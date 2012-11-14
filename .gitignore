@@ -1,13 +1,55 @@
-# Compiled Object files
-*.slo
-*.lo
+#from git extensions
+*.obj
+*.exe
+*.exp
+*.pdb
+*.idb
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.tlog
+*.zip
+*.user
+
+[Dd]ebug*/
+*.sbr
+Thumbs.db
+[Rr]elease*/
+[Tt]est[Rr]esults/
+_UpgradeReport_Files/
+_ReSharper.*/
+gltest3/
+lib-mingw/
+docs/
+doc/
+*.lastbuildstate
+
+#own
+[Oo]bj*/
+[Ii]pch/
+*.*sdf*
+#*.PIXExp
+*/bin/
+*.user
+*.lib
 *.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
+*/*.d
+*.d
+*/lin/
+
+
+#gedit temp files
+*/*~
+*~
+.gitignore~
