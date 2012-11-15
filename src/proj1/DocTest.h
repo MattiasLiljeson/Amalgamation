@@ -6,7 +6,7 @@
 /// \brief Brief description, Lorem
 ///        ipsum dolor sit amet
 /// 
-/// # ClassName
+/// # Test
 /// Detailed description will then start here, describe everything
 /// using lots of fancy words.
 /// Edited By: Name, 2012-11-14
@@ -23,12 +23,19 @@ public:
         int EVal1, /**< enum value 1 */
         int EVal2 /**< enum value 2 */
     };
-    void member(); ///< a member function.
+    void memberFunc(); ///< a member function.
 	///
 	/// Multiline for func, wip
     ///
-	void anotherfunc();
+	void anotherFunc();	
+	///
+	/// A normal member taking two arguments and returning an integer value.
+    /// \param A an integer argument.
+    /// \param s A constant character pointer.
+    /// \return The test results
+    ///
+	int funcWithParams(int a, const char *s);
+	void foo(int v /**< [in] Docs for input parameter v. */);
 protected:
-    int value; ///< an integer value 
-	           ///<
+    int m_value; ///< A brief description of an integer value.
 };

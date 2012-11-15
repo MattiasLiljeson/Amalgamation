@@ -1,12 +1,20 @@
-/*! Another test class */
-class Test2
+// =================================================================================================
+//                                         AnotherTest
+// =================================================================================================
+
+///-------------------------------------------------------------------------------------------------
+/// \brief Incredible class.
+/// 
+/// # AnotherTest
+/// This class is the best ever, it will solve all the problems.
+/// Edited By: Bertbert, 2012-11-15
+///-------------------------------------------------------------------------------------------------
+class AnotherTest
 {
 public:
-    /** An enum type.
-    * The documentation block cannot be put after the enum!
-    */
-    float whatevs /*!< a float */
-    void func(); //!< a member function.
+    void func(); ///< A member function, this is a brief description.
 protected:
-    int value; /*!< an integer value */
+    float m_whatevs; /**< A float, this is a detailed description */
+    int m_value; /**< An integer value */
+	int m_foo; // Not commented in doxygen
 };
