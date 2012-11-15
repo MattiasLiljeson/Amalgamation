@@ -53,3 +53,8 @@ doc/
 */*~
 *~
 .gitignore~
+
+
+#folders
+docs
+
