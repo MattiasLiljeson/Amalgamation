@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="5.95" multi-file="no">
+  <meta>
+    <name>Components_remake</name>
+    <authors>Johan Carlberg</authors>
+    <description />
+  </meta>
+  <management>
+    <persons>
+      <person id="P2b6dfb7e24a54cf8bcd60986b8bb7614">
+        <first-name />
+        <last-name />
+        <role />
+        <e-mail />
+        <phone-number />
+        <description />
+        <color>#00000000</color>
+      </person>
+    </persons>
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <glossary />
+  <types>
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types>
+      <type id="float" name="float" description="" />
+      <type id="int" name="int" description="" />
+    </custom-types>
+  </types>
+  <filters />
+  <items />
+  <models>
+    <model id="p403521307712377946" name="Model 1" type="" namespace="" order-index="1">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>11/20/2012 18:13:03</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <tagged-values />
+      <abstract-items />
+      <sub-models />
+      <diagram type="uml-class" id="p444934737795250588" name="ClassDiagram1" order-index="1" show-nullability="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>11/20/2012 18:13:03</creation-date>
+          <change-date>11/20/2012 18:16:19</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <tagged-values />
+        <abstract-items>
+          <item id="ddip444934737795250588_741967710400468481" cid="C002" type="class" name="Position" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="af6d6f1f18c0f412798affe48bd0d8a02661" name="x" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a5a8653dfe2f040b9bbd80d185b6218b4845" name="y" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a8840c247bea348bebe2e3d75ea66f038825" name="z" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" cid="C002" type="class" name="Rotation" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a773d4fab63cd4a97ba3722a346126eb0400" name="x" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="ac4f49b0b8cb149fb98162e86f12c76f2400" name="y" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a8133f950b4804936bf541ebfdd9d258c400" name="z" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="ae75e0038210542f2ba70889f92a2bd6f970" name="w" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a8fad75ac3be849a8ac8c27e417fd1ea8722" name="rotationType" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_563967366779311775" cid="C002" type="class" name="Scale" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="aec9045d9784f4b638c3594da4f4cd1d4898" name="x" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="aa0b08c88e5b342988921f347fadfc491898" name="y" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a778ccb94f7f14348a5a5e61399c67d54898" name="z" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" cid="C002" type="class" name="Velocity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="aa4784c37b9fe49aa883b34085e7e5225323" name="x" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="aebf8ccc2112c4cc8b6ec7aa9c67c7daa323" name="y" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="ae992bb1dd5ac4c8787480325543eb6aa323" name="z" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_975821143426199912" cid="PKG001" type="package" name="Transforms" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:16:19">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="ddip444934737795250588_975821143426199912" iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:16:19" order-index="1" type="entity">
+            <layout ax="128" ay="232" awidth="709" aheight="243" x="128" y="232" width="709" height="243" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="08d24d3fc9fd47ebabc8bdb14ce93f70" container="ddip444934737795250588_975821143426199912" container-iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="168" ay="300" awidth="140" aheight="93" x="176" y="446" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" iid="5eea96339a474b13afa8a13d8d81473c" container="ddip444934737795250588_975821143426199912" container-iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="658" ay="302" awidth="140" aheight="129" x="666" y="448" width="0" height="129" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_563967366779311775" iid="0cae74cb5e7a49d5bbf2961fd6b1dc2d" container="ddip444934737795250588_975821143426199912" container-iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="325" ay="300" awidth="140" aheight="93" x="333" y="446" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" iid="7391dc7f688d4a4d90c770c412a1ff58" container="ddip444934737795250588_975821143426199912" container-iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="488" ay="302" awidth="140" aheight="93" x="496" y="448" width="0" height="93" angle="0" />
+            <class />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+  </models>
+  <documents />
+  <document-templates />
+</sim-project>
