@@ -2,7 +2,7 @@
 <sim-project version="5.95" multi-file="no">
   <meta>
     <name>Components</name>
-    <authors> </authors>
+    <authors> Johan Carlberg</authors>
     <description />
   </meta>
   <management>
@@ -35,6 +35,8 @@
       <type id="float/int" name="float/int" description="" />
       <type id="Rect" name="Rect" description="" />
       <type id="color" name="color" description="" />
+      <type id="Color" name="Color" description="" />
+      <type id="float/double" name="float/double" description="" />
     </custom-types>
   </types>
   <filters />
@@ -45,7 +47,7 @@
       <associated-diagrams />
       <owned-items />
       <style class="default" />
-      <comment>Maybe it's better to have different types of material in different components.</comment>
+      <comment>Maybe it's better to have different types of materials in different components.</comment>
     </item>
     <item id="di249822725801513346" cid="CN001" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
       <stereotypes />
@@ -90,7 +92,7 @@
       <associated-diagrams />
       <owned-items />
       <style class="default" />
-      <comment>Options could be which deferred steps to attach to.</comment>
+      <comment>Options could be which rendering steps to attach to.</comment>
     </item>
     <item id="di953905101250173376" cid="CN004" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:47:55">
       <stereotypes />
@@ -179,7 +181,7 @@
       <owned-items />
       <style class="default" />
     </item>
-    <item id="di261225993970860000" cid="C001" type="class" name="Containable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
+    <item id="di261225993970860000" cid="C001" type="class" name="Contained" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
       <stereotypes>
         <stereotype name="struct" />
       </stereotypes>
@@ -196,6 +198,66 @@
       <template-parameters>
         <source-codes />
       </template-parameters>
+    </item>
+    <item id="ddip200558346283076374_332841650716356939" cid="C001" type="class" name="DebugRenderable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
+    <item id="di253750422477390788" cid="CMT005" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:47:55">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Options could be which deferred steps to attach to.</comment>
+    </item>
+    <item id="di309763569881325771" cid="CN004" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:47:55">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di883178744542337290" cid="CMT007" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:41:12">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Entities with Force Receiver component are affected by Gravitational forces.</comment>
+    </item>
+    <item id="di863040735385741994" cid="CN005" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:41:12">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di461769163954991973" cid="CMT008" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:49:07">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>[Positional sound] if Entity has Position and AudioSource.
+[Ambient Sound] if Entity only has AudioSource. </comment>
+    </item>
+    <item id="di487590620193773207" cid="CN008" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:49:07">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
     </item>
   </items>
   <models />
