@@ -99,6 +99,104 @@
       <owned-items />
       <style class="default" />
     </item>
+    <item id="di182794691549374615" cid="ELEM200" type="group" name="Group" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:03:18">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di318165846356014554" cid="ELEM203" type="group" name="Group" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 17:03:20">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="ddip200558346283076374_858871250690919557" cid="C001" type="class" name="Container" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a31237ca0dc5b4cdabd84b25eea4a36df291" name="id" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
+    <item id="di538600158872172411" cid="CMT002" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Maybe it's better to have different types of material in different components.</comment>
+    </item>
+    <item id="di405767402772011006" cid="CN001" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di716127165404191730" cid="C001" type="class" name="Material" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a0609093d2350484fa3c0467811e5c94d96" name="materialName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
+    <item id="di256304071515536387" cid="CMT002" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Maybe it's better to have different types of material in different components.</comment>
+    </item>
+    <item id="di681184563665606938" cid="CN001" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di261225993970860000" cid="C001" type="class" name="Containable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:04:05">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a31237ca0dc5b4cdabd84b25eea4a36df291" name="id" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
   </items>
   <models />
   <documents />
