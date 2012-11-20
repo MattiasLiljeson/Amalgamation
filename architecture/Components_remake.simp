@@ -32,6 +32,7 @@
       <type id="int" name="int" description="" />
       <type id="unknown" name="unknown" description="" />
       <type id="string" name="string" description="" />
+      <type id="Color" name="Color" description="" />
     </custom-types>
   </types>
   <filters />
@@ -51,7 +52,7 @@
       <tagged-values />
       <abstract-items />
       <sub-models />
-      <diagram type="uml-class" id="p444934737795250588" name="ClassDiagram1" order-index="1" show-nullability="false">
+      <diagram type="uml-class" id="p444934737795250588" name="ComponentsDiagram" order-index="1" show-nullability="false">
         <style>
           <background-color index="1" color="#FFFFFFFF" />
           <background-color index="2" color="#FFFFFFFF" />
@@ -63,7 +64,7 @@
           </authors>
           <description />
           <creation-date>11/20/2012 18:13:03</creation-date>
-          <change-date>11/20/2012 18:19:32</change-date>
+          <change-date>11/20/2012 18:28:01</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -179,7 +180,7 @@
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip444934737795250588_302757303532694009" cid="C001" type="class" name="Mesh" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+          <item id="ddip444934737795250588_302757303532694009" cid="C001" type="class" name="Mesh" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -197,7 +198,7 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_827982065106818471" cid="C001" type="class" name="Material" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+          <item id="ddip444934737795250588_827982065106818471" cid="C001" type="class" name="Material" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -215,7 +216,7 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_884221786939904526" cid="C001" type="class" name="Renderable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+          <item id="ddip444934737795250588_884221786939904526" cid="C001" type="class" name="Renderable" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -233,13 +234,92 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_829399297731204900" cid="PKG001" type="package" name="Visual" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:19:32">
+          <item id="ddip444934737795250588_829399297731204900" cid="PKG001" type="package" name="Visual" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:19:32">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
             <owned-items />
             <style class="default" />
             <nestedItems />
+          </item>
+          <item id="ddip444934737795250588_613515576588597440" cid="C003" type="class" name="DebugRenderable" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:23:50">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_402295485696987232" cid="PKG001" type="package" name="Debug" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:24:59">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip444934737795250588_421323880168338666" cid="C004" type="class" name="DebugMesh" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:25:18">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a4f25c4921c484a78821963fdb555177251" name="meshName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_309809110868184931" cid="C001" type="class" name="LightSource" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:28:01">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a971ada2c8d0d40bdaeeef375fc39bd75240" name="ambient" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="ac545fdc4cfec48859a02d188aef677db12" name="diffuse" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a1b89a3377f7b4a4d976ac58da9c129d3175" name="specular" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a552c3cc148ad49be8044af608cb2e7f5945" name="type" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a057c165bafe443fa8107307cec92555195" name="xDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a15a59ccf2beb430796520af910321197929" name="yDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="afe7b8405ea4647a1b20d4d15bd991e09344" name="zDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="aef9121c267cc48d39a26ceaab7049dde958" name="range" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
           </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
@@ -263,18 +343,33 @@
             <class />
           </item>
           <item id="ddip444934737795250588_829399297731204900" iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:19:32" order-index="3" type="entity">
-            <layout ax="125" ay="564" awidth="893" aheight="580" x="125" y="564" width="893" height="580" angle="0" />
+            <layout ax="125" ay="564" awidth="933" aheight="454" x="125" y="564" width="893" height="454" angle="0" />
           </item>
           <item id="ddip444934737795250588_302757303532694009" iid="62962600403b49aaa168cc8b854d59c2" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
-            <layout ax="180" ay="647" awidth="140" aheight="61" x="201" y="954" width="0" height="61" angle="0" />
+            <layout ax="205" ay="672" awidth="140" aheight="61" x="201" y="954" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_827982065106818471" iid="a441ea33aa2c4f4da5939a4bebce8ff6" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
-            <layout ax="345" ay="647" awidth="160" aheight="60" x="366" y="954" width="160" height="60" angle="0" />
+            <layout ax="370" ay="672" awidth="160" aheight="60" x="366" y="954" width="160" height="60" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_884221786939904526" iid="eeaa23291b054b068a08a3cb0e8af495" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
-            <layout ax="528" ay="645" awidth="160" aheight="60" x="549" y="952" width="160" height="60" angle="0" />
+            <layout ax="553" ay="670" awidth="160" aheight="60" x="549" y="952" width="160" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_402295485696987232" iid="8e043507468447d7a8f31709d1ece861" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:24:59" order-index="5" type="entity">
+            <layout ax="131" ay="1241" awidth="488" aheight="160" x="131" y="1241" width="488" height="160" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_613515576588597440" iid="82703078b8a5476fb837ded84c21bc4b" container="ddip444934737795250588_402295485696987232" container-iid="8e043507468447d7a8f31709d1ece861" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:23:50" order-index="4" type="entity">
+            <layout ax="163" ay="1299" awidth="140" aheight="35" x="449" y="1354" width="0" height="35" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_421323880168338666" iid="2297499e74b441d6b5f67cf13df71d1a" container="ddip444934737795250588_402295485696987232" container-iid="8e043507468447d7a8f31709d1ece861" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:25:18" order-index="6" type="entity">
+            <layout ax="331" ay="1300" awidth="140" aheight="59" x="331" y="1300" width="0" height="59" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_309809110868184931" iid="34e39fa8926646c394124ec5dec980eb" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:28:01" order-index="7" type="entity">
+            <layout ax="205" ay="787" awidth="140" aheight="177" x="205" y="787" width="0" height="177" angle="0" />
             <class />
           </item>
         </layer>
