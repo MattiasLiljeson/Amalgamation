@@ -30,12 +30,14 @@
     <custom-types>
       <type id="float" name="float" description="" />
       <type id="int" name="int" description="" />
+      <type id="unknown" name="unknown" description="" />
+      <type id="string" name="string" description="" />
     </custom-types>
   </types>
   <filters />
   <items />
   <models>
-    <model id="p403521307712377946" name="Model 1" type="" namespace="" order-index="1">
+    <model id="p403521307712377946" name="Model 1" type="model" namespace="" order-index="1">
       <meta>
         <authors>
           <author> </author>
@@ -61,13 +63,13 @@
           </authors>
           <description />
           <creation-date>11/20/2012 18:13:03</creation-date>
-          <change-date>11/20/2012 18:16:19</change-date>
+          <change-date>11/20/2012 18:19:32</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
         <tagged-values />
         <abstract-items>
-          <item id="ddip444934737795250588_741967710400468481" cid="C002" type="class" name="Position" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+          <item id="ddip444934737795250588_741967710400468481" cid="C002" type="class" name="Position" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -91,7 +93,7 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_325144104840608954" cid="C002" type="class" name="Rotation" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+          <item id="ddip444934737795250588_325144104840608954" cid="C002" type="class" name="Rotation" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -121,7 +123,7 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_563967366779311775" cid="C002" type="class" name="Scale" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+          <item id="ddip444934737795250588_563967366779311775" cid="C002" type="class" name="Scale" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -145,7 +147,7 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_289788994105956923" cid="C002" type="class" name="Velocity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
+          <item id="ddip444934737795250588_289788994105956923" cid="C002" type="class" name="Velocity" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:13:22">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -169,7 +171,69 @@
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_975821143426199912" cid="PKG001" type="package" name="Transforms" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:16:19">
+          <item id="ddip444934737795250588_975821143426199912" cid="PKG001" type="package" name="Transforms" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P2b6dfb7e24a54cf8bcd60986b8bb7614" creation-date="11/20/2012 18:16:19">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip444934737795250588_302757303532694009" cid="C001" type="class" name="Mesh" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a50431f6967ca42669ba8dcf90b578472698" name="meshName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_827982065106818471" cid="C001" type="class" name="Material" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="aaa3cb80bfa5d488aabc5275e0fbbd410457" name="materialName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_884221786939904526" cid="C001" type="class" name="Renderable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:18:08">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a6b943e38fea94059b488be185f5517ee964" name="options" type="unknown" type-id="unknown" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_829399297731204900" cid="PKG001" type="package" name="Visual" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:19:32">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -196,6 +260,21 @@
           </item>
           <item id="ddip444934737795250588_289788994105956923" iid="7391dc7f688d4a4d90c770c412a1ff58" container="ddip444934737795250588_975821143426199912" container-iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
             <layout ax="488" ay="302" awidth="140" aheight="93" x="496" y="448" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_829399297731204900" iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:19:32" order-index="3" type="entity">
+            <layout ax="125" ay="564" awidth="893" aheight="580" x="125" y="564" width="893" height="580" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_302757303532694009" iid="62962600403b49aaa168cc8b854d59c2" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="180" ay="647" awidth="140" aheight="61" x="201" y="954" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_827982065106818471" iid="a441ea33aa2c4f4da5939a4bebce8ff6" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="345" ay="647" awidth="160" aheight="60" x="366" y="954" width="160" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_884221786939904526" iid="eeaa23291b054b068a08a3cb0e8af495" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="528" ay="645" awidth="160" aheight="60" x="549" y="952" width="160" height="60" angle="0" />
             <class />
           </item>
         </layer>
