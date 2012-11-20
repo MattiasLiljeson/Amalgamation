@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="5.95" multi-file="no">
+  <meta>
+    <name>Components</name>
+    <authors> </authors>
+    <description />
+  </meta>
+  <management>
+    <persons>
+      <person id="P49bdbcfc3bb849bd864e78a9fd4c08e1">
+        <first-name />
+        <last-name />
+        <role />
+        <e-mail />
+        <phone-number />
+        <description />
+        <color>#00000000</color>
+      </person>
+    </persons>
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <glossary />
+  <types>
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types>
+      <type id="float" name="float" description="" />
+      <type id="string" name="string" description="" />
+      <type id="int" name="int" description="" />
+      <type id="unknown" name="unknown" description="" />
+      <type id="float/int" name="float/int" description="" />
+      <type id="Rect" name="Rect" description="" />
+      <type id="color" name="color" description="" />
+    </custom-types>
+  </types>
+  <filters />
+  <items>
+    <item id="di795240917749458780" cid="CMT002" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Maybe it's better to have different types of material in different components.</comment>
+    </item>
+    <item id="di249822725801513346" cid="CN001" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:16:19">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di800182664370077805" cid="CMT003" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:27:44">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>type </comment>
+    </item>
+    <item id="di471700419719352256" cid="CN002" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:27:44">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di711943460895877496" cid="CMT004" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:35:24">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Maybe masterVolume should be outside of the entity-world.</comment>
+    </item>
+    <item id="di279145755639371086" cid="CN003" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:35:24">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di679669355336204602" cid="CMT005" type="comment" name="Comment" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:47:55">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <comment>Options could be which deferred steps to attach to.</comment>
+    </item>
+    <item id="di953905101250173376" cid="CN004" type="comment-connector" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P49bdbcfc3bb849bd864e78a9fd4c08e1" creation-date="11/20/2012 16:47:55">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+  </items>
+  <models />
+  <documents />
+  <document-templates />
+</sim-project>
