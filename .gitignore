@@ -21,7 +21,7 @@
 *.zip
 *.user
 
-[Dd]ebug*/
+#[Dd]ebug*/
 *.sbr
 Thumbs.db
 [Rr]elease*/
@@ -39,7 +39,7 @@ doc/
 [Ii]pch/
 *.*sdf*
 #*.PIXExp
-*/bin/
+#*/bin/
 *.user
 *.lib
 *.o
@@ -57,4 +57,4 @@ doc/
 
 #folders
 docs
-
+assets
