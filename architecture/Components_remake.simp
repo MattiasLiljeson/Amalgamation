@@ -36,6 +36,10 @@
       <type id="Integert/other" name="Integert/other" description="" />
       <type id="Matrix" name="Matrix" description="" />
       <type id="bool" name="bool" description="" />
+      <type id="v" name="v" description="" />
+      <type id="void" name="void" description="" />
+      <type id="i" name="i" description="" />
+      <type id="in" name="in" description="" />
     </custom-types>
   </types>
   <filters />
@@ -448,7 +452,7 @@
         <source-codes />
       </template-parameters>
     </item>
-    <item id="ddip444934737795250588_379610232931985266" cid="C001" type="class" name="Collidable" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:47:36">
+    <item id="ddip444934737795250588_379610232931985266" cid="C001" type="class" name="Collidable" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:47:36">
       <stereotypes>
         <stereotype name="struct" />
       </stereotypes>
@@ -1162,7 +1166,7 @@
             <owned-items />
             <style class="default" />
           </item>
-          <item id="ddip268071082636610143_777268131961214037" cid="DEP001" type="dependency" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:48:52">
+          <item id="ddip268071082636610143_777268131961214037" cid="DEP001" type="dependency" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:48:52">
             <stereotypes>
               <stereotype name="use" />
             </stereotypes>
@@ -1436,6 +1440,85 @@
               </points>
             </layout>
             <relation from="di989744018917307936" from-iid="e1bcc12b06494ba59ea49f9a264c240b" to="ddip444934737795250588_379610232931985266" to-iid="1d198877380442389abe8b2991bcdaf3" />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+    <model id="p933661208925567322" name="Model 3" type="" namespace="" order-index="3">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>11/21/2012 13:51:38</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <tagged-values />
+      <abstract-items />
+      <sub-models />
+      <diagram type="uml-class" id="p308205190938509650" name="SystemsOverview" order-index="1" show-nullability="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>11/21/2012 13:51:43</creation-date>
+          <change-date>11/21/2012 13:52:08</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <tagged-values />
+        <abstract-items>
+          <item id="ddip308205190938509650_358864680968362128" cid="C001" type="class" name="Physics" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:52:08">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations>
+              <operation id="o0754ea00b0074feca6aaec920700c5c7201" name="applyForces" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+              <operation id="o3f0b5d6c0ba14d528aa27b11645f7597313" name="applyVelocities" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+              <operation id="o6f741af7e0b14ca4814cde9a14c214c7477" name="updatePositions" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+              <operation id="o55cbc41715b04b8d85941c46fb81de86477" name="collide" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+              <operation id="o717ddfa1a20148599de300937063bc6d477" name="resolve" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="ddip308205190938509650_358864680968362128" iid="87aaeeb39d4641b0a6fae52cd187aeca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:52:08" order-index="0" type="entity">
+            <layout ax="642" ay="244" awidth="234" aheight="121" x="642" y="244" width="234" height="121" angle="0" />
+            <class />
           </item>
         </layer>
       </diagram>
