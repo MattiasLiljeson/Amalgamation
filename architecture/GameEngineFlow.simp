@@ -31,14 +31,7 @@
   </types>
   <filters />
   <items>
-    <item id="di413068184299567849" cid="ELEM098" type="group" name="Group" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:24:45">
-      <stereotypes />
-      <tagged-values />
-      <associated-diagrams />
-      <owned-items />
-      <style class="default" />
-    </item>
-    <item id="di413649004980100627" cid="ELEM079" type="group" name="Group" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:22:34">
+    <item id="di392055630438425868" cid="ELEM013" type="group" name="Group" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 13:36:15">
       <stereotypes />
       <tagged-values />
       <associated-diagrams />
@@ -47,7 +40,7 @@
     </item>
   </items>
   <models>
-    <model id="p147863049610605833" name="Model 1" type="" namespace="" order-index="1">
+    <model id="p147863049610605833" name="Model 1" type="model" namespace="" order-index="1">
       <meta>
         <authors>
           <author> </author>
@@ -73,49 +66,38 @@
           </authors>
           <description />
           <creation-date>11/20/2012 15:09:51</creation-date>
-          <change-date>11/20/2012 15:27:38</change-date>
+          <change-date>11/21/2012 13:36:15</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
         <tagged-values />
         <abstract-items>
-          <item id="ddip489710840621197773_862613929758911025" cid="DFP001" type="dfd-process" name="Collision" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:10:08">
+          <item id="ddip489710840621197773_287671039405311915" cid="CMT001" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:17:46">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>Apply forces; gravitation, thrust etc.
+Apply velocities.
+Detect rigid body collisions.
+Resolve rigid body collisions.</comment>
+          </item>
+          <item id="ddip489710840621197773_819868206915884272" cid="DFP002" type="dfd-process" name="Physics" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:14:22">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
             <owned-items />
             <style class="default" />
           </item>
-          <item id="ddip489710840621197773_287671039405311915" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:17:46">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <comment>Apply forces; gravitation, thrust etc. on entities' velocities.</comment>
-          </item>
-          <item id="ddip489710840621197773_951152026533502440" cid="DFF003" type="dfd-data-flow" name="Velocity change" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:16:50">
+          <item id="ddip489710840621197773_487916347556546948" cid="DFP003" type="dfd-process" name="Movement" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:14:46">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
             <owned-items />
             <style class="default" />
           </item>
-          <item id="ddip489710840621197773_819868206915884272" cid="DFP002" type="dfd-process" name="Physics" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:14:22">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip489710840621197773_487916347556546948" cid="DFP003" type="dfd-process" name="Movement" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:14:46">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip489710840621197773_738352089208899850" cid="CMT002" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:20:44">
+          <item id="ddip489710840621197773_738352089208899850" cid="CMT002" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:20:44">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -123,44 +105,14 @@
             <style class="default" />
             <comment>Apply movement on entities' positions.</comment>
           </item>
-          <item id="ddip489710840621197773_719186383678269094" cid="DFF008" type="dfd-data-flow" name="Position change" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:22:31">
+          <item id="ddip489710840621197773_381821187684706923" cid="DFS002" type="dfd-data-store" name="Entity" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:24:09">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
             <owned-items />
             <style class="default" />
           </item>
-          <item id="ddip489710840621197773_774651095578800923" cid="CMT003" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:22:59">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <comment>Resolve collisions for each entity. Alters both velocities and positions.
-Might add a "damage" component if collision is serious enough.</comment>
-          </item>
-          <item id="ddip489710840621197773_381821187684706923" cid="DFS002" type="dfd-data-store" name="Entity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:24:09">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip489710840621197773_707605478508034508" cid="DFF009" type="dfd-data-flow" name="an entity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:24:32">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip489710840621197773_210543929730766103" cid="DFS003" type="dfd-data-store" name="Entity (updated)" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:25:11">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip489710840621197773_450921734453134674" cid="DFF010" type="dfd-data-flow" name="an entity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:25:57">
+          <item id="ddip489710840621197773_707605478508034508" cid="DFF009" type="dfd-data-flow" name="an entity" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creator="P300f2c1943704fe6b0692395f8df3b2e" creation-date="11/20/2012 15:24:32">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -169,74 +121,26 @@ Might add a "damage" component if collision is serious enough.</comment>
           </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
-          <item id="ddip489710840621197773_862613929758911025" iid="5cfc3d842fa34afeb65ca33e3a437028" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:10:08" order-index="0" type="entity">
-            <layout ax="613" ay="463" awidth="120" aheight="90" x="613" y="463" width="0" height="0" angle="0" />
-          </item>
-          <item id="ddip489710840621197773_951152026533502440" iid="2f868ae132514a51a6fe3e0e91c75d16" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:16:50" order-index="5" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="669" y1="36" x2="672" y2="224" start-border-pos="0.663030624389648" end-border-pos="0.146802266438802">
-              <points>
-                <point x="669" y="36" />
-                <point x="670" y="95" />
-                <point x="672" y="224" />
-              </points>
-            </layout>
-            <relation from="ddip489710840621197773_819868206915884272" from-iid="451cf2c3ce2d44139402f75bab1893c3" to="ddip489710840621197773_487916347556546948" to-iid="bc78d347e22d4c1b90eb3ee7dae707f4" />
-          </item>
-          <item id="ddip489710840621197773_719186383678269094" iid="684683fad64d4c179aa36ed0f541069b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:22:31" order-index="9" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="672" y1="314" x2="673" y2="463" start-border-pos="0.625392278035482" end-border-pos="0.124607721964518">
-              <points>
-                <point x="672" y="314" />
-                <point x="673" y="463" />
-              </points>
-            </layout>
-            <relation from="ddip489710840621197773_487916347556546948" from-iid="bc78d347e22d4c1b90eb3ee7dae707f4" to="ddip489710840621197773_862613929758911025" to-iid="5cfc3d842fa34afeb65ca33e3a437028" />
-          </item>
-          <item id="ddip489710840621197773_774651095578800923" iid="5909715ffc8a43819d195aba5b228807" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:22:59" order-index="11" type="entity">
-            <layout ax="739" ay="481" awidth="239" aheight="63" x="739" y="481" width="239" height="63" angle="0" />
-          </item>
           <item id="ddip489710840621197773_381821187684706923" iid="39c9aaabf7c041dd81952ac50c10f7f5" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:24:09" order-index="12" type="entity">
-            <layout ax="610" ay="-279" awidth="120" aheight="50" x="610" y="-279" width="0" height="0" angle="0" />
+            <layout ax="608" ay="-266" awidth="120" aheight="50" x="608" y="-266" width="0" height="0" angle="0" />
           </item>
           <item id="ddip489710840621197773_707605478508034508" iid="516931e7c00e4e07bec530bd05dec675" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:24:32" order-index="13" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="670" y1="-229" x2="669" y2="-54" start-border-pos="0.624787394205729" end-border-pos="0.125382614135742">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="668" y1="-216" x2="669" y2="-54" start-border-pos="0.62522455851237" end-border-pos="0.124595896402995">
               <points>
-                <point x="670" y="-229" />
+                <point x="668" y="-216" />
                 <point x="669" y="-54" />
               </points>
             </layout>
             <relation from="ddip489710840621197773_381821187684706923" from-iid="39c9aaabf7c041dd81952ac50c10f7f5" to="ddip489710840621197773_819868206915884272" to-iid="451cf2c3ce2d44139402f75bab1893c3" />
           </item>
-          <item id="ddip489710840621197773_210543929730766103" iid="6c267211d8e64aa6981446733593c3f4" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:25:11" order-index="15" type="entity">
-            <layout ax="615" ay="652" awidth="120" aheight="50" x="615" y="652" width="0" height="0" angle="0" />
-          </item>
-          <item id="ddip489710840621197773_450921734453134674" iid="f3d033db77ef4baa85f1add3ddee7e54" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:25:57" order-index="16" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="674" y1="553" x2="675" y2="652" start-border-pos="0.626109441121419" end-border-pos="0.124383672078451">
-              <points>
-                <point x="674" y="553" />
-                <point x="675" y="652" />
-              </points>
-            </layout>
-            <relation from="ddip489710840621197773_862613929758911025" from-iid="5cfc3d842fa34afeb65ca33e3a437028" to="ddip489710840621197773_210543929730766103" to-iid="6c267211d8e64aa6981446733593c3f4" />
-          </item>
-          <item id="di413068184299567849" iid="9791e175cb77428996d0824e4e1cf864" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:24:45" order-index="17" type="group">
+          <item id="di392055630438425868" iid="830fe80eb58b4828b38d1439497a6a97" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:36:15" order-index="14" type="group">
             <layout ax="609" ay="-54" awidth="386" aheight="90" x="50" y="50" width="140" height="160" angle="0" />
             <group-items>
               <item id="ddip489710840621197773_819868206915884272" iid="451cf2c3ce2d44139402f75bab1893c3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:14:22" order-index="3" type="entity">
                 <layout ax="609" ay="-54" awidth="120" aheight="90" x="609" y="-54" width="0" height="0" angle="0" />
               </item>
               <item id="ddip489710840621197773_287671039405311915" iid="0e80511218194ba2854d9b138ea107a7" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:17:46" order-index="6" type="entity">
-                <layout ax="732" ay="-34" awidth="263" aheight="50" x="732" y="-34" width="263" height="50" angle="0" />
-              </item>
-            </group-items>
-          </item>
-          <item id="di413649004980100627" iid="90cc2033989f4973b833bcc8f4c3072a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:22:34" order-index="18" type="group">
-            <layout ax="612" ay="224" awidth="309" aheight="90" x="612" y="224" width="140" height="160" angle="0" />
-            <group-items>
-              <item id="ddip489710840621197773_487916347556546948" iid="bc78d347e22d4c1b90eb3ee7dae707f4" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:14:46" order-index="4" type="entity">
-                <layout ax="612" ay="224" awidth="120" aheight="90" x="612" y="224" width="0" height="0" angle="0" />
-              </item>
-              <item id="ddip489710840621197773_738352089208899850" iid="349d9ea3be674016910374573f1ecec1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 15:20:44" order-index="7" type="entity">
-                <layout ax="736" ay="243" awidth="185" aheight="54" x="736" y="243" width="185" height="54" angle="0" />
+                <layout ax="732" ay="-47" awidth="263" aheight="76" x="732" y="-47" width="263" height="76" angle="0" />
               </item>
             </group-items>
           </item>
