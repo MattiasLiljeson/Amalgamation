@@ -486,6 +486,45 @@
         <source-codes />
       </template-parameters>
     </item>
+    <item id="ddip444934737795250588_309809110868184931" cid="C001" type="class" name="LightSource" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:28:01">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a971ada2c8d0d40bdaeeef375fc39bd75240" name="ambient" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="ac545fdc4cfec48859a02d188aef677db12" name="diffuse" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="a1b89a3377f7b4a4d976ac58da9c129d3175" name="specular" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="a552c3cc148ad49be8044af608cb2e7f5945" name="type" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="a057c165bafe443fa8107307cec92555195" name="xDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="a15a59ccf2beb430796520af910321197929" name="yDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="afe7b8405ea4647a1b20d4d15bd991e09344" name="zDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="aef9121c267cc48d39a26ceaab7049dde958" name="range" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
   </items>
   <models>
     <model id="p403521307712377946" name="Model 1" type="model" namespace="" order-index="1">
@@ -652,45 +691,6 @@
             <style class="default" />
             <attributes>
               <attribute id="a4f25c4921c484a78821963fdb555177251" name="meshName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-            </attributes>
-            <operations />
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
-          </item>
-          <item id="ddip444934737795250588_309809110868184931" cid="C001" type="class" name="LightSource" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/20/2012 18:28:01">
-            <stereotypes>
-              <stereotype name="struct" />
-            </stereotypes>
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes>
-              <attribute id="a971ada2c8d0d40bdaeeef375fc39bd75240" name="ambient" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="ac545fdc4cfec48859a02d188aef677db12" name="diffuse" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a1b89a3377f7b4a4d976ac58da9c129d3175" name="specular" type="Color" type-id="Color" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a552c3cc148ad49be8044af608cb2e7f5945" name="type" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a057c165bafe443fa8107307cec92555195" name="xDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a15a59ccf2beb430796520af910321197929" name="yDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="afe7b8405ea4647a1b20d4d15bd991e09344" name="zDirection" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="aef9121c267cc48d39a26ceaab7049dde958" name="range" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
                 <stereotypes />
               </attribute>
             </attributes>
@@ -952,7 +952,7 @@
             <class />
           </item>
           <item id="ddip444934737795250588_254256217896551844" iid="df025fab829344caaeb17ab7adc0c86d" container="ddip444934737795250588_829399297731204900" container-iid="67f5dcf06b4c4e4eb10541e96888d463" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 09:31:07" order-index="23" type="entity">
-            <layout ax="440" ay="1412" awidth="175" aheight="127" x="470" y="1412" width="175" height="127" angle="0" />
+            <layout ax="440" ay="1412" awidth="175" aheight="127" x="440" y="1412" width="175" height="127" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_361459928549873470" iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 11:07:39" order-index="24" type="entity">
@@ -1505,7 +1505,7 @@
           </authors>
           <description />
           <creation-date>11/21/2012 13:51:43</creation-date>
-          <change-date>11/21/2012 15:00:10</change-date>
+          <change-date>11/21/2012 15:29:57</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -1612,56 +1612,186 @@
               <source-codes />
             </template-parameters>
           </item>
+          <item id="ddip308205190938509650_973435449622636934" cid="PKG001" type="package" name="Physical Object" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:21:22">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_555169310689064346" cid="PKG002" type="package" name="Renderable Objects" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:22:32">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_172671961843513318" cid="PKG003" type="package" name="The Camera" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:24:43">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_259072947978374638" cid="PKG004" type="package" name="Light Sources" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:25:16">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_123125498209759219" cid="PKG005" type="package" name="Moving Player" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:25:56">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="ClientSystem" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations>
+              <operation id="oe4ceb3ea15df4beba27c6a98ffe3727f842" name="fetchChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+              <operation id="o56fd00947bbc4ce9bdf1fec4d64f0621782" name="pushChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+                <parameters />
+                <stereotypes />
+                <source-codes />
+              </operation>
+            </operations>
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
           <item id="ddip308205190938509650_358864680968362128" iid="87aaeeb39d4641b0a6fae52cd187aeca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:52:08" order-index="0" type="entity">
-            <layout ax="2227" ay="1243" awidth="234" aheight="121" x="2227" y="1243" width="234" height="121" angle="0" />
+            <layout ax="1277" ay="1063" awidth="234" aheight="121" x="1277" y="1063" width="234" height="121" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_654009842782219764" iid="d59b64c44cdb46d9ac9b44aa570d0059" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:57:25" order-index="1" type="entity">
-            <layout ax="2271" ay="434" awidth="171" aheight="69" x="2271" y="434" width="171" height="69" angle="0" />
+            <layout ax="1306" ay="434" awidth="171" aheight="69" x="1306" y="434" width="171" height="69" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_981654874951187236" iid="55fe9286c8a6446fb006482586719476" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:58:46" order-index="2" type="entity">
-            <layout ax="2523" ay="1233" awidth="157" aheight="127" x="2523" y="1233" width="157" height="127" angle="0" />
+            <layout ax="1573" ay="1053" awidth="157" aheight="127" x="1573" y="1053" width="157" height="127" angle="0" />
           </item>
           <item id="ddip308205190938509650_562078985984623609" iid="520244dc72f04747a2842da528452bf6" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:59:58" order-index="3" type="entity">
-            <layout ax="2521" ay="435" awidth="140" aheight="100" x="2521" y="435" width="0" height="0" angle="0" />
+            <layout ax="1556" ay="435" awidth="140" aheight="100" x="1556" y="435" width="0" height="0" angle="0" />
           </item>
           <item id="ddip308205190938509650_291423380131969788" iid="46bc6c0446b94df1a5fba050d5b4598c" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:01:14" order-index="4" type="entity">
-            <layout ax="2341" ay="1983" awidth="234" aheight="160" x="2341" y="1983" width="234" height="0" angle="0" />
+            <layout ax="1303" ay="1801" awidth="234" aheight="160" x="1303" y="1801" width="234" height="0" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_632512983141046513" iid="418c20a7163749dba6992f4f5ad58165" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:42:22" order-index="22" type="entity">
-            <layout ax="1864" ay="1234" awidth="161" aheight="128" x="1864" y="1234" width="161" height="128" angle="0" />
+          <item id="ddip308205190938509650_973435449622636934" iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:21:22" order-index="28" type="entity">
+            <layout ax="531" ay="945" awidth="605" aheight="395" x="531" y="945" width="605" height="395" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_632512983141046513" iid="418c20a7163749dba6992f4f5ad58165" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:42:22" order-index="22" type="entity">
+            <layout ax="748" ay="1017" awidth="161" aheight="128" x="142" y="1274" width="161" height="128" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_379610232931985266" iid="0d41094e156b49248e7fc07980210807" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:47:36" order-index="25" type="entity">
-            <layout ax="1688" ay="1272" awidth="140" aheight="37" x="1688" y="1272" width="0" height="37" angle="0" />
+          <item id="ddip444934737795250588_379610232931985266" iid="0d41094e156b49248e7fc07980210807" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:47:36" order-index="25" type="entity">
+            <layout ax="750" ay="1196" awidth="140" aheight="37" x="144" y="1453" width="0" height="37" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_741967710400468481" iid="dd3ecf03280244f9a620f26142c8b3ce" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1716" ay="1438" awidth="140" aheight="93" x="1716" y="1438" width="0" height="93" angle="0" />
+          <item id="ddip444934737795250588_741967710400468481" iid="dd3ecf03280244f9a620f26142c8b3ce" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="948" ay="1025" awidth="140" aheight="93" x="342" y="1282" width="0" height="93" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_325144104840608954" iid="f8a4be72a4c44b7bb1e1ead8f8a0648d" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1911" ay="1429" awidth="140" aheight="127" x="1911" y="1429" width="0" height="127" angle="0" />
+          <item id="ddip444934737795250588_325144104840608954" iid="f8a4be72a4c44b7bb1e1ead8f8a0648d" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="939" ay="1175" awidth="140" aheight="127" x="333" y="1432" width="0" height="127" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_289788994105956923" iid="65a4ce7dd8644503ad58fd379a0d7449" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1479" ay="1360" awidth="140" aheight="93" x="1479" y="1360" width="0" height="93" angle="0" />
+          <item id="ddip444934737795250588_289788994105956923" iid="65a4ce7dd8644503ad58fd379a0d7449" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="568" ay="1123" awidth="140" aheight="93" x="-38" y="1380" width="0" height="93" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_298829927493099776" iid="1906221241214b93bb01889d3f156d97" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
-            <layout ax="1482" ay="1261" awidth="140" aheight="61" x="1482" y="1261" width="0" height="61" angle="0" />
+          <item id="ddip444934737795250588_298829927493099776" iid="1906221241214b93bb01889d3f156d97" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
+            <layout ax="566" ay="1010" awidth="140" aheight="61" x="-40" y="1267" width="0" height="61" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_289788994105956923" iid="74fb7a2db921420c815890c7d93c0e35" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1709" ay="426" awidth="140" aheight="93" x="1709" y="426" width="0" height="93" angle="0" />
+          <item id="ddip308205190938509650_555169310689064346" iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:22:32" order-index="29" type="entity">
+            <layout ax="541" ay="1682" awidth="598" aheight="334" x="541" y="1682" width="598" height="334" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="22c2c6af584f40589e0778c1452d7bbe" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="757" ay="1747" awidth="140" aheight="93" x="327" y="1610" width="0" height="93" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_298829927493099776" iid="bf81e7cbe7ca44bc81cff7984e446354" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
-            <layout ax="1919" ay="441" awidth="140" aheight="61" x="1919" y="441" width="0" height="61" angle="0" />
+          <item id="ddip444934737795250588_325144104840608954" iid="26fc8ab798de41628d75a47f213ced18" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="927" ay="1746" awidth="140" aheight="127" x="497" y="1609" width="0" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_563967366779311775" iid="4acd2d3b67344b07a62a7a4a6c767cf8" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="589" ay="1746" awidth="140" aheight="93" x="159" y="1609" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_302757303532694009" iid="693d7ff627a240bdb9e58035765e3d53" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="589" ay="1912" awidth="140" aheight="61" x="179" y="2099" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_827982065106818471" iid="745e5728127b4b89ada9c85a52bc407c" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="754" ay="1912" awidth="160" aheight="60" x="344" y="2099" width="160" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_884221786939904526" iid="c6ebec71f9e64aa38854b3d8a44231ab" container="ddip308205190938509650_555169310689064346" container-iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:18:08" order-index="2" type="entity">
+            <layout ax="937" ay="1910" awidth="160" aheight="60" x="527" y="2097" width="160" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_172671961843513318" iid="0480d908f226454ca218339bff306e94" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:24:43" order-index="30" type="entity">
+            <layout ax="1621" ay="2091" awidth="612" aheight="244" x="1621" y="2091" width="612" height="244" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_254256217896551844" iid="eb6e965dbd6343869dd9458ca117a1e0" container="ddip308205190938509650_172671961843513318" container-iid="0480d908f226454ca218339bff306e94" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 09:31:07" order-index="23" type="entity">
+            <layout ax="2001" ay="2161" awidth="175" aheight="127" x="1233" y="2148" width="175" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="85c29a8586634a6e9027e1d73da53b3b" container="ddip308205190938509650_172671961843513318" container-iid="0480d908f226454ca218339bff306e94" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1665" ay="2164" awidth="140" aheight="93" x="447" y="1994" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" iid="ad2f3f8e0e3345e29f2e4e919d823395" container="ddip308205190938509650_172671961843513318" container-iid="0480d908f226454ca218339bff306e94" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1835" ay="2163" awidth="140" aheight="127" x="617" y="1993" width="0" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_259072947978374638" iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:25:16" order-index="31" type="entity">
+            <layout ax="1684" ay="1597" awidth="396" aheight="285" x="1684" y="1597" width="396" height="285" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_309809110868184931" iid="2493945f468740b7a93cabf0b9e84d06" container="ddip308205190938509650_259072947978374638" container-iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:28:01" order-index="7" type="entity">
+            <layout ax="1907" ay="1675" awidth="140" aheight="177" x="1837" y="1366" width="0" height="177" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="9848cfc01b2345daa2d8b098f4bf6745" container="ddip308205190938509650_259072947978374638" container-iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1734" ay="1670" awidth="140" aheight="93" x="1664" y="1361" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_123125498209759219" iid="33e186f861cc4090943e9ff4229502a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:25:56" order-index="32" type="entity">
+            <layout ax="600" ay="412" awidth="541" aheight="188" x="600" y="412" width="541" height="188" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" iid="74fb7a2db921420c815890c7d93c0e35" container="ddip308205190938509650_123125498209759219" container-iid="33e186f861cc4090943e9ff4229502a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="633" ay="474" awidth="140" aheight="93" x="698" y="642" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_298829927493099776" iid="bf81e7cbe7ca44bc81cff7984e446354" container="ddip308205190938509650_123125498209759219" container-iid="33e186f861cc4090943e9ff4229502a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
+            <layout ax="798" ay="476" awidth="140" aheight="61" x="798" y="476" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_193163518138461156" iid="babbafef78f34cd4a2b33b0d14051081" container="ddip308205190938509650_123125498209759219" container-iid="33e186f861cc4090943e9ff4229502a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:49" order-index="19" type="entity">
+            <layout ax="968" ay="476" awidth="140" aheight="60" x="968" y="476" width="0" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_594716461761107808" iid="5f838d227e5f4b68bc1d0ba1f88093ea" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:29:57" order-index="33" type="entity">
+            <layout ax="1345" ay="2546" awidth="150" aheight="80" x="1345" y="2546" width="150" height="80" angle="0" />
             <class />
           </item>
         </layer>
