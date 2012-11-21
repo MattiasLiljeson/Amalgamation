@@ -311,7 +311,7 @@
         <attribute id="a282371abf05846be99485ca7c517a916179" name="farPlane" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
           <stereotypes />
         </attribute>
-        <attribute id="a509b6936a79845edab7a5cb9b0049a95978" name="renderTargetIndex" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+        <attribute id="ab5b84b7856df4db3b7ea79f6c5d5befd176" name="rendertargetIndex" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
           <stereotypes />
         </attribute>
       </attributes>
@@ -829,7 +829,7 @@
           </authors>
           <description />
           <creation-date>11/21/2012 08:23:37</creation-date>
-          <change-date>11/21/2012 09:35:37</change-date>
+          <change-date>11/21/2012 09:44:59</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -996,6 +996,23 @@
             <style class="default" />
           </item>
           <item id="ddip268071082636610143_805086097112849710" cid="DEP023" type="dependency" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 09:35:34">
+            <stereotypes>
+              <stereotype name="use" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="ddip268071082636610143_939618062332610266" cid="CMT003" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 09:29:49">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment />
+          </item>
+          <item id="ddip268071082636610143_586950479377533733" cid="DEP025" type="dependency" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 09:44:59">
             <stereotypes>
               <stereotype name="use" />
             </stereotypes>
@@ -1246,6 +1263,25 @@
               </points>
             </layout>
             <relation from="di600450034653644501" from-iid="0d44a68863684211abe1d9babd71d2f7" to="ddip444934737795250588_284701600596981380" to-iid="6cef87592cc842a8ac386d97c58a0e0b" />
+          </item>
+          <item id="ddip268071082636610143_939618062332610266" iid="41bb2b518527447ebc985f249b27ca8d" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 09:29:49" order-index="29" type="entity">
+            <layout ax="2905" ay="1987" awidth="140" aheight="100" x="2905" y="1987" width="0" height="0" angle="0" />
+          </item>
+          <item id="di354066243636377976" iid="b3959968cba148bbafd7a1d95c66762a" name="Element3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 09:44:39" order-index="36" type="drawing-text">
+            <layout ax="1778" ay="368" awidth="110" aheight="20" x="1778" y="368" width="110" height="20" angle="0" />
+            <drawing-text>
+              <text>MainCamera: tag</text>
+            </drawing-text>
+            <style class="default" />
+          </item>
+          <item id="ddip268071082636610143_586950479377533733" iid="dc4dcf3c36dd48d78f4ef9c5b579656b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 09:44:59" order-index="37" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="2126" y1="428" x2="1888" y2="387" start-border-pos="0.788467209914635" end-border-pos="0.491965866088867">
+              <points>
+                <point x="2126" y="428" />
+                <point x="1888" y="387" />
+              </points>
+            </layout>
+            <relation from="di600450034653644501" from-iid="0d44a68863684211abe1d9babd71d2f7" to="di354066243636377976" to-iid="b3959968cba148bbafd7a1d95c66762a" />
           </item>
         </layer>
       </diagram>
