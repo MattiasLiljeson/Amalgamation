@@ -525,6 +525,48 @@
         <source-codes />
       </template-parameters>
     </item>
+    <item id="ddip444934737795250588_670037811526338301" cid="C001" type="class" name="Health" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a467cc06368a949d9aa73ed0d216402d3231" name="maximum" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="ae10b750c437545999765dc43911e5425437" name="current" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
+    <item id="ddip444934737795250588_407940731837213620" cid="C001" type="class" name="Energy" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a8fc1041ca87844c58b50ef05d2e0deb683" name="maximum" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="af5027ec676854f6ca337d0178b0f0c3f83" name="current" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
   </items>
   <models>
     <model id="p403521307712377946" name="Model 1" type="model" namespace="" order-index="1">
@@ -553,7 +595,7 @@
           </authors>
           <description />
           <creation-date>11/20/2012 18:13:03</creation-date>
-          <change-date>11/21/2012 14:59:15</change-date>
+          <change-date>11/21/2012 15:35:27</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -590,48 +632,6 @@
             <owned-items />
             <style class="default" />
             <nestedItems />
-          </item>
-          <item id="ddip444934737795250588_670037811526338301" cid="C001" type="class" name="Health" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
-            <stereotypes>
-              <stereotype name="struct" />
-            </stereotypes>
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes>
-              <attribute id="a467cc06368a949d9aa73ed0d216402d3231" name="maximum" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="ae10b750c437545999765dc43911e5425437" name="current" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-            </attributes>
-            <operations />
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
-          </item>
-          <item id="ddip444934737795250588_407940731837213620" cid="C001" type="class" name="Energy" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
-            <stereotypes>
-              <stereotype name="struct" />
-            </stereotypes>
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes>
-              <attribute id="a8fc1041ca87844c58b50ef05d2e0deb683" name="maximum" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="af5027ec676854f6ca337d0178b0f0c3f83" name="current" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-            </attributes>
-            <operations />
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
           </item>
           <item id="ddip444934737795250588_200359941794814428" cid="C001" type="class" name="EnergyRegeneration" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
             <stereotypes>
@@ -691,6 +691,24 @@
             <style class="default" />
             <attributes>
               <attribute id="a4f25c4921c484a78821963fdb555177251" name="meshName" type="string" type-id="string" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_548219428758917350" cid="C001" type="class" name="Damage" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:32:25">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a9905df91e9194500aa62964942746a6c206" name="amount" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
                 <stereotypes />
               </attribute>
             </attributes>
@@ -956,7 +974,7 @@
             <class />
           </item>
           <item id="ddip444934737795250588_361459928549873470" iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 11:07:39" order-index="24" type="entity">
-            <layout ax="137" ay="2989" awidth="586" aheight="192" x="137" y="2989" width="586" height="192" angle="0" />
+            <layout ax="137" ay="2989" awidth="734" aheight="192" x="137" y="2989" width="734" height="192" angle="0" />
           </item>
           <item id="ddip444934737795250588_670037811526338301" iid="aae4d64a12d74d52a4dd8a00fc6df833" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
             <layout ax="171" ay="3052" awidth="140" aheight="77" x="-5" y="3263" width="0" height="77" angle="0" />
@@ -990,7 +1008,7 @@
             <class />
           </item>
           <item id="ddip444934737795250588_379610232931985266" iid="e5d252ef66334181bc2825dc23c0967e" container="ddip444934737795250588_649125120135551913" container-iid="6357e4fb26ae4e98868dad500373b1c8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:47:36" order-index="25" type="entity">
-            <layout ax="161" ay="2277" awidth="140" aheight="37" x="161" y="2277" width="0" height="37" angle="0" />
+            <layout ax="161" ay="2277" awidth="140" aheight="33" x="161" y="2277" width="0" height="33" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_773612157553848627" iid="4287c83ee7a747e88a14e1d707e89682" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:54:54" order-index="28" type="entity">
@@ -1002,6 +1020,10 @@
           </item>
           <item id="ddip444934737795250588_298829927493099776" iid="9c56172216df4d7d82dcc709864036bb" container="ddip444934737795250588_773612157553848627" container-iid="4287c83ee7a747e88a14e1d707e89682" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
             <layout ax="370" ay="620" awidth="140" aheight="61" x="370" y="620" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_548219428758917350" iid="437d12a7a270499ebbe397da2c422517" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
+            <layout ax="696" ay="3055" awidth="140" aheight="60" x="696" y="3055" width="0" height="60" angle="0" />
             <class />
           </item>
         </layer>
@@ -1505,7 +1527,7 @@
           </authors>
           <description />
           <creation-date>11/21/2012 13:51:43</creation-date>
-          <change-date>11/21/2012 15:29:57</change-date>
+          <change-date>11/21/2012 15:45:57</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -1652,7 +1674,7 @@
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="ClientSystem" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
+          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="ClientNetworkSystem" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1674,6 +1696,30 @@
             <template-parameters>
               <source-codes />
             </template-parameters>
+          </item>
+          <item id="ddip308205190938509650_163280518787193656" cid="PKG006" type="package" name="Push to Server" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:38:52">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_581797725265529819" cid="PKG008" type="package" name="Fetch from Server" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:44:35">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_281979881763560336" cid="PKG009" type="package" name="Players" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:45:25">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
           </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
@@ -1791,7 +1837,48 @@
             <class />
           </item>
           <item id="ddip308205190938509650_594716461761107808" iid="5f838d227e5f4b68bc1d0ba1f88093ea" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:29:57" order-index="33" type="entity">
-            <layout ax="1345" ay="2546" awidth="150" aheight="80" x="1345" y="2546" width="150" height="80" angle="0" />
+            <layout ax="1345" ay="2546" awidth="166" aheight="80" x="1345" y="2546" width="166" height="80" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_163280518787193656" iid="0802a04449294dee968d0f321395f1a9" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:38:52" order-index="34" type="entity">
+            <layout ax="1015" ay="2488" awidth="216" aheight="164" x="1015" y="2488" width="216" height="164" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_193163518138461156" iid="1f9947f97d654439a5dc7f1dbab5884a" container="ddip308205190938509650_163280518787193656" container-iid="0802a04449294dee968d0f321395f1a9" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:49" order-index="19" type="entity">
+            <layout ax="1051" ay="2551" awidth="140" aheight="60" x="839" y="2425" width="0" height="60" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_581797725265529819" iid="cb8baa48f13d4cbfbbf9ab311546a4a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:44:35" order-index="35" type="entity">
+            <layout ax="2866" ay="3332" awidth="883" aheight="534" x="2866" y="3332" width="883" height="534" angle="0" />
+          </item>
+          <item id="ddip308205190938509650_281979881763560336" iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:45:25" order-index="36" type="entity">
+            <layout ax="1321" ay="3002" awidth="749" aheight="403" x="1321" y="3002" width="749" height="403" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="0bb85e0fd631485ab888661676fbd1da" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1358" ay="3070" awidth="140" aheight="93" x="1358" y="3070" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" iid="7f694b2c287d41468c0572c272d978f5" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1528" ay="3069" awidth="140" aheight="127" x="1528" y="3069" width="0" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_670037811526338301" iid="046dbb16452141bba6c235e7db561be3" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
+            <layout ax="1707" ay="3073" awidth="140" aheight="77" x="1707" y="3073" width="0" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_407940731837213620" iid="000af55daeb74f269caef889b76929b7" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
+            <layout ax="1708" ay="3197" awidth="140" aheight="77" x="1708" y="3197" width="0" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" iid="c00798541307429c8020d5bb69d9583e" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="1361" ay="3268" awidth="140" aheight="93" x="1361" y="3268" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_298829927493099776" iid="470207b90be84e7897a47fdd20377769" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
+            <layout ax="1533" ay="3267" awidth="140" aheight="61" x="1533" y="3267" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_491456648224648817" iid="eb01f043371f4277869a14fa9097019f" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
+            <layout ax="1885" ay="3075" awidth="140" aheight="61" x="1885" y="3075" width="0" height="61" angle="0" />
             <class />
           </item>
         </layer>
