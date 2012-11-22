@@ -215,7 +215,7 @@
         <source-codes />
       </template-parameters>
     </item>
-    <item id="ddip444934737795250588_491456648224648817" cid="C002" type="class" name="NetworkUpdate" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:36:54">
+    <item id="ddip444934737795250588_491456648224648817" cid="C002" type="class" name="NetworkSynced" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:36:54">
       <stereotypes>
         <stereotype name="struct" />
       </stereotypes>
@@ -224,7 +224,7 @@
       <owned-items />
       <style class="default" />
       <attributes>
-        <attribute id="a60737a5be6fc48ad81fe82804d549015225" name="id" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+        <attribute id="ab50798433cb44ebeb1b0f83c3fd668cb148" name="id" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
           <stereotypes />
         </attribute>
       </attributes>
@@ -598,6 +598,27 @@
         <end-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
       </relation>
     </item>
+    <item id="ddip444934737795250588_749421198730940880" cid="C001" type="class" name="InputAction" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:12:34">
+      <stereotypes>
+        <stereotype name="struct" />
+      </stereotypes>
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="a7c28874af0704204b80b9f03f122b151729" name="actionIdentity" type="ENUM_ACTIONS" type-id="ENUM_ACTIONS" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+        <attribute id="a9985655446e44a858237b6d689a17bd9729" name="delta" type="float (0-1)" type-id="float (0-1)" visibility="public" abstract="false" virtual="false">
+          <stereotypes />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
   </items>
   <models>
     <model id="p403521307712377946" name="Model 1" type="model" namespace="" order-index="1">
@@ -626,7 +647,7 @@
           </authors>
           <description />
           <creation-date>11/20/2012 18:13:03</creation-date>
-          <change-date>11/22/2012 13:28:06</change-date>
+          <change-date>11/22/2012 15:21:27</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -909,7 +930,7 @@
             <comment>Baka in RelativeTransforms i Transforms?
 Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars har den en parent med "originEntity" som id.</comment>
           </item>
-          <item id="ddip444934737795250588_357760234659495467" cid="C001" type="class" name="KeyMapping" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:12:34">
+          <item id="ddip444934737795250588_357760234659495467" cid="C001" type="class" name="KeyMapping" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:12:34">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -930,7 +951,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_765531201735919130" cid="PKG001" type="package" name="Structs, not Components" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:14:10">
+          <item id="ddip444934737795250588_765531201735919130" cid="PKG001" type="package" name="Structs, not Components" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:14:10">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -938,7 +959,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip444934737795250588_209449566326508205" cid="C002" type="class" name="InputActions" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:27:23">
+          <item id="ddip444934737795250588_209449566326508205" cid="C002" type="class" name="InputActions" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:27:23">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -956,7 +977,51 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_749421198730940880" cid="C001" type="class" name="InputAction" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:12:34">
+          <item id="ddip444934737795250588_569068357941320939" cid="PKG003" type="package" name="Network" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:28:31">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip444934737795250588_750480175581263384" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:57:11">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>The first 8 bits could be "machine id", the last 24 bits could be "entity id".</comment>
+          </item>
+          <item id="ddip444934737795250588_182730929340991816" cid="C002" type="class" name="Created" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_731393871449675656" cid="C002" type="class" name="Deleted" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes />
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_940306934631366786" cid="C003" type="class" name="Lifetime" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:21:24">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -965,10 +1030,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <owned-items />
             <style class="default" />
             <attributes>
-              <attribute id="a7c28874af0704204b80b9f03f122b151729" name="actionIdentity" type="ENUM_ACTIONS" type-id="ENUM_ACTIONS" visibility="public" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a9985655446e44a858237b6d689a17bd9729" name="delta" type="float (0-1)" type-id="float (0-1)" visibility="public" abstract="false" virtual="false">
+              <attribute id="ae20d27302d67488e97782229b102ffd0791" name="remainingSeconds" type="float" type-id="float" visibility="public" abstract="false" virtual="false">
                 <stereotypes />
               </attribute>
             </attributes>
@@ -1025,18 +1087,18 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <class />
           </item>
           <item id="ddip444934737795250588_574961894982962117" iid="2a508e97c8354c2a9111b3716ec549c3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:37:33" order-index="12" type="entity">
-            <layout ax="138" ay="3230" awidth="535" aheight="284" x="138" y="3230" width="535" height="284" angle="0" />
+            <layout ax="136" ay="3518" awidth="535" aheight="284" x="136" y="3518" width="535" height="284" angle="0" />
           </item>
           <item id="ddip444934737795250588_617040091484830035" iid="274b154152ce4bd497d960475f5b7cfd" container="ddip444934737795250588_574961894982962117" container-iid="2a508e97c8354c2a9111b3716ec549c3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:34:12" order-index="10" type="entity">
-            <layout ax="186" ay="3285" awidth="233" aheight="76" x="1708" y="419" width="233" height="76" angle="0" />
+            <layout ax="184" ay="3573" awidth="233" aheight="76" x="1706" y="707" width="233" height="76" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_636619477268830318" iid="ca95de0f4da640f68b56ac047fe60213" container="ddip444934737795250588_574961894982962117" container-iid="2a508e97c8354c2a9111b3716ec549c3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:34:12" order-index="10" type="entity">
-            <layout ax="186" ay="3404" awidth="233" aheight="76" x="1708" y="538" width="233" height="76" angle="0" />
+            <layout ax="184" ay="3692" awidth="233" aheight="76" x="1706" y="826" width="233" height="76" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_541854155122461304" iid="e549e42f1f9e47cd89b6e3b5712012fb" container="ddip444934737795250588_574961894982962117" container-iid="2a508e97c8354c2a9111b3716ec549c3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:35:59" order-index="11" type="entity">
-            <layout ax="463" ay="3288" awidth="140" aheight="60" x="1985" y="422" width="0" height="60" angle="0" />
+            <layout ax="461" ay="3576" awidth="140" aheight="60" x="1983" y="710" width="0" height="60" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_361300242965179243" iid="3e088aed2b2c4bc797f132bb532d3695" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:39:55" order-index="14" type="entity">
@@ -1051,24 +1113,20 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <class />
           </item>
           <item id="ddip444934737795250588_461993768299410485" iid="6945739b67834f7a8e60c69f7216b74e" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:12:46" order-index="15" type="entity">
-            <layout ax="-98" ay="2904" awidth="1375" aheight="34" x="-98" y="2904" width="1375" height="34" angle="0" />
+            <layout ax="-100" ay="3192" awidth="1375" aheight="34" x="-100" y="3192" width="1375" height="34" angle="0" />
           </item>
           <item id="ddip444934737795250588_571583614599599174" iid="24d423a1d217412ab6457bf95e23cbb7" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:12:46" order-index="15" type="entity">
             <layout ax="-89" ay="120" awidth="1375" aheight="34" x="-89" y="120" width="1375" height="34" angle="0" />
           </item>
           <item id="ddip444934737795250588_195028785202658341" iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:20" order-index="18" type="entity">
-            <layout ax="130" ay="2543" awidth="825" aheight="274" x="130" y="2543" width="825" height="250" angle="0" />
-          </item>
-          <item id="ddip444934737795250588_491456648224648817" iid="202863675edb4b9b97530eda181dcddc" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
-            <layout ax="174" ay="2602" awidth="140" aheight="61" x="204" y="2602" width="0" height="61" angle="0" />
-            <class />
+            <layout ax="130" ay="2543" awidth="607" aheight="274" x="130" y="2543" width="607" height="250" angle="0" />
           </item>
           <item id="ddip444934737795250588_193163518138461156" iid="cc72888d59114311a967b3def1450678" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:49" order-index="19" type="entity">
-            <layout ax="350" ay="2600" awidth="228" aheight="62" x="350" y="2600" width="228" height="62" angle="0" />
+            <layout ax="168" ay="2603" awidth="228" aheight="62" x="168" y="2603" width="228" height="62" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_969546679723307915" iid="72a801e8044f447696027de96b9e2379" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:40:26" order-index="20" type="entity">
-            <layout ax="379" ay="2672" awidth="177" aheight="100" x="379" y="2672" width="177" height="0" angle="0" />
+            <layout ax="197" ay="2675" awidth="177" aheight="100" x="197" y="2675" width="177" height="0" angle="0" />
           </item>
           <item id="ddip444934737795250588_649125120135551913" iid="6357e4fb26ae4e98868dad500373b1c8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:42:13" order-index="21" type="entity">
             <layout ax="129" ay="2198" awidth="514" aheight="300" x="129" y="2198" width="514" height="300" angle="0" />
@@ -1082,18 +1140,18 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <class />
           </item>
           <item id="ddip444934737795250588_361459928549873470" iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 11:07:39" order-index="24" type="entity">
-            <layout ax="137" ay="2989" awidth="734" aheight="192" x="137" y="2989" width="734" height="192" angle="0" />
+            <layout ax="135" ay="3277" awidth="950" aheight="215" x="135" y="3277" width="950" height="215" angle="0" />
           </item>
           <item id="ddip444934737795250588_670037811526338301" iid="aae4d64a12d74d52a4dd8a00fc6df833" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="171" ay="3052" awidth="140" aheight="77" x="-5" y="3263" width="0" height="77" angle="0" />
+            <layout ax="169" ay="3340" awidth="140" aheight="77" x="-7" y="3551" width="0" height="77" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_407940731837213620" iid="423bffa26e934eb9b89bbeaca01ef9b0" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="348" ay="3052" awidth="140" aheight="77" x="172" y="3263" width="0" height="77" angle="0" />
+            <layout ax="346" ay="3340" awidth="140" aheight="77" x="170" y="3551" width="0" height="77" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_200359941794814428" iid="6ef5d9152473441a8fd438ddfee63068" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="523" ay="3053" awidth="140" aheight="60" x="347" y="3264" width="0" height="60" angle="0" />
+            <layout ax="521" ay="3341" awidth="140" aheight="60" x="345" y="3552" width="0" height="60" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_827774866626276534" iid="83fd6ee2ad3c4fd78bf3fe0fedb17176" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:16:19" order-index="1" type="entity">
@@ -1131,7 +1189,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <class />
           </item>
           <item id="ddip444934737795250588_548219428758917350" iid="437d12a7a270499ebbe397da2c422517" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="696" ay="3055" awidth="140" aheight="60" x="696" y="3055" width="0" height="60" angle="0" />
+            <layout ax="694" ay="3343" awidth="140" aheight="60" x="694" y="3343" width="0" height="60" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_685429095166991319" iid="f035b92ed0424dfe865e5ee5acc4406a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 17:03:17" order-index="29" type="entity">
@@ -1145,11 +1203,33 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <class />
           </item>
           <item id="ddip444934737795250588_209449566326508205" iid="0d3f73dc5c7249aaaea4ea6936b0f8f9" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:27:23" order-index="32" type="entity">
-            <layout ax="619" ay="2599" awidth="254" aheight="60" x="619" y="2599" width="254" height="60" angle="0" />
+            <layout ax="437" ay="2602" awidth="254" aheight="60" x="437" y="2602" width="254" height="60" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_749421198730940880" iid="b2c3e9e0f00e4e76a1309c4fe46e64ba" container="ddip444934737795250588_765531201735919130" container-iid="b9f88466feb649a295b9dadf4821a124" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:12:34" order-index="30" type="entity">
-            <layout ax="-583" ay="2721" awidth="230" aheight="77" x="-514" y="2694" width="230" height="77" angle="0" />
+            <layout ax="-583" ay="2721" awidth="230" aheight="77" x="-583" y="2721" width="230" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_569068357941320939" iid="a878ffe1a0b444789043651376f70975" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 14:28:31" order-index="33" type="entity">
+            <layout ax="132" ay="2861" awidth="568" aheight="269" x="132" y="2861" width="568" height="269" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_491456648224648817" iid="202863675edb4b9b97530eda181dcddc" container="ddip444934737795250588_569068357941320939" container-iid="a878ffe1a0b444789043651376f70975" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
+            <layout ax="167" ay="2927" awidth="140" aheight="61" x="172" y="2925" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_750480175581263384" iid="fd0821769b284d2cb07fec2927801611" container="ddip444934737795250588_569068357941320939" container-iid="a878ffe1a0b444789043651376f70975" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 14:57:11" order-index="34" type="entity">
+            <layout ax="154" ay="2993" awidth="174" aheight="65" x="154" y="2993" width="174" height="65" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_182730929340991816" iid="28dca7c24548499b8f8ae9886d24d99a" container="ddip444934737795250588_569068357941320939" container-iid="a878ffe1a0b444789043651376f70975" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:11:07" order-index="35" type="entity">
+            <layout ax="349" ay="2926" awidth="140" aheight="36" x="349" y="2926" width="0" height="36" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_731393871449675656" iid="11ed568c0aa1443e9729f4283385bbd2" container="ddip444934737795250588_569068357941320939" container-iid="a878ffe1a0b444789043651376f70975" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:11:07" order-index="35" type="entity">
+            <layout ax="521" ay="2926" awidth="140" aheight="36" x="521" y="2926" width="0" height="36" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_940306934631366786" iid="9e446ec6da844bb6a355e34f1b2b453e" container="ddip444934737795250588_361459928549873470" container-iid="b65e1d88602f4981ae17eacd56261757" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:21:24" order-index="36" type="entity">
+            <layout ax="863" ay="3345" awidth="191" aheight="59" x="863" y="3345" width="191" height="59" angle="0" />
             <class />
           </item>
         </layer>
@@ -1653,7 +1733,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
           </authors>
           <description />
           <creation-date>11/21/2012 13:51:43</creation-date>
-          <change-date>11/22/2012 13:47:18</change-date>
+          <change-date>11/22/2012 14:56:03</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -1800,7 +1880,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="ClientNetworkSystem" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
+          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="FetchNetworkChanges" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1808,12 +1888,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <attributes />
             <operations>
-              <operation id="oe4ceb3ea15df4beba27c6a98ffe3727f842" name="fetchChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
-                <parameters />
-                <stereotypes />
-                <source-codes />
-              </operation>
-              <operation id="o56fd00947bbc4ce9bdf1fec4d64f0621782" name="pushChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+              <operation id="o794ca47b74c244e3833d773f5b2875b6638" name="fetchChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
                 <parameters />
                 <stereotypes />
                 <source-codes />
@@ -1839,7 +1914,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_281979881763560336" cid="PKG009" type="package" name="Players" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:45:25">
+          <item id="ddip308205190938509650_281979881763560336" cid="PKG009" type="package" name="Moving Players" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:45:25">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1847,7 +1922,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_817232752799785198" cid="PKG010" type="package" name="Movin Objects" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:54:09">
+          <item id="ddip308205190938509650_817232752799785198" cid="PKG010" type="package" name="Moving Objects" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:54:09">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1891,13 +1966,30 @@ Could add a Damage component if an entity has a Health component and was collide
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip308205190938509650_591829349576055079" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:47:18">
+          <item id="ddip308205190938509650_591829349576055079" cid="CMT001" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:47:18">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
             <owned-items />
             <style class="default" />
             <comment>Expand to all sort of magical systems! :)</comment>
+          </item>
+          <item id="ddip308205190938509650_986838636679455241" cid="PKG002" type="package" name="Creation Objects" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:21:28">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
+          <item id="ddip308205190938509650_273449858138325918" cid="CMT002" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:26:30">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>Create entities with whatever id and components the server says.
+(Must of course contain NetworkUpdate component)</comment>
           </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
@@ -1989,14 +2081,10 @@ Could add a Damage component if an entity has a Health component and was collide
             <class />
           </item>
           <item id="ddip308205190938509650_259072947978374638" iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:25:16" order-index="31" type="entity">
-            <layout ax="1698" ay="2123" awidth="396" aheight="285" x="1698" y="2123" width="396" height="285" angle="0" />
+            <layout ax="1803" ay="2123" awidth="221" aheight="285" x="1803" y="2123" width="221" height="285" angle="0" />
           </item>
           <item id="ddip444934737795250588_309809110868184931" iid="2493945f468740b7a93cabf0b9e84d06" container="ddip308205190938509650_259072947978374638" container-iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:28:01" order-index="7" type="entity">
-            <layout ax="1921" ay="2201" awidth="140" aheight="177" x="1851" y="1892" width="0" height="177" angle="0" />
-            <class />
-          </item>
-          <item id="ddip444934737795250588_741967710400468481" iid="9848cfc01b2345daa2d8b098f4bf6745" container="ddip308205190938509650_259072947978374638" container-iid="a757b666cb264af29c7d26e14f526ae8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1748" ay="2196" awidth="140" aheight="93" x="1678" y="1887" width="0" height="93" angle="0" />
+            <layout ax="1844" ay="2183" awidth="140" aheight="177" x="1844" y="2183" width="0" height="177" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_123125498209759219" iid="33e186f861cc4090943e9ff4229502a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:25:56" order-index="32" type="entity">
@@ -2019,67 +2107,63 @@ Could add a Damage component if an entity has a Health component and was collide
             <class />
           </item>
           <item id="ddip308205190938509650_163280518787193656" iid="0802a04449294dee968d0f321395f1a9" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:38:52" order-index="34" type="entity">
-            <layout ax="987" ay="3232" awidth="216" aheight="164" x="987" y="3232" width="216" height="164" angle="0" />
-          </item>
-          <item id="ddip444934737795250588_193163518138461156" iid="1f9947f97d654439a5dc7f1dbab5884a" container="ddip308205190938509650_163280518787193656" container-iid="0802a04449294dee968d0f321395f1a9" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:49" order-index="19" type="entity">
-            <layout ax="1023" ay="3295" awidth="140" aheight="60" x="831" y="2841" width="0" height="60" angle="0" />
-            <class />
+            <layout ax="883" ay="3680" awidth="289" aheight="154" x="883" y="3680" width="289" height="154" angle="0" />
           </item>
           <item id="ddip308205190938509650_581797725265529819" iid="cb8baa48f13d4cbfbbf9ab311546a4a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:44:35" order-index="35" type="entity">
-            <layout ax="1725" ay="3022" awidth="1472" aheight="507" x="1725" y="3022" width="1472" height="507" angle="0" />
+            <layout ax="1666" ay="3067" awidth="1472" aheight="516" x="1666" y="3067" width="1472" height="516" angle="0" />
           </item>
           <item id="ddip308205190938509650_281979881763560336" iid="6046996bbaa048ef91bdbdf7106e93b1" container="ddip308205190938509650_581797725265529819" container-iid="cb8baa48f13d4cbfbbf9ab311546a4a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:45:25" order-index="36" type="entity">
-            <layout ax="1762" ay="3085" awidth="749" aheight="403" x="2519" y="3336" width="749" height="403" angle="0" />
+            <layout ax="1703" ay="3130" awidth="749" aheight="403" x="2519" y="3336" width="749" height="403" angle="0" />
           </item>
           <item id="ddip444934737795250588_741967710400468481" iid="0bb85e0fd631485ab888661676fbd1da" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1799" ay="3153" awidth="140" aheight="93" x="1350" y="3486" width="0" height="93" angle="0" />
+            <layout ax="1740" ay="3198" awidth="140" aheight="93" x="1350" y="3486" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_325144104840608954" iid="7f694b2c287d41468c0572c272d978f5" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1969" ay="3152" awidth="140" aheight="127" x="1520" y="3485" width="0" height="127" angle="0" />
+            <layout ax="1910" ay="3197" awidth="140" aheight="127" x="1520" y="3485" width="0" height="127" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_670037811526338301" iid="046dbb16452141bba6c235e7db561be3" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="2148" ay="3156" awidth="140" aheight="77" x="1699" y="3489" width="0" height="77" angle="0" />
+            <layout ax="2089" ay="3201" awidth="140" aheight="77" x="1699" y="3489" width="0" height="77" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_407940731837213620" iid="000af55daeb74f269caef889b76929b7" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
-            <layout ax="2149" ay="3280" awidth="140" aheight="77" x="1700" y="3613" width="0" height="77" angle="0" />
+            <layout ax="2090" ay="3325" awidth="140" aheight="77" x="1700" y="3613" width="0" height="77" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_289788994105956923" iid="c00798541307429c8020d5bb69d9583e" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="1802" ay="3351" awidth="140" aheight="93" x="1353" y="3684" width="0" height="93" angle="0" />
+            <layout ax="1743" ay="3396" awidth="140" aheight="93" x="1353" y="3684" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_298829927493099776" iid="470207b90be84e7897a47fdd20377769" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
-            <layout ax="1974" ay="3350" awidth="140" aheight="61" x="1525" y="3683" width="0" height="61" angle="0" />
+            <layout ax="1915" ay="3395" awidth="140" aheight="61" x="1525" y="3683" width="0" height="61" angle="0" />
             <class />
           </item>
-          <item id="ddip444934737795250588_491456648224648817" iid="eb01f043371f4277869a14fa9097019f" container="ddip308205190938509650_581797725265529819" container-iid="cb8baa48f13d4cbfbbf9ab311546a4a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
-            <layout ax="2326" ay="3158" awidth="140" aheight="61" x="1877" y="3491" width="0" height="61" angle="0" />
+          <item id="ddip444934737795250588_491456648224648817" iid="eb01f043371f4277869a14fa9097019f" container="ddip308205190938509650_281979881763560336" container-iid="6046996bbaa048ef91bdbdf7106e93b1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
+            <layout ax="2267" ay="3203" awidth="140" aheight="61" x="2267" y="3203" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_817232752799785198" iid="ce116c5cdb754b09ab80752ef125c637" container="ddip308205190938509650_581797725265529819" container-iid="cb8baa48f13d4cbfbbf9ab311546a4a3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:54:09" order-index="37" type="entity">
-            <layout ax="2582" ay="3085" awidth="579" aheight="403" x="2852" y="3825" width="579" height="403" angle="0" />
+            <layout ax="2523" ay="3130" awidth="579" aheight="403" x="2852" y="3825" width="579" height="403" angle="0" />
           </item>
           <item id="ddip444934737795250588_741967710400468481" iid="5da0348c3c824b62a87a93ef2add715e" container="ddip308205190938509650_817232752799785198" container-iid="ce116c5cdb754b09ab80752ef125c637" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="2620" ay="3151" awidth="140" aheight="93" x="251" y="3245" width="0" height="93" angle="0" />
+            <layout ax="2561" ay="3196" awidth="140" aheight="93" x="251" y="3245" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_325144104840608954" iid="7c60efad5f25472786d7658fa5172ece" container="ddip308205190938509650_817232752799785198" container-iid="ce116c5cdb754b09ab80752ef125c637" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="2790" ay="3150" awidth="140" aheight="127" x="421" y="3244" width="0" height="127" angle="0" />
+            <layout ax="2731" ay="3195" awidth="140" aheight="127" x="421" y="3244" width="0" height="127" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_289788994105956923" iid="c879e29410784cfab3e704667541790c" container="ddip308205190938509650_817232752799785198" container-iid="ce116c5cdb754b09ab80752ef125c637" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="2623" ay="3349" awidth="140" aheight="93" x="254" y="3443" width="0" height="93" angle="0" />
+            <layout ax="2564" ay="3394" awidth="140" aheight="93" x="254" y="3443" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_298829927493099776" iid="4ff3dfa473b845be8009011ea0c35b53" container="ddip308205190938509650_817232752799785198" container-iid="ce116c5cdb754b09ab80752ef125c637" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
-            <layout ax="2795" ay="3348" awidth="140" aheight="61" x="426" y="3442" width="0" height="61" angle="0" />
+            <layout ax="2736" ay="3393" awidth="140" aheight="61" x="426" y="3442" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_491456648224648817" iid="15a843f6f906498e97bf721ac35b7bef" container="ddip308205190938509650_817232752799785198" container-iid="ce116c5cdb754b09ab80752ef125c637" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
-            <layout ax="2972" ay="3156" awidth="140" aheight="61" x="1342" y="3677" width="0" height="61" angle="0" />
+            <layout ax="2913" ay="3201" awidth="140" aheight="61" x="1342" y="3677" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_826665432958186759" iid="a36c1a612aa94ee09821ffb15245c80b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 16:29:25" order-index="38" type="entity">
@@ -2094,6 +2178,16 @@ Could add a Damage component if an entity has a Health component and was collide
           </item>
           <item id="ddip308205190938509650_591829349576055079" iid="4c71f38e094e47b9b4f98638ac1d3223" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:47:18" order-index="41" type="entity">
             <layout ax="1523" ay="956" awidth="151" aheight="65" x="1523" y="956" width="151" height="65" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_749421198730940880" iid="98961368987e4e479eb5ac35fe80235a" container="ddip308205190938509650_163280518787193656" container-iid="0802a04449294dee968d0f321395f1a9" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:12:34" order-index="30" type="entity">
+            <layout ax="915" ay="3733" awidth="230" aheight="77" x="898" y="3281" width="230" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_986838636679455241" iid="4796fff473094cf5a841a94b1728ac82" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 14:21:28" order-index="42" type="entity">
+            <layout ax="1676" ay="3699" awidth="450" aheight="192" x="1676" y="3699" width="450" height="192" angle="0" />
+          </item>
+          <item id="ddip308205190938509650_273449858138325918" iid="a53fa658d6b14d4e968594bd39837614" container="ddip308205190938509650_986838636679455241" container-iid="4796fff473094cf5a841a94b1728ac82" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 14:26:30" order-index="43" type="entity">
+            <layout ax="1720" ay="3764" awidth="371" aheight="77" x="1209" y="3650" width="371" height="77" angle="0" />
           </item>
         </layer>
       </diagram>
