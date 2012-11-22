@@ -48,6 +48,9 @@
       <type id="'a'" name="'a'" description="" />
       <type id="'d'" name="'d'" description="" />
       <type id="LBM" name="LBM" description="" />
+      <type id="vector&lt; KeyMapping &gt;" name="vector&lt; KeyMapping &gt;" description="" />
+      <type id="ENUM_KEYS (ish...)" name="ENUM_KEYS (ish...)" description="" />
+      <type id="ENUM_ACTIONS" name="ENUM_ACTIONS" description="" />
     </custom-types>
   </types>
   <filters />
@@ -226,7 +229,7 @@
         <source-codes />
       </template-parameters>
     </item>
-    <item id="ddip444934737795250588_193163518138461156" cid="C003" type="class" name="PlayerInput" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:39:49">
+    <item id="ddip444934737795250588_193163518138461156" cid="C003" type="class" name="KeyMappings" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 08:39:49">
       <stereotypes>
         <stereotype name="struct" />
       </stereotypes>
@@ -235,7 +238,7 @@
       <owned-items />
       <style class="default" />
       <attributes>
-        <attribute id="aaa45ad6d892f43fead3f0b61f3380059299" name="controlType" type="int" type-id="int" visibility="public" abstract="false" virtual="false">
+        <attribute id="ac5ef19eef94c4964b2564614baf4cc01672" name="mappings" type="vector&lt; KeyMapping &gt;" type-id="vector&lt; KeyMapping &gt;" visibility="public" abstract="false" virtual="false">
           <stereotypes />
         </attribute>
       </attributes>
@@ -619,7 +622,7 @@
           </authors>
           <description />
           <creation-date>11/20/2012 18:13:03</creation-date>
-          <change-date>11/21/2012 17:03:17</change-date>
+          <change-date>11/22/2012 13:14:10</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -902,6 +905,35 @@
             <comment>Baka in RelativeTransforms i Transforms?
 Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars har den en parent med "originEntity" som id.</comment>
           </item>
+          <item id="ddip444934737795250588_357760234659495467" cid="C001" type="class" name="KeyMapping" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:12:34">
+            <stereotypes>
+              <stereotype name="struct" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="ad4cc6ca238b44f99907f15bcf387afb3557" name="actionIdentity" type="ENUM_ACTIONS" type-id="ENUM_ACTIONS" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a7f15ddf6777d487994aa4d21e5e275b6583" name="key" type="ENUM_KEYS (ish...)" type-id="ENUM_KEYS (ish...)" visibility="public" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+          <item id="ddip444934737795250588_765531201735919130" cid="PKG001" type="package" name="Structs, not Components" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 13:14:10">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <nestedItems />
+          </item>
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
           <item id="ddip444934737795250588_975821143426199912" iid="8c90ebf6bbfc482c8eac36005c2185c1" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:16:19" order-index="1" type="entity">
@@ -982,18 +1014,18 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <layout ax="-89" ay="120" awidth="1375" aheight="34" x="-89" y="120" width="1375" height="34" angle="0" />
           </item>
           <item id="ddip444934737795250588_195028785202658341" iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:20" order-index="18" type="entity">
-            <layout ax="130" ay="2543" awidth="490" aheight="274" x="130" y="2543" width="490" height="250" angle="0" />
+            <layout ax="130" ay="2543" awidth="703" aheight="274" x="130" y="2543" width="703" height="250" angle="0" />
           </item>
           <item id="ddip444934737795250588_491456648224648817" iid="202863675edb4b9b97530eda181dcddc" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
             <layout ax="174" ay="2602" awidth="140" aheight="61" x="204" y="2602" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_193163518138461156" iid="cc72888d59114311a967b3def1450678" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:39:49" order-index="19" type="entity">
-            <layout ax="377" ay="2606" awidth="140" aheight="60" x="407" y="2296" width="0" height="60" angle="0" />
+            <layout ax="350" ay="2600" awidth="228" aheight="62" x="350" y="2600" width="228" height="62" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_969546679723307915" iid="72a801e8044f447696027de96b9e2379" container="ddip444934737795250588_195028785202658341" container-iid="7c28c34acda14001a3f9912c77a42d6b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:40:26" order-index="20" type="entity">
-            <layout ax="374" ay="2690" awidth="177" aheight="100" x="404" y="2380" width="177" height="0" angle="0" />
+            <layout ax="379" ay="2672" awidth="177" aheight="100" x="379" y="2672" width="177" height="0" angle="0" />
           </item>
           <item id="ddip444934737795250588_649125120135551913" iid="6357e4fb26ae4e98868dad500373b1c8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:42:13" order-index="21" type="entity">
             <layout ax="129" ay="2198" awidth="514" aheight="300" x="129" y="2198" width="514" height="300" angle="0" />
@@ -1061,6 +1093,13 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
           </item>
           <item id="ddip444934737795250588_685429095166991319" iid="f035b92ed0424dfe865e5ee5acc4406a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 17:03:17" order-index="29" type="entity">
             <layout ax="838" ay="922" awidth="392" aheight="90" x="838" y="922" width="392" height="90" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_765531201735919130" iid="b9f88466feb649a295b9dadf4821a124" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:14:10" order-index="31" type="entity">
+            <layout ax="-544" ay="2519" awidth="330" aheight="200" x="-544" y="2519" width="330" height="0" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_357760234659495467" iid="d45d5a69e344439e86bda481bcb6bfa9" container="ddip444934737795250588_765531201735919130" container-iid="b9f88466feb649a295b9dadf4821a124" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:12:34" order-index="30" type="entity">
+            <layout ax="-510" ay="2595" awidth="230" aheight="77" x="-520" y="2777" width="230" height="77" angle="0" />
+            <class />
           </item>
         </layer>
       </diagram>
@@ -1992,110 +2031,6 @@ Could add a Damage component if an entity has a Health component and was collide
           </item>
           <item id="ddip308205190938509650_868020972901685280" iid="4d17f7e3fe124e2f96a357e44dc8ad13" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 16:31:50" order-index="40" type="entity">
             <layout ax="1296" ay="909" awidth="205" aheight="160" x="1296" y="909" width="205" height="0" angle="0" />
-            <class />
-          </item>
-        </layer>
-      </diagram>
-    </model>
-    <model id="p562619008606378575" name="Model 4" type="" namespace="" order-index="4">
-      <meta>
-        <authors>
-          <author> </author>
-        </authors>
-        <description />
-        <creation-date>11/22/2012 10:58:22</creation-date>
-        <change-date>01/01/0001 00:00:00</change-date>
-        <revision-count>0</revision-count>
-        <version />
-      </meta>
-      <tagged-values />
-      <abstract-items />
-      <sub-models />
-      <diagram type="uml-mixed" id="p385954182902167062" name="InputSystem flow" order-index="3" show-nullability="false">
-        <style>
-          <background-color index="1" color="#FFFFFFFF" />
-          <background-color index="2" color="#FFFFFFFF" />
-          <background-type type="solid" />
-        </style>
-        <meta>
-          <authors>
-            <author> </author>
-          </authors>
-          <description />
-          <creation-date>11/22/2012 11:01:54</creation-date>
-          <change-date>11/22/2012 11:02:07</change-date>
-          <revision-count>0</revision-count>
-          <version />
-        </meta>
-        <tagged-values />
-        <abstract-items>
-          <item id="ddip642571697505095378_828781196640319169" cid="DFS001" type="dfd-data-store" name="PlayerEntity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 10:59:19">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip642571697505095378_839557264410115599" cid="DFP001" type="dfd-process" name="InputSystem" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:00:16">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip642571697505095378_559878850441909843" cid="DFE001" type="dfd-external" name="Input from devices" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:00:27">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-          </item>
-          <item id="ddip385954182902167062_104529643668767359" cid="C001" type="class" name="KeyMappings" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:02:07">
-            <stereotypes>
-              <stereotype name="component" />
-            </stereotypes>
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes>
-              <attribute id="a67af5d8e5e434314803cefa387664cf315" name="MoveForward" type="'w'" type-id="'w'" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a0a428c0a60174e23a6c13f5f16438d20656" name="MoveBack" type="'s'" type-id="'s'" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a1788fabe7186433e99552451114ab7de33" name="StrafeLeft" type="'a'" type-id="'a'" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a37b24f09d1724382aba2c2565c3d945d216" name="StrafeRight" type="'d'" type-id="'d'" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="acdbbb502f7254b57afa67811c5b3c911476" name="TriggerWeapon1" type="LBM" type-id="LBM" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-              <attribute id="a812eae8ddbe14210928e3ea8871d477c607" name="etc ... ... ... ..." type="" type-id="" visibility="private" abstract="false" virtual="false">
-                <stereotypes />
-              </attribute>
-            </attributes>
-            <operations />
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
-          </item>
-        </abstract-items>
-        <layer name="Default" visible="true" enabled="true" locked="false">
-          <item id="ddip642571697505095378_828781196640319169" iid="ab4cd9dc4bee41c0b52fcf8c06c9e22a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 10:59:19" order-index="0" type="entity">
-            <layout ax="294" ay="274" awidth="120" aheight="50" x="294" y="274" width="0" height="0" angle="0" />
-          </item>
-          <item id="ddip642571697505095378_839557264410115599" iid="806df98f785b4f938d9667a70bbfdce8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:00:16" order-index="1" type="entity">
-            <layout ax="791" ay="239" awidth="120" aheight="90" x="791" y="239" width="0" height="0" angle="0" />
-          </item>
-          <item id="ddip642571697505095378_559878850441909843" iid="775e7ae9f5fb48139c935562079de535" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:00:27" order-index="2" type="entity">
-            <layout ax="1031" ay="249" awidth="120" aheight="70" x="1031" y="249" width="0" height="0" angle="0" />
-          </item>
-          <item id="ddip385954182902167062_104529643668767359" iid="f3d6b1ad6b584efb83b7b4961cbb2801" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:02:07" order-index="3" type="entity">
-            <layout ax="518" ay="257" awidth="169" aheight="143" x="518" y="257" width="169" height="143" angle="0" />
             <class />
           </item>
         </layer>
