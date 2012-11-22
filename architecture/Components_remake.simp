@@ -43,6 +43,11 @@
       <type id="Matrix?" name="Matrix?" description="" />
       <type id="vo" name="vo" description="" />
       <type id="int/other" name="int/other" description="" />
+      <type id="'w'" name="'w'" description="" />
+      <type id="'s'" name="'s'" description="" />
+      <type id="'a'" name="'a'" description="" />
+      <type id="'d'" name="'d'" description="" />
+      <type id="LBM" name="LBM" description="" />
     </custom-types>
   </types>
   <filters />
@@ -568,14 +573,14 @@
         <source-codes />
       </template-parameters>
     </item>
-    <item id="di391343647408855314" cid="IFC001" type="uml-interface" name="Interface1" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:50">
+    <item id="di391343647408855314" cid="IFC001" type="uml-interface" name="Interface1" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:50">
       <stereotypes />
       <tagged-values />
       <associated-diagrams />
       <owned-items />
       <style class="default" />
     </item>
-    <item id="di244085389770006651" cid="REL001" type="relationship" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:50">
+    <item id="di244085389770006651" cid="REL001" type="relationship" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:50">
       <stereotypes />
       <tagged-values />
       <associated-diagrams />
@@ -888,7 +893,7 @@
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip444934737795250588_685429095166991319" cid="CMT003" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 17:03:17">
+          <item id="ddip444934737795250588_685429095166991319" cid="CMT003" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 17:03:17">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1760,7 +1765,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_826665432958186759" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:29:25">
+          <item id="ddip308205190938509650_826665432958186759" cid="CMT001" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:29:25">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1770,7 +1775,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
 
 Could add a Damage component if an entity has a Health component and was collided with a certain impact. (Physics could also return just an Impact component and let Gameplay handle damage.)</comment>
           </item>
-          <item id="ddip308205190938509650_428778990590495313" cid="CMT002" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:25">
+          <item id="ddip308205190938509650_428778990590495313" cid="CMT002" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:30:25">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1778,7 +1783,7 @@ Could add a Damage component if an entity has a Health component and was collide
             <style class="default" />
             <comment>No Component is changed.</comment>
           </item>
-          <item id="ddip308205190938509650_868020972901685280" cid="C001" type="class" name="Gameplay" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:31:50">
+          <item id="ddip308205190938509650_868020972901685280" cid="C001" type="class" name="Gameplay" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:31:50">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -1799,7 +1804,7 @@ Could add a Damage component if an entity has a Health component and was collide
         </abstract-items>
         <layer name="Default" visible="true" enabled="true" locked="false">
           <item id="ddip308205190938509650_358864680968362128" iid="87aaeeb39d4641b0a6fae52cd187aeca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:52:08" order-index="0" type="entity">
-            <layout ax="1287" ay="1061" awidth="234" aheight="121" x="1287" y="1061" width="234" height="121" angle="0" />
+            <layout ax="1301" ay="1525" awidth="234" aheight="121" x="1301" y="1525" width="234" height="121" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_654009842782219764" iid="d59b64c44cdb46d9ac9b44aa570d0059" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:57:25" order-index="1" type="entity">
@@ -1807,7 +1812,7 @@ Could add a Damage component if an entity has a Health component and was collide
             <class />
           </item>
           <item id="ddip308205190938509650_981654874951187236" iid="55fe9286c8a6446fb006482586719476" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:58:46" order-index="2" type="entity">
-            <layout ax="1610" ay="1048" awidth="157" aheight="127" x="1610" y="1048" width="157" height="127" angle="0" />
+            <layout ax="1624" ay="1512" awidth="157" aheight="127" x="1624" y="1512" width="157" height="127" angle="0" />
           </item>
           <item id="ddip308205190938509650_562078985984623609" iid="520244dc72f04747a2842da528452bf6" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:59:58" order-index="3" type="entity">
             <layout ax="1556" ay="435" awidth="140" aheight="100" x="1556" y="435" width="0" height="0" angle="0" />
@@ -1817,30 +1822,30 @@ Could add a Damage component if an entity has a Health component and was collide
             <class />
           </item>
           <item id="ddip308205190938509650_973435449622636934" iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:21:22" order-index="28" type="entity">
-            <layout ax="541" ay="943" awidth="605" aheight="395" x="541" y="943" width="605" height="395" angle="0" />
+            <layout ax="555" ay="1407" awidth="605" aheight="395" x="555" y="1407" width="605" height="395" angle="0" />
           </item>
           <item id="ddip444934737795250588_632512983141046513" iid="418c20a7163749dba6992f4f5ad58165" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:42:22" order-index="22" type="entity">
-            <layout ax="758" ay="1015" awidth="161" aheight="128" x="152" y="1272" width="161" height="128" angle="0" />
+            <layout ax="772" ay="1479" awidth="161" aheight="128" x="166" y="1736" width="161" height="128" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_379610232931985266" iid="0d41094e156b49248e7fc07980210807" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 13:47:36" order-index="25" type="entity">
-            <layout ax="760" ay="1194" awidth="140" aheight="37" x="154" y="1451" width="0" height="37" angle="0" />
+            <layout ax="774" ay="1658" awidth="140" aheight="37" x="168" y="1915" width="0" height="37" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_741967710400468481" iid="dd3ecf03280244f9a620f26142c8b3ce" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="958" ay="1023" awidth="140" aheight="93" x="352" y="1280" width="0" height="93" angle="0" />
+            <layout ax="972" ay="1487" awidth="140" aheight="93" x="366" y="1744" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_325144104840608954" iid="f8a4be72a4c44b7bb1e1ead8f8a0648d" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="949" ay="1173" awidth="140" aheight="127" x="343" y="1430" width="0" height="127" angle="0" />
+            <layout ax="963" ay="1637" awidth="140" aheight="127" x="357" y="1894" width="0" height="127" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_289788994105956923" iid="65a4ce7dd8644503ad58fd379a0d7449" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
-            <layout ax="578" ay="1121" awidth="140" aheight="93" x="-28" y="1378" width="0" height="93" angle="0" />
+            <layout ax="592" ay="1585" awidth="140" aheight="93" x="-14" y="1842" width="0" height="93" angle="0" />
             <class />
           </item>
           <item id="ddip444934737795250588_298829927493099776" iid="1906221241214b93bb01889d3f156d97" container="ddip308205190938509650_973435449622636934" container-iid="86ad444d816747f096c24b3f22797db0" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
-            <layout ax="576" ay="1008" awidth="140" aheight="61" x="-30" y="1265" width="0" height="61" angle="0" />
+            <layout ax="590" ay="1472" awidth="140" aheight="61" x="-16" y="1729" width="0" height="61" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_555169310689064346" iid="e294da41a230422ea09f2e668319a67b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:22:32" order-index="29" type="entity">
@@ -1980,13 +1985,117 @@ Could add a Damage component if an entity has a Health component and was collide
             <class />
           </item>
           <item id="ddip308205190938509650_826665432958186759" iid="a36c1a612aa94ee09821ffb15245c80b" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 16:29:25" order-index="38" type="entity">
-            <layout ax="1266" ay="1190" awidth="296" aheight="168" x="1266" y="1190" width="296" height="168" angle="0" />
+            <layout ax="1280" ay="1654" awidth="296" aheight="168" x="1280" y="1654" width="296" height="168" angle="0" />
           </item>
           <item id="ddip308205190938509650_428778990590495313" iid="2d682c2e37e840498612bead337bb7c5" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 16:30:25" order-index="39" type="entity">
             <layout ax="1326" ay="2494" awidth="213" aheight="31" x="1326" y="2494" width="213" height="31" angle="0" />
           </item>
           <item id="ddip308205190938509650_868020972901685280" iid="4d17f7e3fe124e2f96a357e44dc8ad13" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 16:31:50" order-index="40" type="entity">
-            <layout ax="1316" ay="1633" awidth="205" aheight="160" x="1316" y="1633" width="205" height="0" angle="0" />
+            <layout ax="1296" ay="909" awidth="205" aheight="160" x="1296" y="909" width="205" height="0" angle="0" />
+            <class />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+    <model id="p562619008606378575" name="Model 4" type="" namespace="" order-index="4">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>11/22/2012 10:58:22</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <tagged-values />
+      <abstract-items />
+      <sub-models />
+      <diagram type="uml-mixed" id="p385954182902167062" name="InputSystem flow" order-index="3" show-nullability="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>11/22/2012 11:01:54</creation-date>
+          <change-date>11/22/2012 11:02:07</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <tagged-values />
+        <abstract-items>
+          <item id="ddip642571697505095378_828781196640319169" cid="DFS001" type="dfd-data-store" name="PlayerEntity" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 10:59:19">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="ddip642571697505095378_839557264410115599" cid="DFP001" type="dfd-process" name="InputSystem" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:00:16">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="ddip642571697505095378_559878850441909843" cid="DFE001" type="dfd-external" name="Input from devices" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:00:27">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+          </item>
+          <item id="ddip385954182902167062_104529643668767359" cid="C001" type="class" name="KeyMappings" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 11:02:07">
+            <stereotypes>
+              <stereotype name="component" />
+            </stereotypes>
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <attributes>
+              <attribute id="a67af5d8e5e434314803cefa387664cf315" name="MoveForward" type="'w'" type-id="'w'" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a0a428c0a60174e23a6c13f5f16438d20656" name="MoveBack" type="'s'" type-id="'s'" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a1788fabe7186433e99552451114ab7de33" name="StrafeLeft" type="'a'" type-id="'a'" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a37b24f09d1724382aba2c2565c3d945d216" name="StrafeRight" type="'d'" type-id="'d'" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="acdbbb502f7254b57afa67811c5b3c911476" name="TriggerWeapon1" type="LBM" type-id="LBM" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+              <attribute id="a812eae8ddbe14210928e3ea8871d477c607" name="etc ... ... ... ..." type="" type-id="" visibility="private" abstract="false" virtual="false">
+                <stereotypes />
+              </attribute>
+            </attributes>
+            <operations />
+            <template-parameters>
+              <source-codes />
+            </template-parameters>
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="ddip642571697505095378_828781196640319169" iid="ab4cd9dc4bee41c0b52fcf8c06c9e22a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 10:59:19" order-index="0" type="entity">
+            <layout ax="294" ay="274" awidth="120" aheight="50" x="294" y="274" width="0" height="0" angle="0" />
+          </item>
+          <item id="ddip642571697505095378_839557264410115599" iid="806df98f785b4f938d9667a70bbfdce8" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:00:16" order-index="1" type="entity">
+            <layout ax="791" ay="239" awidth="120" aheight="90" x="791" y="239" width="0" height="0" angle="0" />
+          </item>
+          <item id="ddip642571697505095378_559878850441909843" iid="775e7ae9f5fb48139c935562079de535" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:00:27" order-index="2" type="entity">
+            <layout ax="1031" ay="249" awidth="120" aheight="70" x="1031" y="249" width="0" height="0" angle="0" />
+          </item>
+          <item id="ddip385954182902167062_104529643668767359" iid="f3d6b1ad6b584efb83b7b4961cbb2801" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 11:02:07" order-index="3" type="entity">
+            <layout ax="518" ay="257" awidth="169" aheight="143" x="518" y="257" width="169" height="143" angle="0" />
             <class />
           </item>
         </layer>
