@@ -619,6 +619,74 @@
         <source-codes />
       </template-parameters>
     </item>
+    <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="NetworkFetchChanges" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="o794ca47b74c244e3833d773f5b2875b6638" name="fetchChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <source-codes />
+        </operation>
+      </operations>
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
+    <item id="ddip308205190938509650_581797725265529819" cid="PKG008" type="package" name="Fetch from Server" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:44:35">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="ddip308205190938509650_281979881763560336" cid="PKG009" type="package" name="Moving Players" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:45:25">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="ddip308205190938509650_817232752799785198" cid="PKG010" type="package" name="Moving Objects" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:54:09">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="ddip308205190938509650_163280518787193656" cid="PKG006" type="package" name="Push to Server" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:38:52">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="ddip308205190938509650_841652991266554747" cid="C004" type="class" name="NetworkClientPushChanges" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:25:17">
+      <stereotypes />
+      <tagged-values />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="o1864512b57724a89a3088e3c78ee2da6720" name="pushChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <source-codes />
+        </operation>
+      </operations>
+      <template-parameters>
+        <source-codes />
+      </template-parameters>
+    </item>
   </items>
   <models>
     <model id="p403521307712377946" name="Model 1" type="model" namespace="" order-index="1">
@@ -985,7 +1053,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip444934737795250588_750480175581263384" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:57:11">
+          <item id="ddip444934737795250588_750480175581263384" cid="CMT001" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 14:57:11">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -993,7 +1061,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <comment>The first 8 bits could be "machine id", the last 24 bits could be "entity id".</comment>
           </item>
-          <item id="ddip444934737795250588_182730929340991816" cid="C002" type="class" name="Created" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
+          <item id="ddip444934737795250588_182730929340991816" cid="C002" type="class" name="Created" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -1007,7 +1075,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_731393871449675656" cid="C002" type="class" name="Deleted" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
+          <item id="ddip444934737795250588_731393871449675656" cid="C002" type="class" name="Deleted" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:11:07">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -1021,7 +1089,7 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip444934737795250588_940306934631366786" cid="C003" type="class" name="Lifetime" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:21:24">
+          <item id="ddip444934737795250588_940306934631366786" cid="C003" type="class" name="Lifetime" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:21:24">
             <stereotypes>
               <stereotype name="struct" />
             </stereotypes>
@@ -1880,56 +1948,6 @@ Om exempelvis "originEntity" är 0 så har transformationen ingen parent. Annars
             <style class="default" />
             <nestedItems />
           </item>
-          <item id="ddip308205190938509650_594716461761107808" cid="C001" type="class" name="NetworkFetchChanges" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:29:57">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes />
-            <operations>
-              <operation id="o794ca47b74c244e3833d773f5b2875b6638" name="fetchChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
-                <parameters />
-                <stereotypes />
-                <source-codes />
-              </operation>
-            </operations>
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
-          </item>
-          <item id="ddip308205190938509650_163280518787193656" cid="PKG006" type="package" name="Push to Server" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:38:52">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <nestedItems />
-          </item>
-          <item id="ddip308205190938509650_581797725265529819" cid="PKG008" type="package" name="Fetch from Server" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:44:35">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <nestedItems />
-          </item>
-          <item id="ddip308205190938509650_281979881763560336" cid="PKG009" type="package" name="Moving Players" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:45:25">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <nestedItems />
-          </item>
-          <item id="ddip308205190938509650_817232752799785198" cid="PKG010" type="package" name="Moving Objects" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 15:54:09">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <nestedItems />
-          </item>
           <item id="ddip308205190938509650_826665432958186759" cid="CMT001" type="comment" name="" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/21/2012 16:29:25">
             <stereotypes />
             <tagged-values />
@@ -1991,25 +2009,7 @@ Could add a Damage component if an entity has a Health component and was collide
             <comment>Create entities with whatever id and components the server says.
 (Must of course contain NetworkUpdate component)</comment>
           </item>
-          <item id="ddip308205190938509650_841652991266554747" cid="C004" type="class" name="NetworkPushChanges" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:25:17">
-            <stereotypes />
-            <tagged-values />
-            <associated-diagrams />
-            <owned-items />
-            <style class="default" />
-            <attributes />
-            <operations>
-              <operation id="o1864512b57724a89a3088e3c78ee2da6720" name="pushChanges" type="void" type-id="void" visibility="private" abstract="false" virtual="false" static="false">
-                <parameters />
-                <stereotypes />
-                <source-codes />
-              </operation>
-            </operations>
-            <template-parameters>
-              <source-codes />
-            </template-parameters>
-          </item>
-          <item id="ddip308205190938509650_450766004660169393" cid="C005" type="class" name="NetworkPushCreation" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:12">
+          <item id="ddip308205190938509650_450766004660169393" cid="C005" type="class" name="NetworkPushCreation" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:12">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -2027,7 +2027,7 @@ Could add a Damage component if an entity has a Health component and was collide
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip308205190938509650_924583562154899868" cid="C006" type="class" name="NetworkFetchCreation" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:48">
+          <item id="ddip308205190938509650_924583562154899868" cid="C006" type="class" name="NetworkFetchCreation" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:48">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -2045,7 +2045,7 @@ Could add a Damage component if an entity has a Health component and was collide
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip308205190938509650_865342237345877701" cid="C005" type="class" name="NetworkPushDeletion" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:12">
+          <item id="ddip308205190938509650_865342237345877701" cid="C005" type="class" name="NetworkPushDeletion" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:12">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -2063,7 +2063,7 @@ Could add a Damage component if an entity has a Health component and was collide
               <source-codes />
             </template-parameters>
           </item>
-          <item id="ddip308205190938509650_133939418488327602" cid="C006" type="class" name="NetworkFetchDeletion" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:48">
+          <item id="ddip308205190938509650_133939418488327602" cid="C006" type="class" name="NetworkFetchDeletion" style-class="default" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/22/2012 15:30:48">
             <stereotypes />
             <tagged-values />
             <associated-diagrams />
@@ -2280,7 +2280,7 @@ Could add a Damage component if an entity has a Health component and was collide
             <layout ax="757" ay="4784" awidth="371" aheight="77" x="1211" y="3884" width="371" height="77" angle="0" />
           </item>
           <item id="ddip308205190938509650_841652991266554747" iid="ed908e99b65a4ee7bad5c677abf7a26c" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:25:17" order-index="44" type="entity">
-            <layout ax="1347" ay="3864" awidth="148" aheight="53" x="1347" y="3864" width="148" height="53" angle="0" />
+            <layout ax="1296" ay="3872" awidth="240" aheight="53" x="1296" y="3872" width="240" height="53" angle="0" />
             <class />
           </item>
           <item id="ddip308205190938509650_450766004660169393" iid="070bad282b30496a90460ca08f6fa078" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:30:12" order-index="45" type="entity">
@@ -2298,6 +2298,181 @@ Could add a Damage component if an entity has a Health component and was collide
           <item id="ddip308205190938509650_133939418488327602" iid="5ea7660efb9a4cf1a551b3d38e32a91a" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:30:48" order-index="46" type="entity">
             <layout ax="1342" ay="5356" awidth="183" aheight="66" x="1342" y="5356" width="183" height="66" angle="0" />
             <class />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+    <model id="p745226525531732765" name="Network" type="" namespace="" order-index="4">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>11/23/2012 08:17:41</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <tagged-values />
+      <abstract-items />
+      <sub-models />
+      <diagram type="uml-class" id="p322859237160124074" name="NetworkFetchChanges" order-index="1" show-nullability="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>11/23/2012 08:17:56</creation-date>
+          <change-date>11/23/2012 08:19:35</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <tagged-values />
+        <abstract-items>
+          <item id="ddip322859237160124074_134316129119533350" cid="CMT001" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/23/2012 08:19:12">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>SYSTEM</comment>
+          </item>
+          <item id="ddip322859237160124074_114711440586206435" cid="CMT002" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/23/2012 08:19:35">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>ASPECTS</comment>
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="ddip308205190938509650_594716461761107808" iid="e4076ca3cd104542a41e5fb661c0f5d3" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:29:57" order-index="33" type="entity">
+            <layout ax="-825" ay="405" awidth="166" aheight="80" x="-825" y="405" width="166" height="80" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_581797725265529819" iid="3a6edb04d0394fddb5e63bfd619659bc" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:44:35" order-index="35" type="entity">
+            <layout ax="-2468" ay="189" awidth="1472" aheight="516" x="-2468" y="189" width="1472" height="516" angle="0" />
+          </item>
+          <item id="ddip308205190938509650_281979881763560336" iid="f6c2c7d47dc14133b223af67368a52ca" container="ddip308205190938509650_581797725265529819" container-iid="3a6edb04d0394fddb5e63bfd619659bc" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:45:25" order-index="36" type="entity">
+            <layout ax="-2431" ay="252" awidth="749" aheight="403" x="285" y="475" width="749" height="403" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="4cacd12207e74a5eb91dbe8aa12c0210" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-2394" ay="320" awidth="140" aheight="93" x="-884" y="625" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" iid="38f3721cfcaa4e8e89357d34291ce8db" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-2224" ay="319" awidth="140" aheight="127" x="-714" y="624" width="0" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_670037811526338301" iid="f2bf552c98e54bbca7b4a0ef0fc228f5" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
+            <layout ax="-2045" ay="323" awidth="140" aheight="77" x="-535" y="628" width="0" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_407940731837213620" iid="a02ef2775b4340a9867fb1065c34d00b" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:32:25" order-index="16" type="entity">
+            <layout ax="-2044" ay="447" awidth="140" aheight="77" x="-534" y="752" width="0" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" iid="195fcfc9772845459453c31fda270d85" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-2391" ay="518" awidth="140" aheight="93" x="-881" y="823" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_298829927493099776" iid="d8ad29ecf40b4688aa231ac4772a3495" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
+            <layout ax="-2219" ay="517" awidth="140" aheight="61" x="-709" y="822" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_491456648224648817" iid="a295ce7153a24067be87221a7f6892f0" container="ddip308205190938509650_281979881763560336" container-iid="f6c2c7d47dc14133b223af67368a52ca" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
+            <layout ax="-1867" ay="325" awidth="140" aheight="61" x="33" y="342" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_817232752799785198" iid="361ee6cd875f41deb93668a6803a173f" container="ddip308205190938509650_581797725265529819" container-iid="3a6edb04d0394fddb5e63bfd619659bc" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:54:09" order-index="37" type="entity">
+            <layout ax="-1611" ay="252" awidth="579" aheight="403" x="618" y="964" width="579" height="403" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_741967710400468481" iid="5081edb3df4940939a056f80b780eb22" container="ddip308205190938509650_817232752799785198" container-iid="361ee6cd875f41deb93668a6803a173f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-1573" ay="318" awidth="140" aheight="93" x="-1983" y="384" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_325144104840608954" iid="ef9676770f1a4736b96349d19520f214" container="ddip308205190938509650_817232752799785198" container-iid="361ee6cd875f41deb93668a6803a173f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-1403" ay="317" awidth="140" aheight="127" x="-1813" y="383" width="0" height="127" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_289788994105956923" iid="61c49d99b17d4508978ccc25c4d34c3b" container="ddip308205190938509650_817232752799785198" container-iid="361ee6cd875f41deb93668a6803a173f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/20/2012 18:13:22" order-index="0" type="entity">
+            <layout ax="-1570" ay="516" awidth="140" aheight="93" x="-1980" y="582" width="0" height="93" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_298829927493099776" iid="5655455d8ac149d3b0c46f6b63f64401" container="ddip308205190938509650_817232752799785198" container-iid="361ee6cd875f41deb93668a6803a173f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 14:50:11" order-index="27" type="entity">
+            <layout ax="-1398" ay="515" awidth="140" aheight="61" x="-1808" y="581" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip444934737795250588_491456648224648817" iid="1b383d3e1038477f846304399a4f8a5a" container="ddip308205190938509650_817232752799785198" container-iid="361ee6cd875f41deb93668a6803a173f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 08:36:54" order-index="17" type="entity">
+            <layout ax="-1221" ay="323" awidth="140" aheight="61" x="-892" y="816" width="0" height="61" angle="0" />
+            <class />
+          </item>
+          <item id="ddip322859237160124074_134316129119533350" iid="808a672a11eb4f6b84cfe4d5dd03ecd5" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/23/2012 08:19:12" order-index="38" type="entity">
+            <layout ax="-696" ay="469" awidth="91" aheight="41" x="-696" y="469" width="91" height="41" angle="0" />
+          </item>
+          <item id="ddip322859237160124074_114711440586206435" iid="e6d1e428f15445428834e0436c156810" container="ddip308205190938509650_581797725265529819" container-iid="3a6edb04d0394fddb5e63bfd619659bc" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/23/2012 08:19:35" order-index="39" type="entity">
+            <layout ax="-1908" ay="192" awidth="134" aheight="43" x="-1908" y="192" width="134" height="43" angle="0" />
+          </item>
+        </layer>
+      </diagram>
+      <diagram type="uml-class" id="p275156614141784541" name="NetworkClientPushChanges" order-index="2" show-nullability="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>11/23/2012 08:38:24</creation-date>
+          <change-date>11/23/2012 08:41:02</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <tagged-values />
+        <abstract-items>
+          <item id="ddip275156614141784541_240850988502106933" cid="CMT003" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/23/2012 08:40:49">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>ASPECTS</comment>
+          </item>
+          <item id="ddip275156614141784541_711808779798737915" cid="CMT004" type="comment" name="" style-class="" is-abstract="false" is-root="false" is-leaf="false" is-active="false" creation-date="11/23/2012 08:41:02">
+            <stereotypes />
+            <tagged-values />
+            <associated-diagrams />
+            <owned-items />
+            <style class="default" />
+            <comment>SYSTEM</comment>
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="ddip308205190938509650_163280518787193656" iid="68265e5db0784d078129609aabfb69ac" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/21/2012 15:38:52" order-index="34" type="entity">
+            <layout ax="21" ay="24" awidth="293" aheight="154" x="21" y="24" width="293" height="154" angle="0" />
+          </item>
+          <item id="ddip444934737795250588_749421198730940880" iid="e54813747ac14ae2a7186c4662cbc76a" container="ddip308205190938509650_163280518787193656" container-iid="68265e5db0784d078129609aabfb69ac" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 13:12:34" order-index="30" type="entity">
+            <layout ax="53" ay="77" awidth="230" aheight="77" x="53" y="-514" width="230" height="77" angle="0" />
+            <class />
+          </item>
+          <item id="ddip308205190938509650_841652991266554747" iid="b93b6d48b1004ba293fa008cb3e55cab" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/22/2012 15:25:17" order-index="44" type="entity">
+            <layout ax="451" ay="77" awidth="240" aheight="53" x="451" y="77" width="240" height="53" angle="0" />
+            <class />
+          </item>
+          <item id="ddip275156614141784541_240850988502106933" iid="2b41d4cd639541d6a38856250acfd656" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/23/2012 08:40:49" order-index="45" type="entity">
+            <layout ax="239" ay="21" awidth="122" aheight="38" x="239" y="21" width="122" height="38" angle="0" />
+          </item>
+          <item id="ddip275156614141784541_711808779798737915" iid="b409c8cce74b4582ad0461cd94fbd63f" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" creation-date="11/23/2012 08:41:02" order-index="46" type="entity">
+            <layout ax="647" ay="116" awidth="109" aheight="32" x="647" y="116" width="109" height="32" angle="0" />
           </item>
         </layer>
       </diagram>
