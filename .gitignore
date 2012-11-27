@@ -19,6 +19,9 @@
 *.log
 *.tlog
 *.zip
+*.manifest
+*.res
+*.rc
 
 #[Dd]ebug*/
 *.sbr
@@ -32,7 +35,6 @@ lib-mingw/
 docs/
 doc/
 *.lastbuildstate
-External/DirectX/
 
 #own
 #[Oo]bj*/
@@ -40,7 +42,6 @@ External/DirectX/
 *.*sdf*
 #*.PIXExp
 #*/bin/
-*.user
 *.lib
 *.o
 *.a
@@ -58,3 +59,4 @@ External/DirectX/
 #folders
 docs
 assets
+External/DirectX/
