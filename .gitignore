@@ -19,7 +19,6 @@
 *.log
 *.tlog
 *.zip
-*.user
 
 #[Dd]ebug*/
 *.sbr
