@@ -33,6 +33,7 @@ lib-mingw/
 docs/
 doc/
 *.lastbuildstate
+External/DirectX/
 
 #own
 #[Oo]bj*/
