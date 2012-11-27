@@ -38,7 +38,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\Lib\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\Lib\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>

@@ -40,9 +40,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Build\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Build\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
