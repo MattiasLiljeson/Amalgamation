@@ -20,6 +20,10 @@
 *.tlog
 *.zip
 *.user
+*.manifest
+*.res
+*.unsuccessfulbuild
+*.rc
 
 #[Dd]ebug*/
 *.sbr
