@@ -131,10 +131,17 @@ void D3DRender::initBuffers()
 
 void D3DRender::beginDraw()
 {
+	static float ClearColor[4] = { 1, 0, 0, 1.0f };
+	m_deviceContext->ClearRenderTargetView(m_backBuffer,ClearColor);
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, m_depthStencilView);
 }
 
 void D3DRender::render()
 {
 
+}
+
+void D3DRender::presentFrame()
+{
+	m_swapChain->Present(0,0);
 }

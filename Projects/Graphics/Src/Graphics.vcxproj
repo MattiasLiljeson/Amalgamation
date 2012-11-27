@@ -51,19 +51,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)\External\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\DirectX\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(ProjectDir)\..\Obj\$(Configuration)</IntDir>
+    <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SolutionDir)External\DirectX\Include;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)\External\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\DirectX\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(ProjectDir)\..\Obj\$(Configuration)</IntDir>
+    <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SolutionDir)External\DirectX\Include;$(SourcePath)</SourcePath>
   </PropertyGroup>

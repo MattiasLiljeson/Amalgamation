@@ -19,8 +19,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		return -1;
 	}
 
-
-
 	__int64 cntsPerSec = 0;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
 	float secsPerCnt = 1.0f / (float)cntsPerSec;
@@ -44,10 +42,14 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			float dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
 			prevTimeStamp = currTimeStamp;
+
+			renderer->beginDraw();
+			renderer->presentFrame();
 		}
 	}
 
 	delete window;
+	delete renderer;
 
 	return 9001;
 }
