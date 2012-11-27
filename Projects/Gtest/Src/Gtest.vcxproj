@@ -49,7 +49,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)/Projects/Gameplay/src;$(SolutionDir)/External/Gtest/Include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <IncludePath>$(SolutionDir)/External/Gtest/Include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(SolutionDir)/Projects/AssetManagement/src;$(SolutionDir)/Projects/Audio/src;$(SolutionDir)/Projects/ClientApp/src;$(SolutionDir)/Projects/ES/src;$(SolutionDir)/Projects/Gameplay/src;$(SolutionDir)/Projects/Graphics/src;$(SolutionDir)/Projects/Input/src;$(SolutionDir)/Projects/NetComm/src;$(SolutionDir)/Projects/Physics/src;$(SolutionDir)/Projects/ServerApp/src</IncludePath>
     <LibraryPath>$(SolutionDir)/External/Gtest/lib/(x86) debug;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
@@ -57,7 +57,7 @@
     <SourcePath>$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\mfcm;$(VCInstallDir)atlmfc\src\atl;$(VCInstallDir)crt\src;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)/Projects/Gameplay/src;$(SolutionDir)/External/Gtest/Include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <IncludePath>$(SolutionDir)/External/Gtest/Include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(SolutionDir)/Projects/AssetManagement/src;$(SolutionDir)/Projects/Audio/src;$(SolutionDir)/Projects/ClientApp/src;$(SolutionDir)/Projects/ES/src;$(SolutionDir)/Projects/Gameplay/src;$(SolutionDir)/Projects/Graphics/src;$(SolutionDir)/Projects/Input/src;$(SolutionDir)/Projects/NetComm/src;$(SolutionDir)/Projects/Physics/src;$(SolutionDir)/Projects/ServerApp/src</IncludePath>
     <LibraryPath>$(SolutionDir)/External/Gtest/lib/(x86) debug;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
