@@ -5,10 +5,24 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{975daba7-1fa6-4233-9795-3f2542c629be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\QueueList TEST">
+      <UniqueIdentifier>{13271fcc-3983-4368-9fc4-bb6029fd341c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Runner.cpp">
+    <ClCompile Include="Runner.cpp">
       <Filter>Gtest Entry</Filter>
     </ClCompile>
+    <ClCompile Include="QueueListTEST.cpp">
+      <Filter>Utilities\QueueList TEST</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
+      <Filter>Utilities\QueueList TEST</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
