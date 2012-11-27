@@ -12,6 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h" />
+    <ClInclude Include="Vector3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>

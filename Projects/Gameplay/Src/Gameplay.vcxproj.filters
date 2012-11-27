@@ -7,10 +7,21 @@
     <Filter Include="Utilities\QueueList">
       <UniqueIdentifier>{6f7c2329-cd25-41f7-b8b9-beceae9ff2a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\Vector3">
+      <UniqueIdentifier>{451be5ff-6e8c-49f6-a74f-ffdff8c1de41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
       <Filter>Utilities\QueueList</Filter>
     </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Utilities\Vector3</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Utilities\Vector3</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
