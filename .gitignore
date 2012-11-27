@@ -24,7 +24,7 @@
 #[Dd]ebug*/
 *.sbr
 Thumbs.db
-#[Rr]elease*/
+[Rr]elease*/
 [Tt]est[Rr]esults/
 _UpgradeReport_Files/
 _ReSharper.*/
@@ -35,7 +35,7 @@ doc/
 *.lastbuildstate
 
 #own
-#[Oo]bj*/
+[Oo]bj*/
 [Ii]pch/
 *.*sdf*
 #*.PIXExp
@@ -48,6 +48,9 @@ doc/
 *.d
 */lin/
 
+#External ignores
+External/DirectX/Include*/
+External/DirectX/Lib*/
 
 #gedit temp files
 */*~
