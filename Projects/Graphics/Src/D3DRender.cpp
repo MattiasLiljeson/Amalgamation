@@ -12,17 +12,12 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_width		= p_width;
 	m_height	= p_height;
 
-	
-
-//	if(1<2)
-//		throw D3DException("This is never true");
-
 	initHardware(p_hWnd, p_windowed);
 	
 	m_shader = new Shader(m_device, m_deviceContext);
 
 	initBuffers();
-	beginDraw();
+	clearRenderTargets();
 }
 
 D3DRender::~D3DRender()
@@ -141,7 +136,7 @@ void D3DRender::initBuffers()
 
 }
 
-void D3DRender::beginDraw()
+void D3DRender::clearRenderTargets()
 {
 	static float ClearColor[4] = { 1, 0, 0, 1.0f };
 	m_deviceContext->ClearRenderTargetView(m_backBuffer,ClearColor);
@@ -153,7 +148,28 @@ void D3DRender::render()
 
 }
 
-void D3DRender::presentFrame()
+void D3DRender::flipBackBuffer()
 {
 	m_swapChain->Present(0,0);
+}
+
+void D3DRender::initFullScreenQuad()
+{
+	struct PTVertex
+	{
+		float pos[3];
+		float tex[2];
+	};
+
+	PTVertex mesh[]= {
+		{( 1,	-1,	0),	( 1, 1)},
+		{( -1,	-1,	0),	( 0, 1)},
+		{( 1,	1,	0),	( 1, 0)},
+
+		{( -1, -1,	0),	( 0, 1)},
+		{( 1,	1,	0),	( 1, 0)},
+		{( -1,	1,	0),	( 0, 0)}
+	};
+
+
 }

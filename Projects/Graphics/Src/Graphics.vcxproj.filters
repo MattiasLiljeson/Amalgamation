@@ -33,6 +33,9 @@
     <ClInclude Include="ToString.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="InputLayoutElementStruct.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

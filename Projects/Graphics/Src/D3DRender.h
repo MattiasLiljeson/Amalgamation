@@ -21,13 +21,14 @@ class D3DRender
 public:
 	D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed);
 	virtual ~D3DRender();
-	void beginDraw();
+	void clearRenderTargets();
 	void render();
-	void presentFrame();
+	void flipBackBuffer();
 protected:
 private:
 	void initHardware(HWND p_hWnd, bool p_windowed);
 	void initBuffers();
+	void initFullScreenQuad();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
