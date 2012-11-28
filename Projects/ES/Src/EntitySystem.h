@@ -17,6 +17,7 @@
 #include "Entity.h"
 #include "EntityWorld.h"
 #include "ComponentType.h"
+#include "SystemType.h"
 #include <map>
 #include <stdarg.h>
 

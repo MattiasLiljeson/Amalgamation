@@ -4,8 +4,8 @@
 #include "EntityWorld.h"
 #include "SystemType.h"
 
-class EntitySystem;
 class EntityWorld;
+class EntitySystem;
 
 class SystemManager
 {

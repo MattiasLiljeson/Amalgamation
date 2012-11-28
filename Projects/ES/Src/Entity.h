@@ -4,6 +4,8 @@
 #include "ComponentType.h"
 #include "SystemType.h"
 
+class EntityWorld;
+
 class Entity
 {
 public:
