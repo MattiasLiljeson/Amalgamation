@@ -17,6 +17,12 @@
     <Filter Include="ES">
       <UniqueIdentifier>{5c950032-1f7c-4328-b3df-f9dfc244fce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ES\ComponentType TEST">
+      <UniqueIdentifier>{00ea89a4-6c8d-420d-81e9-73e6e52882b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\EntitySystem TEST">
+      <UniqueIdentifier>{83bdcc86-73a9-4bf0-adef-931fd6c7a671}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
@@ -32,10 +38,19 @@
       <Filter>Utilities\Vector3 TEST</Filter>
     </ClCompile>
     <ClCompile Include="ComponentType TEST.cpp">
-      <Filter>ES</Filter>
+      <Filter>ES\ComponentType TEST</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ES\Src\ComponentType.cpp">
-      <Filter>ES</Filter>
+      <Filter>ES\ComponentType TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="EntitySystemTEST.cpp">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\EntitySystem.cpp">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\Entity.cpp">
+      <Filter>ES\EntitySystem TEST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +61,13 @@
       <Filter>Utilities\Vector3 TEST</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\ComponentType.h">
-      <Filter>ES</Filter>
+      <Filter>ES\ComponentType TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\EntitySystem.h">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\Entity.h">
+      <Filter>ES\EntitySystem TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
