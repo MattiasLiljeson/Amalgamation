@@ -15,9 +15,9 @@ SystemType::~SystemType()
 
 void SystemType::init( SystemTypeIdx p_type )
 {
-	m_bit = s_nextBit;
-	s_nextBit = s_nextBit << 1;
-	m_id = s_nextId++;
+	m_bit = 1;
+	m_bit = m_bit << p_type;
+	m_id = p_type;
 
 	m_type = p_type;
 }
@@ -38,12 +38,12 @@ SystemType SystemType::getTypeFor( SystemTypeIdx p_system )
 
 	if (s_systemTypes.find(p_system) != s_systemTypes.end()) 
 	{
-		type.init( p_system );
-		s_systemTypes[p_system] = type;
+		type = s_systemTypes[p_system];
 	}
 	else
 	{
-		type = s_systemTypes[p_system];
+		type.init( p_system );
+		s_systemTypes[p_system] = type;
 	}
 
 	return type;

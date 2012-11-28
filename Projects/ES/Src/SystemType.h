@@ -10,7 +10,7 @@ class SystemType
 public:	//Enums
 	enum SystemTypeIdx
 	{
-		NON_EXISTING,
+		NON_EXISTING = -1,
 		NUM_SYSTEM_TYPES
 	};
 
