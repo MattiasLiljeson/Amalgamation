@@ -48,6 +48,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			prevTimeStamp = currTimeStamp;
 
 			renderer->clearRenderTargets();
+			renderer->render();
 			renderer->flipBackBuffer();
 		}
 	}

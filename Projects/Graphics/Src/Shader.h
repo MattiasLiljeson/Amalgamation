@@ -29,6 +29,8 @@ public:
 	Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	virtual ~Shader();
 
+	void apply();
+
 	struct VertexShaderData
 	{
 		ID3D10Blob* compiledData;

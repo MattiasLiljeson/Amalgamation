@@ -136,3 +136,10 @@ void Shader::initBuffers()
 		return;
 	}
 }
+
+void Shader::apply()
+{
+	m_deviceContext->VSSetShader(m_vertexShader.data, 0, 0);
+	m_deviceContext->PSSetShader(m_pixelShader.data, 0, 0);
+	m_deviceContext->IASetInputLayout(m_inputLayout);
+}

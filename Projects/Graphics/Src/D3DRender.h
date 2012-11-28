@@ -16,6 +16,12 @@
 #include "Util.h"
 #include "Shader.h"
 
+struct PTVertex
+{
+	float pos[3];
+	float tex[2];
+};
+
 class D3DRender
 {
 public:
@@ -28,6 +34,7 @@ protected:
 private:
 	void initHardware(HWND p_hWnd, bool p_windowed);
 	void initBuffers();
+	void initViewport();
 	void initFullScreenQuad();
 private:
 	ID3D11Device*			m_device;
@@ -40,6 +47,7 @@ private:
 	ID3D11DepthStencilView* m_depthStencilView;
 
 	Shader*					m_shader;
+	ID3D11Buffer*			m_vertexBuffer;
 
 	int m_height;
 	int m_width;
