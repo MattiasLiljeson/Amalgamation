@@ -22,8 +22,8 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 
 	// Compile the programs
 	// vertex
-	res = D3DCompileFromFile(L"Assets/Shaders/vertexTest.vs", 0, 0,
-								"VertexShader", "vs_5_0", 
+	res = D3DCompileFromFile(L"Assets/Shaders/vertexTest.vs", 0, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+								"VS", "vs_5_0", 
 								compileFlags, 0, 
 								&blobShader, &blobError);
 	if (res != S_OK)
@@ -35,10 +35,10 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 	}
 
 	// pixel
-	HRESULT psRes = D3DCompileFromFile(L"Assets/Shaders/pixelTest.ps", 0, 0,
-										  "PixelShader", "ps_5_0", 
-										  compileFlags, 0, 
-										  &blobShader, &blobError);
+	res = D3DCompileFromFile(L"Assets/Shaders/pixelTest.ps", 0, 0,
+								"PS", "ps_5_0", 
+								compileFlags, 0, 
+								&blobShader, &blobError);
 	if (res != S_OK)
 	{
 		if (blobError!=NULL)
@@ -49,7 +49,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 
 
 	// Initialize the buffers
-	initBuffers();
+	// initBuffers();
 
 }
 
@@ -63,6 +63,7 @@ Shader::~Shader()
 
 void Shader::initBuffers()
 {
+	
 	// Set up vertex buffer
 	D3D11_BUFFER_DESC bufferDesc;
 	bufferDesc.Usage				= D3D11_USAGE_DYNAMIC;
@@ -77,6 +78,7 @@ void Shader::initBuffers()
 	if (res != S_OK)
 		throw D3DException("Could not initialize buffer for vertex program!",__FILE__,__FUNCTION__,__LINE__);
 
+	
 	// Set up pixel buffer
 	bufferDesc.Usage				= D3D11_USAGE_DYNAMIC;
 	bufferDesc.ByteWidth			= sizeof(ShaderPixelProgramCBuffer);

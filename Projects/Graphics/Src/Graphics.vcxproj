@@ -58,12 +58,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
+    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>

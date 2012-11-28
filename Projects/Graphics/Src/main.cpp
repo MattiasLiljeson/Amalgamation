@@ -1,3 +1,7 @@
+#ifdef DEBUG
+#include "vld.h"
+#endif
+
 #include <Windows.h>
 #include <iostream>
 #include "Window.h"
@@ -17,7 +21,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	catch (exception &e)
 	{
 		DEBUGPRINT((e.what()));
-		return -1;
 	}
 
 	__int64 cntsPerSec = 0;
@@ -52,5 +55,5 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	delete window;
 	delete renderer;
 
-	return 9001;
+	return 0;
 }
