@@ -11,6 +11,10 @@ public:	//Enums
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING,
+		Position,
+		Orientation,
+		Render,
+		Input,
 		NUM_COMPONENT_TYPES
 	};
 

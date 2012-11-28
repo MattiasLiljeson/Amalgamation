@@ -38,7 +38,7 @@ void Entity::addSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits )
 
 void Entity::removeSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits )
 {
-	m_componentBits &= ~p_systemBits;
+	m_systemBits &= ~p_systemBits;
 }
 
 

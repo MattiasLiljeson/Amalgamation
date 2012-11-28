@@ -14,6 +14,9 @@
     <Filter Include="Utilities\Vector3 TEST">
       <UniqueIdentifier>{7dd21d1c-9db0-42df-9d50-a4b6b207248c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ES">
+      <UniqueIdentifier>{5c950032-1f7c-4328-b3df-f9dfc244fce8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
