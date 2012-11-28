@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 
+
 Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
 	m_device = p_device;
@@ -21,25 +22,29 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 
 	// Compile the programs
 	// vertex
-	res = D3DCompileFromFile(L"../Assets/Shaders/vertexTest.vs", 0, 0,
+	res = D3DCompileFromFile(L"Assets/Shaders/vertexTest.vs", 0, 0,
 								"VertexShader", "vs_5_0", 
 								compileFlags, 0, 
 								&blobShader, &blobError);
 	if (res != S_OK)
 	{
-		// std::string errmsg((char*)blobError->GetBufferPointer(), blobError->GetBufferSize());
-		// throw D3DException(errmsg);
+		if (blobError!=NULL)
+			throw D3DException(blobError,__FILE__,__FUNCTION__,__LINE__);
+		else
+			throw D3DException(res,__FILE__,__FUNCTION__,__LINE__);
 	}
 
 	// pixel
-	HRESULT psRes = D3DCompileFromFile(L"../Assets/Shaders/vertexTest.ps", 0, 0,
+	HRESULT psRes = D3DCompileFromFile(L"Assets/Shaders/pixelTest.ps", 0, 0,
 										  "PixelShader", "ps_5_0", 
 										  compileFlags, 0, 
 										  &blobShader, &blobError);
 	if (res != S_OK)
 	{
-		// std::string errmsg((char*)blobError->GetBufferPointer(), blobError->GetBufferSize());
-		// throw D3DException(errmsg);
+		if (blobError!=NULL)
+			throw D3DException(blobError,__FILE__,__FUNCTION__,__LINE__);
+		else
+			throw D3DException(res,__FILE__,__FUNCTION__,__LINE__);
 	}
 
 
@@ -70,7 +75,7 @@ void Shader::initBuffers()
 
 	HRESULT res = m_device->CreateBuffer(&bufferDesc, NULL, &m_vertexProgramCBuffer);
 	if (res != S_OK)
-		throw D3DException("Could not initialize buffer for vertex program!");
+		throw D3DException("Could not initialize buffer for vertex program!",__FILE__,__FUNCTION__,__LINE__);
 
 	// Set up pixel buffer
 	bufferDesc.Usage				= D3D11_USAGE_DYNAMIC;
@@ -82,7 +87,7 @@ void Shader::initBuffers()
 
 	res = m_device->CreateBuffer(&bufferDesc, NULL, &m_pixelProgramCBuffer);
 	if (res != S_OK)
-		throw D3DException("Could not initialize buffer for pixel program!");
+		throw D3DException("Could not initialize buffer for pixel program!",__FILE__,__FUNCTION__,__LINE__);
 }
 
 

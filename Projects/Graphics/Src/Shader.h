@@ -16,6 +16,8 @@
 #include "D3DCompiler.h"
 #include "Util.h"
 #include "D3DException.h"
+#include <comdef.h>
+#include "ToString.h"
 
 
 class Shader

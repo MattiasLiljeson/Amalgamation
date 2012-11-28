@@ -27,6 +27,12 @@
     <ClInclude Include="Util.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="DebugUtil.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ToString.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

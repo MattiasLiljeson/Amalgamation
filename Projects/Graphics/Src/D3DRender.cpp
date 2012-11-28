@@ -12,10 +12,15 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_width		= p_width;
 	m_height	= p_height;
 
+	
+
 //	if(1<2)
 //		throw D3DException("This is never true");
 
 	initHardware(p_hWnd, p_windowed);
+	
+	m_shader = new Shader(m_device, m_deviceContext);
+
 	initBuffers();
 	beginDraw();
 }
@@ -85,7 +90,7 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 			&m_deviceContext);
 		
 		if ( FAILED(hr) )
-			throw D3DException("Couldn't create the device and/or swapchain");
+			throw D3DException("Couldn't create the device and/or swapchain",__FILE__,__FUNCTION__,__LINE__);
 	}
 }
 
@@ -98,12 +103,12 @@ void D3DRender::initBuffers()
 		(LPVOID*)&backBufferTexture );
 
 	if( FAILED(hr) )
-		throw D3DException("Failed to get backbuffer from swapchain.");
+		throw D3DException("Failed to get backbuffer from swapchain.",__FILE__,__FUNCTION__,__LINE__);
 
 	hr = m_device->CreateRenderTargetView( backBufferTexture, NULL, &m_backBuffer );
 	backBufferTexture->Release();
 	if( FAILED(hr) )
-		throw D3DException("Failed to create rendertargetview from backbuffer.");
+		throw D3DException("Failed to create rendertargetview from backbuffer.",__FILE__,__FUNCTION__,__LINE__);
 
 
 	// Create depth stencil texture
@@ -121,7 +126,7 @@ void D3DRender::initBuffers()
 	descDepth.MiscFlags = 0;
 	hr = m_device->CreateTexture2D( &descDepth, NULL, &m_depthStencil );
 	if( FAILED(hr) )
-		throw D3DException("Failed to create depth stencil texture2d.");
+		throw D3DException("Failed to create depth stencil texture2d.",__FILE__,__FUNCTION__,__LINE__);
 
 
 	// Create the depth stencil view
@@ -132,7 +137,7 @@ void D3DRender::initBuffers()
 	descDSV.Texture2D.MipSlice = 0;
 	hr = m_device->CreateDepthStencilView( m_depthStencil, &descDSV, &m_depthStencilView );
 	if( FAILED(hr) )
-		throw D3DException("Failed to create the depth stencil view.");
+		throw D3DException("Failed to create the depth stencil view.",__FILE__,__FUNCTION__,__LINE__);
 
 }
 

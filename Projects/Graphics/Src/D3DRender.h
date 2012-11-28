@@ -14,6 +14,7 @@
 #include <d3d11.h>
 #include "D3DException.h"
 #include "Util.h"
+#include "Shader.h"
 
 class D3DRender
 {
@@ -36,6 +37,8 @@ private:
 	ID3D11RenderTargetView* m_backBuffer;
 	ID3D11Texture2D*		m_depthStencil;
 	ID3D11DepthStencilView* m_depthStencilView;
+
+	Shader*					m_shader;
 
 	int m_height;
 	int m_width;

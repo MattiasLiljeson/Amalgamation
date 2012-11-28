@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Window.h"
 #include "D3DRender.h"
+#include "DebugUtil.h"
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, 
 	int nCmdShow )
@@ -15,7 +16,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 	catch (exception &e)
 	{
-		std::cout<<e.what()<<endl;
+		DEBUGPRINT((e.what()));
 		return -1;
 	}
 
