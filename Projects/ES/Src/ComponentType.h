@@ -8,6 +8,11 @@ using namespace std;
 class ComponentType
 {
 public:	//Enums
+
+	// This enum is currently used for statically mapping Component types,
+	// and if it is changed the tests will fail. In the future this
+	// functionality will be made dynamically and any testing issues will go away.
+	// Also the same thing goes for SystemType.
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING = -1,
