@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\ES\Src\ComponentType.cpp" />
     <ClCompile Include="..\..\ES\Src\Entity.cpp" />
+    <ClCompile Include="..\..\ES\Src\EntityManager.cpp" />
     <ClCompile Include="..\..\ES\Src\EntitySystem.cpp" />
     <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp" />
     <ClCompile Include="ComponentType TEST.cpp" />
+    <ClCompile Include="EntityManagerTEST.cpp" />
     <ClCompile Include="EntitySystemTEST.cpp" />
     <ClCompile Include="QueueListTEST.cpp" />
     <ClCompile Include="Runner.cpp" />
@@ -24,6 +26,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\ES\Src\ComponentType.h" />
     <ClInclude Include="..\..\ES\Src\Entity.h" />
+    <ClInclude Include="..\..\ES\Src\EntityManager.h" />
     <ClInclude Include="..\..\ES\Src\EntitySystem.h" />
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h" />
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h" />

@@ -17,10 +17,10 @@ public:
 
 	//void initialize() {}
 	Entity* createEntityInstance();
-	void added( Entity* p_entity);
-	void enabled( Entity* p_entity);
-	void disabled( Entity* p_entity);
-	void deleted( Entity* p_entity);
+	void added( Entity* p_entity );
+	void enabled( Entity* p_entity );
+	void disabled( Entity* p_entity );
+	void deleted( Entity* p_entity );
 	bool isActive( int entityId ) const;
 	bool isEnabled( int entityId ) const;
 	Entity* getEntity( int entityid ) const;

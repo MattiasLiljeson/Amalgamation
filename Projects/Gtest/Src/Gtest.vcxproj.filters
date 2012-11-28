@@ -23,6 +23,9 @@
     <Filter Include="ES\EntitySystem TEST">
       <UniqueIdentifier>{83bdcc86-73a9-4bf0-adef-931fd6c7a671}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ES\EntityManager TEST">
+      <UniqueIdentifier>{877c3db5-3e71-4f06-b5ec-6737b1f213e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
@@ -52,6 +55,12 @@
     <ClCompile Include="..\..\ES\Src\Entity.cpp">
       <Filter>ES\EntitySystem TEST</Filter>
     </ClCompile>
+    <ClCompile Include="EntityManagerTEST.cpp">
+      <Filter>ES\EntityManager TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\EntityManager.cpp">
+      <Filter>ES\EntityManager TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -68,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\Entity.h">
       <Filter>ES\EntitySystem TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\EntityManager.h">
+      <Filter>ES\EntityManager TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

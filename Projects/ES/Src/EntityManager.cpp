@@ -11,12 +11,13 @@ EntityManager::EntityManager()
 
 EntityManager::~EntityManager()
 {
+
 }
 
 Entity* EntityManager::createEntityInstance()
 {
 	int id;
-	if(!m_availableIds.empty()) 
+	if( m_availableIds.empty() ) 
 	{
 		id = m_nextAvailableId++;
 		m_entities.reserve(id+1);
@@ -33,24 +34,24 @@ Entity* EntityManager::createEntityInstance()
 	return entity;
 }
 
-void EntityManager::added( Entity* p_entity)
+void EntityManager::added( Entity* p_entity )
 {
 		m_active++;
 		m_added++;
 		m_entities[p_entity->getIndex()] =  p_entity;
 }
 
-void EntityManager::enabled( Entity* p_entity)
+void EntityManager::enabled( Entity* p_entity )
 {
 	m_disabled[p_entity->getIndex()] = false;
 }
 
-void EntityManager::disabled( Entity* p_entity)
+void EntityManager::disabled( Entity* p_entity )
 {
 	m_disabled[p_entity->getIndex()] = true;
 }
 
-void EntityManager::deleted( Entity* p_entity)
+void EntityManager::deleted( Entity* p_entity )
 {
 	m_disabled[p_entity->getIndex()] = false;
 	m_availableIds.push(p_entity->getIndex());
