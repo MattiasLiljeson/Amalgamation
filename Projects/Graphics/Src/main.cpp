@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "D3DRender.h"
 #include "DebugUtil.h"
+#include "ToString.h"
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, 
 	int nCmdShow )
@@ -21,6 +22,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	catch (exception &e)
 	{
 		DEBUGPRINT((e.what()));
+		return -1;
 	}
 
 	__int64 cntsPerSec = 0;
@@ -47,9 +49,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			prevTimeStamp = currTimeStamp;
 
-			renderer->clearRenderTargets();
-			renderer->render();
+			DEBUGPRINT((toString(dt).c_str()));
+
+			renderer->clearRenderTargets(); DEBUGPRINT(("."));
+			renderer->render(); DEBUGPRINT(("."));
 			renderer->flipBackBuffer();
+			DEBUGPRINT(("!\n"));
 		}
 	}
 

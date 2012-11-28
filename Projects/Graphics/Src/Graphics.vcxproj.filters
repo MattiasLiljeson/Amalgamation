@@ -7,7 +7,7 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -19,7 +19,7 @@
       <Filter>Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="D3DRender.h">
       <Filter>Renderer</Filter>
@@ -34,21 +34,24 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="InputLayoutElementStruct.h">
-      <Filter>Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
       <UniqueIdentifier>{ed2080cb-88cc-480c-b1e0-f6f067cf3459}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{9e006dd4-5e85-4dc5-8bd0-a61348454352}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{58889cfd-138e-45e1-8bc7-4c06780cda71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Shader">
+      <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

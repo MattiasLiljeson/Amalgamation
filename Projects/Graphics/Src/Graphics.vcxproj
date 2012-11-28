@@ -17,6 +17,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />
     <ClInclude Include="DebugUtil.h" />
