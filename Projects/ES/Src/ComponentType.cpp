@@ -17,7 +17,7 @@ void ComponentType::init( ComponentTypeIdx p_type )
 {
 	m_bit = 1;
 	m_bit = m_bit << p_type;
-	m_id = p_type;
+	m_idx = p_type;
 
 	m_type = p_type;
 }
@@ -27,9 +27,9 @@ bitset<ComponentType::NUM_COMPONENT_TYPES> ComponentType::getBit()
 	return m_bit;
 }
 
-int ComponentType::getId()
+int ComponentType::getIdx()
 {
-	return m_id;
+	return m_idx;
 }
 
 ComponentType ComponentType::getTypeFor( ComponentTypeIdx p_component )
@@ -52,7 +52,7 @@ ComponentType ComponentType::getTypeFor( ComponentTypeIdx p_component )
 int ComponentType::getIndexFor( ComponentTypeIdx p_component )
 {
 	if (s_componentTypes.find(p_component) != s_componentTypes.end())
-		return s_componentTypes[p_component].m_id;
+		return s_componentTypes[p_component].m_idx;
 	else
 		return NON_EXISTING;
 
