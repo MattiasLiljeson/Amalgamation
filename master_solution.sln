@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsManagement", "Projects\AssetsManagement\Src\AssetsManagement.vcxproj", "{15020C27-0C35-4D82-9517-59D175B1DF49}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audio", "Projects\Audio\Src\Audio.vcxproj", "{BE2A0661-776F-4B5B-B09C-F7304F5C6424}"
@@ -20,6 +20,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Projects\Physics\Src\Physics.vcxproj", "{9A6825EE-38C3-41DC-997D-28D9B269FF3F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "Projects\ServerApp\Src\ServerApp.vcxproj", "{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gtest", "Projects\Gtest\Src\Gtest.vcxproj", "{C1B712E8-6D81-4E7C-A4E9-C50C99259673}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Debug|Win32.Build.0 = Debug|Win32
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Release|Win32.ActiveCfg = Release|Win32
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Release|Win32.Build.0 = Release|Win32
+		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Debug|Win32.Build.0 = Debug|Win32
+		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Release|Win32.ActiveCfg = Release|Win32
+		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

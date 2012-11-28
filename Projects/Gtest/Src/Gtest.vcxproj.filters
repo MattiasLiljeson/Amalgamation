@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Gtest Entry">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{975daba7-1fa6-4233-9795-3f2542c629be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\QueueList TEST">
+      <UniqueIdentifier>{13271fcc-3983-4368-9fc4-bb6029fd341c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Vector3 TEST">
+      <UniqueIdentifier>{7dd21d1c-9db0-42df-9d50-a4b6b207248c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Runner.cpp">
+      <Filter>Gtest Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueListTEST.cpp">
+      <Filter>Utilities\QueueList TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3TEST.cpp">
+      <Filter>Utilities\Vector3 TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp">
+      <Filter>Utilities\Vector3 TEST</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
+      <Filter>Utilities\QueueList TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Gameplay\Src\Vector3.h">
+      <Filter>Utilities\Vector3 TEST</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
