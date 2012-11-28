@@ -1,19 +1,23 @@
 #pragma once
 
+#include "EntityWorld.h"
 #include "ComponentType.h"
 #include "SystemType.h"
 
 class Entity
 {
 public:
-	Entity(void);
+	Entity( EntityWorld* p_world, int p_index );
 	~Entity(void);
+
+	void reset();
 
 	int getUUID();
 	int getIndex();
 
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits() { return m_componentBits; }
 	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits ) { m_componentBits = p_componentBits; }
+	
 	void addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 
@@ -33,6 +37,8 @@ private:
 	// This id  is used as an index for the components internally. If an entity is deleted
 	// from the world its id will be reused for future created entities.
 	int m_index;
+
+	EntityWorld* m_world;
 
 	bool m_enabled;
 

@@ -1,14 +1,24 @@
 #include "Entity.h"
 
 
-Entity::Entity(void)
+Entity::Entity( EntityWorld* p_world, int p_index )
 {
+	 m_world = p_world;
+	 m_index = p_index;
 }
 
 
 Entity::~Entity(void)
 {
 }
+
+void Entity::reset()
+{
+	m_systemBits.reset();
+	m_componentBits.reset();
+	//m_UUID = UUID.randomUUID();
+}
+
 
 int Entity::getUUID()
 {

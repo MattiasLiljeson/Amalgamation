@@ -13,8 +13,8 @@
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
     <ClInclude Include="ComponentType.h" />
-    <ClInclude Include="ComponentTypeID.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EntitySystem.h" />
     <ClInclude Include="EntityWorld.h" />
     <ClInclude Include="SystemManager.h" />
@@ -24,6 +24,7 @@
     <ClCompile Include="Aspect.cpp" />
     <ClCompile Include="ComponentType.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
     <ClCompile Include="SystemManager.cpp" />
