@@ -93,6 +93,8 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 		if ( FAILED(hr) )
 			throw D3DException("Couldn't create the device and/or swapchain",__FILE__,
 			__FUNCTION__,__LINE__);
+		else
+			break;
 	}
 }
 
@@ -172,7 +174,7 @@ void D3DRender::render()
 
 void D3DRender::flipBackBuffer()
 {
-	m_swapChain->Present(0,0);
+	m_swapChain->Present( 0, 0);
 }
 
 void D3DRender::initFullScreenQuad()

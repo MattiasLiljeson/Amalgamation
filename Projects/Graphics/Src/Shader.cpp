@@ -8,7 +8,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 	m_pixelProgramCBuffer = NULL;
 	m_vertexProgramCBuffer = NULL;
 
-	createShader(L"Assets/Shaders/vertexTest.vs", "VS", "vs_5_0",	
+	createShader(L"Assets/Shaders/vertexTest.vs", "VS", "vs_4_0",	
 		&m_vertexShader.compiledData);
 
 	if ( FAILED (m_device->CreateVertexShader(
@@ -18,7 +18,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 		throw D3DException("Couldn't create vertex shader",__FILE__,__FUNCTION__,__LINE__);
 	}
 
-	createShader(L"Assets/Shaders/pixelTest.ps", "PS", "ps_5_0", 
+	createShader(L"Assets/Shaders/pixelTest.ps", "PS", "ps_4_0", 
 		&m_pixelShader.compiledData);
 
 	if ( FAILED (m_device->CreatePixelShader(
@@ -81,17 +81,16 @@ void Shader::createShader( const LPCWSTR &p_sourceFile, const string &p_entryPoi
 void Shader::createInputLayout()
 {
 	HRESULT res = S_OK;
-	vector<InputLayoutElementStruct> inputLayoutData;
 
-	inputLayoutData.push_back(InputLayoutElementStruct("POSITION", 0, 
-		DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_VERTEX_DATA, 0));
-	inputLayoutData.push_back(InputLayoutElementStruct("TEXCOORD", 0, 
-		DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
-		D3D11_INPUT_PER_VERTEX_DATA, 0));
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
 
-	if ( FAILED (m_device->CreateInputLayout(&inputLayoutData[0], inputLayoutData.size(),
-		m_vertexShader.compiledData->GetBufferPointer(),
+	if ( FAILED (m_device->CreateInputLayout(input, 
+		(sizeof(input)/sizeof(input[0])), m_vertexShader.compiledData->GetBufferPointer(),
 		m_vertexShader.compiledData->GetBufferSize(), &m_inputLayout) ) )
 	{
 		throw D3DException("Failed to create input layout.",__FILE__,__FUNCTION__,

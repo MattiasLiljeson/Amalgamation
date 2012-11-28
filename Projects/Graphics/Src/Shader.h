@@ -19,7 +19,6 @@
 #include "Util.h"
 #include "D3DException.h"
 #include "ToString.h"
-#include "InputLayoutElementStruct.h"
 
 using namespace std;
 

@@ -1,7 +1,3 @@
-#ifdef DEBUG
-#include "vld.h"
-#endif
-
 #include <Windows.h>
 #include <iostream>
 #include "Window.h"

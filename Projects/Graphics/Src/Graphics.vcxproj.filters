@@ -33,9 +33,6 @@
     <ClInclude Include="ToString.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="InputLayoutElementStruct.h">
-      <Filter>Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
