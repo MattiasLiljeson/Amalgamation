@@ -1,3 +1,4 @@
+# DO NOT ADD OWN STUPH HERE
 #from git extensions
 *.obj
 *.exe
@@ -19,14 +20,12 @@
 *.log
 *.tlog
 *.zip
-*.manifest
-*.res
-*.rc
 
-#[Dd]ebug*/
+# ADD STUPH HERE!!!
+[Dd]ebug*/
+[Rr]elease*/
 *.sbr
 Thumbs.db
-#[Rr]elease*/
 [Tt]est[Rr]esults/
 _UpgradeReport_Files/
 _ReSharper.*/
@@ -36,19 +35,21 @@ docs/
 doc/
 *.lastbuildstate
 
-#own
-#[Oo]bj*/
+[Oo]bj*/
 [Ii]pch/
 *.*sdf*
-#*.PIXExp
-#*/bin/
+*.PIXExp
+*/bin/
 *.lib
 *.o
 *.a
 */*.d
 *.d
 */lin/
-
+*.unsuccessfulbuild
+*.manifest
+*.res
+*.rc
 
 #gedit temp files
 */*~

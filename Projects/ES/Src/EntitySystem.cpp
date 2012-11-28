@@ -13,7 +13,7 @@ EntitySystem::EntitySystem( int p_numComponents, ... )
 
 	for( int i=0; i<p_numComponents; i++ )
 	{
-		ComponentType::ComponentTypeID type = va_arg( componentTypes, ComponentType::ComponentTypeID );
+		ComponentType::ComponentTypeIdx type = va_arg( componentTypes, ComponentType::ComponentTypeIdx );
 		ComponentType ct = ComponentType::getTypeFor(type);
 		m_componentBits |= ct.getBit();
 	}
@@ -88,16 +88,15 @@ void EntitySystem::onChange( Entity* e )
 	bool contains = ( m_systemBits & e->getSystemBits() ) == m_systemBits;
 	bool interest = ( m_componentBits & e->getComponentBits() ) == m_componentBits;
 
-	// HACK: hard-coded! 
 	bitset<SystemType::NUM_SYSTEM_TYPES> empty;
-
-	if (interest && !contains && m_systemBits > 0) {
+	
+	if (interest && !contains && m_systemBits != empty) {
 		add(e);
-	} else if (!interest && contains && m_systemBits > 0) {
+	} else if (!interest && contains && m_systemBits != empty) {
 		remove(e);
-	} else if ((interest && contains && e->isEnabled()) && m_systemBits > empty) {
+	} else if ((interest && contains && e->isEnabled()) && m_systemBits != empty) {
 		enable(e);
-	} else if ((interest && contains && e->isEnabled() == false) && m_systemBits > 0) {
+	} else if ((interest && contains && e->isEnabled() == false) && m_systemBits != empty) {
 		disable(e);
 	}
 }

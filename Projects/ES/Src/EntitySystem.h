@@ -14,16 +14,6 @@
 /// Created on: 28-11-2012 
 ///---------------------------------------------------------------------------------------
 
-class EntitySystem
-{
-private:
-public:
-	EntitySystem();
-	virtual ~EntitySystem();
-};
-
-#endif // ENTITYSYSTEM_H
-
 #include "Entity.h"
 #include "EntityWorld.h"
 #include "ComponentType.h"

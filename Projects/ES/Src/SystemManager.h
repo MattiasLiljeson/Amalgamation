@@ -1,6 +1,8 @@
 #pragma once
 
+#include "EntitySystem.h"
 #include "EntityWorld.h"
+#include "SystemType.h"
 
 class EntitySystem;
 class EntityWorld;
@@ -9,14 +11,14 @@ class SystemManager
 {
 private:
 	EntityWorld* m_world;
-	map<type_info, EntitySystem*> m_systems;
+	map<SystemType::SystemTypeIdx, EntitySystem*> m_systems;
 
 public:
 	SystemManager( EntityWorld* p_world );
 	~SystemManager();
 
-	EntitySystem* getSystem( type_info p_system );
-	void setSystem( EntitySystem* p_system );
+	EntitySystem* getSystem( SystemType::SystemTypeIdx p_systemIndex );
+	void setSystem( EntitySystem* p_system, SystemType::SystemTypeIdx p_index );
 	void initializeAll();
 	void updateSynchronous();
 };

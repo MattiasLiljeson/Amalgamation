@@ -8,7 +8,7 @@ using namespace std;
 class ComponentType
 {
 public:	//Enums
-	enum ComponentTypeID
+	enum ComponentTypeIdx
 	{
 		NON_EXISTING,
 		NUM_COMPONENT_TYPES
@@ -18,24 +18,24 @@ public:
 	ComponentType();
 	~ComponentType();
 
-	static ComponentType getTypeFor( ComponentTypeID p_component );
-	static int getIndexFor( ComponentTypeID p_component );
-	static bitset<NUM_COMPONENT_TYPES> getBitFor( ComponentTypeID p_component );
+	static ComponentType getTypeFor( ComponentTypeIdx p_component );
+	static int getIndexFor( ComponentTypeIdx p_component );
+	static bitset<NUM_COMPONENT_TYPES> getBitFor( ComponentTypeIdx p_component );
 
 	bitset<NUM_COMPONENT_TYPES> getBit();
 	int getId();
 
 private:
-	void init( ComponentTypeID p_type );
+	void init( ComponentTypeIdx p_type );
 
 private:
 	static bitset<NUM_COMPONENT_TYPES> s_nextBit;
 	static int s_nextId;
-	static map< ComponentTypeID, ComponentType > s_componentTypes;
+	static map< ComponentTypeIdx, ComponentType > s_componentTypes;
 
 	bitset<NUM_COMPONENT_TYPES> m_bit;
 	int m_id;
-	ComponentTypeID m_type;
+	ComponentTypeIdx m_type;
 
 };
 

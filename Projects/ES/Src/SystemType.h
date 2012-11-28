@@ -1,13 +1,14 @@
 #pragma once
 
 #include <bitset>
+#include <map>
 
 using namespace std;
 
 class SystemType
 {
 public:	//Enums
-	enum SystemTypeID
+	enum SystemTypeIdx
 	{
 		NON_EXISTING,
 		NUM_SYSTEM_TYPES
@@ -17,23 +18,23 @@ public:
 	SystemType(void);
 	~SystemType(void);
 
-	static SystemType getTypeFor( SystemTypeID p_system );
-	static int getIndexFor( SystemTypeID p_system );
-	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeID p_system );
+	static SystemType getTypeFor( SystemTypeIdx p_system );
+	static int getIndexFor( SystemTypeIdx p_system );
+	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeIdx p_system );
 
 	bitset<NUM_SYSTEM_TYPES> getBit();
 	int getId();
 
 private:
-	void init( SystemTypeID p_type );
+	void init( SystemTypeIdx p_type );
 
 private:
 	static bitset<NUM_SYSTEM_TYPES> s_nextBit;
 	static int s_nextId;
-	static map<SystemTypeID, ComponentType> s_systemTypes;
+	static map<SystemTypeIdx, SystemType> s_systemTypes;
 
 	bitset<NUM_SYSTEM_TYPES> m_bit;
 	int m_id;
-	SystemTypeID m_type;
+	SystemTypeIdx m_type;
 };
 
