@@ -31,6 +31,12 @@
     <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp">
       <Filter>Utilities\Vector3 TEST</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentType TEST.cpp">
+      <Filter>ES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\ComponentType.cpp">
+      <Filter>ES</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -38,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h">
       <Filter>Utilities\Vector3 TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\ComponentType.h">
+      <Filter>ES</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

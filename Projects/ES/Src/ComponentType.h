@@ -10,7 +10,7 @@ class ComponentType
 public:	//Enums
 	enum ComponentTypeIdx
 	{
-		NON_EXISTING,
+		NON_EXISTING = -1,
 		Position,
 		Orientation,
 		Render,

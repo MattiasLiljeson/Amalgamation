@@ -11,12 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ES\Src\ComponentType.cpp" />
     <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp" />
+    <ClCompile Include="ComponentType TEST.cpp" />
     <ClCompile Include="QueueListTEST.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Vector3TEST.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ES\Src\ComponentType.h" />
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h" />
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h" />
   </ItemGroup>

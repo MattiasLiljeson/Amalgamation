@@ -15,9 +15,9 @@ ComponentType::~ComponentType()
 
 void ComponentType::init( ComponentTypeIdx p_type )
 {
-	m_bit = s_nextBit;
-	s_nextBit = s_nextBit << 1;
-	m_id = s_nextId++;
+	m_bit = 1;
+	m_bit = m_bit << p_type;
+	m_id = p_type;
 
 	m_type = p_type;
 }
@@ -38,12 +38,12 @@ ComponentType ComponentType::getTypeFor( ComponentTypeIdx p_component )
 
 	if (s_componentTypes.find(p_component) != s_componentTypes.end()) 
 	{
-		type.init( p_component );
-		s_componentTypes[p_component] = type;
+		type = s_componentTypes[p_component];
 	}
 	else
 	{
-		type = s_componentTypes[p_component];
+		type.init( p_component );
+		s_componentTypes[p_component] = type;
 	}
 
 	return type;
