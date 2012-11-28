@@ -13,11 +13,14 @@
   <ItemGroup>
     <ClCompile Include="D3DRender.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Util.h" />
     <ClInclude Include="WindowException.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -51,21 +54,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)External\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath);$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;</IncludePath>
+    <LibraryPath>$(LibraryPath);$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x86;$(SolutionDir)External\DirectX\Lib\x86;</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <SourcePath>$(SolutionDir)External\DirectX\Include;$(SourcePath)</SourcePath>
+    <SourcePath>$(SourcePath);$(SolutionDir)External\DirectX\Include;</SourcePath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(MSBuildToolsPath32);$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)External\DirectX\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;</IncludePath>
+    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x86;$(SolutionDir)External\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SolutionDir)External\DirectX\Include;$(SourcePath)</SourcePath>
+    <ExecutablePath>
+    </ExecutablePath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(MSBuildToolsPath32);$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -13,6 +13,7 @@
 
 #include <d3d11.h>
 #include "D3DException.h"
+#include "Util.h"
 
 class D3DRender
 {

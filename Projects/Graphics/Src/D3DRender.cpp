@@ -6,6 +6,9 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_deviceContext = NULL;
 	m_swapChain		= NULL;
 
+	m_depthStencilView = NULL;
+	m_backBuffer	   = NULL;
+
 	m_width		= p_width;
 	m_height	= p_height;
 
@@ -19,7 +22,11 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 
 D3DRender::~D3DRender()
 {
-
+	SAFE_RELEASE(m_device);
+	SAFE_RELEASE(m_deviceContext);
+	SAFE_RELEASE(m_swapChain);
+	SAFE_RELEASE(m_depthStencilView);
+	SAFE_RELEASE(m_backBuffer);
 }
 
 void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
