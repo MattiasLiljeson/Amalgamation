@@ -14,9 +14,14 @@ public:
 
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits() { return m_componentBits; }
 	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits ) { m_componentBits = p_componentBits; }
-	
+	void addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
+	void removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
+
 	bitset<SystemType::NUM_SYSTEM_TYPES> getSystemBits() { return m_systemBits; }
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits ) { m_systemBits = p_systemBits; }
+
+	void addSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits );
+	void removeSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits );
 
 	bool isEnabled();
 	void setEnabled( bool p_enabled );

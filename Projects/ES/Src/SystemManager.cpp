@@ -9,26 +9,26 @@ SystemManager::~SystemManager()
 {
 }
 
-EntitySystem* SystemManager::getSystem( type_info p_system )
+EntitySystem* SystemManager::getSystem( SystemType::SystemTypeIdx p_systemIndex )
 {
-	return m_systems[p_system];
+	return m_systems[p_systemIndex];
 }
 
-void SystemManager::setSystem( EntitySystem* p_system )
+void SystemManager::setSystem( EntitySystem* p_system, SystemType::SystemTypeIdx p_index )
 {
-	m_systems[typeid(p_system)] = p_system;
+	m_systems[p_index] = p_system;
 }
 
 void SystemManager::initializeAll()
 {
-	map<type_info, EntitySystem*>::iterator it;
+	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
 		it->second->initialize();
 }
 
 void SystemManager::updateSynchronous()
 {
-	map<type_info, EntitySystem*>::iterator it;
+	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
 		it->second->process();
 }
