@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
@@ -22,6 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aspect.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentType.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />

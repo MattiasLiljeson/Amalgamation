@@ -27,7 +27,7 @@ public:
 	static bitset<NUM_COMPONENT_TYPES> getBitFor( ComponentTypeIdx p_component );
 
 	bitset<NUM_COMPONENT_TYPES> getBit();
-	int getId();
+	int getIdx();
 
 private:
 	void init( ComponentTypeIdx p_type );
@@ -38,7 +38,7 @@ private:
 	static map< ComponentTypeIdx, ComponentType > s_componentTypes;
 
 	bitset<NUM_COMPONENT_TYPES> m_bit;
-	int m_id;
+	int m_idx;
 	ComponentTypeIdx m_type;
 
 };
