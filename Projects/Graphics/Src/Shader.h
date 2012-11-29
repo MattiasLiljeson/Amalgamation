@@ -19,6 +19,7 @@
 #include "Util.h"
 #include "D3DException.h"
 #include "ToString.h"
+#include "Buffer.h"
 
 using namespace std;
 
@@ -76,8 +77,8 @@ private:
 	PixelShaderData m_pixelShader;
 
 	// Per-program test buffers
-	ID3D11Buffer* m_pixelProgramCBuffer;
-	ID3D11Buffer* m_vertexProgramCBuffer;
+	Buffer* m_pixelProgramCBuffer;
+	Buffer* m_vertexProgramCBuffer;
 
 	// D3D
 	ID3D11Device* m_device;

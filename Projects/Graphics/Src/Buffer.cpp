@@ -83,7 +83,6 @@ Buffer::Buffer( ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	if(FAILED(hr))
 	{
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
-		//MessageBox(NULL, "Unable to create buffer.", "Slenda Error", MB_ICONERROR | MB_OK);
 	}
 
 }

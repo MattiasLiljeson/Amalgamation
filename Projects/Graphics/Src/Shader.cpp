@@ -36,8 +36,8 @@ Shader::~Shader()
 {
 	SAFE_RELEASE(m_pixelShader.data);
 	SAFE_RELEASE(m_vertexShader.data);
-	SAFE_RELEASE(m_pixelProgramCBuffer);
-	SAFE_RELEASE(m_vertexProgramCBuffer);
+	delete m_pixelProgramCBuffer;
+	delete m_vertexProgramCBuffer;
 }
 
 
@@ -101,39 +101,27 @@ void Shader::createInputLayout()
 
 void Shader::initBuffers()
 {
+	float color[]={
+		0.0f,1.0f,0.0f,1.0f,
+	};
 
-	// Set up vertex buffer
-	D3D11_BUFFER_DESC bufferDesc;
-	bufferDesc.Usage				= D3D11_USAGE_DYNAMIC;
-	bufferDesc.ByteWidth			= sizeof(ShaderVertexProgramCBuffer);
-	bufferDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
-	bufferDesc.CPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
-	bufferDesc.MiscFlags			= 0;
-	bufferDesc.StructureByteStride	= 0;
+	Buffer::BUFFER_INIT_DESC vertexBufferDesc;
+	vertexBufferDesc.ElementSize = sizeof(ShaderVertexProgramCBuffer);
+	vertexBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE;
+	vertexBufferDesc.InitData = &color[0];
+	vertexBufferDesc.NumElements = 1;
+	vertexBufferDesc.Type = Buffer::CONSTANT_BUFFER_VS;
 
+	m_vertexProgramCBuffer = new Buffer(m_device,m_deviceContext,vertexBufferDesc);
 
-	if (FAILED (m_device->CreateBuffer(&bufferDesc, NULL, &m_vertexProgramCBuffer)) )
-	{
-		throw D3DException("Could not initialize buffer for vertex program!",__FILE__,
-		__FUNCTION__,__LINE__);
-		return;
-	}
+	Buffer::BUFFER_INIT_DESC pixelBufferDesc;
+	pixelBufferDesc.ElementSize = sizeof(ShaderPixelProgramCBuffer);
+	pixelBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE;
+	pixelBufferDesc.InitData = &color[0];
+	pixelBufferDesc.NumElements = 1;
+	pixelBufferDesc.Type = Buffer::CONSTANT_BUFFER_PS;
 
-
-	// Set up pixel buffer
-	bufferDesc.Usage				= D3D11_USAGE_DYNAMIC;
-	bufferDesc.ByteWidth			= sizeof(ShaderPixelProgramCBuffer);
-	bufferDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
-	bufferDesc.CPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
-	bufferDesc.MiscFlags			= 0;
-	bufferDesc.StructureByteStride	= 0;
-
-	if ( FAILED(m_device->CreateBuffer(&bufferDesc, NULL, &m_pixelProgramCBuffer)) )
-	{
-		throw D3DException("Could not initialize buffer for pixel program!",__FILE__,
-		__FUNCTION__,__LINE__);
-		return;
-	}
+	m_pixelProgramCBuffer = new Buffer(m_device,m_deviceContext,pixelBufferDesc);
 }
 
 void Shader::apply()
