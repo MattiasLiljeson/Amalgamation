@@ -1,11 +1,11 @@
 #include "EntityWorld.h"
 
 
-EntityWorld::EntityWorld(void)
+EntityWorld::EntityWorld()
 {
 }
 
 
-EntityWorld::~EntityWorld(void)
+EntityWorld::~EntityWorld()
 {
 }

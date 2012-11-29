@@ -23,7 +23,7 @@ public:
 	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeIdx p_system );
 
 	bitset<NUM_SYSTEM_TYPES> getBit();
-	int getId();
+	int getIndex();
 
 private:
 	void init( SystemTypeIdx p_type );
@@ -34,7 +34,7 @@ private:
 	static map<SystemTypeIdx, SystemType> s_systemTypes;
 
 	bitset<NUM_SYSTEM_TYPES> m_bit;
-	int m_id;
+	int m_idx;
 	SystemTypeIdx m_type;
 };
 

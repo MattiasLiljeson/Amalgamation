@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Component.h"
-#include "Entity.h"
 #include "ComponentType.h"
-#include <vector>
+#include "Entity.h"
 #include <bitset>
+#include <vector>
 
 using namespace std;
 
 class Component;
+class ComponentType;
 class Entity;
 
 class ComponentManager

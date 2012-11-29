@@ -1,29 +1,42 @@
 #pragma once
 
-//#include "EntityManager.h"
-//#include "ComponentManager.h"
+#include "ComponentManager.h"
+#include "Entity.h"
+#include "EntityManager.h"
 #include "SystemManager.h"
-//#include "Entity.h"
+#include <vector>
 
 using namespace std;
 
-//class EntityManager;
-//class ComponentManager;
+class ComponentManager;
+class Entity;
+class EntityManager;
 class SystemManager;
 
 class EntityWorld
 {
 public:
-	EntityWorld(void);
-	~EntityWorld(void);
+	EntityWorld();
+	~EntityWorld();
+
+	void initialize();
 
 	void process();
 protected:
 
-private:
-	//ComponentManager*	componentManager;
-	//EntityManager*		entityManager;
+public:
+	float m_delta;
 
-	SystemManager*		systemManager;
+private:
+	EntityManager* m_entityManager;
+	ComponentManager* m_componentManager;
+	SystemManager* m_systemManager;
+
+	vector<Entity> m_added;	
+	vector<Entity> m_changed;
+	vector<Entity> m_deleted;
+	vector<Entity> m_enable;
+	vector<Entity> m_disable;
+
 };
 
