@@ -11,7 +11,7 @@ class ProcessThread
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Desc Assigns a unique id to the created ProcessThread.
+	/// Assigns a unique id to the created ProcessThread.
 	/// \returns 
 	///-----------------------------------------------------------------------------------
 	ProcessThread();
@@ -19,39 +19,39 @@ public:
 	virtual ~ProcessThread();
 	
 	///-----------------------------------------------------------------------------------
-	/// Desc Starts a new thread running the overridden "body" method.
+	/// Starts a new thread running the overridden "body" method.
 	/// \returns int (0 if OK)
 	///-----------------------------------------------------------------------------------
 	int start();
 
 	///-----------------------------------------------------------------------------------
-	/// Desc Tries to stop the thread by sending a "shutdown" message to
+	/// Tries to stop the thread by sending a "shutdown" message to
 	/// the ProcessThread. Joins (blocks) the thread until it finishes.
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void stop();
 
 	///-----------------------------------------------------------------------------------
-	/// Desc Calls Stop() and Start() for convenience.
+	/// Calls Stop() and Start() for convenience.
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void restart();
 
 	///-----------------------------------------------------------------------------------
-	/// Desc Get the ProcessThread's unique id.
+	/// Get the ProcessThread's unique id.
 	/// \returns const int
 	///-----------------------------------------------------------------------------------
 	const int getId() const;
 
 	///-----------------------------------------------------------------------------------
-	/// Desc Calls the running thread's internal interrupt method. Will most likely give
+	/// Calls the running thread's internal interrupt method. Will most likely give
 	/// unwanted results!
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void interrupt();
 
 	///-----------------------------------------------------------------------------------
-	/// Desc Override the body method in the making of a ProcessThread.
+	/// Override the body method in the making of a ProcessThread.
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	virtual void body() = 0;

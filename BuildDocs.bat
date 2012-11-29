@@ -1,1 +1,2 @@
-doxygen DoxyfileProj1
+doxygen Doxyfile
+doxygen DoxyfileNetComm
