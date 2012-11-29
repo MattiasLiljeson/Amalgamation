@@ -9,7 +9,8 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	m_width		= p_width;
 	m_height	= p_height;
 
-	m_shader		= new Shader( m_device, p_deviceContext);
+	m_baseShader	= new Shader(L"Assets/Shaders/deferredBase.hlsl", m_device, p_deviceContext);
+	m_composeShader	= new Shader(L"Assets/Shaders/deferredCompose.hlsl", m_device, p_deviceContext);
 	m_vertexBuffer	= NULL;
 
 	initDepthStencil();
@@ -28,23 +29,32 @@ Deferred::~Deferred()
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
 	}
 
-	delete m_shader;
+	delete m_baseShader;
+	delete m_composeShader;
 	delete m_vertexBuffer;
 }
 
 void Deferred::deferredBasePass()
 {
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
+
+	m_vertexBuffer->apply();
+	m_baseShader->apply();
+	m_deviceContext->Draw(6,0);
 }
 
 void Deferred::renderComposedImage()
 {
-	//m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	//m_vertexBuffer->apply();
-	//m_shader->apply();
+	m_deviceContext->PSSetShaderResources(1, 2, &m_gBuffersShaderResource[0]);
 
-	//m_deviceContext->Draw(6,0);
+	m_vertexBuffer->apply();
+	m_composeShader->apply();
+
+	m_deviceContext->Draw(6,0);
 }
 
 void Deferred::initDepthStencil()
@@ -173,6 +183,7 @@ void Deferred::createFullScreenQuad( )
 
 void Deferred::clearBuffers()
 {
+	unMapGBuffers();
 	float clearColor[] = {
 		0.0f,0.5f,0.5f,1.0f
 	};
@@ -184,9 +195,13 @@ void Deferred::clearBuffers()
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Deferred::unampGBuffers()
+void Deferred::unMapGBuffers()
 {
-
+	ID3D11ShaderResourceView * nulz[NUMBUFFERS];
+	for (int i=0; i<NUMBUFFERS; i++)
+		nulz[i]=NULL;
+	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
+	m_composeShader->apply();
 }
 
 

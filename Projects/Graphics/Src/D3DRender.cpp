@@ -17,7 +17,7 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 
 	initHardware(p_hWnd, p_windowed);
 	
-	m_shader = new Shader(m_device, m_deviceContext);
+	//m_shader = new Shader(m_device, m_deviceContext);
 
 	initBuffers();
 	initViewport();
@@ -33,8 +33,9 @@ D3DRender::~D3DRender()
 	SAFE_RELEASE(m_deviceContext);
 	SAFE_RELEASE(m_swapChain);
 	SAFE_RELEASE(m_backBuffer);
+	
+	delete m_deferred;
 
-	delete m_shader;
 	delete m_vertexBuffer;
 }
 
@@ -140,17 +141,6 @@ void D3DRender::render()
 
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
 	m_deferred->renderComposedImage();
-	/*
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	UINT32 vertexSize = sizeof(PTVertex);
-	UINT32 offset = 0;
-	
-	m_vertexBuffer->apply();
-	m_shader->apply();
-
-	m_deviceContext->Draw(6,0);
-	*/
 }
 
 void D3DRender::flipBackBuffer()

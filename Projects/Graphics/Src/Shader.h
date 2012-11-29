@@ -26,7 +26,7 @@ using namespace std;
 class Shader
 {
 public:
-	Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
+	Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	virtual ~Shader();
 
 	void apply();
@@ -71,6 +71,9 @@ private:
 private:
 	// Input layout
 	ID3D11InputLayout* m_inputLayout;
+
+	// Sampler state
+	ID3D11SamplerState* m_samplerState;
 
 	// Shader programs
 	VertexShaderData m_vertexShader;

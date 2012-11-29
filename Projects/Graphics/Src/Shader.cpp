@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
+Shader::Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
@@ -8,7 +8,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 	m_pixelProgramCBuffer = NULL;
 	m_vertexProgramCBuffer = NULL;
 
-	createShader(L"Assets/Shaders/newLayoutTest.hlsl", "VS", "vs_4_0",
+	createShader(p_path, "VS", "vs_5_0",
 		&m_vertexShader.compiledData);
 
 	if ( FAILED (m_device->CreateVertexShader(
@@ -18,7 +18,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 		throw D3DException("Couldn't create vertex shader",__FILE__,__FUNCTION__,__LINE__);
 	}
 
-	createShader(L"Assets/Shaders/newLayoutTest.hlsl", "PS", "ps_4_0",
+	createShader(p_path, "PS", "ps_5_0",
 		&m_pixelShader.compiledData);
 
 	if ( FAILED (m_device->CreatePixelShader(
@@ -28,12 +28,36 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 		throw D3DException("Couldn't create pixel shader",__FILE__,__FUNCTION__,__LINE__);
 	}
 
+	m_samplerState = NULL;
+
+	///
+	D3D11_SAMPLER_DESC samplerDesc;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	/// vackert
+	if ( FAILED (m_device->CreateSamplerState(&samplerDesc,&m_samplerState)) )
+	{
+		throw D3DException("Couldn't create sampler state",__FILE__,__FUNCTION__,__LINE__);
+	}
+
 	createInputLayout();
 	initBuffers();
 }
 
 Shader::~Shader()
 {
+	SAFE_RELEASE(m_samplerState);
 	SAFE_RELEASE(m_pixelShader.data);
 	SAFE_RELEASE(m_vertexShader.data);
 	delete m_pixelProgramCBuffer;
@@ -130,5 +154,6 @@ void Shader::apply()
 	m_pixelProgramCBuffer->apply();
 	m_deviceContext->VSSetShader(m_vertexShader.data, 0, 0);
 	m_deviceContext->PSSetShader(m_pixelShader.data, 0, 0);
+	m_deviceContext->PSSetSamplers(0,1,&m_samplerState);
 	m_deviceContext->IASetInputLayout(m_inputLayout);
 }

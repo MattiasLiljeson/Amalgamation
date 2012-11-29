@@ -36,7 +36,7 @@ private:
 	void initDepthStencil();
 	void initGeomtryBuffers();
 	void createFullScreenQuad();
-	void unampGBuffers();
+	void unMapGBuffers();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -46,7 +46,8 @@ private:
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
-	Shader* m_shader;
+	Shader* m_baseShader;
+	Shader* m_composeShader;
 	Buffer* m_vertexBuffer;
 
 	int m_width;
