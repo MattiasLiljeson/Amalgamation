@@ -5,7 +5,7 @@
 #include <boost/bind.hpp>
 
 ///
-/// Desc Abstract ProcessThread, used as a "safer" thread.
+/// Abstract ProcessThread, used as a "safer" thread.
 ///
 class ProcessThread
 {
@@ -57,10 +57,10 @@ public:
 	virtual void body() = 0;
 
 private:
-	int m_id;
-	boost::thread* m_thread;
+	int m_id; ///< Unique id.
+	boost::thread* m_thread; ///< Thread that will run the super class' body() method.
 
 private:
-	static int s_nextId; ///< Gives every ProcessThread a unique id.
+	static int s_nextId; ///< Manages the unique id's given to ProcessThreads.
 
 };
