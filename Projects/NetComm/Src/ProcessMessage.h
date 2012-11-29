@@ -1,0 +1,61 @@
+// =======================================================================================
+//                                      ProcessMessage
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Placeholder for a usable message.
+///        
+/// # ProcessMessage
+/// Detailed description.....
+/// Created on: 29-11-2012 
+///---------------------------------------------------------------------------------------
+#pragma once
+
+#include <string>
+using namespace std;
+
+class ThreadSafeMessaging;
+
+///
+/// Describes what type of message a ProcessMessage contains.
+///
+struct MessageType
+{
+	enum MESSAGE_TYPE{
+		NONE = -1,
+		TEXT,
+		CLIENT_CONNECTED,
+		CLIENT_DISCONNECTED,
+		TERMINATE,
+		RECEIVE_PACKET,
+		SEND_PACKET,
+	};
+};
+
+class ProcessMessage
+{
+public:
+	///-----------------------------------------------------------------------------------
+	/// Create an empty message.
+	/// \returns 
+	///-----------------------------------------------------------------------------------
+	ProcessMessage();
+
+	///-----------------------------------------------------------------------------------
+	/// Create a message with actual content.
+	/// \param MessageType p_type
+	/// \param ThreadSafeMessaging * p_sender
+	/// \param string p_message
+	/// \returns 
+	///-----------------------------------------------------------------------------------
+	ProcessMessage( MessageType p_type, ThreadSafeMessaging* p_sender,
+		string p_message );
+
+	~ProcessMessage();
+
+public:
+	string message;
+	MessageType type;
+	ThreadSafeMessaging* sender;
+
+};

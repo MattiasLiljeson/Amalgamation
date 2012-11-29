@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessThread.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ProcessMessage.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />
   </ItemGroup>

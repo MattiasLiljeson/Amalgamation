@@ -3,9 +3,8 @@
 #include <queue>
 #include <boost/thread.hpp>
 
+#include "ProcessMessage.h"
 using namespace std;
-
-class ProcessMessage;
 
 ///
 /// Abstract ThreadSafeMessaging provides safe communication between threads/processes

@@ -15,12 +15,18 @@
     <ClCompile Include="ThreadSafeMessaging.cpp">
       <Filter>ThreadSafeMessaging</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessMessage.cpp">
+      <Filter>ThreadSafeMessaging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
       <Filter>ProcessThread</Filter>
     </ClInclude>
     <ClInclude Include="ThreadSafeMessaging.h">
+      <Filter>ThreadSafeMessaging</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessage.h">
       <Filter>ThreadSafeMessaging</Filter>
     </ClInclude>
   </ItemGroup>
