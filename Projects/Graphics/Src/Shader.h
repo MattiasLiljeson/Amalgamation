@@ -56,7 +56,7 @@ protected:
 private:
 
 	///-----------------------------------------------------------------------------------
-	/// Creates a shader blob 
+	/// Creates a shader blob
 	/// \param p_sourceFile
 	/// \param p_entryPoint
 	/// \param p_profile

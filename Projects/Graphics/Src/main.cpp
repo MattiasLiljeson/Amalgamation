@@ -20,7 +20,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		DEBUGPRINT((e.what()));
 		return -1;
 	}
-
+	
 	__int64 cntsPerSec = 0;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
 	float secsPerCnt = 1.0f / (float)cntsPerSec;

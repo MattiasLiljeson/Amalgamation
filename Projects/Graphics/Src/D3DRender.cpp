@@ -73,6 +73,8 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 	};
 	D3D_FEATURE_LEVEL initiatedFeatureLevel;
 
+	int selectedDriverType = -1;
+
 	for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
 	{
 		driverType = driverTypes[driverTypeIndex];
@@ -90,12 +92,16 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 			&initiatedFeatureLevel,
 			&m_deviceContext);
 		
-		if ( FAILED(hr) )
-			throw D3DException("Couldn't create the device and/or swapchain",__FILE__,
-			__FUNCTION__,__LINE__);
-		else
+		if (hr == S_OK)
+		{
+			selectedDriverType = driverTypeIndex;
 			break;
+		}
 	}
+
+	if ( selectedDriverType > 0 )
+		throw D3DException("Couldn't create a D3D Hardware-device, software render enabled."
+		,__FILE__, __FUNCTION__, __LINE__);
 }
 
 void D3DRender::initBuffers()
