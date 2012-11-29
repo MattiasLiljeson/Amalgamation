@@ -12,8 +12,8 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_shader		= NULL;
 	m_vertexBuffer	= NULL;
 
-	m_width		= p_width;
-	m_height	= p_height;
+	m_width	= p_width;
+	m_height= p_height;
 
 	initHardware(p_hWnd, p_windowed);
 	
@@ -33,6 +33,9 @@ D3DRender::~D3DRender()
 	SAFE_RELEASE(m_swapChain);
 	SAFE_RELEASE(m_depthStencilView);
 	SAFE_RELEASE(m_backBuffer);
+
+	delete m_shader;
+	delete m_vertexBuffer;
 }
 
 void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
@@ -170,9 +173,8 @@ void D3DRender::render()
 	UINT32 vertexSize = sizeof(PTVertex);
 	UINT32 offset = 0;
 	
+	m_vertexBuffer->apply();
 	m_shader->apply();
-
-	m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &vertexSize, &offset);
 
 	m_deviceContext->Draw(6,0);
 
@@ -196,21 +198,14 @@ void D3DRender::initFullScreenQuad()
 		{{ -1,	1,	0},	{ 0, 0}}
 	};
 
-	D3D11_BUFFER_DESC bufferDesc;
-	ZeroMemory(&bufferDesc,sizeof(bufferDesc));
-	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth = sizeof(PTVertex)*6;
-	bufferDesc.CPUAccessFlags = 0;
-	bufferDesc.MiscFlags = 0;
+	Buffer::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(PTVertex);
+	bufferDesc.InitData = mesh;
+	bufferDesc.NumElements = 6;
+	bufferDesc.Type = Buffer::VERTEX_BUFFER;
+	bufferDesc.Usage = Buffer::BUFFER_DEFAULT;
 	
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &mesh[0];
-
-	HRESULT hr = S_OK;
-	hr = m_device->CreateBuffer(&bufferDesc, &data, &m_vertexBuffer);
-	if (FAILED (hr) )
-		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+	m_vertexBuffer = new Buffer(m_device,m_deviceContext,bufferDesc);
 }
 
 void D3DRender::initViewport()

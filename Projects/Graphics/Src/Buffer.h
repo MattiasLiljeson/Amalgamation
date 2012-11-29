@@ -11,10 +11,14 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <d3d11.h>
+#include "D3DException.h"
+#include "Util.h"
+
 class Buffer
 {
 public:
-	/*
+
 	enum BUFFER_TYPE
 	{
 		VERTEX_BUFFER,
@@ -24,6 +28,7 @@ public:
 		CONSTANT_BUFFER_PS,
 		BUFFER_TYPE_COUNT
 	};
+
 
 	enum BUFFER_USAGE
 	{
@@ -48,12 +53,25 @@ public:
 			InitData = NULL;
 		}
 	};
-	*/
 
-	Buffer();
+
+	Buffer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+		BUFFER_INIT_DESC& p_initDesc);
 	virtual ~Buffer();
-protected:
-
+	void*			map();
+	void			unmap();
+	void			apply(UINT32 misc = 0);
+	ID3D11Buffer*	getBufferPointer();
+	UINT32			getVertexSize();
+	UINT32			getElementCount();
 private:
+	ID3D11Buffer*	m_buffer;
+	BUFFER_TYPE		m_type;
+	BUFFER_USAGE	m_usage;
 
+	UINT32			m_elementSize;
+	UINT32			m_elementCount;
+
+	ID3D11Device*			m_device;
+	ID3D11DeviceContext*	m_deviceContext;
 };

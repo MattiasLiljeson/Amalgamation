@@ -9,6 +9,9 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Renderer\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Renderer\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -34,10 +37,7 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="GBuffer.h">
-      <Filter>Renderer</Filter>
+      <Filter>Renderer\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +52,9 @@
     </Filter>
     <Filter Include="Renderer\Shader">
       <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Buffer">
+      <UniqueIdentifier>{bd084ec0-9a62-4ac7-b5f4-2229da7a11f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

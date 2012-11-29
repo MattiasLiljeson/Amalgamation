@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="D3DRender.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -21,7 +22,6 @@
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />
     <ClInclude Include="DebugUtil.h" />
-    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="Util.h" />

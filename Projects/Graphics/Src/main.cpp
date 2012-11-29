@@ -46,12 +46,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			prevTimeStamp = currTimeStamp;
 
-			DEBUGPRINT((toString(dt).c_str()));
-
-			renderer->clearRenderTargets(); DEBUGPRINT(("."));
-			renderer->render(); DEBUGPRINT(("."));
+			renderer->clearRenderTargets();
+			renderer->render();
 			renderer->flipBackBuffer();
-			DEBUGPRINT(("!\n"));
 		}
 	}
 

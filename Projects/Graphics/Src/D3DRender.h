@@ -15,6 +15,7 @@
 #include "D3DException.h"
 #include "Util.h"
 #include "Shader.h"
+#include "Buffer.h"
 
 struct PTVertex
 {
@@ -47,7 +48,7 @@ private:
 	ID3D11DepthStencilView* m_depthStencilView;
 
 	Shader*					m_shader;
-	ID3D11Buffer*			m_vertexBuffer;
+	Buffer*					m_vertexBuffer;
 
 	int m_height;
 	int m_width;
