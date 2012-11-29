@@ -18,9 +18,9 @@
 #include "PTVertex.h"
 
 const static int NUMBUFFERS = 3;
-const static int DEPTH = 0;
-const static int DIFFUSE = 1;
-const static int NORMAL = 2;
+const static int DEPTH = 2;
+const static int DIFFUSE = 0;
+const static int NORMAL = 1;
 
 class Deferred
 {

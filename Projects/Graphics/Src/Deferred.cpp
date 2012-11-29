@@ -49,12 +49,37 @@ void Deferred::renderComposedImage()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	m_deviceContext->PSSetShaderResources(1, 2, &m_gBuffersShaderResource[0]);
+	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
+	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
+	//m_deviceContext->PSSetShaderResources(0,2,&m_gBuffersShaderResource[0]);
 
 	m_vertexBuffer->apply();
 	m_composeShader->apply();
 
 	m_deviceContext->Draw(6,0);
+}
+
+void Deferred::clearBuffers()
+{
+	unMapGBuffers();
+	float clearColor[] = {
+		0.0f,0.5f,0.5f,1.0f
+	};
+	for (unsigned int i = 0; i < NUMBUFFERS; i++)
+	{
+		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
+	}
+
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Deferred::unMapGBuffers()
+{
+	ID3D11ShaderResourceView * nulz[NUMBUFFERS];
+	for (int i=0; i<NUMBUFFERS; i++)
+		nulz[i]=NULL;
+	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
+	m_composeShader->apply();
 }
 
 void Deferred::initDepthStencil()
@@ -150,7 +175,7 @@ void Deferred::initGeomtryBuffers()
 	/* !!! Note that the for loop starts at index 1 since depthbuffer		*/
 	/* already in init !!!													*/
 	/************************************************************************/
-	for (unsigned int i = DIFFUSE; i < NUMBUFFERS; i++){
+	for (unsigned int i = DIFFUSE; i < NUMBUFFERS-1; i++){
 		hr = m_device->CreateShaderResourceView(gBufferTextures[i],&shaderResourceDesc,
 			&m_gBuffersShaderResource[i]);
 		gBufferTextures[i]->Release();
@@ -181,27 +206,6 @@ void Deferred::createFullScreenQuad( )
 	m_vertexBuffer = new Buffer(m_device,m_deviceContext,bufferDesc);
 }
 
-void Deferred::clearBuffers()
-{
-	unMapGBuffers();
-	float clearColor[] = {
-		0.0f,0.5f,0.5f,1.0f
-	};
-	for (unsigned int i = 0; i < NUMBUFFERS; i++)
-	{
-		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
-	}
 
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void Deferred::unMapGBuffers()
-{
-	ID3D11ShaderResourceView * nulz[NUMBUFFERS];
-	for (int i=0; i<NUMBUFFERS; i++)
-		nulz[i]=NULL;
-	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
-	m_composeShader->apply();
-}
 
 

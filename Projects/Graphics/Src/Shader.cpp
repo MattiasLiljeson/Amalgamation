@@ -30,22 +30,22 @@ Shader::Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContex
 
 	m_samplerState = NULL;
 
-	///
 	D3D11_SAMPLER_DESC samplerDesc;
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	ZeroMemory(&samplerDesc,sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.BorderColor[0] = 0;
 	samplerDesc.BorderColor[1] = 0;
 	samplerDesc.BorderColor[2] = 0;
 	samplerDesc.BorderColor[3] = 0;
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	/// vackert
+	
 	if ( FAILED (m_device->CreateSamplerState(&samplerDesc,&m_samplerState)) )
 	{
 		throw D3DException("Couldn't create sampler state",__FILE__,__FUNCTION__,__LINE__);
