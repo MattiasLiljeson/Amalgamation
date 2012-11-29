@@ -8,7 +8,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 	m_pixelProgramCBuffer = NULL;
 	m_vertexProgramCBuffer = NULL;
 
-	createShader(L"Assets/Shaders/vertexTest.vs", "VS", "vs_4_0",	
+	createShader(L"Assets/Shaders/newLayoutTest.hlsl", "VS", "vs_4_0",
 		&m_vertexShader.compiledData);
 
 	if ( FAILED (m_device->CreateVertexShader(
@@ -18,7 +18,7 @@ Shader::Shader(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 		throw D3DException("Couldn't create vertex shader",__FILE__,__FUNCTION__,__LINE__);
 	}
 
-	createShader(L"Assets/Shaders/pixelTest.ps", "PS", "ps_4_0", 
+	createShader(L"Assets/Shaders/newLayoutTest.hlsl", "PS", "ps_4_0",
 		&m_pixelShader.compiledData);
 
 	if ( FAILED (m_device->CreatePixelShader(

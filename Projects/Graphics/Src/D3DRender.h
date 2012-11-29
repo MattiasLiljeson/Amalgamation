@@ -16,12 +16,8 @@
 #include "Util.h"
 #include "Shader.h"
 #include "Buffer.h"
+#include "Deferred.h"
 
-struct PTVertex
-{
-	float pos[3];
-	float tex[2];
-};
 
 class D3DRender
 {
@@ -42,10 +38,12 @@ private:
 	ID3D11DeviceContext*	m_deviceContext;
 	IDXGISwapChain*			m_swapChain;
 	D3D_FEATURE_LEVEL		m_featureLevel;
+
+	Deferred*				m_deferred;
 	
 	ID3D11RenderTargetView* m_backBuffer;
-	ID3D11Texture2D*		m_depthStencil;
-	ID3D11DepthStencilView* m_depthStencilView;
+	//ID3D11Texture2D*		m_depthStencil;
+	//ID3D11DepthStencilView* m_depthStencilView;
 
 	Shader*					m_shader;
 	Buffer*					m_vertexBuffer;

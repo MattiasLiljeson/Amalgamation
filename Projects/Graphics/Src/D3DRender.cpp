@@ -6,8 +6,8 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_deviceContext = NULL;
 	m_swapChain		= NULL;
 
-	m_depthStencilView = NULL;
-	m_backBuffer	   = NULL;
+	//m_depthStencilView = NULL;
+	//m_backBuffer	   = NULL;
 
 	m_shader		= NULL;
 	m_vertexBuffer	= NULL;
@@ -23,6 +23,7 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	initViewport();
 	initFullScreenQuad();
 
+	m_deferred = new Deferred( m_device, m_deviceContext, m_width, m_height);
 	clearRenderTargets();
 }
 
@@ -31,7 +32,6 @@ D3DRender::~D3DRender()
 	SAFE_RELEASE(m_device);
 	SAFE_RELEASE(m_deviceContext);
 	SAFE_RELEASE(m_swapChain);
-	SAFE_RELEASE(m_depthStencilView);
 	SAFE_RELEASE(m_backBuffer);
 
 	delete m_shader;
@@ -124,50 +124,23 @@ void D3DRender::initBuffers()
 	if( FAILED(hr) )
 		throw D3DException("Failed to create rendertargetview from backbuffer.",
 		__FILE__,__FUNCTION__,__LINE__);
-
-
-	// Create depth stencil texture
-	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width = m_width;
-	descDepth.Height = m_height;
-	descDepth.MipLevels = 1;
-	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-	descDepth.SampleDesc.Count = 1;
-	descDepth.SampleDesc.Quality = 0;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	descDepth.CPUAccessFlags = 0;
-	descDepth.MiscFlags = 0;
-	hr = m_device->CreateTexture2D( &descDepth, NULL, &m_depthStencil );
-	if( FAILED(hr) )
-		throw D3DException("Failed to create depth stencil texture2d.",__FILE__,
-		__FUNCTION__,__LINE__);
-
-
-	// Create the depth stencil view
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	ZeroMemory(&descDSV, sizeof(descDSV));
-	descDSV.Format = descDepth.Format;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0;
-	hr = m_device->CreateDepthStencilView( m_depthStencil, &descDSV, &m_depthStencilView );
-	if( FAILED(hr) )
-		throw D3DException("Failed to create the depth stencil view.",__FILE__,
-		__FUNCTION__,__LINE__);
-
 }
 
 void D3DRender::clearRenderTargets()
 {
+	m_deferred->clearBuffers();
+	
 	static float ClearColor[4] = { 1, 0, 0, 1.0f };
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
-	m_deviceContext->ClearDepthStencilView( m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, m_depthStencilView);
 }
 
 void D3DRender::render()
 {
+	m_deferred->deferredBasePass();
+
+	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
+	m_deferred->renderComposedImage();
+	/*
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	UINT32 vertexSize = sizeof(PTVertex);
@@ -177,7 +150,7 @@ void D3DRender::render()
 	m_shader->apply();
 
 	m_deviceContext->Draw(6,0);
-
+	*/
 }
 
 void D3DRender::flipBackBuffer()
@@ -187,7 +160,6 @@ void D3DRender::flipBackBuffer()
 
 void D3DRender::initFullScreenQuad()
 {
-
 	PTVertex mesh[]= {
 		{{ 1,	-1,	0},	{ 1, 1}},
 		{{ -1,	-1,	0},	{ 0, 1}},
