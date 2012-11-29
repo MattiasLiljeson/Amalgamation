@@ -27,7 +27,7 @@ bitset<ComponentType::NUM_COMPONENT_TYPES> ComponentType::getBit()
 	return m_bit;
 }
 
-int ComponentType::getIdx()
+int ComponentType::getIndex()
 {
 	return m_idx;
 }

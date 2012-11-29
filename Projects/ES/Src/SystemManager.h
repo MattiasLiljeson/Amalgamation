@@ -6,6 +6,7 @@
 
 class EntitySystem;
 class EntityWorld;
+class SystemType;
 
 class SystemManager
 {

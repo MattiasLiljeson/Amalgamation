@@ -2,11 +2,12 @@
 
 #include "Entity.h"
 #include "EntityWorld.h"
-#include <vector>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
+class Entity;
 class EntityWorld;
 
 class EntityManager

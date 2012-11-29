@@ -1,8 +1,12 @@
 #pragma once
 
-#include "EntityWorld.h"
 #include "ComponentType.h"
+#include "EntityWorld.h"
 #include "SystemType.h"
+
+class ComponentType;
+class EntityWorld;
+class SystemType;
 
 class Entity
 {

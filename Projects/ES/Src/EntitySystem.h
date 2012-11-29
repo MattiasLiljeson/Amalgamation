@@ -14,16 +14,19 @@
 /// Created on: 28-11-2012 
 ///---------------------------------------------------------------------------------------
 
+#include "ComponentType.h"
 #include "Entity.h"
 #include "EntityWorld.h"
-#include "ComponentType.h"
+#include "SystemType.h"
 #include <map>
 #include <stdarg.h>
 
 using namespace std;
 
-class EntityWorld;
+class ComponentType;
 class Entity;
+class EntityWorld;
+class SystemType;
 
 class EntitySystem
 {

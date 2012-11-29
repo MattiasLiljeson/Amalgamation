@@ -31,7 +31,7 @@ void ComponentManager::deleted( Entity* p_entity )
 
 void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type, Component* p_component )
 {
-	int typeIndex = p_type.getIdx();
+	int typeIndex = p_type.getIndex();
 	int entityIndex = p_entity->getIndex();
 
 	m_componentsByType.reserve(typeIndex);
@@ -44,7 +44,7 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type, Com
 void ComponentManager::removeComponent( Entity* p_entity, ComponentType p_type )
 {
 	bitset<ComponentType::NUM_COMPONENT_TYPES> bits = p_entity->getComponentBits();
-	int typeIndex = p_type.getIdx();
+	int typeIndex = p_type.getIndex();
 	int entityIndex = p_entity->getIndex();
 
 	if ( bits[typeIndex] == true)
@@ -56,16 +56,16 @@ void ComponentManager::removeComponent( Entity* p_entity, ComponentType p_type )
 
 Component* ComponentManager::getComponent( Entity* p_entity, ComponentType p_type )
 {
-	if(m_componentsByType[p_type.getIdx()].empty() != true)
+	if(m_componentsByType[p_type.getIndex()].empty() != true)
 	{
-		return m_componentsByType[p_type.getIdx()][p_entity->getIndex()];
+		return m_componentsByType[p_type.getIndex()][p_entity->getIndex()];
 	}
 	return NULL;
 }
 
 vector<Component*> ComponentManager::getComponentsByType( ComponentType p_type )
 {
-	return m_componentsByType[p_type.getIdx()];
+	return m_componentsByType[p_type.getIndex()];
 }
 
 void ComponentManager::clean()
