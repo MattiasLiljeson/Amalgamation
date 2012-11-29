@@ -16,12 +16,17 @@ ProcessThread::~ProcessThread()
 
 int ProcessThread::start()
 {
+	int result = 1;
+
 	if( m_thread == NULL )
 	{
 		m_thread = new boost::thread(
 			boost::bind(
 			&ProcessThread::body, this ) );
+		result = 0;
 	}
+
+	return result;
 }
 
 void ProcessThread::stop()
