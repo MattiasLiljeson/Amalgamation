@@ -4,56 +4,56 @@
 
 using namespace std;
 
-TEST(ComponentTypeGetId, OneComponentType)
+TEST(ComponentTypegetIndex, OneComponentType)
 {
 	ComponentType ct;
 	int ct_id;
 
 
 	ct = ComponentType::getTypeFor(ComponentType::Position);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
 	ct = ComponentType::getTypeFor(ComponentType::Position);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
 	ct = ComponentType::getTypeFor(ComponentType::Position);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 }
 
-TEST(ComponentTypeGetId, SeveralComponentTypes)
+TEST(ComponentTypegetIndex, SeveralComponentTypes)
 {
 	ComponentType ct;
 	int ct_id;
 
 
 	ct = ComponentType::getTypeFor(ComponentType::Position);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
 	ct = ComponentType::getTypeFor(ComponentType::Orientation);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 1, ct_id );
 
 	ct = ComponentType::getTypeFor(ComponentType::Render);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 2, ct_id );
 
 	ct = ComponentType::getTypeFor(ComponentType::Input);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( 3, ct_id );
 }
 
-TEST(ComponentTypeGetId, NonExisting)
+TEST(ComponentTypegetIndex, NonExisting)
 {
 	ComponentType ct;
 	int ct_id;
 
 
 	ct = ComponentType::getTypeFor(ComponentType::NON_EXISTING);
-	ct_id = ct.getId();
+	ct_id = ct.getIndex();
 	EXPECT_EQ( -1, ct_id );
 }
 

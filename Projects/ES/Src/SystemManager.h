@@ -2,25 +2,27 @@
 
 #include "EntitySystem.h"
 #include "EntityWorld.h"
+#include "Manager.h"
 #include "SystemType.h"
 
 class EntitySystem;
 class EntityWorld;
+class Manager;
 class SystemType;
 
-class SystemManager
+class SystemManager : public Manager
 {
-private:
-	EntityWorld* m_world;
-	map<SystemType::SystemTypeIdx, EntitySystem*> m_systems;
-
 public:
 	SystemManager( EntityWorld* p_world );
 	~SystemManager();
 
+	void initialize(){ initializeAll(); };
 	EntitySystem* getSystem( SystemType::SystemTypeIdx p_systemIndex );
 	void setSystem( EntitySystem* p_system, SystemType::SystemTypeIdx p_index );
 	void initializeAll();
 	void updateSynchronous();
+
+private:
+	map<SystemType::SystemTypeIdx, EntitySystem*> m_systems;
 };
 

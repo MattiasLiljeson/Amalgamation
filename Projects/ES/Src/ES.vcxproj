@@ -17,8 +17,10 @@
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="EntitySystem.h" />
     <ClInclude Include="EntityWorld.h" />
+    <ClInclude Include="Manager.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="SystemType.h" />
   </ItemGroup>

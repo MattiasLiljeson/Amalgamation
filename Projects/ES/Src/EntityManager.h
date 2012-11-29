@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "EntityWorld.h"
+#include "Manager.h"
 #include <stack>
 #include <vector>
 
@@ -9,14 +10,15 @@ using namespace std;
 
 class Entity;
 class EntityWorld;
+class Manager;
 
-class EntityManager
+class EntityManager : public Manager
 {
 public:
 	EntityManager();
 	~EntityManager();
 
-	//void initialize() {}
+	void initialize(){};
 	Entity* createEntityInstance();
 	void added( Entity* p_entity);
 	void enabled( Entity* p_entity);
@@ -31,8 +33,6 @@ public:
 	int getTotalDeleted() const;
 
 private:
-	EntityWorld* m_world;
-
 	// Use deque instead of vector maybe? 
 	// Profile and measure!
 	vector<Entity*> m_entities;
