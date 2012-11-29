@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h" />
+    <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp" />
+    <ClCompile Include="ThreadSafeMessaging.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}</ProjectGuid>
