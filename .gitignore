@@ -65,3 +65,11 @@ External/DirectX/Lib*/
 #folders
 docs
 assets
+/External/Visual Leak Detector/include
+/External/Visual Leak Detector/lib
+/External/Visual Leak Detector/src
+/External/Visual Leak Detector/AUTHORS.txt
+/External/Visual Leak Detector/CHANGES.txt
+/External/Visual Leak Detector/COPYING.txt
+/External/Visual Leak Detector/vld.ini
+/External/Visual Leak Detector/bin

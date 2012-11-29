@@ -70,8 +70,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>

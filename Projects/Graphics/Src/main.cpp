@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <iostream>
+#include <vld.h>
 #include "Window.h"
 #include "D3DRender.h"
 #include "DebugUtil.h"
