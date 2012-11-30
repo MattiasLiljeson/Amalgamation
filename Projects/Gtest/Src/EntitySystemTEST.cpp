@@ -13,7 +13,9 @@ TEST(EntitySystemConstructor, SimpleCreation)
 
 TEST(EntitySystemConstructor, MultipleComponentTypes)
 {
-	EntitySystem system(3,
+	SystemType type = SystemType::getTypeFor(SystemType::NON_EXISTING);
+
+	EntitySystem system(type, 3,
 		ComponentType::Position,
 		ComponentType::Orientation,
 		ComponentType::Render);
