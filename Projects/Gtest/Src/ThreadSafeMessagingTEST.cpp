@@ -42,7 +42,6 @@ public:
 private:
 	ThreadSafeMessaging* m_messaging;
 
-
 };
 
 TEST(ThreadSafeMessaging, PutMessage)
@@ -54,4 +53,7 @@ TEST(ThreadSafeMessaging, PutMessage)
 	B->sendMessage( hej );
 
 	EXPECT_STREQ( hej.c_str(), static_cast<TestMessenger*>(A)->getMessage().c_str() );
+
+	delete B;
+	delete A;
 }

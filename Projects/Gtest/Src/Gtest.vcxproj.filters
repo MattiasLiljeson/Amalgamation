@@ -32,6 +32,9 @@
     <Filter Include="ProcessThread\ThreadSafeMessaging TEST">
       <UniqueIdentifier>{9d93ad2a-8d46-49c1-b6bd-5b4a1152a980}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ProcessThread\ProcessThread TEST">
+      <UniqueIdentifier>{0911badd-e531-40c3-a58e-82ca382b2e18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
@@ -76,6 +79,12 @@
     <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
       <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessThreadTEST.cpp">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessThread.cpp">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -101,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
       <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessThread.h">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

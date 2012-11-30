@@ -33,7 +33,9 @@ void ProcessThread::stop()
 {
 	if( m_thread )
 	{
-		// TODO: send "exit" message/event to the process.
+		// Send "exit" message/event to the process.
+		putMessage( new ProcessMessage(
+			MessageType::TERMINATE, this, "exit" ) );
 
 		m_thread->join();
 		delete m_thread;

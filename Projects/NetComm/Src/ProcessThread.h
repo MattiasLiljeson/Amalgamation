@@ -4,10 +4,12 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
+#include "ThreadSafeMessaging.h"
+
 ///
 /// Abstract ProcessThread, used as a "safer" thread.
 ///
-class ProcessThread
+class ProcessThread : public ThreadSafeMessaging
 {
 public:
 	///-----------------------------------------------------------------------------------

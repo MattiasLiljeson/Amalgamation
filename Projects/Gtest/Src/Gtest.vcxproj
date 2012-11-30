@@ -17,10 +17,12 @@
     <ClCompile Include="..\..\ES\Src\EntitySystem.cpp" />
     <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp" />
     <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp" />
+    <ClCompile Include="..\..\NetComm\Src\ProcessThread.cpp" />
     <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp" />
     <ClCompile Include="ComponentType TEST.cpp" />
     <ClCompile Include="EntityManagerTEST.cpp" />
     <ClCompile Include="EntitySystemTEST.cpp" />
+    <ClCompile Include="ProcessThreadTEST.cpp" />
     <ClCompile Include="QueueListTEST.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="ThreadSafeMessagingTEST.cpp" />
@@ -34,6 +36,7 @@
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h" />
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h" />
     <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h" />
+    <ClInclude Include="..\..\NetComm\Src\ProcessThread.h" />
     <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
