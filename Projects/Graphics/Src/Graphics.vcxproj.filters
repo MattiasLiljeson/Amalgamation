@@ -9,11 +9,14 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Renderer\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>Renderer\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="Deferred.cpp">
       <Filter>Renderer\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferBase.cpp">
+      <Filter>Renderer\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferConfig.cpp">
+      <Filter>Renderer\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,14 +42,20 @@
     <ClInclude Include="ToString.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Renderer\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="Deferred.h">
       <Filter>Renderer\Deferred</Filter>
     </ClInclude>
     <ClInclude Include="PTVertex.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferBase.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferConfig.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Renderer\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

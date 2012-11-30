@@ -11,7 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="BufferConfig.cpp" />
+    <ClCompile Include="BufferBase.cpp" />
     <ClCompile Include="D3DRender.cpp" />
     <ClCompile Include="Deferred.cpp" />
     <ClCompile Include="main.cpp" />
@@ -20,6 +21,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="BufferConfig.h" />
+    <ClInclude Include="BufferBase.h" />
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />
     <ClInclude Include="DebugUtil.h" />

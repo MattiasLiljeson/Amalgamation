@@ -42,12 +42,9 @@ void Deferred::deferredBasePass()
 
 	m_vertexBuffer->apply();
 
-	void* bfData = m_baseShader->tempGetBufferPtr()->map();
-	Shader::ShaderPixelProgramCBuffer* cbuf = static_cast<Shader::ShaderPixelProgramCBuffer*>(bfData);
-	cbuf->color[0]=1.0f;
-	cbuf->color[1]=0.0f;
-	m_baseShader->tempGetBufferPtr()->unmap();
-
+	m_baseShader->tempGetBufferPtr()->accessBuffer.color[0] = 1.0f;
+	m_baseShader->tempGetBufferPtr()->accessBuffer.color[1] = 0.0f;
+	m_baseShader->tempGetBufferPtr()->update();
 
 	m_baseShader->apply();
 
@@ -206,14 +203,19 @@ void Deferred::createFullScreenQuad( )
 		{{ -1,	1,	0},	{ 0, 0}}
 	};
 
-	Buffer::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = sizeof(PTVertex);
-	bufferDesc.InitData = mesh;
-	bufferDesc.NumElements = 6;
-	bufferDesc.Type = Buffer::VERTEX_BUFFER;
-	bufferDesc.Usage = Buffer::BUFFER_DEFAULT;
 
-	m_vertexBuffer = new Buffer(m_device,m_deviceContext,bufferDesc);
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(PTVertex);
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = 6;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Store description in config object
+	BufferConfig* initConfig = new BufferConfig(bufferDesc);
+
+	// Create buffer from config and data
+	m_vertexBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
 }
 
 

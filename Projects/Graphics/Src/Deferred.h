@@ -48,7 +48,7 @@ private:
 
 	Shader* m_baseShader;
 	Shader* m_composeShader;
-	Buffer* m_vertexBuffer;
+	Buffer<PTVertex>* m_vertexBuffer;
 
 	int m_width;
 	int m_height;

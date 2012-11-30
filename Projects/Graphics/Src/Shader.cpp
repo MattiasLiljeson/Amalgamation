@@ -5,8 +5,7 @@ Shader::Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContex
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 
-	m_pixelProgramCBuffer = NULL;
-	m_vertexProgramCBuffer = NULL;
+	m_CBufferPerFrame = NULL;
 
 	createShader(p_path, "VS", "vs_5_0",
 		&m_vertexShader.compiledData);
@@ -60,8 +59,7 @@ Shader::~Shader()
 	SAFE_RELEASE(m_samplerState);
 	SAFE_RELEASE(m_pixelShader.data);
 	SAFE_RELEASE(m_vertexShader.data);
-	delete m_pixelProgramCBuffer;
-	delete m_vertexProgramCBuffer;
+	delete m_CBufferPerFrame;
 }
 
 
@@ -125,33 +123,27 @@ void Shader::createInputLayout()
 
 void Shader::initBuffers()
 {
-	float color[]={
+	CBufferTest color={
 		0.0f,1.0f,0.0f,1.0f,
 	};
 
-	Buffer::BUFFER_INIT_DESC vertexProgCBufferDesc;
-	vertexProgCBufferDesc.ElementSize = sizeof(ShaderVertexProgramCBuffer);
-	vertexProgCBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE_DISCARD;
-	vertexProgCBufferDesc.InitData = &color[0];
-	vertexProgCBufferDesc.NumElements = 1;
-	vertexProgCBufferDesc.Type = Buffer::CONSTANT_BUFFER_VS;
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(CBufferTest);
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = 1;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
 
-	m_vertexProgramCBuffer = new Buffer(m_device,m_deviceContext,vertexProgCBufferDesc);
+	// Store description in config object
+	BufferConfig* initConfig = new BufferConfig(bufferDesc);
 
-	Buffer::BUFFER_INIT_DESC pixelProgCBufferDesc;
-	pixelProgCBufferDesc.ElementSize = sizeof(ShaderPixelProgramCBuffer);
-	pixelProgCBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE_DISCARD;
-	pixelProgCBufferDesc.InitData = &color[0];
-	pixelProgCBufferDesc.NumElements = 1;
-	pixelProgCBufferDesc.Type = Buffer::CONSTANT_BUFFER_PS;
-
-	m_pixelProgramCBuffer = new Buffer(m_device,m_deviceContext,pixelProgCBufferDesc);
+	// Create buffer from config and data
+	m_CBufferPerFrame = new Buffer<CBufferTest>(m_device,m_deviceContext,&color,initConfig);
 }
 
 void Shader::apply()
 {
-	m_vertexProgramCBuffer->apply();
-	m_pixelProgramCBuffer->apply();
+	m_CBufferPerFrame->apply();
 	m_deviceContext->VSSetShader(m_vertexShader.data, 0, 0);
 	m_deviceContext->PSSetShader(m_pixelShader.data, 0, 0);
 	m_deviceContext->PSSetSamplers(0,1,&m_samplerState);

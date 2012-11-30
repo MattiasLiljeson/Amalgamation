@@ -42,18 +42,13 @@ public:
 		ID3D10Blob* compiledData;
 		ID3D11PixelShader* data;
 	};
-	
-	struct ShaderVertexProgramCBuffer
+
+	struct CBufferTest
 	{
 		float color[4];
 	};
 
-	struct ShaderPixelProgramCBuffer
-	{
-		float color[4];
-	};
-
-	Buffer* tempGetBufferPtr() {return m_pixelProgramCBuffer;}
+	Buffer<CBufferTest>* tempGetBufferPtr() {return m_CBufferPerFrame;}
 
 protected:
 	void initBuffers();
@@ -83,8 +78,8 @@ private:
 	PixelShaderData m_pixelShader;
 
 	// Per-program test buffers
-	Buffer* m_pixelProgramCBuffer;
-	Buffer* m_vertexProgramCBuffer;
+	Buffer<CBufferTest>* m_CBufferPerFrame;
+	// Buffer* m_vertexProgramCBuffer;
 
 	// D3D
 	ID3D11Device* m_device;

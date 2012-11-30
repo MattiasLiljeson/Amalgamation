@@ -46,7 +46,7 @@ private:
 	//ID3D11DepthStencilView* m_depthStencilView;
 
 	Shader*					m_shader;
-	Buffer*					m_vertexBuffer;
+	Buffer<PTVertex>*		m_vertexBuffer;
 
 	int m_height;
 	int m_width;

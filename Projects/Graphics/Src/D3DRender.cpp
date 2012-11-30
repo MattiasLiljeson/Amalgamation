@@ -160,14 +160,18 @@ void D3DRender::initFullScreenQuad()
 		{{ -1,	1,	0},	{ 0, 0}}
 	};
 
-	Buffer::BUFFER_INIT_DESC bufferDesc;
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
 	bufferDesc.ElementSize = sizeof(PTVertex);
-	bufferDesc.InitData = mesh;
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = 6;
-	bufferDesc.Type = Buffer::VERTEX_BUFFER;
-	bufferDesc.Usage = Buffer::BUFFER_DEFAULT;
-	
-	m_vertexBuffer = new Buffer(m_device,m_deviceContext,bufferDesc);
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Store description in config object
+	BufferConfig* initConfig = new BufferConfig(bufferDesc);
+
+	// Create buffer from config and data
+	m_vertexBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
 }
 
 void D3DRender::initViewport()
