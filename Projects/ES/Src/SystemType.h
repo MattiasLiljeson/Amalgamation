@@ -15,8 +15,13 @@ public:	//Enums
 	};
 
 public:
-	SystemType(void);
-	~SystemType(void);
+	/**
+	 * The constructor is not private but should not be used for creating an instance for
+	 * this class. This method is public so that the class can be allocated on the stack.
+	 * Use getTypeFor() if you want an instance of this class.
+	 */
+	SystemType();
+	~SystemType();
 
 	static SystemType getTypeFor( SystemTypeIdx p_system );
 	static int getIndexFor( SystemTypeIdx p_system );
@@ -26,6 +31,13 @@ public:
 	int getIndex();
 
 private:
+
+	/**
+	 * This method is private. Initialization is done through getTypeFor(). Use that if
+	 * you want an instance of this class. This method will initialize the type with a
+	 * correct bit and correct index.
+	 * @param p_type Type to be initialized to.
+	 */
 	void init( SystemTypeIdx p_type );
 
 private:
@@ -34,7 +46,6 @@ private:
 	static map<SystemTypeIdx, SystemType> s_systemTypes;
 
 	bitset<NUM_SYSTEM_TYPES> m_bit;
-	int m_idx;
-	SystemTypeIdx m_type;
+	SystemTypeIdx m_idx;
 };
 

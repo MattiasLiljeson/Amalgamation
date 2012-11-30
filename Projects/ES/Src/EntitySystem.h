@@ -17,6 +17,7 @@
 #include "ComponentType.h"
 #include "Entity.h"
 #include "EntityWorld.h"
+#include "IEntityObserver.h"
 #include "SystemType.h"
 #include <map>
 #include <stdarg.h>
@@ -26,20 +27,22 @@ using namespace std;
 class ComponentType;
 class Entity;
 class EntityWorld;
+class IEntityObserver;
 class SystemType;
 
-class EntitySystem
+class EntitySystem : public IEntityObserver
 {
 public:
-	EntitySystem();
+	EntitySystem( SystemType p_type );
 
 	/**
 	 * Creates an entity system that uses the specified components as a matcher against 
 	 * entities.
-	 * @param number of components 
-	 * @param components to match against entities
+	 * @param p_type Type of system.
+	 * @param p_numComponents Number of components 
+	 * @param ... Components to match against entities
 	 */
-	EntitySystem( int p_numComponents, ... );
+	EntitySystem( SystemType p_type,  int p_numComponents, ... );
 	~EntitySystem();
 
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits );
@@ -65,7 +68,7 @@ public:
 	 * 
 	 * @param entities the entities this system contains.
 	 */
-	virtual void processEntities(const map<int, Entity*>& p_entities );
+	virtual void processEntities(const vector<Entity*>& p_entities );
 	
 	/**
 	 * 
@@ -78,26 +81,55 @@ public:
 	 */
 	virtual void initialize();
 	
+	// From C#
+	///**
+	// * Called if the system has received a entity it is interested in, e.g. created or a
+	// * component was added to it.
+	// * @param e the entity that was added to this system.
+	// */
+	//virtual void onAdded(Entity* e);
+	//
+	///**
+	// * Called if a entity was removed from this system, e.g. deleted or had one of it's
+	// * components removed.
+	// * @param e the entity that was removed from this system.
+	// */
+	//virtual void onRemoved(Entity* e);
+	//
+	//virtual void onEnabled(Entity* e);
+	//virtual void onDisabled(Entity* e);
+	//virtual void onChange(Entity* e);
+	//void add(Entity* e);
+	//void remove(Entity* e);
+	//void enable(Entity* e);
+	//void disable(Entity* e);
+
+	/**
+	 * Will check if the entity is of interest to this system.
+	 * @param p_entity Entity to check
+	 */
+	void check( Entity* p_entity );
+
 	/**
 	 * Called if the system has received a entity it is interested in, e.g. created or a component was added to it.
-	 * @param e the entity that was added to this system.
+	 * @param p_entity The entity that was added to this system.
 	 */
-	virtual void onAdded(Entity* e);
-	
+	void inserted( Entity* p_entity ) {};
+
 	/**
 	 * Called if a entity was removed from this system, e.g. deleted or had one of it's components removed.
-	 * @param e the entity that was removed from this system.
+	 * @param p_entity The entity that was removed from this system.
 	 */
-	virtual void onRemoved(Entity* e);
+	void removed( Entity* p_entity ) {};
 
-	virtual void onEnabled(Entity* e);
-	virtual void onDisabled(Entity* e);
-	virtual void onChange(Entity* e);
+	void removeFromSystem( Entity* p_entity );
+	void insertToSystem( Entity* p_entity );
 
-	void add(Entity* e);
-	void remove(Entity* e);
-	void enable(Entity* e);
-	void disable(Entity* e);
+	void added( Entity* p_entity );
+	void changed( Entity* p_entity );
+	void deleted( Entity* p_entity );
+	void enabled( Entity* p_entity );
+	void disabled( Entity* p_entity );
 
 	EntityWorld* getWorld() const;
 	void setWorld( EntityWorld* p_world );
@@ -116,13 +148,15 @@ public:
 
 
 protected:
+	int findEntityInActive( Entity* p_entity );
 	EntityWorld* m_world;
 	bool m_enabled;
 
 private:
-	map< int, Entity* > m_actives;
+	vector<Entity*> m_actives;
 
-	bitset<SystemType::NUM_SYSTEM_TYPES> m_systemBits;
+	//bitset<SystemType::NUM_SYSTEM_TYPES> m_systemBits;
+	SystemType m_type;
 	bitset<ComponentType::NUM_COMPONENT_TYPES> m_componentBits;
 };
 

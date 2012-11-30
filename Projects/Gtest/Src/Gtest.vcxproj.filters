@@ -61,6 +61,9 @@
     <ClCompile Include="..\..\ES\Src\EntityManager.cpp">
       <Filter>ES\EntityManager TEST</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ES\Src\SystemType.cpp">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\EntityManager.h">
       <Filter>ES\EntityManager TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\SystemType.h">
+      <Filter>ES\EntitySystem TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "ComponentType.h"
 #include "Entity.h"
+#include "Manager.h"
 #include <bitset>
 #include <vector>
 
@@ -11,22 +12,24 @@ using namespace std;
 class Component;
 class ComponentType;
 class Entity;
+class Manager;
 
-class ComponentManager
+class ComponentManager : public Manager
 {
 public:
 	ComponentManager();
 	~ComponentManager();
 
-	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
+	void initialize(){};
 	void deleted( Entity* p_entity );
+	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
+	void clean();
 
 protected:
 	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
 	void removeComponent( Entity* p_entity, ComponentType p_type );
 	Component* getComponent( Entity* p_entity, ComponentType p_type );
 	vector<Component*> getComponentsByType( ComponentType p_type );
-	void clean();
 
 private:
 	void removeComponentsOfEntity( Entity* p_entity );
