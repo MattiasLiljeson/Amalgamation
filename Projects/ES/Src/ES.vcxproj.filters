@@ -2,34 +2,77 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Aspect.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="ComponentManager.cpp" />
-    <ClCompile Include="ComponentType.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="EntityManager.cpp" />
-    <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
-    <ClCompile Include="SystemManager.cpp" />
-    <ClCompile Include="SystemType.cpp" />
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntitySystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemType.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentType.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentManager.h" />
-    <ClInclude Include="ComponentType.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="IEntityObserver.h" />
-    <ClInclude Include="EntitySystem.h" />
     <ClInclude Include="EntityWorld.h" />
-    <ClInclude Include="Manager.h" />
     <ClInclude Include="IPerformer.h" />
-    <ClInclude Include="SystemManager.h" />
-    <ClInclude Include="SystemType.h" />
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntitySystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemType.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentType.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
       <UniqueIdentifier>{db9775ae-6b47-4e48-9388-395d8965a318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{9326d69e-4502-4956-91b9-169447caded8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{93ca66c4-68f2-462f-b1db-56a786f6120f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{f643ac62-e732-4fe5-9cf9-b33a83c54c8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
