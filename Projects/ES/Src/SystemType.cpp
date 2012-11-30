@@ -8,7 +8,6 @@ SystemType::SystemType()
 {
 }
 
-
 SystemType::~SystemType()
 {
 }
@@ -25,7 +24,7 @@ bitset<SystemType::NUM_SYSTEM_TYPES> SystemType::getBit()
 	return m_bit;
 }
 
-SystemType::SystemTypeIdx SystemType::getIndex()
+int SystemType::getIndex()
 {
 	return m_idx;
 }

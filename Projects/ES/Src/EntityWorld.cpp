@@ -225,7 +225,7 @@ void EntityWorld::process()
 	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
 	{
 		EntitySystem* system = m_systemsBag[i];
-		if(system->getEnabled())
+		if( system->getEnabled() )
 			system->process();
 	}
 }

@@ -52,6 +52,9 @@
     <ClCompile Include="..\..\ES\Src\Entity.cpp">
       <Filter>ES\EntitySystem TEST</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ES\Src\SystemType.cpp">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -67,6 +70,9 @@
       <Filter>ES\EntitySystem TEST</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\Entity.h">
+      <Filter>ES\EntitySystem TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\SystemType.h">
       <Filter>ES\EntitySystem TEST</Filter>
     </ClInclude>
   </ItemGroup>
