@@ -12,12 +12,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessMessage.h" />
+    <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
+    <ClInclude Include="TcpListenerProcess.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessMessage.cpp" />
+    <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
+    <ClCompile Include="TcpListenerProcess.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

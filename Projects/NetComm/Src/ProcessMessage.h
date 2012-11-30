@@ -37,25 +37,17 @@ class ProcessMessage
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Create an empty message.
-	/// \returns 
-	///-----------------------------------------------------------------------------------
-	ProcessMessage();
-
-	///-----------------------------------------------------------------------------------
 	/// Create a message with actual content.
 	/// \param MessageType p_type
 	/// \param ThreadSafeMessaging * p_sender
 	/// \param string p_message
 	/// \returns 
 	///-----------------------------------------------------------------------------------
-	ProcessMessage( MessageType::MESSAGE_TYPE p_type, ThreadSafeMessaging* p_sender,
-		string p_message );
+	ProcessMessage( MessageType::MESSAGE_TYPE p_type, ThreadSafeMessaging* p_sender );
 
 	virtual ~ProcessMessage();
 
 public:
-	string message;
 	MessageType::MESSAGE_TYPE type;
 	ThreadSafeMessaging* sender;
 

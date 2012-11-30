@@ -80,8 +80,8 @@ void TcpListenerProcess::handleAccept( const boost::system::error_code& p_error 
 {
 	if( !p_error )
 	{
-//		m_parent->putMessage( new ProcessMessage(
-//			MessageType::CLIENT_CONNECTED, this, m_socket ) );
+		m_parent->putMessage( new ProcessMessageClientConnected(
+			this, m_socket ) );
 
 		m_socket = NULL;
 

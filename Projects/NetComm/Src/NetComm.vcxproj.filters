@@ -7,6 +7,15 @@
     <Filter Include="ThreadSafeMessaging">
       <UniqueIdentifier>{725e2531-2704-401c-8a3c-d72bc2c673ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TcpListenerProcess">
+      <UniqueIdentifier>{97a9f3b1-a111-47a8-a0a8-8bd9ff0a236e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadSafeMessaging\ProcessMessage">
+      <UniqueIdentifier>{8642e7b0-2300-472d-a4e5-f0626937060b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadSafeMessaging\ProcessMessage\base">
+      <UniqueIdentifier>{c171c6d5-ac52-4ad6-8504-4294fc07e86c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -15,8 +24,17 @@
     <ClCompile Include="ThreadSafeMessaging.cpp">
       <Filter>ThreadSafeMessaging</Filter>
     </ClCompile>
+    <ClCompile Include="TcpListenerProcess.cpp">
+      <Filter>TcpListenerProcess</Filter>
+    </ClCompile>
     <ClCompile Include="ProcessMessage.cpp">
-      <Filter>ThreadSafeMessaging</Filter>
+      <Filter>ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageText.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageClientConnected.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -26,8 +44,17 @@
     <ClInclude Include="ThreadSafeMessaging.h">
       <Filter>ThreadSafeMessaging</Filter>
     </ClInclude>
+    <ClInclude Include="TcpListenerProcess.h">
+      <Filter>TcpListenerProcess</Filter>
+    </ClInclude>
     <ClInclude Include="ProcessMessage.h">
-      <Filter>ThreadSafeMessaging</Filter>
+      <Filter>ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageText.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageClientConnected.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

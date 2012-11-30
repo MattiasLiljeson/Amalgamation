@@ -4,6 +4,7 @@
 
 #include "ThreadSafeMessaging.h"
 #include "ProcessThread.h"
+#include "ProcessMessageClientConnected.h"
 
 using namespace boost::asio::ip;
 using namespace std;
