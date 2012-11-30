@@ -4,10 +4,13 @@
 EntityWorld::EntityWorld()
 {
 	m_componentManager = new ComponentManager();
-	setManager( Manager::ComponentManager, static_cast<Manager*>(m_componentManager) );
+	setManager( Manager::ComponentManager, m_componentManager );
 		
 	m_entityManager = new EntityManager();
-	setManager(  Manager::EntityManager, static_cast<Manager*>(m_entityManager) );
+	setManager(  Manager::EntityManager, m_entityManager );
+
+	m_systemManager = new SystemManager( this );
+	setManager(  Manager::SystemManager, m_entityManager );
 }
 
 
@@ -38,15 +41,19 @@ ComponentManager* EntityWorld::getComponentManager()
 	return m_componentManager;
 }
 
-Manager* EntityWorld::setManager( Manager::ManagerType p_managerType, Manager* p_manager )
+Manager* EntityWorld::setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager )
 {
-	m_managers.reserve(p_managerType+1); // index+1 = required size 
+	int reqSize = p_managerType+1;  // index+1 = required size 
+	if(m_managers.size() < reqSize)
+		m_managers.resize(p_managerType+1);
+	
+	p_manager->setWorld(this);
 	m_managers[p_managerType] = p_manager;
 	m_managersBag.push_back(p_manager);
 	return p_manager;
 }
 
-Manager* EntityWorld::getManager( Manager::ManagerType p_managerType )
+Manager* EntityWorld::getManager( Manager::ManagerTypeIdx p_managerType )
 {
 	return m_managers[p_managerType];
 }
@@ -60,13 +67,13 @@ void EntityWorld::deleteManager( Manager* p_manager )
 	{
 		if(m_managers[i] == p_manager)
 		{
-			deleteManager((Manager::ManagerType)i);
+			deleteManager((Manager::ManagerTypeIdx)i);
 			break;
 		}
 	}
 }
 
-void EntityWorld::deleteManager( Manager::ManagerType p_managerType )
+void EntityWorld::deleteManager( Manager::ManagerTypeIdx p_managerType )
 {
 	// Find the correct manager-object in the bag and delete it;
 	// HACK: break in for-loop below

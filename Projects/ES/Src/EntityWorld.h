@@ -63,7 +63,7 @@ public:
 	 * @param p_managerType type of the manager specified by enum in Manager class
 	 * @param p_manager to be added
 	 */
-	Manager* setManager( Manager::ManagerType p_managerType, Manager* p_manager );
+	Manager* setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager );
 
 	/**
 	 * Returns a manager of the specified type.
@@ -71,14 +71,14 @@ public:
 	 * @param p_managerType type of the manager specified by enum in Manager class
 	 * @return the manager
 	 */
-	Manager* getManager( Manager::ManagerType p_managerType );
+	Manager* getManager( Manager::ManagerTypeIdx p_managerType );
 
 	/**
 	 * Deletes the manager from this world.
 	 * @param p_managerType type of the manager specified by enum in Manager class
 	 */
 	void deleteManager( Manager* p_manager );
-	void deleteManager( Manager::ManagerType p_managerType );
+	void deleteManager( Manager::ManagerTypeIdx p_managerType );
 
 	/**
 	 * Time since last game loop.

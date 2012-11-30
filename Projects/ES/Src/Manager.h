@@ -11,7 +11,7 @@ class IEntityObserver;
 class Manager : public IEntityObserver
 {
 public:
-	enum ManagerType
+	enum ManagerTypeIdx
 	{
 		NON_EXISTING_MANAGER,
 		// Add types here
@@ -28,7 +28,6 @@ public:
 	virtual void disabled( Entity* p_entity ) {}
 	virtual void enabled( Entity* p_entity ) {}
 
-protected:
 	virtual void setWorld( EntityWorld* p_world ) { m_world = p_world; }
 	virtual EntityWorld* getWorld() { return m_world; } 
 

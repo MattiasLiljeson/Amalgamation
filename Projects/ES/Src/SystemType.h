@@ -11,6 +11,9 @@ public:	//Enums
 	enum SystemTypeIdx
 	{
 		NON_EXISTING = -1,
+		EntitySystem,
+		TestSystem,
+		TestSystem2,
 		NUM_SYSTEM_TYPES
 	};
 
