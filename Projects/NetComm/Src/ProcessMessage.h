@@ -12,6 +12,7 @@
 #pragma once
 
 #include <string>
+#include "ThreadSafeMessaging.h"
 using namespace std;
 
 class ThreadSafeMessaging;
@@ -48,14 +49,14 @@ public:
 	/// \param string p_message
 	/// \returns 
 	///-----------------------------------------------------------------------------------
-	ProcessMessage( MessageType p_type, ThreadSafeMessaging* p_sender,
+	ProcessMessage( MessageType::MESSAGE_TYPE p_type, ThreadSafeMessaging* p_sender,
 		string p_message );
 
-	~ProcessMessage();
+	virtual ~ProcessMessage();
 
 public:
 	string message;
-	MessageType type;
+	MessageType::MESSAGE_TYPE type;
 	ThreadSafeMessaging* sender;
 
 };

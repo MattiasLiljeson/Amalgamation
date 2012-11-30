@@ -6,6 +6,8 @@
 #include "ProcessMessage.h"
 using namespace std;
 
+class ProcessMessage;
+
 ///
 /// Abstract ThreadSafeMessaging provides safe communication between threads/processes
 /// using messages.
@@ -14,7 +16,7 @@ class ThreadSafeMessaging
 {
 public:
 	ThreadSafeMessaging();
-	~ThreadSafeMessaging();
+	virtual ~ThreadSafeMessaging();
 
 	///-----------------------------------------------------------------------------------
 	/// Put a message on ThreadSafeMessaging's own message queue.

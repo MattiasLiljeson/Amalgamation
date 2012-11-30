@@ -26,6 +26,12 @@
     <Filter Include="ES\EntityManager TEST">
       <UniqueIdentifier>{877c3db5-3e71-4f06-b5ec-6737b1f213e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ProcessThread">
+      <UniqueIdentifier>{1cdc7bff-f539-40b2-b3ec-2b567a728a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProcessThread\ThreadSafeMessaging TEST">
+      <UniqueIdentifier>{9d93ad2a-8d46-49c1-b6bd-5b4a1152a980}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
@@ -61,6 +67,15 @@
     <ClCompile Include="..\..\ES\Src\EntityManager.cpp">
       <Filter>ES\EntityManager TEST</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadSafeMessagingTEST.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -80,6 +95,12 @@
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\EntityManager.h">
       <Filter>ES\EntityManager TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
