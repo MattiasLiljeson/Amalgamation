@@ -28,6 +28,17 @@ public:
 			MessageType::TEXT, m_messaging, p_message ) );
 	}
 
+	string getMessage()
+	{
+		ProcessMessage* message = popMessage();
+
+		string outMessage = message->message;
+
+		delete message;
+
+		return outMessage;
+	}
+
 private:
 	ThreadSafeMessaging* m_messaging;
 
@@ -42,4 +53,5 @@ TEST(ThreadSafeMessaging, PutMessage)
 	string hej = "hej";
 	B->sendMessage( hej );
 
+	EXPECT_STREQ( hej.c_str(), static_cast<TestMessenger*>(A)->getMessage().c_str() );
 }
