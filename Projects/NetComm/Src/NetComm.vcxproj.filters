@@ -56,5 +56,8 @@
     <ClInclude Include="ProcessMessageClientConnected.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessMessageTerminate.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

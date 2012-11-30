@@ -5,6 +5,7 @@
 #include <boost/bind.hpp>
 
 #include "ThreadSafeMessaging.h"
+#include "ProcessMessageTerminate.h"
 
 ///
 /// Abstract ProcessThread, used as a "safer" thread.

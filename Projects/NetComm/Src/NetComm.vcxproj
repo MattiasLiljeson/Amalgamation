@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageTerminate.h" />
     <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
     <ClInclude Include="TcpListenerProcess.h" />
