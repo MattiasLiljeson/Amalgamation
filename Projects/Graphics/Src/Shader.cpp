@@ -129,23 +129,23 @@ void Shader::initBuffers()
 		0.0f,1.0f,0.0f,1.0f,
 	};
 
-	Buffer::BUFFER_INIT_DESC vertexBufferDesc;
-	vertexBufferDesc.ElementSize = sizeof(ShaderVertexProgramCBuffer);
-	vertexBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE;
-	vertexBufferDesc.InitData = &color[0];
-	vertexBufferDesc.NumElements = 1;
-	vertexBufferDesc.Type = Buffer::CONSTANT_BUFFER_VS;
+	Buffer::BUFFER_INIT_DESC vertexProgCBufferDesc;
+	vertexProgCBufferDesc.ElementSize = sizeof(ShaderVertexProgramCBuffer);
+	vertexProgCBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE_DISCARD;
+	vertexProgCBufferDesc.InitData = &color[0];
+	vertexProgCBufferDesc.NumElements = 1;
+	vertexProgCBufferDesc.Type = Buffer::CONSTANT_BUFFER_VS;
 
-	m_vertexProgramCBuffer = new Buffer(m_device,m_deviceContext,vertexBufferDesc);
+	m_vertexProgramCBuffer = new Buffer(m_device,m_deviceContext,vertexProgCBufferDesc);
 
-	Buffer::BUFFER_INIT_DESC pixelBufferDesc;
-	pixelBufferDesc.ElementSize = sizeof(ShaderPixelProgramCBuffer);
-	pixelBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE;
-	pixelBufferDesc.InitData = &color[0];
-	pixelBufferDesc.NumElements = 1;
-	pixelBufferDesc.Type = Buffer::CONSTANT_BUFFER_PS;
+	Buffer::BUFFER_INIT_DESC pixelProgCBufferDesc;
+	pixelProgCBufferDesc.ElementSize = sizeof(ShaderPixelProgramCBuffer);
+	pixelProgCBufferDesc.Usage = Buffer::BUFFER_CPU_WRITE_DISCARD;
+	pixelProgCBufferDesc.InitData = &color[0];
+	pixelProgCBufferDesc.NumElements = 1;
+	pixelProgCBufferDesc.Type = Buffer::CONSTANT_BUFFER_PS;
 
-	m_pixelProgramCBuffer = new Buffer(m_device,m_deviceContext,pixelBufferDesc);
+	m_pixelProgramCBuffer = new Buffer(m_device,m_deviceContext,pixelProgCBufferDesc);
 }
 
 void Shader::apply()

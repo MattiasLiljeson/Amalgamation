@@ -41,7 +41,17 @@ void Deferred::deferredBasePass()
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
 
 	m_vertexBuffer->apply();
+
+	void* bfData = m_baseShader->tempGetBufferPtr()->map();
+	Shader::ShaderPixelProgramCBuffer* cbuf = static_cast<Shader::ShaderPixelProgramCBuffer*>(bfData);
+	cbuf->color[0]=1.0f;
+	cbuf->color[1]=0.0f;
+	m_baseShader->tempGetBufferPtr()->unmap();
+
+
 	m_baseShader->apply();
+
+
 	m_deviceContext->Draw(6,0);
 }
 

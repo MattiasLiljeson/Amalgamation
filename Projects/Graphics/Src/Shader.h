@@ -52,6 +52,9 @@ public:
 	{
 		float color[4];
 	};
+
+	Buffer* tempGetBufferPtr() {return m_pixelProgramCBuffer;}
+
 protected:
 	void initBuffers();
 private:
