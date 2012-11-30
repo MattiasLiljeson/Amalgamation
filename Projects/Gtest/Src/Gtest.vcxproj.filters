@@ -26,6 +26,24 @@
     <Filter Include="ES\EntityManager TEST">
       <UniqueIdentifier>{877c3db5-3e71-4f06-b5ec-6737b1f213e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ES\EntityWorld TEST">
+      <UniqueIdentifier>{0fd3ae1b-2f22-4b36-ba12-2b40707a8e74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\Code to test">
+      <UniqueIdentifier>{866b4655-11da-4a33-8a23-5bd075de7911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\Code to test\Component">
+      <UniqueIdentifier>{b3660aa1-10f9-4017-8ad9-cc4ed4dd2260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\Code to test\Entity">
+      <UniqueIdentifier>{63f14279-4d10-4ce8-9b17-6110832d21c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\Code to test\Managers">
+      <UniqueIdentifier>{3cff682a-e5eb-4ac9-9c34-c38cd19dd4a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ES\Code to test\System">
+      <UniqueIdentifier>{3e6ffd67-f3eb-4993-96aa-b454bcd7d62f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runner.cpp">
@@ -43,26 +61,44 @@
     <ClCompile Include="ComponentType TEST.cpp">
       <Filter>ES\ComponentType TEST</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ES\Src\ComponentType.cpp">
-      <Filter>ES\ComponentType TEST</Filter>
-    </ClCompile>
     <ClCompile Include="EntitySystemTEST.cpp">
-      <Filter>ES\EntitySystem TEST</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ES\Src\EntitySystem.cpp">
-      <Filter>ES\EntitySystem TEST</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ES\Src\Entity.cpp">
       <Filter>ES\EntitySystem TEST</Filter>
     </ClCompile>
     <ClCompile Include="EntityManagerTEST.cpp">
       <Filter>ES\EntityManager TEST</Filter>
     </ClCompile>
+    <ClCompile Include="EntityWorldTEST.cpp">
+      <Filter>ES\EntityWorld TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\Component.cpp">
+      <Filter>ES\Code to test\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\ComponentType.cpp">
+      <Filter>ES\Code to test\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\Entity.cpp">
+      <Filter>ES\Code to test\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\ComponentManager.cpp">
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ES\Src\EntityManager.cpp">
-      <Filter>ES\EntityManager TEST</Filter>
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\SystemManager.cpp">
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\EntitySystem.cpp">
+      <Filter>ES\Code to test\System</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ES\Src\SystemType.cpp">
-      <Filter>ES\EntitySystem TEST</Filter>
+      <Filter>ES\Code to test\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\Aspect.cpp">
+      <Filter>ES\Code to test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ES\Src\EntityWorld.cpp">
+      <Filter>ES\Code to test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,20 +108,44 @@
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h">
       <Filter>Utilities\Vector3 TEST</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ES\Src\ComponentType.h">
-      <Filter>ES\ComponentType TEST</Filter>
+    <ClInclude Include="..\..\ES\Src\Component.h">
+      <Filter>ES\Code to test\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ES\Src\EntitySystem.h">
-      <Filter>ES\EntitySystem TEST</Filter>
+    <ClInclude Include="..\..\ES\Src\ComponentType.h">
+      <Filter>ES\Code to test\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\Entity.h">
-      <Filter>ES\EntitySystem TEST</Filter>
+      <Filter>ES\Code to test\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\ComponentManager.h">
+      <Filter>ES\Code to test\Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\EntityManager.h">
-      <Filter>ES\EntityManager TEST</Filter>
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\Manager.h">
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\SystemManager.h">
+      <Filter>ES\Code to test\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\EntitySystem.h">
+      <Filter>ES\Code to test\System</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\SystemType.h">
-      <Filter>ES\EntitySystem TEST</Filter>
+      <Filter>ES\Code to test\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\Aspect.h">
+      <Filter>ES\Code to test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\EntityWorld.h">
+      <Filter>ES\Code to test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\IEntityObserver.h">
+      <Filter>ES\Code to test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ES\Src\IPerformer.h">
+      <Filter>ES\Code to test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
