@@ -60,3 +60,20 @@ unsigned int ThreadSafeMessaging::getMessageCount()
 
 	return messageCount;
 }
+
+queue< ProcessMessage* > ThreadSafeMessaging::checkoutMessageQueue()
+{
+	queue< ProcessMessage* > messages;
+
+	m_guard.lock();
+
+	while( m_messageQueue.size() > 0 )
+	{
+		messages.push( m_messageQueue.front() );
+		m_messageQueue.pop();
+	}
+
+	m_guard.unlock();
+
+	return messages;
+}

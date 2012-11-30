@@ -36,6 +36,12 @@ protected:
 	///-----------------------------------------------------------------------------------
 	unsigned int getMessageCount();
 
+	///-----------------------------------------------------------------------------------
+	/// Checking out the message queue means you take ownership over it.
+	/// \returns queue< ProcessMessage* >
+	///-----------------------------------------------------------------------------------
+	queue< ProcessMessage* > checkoutMessageQueue();
+
 private:
 	queue< ProcessMessage* > m_messageQueue; /**< Stores all messages that are "put"
 											on the ThreadSafeMessaging instance. Every
