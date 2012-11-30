@@ -6,9 +6,6 @@
     <ClCompile Include="D3DRender.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Renderer\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Deferred.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
@@ -18,6 +15,18 @@
     <ClCompile Include="BufferConfig.cpp">
       <Filter>Renderer\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderBase.cpp">
+      <Filter>Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBaseShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredComposeShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -26,9 +35,6 @@
     </ClInclude>
     <ClInclude Include="D3DException.h">
       <Filter>Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="D3DRender.h">
       <Filter>Renderer</Filter>
@@ -57,6 +63,30 @@
     <ClInclude Include="Buffer.h">
       <Filter>Renderer\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderConfig.h">
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffers.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBase.h">
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderInitStruct.h">
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStageData.h">
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredBaseShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredComposeShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -76,6 +106,12 @@
     </Filter>
     <Filter Include="Renderer\Deferred">
       <UniqueIdentifier>{a0426606-0273-4997-a7c8-accf0ab8341f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{f522370d-24a2-4452-958f-a48920f9d6a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Shader\Shader types">
+      <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

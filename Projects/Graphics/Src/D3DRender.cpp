@@ -9,21 +9,20 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	//m_depthStencilView = NULL;
 	//m_backBuffer	   = NULL;
 
-	m_shader		= NULL;
+	m_deferredBaseShader		= NULL;
 	m_vertexBuffer	= NULL;
 
 	m_width	= p_width;
 	m_height= p_height;
 
 	initHardware(p_hWnd, p_windowed);
-	
-	//m_shader = new Shader(m_device, m_deviceContext);
 
 	initBuffers();
 	initViewport();
 	initFullScreenQuad();
 
-	m_deferred = new Deferred( m_device, m_deviceContext, m_width, m_height);
+	m_deferred = new Deferred( m_device, m_deviceContext, 
+							   m_width, m_height);
 	clearRenderTargets();
 }
 
@@ -35,8 +34,8 @@ D3DRender::~D3DRender()
 	SAFE_RELEASE(m_backBuffer);
 	
 	delete m_deferred;
-
 	delete m_vertexBuffer;
+	delete m_deferredBaseShader;
 }
 
 void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)

@@ -1,6 +1,6 @@
-#include "Shader.h"
-
-Shader::Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
+#include "DeferredBaseShader.h"
+/*
+DeferredBaseShader::DeferredBaseShader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
@@ -53,17 +53,22 @@ Shader::Shader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContex
 	createInputLayout();
 	initBuffers();
 }
+*/
 
-Shader::~Shader()
+DeferredBaseShader::DeferredBaseShader( ShaderInitStruct p_initData, 
+									   Buffer<SimpleCBuffer>* p_cBuffer ) 
+									   : ShaderBase(p_initData)
 {
-	SAFE_RELEASE(m_samplerState);
-	SAFE_RELEASE(m_pixelShader.data);
-	SAFE_RELEASE(m_vertexShader.data);
-	delete m_CBufferPerFrame;
+	m_perFrameBuffer = p_cBuffer;
 }
 
+DeferredBaseShader::~DeferredBaseShader()
+{
+	delete m_perFrameBuffer;
+}
 
-void Shader::createShader( const LPCWSTR &p_sourceFile, const string &p_entryPoint ,
+/*
+void DeferredBaseShader::createShader( const LPCWSTR &p_sourceFile, const string &p_entryPoint ,
 							 const string &p_profile, ID3DBlob** p_blob )
 {
 	HRESULT res = S_OK;
@@ -100,7 +105,7 @@ void Shader::createShader( const LPCWSTR &p_sourceFile, const string &p_entryPoi
 	*p_blob = shaderBlob;
 }
 
-void Shader::createInputLayout()
+void DeferredBaseShader::createInputLayout()
 {
 	HRESULT res = S_OK;
 
@@ -121,7 +126,7 @@ void Shader::createInputLayout()
 
 }
 
-void Shader::initBuffers()
+void DeferredBaseShader::initBuffers()
 {
 	CBufferTest color={
 		0.0f,1.0f,0.0f,1.0f,
@@ -140,12 +145,14 @@ void Shader::initBuffers()
 	// Create buffer from config and data
 	m_CBufferPerFrame = new Buffer<CBufferTest>(m_device,m_deviceContext,&color,initConfig);
 }
-
-void Shader::apply()
+*/
+void DeferredBaseShader::apply()
 {
-	m_CBufferPerFrame->apply();
-	m_deviceContext->VSSetShader(m_vertexShader.data, 0, 0);
-	m_deviceContext->PSSetShader(m_pixelShader.data, 0, 0);
-	m_deviceContext->PSSetSamplers(0,1,&m_samplerState);
-	m_deviceContext->IASetInputLayout(m_inputLayout);
+	m_perFrameBuffer->apply();
+	applyStages();
+}
+
+Buffer<SimpleCBuffer>* DeferredBaseShader::getPerFrameBufferPtr()
+{
+	return m_perFrameBuffer;
 }

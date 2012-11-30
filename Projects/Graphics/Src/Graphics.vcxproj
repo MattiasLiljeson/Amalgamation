@@ -15,20 +15,30 @@
     <ClCompile Include="BufferBase.cpp" />
     <ClCompile Include="D3DRender.cpp" />
     <ClCompile Include="Deferred.cpp" />
+    <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="DeferredBaseShader.cpp" />
+    <ClCompile Include="ShaderBase.cpp" />
+    <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
+    <ClInclude Include="CBuffers.h" />
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="Deferred.h" />
+    <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="PTVertex.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="DeferredBaseShader.h" />
+    <ClInclude Include="ShaderBase.h" />
+    <ClInclude Include="ShaderConfig.h" />
+    <ClInclude Include="ShaderFactory.h" />
+    <ClInclude Include="ShaderInitStruct.h" />
+    <ClInclude Include="ShaderStageData.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="WindowException.h" />

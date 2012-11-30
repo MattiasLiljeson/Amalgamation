@@ -9,12 +9,15 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	m_width		= p_width;
 	m_height	= p_height;
 
-	m_baseShader	= new Shader(L"Assets/Shaders/deferredBase.hlsl", m_device, p_deviceContext);
-	m_composeShader	= new Shader(L"Assets/Shaders/deferredCompose.hlsl", m_device, p_deviceContext);
+	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
+
+	//m_baseShader	= new DeferredBaseShader(L"Assets/Shaders/deferredBase.hlsl", m_device, p_deviceContext);
+	//m_composeShader	= new DeferredBaseShader(L"Assets/Shaders/deferredCompose.hlsl", m_device, p_deviceContext);
 	m_vertexBuffer	= NULL;
 
 	initDepthStencil();
 	initGeomtryBuffers();
+	initTestShaders();
 
 	createFullScreenQuad();
 }
@@ -29,7 +32,7 @@ Deferred::~Deferred()
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
 	}
 
-	delete m_baseShader;
+	delete m_shaderFactory;
 	delete m_composeShader;
 	delete m_vertexBuffer;
 }
@@ -39,15 +42,14 @@ void Deferred::deferredBasePass()
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
-
+	
 	m_vertexBuffer->apply();
-
-	m_baseShader->tempGetBufferPtr()->accessBuffer.color[0] = 1.0f;
-	m_baseShader->tempGetBufferPtr()->accessBuffer.color[1] = 0.0f;
-	m_baseShader->tempGetBufferPtr()->update();
+	
+	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 1.0f;
+	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.0f;
+	m_baseShader->getPerFrameBufferPtr()->update();
 
 	m_baseShader->apply();
-
 
 	m_deviceContext->Draw(6,0);
 }
@@ -61,6 +63,7 @@ void Deferred::renderComposedImage()
 	//m_deviceContext->PSSetShaderResources(0,2,&m_gBuffersShaderResource[0]);
 
 	m_vertexBuffer->apply();
+
 	m_composeShader->apply();
 
 	m_deviceContext->Draw(6,0);
@@ -216,6 +219,15 @@ void Deferred::createFullScreenQuad( )
 
 	// Create buffer from config and data
 	m_vertexBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
+}
+
+void Deferred::initTestShaders()
+{
+	m_baseShader = m_shaderFactory->createDeferredBaseShader(
+		L"Assets/Shaders/deferredBase.hlsl");
+
+	m_composeShader = m_shaderFactory->createDeferredComposeShader(
+		L"Assets/Shaders/deferredCompose.hlsl");
 }
 
 

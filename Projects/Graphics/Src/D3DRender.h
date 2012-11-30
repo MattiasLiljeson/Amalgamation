@@ -14,10 +14,8 @@
 #include <d3d11.h>
 #include "D3DException.h"
 #include "Util.h"
-#include "Shader.h"
 #include "Buffer.h"
 #include "Deferred.h"
-
 
 class D3DRender
 {
@@ -40,12 +38,10 @@ private:
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
 	Deferred*				m_deferred;
-	
-	ID3D11RenderTargetView* m_backBuffer;
-	//ID3D11Texture2D*		m_depthStencil;
-	//ID3D11DepthStencilView* m_depthStencilView;
 
-	Shader*					m_shader;
+	ID3D11RenderTargetView* m_backBuffer;
+
+	DeferredBaseShader*		m_deferredBaseShader;
 	Buffer<PTVertex>*		m_vertexBuffer;
 
 	int m_height;
