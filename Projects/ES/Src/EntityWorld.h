@@ -11,8 +11,11 @@
 #include "ComponentManager.h"
 #include "Entity.h"
 #include "EntityManager.h"
+#include "EntitySystem.h"
+#include "IEntityObserver.h"
 #include "IPerformer.h"
 #include "SystemManager.h"
+#include "SystemType.h"
 #include <vector>
 #include <map>
 
@@ -21,7 +24,11 @@ using namespace std;
 class ComponentManager;
 class Entity;
 class EntityManager;
+class EntitySystem;
+class IEntityObserver;
+class IPerformer;
 class SystemManager;
+class SystemType;
 
 class EntityWorld
 {
@@ -133,24 +140,74 @@ public:
 	/**
 	 * Get a entity having the specified id.
 	 * 
-	 * @param entityId
+	 * @param p_entityId
 	 * @return entity
 	 */
 	Entity* getEntity( int p_entityId );
 
-	// waddabout system manager?
-	ImmutableBag<EntitySystem> getSystems();
-	<T extends EntitySystem> T setSystem(T system);
-	<T extends EntitySystem> T setSystem(T system, boolean passive);
-	void deleteSystem(EntitySystem system);
-	void notifySystems(Performer performer, Entity* p_entity );
+	/**
+	 * Gives you all the systems in this world for possible iteration.
+	 * 
+	 * @return all entity systems in world.
+	 */
+	SystemManager* getSystems();
+
+	/**
+	 * Will add a system to this world.
+	 *  
+	 * @param p_type Type of system.
+	 * @param p_system The system to add.
+	 * @param p_enabled Wether or not this system will be processed by World.process().
+	 * Defaults to true.
+	 * @return The added system.
+	 */
+	EntitySystem* setSystem( SystemType p_type, EntitySystem* p_system,
+		bool p_enabled = false );
+
+	/**
+	 * Will add a system to this world.
+	 *  
+	 * @param p_typeIdx Index for the type of system.
+	 * @param p_system The system to add.
+	 * @param p_enabled Wether or not this system will be processed by World.process().
+	 * Defaults to true.
+	 * @return The added system.
+	 */
+	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
+		bool p_enabled = false );
+
+	/**
+	 * Remove the specified system from the manager.
+	 * @param p_type Type of system to be deleted from manager.
+	 */
+	void deleteSystem( SystemType p_type );
+
+	/**
+	 * Remove the specified system from the manager.
+	 * @param p_typeIdx index of type of system to be deleted from manager.
+	 */
+	void deleteSystem( SystemType::SystemTypeIdx p_typeIdx );
 	
+	/**
+	 * EXPENSIVE! Use the above methods if possible!
+	 * Remove the specified system from the manager.
+	 * @param p_system to be deleted from manager.
+	 */
+	void deleteSystem( EntitySystem* p_system);
+
+	void notifySystems( IPerformer* p_performer, Entity* p_entity );
+	
+
+
+
+
+
 	void notifyManagers( IPerformer* performer, Entity* p_entity );
 
 	/**
 	 * Retrieve a system for specified system type.
 	 * 
-	 * @param type type of system.
+	 * @param p_type type of system.
 	 * @return instance of the system in this world.
 	 */
 	EntitySystem* getSystem( SystemType p_type );
@@ -168,6 +225,8 @@ public:
 	//<T extends Component> ComponentMapper<T> getMapper(Class<T> type);
 
 private:
+	void deleteSystemFromBag(EntitySystem* system);
+private:
 	float m_delta;
 	EntityManager* m_entityManager;
 	ComponentManager* m_componentManager;
@@ -180,7 +239,7 @@ private:
 	vector<Entity*> m_disable;
 
 	vector<Manager*> m_managers;
-	vector<EntitySystem*> m_systems;
+	//vector<EntitySystem*> m_systems;
 
 	// From Java, needed?
 	vector<Manager*> m_managersBag;

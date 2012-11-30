@@ -6,6 +6,7 @@
 
 class Entity;
 class EntityWorld;
+class IEntityObserver;
 
 class Manager : public IEntityObserver
 {

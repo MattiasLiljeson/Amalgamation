@@ -3,6 +3,6 @@
 
 TEST(EntitySystemConstructor, SimpleCreation)
 {
-	EntitySystem system(1, ComponentType::Position);
-
+	SystemType type = SystemType::getTypeFor(SystemType::NON_EXISTING);
+	EntitySystem system( type, 1, ComponentType::Position);
 }

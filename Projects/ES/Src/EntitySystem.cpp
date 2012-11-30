@@ -2,12 +2,15 @@
 
 //bitset<ComponentType::NUM_COMPONENT_TYPES> EntitySystem::s_typeFlags;
 
-EntitySystem::EntitySystem()
+EntitySystem::EntitySystem( SystemType p_type )
 {
+	m_type = p_type;
 }
 
-EntitySystem::EntitySystem( int p_numComponents, ... )
+EntitySystem::EntitySystem( SystemType p_type, int p_numComponents, ... )
 {
+	m_type = p_type;
+
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );
 
@@ -19,10 +22,10 @@ EntitySystem::EntitySystem( int p_numComponents, ... )
 	}
 }
 
-void EntitySystem::setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits )
-{
-	m_systemBits = p_bits;
-}
+//void EntitySystem::setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits )
+//{
+//	m_systemBits = p_bits;
+//}
 
 EntitySystem::~EntitySystem()
 {
@@ -48,7 +51,7 @@ void EntitySystem::end()
 
 }
 
-void EntitySystem::processEntities( const map<int, Entity*>& p_entities )
+void EntitySystem::processEntities( const vector<Entity*>& p_entities )
 {
 
 }
@@ -63,80 +66,164 @@ void EntitySystem::initialize()
 
 }
 
-void EntitySystem::onAdded( Entity* e )
+//void EntitySystem::onAdded( Entity* e )
+//{
+//
+//}
+//
+//void EntitySystem::onRemoved( Entity* e )
+//{
+//
+//}
+//
+//void EntitySystem::onEnabled( Entity* e )
+//{
+//
+//}
+//
+//void EntitySystem::onDisabled( Entity* e )
+//{
+//
+//}
+//
+////From C# 
+//void EntitySystem::onChange( Entity* e )
+//{
+//	bool contains = ( m_systemBits & e->getSystemBits() ) == m_systemBits;
+//	bool interest = ( m_componentBits & e->getComponentBits() ) == m_componentBits;
+//
+//	bitset<SystemType::NUM_SYSTEM_TYPES> empty;
+//	
+//	if (interest && !contains && m_systemBits != empty) {
+//		add(e);
+//	} else if (!interest && contains && m_systemBits != empty) {
+//		remove(e);
+//	} else if ((interest && contains && e->isEnabled()) && m_systemBits != empty) {
+//		enable(e);
+//	} else if ((interest && contains && e->isEnabled() == false) && m_systemBits != empty) {
+//		disable(e);
+//	}
+//}
+//
+//void EntitySystem::add( Entity* e )
+//{
+//	e->addSystemBit(m_systemBits);
+//	if (e->isEnabled() == true) {
+//		enable(e);
+//	}
+//	onAdded(e);
+//}
+//
+//void EntitySystem::remove( Entity* e )
+//{
+//	e->removeSystemBit(m_systemBits);
+//	if (e->isEnabled() == true) {
+//		disable(e);
+//	}
+//	onRemoved(e);
+//}
+//
+//void EntitySystem::enable( Entity* e )
+//{
+//	// If the map contains the index
+//	if (m_actives.find(e->getIndex()) != m_actives.end()) {
+//		return;
+//	}
+//	m_actives[e->getIndex()] = e;
+//	onEnabled(e);
+//}
+//
+//void EntitySystem::disable( Entity* e )
+//{
+//	// If the map DOESN'T contain the index
+//	if (m_actives.find(e->getIndex()) == m_actives.end()) {
+//		return;
+//	}
+//	m_actives.erase(e->getIndex());
+//	onDisabled(e);
+//}
+
+void EntitySystem::check(Entity* p_entity) 
 {
+		if(m_componentBits.none())
+		{
+			// If this system isn't interested in any components there is no reason to
+			// let it continue as it will do nothing.
+			return;
+		}
+		
+		bool contains = p_entity->getSystemBits()[m_type.getIndex()];
+		bool interested = true; // possibly interested, let's try to prove it wrong.
+		
+		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
 
-}
+		// Check if the entity possesses ALL of the components defined in the system component bits.
+		for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
+		{
+			if ( m_componentBits[i] )
+			{
+				if ( !componentBits[i] )
+				{
+					interested = false;
+					break;
+				}
+			}
+		}
 
-void EntitySystem::onRemoved( Entity* e )
+		if ( interested && !contains )
+			insertToSystem( p_entity );
+		else if ( !interested && contains )
+			removeFromSystem( p_entity );
+	}
+
+void EntitySystem::removeFromSystem( Entity* p_entity )
 {
-
-}
-
-void EntitySystem::onEnabled( Entity* e )
-{
-
-}
-
-void EntitySystem::onDisabled( Entity* e )
-{
-
-}
-
-void EntitySystem::onChange( Entity* e )
-{
-	bool contains = ( m_systemBits & e->getSystemBits() ) == m_systemBits;
-	bool interest = ( m_componentBits & e->getComponentBits() ) == m_componentBits;
-
-	bitset<SystemType::NUM_SYSTEM_TYPES> empty;
+	int idx = findEntityInActive( p_entity );
 	
-	if (interest && !contains && m_systemBits != empty) {
-		add(e);
-	} else if (!interest && contains && m_systemBits != empty) {
-		remove(e);
-	} else if ((interest && contains && e->isEnabled()) && m_systemBits != empty) {
-		enable(e);
-	} else if ((interest && contains && e->isEnabled() == false) && m_systemBits != empty) {
-		disable(e);
+	if( idx != -1 )
+	{
+		p_entity->setSystemBit( m_type.getIndex(), false );
+		m_actives.erase( m_actives.begin() + idx );
+		removed( p_entity );
+		//delete p_entity;
+	}
+}
+void EntitySystem::insertToSystem(Entity* p_entity)
+{
+	m_actives.push_back( p_entity );
+	p_entity->setSystemBit( m_type.getIndex(), true );
+	inserted(p_entity);
+}
+
+void EntitySystem::added( Entity* p_entity )
+{
+	check(p_entity);
+}
+
+void EntitySystem::changed( Entity* p_entity )
+{
+	check(p_entity);
+}
+
+void EntitySystem::deleted( Entity* p_entity )
+{
+	if(p_entity->getSystemBits()[m_type.getIndex()])
+	{
+		removeFromSystem(p_entity);
 	}
 }
 
-void EntitySystem::add( Entity* e )
+void EntitySystem::enabled( Entity* p_entity )
 {
-	e->addSystemBit(m_systemBits);
-	if (e->isEnabled() == true) {
-		enable(e);
-	}
-	onAdded(e);
+	check(p_entity);
 }
 
-void EntitySystem::remove( Entity* e )
+void EntitySystem::disabled( Entity* p_entity )
 {
-	e->removeSystemBit(m_systemBits);
-	if (e->isEnabled() == true) {
-		disable(e);
+	if(p_entity->getSystemBits()[m_type.getIndex()])
+	{
+		removeFromSystem(p_entity);
 	}
-	onRemoved(e);
-}
-
-void EntitySystem::enable( Entity* e )
-{
-	// If the map contains the index
-	if (m_actives.find(e->getIndex()) != m_actives.end()) {
-		return;
-	}
-	m_actives[e->getIndex()] = e;
-	onEnabled(e);
-}
-
-void EntitySystem::disable( Entity* e )
-{
-	// If the map DOESN'T contain the index
-	if (m_actives.find(e->getIndex()) == m_actives.end()) {
-		return;
-	}
-	m_actives.erase(e->getIndex());
-	onDisabled(e);
 }
 
 EntityWorld* EntitySystem::getWorld() const
@@ -162,4 +249,21 @@ bool EntitySystem::getEnabled() const
 void EntitySystem::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
+}
+
+int EntitySystem::findEntityInActive( Entity* p_entity )
+{
+	int idx = -1;
+
+	//HACK: break in for-loop
+	for( unsigned int i=0; i<m_actives.size(); i++ )
+	{
+		if( m_actives[i] == p_entity )
+		{
+			idx = i;
+			break;
+		}
+	}
+
+	return idx;
 }

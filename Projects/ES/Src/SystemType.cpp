@@ -18,8 +18,6 @@ void SystemType::init( SystemTypeIdx p_type )
 	m_bit = 1;
 	m_bit = m_bit << p_type;
 	m_idx = p_type;
-
-	m_type = p_type;
 }
 
 bitset<SystemType::NUM_SYSTEM_TYPES> SystemType::getBit()
@@ -27,7 +25,7 @@ bitset<SystemType::NUM_SYSTEM_TYPES> SystemType::getBit()
 	return m_bit;
 }
 
-int SystemType::getIndex()
+SystemType::SystemTypeIdx SystemType::getIndex()
 {
 	return m_idx;
 }
