@@ -36,6 +36,9 @@
     <ClCompile Include="ProcessMessageClientConnected.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessMessageTerminate.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">

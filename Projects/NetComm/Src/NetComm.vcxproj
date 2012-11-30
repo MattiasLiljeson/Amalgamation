@@ -22,6 +22,7 @@
   <ItemGroup>
     <ClCompile Include="ProcessMessage.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageTerminate.cpp" />
     <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />
