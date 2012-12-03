@@ -6,20 +6,15 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	m_deviceContext = NULL;
 	m_swapChain		= NULL;
 
-	//m_depthStencilView = NULL;
-	//m_backBuffer	   = NULL;
-
-	m_deferredBaseShader		= NULL;
-	m_vertexBuffer	= NULL;
+	m_deferredBaseShader	= NULL;
 
 	m_width	= p_width;
 	m_height= p_height;
 
 	initHardware(p_hWnd, p_windowed);
 
-	initBuffers();
+	initBackBuffer();
 	initViewport();
-	initFullScreenQuad();
 
 	m_deferred = new Deferred( m_device, m_deviceContext, 
 							   m_width, m_height);
@@ -34,7 +29,6 @@ D3DRender::~D3DRender()
 	SAFE_RELEASE(m_backBuffer);
 	
 	delete m_deferred;
-	delete m_vertexBuffer;
 	delete m_deferredBaseShader;
 
 }
@@ -108,7 +102,7 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 		,__FILE__, __FUNCTION__, __LINE__);
 }
 
-void D3DRender::initBuffers()
+void D3DRender::initBackBuffer()
 {
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* backBufferTexture;
@@ -117,13 +111,13 @@ void D3DRender::initBuffers()
 		(LPVOID*)&backBufferTexture );
 
 	if( FAILED(hr) )
-		throw D3DException("Failed to get backbuffer from swapchain.",__FILE__,
+		throw D3DException("Failed to get backbuffer from swap chain.",__FILE__,
 		__FUNCTION__,__LINE__);
 
 	hr = m_device->CreateRenderTargetView( backBufferTexture, NULL, &m_backBuffer );
 	backBufferTexture->Release();
 	if( FAILED(hr) )
-		throw D3DException("Failed to create rendertargetview from backbuffer.",
+		throw D3DException("Failed to create rendertargetview from back buffer.",
 		__FILE__,__FUNCTION__,__LINE__);
 }
 
@@ -148,37 +142,11 @@ void D3DRender::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
-void D3DRender::initFullScreenQuad()
-{
-	PTVertex mesh[]= {
-		{{ 1,	-1,	0},	{ 1, 1}},
-		{{ -1,	-1,	0},	{ 0, 1}},
-		{{ 1,	1,	0},	{ 1, 0}},
-
-		{{ -1, -1,	0},	{ 0, 1}},
-		{{ 1,	1,	0},	{ 1, 0}},
-		{{ -1,	1,	0},	{ 0, 0}}
-	};
-
-	// Create description for buffer
-	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = sizeof(PTVertex);
-	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	bufferDesc.NumElements = 6;
-	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
-
-	// Store description in config object
-	BufferConfig* initConfig = new BufferConfig(bufferDesc);
-
-	// Create buffer from config and data
-	m_vertexBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
-}
-
 void D3DRender::initViewport()
 {
 	D3D11_VIEWPORT vp;
-	vp.Width = (float)m_width;
-	vp.Height = (float)m_height;
+	vp.Width	= (float)m_width;
+	vp.Height	= (float)m_height;
 	vp.MaxDepth = 1.0f;
 	vp.MinDepth = 0.0f;
 	vp.TopLeftX = 0;

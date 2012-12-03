@@ -22,15 +22,46 @@ class D3DRender
 public:
 	D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed);
 	virtual ~D3DRender();
+	///-----------------------------------------------------------------------------------
+	/// Clears the back buffer with a non black color
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void clearRenderTargets();
+
+	///-----------------------------------------------------------------------------------
+	/// Renders the whole scene
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void render();
+
+	///-----------------------------------------------------------------------------------
+	/// Desc
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
-protected:
 private:
+
+	///-----------------------------------------------------------------------------------
+	/// Initialize the graphic card, need input is a win32 window used to present the 
+	/// render result
+	/// \param p_hWnd
+	/// \param p_windowed
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void initHardware(HWND p_hWnd, bool p_windowed);
-	void initBuffers();
+
+	///-----------------------------------------------------------------------------------
+	/// Creates the true back buffer
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void initBackBuffer();
+
+	///-----------------------------------------------------------------------------------
+	/// Desc
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void initViewport();
-	void initFullScreenQuad();
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -42,7 +73,6 @@ private:
 	ID3D11RenderTargetView* m_backBuffer;
 
 	DeferredBaseShader*		m_deferredBaseShader;
-	Buffer<PTVertex>*		m_vertexBuffer;
 
 	int m_height;
 	int m_width;
