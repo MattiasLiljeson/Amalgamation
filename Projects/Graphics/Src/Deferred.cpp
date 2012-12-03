@@ -33,6 +33,7 @@ Deferred::~Deferred()
 	}
 
 	delete m_shaderFactory;
+	delete m_baseShader;
 	delete m_composeShader;
 	delete m_vertexBuffer;
 }

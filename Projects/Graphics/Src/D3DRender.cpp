@@ -36,6 +36,7 @@ D3DRender::~D3DRender()
 	delete m_deferred;
 	delete m_vertexBuffer;
 	delete m_deferredBaseShader;
+
 }
 
 void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)

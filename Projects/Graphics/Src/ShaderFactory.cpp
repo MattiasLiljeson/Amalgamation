@@ -4,16 +4,20 @@ ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_devi
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
+	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
 }
+
+
+ShaderFactory::~ShaderFactory()
+{
+	delete m_bufferFactory;
+}
+
 
 DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_filePath)
 {
 	DeferredBaseShader* newDeferredBaseShader = NULL;
-	ID3D11SamplerState* samplerState = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
-
-	Buffer<SimpleCBuffer>* cBuffer;
-	BufferConfig* initConfig  = NULL;
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
@@ -21,39 +25,17 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	///
 	createAllShaderStages(p_filePath,vertexData,pixelData);
 	///
-	createSamplerState(&samplerState);
+
 	///
 	createVertexInputLayout(vertexData,&inputLayout);
 	///
 
 	ShaderInitStruct shaderInitData;
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,NULL);
 
-	shaderInitData.device = m_device;
-	shaderInitData.deviceContext = m_deviceContext;
-	shaderInitData.domainShader = NULL;
-	shaderInitData.geometryShader = NULL;
-	shaderInitData.hullShader = NULL;
-	shaderInitData.vertexShader = vertexData;
-	shaderInitData.pixelShader = pixelData;
-	shaderInitData.samplerState = samplerState;
-	shaderInitData.inputLayout = inputLayout;
 
-	///
-	SimpleCBuffer data={
-		0.0f,1.0f,0.0f,1.0f
-	};
-
-	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = sizeof(SimpleCBuffer);
-	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
-	bufferDesc.NumElements = 1;
-	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
-
-	initConfig = new BufferConfig(bufferDesc);
-
-	cBuffer = new Buffer<SimpleCBuffer>(m_device,m_deviceContext,&data,initConfig);
-
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,cBuffer);
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
+												m_bufferFactory->createSimpleCBuffer());
 
 	return newDeferredBaseShader;
 }
@@ -78,16 +60,7 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 	///
 
 	ShaderInitStruct shaderInitData;
-
-	shaderInitData.device = m_device;
-	shaderInitData.deviceContext = m_deviceContext;
-	shaderInitData.domainShader = NULL;
-	shaderInitData.geometryShader = NULL;
-	shaderInitData.hullShader = NULL;
-	shaderInitData.vertexShader = vertexData;
-	shaderInitData.pixelShader = pixelData;
-	shaderInitData.samplerState = samplerState;
-	shaderInitData.inputLayout = inputLayout;
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
 
 	newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
@@ -186,4 +159,23 @@ void ShaderFactory::createVertexInputLayout( VSData* p_vs, ID3D11InputLayout** p
 		p_vs->compiledData->GetBufferSize(), p_inputLayout);
 	if ( FAILED(hr))
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
+}
+
+void ShaderFactory::createShaderInitData(ShaderInitStruct* p_shaderInitData, 
+										 ID3D11InputLayout* p_inputLayout,
+										 VSData* p_vsd, PSData* p_psd,
+										 ID3D11SamplerState* p_samplerState/* =NULL */,
+										 GSData* p_gsd/* =NULL */, 
+										 HSData* p_hsd/* =NULL */, 
+										 DSData* p_dsd/* =NULL */)
+{
+	p_shaderInitData->device = m_device;
+	p_shaderInitData->deviceContext = m_deviceContext;
+	p_shaderInitData->domainShader = p_dsd;
+	p_shaderInitData->geometryShader = p_gsd;
+	p_shaderInitData->hullShader = p_hsd;
+	p_shaderInitData->vertexShader = p_vsd;
+	p_shaderInitData->pixelShader = p_psd;
+	p_shaderInitData->samplerState = p_samplerState;
+	p_shaderInitData->inputLayout = p_inputLayout;
 }

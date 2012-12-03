@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
+    <ClCompile Include="BufferFactory.cpp" />
     <ClCompile Include="D3DRender.cpp" />
     <ClCompile Include="Deferred.cpp" />
     <ClCompile Include="DeferredComposeShader.cpp" />
@@ -26,6 +27,7 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
+    <ClInclude Include="BufferFactory.h" />
     <ClInclude Include="CBuffers.h" />
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="D3DRender.h" />

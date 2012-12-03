@@ -22,11 +22,13 @@
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "BufferConfig.h"
+#include "BufferFactory.h"
 
 class ShaderFactory
 {
 public:
 	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
+	virtual ~ShaderFactory();
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 private:
@@ -39,9 +41,17 @@ private:
 
 	void createSamplerState(ID3D11SamplerState** p_samplerState);
 
+	void createShaderInitData(ShaderInitStruct* p_shaderInitData,
+		ID3D11InputLayout* p_inputLayout,
+		VSData* p_vsd, PSData* p_psd, 
+		ID3D11SamplerState* p_samplerState=NULL,
+		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
+
 	void createVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
+
+	BufferFactory* m_bufferFactory;
 };
