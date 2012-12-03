@@ -13,6 +13,7 @@
 
 #include "Buffer.h"
 #include "CBuffers.h"
+#include "PTVertex.h"
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
 // etc?
@@ -29,6 +30,8 @@ public:
 	/// \returns SimpleCBuffer*
 	///-----------------------------------------------------------------------------------
 	Buffer<SimpleCBuffer>* createSimpleCBuffer();
+
+	Buffer<PTVertex>* createFullScreenQuadBuffer();
 
 protected:
 private:

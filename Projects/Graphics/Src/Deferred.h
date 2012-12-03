@@ -15,6 +15,7 @@
 #include "D3DException.h"
 #include "Buffer.h"
 #include "ShaderFactory.h"
+#include "BufferFactory.h"
 #include "PTVertex.h"
 
 const static int NUMBUFFERS = 3;
@@ -35,7 +36,6 @@ protected:
 private:
 	void initDepthStencil();
 	void initGeomtryBuffers();
-	void createFullScreenQuad();
 	void unMapGBuffers();
 	void initTestShaders();
 private:
@@ -49,8 +49,8 @@ private:
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
-	DeferredBaseShader* m_baseShader;
-	DeferredComposeShader* m_composeShader;
+	DeferredBaseShader*		m_baseShader;
+	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_vertexBuffer;
 

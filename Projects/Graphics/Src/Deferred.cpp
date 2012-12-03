@@ -11,15 +11,15 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
 
-	//m_baseShader	= new DeferredBaseShader(L"Assets/Shaders/deferredBase.hlsl", m_device, p_deviceContext);
-	//m_composeShader	= new DeferredBaseShader(L"Assets/Shaders/deferredCompose.hlsl", m_device, p_deviceContext);
 	m_vertexBuffer	= NULL;
+
+	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
+	m_vertexBuffer = bufferFactory->createFullScreenQuadBuffer();
+	delete bufferFactory;
 
 	initDepthStencil();
 	initGeomtryBuffers();
 	initTestShaders();
-
-	createFullScreenQuad();
 }
 
 Deferred::~Deferred()
@@ -194,33 +194,6 @@ void Deferred::initGeomtryBuffers()
 	}
 }
 
-void Deferred::createFullScreenQuad( )
-{
-	PTVertex mesh[]= {
-		{{ 1,	-1,	0},	{ 1, 1}},
-		{{ -1,	-1,	0},	{ 0, 1}},
-		{{ 1,	1,	0},	{ 1, 0}},
-
-		{{ -1, -1,	0},	{ 0, 1}},
-		{{ 1,	1,	0},	{ 1, 0}},
-		{{ -1,	1,	0},	{ 0, 0}}
-	};
-
-
-	// Create description for buffer
-	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = sizeof(PTVertex);
-	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	bufferDesc.NumElements = 6;
-	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
-
-	// Store description in config object
-	BufferConfig* initConfig = new BufferConfig(bufferDesc);
-
-	// Create buffer from config and data
-	m_vertexBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
-}
-
 void Deferred::initTestShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
@@ -229,7 +202,3 @@ void Deferred::initTestShaders()
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Assets/Shaders/deferredCompose.hlsl");
 }
-
-
-
-
