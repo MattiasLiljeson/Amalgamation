@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "Gameplay"
+OUTPUT_DIRECTORY       = docs/gameplay
+INPUT                  = Projects/Gameplay/Src

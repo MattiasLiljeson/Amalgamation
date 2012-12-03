@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "Physics"
+OUTPUT_DIRECTORY       = docs/physics
+INPUT                  = Projects/Physics/Src
