@@ -10,6 +10,33 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnalogueControl.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="DigitalControl.cpp" />
+    <ClCompile Include="DirectInputFetcher.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InputControlFactory.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MessageLoopFetcher.cpp" />
+    <ClCompile Include="XInputFetcher.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnalogueControl.h" />
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="DigitalControl.h" />
+    <ClInclude Include="DirectInputFetcher.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="InputControlFactory.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InputType.h" />
+    <ClInclude Include="MessageLoopFetcher.h" />
+    <ClInclude Include="XInputFetcher.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Input.vcxproj" />
+    <None Include="Input.vcxproj.user" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
