@@ -3,11 +3,9 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	The server application is where all server code runs.
-///        
+/// \brief	The server application run all systems related to the server logic.
+/// 
 /// # ServerApplication
-/// ServerApplication inherits the ThreadSafeMessaging which enables it to communication
-/// thread safe with other processes.
 /// The server application contains its own EntityWorld. It consists of different
 /// ES-systems which in turn are containing game logic, physics, network logic etc...
 /// It also calls the EntityWorld's update (or rather "tick") method.
@@ -16,6 +14,7 @@
 #pragma once
 
 #include <EntityWorld.h>
+#include "NetworkListenerSystem.h"
 
 
 class ServerApplication

@@ -5,6 +5,10 @@ ServerApplication::ServerApplication()
 	m_running = false; // set running to true if initialization is ok!
 
 	m_world = new EntityWorld();
+
+	initSystems();
+
+	m_running = true;
 }
 
 ServerApplication::~ServerApplication()
@@ -39,10 +43,19 @@ ServerApplication::~ServerApplication()
 
 void ServerApplication::run()
 {
-	
+	while( m_running )
+	{
+		m_world->setDelta( 0.016f );
+
+		m_world->process();
+	}
 }
 
 void ServerApplication::initSystems()
 {
+	m_world->setSystem( SystemType::NetworkListenerSystem,
+		new NetworkListenerSystem(), true );
+
+	m_world->initialize();
 
 }
