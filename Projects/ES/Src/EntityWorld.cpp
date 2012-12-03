@@ -16,6 +16,9 @@ EntityWorld::EntityWorld()
 
 EntityWorld::~EntityWorld()
 {
+	delete m_componentManager;
+	delete m_entityManager;
+	delete m_systemManager;
 }
 
 void EntityWorld::initialize()

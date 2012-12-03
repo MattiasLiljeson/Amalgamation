@@ -13,9 +13,12 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <conio.h>
+
 #include <EntityWorld.h>
 #include "NetworkListenerSystem.h"
 
+using namespace std;
 
 class ServerApplication
 {

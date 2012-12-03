@@ -48,6 +48,15 @@ void ServerApplication::run()
 		m_world->setDelta( 0.016f );
 
 		m_world->process();
+
+		// HACK: Maybe place input in systems? :D
+		if( _kbhit() )
+		{
+			if( _getch() == 27 )
+			{
+				m_running = false;
+			}
+		}
 	}
 }
 
