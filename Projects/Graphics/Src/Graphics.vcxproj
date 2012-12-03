@@ -36,6 +36,7 @@
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
+    <ClInclude Include="ResourceMap.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />
