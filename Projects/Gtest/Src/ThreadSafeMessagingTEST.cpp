@@ -33,7 +33,7 @@ public:
 	{
 		ProcessMessage* message = popMessage();
 
-		string outMessage = message->message;
+		string outMessage = static_cast<ProcessMessageText*>(message)->text;
 
 		delete message;
 
