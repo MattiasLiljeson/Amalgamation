@@ -61,7 +61,6 @@ void Deferred::renderComposedImage()
 
 	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
 	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
-	//m_deviceContext->PSSetShaderResources(0,2,&m_gBuffersShaderResource[0]);
 
 	m_vertexBuffer->apply();
 
@@ -152,7 +151,7 @@ void Deferred::initGeomtryBuffers()
 	gBufferDesc.ArraySize = 1;
 	gBufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	gBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	gBufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	gBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	gBufferDesc.SampleDesc.Count = 1;
 	gBufferDesc.SampleDesc.Quality = 0;
 	gBufferDesc.CPUAccessFlags = 0;

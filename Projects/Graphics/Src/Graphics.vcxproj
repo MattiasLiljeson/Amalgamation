@@ -37,7 +37,8 @@
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
     <ClInclude Include="ShaderBase.h" />
-    <ClInclude Include="ShaderConfig.h" />
+    <ClInclude Include="ShaderStageConfig.h" />
+    <ClInclude Include="ShaderPipelineProfile.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInitStruct.h" />
     <ClInclude Include="ShaderStageData.h" />

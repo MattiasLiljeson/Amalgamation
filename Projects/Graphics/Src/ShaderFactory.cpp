@@ -21,22 +21,17 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS","vs_5_0");
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS","ps_5_0");
 
-	///
-	createAllShaderStages(p_filePath,vertexData,pixelData);
-	///
-
-	///
+	createAllShaderStages(vertexData,pixelData);
 	createVertexInputLayout(vertexData,&inputLayout);
-	///
 
 	ShaderInitStruct shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,NULL);
 
-
 	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
 												m_bufferFactory->createSimpleCBuffer());
-
 	return newDeferredBaseShader;
 }
 
@@ -50,14 +45,13 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", "vs_5_0");
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", "ps_5_0");
 
-	///
-	createAllShaderStages(p_filePath,vertexData,pixelData);
-	///
+	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
-	///
 	createVertexInputLayout(vertexData,&inputLayout);
-	///
+
 
 	ShaderInitStruct shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
@@ -68,8 +62,9 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 	return newDeferredComposeShader;
 }
 
-void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, const string &p_entryPoint,
-									  const string &p_profile, ID3DBlob** p_blob )
+void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
+									    const string &p_entryPoint, 
+										const string &p_profile, ID3DBlob** p_blob )
 {
 	HRESULT res = S_OK;
 
@@ -105,22 +100,101 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, const strin
 	*p_blob = shaderBlob;
 }
 
-void ShaderFactory::createAllShaderStages( const LPCWSTR& p_filePath, VSData* p_vs/*=NULL*/,PSData* p_ps/*=NULL*/ )
+void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */, 
+										  PSData* p_ps/* =NULL */, 
+										  GSData* p_gs/* =NULL */, 
+										  HSData* p_hs/* =NULL */, 
+										  DSData* p_ds/* =NULL */)
 {
-	HRESULT hr = S_OK;
-	compileShaderStage(p_filePath,"VS","vs_5_0",&p_vs->compiledData);
+	bool pixelCompiled	= false;
+	bool vertexCompiled = false;
+	bool geometryCompiled = false;
+	bool hullCompiled	= false;
+	bool domainCompiled = false;
 
-	hr = m_device->CreateVertexShader(p_vs->compiledData->GetBufferPointer(),
-		p_vs->compiledData->GetBufferSize(), NULL, &p_vs->data);
-	if(FAILED(hr))
-		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+	if (p_vs)
+	{
+		HRESULT hr = S_OK;
+		compileShaderStage(p_vs->stageConfig->filePath,p_vs->stageConfig->entryPoint,
+			p_vs->stageConfig->version,&p_vs->compiledData);
 
-	compileShaderStage(p_filePath,"PS","ps_5_0",&p_ps->compiledData);
+		hr = m_device->CreateVertexShader(p_vs->compiledData->GetBufferPointer(),
+			p_vs->compiledData->GetBufferSize(), NULL, &p_vs->data);
+		if(FAILED(hr))
+			throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+		else
+			vertexCompiled = true;
+	}
+	else
+		throw D3DException("Missing vertex shader", __FILE__,__FUNCTION__,__LINE__);
 
-	hr = m_device->CreatePixelShader(p_ps->compiledData->GetBufferPointer(),
-		p_ps->compiledData->GetBufferSize(), NULL, &p_ps->data);
-	if (FAILED(hr))
-		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+	if(p_ps)
+	{
+		HRESULT hr = S_OK;
+		compileShaderStage(p_ps->stageConfig->filePath,p_ps->stageConfig->entryPoint,
+			p_ps->stageConfig->version,&p_ps->compiledData);
+
+		hr = m_device->CreatePixelShader(p_ps->compiledData->GetBufferPointer(),
+			p_ps->compiledData->GetBufferSize(), NULL, &p_ps->data);
+		if(FAILED(hr))
+			throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+		else
+			pixelCompiled = true;
+	}
+	else
+		throw D3DException("Missing pixel shader", __FILE__,__FUNCTION__,__LINE__);
+
+	if(vertexCompiled && pixelCompiled)
+	{
+		if (p_gs)
+		{
+			HRESULT hr = S_OK;
+			compileShaderStage(p_gs->stageConfig->filePath,p_gs->stageConfig->entryPoint,
+				p_gs->stageConfig->version,&p_gs->compiledData);
+
+			hr = m_device->CreateGeometryShader(p_gs->compiledData->GetBufferPointer(),
+				p_gs->compiledData->GetBufferSize(), NULL, &p_gs->data);
+			if(FAILED(hr))
+				throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+			else
+				geometryCompiled = true;
+		}
+
+		if (p_hs)
+		{
+			HRESULT hr = S_OK;
+			compileShaderStage(p_hs->stageConfig->filePath,p_hs->stageConfig->entryPoint,
+				p_hs->stageConfig->version,&p_hs->compiledData);
+
+			hr = m_device->CreateHullShader(p_hs->compiledData->GetBufferPointer(),
+				p_hs->compiledData->GetBufferSize(), NULL, &p_hs->data);
+			if(FAILED(hr))
+				throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+			else
+				hullCompiled = true;
+		}
+	
+		if(p_ds && p_hs)
+		{
+			HRESULT hr = S_OK;
+			compileShaderStage(p_ds->stageConfig->filePath,p_ds->stageConfig->entryPoint,
+				p_ds->stageConfig->version,&p_ds->compiledData);
+
+			hr = m_device->CreateDomainShader(p_ds->compiledData->GetBufferPointer(),
+				p_ds->compiledData->GetBufferSize(), NULL, &p_ds->data);
+			if(FAILED(hr))
+				throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+			else 
+				domainCompiled = true;
+		}
+		else if(hullCompiled)
+			throw D3DException("Invalid shader stage config",__FILE__,__FUNCTION__,
+			__LINE__);
+	}
+	else
+		throw D3DException("Either pixel or vertex shader failed to compile", __FILE__,
+		__FUNCTION__,__LINE__);
+
 }
 
 void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )

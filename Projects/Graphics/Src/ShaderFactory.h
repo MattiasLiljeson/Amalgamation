@@ -23,30 +23,84 @@
 #include "CBuffers.h"
 #include "BufferConfig.h"
 #include "BufferFactory.h"
+#include "ShaderStageConfig.h"
 
 class ShaderFactory
 {
 public:
 	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	virtual ~ShaderFactory();
+
+	///-----------------------------------------------------------------------------------
+	/// This method returns the basic deferred base shader used to draw primitivies to 
+	/// various render targets.
+	/// \param p_filePath
+	/// \returns DeferredBaseShader*
+	///-----------------------------------------------------------------------------------
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
+
+	///-----------------------------------------------------------------------------------
+	/// This method returns the basic deferred base shader used to draw primitivies to 
+	/// various render targets.
+	/// \param p_filePath
+	/// \returns DeferredComposeShader*
+	///-----------------------------------------------------------------------------------
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 private:
+
+	///-----------------------------------------------------------------------------------
+	/// A helper function that takes arguments and then compiles the given shader file 
+	/// and it's given entry point. Entry point is shader stage, e.g. PixelShaderFunc
+	/// \param p_sourceFile
+	/// \param p_entryPoint
+	/// \param p_profile
+	/// \param p_blob
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void compileShaderStage(const LPCWSTR &p_sourceFile, const string &p_entryPoint, 
 		const string &p_profile, ID3DBlob** p_blob);
 
-	// common functionality
-	void createAllShaderStages(const LPCWSTR& p_filePath,
-		VSData* p_vs=NULL,PSData* p_ps=NULL);
+	///-----------------------------------------------------------------------------------
+	/// A helper function that creates and compiles all the shader stages specified
+	/// \param p_filePath
+	/// \param p_vs
+	/// \param p_ps
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void createAllShaderStages( VSData* p_vs=NULL, PSData* p_ps=NULL, GSData* p_gs=NULL, 
+		HSData* p_hs=NULL, DSData* p_ds=NULL);
 
+	///-----------------------------------------------------------------------------------
+	/// A helper function that creates a given sampler stage
+	/// \param p_samplerState
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void createSamplerState(ID3D11SamplerState** p_samplerState);
 
+	///-----------------------------------------------------------------------------------
+	/// A helper function that creates and configures the shader from the specified input
+	/// \param p_shaderInitData
+	/// \param p_inputLayout
+	/// \param p_vsd
+	/// \param p_psd
+	/// \param p_samplerState
+	/// \param p_gsd
+	/// \param p_hsd
+	/// \param p_dsd
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void createShaderInitData(ShaderInitStruct* p_shaderInitData,
 		ID3D11InputLayout* p_inputLayout,
 		VSData* p_vsd, PSData* p_psd, 
 		ID3D11SamplerState* p_samplerState=NULL,
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 
+	///-----------------------------------------------------------------------------------
+	/// Creates a inputlayout
+	/// \param p_vs
+	/// \param p_inputLayout
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void createVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
 private:
