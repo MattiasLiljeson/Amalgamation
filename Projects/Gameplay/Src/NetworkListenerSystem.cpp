@@ -39,6 +39,7 @@ void NetworkListenerSystem::process()
 		{
 		case MessageType::CLIENT_CONNECTED:
 			cout << "Someone connected!\n";
+			// TODO: Add an entity perhaps.
 			break;
 		default:
 			break;
