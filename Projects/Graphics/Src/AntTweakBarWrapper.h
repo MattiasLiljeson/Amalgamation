@@ -1,32 +1,27 @@
 // =======================================================================================
-//                                      Window
+//                                      AntTweakBar
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	A wrapper class around Ant Tweak Bar
 ///        
-/// # Window
+/// # AntTweakBar
 /// Detailed description.....
-/// Created on: 27-11-2012 
+/// Created on: 3-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
-
-#include <Windows.h>
 #include <AntTweakBar.h>
-#include "WindowException.h"
+#include <d3d11.h>
 
-static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
+using namespace std;
 
-class Window
+class AntTweakBarWrapper
 {
 public:
-	Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindowFlag);
-	virtual ~Window();
-	HWND getWindowRef();
-protected:
+	AntTweakBarWrapper(ID3D11Device* p_device, const char* p_nameOfBar);
+	virtual ~AntTweakBarWrapper();
+	TwBar* getAntBar();
+	void render();
 private:
-	int m_width;
-	int m_height;
-	HINSTANCE	m_hInstance;
-	HWND		m_hWnd;
+	TwBar* m_antBar;
 };

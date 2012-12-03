@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <vld.h>
+#include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "D3DRender.h"
 #include "DebugUtil.h"
@@ -11,10 +12,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 {
 	Window* window;
 	D3DRender* renderer;
+	AntTweakBarWrapper* bar;
+
 	try
 	{
 		window = new Window(hInstance,800,600,1);
 		renderer = new D3DRender(window->getWindowRef(),800,600,true);
+		bar = new AntTweakBarWrapper(renderer->getDevice(),"DummyBar");
 	}
 	catch (exception &e)
 	{
@@ -48,10 +52,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			renderer->clearRenderTargets();
 			renderer->render();
+			bar->render();
 			renderer->flipBackBuffer();
 		}
 	}
 
+	delete bar;
 	delete window;
 	delete renderer;
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AntTweakBarWrapper.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
     <ClCompile Include="BufferFactory.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
@@ -78,18 +80,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)/External/Ant/Lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
-    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(SolutionDir)External\Ant\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\Visual Leak Detector\include;$(SolutionDir)External\Ant\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)/External/Ant/Lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
@@ -108,7 +110,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,7 +128,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

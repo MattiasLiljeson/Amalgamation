@@ -30,6 +30,9 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="AntTweakBarWrapper.cpp">
+      <Filter>Renderer\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -93,6 +96,9 @@
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="AntTweakBarWrapper.h">
+      <Filter>Renderer\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -118,6 +124,9 @@
     </Filter>
     <Filter Include="Renderer\Shader\Shader types">
       <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Debug">
+      <UniqueIdentifier>{10f41fdd-bd1f-40f8-856c-b8adcc821846}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

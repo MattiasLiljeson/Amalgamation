@@ -30,7 +30,6 @@ D3DRender::~D3DRender()
 	
 	delete m_deferred;
 	delete m_deferredBaseShader;
-
 }
 
 void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
@@ -153,4 +152,9 @@ void D3DRender::initViewport()
 	vp.TopLeftY = 0;
 
 	m_deviceContext->RSSetViewports(1, &vp);
+}
+
+ID3D11Device* D3DRender::getDevice()
+{
+	return m_device;
 }
