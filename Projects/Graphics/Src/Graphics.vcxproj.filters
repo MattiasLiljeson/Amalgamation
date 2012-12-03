@@ -90,9 +90,6 @@
     <ClInclude Include="CBuffers.h">
       <Filter>Renderer\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderPipelineProfile.h">
-      <Filter>Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
