@@ -33,7 +33,7 @@ class SystemType;
 class EntitySystem : public IEntityObserver
 {
 public:
-	EntitySystem( SystemType p_type );
+	EntitySystem( SystemType::SystemTypeIdx p_type );
 
 	/**
 	 * Creates an entity system that uses the specified components as a matcher against 
@@ -42,7 +42,7 @@ public:
 	 * @param p_numComponents Number of components 
 	 * @param ... Components to match against entities
 	 */
-	EntitySystem( SystemType p_type,  int p_numComponents, ... );
+	EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... );
 	~EntitySystem();
 
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits );
