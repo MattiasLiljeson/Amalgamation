@@ -2,6 +2,7 @@
 #include <string>
 
 #include "ThreadSafeMessaging.h"
+#include "ProcessMessageText.h"
 
 using namespace std;
 
@@ -24,8 +25,8 @@ public:
 
 	void sendMessage( string p_message )
 	{
-		m_messaging->putMessage( new ProcessMessage(
-			MessageType::TEXT, m_messaging, p_message ) );
+		m_messaging->putMessage( new ProcessMessageText(
+			m_messaging, p_message ) );
 	}
 
 	string getMessage()

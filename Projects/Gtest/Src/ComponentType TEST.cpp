@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST(ComponentTypeGetId, OneComponentType)
+TEST(ComponentTypegetIndex, OneComponentType)
 {
 	ComponentType ct;
 	int ct_id;
@@ -23,7 +23,7 @@ TEST(ComponentTypeGetId, OneComponentType)
 	EXPECT_EQ( 0, ct_id );
 }
 
-TEST(ComponentTypeGetId, SeveralComponentTypes)
+TEST(ComponentTypegetIndex, SeveralComponentTypes)
 {
 	ComponentType ct;
 	int ct_id;
@@ -46,7 +46,7 @@ TEST(ComponentTypeGetId, SeveralComponentTypes)
 	EXPECT_EQ( 3, ct_id );
 }
 
-TEST(ComponentTypeGetId, NonExisting)
+TEST(ComponentTypegetIndex, NonExisting)
 {
 	ComponentType ct;
 	int ct_id;

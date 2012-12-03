@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Component">
+      <UniqueIdentifier>{ab00836e-853c-444a-a093-791748fd5abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{43a94560-f6c3-46ab-a695-ce8aa799e82c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{15cde1b0-41aa-41ed-ba2f-0cfa6cb4fda8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{3a1cb503-ecdf-480a-ba3c-be3acbc1b363}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentType.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntitySystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemType.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Aspect.cpp" />
+    <ClCompile Include="EntityWorld.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentType.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntitySystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemType.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Aspect.h" />
+    <ClInclude Include="EntityWorld.h" />
+    <ClInclude Include="IEntityObserver.h" />
+    <ClInclude Include="IPerformer.h" />
+  </ItemGroup>
+</Project>
