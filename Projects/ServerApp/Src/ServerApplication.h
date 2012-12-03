@@ -15,16 +15,10 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <boost/asio.hpp>
-
 #include <EntityWorld.h>
-#include <ThreadSafeMessaging.h>
-#include <TcpListenerProcess.h>
 
 
-using namespace boost::asio::ip;
-
-class ServerApplication: public ThreadSafeMessaging
+class ServerApplication
 {
 public:
 	ServerApplication();
@@ -38,11 +32,6 @@ public:
 	void run();
 
 private:
-	///-----------------------------------------------------------------------------------
-	/// Initializes the boost IO service and the TCP listener process.
-	/// \returns void
-	///-----------------------------------------------------------------------------------
-	void initNetwork();
 
 	///-----------------------------------------------------------------------------------
 	/// Creates and initializes all EntitySystems.
@@ -55,8 +44,6 @@ private:
 private:
 	bool m_running;
 
-	boost::asio::io_service* m_ioService;
-
-	ProcessThread* m_tcpListenerProcess; /** A process that listens for new connections */
+	EntityWorld* m_world;
 
 };

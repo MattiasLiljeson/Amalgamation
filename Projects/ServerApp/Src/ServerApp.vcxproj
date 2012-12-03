@@ -89,9 +89,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="ServerApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="ServerApplication.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
