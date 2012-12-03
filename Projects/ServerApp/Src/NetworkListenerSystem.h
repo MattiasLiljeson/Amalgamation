@@ -40,6 +40,7 @@ public:
 private:
 	boost::asio::io_service* m_ioService;
 
-	TcpListenerProcess* m_tcpListenerProcess;
+	ProcessThread* m_tcpListenerProcess;
+	ThreadSafeMessaging* m_tcpListenerProcessMessaging;
 
 };

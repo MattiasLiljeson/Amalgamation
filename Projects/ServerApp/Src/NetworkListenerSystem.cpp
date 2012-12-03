@@ -9,14 +9,18 @@ NetworkListenerSystem::NetworkListenerSystem()
 
 NetworkListenerSystem::~NetworkListenerSystem()
 {
-	if( m_ioService )
-		delete m_ioService;	// Don't forget to call stop() before deletion!
-
 	if( m_tcpListenerProcess )
 	{
 		m_tcpListenerProcess->putMessage( new ProcessMessageTerminate( this ) );
+
 		m_tcpListenerProcess->stop(); // Blocks until process is done.
 		delete m_tcpListenerProcess;
+	}
+
+	if( m_ioService )
+	{
+		m_ioService->stop();
+		delete m_ioService;
 	}
 }
 

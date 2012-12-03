@@ -19,6 +19,9 @@ EntityWorld::~EntityWorld()
 	delete m_componentManager;
 	delete m_entityManager;
 	delete m_systemManager;
+
+	for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
+			delete m_systemsBag[i];
 }
 
 void EntityWorld::initialize()
