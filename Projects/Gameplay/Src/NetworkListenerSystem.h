@@ -23,6 +23,10 @@
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
 
+// Components:
+#include "Transform.h"
+#include "NetworkSynced.h"
+
 using namespace std;
 using namespace boost::asio::ip;
 

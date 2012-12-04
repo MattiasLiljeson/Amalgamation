@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkListenerSystem.h" />
+    <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />

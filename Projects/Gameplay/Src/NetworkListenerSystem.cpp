@@ -35,14 +35,19 @@ void NetworkListenerSystem::process()
 		messageQueue.pop();
 
 		// Handle message.
-		switch( message->type )
+		if( message->type == MessageType::CLIENT_CONNECTED )
 		{
-		case MessageType::CLIENT_CONNECTED:
 			cout << "Someone connected!\n";
+
+			Entity* e = m_world->createEntity();
+			e->addComponent( ComponentType::getTypeFor(ComponentType::Transform),
+				new Transform( 10.0f, 0, 0 ) );
+			e->addComponent( ComponentType::getTypeFor(ComponentType::NetworkSynced),
+				new NetworkSynced() );
+			m_world->addEntity( e );
+
 			// TODO: Add an entity perhaps.
-			break;
-		default:
-			break;
+
 		}
 
 		delete message;
