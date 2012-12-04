@@ -12,7 +12,7 @@
 #pragma once
 
 #include <d3d11.h>
-#include "Util.h"
+#include "D3DUtil.h"
 #include "ShaderStageConfig.h"
 
 struct VSData

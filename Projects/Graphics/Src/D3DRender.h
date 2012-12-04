@@ -14,7 +14,7 @@
 #include <d3d11.h>
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"
-#include "Util.h"
+#include "D3DUtil.h"
 #include "Buffer.h"
 #include "Deferred.h"
 #include "RendererMeshInfo.h"
