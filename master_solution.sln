@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "Projects\Serve
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gtest", "Projects\Gtest\Src\Gtest.vcxproj", "{C1B712E8-6D81-4E7C-A4E9-C50C99259673}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgileUtility", "Projects\AgileUtility\src\AgileUtility.vcxproj", "{7BC84332-97E7-4A31-AA8A-77E4B91F24A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -77,6 +79,10 @@ Global
 		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Debug|Win32.Build.0 = Debug|Win32
 		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Release|Win32.ActiveCfg = Release|Win32
 		{C1B712E8-6D81-4E7C-A4E9-C50C99259673}.Release|Win32.Build.0 = Release|Win32
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2}.Debug|Win32.Build.0 = Debug|Win32
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2}.Release|Win32.ActiveCfg = Release|Win32
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
