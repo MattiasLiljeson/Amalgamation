@@ -44,4 +44,11 @@ Describe(a_tcp_server)
 
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
+
+	// Dummy test that previously broke the "It can receive a connection
+	// from a client" test.
+	It(can_lol)
+	{
+		Assert::That(0, Equals(0));
+	}
 };

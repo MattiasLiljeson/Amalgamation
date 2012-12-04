@@ -9,6 +9,8 @@ TcpServer::TcpServer()
 
 TcpServer::~TcpServer()
 {
+	stopListening();
+
 	delete m_ioService;
 }
 
@@ -26,6 +28,8 @@ void TcpServer::stopListening()
 	{
 		m_listenerProcess->putMessage( new ProcessMessageTerminate( this ) );
 		m_listenerProcess->stop();
+		delete m_listenerProcess;
+		m_listenerProcess = NULL;
 	}
 }
 

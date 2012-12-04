@@ -22,10 +22,12 @@ TcpListenerProcess::~TcpListenerProcess()
 	if( m_acceptor )
 		delete m_acceptor;
 
-	m_ioService->stop();
-
 	if( m_socket )
 		delete m_socket;
+
+	m_ioService->stop();
+
+	delete m_ioService;
 }
 
 void TcpListenerProcess::body()
