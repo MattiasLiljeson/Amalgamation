@@ -23,6 +23,10 @@ struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
 class Transform: public Component
 {
 public:
+	///-----------------------------------------------------------------------------------
+	/// Sets all private members to 0 (zero).
+	/// \returns 
+	///-----------------------------------------------------------------------------------
 	Transform()
 	{
 		m_translation.x = 0.0f;
@@ -38,6 +42,13 @@ public:
 		m_orientation.z = 0.0f;
 	}
 
+	///-----------------------------------------------------------------------------------
+	/// Sets the position. Remaining members are set to 0 (zero).
+	/// \param p_posX
+	/// \param p_posY
+	/// \param p_posZ
+	/// \returns 
+	///-----------------------------------------------------------------------------------
 	Transform( float p_posX, float p_posY, float p_posZ )
 	{
 		m_translation.x = p_posX;
@@ -57,6 +68,10 @@ public:
 	{
 	}
 
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the translation vector. The data can be manipulated in every way.
+	/// \returns xXxVector3*
+	///-----------------------------------------------------------------------------------
 	xXxVector3* getTranslation()
 	{
 		return &m_translation;
