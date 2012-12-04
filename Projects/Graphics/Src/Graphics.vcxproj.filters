@@ -33,6 +33,9 @@
     <ClCompile Include="AntTweakBarWrapper.cpp">
       <Filter>Renderer\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -98,6 +101,15 @@
     </ClInclude>
     <ClInclude Include="AntTweakBarWrapper.h">
       <Filter>Renderer\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="PTNVertex.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DIndex.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,9 @@
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "PTVertex.h"
+#include "PTNVertex.h"
+#include "DIndex.h"
+#include "Box.h"
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
 // etc?
@@ -33,6 +36,11 @@ public:
 
 	Buffer<PTVertex>* createFullScreenQuadBuffer();
 
+	///-----------------------------------------------------------------------------------
+	/// This function should create a box mesh only.
+	/// \returns Box*
+	///-----------------------------------------------------------------------------------
+	Box* createBoxMesh();
 protected:
 private:
 	ID3D11Device* m_device;

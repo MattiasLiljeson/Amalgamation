@@ -65,4 +65,86 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	return quadBuffer;
 }
 
+Box* BufferFactory::createBoxMesh()
+{
+#pragma region static data
+	PTNVertex mesh[]= {
+		{	{-1,-1,-1},	{0,1},	{0,0,-1}	},
+		{	{-1,1,-1},	{0,0},	{0,0,-1}	},
+		{	{1,1,-1},	{1,0},	{0,0,-1}	},
+		{	{1,-1,-1},	{1,1},	{0,0,-1}	},
 
+		{	{-1,-1,1},	{1,1},	{0,0,1}		},
+		{	{1,-1,1},	{0,1},	{0,0,1}		},
+		{	{1,1,1},	{0,0},	{0,0,1}		},
+		{	{-1,1,1},	{1,0},	{0,0,1}		},
+			
+		{	{-1,1,-1},	{0,1},	{0,1,0}		},
+		{	{-1,1,1},	{0,0},	{0,1,0}		},
+		{	{1,1,1},	{1,0},	{0,1,0}		},
+		{	{1,1,-1},	{1,1},	{0,1,0}		},
+			
+		{	{-1,-1,-1},	{1,1},	{0,-1,0}	},
+		{	{1,-1,-1},	{0,1},	{0,-1,0}	},
+		{	{1,-1,1},	{0,0},	{0,-1,0}	},
+		{	{-1,-1,1},	{1,0},	{0,-1,0}	},
+			
+		{	{-1,-1,1},	{0,1},	{-1,0,0}	},
+		{	{-1,1,1},	{0,0},	{-1,0,0}	},
+		{	{-1,1,-1},	{1,0},	{-1,0,0}	},
+		{	{-1,-1,-1},	{1,1},	{-1,0,0}	},
+			
+		{	{1,-1,-1},	{0,1},	{1,0,0}		},
+		{	{1,1,-1},	{0,0},	{1,0,0}		},
+		{	{1,1,1},	{1,0},	{1,0,0}		},
+		{	{1,-1,1},	{1,1},	{1,0,0}		}
+	};
+
+	DIndex indices[] = {
+		0,1,2,
+		0,2,3,
+
+		4,5,6,
+		4,6,7,
+
+		8,9,10,
+		8,10,11,
+
+		12,13,14,
+		12,14,15,
+
+		16,17,18,
+		16,18,19,
+
+		20,21,22,
+		20,22,23
+	};
+
+#pragma endregion end of static data
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
+	vertexBufferDesc.ElementSize = sizeof(PTNVertex);
+	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	vertexBufferDesc.NumElements = sizeof(mesh)/vertexBufferDesc.ElementSize;
+	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
+	indexBufferDesc.ElementSize = sizeof(DIndex);
+	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	indexBufferDesc.NumElements = sizeof(indices)/indexBufferDesc.ElementSize;
+	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
+
+	BufferConfig* vertexConfig = new BufferConfig(vertexBufferDesc);
+	BufferConfig* indexConfig = new BufferConfig(indexBufferDesc);
+
+	Buffer<PTNVertex>* vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
+		&mesh[0],vertexConfig);
+	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, &indices[0],
+		indexConfig);
+	
+	Box* newBox = new Box(vertexBuffer,indexBuffer);
+
+	return newBox;
+}

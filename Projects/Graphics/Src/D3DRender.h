@@ -42,6 +42,7 @@ public:
 	void flipBackBuffer();
 
 	ID3D11Device* getDevice();
+	ID3D11DeviceContext* getDeviceContext();
 
 	void hookUpAntTweakBar();
 private:

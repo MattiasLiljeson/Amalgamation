@@ -159,6 +159,11 @@ ID3D11Device* D3DRender::getDevice()
 	return m_device;
 }
 
+ID3D11DeviceContext* D3DRender::getDeviceContext()
+{
+	return m_deviceContext;
+}
+
 void D3DRender::hookUpAntTweakBar()
 {
 	m_deferred->hookUpAntTweakBar();

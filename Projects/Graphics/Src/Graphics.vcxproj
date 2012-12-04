@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
     <ClCompile Include="BufferFactory.cpp" />
@@ -26,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
@@ -36,6 +38,8 @@
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="Deferred.h" />
     <ClInclude Include="DeferredComposeShader.h" />
+    <ClInclude Include="DIndex.h" />
+    <ClInclude Include="PTNVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
     <ClInclude Include="ShaderBase.h" />
