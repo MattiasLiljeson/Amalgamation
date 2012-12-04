@@ -33,12 +33,18 @@
     <ClInclude Include="NetworkSynced.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="PrintPositionsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
     </ClCompile>
     <ClCompile Include="NetworkListenerSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

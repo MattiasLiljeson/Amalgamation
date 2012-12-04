@@ -18,6 +18,7 @@
 #include <boost/thread.hpp>
 
 #include <EntityWorld.h>
+#include <PrintPositionsSystem.h>
 #include <NetworkListenerSystem.h>
 
 using namespace std;

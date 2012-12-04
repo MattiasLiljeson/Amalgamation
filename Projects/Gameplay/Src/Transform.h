@@ -38,6 +38,11 @@ public:
 	{
 	}
 
+	xXxVector3* getTranslation()
+	{
+		return &translation;
+	}
+
 private:
 	xXxVector3 translation;
 	xXxVector3 scale;

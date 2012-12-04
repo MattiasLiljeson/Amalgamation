@@ -21,7 +21,7 @@ void ServerApplication::run()
 	while( m_running )
 	{
 		// HACK: Static delta and really high for testing purposes.
-		m_world->setDelta( 1.0f );
+		m_world->setDelta( 0.100f );
 
 		m_world->process();
 
@@ -35,12 +35,15 @@ void ServerApplication::run()
 		}
 
 		// HACK: Really slow update loop for testing purposes.
-		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 	}
 }
 
 void ServerApplication::initSystems()
 {
+	m_world->setSystem( SystemType::PrintPositionsSystem,
+		new PrintPositionsSystem(), true );
+
 	m_world->setSystem( SystemType::NetworkListenerSystem,
 		new NetworkListenerSystem(), true );
 

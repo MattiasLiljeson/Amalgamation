@@ -25,10 +25,10 @@ public:
 	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
 	void clean();
 	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
+	Component* getComponent( Entity* p_entity, ComponentType p_type );
 
 protected:
 	void removeComponent( Entity* p_entity, ComponentType p_type );
-	Component* getComponent( Entity* p_entity, ComponentType p_type );
 	vector<Component*> getComponentsByType( ComponentType p_type );
 
 private:
