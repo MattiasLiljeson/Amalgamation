@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "Audio"
+OUTPUT_DIRECTORY       = docs/audio
+INPUT                  = Projects/Audio/Src

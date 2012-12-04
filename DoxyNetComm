@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "NetComm"
+OUTPUT_DIRECTORY       = docs/netcomm
+INPUT                  = Projects/NetComm/Src

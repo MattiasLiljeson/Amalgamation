@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "ServerApp"
+OUTPUT_DIRECTORY       = docs/serverapp
+INPUT                  = Projects/ServerApp/Src
