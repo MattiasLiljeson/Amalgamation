@@ -13,6 +13,9 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{d2ac3317-005a-4364-8e73-af8be24371dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{31f986fe-3544-4100-930a-6e19ec949e78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -23,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="NetworkListenerSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
