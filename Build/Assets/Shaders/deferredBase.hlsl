@@ -1,12 +1,12 @@
 cbuffer VertexProgramCBuffer
 {
     float4 color;
-	float4 pos;
+	float4x4 vp;
 };
 
 struct VertexIn
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float2 texCoord : TEXCOORD; 
 };
 struct VertexOut
@@ -24,7 +24,12 @@ struct PixelOut
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
-	vout.position = p_input.position;
+
+
+
+	vout.position = mul(float4(p_input.position,1.0f), vp);
+		
+
 	vout.texCoord = p_input.texCoord;
     
 	return vout;

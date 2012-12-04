@@ -11,14 +11,14 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
 
-	m_vertexBuffer	= NULL;
+	m_fullscreenQuad	= NULL;
 
 	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	m_vertexBuffer = bufferFactory->createFullScreenQuadBuffer();
+	m_fullscreenQuad = bufferFactory->createFullScreenQuadBuffer();
 	delete bufferFactory;
 
 	initDepthStencil();
-	initGeomtryBuffers();
+	initGeometryBuffers();
 	initTestShaders();
 }
 
@@ -35,38 +35,7 @@ Deferred::~Deferred()
 	delete m_shaderFactory;
 	delete m_baseShader;
 	delete m_composeShader;
-	delete m_vertexBuffer;
-}
-
-void Deferred::deferredBasePass()
-{
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
-	
-	m_vertexBuffer->apply();
-	
-//	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 1.0f;
-//	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.0f;
-	m_baseShader->getPerFrameBufferPtr()->update();
-
-	m_baseShader->apply();
-
-	m_deviceContext->Draw(6,0);
-}
-
-void Deferred::renderComposedImage()
-{
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
-	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
-
-	m_vertexBuffer->apply();
-
-	m_composeShader->apply();
-
-	m_deviceContext->Draw(6,0);
+	delete m_fullscreenQuad;
 }
 
 void Deferred::clearBuffers()
@@ -82,6 +51,68 @@ void Deferred::clearBuffers()
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
+
+void Deferred::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+{
+	m_sceneInfo = p_sceneInfo;
+}
+
+void Deferred::beginDeferredBasePass()
+{
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
+}
+
+
+void Deferred::renderMesh(const RendererMeshInfo& p_meshInfo)
+{
+	// temp, create a quad
+	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
+	Buffer<PTVertex>* lilQuad = bufferFactory->createFullScreenQuadBuffer();
+	delete bufferFactory;
+	// temp
+	// a lil scaling
+	/*r (int i=0;i<lilQuad->getElementCount();i++)
+	{
+		lilQuad->accessBuffer[i].
+	}*/
+
+
+	lilQuad->apply();
+
+	// update per frame buffer
+	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+//	cb->accessBuffer.color[0] = 0.5f;
+//	cb->accessBuffer.color[1] = 0.5f;
+
+	for (int i=0;i<16;i++)
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
+
+	cb->update();
+
+	m_baseShader->apply();
+
+	m_deviceContext->Draw(6,0);
+
+	delete lilQuad;
+}
+
+void Deferred::renderComposedImage()
+{
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
+	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
+
+	m_fullscreenQuad->apply();
+
+	m_composeShader->apply();
+
+	m_deviceContext->Draw(6,0);
+}
+
+
 
 void Deferred::unMapGBuffers()
 {
@@ -137,7 +168,7 @@ void Deferred::initDepthStencil()
 	depthStencilTexture->Release();
 }
 
-void Deferred::initGeomtryBuffers()
+void Deferred::initGeometryBuffers()
 {
 	HRESULT hr = S_OK;
 

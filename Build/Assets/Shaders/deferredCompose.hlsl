@@ -5,7 +5,7 @@ SamplerState pointSampler : register(s0);
 
 struct VertexIn
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float2 texCoord : TEXCOORD; 
 };
 struct VertexOut
@@ -17,7 +17,7 @@ struct VertexOut
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
-	vout.position = p_input.position;
+	vout.position = float4(p_input.position,1.0f);
 	vout.texCoord = p_input.texCoord;
     
 	return vout;

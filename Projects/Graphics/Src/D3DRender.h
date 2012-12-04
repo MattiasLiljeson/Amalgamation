@@ -17,6 +17,8 @@
 #include "Util.h"
 #include "Buffer.h"
 #include "Deferred.h"
+#include "RendererMeshInfo.h"
+#include "RendererSceneInfo.h"
 
 class D3DRender
 {
@@ -30,10 +32,31 @@ public:
 	void clearRenderTargets();
 
 	///-----------------------------------------------------------------------------------
+	/// Passes the scene info(world-view-projection matrix for example) 
+	/// to the render subsystem.
+	/// \param p_sceneInfo
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
+
+	///-----------------------------------------------------------------------------------
+	/// Sets up the frame, prepares the renderer for draw calls.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void beginFrame();
+
+	///-----------------------------------------------------------------------------------
 	/// Renders the whole scene
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void render();
+	void renderMesh(const RendererMeshInfo& p_meshInfo);
+
+	///-----------------------------------------------------------------------------------
+	/// Finalizes the frame. For example; a deferred subsystem will
+	/// render to backbuffer here.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void finalizeFrame();
 
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented

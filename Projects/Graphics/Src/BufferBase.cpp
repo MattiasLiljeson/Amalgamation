@@ -82,6 +82,40 @@ void BufferBase::apply( UINT32 misc /*= 0*/ )
 			m_deviceContext->PSSetConstantBuffers(misc, 1, &m_buffer);
 		}
 		break;
+	case BufferConfig::CONSTANT_BUFFER_VS_PS:
+		{
+			m_deviceContext->VSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->PSSetConstantBuffers(misc, 1, &m_buffer);
+		}
+		break;	
+	case BufferConfig::CONSTANT_BUFFER_VS_GS_PS:
+		{
+			m_deviceContext->VSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->GSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->PSSetConstantBuffers(misc, 1, &m_buffer);
+		}
+		break;	
+	case BufferConfig::CONSTANT_BUFFER_GS_PS:
+		{
+			m_deviceContext->GSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->PSSetConstantBuffers(misc, 1, &m_buffer);
+		}
+		break;	
+	case BufferConfig::CONSTANT_BUFFER_VS_GS:
+		{
+			m_deviceContext->VSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->GSSetConstantBuffers(misc, 1, &m_buffer);
+		}
+		break;	
+	case BufferConfig::CONSTANT_BUFFER_ALL:
+		{
+			m_deviceContext->VSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->GSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->HSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->DSSetConstantBuffers(misc, 1, &m_buffer);
+			m_deviceContext->PSSetConstantBuffers(misc, 1, &m_buffer);
+		}
+		break;
 	default:
 		hr = E_FAIL;
 		break;

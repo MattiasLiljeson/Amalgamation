@@ -17,17 +17,21 @@ Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 	BufferConfig* initConfig  = NULL;
 	/// initialization data
 	SimpleCBuffer data={
-		{0.0f,1.0f,0.0f,1.0f},
-		{0.0f,0.0f,1.0f,1.0f}
+		{0.0f,1.0f,0.0f,  1.0f},
+		{1.0f,0.0f,0.0f,  0.0f, // this here is an identity matrix
+		 0.0f,1.0f,0.0f,  0.0f,
+		 0.0f,0.0f,1.0f,  0.0f,
+		 0.0f,0.0f,0.0f,  1.0f}
 	};
-	UINT32 elemSz = sizeof(float)*4;
+	UINT32 elemSz = sizeof(float)*4; // applicable even if we have matrices, 
+									 // hlsl only cares about total size of buffer
 
 	// set up buffer description: usage, type and size
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
 	bufferDesc.ElementSize = elemSz;
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
 	bufferDesc.NumElements = sizeof(data)/elemSz;
-	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS_PS;
 
 	initConfig = new BufferConfig(bufferDesc);
 
