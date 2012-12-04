@@ -45,6 +45,9 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)/Projects/ES/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Projects/ES/Lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SolutionDir)/Projects/ES/Src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
