@@ -6,12 +6,11 @@ TEST(EntityWorldBasic, EntityWorldInstancingTest)
 {
 	EntityWorld* world = new EntityWorld();
 
-	SystemType type = SystemType::getTypeFor(SystemType::NON_EXISTING);
 
-	EntitySystem* system = new EntitySystem(type, 3,
-		ComponentType::Position,
-		ComponentType::Orientation,
-		ComponentType::Render);
+	EntitySystem* system = new EntitySystem(SystemType::NON_EXISTING, 3,
+		ComponentType::Transform,
+		ComponentType::Render,
+		ComponentType::NetworkSynced);
 
 	world->setSystem(SystemType::getTypeFor(SystemType::EntitySystem), system, true);
 	Entity* ent = world->createEntity();

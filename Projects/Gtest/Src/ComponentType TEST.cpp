@@ -10,15 +10,15 @@ TEST(ComponentTypegetIndex, OneComponentType)
 	int ct_id;
 
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 }
@@ -29,11 +29,11 @@ TEST(ComponentTypegetIndex, SeveralComponentTypes)
 	int ct_id;
 
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Orientation);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 1, ct_id );
 
@@ -63,11 +63,11 @@ TEST(ComponentTypeGetBit, SeveralComponentTypes)
 	bitset<ComponentType::NUM_COMPONENT_TYPES> ct_set;
 
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Orientation);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
@@ -102,11 +102,11 @@ TEST(ComponentTypeGetBit, RandomOrder)
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Orientation);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Position);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
 

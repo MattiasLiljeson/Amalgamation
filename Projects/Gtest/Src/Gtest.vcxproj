@@ -21,14 +21,34 @@
     <ClCompile Include="..\..\ES\Src\EntityWorld.cpp" />
     <ClCompile Include="..\..\ES\Src\SystemManager.cpp" />
     <ClCompile Include="..\..\ES\Src\SystemType.cpp" />
+    <ClCompile Include="..\..\Gameplay\Src\InputSystem.cpp" />
+    <ClCompile Include="..\..\Gameplay\Src\NetworkListenerSystem.cpp" />
+    <ClCompile Include="..\..\Gameplay\Src\PrintPositionsSystem.cpp" />
     <ClCompile Include="..\..\Gameplay\Src\Vector3.cpp" />
+    <ClCompile Include="..\..\Input\Src\AnalogueControl.cpp" />
+    <ClCompile Include="..\..\Input\Src\Control.cpp" />
+    <ClCompile Include="..\..\Input\Src\DigitalControl.cpp" />
+    <ClCompile Include="..\..\Input\Src\DirectInputFetcher.cpp" />
+    <ClCompile Include="..\..\Input\Src\Input.cpp" />
+    <ClCompile Include="..\..\Input\Src\InputControlFactory.cpp" />
+    <ClCompile Include="..\..\Input\Src\InputManager.cpp" />
+    <ClCompile Include="..\..\Input\Src\KeyControl.cpp" />
+    <ClCompile Include="..\..\Input\Src\MessageLoopFetcher.cpp" />
+    <ClCompile Include="..\..\Input\Src\MouseBtnControl.cpp" />
+    <ClCompile Include="..\..\Input\Src\MouseMoveControl.cpp" />
+    <ClCompile Include="..\..\Input\Src\XInputFetcher.cpp" />
     <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp" />
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageTerminate.cpp" />
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageText.cpp" />
     <ClCompile Include="..\..\NetComm\Src\ProcessThread.cpp" />
+    <ClCompile Include="..\..\NetComm\Src\TcpListenerProcess.cpp" />
     <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp" />
     <ClCompile Include="ComponentType TEST.cpp" />
     <ClCompile Include="EntityManagerTEST.cpp" />
     <ClCompile Include="EntitySystemTEST.cpp" />
     <ClCompile Include="EntityWorldTEST.cpp" />
+    <ClCompile Include="InputSystemTEST.cpp" />
     <ClCompile Include="QueueListTEST.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="ThreadSafeMessagingTEST.cpp" />
@@ -48,10 +68,32 @@
     <ClInclude Include="..\..\ES\Src\Manager.h" />
     <ClInclude Include="..\..\ES\Src\SystemManager.h" />
     <ClInclude Include="..\..\ES\Src\SystemType.h" />
+    <ClInclude Include="..\..\Gameplay\Src\InputSystem.h" />
+    <ClInclude Include="..\..\Gameplay\Src\NetworkListenerSystem.h" />
+    <ClInclude Include="..\..\Gameplay\Src\NetworkSynced.h" />
+    <ClInclude Include="..\..\Gameplay\Src\PrintPositionsSystem.h" />
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h" />
+    <ClInclude Include="..\..\Gameplay\Src\Transform.h" />
     <ClInclude Include="..\..\Gameplay\Src\Vector3.h" />
+    <ClInclude Include="..\..\Input\Src\AnalogueControl.h" />
+    <ClInclude Include="..\..\Input\Src\Control.h" />
+    <ClInclude Include="..\..\Input\Src\DigitalControl.h" />
+    <ClInclude Include="..\..\Input\Src\DirectInputFetcher.h" />
+    <ClInclude Include="..\..\Input\Src\Input.h" />
+    <ClInclude Include="..\..\Input\Src\InputControlFactory.h" />
+    <ClInclude Include="..\..\Input\Src\InputManager.h" />
+    <ClInclude Include="..\..\Input\Src\InputType.h" />
+    <ClInclude Include="..\..\Input\Src\KeyControl.h" />
+    <ClInclude Include="..\..\Input\Src\MessageLoopFetcher.h" />
+    <ClInclude Include="..\..\Input\Src\MouseBtnControl.h" />
+    <ClInclude Include="..\..\Input\Src\MouseMoveControl.h" />
+    <ClInclude Include="..\..\Input\Src\XInputFetcher.h" />
     <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h" />
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageClientConnected.h" />
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageTerminate.h" />
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageText.h" />
     <ClInclude Include="..\..\NetComm\Src\ProcessThread.h" />
+    <ClInclude Include="..\..\NetComm\Src\TcpListenerProcess.h" />
     <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -107,7 +149,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>

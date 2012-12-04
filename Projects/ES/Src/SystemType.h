@@ -16,6 +16,7 @@ public:	//Enums
 		TestSystem2,
 		PrintPositionsSystem,
 		NetworkListenerSystem,
+		InputSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -50,12 +50,12 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
-	Control* add360controllerAnalog( Input::XBOX360_CONTROLLER_ANALOGS p_axis,
+	Control* create360controllerAnalog( Input::XBOX360_CONTROLLER_ANALOGS p_axis,
 		Input::SUB_AXIS p_subAxis );
-	Control* add360controllerDigital( Input::XBOX360_CONTROLLER_DIGITALS p_btn );
-	Control* addKeyboardKey( Input::KEYBOARD_KEYS p_key );
-	Control* addMouseButton( Input::MOUSE_BTNS p_btn );
-	Control* addMouseMovement( Input::MOUSE_AXIS p_axis, Input::SUB_AXIS p_subAxis );
+	Control* create360controllerDigital( Input::XBOX360_CONTROLLER_DIGITALS p_btn );
+	Control* createKeyboardKey( Input::KEYBOARD_KEYS p_key );
+	Control* createMouseButton( Input::MOUSE_BTNS p_btn );
+	Control* createMouseMovement( Input::MOUSE_AXIS p_axis, Input::SUB_AXIS p_subAxis );
 
 };
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InputSystem.h" />
     <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PrintPositionsSystem.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="PrintPositionsSystem.cpp" />
     <ClCompile Include="Vector3.cpp" />
@@ -57,15 +59,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Input/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Input/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Input/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Input/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
