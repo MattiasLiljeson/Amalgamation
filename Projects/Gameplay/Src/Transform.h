@@ -25,13 +25,32 @@ class Transform: public Component
 public:
 	Transform()
 	{
+		translation.x = 0.0f;
+		translation.y = 0.0f;
+		translation.z = 0.0f;
+
+		scale.x = 0.0f;
+		scale.y = 0.0f;
+		scale.z = 0.0f;
+
+		orientation.x = 0.0f;
+		orientation.y = 0.0f;
+		orientation.z = 0.0f;
 	}
 
-	Transform( float p_x, float p_y, float p_z )
+	Transform( float p_posX, float p_posY, float p_posZ )
 	{
-		translation.x = p_x;
-		translation.y = p_y;
-		translation.z = p_z;
+		translation.x = p_posX;
+		translation.y = p_posY;
+		translation.z = p_posZ;
+
+		scale.x = 0.0f;
+		scale.y = 0.0f;
+		scale.z = 0.0f;
+
+		orientation.x = 0.0f;
+		orientation.y = 0.0f;
+		orientation.z = 0.0f;
 	}
 
 	~Transform()

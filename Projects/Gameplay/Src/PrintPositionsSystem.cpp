@@ -30,7 +30,9 @@ void PrintPositionsSystem::processEntities( const vector<Entity*>& p_entities )
 				m_world->getComponentManager()->getComponent( p_entities[i],
 				ComponentType::getTypeFor( ComponentType::Transform ) ) );
 
-		cout << "Position( " << transform->getTranslation()->x << ", y, z).\n";
+		cout << "Position(" << transform->getTranslation()->x << ", " <<
+			transform->getTranslation()->y << ", " <<
+			transform->getTranslation()->z <<").\n";
 	}
 }
 
