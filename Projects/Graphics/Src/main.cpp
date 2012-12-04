@@ -4,7 +4,11 @@
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "D3DRender.h"
-#include "DebugUtil.h"
+#include "CamMatrixerUtil.h"
+#include <DebugUtil.h>
+// math tmp
+#include <AglMatrix.h>
+#include <AglVector3.h>
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, 
 	int nCmdShow )
@@ -34,18 +38,25 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 	RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f}};
 
-	// Temporary static view projection matrix
-	// column major. 
-	// R=row, col=column, r=rotation, s=scale, t=translation
-	RendererSceneInfo tempSceneInfo = 
-	{
-	  // R0rs    R1rs   R2rs     R3t
-		{1.0f,   0.0f,  0.0f,    0.0f,  // col 0  x
-		 0.0f,   1.0f,  0.0f,    0.0f,  // col 1  y
-		 0.0f,   0.0f,  1.0f,    0.0f,  // col 2  z
-		 0.0f,   0.0f,  0.0f,    1.0f}  // col 3  w
-	};
 
+
+	AglMatrix viewMatrix = AglMatrix::identityMatrix();
+	AglMatrix projMatrix = AglMatrix::identityMatrix();
+	AglMatrix camMatrix = AglMatrix::identityMatrix();
+	float ticker = 0.0f;
+
+	AglVector3 pos(0.0f,0.0f,-3.0f);
+	AglVector3 lookAt(0.0f,0.0f,0.0f);
+	AglVector3 up(0.0f,1.0f,0.0f);
+
+	SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+	SetProjMatrix(projMatrix,3.14/2.0f,800.0f/600.0f,0.1f,100.0f);
+
+	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
+
+	RendererSceneInfo tempSceneInfo;
+	for (int n=0;n<16;n++)
+		tempSceneInfo.viewProjectionMatrix[n] = camMatrix[n];
 
 	// Main message loop
 	MSG msg = {0};
@@ -63,6 +74,21 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			float dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
 			prevTimeStamp = currTimeStamp;
+
+			// temp camera test
+			{
+				ticker += dt;
+				pos.z = -1.0f-sin(ticker);
+				pos.x = -1.0f-sin(ticker);
+				pos.y = -1.0f-cos(ticker);
+
+				SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+
+				camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
+
+				for (int n=0;n<16;n++)
+					tempSceneInfo.viewProjectionMatrix[n] = camMatrix[n];
+			}
 
 			// * Scene render preparation system * 1
 			renderer->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
