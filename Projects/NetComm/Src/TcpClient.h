@@ -1,31 +1,25 @@
 // =======================================================================================
-//                                      TcpServer
+//                                      TcpClient
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief description...
 ///        
-/// # TcpServer
+/// # TcpClient
 /// Detailed description...
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class TcpServer
+#include <string>
+using namespace std;
+
+class TcpClient
 {
 public:
-	TcpServer();
-	~TcpServer();
+	TcpClient();
+	~TcpClient();
 
-	void startListening( int p_port );
-
-	void stopListening();
-
-	bool isListening();
-
-	bool hasNewConnections();
-
-private:
-	bool m_isListening;
+	void connectToServer( string p_address, int p_port );
 
 };

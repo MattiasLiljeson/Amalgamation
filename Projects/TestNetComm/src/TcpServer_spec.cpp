@@ -2,6 +2,7 @@
 using namespace igloo;
 
 #include <TcpServer.h>
+#include <TcpClient.h>
 
 Describe(a_tcp_server)
 {
@@ -11,5 +12,32 @@ Describe(a_tcp_server)
 		server.startListening( 1337 );
 
 		Assert::That(server.isListening(), IsTrue());
+	}
+
+	It(can_stop_listening_by_calling_stopListening)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		server.stopListening();
+
+		Assert::That(server.isListening(), IsFalse());
+	}
+
+	It(has_no_connections_if_no_client_connected)
+	{
+		TcpServer server;
+
+		Assert::That(server.hasNewConnections(), IsFalse());
+	}
+
+	It(can_receive_a_connection_from_a_client)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "localhost", 1337 );
+
+		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 };

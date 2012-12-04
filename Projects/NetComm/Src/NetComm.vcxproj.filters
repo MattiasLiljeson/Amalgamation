@@ -19,6 +19,9 @@
     <Filter Include="TcpServer">
       <UniqueIdentifier>{8cd0d913-8ccb-4f9c-8451-f665f483fee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TcpClient">
+      <UniqueIdentifier>{e6e8f356-495f-40a1-9af9-193fa3604e18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="TcpServer.cpp">
       <Filter>TcpServer</Filter>
     </ClCompile>
+    <ClCompile Include="TcpClient.cpp">
+      <Filter>TcpClient</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="TcpServer.h">
       <Filter>TcpServer</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClient.h">
+      <Filter>TcpClient</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
