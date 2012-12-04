@@ -2,14 +2,14 @@
 
 //bitset<ComponentType::NUM_COMPONENT_TYPES> EntitySystem::s_typeFlags;
 
-EntitySystem::EntitySystem( SystemType p_type )
+EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 {
-	m_type = p_type;
+	m_type = SystemType::getTypeFor(p_type);
 }
 
-EntitySystem::EntitySystem( SystemType p_type, int p_numComponents, ... )
+EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
 {
-	m_type = p_type;
+	m_type = SystemType::getTypeFor(p_type);
 
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );

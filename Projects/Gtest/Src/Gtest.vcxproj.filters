@@ -26,6 +26,14 @@
     <Filter Include="ES\EntityManager TEST">
       <UniqueIdentifier>{877c3db5-3e71-4f06-b5ec-6737b1f213e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ProcessThread">
+      <UniqueIdentifier>{1cdc7bff-f539-40b2-b3ec-2b567a728a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProcessThread\ThreadSafeMessaging TEST">
+      <UniqueIdentifier>{9d93ad2a-8d46-49c1-b6bd-5b4a1152a980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProcessThread\ProcessThread TEST">
+      <UniqueIdentifier>{0911badd-e531-40c3-a58e-82ca382b2e18}</UniqueIdentifier>
     <Filter Include="ES\EntityWorld TEST">
       <UniqueIdentifier>{0fd3ae1b-2f22-4b36-ba12-2b40707a8e74}</UniqueIdentifier>
     </Filter>
@@ -100,6 +108,21 @@
     <ClCompile Include="..\..\ES\Src\EntityWorld.cpp">
       <Filter>ES\Code to test</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadSafeMessagingTEST.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessThreadTEST.cpp">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessThread.cpp">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\QueueList.h">
@@ -146,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="..\..\ES\Src\IPerformer.h">
       <Filter>ES\Code to test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
+      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessThread.h">
+      <Filter>ProcessThread\ProcessThread TEST</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

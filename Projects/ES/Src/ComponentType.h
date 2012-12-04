@@ -20,6 +20,7 @@ public:	//Enums
 		Orientation,
 		Render,
 		Input,
+		NetworkSynced,
 		NUM_COMPONENT_TYPES
 	};
 
