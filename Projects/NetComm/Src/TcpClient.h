@@ -12,7 +12,11 @@
 #pragma once
 
 #include <string>
+
+#include <boost/asio.hpp>
+
 using namespace std;
+using namespace boost::asio::ip;
 
 class TcpClient
 {
@@ -20,8 +24,11 @@ public:
 	TcpClient();
 	~TcpClient();
 
-	void connectToServer( string p_address, int p_port );
+	bool connectToServer( string p_address, string p_port );
 
 	bool hasActiveConnection();
+
+private:
+	boost::asio::io_service* m_ioService;
 
 };

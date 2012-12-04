@@ -12,7 +12,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", 1337 );
+		client.connectToServer( "localhost", "1337" );
 		Assert::That(client.hasActiveConnection(), IsTrue());
 	}
 

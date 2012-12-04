@@ -1,6 +1,8 @@
 #include <igloo/igloo_alt.h>
 using namespace igloo;
 
+#include <boost/thread.hpp>
+
 #include <TcpServer.h>
 #include <TcpClient.h>
 
@@ -36,7 +38,9 @@ Describe(a_tcp_server)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", 1337 );
+		client.connectToServer( "localhost", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(1000));
 
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}

@@ -11,7 +11,14 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class TcpServer
+#include <boost/asio.hpp>
+
+#include "ThreadSafeMessaging.h"
+#include "TcpListenerProcess.h"
+
+using namespace boost::asio::ip;
+
+class TcpServer: public ThreadSafeMessaging
 {
 public:
 	TcpServer();
@@ -27,5 +34,8 @@ public:
 
 private:
 	bool m_isListening;
+
+	TcpListenerProcess* m_listenerProcess;
+	boost::asio::io_service* m_ioService;
 
 };
