@@ -24,9 +24,9 @@ public:
 	void deleted( Entity* p_entity );
 	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
 	void clean();
+	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
 
 protected:
-	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
 	void removeComponent( Entity* p_entity, ComponentType p_type );
 	Component* getComponent( Entity* p_entity, ComponentType p_type );
 	vector<Component*> getComponentsByType( ComponentType p_type );

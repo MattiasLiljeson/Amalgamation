@@ -50,7 +50,7 @@ ComponentManager* EntityWorld::getComponentManager()
 Manager* EntityWorld::setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager )
 {
 	int reqSize = p_managerType+1;  // index+1 = required size 
-	if(m_managers.size() < reqSize)
+	if(m_managers.size() < (unsigned int)reqSize)
 		m_managers.resize(p_managerType+1);
 	
 	p_manager->setWorld(this);
