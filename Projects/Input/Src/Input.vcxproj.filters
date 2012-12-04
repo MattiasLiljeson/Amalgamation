@@ -34,7 +34,9 @@
     <ClCompile Include="MouseMoveControl.cpp">
       <Filter>InputControls</Filter>
     </ClCompile>
-    <ClCompile Include="MouseBtnControl.cpp" />
+    <ClCompile Include="MouseBtnControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -73,7 +75,9 @@
     <ClInclude Include="MouseMoveControl.h">
       <Filter>InputControls</Filter>
     </ClInclude>
-    <ClInclude Include="MouseBtnControl.h" />
+    <ClInclude Include="MouseBtnControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Input.vcxproj" />
