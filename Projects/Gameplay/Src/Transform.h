@@ -25,32 +25,32 @@ class Transform: public Component
 public:
 	Transform()
 	{
-		translation.x = 0.0f;
-		translation.y = 0.0f;
-		translation.z = 0.0f;
+		m_translation.x = 0.0f;
+		m_translation.y = 0.0f;
+		m_translation.z = 0.0f;
 
-		scale.x = 0.0f;
-		scale.y = 0.0f;
-		scale.z = 0.0f;
+		m_scale.x = 0.0f;
+		m_scale.y = 0.0f;
+		m_scale.z = 0.0f;
 
-		orientation.x = 0.0f;
-		orientation.y = 0.0f;
-		orientation.z = 0.0f;
+		m_orientation.x = 0.0f;
+		m_orientation.y = 0.0f;
+		m_orientation.z = 0.0f;
 	}
 
 	Transform( float p_posX, float p_posY, float p_posZ )
 	{
-		translation.x = p_posX;
-		translation.y = p_posY;
-		translation.z = p_posZ;
+		m_translation.x = p_posX;
+		m_translation.y = p_posY;
+		m_translation.z = p_posZ;
 
-		scale.x = 0.0f;
-		scale.y = 0.0f;
-		scale.z = 0.0f;
+		m_scale.x = 0.0f;
+		m_scale.y = 0.0f;
+		m_scale.z = 0.0f;
 
-		orientation.x = 0.0f;
-		orientation.y = 0.0f;
-		orientation.z = 0.0f;
+		m_orientation.x = 0.0f;
+		m_orientation.y = 0.0f;
+		m_orientation.z = 0.0f;
 	}
 
 	~Transform()
@@ -59,11 +59,11 @@ public:
 
 	xXxVector3* getTranslation()
 	{
-		return &translation;
+		return &m_translation;
 	}
 
 private:
-	xXxVector3 translation;
-	xXxVector3 scale;
-	xXxVector3 orientation;
+	xXxVector3 m_translation;
+	xXxVector3 m_scale;
+	xXxVector3 m_orientation;
 };

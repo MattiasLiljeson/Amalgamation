@@ -1,36 +1,36 @@
 // =======================================================================================
-//                                      NetworkSynced
+//                                      NetworkClientControllable
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	NetworkSynced Component.
+/// \brief	Brief description...
 ///        
-/// # NetworkSynced
-/// Detailed description.....
+/// # NetworkClientControllable
+/// Detailed description...
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <Component.h>
 
-class NetworkSynced: public Component
+class NetworkClientControllable: public Component
 {
 public:
-	NetworkSynced()
+	NetworkClientControllable()
 	{
-		m_networkIdentity = -1;
+		m_clientIdentity = -1;
 	}
 
-	NetworkSynced( int p_networkIdentity )
+	NetworkClientControllable( int p_clientIdentity )
 	{
-		m_networkIdentity = p_networkIdentity;
+		m_clientIdentity = p_clientIdentity;
 	}
 
-	~NetworkSynced()
+	~NetworkClientControllable()
 	{
 	}
 
 private:
-	int m_networkIdentity;
+	int m_clientIdentity;
 
 };
