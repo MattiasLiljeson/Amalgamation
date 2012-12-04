@@ -45,6 +45,19 @@ Describe(a_tcp_server)
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 
+	It(can_receive_another_connection_from_a_client)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "localhost", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(1000));
+
+		Assert::That(server.hasNewConnections(), IsTrue());
+	}
+
 	// Dummy test that previously broke the "It can receive a connection
 	// from a client" test.
 	It(can_lol)
