@@ -14,6 +14,7 @@ public:	//Enums
 		EntitySystem,
 		TestSystem,
 		TestSystem2,
+		PrintPositionsSystem,
 		NetworkListenerSystem,
 		NUM_SYSTEM_TYPES
 	};

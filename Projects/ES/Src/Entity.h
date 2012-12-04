@@ -3,6 +3,7 @@
 #include "ComponentType.h"
 #include "EntityWorld.h"
 #include "SystemType.h"
+#include "ComponentManager.h"
 
 class ComponentType;
 class EntityWorld;
@@ -24,6 +25,8 @@ public:
 	void setComponentBit( int p_idx, bool p_value ) { m_componentBits[p_idx] = p_value; }
 	void addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
+
+	void addComponent( ComponentType p_type, Component* p_component );
 
 	bitset<SystemType::NUM_SYSTEM_TYPES> getSystemBits() { return m_systemBits; }
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits ) { m_systemBits = p_systemBits; }

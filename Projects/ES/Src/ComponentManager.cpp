@@ -34,8 +34,12 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type, Com
 	int typeIndex = p_type.getIndex();
 	int entityIndex = p_entity->getIndex();
 
-	m_componentsByType.reserve(typeIndex);
-	m_componentsByType[typeIndex].reserve( entityIndex );
+	if( m_componentsByType.size() <= typeIndex )
+		m_componentsByType.resize( typeIndex+1 );
+
+	if( m_componentsByType[typeIndex].size() <= entityIndex )
+		m_componentsByType[typeIndex].resize( entityIndex+1 );
+
 	m_componentsByType[typeIndex][entityIndex] = p_component;
 
 	p_entity->setComponentBit( typeIndex, true );

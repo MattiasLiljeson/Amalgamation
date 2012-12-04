@@ -21,9 +21,6 @@ TcpListenerProcess::~TcpListenerProcess()
 	if( m_acceptor )
 		delete m_acceptor;
 
-	if( m_ioService )
-		m_ioService->stop();
-
 	if( m_socket )
 		delete m_socket;
 }

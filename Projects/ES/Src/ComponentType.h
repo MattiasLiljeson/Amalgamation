@@ -16,8 +16,7 @@ public:	//Enums
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING = -1,
-		Position,
-		Orientation,
+		Transform,
 		Render,
 		Input,
 		NetworkSynced,

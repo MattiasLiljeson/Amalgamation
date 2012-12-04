@@ -16,6 +16,12 @@ EntityWorld::EntityWorld()
 
 EntityWorld::~EntityWorld()
 {
+	delete m_componentManager;
+	delete m_entityManager;
+	delete m_systemManager;
+
+	for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
+			delete m_systemsBag[i];
 }
 
 void EntityWorld::initialize()
@@ -44,7 +50,7 @@ ComponentManager* EntityWorld::getComponentManager()
 Manager* EntityWorld::setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager )
 {
 	int reqSize = p_managerType+1;  // index+1 = required size 
-	if(m_managers.size() < reqSize)
+	if(m_managers.size() < (unsigned int)reqSize)
 		m_managers.resize(p_managerType+1);
 	
 	p_manager->setWorld(this);

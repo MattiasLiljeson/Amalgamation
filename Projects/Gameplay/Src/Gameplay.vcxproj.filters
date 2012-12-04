@@ -10,6 +10,12 @@
     <Filter Include="Utilities\Vector3">
       <UniqueIdentifier>{451be5ff-6e8c-49f6-a74f-ffdff8c1de41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{d2ac3317-005a-4364-8e73-af8be24371dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{31f986fe-3544-4100-930a-6e19ec949e78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -18,10 +24,28 @@
     <ClInclude Include="Vector3.h">
       <Filter>Utilities\Vector3</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkListenerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkSynced.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintPositionsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkListenerSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintPositionsSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,30 +1,41 @@
 // =======================================================================================
-//                                      NetworkListenerSystem
+//                                      PrintPositionsSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Brief description...
 ///        
-/// # NetworkListenerSystem
-/// Detailed description.....
-/// Created on: 3-12-2012 
+/// # PrintPositionsSystem
+/// Detailed description...
+/// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <iostream>
+
 #include <SystemType.h>
 #include <EntitySystem.h>
-#include <TcpListenerProcess.h>
 
-class NetworkListenerSystem: public EntitySystem
+// Components:
+#include "Transform.h"
+
+using namespace std;
+
+class PrintPositionsSystem: public EntitySystem
 {
 public:
-	NetworkListenerSystem();
-	~NetworkListenerSystem();
+	PrintPositionsSystem();
+	~PrintPositionsSystem();
 
-	virtual void process();
+	virtual void begin();
+
+	virtual void end();
+
+	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	virtual void initialize();
 
+private:
 
 
 };

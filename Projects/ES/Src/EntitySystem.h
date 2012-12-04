@@ -43,7 +43,7 @@ public:
 	 * @param ... Components to match against entities
 	 */
 	EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... );
-	~EntitySystem();
+	virtual ~EntitySystem();
 
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits );
 

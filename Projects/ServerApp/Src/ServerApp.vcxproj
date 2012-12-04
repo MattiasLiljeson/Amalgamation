@@ -44,16 +44,16 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -66,7 +66,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gameplay_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,16 +84,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gameplay_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="ServerApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="ServerApplication.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
