@@ -38,6 +38,25 @@ Deferred::~Deferred()
 	delete m_fullscreenQuad;
 }
 
+void Deferred::clearBuffers()
+{
+	unMapGBuffers();
+	float clearColor[] = {
+		0.0f,0.5f,0.5f,1.0f
+	};
+	for (unsigned int i = 0; i < NUMBUFFERS; i++)
+	{
+		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
+	}
+
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void Deferred::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+{
+	m_sceneInfo = p_sceneInfo;
+}
+
 void Deferred::beginDeferredBasePass()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -62,9 +81,15 @@ void Deferred::renderMesh(const RendererMeshInfo& p_meshInfo)
 
 	lilQuad->apply();
 
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 0.5f;
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.5f;
-	m_baseShader->getPerFrameBufferPtr()->update();
+	// update per frame buffer
+	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	cb->accessBuffer.color[0] = 0.5f;
+	cb->accessBuffer.color[1] = 0.5f;
+
+	for (int i=0;i<16;i++)
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
+
+	cb->update();
 
 	m_baseShader->apply();
 
@@ -87,19 +112,7 @@ void Deferred::renderComposedImage()
 	m_deviceContext->Draw(6,0);
 }
 
-void Deferred::clearBuffers()
-{
-	unMapGBuffers();
-	float clearColor[] = {
-		0.0f,0.5f,0.5f,1.0f
-	};
-	for (unsigned int i = 0; i < NUMBUFFERS; i++)
-	{
-		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
-	}
 
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
 
 void Deferred::unMapGBuffers()
 {

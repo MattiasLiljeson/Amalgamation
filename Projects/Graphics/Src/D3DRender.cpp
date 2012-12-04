@@ -129,6 +129,11 @@ void D3DRender::clearRenderTargets()
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
+void D3DRender::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+{
+	m_deferred->setSceneInfo(p_sceneInfo);
+}
+
 void D3DRender::beginFrame()
 {
 	m_deferred->beginDeferredBasePass();

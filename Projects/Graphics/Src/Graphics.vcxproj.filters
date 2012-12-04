@@ -96,6 +96,9 @@
     <ClInclude Include="RendererMeshInfo.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="RendererSceneInfo.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

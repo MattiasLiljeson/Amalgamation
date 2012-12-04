@@ -18,6 +18,7 @@
 #include "BufferFactory.h"
 #include "PTVertex.h"
 #include "RendererMeshInfo.h"
+#include "RendererSceneInfo.h"
 
 const static int NUMBUFFERS = 3;
 const static int DEPTH = 2;
@@ -36,6 +37,14 @@ public:
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void clearBuffers();
+
+	///-----------------------------------------------------------------------------------
+	/// Sets the scene info, which can be regarded as "global" information to be used 
+	/// when rendering. For example a world-view-projection matrix.
+	/// \param p_sceneInfo
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Set the gbuffer as render target.
@@ -66,6 +75,8 @@ private:
 	ID3D11DeviceContext*	m_deviceContext;
 
 	ShaderFactory*			m_shaderFactory;
+
+	RendererSceneInfo		m_sceneInfo;
 
 	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
