@@ -8,7 +8,8 @@ TcpListenerProcess::TcpListenerProcess( ThreadSafeMessaging* p_parent, int p_por
 	m_parent = p_parent;
 
 	m_port = p_port;
-	m_ioService = p_ioService;
+//	m_ioService = p_ioService;
+	m_ioService = new boost::asio::io_service();
 	m_socket = NULL;
 
 	m_acceptor = NULL;
@@ -20,6 +21,8 @@ TcpListenerProcess::~TcpListenerProcess()
 {
 	if( m_acceptor )
 		delete m_acceptor;
+
+	m_ioService->stop();
 
 	if( m_socket )
 		delete m_socket;

@@ -30,5 +30,8 @@ public:
 
 private:
 	boost::asio::io_service* m_ioService;
+	tcp::socket* m_activeSocket;
+
+	int m_numConnections;
 
 };

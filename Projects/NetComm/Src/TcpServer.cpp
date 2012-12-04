@@ -9,7 +9,7 @@ TcpServer::TcpServer()
 
 TcpServer::~TcpServer()
 {
-
+	delete m_ioService;
 }
 
 void TcpServer::startListening( int p_port )
