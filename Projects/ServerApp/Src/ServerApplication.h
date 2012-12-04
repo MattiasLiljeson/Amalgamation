@@ -15,6 +15,8 @@
 
 #include <conio.h>
 
+#include <boost/thread.hpp>
+
 #include <EntityWorld.h>
 #include <NetworkListenerSystem.h>
 

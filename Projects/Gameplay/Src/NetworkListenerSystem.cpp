@@ -46,7 +46,7 @@ void NetworkListenerSystem::process()
 				new NetworkSynced() );
 			m_world->addEntity( e );
 
-			// TODO: Add an entity perhaps.
+			// Should notify new client about all NetworkSynced entities.
 
 		}
 

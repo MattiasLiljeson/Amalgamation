@@ -20,7 +20,8 @@ void ServerApplication::run()
 {
 	while( m_running )
 	{
-		m_world->setDelta( 0.016f );
+		// HACK: Static delta and really high for testing purposes.
+		m_world->setDelta( 1.0f );
 
 		m_world->process();
 
@@ -32,6 +33,9 @@ void ServerApplication::run()
 				m_running = false;
 			}
 		}
+
+		// HACK: Really slow update loop for testing purposes.
+		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 	}
 }
 
