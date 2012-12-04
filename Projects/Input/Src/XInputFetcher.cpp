@@ -48,7 +48,7 @@ void XInputFetcher::update()
 	XINPUT_STATE newState;
 	XInputGetState( 0, &newState );
 	for( int i=0; i<Input::NUM_XBOX360_CONTROLLER_DIGITALS; i++)
-		m_btns[i] = Input::calcState( m_btns[i], newState.Gamepad.wButtons & s_btnMaskMap[i]);
+		m_btns[i] = Input::calcState( m_btns[i], (newState.Gamepad.wButtons & s_btnMaskMap[i]));
 	
 	m_analogs[Input::THUMB_LX] = m_currentState.Gamepad.sThumbLX;
 	m_analogs[Input::THUMB_LY] = m_currentState.Gamepad.sThumbLY;
@@ -75,22 +75,22 @@ short XInputFetcher::getAnalog( int p_analog )
 		return -1;
 }
 
-float XInputFetcher::getAnalogAsFloat( int p_analog )
+double XInputFetcher::getAnalogAsDouble( int p_analog )
 {
 	// Std-val. Whats returned if the analog isn't found.
-	float val = (float)-1;
+	double val = (float)-1;
 
 	// Make sure that p_analog is in range
 	if( 0 <= p_analog && p_analog < Input::NUM_XBOX360_CONTROLLER_ANALOGS )
 	{
 		short tmp = getAnalog( p_analog );
 
-		// Triggers have a precision of 0-255 instead of 0-65 as the thumb sticks.
+		// Triggers have a precision of 0-255 instead of 0-65k as the thumb sticks.
 		// Take that into account when calculating 0.0 - 1.0 
 		if(p_analog == Input::TRIGGER_L || p_analog == Input::TRIGGER_R)
-			val =  (float)tmp / (float)255; //BYTE_MAX
+			val =  (double)tmp / 255; //BYTE_MAX
 		else
-			val = (float)tmp / (float)SHRT_MAX;
+			val = (double)tmp / SHRT_MAX;
 	}
 	
 	return val;

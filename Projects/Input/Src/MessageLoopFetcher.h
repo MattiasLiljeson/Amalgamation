@@ -1,4 +1,18 @@
+// =======================================================================================
+//                                      MessageLoopFetcher
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Input fetcher for mouse and keyboard using the Message Loop. REMEMBER TO USE
+/// pushToQue() IN THE CALLBACK MESSAGE LOOP! otherwise this class will not work.
+///        
+/// # MessageLoopFetcher
+/// Detailed description.....
+/// Created on: 4-12-2012 
+///\author Mattias Liljeson
+///---------------------------------------------------------------------------------------
 #pragma once
+
 #include "Input.h"
 #include <Windows.h>
 #include <deque>
@@ -20,7 +34,7 @@ public:
 
 	void update();
 	int getKeyState( int p_key );
-	int getMouseKeyState( int p_key );
+	int getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
 	void processWindowsEvent( MsgAndParams p_msgAndParams );

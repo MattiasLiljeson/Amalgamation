@@ -11,65 +11,120 @@
 	//libRocketFromKeysMap[F3]	= Rocket::Core::Input::KI_F3;
 	//libRocketFromKeysMap[F4]	= Rocket::Core::Input::KI_F4;
 
-int Input::calcState( int p_state, bool p_down )
+int Input::calcState( const int p_oldState, const int p_down )
 {
-	if( p_state == KEY_UP )
+	return calcState(p_oldState, (bool)p_down);
+}
+int Input::calcState( const int p_oldState, const bool p_down )
+{
+	int state = KEY_UP;
+	if( p_oldState == KEY_UP )
 	{
 		if( p_down )
-			{ p_state = KEY_PRESSED; }
+			{ state = KEY_PRESSED; }
 		else
-			{ p_state = KEY_UP; }
+			{ state = KEY_UP; }
 	}
-	else if( p_state == KEY_PRESSED )
+	else if( p_oldState == KEY_PRESSED )
 	{
 		if( p_down )
-			{ p_state = KEY_DOWN; }
+			{ state = KEY_DOWN; }
 		else
-			{ p_state = KEY_RELEASED; }
+			{ state = KEY_RELEASED; }
 	}
-	else if( p_state == KEY_DOWN )
+	else if( p_oldState == KEY_DOWN )
 	{
 		if( p_down )
-			{ p_state = KEY_DOWN; }
+			{ state = KEY_DOWN; }
 		else
-			{ p_state = KEY_RELEASED; }
+			{ state = KEY_RELEASED; }
 	}
-	else if( p_state == KEY_RELEASED )
+	else if( p_oldState == KEY_RELEASED )
 	{
 		if( p_down )
-			{ p_state = KEY_PRESSED; }
+			{ state = KEY_PRESSED; }
 		else
-			{ p_state = KEY_UP; }
+			{ state = KEY_UP; }
 	}
 	else
 	{
 		// should NEVER happen!
-		p_state = KEY_UP;
+		state = KEY_UP;
 	}
 
-	return p_state;
+	return state;
 }
 
-int Input::calcStateFromEvents( int p_state, bool p_pressed, bool p_released )
+int Input::calcStateFromEvents( const int p_oldState, const bool p_pressed, const bool p_released )
 {
+	int state;
 	if( p_pressed )
 	{
-		p_state = KEY_PRESSED;
+		state = KEY_PRESSED;
 	}
 	else if ( p_released )
 	{
-		p_state = KEY_RELEASED;
+		state = KEY_RELEASED;
 	}
 	else
 	{
-		if( p_state == KEY_PRESSED )
-			p_state = KEY_DOWN;
+		if( p_oldState == KEY_PRESSED )
+			state = KEY_DOWN;
 
-		else if( p_state == KEY_RELEASED )
-			p_state = KEY_UP;
+		else if( p_oldState == KEY_RELEASED )
+			state = KEY_UP;
 	}
 
-	return p_state;
+	return p_oldState;
+}
+
+double Input::statusDeltaFromState( const int p_state )
+{
+	double delta = 0.0;
+	switch( p_state )
+	{
+	case Input::KEY_DOWN:
+		delta = 0.0;
+		break;
+
+	case Input::KEY_PRESSED:
+		delta = 1.0;
+		break;
+
+	case Input::KEY_UP:
+		delta = 0.0;
+		break;
+
+	case Input::KEY_RELEASED:
+		delta = -1.0;
+		break;
+	}
+
+	return delta;
+}
+
+double Input::statusFromState( const int p_state )
+{
+	double status = 0.0;
+	switch( p_state )
+	{
+	case Input::KEY_DOWN:
+		status = 1.0;
+		break;
+
+	case Input::KEY_PRESSED:
+		status = 1.0;
+		break;
+
+	case Input::KEY_UP:
+		status = 0.0;
+		break;
+
+	case Input::KEY_RELEASED:
+		status = 0.0;
+		break;
+	}
+	return status;
 }
 
 //Rocket::Core::Input::KeyIdentifier Input::libRocketFromKeys( int m_key )

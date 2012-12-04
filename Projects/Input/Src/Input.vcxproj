@@ -18,7 +18,10 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputControlFactory.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="KeyControl.cpp" />
     <ClCompile Include="MessageLoopFetcher.cpp" />
+    <ClCompile Include="MouseBtnControl.cpp" />
+    <ClCompile Include="MouseMoveControl.cpp" />
     <ClCompile Include="XInputFetcher.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +33,10 @@
     <ClInclude Include="InputControlFactory.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputType.h" />
+    <ClInclude Include="KeyControl.h" />
     <ClInclude Include="MessageLoopFetcher.h" />
+    <ClInclude Include="MouseBtnControl.h" />
+    <ClInclude Include="MouseMoveControl.h" />
     <ClInclude Include="XInputFetcher.h" />
   </ItemGroup>
   <ItemGroup>

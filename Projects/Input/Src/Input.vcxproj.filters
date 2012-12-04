@@ -28,6 +28,13 @@
     <ClCompile Include="Control.cpp">
       <Filter>InputControls</Filter>
     </ClCompile>
+    <ClCompile Include="KeyControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseMoveControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseBtnControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -60,6 +67,13 @@
     <ClInclude Include="Control.h">
       <Filter>InputControls</Filter>
     </ClInclude>
+    <ClInclude Include="KeyControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMoveControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseBtnControl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Input.vcxproj" />

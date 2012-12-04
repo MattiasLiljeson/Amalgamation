@@ -96,7 +96,7 @@ void DirectInputFetcher::update()
 		m_mouseBtns[i] = Input::calcState( m_mouseBtns[i], mousestate.rgbButtons[i] );
 
 	for( int i=0; i<Input::NUM_KEYBOARD_KEYS; i++)
-		m_kbKeys[i] = Input::calcState( m_kbKeys[i], keystate[m_dikFromKeyMap[i]] & 0x80 );
+		m_kbKeys[i] = Input::calcState( m_kbKeys[i], (keystate[m_dikFromKeyMap[i]] & 0x80) );
 }
 
 int DirectInputFetcher::getKeyState( int p_key )

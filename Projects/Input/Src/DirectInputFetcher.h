@@ -1,3 +1,16 @@
+// =======================================================================================
+//                                      DirectInputFetcher
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Input fetcher for mouse and keyboard using Direct Input. Not used at the
+/// moment.
+///        
+/// # DirectInputFetcher
+/// Detailed description.....
+/// Created on: 4-12-2012 
+///\author Mattias Liljeson
+///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <dinput.h>
@@ -9,7 +22,7 @@
 class DirectInputFetcher
 {
 public:
-	DirectInputFetcher(HINSTANCE* hInstance, HWND* hWnd); // sets up and initializes DirectInput
+	DirectInputFetcher( HINSTANCE* hInstance, HWND* hWnd ); // sets up and initializes DirectInput
 	~DirectInputFetcher();	//closes DirectInput and releases memory
 	void createDikKeyMap();
 	void reset();

@@ -1,12 +1,11 @@
 // =======================================================================================
-//                                      AnalogueControl
+//                                      MouseBtnControl
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Implementation of Control for Analogue controls (sticks, triggers) on the 
-/// xbox360 controller.
+/// \brief Implementation of Control for Mouse buttons using the Message Loop.
 ///        
-/// # AnalogueControl
+/// # MouseBtnControl
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///\author Mattias Liljeson
@@ -16,23 +15,17 @@
 #include "Control.h"
 #include "Input.h"
 #include "InputManager.h"
-#include "XInputFetcher.h"
+#include "MessageLoopFetcher.h"
 
-class Control;
-class Input;
-class InputManager;
-class XInputFetcher;
-
-class AnalogueControl : public Control
+class MouseBtnControl : public Control
 {
 public:
-	AnalogueControl( Input::XBOX360_CONTROLLER_ANALOGS p_axis, Input::SUB_AXIS p_subAxis );
-	~AnalogueControl();
+	MouseBtnControl( Input::MOUSE_BTNS p_btn );
+	virtual ~MouseBtnControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	Input::XBOX360_CONTROLLER_ANALOGS m_axis;
-	Input::SUB_AXIS m_subAxis;
+	 Input::MOUSE_BTNS m_btn;
 };
 

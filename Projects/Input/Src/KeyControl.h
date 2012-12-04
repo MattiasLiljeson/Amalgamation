@@ -1,12 +1,11 @@
 // =======================================================================================
-//                                      AnalogueControl
+//                                      KeyControl
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Implementation of Control for Analogue controls (sticks, triggers) on the 
-/// xbox360 controller.
+/// \brief	Implementation of Control used for keyboard keys
 ///        
-/// # AnalogueControl
+/// # KeyControl
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///\author Mattias Liljeson
@@ -16,23 +15,21 @@
 #include "Control.h"
 #include "Input.h"
 #include "InputManager.h"
-#include "XInputFetcher.h"
+#include "MessageLoopFetcher.h"
 
-class Control;
 class Input;
 class InputManager;
-class XInputFetcher;
+class MessageLoopFetcher;
 
-class AnalogueControl : public Control
+class KeyControl : public Control
 {
 public:
-	AnalogueControl( Input::XBOX360_CONTROLLER_ANALOGS p_axis, Input::SUB_AXIS p_subAxis );
-	~AnalogueControl();
+	KeyControl( Input::KEYBOARD_KEYS p_key );
+	virtual ~KeyControl(void);
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	Input::XBOX360_CONTROLLER_ANALOGS m_axis;
-	Input::SUB_AXIS m_subAxis;
+	int m_key;
 };
 

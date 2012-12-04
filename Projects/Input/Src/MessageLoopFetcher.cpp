@@ -143,7 +143,7 @@ int MessageLoopFetcher::getKeyState( int p_key )
 	return m_keyStates[p_key];
 }
 
-int MessageLoopFetcher::getMouseKeyState( int p_key )
+int MessageLoopFetcher::getMouseBtnState( int p_key )
 {
 	return m_mouseBtnStates[p_key];
 }
