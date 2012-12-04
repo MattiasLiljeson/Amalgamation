@@ -36,6 +36,9 @@
     <ClInclude Include="PrintPositionsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkClientControllable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">

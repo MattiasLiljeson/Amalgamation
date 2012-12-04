@@ -14,3 +14,8 @@ void TcpClient::connectToServer( string p_address, int p_port )
 {
 
 }
+
+bool TcpClient::hasActiveConnection()
+{
+	return false;
+}

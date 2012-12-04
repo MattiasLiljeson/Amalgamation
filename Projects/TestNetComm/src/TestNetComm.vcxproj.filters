@@ -5,10 +5,16 @@
     <ClCompile Include="TcpServer_spec.cpp">
       <Filter>TcpServer</Filter>
     </ClCompile>
+    <ClCompile Include="TcpClient_spec.cpp">
+      <Filter>TcpClient</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="TcpServer">
       <UniqueIdentifier>{5015b37f-c48f-43c7-937f-536a0ffa064e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TcpClient">
+      <UniqueIdentifier>{49306991-0288-4dec-974f-16d1bc3f1f87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

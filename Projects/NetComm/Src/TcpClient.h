@@ -22,4 +22,6 @@ public:
 
 	void connectToServer( string p_address, int p_port );
 
+	bool hasActiveConnection();
+
 };
