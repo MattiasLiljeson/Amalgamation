@@ -33,7 +33,7 @@ VertexOut VS(VertexIn p_input)
 PixelOut PS(VertexOut p_input)
 {
 	PixelOut pixelOut;
-	pixelOut.diffuse = pos;
+	pixelOut.diffuse = color;
 	pixelOut.normal = float4(p_input.texCoord.x,p_input.texCoord.y,0.0f,1.0f);
 
 	return pixelOut;

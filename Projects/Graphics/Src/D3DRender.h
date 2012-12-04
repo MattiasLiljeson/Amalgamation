@@ -16,6 +16,7 @@
 #include "Util.h"
 #include "Buffer.h"
 #include "Deferred.h"
+#include "RendererMeshInfo.h"
 
 class D3DRender
 {
@@ -29,10 +30,23 @@ public:
 	void clearRenderTargets();
 
 	///-----------------------------------------------------------------------------------
+	/// Sets up the frame, prepares the renderer for draw calls.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void beginFrame();
+
+	///-----------------------------------------------------------------------------------
 	/// Renders the whole scene
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void render();
+	void renderMesh(const RendererMeshInfo& p_meshInfo);
+
+	///-----------------------------------------------------------------------------------
+	/// Finalizes the frame. For example; a deferred subsystem will
+	/// render to backbuffer here.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void finalizeFrame();
 
 	///-----------------------------------------------------------------------------------
 	/// Desc

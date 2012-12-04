@@ -29,6 +29,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	__int64 prevTimeStamp = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
+	RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f}};
+
 	// Main message loop
 	MSG msg = {0};
 	while(WM_QUIT != msg.message)
@@ -46,8 +48,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			prevTimeStamp = currTimeStamp;
 
+			// clear
 			renderer->clearRenderTargets();
-			renderer->render();
+			// render
+			renderer->beginFrame();
+			renderer->renderMesh(testMeshInfo);
+			renderer->finalizeFrame();
+			// flip
 			renderer->flipBackBuffer();
 		}
 	}

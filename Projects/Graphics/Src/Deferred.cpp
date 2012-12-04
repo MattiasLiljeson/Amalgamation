@@ -11,14 +11,14 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
 
-	m_vertexBuffer	= NULL;
+	m_fullscreenQuad	= NULL;
 
 	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	m_vertexBuffer = bufferFactory->createFullScreenQuadBuffer();
+	m_fullscreenQuad = bufferFactory->createFullScreenQuadBuffer();
 	delete bufferFactory;
 
 	initDepthStencil();
-	initGeomtryBuffers();
+	initGeometryBuffers();
 	initTestShaders();
 }
 
@@ -35,24 +35,42 @@ Deferred::~Deferred()
 	delete m_shaderFactory;
 	delete m_baseShader;
 	delete m_composeShader;
-	delete m_vertexBuffer;
+	delete m_fullscreenQuad;
 }
 
-void Deferred::deferredBasePass()
+void Deferred::beginDeferredBasePass()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
-	
-	m_vertexBuffer->apply();
-	
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 1.0f;
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.0f;
+}
+
+
+void Deferred::renderMesh(const RendererMeshInfo& p_meshInfo)
+{
+	// temp, create a quad
+	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
+	Buffer<PTVertex>* lilQuad = bufferFactory->createFullScreenQuadBuffer();
+	delete bufferFactory;
+	// temp
+	// a lil scaling
+	/*r (int i=0;i<lilQuad->getElementCount();i++)
+	{
+		lilQuad->accessBuffer[i].
+	}*/
+
+
+	lilQuad->apply();
+
+	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 0.5f;
+	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.5f;
 	m_baseShader->getPerFrameBufferPtr()->update();
 
 	m_baseShader->apply();
 
 	m_deviceContext->Draw(6,0);
+
+	delete lilQuad;
 }
 
 void Deferred::renderComposedImage()
@@ -62,7 +80,7 @@ void Deferred::renderComposedImage()
 	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
 	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
 
-	m_vertexBuffer->apply();
+	m_fullscreenQuad->apply();
 
 	m_composeShader->apply();
 
@@ -137,7 +155,7 @@ void Deferred::initDepthStencil()
 	depthStencilTexture->Release();
 }
 
-void Deferred::initGeomtryBuffers()
+void Deferred::initGeometryBuffers()
 {
 	HRESULT hr = S_OK;
 

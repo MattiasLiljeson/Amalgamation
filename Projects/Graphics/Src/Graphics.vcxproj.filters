@@ -93,8 +93,8 @@
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceMap.h">
-      <Filter>Management</Filter>
+    <ClInclude Include="RendererMeshInfo.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,9 +121,6 @@
     </Filter>
     <Filter Include="Renderer\Shader\Shader types">
       <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Management">
-      <UniqueIdentifier>{5e4294a0-7d60-4487-809f-5ce3ce92bbc8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

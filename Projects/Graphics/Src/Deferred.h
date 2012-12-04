@@ -17,6 +17,7 @@
 #include "ShaderFactory.h"
 #include "BufferFactory.h"
 #include "PTVertex.h"
+#include "RendererMeshInfo.h"
 
 const static int NUMBUFFERS = 3;
 const static int DEPTH = 2;
@@ -29,13 +30,35 @@ public:
 	Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		int p_width, int p_height);
 	virtual ~Deferred();
+
+	///-----------------------------------------------------------------------------------
+	/// Clear the buffers used by the deferred renderer.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void clearBuffers();
-	void deferredBasePass();
+
+	///-----------------------------------------------------------------------------------
+	/// Set the gbuffer as render target.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void beginDeferredBasePass();
+
+	///-----------------------------------------------------------------------------------
+	/// Render mesh data
+	/// \param p_meshInfo
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void renderMesh(const RendererMeshInfo& p_meshInfo);
+
+	///-----------------------------------------------------------------------------------
+	/// Render a fullscreen quad textured with the gbuffer.
+	/// \returns void
+	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
 protected:
 private:
 	void initDepthStencil();
-	void initGeomtryBuffers();
+	void initGeometryBuffers();
 	void unMapGBuffers();
 	void initTestShaders();
 private:
@@ -45,14 +68,13 @@ private:
 	ShaderFactory*			m_shaderFactory;
 
 	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
-	ID3D11RenderTargetView*		m_backBuffer;
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredComposeShader*	m_composeShader;
 
-	Buffer<PTVertex>* m_vertexBuffer;
+	Buffer<PTVertex>* m_fullscreenQuad;
 
 	int m_width;
 	int m_height;
