@@ -12,13 +12,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 {
 	Window* window;
 	D3DRender* renderer;
-	AntTweakBarWrapper* bar;
 
 	try
 	{
 		window = new Window(hInstance,800,600,1);
 		renderer = new D3DRender(window->getWindowRef(),800,600,true);
-		bar = new AntTweakBarWrapper(renderer->getDevice(),"DummyBar");
+		AntTweakBarWrapper::getInstance(renderer->getDevice(),"Drunken Bar");
+		renderer->hookUpAntTweakBar();
 	}
 	catch (exception &e)
 	{
@@ -52,12 +52,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			renderer->clearRenderTargets();
 			renderer->render();
-			bar->render();
+			AntTweakBarWrapper::getInstance()->render();
 			renderer->flipBackBuffer();
 		}
 	}
 
-	delete bar;
+	AntTweakBarWrapper::destroy();
 	delete window;
 	delete renderer;
 

@@ -12,6 +12,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include "AntTweakBarWrapper.h"
 #include "D3DException.h"
 #include "Buffer.h"
 #include "ShaderFactory.h"
@@ -32,6 +33,7 @@ public:
 	void clearBuffers();
 	void deferredBasePass();
 	void renderComposedImage();
+	void hookUpAntTweakBar();
 protected:
 private:
 	void initDepthStencil();

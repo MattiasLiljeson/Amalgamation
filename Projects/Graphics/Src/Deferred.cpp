@@ -46,8 +46,8 @@ void Deferred::deferredBasePass()
 	
 	m_vertexBuffer->apply();
 	
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 1.0f;
-	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.0f;
+//	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0] = 1.0f;
+//	m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[1] = 0.0f;
 	m_baseShader->getPerFrameBufferPtr()->update();
 
 	m_baseShader->apply();
@@ -201,4 +201,10 @@ void Deferred::initTestShaders()
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Assets/Shaders/deferredCompose.hlsl");
+}
+
+void Deferred::hookUpAntTweakBar()
+{
+	AntTweakBarWrapper::getInstance()->addWriteVariable("Color",TW_TYPE_COLOR4F,
+		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");
 }

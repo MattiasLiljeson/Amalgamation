@@ -59,8 +59,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-	if( TwEventWin(hWnd, message, wParam, lParam) ) // send event message to AntTweakBar
-		return 0; // event has been handled by AntTweakBar
+
+	AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
 
 	switch (message) 
 	{

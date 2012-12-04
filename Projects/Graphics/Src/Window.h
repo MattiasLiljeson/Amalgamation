@@ -12,7 +12,7 @@
 #pragma once
 
 #include <Windows.h>
-#include <AntTweakBar.h>
+#include "AntTweakBarWrapper.h"
 #include "WindowException.h"
 
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );

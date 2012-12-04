@@ -12,6 +12,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include "AntTweakBarWrapper.h"
 #include "D3DException.h"
 #include "Util.h"
 #include "Buffer.h"
@@ -35,12 +36,14 @@ public:
 	void render();
 
 	///-----------------------------------------------------------------------------------
-	/// Desc
+	/// Switch the back buffer so that the current render target is presented
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
 	ID3D11Device* getDevice();
+
+	void hookUpAntTweakBar();
 private:
 
 	///-----------------------------------------------------------------------------------
