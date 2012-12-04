@@ -17,6 +17,7 @@
     <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
     <ClInclude Include="TcpListenerProcess.h" />
+    <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +27,7 @@
     <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />
+    <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

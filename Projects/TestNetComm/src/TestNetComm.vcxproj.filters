@@ -2,5 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="TestNetCommRunner.cpp" />
+    <ClCompile Include="TcpServer_spec.cpp">
+      <Filter>TcpServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="TcpServer">
+      <UniqueIdentifier>{5015b37f-c48f-43c7-937f-536a0ffa064e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

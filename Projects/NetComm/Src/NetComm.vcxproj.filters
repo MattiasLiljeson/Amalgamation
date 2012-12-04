@@ -16,6 +16,9 @@
     <Filter Include="ThreadSafeMessaging\ProcessMessage\base">
       <UniqueIdentifier>{c171c6d5-ac52-4ad6-8504-4294fc07e86c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TcpServer">
+      <UniqueIdentifier>{8cd0d913-8ccb-4f9c-8451-f665f483fee7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -39,6 +42,9 @@
     <ClCompile Include="ProcessMessageTerminate.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
+    <ClCompile Include="TcpServer.cpp">
+      <Filter>TcpServer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -61,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="ProcessMessageTerminate.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpServer.h">
+      <Filter>TcpServer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

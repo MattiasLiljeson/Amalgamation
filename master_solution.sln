@@ -33,6 +33,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gtest", "Projects\Gtest\Src\Gtest.vcxproj", "{C1B712E8-6D81-4E7C-A4E9-C50C99259673}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestNetComm", "Projects\TestNetComm\src\TestNetComm.vcxproj", "{193B35D9-7155-43DE-A676-BA77CBE782E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8} = {3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
