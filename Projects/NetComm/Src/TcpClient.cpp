@@ -64,7 +64,8 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 
 		success = true;
 
-		m_communicationProcess = new TcpCommunicationProcess( this, activeSocket );
+		m_communicationProcess = new TcpCommunicationProcess( this, activeSocket,
+			m_ioService );
 		m_communicationProcess->start();
 
 	}

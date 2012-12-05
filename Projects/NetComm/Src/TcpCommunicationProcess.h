@@ -13,7 +13,8 @@ using namespace boost::asio::ip;
 class TcpCommunicationProcess: public ProcessThread
 {
 public:
-	TcpCommunicationProcess( ThreadSafeMessaging* p_parent, tcp::socket* p_socket );
+	TcpCommunicationProcess( ThreadSafeMessaging* p_parent, tcp::socket* p_socket,
+		boost::asio::io_service* p_ioService );
 
 	~TcpCommunicationProcess();
 

@@ -1,11 +1,12 @@
 #include "TcpCommunicationProcess.h"
 
 TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent, 
-												 tcp::socket* p_socket )
+												 tcp::socket* p_socket,
+												 boost::asio::io_service* p_ioService )
 {
 	m_running = false;
 
-	m_ioService = new boost::asio::io_service();
+	m_ioService = p_ioService;
 
 	m_parent = p_parent;
 
@@ -25,9 +26,6 @@ TcpCommunicationProcess::~TcpCommunicationProcess()
 	m_activeSocket->close();
 	delete m_activeSocket;
 	delete[] m_asyncData;
-
-	m_ioService->stop();
-	delete m_ioService;
 }
 
 void TcpCommunicationProcess::body()
@@ -38,6 +36,8 @@ void TcpCommunicationProcess::body()
 
 	while( m_running )
 	{
+		boost::this_thread::sleep( boost::posix_time::millisec(1) );
+
 		m_ioService->poll();
 
 		while( getMessageCount() > 0 )
@@ -60,13 +60,12 @@ void TcpCommunicationProcess::body()
 			delete message;
 		}
 		
-		boost::this_thread::sleep( boost::posix_time::millisec(1) );
 	}
 }
 
 void TcpCommunicationProcess::startPacketReceiveCallback()
 {
-	m_ioService->reset();
+	//m_ioService->reset();
 
 	m_activeSocket->async_receive(
 		boost::asio::buffer( m_asyncData, m_asyncDataCapacity ),
@@ -108,7 +107,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				this,
 				new Packet(m_asyncData) ) );
 
-			startPacketReceiveCallback();
+			//startPacketReceiveCallback();
 		}
 	}
 }

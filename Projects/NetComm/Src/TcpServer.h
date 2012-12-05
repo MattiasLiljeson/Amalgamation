@@ -12,11 +12,13 @@
 #pragma once
 
 #include <queue>
+#include <vector>
 
 #include <boost/asio.hpp>
 
 #include "ThreadSafeMessaging.h"
 #include "TcpListenerProcess.h"
+#include "TcpCommunicationProcess.h"
 #include "ProcessMessageClientConnected.h"
 #include "ProcessMessageReceivePacket.h"
 
@@ -48,6 +50,7 @@ private:
 	queue< ProcessMessageReceivePacket* > m_newPackets;
 
 	TcpListenerProcess* m_listenerProcess;
+	vector< TcpCommunicationProcess* > m_communicationProcesses;
 	boost::asio::io_service* m_ioService;
 
 };

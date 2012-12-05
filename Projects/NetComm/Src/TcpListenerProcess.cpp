@@ -8,8 +8,7 @@ TcpListenerProcess::TcpListenerProcess( ThreadSafeMessaging* p_parent, int p_por
 	m_parent = p_parent;
 
 	m_port = p_port;
-//	m_ioService = p_ioService;
-	m_ioService = new boost::asio::io_service();
+	m_ioService = p_ioService;
 	m_socket = NULL;
 
 	m_acceptor = NULL;
@@ -39,6 +38,8 @@ void TcpListenerProcess::body()
 
 	while( m_running )
 	{
+		boost::this_thread::sleep( boost::posix_time::millisec(1) );
+
 		// Poll for a new connection. (This is what calls the handleAccept method).
 		m_ioService->poll();
 
@@ -60,7 +61,6 @@ void TcpListenerProcess::body()
 			}
 		}
 
-		boost::this_thread::sleep( boost::posix_time::millisec(1) );
 	}
 }
 
