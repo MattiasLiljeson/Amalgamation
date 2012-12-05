@@ -4,10 +4,18 @@ TcpClient::TcpClient()
 {
 	m_ioService = new boost::asio::io_service();
 	m_numConnections = 0;
+	m_communicationProcess = NULL;
 }
 
 TcpClient::~TcpClient()
 {
+	if( m_communicationProcess )
+	{
+		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
+		m_communicationProcess->stop();
+		delete m_communicationProcess;
+	}
+
 	delete m_ioService;
 }
 

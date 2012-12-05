@@ -25,8 +25,6 @@ TcpListenerProcess::~TcpListenerProcess()
 		delete m_socket;
 
 	m_ioService->stop();
-
-	delete m_ioService;
 }
 
 void TcpListenerProcess::body()

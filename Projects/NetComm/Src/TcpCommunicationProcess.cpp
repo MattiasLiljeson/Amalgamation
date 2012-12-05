@@ -19,6 +19,11 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_asyncDataLength = 0;
 	m_asyncDataCapacity = 2048;
 	m_asyncData = new char[m_asyncDataCapacity];
+
+	for(unsigned int i = 0; i < m_asyncDataCapacity; i++)
+	{
+		m_asyncData[i] = 0;
+	}
 }
 
 TcpCommunicationProcess::~TcpCommunicationProcess()

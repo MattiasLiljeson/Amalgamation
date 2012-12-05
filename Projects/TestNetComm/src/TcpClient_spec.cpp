@@ -15,8 +15,9 @@ Describe(a_tcp_client)
 		client.connectToServer( "localhost", "1337" );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(5));
-		server.hasNewConnections();
-
+		server.processMessages();
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(5));
 		Assert::That(client.hasActiveConnection(), IsTrue());
 	}
 
