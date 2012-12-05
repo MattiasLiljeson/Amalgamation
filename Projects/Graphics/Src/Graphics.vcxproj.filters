@@ -3,12 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="D3DRender.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Deferred.cpp">
-      <Filter>Renderer\Deferred</Filter>
-    </ClCompile>
     <ClCompile Include="BufferBase.cpp">
       <Filter>Renderer\Buffer</Filter>
     </ClCompile>
@@ -31,7 +25,13 @@
       <Filter>Factory</Filter>
     </ClCompile>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
-    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="GraphicsWrapper.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRenderer.cpp">
+      <Filter>Renderer\Deferred</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -40,12 +40,6 @@
     </ClInclude>
     <ClInclude Include="D3DException.h">
       <Filter>Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DRender.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Deferred.h">
-      <Filter>Renderer\Deferred</Filter>
     </ClInclude>
     <ClInclude Include="PTVertex.h">
       <Filter>Renderer</Filter>
@@ -93,7 +87,6 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="AntTweakBarWrapper.h" />
-    <ClInclude Include="Box.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="PTNVertex.h" />
     <ClInclude Include="D3DUtil.h">
@@ -101,6 +94,13 @@
     </ClInclude>
     <ClInclude Include="CamMatrixerUtil.h">
       <Filter>Graphics Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="GraphicsWrapper.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.h">
+      <Filter>Renderer\Deferred</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

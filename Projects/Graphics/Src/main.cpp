@@ -3,9 +3,13 @@
 #include <vld.h>
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
-#include "D3DRender.h"
+#include "GraphicsWrapper.h"
 #include "CamMatrixerUtil.h"
 #include <DebugUtil.h>
+
+// temporary usage of these in main for mesh creation
+#include "Mesh.h"
+
 // math tmp
 #include <AglMatrix.h>
 #include <AglVector3.h>
@@ -14,14 +18,14 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	int nCmdShow )
 {
 	Window* window;
-	D3DRender* renderer;
+	GraphicsWrapper* graphicsWrapper;
 
 	try
 	{
 		window = new Window(hInstance,800,600,1);
-		renderer = new D3DRender(window->getWindowRef(),800,600,true);
-		AntTweakBarWrapper::getInstance(renderer->getDevice(),"Drunken Bar");
-		renderer->hookUpAntTweakBar();
+		graphicsWrapper = new GraphicsWrapper(window->getWindowRef(),800,600,true);
+		AntTweakBarWrapper::getInstance(graphicsWrapper->getDevice(),"Drunken Bar");
+		graphicsWrapper->hookUpAntTweakBar();
 	}
 	catch (exception &e)
 	{
@@ -36,7 +40,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	__int64 prevTimeStamp = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
-	RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f}};
+	// Create a cube
+	unsigned int cubeId = graphicsWrapper->createMesh("P_cube", 0);
+	// RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f},cubeId};
 
 
 
@@ -50,7 +56,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	AglVector3 up(0.0f,1.0f,0.0f);
 
 	SetLookAtMatrix(viewMatrix, pos, lookAt, up);
-	SetProjMatrix(projMatrix,3.14/2.0f,800.0f/600.0f,0.1f,100.0f);
+	SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
 
 	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 
@@ -91,25 +97,25 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			}
 
 			// * Scene render preparation system * 1
-			renderer->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
+			graphicsWrapper->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
 					
 			// * Deferred base system *            1
-			renderer->clearRenderTargets();	      // clear render targets used           
-			renderer->beginFrame();				  // prepare frame, set drawing to MRT   
+			graphicsWrapper->clearRenderTargets();	      // clear render targets used           
+			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
-			renderer->renderMesh(testMeshInfo);	  // process a mesh						 
+			graphicsWrapper->renderMesh(cubeId);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
-			renderer->finalizeFrame();			  // finalize, draw to backbuffer        
+			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
-			renderer->flipBackBuffer();           // flip buffers						 
+			graphicsWrapper->flipBackBuffer();           // flip buffers						 
 		}
 	}
 
 	AntTweakBarWrapper::destroy();
 	delete window;
-	delete renderer;
+	delete graphicsWrapper;
 
 	return 0;
 }

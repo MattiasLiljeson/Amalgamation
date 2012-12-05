@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsManagement", "Projects\AssetsManagement\Src\AssetsManagement.vcxproj", "{15020C27-0C35-4D82-9517-59D175B1DF49}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audio", "Projects\Audio\Src\Audio.vcxproj", "{BE2A0661-776F-4B5B-B09C-F7304F5C6424}"
 EndProject
@@ -16,6 +19,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gameplay", "Projects\Gamepl
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Projects\Graphics\Src\Graphics.vcxproj", "{6DEEA297-0E8A-48FF-A8D6-C0780B8503EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15020C27-0C35-4D82-9517-59D175B1DF49} = {15020C27-0C35-4D82-9517-59D175B1DF49}
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2} = {7BC84332-97E7-4A31-AA8A-77E4B91F24A2}
+		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Projects\Input\Src\Input.vcxproj", "{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}"
 EndProject

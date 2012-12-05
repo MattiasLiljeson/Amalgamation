@@ -19,20 +19,27 @@ template<class T>
 class UniqueIndexList
 {
 public:
-	UniqueIndexList();
-	virtual ~UniqueIndexList();
-
 	unsigned int add(T p_valueRef);
 
 	bool		 removeAt(unsigned int p_index);
 
 	T			 at(unsigned int p_index);
 	T			 operator[](unsigned int p_index);
+
+	void		clear();
 protected:
 private:
 	vector<T> m_list;
 	stack<unsigned int> m_freeIndices;
 };
+
+template<class T>
+void UniqueIndexList<T>::clear()
+{
+	m_list.clear();
+	while(!m_freeIndices.empty())
+		m_freeIndices.pop();
+}
 
 template<class T>
 unsigned int UniqueIndexList<T>::add(T p_valueRef)

@@ -55,7 +55,7 @@ public:
 		/// \param p_uniqueName
 		/// \returns unsigned int
 		///-----------------------------------------------------------------------------------
-		unsigned int getResourceId(const string& p_uniqueName);
+		int getResourceId(const string& p_uniqueName);
 
 		///-----------------------------------------------------------------------------------
 		/// Get the name of resource data by its id. 
@@ -95,13 +95,15 @@ private:
 		/// # ResourceDataContainer
 		/// Created on: 05-12-2012 
 		///---------------------------------------------------------------------------------------
-		struct ResourceDataContainer
+		typedef struct ResourceDataContainer
 		{
 			~ResourceDataContainer() {delete data;}
 			T* data;
 			string uniqueName;
 			unsigned int uniqueId;
-		};
+		} ResourceDataContainer;
+
+		typedef map<string,ResourceDataContainer*> MapType;
 
 		///-----------------------------------------------------------------------------------
 		/// Help method used in order to get the resource data container from its name.
@@ -114,7 +116,7 @@ private:
 		///
 		/// A map of all the resources for access by unique key.
 		///
-		map<string,ResourceDataContainer*> m_resourceMap;
+		MapType m_resourceMap;
 
 		///
 		/// A list of all the resources for O(1) access.
@@ -126,7 +128,7 @@ private:
 template <class T>
 void ResourceManager<T>::clear()
 {
-		typename map<string,T*>::iterator mapIter = m_resourceMap.begin();
+		MapType::iterator mapIter = m_resourceMap.begin();
 		for (; mapIter!=m_resourceMap.end(); mapIter++)
 		{
 				// delete *mapIter->second;
@@ -156,9 +158,13 @@ T* ResourceManager<T>::operator[](unsigned int p_uniqueId)
 };
 
 template <class T>
-unsigned int ResourceManager<T>::getResourceId(const string& p_uniqueName)
+int ResourceManager<T>::getResourceId(const string& p_uniqueName)
 {
-	return getResourceContainerFromName(p_uniqueName)->uniqueId;
+	ResourceDataContainer* container = getResourceContainerFromName(p_uniqueName);
+	if (container!=NULL)
+		return container->uniqueId;
+	else
+		return -1;
 };
 
 template <class T>
@@ -174,16 +180,15 @@ unsigned int ResourceManager<T>::addResource(const string& p_uniqueName, T* p_re
 		unsigned int reval = -1;
 
 		// Create empty container
-		ResourceManager::ResourceDataContainer* container = new ResourceDataContainer();
+		ResourceDataContainer* container = new ResourceDataContainer();
 
 		// Try to make an insertion using the unique name as key
 		// if it already exists we get a pointer to the existing data
-		typename map<string,ResourceDataContainer*>::iterator mapIter;
-
-		mapIter = m_resourceMap.insert(
-			typename map<string,ResourceDataContainer*>::value_type(
-				uniqueName,container)
-			);
+		MapType::iterator mapIter;
+		MapType::iterator mapIterBegin = m_resourceMap.begin();
+		string test="1";
+		mapIter = m_resourceMap.insert(mapIterBegin, 
+									   MapType::value_type(test,container));
 
 		// if new insertion was made,
 		// add data and keys to the container
@@ -217,11 +222,10 @@ template <class T>
 typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResourceContainerFromName(const string& p_uniqueName)
 {
 	ResourceDataContainer* resourceContainer = NULL;
-	typename map<string,ResourceDataContainer*>::iterator mapIter;
-	mapIter = m_resourceMap.find(uniqueName);
+	MapType::iterator mapIter = m_resourceMap.find(p_uniqueName);
 
 	if(mapIter != m_resourceMap.end()) 
-		resourceObj = mapIter->second;
+		resourceContainer = mapIter->second;
 
 	return resourceContainer;
 }

@@ -69,7 +69,7 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	return quadBuffer;
 }
 
-Box* BufferFactory::createBoxMesh()
+Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data
 	PTNVertex mesh[]= {
@@ -148,7 +148,7 @@ Box* BufferFactory::createBoxMesh()
 	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, &indices[0],
 		indexConfig);
 	
-	Box* newBox = new Box(vertexBuffer,indexBuffer);
+	Mesh* newBox = new Mesh(vertexBuffer,indexBuffer);
 
 	return newBox;
 }

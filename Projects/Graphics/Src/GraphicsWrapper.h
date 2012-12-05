@@ -1,30 +1,33 @@
 // =======================================================================================
-//                                      D3DRender
+//                                      GraphicsWrapper
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	A wrapper for Direct3D functionality, handles objects for creating and
+/// rendering graphics data.
 ///        
-/// # D3DRender
+/// # GraphicsWrapper
 /// Detailed description.....
 /// Created on: 27-11-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <d3d11.h>
+#include <ResourceManager.h>
+#include "BufferFactory.h"
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"
 #include "D3DUtil.h"
 #include "Buffer.h"
-#include "Deferred.h"
+#include "DeferredRenderer.h"
 #include "RendererMeshInfo.h"
 #include "RendererSceneInfo.h"
 
-class D3DRender
+class GraphicsWrapper
 {
 public:
-	D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed);
-	virtual ~D3DRender();
+	GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed);
+	virtual ~GraphicsWrapper();
 	///-----------------------------------------------------------------------------------
 	/// Clears the back buffer with a non black color
 	/// \returns void
@@ -49,7 +52,7 @@ public:
 	/// Renders the whole scene
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(const RendererMeshInfo& p_meshInfo);
+	void renderMesh(unsigned int p_meshId);
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
@@ -63,6 +66,15 @@ public:
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
+
+	///-----------------------------------------------------------------------------------
+	/// Create a mesh using name.
+	/// Extend this with functionality for loading etc...
+	/// \param p_name
+	/// \param p_ownerEntityId
+	/// \returns unsigned int
+	///-----------------------------------------------------------------------------------
+	unsigned int createMesh(const string& p_name, unsigned int p_ownerEntityId);
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
@@ -97,11 +109,15 @@ private:
 	IDXGISwapChain*			m_swapChain;
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
-	Deferred*				m_deferred;
+	DeferredRenderer*		m_deferredRenderer;
 
 	ID3D11RenderTargetView* m_backBuffer;
 
 	DeferredBaseShader*		m_deferredBaseShader;
+
+	// Creation & storage
+	BufferFactory*		    m_bufferFactory;
+	ResourceManager<Mesh>*  m_meshManager;
 
 	int m_height;
 	int m_width;

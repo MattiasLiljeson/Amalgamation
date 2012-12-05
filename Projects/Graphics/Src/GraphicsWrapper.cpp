@@ -1,6 +1,6 @@
-#include "D3DRender.h"
+#include "GraphicsWrapper.h"
 
-D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
+GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
 	m_device		= NULL;
 	m_deviceContext = NULL;
@@ -16,23 +16,31 @@ D3DRender::D3DRender(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 	initBackBuffer();
 	initViewport();
 
-	m_deferred = new Deferred( m_device, m_deviceContext, 
+	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
+	m_meshManager = new ResourceManager<Mesh>();
+
+	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
+
+
+
 	clearRenderTargets();
 }
 
-D3DRender::~D3DRender()
+GraphicsWrapper::~GraphicsWrapper()
 {
 	SAFE_RELEASE(m_device);
 	SAFE_RELEASE(m_deviceContext);
 	SAFE_RELEASE(m_swapChain);
 	SAFE_RELEASE(m_backBuffer);
 	
-	delete m_deferred;
+	delete m_deferredRenderer;
 	delete m_deferredBaseShader;
+	delete m_bufferFactory;
+	delete m_meshManager;
 }
 
-void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
+void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
 {
 	HRESULT hr = S_OK;
 	UINT createDeviceFlags = 0;
@@ -101,7 +109,7 @@ void D3DRender::initHardware(HWND p_hWnd, bool p_windowed)
 		,__FILE__, __FUNCTION__, __LINE__);
 }
 
-void D3DRender::initBackBuffer()
+void GraphicsWrapper::initBackBuffer()
 {
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* backBufferTexture;
@@ -120,41 +128,73 @@ void D3DRender::initBackBuffer()
 		__FILE__,__FUNCTION__,__LINE__);
 }
 
-void D3DRender::clearRenderTargets()
+void GraphicsWrapper::clearRenderTargets()
 {
-	m_deferred->clearBuffers();
+	m_deferredRenderer->clearBuffers();
 	
 	static float ClearColor[4] = { 1, 0, 0, 1.0f };
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
-void D3DRender::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+void GraphicsWrapper::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 {
-	m_deferred->setSceneInfo(p_sceneInfo);
+	m_deferredRenderer->setSceneInfo(p_sceneInfo);
 }
 
-void D3DRender::beginFrame()
+void GraphicsWrapper::beginFrame()
 {
-	m_deferred->beginDeferredBasePass();
+	m_deferredRenderer->beginDeferredBasePass();
 }
 
-void D3DRender::renderMesh(const RendererMeshInfo& p_meshInfo)
+void GraphicsWrapper::renderMesh(unsigned int p_meshId)
 {
-	m_deferred->renderMesh(p_meshInfo);
+	Mesh* mesh = m_meshManager->getResource(p_meshId);
+	m_deferredRenderer->renderMesh(mesh);
 }
 
-void D3DRender::finalizeFrame()
+void GraphicsWrapper::finalizeFrame()
 {
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
-	m_deferred->renderComposedImage();
+	m_deferredRenderer->renderComposedImage();
 }
 
-void D3DRender::flipBackBuffer()
+void GraphicsWrapper::flipBackBuffer()
 {
 	m_swapChain->Present( 0, 0);
 }
 
-void D3DRender::initViewport()
+unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ownerEntityId)
+{
+	// check if resource already exists
+	unsigned int resultId = 0;
+	int foundId = m_meshManager->getResourceId(p_name);
+	if (foundId==-1)  // if it does not exist, create new
+	{
+		if (p_name=="P_cube")
+		{
+			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
+			mesh->addInstanceId(p_ownerEntityId);		   // add owner
+			resultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
+			// (Here you might want to do similar checks for textures/materials
+			// and their managers.)
+			// ...
+			// and then set the resulting data to the mesh
+		}
+		else
+		{
+			// load from path instead
+		}
+	}
+	else // the mesh already exists
+	{
+		resultId = static_cast<unsigned int>(foundId);
+		Mesh* mesh = m_meshManager->getResource(resultId); // get mesh from id
+		mesh->addInstanceId(p_ownerEntityId); // add owner
+	}
+	return resultId;
+}
+
+void GraphicsWrapper::initViewport()
 {
 	D3D11_VIEWPORT vp;
 	vp.Width	= (float)m_width;
@@ -167,17 +207,17 @@ void D3DRender::initViewport()
 	m_deviceContext->RSSetViewports(1, &vp);
 }
 
-ID3D11Device* D3DRender::getDevice()
+ID3D11Device* GraphicsWrapper::getDevice()
 {
 	return m_device;
 }
 
-ID3D11DeviceContext* D3DRender::getDeviceContext()
+ID3D11DeviceContext* GraphicsWrapper::getDeviceContext()
 {
 	return m_deviceContext;
 }
 
-void D3DRender::hookUpAntTweakBar()
+void GraphicsWrapper::hookUpAntTweakBar()
 {
-	m_deferred->hookUpAntTweakBar();
+	m_deferredRenderer->hookUpAntTweakBar();
 }
