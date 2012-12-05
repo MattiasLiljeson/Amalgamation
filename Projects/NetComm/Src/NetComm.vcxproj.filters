@@ -22,6 +22,12 @@
     <Filter Include="TcpClient">
       <UniqueIdentifier>{e6e8f356-495f-40a1-9af9-193fa3604e18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{61a5f306-ae32-4c48-bbf2-685248355e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TcpCommunicationProcess">
+      <UniqueIdentifier>{101fe3ed-5998-4aad-bb7a-32a4cce9616b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -51,6 +57,15 @@
     <ClCompile Include="TcpClient.cpp">
       <Filter>TcpClient</Filter>
     </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageSendPacket.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpCommunicationProcess.cpp">
+      <Filter>TcpCommunicationProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -79,6 +94,15 @@
     </ClInclude>
     <ClInclude Include="TcpClient.h">
       <Filter>TcpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpCommunicationProcess.h">
+      <Filter>TcpCommunicationProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageSendPacket.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

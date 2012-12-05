@@ -11,23 +11,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageSendPacket.h" />
     <ClInclude Include="ProcessMessageTerminate.h" />
     <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
     <ClInclude Include="TcpClient.h" />
+    <ClInclude Include="TcpCommunicationProcess.h" />
     <ClInclude Include="TcpListenerProcess.h" />
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ProcessMessage.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageSendPacket.cpp" />
     <ClCompile Include="ProcessMessageTerminate.cpp" />
     <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
     <ClCompile Include="TcpClient.cpp" />
+    <ClCompile Include="TcpCommunicationProcess.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />

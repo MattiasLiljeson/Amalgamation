@@ -15,10 +15,14 @@
 
 #include <boost/asio.hpp>
 
+#include "Packet.h"
+#include "TcpCommunicationProcess.h"
+#include "ThreadSafeMessaging.h"
+
 using namespace std;
 using namespace boost::asio::ip;
 
-class TcpClient
+class TcpClient: public ThreadSafeMessaging
 {
 public:
 	TcpClient();
@@ -28,10 +32,13 @@ public:
 
 	bool hasActiveConnection();
 
+	void sendPacket( Packet* p_packet );
+
 private:
 	boost::asio::io_service* m_ioService;
-	tcp::socket* m_activeSocket;
 
 	int m_numConnections;
+
+	TcpCommunicationProcess* m_communicationProcess;
 
 };

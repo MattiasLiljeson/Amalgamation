@@ -3,7 +3,6 @@
 TcpClient::TcpClient()
 {
 	m_ioService = new boost::asio::io_service();
-	m_activeSocket = NULL;
 	m_numConnections = 0;
 }
 
@@ -28,7 +27,7 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 
 
 	// socket:
-	m_activeSocket = new tcp::socket( *m_ioService );
+	tcp::socket* activeSocket = new tcp::socket( *m_ioService );
 
 
 	boost::system::error_code error;
@@ -37,8 +36,8 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	// iterate and attempt to connect to resolved endpoints
 	while( error && endpointIterator != end )
 	{
-		m_activeSocket->close();
-		m_activeSocket->connect( *endpointIterator, error );
+		activeSocket->close();
+		activeSocket->connect( *endpointIterator, error );
 
 		*endpointIterator++;
 	}
@@ -47,8 +46,7 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	{
 		cout << error.message() << endl;
 		
-		delete m_activeSocket;
-		m_activeSocket = NULL;
+		delete activeSocket;
 
 		success = false;
 
@@ -57,22 +55,16 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	else
 	{
 		tcp::no_delay option( true );
-		m_activeSocket->set_option( option );
+		activeSocket->set_option( option );
 
 		tcp::socket::non_blocking_io nonBlocking( true );
-		m_activeSocket->io_control( nonBlocking );
+		activeSocket->io_control( nonBlocking );
 
 		m_numConnections += 1;
 
 		success = true;
 
-		// HACK: Should pass the socket to its CommunicationProcess.
-		delete m_activeSocket;
-		m_activeSocket = NULL;
-
-//		m_messengerProcess = new TcpMessengerProcess(
-//			this, activeSocket, m_ioService );
-//		m_messengerProcess->start();
+		m_communicationProcess = new TcpCommunicationProcess( activeSocket );
 
 	}
 
@@ -85,4 +77,9 @@ bool TcpClient::hasActiveConnection()
 	hasActive = (m_numConnections > 0);
 
 	return hasActive;
+}
+
+void TcpClient::sendPacket( Packet* p_packet )
+{
+	m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
 }

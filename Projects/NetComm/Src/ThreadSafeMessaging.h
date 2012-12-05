@@ -27,7 +27,7 @@ public:
 
 protected:
 	///-----------------------------------------------------------------------------------
-	/// Pop oldest message from the message queue.
+	/// Pop oldest message from the message queue. Take over ownership of the message.
 	/// \returns ProcessMessage*
 	///-----------------------------------------------------------------------------------
 	ProcessMessage* popMessage();

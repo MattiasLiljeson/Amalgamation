@@ -38,10 +38,9 @@ Describe(a_tcp_server)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(500));
-
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 
@@ -52,15 +51,34 @@ Describe(a_tcp_server)
 
 		TcpClient client[5];
 		for(int i=0; i<5; i++)
-			client[i].connectToServer( "localhost", "1337" );
+			client[i].connectToServer( "127.0.0.1", "1337" );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(500));
-
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 
+	It(has_no_new_packets_if_no_client_have_sent_it)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
 
+		Assert::That(server.hasNewPackets(), IsFalse());
+	}
 
+	It(can_receive_packets_from_a_connected_client)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+	
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(500));
+		client.sendPacket( new Packet( "Hello mr. Server!" ) );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(500));
+		Assert::That(server.hasNewPackets(), IsTrue());
+	}
 
 
 

@@ -56,3 +56,8 @@ bool TcpServer::hasNewConnections()
 
 	return newConnect;
 }
+
+bool TcpServer::hasNewPackets()
+{
+	return false;
+}

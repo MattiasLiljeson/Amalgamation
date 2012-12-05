@@ -11,6 +11,8 @@ ProcessThread::ProcessThread()
 
 ProcessThread::~ProcessThread()
 {
+//	throw string("ThreadSafeMessaging instance terminated with some messages remaining");
+
 	stop();
 }
 

@@ -8,6 +8,9 @@
     <ClCompile Include="TcpClient_spec.cpp">
       <Filter>TcpClient</Filter>
     </ClCompile>
+    <ClCompile Include="Packet_spec.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="TcpServer">
@@ -15,6 +18,9 @@
     </Filter>
     <Filter Include="TcpClient">
       <UniqueIdentifier>{49306991-0288-4dec-974f-16d1bc3f1f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{3087e2dc-b543-41c8-a383-ee95089428ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

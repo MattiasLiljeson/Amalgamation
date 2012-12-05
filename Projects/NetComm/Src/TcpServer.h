@@ -32,6 +32,8 @@ public:
 
 	bool hasNewConnections();
 
+	bool hasNewPackets();
+
 private:
 	bool m_isListening;
 
