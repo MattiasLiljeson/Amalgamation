@@ -6,12 +6,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ResourceMap.h">
+    <ClInclude Include="ResourceManager.h">
       <Filter>ResourceMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ResourceMap.cpp">
+    <ClCompile Include="ResourceManager.cpp">
       <Filter>ResourceMap</Filter>
     </ClCompile>
   </ItemGroup>
