@@ -54,17 +54,17 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	}
 	else
 	{
-		tcp::no_delay option( true );
-		activeSocket->set_option( option );
-
-		tcp::socket::non_blocking_io nonBlocking( true );
-		activeSocket->io_control( nonBlocking );
+//		tcp::no_delay option( true );
+//		activeSocket->set_option( option );
+//
+//		tcp::socket::non_blocking_io nonBlocking( true );
+//		activeSocket->io_control( nonBlocking );
 
 		m_numConnections += 1;
 
 		success = true;
 
-		m_communicationProcess = new TcpCommunicationProcess( activeSocket );
+		m_communicationProcess = new TcpCommunicationProcess( this, activeSocket );
 
 	}
 

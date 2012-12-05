@@ -66,6 +66,12 @@
     <ClCompile Include="TcpCommunicationProcess.cpp">
       <Filter>TcpCommunicationProcess</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessMessageReceivePacket.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageSocketDisconnected.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -102,6 +108,12 @@
       <Filter>TcpCommunicationProcess</Filter>
     </ClInclude>
     <ClInclude Include="ProcessMessageSendPacket.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageReceivePacket.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageSocketDisconnected.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>

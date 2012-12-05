@@ -50,7 +50,7 @@ void ProcessThread::restart()
 	start();
 }
 
-const int ProcessThread::getId() const
+int ProcessThread::getId() const
 {
 	return m_id;
 }

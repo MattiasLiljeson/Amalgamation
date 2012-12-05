@@ -42,22 +42,39 @@ bool TcpServer::hasNewConnections()
 {
 	bool newConnect = false;
 
-	while( getMessageCount() > 0 )
-	{
-		ProcessMessage* message = popMessage();
-
-		if( message->type == MessageType::CLIENT_CONNECTED )
-		{
-			newConnect = true;
-		}
-
-		delete message;
-	}
+	if( m_newConnections.size() > 0 )
+		newConnect = true;
 
 	return newConnect;
 }
 
 bool TcpServer::hasNewPackets()
 {
-	return false;
+	bool newPacket = false;
+
+	if( m_newPackets.size() > 0 )
+		newPacket = true;
+
+	return newPacket;
+}
+
+void TcpServer::processMessages()
+{
+	while( getMessageCount() > 0 )
+	{
+		ProcessMessage* message = popMessage();
+
+		if( message->type == MessageType::CLIENT_CONNECTED )
+		{
+			m_newConnections.push(
+				static_cast< ProcessMessageClientConnected* >(message) );
+		}
+		else if( message->type == MessageType::RECEIVE_PACKET )
+		{
+			m_newPackets.push(
+				static_cast< ProcessMessageReceivePacket* >(message) );
+		}
+
+		delete message;
+	}
 }

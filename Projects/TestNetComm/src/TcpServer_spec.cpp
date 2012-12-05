@@ -16,7 +16,7 @@ Describe(a_tcp_server)
 		Assert::That(server.isListening(), IsTrue());
 	}
 
-	It(can_stop_listening_by_calling_stopListening)
+	It(can_stop_listening_by_calling_stopListening_method)
 	{
 		TcpServer server;
 		server.startListening( 1337 );
@@ -41,6 +41,7 @@ Describe(a_tcp_server)
 		client.connectToServer( "127.0.0.1", "1337" );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(500));
+		server.processMessages();
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 
@@ -54,6 +55,7 @@ Describe(a_tcp_server)
 			client[i].connectToServer( "127.0.0.1", "1337" );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(500));
+		server.processMessages();
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
 
@@ -61,7 +63,7 @@ Describe(a_tcp_server)
 	{
 		TcpServer server;
 		server.startListening( 1337 );
-
+		
 		Assert::That(server.hasNewPackets(), IsFalse());
 	}
 
@@ -77,6 +79,7 @@ Describe(a_tcp_server)
 		client.sendPacket( new Packet( "Hello mr. Server!" ) );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(500));
+		server.processMessages();
 		Assert::That(server.hasNewPackets(), IsTrue());
 	}
 

@@ -42,9 +42,9 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the ProcessThread's unique id.
-	/// \returns const int
+	/// \returns int
 	///-----------------------------------------------------------------------------------
-	const int getId() const;
+	int getId() const;
 
 	///-----------------------------------------------------------------------------------
 	/// Calls the running thread's internal interrupt method. Will most likely give
