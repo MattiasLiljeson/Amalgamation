@@ -17,7 +17,8 @@ TEST(EntityWorldBasic, EntityWorldInstancingTest)
 
 	float dt = 1.0f/60;
 
-	while (true)
+	// Iterate 10000 times
+	for(int i=0; i<10000; i++)
 	{
 		world->setDelta(dt);
 		world->process();

@@ -26,6 +26,7 @@ public:
 	void addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 
+	void addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component );
 	void addComponent( ComponentType p_type, Component* p_component );
 
 	bitset<SystemType::NUM_SYSTEM_TYPES> getSystemBits() { return m_systemBits; }

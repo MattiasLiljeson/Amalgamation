@@ -13,19 +13,19 @@
 #pragma once
 
 #include "Control.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "InputManager.h"
 #include "MessageLoopFetcher.h"
 
 class MouseBtnControl : public Control
 {
 public:
-	MouseBtnControl( Input::MOUSE_BTNS p_btn );
+	MouseBtnControl( InputHelper::MOUSE_BTNS p_btn );
 	virtual ~MouseBtnControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	 Input::MOUSE_BTNS m_btn;
+	 InputHelper::MOUSE_BTNS m_btn;
 };
 

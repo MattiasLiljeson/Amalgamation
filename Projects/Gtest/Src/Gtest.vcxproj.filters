@@ -190,9 +190,6 @@
     <ClCompile Include="..\..\Input\Src\DirectInputFetcher.cpp">
       <Filter>Input\Code to test\InputFetchers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Input\Src\Input.cpp">
-      <Filter>Input\Code to test\InputFetchers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Input\Src\MessageLoopFetcher.cpp">
       <Filter>Input\Code to test\InputFetchers</Filter>
     </ClCompile>
@@ -225,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
       <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\InputHelper.cpp">
+      <Filter>Input\Code to test\InputFetchers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -309,9 +309,6 @@
     <ClInclude Include="..\..\Input\Src\DirectInputFetcher.h">
       <Filter>Input\Code to test\InputFetchers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Input\Src\Input.h">
-      <Filter>Input\Code to test\InputFetchers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Input\Src\MessageLoopFetcher.h">
       <Filter>Input\Code to test\InputFetchers</Filter>
     </ClInclude>
@@ -347,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
       <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\InputHelper.h">
+      <Filter>Input\Code to test\InputFetchers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

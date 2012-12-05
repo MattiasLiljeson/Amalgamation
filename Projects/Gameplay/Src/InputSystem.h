@@ -12,9 +12,11 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include "Input.h"
 #include <InputControlFactory.h>
 #include <InputManager.h>
 
+class InputHelper;
 class inputControlFactory;
 class InputManager;
 
@@ -28,7 +30,7 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 
 private:
-	InputManager* m_manager;
+	InputManager* m_inputManager;
 	vector<int> m_controlIdxs;
 };
 

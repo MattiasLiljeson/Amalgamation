@@ -24,12 +24,12 @@ InputManager::~InputManager()
 int InputManager::addControl( Control* p_control )
 {
 	m_controls.push_back( p_control );
-	return m_controls.size();
+	return m_controls.size() -1; //size - 1 = index of the added control
 }
 
 Control* InputManager::getControl( int p_idx )
 {
-	if( 0 <= p_idx  && p_idx < m_controls.size())
+	if( 0 <= p_idx  && p_idx < (int)m_controls.size())
 		return m_controls[p_idx];
 	else
 		return NULL;
@@ -47,6 +47,8 @@ XInputFetcher* InputManager::getXInputFetcher() const
 
 void InputManager::update()
 {
-	for( int i=0; i<m_controls.size(); i++)
+	m_mlFetcher->update();
+	m_xiFetcher->update();
+	for( unsigned int i=0; i<m_controls.size(); i++)
 		m_controls[i]->update( this );
 }

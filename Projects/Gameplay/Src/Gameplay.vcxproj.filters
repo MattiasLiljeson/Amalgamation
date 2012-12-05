@@ -39,6 +39,9 @@
     <ClInclude Include="Transform.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">

@@ -13,9 +13,6 @@
     <ClCompile Include="InputControlFactory.cpp">
       <Filter>InputManager</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>InputFetchers</Filter>
-    </ClCompile>
     <ClCompile Include="MessageLoopFetcher.cpp">
       <Filter>InputFetchers</Filter>
     </ClCompile>
@@ -37,6 +34,9 @@
     <ClCompile Include="MouseBtnControl.cpp">
       <Filter>InputControls</Filter>
     </ClCompile>
+    <ClCompile Include="InputHelper.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -53,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="InputType.h">
       <Filter>InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>InputFetchers</Filter>
     </ClInclude>
     <ClInclude Include="MessageLoopFetcher.h">
       <Filter>InputFetchers</Filter>
@@ -77,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="MouseBtnControl.h">
       <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHelper.h">
+      <Filter>InputFetchers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

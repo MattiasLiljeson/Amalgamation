@@ -15,7 +15,7 @@
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="DigitalControl.cpp" />
     <ClCompile Include="DirectInputFetcher.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InputHelper.cpp" />
     <ClCompile Include="InputControlFactory.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="KeyControl.cpp" />
@@ -29,7 +29,7 @@
     <ClInclude Include="Control.h" />
     <ClInclude Include="DigitalControl.h" />
     <ClInclude Include="DirectInputFetcher.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="InputHelper.h" />
     <ClInclude Include="InputControlFactory.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputType.h" />

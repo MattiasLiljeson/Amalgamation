@@ -35,6 +35,10 @@ void Entity::addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_compo
 	m_componentBits |= p_componentBits;
 }
 
+void Entity::addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component )
+{
+	addComponent( ComponentType::getTypeFor(p_typeIdx), p_component );
+}
 void Entity::addComponent( ComponentType p_type, Component* p_component )
 {
 	m_world->getComponentManager()->addComponent( this, p_type, p_component );

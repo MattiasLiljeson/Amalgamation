@@ -15,7 +15,7 @@
 #include "AnalogueControl.h"
 #include "Control.h"
 #include "DigitalControl.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "KeyControl.h"
 #include "MouseBtnControl.h"
 #include "MouseMoveControl.h"
@@ -50,12 +50,12 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
-	Control* create360controllerAnalog( Input::XBOX360_CONTROLLER_ANALOGS p_axis,
-		Input::SUB_AXIS p_subAxis );
-	Control* create360controllerDigital( Input::XBOX360_CONTROLLER_DIGITALS p_btn );
-	Control* createKeyboardKey( Input::KEYBOARD_KEYS p_key );
-	Control* createMouseButton( Input::MOUSE_BTNS p_btn );
-	Control* createMouseMovement( Input::MOUSE_AXIS p_axis, Input::SUB_AXIS p_subAxis );
+	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOGS p_axis,
+		InputHelper::SUB_AXIS p_subAxis );
+	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITALS p_btn );
+	Control* createKeyboardKey( InputHelper::KEYBOARD_KEYS p_key );
+	Control* createMouseButton( InputHelper::MOUSE_BTNS p_btn );
+	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
 
 };
 

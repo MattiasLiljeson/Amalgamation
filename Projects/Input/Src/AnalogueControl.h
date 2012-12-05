@@ -14,25 +14,25 @@
 #pragma once
 
 #include "Control.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "InputManager.h"
 #include "XInputFetcher.h"
 
 class Control;
-class Input;
+class InputHelper;
 class InputManager;
 class XInputFetcher;
 
 class AnalogueControl : public Control
 {
 public:
-	AnalogueControl( Input::XBOX360_CONTROLLER_ANALOGS p_axis, Input::SUB_AXIS p_subAxis );
+	AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOGS p_axis, InputHelper::SUB_AXIS p_subAxis );
 	~AnalogueControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	Input::XBOX360_CONTROLLER_ANALOGS m_axis;
-	Input::SUB_AXIS m_subAxis;
+	InputHelper::XBOX360_CONTROLLER_ANALOGS m_axis;
+	InputHelper::SUB_AXIS m_subAxis;
 };
 

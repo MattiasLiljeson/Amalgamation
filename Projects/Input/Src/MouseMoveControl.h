@@ -14,24 +14,24 @@
 
 #pragma once
 #include "Control.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "InputManager.h"
 #include "MessageLoopFetcher.h"
 
-class Input;
+class InputHelper;
 class InputManager;
 class MessageLoopFetcher;
 
 class MouseMoveControl : public Control
 {
 public:
-	MouseMoveControl( Input::MOUSE_AXIS p_axis, Input::SUB_AXIS p_subAxis );
+	MouseMoveControl( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
 	virtual ~MouseMoveControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	Input::MOUSE_AXIS m_axis;
-	Input::SUB_AXIS m_subAxis;
+	InputHelper::MOUSE_AXIS m_axis;
+	InputHelper::SUB_AXIS m_subAxis;
 };
 

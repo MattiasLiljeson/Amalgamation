@@ -29,17 +29,17 @@ DirectInputFetcher::DirectInputFetcher(HINSTANCE* _hInstance, HWND* _hWnd)
 	dinmouse->SetCooperativeLevel(*hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	reset();
-	m_dikFromKeyMap[Input::W]		= DIK_W;
-	m_dikFromKeyMap[Input::A]		= DIK_A;
-	m_dikFromKeyMap[Input::S]		= DIK_S;
-	m_dikFromKeyMap[Input::D]		= DIK_D;
-	m_dikFromKeyMap[Input::SPACE]	= DIK_SPACE;
-	m_dikFromKeyMap[Input::LCTRL]	= DIK_LCONTROL;
-	m_dikFromKeyMap[Input::ESC]		= DIK_ESCAPE;
-	m_dikFromKeyMap[Input::F1]		= DIK_F1;
-	m_dikFromKeyMap[Input::F2]		= DIK_F2;
-	m_dikFromKeyMap[Input::F3]		= DIK_F3;
-	m_dikFromKeyMap[Input::F4]		= DIK_F4;
+	m_dikFromKeyMap[InputHelper::W]		= DIK_W;
+	m_dikFromKeyMap[InputHelper::A]		= DIK_A;
+	m_dikFromKeyMap[InputHelper::S]		= DIK_S;
+	m_dikFromKeyMap[InputHelper::D]		= DIK_D;
+	m_dikFromKeyMap[InputHelper::SPACE]	= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::LCTRL]	= DIK_LCONTROL;
+	m_dikFromKeyMap[InputHelper::ESC]		= DIK_ESCAPE;
+	m_dikFromKeyMap[InputHelper::F1]		= DIK_F1;
+	m_dikFromKeyMap[InputHelper::F2]		= DIK_F2;
+	m_dikFromKeyMap[InputHelper::F3]		= DIK_F3;
+	m_dikFromKeyMap[InputHelper::F4]		= DIK_F4;
 }
 
 DirectInputFetcher::~DirectInputFetcher()
@@ -51,13 +51,13 @@ DirectInputFetcher::~DirectInputFetcher()
 
 void DirectInputFetcher::reset()
 {
-	for( int i=0; i<Input::NUM_MOUSE_BTNS; i++)
-		m_mouseBtns[i] = Input::KEY_UP;
+	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
+		m_mouseBtns[i] = InputHelper::KEY_UP;
 
-	for( int i=0; i<Input::NUM_KEYBOARD_KEYS; i++)
-		m_mouseBtns[i] = Input::KEY_UP;
+	for( int i=0; i<InputHelper::NUM_KEYBOARD_KEYS; i++)
+		m_mouseBtns[i] = InputHelper::KEY_UP;
 
-	for( int i=0; i<Input::NUM_MOUSE_AXIS+1; i++ )
+	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS+1; i++ )
 	{
 		m_mousePos[i] = 0;
 		m_mouseTravel[i] = 0;
@@ -80,44 +80,44 @@ void DirectInputFetcher::update()
 	detectInput();
 
 	// Mouse travel (delta position / movement)
-	m_mouseTravel[Input::X] = (int)mousestate.lX;
-	m_mouseTravel[Input::Y] = (int)mousestate.lY;
-	m_mouseTravel[Input::Z] = (int)mousestate.lZ;
+	m_mouseTravel[InputHelper::X] = (int)mousestate.lX;
+	m_mouseTravel[InputHelper::Y] = (int)mousestate.lY;
+	m_mouseTravel[InputHelper::Z] = (int)mousestate.lZ;
 
-	// The mouse position is being fetched not through Direct Input but through
+	// The mouse position is being fetched not through Direct InputHelper but through
 	// the windows api. The z-component (scrollwheel) is fetched thru DI.
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
-	m_mousePos[Input::X] = (int)cursorPos.x;
-	m_mousePos[Input::Y] = (int)cursorPos.y;
-	m_mousePos[Input::Z] += (int)mousestate.lZ;
+	m_mousePos[InputHelper::X] = (int)cursorPos.x;
+	m_mousePos[InputHelper::Y] = (int)cursorPos.y;
+	m_mousePos[InputHelper::Z] += (int)mousestate.lZ;
 
-	for( int i=0; i<Input::NUM_MOUSE_BTNS; i++)
-		m_mouseBtns[i] = Input::calcState( m_mouseBtns[i], mousestate.rgbButtons[i] );
+	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
+		m_mouseBtns[i] = InputHelper::calcState( m_mouseBtns[i], mousestate.rgbButtons[i] );
 
-	for( int i=0; i<Input::NUM_KEYBOARD_KEYS; i++)
-		m_kbKeys[i] = Input::calcState( m_kbKeys[i], (keystate[m_dikFromKeyMap[i]] & 0x80) );
+	for( int i=0; i<InputHelper::NUM_KEYBOARD_KEYS; i++)
+		m_kbKeys[i] = InputHelper::calcState( m_kbKeys[i], (keystate[m_dikFromKeyMap[i]] & 0x80) );
 }
 
 int DirectInputFetcher::getKeyState( int p_key )
 {
-	if( 0 <= p_key && p_key < Input::NUM_KEYBOARD_KEYS )
+	if( 0 <= p_key && p_key < InputHelper::NUM_KEYBOARD_KEYS )
 		return m_kbKeys[p_key];
 	else
-		return Input::KEY_UP;
+		return InputHelper::KEY_UP;
 }
 
 int DirectInputFetcher::getMouseKeyState( int p_key )
 {
-	if( 0 <= p_key && p_key < Input::NUM_MOUSE_BTNS )
+	if( 0 <= p_key && p_key < InputHelper::NUM_MOUSE_BTNS )
 		return m_mouseBtns[p_key];
 	else
-		return Input::KEY_UP;
+		return InputHelper::KEY_UP;
 }
 
 int DirectInputFetcher::getMousePos(int axis)
 {
-	if( 0 <= axis && axis < Input::NUM_MOUSE_AXIS )
+	if( 0 <= axis && axis < InputHelper::NUM_MOUSE_AXIS )
 		return m_mousePos[axis];
 	else
 		return 0;
@@ -125,7 +125,7 @@ int DirectInputFetcher::getMousePos(int axis)
 
 int DirectInputFetcher::getMouseTravel(int axis)
 {
-	if( 0 <= axis && axis < Input::NUM_MOUSE_AXIS )
+	if( 0 <= axis && axis < InputHelper::NUM_MOUSE_AXIS )
 		return m_mouseTravel[axis];
 	else
 		return 0;

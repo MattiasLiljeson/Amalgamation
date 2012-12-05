@@ -40,11 +40,18 @@ public:
 	///@return The delta of status from last update and the update before. 
 	virtual double getDelta();
 
+	///\brief get raw data from input device. In the devices native format
+	///\return the raw data
+	virtual int getRawData();
+
 protected:
 	// Current amount of "Pressness" on the control 
 	double m_status;
 
 	// "Pressness" delta between latest update and the update before.
 	double m_statusDelta;
+
+	// Latest raw data fetched from input device.
+	int m_rawData;
 };
 

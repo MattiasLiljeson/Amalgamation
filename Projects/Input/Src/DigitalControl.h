@@ -13,22 +13,22 @@
 #pragma once
 
 #include "Control.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "InputManager.h"
 #include "XInputFetcher.h"
 
-class Input;
+class InputHelper;
 class InputManager;
 class XInputFetcher;
 
 class DigitalControl : public Control
 {
 public:
-	DigitalControl( Input::XBOX360_CONTROLLER_DIGITALS p_btn );
+	DigitalControl( InputHelper::XBOX360_CONTROLLER_DIGITALS p_btn );
 	~DigitalControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	Input::XBOX360_CONTROLLER_DIGITALS m_btn;
+	InputHelper::XBOX360_CONTROLLER_DIGITALS m_btn;
 };

@@ -3,7 +3,7 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Input fetcher for mouse and keyboard using the Message Loop. REMEMBER TO USE
+/// \brief InputHelper fetcher for mouse and keyboard using the Message Loop. REMEMBER TO USE
 /// pushToQue() IN THE CALLBACK MESSAGE LOOP! otherwise this class will not work.
 ///        
 /// # MessageLoopFetcher
@@ -13,7 +13,7 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include "Input.h"
+#include "InputHelper.h"
 #include <Windows.h>
 #include <deque>
 
@@ -43,15 +43,16 @@ public:
 	static void pushToQue( UINT p_message, WPARAM p_wParam, LPARAM p_lParam );
 
 private:
-	int m_mousePos[Input::NUM_MOUSE_AXIS];
-	int m_mouseTravel[Input::NUM_MOUSE_AXIS];
-	int m_mouseBtnStates[Input::NUM_MOUSE_BTNS];
-	int m_keyStates[Input::NUM_KEYBOARD_KEYS];
+	int m_mouseCurrPos[InputHelper::NUM_MOUSE_AXIS];
+	int m_mousePrevPos[InputHelper::NUM_MOUSE_AXIS];
+	int m_mouseMoveDelta[InputHelper::NUM_MOUSE_AXIS];
+	int m_mouseBtnStates[InputHelper::NUM_MOUSE_BTNS];
+	int m_keyStates[InputHelper::NUM_KEYBOARD_KEYS];
 
-	bool m_mouseBtnsPressed[Input::NUM_MOUSE_BTNS];
-	bool m_mouseBtnsReleased[Input::NUM_MOUSE_BTNS];
-	bool m_keysPressed[Input::NUM_KEYBOARD_KEYS];
-	bool m_keysReleased[Input::NUM_KEYBOARD_KEYS];
+	bool m_mouseBtnsPressed[InputHelper::NUM_MOUSE_BTNS];
+	bool m_mouseBtnsReleased[InputHelper::NUM_MOUSE_BTNS];
+	bool m_keysPressed[InputHelper::NUM_KEYBOARD_KEYS];
+	bool m_keysReleased[InputHelper::NUM_KEYBOARD_KEYS];
 
 	int m_keyFromCharMap[VK_LCONTROL+1]; //VK_LCONTROL is the last char
 	static deque<MsgAndParams> msgQue;

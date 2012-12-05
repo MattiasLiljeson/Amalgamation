@@ -13,18 +13,18 @@
 #pragma once
 
 #include "Control.h"
-#include "Input.h"
+#include "InputHelper.h"
 #include "InputManager.h"
 #include "MessageLoopFetcher.h"
 
-class Input;
+class InputHelper;
 class InputManager;
 class MessageLoopFetcher;
 
 class KeyControl : public Control
 {
 public:
-	KeyControl( Input::KEYBOARD_KEYS p_key );
+	KeyControl( InputHelper::KEYBOARD_KEYS p_key );
 	virtual ~KeyControl(void);
 
 	virtual void update( InputManager* p_manager );

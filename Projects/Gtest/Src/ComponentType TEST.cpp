@@ -33,15 +33,15 @@ TEST(ComponentTypegetIndex, SeveralComponentTypes)
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Transform);
+	ct = ComponentType::getTypeFor(ComponentType::Render);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 1, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::Input);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 2, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Input);
+	ct = ComponentType::getTypeFor(ComponentType::NetworkSynced);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 3, ct_id );
 }
@@ -67,15 +67,15 @@ TEST(ComponentTypeGetBit, SeveralComponentTypes)
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Transform);
+	ct = ComponentType::getTypeFor(ComponentType::Render);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::Input);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0100"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Input);
+	ct = ComponentType::getTypeFor(ComponentType::NetworkSynced);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
 }
@@ -84,41 +84,42 @@ TEST(ComponentTypeGetBit, RandomOrder)
 {
 	ComponentType ct;
 	bitset<ComponentType::NUM_COMPONENT_TYPES> ct_set;
-
-
-	ct = ComponentType::getTypeFor(ComponentType::Input);
-	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
-
-	ct = ComponentType::getTypeFor(ComponentType::Input);
-	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
-
-	ct = ComponentType::getTypeFor(ComponentType::Input);
-	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
-
-	ct = ComponentType::getTypeFor(ComponentType::Input);
-	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
+	bitset<ComponentType::NUM_COMPONENT_TYPES> ct_comp;
 
 	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
+	ct_comp = bitset<ComponentType::NUM_COMPONENT_TYPES>("0001");
+	EXPECT_EQ( ct_comp, ct_set );
 
 	ct = ComponentType::getTypeFor(ComponentType::Transform);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
+	ct_set = ct.getBit();
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
+
+	ct = ComponentType::getTypeFor(ComponentType::Transform);
+	ct_set = ct.getBit();
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
+
+	ct = ComponentType::getTypeFor(ComponentType::Input);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0100"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::NetworkSynced);
 	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0100"), ct_set );
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
 
 	ct = ComponentType::getTypeFor(ComponentType::Render);
 	ct_set = ct.getBit();
-	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0100"), ct_set );
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
+
+	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct_set = ct.getBit();
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
+
+	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct_set = ct.getBit();
+	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 }

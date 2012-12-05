@@ -3,7 +3,7 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Input fetcher for mouse and keyboard using Direct Input. Not used at the
+/// \brief InputHelper fetcher for mouse and keyboard using Direct InputHelper. Not used at the
 /// moment.
 ///        
 /// # DirectInputFetcher
@@ -14,7 +14,7 @@
 #pragma once
 
 #include <dinput.h>
-#include "Input.h"
+#include "InputHelper.h"
 
 #pragma comment (lib, "dinput8.lib")
 #pragma comment (lib, "dxguid.lib")
@@ -43,9 +43,9 @@ private:
 	BYTE keystate[256];    // the storage for the key-information
 	DIMOUSESTATE mousestate;    // the storage for the mouse-information
 
-	int m_mousePos[Input::NUM_MOUSE_AXIS];
-	int m_mouseTravel[Input::NUM_MOUSE_AXIS];
-	int m_mouseBtns[Input::NUM_MOUSE_BTNS];
-	int m_kbKeys[Input::NUM_KEYBOARD_KEYS];
-	int m_dikFromKeyMap[Input::NUM_KEYBOARD_KEYS];
+	int m_mousePos[InputHelper::NUM_MOUSE_AXIS];
+	int m_mouseTravel[InputHelper::NUM_MOUSE_AXIS];
+	int m_mouseBtns[InputHelper::NUM_MOUSE_BTNS];
+	int m_kbKeys[InputHelper::NUM_KEYBOARD_KEYS];
+	int m_dikFromKeyMap[InputHelper::NUM_KEYBOARD_KEYS];
 };

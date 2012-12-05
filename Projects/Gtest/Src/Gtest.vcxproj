@@ -29,8 +29,8 @@
     <ClCompile Include="..\..\Input\Src\Control.cpp" />
     <ClCompile Include="..\..\Input\Src\DigitalControl.cpp" />
     <ClCompile Include="..\..\Input\Src\DirectInputFetcher.cpp" />
-    <ClCompile Include="..\..\Input\Src\Input.cpp" />
     <ClCompile Include="..\..\Input\Src\InputControlFactory.cpp" />
+    <ClCompile Include="..\..\Input\Src\InputHelper.cpp" />
     <ClCompile Include="..\..\Input\Src\InputManager.cpp" />
     <ClCompile Include="..\..\Input\Src\KeyControl.cpp" />
     <ClCompile Include="..\..\Input\Src\MessageLoopFetcher.cpp" />
@@ -79,8 +79,8 @@
     <ClInclude Include="..\..\Input\Src\Control.h" />
     <ClInclude Include="..\..\Input\Src\DigitalControl.h" />
     <ClInclude Include="..\..\Input\Src\DirectInputFetcher.h" />
-    <ClInclude Include="..\..\Input\Src\Input.h" />
     <ClInclude Include="..\..\Input\Src\InputControlFactory.h" />
+    <ClInclude Include="..\..\Input\Src\InputHelper.h" />
     <ClInclude Include="..\..\Input\Src\InputManager.h" />
     <ClInclude Include="..\..\Input\Src\InputType.h" />
     <ClInclude Include="..\..\Input\Src\KeyControl.h" />
@@ -149,7 +149,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xinput9_1_0.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -167,7 +167,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xinput9_1_0.lib;gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

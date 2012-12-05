@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Input.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
