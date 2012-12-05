@@ -13,6 +13,9 @@
   <ItemGroup>
     <ClInclude Include="ResourceMap.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ResourceMap.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{15020C27-0C35-4D82-9517-59D175B1DF49}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

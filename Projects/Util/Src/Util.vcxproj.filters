@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="ToString.h" />
+    <ClInclude Include="UniqueIndexList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />

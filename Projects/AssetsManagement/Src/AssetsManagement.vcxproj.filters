@@ -10,4 +10,9 @@
       <Filter>ResourceMap</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ResourceMap.cpp">
+      <Filter>ResourceMap</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

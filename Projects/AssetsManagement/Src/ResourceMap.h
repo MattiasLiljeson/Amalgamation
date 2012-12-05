@@ -13,7 +13,6 @@
 
 #include <map>
 #include <string>
-#include "DebugUtil.h"
 
 using namespace std;
 
@@ -24,7 +23,7 @@ public:
 		~ResourceMap() {clear();}
 		void clear();
 		T** getResource(const string& p_uniqueName);
-		T** addToMap(const string& p_uniqueName, T* p_resourceObj); ///< Add shader to the map structure for allocation control and removal
+		T** addToMap(const string& p_uniqueName, T* p_resourceObj);
 		bool removeFromMap(const string& p_uniqueName);
 private:
 		map<string,T**> m_resourceMap;
