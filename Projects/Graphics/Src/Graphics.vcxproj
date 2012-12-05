@@ -39,6 +39,7 @@
     <ClInclude Include="Deferred.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
+    <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="PTNVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />

@@ -11,7 +11,7 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
 
-	m_fullscreenQuad	= NULL;
+	m_fullscreenQuad = NULL;
 
 	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
 	m_fullscreenQuad = bufferFactory->createFullScreenQuadBuffer();
@@ -21,8 +21,11 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	initGeometryBuffers();
 	initTestShaders();
 
+	/************************************************************************/
+	/* Test texture that shouldn't be used except for testing.				*/
+	/************************************************************************/
 	m_testTexture = TextureParser::loadTexture(m_device, 
-		"Assets/Textures/Test/1000x1000_32.png");
+		"Assets/Textures/Test/rainbow alpha.dds");
 }
 
 Deferred::~Deferred()

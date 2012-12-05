@@ -102,6 +102,9 @@
     <ClInclude Include="TextureParser.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="FreeImageException.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
