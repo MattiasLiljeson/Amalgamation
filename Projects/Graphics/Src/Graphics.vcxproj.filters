@@ -99,6 +99,9 @@
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="TextureParser.h">
+      <Filter>Graphics Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

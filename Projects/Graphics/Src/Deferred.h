@@ -20,6 +20,7 @@
 #include "PTVertex.h"
 #include "RendererMeshInfo.h"
 #include "RendererSceneInfo.h"
+#include "TextureParser.h"
 
 const static int NUMBUFFERS = 3;
 const static int DEPTH = 2;
@@ -83,6 +84,8 @@ private:
 	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
 	ID3D11DepthStencilView*		m_depthStencilView;
+
+	ID3D11ShaderResourceView*	m_testTexture;
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredComposeShader*	m_composeShader;

@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <vld.h>
+#include "TextureParser.h"
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "D3DRender.h"
@@ -12,6 +13,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	Window* window;
 	D3DRender* renderer;
 
+	TextureParser::init();
+	
 	try
 	{
 		window = new Window(hInstance,800,600,1);

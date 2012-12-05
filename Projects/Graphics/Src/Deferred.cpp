@@ -20,11 +20,15 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	initDepthStencil();
 	initGeometryBuffers();
 	initTestShaders();
+
+	m_testTexture = TextureParser::loadTexture(m_device, 
+		"Assets/Textures/Test/1000x1000_32.png");
 }
 
 Deferred::~Deferred()
 {
 	SAFE_RELEASE(m_depthStencilView);
+	SAFE_RELEASE(m_testTexture);
 
 	for (int i = 0; i < NUMBUFFERS; i++)
 	{
@@ -104,6 +108,7 @@ void Deferred::renderComposedImage()
 
 	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
 	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
+	m_deviceContext->PSSetShaderResources(2,1,&m_testTexture);
 
 	m_fullscreenQuad->apply();
 
