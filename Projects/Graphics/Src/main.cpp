@@ -32,6 +32,21 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	__int64 prevTimeStamp = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
+	RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f}};
+
+	// Temporary static view projection matrix
+	// column major. 
+	// R=row, col=column, r=rotation, s=scale, t=translation
+	RendererSceneInfo tempSceneInfo = 
+	{
+	  // R0rs    R1rs   R2rs     R3t
+		{1.0f,   0.0f,  0.0f,    0.0f,  // col 0  x
+		 0.0f,   1.0f,  0.0f,    0.0f,  // col 1  y
+		 0.0f,   0.0f,  1.0f,    0.0f,  // col 2  z
+		 0.0f,   0.0f,  0.0f,    1.0f}  // col 3  w
+	};
+
+
 	// Main message loop
 	MSG msg = {0};
 	while(WM_QUIT != msg.message)
@@ -49,10 +64,20 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			prevTimeStamp = currTimeStamp;
 
-			renderer->clearRenderTargets();
-			renderer->render();
+			// * Scene render preparation system * 1
+			renderer->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
+					
+			// * Deferred base system *            1
+			renderer->clearRenderTargets();	      // clear render targets used           
+			renderer->beginFrame();				  // prepare frame, set drawing to MRT   
+
+			// * Render system *                   N
+			renderer->renderMesh(testMeshInfo);	  // process a mesh						 
+
+			// * Deferred finalize system *        1
+			renderer->finalizeFrame();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
-			renderer->flipBackBuffer();
+			renderer->flipBackBuffer();           // flip buffers						 
 		}
 	}
 

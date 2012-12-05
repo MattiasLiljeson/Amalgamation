@@ -5,11 +5,17 @@
 #ifdef _DEBUG
 	static void debugPrint(const char* msg);
 	#define DEBUGPRINT(x) debugPrint x
-	#ifdef _WIN32
+	#ifdef WINAPI
 		#include <Windows.h>
 		void debugPrint(const char* msg)
 		{
 			OutputDebugStringA(msg);
+		}
+	#else
+		#include <iostream>
+		void debugPrint(const char* msg)
+		{
+			std::cout<<msg;
 		}
 	#endif
 #else

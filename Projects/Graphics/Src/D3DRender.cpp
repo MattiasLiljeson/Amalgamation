@@ -128,10 +128,23 @@ void D3DRender::clearRenderTargets()
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
-void D3DRender::render()
+void D3DRender::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 {
-	m_deferred->deferredBasePass();
+	m_deferred->setSceneInfo(p_sceneInfo);
+}
 
+void D3DRender::beginFrame()
+{
+	m_deferred->beginDeferredBasePass();
+}
+
+void D3DRender::renderMesh(const RendererMeshInfo& p_meshInfo)
+{
+	m_deferred->renderMesh(p_meshInfo);
+}
+
+void D3DRender::finalizeFrame()
+{
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
 	m_deferred->renderComposedImage();
 }

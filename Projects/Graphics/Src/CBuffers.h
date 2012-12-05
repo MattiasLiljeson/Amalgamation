@@ -14,5 +14,5 @@
 struct SimpleCBuffer
 {
 	float color[4];
-	float pos[4];
+	float vp[16];
 };

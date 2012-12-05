@@ -14,7 +14,7 @@
 
 #include <d3d11.h>
 #include "D3DException.h"
-#include "Util.h"
+#include "D3DUtil.h"
 
 struct BufferConfig
 {
@@ -25,6 +25,11 @@ struct BufferConfig
 		CONSTANT_BUFFER_VS,
 		CONSTANT_BUFFER_GS,
 		CONSTANT_BUFFER_PS,
+		CONSTANT_BUFFER_VS_PS,
+		CONSTANT_BUFFER_VS_GS_PS,
+		CONSTANT_BUFFER_GS_PS,
+		CONSTANT_BUFFER_VS_GS,
+		CONSTANT_BUFFER_ALL,
 		BUFFER_TYPE_COUNT
 	};
 

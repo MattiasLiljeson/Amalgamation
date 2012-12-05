@@ -30,12 +30,8 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="AntTweakBarWrapper.cpp">
-      <Filter>Renderer\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Box.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
+    <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="Box.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -47,15 +43,6 @@
     </ClInclude>
     <ClInclude Include="D3DRender.h">
       <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugUtil.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ToString.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Deferred.h">
       <Filter>Renderer\Deferred</Filter>
@@ -99,17 +86,18 @@
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="AntTweakBarWrapper.h">
-      <Filter>Renderer\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="PTNVertex.h">
+    <ClInclude Include="RendererMeshInfo.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="DIndex.h">
+    <ClInclude Include="RendererSceneInfo.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="DIndex.h" />
+    <ClInclude Include="PTNVertex.h" />
+    <ClInclude Include="D3DUtil.h">
+      <Filter>Graphics Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,9 +106,6 @@
     </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{9e006dd4-5e85-4dc5-8bd0-a61348454352}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{58889cfd-138e-45e1-8bc7-4c06780cda71}</UniqueIdentifier>
     </Filter>
     <Filter Include="Renderer\Shader">
       <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
@@ -137,8 +122,8 @@
     <Filter Include="Renderer\Shader\Shader types">
       <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\Debug">
-      <UniqueIdentifier>{10f41fdd-bd1f-40f8-856c-b8adcc821846}</UniqueIdentifier>
+    <Filter Include="Graphics Utilities">
+      <UniqueIdentifier>{58889cfd-138e-45e1-8bc7-4c06780cda71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
