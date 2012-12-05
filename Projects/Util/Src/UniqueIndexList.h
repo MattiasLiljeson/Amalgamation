@@ -24,7 +24,7 @@ public:
 
 	unsigned int add(T p_valueRef);
 
-	void		 removeAt(unsigned int p_index);
+	bool		 removeAt(unsigned int p_index);
 
 	T			 at(unsigned int p_index);
 	T			 operator[](unsigned int p_index);
@@ -53,13 +53,15 @@ unsigned int UniqueIndexList<T>::add(T p_valueRef)
 }
 
 template<class T>
-void UniqueIndexList<T>::removeAt(unsigned int p_index)
+bool UniqueIndexList<T>::removeAt(unsigned int p_index)
 {
 	if (p_index<m_list.size())
 	{
 		m_list[p_index] = NULL;
 		m_freeIndices.push(p_index);
+		return true;
 	}
+	return false;
 }
 
 template<class T>
