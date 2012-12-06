@@ -23,6 +23,7 @@
 #include "ProcessMessageClientConnected.h"
 #include "ProcessMessageReceivePacket.h"
 #include "StringSplit.h"
+#include "Packet.h"
 
 using namespace std;
 using namespace boost::asio::ip;
@@ -40,21 +41,28 @@ public:
 	bool isListening();
 
 	bool hasNewConnections();
+	unsigned int newConnectionsCount();
+
+	unsigned int activeConnectionsCount();
+
+	unsigned int newDisconnectionsCount();
 
 	bool hasNewPackets();
-
 	unsigned int newPacketsCount();
+	Packet* popNewPacket();
 
 	void processMessages();
 
 private:
 	bool m_isListening;
 
-	queue< ProcessMessageClientConnected* > m_newConnections;
-	queue< ProcessMessageReceivePacket* > m_newPackets;
+	queue< int > m_newConnectionProcesses;
+	queue< int > m_newDisconnectionProcesses;
+	vector< TcpCommunicationProcess* > m_communicationProcesses;
+
+	queue< Packet* > m_newPackets;
 
 	TcpListenerProcess* m_listenerProcess;
-	vector< TcpCommunicationProcess* > m_communicationProcesses;
 	boost::asio::io_service* m_ioService;
 
 };

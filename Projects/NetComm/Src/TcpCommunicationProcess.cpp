@@ -102,7 +102,10 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 	}
 	else if( p_error )
 	{
-		
+		m_parent->putMessage( new ProcessMessageSocketDisconnected(
+			this, getId() ) );
+
+		m_running = false;
 	}
 	else
 	{

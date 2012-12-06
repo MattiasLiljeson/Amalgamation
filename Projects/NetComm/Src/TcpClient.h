@@ -30,6 +30,8 @@ public:
 
 	bool connectToServer( string p_address, string p_port );
 
+	void disconnect();
+
 	bool hasActiveConnection();
 
 	void sendPacket( Packet* p_packet );

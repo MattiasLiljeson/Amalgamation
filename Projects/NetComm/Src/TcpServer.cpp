@@ -49,10 +49,25 @@ bool TcpServer::hasNewConnections()
 {
 	bool newConnect = false;
 
-	if( m_newConnections.size() > 0 )
+	if( m_newConnectionProcesses.size() > 0 )
 		newConnect = true;
 
 	return newConnect;
+}
+
+unsigned int TcpServer::newConnectionsCount()
+{
+	return m_newConnectionProcesses.size();
+}
+
+unsigned int TcpServer::activeConnectionsCount()
+{
+	return m_communicationProcesses.size();
+}
+
+unsigned int TcpServer::newDisconnectionsCount()
+{
+	return m_newDisconnectionProcesses.size();
 }
 
 bool TcpServer::hasNewPackets()
@@ -70,6 +85,17 @@ unsigned int TcpServer::newPacketsCount()
 	return m_newPackets.size();
 }
 
+Packet* TcpServer::popNewPacket()
+{
+	Packet* packet = NULL;
+	if ( !m_newPackets.empty() )
+	{	
+		packet = m_newPackets.front();
+		m_newPackets.pop();
+	}
+	return packet;
+}
+
 void TcpServer::processMessages()
 {
 	while( getMessageCount() > 0 )
@@ -80,17 +106,34 @@ void TcpServer::processMessages()
 		{
 			ProcessMessageClientConnected* messageClientConnected
 				= static_cast< ProcessMessageClientConnected* >(message);
-			m_newConnections.push( messageClientConnected );
+
 			m_communicationProcesses.push_back( new TcpCommunicationProcess(
 				this, messageClientConnected->socket, m_ioService ) );
 			m_communicationProcesses.back()->start();
+
+			m_newConnectionProcesses.push( m_communicationProcesses.back()->getId() );
+		}
+		else if( message->type == MessageType::SOCKET_DISCONNECTED )
+		{
+			ProcessMessageSocketDisconnected* messageSocketDisconnected =
+				static_cast< ProcessMessageSocketDisconnected* >(message);
+
+			for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
+			{
+				if( messageSocketDisconnected->processId ==
+					m_communicationProcesses[i]->getId() )
+				{
+					m_newDisconnectionProcesses.push(
+						m_communicationProcesses[i]->getId() );
+				}
+			}
 		}
 		else if( message->type == MessageType::RECEIVE_PACKET )
 		{
 			m_newPackets.push(
-				static_cast< ProcessMessageReceivePacket* >(message) );
+				static_cast< ProcessMessageReceivePacket* >(message)->packet );
 			cout << "TcpServer, receive: " <<
-				m_newPackets.back()->packet->getMessage() << endl;
+				m_newPackets.back()->getMessage() << endl;
 		}
 
 		delete message;

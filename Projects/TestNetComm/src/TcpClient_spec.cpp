@@ -14,16 +14,31 @@ Describe(a_tcp_client)
 		TcpClient client;
 		client.connectToServer( "localhost", "1337" );
 
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		Assert::That(client.hasActiveConnection(), IsTrue());
 	}
 
 	It(has_no_active_connection_if_it_has_not_connected) // duh! :)
 	{
 		TcpClient client;
+		Assert::That(client.hasActiveConnection(), IsFalse());
+	}
+
+	It(can_disconnect_from_server)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "localhost", "1337" );
+		client.disconnect();
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
 		Assert::That(client.hasActiveConnection(), IsFalse());
 	}
 };

@@ -81,12 +81,20 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	return success;
 }
 
+void TcpClient::disconnect()
+{
+	if( m_communicationProcess )
+	{
+		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
+		m_communicationProcess->stop();
+		delete m_communicationProcess;
+		m_communicationProcess = NULL;
+	}
+}
+
 bool TcpClient::hasActiveConnection()
 {
-	bool hasActive;
-	hasActive = (m_numConnections > 0);
-
-	return hasActive;
+	return m_communicationProcess != NULL;
 }
 
 void TcpClient::sendPacket( Packet* p_packet )
