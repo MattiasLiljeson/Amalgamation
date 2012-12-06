@@ -44,6 +44,7 @@
     <ClInclude Include="PTNVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
+    <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />

@@ -18,7 +18,6 @@
 #include "ShaderFactory.h"
 #include "BufferFactory.h"
 #include "PTVertex.h"
-#include "RendererMeshInfo.h"
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
 

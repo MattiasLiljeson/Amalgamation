@@ -20,7 +20,6 @@
 #include "D3DUtil.h"
 #include "Buffer.h"
 #include "DeferredRenderer.h"
-#include "RendererMeshInfo.h"
 #include "RendererSceneInfo.h"
 
 class GraphicsWrapper

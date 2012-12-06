@@ -20,18 +20,11 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 	initDepthStencil();
 	initGeometryBuffers();
 	initTestShaders();
-
-	/************************************************************************/
-	/* Test texture that shouldn't be used except for testing.				*/
-	/************************************************************************/
-	m_testTexture = TextureParser::loadTexture(m_device, 
-		"Assets/Textures/Test/rainbow alpha.dds");
 }
 
 DeferredRenderer::~DeferredRenderer()
 {
 	SAFE_RELEASE(m_depthStencilView);
-	SAFE_RELEASE(m_testTexture);
 
 	for (int i = 0; i < NUMBUFFERS; i++)
 	{
@@ -98,7 +91,6 @@ void DeferredRenderer::renderComposedImage()
 
 	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
 	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
-	m_deviceContext->PSSetShaderResources(2,1,&m_testTexture);
 
 	m_fullscreenQuad->apply();
 

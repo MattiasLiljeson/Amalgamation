@@ -1,6 +1,5 @@
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
-Texture2D dummyTexture : register(t2);
 
 SamplerState pointSampler : register(s0);
 
@@ -28,8 +27,7 @@ float4 PS(VertexOut p_input) : SV_TARGET
 {
 	float4 diffuseColor = float4(gDiffuseMap.Sample(pointSampler, p_input.texCoord));
 	float4 normalColor = float4(gNormalMap.Sample(pointSampler, p_input.texCoord));
-	float4 dummyColor = dummyTexture.Sample(pointSampler, p_input.texCoord);
 	// smash'em together
-	return dummyColor;
+	return diffuseColor;
 }
 
