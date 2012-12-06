@@ -4,10 +4,21 @@
     <Filter Include="Exceptions">
       <UniqueIdentifier>{c14d1eed-5b6b-478e-b3df-d8ea6955eed7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AudioEngine">
+      <UniqueIdentifier>{9ed3e92f-d09a-4b8f-ade8-35960d8e5a95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XAudio2Exception.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="SoundWrapper.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SoundWrapper.cpp">
+      <Filter>AudioEngine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

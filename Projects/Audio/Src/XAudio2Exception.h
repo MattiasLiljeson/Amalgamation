@@ -22,7 +22,8 @@ using namespace std;
 class XAudio2Exception : public exception
 {
 public:
-	XAudio2Exception(HRESULT p_hresult,const string &p_file,const string &p_func,int p_line)
+	XAudio2Exception( HRESULT p_hresult, const string &p_file, const string &p_func, 
+		int p_line)
 	{
 		LPSTR errTxt = NULL;
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | 

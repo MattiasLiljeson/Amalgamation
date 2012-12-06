@@ -3,6 +3,8 @@
 #include <XAudio2.h>
 #include <XAudio2fx.h>
 #include <X3daudio.h>
+#include <strsafe.h>
+#include "XAudio2Exception.h"
 
 // =======================================================================================
 //                                      SoundWrapper
@@ -24,7 +26,7 @@ public:
 private:
 	void initSoundEngine();
 private:
-	IXAudio2* m_soundeDevice;
+	IXAudio2* m_soundDevice;
 	IXAudio2MasteringVoice* m_masterVoice;
 
 	float m_masterVolume;
