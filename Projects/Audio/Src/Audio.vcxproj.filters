@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{c14d1eed-5b6b-478e-b3df-d8ea6955eed7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XAudio2Exception.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

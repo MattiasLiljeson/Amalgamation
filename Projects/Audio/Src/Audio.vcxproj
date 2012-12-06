@@ -10,6 +10,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SoundWrapper.h" />
+    <ClInclude Include="XAudio2Exception.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SoundWrapper.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BE2A0661-776F-4B5B-B09C-F7304F5C6424}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -44,11 +51,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
