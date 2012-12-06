@@ -44,6 +44,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgileUtility", "Projects\Ag
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "Projects\Util\Src\Util.vcxproj", "{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestAssetsManagement", "Projects\TestAssetsManagement\Src\TestAssetsManagement.vcxproj", "{3ED0ACD9-AF21-4904-A04A-EC0AF972711D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15020C27-0C35-4D82-9517-59D175B1DF49} = {15020C27-0C35-4D82-9517-59D175B1DF49}
+		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -102,6 +108,10 @@ Global
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}.Debug|Win32.Build.0 = Debug|Win32
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}.Release|Win32.ActiveCfg = Release|Win32
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}.Release|Win32.Build.0 = Release|Win32
+		{3ED0ACD9-AF21-4904-A04A-EC0AF972711D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3ED0ACD9-AF21-4904-A04A-EC0AF972711D}.Debug|Win32.Build.0 = Debug|Win32
+		{3ED0ACD9-AF21-4904-A04A-EC0AF972711D}.Release|Win32.ActiveCfg = Release|Win32
+		{3ED0ACD9-AF21-4904-A04A-EC0AF972711D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

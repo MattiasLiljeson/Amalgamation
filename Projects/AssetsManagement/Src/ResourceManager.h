@@ -122,6 +122,8 @@ private:
 	/// A list of all the resources for O(1) access.
 	///
 	UniqueIndexList<ResourceDataContainer*> m_resourceList;
+
+	static const string s_invalidName;
 };
 
 
@@ -140,21 +142,29 @@ void ResourceManager<T>::clear()
 template <class T>
 T* ResourceManager<T>::getResource(const string& p_uniqueName)
 {
-	T* resourceObj = getResourceContainerFromName(p_uniqueName)->data;
+	ResourceDataContainer* res = getResourceContainerFromName(p_uniqueName);
+	T* resource = NULL;
+	if (res!=NULL)
+		resource = res->data;
 
-	return resourceObj;
+	return resource;
 };
 
 template <class T>
 T* ResourceManager<T>::getResource(unsigned int p_uniqueId)
 {
-	return m_resourceList[p_uniqueId]->data;
+	ResourceDataContainer* res = m_resourceList[p_uniqueId];
+	T* resource = NULL;
+	if (res!=NULL)
+		resource = res->data;
+
+	return resource;
 };
 
 template <class T>
 T* ResourceManager<T>::operator[](unsigned int p_uniqueId)
 {
-	return m_resourceList[p_uniqueId]->data;
+	return getResource(p_uniqueId);
 };
 
 template <class T>
@@ -170,7 +180,10 @@ int ResourceManager<T>::getResourceId(const string& p_uniqueName)
 template <class T>
 const string& ResourceManager<T>::getResourceName(unsigned int p_uniqueId)
 {
-	return m_resourceList[p_uniqueId]->uniqueName;
+	if (m_resourceList[p_uniqueId]!=NULL)
+		return m_resourceList[p_uniqueId]->uniqueName;
+	else
+		return s_invalidName;
 };
 
 template <class T>
@@ -208,13 +221,29 @@ unsigned int ResourceManager<T>::addResource(const string& p_uniqueName, T* p_re
 template <class T>
 bool ResourceManager<T>::removeResource(const string& p_uniqueName)
 {
-	m_resourceMap.erase(p_uniqueName)==1?return true:return false;
+	unsigned int id = getResourceId(p_uniqueName);
+	int result = m_resourceMap.erase(p_uniqueName);
+	if (result==1)
+	{
+		m_resourceList.removeAt(id);
+		return true;
+	}
+	else
+		return false;
 }
 
 template <class T>
 bool ResourceManager<T>::removeResource(unsigned int p_uniqueId)
 {
-	return m_resourceList.removeAt(p_uniqueId);
+	string name = getResourceName(p_uniqueId);
+	int result = m_resourceMap.erase(p_uniqueName);
+	if (result==1)
+	{
+		m_resourceList.removeAt(p_uniqueId);
+		return true;
+	}
+	else
+		return false;
 }
 
 template <class T>
