@@ -17,6 +17,7 @@
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PrintPositionsSystem.h" />
     <ClInclude Include="QueueList.h" />
+    <ClInclude Include="RenderPrepSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -24,6 +25,7 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="PrintPositionsSystem.cpp" />
+    <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -60,15 +62,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Input/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Input/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)/Projects/AgileUtility/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Input/Src;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Projects/AgileUtility/Lib;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/Input/Lib;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);$(SolutionDir)External/Visual Leak Detector/lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Input/Src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Input/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)/Projects/AgileUtility/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Input/Src;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/Projects/AgileUtility/Lib;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/Input/Lib;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);$(SolutionDir)External/Visual Leak Detector/lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

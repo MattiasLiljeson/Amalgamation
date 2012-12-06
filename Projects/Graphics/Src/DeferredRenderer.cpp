@@ -9,7 +9,7 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 	m_width		= p_width;
 	m_height	= p_height;
 
-	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
+	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, m_device->GetFeatureLevel());
 
 	m_fullscreenQuad = NULL;
 

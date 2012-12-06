@@ -1,10 +1,30 @@
 #include "ShaderFactory.h"
 
-ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
+ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+							 D3D_FEATURE_LEVEL p_featureLevel)
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
+
+	switch( p_featureLevel )
+	{
+	case D3D_FEATURE_LEVEL_10_0:
+		m_shaderModelVersion = "4_0";
+		break;
+
+	case D3D_FEATURE_LEVEL_10_1:
+		m_shaderModelVersion = "4_0";
+		break;
+
+	case D3D_FEATURE_LEVEL_11_0:
+		m_shaderModelVersion = "5_0";
+		break;
+
+	case D3D_FEATURE_LEVEL_11_1:
+		m_shaderModelVersion = "5_0";
+		break;
+	}
 }
 
 
@@ -22,8 +42,9 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS","vs_5_0");
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS","ps_5_0");
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS","vs_4_0");
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS","ps_4_0");
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
@@ -47,8 +68,8 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", "vs_5_0");
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", "ps_5_0");
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", "vs_4_0");
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", "ps_4_0");
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
