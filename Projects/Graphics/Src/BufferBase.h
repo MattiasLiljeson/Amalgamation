@@ -19,7 +19,7 @@ class BufferBase
 {
 public:
 	BufferBase(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-			   BufferConfig* p_config);
+			   BufferConfig::BUFFER_INIT_DESC& p_configDesc);
 	virtual ~BufferBase();
 	///-----------------------------------------------------------------------------------
 	/// Apply changes made to buffer.

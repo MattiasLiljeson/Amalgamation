@@ -14,7 +14,6 @@ BufferFactory::~BufferFactory()
 Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 {
 	Buffer<SimpleCBuffer>* cBuffer;
-	BufferConfig* initConfig  = NULL;
 	/// initialization data
 	SimpleCBuffer data={
 		{0.0f,1.0f,0.0f,  1.0f},
@@ -33,10 +32,8 @@ Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 	bufferDesc.NumElements = sizeof(data)/elemSz;
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS_PS;
 
-	initConfig = new BufferConfig(bufferDesc);
-
 	// create and return the buffer
-	cBuffer = new Buffer<SimpleCBuffer>(m_device,m_deviceContext,&data,initConfig);
+	cBuffer = new Buffer<SimpleCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
 	return cBuffer;
 }
 
@@ -60,11 +57,8 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	bufferDesc.NumElements = 6;
 	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
 
-	// Store description in config object
-	BufferConfig* initConfig = new BufferConfig(bufferDesc);
-
 	// Create buffer from config and data
-	quadBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],initConfig);
+	quadBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],bufferDesc);
 
 	return quadBuffer;
 }
@@ -140,13 +134,10 @@ Mesh* BufferFactory::createBoxMesh()
 	indexBufferDesc.NumElements = sizeof(indices)/indexBufferDesc.ElementSize;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
 
-	BufferConfig* vertexConfig = new BufferConfig(vertexBufferDesc);
-	BufferConfig* indexConfig = new BufferConfig(indexBufferDesc);
-
 	Buffer<PTNVertex>* vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
-		&mesh[0],vertexConfig);
+		&mesh[0],vertexBufferDesc);
 	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, &indices[0],
-		indexConfig);
+		indexBufferDesc);
 	
 	Mesh* newBox = new Mesh(vertexBuffer,indexBuffer);
 
