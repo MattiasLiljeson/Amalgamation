@@ -1,15 +1,3 @@
-// =======================================================================================
-//                                      InputControlFactory
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief Factory for creating Controls mapped to different inputs.
-///        
-/// # InputControlFactory
-/// Detailed description.....
-/// Created on: 4-12-2012 
-///\author Mattias Liljeson
-///---------------------------------------------------------------------------------------
 #pragma once
 
 #include "AnalogueControl.h"
@@ -25,6 +13,19 @@ class DigitalControl;
 class Control;
 class DigitalControl;
 class KeyControl;
+
+// =======================================================================================
+//                                      InputControlFactory
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Factory for creating Controls mapped to different inputs.
+///        
+/// This factory is quite bare bones and should be fleshed out when needed.
+///
+/// Created on: 4-12-2012 
+///\author Mattias Liljeson
+///---------------------------------------------------------------------------------------
 
 class InputControlFactory
 {
@@ -50,11 +51,11 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
-	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOGS p_axis,
+	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis,
 		InputHelper::SUB_AXIS p_subAxis );
-	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITALS p_btn );
-	Control* createKeyboardKey( InputHelper::KEYBOARD_KEYS p_key );
-	Control* createMouseButton( InputHelper::MOUSE_BTNS p_btn );
+	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
+	Control* createKeyboardKey( InputHelper::KEYBOARD_KEY p_key );
+	Control* createMouseButton( InputHelper::MOUSE_BTN p_btn );
 	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
 
 };

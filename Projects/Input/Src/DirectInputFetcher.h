@@ -1,16 +1,3 @@
-// =======================================================================================
-//                                      DirectInputFetcher
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief InputHelper fetcher for mouse and keyboard using Direct InputHelper. Not used at the
-/// moment.
-///        
-/// # DirectInputFetcher
-/// Detailed description.....
-/// Created on: 4-12-2012 
-///\author Mattias Liljeson
-///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <dinput.h>
@@ -18,6 +5,19 @@
 
 #pragma comment (lib, "dinput8.lib")
 #pragma comment (lib, "dxguid.lib")
+
+// =======================================================================================
+//                                      DirectInputFetcher
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief InputHelper fetcher for mouse and keyboard using Direct InputHelper. Not used 
+/// at the moment.
+///        
+/// Detailed description.....
+/// Created on: 4-12-2012 
+///\author Mattias Liljeson
+///---------------------------------------------------------------------------------------
 
 class DirectInputFetcher
 {
@@ -29,8 +29,8 @@ public:
 	void detectInput();    // gets the current input state
 	void update();
 	//bool getKey( int key );
-	virtual int getKeyState( int p_key );
-	int getMouseKeyState( int p_key );
+	virtual InputHelper::KEY_STATE getKeyState( int p_key );
+	InputHelper::KEY_STATE getMouseKeyState( int p_key );
 	int getMousePos( int axis );
 	int getMouseTravel( int p_axis );
 
@@ -45,7 +45,7 @@ private:
 
 	int m_mousePos[InputHelper::NUM_MOUSE_AXIS];
 	int m_mouseTravel[InputHelper::NUM_MOUSE_AXIS];
-	int m_mouseBtns[InputHelper::NUM_MOUSE_BTNS];
-	int m_kbKeys[InputHelper::NUM_KEYBOARD_KEYS];
+	InputHelper::KEY_STATE m_mouseBtns[InputHelper::NUM_MOUSE_BTNS];
+	InputHelper::KEY_STATE m_kbKeys[InputHelper::NUM_KEYBOARD_KEYS];
 	int m_dikFromKeyMap[InputHelper::NUM_KEYBOARD_KEYS];
 };

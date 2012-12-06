@@ -10,14 +10,14 @@ MessageLoopFetcher::MessageLoopFetcher()
 		m_mouseMoveDelta[i] = 0;
 	}
 
-	for( int i=0; i<InputHelper::MOUSE_BTNS::NUM_MOUSE_BTNS; i++ )
+	for( int i=0; i<InputHelper::MOUSE_BTN::NUM_MOUSE_BTNS; i++ )
 	{
 		m_mouseBtnStates[i] = InputHelper::KEY_STATE::KEY_UP;
 		m_mouseBtnsPressed[i] = false;
 		m_mouseBtnsReleased[i] = false;
 	}
 
-	for( int i=0; i<InputHelper::KEYBOARD_KEYS::NUM_KEYBOARD_KEYS; i++ )
+	for( int i=0; i<InputHelper::KEYBOARD_KEY::NUM_KEYBOARD_KEYS; i++ )
 	{
 		m_keyStates[i] = InputHelper::KEY_STATE::KEY_UP;
 		m_keysPressed[i] = false;
@@ -146,8 +146,10 @@ void MessageLoopFetcher::update()
 
 	// Update key states based on buffer states
 	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
+	{
 		m_mouseBtnStates[i] = InputHelper::calcStateFromEvents( m_mouseBtnStates[i],
 		m_mouseBtnsPressed[i], m_mouseBtnsReleased[i] );
+	}
 
 	for( int i=0; i<InputHelper::NUM_KEYBOARD_KEYS; i++)
 		m_keyStates[i] = InputHelper::calcStateFromEvents( m_keyStates[i], m_keysPressed[i],
@@ -159,12 +161,12 @@ void MessageLoopFetcher::update()
 	}
 }
 
-int MessageLoopFetcher::getKeyState( int p_key )
+InputHelper::KEY_STATE MessageLoopFetcher::getKeyState( int p_key )
 {
 	return m_keyStates[p_key];
 }
 
-int MessageLoopFetcher::getMouseBtnState( int p_key )
+InputHelper::KEY_STATE MessageLoopFetcher::getMouseBtnState( int p_key )
 {
 	return m_mouseBtnStates[p_key];
 }

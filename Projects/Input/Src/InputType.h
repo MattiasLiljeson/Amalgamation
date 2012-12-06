@@ -1,6 +1,6 @@
 #pragma once
 
-/// Not used. This enum is in InputControlFactory now instead
+/// Not used. Struct defining different types of input.
 
 //struct InputType
 //{

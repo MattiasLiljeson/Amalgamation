@@ -99,7 +99,7 @@ void DirectInputFetcher::update()
 		m_kbKeys[i] = InputHelper::calcState( m_kbKeys[i], (keystate[m_dikFromKeyMap[i]] & 0x80) );
 }
 
-int DirectInputFetcher::getKeyState( int p_key )
+InputHelper::KEY_STATE DirectInputFetcher::getKeyState( int p_key )
 {
 	if( 0 <= p_key && p_key < InputHelper::NUM_KEYBOARD_KEYS )
 		return m_kbKeys[p_key];
@@ -107,7 +107,7 @@ int DirectInputFetcher::getKeyState( int p_key )
 		return InputHelper::KEY_UP;
 }
 
-int DirectInputFetcher::getMouseKeyState( int p_key )
+InputHelper::KEY_STATE DirectInputFetcher::getMouseKeyState( int p_key )
 {
 	if( 0 <= p_key && p_key < InputHelper::NUM_MOUSE_BTNS )
 		return m_mouseBtns[p_key];

@@ -1,7 +1,7 @@
 #include "KeyControl.h"
 
 
-KeyControl::KeyControl( InputHelper::KEYBOARD_KEYS p_key )
+KeyControl::KeyControl( InputHelper::KEYBOARD_KEY p_key )
 {
 	m_key = p_key;
 }
@@ -13,7 +13,7 @@ KeyControl::~KeyControl(void)
 void KeyControl::update( InputManager* p_manager )
 {
 	MessageLoopFetcher* fetcher = p_manager->getMessageLoopFetcher();
-	int state = fetcher->getKeyState( m_key );
+	InputHelper::KEY_STATE state = fetcher->getKeyState( m_key );
 
 	m_status = InputHelper::statusFromState( state );
 	m_statusDelta = InputHelper::statusDeltaFromState( state );

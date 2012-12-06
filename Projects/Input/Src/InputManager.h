@@ -1,24 +1,37 @@
 #pragma once
 
-//#include "AnalogueControl.h"
 #include "Control.h"
-//#include "DigitalControl.h"
 #include "DirectInputFetcher.h"
-//#include "InputType.h"
 #include "MessageLoopFetcher.h"
 #include "XInputFetcher.h"
 
 #include <vector>
 
-//class AnalogueControl;
 class Control;
-//class DigitalControl;
 class DirectInputFetcher;
-//class InputType;
 class MessageLoopFetcher;
 class XInputFetcher;
 
 using namespace std;
+
+// =======================================================================================
+//                                      InputManager
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Manager class that manages all Controls that are added to it.
+///        
+/// All Controls added to the manager are deleted by the manager. I.e. the manager takes
+/// ownership of the controls.
+///
+/// Use the Input Control Factory to create Controls and add them to the manager so that
+/// they get updated. Then use the index given by the addControl() function to fetch the 
+/// Control and its latest status. You can, if you wish keep the pointer to the Control 
+/// that you use when adding the Control and use that to fetch status from the Control. 
+///
+/// Created on: 6-12-2012 
+///\author Mattias Liljeson
+///---------------------------------------------------------------------------------------
 
 class InputManager
 {

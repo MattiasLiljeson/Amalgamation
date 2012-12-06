@@ -1,7 +1,7 @@
 #include "AnalogueControl.h"
 
 
-AnalogueControl::AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOGS p_axis, InputHelper::SUB_AXIS p_subAxis )
+AnalogueControl::AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis, InputHelper::SUB_AXIS p_subAxis )
 {
 	m_axis = p_axis;
 	m_subAxis = p_subAxis;

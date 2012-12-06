@@ -11,13 +11,15 @@
 	//libRocketFromKeysMap[F3]	= Rocket::Core::Input::KI_F3;
 	//libRocketFromKeysMap[F4]	= Rocket::Core::Input::KI_F4;
 
-int InputHelper::calcState( const int p_oldState, const int p_down )
+InputHelper::KEY_STATE InputHelper::calcState( const InputHelper::KEY_STATE p_oldState,
+											  const int p_down )
 {
 	return calcState(p_oldState, (bool)p_down);
 }
-int InputHelper::calcState( const int p_oldState, const bool p_down )
+InputHelper::KEY_STATE InputHelper::calcState( const InputHelper::KEY_STATE p_oldState,
+											  const bool p_down )
 {
-	int state = KEY_UP;
+	InputHelper::KEY_STATE state = KEY_UP;
 	if( p_oldState == KEY_UP )
 	{
 		if( p_down )
@@ -55,9 +57,10 @@ int InputHelper::calcState( const int p_oldState, const bool p_down )
 	return state;
 }
 
-int InputHelper::calcStateFromEvents( const int p_oldState, const bool p_pressed, const bool p_released )
+InputHelper::KEY_STATE InputHelper::calcStateFromEvents( 
+	const InputHelper::KEY_STATE p_oldState, const bool p_pressed, const bool p_released )
 {
-	int state = KEY_UP;
+	InputHelper::KEY_STATE state = KEY_UP;
 	if( p_pressed )
 	{
 		state = KEY_PRESSED;
@@ -78,7 +81,7 @@ int InputHelper::calcStateFromEvents( const int p_oldState, const bool p_pressed
 	return state;
 }
 
-double InputHelper::statusDeltaFromState( const int p_state )
+double InputHelper::statusDeltaFromState( const InputHelper::KEY_STATE p_state )
 {
 	double delta = 0.0;
 	switch( p_state )
@@ -103,7 +106,7 @@ double InputHelper::statusDeltaFromState( const int p_state )
 	return delta;
 }
 
-double InputHelper::statusFromState( const int p_state )
+double InputHelper::statusFromState( const InputHelper::KEY_STATE p_state )
 {
 	double status = 0.0;
 	switch( p_state )

@@ -59,12 +59,12 @@ void XInputFetcher::update()
 	m_currentState = newState;
 }
 
-int XInputFetcher::getBtnState( int p_btn )
+InputHelper::KEY_STATE XInputFetcher::getBtnState( int p_btn )
 {
 	if( 0 <= p_btn && p_btn < InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS )
 		return m_btns[p_btn];
 	else
-		return -1;
+		return InputHelper::KEY_STATE::NON_EXISTING_STATE;
 }
 
 short XInputFetcher::getAnalog( int p_analog )
