@@ -116,3 +116,5 @@ Visual Leak Detector
 Ant
 Assets
 External
+igloo
+/Build/*.lastcodeanalysissucceeded
