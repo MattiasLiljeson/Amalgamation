@@ -186,9 +186,8 @@ unsigned int ResourceManager<T>::addResource(const string& p_uniqueName, T* p_re
 		// if it already exists we get a pointer to the existing data
 		MapType::iterator mapIter;
 		MapType::iterator mapIterBegin = m_resourceMap.begin();
-		string test="1";
 		mapIter = m_resourceMap.insert(mapIterBegin, 
-									   MapType::value_type(test,container));
+									   MapType::value_type(p_uniqueName,container));
 
 		// if new insertion was made,
 		// add data and keys to the container
