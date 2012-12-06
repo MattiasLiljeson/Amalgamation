@@ -104,6 +104,8 @@ Desktop.ini
 docs
 assets/*
 External/DirectX/
+External/LibRocket/
+External/GTest/
 
 # Files
 *.exe
