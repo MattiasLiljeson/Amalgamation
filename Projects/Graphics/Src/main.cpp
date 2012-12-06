@@ -1,23 +1,34 @@
 #include <Windows.h>
 #include <iostream>
 #include <vld.h>
+#include "TextureParser.h"
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
-#include "D3DRender.h"
-#include "DebugUtil.h"
+#include "GraphicsWrapper.h"
+#include "CamMatrixerUtil.h"
+#include <DebugUtil.h>
+
+// temporary usage of these in main for mesh creation
+#include "Mesh.h"
+
+// math tmp
+#include <AglMatrix.h>
+#include <AglVector3.h>
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, 
 	int nCmdShow )
 {
 	Window* window;
-	D3DRender* renderer;
+	GraphicsWrapper* graphicsWrapper;
 
+	TextureParser::init();
+	
 	try
 	{
 		window = new Window(hInstance,800,600,1);
-		renderer = new D3DRender(window->getWindowRef(),800,600,true);
-		AntTweakBarWrapper::getInstance(renderer->getDevice(),"Drunken Bar");
-		renderer->hookUpAntTweakBar();
+		graphicsWrapper = new GraphicsWrapper(window->getWindowRef(),800,600,true);
+		AntTweakBarWrapper::getInstance(graphicsWrapper->getDevice(),"Drunken Bar");
+		graphicsWrapper->hookUpAntTweakBar();
 	}
 	catch (exception &e)
 	{
@@ -32,20 +43,29 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	__int64 prevTimeStamp = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
-	RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f}};
+	// Create a cube
+	unsigned int cubeId = graphicsWrapper->createMesh("P_cube", 0);
+	// RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f},cubeId};
 
-	// Temporary static view projection matrix
-	// column major. 
-	// R=row, col=column, r=rotation, s=scale, t=translation
-	RendererSceneInfo tempSceneInfo = 
-	{
-	  // R0rs    R1rs   R2rs     R3t
-		{1.0f,   0.0f,  0.0f,    0.0f,  // col 0  x
-		 0.0f,   1.0f,  0.0f,    0.0f,  // col 1  y
-		 0.0f,   0.0f,  1.0f,    0.0f,  // col 2  z
-		 0.0f,   0.0f,  0.0f,    1.0f}  // col 3  w
-	};
 
+
+	AglMatrix viewMatrix = AglMatrix::identityMatrix();
+	AglMatrix projMatrix = AglMatrix::identityMatrix();
+	AglMatrix camMatrix = AglMatrix::identityMatrix();
+	float ticker = 0.0f;
+
+	AglVector3 pos(0.0f,0.0f,-3.0f);
+	AglVector3 lookAt(0.0f,0.0f,0.0f);
+	AglVector3 up(0.0f,1.0f,0.0f);
+
+	SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+	SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
+
+	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
+
+	RendererSceneInfo tempSceneInfo;
+	for (int n=0;n<16;n++)
+		tempSceneInfo.viewProjectionMatrix[n] = camMatrix[n];
 
 	// Main message loop
 	MSG msg = {0};
@@ -64,26 +84,41 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			prevTimeStamp = currTimeStamp;
 
+			// temp camera test
+			{
+				ticker += dt;
+				pos.z = -1.0f-sin(ticker);
+				pos.x = -1.0f-sin(ticker);
+				pos.y = -1.0f-cos(ticker);
+
+				SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+
+				camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
+
+				for (int n=0;n<16;n++)
+					tempSceneInfo.viewProjectionMatrix[n] = camMatrix[n];
+			}
+
 			// * Scene render preparation system * 1
-			renderer->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
+			graphicsWrapper->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
 					
 			// * Deferred base system *            1
-			renderer->clearRenderTargets();	      // clear render targets used           
-			renderer->beginFrame();				  // prepare frame, set drawing to MRT   
+			graphicsWrapper->clearRenderTargets();	      // clear render targets used           
+			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
-			renderer->renderMesh(testMeshInfo);	  // process a mesh						 
+			graphicsWrapper->renderMesh(cubeId);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
-			renderer->finalizeFrame();			  // finalize, draw to backbuffer        
+			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
-			renderer->flipBackBuffer();           // flip buffers						 
+			graphicsWrapper->flipBackBuffer();           // flip buffers						 
 		}
 	}
 
 	AntTweakBarWrapper::destroy();
 	delete window;
-	delete renderer;
+	delete graphicsWrapper;
 
 	return 0;
 }

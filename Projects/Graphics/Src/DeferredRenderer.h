@@ -1,11 +1,11 @@
 // =======================================================================================
-//                                      Deferred
+//                                      DeferredRenderer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Deferred Pipeline
 ///        
-/// # Deferred
+/// # DeferredRenderer
 /// The Geometry buffers (gBuffers) order is, depth, diffuse, normal.
 /// Created on: 29-11-2012 
 ///---------------------------------------------------------------------------------------
@@ -18,20 +18,21 @@
 #include "ShaderFactory.h"
 #include "BufferFactory.h"
 #include "PTVertex.h"
-#include "RendererMeshInfo.h"
 #include "RendererSceneInfo.h"
+#include "ResourceManager.h"
+#include "Texture.h"
 
 const static int NUMBUFFERS = 3;
 const static int DEPTH = 2;
 const static int NORMAL = 1;
 const static int DIFFUSE = 0;
 
-class Deferred
+class DeferredRenderer
 {
 public:
-	Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		int p_width, int p_height);
-	virtual ~Deferred();
+	virtual ~DeferredRenderer();
 
 	///-----------------------------------------------------------------------------------
 	/// Clear the buffers used by the deferred renderer.
@@ -58,7 +59,8 @@ public:
 	/// \param p_meshInfo
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(const RendererMeshInfo& p_meshInfo);
+	void renderMesh(Mesh* p_mesh,
+					Texture* p_texture );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a fullscreen quad textured with the gbuffer.

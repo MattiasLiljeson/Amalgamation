@@ -12,12 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
-    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
     <ClCompile Include="BufferFactory.cpp" />
-    <ClCompile Include="D3DRender.cpp" />
-    <ClCompile Include="Deferred.cpp" />
+    <ClCompile Include="GraphicsWrapper.cpp" />
+    <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
@@ -27,28 +27,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
-    <ClInclude Include="Box.h" />
+    <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
     <ClInclude Include="BufferFactory.h" />
+    <ClInclude Include="CamMatrixerUtil.h" />
     <ClInclude Include="CBuffers.h" />
     <ClInclude Include="D3DException.h" />
-    <ClInclude Include="D3DRender.h" />
+    <ClInclude Include="GraphicsWrapper.h" />
     <ClInclude Include="D3DUtil.h" />
-    <ClInclude Include="Deferred.h" />
+    <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="PTNVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
-    <ClInclude Include="RendererMeshInfo.h" />
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInitStruct.h" />
     <ClInclude Include="ShaderStageData.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureParser.h" />
     <ClInclude Include="WindowException.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -84,18 +87,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)External\Visual Leak Detector\include;$(SolutionDir)External\Ant\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)External\Visual Leak Detector\include;$(SolutionDir)External\Ant\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
@@ -114,7 +117,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Util_x86_Debug.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Debug.lib;Util_x86_Debug.lib;AssetsManagement_x86_Debug.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Util_x86_Release.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Release.lib;Util_x86_Release.lib;AssetsManagement_x86_Release.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

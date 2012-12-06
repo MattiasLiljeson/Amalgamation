@@ -16,7 +16,7 @@
 #include "PTVertex.h"
 #include "PTNVertex.h"
 #include "DIndex.h"
-#include "Box.h"
+#include "Mesh.h"
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
 // etc?
@@ -40,7 +40,7 @@ public:
 	/// This function should create a box mesh only.
 	/// \returns Box*
 	///-----------------------------------------------------------------------------------
-	Box* createBoxMesh();
+	Mesh* createBoxMesh();
 protected:
 private:
 	ID3D11Device* m_device;

@@ -1,6 +1,6 @@
-#include "Deferred.h"
+#include "DeferredRenderer.h"
 
-Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 				   int p_width, int p_height)
 {
 	m_device		= p_device;
@@ -11,7 +11,7 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
 
-	m_fullscreenQuad	= NULL;
+	m_fullscreenQuad = NULL;
 
 	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
 	m_fullscreenQuad = bufferFactory->createFullScreenQuadBuffer();
@@ -22,7 +22,7 @@ Deferred::Deferred(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 	initTestShaders();
 }
 
-Deferred::~Deferred()
+DeferredRenderer::~DeferredRenderer()
 {
 	SAFE_RELEASE(m_depthStencilView);
 
@@ -38,7 +38,7 @@ Deferred::~Deferred()
 	delete m_fullscreenQuad;
 }
 
-void Deferred::clearBuffers()
+void DeferredRenderer::clearBuffers()
 {
 	unMapGBuffers();
 	float clearColor[] = {
@@ -52,53 +52,43 @@ void Deferred::clearBuffers()
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Deferred::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 {
 	m_sceneInfo = p_sceneInfo;
 }
 
-void Deferred::beginDeferredBasePass()
+void DeferredRenderer::beginDeferredBasePass()
 {
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
 }
 
 
-void Deferred::renderMesh(const RendererMeshInfo& p_meshInfo)
+void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture )
 {
-	// temp, create a quad
-	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	Buffer<PTVertex>* lilQuad = bufferFactory->createFullScreenQuadBuffer();
-	delete bufferFactory;
-	// temp
-	// a lil scaling
-	/*r (int i=0;i<lilQuad->getElementCount();i++)
-	{
-		lilQuad->accessBuffer[i].
-	}*/
-
-
-	lilQuad->apply();
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
 
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-//	cb->accessBuffer.color[0] = 0.5f;
-//	cb->accessBuffer.color[1] = 0.5f;
+	//	cb->accessBuffer.color[0] = 0.5f;
+	//	cb->accessBuffer.color[1] = 0.5f;
 
 	for (int i=0;i<16;i++)
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
 
 	cb->update();
 
+	// set texture
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data)); // move this to shader?
+
 	m_baseShader->apply();
 
-	m_deviceContext->Draw(6,0);
-
-	delete lilQuad;
+	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-void Deferred::renderComposedImage()
+void DeferredRenderer::renderComposedImage()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
@@ -114,7 +104,7 @@ void Deferred::renderComposedImage()
 
 
 
-void Deferred::unMapGBuffers()
+void DeferredRenderer::unMapGBuffers()
 {
 	ID3D11ShaderResourceView * nulz[NUMBUFFERS];
 	for (int i=0; i<NUMBUFFERS; i++)
@@ -123,7 +113,7 @@ void Deferred::unMapGBuffers()
 	m_composeShader->apply();
 }
 
-void Deferred::initDepthStencil()
+void DeferredRenderer::initDepthStencil()
 {
 	HRESULT hr = S_OK;
 
@@ -168,7 +158,7 @@ void Deferred::initDepthStencil()
 	depthStencilTexture->Release();
 }
 
-void Deferred::initGeometryBuffers()
+void DeferredRenderer::initGeometryBuffers()
 {
 	HRESULT hr = S_OK;
 
@@ -225,7 +215,7 @@ void Deferred::initGeometryBuffers()
 	}
 }
 
-void Deferred::initTestShaders()
+void DeferredRenderer::initTestShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Assets/Shaders/deferredBase.hlsl");
@@ -234,7 +224,7 @@ void Deferred::initTestShaders()
 		L"Assets/Shaders/deferredCompose.hlsl");
 }
 
-void Deferred::hookUpAntTweakBar()
+void DeferredRenderer::hookUpAntTweakBar()
 {
 	AntTweakBarWrapper::getInstance()->addWriteVariable("Color",TW_TYPE_COLOR4F,
 		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");

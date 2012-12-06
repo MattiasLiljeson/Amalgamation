@@ -1,21 +1,28 @@
 // =======================================================================================
-//                                      RendererMeshInfo
+//                                      Texture
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Information struct to be filled out by a render system for a mesh to be
-/// rendered. This struct is then passed to the renderer itself.
+/// \brief	Wrapper for shader resource view. Wraps release on destroy, etc.
 ///        
-/// # RendererMeshInfo
+/// # Texture
 /// Detailed description.....
-/// Created on: 4-12-2012 
+/// Created on: 6-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-struct RendererMeshInfo
+#include <d3d11.h>
+#include "D3DUtil.h"
+
+struct Texture
 {
-public: // all data/formats are temporary, change when necessary
-	float position[4];
-	float rotation[4];
-	int meshId;
+	Texture(ID3D11ShaderResourceView* p_data)
+	{
+		data=p_data;
+	}
+	~Texture()
+	{
+		SAFE_RELEASE(data);
+	}
+	ID3D11ShaderResourceView* data;
 };

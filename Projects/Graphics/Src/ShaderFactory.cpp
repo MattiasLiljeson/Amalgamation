@@ -17,6 +17,7 @@ ShaderFactory::~ShaderFactory()
 DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_filePath)
 {
 	DeferredBaseShader* newDeferredBaseShader = NULL;
+	ID3D11SamplerState* samplerState = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
 
 	VSData* vertexData = new VSData();
@@ -25,10 +26,11 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS","ps_5_0");
 
 	createAllShaderStages(vertexData,pixelData);
-	createVertexInputLayout(vertexData,&inputLayout);
+	createSamplerState(&samplerState);
+	createPTNVertexInputLayout(vertexData,&inputLayout);
 
 	ShaderInitStruct shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,NULL);
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
 	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
 												m_bufferFactory->createSimpleCBuffer());
@@ -50,7 +52,7 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
-	createVertexInputLayout(vertexData,&inputLayout);
+	createPTVertexInputLayout(vertexData,&inputLayout);
 
 
 	ShaderInitStruct shaderInitData;
@@ -218,21 +220,30 @@ void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 }
 
-void ShaderFactory::createVertexInputLayout( VSData* p_vs, ID3D11InputLayout** p_inputLayout )
+void ShaderFactory::createPTVertexInputLayout(VSData* p_vs, 
+											  ID3D11InputLayout** p_inputLayout )
 {
-	HRESULT hr = S_OK;
-
 	D3D11_INPUT_ELEMENT_DESC input[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	hr = m_device->CreateInputLayout(input,	(sizeof(input)/sizeof(input[0])), 
-		p_vs->compiledData->GetBufferPointer(),
-		p_vs->compiledData->GetBufferSize(), p_inputLayout);
-	if ( FAILED(hr))
-		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
+	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+}
+
+void ShaderFactory::createPTNVertexInputLayout(VSData* p_vs, 
+											   ID3D11InputLayout** p_inputLayout )
+{
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
 
 void ShaderFactory::createShaderInitData(ShaderInitStruct* p_shaderInitData, 
@@ -252,4 +263,16 @@ void ShaderFactory::createShaderInitData(ShaderInitStruct* p_shaderInitData,
 	p_shaderInitData->pixelShader = p_psd;
 	p_shaderInitData->samplerState = p_samplerState;
 	p_shaderInitData->inputLayout = p_inputLayout;
+}
+
+void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc, 
+										 UINT p_numberOfElements,
+										 VSData* p_vs, ID3D11InputLayout** p_inputLayout )
+{
+	HRESULT hr = m_device->CreateInputLayout(p_inputDesc, 
+		p_numberOfElements, 
+		p_vs->compiledData->GetBufferPointer(),
+		p_vs->compiledData->GetBufferSize(), p_inputLayout);
+	if ( FAILED(hr) )
+		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }
