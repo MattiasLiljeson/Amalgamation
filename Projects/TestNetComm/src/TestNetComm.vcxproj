@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Packet_spec.cpp" />
+    <ClCompile Include="StringSplit_spec.cpp" />
     <ClCompile Include="TcpClient_spec.cpp" />
     <ClCompile Include="TcpServer_spec.cpp" />
     <ClCompile Include="TestNetCommRunner.cpp" />

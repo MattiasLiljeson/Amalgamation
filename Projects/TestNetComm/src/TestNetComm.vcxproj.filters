@@ -11,6 +11,9 @@
     <ClCompile Include="Packet_spec.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
+    <ClCompile Include="StringSplit_spec.cpp">
+      <Filter>Utility, StringSplit %28Put in utility project later...%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="TcpServer">
@@ -21,6 +24,9 @@
     </Filter>
     <Filter Include="Packet">
       <UniqueIdentifier>{3087e2dc-b543-41c8-a383-ee95089428ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility, StringSplit %28Put in utility project later...%29">
+      <UniqueIdentifier>{548c5009-ab2f-4a41-93ca-18a9014bfc02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

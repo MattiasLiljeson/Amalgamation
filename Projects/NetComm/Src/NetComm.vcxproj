@@ -20,6 +20,7 @@
     <ClInclude Include="ProcessMessageTerminate.h" />
     <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
+    <ClInclude Include="StringSplit.h" />
     <ClInclude Include="TcpClient.h" />
     <ClInclude Include="TcpCommunicationProcess.h" />
     <ClInclude Include="TcpListenerProcess.h" />
@@ -36,6 +37,7 @@
     <ClCompile Include="ProcessMessageTerminate.cpp" />
     <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
+    <ClCompile Include="StringSplit.cpp" />
     <ClCompile Include="TcpClient.cpp" />
     <ClCompile Include="TcpCommunicationProcess.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />

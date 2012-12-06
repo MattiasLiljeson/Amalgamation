@@ -13,6 +13,7 @@
 
 #include <queue>
 #include <vector>
+#include <iostream>
 
 #include <boost/asio.hpp>
 
@@ -21,6 +22,7 @@
 #include "TcpCommunicationProcess.h"
 #include "ProcessMessageClientConnected.h"
 #include "ProcessMessageReceivePacket.h"
+#include "StringSplit.h"
 
 using namespace std;
 using namespace boost::asio::ip;

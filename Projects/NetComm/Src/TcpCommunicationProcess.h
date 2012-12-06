@@ -7,6 +7,7 @@
 #include "ProcessMessageReceivePacket.h"
 #include "ProcessThread.h"
 #include "ThreadSafeMessaging.h"
+#include "StringSplit.h"
 
 using namespace boost::asio::ip;
 

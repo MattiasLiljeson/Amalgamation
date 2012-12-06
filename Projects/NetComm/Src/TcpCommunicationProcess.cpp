@@ -59,7 +59,8 @@ void TcpCommunicationProcess::body()
 					static_cast<ProcessMessageSendPacket*>(message);
 
 				m_activeSocket->send( boost::asio::buffer(
-					sendPacketMessage->packet->getMessage() ) );
+					sendPacketMessage->packet->getMessage().c_str(),
+					sendPacketMessage->packet->getMessage().size() + 1 ) );
 			}
 
 			delete message;
@@ -107,9 +108,17 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 	{
 		if( p_bytesTransferred > 0 )
 		{
-			m_parent->putMessage( new ProcessMessageReceivePacket(
-				this,
-				new Packet(m_asyncData) ) );
+			queue< string > messages;
+			stringSplitNullTerminated( m_asyncData, p_bytesTransferred, messages );
+
+			while( !messages.empty() )
+			{
+				m_parent->putMessage( new ProcessMessageReceivePacket(
+					this,
+					new Packet(messages.front()) ) );
+				cout << "Packet recv: " << messages.front() << endl;
+				messages.pop();
+			}
 
 			startPacketReceiveCallback();
 		}
