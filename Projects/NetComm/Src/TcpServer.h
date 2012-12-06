@@ -41,6 +41,8 @@ public:
 
 	bool hasNewPackets();
 
+	unsigned int newPacketsCount();
+
 	void processMessages();
 
 private:

@@ -65,6 +65,11 @@ bool TcpServer::hasNewPackets()
 	return newPacket;
 }
 
+unsigned int TcpServer::newPacketsCount()
+{
+	return m_newPackets.size();
+}
+
 void TcpServer::processMessages()
 {
 	while( getMessageCount() > 0 )

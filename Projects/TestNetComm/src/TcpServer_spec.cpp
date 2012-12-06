@@ -40,7 +40,7 @@ Describe(a_tcp_server)
 		TcpClient client;
 		client.connectToServer( "127.0.0.1", "1337" );
 		
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
@@ -54,7 +54,7 @@ Describe(a_tcp_server)
 		for(int i=0; i<5; i++)
 			client[i].connectToServer( "127.0.0.1", "1337" );
 		
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		Assert::That(server.hasNewConnections(), IsTrue());
 	}
@@ -67,7 +67,7 @@ Describe(a_tcp_server)
 		Assert::That(server.hasNewPackets(), IsFalse());
 	}
 
-	It(can_receive_packets_from_a_connected_client)
+	It(can_receive_a_packet_from_a_connected_client)
 	{
 		TcpServer server;
 		server.startListening( 1337 );
@@ -75,14 +75,33 @@ Describe(a_tcp_server)
 		TcpClient client;
 		client.connectToServer( "127.0.0.1", "1337" );
 		
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
 		client.sendPacket( new Packet( "Hello mr. Server!" ) );
 
-		boost::this_thread::sleep(boost::posix_time::millisec(5));
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		Assert::That(server.hasNewPackets(), IsTrue());
 	}
 
+	It(can_receive_several_packets_from_a_connected_client)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+	
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		client.sendPacket( new Packet( "Hello mr. Server!" ) );
+		client.sendPacket( new Packet( "Hello again." ) );
+		client.sendPacket( new Packet( "Blah, blah..." ) );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+
+		server.processMessages();
+		Assert::That(server.newPacketsCount(), Equals(3));
+	}
 
 
 

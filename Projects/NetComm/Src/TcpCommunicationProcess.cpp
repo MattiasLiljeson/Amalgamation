@@ -70,8 +70,7 @@ void TcpCommunicationProcess::body()
 
 void TcpCommunicationProcess::startPacketReceiveCallback()
 {
-	//m_ioService->reset();
-
+	m_ioService->reset();
 	m_activeSocket->async_receive(
 		boost::asio::buffer( m_asyncData, m_asyncDataCapacity ),
 		boost::bind( &TcpCommunicationProcess::onReceivePacket, this,
@@ -112,7 +111,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				this,
 				new Packet(m_asyncData) ) );
 
-			//startPacketReceiveCallback();
+			startPacketReceiveCallback();
 		}
 	}
 }
