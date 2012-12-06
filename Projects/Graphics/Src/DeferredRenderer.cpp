@@ -59,30 +59,33 @@ void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 
 void DeferredRenderer::beginDeferredBasePass()
 {
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
 }
 
 
-void DeferredRenderer::renderMesh(Mesh* p_mesh)
+void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture )
 {
-	p_mesh->getMesh()->apply();
-	p_mesh->getIndicies()->apply();
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
 
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-//	cb->accessBuffer.color[0] = 0.5f;
-//	cb->accessBuffer.color[1] = 0.5f;
+	//	cb->accessBuffer.color[0] = 0.5f;
+	//	cb->accessBuffer.color[1] = 0.5f;
 
 	for (int i=0;i<16;i++)
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
 
 	cb->update();
 
+	// set texture
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data)); // move this to shader?
+
 	m_baseShader->apply();
 
-	m_deviceContext->DrawIndexed(p_mesh->getIndicies()->getElementCount(),0,0);
+	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
 void DeferredRenderer::renderComposedImage()

@@ -6,6 +6,8 @@ cbuffer VertexProgramCBuffer
 
 Texture2D diffuseTexture : register(t0);
 
+SamplerState pointSampler : register(s0);
+
 struct VertexIn
 {
 	float3 position : POSITION;

@@ -96,14 +96,26 @@ private:
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 
 	///-----------------------------------------------------------------------------------
-	/// Creates a inputlayout
+	/// Creates a inputlayout for PTVertex
 	/// \param p_vs
 	/// \param p_inputLayout
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void createVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+	void createPTVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+
+	///-----------------------------------------------------------------------------------
+	/// Creates a inputlayout for PTNVertex
+	/// \param p_vs
+	/// \param p_inputLayout
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void createPTNVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
 private:
+	void constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc,
+							  UINT p_numberOfElements,
+							  VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
 

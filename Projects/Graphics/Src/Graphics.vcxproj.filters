@@ -103,6 +103,9 @@
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
     <ClInclude Include="RendererSceneInfo.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

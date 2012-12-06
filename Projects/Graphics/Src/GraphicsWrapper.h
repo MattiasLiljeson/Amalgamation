@@ -21,6 +21,8 @@
 #include "Buffer.h"
 #include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
+#include "TextureParser.h"
+#include "Texture.h"
 
 class GraphicsWrapper
 {
@@ -115,8 +117,10 @@ private:
 	DeferredBaseShader*		m_deferredBaseShader;
 
 	// Creation & storage
-	BufferFactory*		    m_bufferFactory;
-	ResourceManager<Mesh>*  m_meshManager;
+	BufferFactory*			m_bufferFactory;
+
+	ResourceManager<Mesh>*		m_meshManager;
+	ResourceManager<Texture>*	m_textureManager;
 
 	int m_height;
 	int m_width;

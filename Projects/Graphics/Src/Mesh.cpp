@@ -2,8 +2,8 @@
 
 Mesh::Mesh(Buffer<PTNVertex>* p_mesh , Buffer<DIndex>* p_indices)
 {
-	m_mesh		= p_mesh;
-	m_indices	= p_indices;
+	m_vertexBuffer		= p_mesh;
+	m_indexBuffer	= p_indices;
 }
 
 Mesh::~Mesh()
@@ -11,18 +11,18 @@ Mesh::~Mesh()
 	/************************************************************************/
 	/* THERE SHOULDN'T BE AN DELETION HERE IN THE FINAL VERSION				*/
 	/************************************************************************/
-	delete m_mesh;
-	delete m_indices;
+	delete m_vertexBuffer;
+	delete m_indexBuffer;
 }
 
-Buffer<PTNVertex>* Mesh::getMesh()
+Buffer<PTNVertex>* Mesh::getVertexBuffer()
 {
-	return m_mesh;
+	return m_vertexBuffer;
 }
 
-Buffer<DIndex>* Mesh::getIndicies()
+Buffer<DIndex>* Mesh::getIndexBuffer()
 {
-	return m_indices;
+	return m_indexBuffer;
 }
 
 unsigned int Mesh::getInstanceId( unsigned int p_idx )
@@ -38,4 +38,14 @@ void Mesh::addInstanceId( unsigned int p_instanceId )
 void Mesh::clearInstanceList( unsigned int p_idx )
 {
 	m_instanceList.clear();
+}
+
+unsigned int Mesh::getTextureId()
+{
+	return m_textureId;
+}
+
+void Mesh::setTextureId( unsigned int p_id )
+{
+	m_textureId = p_id;
 }

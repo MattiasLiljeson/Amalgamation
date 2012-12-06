@@ -50,6 +50,7 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInitStruct.h" />
     <ClInclude Include="ShaderStageData.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureParser.h" />
     <ClInclude Include="WindowException.h" />
     <ClInclude Include="Window.h" />

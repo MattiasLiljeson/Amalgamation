@@ -18,6 +18,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
 	m_meshManager = new ResourceManager<Mesh>();
+	m_textureManager = new ResourceManager<Texture>();
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
@@ -38,6 +39,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_deferredBaseShader;
 	delete m_bufferFactory;
 	delete m_meshManager;
+	delete m_textureManager;
 }
 
 void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
@@ -149,7 +151,8 @@ void GraphicsWrapper::beginFrame()
 void GraphicsWrapper::renderMesh(unsigned int p_meshId)
 {
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
-	m_deferredRenderer->renderMesh(mesh);
+	Texture* tex = m_textureManager->getResource(mesh->getTextureId());
+	m_deferredRenderer->renderMesh(mesh,tex);
 }
 
 void GraphicsWrapper::finalizeFrame()
@@ -166,16 +169,35 @@ void GraphicsWrapper::flipBackBuffer()
 unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ownerEntityId)
 {
 	// check if resource already exists
-	unsigned int resultId = 0;
-	int foundId = m_meshManager->getResourceId(p_name);
-	if (foundId==-1)  // if it does not exist, create new
+	unsigned int meshResultId = 0;
+	int meshFoundId = m_meshManager->getResourceId(p_name);
+	if (meshFoundId==-1)  // if it does not exist, create new
 	{
 		if (p_name=="P_cube")
 		{
 			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
 			mesh->addInstanceId(p_ownerEntityId);		   // add owner
-			resultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
+			meshResultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
 			// (Here you might want to do similar checks for textures/materials
+			// For now we have a hard coded texture path, but later on
+			// we probably get this path from a mesh file loader or similar.
+			string texturepath = "Assets/Textures/Test/1000x1000_32.png"; 
+			int texFoundId = m_textureManager->getResourceId(texturepath);
+			unsigned int texResultId = 0;
+			// and probably only the file name or Texture sub folder name+file name
+			// like this: rainbow.dds or Test/rainbow.dds
+			if (texFoundId==-1)  // if it does not exist, create new
+			{
+				Texture* tex;
+				tex = new Texture(TextureParser::loadTexture(m_device,
+															 texturepath.c_str()));
+				texResultId = m_textureManager->addResource(texturepath,tex);
+			}
+			else
+			{
+				texResultId = static_cast<unsigned int>(texFoundId);
+			}
+			mesh->setTextureId(texResultId);
 			// and their managers.)
 			// ...
 			// and then set the resulting data to the mesh
@@ -187,11 +209,11 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ow
 	}
 	else // the mesh already exists
 	{
-		resultId = static_cast<unsigned int>(foundId);
-		Mesh* mesh = m_meshManager->getResource(resultId); // get mesh from id
+		meshResultId = static_cast<unsigned int>(meshFoundId);
+		Mesh* mesh = m_meshManager->getResource(meshResultId); // get mesh from id
 		mesh->addInstanceId(p_ownerEntityId); // add owner
 	}
-	return resultId;
+	return meshResultId;
 }
 
 void GraphicsWrapper::initViewport()

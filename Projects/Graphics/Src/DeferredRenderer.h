@@ -20,6 +20,7 @@
 #include "PTVertex.h"
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
+#include "Texture.h"
 
 const static int NUMBUFFERS = 3;
 const static int DEPTH = 2;
@@ -58,7 +59,8 @@ public:
 	/// \param p_meshInfo
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(Mesh* p_mesh);
+	void renderMesh(Mesh* p_mesh,
+					Texture* p_texture );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a fullscreen quad textured with the gbuffer.
