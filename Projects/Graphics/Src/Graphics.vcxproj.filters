@@ -80,12 +80,6 @@
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="RendererMeshInfo.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="RendererSceneInfo.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="PTNVertex.h" />
@@ -101,6 +95,12 @@
     </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
       <Filter>Renderer\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeImageException.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureParser.h">
+      <Filter>Graphics Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,12 @@
 // =======================================================================================
-//                                      ResourceMap
+//                                      ResourceManager
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	A map structure for storing and accessing resources by use of a unique name(like 
-/// a file name from which the resource was loaded). It prohibits duplicated resources.
+/// \brief	A generic manager for resources. It prohibits duplicates and can be accessed
+/// by index( O(1) ) or map.
 ///        
-/// # ResourceMap
+/// # ResourceManager
 /// Created on: 03-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
