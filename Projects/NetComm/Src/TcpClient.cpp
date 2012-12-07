@@ -9,6 +9,13 @@ TcpClient::TcpClient()
 
 TcpClient::~TcpClient()
 {
+	while ( !m_newPackets.empty() )
+	{	
+		Packet* packet = m_newPackets.front();
+		m_newPackets.pop();
+		delete packet;
+	}
+
 	if( m_communicationProcess )
 	{
 		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
@@ -134,8 +141,10 @@ unsigned int TcpClient::newPacketsCount()
 Packet* TcpClient::popNewPacket()
 {
 	Packet* packet = NULL;
-	packet = m_newPackets.front();
-	m_newPackets.pop();
-
+	if ( !m_newPackets.empty() )
+	{	
+		packet = m_newPackets.front();
+		m_newPackets.pop();
+	}
 	return packet;
 }

@@ -11,6 +11,13 @@ TcpServer::~TcpServer()
 {
 	stopListening();
 
+	while ( !m_newPackets.empty() )
+	{	
+		Packet* packet = m_newPackets.front();
+		m_newPackets.pop();
+		delete packet;
+	}
+
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
 		m_communicationProcesses[i]->putMessage( new ProcessMessageTerminate() );
@@ -150,4 +157,5 @@ void TcpServer::broadcastPacket( Packet* p_packet )
 		m_communicationProcesses[i]->putMessage(
 			new ProcessMessageSendPacket( this, new Packet(*p_packet) ) );
 	}
+	delete p_packet;
 }
