@@ -204,6 +204,31 @@ Describe(a_tcp_server)
 		delete server;
 	}
 
+	It(can_get_the_id_of_a_new_connection)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		if( server.hasNewConnections() )
+		{
+			// Id's start at 0.
+			Assert::That(server.popNewConnection(), IsGreaterThan(-1));
+		}
+	}
+
+	It(should_return_minus_one_if_trying_to_pop_an_empty_new_connections_queue)
+	{
+		TcpServer server;
+
+		Assert::That(server.popNewConnection(), Equals(-1));
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;

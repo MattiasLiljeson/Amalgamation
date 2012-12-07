@@ -42,6 +42,7 @@ public:
 
 	bool hasNewConnections();
 	unsigned int newConnectionsCount();
+	int popNewConnection();
 
 	unsigned int activeConnectionsCount();
 

@@ -12,8 +12,15 @@ NetworkListenerSystem::~NetworkListenerSystem()
 
 void NetworkListenerSystem::process()
 {
-	if( m_server->hasNewConnections() )
+	while( m_server->hasNewConnections() )
 	{
+		int id = m_server->popNewConnection();
+
+		Entity* e = m_world->createEntity();
+		e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+			new Transform( 1.0f, 0, 0 ) );
+		e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+			new NetworkSynced( 1 ) );
 
 	}
 }

@@ -151,3 +151,15 @@ void TcpServer::broadcastPacket( Packet* p_packet )
 
 	delete p_packet;
 }
+
+int TcpServer::popNewConnection()
+{
+	int id = -1;
+	if( m_newConnectionProcesses.size() > 0 )
+	{
+		id = m_newConnectionProcesses.front();
+		m_newConnectionProcesses.pop();
+	}
+
+	return id;
+}
