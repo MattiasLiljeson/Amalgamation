@@ -12,8 +12,7 @@
 /// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
 
-struct PTVertex
+struct InstanceVertex
 {
-	float pos[3];
-	float rotation[2];
+	float worldTransform[16];
 };

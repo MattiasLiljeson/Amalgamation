@@ -111,6 +111,15 @@ private:
 	///-----------------------------------------------------------------------------------
 	void createPTNVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
+	///-----------------------------------------------------------------------------------
+	/// Creates a inputlayout for Instanced PTNVertex
+	/// \param p_vs
+	/// \param p_inputLayout
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void createInstancedPTNVertexInputLayout(VSData* p_vs, 
+											 ID3D11InputLayout** p_inputLayout);
+
 private:
 	void constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc,
 							  UINT p_numberOfElements,

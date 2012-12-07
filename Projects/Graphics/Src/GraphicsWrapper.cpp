@@ -152,7 +152,25 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId)
 {
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 	Texture* tex = m_textureManager->getResource(mesh->getTextureId());
-	m_deferredRenderer->renderMesh(mesh,tex);
+
+	InstanceVertex instanceTransforms[] = {
+	   {1.0f,0.0f,0.0f,  0.0f,
+		0.0f,1.0f,0.0f,  0.0f,
+		0.0f,0.0f,1.0f,  0.0f,
+		0.0f,0.0f,0.0f,  1.0f},
+
+	   {1.0f,0.0f,0.0f,  1.0f,
+		0.0f,1.0f,0.0f,  0.0f,
+		0.0f,0.0f,1.0f,  0.0f,
+		0.0f,0.0f,0.0f,  1.0f}
+	};
+
+	Buffer<InstanceVertex>* instanceBuffer;
+	instanceBuffer = m_bufferFactory->createInstanceBuffer(instanceTransforms,2);
+
+	m_deferredRenderer->renderMeshInstanced(mesh,tex,instanceBuffer);
+
+	delete instanceBuffer;
 }
 
 void GraphicsWrapper::finalizeFrame()

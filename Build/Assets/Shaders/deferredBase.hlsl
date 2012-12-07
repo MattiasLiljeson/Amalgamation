@@ -13,6 +13,7 @@ struct VertexIn
 	float3 position : POSITION;
 	float2 texCoord : TEXCOORD; 
 	float3 normal : NORMAL;
+	float4x4 instanceTransform : INSTANCETRANSFORM;
 };
 struct VertexOut
 {
@@ -31,7 +32,9 @@ VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
 
-	vout.position = mul(float4(p_input.position,1.0f), vp);
+	float4x4 wvp = mul(p_input.instanceTransform,vp);
+	
+	vout.position = mul(float4(p_input.position,1.0f), wvp);
 	vout.normal = mul(float4(p_input.normal,0.0f), vp).xyz;
 
 	vout.texCoord = p_input.texCoord;

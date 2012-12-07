@@ -35,7 +35,7 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
-	createPTNVertexInputLayout(vertexData,&inputLayout);
+	createInstancedPTNVertexInputLayout(vertexData,&inputLayout);
 
 	ShaderInitStruct shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
@@ -228,6 +228,27 @@ void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 }
 
+
+void ShaderFactory::createShaderInitData(ShaderInitStruct* p_shaderInitData, 
+										 ID3D11InputLayout* p_inputLayout,
+										 VSData* p_vsd, PSData* p_psd,
+										 ID3D11SamplerState* p_samplerState/* =NULL */,
+										 GSData* p_gsd/* =NULL */, 
+										 HSData* p_hsd/* =NULL */, 
+										 DSData* p_dsd/* =NULL */)
+{
+	p_shaderInitData->device = m_device;
+	p_shaderInitData->deviceContext = m_deviceContext;
+	p_shaderInitData->domainShader = p_dsd;
+	p_shaderInitData->geometryShader = p_gsd;
+	p_shaderInitData->hullShader = p_hsd;
+	p_shaderInitData->vertexShader = p_vsd;
+	p_shaderInitData->pixelShader = p_psd;
+	p_shaderInitData->samplerState = p_samplerState;
+	p_shaderInitData->inputLayout = p_inputLayout;
+}
+
+
 void ShaderFactory::createPTVertexInputLayout(VSData* p_vs, 
 											  ID3D11InputLayout** p_inputLayout )
 {
@@ -254,24 +275,29 @@ void ShaderFactory::createPTNVertexInputLayout(VSData* p_vs,
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
 
-void ShaderFactory::createShaderInitData(ShaderInitStruct* p_shaderInitData, 
-										 ID3D11InputLayout* p_inputLayout,
-										 VSData* p_vsd, PSData* p_psd,
-										 ID3D11SamplerState* p_samplerState/* =NULL */,
-										 GSData* p_gsd/* =NULL */, 
-										 HSData* p_hsd/* =NULL */, 
-										 DSData* p_dsd/* =NULL */)
+void ShaderFactory::createInstancedPTNVertexInputLayout( VSData* p_vs, 
+														ID3D11InputLayout** p_inputLayout)
 {
-	p_shaderInitData->device = m_device;
-	p_shaderInitData->deviceContext = m_deviceContext;
-	p_shaderInitData->domainShader = p_dsd;
-	p_shaderInitData->geometryShader = p_gsd;
-	p_shaderInitData->hullShader = p_hsd;
-	p_shaderInitData->vertexShader = p_vsd;
-	p_shaderInitData->pixelShader = p_psd;
-	p_shaderInitData->samplerState = p_samplerState;
-	p_shaderInitData->inputLayout = p_inputLayout;
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
+
 
 void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc, 
 										 UINT p_numberOfElements,
@@ -284,3 +310,4 @@ void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_input
 	if ( FAILED(hr) )
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }
+

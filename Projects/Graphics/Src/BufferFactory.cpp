@@ -63,6 +63,25 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	return quadBuffer;
 }
 
+Buffer<InstanceVertex>* BufferFactory::createInstanceBuffer(InstanceVertex* p_instanceList, 
+															unsigned int p_numberOfElements)
+{
+	Buffer<InstanceVertex>* instanceBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(InstanceVertex);
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = p_numberOfElements;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Create buffer from config and data
+	instanceBuffer = new Buffer<InstanceVertex>(m_device,m_deviceContext,
+											    p_instanceList,bufferDesc);
+
+	return instanceBuffer;
+}
+
 Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data

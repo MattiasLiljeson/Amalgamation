@@ -35,6 +35,7 @@ void Mesh::addInstanceId( unsigned int p_instanceId )
 	m_instanceList.add(p_instanceId);
 }
 
+
 void Mesh::clearInstanceList( unsigned int p_idx )
 {
 	m_instanceList.clear();
@@ -49,3 +50,4 @@ void Mesh::setTextureId( unsigned int p_id )
 {
 	m_textureId = p_id;
 }
+

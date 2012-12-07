@@ -27,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="InstanceVertex.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
