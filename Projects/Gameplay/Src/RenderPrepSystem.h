@@ -2,7 +2,6 @@
 
 #include <AglMatrix.h>
 #include <AglVector3.h>
-#include <CamMatrixerUtil.h>
 #include <DebugUtil.h>
 #include <EntitySystem.h>
 #include <GraphicsWrapper.h>

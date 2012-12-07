@@ -19,7 +19,6 @@
     <ClCompile Include="GraphicsWrapper.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="DeferredComposeShader.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
@@ -69,7 +68,7 @@
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -86,22 +85,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
     <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
+    <OutDir>$(ProjectDir)..\Lib\</OutDir>
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
     <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
     <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
+    <OutDir>$(ProjectDir)..\Lib\</OutDir>
+    <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>

@@ -1,7 +1,10 @@
 #include "RenderPrepSystem.h"
 
+#include <CamMatrixerUtil.h>
+
 RenderPrepSystem::RenderPrepSystem( HINSTANCE p_hInstance, int p_scrWidth, int p_scrHeight,
 								   bool p_windowed  )
+								   : EntitySystem( SystemType::RenderPrepSystem )
 {
 	m_hInstance = p_hInstance;
 	m_scrWidth = p_scrWidth;

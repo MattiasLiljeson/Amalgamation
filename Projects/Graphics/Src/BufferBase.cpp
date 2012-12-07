@@ -1,9 +1,9 @@
 #include "BufferBase.h"
 
 BufferBase::BufferBase(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-					   BufferConfig* p_config)
+					   BufferConfig::BUFFER_INIT_DESC& p_configDesc)
 {
-	m_config = p_config;
+	m_config = new BufferConfig(p_configDesc);
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 }

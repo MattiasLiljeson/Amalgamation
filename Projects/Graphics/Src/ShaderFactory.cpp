@@ -5,6 +5,14 @@ ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_devi
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
+	switch(m_device->GetFeatureLevel())
+	{
+	case D3D_FEATURE_LEVEL_10_1:
+	case D3D_FEATURE_LEVEL_10_0:
+		m_shaderModelVersion = "4_0"; break;
+	default:
+		m_shaderModelVersion = "5_0"; break;
+	}
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
 
 	switch( p_featureLevel )
@@ -43,8 +51,8 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
 
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS","vs_4_0");
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS","ps_4_0");
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
@@ -68,8 +76,9 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 
 	VSData* vertexData = new VSData();
 	PSData* pixelData = new PSData();
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", "vs_4_0");
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", "ps_4_0");
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
@@ -139,7 +148,7 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 	{
 		HRESULT hr = S_OK;
 		compileShaderStage(p_vs->stageConfig->filePath,p_vs->stageConfig->entryPoint,
-			p_vs->stageConfig->version,&p_vs->compiledData);
+			string("vs_")+p_vs->stageConfig->version,&p_vs->compiledData);
 
 		hr = m_device->CreateVertexShader(p_vs->compiledData->GetBufferPointer(),
 			p_vs->compiledData->GetBufferSize(), NULL, &p_vs->data);
@@ -155,7 +164,7 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 	{
 		HRESULT hr = S_OK;
 		compileShaderStage(p_ps->stageConfig->filePath,p_ps->stageConfig->entryPoint,
-			p_ps->stageConfig->version,&p_ps->compiledData);
+			string("ps_")+p_ps->stageConfig->version,&p_ps->compiledData);
 
 		hr = m_device->CreatePixelShader(p_ps->compiledData->GetBufferPointer(),
 			p_ps->compiledData->GetBufferSize(), NULL, &p_ps->data);
@@ -173,7 +182,7 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 		{
 			HRESULT hr = S_OK;
 			compileShaderStage(p_gs->stageConfig->filePath,p_gs->stageConfig->entryPoint,
-				p_gs->stageConfig->version,&p_gs->compiledData);
+				string("gs_")+p_gs->stageConfig->version,&p_gs->compiledData);
 
 			hr = m_device->CreateGeometryShader(p_gs->compiledData->GetBufferPointer(),
 				p_gs->compiledData->GetBufferSize(), NULL, &p_gs->data);
@@ -187,7 +196,7 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 		{
 			HRESULT hr = S_OK;
 			compileShaderStage(p_hs->stageConfig->filePath,p_hs->stageConfig->entryPoint,
-				p_hs->stageConfig->version,&p_hs->compiledData);
+				string("hs_")+p_hs->stageConfig->version,&p_hs->compiledData);
 
 			hr = m_device->CreateHullShader(p_hs->compiledData->GetBufferPointer(),
 				p_hs->compiledData->GetBufferSize(), NULL, &p_hs->data);
@@ -201,7 +210,7 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 		{
 			HRESULT hr = S_OK;
 			compileShaderStage(p_ds->stageConfig->filePath,p_ds->stageConfig->entryPoint,
-				p_ds->stageConfig->version,&p_ds->compiledData);
+				string("ds_")+p_ds->stageConfig->version,&p_ds->compiledData);
 
 			hr = m_device->CreateDomainShader(p_ds->compiledData->GetBufferPointer(),
 				p_ds->compiledData->GetBufferSize(), NULL, &p_ds->data);

@@ -120,6 +120,6 @@ private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
 
-	BufferFactory* m_bufferFactory;
 	string m_shaderModelVersion;
+	BufferFactory* m_bufferFactory;
 };

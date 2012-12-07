@@ -19,8 +19,8 @@ class Buffer : public BufferBase
 {
 public:
 	Buffer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-		T* p_initData, BufferConfig* p_config)
-		: BufferBase(p_device, p_deviceContext, p_config)
+		T* p_initData, BufferConfig::BUFFER_INIT_DESC& p_configDesc)
+		: BufferBase(p_device, p_deviceContext, p_configDesc)
 	{
 		accessBuffer = *p_initData;
 		init(static_cast<void*>(p_initData));

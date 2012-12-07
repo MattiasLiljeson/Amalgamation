@@ -62,15 +62,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)/Projects/AgileUtility/Src;$(SolutionDir)/Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Input/Src;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/AgileUtility/Lib;$(SolutionDir)/Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Lib;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/Input/Lib;$(SolutionDir)/Projects/NetComm/Lib;$(SolutionDir)/Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)/Projects/AgileUtility/Src;$(SolutionDir)/Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Input/Src;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/Projects/AgileUtility/Lib;$(SolutionDir)/Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Lib;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/Input/Lib;$(SolutionDir)/Projects/NetComm/Lib;$(SolutionDir)/Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,8 +85,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -106,8 +105,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
