@@ -93,35 +93,35 @@ Describe(a_tcp_client)
 		Assert::That(client.newPacketsCount(), Equals(0));
 	}
 
-//	It(can_read_the_same_packets_as_are_sent)
-//	{
-//		string messages[] =
-//		{
-//			"This is a broadcast message!",
-//			"This is another broadcast message!",
-//			"This is yet another broadcast message!"
-//		};
-//
-//		TcpServer server;
-//		server.startListening( 1337 );
-//
-//		TcpClient client;
-//		client.connectToServer( "localhost", "1337" );
-//
-//		boost::this_thread::sleep(boost::posix_time::millisec(50));
-//		server.processMessages();
-//
-//		for(int i=0; i<3; i++)
-//			server.broadcastPacket( new Packet( messages[i] ) );
-//		
-//		boost::this_thread::sleep(boost::posix_time::millisec(50));
-//		client.processMessages();
-//
-//		for(int i=0; i<3; i++)
-//		{
-//			Packet* packet = client.popNewPacket();
-//			Assert::That(packet->getMessage(), Equals(messages[i]));
-//		}
-//	}
+	It(can_read_the_same_packets_as_are_sent)
+	{
+		string messages[] =
+		{
+			"This is a broadcast message!",
+			"This is another broadcast message!",
+			"This is yet another broadcast message!"
+		};
+
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "localhost", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		for(int i=0; i<3; i++)
+			server.broadcastPacket( new Packet( messages[i] ) );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		client.processMessages();
+
+		for(int i=0; i<3; i++)
+		{
+			Packet* packet = client.popNewPacket();
+			Assert::That(packet->getMessage(), Equals(messages[i]));
+		}
+	}
 
 };

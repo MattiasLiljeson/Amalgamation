@@ -146,7 +146,8 @@ void TcpServer::broadcastPacket( Packet* p_packet )
 	{
 		// HACK: Without copying the packet it will probably result in a crash when
 		// the receiving processes deletes it.
+		// This SHOULD work now.
 		m_communicationProcesses[i]->putMessage(
-			new ProcessMessageSendPacket( this, p_packet ) );
+			new ProcessMessageSendPacket( this, new Packet(*p_packet) ) );
 	}
 }
