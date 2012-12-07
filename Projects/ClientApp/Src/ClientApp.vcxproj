@@ -45,17 +45,18 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(SolutionDir)/Projects/ES/Src;$(SourcePath)</SourcePath>
+    <SourcePath>$(SolutionDir)Projects/ES/Src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SolutionDir)Projects/ES/Src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -68,6 +69,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>AgileUtility_x86_Debug.lib;AssetsManagement_x86_Debug.lib;ES_x86_Debug.lib;GamePlay_x86_Debug.lib;Graphics_x86_Debug.lib;Input_x86_Debug.lib;NetComm_x86_Debug.lib;Util_x86_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
