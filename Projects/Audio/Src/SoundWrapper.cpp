@@ -10,6 +10,8 @@ SoundWrapper::SoundWrapper()
 	CoInitializeEx( NULL, COINIT_MULTITHREADED );
 
 	initSoundEngine();
+
+	m_soundFactory = new SoundFactory();
 }
 
 SoundWrapper::~SoundWrapper()
@@ -17,6 +19,8 @@ SoundWrapper::~SoundWrapper()
 	m_masterVoice->DestroyVoice();
 	m_soundDevice->StopEngine();
 	m_soundDevice->Release();
+	
+	delete m_soundFactory;
 }
 
 void SoundWrapper::initSoundEngine()
@@ -34,23 +38,50 @@ void SoundWrapper::initSoundEngine()
 	if( FAILED( hr = m_soundDevice->CreateMasteringVoice(&m_masterVoice)))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
-	/*
-	XAUDIO2_DEVICE_DETAILS details;
 	if( FAILED( hr = m_soundDevice->GetDeviceDetails(0, &details)))
-	{
-		return hr;
-	}
+		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	m_destChannels = details.OutputFormat.Format.nChannels;
 
 	X3DAudioInitialize( details.OutputFormat.dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, 
-		m_X3DAudioInstance);
+		m_x3DAudioInstance);
+}
 
-	m_matrixCoefficients	= new FLOAT32[1*details.OutputFormat.Format.nChannels];
-	m_emitterAzimuths		= new FLOAT32[1];
+void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
+{
+	X3DAUDIO_VECTOR front = {
+		p_sceneInfo.listenerOrientFront[0],
+		p_sceneInfo.listenerOrientFront[1],
+		p_sceneInfo.listenerOrientFront[2],
+	};
 
-	initPositionalSound();
+	X3DAUDIO_VECTOR top = {
+		p_sceneInfo.listenerOrientFront[0],
+		p_sceneInfo.listenerOrientFront[1],
+		p_sceneInfo.listenerOrientFront[2],
+	};
+	
+	X3DAUDIO_VECTOR velocity =  {
+		p_sceneInfo.listenerVelocity[0],
+		p_sceneInfo.listenerVelocity[1],
+		p_sceneInfo.listenerVelocity[2],
+	};
 
-	return hr;*/
+	X3DAUDIO_VECTOR pos = {
+		p_sceneInfo.listenerPos[0],
+		p_sceneInfo.listenerPos[1],
+		p_sceneInfo.listenerPos[2],
+	};
+
+	m_listener.OrientFront	= front;
+	m_listener.OrientTop	= top;
+	m_listener.Position		= pos;
+	m_listener.Velocity		= velocity;
+	m_listener.pCone		= NULL;
+}
+
+Sound* SoundWrapper::createNewNonPositionalSound( const char* p_filePath )
+{
+	m_soundFactory->
 }
 

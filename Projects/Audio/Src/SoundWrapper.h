@@ -5,6 +5,10 @@
 #include <X3daudio.h>
 #include <strsafe.h>
 #include "XAudio2Exception.h"
+#include "SoundSceneInfo.h"
+#include "AudioCurves.h"
+#include "Sound.h"
+#include "SoundFactory.h"
 
 // =======================================================================================
 //                                      SoundWrapper
@@ -23,6 +27,8 @@ class SoundWrapper
 public:
 	SoundWrapper();
 	virtual ~SoundWrapper();
+	void updateListener(const SoundSceneInfo& p_sceneInfo);
+	Sound* createNewNonPositionalSound(const char* p_filePath);
 private:
 	void initSoundEngine();
 private:
@@ -31,4 +37,12 @@ private:
 
 	float m_masterVolume;
 	DWORD m_destChannels;
+
+	XAUDIO2_DEVICE_DETAILS details;
+
+	X3DAUDIO_LISTENER		m_listener;
+	X3DAUDIO_HANDLE			m_x3DAudioInstance;
+	X3DAUDIO_DSP_SETTINGS	m_dspSettings;
+
+	SoundFactory*			m_soundFactory;
 };

@@ -11,6 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioCurves.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundFactory.h" />
+    <ClInclude Include="SoundSceneInfo.h" />
     <ClInclude Include="SoundWrapper.h" />
     <ClInclude Include="XAudio2Exception.h" />
   </ItemGroup>

@@ -34,7 +34,11 @@ public:
 		else
 			SetMsg("Unknown HRESULT error! \n",p_file,p_func,p_line);
 	}
-
+	XAudio2Exception( const string& p_message, const string& p_file, const string& p_func,
+		int p_line)
+	{
+		SetMsg(p_message,p_file,p_func,p_line);
+	}
 	virtual const char* what() const throw()
 	{
 		return m_msg.c_str();
