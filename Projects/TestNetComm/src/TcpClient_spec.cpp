@@ -117,6 +117,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();
 
+		Assert::That(client.newPacketsCount(), Equals(3));
 		for(int i=0; i<3; i++)
 		{
 			Packet* packet = client.popNewPacket();

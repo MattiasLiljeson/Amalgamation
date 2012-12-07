@@ -18,9 +18,10 @@ void NetworkListenerSystem::process()
 
 		Entity* e = m_world->createEntity();
 		e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-			new Transform( 1.0f, 0, 0 ) );
+			new Transform( (float)(id) * 10.0f, 0, 0 ) );
 		e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-			new NetworkSynced( 1 ) );
+			new NetworkSynced( id ) );
+		m_world->addEntity( e );
 
 	}
 }

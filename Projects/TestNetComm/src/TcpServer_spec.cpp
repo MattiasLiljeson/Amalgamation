@@ -229,6 +229,38 @@ Describe(a_tcp_server)
 		Assert::That(server.popNewConnection(), Equals(-1));
 	}
 
+	It(can_broadcast_packets_to_all_connected_clients)
+	{
+		string messages[] =
+		{
+			"This is a broadcast message!"
+		};
+
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+			
+		server.broadcastPacket( new Packet( messages[0] ) );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<5; i++)
+			client[i].processMessages();
+
+		for(int i=0; i<5; i++)
+		{
+			Assert::That(client[i].newPacketsCount(), Equals(1));
+			Packet* packet = client[i].popNewPacket();
+			Assert::That(packet->getMessage(), Equals(messages[0]));
+			delete packet;
+		}
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;
