@@ -159,14 +159,34 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId)
 		0.0f,0.0f,1.0f,  0.0f,
 		0.0f,0.0f,0.0f,  1.0f},
 
-	   {1.0f,0.0f,0.0f,  1.0f,
+	   {1.0f,0.0f,0.0f,  2.0f,
 		0.0f,1.0f,0.0f,  0.0f,
 		0.0f,0.0f,1.0f,  0.0f,
+		0.0f,0.0f,0.0f,  1.0f},
+
+	   {1.0f,0.0f,0.0f,  0.0f,
+		0.0f,1.0f,0.0f,  2.0f,
+		0.0f,0.0f,1.0f,  0.0f,
+		0.0f,0.0f,0.0f,  1.0f},
+
+	   {1.0f,0.0f,0.0f,  0.0f,
+		0.0f,1.0f,0.0f,  0.0f,
+		0.0f,0.0f,1.0f,  2.0f,
+		0.0f,0.0f,0.0f,  1.0f},
+
+	   {1.0f,0.0f,0.0f,  2.0f,
+		0.0f,1.0f,0.0f,  0.0f,
+		0.0f,0.0f,1.0f,  2.0f,
+		0.0f,0.0f,0.0f,  1.0f},
+
+	   {1.0f,0.0f,0.0f,  0.0f,
+		0.0f,1.0f,0.0f,  2.0f,
+		0.0f,0.0f,1.0f,  -2.0f,
 		0.0f,0.0f,0.0f,  1.0f}
 	};
 
 	Buffer<InstanceVertex>* instanceBuffer;
-	instanceBuffer = m_bufferFactory->createInstanceBuffer(instanceTransforms,2);
+	instanceBuffer = m_bufferFactory->createInstanceBuffer(instanceTransforms,6);
 
 	m_deferredRenderer->renderMeshInstanced(mesh,tex,instanceBuffer);
 
