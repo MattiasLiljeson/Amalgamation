@@ -95,6 +95,9 @@ Describe(a_tcp_server)
 		TcpClient client[5];
 		for(int i=0; i<5; i++)
 			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
 		for(int i=0; i<5; i++)
 			client[i].disconnect();
 		
