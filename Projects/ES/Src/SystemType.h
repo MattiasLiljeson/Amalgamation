@@ -18,6 +18,8 @@ public:	//Enums
 		NetworkListenerSystem,
 		InputSystem,
 		RenderPrepSystem,
+		CameraSystem,
+		GraphicsBackendSystem,
 		NUM_SYSTEM_TYPES
 	};
 

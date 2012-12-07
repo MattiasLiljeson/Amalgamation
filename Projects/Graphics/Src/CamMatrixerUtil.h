@@ -3,8 +3,11 @@
 
 #include <AglMatrix.h>
 #include <AglVector3.h>
+class CHANGETHIS
+{
+public:
 
-void SetLookAtMatrix(AglMatrix&  p_outMat, const AglVector3& p_eye, 
+static void SetLookAtMatrix(AglMatrix&  p_outMat, const AglVector3& p_eye, 
 							   const AglVector3& p_at, const AglVector3& p_up)
 {
 	AglVector3 zaxis,xaxis,yaxis;
@@ -29,7 +32,7 @@ void SetLookAtMatrix(AglMatrix&  p_outMat, const AglVector3& p_eye,
 
 
 
-void SetProjMatrix(AglMatrix&  p_outMat, float p_yFOV, float p_aspectRatio,
+static void SetProjMatrix(AglMatrix&  p_outMat, float p_yFOV, float p_aspectRatio,
 									float p_nearClip, float p_farClip)
 {
 	float yScale = 1.0f/tan(p_yFOV/2.0f);
@@ -42,3 +45,5 @@ void SetProjMatrix(AglMatrix&  p_outMat, float p_yFOV, float p_aspectRatio,
 	0.0f,          0.0f,       -p_nearClip*p_farClip/(p_farClip-p_nearClip),   0.0f
 	);	
 }
+
+};

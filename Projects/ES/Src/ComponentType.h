@@ -17,9 +17,10 @@ public:	//Enums
 	{
 		NON_EXISTING = -1,
 		Transform,
-		Render,
+		RenderInfo,
 		Input,
 		NetworkSynced,
+		CameraInfo,
 		NUM_COMPONENT_TYPES
 	};
 
@@ -28,11 +29,11 @@ public:
 	~ComponentType();
 
 	static ComponentType getTypeFor( ComponentTypeIdx p_component );
-	static int getIndexFor( ComponentTypeIdx p_component );
+	static ComponentTypeIdx getIndexFor( ComponentTypeIdx p_component );
 	static bitset<NUM_COMPONENT_TYPES> getBitFor( ComponentTypeIdx p_component );
 
 	bitset<NUM_COMPONENT_TYPES> getBit();
-	int getIndex();
+	ComponentTypeIdx getIndex();
 
 private:
 	void init( ComponentTypeIdx p_type );
@@ -43,7 +44,7 @@ private:
 	static map< ComponentTypeIdx, ComponentType > s_componentTypes;
 
 	bitset<NUM_COMPONENT_TYPES> m_bit;
-	int m_idx;
+	ComponentTypeIdx m_idx;
 	ComponentTypeIdx m_type;
 
 };

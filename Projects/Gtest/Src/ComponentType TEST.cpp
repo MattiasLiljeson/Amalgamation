@@ -33,7 +33,7 @@ TEST(ComponentTypegetIndex, SeveralComponentTypes)
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 0, ct_id );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::RenderInfo);
 	ct_id = ct.getIndex();
 	EXPECT_EQ( 1, ct_id );
 
@@ -67,7 +67,7 @@ TEST(ComponentTypeGetBit, SeveralComponentTypes)
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0001"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::RenderInfo);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
@@ -111,15 +111,15 @@ TEST(ComponentTypeGetBit, RandomOrder)
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("1000"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::RenderInfo);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::RenderInfo);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 
-	ct = ComponentType::getTypeFor(ComponentType::Render);
+	ct = ComponentType::getTypeFor(ComponentType::RenderInfo);
 	ct_set = ct.getBit();
 	EXPECT_EQ( bitset<ComponentType::NUM_COMPONENT_TYPES>("0010"), ct_set );
 }
