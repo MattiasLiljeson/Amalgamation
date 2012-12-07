@@ -53,6 +53,8 @@ public:
 
 	void processMessages();
 
+	void broadcastPacket( Packet* p_packet );
+
 private:
 	bool m_isListening;
 

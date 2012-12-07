@@ -139,3 +139,14 @@ void TcpServer::processMessages()
 		delete message;
 	}
 }
+
+void TcpServer::broadcastPacket( Packet* p_packet )
+{
+	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
+	{
+		// HACK: Without copying the packet it will probably result in a crash when
+		// the receiving processes deletes it.
+		m_communicationProcesses[i]->putMessage(
+			new ProcessMessageSendPacket( this, p_packet ) );
+	}
+}

@@ -83,6 +83,21 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 
 void TcpClient::processMessages()
 {
+	while( getMessageCount() > 0 )
+	{
+		ProcessMessage* message;
+		message = this->popMessage();
+
+		if( message->type == MessageType::RECEIVE_PACKET )
+		{
+			m_newPackets.push(
+				static_cast< ProcessMessageReceivePacket* >(message)->packet );
+			cout << "TcpServer, receive: " <<
+				m_newPackets.back()->getMessage() << endl;
+		}
+
+		delete message;
+	}
 }
 
 void TcpClient::disconnect()
@@ -104,4 +119,23 @@ bool TcpClient::hasActiveConnection()
 void TcpClient::sendPacket( Packet* p_packet )
 {
 	m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
+}
+
+bool TcpClient::hasNewPackets()
+{
+	return !m_newPackets.empty();
+}
+
+unsigned int TcpClient::newPacketsCount()
+{
+	return m_newPackets.size();
+}
+
+Packet* TcpClient::popNewPacket()
+{
+	Packet* packet = NULL;
+	packet = m_newPackets.front();
+	m_newPackets.pop();
+
+	return packet;
 }
