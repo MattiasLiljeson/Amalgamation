@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "Graphics"
+OUTPUT_DIRECTORY       = docs/graphics
+INPUT                  = Projects/Graphics/Src

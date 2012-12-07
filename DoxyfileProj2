@@ -1,4 +1,0 @@
-@INCLUDE = Doxyfile
-PROJECT_NAME           = "Project2"
-OUTPUT_DIRECTORY       = docs/proj2
-INPUT                  = src/proj2

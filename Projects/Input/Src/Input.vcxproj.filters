@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AnalogueControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InputControlFactory.cpp">
+      <Filter>InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageLoopFetcher.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="XInputFetcher.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInputFetcher.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="Control.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseMoveControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseBtnControl.cpp">
+      <Filter>InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHelper.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnalogueControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputControlFactory.h">
+      <Filter>InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputType.h">
+      <Filter>InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageLoopFetcher.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="XInputFetcher.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputFetcher.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMoveControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseBtnControl.h">
+      <Filter>InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHelper.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Input.vcxproj" />
+    <None Include="Input.vcxproj.user" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="InputFetchers">
+      <UniqueIdentifier>{ad5d1c2b-6d4a-4d33-87b2-75b2b6c6edff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputControls">
+      <UniqueIdentifier>{f3ddd323-d7b1-473e-88cd-3e9401ba4d99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputManager">
+      <UniqueIdentifier>{2c5ea74c-bb64-48e4-b850-c929308cee0a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

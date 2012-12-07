@@ -32,8 +32,6 @@
     <Filter Include="ProcessThread\ThreadSafeMessaging TEST">
       <UniqueIdentifier>{9d93ad2a-8d46-49c1-b6bd-5b4a1152a980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ProcessThread\ProcessThread TEST">
-      <UniqueIdentifier>{0911badd-e531-40c3-a58e-82ca382b2e18}</UniqueIdentifier>
     <Filter Include="ES\EntityWorld TEST">
       <UniqueIdentifier>{0fd3ae1b-2f22-4b36-ba12-2b40707a8e74}</UniqueIdentifier>
     </Filter>
@@ -51,6 +49,54 @@
     </Filter>
     <Filter Include="ES\Code to test\System">
       <UniqueIdentifier>{3e6ffd67-f3eb-4993-96aa-b454bcd7d62f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{6b93792f-d5f8-4c21-9a23-f10a4eb6e274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Code to test">
+      <UniqueIdentifier>{5032e106-e17a-40ea-856c-829426f3cdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Code to test\Components">
+      <UniqueIdentifier>{999383e9-4ba3-4235-9551-e25d40d50d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Code to test\Systems">
+      <UniqueIdentifier>{0513e5c8-697c-4f17-bc1f-62dd236b28fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{5a9914cd-856c-44c6-bad0-d225e1e09b2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Code to test">
+      <UniqueIdentifier>{f06652aa-aaee-45be-bb01-2e203c6e28e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Code to test\InputControls">
+      <UniqueIdentifier>{615ef670-04bc-4568-86f9-4120bcf6770b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Code to test\InputFetchers">
+      <UniqueIdentifier>{ad6915f2-0a18-4ecd-b938-67d1e00531a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Code to test\InputManager">
+      <UniqueIdentifier>{3719fc93-45c4-4431-a7d1-8cc47346aec1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm">
+      <UniqueIdentifier>{f3ad3e0c-00c4-458d-85c4-b35fc1ed5946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test">
+      <UniqueIdentifier>{eaff3f24-69a9-49a6-83d6-009432b55a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test\ProcessThread">
+      <UniqueIdentifier>{39df1d87-405a-4515-965a-17f3a6121849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test\TcpListenerProcess">
+      <UniqueIdentifier>{8776d52f-8a7b-4559-9486-f0ee7d5d2612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test\ThreadSafeMessaging">
+      <UniqueIdentifier>{97888e7f-bfe3-49e1-9d4a-d28bcb504bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test\ThreadSafeMessaging\ProcessMessage">
+      <UniqueIdentifier>{03b0ef83-7f5a-432d-af24-3bbc99798d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetComm\Code to test\ThreadSafeMessaging\ProcessMessage\base">
+      <UniqueIdentifier>{fb9cfff6-9dea-4f8e-b369-2a9c71ef4c17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,17 +157,74 @@
     <ClCompile Include="ThreadSafeMessagingTEST.cpp">
       <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp">
-      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    <ClCompile Include="..\..\Gameplay\Src\InputSystem.cpp">
+      <Filter>Gameplay\Code to test\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
-      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    <ClCompile Include="..\..\Gameplay\Src\NetworkListenerSystem.cpp">
+      <Filter>Gameplay\Code to test\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ProcessThreadTEST.cpp">
-      <Filter>ProcessThread\ProcessThread TEST</Filter>
+    <ClCompile Include="..\..\Gameplay\Src\PrintPositionsSystem.cpp">
+      <Filter>Gameplay\Code to test\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystemTEST.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\AnalogueControl.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\Control.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\DigitalControl.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\KeyControl.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\MouseBtnControl.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\MouseMoveControl.cpp">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\DirectInputFetcher.cpp">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\MessageLoopFetcher.cpp">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\XInputFetcher.cpp">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\InputControlFactory.cpp">
+      <Filter>Input\Code to test\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\InputManager.cpp">
+      <Filter>Input\Code to test\InputManager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NetComm\Src\ProcessThread.cpp">
-      <Filter>ProcessThread\ProcessThread TEST</Filter>
+      <Filter>NetComm\Code to test\ProcessThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\TcpListenerProcess.cpp">
+      <Filter>NetComm\Code to test\TcpListenerProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ThreadSafeMessaging.cpp">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageClientConnected.cpp">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageTerminate.cpp">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessageText.cpp">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetComm\Src\ProcessMessage.cpp">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Input\Src\InputHelper.cpp">
+      <Filter>Input\Code to test\InputFetchers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,14 +273,80 @@
     <ClInclude Include="..\..\ES\Src\IPerformer.h">
       <Filter>ES\Code to test</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h">
-      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    <ClInclude Include="..\..\Gameplay\Src\InputSystem.h">
+      <Filter>Gameplay\Code to test\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
-      <Filter>ProcessThread\ThreadSafeMessaging TEST</Filter>
+    <ClInclude Include="..\..\Gameplay\Src\NetworkListenerSystem.h">
+      <Filter>Gameplay\Code to test\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Gameplay\Src\PrintPositionsSystem.h">
+      <Filter>Gameplay\Code to test\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Gameplay\Src\NetworkSynced.h">
+      <Filter>Gameplay\Code to test\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Gameplay\Src\Transform.h">
+      <Filter>Gameplay\Code to test\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\AnalogueControl.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\Control.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\DigitalControl.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\KeyControl.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\MouseBtnControl.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\MouseMoveControl.h">
+      <Filter>Input\Code to test\InputControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\DirectInputFetcher.h">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\MessageLoopFetcher.h">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\XInputFetcher.h">
+      <Filter>Input\Code to test\InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\InputControlFactory.h">
+      <Filter>Input\Code to test\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\InputManager.h">
+      <Filter>Input\Code to test\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\InputType.h">
+      <Filter>Input\Code to test\InputManager</Filter>
     </ClInclude>
     <ClInclude Include="..\..\NetComm\Src\ProcessThread.h">
-      <Filter>ProcessThread\ProcessThread TEST</Filter>
+      <Filter>NetComm\Code to test\ProcessThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\TcpListenerProcess.h">
+      <Filter>NetComm\Code to test\TcpListenerProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ThreadSafeMessaging.h">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageClientConnected.h">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageTerminate.h">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessageText.h">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetComm\Src\ProcessMessage.h">
+      <Filter>NetComm\Code to test\ThreadSafeMessaging\ProcessMessage\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Input\Src\InputHelper.h">
+      <Filter>Input\Code to test\InputFetchers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

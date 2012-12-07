@@ -104,9 +104,17 @@ Desktop.ini
 docs
 assets/*
 External/DirectX/
+External/LibRocket/
+External/GTest/
 
 # Files
 *.exe
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
+Visual Leak Detector
+Ant
+Assets
+External
+igloo
+/Build/*.lastcodeanalysissucceeded

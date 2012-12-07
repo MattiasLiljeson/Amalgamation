@@ -1,0 +1,4 @@
+@INCLUDE = Doxyfile
+PROJECT_NAME           = "AssetsManagement"
+OUTPUT_DIRECTORY       = docs/assetsmanagement
+INPUT                  = Projects/AssetsManagement/Src

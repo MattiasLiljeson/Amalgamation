@@ -9,7 +9,7 @@ class TestSystem : public EntitySystem
 {
 public:
 	TestSystem()
-		: EntitySystem( SystemType::getTypeFor(SystemType::TestSystem),
+		: EntitySystem( SystemType::TestSystem,
 		0,ComponentType::NON_EXISTING)
 	{}
 };
@@ -18,7 +18,7 @@ class TestSystem2 : public EntitySystem
 {
 public:
 	TestSystem2()
-		: EntitySystem( SystemType::getTypeFor(SystemType::TestSystem),
+		: EntitySystem( SystemType::TestSystem,
 		1,ComponentType::NON_EXISTING)
 	{}
 };
@@ -26,16 +26,14 @@ public:
 TEST(EntitySystemConstructor, SimpleCreation)
 {
 	SystemType type = SystemType::getTypeFor(SystemType::NON_EXISTING);
-	EntitySystem system( type, 1, ComponentType::Position);
+	EntitySystem system( SystemType::NON_EXISTING, 1, ComponentType::Transform);
 }
 
 TEST(EntitySystemConstructor, MultipleComponentTypes)
 {
-	SystemType type = SystemType::getTypeFor(SystemType::NON_EXISTING);
-
-	EntitySystem system(type, 3,
-		ComponentType::Position,
-		ComponentType::Orientation,
+	EntitySystem system(SystemType::NON_EXISTING, 3,
+		ComponentType::Input,
+		ComponentType::Transform,
 		ComponentType::Render);
 
 	bitset<ComponentType::NUM_COMPONENT_TYPES> set;

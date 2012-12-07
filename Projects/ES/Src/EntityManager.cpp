@@ -41,7 +41,7 @@ void EntityManager::added( Entity* p_entity )
 
 		int idx = p_entity->getIndex();
 
-		if( m_entities.size() <= idx )
+		if( (int)m_entities.size() <= idx )
 		m_entities.resize( idx+1 );
 
 		m_entities[idx] =  p_entity;
