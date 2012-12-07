@@ -12,7 +12,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
@@ -33,7 +33,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 		client.disconnect();
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
@@ -48,7 +48,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
@@ -67,7 +67,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
@@ -93,7 +93,7 @@ Describe(a_tcp_client)
 		Assert::That(client.newPacketsCount(), Equals(0));
 	}
 
-	It(can_read_the_same_packets_as_are_sent)
+	It(can_read_the_same_packets_that_are_sent)
 	{
 		string messages[] =
 		{
@@ -106,7 +106,7 @@ Describe(a_tcp_client)
 		server.startListening( 1337 );
 
 		TcpClient client;
-		client.connectToServer( "localhost", "1337" );
+		client.connectToServer( "127.0.0.1", "1337" );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();

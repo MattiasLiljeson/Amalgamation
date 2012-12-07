@@ -21,6 +21,7 @@
 #include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
+#include <TcpServer.h>
 
 using namespace std;
 
@@ -51,5 +52,5 @@ private:
 	bool m_running;
 
 	EntityWorld* m_world;
-
+	TcpServer* m_server;
 };

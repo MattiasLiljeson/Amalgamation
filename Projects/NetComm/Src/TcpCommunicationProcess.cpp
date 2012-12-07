@@ -124,7 +124,6 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				m_parent->putMessage( new ProcessMessageReceivePacket(
 					this,
 					new Packet(messages.front()) ) );
-				cout << "Packet recv: " << messages.front() << endl;
 				messages.pop();
 			}
 

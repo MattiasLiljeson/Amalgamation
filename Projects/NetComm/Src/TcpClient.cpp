@@ -92,8 +92,6 @@ void TcpClient::processMessages()
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
-			cout << "TcpServer, receive: " <<
-				m_newPackets.back()->getMessage() << endl;
 		}
 
 		delete message;

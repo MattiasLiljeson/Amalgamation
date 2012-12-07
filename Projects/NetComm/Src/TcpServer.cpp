@@ -132,8 +132,6 @@ void TcpServer::processMessages()
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
-			cout << "TcpServer, receive: " <<
-				m_newPackets.back()->getMessage() << endl;
 		}
 
 		delete message;
@@ -150,4 +148,6 @@ void TcpServer::broadcastPacket( Packet* p_packet )
 		m_communicationProcesses[i]->putMessage(
 			new ProcessMessageSendPacket( this, new Packet(*p_packet) ) );
 	}
+
+	delete p_packet;
 }
