@@ -31,7 +31,7 @@ using namespace std;
 using namespace boost::asio::ip;
 
 
-class NetworkListenerSystem: public EntitySystem, public ThreadSafeMessaging
+class NetworkListenerSystem: public EntitySystem
 {
 public:
 	NetworkListenerSystem();

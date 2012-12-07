@@ -45,27 +45,32 @@ void TcpCommunicationProcess::body()
 
 		m_ioService->poll();
 
-		while( getMessageCount() > 0 )
-		{
-			ProcessMessage* message = popMessage();
-
-			if( message->type == MessageType::TERMINATE )
-			{
-				m_running = false;
-			}
-			else if( message->type == MessageType::SEND_PACKET )
-			{
-				ProcessMessageSendPacket* sendPacketMessage =
-					static_cast<ProcessMessageSendPacket*>(message);
-
-				m_activeSocket->send( boost::asio::buffer(
-					sendPacketMessage->packet->getMessage().c_str(),
-					sendPacketMessage->packet->getMessage().size() + 1 ) );
-			}
-
-			delete message;
-		}
+		processMessages();
 		
+	}
+}
+
+void TcpCommunicationProcess::processMessages()
+{
+	while( getMessageCount() > 0 )
+	{
+		ProcessMessage* message = popMessage();
+
+		if( message->type == MessageType::TERMINATE )
+		{
+			m_running = false;
+		}
+		else if( message->type == MessageType::SEND_PACKET )
+		{
+			ProcessMessageSendPacket* sendPacketMessage =
+				static_cast<ProcessMessageSendPacket*>(message);
+
+			m_activeSocket->send( boost::asio::buffer(
+				sendPacketMessage->packet->getMessage().c_str(),
+				sendPacketMessage->packet->getMessage().size() + 1 ) );
+		}
+
+		delete message;
 	}
 }
 

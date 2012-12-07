@@ -195,6 +195,15 @@ Describe(a_tcp_server)
 		Assert::That( server.popNewPacket(), Equals((Packet*)NULL) );
 	}
 
+	It(has_an_interface_that_can_be_used_to_process_messages)
+	{
+		ThreadSafeMessaging* server = new TcpServer();
+
+		server->processMessages();
+
+		delete server;
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;

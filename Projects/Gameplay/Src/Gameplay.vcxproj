@@ -17,6 +17,7 @@
     <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PrintPositionsSystem.h" />
+    <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
@@ -25,6 +26,7 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="PrintPositionsSystem.cpp" />
+    <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -15,6 +15,7 @@ public:	//Enums
 		TestSystem,
 		TestSystem2,
 		PrintPositionsSystem,
+		ProcessingMessagesSystem,
 		NetworkListenerSystem,
 		InputSystem,
 		NUM_SYSTEM_TYPES

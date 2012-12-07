@@ -81,6 +81,10 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	return success;
 }
 
+void TcpClient::processMessages()
+{
+}
+
 void TcpClient::disconnect()
 {
 	if( m_communicationProcess )

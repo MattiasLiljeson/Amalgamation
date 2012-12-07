@@ -19,6 +19,7 @@
 
 #include <EntityWorld.h>
 #include <PrintPositionsSystem.h>
+#include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
 
 using namespace std;

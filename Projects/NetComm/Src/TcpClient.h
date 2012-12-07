@@ -36,6 +36,8 @@ public:
 
 	void sendPacket( Packet* p_packet );
 
+	void processMessages();
+
 private:
 	boost::asio::io_service* m_ioService;
 

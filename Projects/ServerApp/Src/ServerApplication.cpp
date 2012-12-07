@@ -44,6 +44,9 @@ void ServerApplication::initSystems()
 	m_world->setSystem( SystemType::PrintPositionsSystem,
 		new PrintPositionsSystem(), true );
 
+	m_world->setSystem( SystemType::ProcessingMessagesSystem,
+		new ProcessingMessagesSystem(), true );
+
 	m_world->setSystem( SystemType::NetworkListenerSystem,
 		new NetworkListenerSystem(), true );
 
