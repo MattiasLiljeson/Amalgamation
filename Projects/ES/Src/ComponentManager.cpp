@@ -8,11 +8,27 @@ ComponentManager::ComponentManager()
 
 ComponentManager::~ComponentManager()
 {
+	for( unsigned int componentTypeIndex=0;
+		componentTypeIndex<m_componentsByType.size();
+		componentTypeIndex++ )
+	{
+		for( unsigned int componentIndex=0;
+			componentIndex<m_componentsByType[componentTypeIndex].size();
+			componentIndex++ )
+		{
+			if( m_componentsByType[componentTypeIndex][componentIndex] )
+			{
+				delete m_componentsByType[componentTypeIndex][componentIndex];
+			}
+		}
+	}
 }
 
-vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity, vector<Component*>& p_fillBag)
+vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity,
+													   vector<Component*>& p_fillBag)
 {
-	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
+	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits =
+		p_entity->getComponentBits();
 
 	for(unsigned int i=0; i<componentBits.size(); i++ )
 	{
@@ -29,7 +45,8 @@ void ComponentManager::deleted( Entity* p_entity )
 	m_deleted.push_back(p_entity);
 }
 
-void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type, Component* p_component )
+void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
+									Component* p_component )
 {
 	int typeIndex = p_type.getIndex();
 	int entityIndex = p_entity->getIndex();
@@ -81,7 +98,8 @@ void ComponentManager::clean()
 
 void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 {
-	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
+	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits =
+		p_entity->getComponentBits();
 	for(unsigned int i=0; i<componentBits.size(); i++ )
 	{
 		// Should these be deleted?
