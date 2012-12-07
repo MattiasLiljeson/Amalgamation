@@ -23,6 +23,8 @@ TcpListenerProcess::~TcpListenerProcess()
 
 	if( m_socket )
 		delete m_socket;
+
+	m_ioService->stop();
 }
 
 void TcpListenerProcess::body()
@@ -34,6 +36,8 @@ void TcpListenerProcess::body()
 
 	while( m_running )
 	{
+		boost::this_thread::sleep( boost::posix_time::millisec(1) );
+
 		// Poll for a new connection. (This is what calls the handleAccept method).
 		m_ioService->poll();
 
@@ -55,7 +59,6 @@ void TcpListenerProcess::body()
 			}
 		}
 
-		boost::this_thread::sleep( boost::posix_time::millisec(1) );
 	}
 }
 

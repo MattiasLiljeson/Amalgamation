@@ -16,6 +16,21 @@
     <Filter Include="ThreadSafeMessaging\ProcessMessage\base">
       <UniqueIdentifier>{c171c6d5-ac52-4ad6-8504-4294fc07e86c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TcpServer">
+      <UniqueIdentifier>{8cd0d913-8ccb-4f9c-8451-f665f483fee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TcpClient">
+      <UniqueIdentifier>{e6e8f356-495f-40a1-9af9-193fa3604e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{61a5f306-ae32-4c48-bbf2-685248355e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TcpCommunicationProcess">
+      <UniqueIdentifier>{101fe3ed-5998-4aad-bb7a-32a4cce9616b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility %28Put this in utility project when that project is created.">
+      <UniqueIdentifier>{27e1b6c3-05a9-4e54-bdd1-fde5ee97e2a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -39,6 +54,30 @@
     <ClCompile Include="ProcessMessageTerminate.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
+    <ClCompile Include="TcpServer.cpp">
+      <Filter>TcpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClient.cpp">
+      <Filter>TcpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageSendPacket.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpCommunicationProcess.cpp">
+      <Filter>TcpCommunicationProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageReceivePacket.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageSocketDisconnected.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="StringSplit.cpp">
+      <Filter>Utility %28Put this in utility project when that project is created.</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -61,6 +100,30 @@
     </ClInclude>
     <ClInclude Include="ProcessMessageTerminate.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpServer.h">
+      <Filter>TcpServer</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClient.h">
+      <Filter>TcpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpCommunicationProcess.h">
+      <Filter>TcpCommunicationProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageSendPacket.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageReceivePacket.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageSocketDisconnected.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="StringSplit.h">
+      <Filter>Utility %28Put this in utility project when that project is created.</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

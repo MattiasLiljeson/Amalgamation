@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="TestNetCommRunner.cpp" />
+    <ClCompile Include="TcpServer_spec.cpp">
+      <Filter>TcpServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClient_spec.cpp">
+      <Filter>TcpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet_spec.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="StringSplit_spec.cpp">
+      <Filter>Utility, StringSplit %28Put in utility project later...%29</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="TcpServer">
+      <UniqueIdentifier>{5015b37f-c48f-43c7-937f-536a0ffa064e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TcpClient">
+      <UniqueIdentifier>{49306991-0288-4dec-974f-16d1bc3f1f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{3087e2dc-b543-41c8-a383-ee95089428ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility, StringSplit %28Put in utility project later...%29">
+      <UniqueIdentifier>{548c5009-ab2f-4a41-93ca-18a9014bfc02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

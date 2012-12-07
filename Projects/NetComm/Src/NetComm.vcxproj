@@ -11,21 +11,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageSocketDisconnected.h" />
+    <ClInclude Include="ProcessMessageReceivePacket.h" />
+    <ClInclude Include="ProcessMessageSendPacket.h" />
     <ClInclude Include="ProcessMessageTerminate.h" />
     <ClInclude Include="ProcessMessageText.h" />
     <ClInclude Include="ProcessThread.h" />
+    <ClInclude Include="StringSplit.h" />
+    <ClInclude Include="TcpClient.h" />
+    <ClInclude Include="TcpCommunicationProcess.h" />
     <ClInclude Include="TcpListenerProcess.h" />
+    <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ProcessMessage.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageReceivePacket.cpp" />
+    <ClCompile Include="ProcessMessageSendPacket.cpp" />
+    <ClCompile Include="ProcessMessageSocketDisconnected.cpp" />
     <ClCompile Include="ProcessMessageTerminate.cpp" />
     <ClCompile Include="ProcessMessageText.cpp" />
     <ClCompile Include="ProcessThread.cpp" />
+    <ClCompile Include="StringSplit.cpp" />
+    <ClCompile Include="TcpClient.cpp" />
+    <ClCompile Include="TcpCommunicationProcess.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />
+    <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -78,7 +94,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,7 +109,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

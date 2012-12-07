@@ -16,7 +16,7 @@
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\GFX">
+	<Filter Include="Systems\GFX">
       <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GFX">
@@ -48,7 +48,10 @@
     <ClInclude Include="Input.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="CameraSystem.h">
+	<ClInclude Include="NetworkClientControllable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+	<ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
@@ -77,7 +80,7 @@
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="CameraSystem.cpp">
+	<ClCompile Include="CameraSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">

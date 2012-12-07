@@ -11,6 +11,8 @@ ProcessThread::ProcessThread()
 
 ProcessThread::~ProcessThread()
 {
+//	throw string("ThreadSafeMessaging instance terminated with some messages remaining");
+
 	stop();
 }
 
@@ -48,7 +50,7 @@ void ProcessThread::restart()
 	start();
 }
 
-const int ProcessThread::getId() const
+int ProcessThread::getId() const
 {
 	return m_id;
 }
