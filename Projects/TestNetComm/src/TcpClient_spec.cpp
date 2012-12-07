@@ -121,6 +121,7 @@ Describe(a_tcp_client)
 		{
 			Packet* packet = client.popNewPacket();
 			Assert::That(packet->getMessage(), Equals(messages[i]));
+			delete packet;
 		}
 	}
 

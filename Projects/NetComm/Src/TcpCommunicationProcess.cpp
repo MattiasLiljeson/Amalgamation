@@ -68,6 +68,10 @@ void TcpCommunicationProcess::processMessages()
 			m_activeSocket->send( boost::asio::buffer(
 				sendPacketMessage->packet->getMessage().c_str(),
 				sendPacketMessage->packet->getMessage().size() + 1 ) );
+
+			// Once the packet has been sent over the network, it can safely be deleted.
+			delete sendPacketMessage->packet;
+			sendPacketMessage->packet = NULL;
 		}
 
 		delete message;
