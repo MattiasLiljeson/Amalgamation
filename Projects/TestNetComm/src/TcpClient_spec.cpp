@@ -40,6 +40,7 @@ Describe(a_tcp_client)
 		server.processMessages();
 
 		Assert::That(client.hasActiveConnection(), IsFalse());
+		Assert::That(server.activeConnectionsCount(), Equals(0));
 	}
 
 	It(can_see_if_there_are_new_packets)

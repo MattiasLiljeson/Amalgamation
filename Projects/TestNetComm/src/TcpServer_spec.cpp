@@ -180,6 +180,7 @@ Describe(a_tcp_server)
 		server.processMessages();
 
 		Packet* packet = NULL;
+		Assert::That(server.newPacketsCount(), Equals(3));
 		for( unsigned int i=0; i<3; i++ )
 		{
 			packet = server.popNewPacket();
