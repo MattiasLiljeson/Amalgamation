@@ -44,6 +44,7 @@
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)Build;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\Tools\bin;$(VSInstallDir)Common7\tools;$(VSInstallDir)Common7\ide;$(ProgramFiles)\HTML Help Workshop;$(MSBuildToolsPath32);$(VSInstallDir);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build\</OutDir>
@@ -51,6 +52,7 @@
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(SolutionDir)Build;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\Tools\bin;$(VSInstallDir)Common7\tools;$(VSInstallDir)Common7\ide;$(ProgramFiles)\HTML Help Workshop;$(MSBuildToolsPath32);$(VSInstallDir);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

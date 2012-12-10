@@ -44,9 +44,61 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
 	// Create a cube
-	unsigned int cubeId = graphicsWrapper->createMesh("P_cube", 0);
-	// RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f},cubeId};
+	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
 
+	// Create a shitload of instances
+	vector<InstanceVertex>* instances = new vector<InstanceVertex>();
+	for (int i=0;i<100;i++)
+	{
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+				0.0f,1.0f,0.0f,  0.0f,
+				0.0f,0.0f,1.0f,  0.0f,
+				0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+	
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
+				0.0f,1.0f,0.0f,  0.0f,
+				0.0f,0.0f,1.0f,  2.0f,
+				0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
+			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  0.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			0.0f,1.0f,0.0f,  0.0f,
+			0.0f,0.0f,1.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
+				0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  -(float)i*2.3f-2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  -2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+	}
 
 
 	AglMatrix viewMatrix = AglMatrix::identityMatrix();
@@ -107,7 +159,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
-			graphicsWrapper->renderMesh(cubeId);	  // process a mesh						 
+			graphicsWrapper->renderMesh(cubeId,instances);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
 			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
@@ -117,6 +169,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 
 	AntTweakBarWrapper::destroy();
+	delete instances;
 	delete window;
 	delete graphicsWrapper;
 
