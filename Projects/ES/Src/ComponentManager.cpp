@@ -106,7 +106,7 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 		if (p_entity->getIndex() < m_componentsByType[i].size())
 		{
 			// Should these be deleted?
-			delete m_componentsByType[i][p_entity->getIndex()];
+			//delete m_componentsByType[i][p_entity->getIndex()];
 			m_componentsByType[i][p_entity->getIndex()] = NULL;
 		}
 	}

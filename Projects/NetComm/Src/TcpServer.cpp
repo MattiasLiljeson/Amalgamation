@@ -147,6 +147,7 @@ void TcpServer::processMessages()
 			ProcessMessageSocketDisconnected* messageSocketDisconnected =
 				static_cast< ProcessMessageSocketDisconnected* >(message);
 
+			int processToBeDeleted = -1;
 			for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 			{
 				if( messageSocketDisconnected->processId ==
@@ -155,8 +156,21 @@ void TcpServer::processMessages()
 					m_newDisconnectionProcesses.push(
 						m_communicationProcesses[i]->getId() );
 
+					processToBeDeleted = i;
+					break;
 				}
 			}
+			
+			if (processToBeDeleted != -1)
+			{
+				m_communicationProcesses[processToBeDeleted]->putMessage( new ProcessMessageTerminate() );
+				m_communicationProcesses[processToBeDeleted]->stop();
+				delete m_communicationProcesses[processToBeDeleted];
+				m_communicationProcesses.erase(m_communicationProcesses.begin() + processToBeDeleted);
+			}
+			else
+				throw "Something is really knaaas";
+
 		}
 		else if( message->type == MessageType::RECEIVE_PACKET )
 		{
