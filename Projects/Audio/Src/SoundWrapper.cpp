@@ -11,7 +11,7 @@ SoundWrapper::SoundWrapper()
 
 	initSoundEngine();
 
-	m_soundFactory = new SoundFactory();
+	m_soundFactory = new SoundFactory(m_soundDevice);
 }
 
 SoundWrapper::~SoundWrapper()
@@ -82,6 +82,6 @@ void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
 
 Sound* SoundWrapper::createNewNonPositionalSound( const char* p_filePath )
 {
-	m_soundFactory->
+	return m_soundFactory->createNonPositionalSound(p_filePath);
 }
 

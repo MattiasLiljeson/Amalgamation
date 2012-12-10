@@ -2,7 +2,7 @@
 
 #include <XAudio2.h>
 #include <XAudio2fx.h>
-#include <X3daudio.h>
+#include <x3daudio.h>
 #include <strsafe.h>
 #include "XAudio2Exception.h"
 #include "SoundSceneInfo.h"

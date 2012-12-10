@@ -12,7 +12,7 @@ SoundFactory::~SoundFactory()
 
 Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 {
-	WAVEFORMATEXTENSIBLE* m_waveFormatEx;
+	WAVEFORMATEXTENSIBLE waveFormatEx;
 	ZeroMemory(&m_file, sizeof(HANDLE));
 	initFile(p_flePath);
 
@@ -28,7 +28,7 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 	/* Locate the fmt chunk and copy its contents into a WAVEFORMATEXTENSIBLE*/
 	/*************************************************************************/
 	findChunk(m_file,fourccFMT,chunkSize,chunkPosition);
-	readChunkData(m_file,m_waveFormatEx,chunkSize,chunkPosition);
+	readChunkData(m_file,&waveFormatEx,chunkSize,chunkPosition);
 
 	/************************************************************************/
 	/* Locate the data chunk and read its contents into a buffer            */
@@ -36,6 +36,27 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 	findChunk(m_file, fourccDATA,chunkSize,chunkPosition);
 	BYTE* dataBuffer = new BYTE[chunkSize];
 	readChunkData(m_file,dataBuffer,chunkSize, chunkPosition);
+
+	XAUDIO2_BUFFER buffer;
+
+	/************************************************************************/
+	/* HACK: Most options of the buffer should be sent into the function	*/
+	/* rather than the hard coded way below									*/
+	/************************************************************************/
+	ZeroMemory(&buffer, sizeof(XAUDIO2_BUFFER));
+	buffer.AudioBytes = chunkSize;
+	buffer.pAudioData = dataBuffer;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.LoopBegin = 0;
+	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+
+	IXAudio2SourceVoice* soundVoice;
+
+	m_soundDevice->CreateSourceVoice( &soundVoice, (WAVEFORMATEX*)&waveFormatEx, 0,
+		XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL);
+
+	Sound* newSound = new Sound(soundVoice,buffer);
+	return newSound;
 }
 
 void SoundFactory::findChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, 

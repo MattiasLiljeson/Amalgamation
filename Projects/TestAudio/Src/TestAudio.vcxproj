@@ -42,15 +42,15 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)External/igloo/;$(SolutionDir)Projects/Audio/Src/;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Audio/Lib/;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External/igloo/;$(SolutionDir)Projects/Audio/Src/;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/XAudio2/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Audio/Lib/;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)External/igloo/;$(SolutionDir)Projects/Audio/Src/;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Audio/Lib/;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External/igloo/;$(SolutionDir)Projects/Audio/Src/;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/XAudio2/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Audio/Lib/;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

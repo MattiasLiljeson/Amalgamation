@@ -29,7 +29,11 @@ Describe(A_AudioManager)
 
 		Sound* technoMusic = newSoundEngine->createNewNonPositionalSound
 			("Assets/Sound/Music/Test/Techno_1.wav");
-		technoMusic->beginPlaying();
 
+		HRESULT hr = S_OK;
+		Assert::That(hr,Equals(technoMusic->play()));
+
+		delete technoMusic;
+		delete newSoundEngine;
 	}
 };

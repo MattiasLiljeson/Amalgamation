@@ -33,10 +33,19 @@
     <ClInclude Include="SoundFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="SoundDefines.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundWrapper.cpp">
       <Filter>AudioEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>AudioEngine\SoundFiles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

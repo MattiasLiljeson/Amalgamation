@@ -13,12 +13,15 @@
   <ItemGroup>
     <ClInclude Include="AudioCurves.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
     <ClInclude Include="SoundSceneInfo.h" />
     <ClInclude Include="SoundWrapper.h" />
     <ClInclude Include="XAudio2Exception.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundFactory.cpp" />
     <ClCompile Include="SoundWrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -55,14 +58,14 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External/XAudio2/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External/XAudio2/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
