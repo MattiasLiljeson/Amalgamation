@@ -77,6 +77,28 @@ unsigned int TcpServer::newDisconnectionsCount()
 	return m_newDisconnectionProcesses.size();
 }
 
+bool TcpServer::hasNewDisconnections()
+{
+	bool newDisconnect = false;
+
+	if( m_newDisconnectionProcesses.size() > 0 )
+		newDisconnect = true;
+
+	return newDisconnect;
+}
+
+int TcpServer::popNewDisconnection()
+{
+	int id = -1;
+	if( m_newDisconnectionProcesses.size() > 0 )
+	{
+		id = m_newDisconnectionProcesses.front();
+		m_newDisconnectionProcesses.pop();
+	}
+
+	return id;
+}
+
 bool TcpServer::hasNewPackets()
 {
 	bool newPacket = false;
@@ -132,6 +154,7 @@ void TcpServer::processMessages()
 				{
 					m_newDisconnectionProcesses.push(
 						m_communicationProcesses[i]->getId() );
+
 				}
 			}
 		}

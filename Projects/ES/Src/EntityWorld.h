@@ -218,7 +218,7 @@ public:
 	 * @param entities
 	 * @param performer
 	 */
-	void check( vector<Entity*> p_entities, IPerformer* p_performer );
+	void check( vector<Entity*>& p_entities, IPerformer* p_performer );
 
 	void process();
 

@@ -1,7 +1,7 @@
 #include "NetworkListenerSystem.h"
 
 NetworkListenerSystem::NetworkListenerSystem( TcpServer* p_server )
-	: EntitySystem( SystemType::NetworkListenerSystem )
+	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;
 }
@@ -12,6 +12,8 @@ NetworkListenerSystem::~NetworkListenerSystem()
 
 void NetworkListenerSystem::process()
 {
+	EntitySystem::process();
+
 	while( m_server->hasNewConnections() )
 	{
 		int id = m_server->popNewConnection();
@@ -23,6 +25,23 @@ void NetworkListenerSystem::process()
 			new NetworkSynced( id ) );
 		m_world->addEntity( e );
 
+	}
+}
+
+void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
+{
+	while (m_server->hasNewDisconnections())
+	{
+		int id = m_server->popNewDisconnection();
+		for (unsigned int index = 0; index < p_entities.size(); index++)
+		{
+			NetworkSynced* netSync = static_cast<NetworkSynced*>(
+				m_world->getComponentManager()->getComponent( p_entities[index],
+				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
+
+			if (netSync->getNetworkIdentity() == id)
+				m_world->deleteEntity(p_entities[index]);
+		}
 	}
 }
 

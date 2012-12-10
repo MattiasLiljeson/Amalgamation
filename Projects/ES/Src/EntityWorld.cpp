@@ -10,7 +10,7 @@ EntityWorld::EntityWorld()
 	setManager(  Manager::EntityManager, m_entityManager );
 
 	m_systemManager = new SystemManager( this );
-	setManager(  Manager::SystemManager, m_entityManager );
+	setManager(  Manager::SystemManager, m_systemManager );
 }
 
 
@@ -208,7 +208,7 @@ EntitySystem* EntityWorld::getSystem( SystemType::SystemTypeIdx p_typeIdx )
 	return m_systemManager->getSystem( p_typeIdx );
 }
 
-void EntityWorld::check( vector<Entity*> p_entities, IPerformer* p_performer )
+void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 {
 	if(!p_entities.empty())
 	{
@@ -233,7 +233,7 @@ void EntityWorld::process()
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
 
-	m_componentManager->clean();
+	//m_componentManager->clean();
 
 	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
 	{

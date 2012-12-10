@@ -39,6 +39,7 @@ public:
 	~NetworkListenerSystem();
 
 	virtual void process();
+	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
 
