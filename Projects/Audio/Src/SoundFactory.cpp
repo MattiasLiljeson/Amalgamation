@@ -53,7 +53,7 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 	IXAudio2SourceVoice* soundVoice;
 
 	m_soundDevice->CreateSourceVoice( &soundVoice, (WAVEFORMATEX*)&waveFormatEx, 0,
-		XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL);
+		1.0f, NULL, NULL, NULL);
 
 	Sound* newSound = new Sound(soundVoice,buffer);
 	return newSound;

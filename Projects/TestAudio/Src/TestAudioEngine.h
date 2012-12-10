@@ -7,33 +7,45 @@ using namespace std;
 
 Describe(A_AudioManager)
 {
-	It(Should_be_initalized)
+	SoundWrapper* m_soundEngine;
+	Sound* m_sound;
+
+	void SetUp()
 	{
-		bool init = true;
-		SoundWrapper* newSoundEngine;
-		try
-		{
-			newSoundEngine = new SoundWrapper();
-		}
-		catch (exception &e)
-		{
-			DEBUGPRINT((e.what()));
-			init = false;
-		}
-		delete newSoundEngine;
-		AssertThat(init, Equals(true));
+		m_soundEngine = new SoundWrapper();
+		m_sound = m_soundEngine->createNewNonPositionalSound
+			("Assets/Sound/Music/Test/MusicMono.wav");
+	}
+	void TearDown()
+	{
+		delete m_sound;
+		delete m_soundEngine;
 	}
 	It(Should_be_able_to_play_nonpositional_sound)
 	{
-		SoundWrapper* newSoundEngine = new SoundWrapper();
-
-		Sound* technoMusic = newSoundEngine->createNewNonPositionalSound
-			("Assets/Sound/Music/Test/Techno_1.wav");
-
 		HRESULT hr = S_OK;
-		Assert::That(hr,Equals(technoMusic->play()));
-
-		delete technoMusic;
-		delete newSoundEngine;
+		Assert::That(hr,Equals(m_sound->resumeOrPlay() ) );
+	}
+	It(Should_be_able_to_play_pause_and_resume_sound)
+	{
+		HRESULT hr = S_OK;
+		int sleepTime = 0;
+		Assert::That(hr, Equals ( m_sound->resumeOrPlay() ) );
+		Sleep(sleepTime);
+		Assert::That(hr, Equals ( m_sound->pause() ) );
+		Sleep(sleepTime);
+		Assert::That(hr, Equals ( m_sound->resumeOrPlay() ) );
+		Sleep(sleepTime);
+	}
+	It(Should_be_able_to_play_stop_and_play)
+	{
+		HRESULT hr = S_OK;
+		int sleepTime = 0;
+		Assert::That(hr, Equals ( m_sound->resumeOrPlay() ) );
+		Sleep(sleepTime);
+		Assert::That(hr, Equals ( m_sound->stop() ) );
+		Sleep(sleepTime);
+		Assert::That(hr, Equals ( m_sound->restart() ) );
+		Sleep(sleepTime);
 	}
 };

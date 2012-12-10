@@ -13,14 +13,17 @@
 ///---------------------------------------------------------------------------------------
 #include <XAudio2fx.h>
 #include <XAudio2.h>
+#include "XAudio2Exception.h"
 
 class Sound
 {
 public:
 	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer);
 	virtual ~Sound();
-	HRESULT play();
 	HRESULT stop();
+	HRESULT pause();
+	HRESULT restart();
+	HRESULT resumeOrPlay();
 private:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
