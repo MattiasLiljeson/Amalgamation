@@ -42,7 +42,8 @@ vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity,
 
 void ComponentManager::deleted( Entity* p_entity )
 {
-	m_deleted.push_back(p_entity);
+	removeComponentsOfEntity(p_entity);
+	//m_deleted.push_back(p_entity);
 }
 
 void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
@@ -89,12 +90,12 @@ vector<Component*> ComponentManager::getComponentsByType( ComponentType p_type )
 	return m_componentsByType[p_type.getIndex()];
 }
 
-void ComponentManager::clean()
-{
-	for (unsigned int i = 0; i < m_deleted.size(); i++)
-		removeComponentsOfEntity(m_deleted[i]);
-	m_deleted.clear();
-}
+//void ComponentManager::clean()
+//{
+//	for (unsigned int i = 0; i < m_deleted.size(); i++)
+//		removeComponentsOfEntity(m_deleted[i]);
+//	m_deleted.clear();
+//}
 
 void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 {
@@ -102,9 +103,12 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 		p_entity->getComponentBits();
 	for(unsigned int i=0; i<componentBits.size(); i++ )
 	{
-		// Should these be deleted?
-		delete m_componentsByType[i][p_entity->getIndex()];
-		m_componentsByType[i][p_entity->getIndex()] = NULL;
+		if (p_entity->getIndex() < m_componentsByType[i].size())
+		{
+			// Should these be deleted?
+			delete m_componentsByType[i][p_entity->getIndex()];
+			m_componentsByType[i][p_entity->getIndex()] = NULL;
+		}
 	}
 	componentBits.reset();
 	p_entity->setComponentBits(componentBits);

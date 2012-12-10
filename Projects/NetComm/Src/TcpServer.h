@@ -46,7 +46,9 @@ public:
 
 	unsigned int activeConnectionsCount();
 
+	bool hasNewDisconnections();
 	unsigned int newDisconnectionsCount();
+	int popNewDisconnection();
 
 	bool hasNewPackets();
 	unsigned int newPacketsCount();
