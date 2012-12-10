@@ -1,0 +1,83 @@
+cbuffer Material
+{
+	float4 Ambient;
+	float4 Diffuse;
+	float4 Specular;
+	float4 Emissive;
+    float4 EyePosition;
+    float4 Flags;
+};
+Texture2D DiffuseTexture;
+Texture2D SpecularTexture;
+Texture2D GlowTexture;
+Texture2D NormalTexture;
+SamplerState SampleType : register(s0);
+
+struct VOut
+{
+    float4 position : SV_POSITION;
+    float3 wpos     : POSITION;
+	float3 normal	: NORMAL;
+    float3 tangent      : TANGENT;
+    float3 bitangent    : BITANGENT;
+	float2 texCoord : TEXCOORD;
+};
+
+float4 PShader(VOut pIn) : SV_TARGET
+{
+    float3 n = pIn.normal;
+    if (Flags.y != 0)
+    {
+        float3 normalT = NormalTexture.Sample(SampleType, pIn.texCoord).xyz;
+
+        //Should only be done if the coordinates are not in the correct range
+        normalT = 2.0f*normalT - 1.0f;
+
+        float3 N = normalize(pIn.normal);
+        float3 T = normalize(pIn.tangent);
+        float3 B = normalize(pIn.bitangent);
+
+        float3x3 TBN = float3x3(T, B, N);
+
+        n = normalize(mul(normalT, TBN));
+    }
+
+    if (Ambient.w > 0)
+    {
+        float3 diffuse;
+        float3 specular;
+        float3 glow;
+        if (Emissive.w != 0)
+            diffuse = DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
+        else
+            diffuse = Diffuse.xyz;
+        if (EyePosition.w != 0)
+            specular = SpecularTexture.Sample(SampleType, pIn.texCoord).xyz;
+        else
+            specular = Specular.xyz;
+        if (Flags.x != 0)
+            glow = GlowTexture.Sample(SampleType, pIn.texCoord).xyz;
+        else
+            glow = float3(0, 0, 0); 
+        float3 Color = float3(0,0,0);
+        float3 lightDir = normalize(float3(-0.707f, -0.707f, 0));
+        float DiffuseFactor = max(dot(-lightDir, n), 0.2f);  
+        if (DiffuseFactor > 0)
+        {
+            float  Shininess       = Specular.w;
+            float3 viewDir         = normalize(pIn.wpos - EyePosition);
+            float3 Reflection      = reflect(-lightDir, n);
+            float  SpecularFactor  = pow(max(dot(Reflection, viewDir),0.0f), Specular.w);
+
+            Color += DiffuseFactor * diffuse;
+            Color += SpecularFactor * specular;
+        }  
+        Color += float3(diffuse.x * glow.x, diffuse.y * glow.y, diffuse.z * glow.z);
+        //Color += glow;
+        return float4(Color.x, Color.y, Color.z, Ambient.w);
+    }
+    else
+    {
+        return float4(0, 0, 0, 0);
+    }
+}

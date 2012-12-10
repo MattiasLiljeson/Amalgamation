@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestAssetsManagement", "Pro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgileAssets", "Projects\AgileAssets\src\AgileAssets.vcxproj", "{91ED2C8E-E4F2-4326-9164-E34CC94B14E2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Projects\Editor\src\Editor.vcxproj", "{58809840-85C7-4B5F-91D7-5025BDF3AEE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -127,6 +129,10 @@ Global
 		{91ED2C8E-E4F2-4326-9164-E34CC94B14E2}.Debug|Win32.Build.0 = Debug|Win32
 		{91ED2C8E-E4F2-4326-9164-E34CC94B14E2}.Release|Win32.ActiveCfg = Release|Win32
 		{91ED2C8E-E4F2-4326-9164-E34CC94B14E2}.Release|Win32.Build.0 = Release|Win32
+		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Debug|Win32.Build.0 = Debug|Win32
+		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Release|Win32.ActiveCfg = Release|Win32
+		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
