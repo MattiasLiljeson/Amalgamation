@@ -24,32 +24,48 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 	else
 	{
-		// * Deferred base system *            1
 		GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 
 		gfxWrapper->clearRenderTargets();	      // clear render targets used           
 		gfxWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
-
-		// * Render system *                   N
+		
+		vector< vector<InstanceVertex> > instanceLists;
 		for( int i=0; i<p_entities.size(); i++ )
 		{
-			Component* comp = m_world->getComponentManager()->getComponent( p_entities[i],
-				ComponentType::ComponentTypeIdx::RenderInfo);
+			RenderInfo* renderInfo = static_cast<RenderInfo*>(
+				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 
-			RenderInfo* renderInfo = static_cast<RenderInfo*>(comp);
-			int instId = renderInfo->m_instanceId;
-			if( instId != -1)
-			{
-				gfxWrapper->renderMesh( instId ); // process a mesh
-			}
-			else
+			if( renderInfo->m_meshId == -1)
 			{
 				// Create a cube
-				renderInfo->m_instanceId = gfxWrapper->createMesh( "P_cube", 0 );
+				renderInfo->m_meshId = gfxWrapper->createMesh( "P_cube" );
 			}
+
+			Transform* transform = static_cast<Transform*>(
+				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
+
+			AglMatrix mat = AglMatrix::identityMatrix();
+			if( transform != NULL )
+			{
+				mat = *transform->getMatrix();
+			}
+
+			InstanceVertex vert;
+			for( int i=0; i<16; i++ )
+			{
+				vert.worldTransform[i] = mat[i];
+			}
+
+			if( instanceLists.size() <= renderInfo->m_meshId )
+				instanceLists.resize( renderInfo->m_meshId + 1 );
+
+			instanceLists[renderInfo->m_meshId].push_back( vert );
+		}
+		for( int meshIdx=0; meshIdx<instanceLists.size(); meshIdx++)
+		{
+			gfxWrapper->renderMesh( meshIdx, &instanceLists[meshIdx] ); // process a mesh
 		}
 
-		// * Deferred finalize system *        1
 		gfxWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
 		AntTweakBarWrapper::getInstance()->render();
 		gfxWrapper->flipBackBuffer();           // flip buffers	

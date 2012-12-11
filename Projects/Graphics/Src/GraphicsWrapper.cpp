@@ -148,11 +148,19 @@ void GraphicsWrapper::beginFrame()
 	m_deferredRenderer->beginDeferredBasePass();
 }
 
-void GraphicsWrapper::renderMesh(unsigned int p_meshId)
+void GraphicsWrapper::renderMesh(unsigned int p_meshId,
+								 vector<InstanceVertex>* p_instanceList)
 {
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 	Texture* tex = m_textureManager->getResource(mesh->getTextureId());
-	m_deferredRenderer->renderMesh(mesh,tex);
+
+	Buffer<InstanceVertex>* instanceBuffer;
+	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
+														   p_instanceList->size());
+
+	m_deferredRenderer->renderMeshInstanced(mesh,tex,instanceBuffer);
+
+	delete instanceBuffer;
 }
 
 void GraphicsWrapper::finalizeFrame()
@@ -166,7 +174,7 @@ void GraphicsWrapper::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
-unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ownerEntityId)
+unsigned int GraphicsWrapper::createMesh(const string& p_name)
 {
 	// check if resource already exists
 	unsigned int meshResultId = 0;
@@ -176,7 +184,6 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ow
 		if (p_name=="P_cube")
 		{
 			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
-			mesh->addInstanceId(p_ownerEntityId);		   // add owner
 			meshResultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
 			// (Here you might want to do similar checks for textures/materials
 			// For now we have a hard coded texture path, but later on
@@ -211,7 +218,6 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name, unsigned int p_ow
 	{
 		meshResultId = static_cast<unsigned int>(meshFoundId);
 		Mesh* mesh = m_meshManager->getResource(meshResultId); // get mesh from id
-		mesh->addInstanceId(p_ownerEntityId); // add owner
 	}
 	return meshResultId;
 }

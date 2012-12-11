@@ -1,23 +1,23 @@
+#pragma once
+
 // =======================================================================================
-//                                      RenderInfo
+//                             RendererMeshInfo
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Interfacing struct for renderer. Information on what will be rendered.
 ///        
-/// # RenderInfo
+/// # RendererMeshInfo
 /// Detailed description.....
 /// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-#include <Component.h>
 
-class RenderInfo : public Component
+#include "InstanceVertex.h"
+
+struct RendererMeshInfo
 {
-public:
-	RenderInfo();
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-private:
+	unsigned int p_meshId;
+	unsigned int p_textureId;
+	InstanceVertex* p_instanceList;
+	unsigned int p_numberOfInstances;
 };

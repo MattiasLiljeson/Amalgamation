@@ -1,23 +1,21 @@
+#pragma once
+
 // =======================================================================================
-//                                      RenderInfo
+//                                      Model
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Model component
 ///        
-/// # RenderInfo
+/// # Model
 /// Detailed description.....
 /// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-#include <Component.h>
 
-class RenderInfo : public Component
+class Model
 {
-public:
-	RenderInfo();
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-private:
+	unsigned int meshId;
+	unsigned int textureId;
+	unsigned int* p_instanceEntityList;
+	unsigned int p_numberOfInstances;
 };

@@ -25,21 +25,6 @@ Buffer<DIndex>* Mesh::getIndexBuffer()
 	return m_indexBuffer;
 }
 
-unsigned int Mesh::getInstanceId( unsigned int p_idx )
-{
-	return m_instanceList[p_idx];
-}
-
-void Mesh::addInstanceId( unsigned int p_instanceId )
-{
-	m_instanceList.add(p_instanceId);
-}
-
-void Mesh::clearInstanceList( unsigned int p_idx )
-{
-	m_instanceList.clear();
-}
-
 unsigned int Mesh::getTextureId()
 {
 	return m_textureId;
@@ -49,3 +34,4 @@ void Mesh::setTextureId( unsigned int p_id )
 {
 	m_textureId = p_id;
 }
+

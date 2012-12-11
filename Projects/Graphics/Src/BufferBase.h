@@ -27,7 +27,10 @@ public:
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void			apply(UINT32 misc = 0);
-	// ID3D11Buffer*	getBufferPointer();
+
+	ID3D11Buffer*	getBufferPointer();
+	const BufferConfig*	getBufferConfigPointer();
+
 	UINT32			getElementSize();
 	UINT32			getElementCount();
 protected:

@@ -59,7 +59,7 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 			double x = xp - xn;
 
 			int rd = m_inputManager->getControl(m_controlIdxs[2])->getRawData();
-			cam->m_pos.x += x*500.0;
+			//cam->m_pos.x += x*500.0;
 		}
 
 		if( inp->m_bBtnPressed == true )

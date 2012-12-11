@@ -18,6 +18,8 @@
 #include "ShaderFactory.h"
 #include "BufferFactory.h"
 #include "PTVertex.h"
+#include "PTNVertex.h"
+#include "InstanceVertex.h"
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -56,11 +58,23 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Render mesh data
-	/// \param p_meshInfo
+	/// \param p_mesh
+	/// \param p_texture
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void renderMesh(Mesh* p_mesh,
-					Texture* p_texture );
+		Texture* p_texture);
+
+	///-----------------------------------------------------------------------------------
+	/// Render instanced mesh data
+	/// \param p_mesh
+	/// \param p_texture
+	/// \param p_instanceBuffer
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void renderMeshInstanced(Mesh* p_mesh,
+							 Texture* p_texture, 
+							 Buffer<InstanceVertex>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a fullscreen quad textured with the gbuffer.
@@ -79,6 +93,7 @@ private:
 	ID3D11DeviceContext*	m_deviceContext;
 
 	ShaderFactory*			m_shaderFactory;
+	BufferFactory*			m_bufferFactory;
 
 	RendererSceneInfo		m_sceneInfo;
 

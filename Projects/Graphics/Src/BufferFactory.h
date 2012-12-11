@@ -15,6 +15,7 @@
 #include "CBuffers.h"
 #include "PTVertex.h"
 #include "PTNVertex.h"
+#include "InstanceVertex.h"
 #include "DIndex.h"
 #include "Mesh.h"
 // #include "TextureBuffers.h"
@@ -35,6 +36,16 @@ public:
 	Buffer<SimpleCBuffer>* createSimpleCBuffer();
 
 	Buffer<PTVertex>* createFullScreenQuadBuffer();
+
+
+	///-----------------------------------------------------------------------------------
+	/// Constructs a buffer object of a list of instance transform data
+	/// \param p_instanceList 
+	/// \param p_numberOfElements
+	/// \returns Buffer<InstanceVertex>*
+	///-----------------------------------------------------------------------------------
+	Buffer<InstanceVertex>* createInstanceBuffer(InstanceVertex* p_instanceList,
+												 unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.

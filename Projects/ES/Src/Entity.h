@@ -39,11 +39,11 @@ public:
 	/** The world the Entity has been bound to.
 	 * @return The world the Entity has been bound to.
 	 */
-	EntityWorld* getWorld(){ return m_world; }
+	EntityWorld* getWorld();
 
-	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits() { return m_componentBits; }
-	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits ) { m_componentBits = p_componentBits; }
-	void setComponentBit( int p_idx, bool p_value ) { m_componentBits[p_idx] = p_value; }
+	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
+	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
+	void setComponentBit( int p_idx, bool p_value );
 	void addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 
@@ -59,9 +59,16 @@ public:
 	void addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component );
 	void addComponent( ComponentType p_type, Component* p_component );
 
-	bitset<SystemType::NUM_SYSTEM_TYPES> getSystemBits() { return m_systemBits; }
-	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits ) { m_systemBits = p_systemBits; }
-	void setSystemBit( int p_idx, bool p_value ) { m_systemBits[p_idx] = p_value; }
+
+	///\brief Shorthand function for fetching a components component from the worlds 
+	/// component manager
+	///\param p_typeIdx The type of component wished for
+	///\return The entity's component of the supplied ComponentType 
+	Component* getComponent( ComponentType::ComponentTypeIdx p_typeIdx );
+
+	bitset<SystemType::NUM_SYSTEM_TYPES> getSystemBits();
+	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits );
+	void setSystemBit( int p_idx, bool p_value );
 	void addSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits );
 	void removeSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits );
 
