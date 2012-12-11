@@ -5,7 +5,7 @@
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "GraphicsWrapper.h"
-#include "CamMatrixerUtil.h"
+#include <CamMatrixerUtil.h>
 #include <DebugUtil.h>
 
 // temporary usage of these in main for mesh creation
@@ -58,8 +58,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	AglVector3 lookAt(0.0f,0.0f,0.0f);
 	AglVector3 up(0.0f,1.0f,0.0f);
 
-	SetLookAtMatrix(viewMatrix, pos, lookAt, up);
-	SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
+	MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+	MatrixHelper::SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
 
 	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 
@@ -91,7 +91,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 				pos.x = sin(ticker);
 				pos.y = -2.0f-cos(ticker);
 
-				SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+				MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
 
 				camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 

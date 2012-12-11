@@ -16,14 +16,12 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	initBackBuffer();
 	initViewport();
 
-	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	m_meshManager = new ResourceManager<Mesh>();
-	m_textureManager = new ResourceManager<Texture>();
+	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
+	m_meshManager		= new ResourceManager<Mesh>();
+	m_textureManager	= new ResourceManager<Texture>();
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
-
-
 
 	clearRenderTargets();
 }

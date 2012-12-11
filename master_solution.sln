@@ -70,10 +70,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\TestGraphics\Src\TestGraphics.vcxproj", "{9914D3D3-86EE-415A-9D7F-219504F5FF71}"
 	ProjectSection(ProjectDependencies) = postProject
 		{15020C27-0C35-4D82-9517-59D175B1DF49} = {15020C27-0C35-4D82-9517-59D175B1DF49}
+		{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4} = {1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}
 		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2} = {7BC84332-97E7-4A31-AA8A-77E4B91F24A2}
 		{6DEEA297-0E8A-48FF-A8D6-C0780B8503EA} = {6DEEA297-0E8A-48FF-A8D6-C0780B8503EA}
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestAudio", "Projects\TestAudio\Src\TestAudio.vcxproj", "{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,11 +148,12 @@ Global
 		{9914D3D3-86EE-415A-9D7F-219504F5FF71}.Debug|Win32.Build.0 = Debug|Win32
 		{9914D3D3-86EE-415A-9D7F-219504F5FF71}.Release|Win32.ActiveCfg = Release|Win32
 		{9914D3D3-86EE-415A-9D7F-219504F5FF71}.Release|Win32.Build.0 = Release|Win32
+		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Debug|Win32.Build.0 = Debug|Win32
+		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Release|Win32.ActiveCfg = Release|Win32
+		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
