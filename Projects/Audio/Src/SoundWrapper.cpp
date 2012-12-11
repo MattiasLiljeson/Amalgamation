@@ -1,12 +1,12 @@
 #include "SoundWrapper.h"
 
+
 SoundWrapper::SoundWrapper()
 {
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
 	m_masterVolume	= 0;
 
-	//required by XAudio2
 	CoInitializeEx( NULL, COINIT_MULTITHREADED );
 
 	initSoundEngine();
@@ -25,26 +25,10 @@ SoundWrapper::~SoundWrapper()
 
 void SoundWrapper::initSoundEngine()
 {
-	HRESULT hr = S_OK;
-	UINT32 flags = 0;
-#ifdef _DEBUG
-	flags |= XAUDIO2_DEBUG_ENGINE;
-#endif
-
-	// Send in the wanted flags when the sound device is created.
-	if( FAILED( hr = XAudio2Create(&m_soundDevice, flags)) )
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
-
-	if( FAILED( hr = m_soundDevice->CreateMasteringVoice(&m_masterVoice)))
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
-
-	if( FAILED( hr = m_soundDevice->GetDeviceDetails(0, &details)))
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
-
-	m_destChannels = details.OutputFormat.Format.nChannels;
-
-	X3DAudioInitialize( details.OutputFormat.dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, 
-		m_x3DAudioInstance);
+	
+	m_soundDevice = AudioEngineCreator::createAudioEngine();
+	m_masterVoice = AudioEngineCreator::createMasterVoice(m_soundDevice);
+	AudioEngineCreator::createXAudio3(m_soundDevice, m_x3DAudioInstance);
 }
 
 void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
@@ -85,3 +69,7 @@ Sound* SoundWrapper::createNewNonPositionalSound( const char* p_filePath )
 	return m_soundFactory->createNonPositionalSound(p_filePath);
 }
 
+PositionalSound* SoundWrapper::createNewPositionalSound( const char* p_filePath )
+{
+	return m_soundFactory->createPositionalSound(p_filePath);
+}

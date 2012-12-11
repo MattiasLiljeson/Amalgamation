@@ -1,13 +1,11 @@
 #pragma once
 
-#include <XAudio2.h>
-#include <XAudio2fx.h>
-#include <x3daudio.h>
-#include <strsafe.h>
+#include "AudioEngineCreatorh.h"
 #include "XAudio2Exception.h"
 #include "SoundSceneInfo.h"
 #include "AudioCurves.h"
 #include "Sound.h"
+#include "PositionalSound.h"
 #include "SoundFactory.h"
 
 // =======================================================================================
@@ -29,6 +27,7 @@ public:
 	virtual ~SoundWrapper();
 	void updateListener(const SoundSceneInfo& p_sceneInfo);
 	Sound* createNewNonPositionalSound(const char* p_filePath);
+	PositionalSound* createNewPositionalSound(const char* p_filePath);
 private:
 	void initSoundEngine();
 private:

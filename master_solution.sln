@@ -77,6 +77,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\Te
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestAudio", "Projects\TestAudio\Src\TestAudio.vcxproj", "{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE2A0661-776F-4B5B-B09C-F7304F5C6424} = {BE2A0661-776F-4B5B-B09C-F7304F5C6424}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

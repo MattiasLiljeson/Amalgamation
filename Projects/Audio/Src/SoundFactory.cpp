@@ -9,13 +9,50 @@ SoundFactory::~SoundFactory()
 {
 
 }
-
-Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
+Sound* SoundFactory::createNonPositionalSound( const char* p_filePath )
 {
+	IXAudio2SourceVoice* soundVoice;
 	WAVEFORMATEXTENSIBLE waveFormatEx;
+	XAUDIO2_BUFFER buffer;
 	ZeroMemory(&m_file, sizeof(HANDLE));
-	initFile(p_flePath);
+	initFile(p_filePath);
 
+	fillBuffer(waveFormatEx,buffer);
+	
+	m_soundDevice->CreateSourceVoice( &soundVoice, (WAVEFORMATEX*)&waveFormatEx, 0,
+		1.0f, NULL, NULL, NULL);
+
+	Sound* newSound = new Sound(soundVoice,buffer);
+	return newSound;
+}
+
+
+PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath )
+{
+	IXAudio2SourceVoice* soundVoice;
+	WAVEFORMATEXTENSIBLE waveFormatEx;
+	XAUDIO2_BUFFER buffer;
+	PositionalSound* newSound;
+
+	/************************************************************************/
+	/* PositionalSoundInfo should be sent into the sound factory.			*/
+	/************************************************************************/
+	PositionalSoundInfo info = PositionalSoundInfo(0,0,0);
+
+	ZeroMemory(&m_file, sizeof(HANDLE));
+	initFile(p_filePath);
+
+	fillBuffer(waveFormatEx,buffer);
+
+	m_soundDevice->CreateSourceVoice( &soundVoice, (WAVEFORMATEX*)&waveFormatEx, 0, 1.0f,
+		NULL,NULL,NULL);
+	newSound = new PositionalSound(soundVoice,buffer,info);
+	return newSound;
+}
+
+void SoundFactory::fillBuffer( WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
+							  XAUDIO2_BUFFER& p_buffer )
+{
 	DWORD chunkSize, chunkPosition, fileType;
 	findChunk( m_file, fourccRIFF, chunkSize, chunkPosition);
 
@@ -28,7 +65,7 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 	/* Locate the fmt chunk and copy its contents into a WAVEFORMATEXTENSIBLE*/
 	/*************************************************************************/
 	findChunk(m_file,fourccFMT,chunkSize,chunkPosition);
-	readChunkData(m_file,&waveFormatEx,chunkSize,chunkPosition);
+	readChunkData(m_file,&p_waveFormatEx,chunkSize,chunkPosition);
 
 	/************************************************************************/
 	/* Locate the data chunk and read its contents into a buffer            */
@@ -37,26 +74,16 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_flePath )
 	BYTE* dataBuffer = new BYTE[chunkSize];
 	readChunkData(m_file,dataBuffer,chunkSize, chunkPosition);
 
-	XAUDIO2_BUFFER buffer;
-
 	/************************************************************************/
 	/* HACK: Most options of the buffer should be sent into the function	*/
 	/* rather than the hard coded way below									*/
 	/************************************************************************/
-	ZeroMemory(&buffer, sizeof(XAUDIO2_BUFFER));
-	buffer.AudioBytes = chunkSize;
-	buffer.pAudioData = dataBuffer;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopBegin = 0;
-	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-
-	IXAudio2SourceVoice* soundVoice;
-
-	m_soundDevice->CreateSourceVoice( &soundVoice, (WAVEFORMATEX*)&waveFormatEx, 0,
-		1.0f, NULL, NULL, NULL);
-
-	Sound* newSound = new Sound(soundVoice,buffer);
-	return newSound;
+	ZeroMemory(&p_buffer, sizeof(XAUDIO2_BUFFER));
+	p_buffer.AudioBytes = chunkSize;
+	p_buffer.pAudioData = dataBuffer;
+	p_buffer.Flags = XAUDIO2_END_OF_STREAM;
+	p_buffer.LoopBegin = 0;
+	p_buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 }
 
 void SoundFactory::findChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, 
@@ -142,6 +169,8 @@ void SoundFactory::readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize,
 		throw XAudio2Exception(hr, __FILE__,__FUNCTION__,__LINE__);
 	}
 }
+
+
 void SoundFactory::initFile(string p_filePath)
 {
 	HRESULT hr = S_OK;
@@ -160,3 +189,4 @@ void SoundFactory::initFile(string p_filePath)
 		throw XAudio2Exception(hr, __FILE__,__FUNCTION__,__LINE__);
 	}
 }
+
