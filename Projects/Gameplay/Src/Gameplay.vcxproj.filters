@@ -1,117 +1,33 @@
-<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{8573d510-e781-4bb1-9a99-5cfb1ae614c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities\QueueList">
-      <UniqueIdentifier>{6f7c2329-cd25-41f7-b8b9-beceae9ff2a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities\Vector3">
-      <UniqueIdentifier>{451be5ff-6e8c-49f6-a74f-ffdff8c1de41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{3b4ffbfb-44ad-46fd-9668-cf5457cf2378}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
-    </Filter>
-	    <Filter Include="Systems\GFX">
-      <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\GFX">
-      <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="CameraInfo.cpp" />
+    <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="NetworkListenerSystem.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PrintPositionsSystem.cpp" />
+    <ClCompile Include="RenderInfo.cpp" />
+    <ClCompile Include="RenderPrepSystem.cpp" />
+    <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="QueueList.h">
-      <Filter>Utilities\QueueList</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Utilities\Vector3</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkListenerSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintPositionsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkSynced.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkClientControllable.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-	<ClInclude Include="ProcessingMessagesSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-	<ClInclude Include="CameraSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsBackendSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPrepSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderInfo.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraInfo.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkConnectToServerSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
+    <ClInclude Include="CameraInfo.h" />
+    <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="RenderInfo.h" />
+    <ClInclude Include="NetworkClientControllable.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="NetworkListenerSystem.h" />
+    <ClInclude Include="NetworkSynced.h" />
+    <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="PrintPositionsSystem.h" />
+    <ClInclude Include="QueueList.h" />
+    <ClInclude Include="RenderPrepSystem.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="PhysicsBody.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Utilities\Vector3</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="PrintPositionsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-	<ClCompile Include="ProcessingMessagesSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsBackendSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPrepSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderInfo.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraInfo.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkConnectToServerSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-  </ItemGroup>
+</Project>

@@ -70,6 +70,9 @@ void ClientApplication::initSystems()
 	RenderPrepSystem* rpSys = new RenderPrepSystem( gfxSys );
 	m_world->setSystem( SystemType::RenderPrepSystem, rpSys , true );
 
+	PhysicsSystem* phySys = new PhysicsSystem();
+	m_world->setSystem(SystemType::PhysicsSystem, phySys, true);
+
 	m_world->initialize();
 }
 
@@ -83,6 +86,8 @@ void ClientApplication::initEntities()
 	e->addComponent( ComponentType::RenderInfo, c );
 	c = new Transform();
 	e->addComponent( ComponentType::Transform, c );
+	c = new PhysicsBody();
+	e->addComponent(ComponentType::PhysicsBody, c);
 	m_world->addEntity(e);
 
 	e = m_world->createEntity();

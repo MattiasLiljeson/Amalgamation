@@ -19,7 +19,9 @@
 #include <EntityWorld.h>
 #include <Input.h>
 #include <InputSystem.h>
+#include <PhysicsSystem.h>
 #include <RenderInfo.h>
+#include <PhysicsBody.h>
 #include <Transform.h>
 #include <Windows.h>
 

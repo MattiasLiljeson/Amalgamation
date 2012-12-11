@@ -1,6 +1,8 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <PhysicsController.h>
+#include "PhysicsBody.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -23,5 +25,6 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 
 private:
+	PhysicsController* m_physicsController;
 
 };
