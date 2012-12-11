@@ -1,4 +1,5 @@
 #include "SceneDialog.h"
+#include "Globals.h"
 
 SceneDialog* SceneDialog::sInstance = NULL;
 
@@ -79,6 +80,11 @@ SceneDialog::SceneDialog()
     TwType pointType = TwDefineStruct("POINT", pointMembers, 3, sizeof(AglVector3), NULL, NULL);
 
 	TwAddVarRW(m_dialog, "Position", pointType, Scene::GetInstance()->GetPosition(), "");
+
+	TwAddVarRW(m_dialog, "ShowHideDiffuse", TW_TYPE_BOOLCPP, &DIFFUSEON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideSpec", TW_TYPE_BOOLCPP, &SPECULARON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideGlow", TW_TYPE_BOOLCPP, &GLOWON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideNormal", TW_TYPE_BOOLCPP, &NORMALON, "group='Show/Hide'");
 
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();
