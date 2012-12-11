@@ -21,6 +21,7 @@
 #include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
+#include <NetworkInputHandlerSystem.h>
 #include <TcpServer.h>
 
 using namespace std;

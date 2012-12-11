@@ -16,11 +16,14 @@
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Systems\GFX">
+    <Filter Include="Systems\GFX">
       <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GFX">
       <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Server">
+      <UniqueIdentifier>{9f644f8c-19fa-476a-ac32-495505c864a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,9 +34,6 @@
       <Filter>Utilities\Vector3</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkListenerSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PrintPositionsSystem.h">
@@ -54,7 +54,7 @@
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-	<ClInclude Include="CameraSystem.h">
+    <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
@@ -69,6 +69,12 @@
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkListenerSystem.h">
+      <Filter>Systems\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkInputHandlerSystem.h">
+      <Filter>Systems\Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -77,16 +83,13 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-	<ClCompile Include="CameraSystem.cpp">
+    <ClCompile Include="CameraSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
@@ -100,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkListenerSystem.cpp">
+      <Filter>Systems\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkInputHandlerSystem.cpp">
+      <Filter>Systems\Server</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

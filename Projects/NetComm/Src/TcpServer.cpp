@@ -176,6 +176,8 @@ void TcpServer::processMessages()
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
+
+		
 		}
 
 		delete message;

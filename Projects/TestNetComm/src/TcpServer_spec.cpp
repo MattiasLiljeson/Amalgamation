@@ -122,9 +122,12 @@ Describe(a_tcp_server)
 		TcpClient client;
 		client.connectToServer( "127.0.0.1", "1337" );
 		
+		Packet packet;
+		packet << (int)0;
+
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
-		client.sendPacket( new Packet( "Hello mr. Server!" ) );
+		client.sendPacket( packet );
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
@@ -133,12 +136,9 @@ Describe(a_tcp_server)
 
 	It(can_receive_several_packets_from_a_connected_client)
 	{
-		string packetStrings[] =
-		{
-			"Hello mr. Server!",
-			"Hello again.",
-			"Blah, blah..."
-		};
+		Packet packets[3];
+		for (int i = 0; i < 3; i++)
+			packets[i] << i;
 
 		TcpServer server;
 		server.startListening( 1337 );
@@ -149,21 +149,20 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		for( unsigned int i=0; i<3; i++ )
-			client.sendPacket( new Packet( packetStrings[i] ) );
+			client.sendPacket( packets[i] );
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 
 		server.processMessages();
+
 		Assert::That(server.newPacketsCount(), Equals(3));
 	}
 
 	It(can_return_newly_received_packets)
 	{
-		string packetStrings[] =
-		{
-			"Hello mr. Server!",
-			"Hello again.",
-			"Blah, blah..."
-		};
+
+		Packet packets[3];
+		for (int i = 0; i < 3; i++)
+			packets[i] << i;
 
 		TcpServer server;
 		server.startListening( 1337 );
@@ -174,18 +173,18 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		for( unsigned int i=0; i<3; i++ )
-			client.sendPacket( new Packet( packetStrings[i] ) );
+			client.sendPacket( packets[i] );
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 
 		server.processMessages();
 
-		Packet* packet = NULL;
 		Assert::That(server.newPacketsCount(), Equals(3));
 		for( unsigned int i=0; i<3; i++ )
 		{
-			packet = server.popNewPacket();
-			Assert::That(packet->getMessage(), Equals(packetStrings[i]));
-			delete packet;
+			Packet packet = server.popNewPacket();
+			int data;
+			packet >> data;
+			Assert::That(data, Equals(i));
 		}
 	}
 
@@ -232,11 +231,6 @@ Describe(a_tcp_server)
 
 	It(can_broadcast_packets_to_all_connected_clients)
 	{
-		string messages[] =
-		{
-			"This is a broadcast message!"
-		};
-
 		TcpServer server;
 		server.startListening( 1337 );
 		
@@ -246,8 +240,11 @@ Describe(a_tcp_server)
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
-			
-		server.broadcastPacket( new Packet( messages[0] ) );
+		
+		int i_src = 32;
+		Packet packet_src;
+		packet_src << i_src;
+		server.broadcastPacket( packet_src );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		for(int i=0; i<5; i++)
@@ -256,9 +253,11 @@ Describe(a_tcp_server)
 		for(int i=0; i<5; i++)
 		{
 			Assert::That(client[i].newPacketsCount(), Equals(1));
-			Packet* packet = client[i].popNewPacket();
-			Assert::That(packet->getMessage(), Equals(messages[0]));
-			delete packet;
+			Packet packet_dst = client[i].popNewPacket();
+			int i_dst;
+			packet_dst >> i_dst;
+
+			Assert::That(i_dst, Equals(i_src));
 		}
 	}
 

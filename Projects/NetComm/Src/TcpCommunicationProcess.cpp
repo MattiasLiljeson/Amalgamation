@@ -66,12 +66,9 @@ void TcpCommunicationProcess::processMessages()
 				static_cast<ProcessMessageSendPacket*>(message);
 
 			m_activeSocket->send( boost::asio::buffer(
-				sendPacketMessage->packet->getMessage().c_str(),
-				sendPacketMessage->packet->getMessage().size() + 1 ) );
+				sendPacketMessage->packet.getDataPtr(),
+				sendPacketMessage->packet.getDataSize()) );
 
-			// Once the packet has been sent over the network, it can safely be deleted.
-			delete sendPacketMessage->packet;
-			sendPacketMessage->packet = NULL;
 		}
 
 		delete message;
@@ -122,6 +119,10 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 		{
 			queue< string > messages;
 			stringSplitNullTerminated( m_asyncData, p_bytesTransferred, messages );
+
+
+			queue< Packet > packets;
+
 
 			while( !messages.empty() )
 			{

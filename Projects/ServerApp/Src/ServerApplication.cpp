@@ -5,7 +5,6 @@ ServerApplication::ServerApplication()
 	m_running = false; // set running to true if initialization is ok!
 
 	m_server = new TcpServer();
-	m_server->startListening( 1337 );
 
 	m_world = new EntityWorld();
 	initSystems();
@@ -53,6 +52,9 @@ void ServerApplication::initSystems()
 
 	m_world->setSystem( SystemType::NetworkListenerSystem,
 		new NetworkListenerSystem( m_server ), true );
+
+	m_world->setSystem( SystemType::NetworkInputHandlerSystem,
+		new NetworkInputHandlerSystem( m_server ), true );
 
 	m_world->initialize();
 

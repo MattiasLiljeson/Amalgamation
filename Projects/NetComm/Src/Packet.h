@@ -11,6 +11,7 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <vector>
 #include <string>
 using namespace std;
 
@@ -18,14 +19,17 @@ class Packet
 {
 public:
 	Packet();
-
-	Packet( string p_message );
-
 	~Packet();
 
-	string getMessage();
+	char* getDataPtr() const;
+	unsigned int getDataSize() const;
 
+	void setData(char* p_data, unsigned int p_size);
+
+	Packet& operator << (int  p_data);
+	Packet& operator >> (int& p_data);
 private:
-	string m_message;
 
+	int readPos;
+	vector<char> m_data;
 };

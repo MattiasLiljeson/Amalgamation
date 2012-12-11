@@ -8,23 +8,27 @@ NetworkListenerSystem::NetworkListenerSystem( TcpServer* p_server )
 
 NetworkListenerSystem::~NetworkListenerSystem()
 {
+	m_server->stopListening();
 }
 
 void NetworkListenerSystem::process()
 {
 	EntitySystem::process();
 
-	while( m_server->hasNewConnections() )
+	if ( m_server->isListening() )
 	{
-		int id = m_server->popNewConnection();
+		while( m_server->hasNewConnections() )
+		{
+			int id = m_server->popNewConnection();
 
-		Entity* e = m_world->createEntity();
-		e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-			new Transform( (float)(id) * 10.0f, 0, 0 ) );
-		e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-			new NetworkSynced( id ) );
-		m_world->addEntity( e );
+			Entity* e = m_world->createEntity();
+			e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+				new Transform( (float)(id) * 10.0f, 0, 0 ) );
+			e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+				new NetworkSynced( id ) );
+			m_world->addEntity( e );
 
+		}
 	}
 }
 
@@ -49,4 +53,5 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 
 void NetworkListenerSystem::initialize()
 {
+	m_server->startListening(1337);
 }
