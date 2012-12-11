@@ -13,7 +13,7 @@ class Manager : public IEntityObserver
 public:
 	enum ManagerTypeIdx
 	{
-		NON_EXISTING_MANAGER,
+		NON_EXISTING_MANAGER = -1,
 		// Add types here
 		ComponentManager,
 		EntityManager,
