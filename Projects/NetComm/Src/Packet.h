@@ -21,7 +21,7 @@ public:
 	Packet();
 	~Packet();
 
-	char* getDataPtr() const;
+	char* getDataPtr();
 	unsigned int getDataSize() const;
 
 	void setData(char* p_data, unsigned int p_size);

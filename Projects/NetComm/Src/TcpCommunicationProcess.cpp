@@ -123,13 +123,14 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 
 			queue< Packet > packets;
 
+			// TODO: Fill packets queue with data using the messages queue.
 
-			while( !messages.empty() )
+			while( !packets.empty() )
 			{
 				m_parent->putMessage( new ProcessMessageReceivePacket(
 					this,
-					new Packet(messages.front()) ) );
-				messages.pop();
+					packets.front() ) );
+				packets.pop();
 			}
 
 			startPacketReceiveCallback();

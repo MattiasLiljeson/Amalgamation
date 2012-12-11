@@ -9,13 +9,6 @@ TcpClient::TcpClient()
 
 TcpClient::~TcpClient()
 {
-	while ( !m_newPackets.empty() )
-	{	
-		Packet* packet = m_newPackets.front();
-		m_newPackets.pop();
-		delete packet;
-	}
-
 	if( m_communicationProcess )
 	{
 		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
@@ -121,7 +114,7 @@ bool TcpClient::hasActiveConnection()
 	return m_communicationProcess != NULL;
 }
 
-void TcpClient::sendPacket( Packet* p_packet )
+void TcpClient::sendPacket( Packet p_packet )
 {
 	m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
 }
@@ -136,13 +129,17 @@ unsigned int TcpClient::newPacketsCount()
 	return m_newPackets.size();
 }
 
-Packet* TcpClient::popNewPacket()
+Packet TcpClient::popNewPacket()
 {
-	Packet* packet = NULL;
+	Packet packet;
 	if ( !m_newPackets.empty() )
 	{	
 		packet = m_newPackets.front();
 		m_newPackets.pop();
+	}
+	else
+	{
+		throw new domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return packet;
 }

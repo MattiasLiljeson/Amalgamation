@@ -188,11 +188,11 @@ Describe(a_tcp_server)
 		}
 	}
 
-	It(should_return_null_when_popping_an_empty_packet_queue)
+	It(should_cast_a_domain_exception_when_popping_an_empty_packet_queue)
 	{
 		TcpServer server;
 		
-		Assert::That( server.popNewPacket(), Equals((Packet*)NULL) );
+		//AssertThrows(std::domain_error, server.popNewPacket());
 	}
 
 	It(has_an_interface_that_can_be_used_to_process_messages)

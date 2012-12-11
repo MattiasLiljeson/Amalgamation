@@ -14,6 +14,7 @@
 #include <queue>
 #include <vector>
 #include <iostream>
+#include <exception>
 
 #include <boost/asio.hpp>
 
@@ -53,11 +54,11 @@ public:
 
 	bool hasNewPackets();
 	unsigned int newPacketsCount();
-	Packet* popNewPacket();
+	Packet popNewPacket();
 
 	void processMessages();
 
-	void broadcastPacket( Packet* p_packet );
+	void broadcastPacket( Packet p_packet );
 
 private:
 	bool m_isListening;
@@ -66,7 +67,7 @@ private:
 	queue< int > m_newDisconnectionProcesses;
 	vector< TcpCommunicationProcess* > m_communicationProcesses;
 
-	queue< Packet* > m_newPackets;
+	queue< Packet > m_newPackets;
 
 	TcpListenerProcess* m_listenerProcess;
 	boost::asio::io_service* m_ioService;

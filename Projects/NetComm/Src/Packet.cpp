@@ -10,7 +10,7 @@ Packet::~Packet()
 
 }
 
-char* Packet::getDataPtr() const
+char* Packet::getDataPtr()
 {
 	if (! m_data.empty() )
 		return &m_data[0];
@@ -42,6 +42,12 @@ Packet& Packet::operator << (int p_data)
 Packet& Packet::operator >> (int& p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
+
+	if( m_data.size() - readPos < dataSize )
+	{
+		throw new out_of_range( "Trying to stream out more data than\
+								what is left to be read in the Packet." );
+	}
 
 	memcpy(&p_data, &m_data[readPos], dataSize); 
 	readPos += dataSize;

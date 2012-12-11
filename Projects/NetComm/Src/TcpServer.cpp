@@ -11,13 +11,6 @@ TcpServer::~TcpServer()
 {
 	stopListening();
 
-	while ( !m_newPackets.empty() )
-	{	
-		Packet* packet = m_newPackets.front();
-		m_newPackets.pop();
-		delete packet;
-	}
-
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
 		m_communicationProcesses[i]->putMessage( new ProcessMessageTerminate() );
@@ -114,13 +107,17 @@ unsigned int TcpServer::newPacketsCount()
 	return m_newPackets.size();
 }
 
-Packet* TcpServer::popNewPacket()
+Packet TcpServer::popNewPacket()
 {
-	Packet* packet = NULL;
+	Packet packet;
 	if ( !m_newPackets.empty() )
 	{	
 		packet = m_newPackets.front();
 		m_newPackets.pop();
+	}
+	else
+	{
+		throw new domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return packet;
 }
@@ -184,7 +181,7 @@ void TcpServer::processMessages()
 	}
 }
 
-void TcpServer::broadcastPacket( Packet* p_packet )
+void TcpServer::broadcastPacket( Packet p_packet )
 {
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
@@ -192,10 +189,8 @@ void TcpServer::broadcastPacket( Packet* p_packet )
 		// the receiving processes deletes it.
 		// This SHOULD work now.
 		m_communicationProcesses[i]->putMessage(
-			new ProcessMessageSendPacket( this, new Packet(*p_packet) ) );
+			new ProcessMessageSendPacket( this, p_packet ) );
 	}
-
-	delete p_packet;
 }
 
 int TcpServer::popNewConnection()

@@ -53,7 +53,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		server.broadcastPacket( new Packet( ) );
+		server.broadcastPacket( Packet( ) );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();
@@ -72,8 +72,8 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		server.broadcastPacket( new Packet(  ) );
-		server.broadcastPacket( new Packet(  ) );
+		server.broadcastPacket( Packet(  ) );
+		server.broadcastPacket( Packet(  ) );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();
