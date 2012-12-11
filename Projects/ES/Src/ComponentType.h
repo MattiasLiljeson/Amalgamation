@@ -20,6 +20,7 @@ public:	//Enums
 		RenderInfo,
 		Input,
 		NetworkSynced,
+		PhysUnknown,
 		CameraInfo,
 		NUM_COMPONENT_TYPES
 	};

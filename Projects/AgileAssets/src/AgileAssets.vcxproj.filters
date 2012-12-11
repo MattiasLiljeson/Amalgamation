@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Agl.h" />
+    <ClInclude Include="AglAnimation.h" />
+    <ClInclude Include="AglAnimationLayer.h" />
+    <ClInclude Include="AglGradient.h" />
+    <ClInclude Include="AglGradientMaterial.h" />
+    <ClInclude Include="AglInteriorSphereGrid.h" />
+    <ClInclude Include="AglLooseBspTree.h" />
+    <ClInclude Include="AglMaterial.h" />
+    <ClInclude Include="AglMaterialMapping.h" />
+    <ClInclude Include="AglMesh.h" />
+    <ClInclude Include="AglNode.h" />
+    <ClInclude Include="AglNodeAnimation.h" />
+    <ClInclude Include="AglReader.h" />
+    <ClInclude Include="AglScene.h" />
+    <ClInclude Include="AglSkeleton.h" />
+    <ClInclude Include="AglSkeletonMapping.h" />
+    <ClInclude Include="AglWriter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AglAnimation.cpp" />
+    <ClCompile Include="AglAnimationLayer.cpp" />
+    <ClCompile Include="AglGradient.cpp" />
+    <ClCompile Include="AglGradientMaterial.cpp" />
+    <ClCompile Include="AglInteriorSphereGrid.cpp" />
+    <ClCompile Include="AglLooseBspTree.cpp" />
+    <ClCompile Include="AglMaterial.cpp" />
+    <ClCompile Include="AglMesh.cpp" />
+    <ClCompile Include="AglNode.cpp" />
+    <ClCompile Include="AglNodeAnimation.cpp" />
+    <ClCompile Include="AglReader.cpp" />
+    <ClCompile Include="AglScene.cpp" />
+    <ClCompile Include="AglSkeleton.cpp" />
+    <ClCompile Include="AglSkeletonMapping.cpp" />
+    <ClCompile Include="AglWriter.cpp" />
+  </ItemGroup>
+</Project>

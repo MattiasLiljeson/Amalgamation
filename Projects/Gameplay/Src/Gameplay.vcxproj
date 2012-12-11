@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
@@ -20,6 +21,7 @@
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
+    <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PrintPositionsSystem.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="RenderPrepSystem.h" />
@@ -32,6 +34,7 @@
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PrintPositionsSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />

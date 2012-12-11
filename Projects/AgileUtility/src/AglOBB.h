@@ -13,14 +13,22 @@
 #define AGLOBB_H
 
 #include "AglVector3.h"
+#include "AglMatrix.h"
+#include <vector>
 
-class AglOBB
+using namespace std;
+
+struct AglOBB
 {
-	AglVector3 position;
+	AglMatrix world;
 	AglVector3 size;
-	AglVector3 axes[3];
 
+	AglOBB();
 	AglOBB(AglVector3 p_position, AglVector3 p_size);
+	AglOBB(AglMatrix p_world, AglVector3 p_size);
+
+	//Static Functions
+	static AglOBB constructMinimum(vector<AglVector3> p_vertices, vector<int> p_indices);
 };
 
 #endif

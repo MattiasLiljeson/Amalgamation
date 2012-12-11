@@ -51,7 +51,10 @@
     <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="CameraSystem.h">
+	<ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+	<ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
@@ -66,6 +69,12 @@
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -78,6 +87,15 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+	<ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
@@ -95,8 +113,7 @@
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="NetworkConnectToServerSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
-</Project>
