@@ -16,7 +16,7 @@ CameraInfo::CameraInfo( float p_aspectRatio )
 	float fovAsRadians = 3.14f/2.0f;
 	float nearClip = 0.1f;
 	float farClip = 100.0f;
-	CHANGETHIS::SetProjMatrix( m_projMatrix, fovAsRadians, p_aspectRatio, nearClip, farClip );
+	MatrixHelper::SetProjMatrix( m_projMatrix, fovAsRadians, p_aspectRatio, nearClip, farClip );
 
 	m_camMatrix = AglMatrix::transpose( AglMatrix::identityMatrix() * m_viewMatrix * m_projMatrix );
 }
