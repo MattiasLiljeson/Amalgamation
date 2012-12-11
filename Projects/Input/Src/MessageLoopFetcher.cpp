@@ -96,10 +96,13 @@ void MessageLoopFetcher::resetCursor()
 	GetWindowRect( windowHandle, &windowPos );
 
 	POINT point;
-	point.x = windowPos.right/2 - windowPos.left;
-	point.y = windowPos.bottom/2 - windowPos.top;
+	// Set the point to the center of the window:
+	int windowSizeX = (windowPos.right - windowPos.left);
+	int windowSizeY = (windowPos.bottom - windowPos.top);
+	point.x = windowSizeX/2 + windowPos.left;
+	point.y = windowSizeY/2 + windowPos.top;
 	// Set the cursor to the center of the window
-	SetCursorPos( point.x, point.y/2 );
+	SetCursorPos( point.x, point.y );
 	// Convert screen space coords to client space
 	ScreenToClient( windowHandle, &point );
 
