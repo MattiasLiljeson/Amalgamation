@@ -10,6 +10,20 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioCurves.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundDefines.h" />
+    <ClInclude Include="SoundFactory.h" />
+    <ClInclude Include="SoundSceneInfo.h" />
+    <ClInclude Include="SoundWrapper.h" />
+    <ClInclude Include="XAudio2Exception.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundFactory.cpp" />
+    <ClCompile Include="SoundWrapper.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BE2A0661-776F-4B5B-B09C-F7304F5C6424}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -20,14 +34,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -44,11 +58,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -62,6 +80,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -79,6 +100,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
