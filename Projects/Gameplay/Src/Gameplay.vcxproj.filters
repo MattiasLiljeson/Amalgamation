@@ -16,7 +16,7 @@
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Systems\GFX">
+    <Filter Include="Systems\GFX">
       <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GFX">
@@ -48,10 +48,13 @@
     <ClInclude Include="Input.h">
       <Filter>Components</Filter>
     </ClInclude>
-	<ClInclude Include="NetworkClientControllable.h">
+    <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
     </ClInclude>
-	<ClInclude Include="CameraSystem.h">
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
@@ -65,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +86,10 @@
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-	<ClCompile Include="CameraSystem.cpp">
+    <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
@@ -94,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkConnectToServerSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

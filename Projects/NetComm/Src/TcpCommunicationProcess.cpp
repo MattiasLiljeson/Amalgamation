@@ -45,27 +45,36 @@ void TcpCommunicationProcess::body()
 
 		m_ioService->poll();
 
-		while( getMessageCount() > 0 )
-		{
-			ProcessMessage* message = popMessage();
-
-			if( message->type == MessageType::TERMINATE )
-			{
-				m_running = false;
-			}
-			else if( message->type == MessageType::SEND_PACKET )
-			{
-				ProcessMessageSendPacket* sendPacketMessage =
-					static_cast<ProcessMessageSendPacket*>(message);
-
-				m_activeSocket->send( boost::asio::buffer(
-					sendPacketMessage->packet->getMessage().c_str(),
-					sendPacketMessage->packet->getMessage().size() + 1 ) );
-			}
-
-			delete message;
-		}
+		processMessages();
 		
+	}
+}
+
+void TcpCommunicationProcess::processMessages()
+{
+	while( getMessageCount() > 0 )
+	{
+		ProcessMessage* message = popMessage();
+
+		if( message->type == MessageType::TERMINATE )
+		{
+			m_running = false;
+		}
+		else if( message->type == MessageType::SEND_PACKET )
+		{
+			ProcessMessageSendPacket* sendPacketMessage =
+				static_cast<ProcessMessageSendPacket*>(message);
+
+			m_activeSocket->send( boost::asio::buffer(
+				sendPacketMessage->packet->getMessage().c_str(),
+				sendPacketMessage->packet->getMessage().size() + 1 ) );
+
+			// Once the packet has been sent over the network, it can safely be deleted.
+			delete sendPacketMessage->packet;
+			sendPacketMessage->packet = NULL;
+		}
+
+		delete message;
 	}
 }
 
@@ -119,7 +128,6 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				m_parent->putMessage( new ProcessMessageReceivePacket(
 					this,
 					new Packet(messages.front()) ) );
-				cout << "Packet recv: " << messages.front() << endl;
 				messages.pop();
 			}
 

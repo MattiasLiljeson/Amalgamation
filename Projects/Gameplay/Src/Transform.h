@@ -36,9 +36,9 @@ public:
 		m_translation.y = 0.0f;
 		m_translation.z = 0.0f;
 
-		m_scale.x = 0.0f;
-		m_scale.y = 0.0f;
-		m_scale.z = 0.0f;
+		m_scale.x = 1.0f;
+		m_scale.y = 1.0f;
+		m_scale.z = 1.0f;
 
 		m_rotation = AglQuaternion::identity();
 
@@ -62,9 +62,9 @@ public:
 		m_translation.y = p_posY;
 		m_translation.z = p_posZ;
 
-		m_scale.x = 0.0f;
-		m_scale.y = 0.0f;
-		m_scale.z = 0.0f;
+		m_scale.x = 1.0f;
+		m_scale.y = 1.0f;
+		m_scale.z = 1.0f;
 
 		m_rotation = AglQuaternion::identity();
 

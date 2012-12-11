@@ -42,7 +42,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			Transform* transform = static_cast<Transform*>(
-				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
+				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 			AglMatrix mat = AglMatrix::identityMatrix();
 			if( transform != NULL )
@@ -69,7 +69,5 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		gfxWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
 		AntTweakBarWrapper::getInstance()->render();
 		gfxWrapper->flipBackBuffer();           // flip buffers	
-		static int korv = 0;
-		korv++;
 	}
 }

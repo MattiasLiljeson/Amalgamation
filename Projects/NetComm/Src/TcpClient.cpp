@@ -9,6 +9,13 @@ TcpClient::TcpClient()
 
 TcpClient::~TcpClient()
 {
+	while ( !m_newPackets.empty() )
+	{	
+		Packet* packet = m_newPackets.front();
+		m_newPackets.pop();
+		delete packet;
+	}
+
 	if( m_communicationProcess )
 	{
 		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
@@ -81,6 +88,23 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	return success;
 }
 
+void TcpClient::processMessages()
+{
+	while( getMessageCount() > 0 )
+	{
+		ProcessMessage* message;
+		message = this->popMessage();
+
+		if( message->type == MessageType::RECEIVE_PACKET )
+		{
+			m_newPackets.push(
+				static_cast< ProcessMessageReceivePacket* >(message)->packet );
+		}
+
+		delete message;
+	}
+}
+
 void TcpClient::disconnect()
 {
 	if( m_communicationProcess )
@@ -100,4 +124,25 @@ bool TcpClient::hasActiveConnection()
 void TcpClient::sendPacket( Packet* p_packet )
 {
 	m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
+}
+
+bool TcpClient::hasNewPackets()
+{
+	return !m_newPackets.empty();
+}
+
+unsigned int TcpClient::newPacketsCount()
+{
+	return m_newPackets.size();
+}
+
+Packet* TcpClient::popNewPacket()
+{
+	Packet* packet = NULL;
+	if ( !m_newPackets.empty() )
+	{	
+		packet = m_newPackets.front();
+		m_newPackets.pop();
+	}
+	return packet;
 }

@@ -42,16 +42,21 @@ public:
 
 	bool hasNewConnections();
 	unsigned int newConnectionsCount();
+	int popNewConnection();
 
 	unsigned int activeConnectionsCount();
 
+	bool hasNewDisconnections();
 	unsigned int newDisconnectionsCount();
+	int popNewDisconnection();
 
 	bool hasNewPackets();
 	unsigned int newPacketsCount();
 	Packet* popNewPacket();
 
 	void processMessages();
+
+	void broadcastPacket( Packet* p_packet );
 
 private:
 	bool m_isListening;

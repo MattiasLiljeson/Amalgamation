@@ -10,31 +10,29 @@ EntityWorld::EntityWorld()
 	setManager(  Manager::EntityManager, m_entityManager );
 
 	m_systemManager = new SystemManager( this );
-	setManager(  Manager::SystemManager, m_entityManager );
+	setManager(  Manager::SystemManager, m_systemManager );
 }
 
 
 EntityWorld::~EntityWorld()
 {
 	delete m_componentManager;
+	m_componentManager = NULL;
 	delete m_entityManager;
+	m_entityManager = NULL;
 	delete m_systemManager;
+	m_systemManager = NULL;
 
-	for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
-			delete m_systemsBag[i];
+	//for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
+	//		delete m_systemsBag[i];
+
+	m_systemsBag.clear();
 }
 
 void EntityWorld::initialize()
 {
 	for ( unsigned int i = 0; i < m_managersBag.size(); i++ )
 			m_managersBag[i]->initialize();
-		
-	for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
-	{
-		// Need this?
-		//ComponentMapperInitHelper.config(systemsBag.get(i), this);
-		m_systemsBag[i]->initialize();
-	}
 }
 
 EntityManager* EntityWorld::getEntityManager()
@@ -208,7 +206,7 @@ EntitySystem* EntityWorld::getSystem( SystemType::SystemTypeIdx p_typeIdx )
 	return m_systemManager->getSystem( p_typeIdx );
 }
 
-void EntityWorld::check( vector<Entity*> p_entities, IPerformer* p_performer )
+void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 {
 	if(!p_entities.empty())
 	{
@@ -233,7 +231,7 @@ void EntityWorld::process()
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
 
-	m_componentManager->clean();
+	//m_componentManager->clean();
 
 	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
 	{

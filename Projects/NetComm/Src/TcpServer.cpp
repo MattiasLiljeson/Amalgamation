@@ -11,6 +11,13 @@ TcpServer::~TcpServer()
 {
 	stopListening();
 
+	while ( !m_newPackets.empty() )
+	{	
+		Packet* packet = m_newPackets.front();
+		m_newPackets.pop();
+		delete packet;
+	}
+
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
 		m_communicationProcesses[i]->putMessage( new ProcessMessageTerminate() );
@@ -33,7 +40,7 @@ void TcpServer::stopListening()
 	m_isListening = false;
 	if( m_listenerProcess )
 	{
-		m_listenerProcess->putMessage( new ProcessMessageTerminate( this ) );
+		m_listenerProcess->putMessage( new ProcessMessageTerminate() );
 		m_listenerProcess->stop();
 		delete m_listenerProcess;
 		m_listenerProcess = NULL;
@@ -68,6 +75,28 @@ unsigned int TcpServer::activeConnectionsCount()
 unsigned int TcpServer::newDisconnectionsCount()
 {
 	return m_newDisconnectionProcesses.size();
+}
+
+bool TcpServer::hasNewDisconnections()
+{
+	bool newDisconnect = false;
+
+	if( m_newDisconnectionProcesses.size() > 0 )
+		newDisconnect = true;
+
+	return newDisconnect;
+}
+
+int TcpServer::popNewDisconnection()
+{
+	int id = -1;
+	if( m_newDisconnectionProcesses.size() > 0 )
+	{
+		id = m_newDisconnectionProcesses.front();
+		m_newDisconnectionProcesses.pop();
+	}
+
+	return id;
 }
 
 bool TcpServer::hasNewPackets()
@@ -118,6 +147,7 @@ void TcpServer::processMessages()
 			ProcessMessageSocketDisconnected* messageSocketDisconnected =
 				static_cast< ProcessMessageSocketDisconnected* >(message);
 
+			int processToBeDeleted = -1;
 			for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 			{
 				if( messageSocketDisconnected->processId ==
@@ -125,17 +155,55 @@ void TcpServer::processMessages()
 				{
 					m_newDisconnectionProcesses.push(
 						m_communicationProcesses[i]->getId() );
+
+					processToBeDeleted = i;
+					break;
 				}
 			}
+			
+			if (processToBeDeleted != -1)
+			{
+				m_communicationProcesses[processToBeDeleted]->putMessage( new ProcessMessageTerminate() );
+				m_communicationProcesses[processToBeDeleted]->stop();
+				delete m_communicationProcesses[processToBeDeleted];
+				m_communicationProcesses.erase(m_communicationProcesses.begin() + processToBeDeleted);
+			}
+			else
+				throw "Something is really knaaas";
+
 		}
 		else if( message->type == MessageType::RECEIVE_PACKET )
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
-			cout << "TcpServer, receive: " <<
-				m_newPackets.back()->getMessage() << endl;
 		}
 
 		delete message;
 	}
+}
+
+void TcpServer::broadcastPacket( Packet* p_packet )
+{
+	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
+	{
+		// HACK: Without copying the packet it will probably result in a crash when
+		// the receiving processes deletes it.
+		// This SHOULD work now.
+		m_communicationProcesses[i]->putMessage(
+			new ProcessMessageSendPacket( this, new Packet(*p_packet) ) );
+	}
+
+	delete p_packet;
+}
+
+int TcpServer::popNewConnection()
+{
+	int id = -1;
+	if( m_newConnectionProcesses.size() > 0 )
+	{
+		id = m_newConnectionProcesses.front();
+		m_newConnectionProcesses.pop();
+	}
+
+	return id;
 }

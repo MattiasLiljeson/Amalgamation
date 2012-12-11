@@ -31,6 +31,9 @@
     <Filter Include="Utility %28Put this in utility project when that project is created.">
       <UniqueIdentifier>{27e1b6c3-05a9-4e54-bdd1-fde5ee97e2a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IProcessingMessages">
+      <UniqueIdentifier>{4d21f996-7e7c-4586-822d-4357817833b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
