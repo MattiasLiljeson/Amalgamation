@@ -40,7 +40,7 @@ void TcpServer::stopListening()
 	m_isListening = false;
 	if( m_listenerProcess )
 	{
-		m_listenerProcess->putMessage( new ProcessMessageTerminate( this ) );
+		m_listenerProcess->putMessage( new ProcessMessageTerminate() );
 		m_listenerProcess->stop();
 		delete m_listenerProcess;
 		m_listenerProcess = NULL;
