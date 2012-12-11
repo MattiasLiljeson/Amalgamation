@@ -15,9 +15,14 @@ public:	//Enums
 		TestSystem,
 		TestSystem2,
 		PrintPositionsSystem,
+		ProcessingMessagesSystem,
 		NetworkListenerSystem,
+		NetworkConnectoToServerSystem,
 		InputSystem,
 		PhysicsSystem,
+		RenderPrepSystem,
+		CameraSystem,
+		GraphicsBackendSystem,
 		NUM_SYSTEM_TYPES
 	};
 

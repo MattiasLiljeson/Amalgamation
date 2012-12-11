@@ -21,6 +21,8 @@ public:
 
 	void body();
 
+	void processMessages();
+
 private:
 	void startPacketReceiveCallback();
 

@@ -95,6 +95,9 @@ Describe(a_tcp_server)
 		TcpClient client[5];
 		for(int i=0; i<5; i++)
 			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
 		for(int i=0; i<5; i++)
 			client[i].disconnect();
 		
@@ -177,6 +180,7 @@ Describe(a_tcp_server)
 		server.processMessages();
 
 		Packet* packet = NULL;
+		Assert::That(server.newPacketsCount(), Equals(3));
 		for( unsigned int i=0; i<3; i++ )
 		{
 			packet = server.popNewPacket();
@@ -190,6 +194,94 @@ Describe(a_tcp_server)
 		TcpServer server;
 		
 		Assert::That( server.popNewPacket(), Equals((Packet*)NULL) );
+	}
+
+	It(has_an_interface_that_can_be_used_to_process_messages)
+	{
+		ThreadSafeMessaging* server = new TcpServer();
+
+		server->processMessages();
+
+		delete server;
+	}
+
+	It(can_get_the_id_of_a_new_connection)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		if( server.hasNewConnections() )
+		{
+			// Id's start at 0.
+			Assert::That(server.popNewConnection(), IsGreaterThan(-1));
+		}
+	}
+
+	It(should_return_minus_one_if_trying_to_pop_an_empty_new_connections_queue)
+	{
+		TcpServer server;
+
+		Assert::That(server.popNewConnection(), Equals(-1));
+	}
+
+	It(can_broadcast_packets_to_all_connected_clients)
+	{
+		string messages[] =
+		{
+			"This is a broadcast message!"
+		};
+
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+			
+		server.broadcastPacket( new Packet( messages[0] ) );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<5; i++)
+			client[i].processMessages();
+
+		for(int i=0; i<5; i++)
+		{
+			Assert::That(client[i].newPacketsCount(), Equals(1));
+			Packet* packet = client[i].popNewPacket();
+			Assert::That(packet->getMessage(), Equals(messages[0]));
+			delete packet;
+		}
+	}
+
+	It(has_no_active_connection_if_the_only_client_has_disconnected)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		client.disconnect();
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		//boost::this_thread::sleep(boost::posix_time::millisec(50));
+		//server.processMessages();
+		//boost::this_thread::sleep(boost::posix_time::millisec(50));
+		//server.processMessages();
+
+
+		Assert::That(server.activeConnectionsCount(), Equals(0));
 	}
 
 //	It(can_see_a_client_disconnecting)

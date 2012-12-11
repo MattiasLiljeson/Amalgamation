@@ -22,6 +22,7 @@
 #include <ProcessMessageTerminate.h>
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
+#include <TcpServer.h>
 
 // Components:
 #include "Transform.h"
@@ -31,20 +32,18 @@ using namespace std;
 using namespace boost::asio::ip;
 
 
-class NetworkListenerSystem: public EntitySystem, public ThreadSafeMessaging
+class NetworkListenerSystem: public EntitySystem
 {
 public:
-	NetworkListenerSystem();
+	NetworkListenerSystem( TcpServer* p_server );
 	~NetworkListenerSystem();
 
 	virtual void process();
+	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
 
 private:
-	boost::asio::io_service* m_ioService;
-
-	ProcessThread* m_tcpListenerProcess;
-	ThreadSafeMessaging* m_tcpListenerProcessMessaging;
+	TcpServer* m_server;
 
 };

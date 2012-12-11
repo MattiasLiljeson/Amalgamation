@@ -25,6 +25,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void putMessage( ProcessMessage* p_message );
 
+	virtual void processMessages() = 0;
+
 protected:
 	///-----------------------------------------------------------------------------------
 	/// Pop oldest message from the message queue. Take over ownership of the message.

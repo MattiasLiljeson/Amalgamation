@@ -122,12 +122,19 @@ void BufferBase::apply( UINT32 misc /*= 0*/ )
 	};
 }
 
-/*
+
+
 ID3D11Buffer* BufferBase::getBufferPointer()
 {
 	return m_buffer;
 }
-*/
+
+const BufferConfig* BufferBase::getBufferConfigPointer()
+{
+	return m_config;
+}
+
+
 
 UINT32 BufferBase::getElementSize()
 {
@@ -158,4 +165,6 @@ void BufferBase::init(void* p_initData )
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 	}
 }
+
+
 

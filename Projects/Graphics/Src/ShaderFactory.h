@@ -1,14 +1,3 @@
-// =======================================================================================
-//                                      ShaderFactory
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief	Handles the creation of all the different shaders
-///        
-/// # ShaderFactory
-/// Detailed description.....
-/// Created on: 30-11-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <d3d11.h>
@@ -25,10 +14,22 @@
 #include "BufferFactory.h"
 #include "ShaderStageConfig.h"
 
+// =======================================================================================
+//                                      ShaderFactory
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Handles the creation of all the different shaders
+///        
+/// # ShaderFactory
+/// Detailed description.....
+/// Created on: 30-11-2012 
+///---------------------------------------------------------------------------------------
 class ShaderFactory
 {
 public:
-	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
+	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
+		D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
 
 	///-----------------------------------------------------------------------------------
@@ -110,6 +111,15 @@ private:
 	/// \returns void
 	///-----------------------------------------------------------------------------------
 	void createPTNVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+
+	///-----------------------------------------------------------------------------------
+	/// Creates a inputlayout for Instanced PTNVertex
+	/// \param p_vs
+	/// \param p_inputLayout
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void createInstancedPTNVertexInputLayout(VSData* p_vs, 
+											 ID3D11InputLayout** p_inputLayout);
 
 private:
 	void constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc,

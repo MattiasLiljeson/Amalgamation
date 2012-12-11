@@ -11,7 +11,11 @@ EntityManager::EntityManager()
 
 EntityManager::~EntityManager()
 {
-
+	for( unsigned int i=0; i<m_entities.size(); i++ )
+	{
+		// HACK: Not totally sure if this is where entities should be deleted.
+		//delete m_entities[i];
+	}
 }
 
 Entity* EntityManager::createEntityInstance()
@@ -20,8 +24,6 @@ Entity* EntityManager::createEntityInstance()
 	if( m_availableIds.empty() ) 
 	{
 		id = m_nextAvailableId++;
-		m_entities.reserve(id+1);
-		m_disabled.reserve(id+1);
 	}
 	else
 	{
@@ -42,9 +44,12 @@ void EntityManager::added( Entity* p_entity )
 		int idx = p_entity->getIndex();
 
 		if( (int)m_entities.size() <= idx )
-		m_entities.resize( idx+1 );
-
+		{
+			m_entities.resize( idx+1 );
+			m_disabled.resize( idx+1);
+		}
 		m_entities[idx] =  p_entity;
+		m_disabled[idx] = false;
 }
 
 void EntityManager::enabled( Entity* p_entity )
@@ -63,9 +68,11 @@ void EntityManager::deleted( Entity* p_entity )
 	m_availableIds.push(p_entity->getIndex());
 	
 	// can we delete here? are there still references? 
-	delete m_entities[p_entity->getIndex()];
+	//delete m_entities[p_entity->getIndex()];
 	m_entities[p_entity->getIndex()] = NULL;
 	
+	delete p_entity;
+
 	m_active--;
 	m_deleted++;
 }

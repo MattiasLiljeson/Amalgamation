@@ -11,10 +11,13 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <EntitySystem.h>
+#include "CameraInfo.h"
 #include "Input.h"
+#include <EntitySystem.h>
 #include <InputControlFactory.h>
 #include <InputManager.h>
+#include <MessageLoopFetcher.h>
+#include <XInputFetcher.h>
 
 class InputHelper;
 class inputControlFactory;

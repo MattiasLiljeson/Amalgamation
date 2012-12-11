@@ -7,7 +7,7 @@ using namespace igloo;
 int main()
 {
 	int i = TestRunner::RunAllTests();
-	getch();
+	_getch();
 	return i;
 }
 	

@@ -74,6 +74,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		break;
 
 	case WM_KEYDOWN:
+		MessageLoopFetcher::pushToQue(message, wParam, lParam);
 
 		switch(wParam)
 		{
@@ -84,6 +85,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		break;
 
 	default:
+		MessageLoopFetcher::pushToQue(message, wParam, lParam);
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 

@@ -11,14 +11,17 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <AglMatrix.h>
+#include <AglVector3.h>
+#include <AglQuaternion.h>
 #include <Component.h>
 
-struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
-{
-	float x;
-	float y;
-	float z;
-};
+//struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
+//{
+//	float x;
+//	float y;
+//	float z;
+//};
 
 class Transform: public Component
 {
@@ -33,13 +36,17 @@ public:
 		m_translation.y = 0.0f;
 		m_translation.z = 0.0f;
 
-		m_scale.x = 0.0f;
-		m_scale.y = 0.0f;
-		m_scale.z = 0.0f;
+		m_scale.x = 1.0f;
+		m_scale.y = 1.0f;
+		m_scale.z = 1.0f;
 
-		m_orientation.x = 0.0f;
-		m_orientation.y = 0.0f;
-		m_orientation.z = 0.0f;
+		m_rotation = AglQuaternion::identity();
+
+		//m_orientation.x = 0.0f;
+		//m_orientation.y = 0.0f;
+		//m_orientation.z = 0.0f;
+		
+		calcCompMatrix();
 	}
 
 	///-----------------------------------------------------------------------------------
@@ -55,13 +62,17 @@ public:
 		m_translation.y = p_posY;
 		m_translation.z = p_posZ;
 
-		m_scale.x = 0.0f;
-		m_scale.y = 0.0f;
-		m_scale.z = 0.0f;
+		m_scale.x = 1.0f;
+		m_scale.y = 1.0f;
+		m_scale.z = 1.0f;
 
-		m_orientation.x = 0.0f;
-		m_orientation.y = 0.0f;
-		m_orientation.z = 0.0f;
+		m_rotation = AglQuaternion::identity();
+
+		//m_orientation.x = 0.0f;
+		//m_orientation.y = 0.0f;
+		//m_orientation.z = 0.0f;
+
+		calcCompMatrix();
 	}
 
 	~Transform()
@@ -70,15 +81,58 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the translation vector. The data can be manipulated in every way.
-	/// \returns xXxVector3*
+	/// \returns A pointer to the translation vector.
 	///-----------------------------------------------------------------------------------
-	xXxVector3* getTranslation()
+	AglVector3* getTranslation()
 	{
 		return &m_translation;
 	}
 
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the scale vector. The data can be manipulated in every way.
+	/// \returns A pointer to the scale vector.
+	///-----------------------------------------------------------------------------------
+	AglVector3* getScale()
+	{
+		return &m_scale;
+	}
+
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the scale vector. The data can be manipulated in every way.
+	/// \returns A pointer to the rotation quaternion.
+	///-----------------------------------------------------------------------------------
+	AglQuaternion* getRotation()
+	{
+		return &m_rotation;
+	}
+
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the scale vector. The data can be manipulated in every way.
+	/// \returns A pointer to the transform matrix.
+	///----------------------------------------------------------------------------------
+	AglMatrix* getMatrix()
+	{
+		return &m_compositionMatrix;
+	}
+
 private:
-	xXxVector3 m_translation;
-	xXxVector3 m_scale;
-	xXxVector3 m_orientation;
+	///-----------------------------------------------------------------------------------
+	/// Calculates the composited matrix for all translation members
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void calcCompMatrix()
+	{
+		AglMatrix::componentsToMatrix(
+			m_compositionMatrix,
+			m_scale,
+			m_rotation,
+			m_translation);
+	}
+
+private:
+	AglMatrix m_compositionMatrix;
+	AglVector3 m_translation;
+	AglVector3 m_scale;
+	AglQuaternion m_rotation;
+	///AglVector3 m_orientation;
 };

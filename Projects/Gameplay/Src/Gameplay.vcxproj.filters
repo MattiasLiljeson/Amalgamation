@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
@@ -15,6 +16,12 @@
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
+    </Filter>
+	    <Filter Include="Systems\GFX">
+      <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\GFX">
+      <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +52,27 @@
     <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
     </ClInclude>
+	<ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+	<ClInclude Include="CameraSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsBackendSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPrepSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInfo.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInfo.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -65,5 +93,25 @@
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+	<ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPrepSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderInfo.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraInfo.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkConnectToServerSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
-</Project>

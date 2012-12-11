@@ -5,21 +5,30 @@ InputSystem::InputSystem(void)
 {
 }
 
-
 InputSystem::~InputSystem(void)
 {
 }
 
 void InputSystem::initialize()
 {
-	XInputFetcher* xif = new XInputFetcher();
-	MessageLoopFetcher* milf = new MessageLoopFetcher();
-	m_inputManager = new InputManager( milf, xif);
+	//XInputFetcher* xif = new XInputFetcher();
+	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
+	m_inputManager = new InputManager( milf, /*xif*/ NULL );
 
 	InputControlFactory icf;
-	Control* mbl = icf.create360controllerDigital( InputHelper::BTN_B );
-	int mblIdx = m_inputManager->addControl(mbl);
-	m_controlIdxs.push_back(mblIdx);
+	Control* gamepadB = icf.create360controllerDigital( InputHelper::BTN_B );
+	int idx = m_inputManager->addControl( gamepadB );
+	m_controlIdxs.push_back(idx);
+
+	Control* mouseXP = icf.createMouseMovement( InputHelper::MOUSE_AXIS::X,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	idx = m_inputManager->addControl( mouseXP );
+	m_controlIdxs.push_back(idx);
+
+	Control* mouseXN = icf.createMouseMovement( InputHelper::MOUSE_AXIS::X,
+		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
+	idx = m_inputManager->addControl( mouseXN );
+	m_controlIdxs.push_back(idx);
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
@@ -37,6 +46,21 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 			static_cast<Input*>(
 			m_world->getComponentManager()->getComponent( p_entities[0],
 			ComponentType::getTypeFor( ComponentType::Input ) ) );
+
+		CameraInfo* cam = 
+			static_cast<CameraInfo*>(
+			m_world->getComponentManager()->getComponent( p_entities[0],
+			ComponentType::getTypeFor( ComponentType::CameraInfo ) ) );
+
+		if( cam != NULL )
+		{
+			double xp = m_inputManager->getControl(m_controlIdxs[1])->getStatus();
+			double xn = m_inputManager->getControl(m_controlIdxs[2])->getStatus();
+			double x = xp - xn;
+
+			int rd = m_inputManager->getControl(m_controlIdxs[2])->getRawData();
+			cam->m_pos.x += x*500.0;
+		}
 
 		if( inp->m_bBtnPressed == true )
 			int breakHere = 0;

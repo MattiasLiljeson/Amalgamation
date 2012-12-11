@@ -9,13 +9,12 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 	m_width		= p_width;
 	m_height	= p_height;
 
-	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext);
+	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, m_device->GetFeatureLevel());
 
 	m_fullscreenQuad = NULL;
 
-	BufferFactory* bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	m_fullscreenQuad = bufferFactory->createFullScreenQuadBuffer();
-	delete bufferFactory;
+	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
+	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 
 	initDepthStencil();
 	initGeometryBuffers();
@@ -33,6 +32,7 @@ DeferredRenderer::~DeferredRenderer()
 	}
 
 	delete m_shaderFactory;
+	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
@@ -61,15 +61,8 @@ void DeferredRenderer::beginDeferredBasePass()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
-}
-
-
-void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture )
-{
-	p_mesh->getVertexBuffer()->apply();
-	p_mesh->getIndexBuffer()->apply();
-
+	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
+	
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
 	//	cb->accessBuffer.color[0] = 0.5f;
@@ -79,13 +72,52 @@ void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture )
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
 
 	cb->update();
+}
+
+void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
+{
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
 
 	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data)); // move this to shader?
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
 
 	m_baseShader->apply();
 
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
+}
+
+
+void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture, 
+										   Buffer<InstanceVertex>* p_instanceBuffer )
+{
+	// Specialized, external apply of these buffers
+	// since instanced drawing required a "combined"
+	// vertex/instance-buffer
+	//
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+						p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+								 p_instanceBuffer->getBufferPointer() };
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+									  DXGI_FORMAT_R32_UINT, 0);
+
+	// set texture
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+
+	m_baseShader->apply();
+
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
+										  p_instanceBuffer->getElementCount(),
+										  0,0,0);
 }
 
 void DeferredRenderer::renderComposedImage()

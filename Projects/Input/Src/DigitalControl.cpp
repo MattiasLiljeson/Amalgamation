@@ -14,9 +14,12 @@ DigitalControl::~DigitalControl()
 void DigitalControl::update( InputManager* p_manager )
 {
 	XInputFetcher* fetcher = p_manager->getXInputFetcher();
-	InputHelper::KEY_STATE state = fetcher->getBtnState( m_btn );
+	if( fetcher != NULL )
+	{
+		InputHelper::KEY_STATE state = fetcher->getBtnState( m_btn );
 
-	m_status = InputHelper::statusFromState( state );
-	m_statusDelta = InputHelper::statusDeltaFromState( state );
-	m_rawData = state;
+		m_status = InputHelper::statusFromState( state );
+		m_statusDelta = InputHelper::statusDeltaFromState( state );
+		m_rawData = state;
+	}
 }

@@ -11,6 +11,8 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <MessageLoopFetcher.h>
+
 #include <Windows.h>
 #include "AntTweakBarWrapper.h"
 #include "WindowException.h"

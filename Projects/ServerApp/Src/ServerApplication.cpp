@@ -2,22 +2,25 @@
 
 ServerApplication::ServerApplication()
 {
-	m_running = false; // set running to true if initialization is ok!
+	m_running = false;
+
+	m_server = new TcpServer();
+	m_server->startListening( 1337 );
 
 	m_world = new EntityWorld();
-
 	initSystems();
-
-	m_running = true;
 }
 
 ServerApplication::~ServerApplication()
 {
 	delete m_world;
+	delete m_server;
 }
 
 void ServerApplication::run()
 {
+	m_running = true;
+
 	while( m_running )
 	{
 		// HACK: Static delta and really high for testing purposes.
@@ -44,8 +47,12 @@ void ServerApplication::initSystems()
 	m_world->setSystem( SystemType::PrintPositionsSystem,
 		new PrintPositionsSystem(), true );
 
+	m_world->setSystem( SystemType::ProcessingMessagesSystem,
+		new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
+		true );
+
 	m_world->setSystem( SystemType::NetworkListenerSystem,
-		new NetworkListenerSystem(), true );
+		new NetworkListenerSystem( m_server ), true );
 
 	m_world->initialize();
 

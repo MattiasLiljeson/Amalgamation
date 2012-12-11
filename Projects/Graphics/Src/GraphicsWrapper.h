@@ -53,7 +53,7 @@ public:
 	/// Renders the whole scene
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(unsigned int p_meshId);
+	void renderMesh(unsigned int p_meshId,vector<InstanceVertex>* p_instanceList);
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
@@ -72,10 +72,9 @@ public:
 	/// Create a mesh using name.
 	/// Extend this with functionality for loading etc...
 	/// \param p_name
-	/// \param p_ownerEntityId
 	/// \returns unsigned int
 	///-----------------------------------------------------------------------------------
-	unsigned int createMesh(const string& p_name, unsigned int p_ownerEntityId);
+	unsigned int createMesh(const string& p_name);
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();

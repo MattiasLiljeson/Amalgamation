@@ -34,7 +34,13 @@ public:
 
 	bool hasActiveConnection();
 
+	bool hasNewPackets();
+	unsigned int newPacketsCount();
+	Packet* popNewPacket();
+
 	void sendPacket( Packet* p_packet );
+
+	void processMessages();
 
 private:
 	boost::asio::io_service* m_ioService;
@@ -42,5 +48,7 @@ private:
 	int m_numConnections;
 
 	TcpCommunicationProcess* m_communicationProcess;
+
+	queue< Packet* > m_newPackets;
 
 };
