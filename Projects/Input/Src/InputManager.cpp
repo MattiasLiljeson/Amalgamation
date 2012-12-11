@@ -47,8 +47,14 @@ XInputFetcher* InputManager::getXInputFetcher() const
 
 void InputManager::update()
 {
-	m_mlFetcher->update();
-	m_xiFetcher->update();
+	if( m_mlFetcher != NULL )
+	{
+		m_mlFetcher->update();
+	}
+	if( m_xiFetcher != NULL )
+	{
+		m_xiFetcher->update();
+	}
 	for( unsigned int i=0; i<m_controls.size(); i++)
 		m_controls[i]->update( this );
 }

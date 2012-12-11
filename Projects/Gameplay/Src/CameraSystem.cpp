@@ -30,9 +30,9 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			ComponentType::ComponentTypeIdx::CameraInfo);
 
 		CameraInfo* camInfo = static_cast<CameraInfo*>(comp);
-
-		camInfo->m_pos.z = -1.0f-sin(m_ticker);
-		camInfo->m_pos.x = -1.0f-sin(m_ticker);
+		// HACK: temp animation
+		//camInfo->m_pos.z = -1.0f-sin(m_ticker);
+		//camInfo->m_pos.x = -1.0f-sin(m_ticker);
 		camInfo->m_pos.y = -1.0f-cos(m_ticker);
 
 		CHANGETHIS::SetLookAtMatrix( camInfo->m_viewMatrix, camInfo->m_pos, camInfo->m_lookAt, camInfo->m_up );

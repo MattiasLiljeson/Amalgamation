@@ -43,10 +43,13 @@ struct MsgAndParams
 class MessageLoopFetcher
 {
 public:
-	MessageLoopFetcher();
+	MessageLoopFetcher( bool p_resetCursor );
 	~MessageLoopFetcher();
 
 	void update();
+	void resetStateBuffers();
+	void resetCursor();
+	void updateStateBuffers();
 	InputHelper::KEY_STATE getKeyState( int p_key );
 	InputHelper::KEY_STATE getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
@@ -57,6 +60,8 @@ public:
 	static void pushToQue( UINT p_message, WPARAM p_wParam, LPARAM p_lParam );
 
 private:
+	 bool m_resetCursor;
+
 	int m_mouseCurrPos[InputHelper::NUM_MOUSE_AXIS];
 	int m_mousePrevPos[InputHelper::NUM_MOUSE_AXIS];
 	int m_mouseMoveDelta[InputHelper::NUM_MOUSE_AXIS];

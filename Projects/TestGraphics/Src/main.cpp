@@ -1,6 +1,6 @@
+#include <vld.h>
 #include <Windows.h>
 #include <iostream>
-#include <vld.h>
 #include "TextureParser.h"
 #include "AntTweakBarWrapper.h"
 #include "Window.h"

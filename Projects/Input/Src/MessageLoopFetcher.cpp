@@ -2,8 +2,10 @@
 
 deque<MsgAndParams> MessageLoopFetcher::msgQue;
 
-MessageLoopFetcher::MessageLoopFetcher()
+MessageLoopFetcher::MessageLoopFetcher( bool p_resetCursor )
 {
+	m_resetCursor = p_resetCursor;
+
 	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS+1; i++ )
 	{
 		m_mouseCurrPos[i] = 0;
@@ -44,82 +46,28 @@ MessageLoopFetcher::~MessageLoopFetcher()
 {
 }
 
-void MessageLoopFetcher::processWindowsEvent( MsgAndParams p_msgAndParams )
-{
-	processWindowsEvent( p_msgAndParams.message, p_msgAndParams.wParam, p_msgAndParams.lParam );
-}
-
-void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, LPARAM p_lParam )
-{
-	// Process all mouse and keyboard events
-	switch (p_message)
-	{
-		case WM_MOUSEMOVE:
-			m_mouseCurrPos[InputHelper::X] = LOWORD(p_lParam);
-			m_mouseCurrPos[InputHelper::Y] = HIWORD(p_lParam);
-			break;
-
-		case WM_KEYDOWN:
-		{
-
-			int key = m_keyFromCharMap[p_wParam];
-			if(key != -1)
-				m_keysPressed[key] = InputHelper::DOWN;
-		}
-		break;
-
-		case WM_KEYUP:
-		{
-			int key = m_keyFromCharMap[p_wParam];
-			if(key != -1)
-				m_keysReleased[key] = InputHelper::UP;
-		}
-		break;
-
-		case WM_LBUTTONDOWN:
-			m_mouseBtnsPressed[InputHelper::M_LBTN] = true;
-			break;
-
-		case WM_LBUTTONUP:
-			m_mouseBtnsReleased[InputHelper::M_LBTN] = true;
-			break;
-
-		case WM_RBUTTONDOWN:
-			m_mouseBtnsPressed[InputHelper::M_MBTN] = true;
-			break;
-
-		case WM_RBUTTONUP:
-			m_mouseBtnsReleased[InputHelper::M_MBTN] = true;
-			break;
-
-		case WM_MBUTTONDOWN:
-			m_mouseBtnsPressed[InputHelper::M_MBTN] = true;
-			break;
-
-		case WM_MBUTTONUP:
-			m_mouseBtnsReleased[InputHelper::M_MBTN] = true;
-			break;
-
-		case WM_MOUSEWHEEL:
-			m_mouseCurrPos[InputHelper::Z] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
-			break;
-
-		case WM_CHAR:
-		{
-			//HACK: Ignore for now
-
-			//// Only send through printable characters.
-			//if (w_param >= 32)
-			//	context->ProcessTextInput((Rocket::Core::word) w_param);
-			//// Or endlines - Windows sends them through as carriage returns.
-			//else if (w_param == '\r')
-			//	context->ProcessTextInput((Rocket::Core::word) '\n');
-		}
-		break;
-	}
-}
-
 void MessageLoopFetcher::update()
+{
+	if( m_resetCursor )
+	{
+		// Reset cursor pos so that the mouse can be freely moved. If the mouse is moved 
+		// outside of the window w/o this the window will no longer receive input.
+		resetCursor();
+	}
+
+	resetStateBuffers();
+
+	// Fetch latest input and refresh buffers
+	while(!msgQue.empty())
+	{
+		processWindowsEvent( msgQue.front() );
+		msgQue.pop_front();
+	}
+
+	updateStateBuffers();
+}
+
+void MessageLoopFetcher::resetStateBuffers()
 {
 	// Reset per frame buffers
 	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
@@ -136,25 +84,46 @@ void MessageLoopFetcher::update()
 	{
 		m_mousePrevPos[i] = m_mouseCurrPos[i];
 	}
+}
 
-	// Fetch latest input and refresh buffers
-	while(!msgQue.empty())
-	{
-		processWindowsEvent( msgQue.front() );
-		msgQue.pop_front();
-	}
+void MessageLoopFetcher::resetCursor()
+{
+	// HACK: uses getActiveWindow. Will fail if alt-tabbing. 
+	HWND windowHandle = GetActiveWindow();
 
+	// Fetch window position in screen space
+	RECT windowPos;
+	GetWindowRect( windowHandle, &windowPos );
+
+	POINT point;
+	point.x = windowPos.right/2 - windowPos.left;
+	point.y = windowPos.bottom/2 - windowPos.top;
+	// Set the cursor to the center of the window
+	SetCursorPos( point.x, point.y/2 );
+	// Convert screen space coords to client space
+	ScreenToClient( windowHandle, &point );
+
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::X] = point.x;
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::Y] = point.y;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::X] = point.x;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::Y] = point.y;
+}
+
+void MessageLoopFetcher::updateStateBuffers()
+{
 	// Update key states based on buffer states
 	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
 	{
 		m_mouseBtnStates[i] = InputHelper::calcStateFromEvents( m_mouseBtnStates[i],
-		m_mouseBtnsPressed[i], m_mouseBtnsReleased[i] );
+			m_mouseBtnsPressed[i], m_mouseBtnsReleased[i] );
 	}
 
 	for( int i=0; i<InputHelper::NUM_KEYBOARD_KEYS; i++)
+	{
 		m_keyStates[i] = InputHelper::calcStateFromEvents( m_keyStates[i], m_keysPressed[i],
-		m_keysReleased[i] );
-	
+			m_keysReleased[i] );
+	}
+
 	for( int i=0; i< InputHelper::NUM_MOUSE_AXIS; i++ )
 	{
 		m_mouseMoveDelta[i] = m_mouseCurrPos[i] - m_mousePrevPos[i];
@@ -185,6 +154,81 @@ int MessageLoopFetcher::getMouseTravel( int axis )
 		return m_mouseMoveDelta[axis];
 	else
 		return 0;
+}
+
+void MessageLoopFetcher::processWindowsEvent( MsgAndParams p_msgAndParams )
+{
+	processWindowsEvent( p_msgAndParams.message, p_msgAndParams.wParam, p_msgAndParams.lParam );
+}
+
+void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, LPARAM p_lParam )
+{
+	// Process all mouse and keyboard events
+	switch (p_message)
+	{
+	case WM_MOUSEMOVE:
+		m_mouseCurrPos[InputHelper::X] = LOWORD(p_lParam);
+		m_mouseCurrPos[InputHelper::Y] = HIWORD(p_lParam);
+		break;
+
+	case WM_KEYDOWN:
+		{
+
+			int key = m_keyFromCharMap[p_wParam];
+			if(key != -1)
+				m_keysPressed[key] = InputHelper::DOWN;
+		}
+		break;
+
+	case WM_KEYUP:
+		{
+			int key = m_keyFromCharMap[p_wParam];
+			if(key != -1)
+				m_keysReleased[key] = InputHelper::UP;
+		}
+		break;
+
+	case WM_LBUTTONDOWN:
+		m_mouseBtnsPressed[InputHelper::M_LBTN] = true;
+		break;
+
+	case WM_LBUTTONUP:
+		m_mouseBtnsReleased[InputHelper::M_LBTN] = true;
+		break;
+
+	case WM_RBUTTONDOWN:
+		m_mouseBtnsPressed[InputHelper::M_MBTN] = true;
+		break;
+
+	case WM_RBUTTONUP:
+		m_mouseBtnsReleased[InputHelper::M_MBTN] = true;
+		break;
+
+	case WM_MBUTTONDOWN:
+		m_mouseBtnsPressed[InputHelper::M_MBTN] = true;
+		break;
+
+	case WM_MBUTTONUP:
+		m_mouseBtnsReleased[InputHelper::M_MBTN] = true;
+		break;
+
+	case WM_MOUSEWHEEL:
+		m_mouseCurrPos[InputHelper::Z] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
+		break;
+
+	case WM_CHAR:
+		{
+			//HACK: Ignore for now
+
+			//// Only send through printable characters.
+			//if (w_param >= 32)
+			//	context->ProcessTextInput((Rocket::Core::word) w_param);
+			//// Or endlines - Windows sends them through as carriage returns.
+			//else if (w_param == '\r')
+			//	context->ProcessTextInput((Rocket::Core::word) '\n');
+		}
+		break;
+	}
 }
 
 void MessageLoopFetcher::pushToQue( UINT p_message, WPARAM p_wParam, LPARAM p_lParam )

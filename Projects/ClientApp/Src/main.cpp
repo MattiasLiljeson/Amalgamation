@@ -1,10 +1,12 @@
-#include "CameraSystem.h"
-#include "GraphicsBackendSystem.h"
 
-#include <Windows.h>
+#include <CameraSystem.h>
+#include <GraphicsBackendSystem.h>
+#include <RenderPrepSystem.h>
 #include <EntityWorld.h>
-#include "RenderPrepSystem.h"
+#include <Input.h>
+#include <InputSystem.h>
 #include <RenderInfo.h>
+#include <Windows.h>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -20,6 +22,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	RenderPrepSystem* rpSys = new RenderPrepSystem( gfxSys );
 	world->setSystem( SystemType::RenderPrepSystem, rpSys , true );
 
+	InputSystem* inSys = new InputSystem();
+	world->setSystem( SystemType::RenderPrepSystem, inSys, true);
 
 	Entity* e = world->createEntity();
 	Component* c = new RenderInfo();
@@ -29,6 +33,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	e = world->createEntity();
 	c = new CameraInfo(800/(float)600);
 	e->addComponent( ComponentType::CameraInfo, c );
+	c = new Input();
+	e->addComponent( ComponentType::Input, c );
+
 	world->addEntity(e);
 
 	world->initialize();
@@ -41,16 +48,26 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	double dt = 0.0f;
 	__int64 m_prevTimeStamp = 0;
-	while( true )
-	{
-		currTimeStamp = 0;
-		QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
-		dt = (currTimeStamp - m_prevTimeStamp) * secsPerCnt;
-		dt = 1/100.0;
-		m_prevTimeStamp = currTimeStamp;
 
-		world->setDelta(dt);
-		world->process();
+	MSG msg = {0};
+	while(WM_QUIT != msg.message)
+	{
+		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
+		{
+			TranslateMessage( &msg );
+			DispatchMessage( &msg );
+		}
+		else
+		{
+			currTimeStamp = 0;
+			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCnt;
+			dt = 1/100.0;
+			m_prevTimeStamp = currTimeStamp;
+
+			world->setDelta(dt);
+			world->process();
+		}
 	}
 
 	delete world;
