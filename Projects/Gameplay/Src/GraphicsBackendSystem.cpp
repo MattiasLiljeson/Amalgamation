@@ -38,6 +38,11 @@ void GraphicsBackendSystem::process()
 
 }
 
+int GraphicsBackendSystem::getMeshId( string p_meshName )
+{
+	return m_graphicsWrapper->createMesh( p_meshName );
+}
+
 GraphicsWrapper* GraphicsBackendSystem::getGfxWrapper()
 {
 	return m_graphicsWrapper;

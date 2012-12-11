@@ -78,17 +78,30 @@ void ClientApplication::initEntities()
 	Entity* e;
 	Component* c;
 
+	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* gfxSys = static_cast<GraphicsBackendSystem*>(sys);
+	int cubeMeshId = gfxSys->getMeshId( "P_cube" );
+
 	e = m_world->createEntity();
-	c = new RenderInfo();
+	c = new RenderInfo( cubeMeshId );
 	e->addComponent( ComponentType::RenderInfo, c );
-	c = new Transform();
+	c = new Transform( 2.0f, 1.0f, 1.0f );
 	e->addComponent( ComponentType::Transform, c );
 	m_world->addEntity(e);
 
 	e = m_world->createEntity();
-	c = new CameraInfo(800/(float)600);
+	c = new RenderInfo( cubeMeshId );
+	e->addComponent( ComponentType::RenderInfo, c );
+	c = new Transform( 0.0f, 0.0f, 0.0f );
+	e->addComponent( ComponentType::Transform, c );
+	m_world->addEntity(e);
+
+	e = m_world->createEntity();
+	c = new CameraInfo( 800/(float)600 );
 	e->addComponent( ComponentType::CameraInfo, c );
 	c = new Input();
 	e->addComponent( ComponentType::Input, c );
+	c = new Transform( 5.0f, 5.0f, 5.0f );
+	e->addComponent( ComponentType::Transform, c );
 	m_world->addEntity(e);
 }

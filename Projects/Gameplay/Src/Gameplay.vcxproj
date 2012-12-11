@@ -35,6 +35,7 @@
     <ClCompile Include="PrintPositionsSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

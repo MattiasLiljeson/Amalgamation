@@ -16,6 +16,7 @@ class RenderInfo : public Component
 {
 public:
 	RenderInfo();
+	RenderInfo( int p_mesh_id);
 	virtual ~RenderInfo();
 	int m_instanceId;
 	int m_meshId;

@@ -1,6 +1,7 @@
 #pragma once
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
+#include "Transform.h"
 #include <EntitySystem.h>
 
 class CameraSystem : public EntitySystem
