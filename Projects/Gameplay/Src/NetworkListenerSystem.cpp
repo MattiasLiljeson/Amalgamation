@@ -39,8 +39,10 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 				m_world->getComponentManager()->getComponent( p_entities[index],
 				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
 
-			if (netSync->getNetworkIdentity() == id)
-				m_world->deleteEntity(p_entities[index]);
+			// HACK: This deletion is what caused the magical crashes all the time.
+			// This should be solved as soon as possible.
+//			if (netSync->getNetworkIdentity() == id)
+//				m_world->deleteEntity(p_entities[index]);
 		}
 	}
 }

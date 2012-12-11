@@ -103,7 +103,7 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 		p_entity->getComponentBits();
 	for(unsigned int i=0; i<componentBits.size(); i++ )
 	{
-		if (p_entity->getIndex() < m_componentsByType[i].size())
+		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{
 			// Should these be deleted?
 			//delete m_componentsByType[i][p_entity->getIndex()];
