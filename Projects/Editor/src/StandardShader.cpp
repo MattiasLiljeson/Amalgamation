@@ -151,10 +151,10 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 		subd = 1;
 	HullBuffer* hbuffer;
 	hbuffer = (HullBuffer*)resource.pData;
-	hbuffer->Amount[0] = pMaterial.tesselationFactor.data[0];
-	hbuffer->Amount[1] = pMaterial.tesselationFactor.data[1];
-	hbuffer->Amount[2] = pMaterial.tesselationFactor.data[2];
-	hbuffer->Amount[3] = pMaterial.tesselationFactor.data[3];
+	hbuffer->Amount[0] = pMaterial.tesselationFactor.x;
+	hbuffer->Amount[1] = pMaterial.tesselationFactor.y;
+	hbuffer->Amount[2] = pMaterial.tesselationFactor.z;
+	hbuffer->Amount[3] = pMaterial.tesselationFactor.w;
 	mDeviceContext->Unmap(mHullBuffer, 0);
 
 

@@ -59,6 +59,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgileAssets", "Projects\Agi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Projects\Editor\src\Editor.vcxproj", "{58809840-85C7-4B5F-91D7-5025BDF3AEE0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgileConverter", "Projects\AgileConverter\src\AgileConverter.vcxproj", "{86DCD7A8-1EFA-436D-9168-D9802643574F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -133,6 +135,10 @@ Global
 		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Debug|Win32.Build.0 = Debug|Win32
 		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Release|Win32.ActiveCfg = Release|Win32
 		{58809840-85C7-4B5F-91D7-5025BDF3AEE0}.Release|Win32.Build.0 = Release|Win32
+		{86DCD7A8-1EFA-436D-9168-D9802643574F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{86DCD7A8-1EFA-436D-9168-D9802643574F}.Debug|Win32.Build.0 = Debug|Win32
+		{86DCD7A8-1EFA-436D-9168-D9802643574F}.Release|Win32.ActiveCfg = Release|Win32
+		{86DCD7A8-1EFA-436D-9168-D9802643574F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

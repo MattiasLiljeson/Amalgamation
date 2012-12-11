@@ -143,10 +143,10 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddButton(m_dialog, "Load Displacement Texture", LoadDisplacement, this, " label='Displacement Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 
 	TwStructMember tessMembers[] = { 
-		{ "Edge1", TW_TYPE_FLOAT, offsetof(AglVector4, data[0]), " Step=0.1 min=1.0 max=64.0" },
-		{ "Edge2", TW_TYPE_FLOAT, offsetof(AglVector4, data[1]), " Step=0.1 min=1.0 max=64.0" },
-		{ "Edge3", TW_TYPE_FLOAT, offsetof(AglVector4, data[2]), " Step=0.1 min=1.0 max=64.0" },
-		{ "Internal", TW_TYPE_FLOAT, offsetof(AglVector4, data[3]), " Step=0.1 min=1.0 max=64.0" }};
+		{ "Edge1", TW_TYPE_FLOAT, offsetof(AglVector4, x), " Step=0.1 min=1.0 max=64.0" },
+		{ "Edge2", TW_TYPE_FLOAT, offsetof(AglVector4, y), " Step=0.1 min=1.0 max=64.0" },
+		{ "Edge3", TW_TYPE_FLOAT, offsetof(AglVector4, z), " Step=0.1 min=1.0 max=64.0" },
+		{ "Internal", TW_TYPE_FLOAT, offsetof(AglVector4, w), " Step=0.1 min=1.0 max=64.0" }};
 	TwType tessType = TwDefineStruct("TESSELATIONFACTORS", tessMembers, 4, sizeof(AglVector4), NULL, NULL);
 
 	TwAddVarRW(m_dialog, "Tess", tessType, &m_material->tesselationFactor, " group='Properties' ");

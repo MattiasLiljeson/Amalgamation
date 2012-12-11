@@ -7,11 +7,13 @@
     <ClInclude Include="AglInteriorSphereGrid.h" />
     <ClInclude Include="AglLooseBspTree.h" />
     <ClInclude Include="AglMatrix.h" />
+    <ClInclude Include="AglMatrix3x3.h" />
     <ClInclude Include="AglOBB.h" />
     <ClInclude Include="AglQuaternion.h" />
     <ClInclude Include="AglVector2.h" />
     <ClInclude Include="AglVector3.h" />
     <ClInclude Include="AglVector4.h" />
+    <ClInclude Include="Eigen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AglAABB.cpp" />
@@ -19,10 +21,12 @@
     <ClCompile Include="AglInteriorSphereGrid.cpp" />
     <ClCompile Include="AglLooseBspTree.cpp" />
     <ClCompile Include="AglMatrix.cpp" />
+    <ClCompile Include="AglMatrix3x3.cpp" />
     <ClCompile Include="AglOBB.cpp" />
     <ClCompile Include="AglQuaternion.cpp" />
     <ClCompile Include="AglVector2.cpp" />
     <ClCompile Include="AglVector3.cpp" />
     <ClCompile Include="AglVector4.cpp" />
+    <ClCompile Include="Eigen.cpp" />
   </ItemGroup>
 </Project>

@@ -14,6 +14,9 @@
 /// # AglVector3
 /// Edited By: Anton Andersson, 2012-11-20
 ///-------------------------------------------------------------------------------------------------
+
+struct AglMatrix;
+
 struct AglVector3
 {
 	float x, y, z;
@@ -54,13 +57,20 @@ struct AglVector3
 
 	bool operator==(const AglVector3& p_other) const;
 
+	//Member functions
+	float length();
+	float lengthSquared();
+	void normalize();
+	void transform(const AglMatrix& pMatrix);
+	void transformNormal(const AglMatrix& pMatrix);
 
 	//Static functions
 	static float dotProduct(const AglVector3& pV1, const AglVector3& pV2);
 	static AglVector3 crossProduct(const AglVector3& pV1, const AglVector3& pV2);
-	static float lengthSquared(AglVector3 pVector);
-	static float length(AglVector3 pVector);
+	static float lengthSquared(const AglVector3& pVector);
+	static float length(const AglVector3& pVector);
 	static void normalize(AglVector3& pVector);
+	static AglVector3 lerp(const AglVector3& p_v1, const AglVector3& p_v2, float p_t);
 	
 };
 
