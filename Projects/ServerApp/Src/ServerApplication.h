@@ -3,7 +3,7 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	The server application run all systems related to the server logic.
+/// \brief The server application run all systems related to the server logic.
 /// 
 /// # ServerApplication
 /// The server application contains its own EntityWorld. It consists of different
@@ -29,7 +29,7 @@ class ServerApplication
 {
 public:
 	ServerApplication();
-	virtual ~ServerApplication();
+	~ServerApplication();
 
 	///-----------------------------------------------------------------------------------
 	/// The run() method starts the whole application. It runs all the

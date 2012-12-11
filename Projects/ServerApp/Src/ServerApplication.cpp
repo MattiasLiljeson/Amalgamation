@@ -2,15 +2,13 @@
 
 ServerApplication::ServerApplication()
 {
-	m_running = false; // set running to true if initialization is ok!
+	m_running = false;
 
 	m_server = new TcpServer();
 	m_server->startListening( 1337 );
 
 	m_world = new EntityWorld();
 	initSystems();
-
-	m_running = true;
 }
 
 ServerApplication::~ServerApplication()
@@ -21,6 +19,8 @@ ServerApplication::~ServerApplication()
 
 void ServerApplication::run()
 {
+	m_running = true;
+
 	while( m_running )
 	{
 		// HACK: Static delta and really high for testing purposes.
