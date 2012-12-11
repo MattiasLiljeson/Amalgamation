@@ -70,6 +70,11 @@ void ClientApplication::initSystems()
 	InputSystem* inSys = new InputSystem();
 	m_world->setSystem( SystemType::RenderPrepSystem, inSys, true);
 
+	NetworkConnectToServerSystem* connectSystem =
+		new NetworkConnectToServerSystem( m_client );
+	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connectSystem,
+		true );
+
 	m_world->initialize();
 }
 

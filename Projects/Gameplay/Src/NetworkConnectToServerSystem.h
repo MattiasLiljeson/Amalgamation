@@ -11,17 +11,21 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <TcpClient.h>
 #include <EntitySystem.h>
 
 class NetworkConnectToServerSystem: public EntitySystem
 {
 public:
-	NetworkConnectToServerSystem();
+	NetworkConnectToServerSystem( TcpClient* p_tcpClient );
 
 	~NetworkConnectToServerSystem();
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	virtual void initialize();
+
+private:
+	TcpClient* m_tcpClient;
 
 };
