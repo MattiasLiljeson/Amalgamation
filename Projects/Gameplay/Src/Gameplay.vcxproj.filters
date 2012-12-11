@@ -22,8 +22,17 @@
     <Filter Include="Components\GFX">
       <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Server">
-      <UniqueIdentifier>{9f644f8c-19fa-476a-ac32-495505c864a7}</UniqueIdentifier>
+    <Filter Include="Systems\Network">
+      <UniqueIdentifier>{c8d90dbd-1e98-4c08-bd45-970976832584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Client only">
+      <UniqueIdentifier>{7e8c3639-af8d-4dc9-b14a-a2110309b0d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Server only">
+      <UniqueIdentifier>{f9080e87-a6cc-4e4e-a5b6-d8d9d12c560c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Shared">
+      <UniqueIdentifier>{598cd067-3fde-4322-93f8-60839d9de4bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,10 +79,10 @@
       <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="NetworkListenerSystem.h">
-      <Filter>Systems\Server</Filter>
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkInputHandlerSystem.h">
-      <Filter>Systems\Server</Filter>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,10 +114,10 @@
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems\Server</Filter>
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkInputHandlerSystem.cpp">
-      <Filter>Systems\Server</Filter>
+    <ClCompile Include="NetworkConnectToServerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

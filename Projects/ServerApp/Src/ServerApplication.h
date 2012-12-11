@@ -54,4 +54,5 @@ private:
 
 	EntityWorld* m_world;
 	TcpServer* m_server;
+
 };
