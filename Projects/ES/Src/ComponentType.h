@@ -20,6 +20,7 @@ public:	//Enums
 		Render,
 		Input,
 		NetworkSynced,
+		PhysUnknown,
 		NUM_COMPONENT_TYPES
 	};
 

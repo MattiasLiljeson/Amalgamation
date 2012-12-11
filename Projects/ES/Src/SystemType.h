@@ -17,6 +17,7 @@ public:	//Enums
 		PrintPositionsSystem,
 		NetworkListenerSystem,
 		InputSystem,
+		PhysicsSystem,
 		NUM_SYSTEM_TYPES
 	};
 

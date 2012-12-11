@@ -42,8 +42,11 @@
     <ClInclude Include="Input.h">
       <Filter>Components</Filter>
     </ClInclude>
-	<ClInclude Include="NetworkClientControllable.h">
+    <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +60,9 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

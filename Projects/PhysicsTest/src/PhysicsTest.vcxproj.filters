@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="DebugHull.cpp" />
+    <ClCompile Include="DebugSphere.cpp" />
+    <ClCompile Include="DX11Application.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysicsController2.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SimpleShader.cpp" />
+    <ClCompile Include="SimpleTessShader.cpp" />
+    <ClCompile Include="StandardShader.cpp" />
+    <ClCompile Include="TestTesselatedTriangle.cpp" />
+    <ClCompile Include="TestTriangle.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Utility.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="DebugHull.h" />
+    <ClInclude Include="DebugSphere.h" />
+    <ClInclude Include="DX11Application.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="PhysicsController2.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="SimpleShader.h" />
+    <ClInclude Include="SimpleTessShader.h" />
+    <ClInclude Include="StandardShader.h" />
+    <ClInclude Include="TestTesselatedTriangle.h" />
+    <ClInclude Include="TestTriangle.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="VertexStructures.h" />
+  </ItemGroup>
+</Project>
