@@ -11,14 +11,15 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <AglVector3.h>
 #include <Component.h>
 
-struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
-{
-	float x;
-	float y;
-	float z;
-};
+//struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
+//{
+//	float x;
+//	float y;
+//	float z;
+//};
 
 class Transform: public Component
 {
@@ -72,13 +73,13 @@ public:
 	/// Get a pointer to the translation vector. The data can be manipulated in every way.
 	/// \returns xXxVector3*
 	///-----------------------------------------------------------------------------------
-	xXxVector3* getTranslation()
+	AglVector3* getTranslation()
 	{
 		return &m_translation;
 	}
 
 private:
-	xXxVector3 m_translation;
-	xXxVector3 m_scale;
-	xXxVector3 m_orientation;
+	AglVector3 m_translation;
+	AglVector3 m_scale;
+	AglVector3 m_orientation;
 };

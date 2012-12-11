@@ -109,6 +109,7 @@ External/GTest/
 
 # Files
 *.exe
+*.lastcodeanalysissucceeded
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions

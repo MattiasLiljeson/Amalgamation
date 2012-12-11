@@ -34,7 +34,7 @@ TEST(EntitySystemConstructor, MultipleComponentTypes)
 	EntitySystem system(SystemType::NON_EXISTING, 3,
 		ComponentType::Input,
 		ComponentType::Transform,
-		ComponentType::Render);
+		ComponentType::RenderInfo);
 
 	bitset<ComponentType::NUM_COMPONENT_TYPES> set;
 	set = system.getComponentBits();

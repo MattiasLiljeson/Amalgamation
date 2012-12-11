@@ -23,19 +23,22 @@ public:
 	void initialize(){};
 	void deleted( Entity* p_entity );
 	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
-	//void clean();
+	void clean();
 	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
-	Component* getComponent( Entity* p_entity, ComponentType p_type );
 
-protected:
-	void removeComponent( Entity* p_entity, ComponentType p_type );
-	vector<Component*> getComponentsByType( ComponentType p_type );
+	/// Fetch Component
+	Component* getComponent( Entity* p_entity, ComponentType p_type );
+	Component* getComponent( Entity* p_entity, ComponentType::ComponentTypeIdx p_typeIdx );
+	Component* getComponent( int p_entityIdx, ComponentType p_type );
+	Component* getComponent( int p_entityIdx, ComponentType::ComponentTypeIdx p_typeIdx );
 
 private:
+	void removeComponent( Entity* p_entity, ComponentType p_type );
+	vector<Component*> getComponentsByType( ComponentType p_type );
 	void removeComponentsOfEntity( Entity* p_entity );
 
 private:
 	vector< vector<Component*> > m_componentsByType;
-	//vector<Entity*> m_deleted;
+	vector<Entity*> m_deleted;
 };
 

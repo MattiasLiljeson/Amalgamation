@@ -9,7 +9,7 @@ TEST(EntityWorldBasic, EntityWorldInstancingTest)
 
 	EntitySystem* system = new EntitySystem(SystemType::NON_EXISTING, 3,
 		ComponentType::Transform,
-		ComponentType::Render,
+		ComponentType::RenderInfo,
 		ComponentType::NetworkSynced);
 
 	world->setSystem(SystemType::getTypeFor(SystemType::EntitySystem), system, true);

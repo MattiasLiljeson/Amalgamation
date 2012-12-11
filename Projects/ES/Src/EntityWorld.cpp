@@ -33,13 +33,6 @@ void EntityWorld::initialize()
 {
 	for ( unsigned int i = 0; i < m_managersBag.size(); i++ )
 			m_managersBag[i]->initialize();
-		
-	for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
-	{
-		// Need this?
-		//ComponentMapperInitHelper.config(systemsBag.get(i), this);
-		m_systemsBag[i]->initialize();
-	}
 }
 
 EntityManager* EntityWorld::getEntityManager()

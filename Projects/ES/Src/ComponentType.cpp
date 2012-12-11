@@ -27,7 +27,7 @@ bitset<ComponentType::NUM_COMPONENT_TYPES> ComponentType::getBit()
 	return m_bit;
 }
 
-int ComponentType::getIndex()
+ComponentType::ComponentTypeIdx ComponentType::getIndex()
 {
 	return m_idx;
 }
@@ -49,7 +49,7 @@ ComponentType ComponentType::getTypeFor( ComponentTypeIdx p_component )
 	return type;
 }
 
-int ComponentType::getIndexFor( ComponentTypeIdx p_component )
+ComponentType::ComponentTypeIdx ComponentType::getIndexFor( ComponentTypeIdx p_component )
 {
 	if (s_componentTypes.find(p_component) != s_componentTypes.end())
 		return s_componentTypes[p_component].m_idx;

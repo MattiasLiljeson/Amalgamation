@@ -78,9 +78,26 @@ void ComponentManager::removeComponent( Entity* p_entity, ComponentType p_type )
 
 Component* ComponentManager::getComponent( Entity* p_entity, ComponentType p_type )
 {
-	if(m_componentsByType[p_type.getIndex()].empty() != true)
+	return getComponent( p_entity, p_type.getIndex() );
+}
+
+Component* ComponentManager::getComponent( Entity* p_entity,
+										  ComponentType::ComponentTypeIdx p_typeIdx )
+{
+	return getComponent( p_entity->getIndex(), p_typeIdx );
+}
+
+Component* ComponentManager::getComponent( int p_entityIdx, ComponentType p_type )
+{
+	return getComponent( p_entityIdx, p_type.getIndex() );
+}
+
+Component* ComponentManager::getComponent( int p_entityIdx,
+										  ComponentType::ComponentTypeIdx p_typeIdx )
+{
+	if(m_componentsByType[p_typeIdx].empty() != true)
 	{
-		return m_componentsByType[p_type.getIndex()][p_entity->getIndex()];
+		return m_componentsByType[p_typeIdx][p_entityIdx];
 	}
 	return NULL;
 }

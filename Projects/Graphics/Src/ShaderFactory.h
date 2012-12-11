@@ -1,14 +1,3 @@
-// =======================================================================================
-//                                      ShaderFactory
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief	Handles the creation of all the different shaders
-///        
-/// # ShaderFactory
-/// Detailed description.....
-/// Created on: 30-11-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <d3d11.h>
@@ -25,10 +14,22 @@
 #include "BufferFactory.h"
 #include "ShaderStageConfig.h"
 
+// =======================================================================================
+//                                      ShaderFactory
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Handles the creation of all the different shaders
+///        
+/// # ShaderFactory
+/// Detailed description.....
+/// Created on: 30-11-2012 
+///---------------------------------------------------------------------------------------
 class ShaderFactory
 {
 public:
-	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
+	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
+		D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
 
 	///-----------------------------------------------------------------------------------

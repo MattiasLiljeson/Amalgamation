@@ -1,6 +1,6 @@
+#include <vld.h>
 #include <Windows.h>
 #include <iostream>
-#include <vld.h>
 #include "TextureParser.h"
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
@@ -16,13 +16,13 @@
 #include <AglVector3.h>
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, 
-	int nCmdShow )
+					int nCmdShow )
 {
 	Window* window;
 	GraphicsWrapper* graphicsWrapper;
 
 	TextureParser::init();
-	
+
 	try
 	{
 		window = new Window(hInstance,800,600,1);
@@ -35,7 +35,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		DEBUGPRINT((e.what()));
 		return -1;
 	}
-	
+
 	__int64 cntsPerSec = 0;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
 	float secsPerCnt = 1.0f / (float)cntsPerSec;
@@ -87,9 +87,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			// temp camera test
 			{
 				ticker += dt;
-				pos.z = -1.0f-sin(ticker);
-				pos.x = -1.0f-sin(ticker);
-				pos.y = -1.0f-cos(ticker);
+				pos.z = -2.0f-sin(ticker);
+				pos.x = sin(ticker);
+				pos.y = -2.0f-cos(ticker);
 
 				SetLookAtMatrix(viewMatrix, pos, lookAt, up);
 
@@ -101,7 +101,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			// * Scene render preparation system * 1
 			graphicsWrapper->setSceneInfo(tempSceneInfo);// sets up certain "global" scene data 
-					
+
 			// * Deferred base system *            1
 			graphicsWrapper->clearRenderTargets();	      // clear render targets used           
 			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
