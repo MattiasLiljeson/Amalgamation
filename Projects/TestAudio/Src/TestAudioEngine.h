@@ -36,7 +36,7 @@ Describe(A_AudioManager)
 	It(Should_be_able_to_play_pause_and_resume_sound)
 	{
 		HRESULT hr = S_OK;
-		int sleepTime = 1500;
+		int sleepTime = 0;
 		Assert::That(hr, Equals ( m_sound->resumeOrPlay() ) );
 		Sleep(sleepTime);
 		Assert::That(hr, Equals ( m_sound->pause() ) );
@@ -47,12 +47,25 @@ Describe(A_AudioManager)
 	It(Should_be_able_to_play_stop_and_play)
 	{
 		HRESULT hr = S_OK;
-		int sleepTime = 1500;
+		int sleepTime = 0;
 		Assert::That(hr, Equals ( m_sound->resumeOrPlay() ) );
 		Sleep(sleepTime);
 		Assert::That(hr, Equals ( m_sound->stop() ) );
 		Sleep(sleepTime);
 		Assert::That(hr, Equals ( m_sound->restart() ) );
 		Sleep(sleepTime);
+	}
+	It(Should_be_able_to_play_positional_sound)
+	{
+		/************************************************************************/
+		/* NOT PLAYING SOUND! CHECK SOUND FACTORY!								*/
+		/************************************************************************/
+		HRESULT hr = S_OK;
+		int sleepTime = 1500;
+		PositionalSound* posSound = m_soundEngine->createNewPositionalSound(
+			"Assets/Sound/SoundEffect/Test/spaceship_laser.wav");
+		Assert::That(hr, Equals( posSound->resumeOrPlay() ) );
+
+		delete posSound;
 	}
 };
