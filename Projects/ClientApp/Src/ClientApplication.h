@@ -11,6 +11,8 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <TcpClient.h>
+
 #include <CameraSystem.h>
 #include <GraphicsBackendSystem.h>
 #include <RenderPrepSystem.h>
@@ -19,7 +21,6 @@
 #include <InputSystem.h>
 #include <RenderInfo.h>
 #include <Windows.h>
-#include <TcpClient.h>
 
 class ClientApplication
 {

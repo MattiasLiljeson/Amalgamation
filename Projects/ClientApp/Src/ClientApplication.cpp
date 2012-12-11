@@ -11,6 +11,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 
 	m_world = new EntityWorld();
 	initSystems();
+	initEntities();
 }
 
 ClientApplication::~ClientApplication()

@@ -15,8 +15,6 @@
 
 #include <conio.h>
 
-#include <boost/thread.hpp>
-
 #include <EntityWorld.h>
 #include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
