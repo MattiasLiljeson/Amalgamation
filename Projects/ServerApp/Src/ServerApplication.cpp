@@ -15,7 +15,7 @@ ServerApplication::ServerApplication()
 
 ServerApplication::~ServerApplication()
 {
-	//delete m_world;
+	delete m_world;
 	delete m_server;
 }
 
