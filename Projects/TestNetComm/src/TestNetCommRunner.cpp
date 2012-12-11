@@ -1,6 +1,6 @@
 #include <iostream>
 #include <igloo/igloo_alt.h>
-//#include <vld.h>
+#include <vld.h>
 
 using namespace igloo;
 using namespace std;

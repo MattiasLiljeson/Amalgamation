@@ -262,6 +262,28 @@ Describe(a_tcp_server)
 		}
 	}
 
+	It(has_no_active_connection_if_the_only_client_has_disconnected)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		client.disconnect();
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		//boost::this_thread::sleep(boost::posix_time::millisec(50));
+		//server.processMessages();
+		//boost::this_thread::sleep(boost::posix_time::millisec(50));
+		//server.processMessages();
+
+
+		Assert::That(server.activeConnectionsCount(), Equals(0));
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;
