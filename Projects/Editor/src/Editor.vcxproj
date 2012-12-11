@@ -44,8 +44,8 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/FreeImage/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -53,8 +53,8 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/FreeImage/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

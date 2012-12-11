@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <vld.h>
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,

@@ -14,7 +14,8 @@ TextureManager::~TextureManager()
 {
 	for (int i = 0; i < mTextureData.size(); i++)
 	{
-		mTextureData[i]->SRV->Release();
+		if (mTextureData[i]->SRV)
+			mTextureData[i]->SRV->Release();
 		delete mTextureData[i];
 	}
 }
@@ -154,12 +155,14 @@ ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device,
 	data[0].SysMemSlicePitch = 0;
 	unsigned int w = FreeImage_GetWidth(image);
 	unsigned int h = FreeImage_GetHeight(image);
+	vector<unsigned char*> levelData;
 	for(unsigned int i = 1; i< numLevels; i++)
 	{
 		ZeroMemory(&data[i], sizeof(D3D11_SUBRESOURCE_DATA));
 		w = max(1, w*0.5f);
 		h = max(1, h*0.5f);
-		data[i].pSysMem = new unsigned char[4*w*h];
+		levelData.push_back(new unsigned char[4*w*h]);
+		data[i].pSysMem = levelData.back();
 		data[i].SysMemPitch = 4 * w;
 		data[i].SysMemSlicePitch = 0;
 	} 
@@ -181,8 +184,15 @@ ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device,
 	ID3D11Texture2D* texture = NULL;
 	HRESULT hr = p_device->CreateTexture2D( &texDesc, data, &texture);
 
+	for (unsigned int i = 0; i < levelData.size(); i++)
+		delete[] levelData[i];
+
 	if (!texture)
+	{
+		delete[] data;
+		delete[] newdata;
 		return NULL;
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderDesc;
 	ZeroMemory(&shaderDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -205,6 +215,9 @@ ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device,
 	/************************************************************************/
 	FreeImage_Unload(image);
 	texture->Release();
+
+	delete[] data;
+	delete[] newdata;
 
 	return newShaderResurceView;
 }
