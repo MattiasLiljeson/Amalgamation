@@ -84,6 +84,9 @@
     <ClInclude Include="NetworkConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkInputHandlerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="NetworkConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkInputHandlerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
