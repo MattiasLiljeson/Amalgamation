@@ -25,7 +25,8 @@ unsigned int Packet::getDataSize() const
 
 void Packet::setData(char* p_data, unsigned int p_size)
 {
-
+	m_data.resize(p_size);
+	memcpy(&m_data[0], p_data, p_size);
 }
 
 Packet& Packet::operator << (int p_data)

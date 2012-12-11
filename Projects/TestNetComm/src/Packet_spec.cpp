@@ -58,10 +58,11 @@ Describe(a_packet)
 	It(can_set_byte_data)
 	{
 		char* byteData = new char[4];
-		byteData[0] = 0;
+		// Big endian order
+		byteData[0] = 42;
 		byteData[1] = 0;
 		byteData[2] = 0;
-		byteData[3] = 42;
+		byteData[3] = 0;
 
 		Packet packet;
 		packet.setData(byteData, 4);
