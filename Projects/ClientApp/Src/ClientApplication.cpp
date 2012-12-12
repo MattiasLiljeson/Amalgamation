@@ -94,11 +94,11 @@ void ClientApplication::initEntities()
 	GraphicsBackendSystem* gfxSys = static_cast<GraphicsBackendSystem*>(sys);
 	int cubeMeshId = gfxSys->getMeshId( "P_cube" );
 
-	for( int i=0; i<64; i++ )
+	for( int i=0; i<8; i++ )
 	{
-		for( int j=0; j<64; j++ )
+		for( int j=0; j<8; j++ )
 		{
-			for( int k=0; k<64; k++ )
+			for( int k=0; k<8; k++ )
 			{
 				e = m_world->createEntity();
 				c = new RenderInfo( cubeMeshId );
