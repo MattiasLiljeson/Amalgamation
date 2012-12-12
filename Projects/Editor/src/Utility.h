@@ -14,6 +14,7 @@
 #include <sstream>
 #include <AglVector3.h>
 #include <Agl.h>
+#include <AntTweakBar.h>
 
 using namespace std;
 

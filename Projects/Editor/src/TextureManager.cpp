@@ -215,3 +215,12 @@ ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device,
 
 	return newShaderResurceView;
 }
+void TextureManager::ReloadAll()
+{
+	for (unsigned int i = 0; i < mTextureData.size(); i++)
+	{
+		if (mTextureData[i]->SRV)
+			mTextureData[i]->SRV->Release();
+		mTextureData[i]->SRV = loadTexture(mDevice, mTextureData[i]->Path.c_str());
+	}
+}

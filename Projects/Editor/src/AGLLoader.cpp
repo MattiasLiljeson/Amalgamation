@@ -122,7 +122,7 @@ void AGLLoader::Load(string pPath)
 	}
 
 
-	Scene::GetInstance()->Init(modmeshes, skeletons, modmappings, mReader->getScene(), folder);
+	Scene::GetInstance()->Init(modmeshes, skeletons, modmappings, mReader->getScene(), folder, mDevice, mDeviceContext);
 }
 AGLLoader::~AGLLoader()
 {

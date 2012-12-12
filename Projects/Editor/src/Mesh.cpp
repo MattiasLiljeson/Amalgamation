@@ -66,8 +66,8 @@ AglVector3 Mesh::GetMin()
 	/*AglMatrix w = mScene->GetWorld();
 	Matrix world(w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7], w[8], w[9], w[10], w[11], w[12], w[13], w[14], w[15]);
 	AglVector3 minP, maxP;
-	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->GetVertices();
-	AglVector3 p = AglVector3(v[0].Position[0], v[0].Position[1], v[0].Position[2]);
+	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->getVertices();
+	AglVector3 p = AglVector3(v[0].position[0], v[0].position[1], v[0].position[2]);
 	Vec3Transform(p, world);
 	minP = maxP = p;
 	for (int i = 1; i < mMesh->GetHeader().VertexCount; i++)

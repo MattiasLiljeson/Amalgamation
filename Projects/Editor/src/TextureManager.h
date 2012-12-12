@@ -34,7 +34,7 @@ public:
 	TextureData*			GetTexture(int pIndex);
 	TextureData*			GetTexture(string pPath);
 
-
+	void					ReloadAll();
 
 	static int NormMap;
 	static int DispMap;
