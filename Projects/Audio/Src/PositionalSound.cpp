@@ -13,7 +13,7 @@ PositionalSound::~PositionalSound()
 
 }
 
-float* PositionalSound::getPosition()
+const X3DAUDIO_EMITTER& PositionalSound::getEmitter()
 {
-	return m_dataInfo.pos;
+	return m_dataInfo.emitter;
 }

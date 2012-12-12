@@ -1,4 +1,5 @@
 #pragma once
+#include <x3daudio.h>
 
 // =======================================================================================
 //                                      PositionalSoundInfo
@@ -15,6 +16,8 @@
 struct PositionalSoundInfo
 {
 	float pos[3];
+
+	X3DAUDIO_EMITTER emitter;
 
 	PositionalSoundInfo(float x, float y, float z)
 	{

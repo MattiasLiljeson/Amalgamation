@@ -22,7 +22,7 @@ public:
 	PositionalSound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer,
 		const PositionalSoundInfo& p_info);
 	virtual ~PositionalSound();
-	float* getPosition();
+	const X3DAUDIO_EMITTER& getEmitter();
 private:
 	PositionalSoundInfo m_dataInfo;
 };

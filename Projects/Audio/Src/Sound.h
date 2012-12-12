@@ -46,6 +46,8 @@ public:
 	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT resumeOrPlay();
+
+	IXAudio2SourceVoice* getSourceVoice();
 protected:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;

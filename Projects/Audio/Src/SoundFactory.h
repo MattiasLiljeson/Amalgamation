@@ -1,9 +1,11 @@
 #pragma once
 #include <xaudio2.h>
+#include <x3daudio.h>
 #include "Sound.h"
 #include "PositionalSound.h"
 #include "XAudio2Exception.h"
 #include "SoundDefines.h"
+#include "AudioCurves.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -33,12 +35,16 @@ public:
 	PositionalSound* createPositionalSound( const char* p_filePath );
 protected:
 private:
-	void fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, XAUDIO2_BUFFER& p_buffer);
+	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
+		XAUDIO2_BUFFER& p_buffer);
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
 	void initFile(string p_filePath);
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter);
 private:
 	IXAudio2*	m_soundDevice;
-	HANDLE		m_file;
+
+	
+	HANDLE	m_file; ///< m_file is always used when loading sounds from file
 };

@@ -7,6 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsManagement", "Project
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audio", "Projects\Audio\Src\Audio.vcxproj", "{BE2A0661-776F-4B5B-B09C-F7304F5C6424}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientApp", "Projects\ClientApp\Src\ClientApp.vcxproj", "{B139A6B5-5EE8-4C76-BEAF-532B8713C36F}"
 	ProjectSection(ProjectDependencies) = postProject
