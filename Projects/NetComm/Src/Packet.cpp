@@ -46,8 +46,8 @@ Packet& Packet::operator >> (int& p_data)
 
 	if( m_data.size() - readPos < dataSize )
 	{
-		throw new out_of_range( "Trying to stream out more data than\
-								what is left to be read in the Packet." );
+		throw std::out_of_range( "Trying to stream out more data than\
+							what is left to be read in the Packet." );
 	}
 
 	memcpy(&p_data, &m_data[readPos], dataSize); 

@@ -52,7 +52,7 @@ Describe(a_packet)
 	{
 		Packet packet;
 		int i_dst;
-		AssertThrows(out_of_range, packet >> i_dst);
+		AssertThrows(std::out_of_range, (packet >> i_dst));
 	}
 
 	It(can_set_byte_data)

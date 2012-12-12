@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
 using namespace std;
 
 class Packet
@@ -28,6 +29,7 @@ public:
 
 	Packet& operator << (int  p_data);
 	Packet& operator >> (int& p_data);
+
 private:
 
 	int readPos;
