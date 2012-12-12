@@ -19,7 +19,6 @@ private:
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;
 	vector<TextureData*> mTextureData;
-	int mNoImage;
 private:
 	TextureManager();
 	~TextureManager();
@@ -34,7 +33,6 @@ public:
 	int						LoadTexture(string pPath);
 	TextureData*			GetTexture(int pIndex);
 	TextureData*			GetTexture(string pPath);
-	int						GetNoImage();
 
 
 

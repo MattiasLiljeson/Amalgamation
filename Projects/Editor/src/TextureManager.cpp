@@ -8,7 +8,6 @@ int TextureManager::DispMap = 0;
 TextureManager::TextureManager()
 {
 	mDevice = NULL;
-	mNoImage = NULL;
 }
 TextureManager::~TextureManager()
 {
@@ -37,7 +36,6 @@ void TextureManager::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceCon
 {
 	mDevice = pDevice;
 	mDeviceContext = pDeviceContext;
-	mNoImage = LoadTexture("NoImage.gif");
 }
 int TextureManager::LoadTexture(string pPath)
 {
@@ -81,10 +79,6 @@ TextureData* TextureManager::GetTexture(string pPath)
 			return mTextureData[i];
 	}
 	return NULL;
-}
-int TextureManager::GetNoImage()
-{
-	return mNoImage;
 }
 
 ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device, 

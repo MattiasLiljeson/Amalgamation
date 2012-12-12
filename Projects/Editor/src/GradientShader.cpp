@@ -107,8 +107,6 @@ void GradientShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	}
 	else
 	{
-		TextureData* td = TextureManager::GetInstance()->GetTexture(TextureManager::GetInstance()->GetNoImage());
-		mDeviceContext->PSSetShaderResources(0, 1, &td->SRV);
 	}
 	if (pGradient->getNormalTextureNameIndex() >= 0)
 	{
