@@ -58,7 +58,10 @@ public:
 
 	void processMessages();
 
+	/// Broadcasts a packet to all connected clients
 	void broadcastPacket( Packet p_packet );
+	/// Unicast sends a packet to only one specified client
+	void unicastPacket( Packet p_packet, int clientId );
 
 private:
 	bool m_isListening;
