@@ -39,7 +39,7 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		AglMatrix view;
 		MatrixHelper::SetLookAtMatrix(
 			view,
-			*transform->getTranslation(),
+			transform->getTranslation(),
 			camInfo->m_lookAt,
 			camInfo->m_up );
 

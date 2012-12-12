@@ -69,10 +69,11 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 			y += m_inputManager->getControl(m_controlIdxs[3])->getStatus();
 			y -= m_inputManager->getControl(m_controlIdxs[4])->getStatus();
 
-			AglVector3* pos = trans->getTranslation();
+			AglVector3 pos = trans->getTranslation();
 			double sensitivityMult = 1000.0;
-			pos->x -= x*sensitivityMult;
-			pos->y -= y*sensitivityMult;
+			pos.x -= x*sensitivityMult;
+			pos.y -= y*sensitivityMult;
+			trans->setTranslation(pos);
 		}
 	}
 }
