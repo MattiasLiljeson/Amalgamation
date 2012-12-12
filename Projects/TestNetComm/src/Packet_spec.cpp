@@ -17,6 +17,17 @@ Describe(a_packet)
 		Assert::That(i_dst, Equals(i_src));
 	}
 
+	It(can_contain_float_data)
+	{
+		Packet packet;
+		float f_src = 13.37f;
+		packet << f_src;
+		float f_dst;
+		packet >> f_dst;
+
+		Assert::That(f_dst, Equals(f_src));
+	}
+
 	It(can_contain_multiple_int_data)
 	{
 		Packet packet;
@@ -28,6 +39,20 @@ Describe(a_packet)
 
 		for (int i = 0; i <3; i++)
 			Assert::That(i_dst[i], Equals(i_src[i]));
+	}
+
+	It(can_contain_multiple_types_of_data)
+	{
+		Packet packet;
+		int i_src = 42;
+		float f_src = 13.37f;
+		packet << i_src << f_src;
+		int i_dst;
+		float f_dst;
+		packet >> i_dst >> f_dst;
+
+		Assert::That(i_dst, Equals(i_src));
+		Assert::That(f_dst, Equals(f_src));
 	}
 
 	It(can_return_data_size)
@@ -77,9 +102,10 @@ Describe(a_packet)
 
 	It(should_be_possible_to_copy_byte_data_from_a_packet_to_another)
 	{
-		int i_src[] = { 5, 10 };
+		int i_src = 5;
+		float f_src = 6.9f;
 		Packet packet_src;
-		packet_src << (int)5 << (int)10;
+		packet_src << i_src << f_src;
 
 		unsigned int data_size = packet_src.getDataSize();
 		char* data_src = packet_src.getDataPtr();
@@ -87,11 +113,12 @@ Describe(a_packet)
 		Packet packet_dst;
 		packet_dst.setData(data_src, data_size);
 
-		int i_dst[2];
-		packet_dst >> i_dst[0] >> i_dst[1];
+		int i_dst;
+		float f_dst;
+		packet_dst >> i_dst >> f_dst;
 
-		Assert::That(i_dst[0], Is().EqualTo(i_src[0]));
-		Assert::That(i_dst[1], Is().EqualTo(i_src[1]));
+		Assert::That(i_dst, Equals(i_src));
+		Assert::That(f_dst, Equals(f_src));
 	}
 
 };

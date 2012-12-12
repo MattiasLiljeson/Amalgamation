@@ -41,6 +41,9 @@ public:
 	Packet& operator << (int  p_data);
 	Packet& operator >> (int& p_data);
 
+	Packet& operator << (float p_data);
+	Packet& operator >> (float& p_data);
+
 private:
 	int readPos;
 	vector<char> m_data;

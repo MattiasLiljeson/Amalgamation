@@ -80,3 +80,38 @@ Packet& Packet::operator >> (int& p_data)
 	}
 	return *this;
 }
+
+Packet& Packet::operator << ( float p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+
+	if (m_data.size() + dataSize > 255)
+	{
+		throw std::out_of_range( "Trying to stream in more data than\
+							what is allowed (255) to be written in the Packet." );
+	}
+	else 
+	{
+		unsigned int oldPacketSize = m_data.size();
+		m_data.resize(m_data.size() + dataSize);
+		memcpy(&m_data[oldPacketSize], &p_data, dataSize);
+	}
+	return *this;
+}
+
+Packet& Packet::operator >> ( float& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+
+	if( m_data.size() - readPos < dataSize )
+	{
+		throw std::out_of_range( "Trying to stream out more data than\
+							what is left to be read in the Packet." );
+	}
+	else
+	{
+		memcpy(&p_data, &m_data[readPos], dataSize); 
+		readPos += dataSize;
+	}
+	return *this;
+}
