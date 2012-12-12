@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{193B35D9-7155-43DE-A676-BA77CBE782E4}</ProjectGuid>
-    <RootNamespace>TestNetComm</RootNamespace>
+    <ProjectGuid>{728265AD-6D83-49C7-A88E-29598349824B}</ProjectGuid>
+    <RootNamespace>TestGameplay</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,12 +42,12 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>NetComm_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NetComm_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,15 +75,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>NetComm_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NetComm_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Packet_spec.cpp" />
-    <ClCompile Include="StringSplit_spec.cpp" />
-    <ClCompile Include="TcpClient_spec.cpp" />
-    <ClCompile Include="TcpServer_spec.cpp" />
-    <ClCompile Include="TestNetCommRunner.cpp" />
+    <ClCompile Include="PacketTranslator_spec.cpp" />
+    <ClCompile Include="TestGameplayRunner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

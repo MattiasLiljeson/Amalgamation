@@ -22,6 +22,21 @@
     <Filter Include="Components\GFX">
       <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Network">
+      <UniqueIdentifier>{c8d90dbd-1e98-4c08-bd45-970976832584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Client only">
+      <UniqueIdentifier>{7e8c3639-af8d-4dc9-b14a-a2110309b0d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Server only">
+      <UniqueIdentifier>{f9080e87-a6cc-4e4e-a5b6-d8d9d12c560c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Shared">
+      <UniqueIdentifier>{598cd067-3fde-4322-93f8-60839d9de4bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Packet Translation">
+      <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -31,9 +46,6 @@
       <Filter>Utilities\Vector3</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkListenerSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PrintPositionsSystem.h">
@@ -66,11 +78,26 @@
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkListenerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsBody.h">
+	<ClInclude Include="PhysicsBody.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkInputHandlerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketTranslator.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,13 +107,10 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
+	<ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
@@ -106,6 +130,18 @@
     </ClCompile>
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkListenerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkConnectToServerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkInputHandlerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

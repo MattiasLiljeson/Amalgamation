@@ -15,6 +15,10 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="PhysicsBody.h" />
+    <ClInclude Include="NetworkInputHandlerSystem.h" />
+    <ClInclude Include="NetworkConnectToServerSystem.h" />
+    <ClInclude Include="PacketTranslator.h" />
+    <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
     <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
@@ -33,9 +37,12 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="NetworkInputHandlerSystem.cpp" />
+    <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PrintPositionsSystem.cpp" />
+    <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -91,7 +98,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +116,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

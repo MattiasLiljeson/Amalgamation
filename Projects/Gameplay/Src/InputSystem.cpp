@@ -39,6 +39,11 @@ void InputSystem::initialize()
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
 	idx = m_inputManager->addControl( mouseYN );
 	m_controlIdxs.push_back(idx);
+
+	Control* keyL = icf.createKeyboardKey( InputHelper::L );
+	idx = m_inputManager->addControl( keyL );
+
+	m_controlIdxs.push_back(idx);
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
@@ -75,5 +80,23 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 			pos.y -= y*sensitivityMult;
 			trans->setTranslation(pos);
 		}
+
+		if( inp->m_bBtnPressed == true )
+			int breakHere = 0;
+
+		inp->m_bBtnPressed = true;
+
+	}
+	if(m_inputManager->getControl(m_controlIdxs[5])->getDelta() == 1.0)
+	{
+		// L pressed
+		EntitySystem* connectionSystem = m_world->getSystem(
+			SystemType::NetworkConnectoToServerSystem );
+
+		connectionSystem->setEnabled( true );
+	}
+	else if (m_inputManager->getControl(m_controlIdxs[5])->getDelta() == -1.0)
+	{
+		// L released
 	}
 }

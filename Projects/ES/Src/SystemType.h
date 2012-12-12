@@ -17,6 +17,7 @@ public:	//Enums
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
 		NetworkListenerSystem,
+		NetworkInputHandlerSystem,
 		NetworkConnectoToServerSystem,
 		InputSystem,
 		PhysicsSystem,

@@ -33,6 +33,7 @@ MessageLoopFetcher::MessageLoopFetcher( bool p_resetCursor )
 	m_keyFromCharMap['A']			= InputHelper::A;
 	m_keyFromCharMap['S']			= InputHelper::S;
 	m_keyFromCharMap['D']			= InputHelper::D;
+	m_keyFromCharMap['L']			= InputHelper::L;
 	m_keyFromCharMap[VK_SPACE]		= InputHelper::SPACE;
 	m_keyFromCharMap[VK_F1]			= InputHelper::F1;
 	m_keyFromCharMap[VK_F2]			= InputHelper::F2;

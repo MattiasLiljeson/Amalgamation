@@ -8,11 +8,11 @@ class ProcessMessageReceivePacket: public ProcessMessage
 public:
 	ProcessMessageReceivePacket();
 
-	ProcessMessageReceivePacket( ThreadSafeMessaging* p_sender, Packet* p_packet );
+	ProcessMessageReceivePacket( ThreadSafeMessaging* p_sender, Packet p_packet );
 
 	~ProcessMessageReceivePacket();
 
 public:
-	Packet* packet;
+	Packet packet;
 
 };

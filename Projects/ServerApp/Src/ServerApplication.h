@@ -3,7 +3,7 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief The server application run all systems related to the server logic.
+/// \brief	The server application run all systems related to the server logic.
 /// 
 /// # ServerApplication
 /// The server application contains its own EntityWorld. It consists of different
@@ -15,10 +15,13 @@
 
 #include <conio.h>
 
+#include <boost/thread.hpp>
+
 #include <EntityWorld.h>
 #include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
+#include <NetworkInputHandlerSystem.h>
 #include <TcpServer.h>
 
 using namespace std;
@@ -27,7 +30,7 @@ class ServerApplication
 {
 public:
 	ServerApplication();
-	~ServerApplication();
+	virtual ~ServerApplication();
 
 	///-----------------------------------------------------------------------------------
 	/// The run() method starts the whole application. It runs all the
@@ -51,4 +54,5 @@ private:
 
 	EntityWorld* m_world;
 	TcpServer* m_server;
+
 };

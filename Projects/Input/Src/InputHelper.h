@@ -54,6 +54,7 @@ public:
 		A,
 		S,
 		D,
+		L,
 		SPACE,
 		LCTRL,
 		ESC,

@@ -3,11 +3,11 @@
 ProcessMessageSendPacket::ProcessMessageSendPacket()
 	: ProcessMessage( MessageType::SEND_PACKET, NULL )
 {
-	packet = NULL;
+
 }
 
 ProcessMessageSendPacket::ProcessMessageSendPacket(
-	ThreadSafeMessaging* p_sender, Packet* p_packet )
+	ThreadSafeMessaging* p_sender, Packet p_packet )
 	: ProcessMessage( MessageType::SEND_PACKET, p_sender )
 {
 	packet = p_packet;
