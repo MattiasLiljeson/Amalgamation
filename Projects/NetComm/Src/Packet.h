@@ -47,4 +47,7 @@ public:
 private:
 	int readPos;
 	vector<char> m_data;
+
+	void WriteData(void* p_data, unsigned int p_dataSize);
+	void ReadData(void* p_data, unsigned int p_dataSize);
 };
