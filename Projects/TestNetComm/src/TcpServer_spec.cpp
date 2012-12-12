@@ -261,7 +261,7 @@ Describe(a_tcp_server)
 		}
 	}
 
-	It(can_broadcast_packets_to_individual_clients)
+	It(can_unicast_packets_to_individual_clients)
 	{
 		TcpServer server;
 		server.startListening( 1337 );
@@ -273,11 +273,13 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		
+		vector<int> currentConnections = server.getActiveConnections();
+
 		Packet packets[3];
 		for (int i = 0; i < 3; i++)
 		{
-			packets[i] << i;
-			server.unicastPacket( packets[i], i + 1 );
+			packets[i] << i + 111;
+			server.unicastPacket( packets[i], currentConnections[i] );
 		}
 
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
@@ -285,10 +287,12 @@ Describe(a_tcp_server)
 		{
 			client[i].processMessages();
 			
+			Assert::That(client[i].hasNewPackets(), IsTrue());
 			Packet packet = client[i].popNewPacket();
 			int i_dst;
 			packet >> i_dst;
-			Assert::That(i_dst, Equals(i));
+			Assert::That(i_dst, IsGreaterThan(110)); /** Remember the values set to be
+														i + 111 (greater than 110). */
 		}
 	}
 

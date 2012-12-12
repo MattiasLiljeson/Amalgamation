@@ -40,6 +40,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Projects\Input\Src\Input.vcxproj", "{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetComm", "Projects\NetComm\Src\NetComm.vcxproj", "{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Projects\Physics\Src\Physics.vcxproj", "{9A6825EE-38C3-41DC-997D-28D9B269FF3F}"
 EndProject
