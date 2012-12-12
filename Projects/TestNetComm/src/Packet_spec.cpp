@@ -37,15 +37,15 @@ Describe(a_packet)
 		int i_src[] = { 1, 2, 3 };
 		packet << i_src[0] << i_src[1] << i_src[2];
 		
-		Assert::That(packet.getDataSize(), Equals(sizeof(i_src)));
+		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + 1));
 	}
 
 
-	It(returns_null_if_trying_to_get_byte_data_of_an_empty_packet)
+	It(can_be_empty)
 	{
 		Packet packet;
 		
-		Assert::That(packet.getDataPtr(), Is().EqualTo((char*)NULL));
+		Assert::That(packet.isEmpty(), IsTrue());
 	}
 
 	It(throws_an_exception_if_trying_to_stream_out_an_empty_packet)
@@ -57,15 +57,16 @@ Describe(a_packet)
 
 	It(can_set_byte_data)
 	{
-		char* byteData = new char[4];
+		char* byteData = new char[5];
 		// Big endian order
-		byteData[0] = 42;
-		byteData[1] = 0;
+		byteData[0] = 4;
+		byteData[1] = 42;
 		byteData[2] = 0;
 		byteData[3] = 0;
+		byteData[4] = 0;
 
 		Packet packet;
-		packet.setData(byteData, 4);
+		packet.setData(byteData, 5);
 
 		int i_dst;
 		packet >> i_dst;
