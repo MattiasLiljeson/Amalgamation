@@ -24,8 +24,10 @@
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
 #include <TcpServer.h>
-#include "DebugUtil.h"
-#include "ToString.h"
+#include <DebugUtil.h>
+#include <ToString.h>
+
+#include "PacketTypes.h"
 
 // Components:
 #include "Transform.h"

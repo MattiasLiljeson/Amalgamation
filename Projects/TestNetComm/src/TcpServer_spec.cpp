@@ -261,6 +261,43 @@ Describe(a_tcp_server)
 		}
 	}
 
+	It(can_multicast_packets_to_a_list_of_clients)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		
+		int i_src = 32;
+		Packet packet_src;
+		packet_src << i_src;
+
+		vector<int> connections;
+		connections = server.getActiveConnections();
+		connections.erase( connections.begin() );
+		server.multicastPacket( connections, packet_src );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<5; i++)
+			client[i].processMessages();
+
+		int numberOfClientsThatReceivedPacket = 0;
+		for(int i=0; i<5; i++)
+		{
+			if( client[i].newPacketsCount() > 0 )
+			{
+				numberOfClientsThatReceivedPacket += 1;
+			}
+		}
+
+		Assert::That(numberOfClientsThatReceivedPacket, Equals(4));
+	}
+
 	It(can_unicast_packets_to_individual_clients)
 	{
 		TcpServer server;

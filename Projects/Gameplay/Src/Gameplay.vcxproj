@@ -18,6 +18,7 @@
     <ClInclude Include="NetworkInputHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
     <ClInclude Include="PacketTranslator.h" />
+    <ClInclude Include="PacketTypes.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
     <ClInclude Include="NetworkClientControllable.h" />
