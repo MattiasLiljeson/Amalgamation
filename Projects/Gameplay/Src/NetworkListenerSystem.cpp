@@ -28,6 +28,19 @@ void NetworkListenerSystem::process()
 				new NetworkSynced( id, id ) );
 			m_world->addEntity( e );
 
+			// When a client is connecting, the server must broadcast to all other
+			// clients that a new client exists.
+			// Packet needed: ON_CLIENT_CONNECT 
+			//	data: clientId
+			//	
+
+			// The server must then initialise data for the new client.
+			// Packet needed: CREATE_ENTITY
+			//	data:	id
+			//	string: name (debug)
+			// Packet needed: ADD_COMPONENT
+			//	
+			
 		}
 	}
 }
@@ -42,6 +55,8 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent( p_entities[index],
 				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
+
+			// When a client is disconnecting, then all other clients must know this.
 
 			// HACK: This deletion is what caused the magical crashes all the time.
 			// This should be solved as soon as possible.
