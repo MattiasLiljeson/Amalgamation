@@ -34,7 +34,7 @@ void NetworkListenerSystem::process()
 			//	data: clientId
 			//	And entity creation.
 			
-			vector< int > currentConnections = m_server->getActiveConnections();
+			vector<int> currentConnections = m_server->getActiveConnections();
 
 			for( unsigned int i=0; i<currentConnections.size(); i++ )
 			{
@@ -44,9 +44,16 @@ void NetworkListenerSystem::process()
 					DEBUGPRINT(( toString(i).c_str() ));
 				}
 			}
+
+			// HACK: Just some testing packet here.
+			Packet newClientConnected;
+			newClientConnected << PacketTypes::NewClientJoinedGame << id <<
+				(float)(id) * 10.0f;
+			m_server->multicastPacket( currentConnections, newClientConnected );
+
 			
 
-			// The server must then initialise data for the new client.
+			// The server must then initialize data for the new client.
 			// Packets needed: CREATE_ENTITY
 			//	int:	id
 			//	string: name (debug)

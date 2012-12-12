@@ -190,6 +190,14 @@ void TcpServer::broadcastPacket( Packet p_packet )
 	}
 }
 
+void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_packet )
+{
+	for( unsigned int i=0; i<p_connectionIdentities.size(); i++ )
+	{
+		unicastPacket( p_packet, p_connectionIdentities[i] );
+	}
+}
+
 void TcpServer::unicastPacket( Packet p_packet, int clientId )
 {
 	// NOTE: this might be slow enough to do for individual packets
