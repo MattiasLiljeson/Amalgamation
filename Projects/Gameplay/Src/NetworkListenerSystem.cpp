@@ -35,12 +35,15 @@ void NetworkListenerSystem::process()
 			//	
 
 			// The server must then initialise data for the new client.
-			// Packet needed: CREATE_ENTITY
-			//	data:	id
+			// Packets needed: CREATE_ENTITY
+			//	int:	id
 			//	string: name (debug)
-			// Packet needed: ADD_COMPONENT
-			//	
+			// Packets	needed: ADD_COMPONENT
+			//	int:	entityId
+			//	int:	componentTypeId
+			//	*:		specificComponentData
 			
+
 		}
 	}
 }
