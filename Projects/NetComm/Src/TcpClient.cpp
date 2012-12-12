@@ -139,7 +139,7 @@ Packet TcpClient::popNewPacket()
 	}
 	else
 	{
-		throw new domain_error( "Trying to pop from an empty packet queue!" );
+		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return packet;
 }
