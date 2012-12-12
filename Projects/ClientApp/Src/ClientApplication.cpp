@@ -49,7 +49,7 @@ void ClientApplication::run()
 			dt = 1/100.0;
 			m_prevTimeStamp = currTimeStamp;
 
-			m_world->setDelta(dt);
+			m_world->setDelta((float)dt);
 			m_world->process();
 		}
 	}
@@ -94,6 +94,7 @@ void ClientApplication::initEntities()
 	Entity* entity;
 	Component* component;
 
+	// Physics object without a model defined, will not be rendered.
 	entity = m_world->createEntity();
 	component = new RenderInfo();
 	entity->addComponent( ComponentType::RenderInfo, component );
@@ -101,14 +102,14 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
-	//component = new PhysUnknown();
-	//entity->addComponent(ComponentType::PhysUnknown, component);
 	m_world->addEntity(entity);
 
+	// Load cube model used as graphic representation for all "graphical" entities.
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
 
+	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )
 	{
 		for( int y=0; y<8; y++ )
@@ -125,6 +126,7 @@ void ClientApplication::initEntities()
 		}
 	}
 
+	// A camera from which the world is rendered.
 	entity = m_world->createEntity();
 	component = new CameraInfo( 800/(float)600 );
 	entity->addComponent( ComponentType::CameraInfo, component );
@@ -133,4 +135,12 @@ void ClientApplication::initEntities()
 	component = new Transform( 5.0f, 5.0f, 5.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
+
+	// Code below used to test removal of object and compoennts under runtime
+	entity = m_world->createEntity();
+	component = new Transform( 5.0f, 5.0f, 5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
+	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
+	m_world->deleteEntity(entity);
 }

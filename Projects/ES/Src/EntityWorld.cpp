@@ -228,8 +228,6 @@ void EntityWorld::process()
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
 
-	//m_componentManager->clean();
-
 	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
 	{
 		EntitySystem* system = m_systemsBag[i];

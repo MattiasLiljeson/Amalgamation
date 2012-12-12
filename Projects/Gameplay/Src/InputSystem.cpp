@@ -67,10 +67,10 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if( cameraInfo != NULL )
 		{
-			double x,y;
-			x  = m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
+			double x = 0.0, y = 0.0;
+			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
 			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
-			y  = m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
+			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
 			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
 
 			AglVector3 position = transform->getTranslation();
