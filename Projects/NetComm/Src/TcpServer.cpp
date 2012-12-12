@@ -204,3 +204,15 @@ int TcpServer::popNewConnection()
 
 	return id;
 }
+
+vector< int > TcpServer::getActiveConnections()
+{
+	vector< int > currentConnections;
+
+	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
+	{
+		currentConnections.push_back( m_communicationProcesses[i]->getId() );
+	}
+
+	return currentConnections;
+}

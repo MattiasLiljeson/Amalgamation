@@ -32,7 +32,16 @@ void NetworkListenerSystem::process()
 			// clients that a new client exists.
 			// Packet needed: ON_CLIENT_CONNECT 
 			//	data: clientId
-			//	
+			//	And entity creation.
+			
+			vector< int > currentConnections = m_server->getActiveConnections();
+
+			for( unsigned int i=0; i<currentConnections.size(); i++ )
+			{
+				if( currentConnections[i] == id )
+					currentConnections.erase( currentConnections.front() + i );
+			}
+			
 
 			// The server must then initialise data for the new client.
 			// Packets needed: CREATE_ENTITY
