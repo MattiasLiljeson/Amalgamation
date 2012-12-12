@@ -8,6 +8,7 @@
 
 class NetworkInputHandlerSystem : public EntitySystem
 {
+public:
 	NetworkInputHandlerSystem( TcpServer* p_server );
 	~NetworkInputHandlerSystem();
 

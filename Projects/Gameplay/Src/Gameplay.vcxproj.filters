@@ -16,7 +16,7 @@
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
     </Filter>
-	    <Filter Include="Systems\GFX">
+    <Filter Include="Systems\GFX">
       <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GFX">
@@ -63,10 +63,7 @@
     <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
     </ClInclude>
-	<ClInclude Include="ProcessingMessagesSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-	<ClInclude Include="CameraSystem.h">
+    <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
@@ -96,6 +93,9 @@
     <ClInclude Include="PacketTranslator.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -108,9 +108,6 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-	<ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
@@ -136,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="NetworkInputHandlerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
