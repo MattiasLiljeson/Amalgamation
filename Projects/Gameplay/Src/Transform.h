@@ -76,8 +76,9 @@ public:
 	///----------------------------------------------------------------------------------
 	//AglMatrix& getTransposedMatrix();
 
-	InstanceVertex& getInstanceVertex();
-	InstanceVertex* getInstanceVertexPtr();
+	InstanceVertex getInstanceVertex() const;
+	InstanceVertex& getInstanceVertexRef() ;
+	InstanceVertex* getInstanceVertexPtr() ;
 
 private:
 	///-----------------------------------------------------------------------------------

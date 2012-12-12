@@ -68,7 +68,12 @@ AglMatrix* Transform::getMatrix()
 //	return m_transposedCompositionMatrix;
 //}
 
-InstanceVertex& Transform::getInstanceVertex()
+InstanceVertex Transform::getInstanceVertex() const
+{
+	return m_instanceVertex;
+}
+
+InstanceVertex& Transform::getInstanceVertexRef()
 {
 	return m_instanceVertex;
 }
