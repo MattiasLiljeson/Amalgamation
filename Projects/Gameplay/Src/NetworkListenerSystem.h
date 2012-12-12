@@ -16,6 +16,7 @@
 #include <iostream>
 #include <queue>
 #include <boost/asio.hpp>
+#include <vector>
 
 #include <SystemType.h>
 #include <EntitySystem.h>
@@ -23,6 +24,8 @@
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
 #include <TcpServer.h>
+#include "DebugUtil.h"
+#include "ToString.h"
 
 // Components:
 #include "Transform.h"

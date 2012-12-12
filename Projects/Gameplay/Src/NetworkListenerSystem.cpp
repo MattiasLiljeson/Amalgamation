@@ -39,7 +39,10 @@ void NetworkListenerSystem::process()
 			for( unsigned int i=0; i<currentConnections.size(); i++ )
 			{
 				if( currentConnections[i] == id )
-					currentConnections.erase( currentConnections.front() + i );
+				{
+					currentConnections.erase( currentConnections.begin() + i );
+					DEBUGPRINT(( toString(i).c_str() ));
+				}
 			}
 			
 
