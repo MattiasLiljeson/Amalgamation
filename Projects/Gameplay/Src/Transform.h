@@ -62,10 +62,17 @@ public:
 	AglQuaternion* getRotation();
 
 	///-----------------------------------------------------------------------------------
-	/// Get a pointer to the scale vector. The data can be manipulated in every way.
+	/// Get a pointer to the transform matrix. The data can be manipulated in every way.
 	/// \returns A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
 	AglMatrix* getMatrix();
+
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the translated transform matrix.. The data can be manipulated 
+	/// in every way.
+	/// \returns A pointer to the translated transform matrix.
+	///----------------------------------------------------------------------------------
+	AglMatrix* getTransposedMatrix();
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -76,8 +83,8 @@ private:
 
 private:
 	AglMatrix m_compositionMatrix;
+	AglMatrix m_transposedCompositionMatrix;
 	AglVector3 m_translation;
 	AglVector3 m_scale;
 	AglQuaternion m_rotation;
-	///AglVector3 m_orientation;
 };

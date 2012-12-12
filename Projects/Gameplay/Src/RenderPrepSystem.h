@@ -26,6 +26,7 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 private:
+	vector< vector<InstanceVertex> > m_instanceLists;
 	GraphicsBackendSystem* m_gfxBackend;
 
 };

@@ -63,6 +63,11 @@ AglMatrix* Transform::getMatrix()
 	return &m_compositionMatrix;
 }
 
+AglMatrix* Transform::getTransposedMatrix()
+{
+	return &m_transposedCompositionMatrix;
+}
+
 void Transform::calcCompMatrix()
 {
 	AglMatrix::componentsToMatrix(
@@ -70,4 +75,5 @@ void Transform::calcCompMatrix()
 		m_scale,
 		m_rotation,
 		m_translation);
+	m_transposedCompositionMatrix = AglMatrix::transpose( m_compositionMatrix );
 }

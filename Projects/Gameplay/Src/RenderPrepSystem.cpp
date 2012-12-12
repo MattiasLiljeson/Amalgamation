@@ -29,7 +29,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		gfxWrapper->clearRenderTargets();	      // clear render targets used           
 		gfxWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 		
-		vector< vector<InstanceVertex> > instanceLists;
+		
 
 		//HACK: breaks in loop below 
 		for( int i=0; i<p_entities.size(); i++ )
@@ -52,9 +52,8 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 				break;
 			}
 
-			AglMatrix mat = *transform->getMatrix();
 			// The renderer wants col-major matrices, therefore transpose
-			mat = AglMatrix::transpose( mat );
+			AglMatrix mat = *transform->getTransposedMatrix();
 			
 			// Create instance vertex for this entity 
 			InstanceVertex vert;
@@ -64,20 +63,26 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			// resize vector if the mesh id is outside of the vectors size
-			if( instanceLists.size() <= renderInfo->m_meshId )
-				instanceLists.resize( renderInfo->m_meshId + 1 );
+			if( m_instanceLists.size() <= renderInfo->m_meshId )
+				m_instanceLists.resize( renderInfo->m_meshId + 1 );
 
 			// Finally, add the entity to the instance vector
-			instanceLists[renderInfo->m_meshId].push_back( vert );
+			m_instanceLists[renderInfo->m_meshId].push_back( vert );
 		}
-		for( int meshIdx=0; meshIdx<instanceLists.size(); meshIdx++ )
+		for( int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
 			// Batch render all entities that share the same mesh
-			gfxWrapper->renderMesh( meshIdx, &instanceLists[meshIdx] ); // process a mesh
+			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
 		}
 
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer        
 		AntTweakBarWrapper::getInstance()->render();
-		gfxWrapper->flipBackBuffer();           // flip buffers	
+		gfxWrapper->flipBackBuffer();           // flip buffers
+		
+		// WOW! for each loop in C++!
+		for( int i=0; i<m_instanceLists.size(); i++ )
+		{
+			m_instanceLists[i].clear();
+		}
 	}
 }
