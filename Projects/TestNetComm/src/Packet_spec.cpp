@@ -28,6 +28,11 @@ Describe(a_packet)
 		Assert::That(f_dst, Equals(f_src));
 	}
 
+	It(can_contain_char_data)
+	{
+
+	}
+
 	It(can_contain_multiple_int_data)
 	{
 		Packet packet;
@@ -65,7 +70,6 @@ Describe(a_packet)
 		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + 1));
 	}
 
-
 	It(can_be_empty)
 	{
 		Packet packet;
@@ -83,7 +87,7 @@ Describe(a_packet)
 	It(can_set_byte_data)
 	{
 		char* byteData = new char[5];
-		// Big endian order
+		// Big endian order?
 		byteData[0] = 4;
 		byteData[1] = 42;
 		byteData[2] = 0;

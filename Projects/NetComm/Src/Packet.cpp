@@ -49,43 +49,34 @@ void Packet::setData(char* p_data, unsigned int p_size)
 Packet& Packet::operator << (int p_data)
 {	
 	unsigned int dataSize = sizeof(p_data);
-
-	if (m_data.size() + dataSize > 255)
-	{
-		throw std::out_of_range( "Trying to stream in more data than\
-							what is allowed (255) to be written in the Packet." );
-	}
-	else 
-	{
-		unsigned int oldPacketSize = m_data.size();
-		m_data.resize(m_data.size() + dataSize);
-		memcpy(&m_data[oldPacketSize], &p_data, dataSize);
-	}
+	WriteData(&p_data, dataSize);
 	return *this;
 }
 
 Packet& Packet::operator >> (int& p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
-
-	if( m_data.size() - readPos < dataSize )
-	{
-		throw std::out_of_range( "Trying to stream out more data than\
-							what is left to be read in the Packet." );
-	}
-	else
-	{
-		memcpy(&p_data, &m_data[readPos], dataSize); 
-		readPos += dataSize;
-	}
+	ReadData(&p_data, dataSize);
 	return *this;
 }
 
 Packet& Packet::operator << ( float p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
 
-	if (m_data.size() + dataSize > 255)
+Packet& Packet::operator >> ( float& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+void Packet::WriteData(void* p_data, unsigned int p_dataSize)
+{
+	if (m_data.size() + p_dataSize > 255)
 	{
 		throw std::out_of_range( "Trying to stream in more data than\
 							what is allowed (255) to be written in the Packet." );
@@ -93,25 +84,23 @@ Packet& Packet::operator << ( float p_data )
 	else 
 	{
 		unsigned int oldPacketSize = m_data.size();
-		m_data.resize(m_data.size() + dataSize);
-		memcpy(&m_data[oldPacketSize], &p_data, dataSize);
+		m_data.resize(m_data.size() + p_dataSize);
+		memcpy(&m_data[oldPacketSize], p_data, p_dataSize);
 	}
-	return *this;
 }
 
-Packet& Packet::operator >> ( float& p_data )
+void Packet::ReadData(void* p_data, unsigned int p_dataSize)
 {
-	unsigned int dataSize = sizeof(p_data);
-
-	if( m_data.size() - readPos < dataSize )
+	if( m_data.size() - readPos < p_dataSize )
 	{
 		throw std::out_of_range( "Trying to stream out more data than\
 							what is left to be read in the Packet." );
 	}
 	else
 	{
-		memcpy(&p_data, &m_data[readPos], dataSize); 
-		readPos += dataSize;
+		memcpy(p_data, &m_data[readPos], p_dataSize); 
+		readPos += p_dataSize;
 	}
-	return *this;
 }
+
+
