@@ -192,7 +192,7 @@ Describe(a_tcp_server)
 	{
 		TcpServer server;
 		
-		//AssertThrows(std::domain_error, server.popNewPacket());
+		AssertThrows(std::domain_error, server.popNewPacket());
 	}
 
 	It(has_an_interface_that_can_be_used_to_process_messages)
@@ -258,6 +258,37 @@ Describe(a_tcp_server)
 			packet_dst >> i_dst;
 
 			Assert::That(i_dst, Equals(i_src));
+		}
+	}
+
+	It(can_broadcast_packets_to_individual_clients)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[3];
+		for(int i=0; i<3; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		
+		Packet packets[3];
+		for (int i = 0; i < 3; i++)
+		{
+			packets[i] << i;
+			server.unicastPacket( packets[i], i + 1 );
+		}
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<3; i++)
+		{
+			client[i].processMessages();
+			
+			Packet packet = client[i].popNewPacket();
+			int i_dst;
+			packet >> i_dst;
+			Assert::That(i_dst, Equals(i));
 		}
 	}
 
