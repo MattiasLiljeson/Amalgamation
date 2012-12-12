@@ -22,13 +22,13 @@ public:
 	virtual ~Sound();
 
 	///-----------------------------------------------------------------------------------
-	/// Stops the source voice and flushesh the buffers
+	/// Stops the source voice and also flushes the source buffers
 	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT stop();
 
 	///-----------------------------------------------------------------------------------
-	/// Pauses the sound but dosen't clear the buffers
+	/// Pauses the sound but doesn't clear the source buffers
 	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT pause();
@@ -41,11 +41,14 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Only asks the source voice to begin playing it's sound no matter where the 
-	/// bufferpointer is.
+	/// buffer pointer. If the sound has never been played the buffer location will be at
+	/// the begining.
 	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT resumeOrPlay();
-private:
+
+	IXAudio2SourceVoice* getSourceVoice();
+protected:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
 };
