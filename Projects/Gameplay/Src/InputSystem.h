@@ -13,6 +13,7 @@
 
 #include "CameraInfo.h"
 #include "Input.h"
+#include "Transform.h"
 #include <EntitySystem.h>
 #include <InputControlFactory.h>
 #include <InputManager.h>

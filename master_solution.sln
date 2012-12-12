@@ -76,6 +76,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgilePhysics", "Projects\AgilePhysics\src\AgilePhysics.vcxproj", "{626A92B1-E978-48A3-85E7-93BB209D6A3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsTest", "Projects\PhysicsTest\src\PhysicsTest.vcxproj", "{EC65E2DA-0377-4367-A57F-D23AE2758360}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\TestGraphics\Src\TestGraphics.vcxproj", "{9914D3D3-86EE-415A-9D7F-219504F5FF71}"
 	ProjectSection(ProjectDependencies) = postProject
 		{15020C27-0C35-4D82-9517-59D175B1DF49} = {15020C27-0C35-4D82-9517-59D175B1DF49}
@@ -182,5 +183,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

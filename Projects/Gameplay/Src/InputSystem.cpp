@@ -29,6 +29,16 @@ void InputSystem::initialize()
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
 	idx = m_inputManager->addControl( mouseXN );
 	m_controlIdxs.push_back(idx);
+
+	Control* mouseYP = icf.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	idx = m_inputManager->addControl( mouseYP );
+	m_controlIdxs.push_back(idx);
+
+	Control* mouseYN = icf.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
+		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
+	idx = m_inputManager->addControl( mouseYN );
+	m_controlIdxs.push_back(idx);
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
@@ -42,29 +52,27 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 	if( p_entities.size() > 0 )
 	{
-		Input* inp =
-			static_cast<Input*>(
-			m_world->getComponentManager()->getComponent( p_entities[0],
-			ComponentType::getTypeFor( ComponentType::Input ) ) );
+		Input* inp = static_cast<Input*>(
+			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Input ) );
 
-		CameraInfo* cam = 
-			static_cast<CameraInfo*>(
-			m_world->getComponentManager()->getComponent( p_entities[0],
-			ComponentType::getTypeFor( ComponentType::CameraInfo ) ) );
+		CameraInfo* cam = static_cast<CameraInfo*>(
+			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
+
+		Transform* trans = static_cast<Transform*>(
+			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 		if( cam != NULL )
 		{
-			double xp = m_inputManager->getControl(m_controlIdxs[1])->getStatus();
-			double xn = m_inputManager->getControl(m_controlIdxs[2])->getStatus();
-			double x = xp - xn;
+			double x = 0.0, y = 0.0;
+			x += m_inputManager->getControl(m_controlIdxs[1])->getStatus();
+			x -= m_inputManager->getControl(m_controlIdxs[2])->getStatus();
+			y += m_inputManager->getControl(m_controlIdxs[3])->getStatus();
+			y -= m_inputManager->getControl(m_controlIdxs[4])->getStatus();
 
-			int rd = m_inputManager->getControl(m_controlIdxs[2])->getRawData();
-			cam->m_pos.x += x*500.0;
+			AglVector3* pos = trans->getTranslation();
+			double sensitivityMult = 1000.0;
+			pos->x -= x*sensitivityMult;
+			pos->y -= y*sensitivityMult;
 		}
-
-		if( inp->m_bBtnPressed == true )
-			int breakHere = 0;
-
-		inp->m_bBtnPressed = true;
 	}
 }

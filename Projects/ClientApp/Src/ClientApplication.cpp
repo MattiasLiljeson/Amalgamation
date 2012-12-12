@@ -90,10 +90,32 @@ void ClientApplication::initEntities()
 	e->addComponent(ComponentType::PhysicsBody, c);
 	m_world->addEntity(e);
 
+	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* gfxSys = static_cast<GraphicsBackendSystem*>(sys);
+	int cubeMeshId = gfxSys->getMeshId( "P_cube" );
+
+	for( int i=0; i<64; i++ )
+	{
+		for( int j=0; j<64; j++ )
+		{
+			for( int k=0; k<64; k++ )
+			{
+				e = m_world->createEntity();
+				c = new RenderInfo( cubeMeshId );
+				e->addComponent( ComponentType::RenderInfo, c );
+				c = new Transform( 2.0f+5.0f*-i, 1.0f+5.0f*-j, 1.0f+5.0f*-k );
+				e->addComponent( ComponentType::Transform, c );
+				m_world->addEntity(e);
+			}
+		}
+	}
+
 	e = m_world->createEntity();
-	c = new CameraInfo(800/(float)600);
+	c = new CameraInfo( 800/(float)600 );
 	e->addComponent( ComponentType::CameraInfo, c );
 	c = new Input();
 	e->addComponent( ComponentType::Input, c );
+	c = new Transform( 5.0f, 5.0f, 5.0f );
+	e->addComponent( ComponentType::Transform, c );
 	m_world->addEntity(e);
 }

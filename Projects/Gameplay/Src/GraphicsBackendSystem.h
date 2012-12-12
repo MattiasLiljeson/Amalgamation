@@ -18,6 +18,7 @@ public:
 	virtual void initialize();
 	void process();
 
+	int getMeshId( string p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 
 private:
