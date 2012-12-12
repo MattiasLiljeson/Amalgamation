@@ -1,7 +1,7 @@
 #include "PhysicsSystem.h"
 
 PhysicsSystem::PhysicsSystem()
-	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::PhysUnknown, ComponentType::PhysicsBody)
+	: EntitySystem(SystemType::PhysicsSystem, 1, /*ComponentType::PhysUnknown,*/ ComponentType::PhysicsBody)
 {
 	m_physicsController = new PhysicsController();
 }

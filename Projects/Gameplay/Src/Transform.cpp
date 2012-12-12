@@ -12,10 +12,6 @@ Transform::Transform()
 
 	m_rotation = AglQuaternion::identity();
 
-	//m_orientation.x = 0.0f;
-	//m_orientation.y = 0.0f;
-	//m_orientation.z = 0.0f;
-
 	calcCompMatrix();
 }
 
@@ -31,10 +27,6 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 
 	m_rotation = AglQuaternion::identity();
 
-	//m_orientation.x = 0.0f;
-	//m_orientation.y = 0.0f;
-	//m_orientation.z = 0.0f;
-
 	calcCompMatrix();
 }
 
@@ -43,30 +35,43 @@ Transform::~Transform()
 
 }
 
-AglVector3* Transform::getTranslation()
+AglVector3 Transform::getTranslation() const
 {
-	return &m_translation;
+	return m_translation;
 }
 
-AglVector3* Transform::getScale()
+void Transform::setTranslation( const AglVector3 p_translation )
 {
-	return &m_scale;
+	m_translation = p_translation;
+	calcCompMatrix();
 }
 
-AglQuaternion* Transform::getRotation()
+AglVector3 Transform::getScale() const
 {
-	return &m_rotation;
+	return m_scale;
 }
 
-AglMatrix* Transform::getMatrix()
+void Transform::setScale( const AglVector3 p_scale )
 {
-	return &m_compositionMatrix;
+	m_scale = p_scale;
+	calcCompMatrix();
 }
 
-//AglMatrix& Transform::getTransposedMatrix()
-//{
-//	return m_transposedCompositionMatrix;
-//}
+AglQuaternion Transform::getRotation() const
+{
+	return m_rotation;
+}
+
+void Transform::setRotation( const AglQuaternion p_rotation )
+{
+	m_rotation = p_rotation;
+	calcCompMatrix();
+}
+
+AglMatrix Transform::getMatrix() const
+{
+	return m_compositionMatrix;
+}
 
 InstanceVertex Transform::getInstanceVertex() const
 {

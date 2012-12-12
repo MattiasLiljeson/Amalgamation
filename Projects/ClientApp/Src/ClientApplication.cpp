@@ -88,22 +88,24 @@ void ClientApplication::initEntities()
 	e->addComponent( ComponentType::Transform, c );
 	c = new PhysicsBody();
 	e->addComponent(ComponentType::PhysicsBody, c);
+	//c = new PhysUnknown();
+	//e->addComponent(ComponentType::PhysUnknown, c);
 	m_world->addEntity(e);
 
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* gfxSys = static_cast<GraphicsBackendSystem*>(sys);
 	int cubeMeshId = gfxSys->getMeshId( "P_cube" );
 
-	for( int i=0; i<8; i++ )
+	for( int x=0; x<8; x++ )
 	{
-		for( int j=0; j<8; j++ )
+		for( int y=0; y<8; y++ )
 		{
-			for( int k=0; k<8; k++ )
+			for( int z=0; z<8; z++ )
 			{
 				e = m_world->createEntity();
 				c = new RenderInfo( cubeMeshId );
 				e->addComponent( ComponentType::RenderInfo, c );
-				c = new Transform( 2.0f+5.0f*-i, 1.0f+5.0f*-j, 1.0f+5.0f*-k );
+				c = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
 				e->addComponent( ComponentType::Transform, c );
 				m_world->addEntity(e);
 			}
