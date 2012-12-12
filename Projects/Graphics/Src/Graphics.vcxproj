@@ -27,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="InstanceVertex.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
@@ -102,7 +103,8 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>
+    </ExecutablePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

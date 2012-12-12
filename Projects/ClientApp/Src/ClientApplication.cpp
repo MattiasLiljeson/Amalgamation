@@ -58,6 +58,9 @@ void ClientApplication::run()
 
 void ClientApplication::initSystems()
 {
+	InputSystem* inSys = new InputSystem();
+	m_world->setSystem( SystemType::InputSystem, inSys, true);
+
 	GraphicsBackendSystem* gfxSys = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( SystemType::SystemTypeIdx::GraphicsBackendSystem, gfxSys , true );
 
@@ -66,9 +69,6 @@ void ClientApplication::initSystems()
 
 	RenderPrepSystem* rpSys = new RenderPrepSystem( gfxSys );
 	m_world->setSystem( SystemType::RenderPrepSystem, rpSys , true );
-
-	InputSystem* inSys = new InputSystem();
-	m_world->setSystem( SystemType::RenderPrepSystem, inSys, true);
 
 	NetworkConnectToServerSystem* connectSystem =
 		new NetworkConnectToServerSystem( m_client );
@@ -80,9 +80,14 @@ void ClientApplication::initSystems()
 
 void ClientApplication::initEntities()
 {
-	Entity* e = m_world->createEntity();
-	Component* c = new RenderInfo();
+	Entity* e;
+	Component* c;
+
+	e = m_world->createEntity();
+	c = new RenderInfo();
 	e->addComponent( ComponentType::RenderInfo, c );
+	c = new Transform();
+	e->addComponent( ComponentType::Transform, c );
 	m_world->addEntity(e);
 
 	e = m_world->createEntity();

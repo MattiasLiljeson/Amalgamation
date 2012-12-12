@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Body.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CompoundBody.cpp" />
+    <ClCompile Include="ConvexHullShape.cpp" />
+    <ClCompile Include="GJKSolver.cpp" />
+    <ClCompile Include="ImpulseSolver.cpp" />
+    <ClCompile Include="PhysicsController.cpp" />
+    <ClCompile Include="PhyUtility.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="RigidBodyBox.cpp" />
+    <ClCompile Include="RigidBodyConvexHull.cpp" />
+    <ClCompile Include="RigidBodySphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Body.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="CompoundBody.h" />
+    <ClInclude Include="ConvexHullShape.h" />
+    <ClInclude Include="GJKSolver.h" />
+    <ClInclude Include="ImpulseSolver.h" />
+    <ClInclude Include="PhysicsController.h" />
+    <ClInclude Include="PhyUtility.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="RigidBodyBox.h" />
+    <ClInclude Include="RigidBodyConvexHull.h" />
+    <ClInclude Include="RigidBodySphere.h" />
+  </ItemGroup>
+</Project>

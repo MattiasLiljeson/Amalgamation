@@ -19,7 +19,6 @@ void Entity::reset()
 	//m_UUID = UUID.randomUUID();
 }
 
-
 int Entity::getUUID()
 {
 	return m_UUID;
@@ -28,6 +27,26 @@ int Entity::getUUID()
 int Entity::getIndex()
 {
 	return m_index;
+}
+
+EntityWorld* Entity::getWorld()
+{
+	return m_world;
+}
+
+bitset<ComponentType::NUM_COMPONENT_TYPES> Entity::getComponentBits()
+{
+	return m_componentBits;
+}
+
+void Entity::setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits )
+{
+	m_componentBits = p_componentBits;
+}
+
+void Entity::setComponentBit( int p_idx, bool p_value )
+{
+	m_componentBits[p_idx] = p_value;
 }
 
 void Entity::addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits )
@@ -44,11 +63,30 @@ void Entity::addComponent( ComponentType p_type, Component* p_component )
 	m_world->getComponentManager()->addComponent( this, p_type, p_component );
 }
 
+Component* Entity::getComponent( ComponentType::ComponentTypeIdx p_typeIdx )
+{
+	return m_world->getComponentManager()->getComponent( this, p_typeIdx );
+}
+
+bitset<SystemType::NUM_SYSTEM_TYPES> Entity::getSystemBits()
+{
+	return m_systemBits;
+}
+
+void Entity::setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits )
+{
+	m_systemBits = p_systemBits;
+}
+
+void Entity::setSystemBit( int p_idx, bool p_value )
+{
+	m_systemBits[p_idx] = p_value;
+}
+
 void Entity::removeComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits )
 {
 	m_componentBits &= ~p_componentBits;
 }
-
 
 void Entity::addSystemBit( bitset<SystemType::NUM_SYSTEM_TYPES> p_systemBits )
 {
@@ -70,4 +108,3 @@ void Entity::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
 }
-

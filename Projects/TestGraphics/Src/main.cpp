@@ -5,7 +5,7 @@
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "GraphicsWrapper.h"
-#include "CamMatrixerUtil.h"
+#include <CamMatrixerUtil.h>
 #include <DebugUtil.h>
 
 // temporary usage of these in main for mesh creation
@@ -44,9 +44,61 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
 	// Create a cube
-	unsigned int cubeId = graphicsWrapper->createMesh("P_cube", 0);
-	// RendererMeshInfo testMeshInfo = {{0.0f,0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f,0.0f},cubeId};
+	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
 
+	// Create a shitload of instances
+	vector<InstanceVertex>* instances = new vector<InstanceVertex>();
+	for (int i=0;i<100;i++)
+	{
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+				0.0f,1.0f,0.0f,  0.0f,
+				0.0f,0.0f,1.0f,  0.0f,
+				0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+	
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
+				0.0f,1.0f,0.0f,  0.0f,
+				0.0f,0.0f,1.0f,  2.0f,
+				0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
+			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  0.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			0.0f,1.0f,0.0f,  0.0f,
+			0.0f,0.0f,1.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
+				0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  -(float)i*2.3f-2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+
+		{
+			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
+			0.0f,0.0f,1.0f,  -2.0f,
+			0.0f,0.0f,0.0f,  1.0f};
+			instances->push_back(t);
+		}
+	}
 
 
 	AglMatrix viewMatrix = AglMatrix::identityMatrix();
@@ -58,8 +110,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	AglVector3 lookAt(0.0f,0.0f,0.0f);
 	AglVector3 up(0.0f,1.0f,0.0f);
 
-	SetLookAtMatrix(viewMatrix, pos, lookAt, up);
-	SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
+	MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+	MatrixHelper::SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
 
 	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 
@@ -91,7 +143,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 				pos.x = sin(ticker);
 				pos.y = -2.0f-cos(ticker);
 
-				SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+				MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
 
 				camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 
@@ -107,7 +159,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
-			graphicsWrapper->renderMesh(cubeId);	  // process a mesh						 
+			graphicsWrapper->renderMesh(cubeId,instances);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
 			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
@@ -117,6 +169,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 
 	AntTweakBarWrapper::destroy();
+	delete instances;
 	delete window;
 	delete graphicsWrapper;
 

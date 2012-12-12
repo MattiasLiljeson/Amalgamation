@@ -18,5 +18,6 @@ public:
 	RenderInfo();
 	virtual ~RenderInfo();
 	int m_instanceId;
+	int m_meshId;
 private:
 };

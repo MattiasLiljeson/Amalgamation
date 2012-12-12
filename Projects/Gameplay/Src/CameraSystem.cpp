@@ -35,7 +35,8 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		//camInfo->m_pos.x = -1.0f-sin(m_ticker);
 		camInfo->m_pos.y = -1.0f-cos(m_ticker);
 
-		CHANGETHIS::SetLookAtMatrix( camInfo->m_viewMatrix, camInfo->m_pos, camInfo->m_lookAt, camInfo->m_up );
+		MatrixHelper::SetLookAtMatrix( camInfo->m_viewMatrix, camInfo->m_pos, camInfo->m_lookAt, camInfo->m_up );
+
 		camInfo->m_camMatrix = AglMatrix::transpose( AglMatrix::identityMatrix() * camInfo->m_viewMatrix * camInfo->m_projMatrix );
 		RendererSceneInfo tempSceneInfo;
 		for( int n=0; n<16; n++ )

@@ -19,6 +19,7 @@
 #include <EntityWorld.h>
 #include <Input.h>
 #include <RenderInfo.h>
+#include <Transform.h>
 #include <Windows.h>
 
 // Systems

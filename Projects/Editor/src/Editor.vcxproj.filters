@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AGLLoader.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="DomainShader.cpp" />
+    <ClCompile Include="DX11Application.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="GradientShader.cpp" />
+    <ClCompile Include="HullShader.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MaterialDialog.cpp" />
+    <ClCompile Include="MaterialMap.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshDialog.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="RasterManager.cpp" />
+    <ClCompile Include="RenderNormalsShader.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneDialog.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SimpleShader.cpp" />
+    <ClCompile Include="SimpleTessShader.cpp" />
+    <ClCompile Include="SkeletonMapping.cpp" />
+    <ClCompile Include="SkeletonMesh.cpp" />
+    <ClCompile Include="SkeletonMeshShader.cpp" />
+    <ClCompile Include="SkeletonShader.cpp" />
+    <ClCompile Include="StandardShader.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AGLLoader.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="DomainShader.h" />
+    <ClInclude Include="DX11Application.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="GradientShader.h" />
+    <ClInclude Include="HullShader.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="MaterialDialog.h" />
+    <ClInclude Include="MaterialMapDialog.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshDialog.h" />
+    <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="RasterManager.h" />
+    <ClInclude Include="RenderNormalsShader.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneDialog.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="SimpleShader.h" />
+    <ClInclude Include="SimpleTessShader.h" />
+    <ClInclude Include="SkeletonMapping.h" />
+    <ClInclude Include="SkeletonMesh.h" />
+    <ClInclude Include="SkeletonMeshShader.h" />
+    <ClInclude Include="SkeletonShader.h" />
+    <ClInclude Include="StandardShader.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="VertexStructures.h" />
+  </ItemGroup>
+</Project>

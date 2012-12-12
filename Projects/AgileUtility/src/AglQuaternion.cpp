@@ -16,7 +16,7 @@ AglQuaternion::AglQuaternion()
 	v = 1.0f;
 }
 
-AglQuaternion AglQuaternion::operator*(const AglQuaternion& p_other)
+AglQuaternion AglQuaternion::operator*(const AglQuaternion& p_other) const
 {
 	AglVector3 uvec = p_other.u;
 	AglVector3 mulU = AglVector3::crossProduct(this->u, p_other.u) + 
@@ -24,6 +24,14 @@ AglQuaternion AglQuaternion::operator*(const AglQuaternion& p_other)
 	float mulV = this->v*p_other.v - AglVector3::dotProduct(this->u, p_other.u);
 	AglQuaternion quat(mulU, mulV); 
 	return quat;
+}
+AglQuaternion AglQuaternion::operator*(const float& p_scalar) const
+{
+	return AglQuaternion(u * p_scalar, v * p_scalar);
+}
+AglQuaternion AglQuaternion::operator+(const AglQuaternion& p_other) const
+{
+	return AglQuaternion(u + p_other.u, v + p_other.v);
 }
 
 AglQuaternion AglQuaternion::identity()
@@ -89,4 +97,24 @@ void AglQuaternion::transformVector(AglVector3& p_vector)
 	quat = quat.operator*(this->conjugate());
 
 	p_vector = quat.u;
+}
+
+//Static functions
+AglQuaternion AglQuaternion::lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, float p_t)
+{
+	AglQuaternion q = p_q1 * (1.0f - p_t) + p_q2 * p_t;
+	q.normalize();
+	return q;
+}
+AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, float p_t)
+{
+	float phi = p_q1.u.x*p_q2.u.x + p_q1.u.y*p_q2.u.y + p_q1.u.z*p_q2.u.z + p_q1.v*p_q2.v;
+
+	float denom = sin(phi);
+
+	float factor1 = sin(phi*(1-p_t)) / denom;
+	float factor2 = sin(phi*p_t) / denom;
+
+	return p_q1 * factor1 + p_q2 * factor2;
+
 }

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{c14d1eed-5b6b-478e-b3df-d8ea6955eed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioEngine">
+      <UniqueIdentifier>{9ed3e92f-d09a-4b8f-ade8-35960d8e5a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioEngine\SoundFiles">
+      <UniqueIdentifier>{2035d3fe-837c-4ed3-9c29-97e746b56d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{863c3283-e765-42c5-8f47-e5f5adbeca75}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XAudio2Exception.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundWrapper.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSceneInfo.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioCurves.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundDefines.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SoundWrapper.cpp">
+      <Filter>AudioEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
