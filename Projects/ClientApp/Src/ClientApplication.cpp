@@ -25,10 +25,10 @@ void ClientApplication::run()
 	m_running = true;
 
 	// simple timer
-	__int64 cntsPerSec = 0;
+	__int64 countsPerSec = 0;
 	__int64 currTimeStamp = 0;
-	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
-	double secsPerCnt = 1.0f / (float)cntsPerSec;
+	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
+	double secsPerCount = 1.0f / (float)countsPerSec;
 
 	double dt = 0.0f;
 	__int64 m_prevTimeStamp = 0;
@@ -45,7 +45,7 @@ void ClientApplication::run()
 		{
 			currTimeStamp = 0;
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
-			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCnt;
+			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 			dt = 1/100.0;
 			m_prevTimeStamp = currTimeStamp;
 
@@ -58,48 +58,56 @@ void ClientApplication::run()
 
 void ClientApplication::initSystems()
 {
-	InputSystem* inSys = new InputSystem();
-	m_world->setSystem( SystemType::InputSystem, inSys, true);
+	//----------------------------------------------------------------------------------
+	// Systems must be added in the order they are meant to be executed. The order the
+	// systems are added here is the order the systems will be processed
+	//----------------------------------------------------------------------------------
 
+	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
+	// will be available if the backend systems isn't used. 
+	InputSystem* input = new InputSystem();
+	m_world->setSystem( SystemType::InputSystem, input, true);
+
+	// Physics systems
+	PhysicsSystem* physics = new PhysicsSystem();
+	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
+	
+	// Graphic systems
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
-	m_world->setSystem( SystemType::SystemTypeIdx::GraphicsBackendSystem, graphicsBackend , true );
+	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
 
-	CameraSystem* camSys = new CameraSystem( graphicsBackend );
-	m_world->setSystem( SystemType::SystemTypeIdx::CameraSystem, camSys , true );
+	CameraSystem* camera = new CameraSystem( graphicsBackend );
+	m_world->setSystem( SystemType::CameraSystem, camera , true );
 
-	RenderPrepSystem* rpSys = new RenderPrepSystem( graphicsBackend );
-	m_world->setSystem( SystemType::RenderPrepSystem, rpSys , true );
+	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
+	m_world->setSystem( SystemType::RenderPrepSystem, renderer , true );
 
-	PhysicsSystem* phySys = new PhysicsSystem();
-	m_world->setSystem(SystemType::PhysicsSystem, phySys, true);
-
-	NetworkConnectToServerSystem* connectSystem =
-		new NetworkConnectToServerSystem( m_client );
-	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connectSystem,
-		false );
+	// Network systems
+	NetworkConnectToServerSystem* connect = new NetworkConnectToServerSystem( m_client );
+	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connect, false );
 
 	m_world->initialize();
 }
 
 void ClientApplication::initEntities()
 {
-	Entity* e;
-	Component* c;
+	Entity* entity;
+	Component* component;
 
-	e = m_world->createEntity();
-	c = new RenderInfo();
-	e->addComponent( ComponentType::RenderInfo, c );
-	c = new Transform();
-	e->addComponent( ComponentType::Transform, c );
-	c = new PhysicsBody();
-	e->addComponent(ComponentType::PhysicsBody, c);
-	//c = new PhysUnknown();
-	//e->addComponent(ComponentType::PhysUnknown, c);
-	m_world->addEntity(e);
+	entity = m_world->createEntity();
+	component = new RenderInfo();
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform();
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+	//component = new PhysUnknown();
+	//entity->addComponent(ComponentType::PhysUnknown, component);
+	m_world->addEntity(entity);
 
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* gfxSys = static_cast<GraphicsBackendSystem*>(sys);
-	int cubeMeshId = gfxSys->getMeshId( "P_cube" );
+	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
+	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
 
 	for( int x=0; x<8; x++ )
 	{
@@ -107,22 +115,22 @@ void ClientApplication::initEntities()
 		{
 			for( int z=0; z<8; z++ )
 			{
-				e = m_world->createEntity();
-				c = new RenderInfo( cubeMeshId );
-				e->addComponent( ComponentType::RenderInfo, c );
-				c = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-				e->addComponent( ComponentType::Transform, c );
-				m_world->addEntity(e);
+				entity = m_world->createEntity();
+				component = new RenderInfo( cubeMeshId );
+				entity->addComponent( ComponentType::RenderInfo, component );
+				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+				entity->addComponent( ComponentType::Transform, component );
+				m_world->addEntity(entity);
 			}
 		}
 	}
 
-	e = m_world->createEntity();
-	c = new CameraInfo( 800/(float)600 );
-	e->addComponent( ComponentType::CameraInfo, c );
-	c = new Input();
-	e->addComponent( ComponentType::Input, c );
-	c = new Transform( 5.0f, 5.0f, 5.0f );
-	e->addComponent( ComponentType::Transform, c );
-	m_world->addEntity(e);
+	entity = m_world->createEntity();
+	component = new CameraInfo( 800/(float)600 );
+	entity->addComponent( ComponentType::CameraInfo, component );
+	component = new Input();
+	entity->addComponent( ComponentType::Input, component );
+	component = new Transform( 5.0f, 5.0f, 5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
 }

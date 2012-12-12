@@ -239,7 +239,6 @@ private:
 	vector<Entity*> m_disable;
 
 	vector<Manager*> m_managers;
-	//vector<EntitySystem*> m_systems;
 
 	// From Java, needed?
 	vector<Manager*> m_managersBag;

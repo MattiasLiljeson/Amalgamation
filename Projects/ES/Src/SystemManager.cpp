@@ -7,6 +7,12 @@ SystemManager::SystemManager( EntityWorld* p_world )
 
 SystemManager::~SystemManager()
 {
+	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
+	for( it=m_systems.begin(); it != m_systems.end(); it++ )
+	{
+		delete it->second;
+		it->second = NULL;
+	}
 }
 
 EntitySystem* SystemManager::getSystem( SystemType::SystemTypeIdx p_systemIndex )

@@ -23,9 +23,6 @@ EntityWorld::~EntityWorld()
 	delete m_systemManager;
 	m_systemManager = NULL;
 
-	//for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
-	//		delete m_systemsBag[i];
-
 	m_systemsBag.clear();
 }
 
