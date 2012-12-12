@@ -53,7 +53,9 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		server.broadcastPacket( Packet( ) );
+		Packet packet_src;
+		packet_src << (int)42;
+		server.broadcastPacket( packet_src );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();

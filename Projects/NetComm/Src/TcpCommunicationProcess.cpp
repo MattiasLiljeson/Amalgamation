@@ -117,13 +117,16 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 	{
 		if( p_bytesTransferred > 0 )
 		{
-			queue< string > messages;
-			stringSplitNullTerminated( m_asyncData, p_bytesTransferred, messages );
-
-
 			queue< Packet > packets;
-
 			// TODO: Fill packets queue with data using the messages queue.
+
+			unsigned int readPosition = 0;
+			while( readPosition < p_bytesTransferred )
+			{
+
+			}
+
+
 
 			while( !packets.empty() )
 			{
