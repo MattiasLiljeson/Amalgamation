@@ -8,6 +8,7 @@ RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend  ) : En
 
 RenderPrepSystem::~RenderPrepSystem()
 {
+
 }
 
 void RenderPrepSystem::initialize()
@@ -55,10 +56,12 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 
 			// resize vector if the mesh id is outside of the vectors size
 			if( m_instanceLists.size() <= renderInfo->m_meshId )
+			{
 				m_instanceLists.resize( renderInfo->m_meshId + 1 );
+			}
 
 			// Finally, add the entity to the instance vector
-			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceVertex() );
+			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceVertexRef() );
 		}
 		for( int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
