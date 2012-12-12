@@ -126,10 +126,11 @@ public:
 	//virtual int getMousePos( int p_axis ) = 0;
 	//virtual int getMouseTravel( int p_axis ) = 0;
 
-	/// Overrides the default calcState() with a int instead of bool. This is only to.
-	/// collect all performance warnings of bool to int conversions to a single place. 
-	static InputHelper::KEY_STATE calcState( const KEY_STATE p_oldState,
-		const int p_down );
+	/// Overrides the default calcState() with a int instead of bool. This is only to
+	/// collect all performance warnings of bool to int conversions to a single place.
+	/// Gives performance warning, therefore commented away.
+	//static InputHelper::KEY_STATE calcState( const KEY_STATE p_oldState,
+	//	const int p_down );
 
 	/// Calculate new state using the old state en the current state of the button/key.
 	///\param p_oldState The state of the key/button key before calling this function.

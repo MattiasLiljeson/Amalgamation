@@ -48,8 +48,11 @@ void XInputFetcher::update()
 	XINPUT_STATE newState;
 	XInputGetState( 0, &newState );
 	for( int i=0; i<InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS; i++)
-		m_btns[i] = InputHelper::calcState( m_btns[i], (newState.Gamepad.wButtons & s_btnMaskMap[i]));
-	
+	{
+		bool pressed = newState.Gamepad.wButtons & s_btnMaskMap[i];
+		m_btns[i] = InputHelper::calcState( m_btns[i], pressed );
+	}
+
 	m_analogs[InputHelper::THUMB_LX] = m_currentState.Gamepad.sThumbLX;
 	m_analogs[InputHelper::THUMB_LY] = m_currentState.Gamepad.sThumbLY;
 	m_analogs[InputHelper::THUMB_RX] = m_currentState.Gamepad.sThumbRX;
