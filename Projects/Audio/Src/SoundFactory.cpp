@@ -22,7 +22,8 @@ Sound* SoundFactory::createNonPositionalSound( const char* p_filePath )
 }
 
 
-PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath )
+PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath, 
+													 AglVector3 p_pos )
 {
 	IXAudio2SourceVoice* soundVoice;
 	WAVEFORMATEXTENSIBLE waveFormatEx;
@@ -32,14 +33,14 @@ PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath )
 	/* Positional sound specifics.											*/
 	/************************************************************************/
 	/* START */
-	X3DAUDIO_EMITTER emitter;
+	X3DAUDIO_EMITTER emitter = {0};
 	
-	initEmitter(&emitter);
+	initEmitter(&emitter, p_pos);
 
 	/************************************************************************/
 	/* PositionalSoundInfo should be sent into the sound factory.			*/
 	/************************************************************************/
-	PositionalSoundInfo info = PositionalSoundInfo(0,0,0);
+	PositionalSoundInfo info;
 	info.emitter	= emitter;
 	/* END */
 
@@ -200,7 +201,7 @@ void SoundFactory::initFile(string p_filePath)
 	}
 }
 
-void SoundFactory::initEmitter( X3DAUDIO_EMITTER* p_emitter)
+void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter, AglVector3 p_pos )
 {
 	/************************************************************************/
 	/* The emitter should be able to receive any predefined audio cone, it's*/
@@ -226,8 +227,8 @@ void SoundFactory::initEmitter( X3DAUDIO_EMITTER* p_emitter)
 		p_emitter->InnerRadius = 0.0f;
 		p_emitter->InnerRadiusAngle = 0.0f;
 	}
-	X3DAUDIO_VECTOR pos = {1,0,0};
-	X3DAUDIO_VECTOR orientFront = {-1,0,0};
+	X3DAUDIO_VECTOR pos = {p_pos[0],p_pos[1],p_pos[2]};
+	X3DAUDIO_VECTOR orientFront = {0,0,1};
 	X3DAUDIO_VECTOR orientTop	= {0,1,0};
 	X3DAUDIO_VECTOR velocity	= {0,0,0};
 
@@ -236,15 +237,15 @@ void SoundFactory::initEmitter( X3DAUDIO_EMITTER* p_emitter)
 	p_emitter->OrientFront	= orientFront;
 	p_emitter->OrientTop	= orientTop;
 	p_emitter->Velocity		= velocity;
-	p_emitter->ChannelCount = 1;
-	p_emitter->ChannelRadius = 1.0f;
-	p_emitter->pChannelAzimuths = new FLOAT32[1]; ///< UNKOWN VARIABLE
+	p_emitter->ChannelCount		= 1;
+	p_emitter->ChannelRadius	= 1.0f;
+	//p_emitter->pChannelAzimuths = new FLOAT32[1]; ///< UNKOWN VARIABLE
 
 	p_emitter->pVolumeCurve = (X3DAUDIO_DISTANCE_CURVE*)&X3DAudioDefault_LinearCurve;
 	p_emitter->pLFECurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_LFE_Curve;
 	p_emitter->pLPFDirectCurve = NULL; // use default curve
 	p_emitter->pLPFReverbCurve = NULL; // use default curve
 	p_emitter->pReverbCurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_Reverb_Curve;
-	p_emitter->CurveDistanceScaler = 30.0f;
-	p_emitter->DopplerScaler = 1.0f;
+	p_emitter->CurveDistanceScaler	= 30.0f;
+	p_emitter->DopplerScaler		= 1.0f;
 }

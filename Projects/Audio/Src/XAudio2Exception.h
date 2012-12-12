@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Windows.h>
 #include <exception>
 #include <string>
 #include <Strsafe.h>

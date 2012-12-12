@@ -1,6 +1,7 @@
 #pragma once
 #include <xaudio2.h>
 #include <x3daudio.h>
+#include <AglVector3.h>
 #include "Sound.h"
 #include "PositionalSound.h"
 #include "XAudio2Exception.h"
@@ -32,7 +33,7 @@ public:
 	/// \returns Sound*
 	///-----------------------------------------------------------------------------------
 	Sound* createNonPositionalSound( const char* p_filePath );
-	PositionalSound* createPositionalSound( const char* p_filePath );
+	PositionalSound* createPositionalSound( const char* p_filePath, AglVector3 p_pos );
 protected:
 private:
 	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
@@ -41,7 +42,7 @@ private:
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
 	void initFile(string p_filePath);
-	void initEmitter(X3DAUDIO_EMITTER* p_emitter);
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter, AglVector3 p_pos );
 private:
 	IXAudio2*	m_soundDevice;
 

@@ -15,16 +15,8 @@
 
 struct PositionalSoundInfo
 {
-	float pos[3];
-
 	X3DAUDIO_EMITTER emitter;
 
-	PositionalSoundInfo(float x, float y, float z)
-	{
-		pos[0] = x;
-		pos[1] = y;
-		pos[2] = z;
-	}
 	PositionalSoundInfo()
 	{
 

@@ -13,7 +13,14 @@ PositionalSound::~PositionalSound()
 
 }
 
-const X3DAUDIO_EMITTER& PositionalSound::getEmitter()
+X3DAUDIO_EMITTER PositionalSound::getEmitter()
 {
 	return m_dataInfo.emitter;
+}
+
+void PositionalSound::setPosition( const AglVector3& p_newPos )
+{
+	m_dataInfo.emitter.Position.x = p_newPos.x;
+	m_dataInfo.emitter.Position.y = p_newPos.y;
+	m_dataInfo.emitter.Position.z = p_newPos.z;
 }

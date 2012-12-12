@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AudioEngineCreatorh.h"
+#include <AglVector3.h>
 #include "XAudio2Exception.h"
 #include "SoundSceneInfo.h"
 #include "AudioCurves.h"
@@ -16,7 +16,11 @@
 /// \brief	Wraps the sound functionality to become easier to use
 ///        
 /// # SoundWrapper
-/// Detailed description.....
+/// Listener position will always be initialized to 
+/// Position (0,0,0)
+/// OrientTop (0,1,0)
+/// OrientFront (0,0,1)
+/// Velocity (0,0,0)
 /// Created on: 6-12-2012 
 ///---------------------------------------------------------------------------------------
 
@@ -27,9 +31,10 @@ public:
 	virtual ~SoundWrapper();
 	void updateListener(const SoundSceneInfo& p_sceneInfo);
 	Sound* createNewNonPositionalSound(const char* p_filePath);
-	PositionalSound* createNewPositionalSound(const char* p_filePath);
+	PositionalSound* createNewPositionalSound(const char* p_filePath, AglVector3 p_pos);
 
 	void update(PositionalSound* p_sound);
+	void setListenerPos(AglVector3 p_newPos);
 private:
 	void initSoundEngine();
 	void init3DSoundSettings();

@@ -1,4 +1,5 @@
 #pragma once
+#include <AglVector3.h>
 
 // =======================================================================================
 //                                      SoundSceneInfo
@@ -14,8 +15,8 @@
 
 struct SoundSceneInfo
 {
-	float listenerPos[3];
-	float listenerOrientFront[3];
-	float listenerOrientTop[3];
-	float listenerVelocity[3];
+	AglVector3 listenerPos;
+	AglVector3 listenerOrientFront;
+	AglVector3 listenerOrientTop;
+	AglVector3 listenerVelocity;
 };

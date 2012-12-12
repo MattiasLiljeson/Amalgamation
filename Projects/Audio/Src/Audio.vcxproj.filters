@@ -36,9 +36,6 @@
     <ClInclude Include="SoundDefines.h">
       <Filter>AudioEngine</Filter>
     </ClInclude>
-    <ClInclude Include="AudioEngineCreatorh.h">
-      <Filter>AudioEngine</Filter>
-    </ClInclude>
     <ClInclude Include="PositionalSound.h">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClInclude>
