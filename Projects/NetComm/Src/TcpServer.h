@@ -47,6 +47,7 @@ public:
 	int popNewConnection();
 
 	unsigned int activeConnectionsCount();
+	vector< int > getActiveConnections();
 
 	bool hasNewDisconnections();
 	unsigned int newDisconnectionsCount();

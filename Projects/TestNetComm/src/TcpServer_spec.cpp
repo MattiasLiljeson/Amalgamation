@@ -314,6 +314,24 @@ Describe(a_tcp_server)
 		Assert::That(server.activeConnectionsCount(), Equals(0));
 	}
 
+	It(can_return_all_active_connections_as_a_vector)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		vector< int > currentConnections;
+		currentConnections = server.getActiveConnections();
+
+		Assert::That(currentConnections.size(), Equals(5));
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;
