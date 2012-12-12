@@ -118,12 +118,19 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 		if( p_bytesTransferred > 0 )
 		{
 			queue< Packet > packets;
-			// TODO: Fill packets queue with data using the messages queue.
+			/// TODO: Fill packets queue with data using the messages queue.
 
 			unsigned int readPosition = 0;
+			char* readPtr = m_asyncData;
+
 			while( readPosition < p_bytesTransferred )
 			{
-
+				unsigned int currentReadSize = (unsigned int)readPtr[0] + 1;
+				Packet packet;
+				packet.setData( readPtr, currentReadSize );
+				packets.push( packet );
+				readPosition += currentReadSize;
+				readPtr = m_asyncData + readPosition;
 			}
 
 
