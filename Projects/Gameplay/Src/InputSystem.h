@@ -11,6 +11,7 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+
 #include "CameraInfo.h"
 #include "Input.h"
 #include "Transform.h"
@@ -19,10 +20,14 @@
 #include <InputManager.h>
 #include <MessageLoopFetcher.h>
 #include <XInputFetcher.h>
+#include <string>
+#include <map>
 
 class InputHelper;
 class inputControlFactory;
 class InputManager;
+
+using namespace std;
 
 class InputSystem : public EntitySystem
 {
@@ -35,6 +40,6 @@ public:
 
 private:
 	InputManager* m_inputManager;
-	vector<int> m_controlIdxs;
+	map<string, int> m_controlIdxs;
 };
 

@@ -23,42 +23,36 @@ void InputSystem::initialize()
 
 	tempControl = factory.create360controllerDigital( InputHelper::BTN_B );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Gamepad B"] = tempControlIdx;
 
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Mouse X positive"] = tempControlIdx;
 
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Mouse X negative"] = tempControlIdx;
 
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Mouse Y positive"] = tempControlIdx;
 
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
 
 	tempControl = factory.createKeyboardKey( InputHelper::L );
 	tempControlIdx = m_inputManager->addControl( tempControl );
-
-	m_controlIdxs.push_back(tempControlIdx);
+	m_controlIdxs["Keyboard key L"] = tempControlIdx;
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	m_inputManager->update();
-
-	double pressness = m_inputManager->getControl(m_controlIdxs[0])->getStatus();
-	bool pressed = false; 
-	if(pressness == 1.0f)
-		pressed = true;
 
 	if( p_entities.size() > 0 )
 	{
@@ -73,10 +67,11 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if( cameraInfo != NULL )
 		{
-			double x = m_inputManager->getControl(m_controlIdxs[1])->getStatus();
-			x -= m_inputManager->getControl(m_controlIdxs[2])->getStatus();
-			double y = m_inputManager->getControl(m_controlIdxs[3])->getStatus();
-			y -= m_inputManager->getControl(m_controlIdxs[4])->getStatus();
+			double x,y;
+			x  = m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
+			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
+			y  = m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
+			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
 
 			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
@@ -86,7 +81,7 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 
 	}
-	if( m_inputManager->getControl( m_controlIdxs[5] )->getDelta() == 1.0 )
+	if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == 1.0 )
 	{
 		// L pressed
 		EntitySystem* connectionSystem = m_world->getSystem(
@@ -94,7 +89,7 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		connectionSystem->setEnabled( true );
 	}
-	else if( m_inputManager->getControl( m_controlIdxs[5] )->getDelta() == -1.0 )
+	else if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == -1.0 )
 	{
 		// L released
 	}
