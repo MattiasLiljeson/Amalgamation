@@ -16,6 +16,8 @@
 #include <AglQuaternion.h>
 #include <Component.h>
 
+#include <InstanceVertex.h>
+
 //struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
 //{
 //	float x;
@@ -72,7 +74,10 @@ public:
 	/// in every way.
 	/// \returns A pointer to the translated transform matrix.
 	///----------------------------------------------------------------------------------
-	AglMatrix* getTransposedMatrix();
+	//AglMatrix& getTransposedMatrix();
+
+	InstanceVertex& getInstanceVertex();
+	InstanceVertex* getInstanceVertexPtr();
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -83,7 +88,8 @@ private:
 
 private:
 	AglMatrix m_compositionMatrix;
-	AglMatrix m_transposedCompositionMatrix;
+	InstanceVertex m_instanceVertex;
+	//AglMatrix m_transposedCompositionMatrix;
 	AglVector3 m_translation;
 	AglVector3 m_scale;
 	AglQuaternion m_rotation;

@@ -29,7 +29,8 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		gfxWrapper->clearRenderTargets();	      // clear render targets used           
 		gfxWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
 		
-		
+		// Pre-alloc for speed
+		//InstanceVertex vert;
 
 		//HACK: breaks in loop below 
 		for( int i=0; i<p_entities.size(); i++ )
@@ -52,22 +53,12 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 				break;
 			}
 
-			// The renderer wants col-major matrices, therefore transpose
-			AglMatrix mat = *transform->getTransposedMatrix();
-			
-			// Create instance vertex for this entity 
-			InstanceVertex vert;
-			for( int i=0; i<16; i++ )
-			{
-				vert.worldTransform[i] = mat[i];
-			}
-
 			// resize vector if the mesh id is outside of the vectors size
 			if( m_instanceLists.size() <= renderInfo->m_meshId )
 				m_instanceLists.resize( renderInfo->m_meshId + 1 );
 
 			// Finally, add the entity to the instance vector
-			m_instanceLists[renderInfo->m_meshId].push_back( vert );
+			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceVertex() );
 		}
 		for( int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{

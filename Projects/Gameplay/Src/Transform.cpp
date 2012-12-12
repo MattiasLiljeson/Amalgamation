@@ -63,9 +63,19 @@ AglMatrix* Transform::getMatrix()
 	return &m_compositionMatrix;
 }
 
-AglMatrix* Transform::getTransposedMatrix()
+//AglMatrix& Transform::getTransposedMatrix()
+//{
+//	return m_transposedCompositionMatrix;
+//}
+
+InstanceVertex& Transform::getInstanceVertex()
 {
-	return &m_transposedCompositionMatrix;
+	return m_instanceVertex;
+}
+
+InstanceVertex* Transform::getInstanceVertexPtr()
+{
+	return &m_instanceVertex;
 }
 
 void Transform::calcCompMatrix()
@@ -75,5 +85,10 @@ void Transform::calcCompMatrix()
 		m_scale,
 		m_rotation,
 		m_translation);
-	m_transposedCompositionMatrix = AglMatrix::transpose( m_compositionMatrix );
+
+	AglMatrix transMat = AglMatrix::transpose( m_compositionMatrix );
+	for( int i=0; i<16; i++ )
+	{
+		m_instanceVertex.worldTransform[i] = transMat[i];
+	}
 }
