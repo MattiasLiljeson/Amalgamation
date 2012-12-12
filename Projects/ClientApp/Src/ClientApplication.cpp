@@ -61,19 +61,19 @@ void ClientApplication::initSystems()
 	InputSystem* inSys = new InputSystem();
 	m_world->setSystem( SystemType::InputSystem, inSys, true);
 
-	GraphicsBackendSystem* gfxSys = new GraphicsBackendSystem( m_hInstance );
-	m_world->setSystem( SystemType::SystemTypeIdx::GraphicsBackendSystem, gfxSys , true );
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
+	m_world->setSystem( SystemType::SystemTypeIdx::GraphicsBackendSystem, graphicsBackend , true );
 
-	CameraSystem* camSys = new CameraSystem( gfxSys );
+	CameraSystem* camSys = new CameraSystem( graphicsBackend );
 	m_world->setSystem( SystemType::SystemTypeIdx::CameraSystem, camSys , true );
 
-	RenderPrepSystem* rpSys = new RenderPrepSystem( gfxSys );
+	RenderPrepSystem* rpSys = new RenderPrepSystem( graphicsBackend );
 	m_world->setSystem( SystemType::RenderPrepSystem, rpSys , true );
 
 	NetworkConnectToServerSystem* connectSystem =
 		new NetworkConnectToServerSystem( m_client );
 	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connectSystem,
-		true );
+		false );
 
 	m_world->initialize();
 }
