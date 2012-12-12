@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioCurves.h" />
+    <ClInclude Include="AudioEngineCreatorh.h" />
+    <ClInclude Include="PositionalSound.h" />
+    <ClInclude Include="PositionalSoundInfo.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
@@ -20,6 +23,7 @@
     <ClInclude Include="XAudio2Exception.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PositionalSound.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundFactory.cpp" />
     <ClCompile Include="SoundWrapper.cpp" />
@@ -101,7 +105,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

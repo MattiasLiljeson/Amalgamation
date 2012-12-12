@@ -36,6 +36,15 @@
     <ClInclude Include="SoundDefines.h">
       <Filter>AudioEngine</Filter>
     </ClInclude>
+    <ClInclude Include="AudioEngineCreatorh.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSound.h">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundInfo.h">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundWrapper.cpp">
@@ -45,6 +54,9 @@
       <Filter>Factory</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSound.cpp">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClCompile>
   </ItemGroup>

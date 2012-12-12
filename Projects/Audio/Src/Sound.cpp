@@ -53,3 +53,8 @@ HRESULT Sound::resumeOrPlay()
 	return hr;
 
 }
+
+IXAudio2SourceVoice* Sound::getSourceVoice()
+{
+	return m_sourceVoice;
+}
