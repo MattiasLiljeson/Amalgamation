@@ -24,9 +24,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gameplay", "Projects\Gamepl
 		{BE2A0661-776F-4B5B-B09C-F7304F5C6424} = {BE2A0661-776F-4B5B-B09C-F7304F5C6424}
 		{6DEEA297-0E8A-48FF-A8D6-C0780B8503EA} = {6DEEA297-0E8A-48FF-A8D6-C0780B8503EA}
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
+		{626A92B1-E978-48A3-85E7-93BB209D6A3A} = {626A92B1-E978-48A3-85E7-93BB209D6A3A}
 		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8} = {3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}
 		{78BCBBD0-888F-41CD-8B6F-29539812F67E} = {78BCBBD0-888F-41CD-8B6F-29539812F67E}
-		{9A6825EE-38C3-41DC-997D-28D9B269FF3F} = {9A6825EE-38C3-41DC-997D-28D9B269FF3F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Projects\Graphics\Src\Graphics.vcxproj", "{6DEEA297-0E8A-48FF-A8D6-C0780B8503EA}"
@@ -40,8 +40,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Projects\Input\Src\Input.vcxproj", "{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetComm", "Projects\NetComm\Src\NetComm.vcxproj", "{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Projects\Physics\Src\Physics.vcxproj", "{9A6825EE-38C3-41DC-997D-28D9B269FF3F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "Projects\ServerApp\Src\ServerApp.vcxproj", "{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -76,6 +74,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgilePhysics", "Projects\AgilePhysics\src\AgilePhysics.vcxproj", "{626A92B1-E978-48A3-85E7-93BB209D6A3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsTest", "Projects\PhysicsTest\src\PhysicsTest.vcxproj", "{EC65E2DA-0377-4367-A57F-D23AE2758360}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2} = {7BC84332-97E7-4A31-AA8A-77E4B91F24A2}
+		{626A92B1-E978-48A3-85E7-93BB209D6A3A} = {626A92B1-E978-48A3-85E7-93BB209D6A3A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\TestGraphics\Src\TestGraphics.vcxproj", "{9914D3D3-86EE-415A-9D7F-219504F5FF71}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -126,10 +128,6 @@ Global
 		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}.Debug|Win32.Build.0 = Debug|Win32
 		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}.Release|Win32.ActiveCfg = Release|Win32
 		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}.Release|Win32.Build.0 = Release|Win32
-		{9A6825EE-38C3-41DC-997D-28D9B269FF3F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9A6825EE-38C3-41DC-997D-28D9B269FF3F}.Debug|Win32.Build.0 = Debug|Win32
-		{9A6825EE-38C3-41DC-997D-28D9B269FF3F}.Release|Win32.ActiveCfg = Release|Win32
-		{9A6825EE-38C3-41DC-997D-28D9B269FF3F}.Release|Win32.Build.0 = Release|Win32
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Debug|Win32.Build.0 = Debug|Win32
 		{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}.Release|Win32.ActiveCfg = Release|Win32
@@ -189,5 +187,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
