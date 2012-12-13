@@ -88,6 +88,15 @@ Describe(a_packet)
 		Assert::That(f_dst, Equals(f_src));
 	}
 
+	It(can_be_cleared)
+	{
+		Packet packet;
+		packet << 10 << 10.0f;
+
+		packet.clear();
+		Assert::That(packet.isEmpty(), Equals(true));
+	}
+
 	It(can_return_data_size)
 	{
 		Packet packet;
