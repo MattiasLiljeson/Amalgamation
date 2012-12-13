@@ -29,6 +29,7 @@
     <ClInclude Include="PrintPositionsSystem.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="RenderPrepSystem.h" />
+    <ClInclude Include="ShipControllerSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -45,6 +46,7 @@
     <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
+    <ClCompile Include="ShipControllerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

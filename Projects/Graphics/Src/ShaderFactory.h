@@ -36,7 +36,7 @@ public:
 	/// This method returns the basic deferred base shader used to draw primitivies to 
 	/// various render targets.
 	/// \param p_filePath
-	/// \returns DeferredBaseShader*
+	/// \return DeferredBaseShader*
 	///-----------------------------------------------------------------------------------
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
 
@@ -44,7 +44,7 @@ public:
 	/// This method returns the basic deferred base shader used to draw primitivies to 
 	/// various render targets.
 	/// \param p_filePath
-	/// \returns DeferredComposeShader*
+	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 private:
@@ -56,7 +56,7 @@ private:
 	/// \param p_entryPoint
 	/// \param p_profile
 	/// \param p_blob
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void compileShaderStage(const LPCWSTR &p_sourceFile, const string &p_entryPoint, 
 		const string &p_profile, ID3DBlob** p_blob);
@@ -66,7 +66,7 @@ private:
 	/// \param p_filePath
 	/// \param p_vs
 	/// \param p_ps
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createAllShaderStages( VSData* p_vs=NULL, PSData* p_ps=NULL, GSData* p_gs=NULL, 
 		HSData* p_hs=NULL, DSData* p_ds=NULL);
@@ -74,7 +74,7 @@ private:
 	///-----------------------------------------------------------------------------------
 	/// A helper function that creates a given sampler stage
 	/// \param p_samplerState
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createSamplerState(ID3D11SamplerState** p_samplerState);
 
@@ -88,7 +88,7 @@ private:
 	/// \param p_gsd
 	/// \param p_hsd
 	/// \param p_dsd
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createShaderInitData(ShaderInitStruct* p_shaderInitData,
 		ID3D11InputLayout* p_inputLayout,
@@ -100,7 +100,7 @@ private:
 	/// Creates a inputlayout for PTVertex
 	/// \param p_vs
 	/// \param p_inputLayout
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createPTVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
@@ -108,7 +108,7 @@ private:
 	/// Creates a inputlayout for PTNVertex
 	/// \param p_vs
 	/// \param p_inputLayout
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createPTNVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
@@ -116,7 +116,7 @@ private:
 	/// Creates a inputlayout for Instanced PTNVertex
 	/// \param p_vs
 	/// \param p_inputLayout
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createInstancedPTNVertexInputLayout(VSData* p_vs, 
 											 ID3D11InputLayout** p_inputLayout);

@@ -142,7 +142,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Desc Used for testing purposes. Returns a bitset representing the
 	/// Component combinations used by the system.
-	/// \returns bitset<SystemType::NUM_SYSTEM_TYPES>
+	/// \return bitset<SystemType::NUM_SYSTEM_TYPES>
 	///-----------------------------------------------------------------------------------
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
 

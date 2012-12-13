@@ -30,7 +30,7 @@ class Transform: public Component
 public:
 	///-----------------------------------------------------------------------------------
 	/// Sets all private members to 0 (zero).
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	Transform();
 
@@ -39,54 +39,54 @@ public:
 	/// \param p_posX
 	/// \param p_posY
 	/// \param p_posZ
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	Transform( float p_posX, float p_posY, float p_posZ );
 
 	~Transform();
 
 	///-----------------------------------------------------------------------------------
-	/// \returns The translation vector.
+	/// \return The translation vector.
 	///-----------------------------------------------------------------------------------
 	AglVector3 getTranslation() const;
 	
 	///-----------------------------------------------------------------------------------
 	/// \param p_translation The new translation as a vector
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setTranslation( const AglVector3 p_translation );
 
 	///-----------------------------------------------------------------------------------
-	/// \returns The scale vector.
+	/// \return The scale vector.
 	///-----------------------------------------------------------------------------------
 	AglVector3 getScale() const;
 
 	///-----------------------------------------------------------------------------------
 	/// \param p_scale The new scale as a vector
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setScale( const AglVector3 p_scale );
 
 	///-----------------------------------------------------------------------------------
-	/// \returns The rotation quaternion.
+	/// \return The rotation quaternion.
 	///-----------------------------------------------------------------------------------
 	AglQuaternion getRotation() const;
 
 	///-----------------------------------------------------------------------------------
 	/// \param p_rotation The new rotation as a quaternion
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setRotation( const AglQuaternion p_rotation );
 
 	///-----------------------------------------------------------------------------------
 	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
-	/// \returns A pointer to the transform matrix.
+	/// \return A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
 	AglMatrix getMatrix() const;
 
 	///-----------------------------------------------------------------------------------
 	/// Get the translated transform matrix packaged in a InstanceVertex.
-	/// \returns The translated transform matrix as a InstanceVertex.
+	/// \return The translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
 	InstanceVertex getInstanceVertex() const;
 
@@ -94,7 +94,7 @@ public:
 	/// Get a reference to the translated transform matrix packaged in a InstanceVertex.
 	/// If the data is manipulated it will change the internal InstanceVertex. This will 
 	/// be overwritten the next time a setter is called.
-	/// \returns A reference to the translated transform matrix as a InstanceVertex.
+	/// \return A reference to the translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
 	InstanceVertex& getInstanceVertexRef() ;
 
@@ -102,14 +102,14 @@ public:
 	/// Get a pointer to the translated transform matrix packaged in a InstanceVertex.
 	/// If the data is manipulated it will change the internal InstanceVertex. This will 
 	/// be overwritten the next time a setter is called.
-	/// \returns A pointer to the translated transform matrix as a InstanceVertex.
+	/// \return A pointer to the translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
 	InstanceVertex* getInstanceVertexPtr() ;
 
 private:
 	///-----------------------------------------------------------------------------------
 	/// Calculates the composited matrix for all translation members
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void calcCompMatrix();
 

@@ -18,7 +18,7 @@ class NetworkSynced: public Component
 public:
 	///-----------------------------------------------------------------------------------
 	/// Sets the networkIdentity and owner to -1 (unspecified).
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced()
 	{
@@ -30,7 +30,7 @@ public:
 	/// Sets the private networkIdentity to argument's value.
 	/// Sets the private owner to argument's value.
 	/// \param p_networkIdentity
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced( int p_networkIdentity, int p_owner )
 	{
@@ -44,7 +44,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the component's networkIdentity.
-	/// \returns int
+	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getNetworkIdentity() const
 	{
@@ -53,7 +53,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the component's owner.
-	/// \returns int
+	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getNetworkOwner() const
 	{
@@ -63,7 +63,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Set the private networkIdentity.
 	/// \param p_networkIdentity
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setNetworkIdentity( int p_networkIdentity )
 	{
@@ -73,7 +73,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Set the private owner.
 	/// \param p_owner
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setNetworkOwner( int p_owner )
 	{

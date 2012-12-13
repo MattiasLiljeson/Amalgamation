@@ -51,7 +51,7 @@ private:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void SetMsg(const string &p_msg,const string &p_file,const string &p_func,int p_line)
 	{

@@ -23,19 +23,19 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Stops the source voice and also flushes the source buffers
-	/// \returns HRESULT
+	/// \return HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT stop();
 
 	///-----------------------------------------------------------------------------------
 	/// Pauses the sound but doesn't clear the source buffers
-	/// \returns HRESULT
+	/// \return HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT pause();
 
 	///-----------------------------------------------------------------------------------
 	/// Submits the original buffer and restarts the sound
-	/// \returns HRESULT
+	/// \return HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT restart();
 
@@ -43,7 +43,7 @@ public:
 	/// Only asks the source voice to begin playing it's sound no matter where the 
 	/// buffer pointer. If the sound has never been played the buffer location will be at
 	/// the begining.
-	/// \returns HRESULT
+	/// \return HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT resumeOrPlay();
 

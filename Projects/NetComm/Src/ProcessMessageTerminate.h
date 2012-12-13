@@ -19,14 +19,14 @@ class ProcessMessageTerminate: public ProcessMessage
 public:
 	///-----------------------------------------------------------------------------------
 	/// Create an empty terminate message.
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageTerminate();
 
 	///-----------------------------------------------------------------------------------
 	/// Create a terminate message.
 	/// \param p_sender
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageTerminate( ThreadSafeMessaging* p_sender );
 

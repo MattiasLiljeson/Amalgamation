@@ -35,7 +35,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// The run() method starts the whole application. It runs all the
 	/// Let the program's entry point call run().
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void run();
 
@@ -43,7 +43,7 @@ private:
 
 	///-----------------------------------------------------------------------------------
 	/// Creates and initializes all EntitySystems.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initSystems();
 	

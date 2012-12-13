@@ -30,7 +30,7 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 	double mouseY = m_mouseYPositive->getStatus() - m_mouseYNegative->getStatus();
 
 
-	for( int i=0; i<p_entities.size(); i++ )
+	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
 		m_ticker += m_world->getDelta();
 
@@ -43,8 +43,8 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		// Handle Input for camera
 		AglVector3 position = transform->getTranslation();
 		double sensitivityMult = 1000.0;
-		position.x -= mouseX*sensitivityMult;
-		position.y -= mouseY*sensitivityMult;
+		position.x -= static_cast<float>(mouseX*sensitivityMult);
+		position.y -= static_cast<float>(mouseY*sensitivityMult);
 		transform->setTranslation( position );
 
 		AglMatrix view = AglMatrix::createViewMatrix(transform->getTranslation(),
