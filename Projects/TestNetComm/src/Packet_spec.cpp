@@ -2,6 +2,7 @@
 using namespace igloo;
 
 #include <Packet.h>
+#include <AglVector3.h>
 
 Describe(a_packet)
 {
@@ -59,6 +60,19 @@ Describe(a_packet)
 		packet >> d_dst;
 
 		Assert::That(d_dst, Equals(d_src));
+	}
+
+	It(can_contain_vec3_data)
+	{
+		Packet packet;
+		AglVector3 vec_src(1.0f, 2.0f, 3.0f);
+		packet << vec_src;
+		AglVector3 vec_dst;
+		packet >> vec_dst;
+		
+		Assert::That(vec_dst.x, Equals(vec_src.x));
+		Assert::That(vec_dst.y, Equals(vec_src.y));
+		Assert::That(vec_dst.z, Equals(vec_src.z));
 	}
 
 	It(can_contain_multiple_int_data)

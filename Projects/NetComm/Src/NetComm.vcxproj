@@ -78,15 +78,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/Util/Lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

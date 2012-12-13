@@ -19,6 +19,8 @@ public:
 		NON_EXISTENT = -1,
 		NewClientJoinedGame,
 		EntityCreation,
+		ClientDisconnect,
+		Update
 	};
 
 };

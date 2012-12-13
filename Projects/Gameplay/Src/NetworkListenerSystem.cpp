@@ -16,24 +16,28 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 	while (m_server->hasNewDisconnections())
 	{
 		int id = m_server->popNewDisconnection();
+
+		// When a client is disconnecting, then all other clients must know this.
+		// At this point, the disconnecting client is not in the active connections list.
+		Packet dcPacket;
+		dcPacket 
+			<< (char)PacketType::ClientDisconnect
+			<< (char)id; 
+			
+		m_server->broadcastPacket( Packet() );
+
 		for (unsigned int index = 0; index < p_entities.size(); index++)
 		{
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent( p_entities[index],
 					ComponentType::NetworkSynced ) );
 
-			// When a client is disconnecting, then all other clients must know this.
-
 			// HACK: This deletion is what caused the magical crashes all the time.
 			// This should be solved as soon as possible.
-//			if (netSync->getNetworkIdentity() == id)
-//				m_world->deleteEntity(p_entities[index]);
+			//if (netSync->getNetworkIdentity() == id)
+			//	m_world->deleteEntity(p_entities[index]);
 		}
 	}
-
-
-
-
 
 	if ( m_server->isListening() )
 	{
@@ -41,11 +45,16 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			int id = m_server->popNewConnection();
 
+			// Create a new entity for the connecting client, and belonging components
 			Entity* e = m_world->createEntity();
-			e->addComponent( ComponentType::Transform,
-				new Transform( (float)(id) * 10.0f, 0, 0 ) );
-			e->addComponent( ComponentType::NetworkSynced,
-				new NetworkSynced( e->getIndex(), id, NetworkType::Ship ) );
+
+			Transform* transform = new Transform( (float)(id) * 10.0f, 0, 0 );
+			NetworkSynced* netSync = 
+				new NetworkSynced( e->getIndex(), id, NetworkType::Ship );
+			
+			e->addComponent( ComponentType::Transform, transform);
+			e->addComponent( ComponentType::NetworkSynced, netSync);
+
 			m_world->addEntity( e );
 
 			// When a client is connecting, the server must broadcast to all other
@@ -60,20 +69,27 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				if( currentConnections[i] == id )
 				{
+					// Removes the new client from this vector.
 					currentConnections.erase( currentConnections.begin() + i );
 					DEBUGPRINT(( toString(i).c_str() ));
 				}
 			}
 
 			// HACK: Just some testing packet here.
+			// Broadcast the new client's entity to all clients, even the new one.
 			Packet newClientConnected;
-			newClientConnected << (char)PacketType::EntityCreation <<
+			newClientConnected << 
+				(char)PacketType::EntityCreation <<
 				(char)NetworkType::Ship << id << e->getIndex() <<
-				(float)(id) * 10.0f << (float)0 << (float)0;
-			m_server->multicastPacket( currentConnections, newClientConnected );
 
+				(float)(id) * 10.0f << (float)0 << (float)0;
+			
+			m_server->broadcastPacket(newClientConnected);
+
+			//m_server->multicastPacket( currentConnections, newClientConnected );
 			
 			// The server must then initialize data for the new client.
+			// Suggestion
 			// Packets needed: CREATE_ENTITY
 			//	int:	id
 			//	string: name (debug)
@@ -92,17 +108,20 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			// Send the old networkSynced stuff:
 			for( unsigned int i=0; i<p_entities.size(); i++ )
 			{
+				int entityId = p_entities[i]->getIndex();
 				netSync = (NetworkSynced*)m_world->getComponentManager()->
-					getComponent(
-						p_entities[i]->getIndex(), ComponentType::NetworkSynced );
+					getComponent( entityId, ComponentType::NetworkSynced );
+				
+				transform = (Transform*)m_world->getComponentManager()->
+					getComponent( entityId, ComponentType::Transform );
 
 				// Create entity
 				if( netSync->getNetworkType() == NetworkType::Ship )
 				{
 					Packet packet;
 					packet << (char)PacketType::EntityCreation <<
-						(char)NetworkType::Ship << id << p_entities[i]->getIndex() <<
-						(float)(id) * 10.0f << (float)0 << (float)0;
+						(char)NetworkType::Ship << netSync->getNetworkOwner() << 
+						entityId << transform->getTranslation();
 
 					m_server->unicastPacket( packet, id );
 				}
