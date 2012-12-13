@@ -12,6 +12,7 @@
 #pragma once
 
 #include <Component.h>
+#include "NetworkType.h"
 
 class NetworkSynced: public Component
 {
@@ -24,6 +25,7 @@ public:
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
+		m_networkType.type = NetworkType::NON_EXISTENT;
 	}
 
 	///-----------------------------------------------------------------------------------
@@ -36,6 +38,14 @@ public:
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
+		m_networkType.type = NetworkType::NON_EXISTENT;
+	}
+
+	NetworkSynced( int p_networkIdentity, int p_owner, NetworkType::Network_T p_networkType )
+	{
+		m_networkIdentity = p_networkIdentity;
+		m_owner = p_owner;
+		m_networkType.type = p_networkType;
 	}
 
 	~NetworkSynced()
@@ -61,6 +71,15 @@ public:
 	}
 
 	///-----------------------------------------------------------------------------------
+	/// Get the network type.
+	/// \returns NetworkType
+	///-----------------------------------------------------------------------------------
+	NetworkType::Network_T getNetworkType() const
+	{
+		return m_networkType.type;
+	}
+
+	///-----------------------------------------------------------------------------------
 	/// Set the private networkIdentity.
 	/// \param p_networkIdentity
 	/// \returns void
@@ -80,7 +99,13 @@ public:
 		m_owner = p_owner;
 	}
 
+	void setNetworkType( NetworkType::Network_T p_networkType )
+	{
+		m_networkType.type = p_networkType;
+	}
+
 private:
 	int m_networkIdentity;
 	int m_owner;
+	NetworkType m_networkType;
 };

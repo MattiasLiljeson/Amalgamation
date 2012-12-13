@@ -99,7 +99,10 @@
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PacketTypes.h">
+    <ClInclude Include="NetworkType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
   </ItemGroup>
