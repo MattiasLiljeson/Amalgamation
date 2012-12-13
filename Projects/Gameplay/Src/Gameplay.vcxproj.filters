@@ -87,7 +87,7 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-	<ClInclude Include="PhysicsBody.h">
+    <ClInclude Include="PhysicsBody.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="NetworkInputHandlerSystem.h">
@@ -96,14 +96,17 @@
     <ClInclude Include="PacketTranslator.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessingMessagesSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,7 +119,7 @@
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-	<ClCompile Include="Transform.cpp">
+    <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
@@ -146,8 +149,11 @@
     <ClCompile Include="NetworkInputHandlerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkCommunicatorSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
-      <Filter>Systems</Filter>
+      <Filter>Systems\Network\Shared</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

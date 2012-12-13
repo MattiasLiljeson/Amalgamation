@@ -30,6 +30,8 @@
 #include <GraphicsBackendSystem.h>
 #include <InputSystem.h>
 #include <NetworkConnectToServerSystem.h>
+#include <NetworkCommunicatorSystem.h>
+#include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
 
 class ClientApplication
@@ -51,5 +53,4 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
-
 };

@@ -83,9 +83,20 @@ void ClientApplication::initSystems()
 	m_world->setSystem( SystemType::RenderPrepSystem, renderer , true );
 
 	// Network systems
-	NetworkConnectToServerSystem* connect = new NetworkConnectToServerSystem( m_client );
-	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connect, false );
+	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	m_world->setSystem( SystemType::ProcessingMessagesSystem, msgProcSystem , true );
 
+	NetworkConnectToServerSystem* connect =
+		new NetworkConnectToServerSystem( m_client );
+	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connect,
+		false );
+
+	NetworkCommunicatorSystem* communicatorSystem =
+		new NetworkCommunicatorSystem( m_client );
+	m_world->setSystem( SystemType::NetworkCommunicatorSystem, communicatorSystem,
+		false );
+
+	
 	m_world->initialize();
 }
 
@@ -144,3 +155,4 @@ void ClientApplication::initEntities()
 	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
 	m_world->deleteEntity(entity);
 }
+
