@@ -15,7 +15,7 @@ void InputBackendSystem::initialize()
 {
 	XInputFetcher* xif = new XInputFetcher();
 	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
-	m_inputManager = new InputManager( milf, /*xif*/ NULL );
+	m_inputManager = new InputManager( milf, xif );
 
 	InputControlFactory factory;
 	Control* tempControl = NULL;
@@ -44,6 +44,10 @@ void InputBackendSystem::initialize()
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
+
+	tempControl = factory.createKeyboardKey( InputHelper::SPACE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Space"] = tempControlIdx;
 
 	tempControl = factory.createKeyboardKey( InputHelper::L );
 	tempControlIdx = m_inputManager->addControl( tempControl );

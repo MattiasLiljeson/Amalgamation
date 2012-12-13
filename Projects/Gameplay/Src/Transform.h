@@ -48,7 +48,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// \return The translation vector.
 	///-----------------------------------------------------------------------------------
-	AglVector3 getTranslation() const;
+	const AglVector3& getTranslation() const;
 	
 	///-----------------------------------------------------------------------------------
 	/// \param p_translation The new translation as a vector
@@ -59,7 +59,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// \return The scale vector.
 	///-----------------------------------------------------------------------------------
-	AglVector3 getScale() const;
+	const AglVector3& getScale() const;
 
 	///-----------------------------------------------------------------------------------
 	/// \param p_scale The new scale as a vector
@@ -70,7 +70,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// \return The rotation quaternion.
 	///-----------------------------------------------------------------------------------
-	AglQuaternion getRotation() const;
+	const AglQuaternion& getRotation() const;
 
 	///-----------------------------------------------------------------------------------
 	/// \param p_rotation The new rotation as a quaternion
@@ -82,7 +82,7 @@ public:
 	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
 	/// \return A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
-	AglMatrix getMatrix() const;
+	const AglMatrix& getMatrix() const;
 
 	///-----------------------------------------------------------------------------------
 	/// Get the translated transform matrix packaged in a InstanceVertex.

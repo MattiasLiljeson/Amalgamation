@@ -12,11 +12,13 @@
 /// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
-#include "CameraInfo.h"
-#include "GraphicsBackendSystem.h"
+#include <EntitySystem.h>
+#include <AglQuaternion.h>
 #include "InputBackendSystem.h"
 #include "Transform.h"
-#include <EntitySystem.h>
+#include "ShipController.h"
+
+
 
 class ShipControllerSystem : public EntitySystem
 {

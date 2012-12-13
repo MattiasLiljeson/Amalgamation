@@ -13,14 +13,16 @@
 ///---------------------------------------------------------------------------------------
 
 #include <Component.h>
+#include <DebugUtil.h>
+#include <ToString.h>
 
 class ShipController : public Component
 {
 public:
 	ShipController()
 	{
-		m_turnSpeed = 1.0f;
-		m_thrustPower = 1.0f;
+		m_turnSpeed = 10.0f;
+		m_thrustPower = 0.2f;
 	}
 
 	ShipController(float p_turnSpeed, float p_thrustPower)

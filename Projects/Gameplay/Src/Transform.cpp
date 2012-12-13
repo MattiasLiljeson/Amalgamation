@@ -35,7 +35,7 @@ Transform::~Transform()
 
 }
 
-AglVector3 Transform::getTranslation() const
+const AglVector3& Transform::getTranslation() const
 {
 	return m_translation;
 }
@@ -46,7 +46,7 @@ void Transform::setTranslation( const AglVector3 p_translation )
 	calcCompMatrix();
 }
 
-AglVector3 Transform::getScale() const
+const AglVector3& Transform::getScale() const
 {
 	return m_scale;
 }
@@ -57,7 +57,7 @@ void Transform::setScale( const AglVector3 p_scale )
 	calcCompMatrix();
 }
 
-AglQuaternion Transform::getRotation() const
+const AglQuaternion& Transform::getRotation() const
 {
 	return m_rotation;
 }
@@ -68,7 +68,7 @@ void Transform::setRotation( const AglQuaternion p_rotation )
 	calcCompMatrix();
 }
 
-AglMatrix Transform::getMatrix() const
+const AglMatrix& Transform::getMatrix() const
 {
 	return m_compositionMatrix;
 }

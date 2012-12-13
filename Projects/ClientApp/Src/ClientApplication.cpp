@@ -76,6 +76,10 @@ void ClientApplication::initSystems()
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
 
+	// Controller system for the ship
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
+	m_world->setSystem(SystemType::ShipControllerSystem, shipController, true);
+
 	// Camera system updates camera based on input and sets its viewport info
 	// to the graphics backend for render
 	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
@@ -127,6 +131,17 @@ void ClientApplication::initEntities()
 			}
 		}
 	}
+
+	// Create a "spaceship"
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform( 0.0f, 0.0f, 0.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new ShipController(2.0f,10.0f);
+	entity->addComponent( ComponentType::ShipController, component );
+	m_world->addEntity(entity);
+
 
 	// A camera from which the world is rendered.
 	entity = m_world->createEntity();
