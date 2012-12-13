@@ -51,6 +51,37 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				m_world->addEntity(e);
 			}
 		}
+		else if (packetType == (char)PacketType::EntityUpdate)
+		{
+			char networkType;
+			
+			packet >> networkType;
+			if (networkType == (char)NetworkType::Ship)
+			{
+				int			networkId;
+				AglVector3	position;
+
+				packet >> networkId >> position;
+
+				// HACK: This is VERY inefficient for large amount of
+				// network-synchronized entities. (Solve later)
+				for( unsigned int i=0; i<p_entities.size(); i++ )
+				{
+					NetworkSynced* netSync = NULL;
+					netSync = static_cast<NetworkSynced*>(
+						m_world->getComponentManager()->getComponent(
+						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+					if( netSync->getNetworkIdentity() == networkId )
+					{
+						Transform* transform = NULL;
+						transform = static_cast<Transform*>(
+							m_world->getComponentManager()->getComponent(
+							p_entities[i]->getIndex(), ComponentType::Transform ) );
+						transform->setTranslation( position );
+					}
+				}
+			}
+		}
 	}
 }
 
