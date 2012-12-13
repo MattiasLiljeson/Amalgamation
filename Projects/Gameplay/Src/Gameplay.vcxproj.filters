@@ -96,17 +96,17 @@
     <ClInclude Include="PacketTranslator.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessingMessagesSystem.h">
-      <Filter>Systems\Network\Shared</Filter>
+    <ClInclude Include="PacketType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,11 +149,11 @@
     <ClCompile Include="NetworkInputHandlerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkCommunicatorSystem.cpp">
-      <Filter>Systems\Network\Client only</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCommunicatorSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
