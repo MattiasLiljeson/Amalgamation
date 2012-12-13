@@ -30,7 +30,7 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			static float timeElapsed = 0;
 			timeElapsed += m_world->getDelta();
 			AglVector3 pos = transform->getTranslation();
-			pos.z = 5.0f * sinf( timeElapsed );
+			pos.z = 5.0f * sinf( timeElapsed ) + 6.0f;;
 			transform->setTranslation( pos );
 
 			Packet updateShipPacket;

@@ -63,6 +63,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 				packet >> networkId >> position;
 
+
+
 				// HACK: This is VERY inefficient for large amount of
 				// network-synchronized entities. (Solve later)
 				for( unsigned int i=0; i<p_entities.size(); i++ )
@@ -78,6 +80,10 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 							m_world->getComponentManager()->getComponent(
 							p_entities[i]->getIndex(), ComponentType::Transform ) );
 						transform->setTranslation( position );
+						if (transform->getTranslation().z == 0.0f)
+						{
+							int a = 0;
+						}
 					}
 				}
 			}
