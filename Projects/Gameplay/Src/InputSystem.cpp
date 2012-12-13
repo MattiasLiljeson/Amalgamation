@@ -13,7 +13,7 @@ InputSystem::~InputSystem(void)
 
 void InputSystem::initialize()
 {
-	//XInputFetcher* xif = new XInputFetcher();
+	XInputFetcher* xif = new XInputFetcher();
 	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
 	m_inputManager = new InputManager( milf, /*xif*/ NULL );
 

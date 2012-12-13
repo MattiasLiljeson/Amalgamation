@@ -32,8 +32,8 @@ using namespace std;
 class InputSystem : public EntitySystem
 {
 public:
-	InputSystem(void);
-	~InputSystem(void);
+	InputSystem();
+	~InputSystem();
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
