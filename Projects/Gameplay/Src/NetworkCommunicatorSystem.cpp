@@ -33,7 +33,10 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				int			networkId;
 				AglVector3	position;
 
-				packet >> owner >> networkId >> position.x >> position.y >> position.z;
+				packet >> owner >> networkId >> position;
+
+				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+					SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
 				Entity* e = NULL;
 				e = m_world->createEntity();
@@ -43,7 +46,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				e->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(networkId, owner, NetworkType::Ship));
 				e->addComponent(ComponentType::RenderInfo,
-					new RenderInfo());
+					new RenderInfo( meshId ));
 
 				m_world->addEntity(e);
 			}

@@ -11,6 +11,7 @@
 
 #include <AglVector3.h>
 
+#include "GraphicsBackendSystem.h"
 #include "NetworkSynced.h"
 #include "NetworkType.h"
 #include "PacketType.h"

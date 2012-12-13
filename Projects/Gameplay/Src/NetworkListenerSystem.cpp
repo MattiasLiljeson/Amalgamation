@@ -19,12 +19,12 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// When a client is disconnecting, then all other clients must know this.
 		// At this point, the disconnecting client is not in the active connections list.
-		Packet dcPacket;
-		dcPacket 
-			<< (char)PacketType::ClientDisconnect
-			<< (char)id; 
-			
-		m_server->broadcastPacket( Packet() );
+//		Packet dcPacket;
+//		dcPacket 
+//			<< (char)PacketType::ClientDisconnect
+//			<< (char)id; 
+//			
+//		m_server->broadcastPacket( Packet() );
 
 		for (unsigned int index = 0; index < p_entities.size(); index++)
 		{
