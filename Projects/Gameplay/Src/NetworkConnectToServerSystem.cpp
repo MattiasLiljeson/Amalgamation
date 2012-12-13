@@ -17,6 +17,11 @@ void NetworkConnectToServerSystem::processEntities( const vector<Entity*>& p_ent
 	{
 		m_tcpClient->connectToServer( "194.47.150.135", "1337" );
 	}
+	else
+	{
+		m_world->getSystem(SystemType::NetworkCommunicatorSystem)->setEnabled(true);
+		setEnabled(false);
+	}
 }
 
 void NetworkConnectToServerSystem::initialize()

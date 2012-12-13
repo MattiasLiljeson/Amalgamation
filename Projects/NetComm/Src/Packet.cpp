@@ -2,8 +2,7 @@
 
 Packet::Packet()
 {
-	readPos = 1;
-	m_data.push_back(0);
+	clear();
 }
 
 Packet::~Packet()
@@ -27,14 +26,6 @@ unsigned int Packet::getDataSize() const
 	return m_data.size();
 }
 
-bool Packet::isEmpty() const
-{
-	bool empty;
-	empty = (m_data.size() <= 1);
-
-	return empty;
-}
-
 void Packet::setData(char* p_data, unsigned int p_size)
 {
 	if (p_size <= 255)
@@ -44,6 +35,21 @@ void Packet::setData(char* p_data, unsigned int p_size)
 	}
 	else
 		throw invalid_argument("Attempting to set data beyond the allowed data size (255)");
+}
+
+bool Packet::isEmpty() const
+{
+	bool empty;
+	empty = (m_data.size() <= 1);
+
+	return empty;
+}
+
+void Packet::clear()
+{
+	m_readPos = 1;
+	m_data.resize(1);
+	m_data[0] = 0;
 }
 
 Packet& Packet::operator << (char p_data)
@@ -134,15 +140,15 @@ void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 
 void Packet::ReadData(void* p_data, unsigned int p_dataSize)
 {
-	if( m_data.size() - readPos < p_dataSize )
+	if( m_data.size() - m_readPos < p_dataSize )
 	{
 		throw std::out_of_range( "Trying to stream out more data than\
 							what is left to be read in the Packet." );
 	}
 	else
 	{
-		memcpy(p_data, &m_data[readPos], p_dataSize); 
-		readPos += p_dataSize;
+		memcpy(p_data, &m_data[m_readPos], p_dataSize); 
+		m_readPos += p_dataSize;
 	}
 }
 
