@@ -34,6 +34,7 @@ protected:
 public:
 	Body();
 	virtual ~Body();
+	virtual AglMatrix GetWorld() const = 0;
 };
 
 #endif // BODY_H

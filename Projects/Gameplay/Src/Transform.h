@@ -42,6 +42,15 @@ public:
 	/// \returns 
 	///-----------------------------------------------------------------------------------
 	Transform( float p_posX, float p_posY, float p_posZ );
+	
+	///-----------------------------------------------------------------------------------
+	/// creates a transform with position, scale and rotation
+	/// \param p_translation
+	/// \param p_rotation
+	/// \param p_scale
+	/// \return 
+	///-----------------------------------------------------------------------------------
+	Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale);
 
 	~Transform();
 

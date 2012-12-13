@@ -19,22 +19,23 @@ PhysicsController2::~PhysicsController2()
 	delete mController;
 }
 
-RigidBodySphere* PhysicsController2::AddSphere(AglVector3 pPosition, float pRadius, bool pUserControlled, CompoundBody* p_parent)
+int PhysicsController2::AddSphere(AglVector3 pPosition, float pRadius, bool pUserControlled, CompoundBody* p_parent)
 {
 	return mController->AddSphere(pPosition, pRadius, pUserControlled, p_parent);
 }
-RigidBodyBox* PhysicsController2::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
+int PhysicsController2::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
 {
 	return mController->AddBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
 }
-RigidBodyConvexHull* PhysicsController2::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
+int PhysicsController2::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
 {
-	RigidBodyConvexHull* h = mController->AddConvexHull(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
-	mDebugHullData.push_back(new DebugHullData(h->getShape(), mDevice, mDeviceContext));
-	mDebugHullData.back()->AddInstance(h);
+	int h = mController->AddConvexHull(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
+	RigidBodyConvexHull* h2 = (RigidBodyConvexHull*)mController->getBody(h);
+	mDebugHullData.push_back(new DebugHullData(h2->getShape(), mDevice, mDeviceContext));
+	mDebugHullData.back()->AddInstance(h2);
 	return h;
 }
-CompoundBody* PhysicsController2::AddCompoundBody(AglVector3 p_position)
+int PhysicsController2::AddCompoundBody(AglVector3 p_position)
 {
 	return mController->AddCompoundBody(p_position);
 }

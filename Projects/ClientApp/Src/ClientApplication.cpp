@@ -95,14 +95,14 @@ void ClientApplication::initEntities()
 	Component* component;
 
 	// Physics object without a model defined, will not be rendered.
-	entity = m_world->createEntity();
+	/*entity = m_world->createEntity();
 	component = new RenderInfo();
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform();
 	entity->addComponent( ComponentType::Transform, component );
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
-	m_world->addEntity(entity);
+	m_world->addEntity(entity);*/
 
 	// Load cube model used as graphic representation for all "graphical" entities.
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
@@ -110,7 +110,7 @@ void ClientApplication::initEntities()
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
 
 	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
+	/*for( int x=0; x<8; x++ )
 	{
 		for( int y=0; y<8; y++ )
 		{
@@ -124,7 +124,32 @@ void ClientApplication::initEntities()
 				m_world->addEntity(entity);
 			}
 		}
-	}
+	}*/
+
+	//Test physics
+
+	//b1
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+	m_world->addEntity(entity);
+
+	//b2
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(15, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+	m_world->addEntity(entity);
+
 
 	// A camera from which the world is rendered.
 	entity = m_world->createEntity();
