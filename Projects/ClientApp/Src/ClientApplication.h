@@ -28,6 +28,8 @@
 #include <RenderPrepSystem.h>
 #include <InputSystem.h>
 #include <NetworkConnectToServerSystem.h>
+#include <NetworkCommunicatorSystem.h>
+#include <ProcessingMessagesSystem.h>
 
 class ClientApplication
 {

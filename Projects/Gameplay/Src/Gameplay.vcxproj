@@ -14,6 +14,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="NetworkInputHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
     <ClInclude Include="NetworkType.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="NetworkCommunicatorSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
