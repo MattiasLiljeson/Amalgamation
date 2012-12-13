@@ -68,7 +68,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			// HACK: Just some testing packet here.
 			Packet newClientConnected;
 			newClientConnected << (char)PacketType::EntityCreation <<
-				(char)NetworkType::Ship << id <<
+				(char)NetworkType::Ship << id << e->getIndex() <<
 				(float)(id) * 10.0f << (float)0 << (float)0;
 			m_server->multicastPacket( currentConnections, newClientConnected );
 
@@ -96,11 +96,15 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 					getComponent(
 						p_entities[i]->getIndex(), ComponentType::NetworkSynced );
 
-				//Packet create
-
+				// Create entity
 				if( netSync->getNetworkType() == NetworkType::Ship )
 				{
+					Packet packet;
+					packet << (char)PacketType::EntityCreation <<
+						(char)NetworkType::Ship << id << p_entities[i]->getIndex() <<
+						(float)(id) * 10.0f << (float)0 << (float)0;
 
+					m_server->unicastPacket( packet, id );
 				}
 			}
 
