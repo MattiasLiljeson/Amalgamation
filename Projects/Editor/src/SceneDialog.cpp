@@ -1,4 +1,5 @@
 #include "SceneDialog.h"
+#include "Globals.h"
 
 SceneDialog* SceneDialog::sInstance = NULL;
 
@@ -12,6 +13,16 @@ void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMaterial(index);
 }
+void TW_CALL SceneDialog::SetCOSystem(void *clientData)
+{
+	int index = (int)clientData;
+	if (index == 0)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
+	if (index == 1)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
+	if (index == 2)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+}
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
 {
@@ -22,7 +33,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		AGLLoader::GetInstance()->Load(file);
 
 		vector<Mesh*> meshes = Scene::GetInstance()->GetMeshes();
-		for (int i = 0; i < meshes.size(); i++)
+		for (unsigned int i = 0; i < meshes.size(); i++)
 		{
 			string s = "Mesh" + toString(i+1);
 			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Meshes' label='" + meshes[i]->GetName() + "'";
@@ -30,7 +41,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 			TwAddButton(sceneDialog->m_dialog, s.c_str(), OpenMeshDialog, (void*)i, info.c_str());
 		}
 		vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
-		for (int i = 0; i < materials.size(); i++)
+		for (unsigned int i = 0; i < materials.size(); i++)
 		{
 			string s = Scene::GetInstance()->GetName(materials[i]->nameID);
 			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";
@@ -39,6 +50,10 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		}
 
 		TwAddButton(sceneDialog->m_dialog, "AddMaterial", AddMaterial, sceneDialog, " label='Material' key=c help='Load an Agile file into the editor.' group='Add'");
+
+		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)
@@ -79,6 +94,11 @@ SceneDialog::SceneDialog()
     TwType pointType = TwDefineStruct("POINT", pointMembers, 3, sizeof(AglVector3), NULL, NULL);
 
 	TwAddVarRW(m_dialog, "Position", pointType, Scene::GetInstance()->GetPosition(), "");
+
+	TwAddVarRW(m_dialog, "ShowHideDiffuse", TW_TYPE_BOOLCPP, &DIFFUSEON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideSpec", TW_TYPE_BOOLCPP, &SPECULARON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideGlow", TW_TYPE_BOOLCPP, &GLOWON, "group='Show/Hide'");
+	TwAddVarRW(m_dialog, "ShowHideNormal", TW_TYPE_BOOLCPP, &NORMALON, "group='Show/Hide'");
 
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();

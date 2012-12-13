@@ -48,13 +48,22 @@ private:
 	int mCurrentAnimation;
 
 	string mFolder;
+
+	ID3D11Device* mDevice;
+	ID3D11DeviceContext* mDeviceContext;
+
+	Mesh* mPlaneMesh;
+
 private:
 	Scene();
 	~Scene();
+
+	void CreateScenePlane(); 
 public:
 	static Scene* GetInstance();
 	static void Release();
-	void Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder);
+	void Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
+		ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	void Update(float pElapsedTime);
 	void Draw();
 	AglNode GetNode(int pIndex);
@@ -82,6 +91,10 @@ public:
 	AglQuaternion* GetQuaternionRotation(){ return &mQuaternionRotation; }
 	AglVector3* GetPosition(){ return &mPosition; }
 	AglMatrix GetWorld() { return m_world; }
+	AglVector3 GetCenter();
+
+	bool IsLeftHanded();
+	void SetCoordinateSystem(AglCoordinateSystem pSystem);
 };
 
 #endif

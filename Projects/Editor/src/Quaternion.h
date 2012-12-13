@@ -14,7 +14,7 @@ public:
 	float		GetScalar();
 	Quaternion  Conjugate();
 	void		Rotate(float angle, AglVector3 axis);
-	Quaternion& operator*(const Quaternion& quat);
+	Quaternion operator*(const Quaternion& quat);
 };
 
 #endif

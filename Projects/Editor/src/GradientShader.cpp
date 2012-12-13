@@ -87,12 +87,12 @@ void GradientShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	matbuffer = (GradientBuffer*)resource.pData;
 
 	vector<AglGradientMaterial*> layers = pGradient->getLayers();
-	for (int i = 0; i < layers.size(); i++)
+	for (unsigned int i = 0; i < layers.size(); i++)
 	{
 		matbuffer->AmbientOpacity[i] = AglVector4(layers[i]->ambient, 1);
 		matbuffer->DiffuseReflectivity[i] = AglVector4(layers[i]->diffuse, 0);
 	}
-	matbuffer->Flags = AglVector4(pGradient->getNormalTextureNameIndex() >= 0, layers.size(), 0, 0);
+	matbuffer->Flags = AglVector4(pGradient->getNormalTextureNameIndex() >= 0, (float)layers.size(), 0, 0);
 
 	mDeviceContext->Unmap(mGradientBuffer, 0);
 
@@ -107,8 +107,6 @@ void GradientShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	}
 	else
 	{
-		TextureData* td = TextureManager::GetInstance()->GetTexture(TextureManager::GetInstance()->GetNoImage());
-		mDeviceContext->PSSetShaderResources(0, 1, &td->SRV);
 	}
 	if (pGradient->getNormalTextureNameIndex() >= 0)
 	{

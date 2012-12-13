@@ -24,7 +24,7 @@ void Quaternion::Rotate(float angle, AglVector3 axis)
 	*this = q.operator*(*this);
 	*this = operator*(q.Conjugate());
 }
-Quaternion& Quaternion::operator*(const Quaternion& quat)
+Quaternion Quaternion::operator*(const Quaternion& quat)
 {
 	return Quaternion(CrossProduct(this->m_UVector, quat.m_UVector) + 
 				quat.m_UVector*this->m_Scalar + this->m_UVector*quat.m_Scalar,

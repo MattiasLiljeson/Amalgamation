@@ -13,6 +13,23 @@
 
 using namespace std;
 
+struct AglCoordinateSystem
+{
+	enum Handedness
+	{
+		LEFT, RIGHT
+	};
+	Handedness handedness;
+	AglVector3 upVector;
+	AglVector3 forwardVector;
+
+	AglCoordinateSystem();
+	static AglCoordinateSystem DX();
+	static AglCoordinateSystem GL();
+	static AglCoordinateSystem BLENDER();
+};
+
+
 // =================================================================================================
 //                                         AglTopHeader
 // =================================================================================================
@@ -40,6 +57,8 @@ struct AglTopHeader
 	int		animationCount;			///< Number of animations in the file
 	int		looseBspCount;			///< Number of loose bsp trees in the file
 	int		SphereGridCount;		///< Number of sphere grids in the file
+	
+	AglCoordinateSystem coordinateSystem; ///< Coordinate System of the scene
 };
 
 typedef int AglVertexFormat;

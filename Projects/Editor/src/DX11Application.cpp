@@ -1,5 +1,6 @@
 #include "DX11Application.h"
 #include <AntTweakBar.h>
+#include "Globals.h"
 
 float DX11Application::dt = 0;
 
@@ -9,6 +10,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     if (TwEventWin(hWnd, message, wParam, lParam))
         return 0; // Event has been handled by AntTweakBar
 
+	float newPos;
     switch(message)
     {
 		case WM_KEYDOWN:
@@ -17,6 +19,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				DestroyWindow(hWnd);
 			return 0;
 		}
+		case WM_MOUSEWHEEL:
+			newPos = GET_WHEEL_DELTA_WPARAM(wParam);
+			MOUSEWHEELDELTA = newPos;/* / -WHEEL_DELTA*/;
+		break;
         case WM_DESTROY:
         {
                 PostQuitMessage(0);
@@ -242,7 +248,6 @@ void DX11Application::Run()
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-
 			if(msg.message == WM_QUIT)
 				break;
 		}
@@ -266,6 +271,7 @@ void DX11Application::Run()
 
 			Update(mTimer.DeltaTime());
 			Draw(mTimer.DeltaTime());
+			MOUSEWHEELDELTA = 0;
 		}
 	}
 }

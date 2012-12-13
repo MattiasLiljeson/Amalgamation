@@ -14,6 +14,7 @@
 class Game: public DX11Application
 {
 private:
+	CameraController* m_cameraController;
 public:
 	Game(HINSTANCE pInstanceHandle);
 	bool Initialize();

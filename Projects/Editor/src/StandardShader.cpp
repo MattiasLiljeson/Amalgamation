@@ -7,6 +7,7 @@
 #include "DomainShader.h"
 #include "Scene.h"
 #include "DX11Application.h"
+#include "Globals.h"
 
 //http://developer.download.nvidia.com/whitepapers/2010/PN-AEN-Triangles-Whitepaper.pdf
 
@@ -175,9 +176,9 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	matbuffer->AmbientOpacity = AglVector4(pMaterial.ambient, pMaterial.opacity);
 	matbuffer->DiffuseReflectivity = AglVector4(pMaterial.diffuse, pMaterial.reflectivity);
 	matbuffer->SpecularShininess = AglVector4(pMaterial.specular, pMaterial.shininess);
-	matbuffer->EmissiveDiffuseMapped = AglVector4(pMaterial.emissive, float(pMaterial.diffuseTextureNameIndex >= 0));
-	matbuffer->EyePositionSpecularMapped = AglVector4(Camera::GetInstance()->Position().x, Camera::GetInstance()->Position().y, Camera::GetInstance()->Position().z, float(pMaterial.specularTextureNameIndex >= 0));
-	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0), (float)(pMaterial.normalTextureNameIndex >= 0), 0, 0);
+	matbuffer->EmissiveDiffuseMapped = AglVector4(pMaterial.emissive, float(pMaterial.diffuseTextureNameIndex >= 0 && DIFFUSEON));
+	matbuffer->EyePositionSpecularMapped = AglVector4(Camera::GetInstance()->Position().x, Camera::GetInstance()->Position().y, Camera::GetInstance()->Position().z, float(pMaterial.specularTextureNameIndex >= 0  && SPECULARON));
+	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0 && NORMALON), 0, 0);
 	mDeviceContext->Unmap(mMaterialBuffer, 0);
 
 	mDeviceContext->PSSetConstantBuffers(bufferNumber, 1, &mMaterialBuffer);

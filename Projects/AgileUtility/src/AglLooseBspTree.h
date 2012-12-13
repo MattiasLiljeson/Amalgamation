@@ -28,14 +28,7 @@ struct AglBspNode
 	///-----------------------------------------------------------------------------------
 	/// Constructor
 	///-----------------------------------------------------------------------------------
-	AglBspNode()
-	{
-		leftChild = -1;
-		rightChild = -1;
-		triangleID = -1;
-		minPoint = AglVector3();
-		maxPoint = AglVector3();
-	}
+	AglBspNode();
 };
 
 struct AglBspSphere
@@ -50,25 +43,8 @@ struct AglBspTriangle
 	AglVector3		vertices[3];
 	AglVector3		center;
 	AglVector3		normal;
-	AglBspTriangle(unsigned int p_index, const vector<AglVector3>& p_vertices, const vector<unsigned int>& p_indices)
-	{
-		index = p_index;
-		float factor = 1.0f / 3.0f;
-
-		vertices[0] = p_vertices[p_indices[index*3]];
-		vertices[1] = p_vertices[p_indices[index*3+1]];
-		vertices[2] = p_vertices[p_indices[index*3+2]];
-
-		center = vertices[0] + vertices[1] + vertices[2];
-		center *= factor;
-		normal = AglVector3(1, 0, 0);
-	}
-	bool operator<(const AglBspTriangle& pOther)
-	{
-		float dot1 = AglVector3::dotProduct(center, normal);
-		float dot2 = AglVector3::dotProduct(pOther.center, pOther.normal);
-		return dot1 < dot2;
-	}
+	AglBspTriangle(unsigned int p_index, const vector<AglVector3>& p_vertices, const vector<unsigned int>& p_indices);
+	bool operator<(const AglBspTriangle& pOther);
 
 };
 

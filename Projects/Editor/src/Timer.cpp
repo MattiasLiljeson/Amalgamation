@@ -41,7 +41,7 @@ float Timer::DeltaTime()
 }
 float Timer::ElapsedTime()
 {
-	return mElapsedTime;
+	return (float)mElapsedTime;
 }
 void Timer::Reset()
 {

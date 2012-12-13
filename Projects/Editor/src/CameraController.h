@@ -9,6 +9,9 @@ private:
 	HWND mWindowHandle;
 	POINT mPreviousMousePos;
 	POINT mCurrentMousePos;
+
+	bool mActive;
+	AglVector3 mPivot;
 private:
 	POINT GetWindowCenter();
 public:

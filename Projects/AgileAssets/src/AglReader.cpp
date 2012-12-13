@@ -62,6 +62,8 @@ AglReader::AglReader(char* p_path)
 		desc.sphereGrids.push_back(readSphereGrid());
 	}
 
+	desc.coordinateSystem = m_topHeader.coordinateSystem;
+
 	m_scene->init(desc);
 
 	m_file.close();
