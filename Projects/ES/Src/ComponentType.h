@@ -23,6 +23,7 @@ public:	//Enums
 		PhysicsBody,
 		Impulse,
 		PhysUnknown,
+		BodyInitData,
 		CameraInfo,
 		NUM_COMPONENT_TYPES
 	};

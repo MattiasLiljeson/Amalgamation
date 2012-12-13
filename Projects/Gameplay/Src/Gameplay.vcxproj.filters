@@ -105,6 +105,9 @@
     <ClInclude Include="Impulse.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="BodyInitData.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="ImpulseSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

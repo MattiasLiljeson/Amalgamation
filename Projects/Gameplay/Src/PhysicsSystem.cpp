@@ -1,5 +1,6 @@
 #include "PhysicsSystem.h"
 #include "Transform.h"
+#include "BodyInitData.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -52,22 +53,35 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 
 void PhysicsSystem::initializeEntity(Entity* p_entity)
 {
-	//TEMP: Initializes a box for each entity with physics
-	Transform* t =
-		static_cast<Transform*>(
-		m_world->getComponentManager()->getComponent( p_entity,
-		ComponentType::getTypeFor(ComponentType::Transform)));
-
 	PhysicsBody* body =
 		static_cast<PhysicsBody*>(
 		m_world->getComponentManager()->getComponent( p_entity,
 		ComponentType::getTypeFor(ComponentType::PhysicsBody)));
 
-	static int shit = 0;
-	AglVector3 v(1, 0, 0);
-	if (shit > 0)
-		 v = AglVector3(-1, 0, 0);
-	body->m_id = m_physicsController->AddBox(t->getTranslation(), t->getScale()*2, 1, v, AglVector3(0, 0, 0), false);
-	shit++;
-	//TODO: Add support for general creation
+	BodyInitData* init =
+		static_cast<BodyInitData*>(
+		m_world->getComponentManager()->getComponent( p_entity,
+		ComponentType::getTypeFor(ComponentType::BodyInitData)));
+
+	if (init)
+	{
+		if (init->m_type == 0)
+		{
+			body->m_id = m_physicsController->AddBox(init->m_position, init->m_scale*2, 1, init->m_velocity, init->m_angularVelocity, init->m_static);
+		}
+		else
+		{
+			//Not Supported
+		}
+		m_world->getComponentManager()->removeComponent(
+			p_entity, ComponentType::BodyInitData);
+	}
+	else
+	{
+		Transform* t =
+			static_cast<Transform*>(
+			m_world->getComponentManager()->getComponent( p_entity,
+			ComponentType::getTypeFor(ComponentType::Transform)));
+		body->m_id = m_physicsController->AddBox(t->getTranslation(), t->getScale()*2, 1, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
+	}
 }

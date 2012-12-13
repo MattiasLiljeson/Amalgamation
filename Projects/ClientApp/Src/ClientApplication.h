@@ -20,6 +20,7 @@
 #include <Input.h>
 #include <InputSystem.h>
 #include <PhysicsBody.h>
+#include <BodyInitData.h>
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <Transform.h>

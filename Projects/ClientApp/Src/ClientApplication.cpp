@@ -134,9 +134,13 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
 	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
 	m_world->addEntity(entity);
 
 	//b2
@@ -145,9 +149,13 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
 	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
+	
+	component = new BodyInitData(AglVector3(15, 0.5f, 0.0f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
 	m_world->addEntity(entity);
 
 
