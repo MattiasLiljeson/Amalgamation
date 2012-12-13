@@ -6,5 +6,11 @@ extern bool SPECULARON;
 extern bool GLOWON;
 extern bool NORMALON;
 extern float MOUSEWHEELDELTA;
+enum CoordinateSystem
+{
+	DX, GL, BLENDER
+};
+
+extern CoordinateSystem COSYSTEM;
 
 #endif

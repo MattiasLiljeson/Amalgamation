@@ -58,13 +58,13 @@ struct AglMatrix
 	AglVector3 GetTranslation() const;
 
 	//Member Setters
-	void SetForward(AglVector3 pValue);
-	void SetBackward(AglVector3 pValue);
-	void SetRight(AglVector3 pValue);
-	void SetLeft(AglVector3 pValue);
-	void SetUp(AglVector3 pValue);
-	void SetDown(AglVector3 pValue);
-	void SetTranslation(AglVector3 pValue);
+	void SetForward(const AglVector3& pValue);
+	void SetBackward(const AglVector3& pValue);
+	void SetRight(const AglVector3& pValue);
+	void SetLeft(const AglVector3& pValue);
+	void SetUp(const AglVector3& pValue);
+	void SetDown(const AglVector3& pValue);
+	void SetTranslation(const AglVector3& pValue);
 
 	//Member Functions
 
@@ -104,19 +104,19 @@ struct AglMatrix
 	static void componentsToMatrix(AglMatrix& pMatrix, const AglVector3& pScale, const AglQuaternion& pQuaternion, const AglVector3& pTranslation);
 
 	//Creates a translation matrix
-	static AglMatrix createTranslationMatrix(AglVector3 pTranslation);
+	static AglMatrix createTranslationMatrix(const AglVector3& pTranslation);
 	
 	//Creates a scale matrix
-	static AglMatrix createScaleMatrix(AglVector3 pScale);
+	static AglMatrix createScaleMatrix(const AglVector3& pScale);
 
 	//Create a rotation matrix
-	static AglMatrix createRotationMatrix(AglQuaternion pQuaternion);
+	static AglMatrix createRotationMatrix(const AglQuaternion& pQuaternion);
 
 	//Create a perspective matrix
-	static AglMatrix createPerspectiveMatrix(float pAspectRatio, float pFieldOfView, float pNear, float pFar);
+	static AglMatrix createPerspectiveMatrix(const float& pAspectRatio, const float& pFieldOfView, const float& pNear, const float& pFar);
 
 	//Create a view matrix
-	static AglMatrix createViewMatrix(AglVector3 pPosition, AglVector3 pTarget, AglVector3 pUp);
+	static AglMatrix createViewMatrix(const AglVector3& pPosition, const AglVector3& pTarget, const AglVector3& pUp);
 };
 
 #endif

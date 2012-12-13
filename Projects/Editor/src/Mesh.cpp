@@ -10,6 +10,7 @@
 #include "RasterManager.h"
 #include "RenderNormalsShader.h"
 #include "AglLooseBspTree.h"
+#include "Globals.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene)
 {
@@ -37,13 +38,6 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 
 	unsigned int* ind = pMesh->getIndices();
 
-	//Borde inte göras här. Borde göras i konverteringen från fbx.
-	for (int i = 0; i < h.indexCount; i+=3)
-	{
-		unsigned int temp = ind[i];
-		ind[i] = ind[i+1];
-		ind[i+1] = temp;
-	}
 	Init<AglVertexSTBN>(v, h.vertexCount, pMesh->getIndices(), h.indexCount);
 
 	AglVector3 minP, maxP;
@@ -112,8 +106,10 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 		DrawNormals(pWorld, pScale);
 	if (m_wireframe)
 		RasterManager::getInstance()->setWireframeState();
-	else
+	else if (Scene::GetInstance()->IsLeftHanded())
 		RasterManager::getInstance()->setStandardState();
+	else
+		RasterManager::getInstance()->setInvertedState();
 	vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
 	AglMaterial mat;
 	AglMaterial matp;

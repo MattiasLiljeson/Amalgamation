@@ -4,6 +4,7 @@
 #include "AglWriter.h"
 #include "TextureManager.h"
 #include "SkeletonMesh.h"
+#include "Globals.h"
 
 Scene* Scene::sInstance = NULL;
 
@@ -101,10 +102,12 @@ void Scene::Draw()
 
 	AglVector3 scale(1, 1, 1);
 	AglMatrix::componentsToMatrix(w, scale, mQuaternionRotation, mPosition);
-	
-	//Borde inte göras här. Borde göras vid konverteringen från fbx.
-	AglMatrix w3(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
-	w = w3 * w;
+
+	if (mAglScene)
+	{
+		AglMatrix w3 = mAglScene->getCoordinateSystemAsMatrix();
+		w = w3 * w;
+	}
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
 	for (int i = 0; i < mMeshes.size(); i++)
@@ -112,13 +115,17 @@ void Scene::Draw()
 	for (int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
+	AglVector3 minP = mMin;
+	AglVector3 maxP = mMax;
 
-	//Mesh Walker does not work with this solution because of animation
-	AglVector3 min = mMin;
-
-	min.transform(m_world);
+	AglMatrix newW = m_world;
+	newW.SetTranslation(AglVector3(0, 0, 0));
+	minP.transform(newW*invMax);
+	maxP.transform(newW*invMax);
 	if (mPlaneMesh)
-		mPlaneMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(0, min.y*invMax, 0)), 1.0f);
+	{
+		mPlaneMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(0, min(minP.y, maxP.y), 0)), 1.0f);
+	}
 }
 AglNode Scene::GetNode(int pIndex)
 {
@@ -255,4 +262,17 @@ void Scene::CreateScenePlane()
 	AglMesh* m = new AglMesh(h, verts, ind);
 	mPlaneMesh = new Mesh(mDevice, mDeviceContext, this);
 	mPlaneMesh->Init(m, NULL);
+}
+bool Scene::IsLeftHanded()
+{
+	if (!mAglScene)
+		return true;
+	else
+	{
+		return mAglScene->isLeftHanded();
+	}
+}
+void Scene::SetCoordinateSystem(AglCoordinateSystem pSystem)
+{
+	mAglScene->setCoordinateSystem(pSystem);
 }

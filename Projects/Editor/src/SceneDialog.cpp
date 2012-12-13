@@ -13,6 +13,16 @@ void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMaterial(index);
 }
+void TW_CALL SceneDialog::SetCOSystem(void *clientData)
+{
+	int index = (int)clientData;
+	if (index == 0)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
+	if (index == 1)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
+	if (index == 2)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+}
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
 {
@@ -40,6 +50,10 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		}
 
 		TwAddButton(sceneDialog->m_dialog, "AddMaterial", AddMaterial, sceneDialog, " label='Material' key=c help='Load an Agile file into the editor.' group='Add'");
+
+		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)

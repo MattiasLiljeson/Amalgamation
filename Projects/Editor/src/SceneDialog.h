@@ -29,6 +29,7 @@ private:
 	static void TW_CALL LoadAGL(void *clientData);
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
+	static void TW_CALL SetCOSystem(void *clientData);
 public:
 	//Static functions
 	static SceneDialog* GetInstance();

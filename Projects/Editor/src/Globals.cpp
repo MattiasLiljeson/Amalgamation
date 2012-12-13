@@ -5,3 +5,5 @@ bool SPECULARON = true;
 bool GLOWON = true;
 bool NORMALON = true;
 float MOUSEWHEELDELTA = 0;
+
+CoordinateSystem COSYSTEM = CoordinateSystem::DX;

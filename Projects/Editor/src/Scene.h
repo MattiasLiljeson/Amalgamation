@@ -92,6 +92,9 @@ public:
 	AglVector3* GetPosition(){ return &mPosition; }
 	AglMatrix GetWorld() { return m_world; }
 	AglVector3 GetCenter();
+
+	bool IsLeftHanded();
+	void SetCoordinateSystem(AglCoordinateSystem pSystem);
 };
 
 #endif
