@@ -22,6 +22,7 @@
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
 #include <NetworkInputHandlerSystem.h>
+#include <NetworkUpdateSystem.h>
 #include <TcpServer.h>
 
 using namespace std;

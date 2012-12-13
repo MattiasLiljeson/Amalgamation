@@ -57,6 +57,9 @@ void ServerApplication::initSystems()
 	m_world->setSystem( SystemType::NetworkInputHandlerSystem,
 		new NetworkInputHandlerSystem( m_server ), true );
 
+	m_world->setSystem( SystemType::NetworkUpdateSystem,
+		new NetworkUpdateSystem( m_server ), true );
+
 	m_world->initialize();
 
 }

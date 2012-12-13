@@ -108,6 +108,9 @@
     <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="NetworkCommunicatorSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkUpdateSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
