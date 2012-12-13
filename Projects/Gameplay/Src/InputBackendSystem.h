@@ -29,14 +29,16 @@ class InputManager;
 
 using namespace std;
 
-class InputSystem : public EntitySystem
+class InputBackendSystem : public EntitySystem
 {
 public:
-	InputSystem();
-	~InputSystem();
+	InputBackendSystem();
+	~InputBackendSystem();
 
 	virtual void initialize();
-	void processEntities(const vector<Entity*>& p_entities );
+	void process();
+
+	Control* getInputControl(const string& p_name);
 
 private:
 	InputManager* m_inputManager;

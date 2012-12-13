@@ -3,10 +3,13 @@
 // The include below can't be in h-file. Causes linker error.
 #include <CamMatrixerUtil.h>
 
-CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend ): EntitySystem( SystemType::CameraSystem, 1,
-										   ComponentType::ComponentTypeIdx::CameraInfo )
+CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
+						    InputBackendSystem* p_inputBackend ) : 
+		      EntitySystem( SystemType::CameraSystem, 1,
+							ComponentType::ComponentTypeIdx::CameraInfo )
 {
 	m_gfxBackend = p_gfxBackend;
+	m_inputBackend = p_inputBackend;
 }
 
 
@@ -17,10 +20,19 @@ CameraSystem::~CameraSystem()
 void CameraSystem::initialize()
 {
 	m_ticker = 0.0f;
+	m_mouseXPositive = m_inputBackend->getInputControl("Mouse X positive");
+	m_mouseXNegative = m_inputBackend->getInputControl("Mouse X negative");
+	m_mouseYPositive = m_inputBackend->getInputControl("Mouse Y positive");
+	m_mouseYNegative = m_inputBackend->getInputControl("Mouse Y negative");
 }
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	// Input controls
+	double mouseX = m_mouseXPositive->getStatus() - m_mouseXNegative->getStatus();
+	double mouseY = m_mouseYPositive->getStatus() - m_mouseYNegative->getStatus();
+
+
 	for( int i=0; i<p_entities.size(); i++ )
 	{
 		m_ticker += m_world->getDelta();
@@ -31,10 +43,12 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-		// HACK: temp animation
-		//camInfo->m_pos.z = -1.0f-sin(m_ticker);
-		//camInfo->m_pos.x = -1.0f-sin(m_ticker);
-		//camInfo->m_pos.y = -1.0f-cos(m_ticker);
+		// Handle Input for camera
+		AglVector3 position = transform->getTranslation();
+		double sensitivityMult = 1000.0;
+		position.x -= mouseX*sensitivityMult;
+		position.y -= mouseY*sensitivityMult;
+		transform->setTranslation( position );
 
 		AglMatrix view;
 		MatrixHelper::SetLookAtMatrix(

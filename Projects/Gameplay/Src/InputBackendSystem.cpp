@@ -1,17 +1,17 @@
-#include "InputSystem.h"
+#include "InputBackendSystem.h"
 
-InputSystem::InputSystem(void)
-	: EntitySystem( SystemType::InputSystem, 1, ComponentType::Input )
+InputBackendSystem::InputBackendSystem(void)
+	: EntitySystem( SystemType::InputBackendSystem )
 {
 }
 
-InputSystem::~InputSystem(void)
+InputBackendSystem::~InputBackendSystem(void)
 {
 	delete m_inputManager;
 	m_inputManager = NULL;
 }
 
-void InputSystem::initialize()
+void InputBackendSystem::initialize()
 {
 	XInputFetcher* xif = new XInputFetcher();
 	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
@@ -49,11 +49,12 @@ void InputSystem::initialize()
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Keyboard key L"] = tempControlIdx;
 }
-
-void InputSystem::processEntities( const vector<Entity*>& p_entities )
+/*
+void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	
 	m_inputManager->update();
-
+	
 	if( p_entities.size() > 0 )
 	{
 		Input* input = static_cast<Input*>(
@@ -93,4 +94,15 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		// L released
 	}
+	
+}
+*/
+void InputBackendSystem::process()
+{
+	m_inputManager->update();
+}
+
+Control* InputBackendSystem::getInputControl( const string& p_name )
+{
+	return m_inputManager->getControl(m_controlIdxs[p_name]);
 }

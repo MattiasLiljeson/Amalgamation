@@ -45,9 +45,6 @@
     <ClInclude Include="Vector3.h">
       <Filter>Utilities\Vector3</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="PrintPositionsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -87,7 +84,7 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-	<ClInclude Include="PhysicsBody.h">
+    <ClInclude Include="PhysicsBody.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="NetworkInputHandlerSystem.h">
@@ -99,18 +96,18 @@
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="InputBackendSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
     </ClCompile>
-    <ClCompile Include="InputSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-	<ClCompile Include="Transform.cpp">
+    <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
@@ -141,6 +138,9 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

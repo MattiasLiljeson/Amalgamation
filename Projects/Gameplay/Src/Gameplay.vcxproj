@@ -22,7 +22,7 @@
     <ClInclude Include="RenderInfo.h" />
     <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="InputBackendSystem.h" />
     <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -36,7 +36,7 @@
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />

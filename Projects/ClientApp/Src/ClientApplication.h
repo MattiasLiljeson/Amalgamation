@@ -18,7 +18,7 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
-#include <InputSystem.h>
+#include <InputBackendSystem.h>
 #include <PhysicsBody.h>
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
@@ -28,7 +28,7 @@
 // Systems
 #include <CameraSystem.h>
 #include <GraphicsBackendSystem.h>
-#include <InputSystem.h>
+#include <InputBackendSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <RenderPrepSystem.h>
 

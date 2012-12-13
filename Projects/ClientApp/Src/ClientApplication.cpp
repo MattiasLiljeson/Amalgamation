@@ -64,9 +64,9 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
-	// will be available if the backend systems isn't used. 
-	InputSystem* input = new InputSystem();
-	m_world->setSystem( SystemType::InputSystem, input, true);
+	// will be available if the graphics backend system isn't used. 
+	InputBackendSystem* inputBackend = new InputBackendSystem();
+	m_world->setSystem( SystemType::InputBackendSystem, inputBackend, true);
 
 	// Physics systems
 	PhysicsSystem* physics = new PhysicsSystem();
@@ -76,7 +76,9 @@ void ClientApplication::initSystems()
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
 
-	CameraSystem* camera = new CameraSystem( graphicsBackend );
+	// Camera system updates camera based on input and sets its viewport info
+	// to the graphics backend for render
+	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( SystemType::CameraSystem, camera , true );
 
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );

@@ -19,7 +19,7 @@ public:	//Enums
 		NetworkListenerSystem,
 		NetworkInputHandlerSystem,
 		NetworkConnectoToServerSystem,
-		InputSystem,
+		InputBackendSystem,
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
