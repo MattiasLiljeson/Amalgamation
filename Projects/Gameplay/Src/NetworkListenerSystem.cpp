@@ -62,27 +62,13 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			// Packet needed: ON_CLIENT_CONNECT 
 			//	data: clientId
 			//	And entity creation.
-			
-			vector<int> currentConnections = m_server->getActiveConnections();
 
-			for( unsigned int i=0; i<currentConnections.size(); i++ )
-			{
-				if( currentConnections[i] == id )
-				{
-					// Removes the new client from this vector.
-					currentConnections.erase( currentConnections.begin() + i );
-					DEBUGPRINT(( toString(i).c_str() ));
-				}
-			}
-
-			// HACK: Just some testing packet here.
 			// Broadcast the new client's entity to all clients, even the new one.
 			Packet newClientConnected;
 			newClientConnected << 
 				(char)PacketType::EntityCreation <<
 				(char)NetworkType::Ship << id << e->getIndex() <<
-
-				(float)(id) * 10.0f << (float)0 << (float)0;
+				transform->getTranslation();
 			
 			m_server->broadcastPacket(newClientConnected);
 
@@ -97,12 +83,6 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			//	int:	entityId
 			//	int:	componentTypeId
 			//	*:		specificComponentData
-
-			// Send the new ship created:
-			NetworkSynced* netSync = NULL;
-			netSync = (NetworkSynced*)m_world->getComponentManager()->
-				getComponent(
-					e->getIndex(), ComponentType::NetworkSynced );
 
 
 			// Send the old networkSynced stuff:
