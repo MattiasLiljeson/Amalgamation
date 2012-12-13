@@ -14,7 +14,10 @@
     <ClCompile Include="AnalogueControl.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="DigitalControl.cpp" />
-    <ClCompile Include="DirectInputFetcher.cpp" />
+    <ClCompile Include="DirectInputFetcher.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="InputHelper.cpp" />
     <ClCompile Include="InputControlFactory.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -28,7 +31,10 @@
     <ClInclude Include="AnalogueControl.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="DigitalControl.h" />
-    <ClInclude Include="DirectInputFetcher.h" />
+    <ClInclude Include="DirectInputFetcher.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="InputHelper.h" />
     <ClInclude Include="InputControlFactory.h" />
     <ClInclude Include="InputManager.h" />

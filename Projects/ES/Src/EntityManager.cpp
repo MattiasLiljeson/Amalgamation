@@ -14,7 +14,7 @@ EntityManager::~EntityManager()
 	for( unsigned int i=0; i<m_entities.size(); i++ )
 	{
 		// HACK: Not totally sure if this is where entities should be deleted.
-		//delete m_entities[i];
+		delete m_entities[i];
 	}
 }
 

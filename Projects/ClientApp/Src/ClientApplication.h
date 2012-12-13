@@ -1,14 +1,3 @@
-// =======================================================================================
-//	ClientApplication
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief The client application run all systems related to the client logic.
-///        
-/// # ClientApplication
-/// Detailed description...
-/// Created on: 11-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
 
 #include <TcpClient.h> /* There is a problem where boost must initialize some socket-
@@ -31,6 +20,21 @@
 #include <InputSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <RenderPrepSystem.h>
+#include <AudioBackendSystem.h>
+#include <AudioController.h>
+
+// =======================================================================================
+//	ClientApplication
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief The client application run all systems related to the client logic.
+///        
+/// # ClientApplication
+/// Detailed description...
+/// Created on: 11-12-2012 
+///---------------------------------------------------------------------------------------
+
 
 class ClientApplication
 {

@@ -14,7 +14,9 @@ Sound::Sound( IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer
 
 Sound::~Sound()
 {
+	m_sourceVoice->Stop(0);
 	m_sourceVoice->DestroyVoice();
+	delete m_buffer.pAudioData;
 }
 
 HRESULT Sound::stop()

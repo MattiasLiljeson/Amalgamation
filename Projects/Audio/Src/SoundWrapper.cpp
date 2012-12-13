@@ -37,6 +37,8 @@ SoundWrapper::~SoundWrapper()
 	m_soundDevice->StopEngine();
 	m_soundDevice->Release();
 	
+	delete m_matrixCoefficients;
+	delete m_emitterAzimuths;
 	delete m_soundFactory;
 }
 

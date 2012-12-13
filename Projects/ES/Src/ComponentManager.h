@@ -32,8 +32,10 @@ public:
 	Component* getComponent( int p_entityIdx, ComponentType p_type );
 	Component* getComponent( int p_entityIdx, ComponentType::ComponentTypeIdx p_typeIdx );
 
-private:
 	void removeComponent( Entity* p_entity, ComponentType p_type );
+	void removeComponent( Entity* p_entity, ComponentType::ComponentTypeIdx p_typeIdx );
+
+private:
 	vector<Component*> getComponentsByType( ComponentType p_type );
 	void removeComponentsOfEntity( Entity* p_entity );
 

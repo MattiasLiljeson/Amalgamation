@@ -7,87 +7,81 @@ InputSystem::InputSystem(void)
 
 InputSystem::~InputSystem(void)
 {
+	delete m_inputManager;
+	m_inputManager = NULL;
 }
 
 void InputSystem::initialize()
 {
-	//XInputFetcher* xif = new XInputFetcher();
+	XInputFetcher* xif = new XInputFetcher();
 	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
-	m_inputManager = new InputManager( milf, /*xif*/ NULL );
+	m_inputManager = new InputManager( milf, xif );
 
-	InputControlFactory icf;
-	Control* gamepadB = icf.create360controllerDigital( InputHelper::BTN_B );
-	int idx = m_inputManager->addControl( gamepadB );
-	m_controlIdxs.push_back(idx);
+	InputControlFactory factory;
+	Control* tempControl = NULL;
+	int tempControlIdx = -1;
 
-	Control* mouseXP = icf.createMouseMovement( InputHelper::MOUSE_AXIS::X,
+	tempControl = factory.create360controllerDigital( InputHelper::BTN_B );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad B"] = tempControlIdx;
+
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	idx = m_inputManager->addControl( mouseXP );
-	m_controlIdxs.push_back(idx);
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse X positive"] = tempControlIdx;
 
-	Control* mouseXN = icf.createMouseMovement( InputHelper::MOUSE_AXIS::X,
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	idx = m_inputManager->addControl( mouseXN );
-	m_controlIdxs.push_back(idx);
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse X negative"] = tempControlIdx;
 
-	Control* mouseYP = icf.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	idx = m_inputManager->addControl( mouseYP );
-	m_controlIdxs.push_back(idx);
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse Y positive"] = tempControlIdx;
 
-	Control* mouseYN = icf.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
 		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	idx = m_inputManager->addControl( mouseYN );
-	m_controlIdxs.push_back(idx);
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
 
-	Control* keyL = icf.createKeyboardKey( InputHelper::L );
-	idx = m_inputManager->addControl( keyL );
-
-	m_controlIdxs.push_back(idx);
+	tempControl = factory.createKeyboardKey( InputHelper::L );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Keyboard key L"] = tempControlIdx;
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	m_inputManager->update();
 
-	double pressness = m_inputManager->getControl(m_controlIdxs[0])->getStatus();
-	bool pressed = false; 
-	if(pressness == 1.0f)
-		pressed = true;
-
 	if( p_entities.size() > 0 )
 	{
-		Input* inp = static_cast<Input*>(
+		Input* input = static_cast<Input*>(
 			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Input ) );
 
-		CameraInfo* cam = static_cast<CameraInfo*>(
+		CameraInfo* cameraInfo = static_cast<CameraInfo*>(
 			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
 
-		Transform* trans = static_cast<Transform*>(
+		Transform* transform = static_cast<Transform*>(
 			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-		if( cam != NULL )
+		if( cameraInfo != NULL )
 		{
 			double x = 0.0, y = 0.0;
-			x += m_inputManager->getControl(m_controlIdxs[1])->getStatus();
-			x -= m_inputManager->getControl(m_controlIdxs[2])->getStatus();
-			y += m_inputManager->getControl(m_controlIdxs[3])->getStatus();
-			y -= m_inputManager->getControl(m_controlIdxs[4])->getStatus();
+			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
+			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
+			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
+			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
 
-			AglVector3 pos = trans->getTranslation();
+			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
-			pos.x -= x*sensitivityMult;
-			pos.y -= y*sensitivityMult;
-			trans->setTranslation(pos);
+			position.x -= x*sensitivityMult;
+			position.y -= y*sensitivityMult;
+			transform->setTranslation( position );
 		}
 
-		if( inp->m_bBtnPressed == true )
-			int breakHere = 0;
-
-		inp->m_bBtnPressed = true;
-
 	}
-	if(m_inputManager->getControl(m_controlIdxs[5])->getDelta() == 1.0)
+	if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == 1.0 )
 	{
 		// L pressed
 		EntitySystem* connectionSystem = m_world->getSystem(
@@ -95,7 +89,7 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		connectionSystem->setEnabled( true );
 	}
-	else if (m_inputManager->getControl(m_controlIdxs[5])->getDelta() == -1.0)
+	else if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == -1.0 )
 	{
 		// L released
 	}
