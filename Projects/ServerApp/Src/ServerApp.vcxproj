@@ -44,16 +44,16 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)/Projects/Graphics/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)/Projects/Graphics/Lib;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -66,7 +66,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,7 +84,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

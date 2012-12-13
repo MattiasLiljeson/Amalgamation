@@ -50,7 +50,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "Projects\ServerApp\Src\ServerApp.vcxproj", "{7103FB0E-9D65-4F94-910A-61F53BA6DF5C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F} = {31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}
-		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8} = {3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}
 		{78BCBBD0-888F-41CD-8B6F-29539812F67E} = {78BCBBD0-888F-41CD-8B6F-29539812F67E}
 	EndProjectSection
 EndProject
@@ -80,7 +79,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgilePhysics", "Projects\AgilePhysics\src\AgilePhysics.vcxproj", "{626A92B1-E978-48A3-85E7-93BB209D6A3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsTest", "Projects\PhysicsTest\src\PhysicsTest.vcxproj", "{EC65E2DA-0377-4367-A57F-D23AE2758360}"
-EndProject
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\TestGraphics\Src\TestGraphics.vcxproj", "{9914D3D3-86EE-415A-9D7F-219504F5FF71}"
 	ProjectSection(ProjectDependencies) = postProject
