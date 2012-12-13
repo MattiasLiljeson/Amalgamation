@@ -100,13 +100,14 @@ Describe(A_Sound_Engine)
 		/************************************************************************/
 		/* UNSURE IF IT WORKS */
 		/************************************************************************/
-		m_pos = AglVector3(1,0,0);
-		AglVector3 listenerPos = AglVector3(10,10,10);
+		AglVector3 soundPos = AglVector3(30,-4.75f, 10);
+		AglVector3 listenerPos = AglVector3(30,10,-5);
 		cout<<"Positional sound:"<<endl<<endl;
 		int sleepTime = 2000;
-		m_positionalSound->setPosition(m_pos);
 
+		m_positionalSound->setPosition(soundPos);
 		m_soundEngine->setListenerPos(listenerPos);
+
 		m_soundEngine->update(m_positionalSound);
 
 		cout<<"Playing positional sound in the left channel";

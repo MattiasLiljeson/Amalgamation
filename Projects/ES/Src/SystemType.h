@@ -24,6 +24,9 @@ public:	//Enums
 		RenderPrepSystem,
 		CameraSystem,
 		GraphicsBackendSystem,
+		AudioBackendSystem,
+		AudioControllerSystem,
+		AudioListenerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

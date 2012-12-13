@@ -102,3 +102,4 @@ void Transform::calcCompMatrix()
 		m_instanceVertex.worldTransform[i] = transMat[i];
 	}
 }
+

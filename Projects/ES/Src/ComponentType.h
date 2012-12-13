@@ -23,6 +23,7 @@ public:	//Enums
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
+		AudioComponent,
 		NUM_COMPONENT_TYPES
 	};
 

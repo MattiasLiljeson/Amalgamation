@@ -42,6 +42,9 @@
     <ClInclude Include="PositionalSoundInfo.h">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClInclude>
+    <ClInclude Include="SoundEnums.h">
+      <Filter>AudioEngine\SoundFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundWrapper.cpp">

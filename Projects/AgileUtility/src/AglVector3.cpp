@@ -175,3 +175,10 @@ AglVector3 AglVector3::lerp(const AglVector3& p_v1, const AglVector3& p_v2, floa
 {
 	return p_v1 * (1.0f - p_t) + p_v2 * p_t;
 }
+
+AglVector3 AglVector3::createDirection(const AglVector3& p_from, const AglVector3& p_to)
+{
+	AglVector3 dir = p_to - p_from;
+	dir.normalize();
+	return dir;
+}

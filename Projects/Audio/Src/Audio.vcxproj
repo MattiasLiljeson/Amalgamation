@@ -17,6 +17,7 @@
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
+    <ClInclude Include="SoundEnums.h" />
     <ClInclude Include="SoundSceneInfo.h" />
     <ClInclude Include="SoundWrapper.h" />
     <ClInclude Include="XAudio2Exception.h" />

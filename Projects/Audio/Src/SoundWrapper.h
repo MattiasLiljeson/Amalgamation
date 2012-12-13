@@ -1,12 +1,16 @@
 #pragma once
 
 #include <AglVector3.h>
+#include <vector>
 #include "XAudio2Exception.h"
+#include "SoundEnums.h"
 #include "SoundSceneInfo.h"
 #include "AudioCurves.h"
 #include "Sound.h"
 #include "PositionalSound.h"
 #include "SoundFactory.h"
+
+using namespace std;
 
 // =======================================================================================
 //                                      SoundWrapper
@@ -30,11 +34,13 @@ public:
 	SoundWrapper();
 	virtual ~SoundWrapper();
 	void updateListener(const SoundSceneInfo& p_sceneInfo);
-	Sound* createNewNonPositionalSound(const char* p_filePath);
-	PositionalSound* createNewPositionalSound(const char* p_filePath, AglVector3 p_pos);
+	int createNewNonPositionalSound(const char* p_filePath);
+	int createNewPositionalSound(const char* p_filePath, const AglVector3& p_pos);
 
-	void update(PositionalSound* p_sound);
+	void update(int p_index, bool p_positionalSound = false);
 	void setListenerPos(AglVector3 p_newPos);
+	void updateSound(int p_index, const SoundEnums::Instructions& p_soundInstruction);
+
 private:
 	void initSoundEngine();
 	void init3DSoundSettings();
@@ -60,4 +66,6 @@ private:
 	FLOAT32*				m_emitterAzimuths;
 
 	SoundFactory*			m_soundFactory;
+
+	vector<Sound*>			m_createdSounds;
 };

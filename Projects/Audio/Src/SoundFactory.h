@@ -33,7 +33,8 @@ public:
 	/// \returns Sound*
 	///-----------------------------------------------------------------------------------
 	Sound* createNonPositionalSound( const char* p_filePath );
-	PositionalSound* createPositionalSound( const char* p_filePath, AglVector3 p_pos );
+	PositionalSound* createPositionalSound( const char* p_filePath, AglVector3 p_pos ,
+		float* p_pChannelAzimuths);
 protected:
 private:
 	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
@@ -42,7 +43,7 @@ private:
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
 	void initFile(string p_filePath);
-	void initEmitter(X3DAUDIO_EMITTER* p_emitter, AglVector3 p_pos );
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter, AglVector3 p_pos, float* p_pChannelAzimuths);
 private:
 	IXAudio2*	m_soundDevice;
 
