@@ -24,6 +24,7 @@ public:	//Enums
 		RenderPrepSystem,
 		CameraSystem,
 		GraphicsBackendSystem,
+		ShipControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

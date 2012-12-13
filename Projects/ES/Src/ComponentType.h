@@ -23,6 +23,7 @@ public:	//Enums
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
+		ShipController,
 		NUM_COMPONENT_TYPES
 	};
 

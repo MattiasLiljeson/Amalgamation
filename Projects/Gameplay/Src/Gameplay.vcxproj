@@ -29,6 +29,7 @@
     <ClInclude Include="PrintPositionsSystem.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="RenderPrepSystem.h" />
+    <ClInclude Include="ShipController.h" />
     <ClInclude Include="ShipControllerSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />

@@ -1,7 +1,7 @@
 #pragma once
 
 // =======================================================================================
-//                                      ShipControllerSystem
+//                                ShipControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 #include "Transform.h"
 #include <EntitySystem.h>
 
-class ShipControllerSystem
+class ShipControllerSystem : public EntitySystem
 {
 public:
 	ShipControllerSystem(InputBackendSystem* p_inputBackend);
@@ -30,11 +30,15 @@ public:
 private:
 	InputBackendSystem* m_inputBackend;
 
-	Control* m_mouseXPositive;
-	Control* m_mouseXNegative;
-	Control* m_mouseYPositive;
-	Control* m_mouseYNegative;
-
-
-	float m_ticker;
+	Control* m_horizontalPositive;
+	Control* m_horizontalNegative;
+	Control* m_verticalPositive;
+	Control* m_verticalNegative;
+	//
+	Control* m_roll;
+	Control* m_thrust;
+	Control* m_strafeHorizontalPositive;
+	Control* m_strafeHorizontalNegative;
+	Control* m_strafeVerticalPositive;
+	Control* m_strafeVerticalNegative;
 };
