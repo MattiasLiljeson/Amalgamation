@@ -123,3 +123,5 @@ igloo
 /Build/Project1_x86_debug.exe.txt
 /Build/Project2_x64_release.exe.txt
 /Build/Project2_x86_release.dll.txt
+*.fbx
+*.agl
