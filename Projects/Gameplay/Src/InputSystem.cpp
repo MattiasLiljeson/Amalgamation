@@ -45,6 +45,16 @@ void InputSystem::initialize()
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
 
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Z,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse Z positive"] = tempControlIdx;
+
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Z,
+		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Mouse Z negative"] = tempControlIdx;
+
 	tempControl = factory.createKeyboardKey( InputHelper::L );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Keyboard key L"] = tempControlIdx;
@@ -67,16 +77,19 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if( cameraInfo != NULL )
 		{
-			double x = 0.0, y = 0.0;
+			double x = 0.0, y = 0.0, z = 0.0;
 			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
 			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
 			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
-			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
+			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y  negative"])->getStatus();
+			z += m_inputManager->getControl(m_controlIdxs["Mouse Z positive"])->getStatus();
+			z -= m_inputManager->getControl(m_controlIdxs["Mouse Z negative"])->getStatus();
 
 			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
 			position.x -= x*sensitivityMult;
 			position.y -= y*sensitivityMult;
+			position.z -= z*sensitivityMult;
 			transform->setTranslation( position );
 		}
 

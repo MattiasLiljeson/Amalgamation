@@ -89,10 +89,13 @@ void ClientApplication::initSystems()
 
 	//Audio Systems
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem(SystemType::AudioBackendSystem, audioBackend, true);
+	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
 	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem(SystemType::AudioControllerSystem,audioController, true);
+	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
+
+	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
+	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
 	m_world->initialize();
 }
@@ -112,10 +115,31 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::PhysicsBody, component);
 	m_world->addEntity(entity);
 
+	EntitySystem* tempSys = NULL;
+
 	// Load cube model used as graphic representation for all "graphical" entities.
-	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
+	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
+
+	// Load sound file
+	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
+	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
+	int soundIdx = audioBackend->createPositionalSound(
+		"Assets/Sound/Music/Test/MusicMono.wav", AglVector3( 3.0f, 3.0f, 3.0f ));
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform( 3.0f, 3.0f, 3.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new AudioInfo(soundIdx,true);
+	entity->addComponent(ComponentType::AudioComponent, component);
+
+	m_world->addEntity(entity);
+
+	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
+
 
 	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )

@@ -13,21 +13,20 @@ AudioController::~AudioController()
 
 void AudioController::initialize()
 {
-	m_basicSound = m_audioBackend->createNonPositionalSound(
-		"Assets/Sound/Music/Test/Techno_1.wav");
-	m_basicPositionalSound = m_audioBackend->createPositionalSound(
-		"Assets/Sound/Music/Test/MusicMono.wav", AglVector3(0,0,0));
 
-	m_audioBackend->changeAudioInstruction(m_basicSound,SoundEnums::Instructions::PLAY);
 }
 
 void AudioController::processEntities( const vector<Entity*>& p_entities )
 {
 	if(!p_entities.empty())
 	{
-		/************************************************************************/
-		/* DO STUFF!! */
-		/************************************************************************/
+		for (unsigned int i = 0; i < p_entities.size(); i++)
+		{
+			AudioInfo* comp; 
+			comp = static_cast<AudioInfo*>(p_entities[i]->getComponent(ComponentType::AudioComponent));
+			if(comp->isPositionalSound())
+				m_audioBackend->getSoundWrapper()->updateOutputMatrix(comp->getSoundId());
+		}
 	}
 }
 

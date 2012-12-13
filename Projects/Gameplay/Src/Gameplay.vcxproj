@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
+    <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
@@ -38,6 +39,7 @@
   <ItemGroup>
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />

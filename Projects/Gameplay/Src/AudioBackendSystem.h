@@ -25,6 +25,7 @@ public:
 	int createNonPositionalSound(const char* p_filePath);
 	int createPositionalSound(const char* p_filePath, const AglVector3& p_pos );
 	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
+	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
 };

@@ -9,6 +9,7 @@ using namespace std;
 
 Describe(A_Sound_Engine)
 {
+	/* DON'T USE!
 	SoundWrapper* m_soundEngine;
 	Sound* m_basicSound;
 	PositionalSound* m_positionalSound;
@@ -97,9 +98,7 @@ Describe(A_Sound_Engine)
 	}
 	It(Should_be_able_to_play_in_left_channel)
 	{
-		/************************************************************************/
-		/* UNSURE IF IT WORKS */
-		/************************************************************************/
+
 		AglVector3 soundPos = AglVector3(30,-4.75f, 10);
 		AglVector3 listenerPos = AglVector3(30,10,-5);
 		cout<<"Positional sound:"<<endl<<endl;
@@ -108,7 +107,7 @@ Describe(A_Sound_Engine)
 		m_positionalSound->setPosition(soundPos);
 		m_soundEngine->setListenerPos(listenerPos);
 
-		m_soundEngine->update(m_positionalSound);
+		m_soundEngine->updatePositionalSoundOutputMatrix(m_positionalSound);
 
 		cout<<"Playing positional sound in the left channel";
 
@@ -119,10 +118,7 @@ Describe(A_Sound_Engine)
 	}
 	It(Should_be_able_to_move_a_positional_sound)
 	{
-		/************************************************************************/
-		/* NOT WORKING!!!!														*/
-		/************************************************************************/
-		/*
+
 		m_pos = AglVector3(1,0,0);
 		cout<<"Positional sound:"<<endl<<endl;
 		int sleepTime = 15;
@@ -141,6 +137,7 @@ Describe(A_Sound_Engine)
 		}
 		cout<<"Stopping"<<endl;
 		Assert::That(hr , Equals( m_positionalSound->stop() ) );
-		*/
+		
 	}
+	*/
 };

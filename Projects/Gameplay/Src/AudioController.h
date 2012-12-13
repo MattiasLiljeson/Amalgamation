@@ -1,6 +1,7 @@
 #pragma once
 #include "EntitySystem.h"
 #include "AudioBackendSystem.h"
+#include "AudioInfo.h"
 
 // =======================================================================================
 //                                      AudioController

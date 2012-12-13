@@ -41,3 +41,8 @@ void AudioBackendSystem::changeAudioInstruction( int p_index,
 {
 	m_soundWrapper->updateSound(p_index,p_instruction);
 }
+
+SoundWrapper* AudioBackendSystem::getSoundWrapper()
+{
+	return m_soundWrapper;
+}

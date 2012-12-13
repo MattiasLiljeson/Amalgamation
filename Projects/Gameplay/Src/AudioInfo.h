@@ -1,22 +1,27 @@
 #pragma once
-#include <AglVector3.h>
+
+#include "Component.h"
 
 // =======================================================================================
-//                                      SoundSceneInfo
+//                                      AudioInfo
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Contains the needed information for the sound
+/// \brief	Brief
 ///        
-/// # SoundSceneInfo
+/// # AudioInfo
 /// Detailed description.....
-/// Created on: 7-12-2012 
+/// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
-struct SoundSceneInfo
+class AudioInfo : public Component
 {
-	AglVector3 listenerPos;
-	AglVector3 listenerOrientFront;
-	AglVector3 listenerOrientTop;
-	AglVector3 listenerVelocity;
+public:
+	AudioInfo(int p_soundId, bool p_isPositionalSound);
+	~AudioInfo();
+	int getSoundId() const;
+	bool isPositionalSound() const;
+private:
+	int m_soundId;
+	bool m_isPositionalSound;
 };

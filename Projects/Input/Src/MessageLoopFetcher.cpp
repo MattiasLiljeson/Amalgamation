@@ -217,7 +217,8 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 		break;
 
 	case WM_MOUSEWHEEL:
-		m_mouseCurrPos[InputHelper::Z] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
+		m_mouseCurrPos[InputHelper::Z] += GET_WHEEL_DELTA_WPARAM(p_wParam);
+		//m_mouseCurrPos[InputHelper::Z] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
 		break;
 
 	case WM_CHAR:

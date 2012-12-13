@@ -13,6 +13,7 @@
 #include <RenderInfo.h>
 #include <Transform.h>
 #include <Windows.h>
+#include <AudioInfo.h>
 
 // Systems
 #include <CameraSystem.h>
@@ -22,6 +23,10 @@
 #include <RenderPrepSystem.h>
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
+#include <AudioListenerSystem.h>
+
+//TEMP
+#include <SoundEnums.h>
 
 // =======================================================================================
 //	ClientApplication

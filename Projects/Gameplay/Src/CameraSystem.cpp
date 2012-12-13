@@ -21,7 +21,7 @@ void CameraSystem::initialize()
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	for( int i=0; i<p_entities.size(); i++ )
+	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
 		m_ticker += m_world->getDelta();
 

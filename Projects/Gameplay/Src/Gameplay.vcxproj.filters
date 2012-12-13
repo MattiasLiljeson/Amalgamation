@@ -40,6 +40,9 @@
     <Filter Include="Systems\Audio">
       <UniqueIdentifier>{1207adc0-40bd-45c5-9a9c-c620b279a29f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Audio">
+      <UniqueIdentifier>{3fa7e5c2-9fbb-4977-b9a9-4d45b320ec67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -111,6 +114,9 @@
     <ClInclude Include="AudioController.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="AudioInfo.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -163,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="AudioController.cpp">
       <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioInfo.cpp">
+      <Filter>Components\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

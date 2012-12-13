@@ -16,9 +16,6 @@ void AudioListenerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if(!p_entities.empty())
 	{
-		/************************************************************************/
-		/* DO STUFFFF!															*/
-		/************************************************************************/
 		SoundSceneInfo listenerInfo;
 		CameraInfo* camerInfo = static_cast<CameraInfo*>(
 			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
