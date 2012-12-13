@@ -20,7 +20,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent( p_entities[index],
-				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
+					ComponentType::NetworkSynced ) );
 
 			// When a client is disconnecting, then all other clients must know this.
 
@@ -42,10 +42,10 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			int id = m_server->popNewConnection();
 
 			Entity* e = m_world->createEntity();
-			e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+			e->addComponent( ComponentType::Transform,
 				new Transform( (float)(id) * 10.0f, 0, 0 ) );
-			e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-				new NetworkSynced( id, id ) );
+			e->addComponent( ComponentType::NetworkSynced,
+				new NetworkSynced( e->getIndex(), id, NetworkType::Ship ) );
 			m_world->addEntity( e );
 
 			// When a client is connecting, the server must broadcast to all other
