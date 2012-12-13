@@ -1,22 +1,26 @@
 // =======================================================================================
-//	PacketTypes
+//	NetworkType
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # PacketTypes
+/// # NetworkType
 /// Detailed description...
-/// Created on: 12-12-2012 
+/// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class PacketTypes
+class NetworkType
 {
 public:
-	enum
+	enum Network_T
 	{
-		NewClientJoinedGame = 0,
+		NON_EXISTENT = -1,
+		Ship,
 	};
+
+public:
+	Network_T type;
 
 };

@@ -27,7 +27,8 @@
 #include <DebugUtil.h>
 #include <ToString.h>
 
-#include "PacketTypes.h"
+#include "PacketType.h"
+#include "NetworkType.h"
 
 // Components:
 #include "Transform.h"
@@ -43,7 +44,6 @@ public:
 	NetworkListenerSystem( TcpServer* p_server );
 	~NetworkListenerSystem();
 
-	virtual void process();
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();

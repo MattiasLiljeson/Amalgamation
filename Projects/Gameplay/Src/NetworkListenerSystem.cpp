@@ -11,9 +11,29 @@ NetworkListenerSystem::~NetworkListenerSystem()
 	m_server->stopListening();
 }
 
-void NetworkListenerSystem::process()
+void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	EntitySystem::process();
+	while (m_server->hasNewDisconnections())
+	{
+		int id = m_server->popNewDisconnection();
+		for (unsigned int index = 0; index < p_entities.size(); index++)
+		{
+			NetworkSynced* netSync = static_cast<NetworkSynced*>(
+				m_world->getComponentManager()->getComponent( p_entities[index],
+				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
+
+			// When a client is disconnecting, then all other clients must know this.
+
+			// HACK: This deletion is what caused the magical crashes all the time.
+			// This should be solved as soon as possible.
+//			if (netSync->getNetworkIdentity() == id)
+//				m_world->deleteEntity(p_entities[index]);
+		}
+	}
+
+
+
+
 
 	if ( m_server->isListening() )
 	{
@@ -47,12 +67,12 @@ void NetworkListenerSystem::process()
 
 			// HACK: Just some testing packet here.
 			Packet newClientConnected;
-			newClientConnected << PacketTypes::NewClientJoinedGame << id <<
-				(float)(id) * 10.0f;
+			newClientConnected << (char)PacketType::EntityCreation <<
+				(char)NetworkType::Ship << id <<
+				(float)(id) * 10.0f << (float)0 << (float)0;
 			m_server->multicastPacket( currentConnections, newClientConnected );
 
 			
-
 			// The server must then initialize data for the new client.
 			// Packets needed: CREATE_ENTITY
 			//	int:	id
@@ -61,29 +81,29 @@ void NetworkListenerSystem::process()
 			//	int:	entityId
 			//	int:	componentTypeId
 			//	*:		specificComponentData
-			
 
-		}
-	}
-}
+			// Send the new ship created:
+			NetworkSynced* netSync = NULL;
+			netSync = (NetworkSynced*)m_world->getComponentManager()->
+				getComponent(
+					e->getIndex(), ComponentType::NetworkSynced );
 
-void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
-{
-	while (m_server->hasNewDisconnections())
-	{
-		int id = m_server->popNewDisconnection();
-		for (unsigned int index = 0; index < p_entities.size(); index++)
-		{
-			NetworkSynced* netSync = static_cast<NetworkSynced*>(
-				m_world->getComponentManager()->getComponent( p_entities[index],
-				ComponentType::getTypeFor( ComponentType::NetworkSynced ) ) );
 
-			// When a client is disconnecting, then all other clients must know this.
+			// Send the old networkSynced stuff:
+			for( unsigned int i=0; i<p_entities.size(); i++ )
+			{
+				netSync = (NetworkSynced*)m_world->getComponentManager()->
+					getComponent(
+						p_entities[i]->getIndex(), ComponentType::NetworkSynced );
 
-			// HACK: This deletion is what caused the magical crashes all the time.
-			// This should be solved as soon as possible.
-//			if (netSync->getNetworkIdentity() == id)
-//				m_world->deleteEntity(p_entities[index]);
+				//Packet create
+
+				if( netSync->getNetworkType() == NetworkType::Ship )
+				{
+
+				}
+			}
+
 		}
 	}
 }
