@@ -11,11 +11,12 @@
 	//libRocketFromKeysMap[F3]	= Rocket::Core::Input::KI_F3;
 	//libRocketFromKeysMap[F4]	= Rocket::Core::Input::KI_F4;
 
-InputHelper::KEY_STATE InputHelper::calcState( const InputHelper::KEY_STATE p_oldState,
-											  const int p_down )
-{
-	return calcState(p_oldState, (bool)p_down);
-}
+// Gives performance warning, therefore commented away.
+//InputHelper::KEY_STATE InputHelper::calcState( const InputHelper::KEY_STATE p_oldState,
+//											  const int p_down )
+//{
+//	return calcState(p_oldState, (bool)p_down);
+//}
 InputHelper::KEY_STATE InputHelper::calcState( const InputHelper::KEY_STATE p_oldState,
 											  const bool p_down )
 {

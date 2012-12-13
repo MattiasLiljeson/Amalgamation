@@ -22,7 +22,9 @@ public:
 		T* p_initData, BufferConfig::BUFFER_INIT_DESC& p_configDesc)
 		: BufferBase(p_device, p_deviceContext, p_configDesc)
 	{
-		accessBuffer = *p_initData;
+		// Access buffer *HACK*, Prettier way to solve this?
+		if (m_config->usage!=BufferConfig::BUFFER_DEFAULT) 
+			accessBuffer = *p_initData;
 		init(static_cast<void*>(p_initData));
 	}
 	virtual ~Buffer() {}
@@ -33,10 +35,13 @@ public:
 	///-----------------------------------------------------------------------------------
 	void update()
 	{
-		void* bufferGenericData = map();
-		T* buf = static_cast<T*>(bufferGenericData);
-		*buf = accessBuffer;
-		unmap();
+		if (m_config->usage!=BufferConfig::BUFFER_DEFAULT) 
+		{
+			void* bufferGenericData = map();
+			T* buf = static_cast<T*>(bufferGenericData);
+			*buf = accessBuffer;
+			unmap();
+		}
 	}
 
 	///

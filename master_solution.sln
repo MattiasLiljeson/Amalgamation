@@ -76,6 +76,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgilePhysics", "Projects\AgilePhysics\src\AgilePhysics.vcxproj", "{626A92B1-E978-48A3-85E7-93BB209D6A3A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsTest", "Projects\PhysicsTest\src\PhysicsTest.vcxproj", "{EC65E2DA-0377-4367-A57F-D23AE2758360}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\TestGraphics\Src\TestGraphics.vcxproj", "{9914D3D3-86EE-415A-9D7F-219504F5FF71}"
 	ProjectSection(ProjectDependencies) = postProject
 		{15020C27-0C35-4D82-9517-59D175B1DF49} = {15020C27-0C35-4D82-9517-59D175B1DF49}
@@ -86,6 +87,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGraphics", "Projects\Te
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestAudio", "Projects\TestAudio\Src\TestAudio.vcxproj", "{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGameplay", "Projects\TestGameplay\src\TestGameplay.vcxproj", "{728265AD-6D83-49C7-A88E-29598349824B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,6 +182,10 @@ Global
 		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Debug|Win32.Build.0 = Debug|Win32
 		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Release|Win32.ActiveCfg = Release|Win32
 		{B7796073-8DAA-45B9-9551-1AC8A3D4B1B1}.Release|Win32.Build.0 = Release|Win32
+		{728265AD-6D83-49C7-A88E-29598349824B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{728265AD-6D83-49C7-A88E-29598349824B}.Debug|Win32.Build.0 = Debug|Win32
+		{728265AD-6D83-49C7-A88E-29598349824B}.Release|Win32.ActiveCfg = Release|Win32
+		{728265AD-6D83-49C7-A88E-29598349824B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

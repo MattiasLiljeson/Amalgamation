@@ -12,6 +12,7 @@
 #pragma once
 
 #include <string>
+#include <exception>
 
 #include <boost/asio.hpp>
 
@@ -36,9 +37,9 @@ public:
 
 	bool hasNewPackets();
 	unsigned int newPacketsCount();
-	Packet* popNewPacket();
+	Packet popNewPacket();
 
-	void sendPacket( Packet* p_packet );
+	void sendPacket( Packet p_packet );
 
 	void processMessages();
 
@@ -49,6 +50,6 @@ private:
 
 	TcpCommunicationProcess* m_communicationProcess;
 
-	queue< Packet* > m_newPackets;
+	queue< Packet > m_newPackets;
 
 };

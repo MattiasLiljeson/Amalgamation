@@ -66,12 +66,9 @@ void TcpCommunicationProcess::processMessages()
 				static_cast<ProcessMessageSendPacket*>(message);
 
 			m_activeSocket->send( boost::asio::buffer(
-				sendPacketMessage->packet->getMessage().c_str(),
-				sendPacketMessage->packet->getMessage().size() + 1 ) );
+				sendPacketMessage->packet.getDataPtr(),
+				sendPacketMessage->packet.getDataSize()) );
 
-			// Once the packet has been sent over the network, it can safely be deleted.
-			delete sendPacketMessage->packet;
-			sendPacketMessage->packet = NULL;
 		}
 
 		delete message;
@@ -120,15 +117,30 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 	{
 		if( p_bytesTransferred > 0 )
 		{
-			queue< string > messages;
-			stringSplitNullTerminated( m_asyncData, p_bytesTransferred, messages );
+			queue< Packet > packets;
+			/// TODO: Fill packets queue with data using the messages queue.
 
-			while( !messages.empty() )
+			unsigned int readPosition = 0;
+			char* readPtr = m_asyncData;
+
+			while( readPosition < p_bytesTransferred )
+			{
+				unsigned int currentReadSize = (unsigned int)readPtr[0] + 1;
+				Packet packet;
+				packet.setData( readPtr, currentReadSize );
+				packets.push( packet );
+				readPosition += currentReadSize;
+				readPtr = m_asyncData + readPosition;
+			}
+
+
+
+			while( !packets.empty() )
 			{
 				m_parent->putMessage( new ProcessMessageReceivePacket(
 					this,
-					new Packet(messages.front()) ) );
-				messages.pop();
+					packets.front() ) );
+				packets.pop();
 			}
 
 			startPacketReceiveCallback();

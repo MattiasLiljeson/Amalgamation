@@ -65,14 +65,20 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 
 void ComponentManager::removeComponent( Entity* p_entity, ComponentType p_type )
 {
+	removeComponent( p_entity, p_type.getIndex());
+}
+
+void ComponentManager::removeComponent( Entity* p_entity, ComponentType::ComponentTypeIdx p_typeIdx )
+{
 	bitset<ComponentType::NUM_COMPONENT_TYPES> bits = p_entity->getComponentBits();
-	int typeIndex = p_type.getIndex();
 	int entityIndex = p_entity->getIndex();
 
-	if ( bits[typeIndex] == true)
+	if ( bits[p_typeIdx] == true)
 	{
-		m_componentsByType[typeIndex][entityIndex] = NULL;
-		p_entity->setComponentBit( typeIndex, false );
+		// delete her OK? Any references left?
+		delete m_componentsByType[p_typeIdx][entityIndex];
+		m_componentsByType[p_typeIdx][entityIndex] = NULL;
+		p_entity->setComponentBit( p_typeIdx, false );
 	}
 }
 

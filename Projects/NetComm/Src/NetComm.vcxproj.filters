@@ -63,9 +63,6 @@
     <ClCompile Include="TcpClient.cpp">
       <Filter>TcpClient</Filter>
     </ClCompile>
-    <ClCompile Include="Packet.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessMessageSendPacket.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
@@ -80,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="StringSplit.cpp">
       <Filter>Utility %28Put this in utility project when that project is created.</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Packet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +110,6 @@
     <ClInclude Include="TcpClient.h">
       <Filter>TcpClient</Filter>
     </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="TcpCommunicationProcess.h">
       <Filter>TcpCommunicationProcess</Filter>
     </ClInclude>
@@ -127,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="StringSplit.h">
       <Filter>Utility %28Put this in utility project when that project is created.</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Packet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
