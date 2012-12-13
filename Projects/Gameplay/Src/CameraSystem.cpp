@@ -1,8 +1,5 @@
 #include "CameraSystem.h"
 
-// The include below can't be in h-file. Causes linker error.
-#include <CamMatrixerUtil.h>
-
 CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
 						    InputBackendSystem* p_inputBackend ) : 
 		      EntitySystem( SystemType::CameraSystem, 1,
@@ -50,12 +47,9 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		position.y -= mouseY*sensitivityMult;
 		transform->setTranslation( position );
 
-		AglMatrix view;
-		MatrixHelper::SetLookAtMatrix(
-			view,
-			transform->getTranslation(),
-			camInfo->m_lookAt,
-			camInfo->m_up );
+		AglMatrix view = AglMatrix::createViewMatrix(transform->getTranslation(),
+													camInfo->m_lookAt,
+													camInfo->m_up);
 
 		AglMatrix viewProj = AglMatrix::identityMatrix() ;
 		viewProj = view * camInfo->m_projMat;
