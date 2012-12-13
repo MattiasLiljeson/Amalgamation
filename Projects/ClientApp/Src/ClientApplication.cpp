@@ -82,12 +82,13 @@ void ClientApplication::initSystems()
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
 	m_world->setSystem( SystemType::RenderPrepSystem, renderer , true );
 
+	// Network systems
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( SystemType::ProcessingMessagesSystem, msgProcSystem , true );
 
-	NetworkConnectToServerSystem* connectSystem =
+	NetworkConnectToServerSystem* connect =
 		new NetworkConnectToServerSystem( m_client );
-	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connectSystem,
+	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connect,
 		false );
 
 	NetworkCommunicatorSystem* communicatorSystem =
@@ -95,6 +96,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( SystemType::NetworkCommunicatorSystem, communicatorSystem,
 		false );
 
+	
 	m_world->initialize();
 }
 
