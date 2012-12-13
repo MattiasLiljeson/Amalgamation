@@ -13,7 +13,7 @@ GeometryShader::GeometryShader(ID3D11Device* pDevice, string p_path, string p_ma
 		if (error)
 		{
 			char* msg = (char*)error->GetBufferPointer();
-			int k;
+			int k = 0;
 			k++;
 		}
 		mDevice->CreateGeometryShader(compiled->GetBufferPointer(), compiled->GetBufferSize(), NULL, &mData);

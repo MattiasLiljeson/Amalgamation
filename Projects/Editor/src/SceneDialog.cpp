@@ -33,7 +33,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		AGLLoader::GetInstance()->Load(file);
 
 		vector<Mesh*> meshes = Scene::GetInstance()->GetMeshes();
-		for (int i = 0; i < meshes.size(); i++)
+		for (unsigned int i = 0; i < meshes.size(); i++)
 		{
 			string s = "Mesh" + toString(i+1);
 			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Meshes' label='" + meshes[i]->GetName() + "'";
@@ -41,7 +41,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 			TwAddButton(sceneDialog->m_dialog, s.c_str(), OpenMeshDialog, (void*)i, info.c_str());
 		}
 		vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
-		for (int i = 0; i < materials.size(); i++)
+		for (unsigned int i = 0; i < materials.size(); i++)
 		{
 			string s = Scene::GetInstance()->GetName(materials[i]->nameID);
 			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";

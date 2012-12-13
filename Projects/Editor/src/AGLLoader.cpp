@@ -33,7 +33,8 @@ void AGLLoader::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 void AGLLoader::Load(string pPath)
 {
 	mPath = new char[pPath.length()+1];
-	strcpy(mPath, pPath.c_str());
+	const char* src = pPath.c_str();
+	strcpy_s(mPath, pPath.length()+1, src);
 	mReader = new AglReader(mPath);
 
 	vector<AglMesh*> meshes = mReader->getScene()->getMeshes();
@@ -105,18 +106,18 @@ void AGLLoader::Load(string pPath)
 	folder = folder.substr(0, ind+1);
 
 	vector<SkeletonMesh*> skeletons;
-	for (int i = 0; i < mReader->getScene()->getSkeletonCount(); i++)
+	for (unsigned int i = 0; i < mReader->getScene()->getSkeletonCount(); i++)
 	{
 		skeletons.push_back(new SkeletonMesh(mDevice, mDeviceContext, mReader->getScene()->getSkeleton(i)));
 	}
 
 	vector<AglLooseBspTree*> bspTrees = mReader->getScene()->getBspTrees();
-	for (int i = 0; i < bspTrees.size(); i++)
+	for (unsigned int i = 0; i < bspTrees.size(); i++)
 	{
 		modmeshes[bspTrees[i]->getHeader().targetMesh]->SetBspTree(bspTrees[i]);
 	}
 	vector<AglInteriorSphereGrid*> grids = mReader->getScene()->getSphereGrids();
-	for (int i = 0; i < grids.size(); i++)
+	for (unsigned int i = 0; i < grids.size(); i++)
 	{
 		modmeshes[grids[i]->getHeader().targetMesh]->SetInteriorSpheres(grids[i]);
 	}

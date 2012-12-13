@@ -19,7 +19,7 @@ void TW_CALL LoadAGL(void *clientData)
 		AGLLoader::GetInstance()->Load(file);
 
 	vector<Mesh*> meshes = Scene::GetInstance()->GetMeshes();
-	for (int i = 0; i < meshes.size(); i++)
+	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
 		string s = "Mesh " + toString(i);
 		string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Meshes'";

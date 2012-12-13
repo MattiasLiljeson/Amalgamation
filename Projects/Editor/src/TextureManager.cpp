@@ -11,7 +11,7 @@ TextureManager::TextureManager()
 }
 TextureManager::~TextureManager()
 {
-	for (int i = 0; i < mTextureData.size(); i++)
+	for (unsigned int i = 0; i < mTextureData.size(); i++)
 	{
 		if (mTextureData[i]->SRV)
 			mTextureData[i]->SRV->Release();
@@ -44,7 +44,7 @@ int TextureManager::LoadTexture(string pPath)
 		if (pPath[i] == '\\')
 			pPath[i] = '/';
 	}*/
-	for (int i = 0; i < mTextureData.size(); i++)
+	for (unsigned int i = 0; i < mTextureData.size(); i++)
 	{
 		if (pPath == mTextureData[i]->Path)
 			return i;
@@ -62,7 +62,7 @@ int TextureManager::LoadTexture(string pPath)
 }
 TextureData* TextureManager::GetTexture(int pIndex)
 {
-	if (pIndex < 0 || pIndex >= mTextureData.size())
+	if (pIndex < 0 || pIndex >= (int)mTextureData.size())
 		return NULL;
 	return mTextureData[pIndex];
 }
@@ -73,7 +73,7 @@ TextureData* TextureManager::GetTexture(string pPath)
 		if (ind == -1)
 			ind = path.find_last_of('/');
 		path = path.substr(0, ind+1);	*/
-	for (int i = 0; i < mTextureData.size(); i++)
+	for (unsigned int i = 0; i < mTextureData.size(); i++)
 	{
 		if (mTextureData[i]->Path == pPath)
 			return mTextureData[i];
@@ -150,11 +150,11 @@ ID3D11ShaderResourceView* TextureManager::loadTexture(ID3D11Device* p_device,
 	unsigned int w = FreeImage_GetWidth(image);
 	unsigned int h = FreeImage_GetHeight(image);
 	vector<unsigned char*> levelData;
-	for(unsigned int i = 1; i< numLevels; i++)
+	for(int i = 1; i< numLevels; i++)
 	{
 		ZeroMemory(&data[i], sizeof(D3D11_SUBRESOURCE_DATA));
-		w = max(1, w*0.5f);
-		h = max(1, h*0.5f);
+		w = (unsigned int)max(1.0f, w*0.5f);
+		h = (unsigned int)max(1.0f, h*0.5f);
 		levelData.push_back(new unsigned char[4*w*h]);
 		data[i].pSysMem = levelData.back();
 		data[i].SysMemPitch = 4 * w;

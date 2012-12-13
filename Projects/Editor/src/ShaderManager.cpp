@@ -40,15 +40,15 @@ ShaderManager::~ShaderManager()
 	mSkeletonShader = NULL;
 	mRenderNormals = NULL;
 
-	for (int i = 0; i < m_vertexShaders.size(); i++)
+	for (unsigned int i = 0; i < m_vertexShaders.size(); i++)
 		delete m_vertexShaders[i];
-	for (int i = 0; i < m_pixelShaders.size(); i++)
+	for (unsigned int i = 0; i < m_pixelShaders.size(); i++)
 		delete m_pixelShaders[i];
-	for (int i = 0; i < m_hullShaders.size(); i++)
+	for (unsigned int i = 0; i < m_hullShaders.size(); i++)
 		delete m_hullShaders[i];
-	for (int i = 0; i < m_domainShaders.size(); i++)
+	for (unsigned int i = 0; i < m_domainShaders.size(); i++)
 		delete m_domainShaders[i];
-	for (int i = 0; i < m_geometryShaders.size(); i++)
+	for (unsigned int i = 0; i < m_geometryShaders.size(); i++)
 		delete m_geometryShaders[i];
 }
 ShaderManager* ShaderManager::GetInstance()

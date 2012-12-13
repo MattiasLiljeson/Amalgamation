@@ -19,15 +19,15 @@ Scene::Scene()
 }
 Scene::~Scene()
 {
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		delete mMeshes[i];
 	}
-	for (int i = 0; i < mSkeletonMeshes.size(); i++)
+	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 	{
 		delete mSkeletonMeshes[i];
 	}	
-	for (int i = 0; i < mSkeletonMappings.size(); i++)
+	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
 	{
 		delete mSkeletonMappings[i];
 	}
@@ -69,14 +69,14 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	mSkeletonMappings = pSkeletonMappings;
 	mMax = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 	mMin = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		AglVector3 minV = mMeshes[i]->GetMin();
 		AglVector3 maxV = mMeshes[i]->GetMax();
 		mMax = AglVector3(max(mMax.x, maxV.x), max(mMax.y, maxV.y), max(mMax.z, maxV.z)); 
 		mMin = AglVector3(min(mMin.x, minV.x), min(mMin.y, minV.y), min(mMin.z, minV.z)); 
 	}
-	for (int i = 0; i < mSkeletonMappings.size(); i++)
+	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
 	{
 		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
 	}
@@ -87,7 +87,7 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 }
 void Scene::Update(float pElapsedTime)
 {
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 		mMeshes[i]->update(pElapsedTime);
 	if (mAglScene)
 		mAglScene->update(pElapsedTime);
@@ -110,9 +110,9 @@ void Scene::Draw()
 	}
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 		mMeshes[i]->Draw(w, invMax);
-	for (int i = 0; i < mSkeletonMeshes.size(); i++)
+	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
 	AglVector3 minP = mMin;
@@ -135,7 +135,7 @@ AglNode Scene::GetNode(int pIndex)
 vector<string> Scene::GetMeshNames()
 {
 	vector<string> names;
-	for (int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		stringstream ss;
 		ss << i;
@@ -147,7 +147,7 @@ vector<string> Scene::GetMatrialNames()
 {
 	vector<string> names;
 	vector<AglMaterial*> materials = mAglScene->getMaterials();
-	for (int i = 0; i < materials.size(); i++)
+	for (unsigned int i = 0; i < materials.size(); i++)
 	{
 		stringstream ss;
 		ss << i;
@@ -173,7 +173,7 @@ void Scene::AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCu
 	int count = mAglScene->getMaterials().size();
 	if (pAddToMeshes)
 	{
-		for (int i = 0; i < mMeshes.size(); i++)
+		for (unsigned int i = 0; i < mMeshes.size(); i++)
 		{
 			mMeshes[i]->AddMaterial(count-1, pSetAsCurrent);
 		}
@@ -184,7 +184,7 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 	mAglScene->addGradient(pGradient);
 	if (pAddToMeshes)
 	{
-		for (int i = 0; i < mMeshes.size(); i++)
+		for (unsigned int i = 0; i < mMeshes.size(); i++)
 		{
 			mMeshes[i]->AddGradient(pGradient, pSetAsCurrent);
 		}

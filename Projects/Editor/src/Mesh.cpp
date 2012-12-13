@@ -251,7 +251,7 @@ void Mesh::AddMaterial(int pMaterial, bool pSetAsCurrent)
 }
 void Mesh::AddGradient(AglGradient* pGradient, bool pSetAsCurrent)
 {
-	for (int i = 0; i < mGradients.size(); i++)
+	for (unsigned int i = 0; i < mGradients.size(); i++)
 	{
 		if (mGradients[i] == pGradient)
 		{
