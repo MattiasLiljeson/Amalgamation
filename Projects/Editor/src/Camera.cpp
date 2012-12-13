@@ -18,10 +18,10 @@ void Camera::Init(AglVector3 Position, AglVector3 Target, AglVector3 WorldUpVect
 
 	float r = (float)Width / (float)Height;
 	mViewAngle = PI * 0.25f;
-	mProj = AglMatrix(1/(r*tan(mViewAngle/2)), 0, 0, 0, 
-						0, 1/tan(mViewAngle/2), 0, 0, 
-							0, 0, 1000.0f/(1000.0f-1.0f), 1, 
-								0, 0, (-1.0f*1000.0f)/(1000.0f - 1.0f), 0);
+	mProj = AglMatrix(1.0f/(float)(r*tan(mViewAngle/2)), 0.0f, 0.0f, 0.0f, 
+						0.0f, 1.0f/(float)tan(mViewAngle/2), 0.0f, 0.0f, 
+							0.0f, 0.0f, 1000.0f/(1000.0f-0.1f), 1.0f, 
+								0.0f, 0.0f, (-0.1f*1000.0f)/(1000.0f - 0.1f), 0.0f);
 	mViewNeedsUpdate = true;
 }
 Camera* Camera::GetInstance()
@@ -100,10 +100,26 @@ void Camera::MoveForwards(float Distance)
 	Move(MoveDirection*Distance);
 	mViewNeedsUpdate = true;
 }
+void Camera::MoveForwardsMaintainTarget(float Distance)
+{
+	AglVector3 MoveDirection = mTarget - mPosition;
+	Normalize(MoveDirection);
+	mPosition += MoveDirection*Distance;
+	mViewNeedsUpdate = true;
+}
 void Camera::MoveBackwards(float Distance)
 {
 	//Inverted move forwards
 	MoveForwards(-Distance);
+}
+void Camera::MoveUp(float Distance)
+{
+	Move(mUpDirection*Distance);
+	mViewNeedsUpdate = true;
+}
+void Camera::MoveDown(float Distance)
+{
+	MoveUp(-Distance);
 }
 void Camera::Panorate(float Angle)
 {
@@ -157,14 +173,14 @@ void Camera::SetLens(float Angle, int Width, int Height, int n, int f)
 {
 		mViewAngle = Angle;
 		float r = (float)Width / (float)Height;
-		mProj = AglMatrix(1/(r*tan(Angle/2)), 0, 0, 0, 
-						0, 1/tan(Angle/2), 0, 0, 
-							0, 0, f/(f-n), 1, 
-								0, 0, (-n*f)/(f - n), 0);
+		mProj = AglMatrix(1/(r*tan(Angle/2)), 0.0f, 0.0f, 0.0f, 
+						0.0f, 1.0f/tan(Angle/2), 0.0f, 0.0f, 
+							0.0f, 0.0f, f/(float)(f-n), 1.0f, 
+								0.0f, 0.0f, (-n*f)/(float)(f - n), 0.0f);
 }
 float Camera::GetViewAngle()
 {
-	return mViewAngle;
+	return (float)mViewAngle;
 }
 void Camera::MoveTo(AglVector3 pos)
 {

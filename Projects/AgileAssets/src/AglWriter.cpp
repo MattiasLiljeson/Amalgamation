@@ -43,6 +43,7 @@ void AglWriter::write(AglScene* p_scene)
 	m_header.animationCount			= d.animations.size();
 	m_header.looseBspCount			= d.bspTrees.size();
 	m_header.SphereGridCount		= d.sphereGrids.size();
+	m_header.coordinateSystem		= d.coordinateSystem;
 
 	ofstream file;
 

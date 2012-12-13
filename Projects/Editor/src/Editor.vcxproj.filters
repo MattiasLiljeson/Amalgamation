@@ -33,6 +33,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VertexShader.cpp" />
+    <ClCompile Include="Globals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
@@ -68,5 +69,6 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="VertexStructures.h" />
+    <ClInclude Include="Globals.h" />
   </ItemGroup>
 </Project>

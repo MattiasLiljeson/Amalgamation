@@ -10,6 +10,7 @@
 #include "RasterManager.h"
 #include "RenderNormalsShader.h"
 #include "AglLooseBspTree.h"
+#include "Globals.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene)
 {
@@ -37,13 +38,6 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 
 	unsigned int* ind = pMesh->getIndices();
 
-	//Borde inte göras här. Borde göras i konverteringen från fbx.
-	for (int i = 0; i < h.indexCount; i+=3)
-	{
-		unsigned int temp = ind[i];
-		ind[i] = ind[i+1];
-		ind[i+1] = temp;
-	}
 	Init<AglVertexSTBN>(v, h.vertexCount, pMesh->getIndices(), h.indexCount);
 
 	AglVector3 minP, maxP;
@@ -66,8 +60,8 @@ AglVector3 Mesh::GetMin()
 	/*AglMatrix w = mScene->GetWorld();
 	Matrix world(w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7], w[8], w[9], w[10], w[11], w[12], w[13], w[14], w[15]);
 	AglVector3 minP, maxP;
-	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->GetVertices();
-	AglVector3 p = AglVector3(v[0].Position[0], v[0].Position[1], v[0].Position[2]);
+	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->getVertices();
+	AglVector3 p = AglVector3(v[0].position[0], v[0].position[1], v[0].position[2]);
 	Vec3Transform(p, world);
 	minP = maxP = p;
 	for (int i = 1; i < mMesh->GetHeader().VertexCount; i++)
@@ -112,8 +106,10 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 		DrawNormals(pWorld, pScale);
 	if (m_wireframe)
 		RasterManager::getInstance()->setWireframeState();
-	else
+	else if (Scene::GetInstance()->IsLeftHanded())
 		RasterManager::getInstance()->setStandardState();
+	else
+		RasterManager::getInstance()->setInvertedState();
 	vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
 	AglMaterial mat;
 	AglMaterial matp;
@@ -255,7 +251,7 @@ void Mesh::AddMaterial(int pMaterial, bool pSetAsCurrent)
 }
 void Mesh::AddGradient(AglGradient* pGradient, bool pSetAsCurrent)
 {
-	for (int i = 0; i < mGradients.size(); i++)
+	for (unsigned int i = 0; i < mGradients.size(); i++)
 	{
 		if (mGradients[i] == pGradient)
 		{

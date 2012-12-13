@@ -25,7 +25,10 @@ public:
 	void MoveLeft(float Distance);
 	void MoveRight(float Distance);
 	void MoveForwards(float Distance);
+	void MoveForwardsMaintainTarget(float Distance);
 	void MoveBackwards(float Distance);
+	void MoveUp(float Distance);
+	void MoveDown(float Distance);
 
 	//Rotating functions
 	void Panorate(float Angle);

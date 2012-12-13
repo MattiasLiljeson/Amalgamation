@@ -97,6 +97,7 @@
     <ClCompile Include="DX11Application.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GradientShader.cpp" />
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="DX11Application.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="GradientShader.h" />
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="Input.h" />
