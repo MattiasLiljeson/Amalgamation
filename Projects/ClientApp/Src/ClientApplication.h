@@ -18,6 +18,9 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <InputSystem.h>
+#include <PhysicsBody.h>
+#include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <Transform.h>
 #include <Windows.h>
@@ -25,11 +28,11 @@
 // Systems
 #include <CameraSystem.h>
 #include <GraphicsBackendSystem.h>
-#include <RenderPrepSystem.h>
 #include <InputSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <NetworkCommunicatorSystem.h>
 #include <ProcessingMessagesSystem.h>
+#include <RenderPrepSystem.h>
 
 class ClientApplication
 {

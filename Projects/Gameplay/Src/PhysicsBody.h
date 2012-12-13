@@ -1,24 +1,26 @@
 // =======================================================================================
-//                                      RenderInfo
+//                                      PhysicsBody
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # RenderInfo
+/// # PhysicsBody
 /// Detailed description.....
-/// Created on: 7-12-2012 
+/// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 #include <Component.h>
+#include <AglVector3.h>
 
-class RenderInfo : public Component
+class PhysicsBody : public Component
 {
 public:
-	RenderInfo();
-	RenderInfo( int p_mesh_id);
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-private:
+	PhysicsBody()
+	{
+		m_id = -1;
+		m_position = AglVector3(0, 0, 0);
+	}
+	int m_id;
+	AglVector3 m_position;
 };

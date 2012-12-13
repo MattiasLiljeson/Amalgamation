@@ -16,6 +16,8 @@
 #include <AglQuaternion.h>
 #include <Component.h>
 
+#include <InstanceVertex.h>
+
 //struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
 //{
 //	float x;
@@ -30,24 +32,7 @@ public:
 	/// Sets all private members to 0 (zero).
 	/// \returns 
 	///-----------------------------------------------------------------------------------
-	Transform()
-	{
-		m_translation.x = 0.0f;
-		m_translation.y = 0.0f;
-		m_translation.z = 0.0f;
-
-		m_scale.x = 1.0f;
-		m_scale.y = 1.0f;
-		m_scale.z = 1.0f;
-
-		m_rotation = AglQuaternion::identity();
-
-		//m_orientation.x = 0.0f;
-		//m_orientation.y = 0.0f;
-		//m_orientation.z = 0.0f;
-		
-		calcCompMatrix();
-	}
+	Transform();
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the position. Remaining members are set to 0 (zero).
@@ -56,83 +41,83 @@ public:
 	/// \param p_posZ
 	/// \returns 
 	///-----------------------------------------------------------------------------------
-	Transform( float p_posX, float p_posY, float p_posZ )
-	{
-		m_translation.x = p_posX;
-		m_translation.y = p_posY;
-		m_translation.z = p_posZ;
+	Transform( float p_posX, float p_posY, float p_posZ );
 
-		m_scale.x = 1.0f;
-		m_scale.y = 1.0f;
-		m_scale.z = 1.0f;
-
-		m_rotation = AglQuaternion::identity();
-
-		//m_orientation.x = 0.0f;
-		//m_orientation.y = 0.0f;
-		//m_orientation.z = 0.0f;
-
-		calcCompMatrix();
-	}
-
-	~Transform()
-	{
-	}
+	~Transform();
 
 	///-----------------------------------------------------------------------------------
-	/// Get a pointer to the translation vector. The data can be manipulated in every way.
-	/// \returns A pointer to the translation vector.
+	/// \returns The translation vector.
 	///-----------------------------------------------------------------------------------
-	AglVector3* getTranslation()
-	{
-		return &m_translation;
-	}
+	AglVector3 getTranslation() const;
+	
+	///-----------------------------------------------------------------------------------
+	/// \param p_translation The new translation as a vector
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void setTranslation( const AglVector3 p_translation );
 
 	///-----------------------------------------------------------------------------------
-	/// Get a pointer to the scale vector. The data can be manipulated in every way.
-	/// \returns A pointer to the scale vector.
+	/// \returns The scale vector.
 	///-----------------------------------------------------------------------------------
-	AglVector3* getScale()
-	{
-		return &m_scale;
-	}
+	AglVector3 getScale() const;
 
 	///-----------------------------------------------------------------------------------
-	/// Get a pointer to the scale vector. The data can be manipulated in every way.
-	/// \returns A pointer to the rotation quaternion.
+	/// \param p_scale The new scale as a vector
+	/// \returns void
 	///-----------------------------------------------------------------------------------
-	AglQuaternion* getRotation()
-	{
-		return &m_rotation;
-	}
+	void setScale( const AglVector3 p_scale );
 
 	///-----------------------------------------------------------------------------------
-	/// Get a pointer to the scale vector. The data can be manipulated in every way.
+	/// \returns The rotation quaternion.
+	///-----------------------------------------------------------------------------------
+	AglQuaternion getRotation() const;
+
+	///-----------------------------------------------------------------------------------
+	/// \param p_rotation The new rotation as a quaternion
+	/// \returns void
+	///-----------------------------------------------------------------------------------
+	void setRotation( const AglQuaternion p_rotation );
+
+	///-----------------------------------------------------------------------------------
+	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
 	/// \returns A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
-	AglMatrix* getMatrix()
-	{
-		return &m_compositionMatrix;
-	}
+	AglMatrix getMatrix() const;
+
+	///-----------------------------------------------------------------------------------
+	/// Get the translated transform matrix packaged in a InstanceVertex.
+	/// \returns The translated transform matrix as a InstanceVertex.
+	///----------------------------------------------------------------------------------
+	InstanceVertex getInstanceVertex() const;
+
+	///-----------------------------------------------------------------------------------
+	/// Get a reference to the translated transform matrix packaged in a InstanceVertex.
+	/// If the data is manipulated it will change the internal InstanceVertex. This will 
+	/// be overwritten the next time a setter is called.
+	/// \returns A reference to the translated transform matrix as a InstanceVertex.
+	///----------------------------------------------------------------------------------
+	InstanceVertex& getInstanceVertexRef() ;
+
+	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the translated transform matrix packaged in a InstanceVertex.
+	/// If the data is manipulated it will change the internal InstanceVertex. This will 
+	/// be overwritten the next time a setter is called.
+	/// \returns A pointer to the translated transform matrix as a InstanceVertex.
+	///----------------------------------------------------------------------------------
+	InstanceVertex* getInstanceVertexPtr() ;
 
 private:
 	///-----------------------------------------------------------------------------------
 	/// Calculates the composited matrix for all translation members
 	/// \returns void
 	///-----------------------------------------------------------------------------------
-	void calcCompMatrix()
-	{
-		AglMatrix::componentsToMatrix(
-			m_compositionMatrix,
-			m_scale,
-			m_rotation,
-			m_translation);
-	}
+	void calcCompMatrix();
 
 private:
 	AglMatrix m_compositionMatrix;
+	InstanceVertex m_instanceVertex;
+	//AglMatrix m_transposedCompositionMatrix;
 	AglVector3 m_translation;
 	AglVector3 m_scale;
 	AglQuaternion m_rotation;
-	///AglVector3 m_orientation;
 };

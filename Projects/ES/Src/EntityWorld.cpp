@@ -23,9 +23,6 @@ EntityWorld::~EntityWorld()
 	delete m_systemManager;
 	m_systemManager = NULL;
 
-	//for ( unsigned int i = 0; i < m_systemsBag.size(); i++ )
-	//		delete m_systemsBag[i];
-
 	m_systemsBag.clear();
 }
 
@@ -230,8 +227,6 @@ void EntityWorld::process()
 	check( m_disable, new DisabledPerformer );
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
-
-	//m_componentManager->clean();
 
 	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
 	{
