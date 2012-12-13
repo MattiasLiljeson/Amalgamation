@@ -30,7 +30,35 @@ Describe(a_packet)
 
 	It(can_contain_char_data)
 	{
+		Packet packet;
+		char c_src = 100;
+		packet << c_src;
+		char c_dst;
+		packet >> c_dst;
 
+		Assert::That(c_dst, Equals(c_src));
+	}
+
+	It(can_contain_short_data)
+	{
+		Packet packet;
+		short s_src = 10000;
+		packet << s_src;
+		short s_dst;
+		packet >> s_dst;
+
+		Assert::That(s_dst, Equals(s_src));
+	}
+
+	It(can_contain_double_data)
+	{
+		Packet packet;
+		double d_src = 1337.1435000000377;
+		packet << d_src;
+		double d_dst;
+		packet >> d_dst;
+
+		Assert::That(d_dst, Equals(d_src));
 	}
 
 	It(can_contain_multiple_int_data)

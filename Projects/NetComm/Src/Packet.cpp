@@ -46,17 +46,24 @@ void Packet::setData(char* p_data, unsigned int p_size)
 		throw invalid_argument("Attempting to set data beyond the allowed data size (255)");
 }
 
-Packet& Packet::operator << (int p_data)
+Packet& Packet::operator << (char p_data)
 {	
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator >> (int& p_data)
-{
+Packet& Packet::operator << (short p_data)
+{	
 	unsigned int dataSize = sizeof(p_data);
-	ReadData(&p_data, dataSize);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator << (int p_data)
+{	
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
 	return *this;
 }
 
@@ -67,12 +74,48 @@ Packet& Packet::operator << ( float p_data )
 	return *this;
 }
 
+Packet& Packet::operator << (double p_data)
+{	
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator >> (char& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator >> (short& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator >> (int& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator >> ( float& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
 	ReadData(&p_data, dataSize);
 	return *this;
 }
+
+Packet& Packet::operator >> ( double& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
 
 void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 {

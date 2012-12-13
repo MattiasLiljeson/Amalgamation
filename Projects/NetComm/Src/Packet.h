@@ -38,11 +38,17 @@ public:
 	void setData(char* p_data, unsigned int p_size);
 	bool isEmpty() const;
 
-	Packet& operator << (int  p_data);
-	Packet& operator >> (int& p_data);
+	Packet& operator << (char	p_data);
+	Packet& operator << (short	p_data);
+	Packet& operator << (int	p_data);
+	Packet& operator << (float	p_data);
+	Packet& operator << (double p_data);
 
-	Packet& operator << (float p_data);
-	Packet& operator >> (float& p_data);
+	Packet& operator >> (char&	 p_data);
+	Packet& operator >> (short&	 p_data);
+	Packet& operator >> (int&	 p_data);
+	Packet& operator >> (float&  p_data);
+	Packet& operator >> (double& p_data);
 
 private:
 	int readPos;
