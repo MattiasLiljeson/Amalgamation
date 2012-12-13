@@ -143,7 +143,7 @@ void ClientApplication::initEntities()
 	entity = m_world->createEntity();
 	component = new RenderInfo( cubeMeshId );
 	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(AglVector3(15, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 	component = new PhysicsBody();

@@ -270,3 +270,8 @@ float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore,
 	}
 	return minT;
 }
+void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, AglVector3 p_angularImpulse)
+{
+	mBodies[p_id]->AddImpulse(p_impulse);
+	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
+}

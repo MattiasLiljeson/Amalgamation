@@ -99,6 +99,8 @@ public:
 	vector<RigidBody*> getBodies(){ return mRigidBodies; }
 
 	Body* getBody(int pIndex){ return mBodies[pIndex]; }
+
+	void ApplyExternalImpulse(int p_id, AglVector3 p_impulse, AglVector3 p_angularImpulse);
 };
 
 #endif

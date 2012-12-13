@@ -87,7 +87,7 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-	<ClInclude Include="PhysicsBody.h">
+    <ClInclude Include="PhysicsBody.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="NetworkInputHandlerSystem.h">
@@ -98,6 +98,12 @@
     </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ImpulseSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Impulse.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +116,7 @@
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-	<ClCompile Include="Transform.cpp">
+    <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
@@ -141,6 +147,9 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ImpulseSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

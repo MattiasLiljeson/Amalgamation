@@ -35,6 +35,8 @@ public:
 	Body();
 	virtual ~Body();
 	virtual AglMatrix GetWorld() const = 0;
+	virtual void AddImpulse(AglVector3 pImpulse) = 0;
+	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
 };
 
 #endif // BODY_H

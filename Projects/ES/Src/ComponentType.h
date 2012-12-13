@@ -21,6 +21,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		PhysicsBody,
+		Impulse,
 		PhysUnknown,
 		CameraInfo,
 		NUM_COMPONENT_TYPES

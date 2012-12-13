@@ -21,6 +21,7 @@ public:	//Enums
 		NetworkConnectoToServerSystem,
 		InputSystem,
 		PhysicsSystem,
+		ImpulseSystem,
 		RenderPrepSystem,
 		CameraSystem,
 		GraphicsBackendSystem,

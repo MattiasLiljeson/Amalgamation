@@ -45,6 +45,7 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			AglQuaternion rot;
 			AglMatrix::matrixToComponents(world, scale, rot, pos);
 			t->setTranslation(pos);
+			t->setRotation(rot);
 		}
 	}
 }
