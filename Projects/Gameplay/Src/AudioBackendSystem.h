@@ -1,6 +1,5 @@
 #pragma once
 #include <SoundWrapper.h>
-#include <BasicSoundCreationInfo.h>
 #include <AntTweakBarWrapper.h>
 #include <ToString.h>
 #include <string>
@@ -29,7 +28,8 @@ public:
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
 	int createAmbientSound(BasicSoundCreationInfo* p_info);
-	int createPositionalSound(BasicSoundCreationInfo* p_info, const AglVector3& p_pos );
+	int createPositionalSound(BasicSoundCreationInfo* p_info,
+		PositionalSoundCreationInfo* p_positionalInfo );
 	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
 	SoundWrapper* getSoundWrapper();
 private:

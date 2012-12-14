@@ -102,10 +102,12 @@ int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 
-int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_info, 
-										   const AglVector3& p_pos)
+int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+										   PositionalSoundCreationInfo* p_positionalInfo)
 {
-	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_info, p_pos));
+	p_positionalInfo->destChannels = m_destChannels; // NOTE THE ASSIGNMENT 
+	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_basicSoundInfo, 
+		p_positionalInfo));
 	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 

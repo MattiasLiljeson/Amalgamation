@@ -10,6 +10,7 @@
 #include "PositionalSound.h"
 #include "SoundFactory.h"
 #include "BasicSoundCreationInfo.h"
+#include "PositionalSoundCreationInfo.h"
 
 using namespace std;
 
@@ -54,7 +55,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Utilizes the sound factory class to create the new non positional sound. The 
 	/// created sound is then stored for easy access through the ES system.
-	/// \param p_filePath
+	/// \param p_info
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	int createAmbientSound(BasicSoundCreationInfo* p_info);
@@ -66,7 +67,8 @@ public:
 	/// \param p_pos
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int createNewPositionalSound(BasicSoundCreationInfo* p_info, const AglVector3& p_pos);
+	int createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+		PositionalSoundCreationInfo* p_positionalInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// To update positional sound output matrix is a relative expensive function to be 

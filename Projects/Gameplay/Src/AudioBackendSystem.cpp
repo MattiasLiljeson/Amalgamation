@@ -6,7 +6,7 @@ AudioBackendSystem::AudioBackendSystem() : EntitySystem(SystemType::AudioBackend
 {
 	m_soundWrapper = new SoundWrapper();
 	m_theSystem = this;
-	m_label = "Play/Stop: ";
+	m_label = "P/S: ";
 }
 
 AudioBackendSystem::~AudioBackendSystem()
@@ -35,21 +35,30 @@ void AudioBackendSystem::updateListener( const SoundOrientation& p_listenerInfo 
 int AudioBackendSystem::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
 	int index = m_soundWrapper->createAmbientSound(p_info);
-	string temp = m_label + toString(index);
+
+	/************************************************************************/
+	/* DEBUG INFO!															*/
+	/************************************************************************/
+	string temp = m_label + toString(index) +" "+ p_info->file;
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),temp.c_str(),
 		stopOrPlaySound, (void*)index,"group=Ambient_Sound");
+	//-END-
 
 	return index;
 }
 
-int AudioBackendSystem::createPositionalSound( BasicSoundCreationInfo* p_info, 
-											  const AglVector3& p_pos )
+int AudioBackendSystem::createPositionalSound(BasicSoundCreationInfo* p_info,
+											  PositionalSoundCreationInfo* p_positionalInfo )
 {
-	int index = m_soundWrapper->createNewPositionalSound(p_info,p_pos);
+	int index = m_soundWrapper->createNewPositionalSound(p_info,p_positionalInfo);
 
-	string temp = m_label + toString(index);
+	/************************************************************************/
+	/* DEBUG INFO!															*/
+	/************************************************************************/
+	string temp = m_label + toString(index) + " " + p_info->file;
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(), temp.c_str(),
 		stopOrPlaySound, (void*)index, "group=Positional_Sound");
+	//-END-
 
 	return index;
 }

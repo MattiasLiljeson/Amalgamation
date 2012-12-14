@@ -1,6 +1,7 @@
 #pragma once
 #include <x3daudio.h>
 #include <AglVector3.h>
+#include "SoundOrientation.h"
 
 // =======================================================================================
 //                                      PositionalSoundInfo
@@ -16,8 +17,9 @@
 
 struct PositionalSoundInfo
 {
-	X3DAUDIO_EMITTER emitter;
-	AglVector3 previousPosition;
+	X3DAUDIO_EMITTER		emitter;
+	X3DAUDIO_DSP_SETTINGS	settings;
+	AglVector3				previousPosition;
 
 	PositionalSoundInfo()
 	{

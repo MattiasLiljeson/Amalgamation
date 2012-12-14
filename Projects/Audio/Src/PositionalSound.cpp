@@ -11,7 +11,7 @@ PositionalSound::PositionalSound( IXAudio2SourceVoice* p_sourceVoice,
 
 PositionalSound::~PositionalSound()
 {
-
+	delete m_dataInfo.settings.pMatrixCoefficients;
 }
 
 X3DAUDIO_EMITTER PositionalSound::getEmitter()

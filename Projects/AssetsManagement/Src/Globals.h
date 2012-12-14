@@ -17,3 +17,6 @@ using namespace std;
 
 static const string& SOUNDEFFECTPATH = "Assets/Sound/SoundEffect/";
 static const string& MUSICPATH = "Assets/Sound/Music/";
+
+static const string& TESTSOUNDEFFECTPATH = "Assets/Sound/SoundEffect/Test/";
+static const string& TESTMUSICPATH = "Assets/Sound/Music/Test/";

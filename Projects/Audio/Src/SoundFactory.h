@@ -8,6 +8,7 @@
 #include "SoundDefines.h"
 #include "AudioCurves.h"
 #include "BasicSoundCreationInfo.h"
+#include "PositionalSoundCreationInfo.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -34,17 +35,20 @@ public:
 	/// \returns Sound*
 	///-----------------------------------------------------------------------------------
 	Sound* createAmbientSound( BasicSoundCreationInfo* p_info );
-	PositionalSound* createPositionalSound( BasicSoundCreationInfo* p_info, 
-		const AglVector3& p_pos);
+
+	PositionalSound* createPositionalSound( BasicSoundCreationInfo* p_basicSoundInfo, 
+		PositionalSoundCreationInfo* p_positionalInfo);
 protected:
 private:
-	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
+	IXAudio2SourceVoice* createSourceVoice(const char* p_fullFilePath, 
 		XAUDIO2_BUFFER& p_buffer);
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
-	void initFile(string p_filePath);
-	void initEmitter(X3DAUDIO_EMITTER* p_emitter, AglVector3 p_pos, float* p_pChannelAzimuths);
+	void initBuffer(XAUDIO2_BUFFER* p_audioBuffer, BasicSoundCreationInfo* p_basicSoundInfo);
+	void initFile(const char* p_filePath);
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter, SoundOrientation p_soundOrientation);
+	void initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_destChannels);
 private:
 	IXAudio2*	m_soundDevice;
 

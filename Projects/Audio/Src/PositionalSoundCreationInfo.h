@@ -16,11 +16,16 @@
 
 struct PositionalSoundCreationInfo
 {
-	FLOAT32* outputMatrix;
-	//FLOAT32* emitterAzimuths;
-
-	X3DAUDIO_DSP_SETTINGS settings;
-
-	bool	loopPlayback;
+	X3DAUDIO_DSP_SETTINGS* settings;
+	int destChannels;
 	SoundOrientation soundOrientation;
+	PositionalSoundCreationInfo(const AglVector3& p_pos)
+	{
+		soundOrientation.listenerPos = p_pos;
+		soundOrientation.listenerOrientFront = AglVector3(0,0,1);
+		soundOrientation.listenerOrientTop = AglVector3(0,1,0);
+		soundOrientation.listenerVelocity = AglVector3(0,0,0);
+		destChannels = 0;
+		settings = NULL;
+	}
 };
