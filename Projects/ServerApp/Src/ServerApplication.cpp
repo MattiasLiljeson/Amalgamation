@@ -68,17 +68,17 @@ void ServerApplication::initEntities()
 {
 	Entity* e;
 
-//	e = m_world->createEntity();
-//	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-//		new Transform( -10.0f, 0, 0 ) );
-//	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-//		new NetworkSynced( 0, -1, NetworkType::Ship ) );
-//	m_world->addEntity( e );
-//
-//	e = m_world->createEntity();
-//	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-//		new Transform( 0, 0, 0 ) );
-//	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-//		new NetworkSynced( 0, -1, NetworkType::Ship ) );
-//	m_world->addEntity( e );
+	e = m_world->createEntity();
+	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+		new Transform( -10.0f, 0, 0 ) );
+	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
+	m_world->addEntity( e );
+
+	e = m_world->createEntity();
+	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+		new Transform( 0, 0, 0 ) );
+	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
+	m_world->addEntity( e );
 }
