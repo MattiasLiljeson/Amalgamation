@@ -176,6 +176,9 @@ public:
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
 		bool p_enabled = false );
 
+	EntitySystem* setSystem( EntitySystem* p_system,
+		bool p_enabled = false );
+
 	/**
 	 * Remove the specified system from the manager.
 	 * @param p_type Type of system to be deleted from manager.
@@ -195,13 +198,8 @@ public:
 	 */
 	void deleteSystem( EntitySystem* p_system);
 
-	void notifySystems( IPerformer* p_performer, Entity* p_entity );
+	//void notifySystems( IPerformer* p_performer, Entity* p_entity );
 	
-
-
-
-
-
 	void notifyManagers( IPerformer* performer, Entity* p_entity );
 
 	/**
@@ -225,7 +223,8 @@ public:
 	//<T extends Component> ComponentMapper<T> getMapper(Class<T> type);
 
 private:
-	void deleteSystemFromBag(EntitySystem* system);
+	//void deleteSystemFromBag(EntitySystem* system);
+
 private:
 	float m_delta;
 	EntityManager* m_entityManager;
@@ -242,7 +241,5 @@ private:
 
 	// From Java, needed?
 	vector<Manager*> m_managersBag;
-	vector<EntitySystem*> m_systemsBag;
-	
 };
 

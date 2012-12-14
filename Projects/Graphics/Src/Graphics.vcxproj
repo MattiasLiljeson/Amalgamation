@@ -33,7 +33,6 @@
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferBase.h" />
     <ClInclude Include="BufferFactory.h" />
-    <ClInclude Include="CamMatrixerUtil.h" />
     <ClInclude Include="CBuffers.h" />
     <ClInclude Include="D3DException.h" />
     <ClInclude Include="GraphicsWrapper.h" />

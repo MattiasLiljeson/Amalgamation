@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 #include "EntityWorld.h"
-#include "InputSystem.h"
+#include "InputBackendSystem.h"
 
-TEST(InputSystem, MouseButton)
+TEST(InputBackendSystem, MouseButton)
 {
 	// Doesn't work. No messages are put in the message queue from the message loop as the 
 	// message loop doesn't exist. XINPUT only works with windowed applications.
 	EntityWorld* world = new EntityWorld();
-	EntitySystem* sys = new InputSystem();
-	world->setSystem( SystemType::InputSystem, sys, true);
+	EntitySystem* sys = new InputBackendSystem();
+	world->setSystem( SystemType::InputBackendSystem, sys, true);
 	
 	Entity* e = world->createEntity();
 	e->addComponent( ComponentType::Input, new Input());

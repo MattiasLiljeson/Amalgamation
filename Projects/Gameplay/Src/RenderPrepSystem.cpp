@@ -35,7 +35,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		//InstanceVertex vert;
 
 		//HACK: continues in loop below 
-		for( int i=0; i<p_entities.size(); i++ )
+		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
 			RenderInfo* renderInfo = static_cast<RenderInfo*>(
 				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
@@ -56,7 +56,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			// resize vector if the mesh id is outside of the vectors size
-			if( m_instanceLists.size() <= renderInfo->m_meshId )
+			if( m_instanceLists.size() <= static_cast<unsigned int>(renderInfo->m_meshId) )
 			{
 				m_instanceLists.resize( renderInfo->m_meshId + 1 );
 			}
@@ -64,7 +64,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			// Finally, add the entity to the instance vector
 			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceVertexRef() );
 		}
-		for( int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
+		for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
 			// Batch render all entities that share the same mesh
 			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
@@ -74,8 +74,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		AntTweakBarWrapper::getInstance()->render();
 		gfxWrapper->flipBackBuffer();           // flip buffers
 		
-		// WOW! for each loop in C++!
-		for( int i=0; i<m_instanceLists.size(); i++ )
+		for(unsigned int i=0; i<m_instanceLists.size(); i++ )
 		{
 			m_instanceLists[i].clear();
 		}

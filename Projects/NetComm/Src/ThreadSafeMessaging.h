@@ -21,7 +21,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Put a message on ThreadSafeMessaging's own message queue.
 	/// \param ProcessMessage * p_message
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void putMessage( ProcessMessage* p_message );
 
@@ -30,19 +30,19 @@ public:
 protected:
 	///-----------------------------------------------------------------------------------
 	/// Pop oldest message from the message queue. Take over ownership of the message.
-	/// \returns ProcessMessage*
+	/// \return ProcessMessage*
 	///-----------------------------------------------------------------------------------
 	ProcessMessage* popMessage();
 
 	///-----------------------------------------------------------------------------------
 	/// Get the amount of messages currently stored in the message queue.
-	/// \returns unsigned int
+	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
 	unsigned int getMessageCount();
 
 	///-----------------------------------------------------------------------------------
 	/// Checking out the message queue means you take ownership over it.
-	/// \returns queue< ProcessMessage* >
+	/// \return queue< ProcessMessage* >
 	///-----------------------------------------------------------------------------------
 	queue< ProcessMessage* > checkoutMessageQueue();
 

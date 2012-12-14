@@ -23,14 +23,14 @@ public:
 	/// Wrapper(ATBW) properly. Afterwards just call the function without any parameters
 	/// \param p_device
 	/// \param p_nameOfBar
-	/// \returns AntTweakBarWrapper*
+	/// \return AntTweakBarWrapper*
 	///-----------------------------------------------------------------------------------
 	static AntTweakBarWrapper* getInstance(ID3D11Device* p_device=NULL, 
 		const char* p_nameOfBar=NULL);
 
 	///-----------------------------------------------------------------------------------
 	/// Called to destroy the ATBW
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	static void destroy();
 
