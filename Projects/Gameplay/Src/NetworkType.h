@@ -18,6 +18,7 @@ public:
 	{
 		NON_EXISTENT = -1,
 		Ship,
+		Identity,
 	};
 
 public:

@@ -25,7 +25,6 @@
 #include <PhysicsBody.h>
 #include <RenderInfo.h>
 #include <Transform.h>
-#include <Identity.h>
 
 // Systems
 #include <InputSystem.h>

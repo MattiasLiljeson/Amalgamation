@@ -11,12 +11,14 @@
 
 #include <AglVector3.h>
 
-#include "GraphicsBackendSystem.h"
+// Components
 #include "NetworkSynced.h"
-#include "NetworkType.h"
-#include "PacketType.h"
 #include "Transform.h"
 #include "RenderInfo.h"
+
+#include "GraphicsBackendSystem.h"
+#include "NetworkType.h"
+#include "PacketType.h"
 
 class NetworkCommunicatorSystem: public EntitySystem
 {

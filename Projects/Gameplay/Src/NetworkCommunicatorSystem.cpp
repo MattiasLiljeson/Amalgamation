@@ -88,6 +88,19 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::InitCredentials)
+		{
+			char networkType;
+
+			packet >> networkType;
+			if(networkType == (char)NetworkType::Identity)
+			{
+				int id;
+				packet >> id;
+
+				m_tcpClient->setId( id );
+			}
+		}
 	}
 }
 

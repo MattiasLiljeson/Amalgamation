@@ -84,6 +84,11 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			//	int:	componentTypeId
 			//	*:		specificComponentData
 
+			// Give the new client its Network Identity.
+			Packet identityPacket;
+			identityPacket << (char)PacketType::InitCredentials <<
+				(char)NetworkType::Identity << id;
+			m_server->unicastPacket( identityPacket, id );
 
 			// Send the old networkSynced stuff:
 			for( unsigned int i=0; i<p_entities.size(); i++ )

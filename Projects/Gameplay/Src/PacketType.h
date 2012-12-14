@@ -21,6 +21,7 @@ public:
 		EntityCreation,
 		EntityUpdate,
 		ClientDisconnect,
+		InitCredentials,
 	};
 
 };

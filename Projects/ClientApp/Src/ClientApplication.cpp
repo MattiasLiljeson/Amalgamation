@@ -150,14 +150,10 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 
-	// The "me" entity is needed for determining the client's identity.
-	entity = m_world->createEntity();
-	component = new Identity();
-	entity->addComponent( ComponentType::Identity, component );
-	m_world->addEntity( entity );
+	// Misplaced.
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
 		TwType::TW_TYPE_INT32,
-		static_cast<Identity*>(component)->getIdentityPointer(), "" );
+		m_client->getIdPointer(), "" );
 
 //
 //	// Code below used to test removal of object and components under runtime
