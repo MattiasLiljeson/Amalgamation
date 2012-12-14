@@ -83,9 +83,6 @@
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="CamMatrixerUtil.h">
-      <Filter>Graphics Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsWrapper.h">
       <Filter>Renderer</Filter>
     </ClInclude>

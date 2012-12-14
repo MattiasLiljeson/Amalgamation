@@ -82,7 +82,7 @@ float CompoundBody::GetInvMass()
 {
 	return 1.0f / GetMass();
 }
-AglMatrix CompoundBody::GetWorld()
+AglMatrix CompoundBody::GetWorld() const
 {
 	return mLocalTransform;
 }

@@ -21,7 +21,7 @@ class ProcessMessageText: public ProcessMessage
 public:
 	///-----------------------------------------------------------------------------------
 	/// Create an empty text message.
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageText();
 
@@ -29,7 +29,7 @@ public:
 	/// Create a text message containing a type and a sender.
 	/// \param ThreadSafeMessaging * p_sender
 	/// \param string p_text
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageText( ThreadSafeMessaging* p_sender, string p_text );
 

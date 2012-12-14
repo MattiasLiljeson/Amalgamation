@@ -1,7 +1,7 @@
 #include "GraphicsBackendSystem.h"
 
 GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth, int p_scrHeight,
-											 bool p_windowed  ) : EntitySystem( SystemType::RenderPrepSystem )
+											 bool p_windowed  ) : EntitySystem( SystemType::GraphicsBackendSystem )
 {
 	m_hInstance = p_hInstance;
 	m_scrWidth = p_scrWidth;

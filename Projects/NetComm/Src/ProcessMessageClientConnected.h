@@ -21,7 +21,7 @@ class ProcessMessageClientConnected: public ProcessMessage
 public:
 	///-----------------------------------------------------------------------------------
 	/// Create an empty socket message.
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageClientConnected();
 
@@ -29,7 +29,7 @@ public:
 	/// Create a ClientConnected message containing a socket connection.
 	/// \param p_sender
 	/// \param p_socket
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessageClientConnected( ThreadSafeMessaging* p_sender, tcp::socket* p_socket );
 

@@ -176,10 +176,11 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 
 	case WM_KEYDOWN:
 		{
-
 			int key = m_keyFromCharMap[p_wParam];
 			if(key != -1)
-				m_keysPressed[key] = InputHelper::DOWN;
+			{
+				m_keysPressed[key] = InputHelper::KEY_RAW_STATE::DOWN;
+			}
 		}
 		break;
 
@@ -187,7 +188,9 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 		{
 			int key = m_keyFromCharMap[p_wParam];
 			if(key != -1)
-				m_keysReleased[key] = InputHelper::UP;
+			{
+				m_keysPressed[key] = InputHelper::KEY_RAW_STATE::UP;
+			}
 		}
 		break;
 

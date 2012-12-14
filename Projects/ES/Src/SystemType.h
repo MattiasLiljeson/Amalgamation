@@ -19,10 +19,12 @@ public:	//Enums
 		NetworkInputHandlerSystem,
 		NetworkConnectoToServerSystem,
 		NetworkCommunicatorSystem,
-		InputSystem,
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
+		InputBackendSystem,
+		ShipControllerSystem,
+		ImpulseSystem,
 		NUM_SYSTEM_TYPES
 	};
 
@@ -40,7 +42,7 @@ public:
 	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeIdx p_system );
 
 	bitset<NUM_SYSTEM_TYPES> getBit();
-	int getIndex();
+	SystemTypeIdx getIndex();
 
 private:
 
