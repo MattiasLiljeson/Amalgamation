@@ -6,6 +6,21 @@ using namespace igloo;
 
 Describe(a_packet)
 {
+	It(can_have_a_sender_id_defined_in_constructor)
+	{
+		Packet packet(55);
+
+		Assert::That(packet.getSenderId(), Equals(55));
+	}
+
+	It(can_have_a_sender_id_defined_in_setSenderId_method)
+	{
+		Packet packet;
+		packet.setSenderId(77);
+
+		Assert::That(packet.getSenderId(), Equals(77));
+	}
+
 	It(can_contain_int_data)
 	{
 		Packet packet;

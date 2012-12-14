@@ -5,6 +5,11 @@ Packet::Packet()
 	clear();
 }
 
+Packet::Packet( int p_senderId )
+{
+	m_senderId = p_senderId;
+}
+
 Packet::~Packet()
 {
 
@@ -50,6 +55,7 @@ void Packet::clear()
 	m_readPos = 1;
 	m_data.resize(1);
 	m_data[0] = 0;
+	m_senderId = -1;
 }
 
 Packet& Packet::operator << ( bool p_data )
@@ -180,4 +186,12 @@ void Packet::ReadData(void* p_data, unsigned int p_dataSize)
 	}
 }
 
+int Packet::getSenderId()
+{
+	return m_senderId;
+}
 
+void Packet::setSenderId( int p_senderId )
+{
+	m_senderId = p_senderId;
+}

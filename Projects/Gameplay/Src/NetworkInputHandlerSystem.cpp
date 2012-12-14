@@ -40,12 +40,12 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				for( unsigned int i=0; i<p_entities.size(); i++ )
 				{
 					// TODO: Need to know who sent the packet!
-					if( p_entities[i].getIndex() == packet.getSenderId() )
+					if( p_entities[i]->getIndex() == packet.getSenderId() )
 					{
 						Transform* transform = NULL;
 						transform = static_cast<Transform*>(
 							m_world->getComponentManager()->getComponent(
-							p_entities[i].getIndex(), ComponentType::Transform ) );
+							p_entities[i]->getIndex(), ComponentType::Transform ) );
 
 						if( thrustForwardState == true ) // "Using thrust forward".
 						{

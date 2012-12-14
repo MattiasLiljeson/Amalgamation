@@ -131,6 +131,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 			{
 				unsigned int currentReadSize = (unsigned int)readPtr[0] + 1;
 				Packet packet;
+				packet.setSenderId( getId() );
 				packet.setData( readPtr, currentReadSize );
 				packets.push( packet );
 				readPosition += currentReadSize;

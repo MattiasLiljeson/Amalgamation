@@ -121,16 +121,16 @@ Describe(a_tcp_server)
 	
 		TcpClient client;
 		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
 		
 		Packet packet;
 		packet << (int)0;
 
-		boost::this_thread::sleep(boost::posix_time::millisec(50));
-		server.processMessages();
 		client.sendPacket( packet );
-
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
+
 		Assert::That(server.hasNewPackets(), IsTrue());
 	}
 
@@ -371,6 +371,39 @@ Describe(a_tcp_server)
 		currentConnections = server.getActiveConnections();
 
 		Assert::That(currentConnections.size(), Equals(5));
+	}
+
+	It(can_see_who_sent_the_packet)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient clients[3];
+		for(int i=0; i<3; i++)
+			clients[i].connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet src_packets[3];
+		for(int i=0; i<3; i++)
+		{
+			src_packets[i] << ( 'A' + (char)i );
+			clients[i].sendPacket( src_packets[i] );
+		}
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Assert::That(server.newPacketsCount(), Equals(3));
+
+		Packet dst_packets[3];
+		for(int i=0; i<3; i++)
+		{
+			dst_packets[i] = server.popNewPacket();
+			int senderId = dst_packets[i].getSenderId();
+			Assert::That(senderId, Is().Not().EqualTo(-1));
+		}
 	}
 
 //	It(can_see_a_client_disconnecting)
