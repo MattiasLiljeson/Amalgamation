@@ -323,28 +323,6 @@ void Game::Restart()
 		{
 			mPhysics->AddBox(AglVector3(2.0f, -8.49f + i * 1.010f, 0), AglVector3(1, 1, 1), 1, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
 		}
-		//mPhysics->AddSphere(AglVector3(-4.0f, 0, 0), 1, false);
-		//mPhysics->AddSphere(AglVector3(-4.0f, 7, -1), 1, false);
-
-		/*mPhysics->AddBox(AglVector3(2.0f, -8.49f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -6.98f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -5.97f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -4.96f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -3.95f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -2.94f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -1.93f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -0.92f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  0.03f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  1.04f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  2.05f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  3.06f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  4.07f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  5.08f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  6.09f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  7.10f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  8.11f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);*/
-
-		//mPhysics->AddBox(AglVector3(2.0f, 8.0f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
 	}
 	else
 	{

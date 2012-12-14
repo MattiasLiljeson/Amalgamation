@@ -138,7 +138,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::PhysicsBody, component);
 
 	component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0);
+									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
 	entity->addComponent(ComponentType::BodyInitData, component);
 
 	m_world->addEntity(entity);
@@ -152,8 +152,8 @@ void ClientApplication::initEntities()
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
 	
-	component = new BodyInitData(AglVector3(15, 0.5f, 0.0f), AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0);
+	component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
 	entity->addComponent(ComponentType::BodyInitData, component);
 
 	m_world->addEntity(entity);

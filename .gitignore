@@ -111,6 +111,12 @@ External/GTest/
 *.exe
 *.lastcodeanalysissucceeded
 
+*.agl
+*.fbx
+*.png
+*.dds
+*.tga
+
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
 Visual Leak Detector
