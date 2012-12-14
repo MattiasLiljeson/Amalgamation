@@ -32,7 +32,7 @@ public:
 	/// This function only allows for a basic non positional sound to be created, please 
 	/// see other functions for various other sounds
 	/// \param p_flePath
-	/// \returns Sound*
+	/// \return Sound*
 	///-----------------------------------------------------------------------------------
 	Sound* createAmbientSound( BasicSoundCreationInfo* p_info );
 

@@ -21,7 +21,7 @@ namespace TextureParser
 {
 	///-----------------------------------------------------------------------------------
 	/// Called once to initialize Free Image properly
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	static void init()
 	{
@@ -33,7 +33,7 @@ namespace TextureParser
 	/// throws exception if creation wasn't successfully.
 	/// \param p_device
 	/// \param p_filePath
-	/// \returns ID3D11ShaderResourceView*
+	/// \return ID3D11ShaderResourceView*
 	///-----------------------------------------------------------------------------------
 	static ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, 
 		const char* p_filePath)

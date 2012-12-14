@@ -25,7 +25,7 @@ public:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	FreeImageException(const string &p_msg,const string &p_file,const string &p_func,
 		int p_line){

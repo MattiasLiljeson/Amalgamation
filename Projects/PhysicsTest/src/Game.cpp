@@ -111,7 +111,8 @@ bool Game::Update(float pElapsedTime)
 
 	if (Avatar && mPhysics)
 	{
-		AglMatrix m = Avatar->GetWorld();
+		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
+		AglMatrix m = av->GetWorld();
 		AglMatrix world = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9],
 								m[10], m[11], m[12], m[13], m[14], m[15]);
 
@@ -123,11 +124,11 @@ bool Game::Update(float pElapsedTime)
 		SetCursorPos(PreviousMousePos.x, PreviousMousePos.y);
 		if (dy != 0)
 		{
-			Avatar->AddAngularImpulse(-world.GetRight() * (float)dy * pElapsedTime*4);
+			av->AddAngularImpulse(-world.GetRight() * (float)dy * pElapsedTime*4);
 		}
 		if (dx != 0)
 		{
-			Avatar->AddAngularImpulse(world.GetUp() * (float)dx * pElapsedTime*4);
+			av->AddAngularImpulse(world.GetUp() * (float)dx * pElapsedTime*4);
 		}
 
 
@@ -135,7 +136,7 @@ bool Game::Update(float pElapsedTime)
 		{
 			if (!mDown)
 			{
-				this->mPhysics->DetachBodyFromCompound(Avatar, toDetach);
+				//this->mPhysics->DetachBodyFromCompound(Avatar, toDetach);
 			}
 			mDown = true;
 		}
@@ -145,38 +146,38 @@ bool Game::Update(float pElapsedTime)
 
 		if(GetAsyncKeyState(VK_SPACE) & 0x8000)
 		{
-			Avatar->AddImpulse(world.GetForward()*50.0f * Avatar->GetMass() * pElapsedTime);
+			av->AddImpulse(world.GetForward()*50.0f * av->GetMass() * pElapsedTime);
 		}
 		else if(GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 		{
-			Avatar->AddImpulse(-world.GetForward()*50.0f * Avatar->GetMass() * pElapsedTime);
+			av->AddImpulse(-world.GetForward()*50.0f * av->GetMass() * pElapsedTime);
 		}
 
 		if(GetAsyncKeyState('W') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(world.GetRight()*pElapsedTime*4);
+			av->AddAngularImpulse(world.GetRight()*pElapsedTime*4);
 			//Avatar->AddImpulse(Avatar->GetWorld().GetForward()*0.05f);
 		}
 		else if(GetAsyncKeyState('S') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(-world.GetRight()*pElapsedTime*4);
+			av->AddAngularImpulse(-world.GetRight()*pElapsedTime*4);
 			//Avatar->AddImpulse(-Avatar->GetWorld().GetForward()*0.05f);
 		}
 		if (GetAsyncKeyState('A') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(-world.GetUp()*pElapsedTime*4);
+			av->AddAngularImpulse(-world.GetUp()*pElapsedTime*4);
 		}
 		else if (GetAsyncKeyState('D') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(world.GetUp()*pElapsedTime*4);
+			av->AddAngularImpulse(world.GetUp()*pElapsedTime*4);
 		}
 		if (GetAsyncKeyState('Q') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(world.GetForward()*pElapsedTime*4);
+			av->AddAngularImpulse(world.GetForward()*pElapsedTime*4);
 		}
 		else if (GetAsyncKeyState('E') & 0x8000)
 		{
-			Avatar->AddAngularImpulse(-world.GetForward()*pElapsedTime*4);
+			av->AddAngularImpulse(-world.GetForward()*pElapsedTime*4);
 		}
 
 		float distance = 10;
@@ -302,10 +303,12 @@ void Game::Restart()
 
 		//new
 		Avatar = mPhysics->AddCompoundBody(AglVector3(0, 0, -40));
+		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
 		float step = 1.0f / 9.0f * 2 * 3.14159f;
 		for (unsigned int i = 0; i < 7; i++)
 		{
-			toDetach = mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, Avatar);
+			//toDetach =
+			mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, av);
 		}
 	}
 	else if (val == 2)
@@ -320,28 +323,6 @@ void Game::Restart()
 		{
 			mPhysics->AddBox(AglVector3(2.0f, -8.49f + i * 1.010f, 0), AglVector3(1, 1, 1), 1, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
 		}
-		//mPhysics->AddSphere(AglVector3(-4.0f, 0, 0), 1, false);
-		//mPhysics->AddSphere(AglVector3(-4.0f, 7, -1), 1, false);
-
-		/*mPhysics->AddBox(AglVector3(2.0f, -8.49f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -6.98f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -5.97f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -4.96f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -3.95f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -2.94f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -1.93f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f, -0.92f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  0.03f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  1.04f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  2.05f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  3.06f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  4.07f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  5.08f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  6.09f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  7.10f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
-		mPhysics->AddBox(AglVector3(2.0f,  8.11f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);*/
-
-		//mPhysics->AddBox(AglVector3(2.0f, 8.0f, 0), AglVector3(1, 1, 1), 100, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
 	}
 	else
 	{

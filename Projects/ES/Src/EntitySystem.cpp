@@ -27,6 +27,16 @@ EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponent
 //	m_systemBits = p_bits;
 //}
 
+SystemType EntitySystem::getSystemType()
+{
+	return m_type;
+}
+
+SystemType::SystemTypeIdx EntitySystem::getSystemTypeIdx()
+{
+	return m_type.getIndex();
+}
+
 EntitySystem::~EntitySystem()
 {
 }

@@ -47,6 +47,7 @@ public:
 	int popNewConnection();
 
 	unsigned int activeConnectionsCount();
+	vector< int > getActiveConnections();
 
 	bool hasNewDisconnections();
 	unsigned int newDisconnectionsCount();
@@ -58,7 +59,13 @@ public:
 
 	void processMessages();
 
+	/// Broadcasts a packet to all connected clients
 	void broadcastPacket( Packet p_packet );
+
+	void multicastPacket( vector<int> p_connectionIdentities, Packet p_packet );
+
+	/// Unicast sends a packet to only one specified client
+	void unicastPacket( Packet p_packet, int clientId );
 
 private:
 	bool m_isListening;

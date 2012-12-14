@@ -14,7 +14,7 @@ MouseMoveControl::~MouseMoveControl()
 
 void MouseMoveControl::update( InputManager* p_manager )
 {
-	MessageLoopFetcher* fetcher = p_manager->getMessageLoopFetcher();
+	IMouseKeyboardFetcher* fetcher = p_manager->getMouseKeyboardFetcher();
 	int travel = fetcher->getMouseTravel( m_axis );
 	
 	double newStatus = 0.0;

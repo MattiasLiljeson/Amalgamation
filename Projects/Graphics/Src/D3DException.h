@@ -28,7 +28,7 @@ public:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	D3DException(HRESULT p_hresult,const string &p_file,const string &p_func,int p_line)
 	{
@@ -47,7 +47,7 @@ public:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	D3DException(ID3DBlob* p_errorBlob,const string &p_file,const string &p_func,int p_line)
 	{
@@ -62,7 +62,7 @@ public:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	D3DException(const string &p_msg,const string &p_file,const string &p_func,int p_line)
 	{
@@ -71,7 +71,7 @@ public:
 	virtual ~D3DException(){}
 	///-----------------------------------------------------------------------------------
 	/// Retrieve the error message
-	/// \returns const char*
+	/// \return const char*
 	///-----------------------------------------------------------------------------------
 	virtual const char* what() const throw()
 	{
@@ -84,7 +84,7 @@ private:
 	/// \param p_file
 	/// \param p_func
 	/// \param p_line
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void SetMsg(const string &p_msg,const string &p_file,const string &p_func,int p_line)
 	{

@@ -9,23 +9,25 @@ PhysicsController::~PhysicsController()
 	Clear();
 }
 
-RigidBodySphere* PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUserControlled, CompoundBody* pParent)
+int PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUserControlled, CompoundBody* pParent)
 {
 	RigidBodySphere* s = new RigidBodySphere(pPosition, pRadius, pUserControlled);
 	mRigidBodies.push_back(s);
+	mBodies.push_back(s);
 	if (pParent)
 		pParent->AddChild(s);
-	return s;
+	return mBodies.size()-1;
 }
-RigidBodyBox* PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
+int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
 {
 	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
 	mRigidBodies.push_back(b);
+	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
-	return b;
+	return mBodies.size()-1;
 }
-RigidBodyConvexHull* PhysicsController::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
+int PhysicsController::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
 {
 	//Create a new convex hull shape.
 	ConvexHullShape* shape = new ConvexHullShape(10);
@@ -33,15 +35,17 @@ RigidBodyConvexHull* PhysicsController::AddConvexHull(AglVector3 pPosition, floa
 
 	RigidBodyConvexHull* h = new RigidBodyConvexHull(shape, pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
 	mRigidBodies.push_back(h);
+	mBodies.push_back(h);
 	if (pParent)
 		pParent->AddChild(h);
-	return h;
+	return mBodies.size()-1;
 }
-CompoundBody* PhysicsController::AddCompoundBody(AglVector3 p_position)
+int PhysicsController::AddCompoundBody(AglVector3 p_position)
 {
 	CompoundBody* cb = new CompoundBody(p_position);
+	mBodies.push_back(cb);
 	mCompoundBodies.push_back(cb);
-	return cb;
+	return mBodies.size()-1;
 }
 
 void PhysicsController::DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body)
@@ -265,4 +269,9 @@ float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore,
 		}
 	}
 	return minT;
+}
+void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, AglVector3 p_angularImpulse)
+{
+	mBodies[p_id]->AddImpulse(p_impulse);
+	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
 }

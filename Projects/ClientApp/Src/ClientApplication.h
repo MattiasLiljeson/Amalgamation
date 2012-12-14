@@ -8,20 +8,26 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
-#include <InputSystem.h>
 #include <PhysicsBody.h>
+#include <BodyInitData.h>
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <Transform.h>
+#include <ShipController.h>
 #include <Windows.h>
 #include <AudioInfo.h>
+
 
 // Systems
 #include <CameraSystem.h>
 #include <GraphicsBackendSystem.h>
-#include <InputSystem.h>
+#include <InputBackendSystem.h>
+#include <PhysicsSystem.h>
 #include <NetworkConnectToServerSystem.h>
+#include <NetworkCommunicatorSystem.h>
+#include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
+#include <ShipControllerSystem.h>
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
@@ -61,5 +67,4 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
-
 };

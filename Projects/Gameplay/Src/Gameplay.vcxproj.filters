@@ -129,6 +129,108 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
+	</ClCompile>
+	<Filter Include="Systems\Gameplay">
+      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="QueueList.h">
+      <Filter>Utilities\QueueList</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Utilities\Vector3</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintPositionsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkSynced.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkClientControllable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsBackendSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPrepSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInfo.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInfo.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkListenerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsBody.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkInputHandlerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketTranslator.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="InputBackendSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipController.h">
+	  <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImpulseSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Impulse.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyInitData.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Utilities\Vector3</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintPositionsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
@@ -159,7 +261,10 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
-      <Filter>Systems</Filter>
+      <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCommunicatorSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
     <ClCompile Include="AudioBackendSystem.cpp">
       <Filter>Systems\Audio</Filter>
@@ -172,6 +277,18 @@
     </ClCompile>
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+	</ClCompile>
+    <ClCompile Include="ImpulseSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

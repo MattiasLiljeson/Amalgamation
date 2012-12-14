@@ -23,7 +23,7 @@ EntityWorld::~EntityWorld()
 	delete m_systemManager;
 	m_systemManager = NULL;
 
-	m_systemsBag.clear();
+	//m_systemsBag.clear();
 }
 
 void EntityWorld::initialize()
@@ -158,8 +158,14 @@ EntitySystem* EntityWorld::setSystem( SystemType::SystemTypeIdx p_typeIdx, Entit
 		bool p_enabled )
 {
 	p_system->setWorld( this );
-	m_systemsBag.push_back( p_system );
+	//m_systemsBag.push_back( p_system );
 	return m_systemManager->setSystem( p_typeIdx, p_system, p_enabled );
+}
+
+EntitySystem* EntityWorld::setSystem( EntitySystem* p_system,
+									 bool p_enabled )
+{
+	return setSystem( p_system->getSystemType(), p_system, p_enabled );
 }
 
 void EntityWorld::deleteSystem( SystemType p_type )
@@ -169,23 +175,23 @@ void EntityWorld::deleteSystem( SystemType p_type )
 
 void EntityWorld::deleteSystem( SystemType::SystemTypeIdx p_typeIdx )
 {
-	deleteSystemFromBag( m_systemManager->getSystem(p_typeIdx) );
+	//deleteSystemFromBag( m_systemManager->getSystem(p_typeIdx) );
 	m_systemManager->deleteSystem( p_typeIdx );
 }
 
 void EntityWorld::deleteSystem( EntitySystem* system)
 {
-	deleteSystemFromBag(system);
+	//deleteSystemFromBag(system);
 	m_systemManager->deleteSystem(system);
 }
 
-void EntityWorld::notifySystems( IPerformer* p_performer, Entity* p_entity )
-{
-	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
-	{
-		p_performer->perform(m_systemsBag[i], p_entity);
-	}
-}
+//void EntityWorld::notifySystems( IPerformer* p_performer, Entity* p_entity )
+//{
+//	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
+//	{
+//		p_performer->perform(m_systemsBag[i], p_entity);
+//	}
+//}
 
 void EntityWorld::notifyManagers( IPerformer* p_performer, Entity* p_entity )
 {
@@ -211,7 +217,7 @@ void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 		{
 			Entity* entity = p_entities[i];
 			notifyManagers(p_performer, entity);
-			notifySystems(p_performer, entity);
+			m_systemManager->notifySystems(p_performer, entity);
 		}
 		p_entities.clear();
 	}
@@ -228,24 +234,19 @@ void EntityWorld::process()
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
 
-	for( unsigned int i = 0; i<m_systemsBag.size(); i++ ) 
-	{
-		EntitySystem* system = m_systemsBag[i];
-		if( system->getEnabled() )
-			system->process();
-	}
+	m_systemManager->updateSynchronous();
 }
 
-void EntityWorld::deleteSystemFromBag(EntitySystem* system)
-{
-	//HACK: break in for-loop
-	vector<EntitySystem*>::iterator it;
-	for( it=m_systemsBag.begin(); it != m_systemsBag.end(); it++ )
-	{
-		if( *it == system )
-		{
-			m_systemsBag.erase(it);
-			break;
-		}
-	}
-}
+//void EntityWorld::deleteSystemFromBag(EntitySystem* system)
+//{
+//	//HACK: break in for-loop
+//	vector<EntitySystem*>::iterator it;
+//	for( it=m_systemsBag.begin(); it != m_systemsBag.end(); it++ )
+//	{
+//		if( *it == system )
+//		{
+//			m_systemsBag.erase(it);
+//			break;
+//		}
+//	}
+//}

@@ -37,11 +37,24 @@ public:
 	/// the packet size itself.
 	void setData(char* p_data, unsigned int p_size);
 	bool isEmpty() const;
+	void clear();
 
-	Packet& operator << (int  p_data);
-	Packet& operator >> (int& p_data);
+	Packet& operator << (char	p_data);
+	Packet& operator << (short	p_data);
+	Packet& operator << (int	p_data);
+	Packet& operator << (float	p_data);
+	Packet& operator << (double p_data);
+
+	Packet& operator >> (char&	 p_data);
+	Packet& operator >> (short&	 p_data);
+	Packet& operator >> (int&	 p_data);
+	Packet& operator >> (float&  p_data);
+	Packet& operator >> (double& p_data);
 
 private:
-	int readPos;
+	int m_readPos;
 	vector<char> m_data;
+
+	void WriteData(void* p_data, unsigned int p_dataSize);
+	void ReadData(void* p_data, unsigned int p_dataSize);
 };

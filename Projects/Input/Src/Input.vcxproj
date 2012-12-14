@@ -14,6 +14,11 @@
     <ClCompile Include="AnalogueControl.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="DigitalControl.cpp" />
+    <ClCompile Include="DirectInputFetcher.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="IMouseKeyboardFetcher.cpp" />
     <ClCompile Include="InputHelper.cpp" />
     <ClCompile Include="InputControlFactory.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -22,11 +27,15 @@
     <ClCompile Include="MouseBtnControl.cpp" />
     <ClCompile Include="MouseMoveControl.cpp" />
     <ClCompile Include="XInputFetcher.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AnalogueControl.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="DigitalControl.h" />
+    <ClInclude Include="DirectInputException.h" />
+    <ClInclude Include="DirectInputFetcher.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="IMouseKeyboardFetcher.h" />
     <ClInclude Include="InputHelper.h" />
     <ClInclude Include="InputControlFactory.h" />
     <ClInclude Include="InputManager.h" />
@@ -75,11 +84,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
