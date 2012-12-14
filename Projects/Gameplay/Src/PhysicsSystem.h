@@ -23,6 +23,9 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+
+	void applyImpulse(int p_bodyID, AglVector3 p_impulse, AglVector3 p_angularImpulse);
+
 private:
 	void initializeEntity(Entity* p_entity);
 

@@ -51,6 +51,11 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 	}
 }
 
+void PhysicsSystem::applyImpulse(int p_bodyID, AglVector3 p_impulse, AglVector3 p_angularImpulse)
+{
+	m_physicsController->ApplyExternalImpulse(p_bodyID, p_impulse, p_angularImpulse);
+}
+
 void PhysicsSystem::initializeEntity(Entity* p_entity)
 {
 	PhysicsBody* body =

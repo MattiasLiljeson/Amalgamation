@@ -120,5 +120,11 @@ External/FreeImage/
 /Build/*.dll.txt
 /Build/*.exe.txt
 
+*.agl
+*.fbx
+*.png
+*.dds
+*.tga
+
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
