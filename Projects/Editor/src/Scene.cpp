@@ -131,8 +131,11 @@ void Scene::Draw()
 			AglMatrix sw = obb.world * invMax;
 			AglMatrix size;
 			AglMatrix::componentsToMatrix(size, obb.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
-			sw = size * sw;
+			AglVector3 trans = w.GetTranslation();
+			w.SetTranslation(AglVector3(0, 0, 0));
 			sw *= w;
+			sw = size * sw;
+			sw.SetTranslation(sw.GetTranslation()+trans);
 			BOXMESH->Draw(sw);
 		}
 	}
