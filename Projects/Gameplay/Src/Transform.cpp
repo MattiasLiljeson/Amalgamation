@@ -30,6 +30,15 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	calcCompMatrix();
 }
 
+Transform::Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale)
+{
+	m_translation = p_translation;
+	m_rotation = p_rotation;
+	m_scale = p_scale;
+
+	calcCompMatrix();
+}
+
 Transform::~Transform()
 {
 

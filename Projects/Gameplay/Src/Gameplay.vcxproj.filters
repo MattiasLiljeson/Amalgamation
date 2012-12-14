@@ -106,6 +106,15 @@
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="ShipController.h">
+	  <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImpulseSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Impulse.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -154,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+	</ClCompile>
+    <ClCompile Include="ImpulseSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

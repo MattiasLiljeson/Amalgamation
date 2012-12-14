@@ -42,6 +42,7 @@ struct AglSceneDesc
 	vector<AglLooseBspTree*>		bspTrees;
 	vector<AglInteriorSphereGrid*>	sphereGrids;
 	string							textureDirectory;
+	AglCoordinateSystem				coordinateSystem;
 };
 
 class AglScene
@@ -61,6 +62,7 @@ private:
 	vector<AglSkeletonMapping*>		m_skeletonMappings; ///< List of skeleton mappings
 	vector<AglLooseBspTree*>		m_bspTrees;			///< List of Bsp trees
 	vector<AglInteriorSphereGrid*>	m_sphereGrids;		///< List of sphere grids
+	AglCoordinateSystem				m_coordinateSystem; ///< Coordinate system of the scene
 
 	unsigned int m_currentAnimation; ///< Currently played animation
 public:
@@ -288,6 +290,30 @@ public:
 	/// \param The sphere grid to add
 	///-----------------------------------------------------------------------------------
 	void addSphereGrid(AglInteriorSphereGrid* p_sphereGrid);
+
+	///-----------------------------------------------------------------------------------
+	/// Gets a matrix corresponding to the axes in the coordinate system
+	/// \return Matrix representing the coordinate system
+	///-----------------------------------------------------------------------------------
+	AglMatrix getCoordinateSystemAsMatrix();
+
+	///-----------------------------------------------------------------------------------
+	/// Sets the coordinate system of the scene
+	/// \param The system to set
+	///-----------------------------------------------------------------------------------
+	void setCoordinateSystem(AglCoordinateSystem p_system);
+
+	///-----------------------------------------------------------------------------------
+	/// Returns whether of not the system is left-handed
+	/// \return If the system is left-handed
+	///-----------------------------------------------------------------------------------
+	bool isLeftHanded();
+	
+	///-----------------------------------------------------------------------------------
+	/// Returns whether of not the system is right-handed
+	/// \return If the system is right-handed
+	///-----------------------------------------------------------------------------------
+	bool isRightHanded();
 };
 
 #endif

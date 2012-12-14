@@ -19,6 +19,8 @@
 #include <EntityWorld.h>
 #include <Input.h>
 #include <PhysicsBody.h>
+#include <BodyInitData.h>
+#include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <Transform.h>
 #include <ShipController.h>

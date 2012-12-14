@@ -23,6 +23,8 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+private:
+	void initializeEntity(Entity* p_entity);
 
 private:
 	PhysicsController* m_physicsController;

@@ -1,5 +1,34 @@
 #include "AglLooseBspTree.h"
 
+AglBspNode::AglBspNode()
+{
+	leftChild = -1;
+	rightChild = -1;
+	triangleID = -1;
+	minPoint = AglVector3();
+	maxPoint = AglVector3();
+}
+
+AglBspTriangle::AglBspTriangle(unsigned int p_index, const vector<AglVector3>& p_vertices, const vector<unsigned int>& p_indices)
+{
+	index = p_index;
+	float factor = 1.0f / 3.0f;
+
+	vertices[0] = p_vertices[p_indices[index*3]];
+	vertices[1] = p_vertices[p_indices[index*3+1]];
+	vertices[2] = p_vertices[p_indices[index*3+2]];
+
+	center = vertices[0] + vertices[1] + vertices[2];
+	center *= factor;
+	normal = AglVector3(1, 0, 0);
+}
+bool AglBspTriangle::operator<(const AglBspTriangle& pOther)
+{
+	float dot1 = AglVector3::dotProduct(center, normal);
+	float dot2 = AglVector3::dotProduct(pOther.center, pOther.normal);
+	return dot1 < dot2;
+}
+
 AglLooseBspTreeConstructor::AglLooseBspTreeConstructor(unsigned int p_targetMesh, vector<AglVector3> p_vertices, vector<unsigned int> p_indices)
 {
 	int count = 1;

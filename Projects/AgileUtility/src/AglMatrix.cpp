@@ -223,37 +223,37 @@ AglVector3 AglMatrix::GetTranslation() const
 }
 
 //Member Setters
-void AglMatrix::SetForward(AglVector3 pValue)
+void AglMatrix::SetForward(const AglVector3& pValue)
 {
 	data[8] = pValue.x;
 	data[9] = pValue.y;
 	data[10] = pValue.z;
 }
-void AglMatrix::SetBackward(AglVector3 pValue)
+void AglMatrix::SetBackward(const AglVector3& pValue)
 {
 	SetForward(-pValue);
 }
-void AglMatrix::SetRight(AglVector3 pValue)
+void AglMatrix::SetRight(const AglVector3& pValue)
 {
 	data[0] = pValue.x;
 	data[1] = pValue.y;
 	data[2] = pValue.z;
 }
-void AglMatrix::SetLeft(AglVector3 pValue)
+void AglMatrix::SetLeft(const AglVector3& pValue)
 {
 	SetRight(-pValue);
 }
-void AglMatrix::SetUp(AglVector3 pValue)
+void AglMatrix::SetUp(const AglVector3& pValue)
 {
 	data[4] = pValue.x;
 	data[5] = pValue.y;
 	data[6] = pValue.z;
 }
-void AglMatrix::SetDown(AglVector3 pValue)
+void AglMatrix::SetDown(const AglVector3& pValue)
 {
 	SetUp(-pValue);
 }
-void AglMatrix::SetTranslation(AglVector3 pValue)
+void AglMatrix::SetTranslation(const AglVector3& pValue)
 {
 	data[12] = pValue.x;
 	data[13] = pValue.y;
@@ -696,19 +696,19 @@ void AglMatrix::componentsToMatrix(AglMatrix& pMatrix, const AglVector3& pScale,
 }
 
 //Creates a translation matrix
-AglMatrix AglMatrix::createTranslationMatrix(AglVector3 pTranslation)
+AglMatrix AglMatrix::createTranslationMatrix(const AglVector3& pTranslation)
 {
 	return AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pTranslation.x, pTranslation.y, pTranslation.z, 1);
 }
 
 //Creates a scale matrix
-AglMatrix AglMatrix::createScaleMatrix(AglVector3 pScale)
+AglMatrix AglMatrix::createScaleMatrix(const AglVector3& pScale)
 {
 	return AglMatrix(pScale.x, 0, 0, 0, 0, pScale.y, 0, 0, 0, 0, pScale.z, 0, 0, 0, 0, 1);
 }
 
 //Create a rotation matrix
-AglMatrix AglMatrix::createRotationMatrix(AglQuaternion pQuaternion)
+AglMatrix AglMatrix::createRotationMatrix(const AglQuaternion& pQuaternion)
 {
 	//Based on one simple understanding. Given a quaternion rotation transform
 	//of qpq* two separate matrix-vector transforms can be derived.
@@ -741,7 +741,7 @@ AglMatrix AglMatrix::createRotationMatrix(AglQuaternion pQuaternion)
 }
 
 //Create a perspective matrix
-AglMatrix AglMatrix::createPerspectiveMatrix(float pAspectRatio, float pFieldOfView, float pNear, float pFar)
+AglMatrix AglMatrix::createPerspectiveMatrix(const float& pAspectRatio, const float& pFieldOfView, const float& pNear, const float& pFar)
 {
 	AglMatrix proj = AglMatrix(1.0f/(pAspectRatio*(float)tan(pFieldOfView/2)), 0.0f, 0.0f, 0.0f, 
 								0.0f, 1.0f/(float)tan(pFieldOfView/2), 0.0f, 0.0f, 
@@ -751,7 +751,7 @@ AglMatrix AglMatrix::createPerspectiveMatrix(float pAspectRatio, float pFieldOfV
 }
 
 //Create a view matrix
-AglMatrix AglMatrix::createViewMatrix(AglVector3 pPosition, AglVector3 pTarget, AglVector3 pUp)
+AglMatrix AglMatrix::createViewMatrix(const AglVector3& pPosition, const AglVector3& pTarget, const AglVector3& pUp)
 {
 	//Local Camera z-axis
 	AglVector3 w = (pTarget-pPosition) / AglVector3::length(pTarget-pPosition);

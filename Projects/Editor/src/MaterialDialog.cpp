@@ -3,8 +3,6 @@
 #include "TextureManager.h"
 #include <AglVector4.h>
 
-string materialName;
-
 //Callbacks
 void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 {
@@ -78,23 +76,29 @@ void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)
 {
+	const char *src = *(const char **)value;
+	size_t srcLen = strlen(src);
+	string res = "";
+	for (unsigned int i = 0; i < srcLen; i++)
+	{
+		res += src[i];
+	}
+
 	MaterialDialog* d = (MaterialDialog*)clientData;
 	AglMaterial* m = d->m_material;
-	const std::string *srcPtr = static_cast<const std::string *>(value);
-	m->nameID = Scene::GetInstance()->AddName(*srcPtr);
+	m->nameID = Scene::GetInstance()->AddName(res);
 
-	string define = "Scene/Material" + toString(m->id) + " label ='" + *srcPtr + "'";
+	string define = "Scene/Material" + toString(m->id) + " label ='" + res + "'";
 	TwDefine(define.c_str());
 }
 void TW_CALL MaterialDialog::GetName(void *value, void *clientData)
 {
+	char **destPtr = (char **)value;
 	MaterialDialog* d = (MaterialDialog*)clientData;
 	AglMaterial* m = d->m_material;
-
-	std::string *dest = (std::string *)(value);
-	string hej = *dest;
-	materialName = Scene::GetInstance()->GetName(m->nameID);
-	TwCopyStdStringToLibrary(*dest, materialName);
+	string materialName = Scene::GetInstance()->GetName(m->nameID);
+	char *src = (char*)materialName.c_str();
+	TwCopyCDStringToLibrary(destPtr, src);
 }
 
 MaterialDialog::MaterialDialog()
@@ -125,7 +129,7 @@ void MaterialDialog::setMaterial(int pIndex)
 
 	m_material = Scene::GetInstance()->GetMaterial(pIndex);
 
-	TwAddVarCB(m_dialog, "MaterialName", TW_TYPE_STDSTRING, SetName, GetName, (void*)this, " label='Name: '");
+	TwAddVarCB(m_dialog, "MaterialName", TW_TYPE_CDSTRING, SetName, GetName, (void*)this, " label='Name: '");
 	TwAddVarRW(m_dialog, "Ambient", TW_TYPE_COLOR3F, (void*)&m_material->ambient, " help='Light color.' group='Properties'");
 	TwAddVarRW(m_dialog, "Diffuse", TW_TYPE_COLOR3F, (void*)&m_material->diffuse, " help='Light color.' group='Properties'");
 	TwAddVarRW(m_dialog, "Specular", TW_TYPE_COLOR3F, (void*)&m_material->specular, " help='Light color.' group='Properties'");

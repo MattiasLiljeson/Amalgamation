@@ -1,8 +1,6 @@
 #include "MeshDialog.h"
 #include "Mesh.h"
 
-string meshName;
-
 void TW_CALL MeshDialog::SetWireframe(const void *value, void *clientData)
 {
 	MeshDialog* d = (MeshDialog*)clientData;
@@ -29,22 +27,29 @@ void TW_CALL MeshDialog::GetDrawNormals(void *value, void *clientData)
 }
 void TW_CALL MeshDialog::SetName(const void *value, void *clientData)
 {
+	const char *src = *(const char **)value;
+	size_t srcLen = strlen(src);
+	string res = "";
+	for (unsigned int i = 0; i < srcLen; i++)
+	{
+		res += src[i];
+	}
+
 	MeshDialog* d = (MeshDialog*)clientData;
 	Mesh* m = Scene::GetInstance()->GetMesh(d->m_meshIndex);
-	const std::string *srcPtr = static_cast<const std::string *>(value);
-	m->SetName(*srcPtr);
+	m->SetName(res);
 
-	string define = "Scene/Mesh" + toString(d->m_meshIndex+1) + " label ='" + *srcPtr + "'";
+	string define = "Scene/Mesh" + toString(d->m_meshIndex+1) + " label ='" + res + "'";
 	TwDefine(define.c_str());
 }
 void TW_CALL MeshDialog::GetName(void *value, void *clientData)
 {
+	char **destPtr = (char **)value;
 	MeshDialog* d = (MeshDialog*)clientData;
 	Mesh* m = Scene::GetInstance()->GetMesh(d->m_meshIndex);
-
-	std::string *dest = (std::string *)(value);
-	meshName = m->GetName();
-	TwCopyStdStringToLibrary(*dest, meshName);
+	string meshName = m->GetName();
+	char *src = (char*)meshName.c_str();
+	TwCopyCDStringToLibrary(destPtr, src);
 }
 
 MeshDialog::MeshDialog()
@@ -72,7 +77,7 @@ void MeshDialog::show()
 	
 	Mesh* m = Scene::GetInstance()->GetMesh(m_meshIndex);
 
-	TwAddVarCB(m_dialog, "MeshName", TW_TYPE_STDSTRING, SetName, GetName, (void*)this, " label='Name: '");
+	TwAddVarCB(m_dialog, "MeshName", TW_TYPE_CDSTRING, SetName, GetName, (void*)this, " label='Name: '");
 	TwAddVarCB(m_dialog, "Wireframe", TW_TYPE_BOOLCPP, SetWireframe, GetWireframe, (void*)this, "group=Sponge key=o");
 	TwAddVarCB(m_dialog, "Normal Length", TW_TYPE_FLOAT, SetDrawNormals, GetDrawNormals, (void*)this, "min=0.0 max=1.0 step=0.001");
 	TwAddVarCB(m_dialog, "Current Material", TW_TYPE_FLOAT, SetDrawNormals, GetDrawNormals, (void*)this, "min=0.0 max=1.0 step=0.001");

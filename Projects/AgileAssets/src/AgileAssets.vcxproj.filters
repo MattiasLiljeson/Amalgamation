@@ -9,8 +9,6 @@
     <ClInclude Include="AglAnimationLayer.h" />
     <ClInclude Include="AglGradient.h" />
     <ClInclude Include="AglGradientMaterial.h" />
-    <ClInclude Include="AglInteriorSphereGrid.h" />
-    <ClInclude Include="AglLooseBspTree.h" />
     <ClInclude Include="AglMaterial.h" />
     <ClInclude Include="AglMaterialMapping.h" />
     <ClInclude Include="AglMesh.h" />
@@ -27,8 +25,6 @@
     <ClCompile Include="AglAnimationLayer.cpp" />
     <ClCompile Include="AglGradient.cpp" />
     <ClCompile Include="AglGradientMaterial.cpp" />
-    <ClCompile Include="AglInteriorSphereGrid.cpp" />
-    <ClCompile Include="AglLooseBspTree.cpp" />
     <ClCompile Include="AglMaterial.cpp" />
     <ClCompile Include="AglMesh.cpp" />
     <ClCompile Include="AglNode.cpp" />
@@ -38,5 +34,6 @@
     <ClCompile Include="AglSkeleton.cpp" />
     <ClCompile Include="AglSkeletonMapping.cpp" />
     <ClCompile Include="AglWriter.cpp" />
+    <ClCompile Include="Agl.cpp" />
   </ItemGroup>
 </Project>

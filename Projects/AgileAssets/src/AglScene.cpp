@@ -45,6 +45,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
 	m_currentAnimation = 0;
+	m_coordinateSystem = p_desc.coordinateSystem;
 }
 
 AglNode AglScene::getNode(int p_index)
@@ -215,5 +216,36 @@ AglSceneDesc AglScene::getSceneData()
 	desc.skeletons = this->m_skeletons;
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
+	desc.coordinateSystem = this->m_coordinateSystem;
 	return desc;
+}
+
+AglMatrix AglScene::getCoordinateSystemAsMatrix()
+{
+	AglVector3 right = AglVector3::crossProduct(
+						m_coordinateSystem.upVector,
+						m_coordinateSystem.forwardVector);
+	if (m_coordinateSystem.handedness == AglCoordinateSystem::RIGHT)
+		right = -right;
+
+	AglMatrix mat = AglMatrix::identityMatrix();
+	mat.SetRight(right);
+	mat.SetUp(m_coordinateSystem.upVector);
+	mat.SetForward(m_coordinateSystem.forwardVector);
+	return mat;
+}
+
+void AglScene::setCoordinateSystem( AglCoordinateSystem p_system )
+{
+	m_coordinateSystem = p_system;
+}
+
+bool AglScene::isLeftHanded()
+{
+	return m_coordinateSystem.handedness == AglCoordinateSystem::LEFT;
+}
+
+bool AglScene::isRightHanded()
+{
+	return m_coordinateSystem.handedness == AglCoordinateSystem::RIGHT;
 }

@@ -19,7 +19,7 @@ void TW_CALL LoadAGL(void *clientData)
 		AGLLoader::GetInstance()->Load(file);
 
 	vector<Mesh*> meshes = Scene::GetInstance()->GetMeshes();
-	for (int i = 0; i < meshes.size(); i++)
+	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
 		string s = "Mesh " + toString(i);
 		string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Meshes'";
@@ -51,6 +51,8 @@ bool Game::Initialize()
     }
 	SceneDialog::GetInstance();
 
+
+	m_cameraController = new CameraController(mWindowHandle);
 	return true;
 }
 bool Game::Cleanup()
@@ -64,11 +66,17 @@ bool Game::Cleanup()
 	SceneDialog::Release();
 	RasterManager::cleanup();
 	TwTerminate();
+	delete m_cameraController;
 	return true;
 }
 bool Game::Update(float pElapsedTime)
 {
 	DX11Application::Update(pElapsedTime);
+	if(GetAsyncKeyState(VK_F5) & 0x8000)
+	{
+		TextureManager::GetInstance()->ReloadAll();
+	}
+	m_cameraController->Update(pElapsedTime);
 	Scene::GetInstance()->Update(pElapsedTime);
 	return true;
 }

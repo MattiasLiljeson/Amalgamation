@@ -100,16 +100,6 @@ void ClientApplication::initEntities()
 	Entity* entity;
 	Component* component;
 
-	// Physics object without a model defined, will not be rendered.
-	entity = m_world->createEntity();
-	component = new RenderInfo();
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform();
-	entity->addComponent( ComponentType::Transform, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
-	m_world->addEntity(entity);
-
 	// Load cube model used as graphic representation for all "graphical" entities.
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
@@ -131,6 +121,39 @@ void ClientApplication::initEntities()
 			}
 		}
 	}
+
+	//Test physics
+
+	//b1
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
+	m_world->addEntity(entity);
+
+	//b2
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+	
+	component = new BodyInitData(AglVector3(15, 0.5f, 0.0f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
+	m_world->addEntity(entity);
+
 
 	// Create a "spaceship"
 	entity = m_world->createEntity();

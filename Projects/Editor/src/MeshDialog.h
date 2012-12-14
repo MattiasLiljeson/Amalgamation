@@ -1,7 +1,6 @@
 #ifndef MESHDIALOG_H
 #define MESHDIALOG_H
 
-#include <AntTweakBar.h>
 #include "Scene.h"
 
 class MeshDialog
