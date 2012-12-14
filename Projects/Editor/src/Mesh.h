@@ -4,6 +4,8 @@
 #include "Utility.h"
 #include "AglReader.h"
 #include <AglGradient.h>
+#include <AglBoundingSphere.h>
+#include <AglOBB.h>
 
 class SkeletonMapping;
 class Scene;
@@ -78,6 +80,9 @@ public:
 	void				  SetInteriorSpheres(AglInteriorSphereGrid* p_grid){ m_grid = p_grid;}	
 
 	void update(float p_elapsedTime);
+
+	AglBoundingSphere minsphere;
+	AglOBB			  minOBB;
 };
 
 template <typename T>

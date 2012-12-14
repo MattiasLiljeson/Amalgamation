@@ -18,6 +18,26 @@ AglOBB::AglOBB(AglMatrix p_world, AglVector3 p_size)
 	size = p_size;
 }
 
+vector<AglVector3> AglOBB::getCorners()
+{
+	vector<AglVector3> c;
+
+	AglVector3 HalfSize = size / 2;
+	c.push_back(AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]));
+	c.push_back(AglVector3( HalfSize[0], -HalfSize[1], -HalfSize[2]));
+	c.push_back(AglVector3(-HalfSize[0],  HalfSize[1], -HalfSize[2]));
+	c.push_back(AglVector3(-HalfSize[0], -HalfSize[1],  HalfSize[2]));
+	c.push_back(AglVector3( HalfSize[0],  HalfSize[1], -HalfSize[2]));
+	c.push_back(AglVector3( HalfSize[0], -HalfSize[1],  HalfSize[2]));
+	c.push_back(AglVector3(-HalfSize[0],  HalfSize[1],  HalfSize[2]));
+	c.push_back(AglVector3( HalfSize[0],  HalfSize[1],  HalfSize[2]));
+	for (int i = 0; i < 8; i++)
+	{
+		c[i].transform(world);
+	}
+	return c;
+}
+
 //Static Functions
 AglOBB AglOBB::constructMinimum(vector<AglVector3> p_vertices, vector<unsigned int> p_indices)
 {

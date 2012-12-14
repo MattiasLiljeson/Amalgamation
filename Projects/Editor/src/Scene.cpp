@@ -5,6 +5,8 @@
 #include "TextureManager.h"
 #include "SkeletonMesh.h"
 #include "Globals.h"
+#include "SphereMesh.h"
+#include "BoxMesh.h"
 
 Scene* Scene::sInstance = NULL;
 
@@ -111,7 +113,27 @@ void Scene::Draw()
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
 		mMeshes[i]->Draw(w, invMax);
+		if (SPHEREMESH && DRAWDEBUGSPHERE)
+		{
+			AglVector3 pos = mMeshes[i]->minsphere.position * invMax;
+			float size = mMeshes[i]->minsphere.radius * invMax;
+			AglMatrix sw;
+			AglMatrix::componentsToMatrix(sw, AglVector3(size, size, size), AglQuaternion::identity(), pos);
+			sw *= w;
+			SPHEREMESH->Draw(sw);
+		}
+		if (BOXMESH && DRAWDEBUGBOX)
+		{
+			AglMatrix sw = mMeshes[i]->minOBB.world * invMax;
+			AglMatrix size;
+			AglMatrix::componentsToMatrix(size, mMeshes[i]->minOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
+			sw = size * sw;
+			sw *= w;
+			BOXMESH->Draw(sw);
+		}
+	}
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
@@ -122,10 +144,10 @@ void Scene::Draw()
 	newW.SetTranslation(AglVector3(0, 0, 0));
 	minP.transform(newW*invMax);
 	maxP.transform(newW*invMax);
-	if (mPlaneMesh)
+	/*if (mPlaneMesh)
 	{
 		mPlaneMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(0, min(minP.y, maxP.y), 0)), 1.0f);
-	}
+	}*/
 }
 AglNode Scene::GetNode(int pIndex)
 {

@@ -11,6 +11,8 @@
 #include "RenderNormalsShader.h"
 #include "AglLooseBspTree.h"
 #include "Globals.h"
+#include "SphereMesh.h"
+#include "AglOBB.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene)
 {
@@ -53,6 +55,20 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 	mVisible = true;
 	mCurrentMaterial = 0;
 	mMesh = pMesh;
+
+	vector<AglVector3> points;
+	for (int i = 0; i < h.vertexCount; i++)
+	{
+		points.push_back(v[i].position);
+	}
+	vector<unsigned int> ind2;
+	for (int i = 0; i < h.indexCount; i++)
+	{
+		ind2.push_back(ind[i]);
+	}
+
+	minOBB = AglOBB::constructMinimum(points, ind2);
+	minsphere = AglBoundingSphere::minimumBoundingSphere(minOBB.getCorners());
 }
 
 AglVector3 Mesh::GetMin()
@@ -141,7 +157,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 		}
 		else
 		{
-			if (mSkeletonMappings.size() > 0)
+			if (false)//mSkeletonMappings.size() > 0)
 			{
 				SkeletonMeshShader* ss = ShaderManager::GetInstance()->GetSkeletonMeshShader();
 				ss->SetBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), pScale, Scene::GetInstance()->GetSkeleton(mSkeletonMappings[0]->GetSkeleton()), matp);

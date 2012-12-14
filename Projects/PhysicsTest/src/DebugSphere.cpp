@@ -9,10 +9,13 @@ DebugSphere::DebugSphere(int pPerimiterPoints, ID3D11Device* p_device, ID3D11Dev
 	m_deviceContext = p_deviceContext;
 
 	AglSphereMesh sm;
-	vector<VertexPC> v = vector<VertexPC>(pPerimiterPoints * (pPerimiterPoints - 1) + 2);
+	vector<VertexPC> v = vector<VertexPC>(sm.positions.size());
 	for (int i = 0; i < v.size(); i++)
 	{
-		v[i] = VertexPC(sm.positions[i], sm.normals[i], AglVector4(1, 0, 0, 1));
+		if (sm.positions[i].x > 0)
+			v[i] = VertexPC(sm.positions[i], sm.normals[i], AglVector4(0, 0, 1, 1));
+		else
+			v[i] = VertexPC(sm.positions[i], sm.normals[i], AglVector4(1, 1, 0, 1));
 	}
 
 	m_indexCount = sm.indices.size();
