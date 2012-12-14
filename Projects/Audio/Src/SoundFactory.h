@@ -7,6 +7,7 @@
 #include "XAudio2Exception.h"
 #include "SoundDefines.h"
 #include "AudioCurves.h"
+#include "BasicSoundCreationInfo.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -32,9 +33,9 @@ public:
 	/// \param p_flePath
 	/// \returns Sound*
 	///-----------------------------------------------------------------------------------
-	Sound* createNonPositionalSound( const char* p_filePath );
-	PositionalSound* createPositionalSound( const char* p_filePath, AglVector3 p_pos ,
-		float* p_pChannelAzimuths);
+	Sound* createAmbientSound( BasicSoundCreationInfo* p_info );
+	PositionalSound* createPositionalSound( BasicSoundCreationInfo* p_info, 
+		const AglVector3& p_pos);
 protected:
 private:
 	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 

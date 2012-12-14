@@ -11,11 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicSoundCreationInfo.h" />
     <ClInclude Include="AudioCurves.h" />
     <ClInclude Include="PositionalSound.h" />
     <ClInclude Include="PositionalSoundInfo.h" />
     <ClInclude Include="Sound.h" />
-    <ClInclude Include="SoundCreationInfo.h" />
+    <ClInclude Include="PositionalSoundCreationInfo.h" />
     <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
     <ClInclude Include="SoundEnums.h" />

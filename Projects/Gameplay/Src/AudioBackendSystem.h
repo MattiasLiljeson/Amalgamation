@@ -1,6 +1,12 @@
 #pragma once
 #include <SoundWrapper.h>
+#include <BasicSoundCreationInfo.h>
+#include <AntTweakBarWrapper.h>
+#include <ToString.h>
+#include <string>
 #include "EntitySystem.h"
+
+using namespace std;
 
 // =======================================================================================
 //                                      AudioSystem
@@ -22,10 +28,19 @@ public:
 	void initialize();
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
-	int createNonPositionalSound(const char* p_filePath);
-	int createPositionalSound(const char* p_filePath, const AglVector3& p_pos );
+	int createAmbientSound(BasicSoundCreationInfo* p_info);
+	int createPositionalSound(BasicSoundCreationInfo* p_info, const AglVector3& p_pos );
 	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
 	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
+
+
+	/************************************************************************/
+	/* DEBUG FUNCTIONS ONLY! */
+	/************************************************************************/
+	static AudioBackendSystem* m_theSystem;
+private:
+	static void TW_CALL stopOrPlaySound(void* p_clientData);
+	string m_label;
 };

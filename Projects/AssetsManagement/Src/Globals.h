@@ -1,26 +1,19 @@
 #pragma once
-#include <x3daudio.h>
-#include <AglVector3.h>
+#include <string>
+
+using namespace std;
 
 // =======================================================================================
-//                                      PositionalSoundInfo
+//                                      Globals
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Contains the information needed to use a positional sound
+/// \brief Holds all the global defined variables
 ///        
-/// # PositionalSoundInfo
+/// # Globals
 /// Detailed description.....
-/// Created on: 11-12-2012 
+/// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
 
-struct PositionalSoundInfo
-{
-	X3DAUDIO_EMITTER emitter;
-	AglVector3 previousPosition;
-
-	PositionalSoundInfo()
-	{
-
-	}
-};
+static const string& SOUNDEFFECTPATH = "Assets/Sound/SoundEffect/";
+static const string& MUSICPATH = "Assets/Sound/Music/";

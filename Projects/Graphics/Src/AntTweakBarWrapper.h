@@ -43,6 +43,7 @@ public:
 
 	void	render();
 	void	handleMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	TwBar*	getMainBar();
 private:
 	AntTweakBarWrapper(ID3D11Device* p_device, const char* p_nameOfBar);
 	virtual ~AntTweakBarWrapper();

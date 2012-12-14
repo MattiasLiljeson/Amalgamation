@@ -9,26 +9,36 @@ SoundFactory::~SoundFactory()
 {
 
 }
-Sound* SoundFactory::createNonPositionalSound( const char* p_filePath )
+Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 {
 	IXAudio2SourceVoice* soundVoice;
 	WAVEFORMATEXTENSIBLE waveFormatEx;
 	XAUDIO2_BUFFER buffer;
+	ZeroMemory(&buffer, sizeof(XAUDIO2_BUFFER));
+	if (p_info->loopPlayback)
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	else
+		buffer.LoopCount = p_info->loopPlayback;
+
 	ZeroMemory(&m_file, sizeof(HANDLE));
-	initFile(p_filePath);
+	initFile(p_info->file);
 
 	soundVoice = fillBuffer(waveFormatEx,buffer);
-	return new Sound(soundVoice,buffer);
+	return new Sound(soundVoice,buffer,p_info->volume);
 }
 
 
-PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath, 
-													 AglVector3 p_pos,
-													 float* p_pChannelAzimuths)
+PositionalSound* SoundFactory::createPositionalSound( BasicSoundCreationInfo* p_info, 
+													 const AglVector3& p_pos)
 {
 	IXAudio2SourceVoice* soundVoice;
 	WAVEFORMATEXTENSIBLE waveFormatEx;
 	XAUDIO2_BUFFER buffer;
+	ZeroMemory(&buffer, sizeof(XAUDIO2_BUFFER));
+	if (p_info->loopPlayback)
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	else
+		buffer.LoopCount = p_info->loopPlayback;
 
 	/************************************************************************/
 	/* Positional sound specifics.											*/
@@ -36,7 +46,7 @@ PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath,
 	/* START */
 	X3DAUDIO_EMITTER emitter = {0};
 	
-	initEmitter(&emitter, p_pos, p_pChannelAzimuths);
+	initEmitter(&emitter, p_pos, NULL);
 
 	/************************************************************************/
 	/* PositionalSoundInfo should be sent into the sound factory.			*/
@@ -46,10 +56,10 @@ PositionalSound* SoundFactory::createPositionalSound( const char* p_filePath,
 	/* END */
 
 	ZeroMemory(&m_file, sizeof(HANDLE));
-	initFile(p_filePath);
+	initFile(p_info->file);
 
 	soundVoice = fillBuffer(waveFormatEx,buffer);
-	return new PositionalSound(soundVoice,buffer,info);
+	return new PositionalSound(soundVoice,buffer,info,p_info->volume);
 }
 
 IXAudio2SourceVoice* SoundFactory::fillBuffer( WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
@@ -80,12 +90,11 @@ IXAudio2SourceVoice* SoundFactory::fillBuffer( WAVEFORMATEXTENSIBLE& p_waveForma
 	/* HACK: Most options of the buffer should be sent into the function	*/
 	/* rather than the hard coded way below									*/
 	/************************************************************************/
-	ZeroMemory(&p_buffer, sizeof(XAUDIO2_BUFFER));
 	p_buffer.AudioBytes = chunkSize;
 	p_buffer.pAudioData = dataBuffer;
 	p_buffer.Flags = XAUDIO2_END_OF_STREAM;
 	p_buffer.LoopBegin = 0;
-	p_buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	//p_buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	/************************************************************************/
 	/* Create the source voice after the buffers has been formated.			*/
@@ -192,7 +201,7 @@ void SoundFactory::initFile(string p_filePath)
 	if (INVALID_HANDLE_VALUE == m_file)
 	{
 		hr = HRESULT_FROM_WIN32( GetLastError() );
-		throw XAudio2Exception(hr, __FILE__,__FUNCTION__,__LINE__);
+		throw XAudio2Exception(hr,p_filePath, __FILE__,__FUNCTION__,__LINE__);
 	}
 
 	if ( INVALID_SET_FILE_POINTER == SetFilePointer(m_file,0,NULL,FILE_BEGIN) )

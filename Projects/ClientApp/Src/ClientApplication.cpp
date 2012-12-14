@@ -3,15 +3,22 @@
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
-	m_running = false;
+	try{
+		m_running = false;
 
-	m_hInstance = p_hInstance;
-	
-	m_client = new TcpClient();
+		m_hInstance = p_hInstance;
 
-	m_world = new EntityWorld();
-	initSystems();
-	initEntities();
+		m_client = new TcpClient();
+
+		m_world = new EntityWorld();
+		initSystems();
+		initEntities();
+		initSounds();
+	}
+	catch(exception& e)
+	{
+		DEBUGPRINT((e.what()));
+	}
 }
 
 ClientApplication::~ClientApplication()
@@ -122,23 +129,7 @@ void ClientApplication::initEntities()
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
 
-	// Load sound file
-	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
-	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
-	int soundIdx = audioBackend->createPositionalSound(
-		"Assets/Sound/Music/Test/MusicMono.wav", AglVector3( 3.0f, 3.0f, 3.0f ));
 
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 3.0f, 3.0f, 3.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-
-	m_world->addEntity(entity);
-
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
 
 
 	// Add a grid of cubes to test instancing.
@@ -168,11 +159,94 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 
-	// Code below used to test removal of object and compoennts under runtime
+	// Code below used to test removal of object and components under runtime
 	entity = m_world->createEntity();
 	component = new Transform( 5.0f, 5.0f, 5.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
 	m_world->deleteEntity(entity);
+
+}
+
+void ClientApplication::initSounds()
+{
+	EntitySystem*	tempSys			= NULL;
+	Entity*			entity			= NULL;
+	Component*		component		= NULL;
+	BasicSoundCreationInfo* info	= NULL;
+	int				soundIdx		= -1;
+	string			fullFilePath;
+
+	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
+	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
+
+	/************************************************************************/
+	/* Load positional sound												*/
+	/************************************************************************/
+	
+	fullFilePath = MUSICPATH;
+	fullFilePath += "Test/MusicMono.wav";
+
+	info = new BasicSoundCreationInfo("Assets/Sound/Music/Test/MusicMono.wav",true);
+	soundIdx = audioBackend->createPositionalSound(info,AglVector3( 3.0f, 3.0f, 3.0f ));
+	entity = m_world->createEntity();
+	component = new Transform( 3.0f, 3.0f, 3.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new AudioInfo(soundIdx,true);
+	entity->addComponent(ComponentType::AudioComponent, component);
+	m_world->addEntity(entity);
+	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::STOP);
+
+	delete info;
+	
+	/************************************************************************/
+	/* Load positional sound												*/
+	/************************************************************************/
+	
+	fullFilePath = MUSICPATH;
+	fullFilePath += "Test/MusicMono.wav";
+
+	info = new BasicSoundCreationInfo("Assets/Sound/Music/Test/MusicMono.wav",true);
+	soundIdx = audioBackend->createPositionalSound(info,AglVector3( 3.0f, -10.0f, 3.0f ));
+	entity = m_world->createEntity();
+	component = new Transform( 3.0f, -10.0f, 3.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new AudioInfo(soundIdx,true);
+	entity->addComponent(ComponentType::AudioComponent, component);
+	m_world->addEntity(entity);
+	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::STOP);
+
+	delete info;
+	
+	/************************************************************************/
+	/* Load ambient sound													*/
+	/************************************************************************/
+
+	fullFilePath = MUSICPATH;
+	fullFilePath += "Test/Techno_1.wav";
+
+	info = new BasicSoundCreationInfo(fullFilePath.c_str(), true);
+	soundIdx = audioBackend->createAmbientSound( info );
+	entity = m_world->createEntity();
+	component = new AudioInfo(soundIdx,false);
+	entity->addComponent(ComponentType::AudioComponent,component);
+	m_world->addEntity(entity);
+	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::STOP);
+
+	delete info;
+	
+	/************************************************************************/
+	/* Load ambient sound													*/
+	/************************************************************************/
+	fullFilePath = SOUNDEFFECTPATH;
+	fullFilePath += "Test/spaceship_laser.wav";
+	info = new BasicSoundCreationInfo(fullFilePath.c_str(), false);
+	soundIdx = audioBackend->createAmbientSound( info );
+	entity = m_world->createEntity();
+	component = new AudioInfo(soundIdx,false);
+	entity->addComponent(ComponentType::AudioComponent,component);
+	m_world->addEntity(entity);
+
+	delete info;
 }

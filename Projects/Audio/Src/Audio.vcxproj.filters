@@ -45,11 +45,14 @@
     <ClInclude Include="SoundEnums.h">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClInclude>
-    <ClInclude Include="SoundCreationInfo.h">
-      <Filter>AudioEngine\Structs</Filter>
-    </ClInclude>
     <ClInclude Include="SoundOrientation.h">
       <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundCreationInfo.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicSoundCreationInfo.h">
+      <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Globals.h>
 #include <TcpClient.h> /* There is a problem where boost must initialize some socket-
 						related stuff before other things. Therefore TcpClient should
 						be included as soon as possible. Johan: Haven't looked too
@@ -52,7 +53,7 @@ public:
 private:
 	void initSystems();
 	void initEntities();
-
+	void initSounds();
 private:
 	HINSTANCE m_hInstance;
 

@@ -9,6 +9,7 @@
 #include "Sound.h"
 #include "PositionalSound.h"
 #include "SoundFactory.h"
+#include "BasicSoundCreationInfo.h"
 
 using namespace std;
 
@@ -56,7 +57,7 @@ public:
 	/// \param p_filePath
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int createNewNonPositionalSound(const char* p_filePath);
+	int createAmbientSound(BasicSoundCreationInfo* p_info);
 
 	///-----------------------------------------------------------------------------------
 	/// Utilizes the sound factory class to create the new positional sound. The created
@@ -65,7 +66,7 @@ public:
 	/// \param p_pos
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int createNewPositionalSound(const char* p_filePath, const AglVector3& p_pos);
+	int createNewPositionalSound(BasicSoundCreationInfo* p_info, const AglVector3& p_pos);
 
 	///-----------------------------------------------------------------------------------
 	/// To update positional sound output matrix is a relative expensive function to be 
@@ -109,8 +110,13 @@ public:
 	///-----------------------------------------------------------------------------------
 	void updateMasterVolume();
 
-	float* getLeftChannelRef();
-	float* getRightChannelRef();
+	///-----------------------------------------------------------------------------------
+	/// Checks if the numbers of queued buffer is higher than 0 if so than return true else 
+	/// returns false.
+	/// \param soundIndex
+	/// \return bool
+	///-----------------------------------------------------------------------------------
+	bool isPlaying(const int soundIndex);
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -151,9 +157,6 @@ private:
 
 	FLOAT32*				m_matrixCoefficients;
 	FLOAT32*				m_emitterAzimuths;
-
-	float					m_left;
-	float					m_right;
 
 	SoundFactory*			m_soundFactory;
 

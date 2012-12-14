@@ -50,3 +50,8 @@ void AntTweakBarWrapper::addWriteVariable(const char* p_name, TwType p_type,
 {
 	TwAddVarRW(m_antBar,p_name,p_type,p_var,p_misc);
 }
+
+TwBar* AntTweakBarWrapper::getMainBar()
+{
+	return m_antBar;
+}

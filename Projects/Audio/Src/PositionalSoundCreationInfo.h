@@ -1,10 +1,9 @@
 #pragma once
-#include <xaudio2.h>
 #include <x3daudio.h>
 #include "SoundOrientation.h"
 
 // =======================================================================================
-//                                      SoundCreationStruct
+//                                      PositionalSoundCreationInfo
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -15,12 +14,13 @@
 /// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
-struct SoundCreationInfo
+struct PositionalSoundCreationInfo
 {
 	FLOAT32* outputMatrix;
-	FLOAT32* emitterAzimuths;
+	//FLOAT32* emitterAzimuths;
 
-	int		destinationChannels;
+	X3DAUDIO_DSP_SETTINGS settings;
+
 	bool	loopPlayback;
 	SoundOrientation soundOrientation;
 };

@@ -34,6 +34,18 @@ public:
 			SetMsg(toString(errTxt),p_file,p_func,p_line);
 		else
 			SetMsg("Unknown HRESULT error! \n",p_file,p_func,p_line);
+	}	
+	XAudio2Exception( HRESULT p_hresult, const string &p_filePath, const string &p_file, 
+		const string &p_func, int p_line)
+	{
+		LPSTR errTxt = NULL;
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, p_hresult, MAKELANGID(LANG_NEUTRAL, 
+			SUBLANG_DEFAULT), (LPSTR)&errTxt, 0, NULL);
+		if (errTxt!=NULL)
+			SetMsg(toString(errTxt)+p_filePath,p_file,p_func,p_line);
+		else
+			SetMsg("Unknown HRESULT error! \n",p_file,p_func,p_line);
 	}
 	XAudio2Exception( const string& p_message, const string& p_file, const string& p_func,
 		int p_line)

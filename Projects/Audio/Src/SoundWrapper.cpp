@@ -6,8 +6,6 @@ SoundWrapper::SoundWrapper()
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
 	m_masterVolume	= 1.0f;
-	m_left			= 0;
-	m_right			= 0;
 
 	/************************************************************************/
 	/* XAudio2 2.7 specific call, this is called behind the scene in later	*/
@@ -98,18 +96,16 @@ void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 	m_listener.pCone		= NULL;
 }
 
-int SoundWrapper::createNewNonPositionalSound( const char* p_filePath )
+int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
-
-	m_createdSounds.push_back(m_soundFactory->createNonPositionalSound(p_filePath));
+	m_createdSounds.push_back(m_soundFactory->createAmbientSound(p_info));
 	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 
-int SoundWrapper::createNewPositionalSound(const char* p_filePath, 
-														const AglVector3& p_pos)
+int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_info, 
+										   const AglVector3& p_pos)
 {
-	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_filePath, p_pos, 
-		m_emitterAzimuths));
+	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_info, p_pos));
 	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 
@@ -201,12 +197,14 @@ void SoundWrapper::updateMasterVolume()
 	m_masterVoice->SetVolume(m_masterVolume,0);
 }
 
-float* SoundWrapper::getLeftChannelRef()
+bool SoundWrapper::isPlaying( const int soundIndex )
 {
-	return &m_left;
-}
+	XAUDIO2_VOICE_STATE* state = m_createdSounds[soundIndex]->getSourceCurrentState();
 
-float* SoundWrapper::getRightChannelRef()
-{
-	return &m_right;
+	if (state->BuffersQueued > 0 && state->SamplesPlayed != 0)
+	{
+		return true;
+	}
+
+	return false;
 }

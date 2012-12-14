@@ -18,7 +18,8 @@
 class Sound
 {
 public:
-	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer);
+	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer, 
+		float p_volume=1.0f);
 	virtual ~Sound();
 
 	///-----------------------------------------------------------------------------------
@@ -42,13 +43,19 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Only asks the source voice to begin playing it's sound no matter where the 
 	/// buffer pointer. If the sound has never been played the buffer location will be at
-	/// the begining.
+	/// the beginning.
 	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT resumeOrPlay();
 
 	IXAudio2SourceVoice* getSourceVoice();
+
+	XAUDIO2_VOICE_STATE* getSourceCurrentState();
+
+	void updateVoiceState();
 protected:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
+	XAUDIO2_VOICE_STATE*	m_sourceState;
+	float					m_volume;
 };
