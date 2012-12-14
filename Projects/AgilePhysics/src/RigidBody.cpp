@@ -221,8 +221,8 @@ void RigidBody::UpdateVelocity(float pElapsedTime)
 		mForce = AglVector3(0, 0, 0);
 
 		//Damping
-		//mVelocity *= (1 - 0.9f * pElapsedTime);
-		//mAngularVelocity *= (1 - 0.9f * pElapsedTime);
+		mVelocity *= (1 - 0.9f * pElapsedTime);
+		mAngularVelocity *= (1 - 0.9f * pElapsedTime);
 	}
 }
 void RigidBody::UpdatePosition(float pElapsedTime)

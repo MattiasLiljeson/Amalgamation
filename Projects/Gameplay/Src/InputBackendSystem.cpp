@@ -15,6 +15,7 @@ InputBackendSystem::~InputBackendSystem()
 
 void InputBackendSystem::initialize()
 {
+
 	XInputFetcher* xInput = new XInputFetcher();
 	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
 	HWND hWnd = m_graphicsBackend->getWindowRef();
@@ -25,10 +26,50 @@ void InputBackendSystem::initialize()
 	Control* tempControl = NULL;
 	int tempControlIdx = -1;
 
+	// GAMEPAD
 	tempControl = factory.create360controllerDigital( InputHelper::BTN_B );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Gamepad B"] = tempControlIdx;
 
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad LX positive"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX,
+		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad LX negative"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad LY positive"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY,
+		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad LY negative"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_L,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad L trigger"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_R,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad R analog trigger"] = tempControlIdx;
+
+	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_R );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad R shoulder button"] = tempControlIdx;
+
+	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_L );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad L shoulder button"] = tempControlIdx;
+
+	// MOUSE
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
@@ -49,6 +90,7 @@ void InputBackendSystem::initialize()
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
 
+	// KEYBOARD
 	tempControl = factory.createKeyboardKey( InputHelper::SPACE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Space"] = tempControlIdx;
@@ -88,25 +130,15 @@ void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
 			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
 			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
-<<<<<<< HEAD:Projects/Gameplay/Src/InputSystem.cpp
-			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y  negative"])->getStatus();
-			z += m_inputManager->getControl(m_controlIdxs["Mouse Z positive"])->getStatus();
-			z -= m_inputManager->getControl(m_controlIdxs["Mouse Z negative"])->getStatus();
-=======
 			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
 			z += m_inputManager->getControl(m_controlIdxs["Keyboard key W"])->getStatus();
 			z -= m_inputManager->getControl(m_controlIdxs["Keyboard key S"])->getStatus();
->>>>>>> sprint3:Projects/Gameplay/Src/InputBackendSystem.cpp
 
 			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
 			position.x -= x*sensitivityMult;
 			position.y -= y*sensitivityMult;
-<<<<<<< HEAD:Projects/Gameplay/Src/InputSystem.cpp
-			position.z -= z*sensitivityMult;
-=======
 			position.z -= z; 
->>>>>>> sprint3:Projects/Gameplay/Src/InputBackendSystem.cpp
 			transform->setTranslation( position );
 		}
 

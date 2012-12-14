@@ -17,6 +17,5 @@ public:
 
 	//AglVector3 m_pos;
 	AglVector3 m_lookAt;
-	AglVector3 m_up;
 };
 

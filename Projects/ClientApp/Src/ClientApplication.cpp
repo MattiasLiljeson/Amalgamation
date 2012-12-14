@@ -87,7 +87,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( inputBackend, true);
 
 	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics);
 	m_world->setSystem( shipController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
@@ -138,7 +138,7 @@ void ClientApplication::initEntities()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
-
+	
 
 
 
@@ -154,10 +154,12 @@ void ClientApplication::initEntities()
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
 				entity->addComponent( ComponentType::Transform, component );
+
 				m_world->addEntity(entity);
 			}
 		}
 	}
+	
 
 	//Test physics
 
@@ -196,11 +198,19 @@ void ClientApplication::initEntities()
 	entity = m_world->createEntity();
 	component = new RenderInfo( cubeMeshId );
 	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 0.0f, 0.0f, 0.0f );
+	component = new Transform( -5.0f, 0.0f, 0.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(2.0f,10.0f);
+	component = new ShipController(0.3f,3.0f);
 	entity->addComponent( ComponentType::ShipController, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+	entity->addComponent(ComponentType::BodyInitData, component);
+	
 	m_world->addEntity(entity);
+	int shipId = entity->getIndex();
 
 
 	// A camera from which the world is rendered.
@@ -209,8 +219,10 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::CameraInfo, component );
 	component = new Input();
 	entity->addComponent( ComponentType::Input, component );
-	component = new Transform( 5.0f, 5.0f, 5.0f );
+	component = new Transform( -5.0f, 0.0f, -5.0f );
 	entity->addComponent( ComponentType::Transform, component );
+	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
+	entity->addComponent( ComponentType::LookAtEntity, component );
 	m_world->addEntity(entity);
 
 	// Code below used to test removal of object and components under runtime
