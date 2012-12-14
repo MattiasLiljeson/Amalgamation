@@ -34,12 +34,27 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			if(playerInputAction == (char)PlayerInputAction::ThrustForward)
 			{
-				bool thrustState;
-				packet >> thrustState;
+				bool thrustForwardState;
+				packet >> thrustForwardState;
 
 				for( unsigned int i=0; i<p_entities.size(); i++ )
 				{
 					// TODO: Need to know who sent the packet!
+					if( p_entities[i].getIndex() == packet.getSenderId() )
+					{
+						Transform* transform = NULL;
+						transform = static_cast<Transform*>(
+							m_world->getComponentManager()->getComponent(
+							p_entities[i].getIndex(), ComponentType::Transform ) );
+
+						if( thrustForwardState == true ) // "Using thrust forward".
+						{
+							AglVector3 pos = transform->getTranslation();
+							pos.y += 0.5f;
+							transform->setTranslation( pos );
+						}
+							
+					}
 				}
 			}
 		}

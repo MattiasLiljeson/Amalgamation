@@ -6,6 +6,8 @@
 // NetComm
 #include <TcpServer.h>
 
+#include "Transform.h"
+
 #include "PacketType.h"
 #include "PlayerInputAction.h"
 
