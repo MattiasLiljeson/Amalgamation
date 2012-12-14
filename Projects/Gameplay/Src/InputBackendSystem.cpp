@@ -46,6 +46,24 @@ void InputBackendSystem::initialize()
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Gamepad LY negative"] = tempControlIdx;
 
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_L,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad L trigger"] = tempControlIdx;
+
+	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_R,
+		InputHelper::SUB_AXIS::AXIS_POSITIVE );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad R analog trigger"] = tempControlIdx;
+
+	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_R );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad R shoulder button"] = tempControlIdx;
+
+	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_L );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Gamepad L shoulder button"] = tempControlIdx;
+
 	// MOUSE
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
 		InputHelper::SUB_AXIS::AXIS_POSITIVE );

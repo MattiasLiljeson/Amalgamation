@@ -16,23 +16,14 @@ CameraSystem::~CameraSystem()
 
 void CameraSystem::initialize()
 {
-	m_ticker = 0.0f;
-	m_mouseXPositive = m_inputBackend->getInputControl("Mouse X positive");
-	m_mouseXNegative = m_inputBackend->getInputControl("Mouse X negative");
-	m_mouseYPositive = m_inputBackend->getInputControl("Mouse Y positive");
-	m_mouseYNegative = m_inputBackend->getInputControl("Mouse Y negative");
+
 }
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	// Input controls
-	double mouseX = m_mouseXPositive->getStatus() - m_mouseXNegative->getStatus();
-	double mouseY = m_mouseYPositive->getStatus() - m_mouseYNegative->getStatus();
-
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
-		m_ticker += m_world->getDelta();
 
 		CameraInfo* camInfo = static_cast<CameraInfo*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
@@ -41,19 +32,18 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 		// optional component for lookat
-		LookAtEntity* lookAt = static_cast<LookAtEntity*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity ) );
+		LookAtEntity* lookAt=NULL;
+		Component* t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity );
+		if (t!=NULL)
+			lookAt = static_cast<LookAtEntity*>(t);
 
-		// Handle Input for camera
+		// Retrieve initial info
 		AglVector3 position = transform->getTranslation();
-		// AglQuaternion rotation = transform->getRotation();
+		AglQuaternion rotation = transform->getRotation();
 		AglVector3 lookTarget = position+transform->getMatrix().GetForward();
 		AglVector3 up = transform->getMatrix().GetUp();
-		double sensitivityMult = 1000.0;
-		// position.x -= static_cast<float>(mouseX*sensitivityMult);
-		// position.y -= static_cast<float>(mouseY*sensitivityMult);
-		// transform->setTranslation( position );
 
+		// Prepare lookat values if used
 		if (lookAt)
 		{
 			// Extract look-at entity and its transform
@@ -66,21 +56,24 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			AglVector3 offset = lookAt->getOffset();
 			offset.transformNormal(targetTransform->getMatrix());
 			// Transform camera up
-			up.transformNormal(targetTransform->getMatrix());
+			up = targetTransform->getMatrix().GetUp();
 
 			// update transform
 			position = lookTarget+offset;
-			// rotation = targetTransform->getRotation();
+			rotation = targetTransform->getRotation();
 		}
 
+		// Construct view matrix
 		AglMatrix view = AglMatrix::createViewMatrix(position,
 													 lookTarget,
 													 up);
 
 		// update of position
 		transform->setTranslation( position );
-		// transform->setRotation( rotation );
+	    transform->setRotation( rotation );
 		
+
+		// Rendering preparations
 		AglMatrix viewProj = AglMatrix::identityMatrix();
 		viewProj = view * camInfo->m_projMat;
 		viewProj = AglMatrix::transpose( viewProj );

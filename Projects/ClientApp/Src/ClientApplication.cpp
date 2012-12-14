@@ -113,7 +113,7 @@ void ClientApplication::initEntities()
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
-	/*
+	
 	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )
 	{
@@ -126,11 +126,12 @@ void ClientApplication::initEntities()
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
 				entity->addComponent( ComponentType::Transform, component );
+
 				m_world->addEntity(entity);
 			}
 		}
 	}
-	*/
+	
 
 	//Test physics
 
@@ -171,7 +172,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform( -5.0f, 0.0f, 0.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(1.0f,3.0f);
+	component = new ShipController(0.3f,3.0f);
 	entity->addComponent( ComponentType::ShipController, component );
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);
@@ -190,7 +191,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::CameraInfo, component );
 	component = new Input();
 	entity->addComponent( ComponentType::Input, component );
-	component = new Transform( 5.0f, 5.0f, 5.0f );
+	component = new Transform( -5.0f, 0.0f, -5.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
 	entity->addComponent( ComponentType::LookAtEntity, component );
@@ -203,5 +204,6 @@ void ClientApplication::initEntities()
 	m_world->addEntity(entity);
 	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
 	m_world->deleteEntity(entity);
+
 }
 
