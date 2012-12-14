@@ -77,7 +77,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( graphicsBackend, true );
 
 	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics);
 	m_world->setSystem( shipController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
@@ -113,7 +113,7 @@ void ClientApplication::initEntities()
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
 	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
-
+	/*
 	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )
 	{
@@ -130,6 +130,7 @@ void ClientApplication::initEntities()
 			}
 		}
 	}
+	*/
 
 	//Test physics
 
@@ -168,10 +169,17 @@ void ClientApplication::initEntities()
 	entity = m_world->createEntity();
 	component = new RenderInfo( cubeMeshId );
 	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 0.0f, 0.0f, 0.0f );
+	component = new Transform( -5.0f, 0.0f, 0.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(2.0f,10.0f);
+	component = new ShipController(1.0f,3.0f);
 	entity->addComponent( ComponentType::ShipController, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+	entity->addComponent(ComponentType::BodyInitData, component);
+	
 	m_world->addEntity(entity);
 
 

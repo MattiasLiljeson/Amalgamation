@@ -1,11 +1,14 @@
 #include "ShipControllerSystem.h"
 
-ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend ) : 
-					  EntitySystem( SystemType::ShipControllerSystem, 2,
+ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
+										    PhysicsSystem* p_physicsSystem ) : 
+					  EntitySystem( SystemType::ShipControllerSystem, 3,
 									ComponentType::ComponentTypeIdx::ShipController,
-									ComponentType::ComponentTypeIdx::Transform)
+									ComponentType::ComponentTypeIdx::Transform,
+									ComponentType::ComponentTypeIdx::PhysicsBody)
 {
 	m_inputBackend = p_inputBackend;
+	m_physics = p_physicsSystem;
 }
 
 ShipControllerSystem::~ShipControllerSystem()
@@ -15,10 +18,10 @@ ShipControllerSystem::~ShipControllerSystem()
 
 void ShipControllerSystem::initialize()
 {
-	m_horizontalPositive	= m_inputBackend->getInputControl("Mouse X positive");
-	m_horizontalNegative	= m_inputBackend->getInputControl("Mouse X negative");
-	m_verticalPositive		= m_inputBackend->getInputControl("Mouse Y positive");
-	m_verticalNegative		= m_inputBackend->getInputControl("Mouse Y negative");
+	m_horizontalPositive	= m_inputBackend->getInputControl("Gamepad LX positive");
+	m_horizontalNegative	= m_inputBackend->getInputControl("Gamepad LX negative");
+	m_verticalPositive		= m_inputBackend->getInputControl("Gamepad LY positive");
+	m_verticalNegative		= m_inputBackend->getInputControl("Gamepad LY negative");
 
 	m_roll		= m_inputBackend->getInputControl("L");
 	m_thrust	= m_inputBackend->getInputControl("Gamepad B");
@@ -38,6 +41,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	double thrustInput = m_thrust->getStatus();
 	double strafeHorizontalInput = 0.0;
 	double strafeVerticalInput = 0.0;
+	double sensitivityMult = 1.0;
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -48,9 +52,12 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
+		PhysicsBody* physicsBody = static_cast<PhysicsBody*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody ) );
+
 		// Calc rotation from player input
-		float xangle = -verticalInput/* - Input.GetAxis("Mouse Y")*/;
-		float yangle = horizontalInput/* + Input.GetAxis("Mouse X")*/;
+		float xangle = verticalInput * sensitivityMult/* - Input.GetAxis("Mouse Y")*/;
+		float yangle = horizontalInput * sensitivityMult/* + Input.GetAxis("Mouse X")*/;
 		float zangle = 0.0f;
 		AglVector3 inputAngles(xangle,yangle,zangle);
 
@@ -70,12 +77,16 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		thrustVec += transform->getMatrix().GetRight() * strafeHorizontalInput * thrustPower;
 		thrustVec += transform->getMatrix().GetUp()	 * strafeVerticalInput * thrustPower;
 
-		// DEBUGPRINT(( (toString(thrustVec.x)+string(" ")+toString(thrustVec.y)+string(" ")+toString(thrustVec.z)+string("\n")).c_str() ));
+		AglVector3 angularVec=inputAngles*turnSpeed;
+		AglQuaternion quat = transform->getRotation();
+		quat.transformVector(angularVec);
+
+		DEBUGPRINT(( (toString(angularVec.x)+string(" ")+toString(angularVec.y)+string(" ")+toString(angularVec.z)+string("\n")).c_str() ));
 
 		// DEBUGPRINT(( (toString(horizontalInput)+string("\n")).c_str() ));
 
-		transform->setTranslation(transform->getTranslation()+thrustVec);
-
+		// transform->setTranslation(transform->getTranslation()+thrustVec);
+		m_physics->applyImpulse(physicsBody->m_id,thrustVec,angularVec);
 
 		// Apply force and torque
 		// rigidbody.AddForce(m_thrustVec,ForceMode.Acceleration);
