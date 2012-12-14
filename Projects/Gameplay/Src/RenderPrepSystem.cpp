@@ -1,7 +1,8 @@
 #include "RenderPrepSystem.h"
 
-RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend  ) : EntitySystem( SystemType::RenderPrepSystem, 1,
-								   ComponentType::ComponentTypeIdx::RenderInfo )
+RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend  )
+	: EntitySystem( SystemType::RenderPrepSystem, 1,
+		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
 }

@@ -18,14 +18,18 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
-#include <InputSystem.h>
+#include <Windows.h>
+#include <AntTweakBarWrapper.h>
+
+// Components
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <Transform.h>
-#include <Windows.h>
+#include <Identity.h>
 
 // Systems
+#include <InputSystem.h>
+#include <PhysicsSystem.h>
 #include <CameraSystem.h>
 #include <GraphicsBackendSystem.h>
 #include <InputSystem.h>

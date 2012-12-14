@@ -14,6 +14,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="Identity.h" />
     <ClInclude Include="NetworkUpdateSystem.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />

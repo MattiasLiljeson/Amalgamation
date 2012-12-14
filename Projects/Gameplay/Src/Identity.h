@@ -35,6 +35,11 @@ public:
 		return m_identity;
 	}
 
+	int* getIdentityPointer()
+	{
+		return &m_identity;
+	}
+
 	void setIdentity( int p_identity )
 	{
 		m_identity = p_identity;
