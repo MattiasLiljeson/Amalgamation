@@ -2,6 +2,7 @@
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
 #include "InputBackendSystem.h"
+#include "LookAtEntity.h"
 #include "Transform.h"
 #include <EntitySystem.h>
 

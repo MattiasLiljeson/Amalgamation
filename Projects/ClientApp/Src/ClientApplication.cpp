@@ -181,6 +181,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::BodyInitData, component);
 	
 	m_world->addEntity(entity);
+	int shipId = entity->getIndex();
 
 
 	// A camera from which the world is rendered.
@@ -191,6 +192,8 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Input, component );
 	component = new Transform( 5.0f, 5.0f, 5.0f );
 	entity->addComponent( ComponentType::Transform, component );
+	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
+	entity->addComponent( ComponentType::LookAtEntity, component );
 	m_world->addEntity(entity);
 
 	// Code below used to test removal of object and compoennts under runtime
