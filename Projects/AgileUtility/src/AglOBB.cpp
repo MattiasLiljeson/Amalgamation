@@ -19,7 +19,7 @@ AglOBB::AglOBB(AglMatrix p_world, AglVector3 p_size)
 }
 
 //Static Functions
-AglOBB AglOBB::constructMinimum(vector<AglVector3> p_vertices, vector<int> p_indices)
+AglOBB AglOBB::constructMinimum(vector<AglVector3> p_vertices, vector<unsigned int> p_indices)
 {
 	//Compute area of the mesh and centroid of the mesh
 	float areaH = 0; //areaH = areaHull

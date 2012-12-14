@@ -1,78 +1,21 @@
 #include "DebugSphere.h"
 #include "ShaderManager.h"
 #include "Camera.h"
+#include <AglSphereMesh.h>
 
 DebugSphere::DebugSphere(int pPerimiterPoints, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 
+	AglSphereMesh sm;
 	vector<VertexPC> v = vector<VertexPC>(pPerimiterPoints * (pPerimiterPoints - 1) + 2);
-	float step = (float)(2 * PI / pPerimiterPoints);
-
-	int curr = 0;
-	for (int i = 0; i < pPerimiterPoints; i++)
+	for (int i = 0; i < v.size(); i++)
 	{
-		for (int j = 1; j < pPerimiterPoints; j++)
-		{
-			float x = (float)cos(step * i);
-			float y = 2 * j / (float)pPerimiterPoints - 1.0f;
-			float z = (float)sin(step * i);
-			float frac = (float)cos(PI * y  / 2);// 1 - y * y;
-			AglVector3 pos = AglVector3(x * frac, y, z * frac);
-			Normalize(pos);
-
-			float texu = (float)(0.5f * asin(pos[0]) / PI) + 0.5f;
-			float texv = (float)(0.5f * asin(pos[1]) / PI) + 0.5f;
-			//texu = 0.5f * pos.X + 0.5f;
-			//texv = -0.5f * pos.Y + 0.5f;
-			AglVector4 c(1, 0, 0, 1);
-			if (pos[0] > 0 && pos[1] > 0)
-				c = AglVector4(0, 1, 0, 1);
-			else if (pos[0] > 0)
-				c = AglVector4(1, 1, 0, 1);
-			else if (pos[1] > 0)
-				c = AglVector4(0, 0, 1, 1);
-			v[curr++] = VertexPC(pos, pos, c);
-		}
+		v[i] = VertexPC(sm.positions[i], sm.normals[i], AglVector4(1, 0, 0, 1));
 	}
-	//v[v.size() - 2] = new VertexPositionNormalTexture(new AglVector3(0, -1, 0), new AglVector3(0, -1, 0), new Vector2(0, 0.0f));
-	//v[v.size() - 1] = new VertexPositionNormalTexture(new AglVector3(0, 1, 0), new AglVector3(0, 1, 0), new Vector2(0, 0.0f));
-	v[v.size() - 2] = VertexPC(AglVector3(0, -1, 0), AglVector3(0, -1, 0), AglVector4(1, 0, 0, 1));
-	v[v.size() - 1] = VertexPC(AglVector3(0, 1, 0), AglVector3(0, 1, 0), AglVector4(1, 0, 0, 1));
 
-
-	vector<unsigned int> ind = vector<unsigned int>(pPerimiterPoints * (pPerimiterPoints-2)*6 + pPerimiterPoints*3*2);
-	curr = 0;
-	for (int i = 0; i < pPerimiterPoints; i++)
-	{
-		for (int j = 0; j < pPerimiterPoints-2; j++)
-		{
-			int c1 = i * (pPerimiterPoints - 1) + j; 
-			int c2 = (i+1) * (pPerimiterPoints - 1) + j;
-			ind[curr++] = c1;
-			ind[curr++] = c1 + 1;
-			ind[curr++] = c2 % (v.size()-2);
-			ind[curr++] = c1 + 1;
-			ind[curr++] = (c2 + 1) % (v.size()-2);
-			ind[curr++] = c2 % (v.size()-2);
-		}
-	}
-	for (int i = 0; i < pPerimiterPoints; i++)
-	{
-		int c1 = i * (pPerimiterPoints - 1);
-		int c2 = ((i + 1) * (pPerimiterPoints - 1)) % (v.size() - 2);
-		ind[curr++] = v.size() - 2;
-		ind[curr++] = c1;
-		ind[curr++] = c2;
-
-		c1 = i * (pPerimiterPoints - 1) + pPerimiterPoints-2;
-		c2 = ((i + 1) * (pPerimiterPoints - 1) + pPerimiterPoints-2) % (v.size() - 2);
-		ind[curr++] = v.size() - 1;
-		ind[curr++] = c2;
-		ind[curr++] = c1;
-	}
-	m_indexCount = ind.size();
+	m_indexCount = sm.indices.size();
 
 
 	//Create Vertex Buffer
@@ -92,14 +35,14 @@ DebugSphere::DebugSphere(int pPerimiterPoints, ID3D11Device* p_device, ID3D11Dev
 	
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(unsigned int) * ind.size();
+	ibd.ByteWidth = sizeof(unsigned int) * sm.indices.size();
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	ibd.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA indexData;
-	indexData.pSysMem = &ind[0];
+	indexData.pSysMem = &sm.indices[0];
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 

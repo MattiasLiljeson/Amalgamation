@@ -1,34 +1,32 @@
 // =======================================================================================
-//                                      AglOBB
+//                                      AglSphereMesh
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # OBB
+/// # AglSphereMesh
 /// Detailed description.....
-/// Created on: 4-12-2012 
+/// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
-#ifndef AGLOBB_H
-#define AGLOBB_H
+#ifndef AGLSPHEREMESH_H
+#define AGLSPHEREMESH_H
 
 #include "AglVector3.h"
-#include "AglMatrix.h"
+#include "AglVector2.h"
 #include <vector>
 
 using namespace std;
 
-struct AglOBB
+struct AglSphereMesh
 {
-	AglMatrix world;
-	AglVector3 size;
+	vector<AglVector3> positions;
+	vector<AglVector3> normals;
+	vector<AglVector2> texCoord;
+	vector<unsigned int> indices;
 
-	AglOBB();
-	AglOBB(AglVector3 p_position, AglVector3 p_size);
-	AglOBB(AglMatrix p_world, AglVector3 p_size);
-
-	//Static Functions
-	static AglOBB constructMinimum(vector<AglVector3> p_vertices, vector<unsigned int> p_indices);
+	AglSphereMesh();
+	virtual ~AglSphereMesh();
 };
 
-#endif
+#endif // AGLSPHEREMESH_H

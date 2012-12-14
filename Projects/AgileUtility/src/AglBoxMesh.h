@@ -1,34 +1,32 @@
 // =======================================================================================
-//                                      AglOBB
+//                                      AglBoxMesh
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # OBB
+/// # AglBoxMesh
 /// Detailed description.....
-/// Created on: 4-12-2012 
+/// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
-#ifndef AGLOBB_H
-#define AGLOBB_H
+#ifndef AGLBOXMESH_H
+#define AGLBOXMESH_H
 
 #include "AglVector3.h"
-#include "AglMatrix.h"
+#include "AglVector2.h"
 #include <vector>
 
 using namespace std;
 
-struct AglOBB
+struct AglBoxMesh
 {
-	AglMatrix world;
-	AglVector3 size;
+	vector<AglVector3> positions;
+	vector<AglVector3> normals;
+	vector<AglVector2> texCoord;
+	vector<unsigned int> indices;
 
-	AglOBB();
-	AglOBB(AglVector3 p_position, AglVector3 p_size);
-	AglOBB(AglMatrix p_world, AglVector3 p_size);
-
-	//Static Functions
-	static AglOBB constructMinimum(vector<AglVector3> p_vertices, vector<unsigned int> p_indices);
+	AglBoxMesh();
+	virtual ~AglBoxMesh();
 };
 
-#endif
+#endif // AGLBOXMESH_H

@@ -66,7 +66,7 @@ void PhysicsController2::DrawDebug()
 			{
 				float radius = b->GetBoundingSphere().radius;
 				m2 = AglMatrix(radius, 0, 0, 0, 0, radius, 0, 0, 0, 0, radius, 0, 0, 0, 0, 1) * m2;
-				//mDebugSphere->draw(m2, true);
+				mDebugSphere->draw(m2, true);
 			}
 		}
 		if (bodies[i]->GetType() == SPHERE)
