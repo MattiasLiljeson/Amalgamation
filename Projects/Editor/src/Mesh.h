@@ -81,8 +81,8 @@ public:
 
 	void update(float p_elapsedTime);
 
-	AglBoundingSphere minsphere;
-	AglOBB			  minOBB;
+	AglBoundingSphere	getBoundingSphere();
+	AglOBB				getMinimumOBB();
 };
 
 template <typename T>

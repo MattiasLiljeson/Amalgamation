@@ -117,8 +117,9 @@ void Scene::Draw()
 		mMeshes[i]->Draw(w, invMax);
 		if (SPHEREMESH && DRAWDEBUGSPHERE)
 		{
-			AglVector3 pos = mMeshes[i]->minsphere.position * invMax;
-			float size = mMeshes[i]->minsphere.radius * invMax;
+			AglBoundingSphere bs = mMeshes[i]->getBoundingSphere();
+			AglVector3 pos = bs.position * invMax;
+			float size = bs.radius * invMax;
 			AglMatrix sw;
 			AglMatrix::componentsToMatrix(sw, AglVector3(size, size, size), AglQuaternion::identity(), pos);
 			sw *= w;
@@ -126,9 +127,10 @@ void Scene::Draw()
 		}
 		if (BOXMESH && DRAWDEBUGBOX)
 		{
-			AglMatrix sw = mMeshes[i]->minOBB.world * invMax;
+			AglOBB obb = mMeshes[i]->getMinimumOBB();
+			AglMatrix sw = obb.world * invMax;
 			AglMatrix size;
-			AglMatrix::componentsToMatrix(size, mMeshes[i]->minOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
+			AglMatrix::componentsToMatrix(size, obb.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
 			sw = size * sw;
 			sw *= w;
 			BOXMESH->Draw(sw);

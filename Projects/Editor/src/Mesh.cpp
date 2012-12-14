@@ -55,20 +55,6 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 	mVisible = true;
 	mCurrentMaterial = 0;
 	mMesh = pMesh;
-
-	vector<AglVector3> points;
-	for (int i = 0; i < h.vertexCount; i++)
-	{
-		points.push_back(v[i].position);
-	}
-	vector<unsigned int> ind2;
-	for (int i = 0; i < h.indexCount; i++)
-	{
-		ind2.push_back(ind[i]);
-	}
-
-	minOBB = AglOBB::constructMinimum(points, ind2);
-	minsphere = AglBoundingSphere::minimumBoundingSphere(minOBB.getCorners());
 }
 
 AglVector3 Mesh::GetMin()
@@ -306,4 +292,14 @@ void Mesh::update(float p_elapsedTime)
 		for (int i = 0; i < 50; i++)
 			bsptree->evaluate(spos, 0.01f);
 	}
+}
+AglBoundingSphere Mesh::getBoundingSphere()
+{
+	AglMeshHeader mh = mMesh->getHeader();
+	return mh.boundingSphere;
+}
+AglOBB Mesh::getMinimumOBB()
+{
+	AglMeshHeader mh = mMesh->getHeader();
+	return mh.minimumOBB;
 }

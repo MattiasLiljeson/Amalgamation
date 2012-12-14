@@ -65,7 +65,7 @@ void BoxMesh::Draw(AglMatrix pWorld)
 {
 	RasterManager::getInstance()->setWireframeState();
 	AglMaterial mat;
-	mat.diffuse = AglVector3(1, 0 , 0);
+	mat.diffuse = AglVector3(0, 100 , 0);
 	mat.specular = AglVector3(0, 0, 0);
 	StandardShader* ss = ShaderManager::GetInstance()->GetStandardShader();
 	ss->SetBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), 1.0f, mat);
