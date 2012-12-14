@@ -41,7 +41,7 @@ public:
 	/// \param MessageType p_type
 	/// \param ThreadSafeMessaging * p_sender
 	/// \param string p_message
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessMessage( MessageType::MESSAGE_TYPE p_type, ThreadSafeMessaging* p_sender );
 

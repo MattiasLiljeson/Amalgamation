@@ -22,19 +22,19 @@ public:
 	Mesh( Buffer<PTNVertex>* p_vertexBuffer, Buffer<DIndex>* p_indexBuffer);
 	///-----------------------------------------------------------------------------------
 	/// The Managers for the mesh will handle the deletion of each entities data.
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	virtual ~Mesh();
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the vertex buffer.
-	/// \returns Buffer<PTNVertex>*
+	/// \return Buffer<PTNVertex>*
 	///-----------------------------------------------------------------------------------
 	Buffer<PTNVertex>*	getVertexBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the index buffer.
-	/// \returns Buffer<DIndex>*
+	/// \return Buffer<DIndex>*
 	///-----------------------------------------------------------------------------------
 	Buffer<DIndex>*		getIndexBuffer();
 

@@ -20,11 +20,13 @@ public:	//Enums
 		NetworkInputHandlerSystem,
 		NetworkConnectoToServerSystem,
 		NetworkCommunicatorSystem,
-		InputSystem,
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
 		GraphicsBackendSystem,
+		InputBackendSystem,
+		ShipControllerSystem,
+		ImpulseSystem,
 		NUM_SYSTEM_TYPES
 	};
 

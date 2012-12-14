@@ -64,9 +64,9 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
-	// will be available if the backend systems isn't used. 
-	InputSystem* input = new InputSystem();
-	m_world->setSystem( SystemType::InputSystem, input, true);
+	// will be available if the graphics backend system isn't used. 
+	InputBackendSystem* inputBackend = new InputBackendSystem();
+	m_world->setSystem( SystemType::InputBackendSystem, inputBackend, true);
 
 	// Physics systems
 	PhysicsSystem* physics = new PhysicsSystem();
@@ -76,7 +76,13 @@ void ClientApplication::initSystems()
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
 
-	CameraSystem* camera = new CameraSystem( graphicsBackend );
+	// Controller system for the ship
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
+	m_world->setSystem(SystemType::ShipControllerSystem, shipController, true);
+
+	// Camera system updates camera based on input and sets its viewport info
+	// to the graphics backend for render
+	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( SystemType::CameraSystem, camera , true );
 
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
@@ -105,16 +111,6 @@ void ClientApplication::initEntities()
 	Entity* entity;
 	Component* component;
 
-	// Physics object without a model defined, will not be rendered.
-	entity = m_world->createEntity();
-	component = new RenderInfo();
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform();
-	entity->addComponent( ComponentType::Transform, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
-	m_world->addEntity(entity);
-
 	// Load cube model used as graphic representation for all "graphical" entities.
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
@@ -136,6 +132,50 @@ void ClientApplication::initEntities()
 			}
 		}
 	}
+
+	//Test physics
+
+	//b1
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
+	m_world->addEntity(entity);
+
+	//b2
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+	
+	component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
+	m_world->addEntity(entity);
+
+
+	// Create a "spaceship"
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform( 0.0f, 0.0f, 0.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new ShipController(2.0f,10.0f);
+	entity->addComponent( ComponentType::ShipController, component );
+	m_world->addEntity(entity);
+
 
 	// A camera from which the world is rendered.
 	entity = m_world->createEntity();

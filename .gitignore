@@ -101,27 +101,32 @@ Desktop.ini
 
 # Folders
 [Ll]ib/
-docs
-assets/*
-External/DirectX/
+docs/
+Build/Assets/Textures/
+Build/Assets/Sound/
+Build/Assets/Maps/
+Build/Assets/Misc/
+Build/Assets/Models/
 External/LibRocket/
 External/GTest/
+External/Visual Leak Detector/
+External/igloo/
+External/Ant/
+External/FreeImage/
 
 # Files
 *.exe
 *.lastcodeanalysissucceeded
+/Build/*.dll.txt
+/Build/*.exe.txt
+
+*.agl
+*.fbx
+*.png
+*.dds
+*.tga
+*.fbx
+*.agl
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
-Visual Leak Detector
-Ant
-Assets
-External
-igloo
-/Build/*.lastcodeanalysissucceeded
-/Build/Project1_x86_debug.dll.txt
-/Build/Project1_x86_debug.exe.txt
-/Build/Project2_x64_release.exe.txt
-/Build/Project2_x86_release.dll.txt
-*.fbx
-*.agl

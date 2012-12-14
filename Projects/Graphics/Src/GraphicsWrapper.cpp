@@ -186,7 +186,7 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name)
 			// (Here you might want to do similar checks for textures/materials
 			// For now we have a hard coded texture path, but later on
 			// we probably get this path from a mesh file loader or similar.
-			string texturepath = "Assets/Textures/Test/1000x1000_32.png"; 
+			string texturepath = "Assets/Textures/Test/10x10.png"; 
 			int texFoundId = m_textureManager->getResourceId(texturepath);
 			unsigned int texResultId = 0;
 			// and probably only the file name or Texture sub folder name+file name
