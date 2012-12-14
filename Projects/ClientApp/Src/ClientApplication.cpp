@@ -101,8 +101,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( msgProcSystem , true );
 
 	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client );
-	m_world->setSystem( connect, false );
+		new NetworkConnectToServerSystem( m_client, inputBackend );
+	m_world->setSystem( connect, true );
 
 	NetworkCommunicatorSystem* communicatorSystem =
 		new NetworkCommunicatorSystem( m_client );
