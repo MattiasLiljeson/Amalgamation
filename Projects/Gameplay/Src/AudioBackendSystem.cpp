@@ -20,7 +20,7 @@ void AudioBackendSystem::processEntities( const vector<Entity*>& p_entities )
 
 }
 
-void AudioBackendSystem::updateListener( const SoundSceneInfo& p_listenerInfo )
+void AudioBackendSystem::updateListener( const SoundOrientation& p_listenerInfo )
 {
 	m_soundWrapper->updateListener(p_listenerInfo);
 }

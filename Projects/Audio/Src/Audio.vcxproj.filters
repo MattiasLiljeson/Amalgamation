@@ -13,15 +13,15 @@
     <Filter Include="Factory">
       <UniqueIdentifier>{863c3283-e765-42c5-8f47-e5f5adbeca75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AudioEngine\Structs">
+      <UniqueIdentifier>{fab5f3e9-5373-445d-a1a2-73cc83300740}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XAudio2Exception.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="SoundWrapper.h">
-      <Filter>AudioEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundSceneInfo.h">
       <Filter>AudioEngine</Filter>
     </ClInclude>
     <ClInclude Include="AudioCurves.h">
@@ -44,6 +44,12 @@
     </ClInclude>
     <ClInclude Include="SoundEnums.h">
       <Filter>AudioEngine\SoundFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundCreationInfo.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundOrientation.h">
+      <Filter>AudioEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

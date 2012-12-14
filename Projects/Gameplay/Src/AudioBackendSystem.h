@@ -21,7 +21,7 @@ public:
 	virtual ~AudioBackendSystem();
 	void initialize();
 	void processEntities(const vector<Entity*>& p_entities);
-	void updateListener(const SoundSceneInfo& p_listenerInfo);
+	void updateListener(const SoundOrientation& p_listenerInfo);
 	int createNonPositionalSound(const char* p_filePath);
 	int createPositionalSound(const char* p_filePath, const AglVector3& p_pos );
 	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);

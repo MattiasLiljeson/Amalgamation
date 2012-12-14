@@ -15,10 +15,11 @@
     <ClInclude Include="PositionalSound.h" />
     <ClInclude Include="PositionalSoundInfo.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundCreationInfo.h" />
     <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
     <ClInclude Include="SoundEnums.h" />
-    <ClInclude Include="SoundSceneInfo.h" />
+    <ClInclude Include="SoundOrientation.h" />
     <ClInclude Include="SoundWrapper.h" />
     <ClInclude Include="XAudio2Exception.h" />
   </ItemGroup>
