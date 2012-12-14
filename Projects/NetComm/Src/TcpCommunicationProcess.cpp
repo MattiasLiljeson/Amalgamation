@@ -65,9 +65,13 @@ void TcpCommunicationProcess::processMessages()
 			ProcessMessageSendPacket* sendPacketMessage =
 				static_cast<ProcessMessageSendPacket*>(message);
 
+			// HACK: Don't forget to actually HANDLE the error if it occurs :)
+			boost::system::error_code ec;
 			m_activeSocket->send( boost::asio::buffer(
 				sendPacketMessage->packet.getDataPtr(),
-				sendPacketMessage->packet.getDataSize()) );
+				sendPacketMessage->packet.getDataSize()),
+				boost::asio::detail::message_do_not_route,
+				ec );
 
 		}
 
