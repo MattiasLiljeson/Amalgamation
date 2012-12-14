@@ -1,11 +1,13 @@
 #include "InputSystem.h"
 
-InputSystem::InputSystem(void)
+InputSystem::InputSystem( HINSTANCE p_hInstance, GraphicsBackendSystem* p_graphicsBackend )
 	: EntitySystem( SystemType::InputSystem, 1, ComponentType::Input )
 {
+	m_hInstance = p_hInstance;
+	m_graphicsBackend = p_graphicsBackend;
 }
 
-InputSystem::~InputSystem(void)
+InputSystem::~InputSystem()
 {
 	delete m_inputManager;
 	m_inputManager = NULL;
@@ -13,9 +15,11 @@ InputSystem::~InputSystem(void)
 
 void InputSystem::initialize()
 {
-	XInputFetcher* xif = new XInputFetcher();
-	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
-	m_inputManager = new InputManager( milf, /*xif*/ NULL );
+	XInputFetcher* xInput = new XInputFetcher();
+	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
+	HWND hWnd = m_graphicsBackend->getWindowRef();
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
+	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;
 	Control* tempControl = NULL;
@@ -48,6 +52,14 @@ void InputSystem::initialize()
 	tempControl = factory.createKeyboardKey( InputHelper::L );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Keyboard key L"] = tempControlIdx;
+
+	tempControl = factory.createKeyboardKey( InputHelper::W );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Keyboard key W"] = tempControlIdx;
+
+	tempControl = factory.createKeyboardKey( InputHelper::S );
+	tempControlIdx = m_inputManager->addControl( tempControl );
+	m_controlIdxs["Keyboard key S"] = tempControlIdx;
 }
 
 void InputSystem::processEntities( const vector<Entity*>& p_entities )
@@ -67,16 +79,19 @@ void InputSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if( cameraInfo != NULL )
 		{
-			double x = 0.0, y = 0.0;
+			double x = 0.0, y = 0.0, z = 0.0;
 			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
 			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
 			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
 			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
+			z += m_inputManager->getControl(m_controlIdxs["Keyboard key W"])->getStatus();
+			z -= m_inputManager->getControl(m_controlIdxs["Keyboard key S"])->getStatus();
 
 			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
 			position.x -= x*sensitivityMult;
 			position.y -= y*sensitivityMult;
+			position.z -= z; 
 			transform->setTranslation( position );
 		}
 

@@ -12,8 +12,7 @@ public:	//Enums
 	{
 		NON_EXISTING = -1,
 		EntitySystem,
-		TestSystem,
-		TestSystem2,
+		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
 		NetworkListenerSystem,
@@ -24,7 +23,6 @@ public:	//Enums
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
-		GraphicsBackendSystem,
 		NUM_SYSTEM_TYPES
 	};
 

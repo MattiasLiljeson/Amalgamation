@@ -63,18 +63,22 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
-	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
-	// will be available if the backend systems isn't used. 
-	InputSystem* input = new InputSystem();
-	m_world->setSystem( SystemType::InputSystem, input, true);
 
-	// Physics systems
+	/************************************************************************/
+	/* Physics																*/
+	/************************************************************************/
 	PhysicsSystem* physics = new PhysicsSystem();
 	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 	
-	// Graphic systems
+	/************************************************************************/
+	/* Graphics																*/
+	/************************************************************************/
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
+	
+	// Input depends on the window created by the graphics back-end system.
+	InputSystem* input = new InputSystem( m_hInstance, graphicsBackend );
+	m_world->setSystem( SystemType::InputSystem, input, true);
 
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( SystemType::CameraSystem, camera , true );
@@ -82,7 +86,9 @@ void ClientApplication::initSystems()
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
 	m_world->setSystem( SystemType::RenderPrepSystem, renderer , true );
 
-	// Network systems
+	/************************************************************************/
+	/* Network																*/
+	/************************************************************************/
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( SystemType::ProcessingMessagesSystem, msgProcSystem , true );
 
