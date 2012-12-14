@@ -1,11 +1,13 @@
 #include "InputBackendSystem.h"
-
-InputBackendSystem::InputBackendSystem(void)
+InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
+									   GraphicsBackendSystem* p_graphicsBackend )
 	: EntitySystem( SystemType::InputBackendSystem )
 {
+	m_hInstance = p_hInstance;
+	m_graphicsBackend = p_graphicsBackend;
 }
 
-InputBackendSystem::~InputBackendSystem(void)
+InputBackendSystem::~InputBackendSystem()
 {
 	delete m_inputManager;
 	m_inputManager = NULL;
@@ -13,9 +15,12 @@ InputBackendSystem::~InputBackendSystem(void)
 
 void InputBackendSystem::initialize()
 {
-	XInputFetcher* xif = new XInputFetcher();
-	MessageLoopFetcher* milf = new MessageLoopFetcher( false );
-	m_inputManager = new InputManager( milf, xif );
+
+	XInputFetcher* xInput = new XInputFetcher();
+	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
+	HWND hWnd = m_graphicsBackend->getWindowRef();
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
+	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;
 	Control* tempControl = NULL;
@@ -45,13 +50,32 @@ void InputBackendSystem::initialize()
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
 
-	tempControl = factory.createKeyboardKey( InputHelper::SPACE );
+	tempControl = factory.createKeyboardKey( InputHelper::KEY_SPACE );
 	tempControlIdx = m_inputManager->addControl( tempControl );
 	m_controlIdxs["Space"] = tempControlIdx;
 
-	tempControl = factory.createKeyboardKey( InputHelper::L );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Keyboard key L"] = tempControlIdx;
+	vector<Control*> keysAtoZ = factory.createKeysAToZ();
+	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
+	{
+		stringstream ss;
+		ss << "Keyboard key ";
+		ss << (char)('A'+i);
+
+		tempControlIdx = m_inputManager->addControl( keysAtoZ[i] );
+		m_controlIdxs[ss.str()] = tempControlIdx;
+	}
+
+//	tempControl = factory.createKeyboardKey( InputHelper::KEY_L );
+//	tempControlIdx = m_inputManager->addControl( tempControl );
+//	m_controlIdxs["Keyboard key L"] = tempControlIdx;
+//
+//	tempControl = factory.createKeyboardKey( InputHelper::KEY_W );
+//	tempControlIdx = m_inputManager->addControl( tempControl );
+//	m_controlIdxs["Keyboard key W"] = tempControlIdx;
+//
+//	tempControl = factory.createKeyboardKey( InputHelper::KEY_S );
+//	tempControlIdx = m_inputManager->addControl( tempControl );
+//	m_controlIdxs["Keyboard key S"] = tempControlIdx;
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -72,16 +96,19 @@ void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if( cameraInfo != NULL )
 		{
-			double x = 0.0, y = 0.0;
+			double x = 0.0, y = 0.0, z = 0.0;
 			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
 			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
 			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
 			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
+			z += m_inputManager->getControl(m_controlIdxs["Keyboard key W"])->getStatus();
+			z -= m_inputManager->getControl(m_controlIdxs["Keyboard key S"])->getStatus();
 
 			AglVector3 position = transform->getTranslation();
 			double sensitivityMult = 1000.0;
 			position.x -= x*sensitivityMult;
 			position.y -= y*sensitivityMult;
+			position.z -= z; 
 			transform->setTranslation( position );
 		}
 

@@ -37,6 +37,9 @@
     <ClCompile Include="InputHelper.cpp">
       <Filter>InputFetchers</Filter>
     </ClCompile>
+    <ClCompile Include="IMouseKeyboardFetcher.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -78,6 +81,12 @@
     <ClInclude Include="InputHelper.h">
       <Filter>InputFetchers</Filter>
     </ClInclude>
+    <ClInclude Include="IMouseKeyboardFetcher.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputException.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Input.vcxproj" />
@@ -92,6 +101,9 @@
     </Filter>
     <Filter Include="InputManager">
       <UniqueIdentifier>{2c5ea74c-bb64-48e4-b850-c929308cee0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{1458a4a5-9f44-4814-a99f-54513a921e9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

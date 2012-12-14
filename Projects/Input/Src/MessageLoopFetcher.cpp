@@ -2,8 +2,10 @@
 
 deque<MsgAndParams> MessageLoopFetcher::msgQue;
 
-MessageLoopFetcher::MessageLoopFetcher( bool p_resetCursor )
+MessageLoopFetcher::MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool p_resetCursor )
 {
+	m_hInstance = p_hInstance;
+	m_hWnd = p_hWnd;
 	m_resetCursor = p_resetCursor;
 
 	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS+1; i++ )
@@ -29,18 +31,19 @@ MessageLoopFetcher::MessageLoopFetcher( bool p_resetCursor )
 	for( int i=0; i<VK_LCONTROL+1; i++ ) //VK_LCONTROL is the last char
 		m_keyFromCharMap[i] = -1;
 
-	m_keyFromCharMap['W']			= InputHelper::W;
-	m_keyFromCharMap['A']			= InputHelper::A;
-	m_keyFromCharMap['S']			= InputHelper::S;
-	m_keyFromCharMap['D']			= InputHelper::D;
-	m_keyFromCharMap['L']			= InputHelper::L;
-	m_keyFromCharMap[VK_SPACE]		= InputHelper::SPACE;
-	m_keyFromCharMap[VK_F1]			= InputHelper::F1;
-	m_keyFromCharMap[VK_F2]			= InputHelper::F2;
-	m_keyFromCharMap[VK_F3]			= InputHelper::F3;
-	m_keyFromCharMap[VK_F4]			= InputHelper::F4;
-	m_keyFromCharMap[VK_LCONTROL]	= InputHelper::LCTRL;
-	m_keyFromCharMap[VK_ESCAPE]		= InputHelper::ESC;
+	// Letters/Characters have the same index as in the ascii table 
+	for( int i=0; i<26; i++ )
+	{
+		m_keyFromCharMap['A'+i]			= InputHelper::KEY_A+i;
+	}
+
+	m_keyFromCharMap[VK_SPACE]		= InputHelper::KEY_SPACE;
+	m_keyFromCharMap[VK_F1]			= InputHelper::KEY_F1;
+	m_keyFromCharMap[VK_F2]			= InputHelper::KEY_F2;
+	m_keyFromCharMap[VK_F3]			= InputHelper::KEY_F3;
+	m_keyFromCharMap[VK_F4]			= InputHelper::KEY_F4;
+	m_keyFromCharMap[VK_LCONTROL]	= InputHelper::KEY_LCTRL;
+	m_keyFromCharMap[VK_ESCAPE]		= InputHelper::KEY_ESC;
 }
 
 MessageLoopFetcher::~MessageLoopFetcher()
@@ -89,12 +92,9 @@ void MessageLoopFetcher::resetStateBuffers()
 
 void MessageLoopFetcher::resetCursor()
 {
-	// HACK: uses getActiveWindow. Will fail if alt-tabbing. 
-	HWND windowHandle = GetActiveWindow();
-
 	// Fetch window position in screen space
 	RECT windowPos;
-	GetWindowRect( windowHandle, &windowPos );
+	GetWindowRect( m_hWnd, &windowPos );
 
 	POINT point;
 	// Set the point to the center of the window:
@@ -105,7 +105,7 @@ void MessageLoopFetcher::resetCursor()
 	// Set the cursor to the center of the window
 	SetCursorPos( point.x, point.y );
 	// Convert screen space coords to client space
-	ScreenToClient( windowHandle, &point );
+	ScreenToClient( m_hWnd, &point );
 
 	m_mouseCurrPos[InputHelper::MOUSE_AXIS::X] = point.x;
 	m_mouseCurrPos[InputHelper::MOUSE_AXIS::Y] = point.y;

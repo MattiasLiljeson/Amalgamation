@@ -24,6 +24,18 @@ Control* InputControlFactory::create360controllerDigital(
 	return ctl;
 }
 
+vector<Control*> InputControlFactory::createKeysAToZ()
+{
+	vector<Control*> controls;
+	for( int i=0; i<26; i++ )
+	{
+		Control* control  = NULL;
+		control = createKeyboardKey((InputHelper::KEYBOARD_KEY)(InputHelper::KEY_A + i));
+		controls.push_back(control);
+	}
+	return controls;
+}
+
 Control* InputControlFactory::createKeyboardKey( InputHelper::KEYBOARD_KEY p_key )
 {
 	Control* ctl = new KeyControl( p_key );

@@ -47,3 +47,8 @@ GraphicsWrapper* GraphicsBackendSystem::getGfxWrapper()
 {
 	return m_graphicsWrapper;
 }
+
+HWND GraphicsBackendSystem::getWindowRef()
+{
+	return m_window->getWindowRef();
+}

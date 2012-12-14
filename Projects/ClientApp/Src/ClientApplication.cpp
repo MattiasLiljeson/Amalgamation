@@ -66,18 +66,21 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
-	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
-	// will be available if the graphics backend system isn't used. 
-	InputBackendSystem* inputBackend = new InputBackendSystem();
-	m_world->setSystem( inputBackend, true);
 
-	// Physics systems
+	/************************************************************************/
+	/* Physics																*/
+	/************************************************************************/
 	PhysicsSystem* physics = new PhysicsSystem();
 	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 	
-	// Graphic systems
+	/************************************************************************/
+	/* Graphics																*/
+	/************************************************************************/
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( graphicsBackend, true );
+
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
+	m_world->setSystem( inputBackend, true);
 
 	// Controller system for the ship
 	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
@@ -91,7 +94,9 @@ void ClientApplication::initSystems()
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
 
-	// Network systems
+	/************************************************************************/
+	/* Network																*/
+	/************************************************************************/
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
@@ -193,12 +198,11 @@ void ClientApplication::initEntities()
 		TwType::TW_TYPE_INT32,
 		m_client->getIdPointer(), "" );
 
-//
-//	// Code below used to test removal of object and components under runtime
-//	entity = m_world->createEntity();
-//	component = new Transform( 5.0f, 5.0f, 5.0f );
-//	entity->addComponent( ComponentType::Transform, component );
-//	m_world->addEntity(entity);
-//	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
-//	m_world->deleteEntity(entity);
+	// Code below used to test removal of object and components under runtime
+	entity = m_world->createEntity();
+	component = new Transform( 5.0f, 5.0f, 5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
+	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
+	m_world->deleteEntity(entity);
 }
