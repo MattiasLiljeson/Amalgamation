@@ -63,10 +63,6 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
-	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
-	// will be available if the graphics backend system isn't used. 
-	InputBackendSystem* inputBackend = new InputBackendSystem();
-	m_world->setSystem( inputBackend, true);
 
 	/************************************************************************/
 	/* Physics																*/
@@ -79,6 +75,9 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( graphicsBackend, true );
+
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
+	m_world->setSystem( inputBackend, true);
 
 	// Controller system for the ship
 	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
