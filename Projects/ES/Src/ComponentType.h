@@ -26,6 +26,7 @@ public:	//Enums
 		ShipController,
 		Impulse,
 		BodyInitData,
+		LookAtEntity,
 		NUM_COMPONENT_TYPES
 	};
 
