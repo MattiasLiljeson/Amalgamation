@@ -47,6 +47,9 @@ public:
 
 	void setSystemBits( bitset<SystemType::NUM_SYSTEM_TYPES> p_bits );
 
+	SystemType getSystemType();
+	SystemType::SystemTypeIdx getSystemTypeIdx();
+
 	/**
 	 * Called before processing of entities begins. 
 	 */

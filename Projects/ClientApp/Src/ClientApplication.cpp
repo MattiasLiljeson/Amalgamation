@@ -66,7 +66,7 @@ void ClientApplication::initSystems()
 	// Input depends on callback loop in the graphicsBackend. No mouse/keyboard inputs
 	// will be available if the graphics backend system isn't used. 
 	InputBackendSystem* inputBackend = new InputBackendSystem();
-	m_world->setSystem( SystemType::InputBackendSystem, inputBackend, true);
+	m_world->setSystem( inputBackend, true);
 
 	// Physics systems
 	PhysicsSystem* physics = new PhysicsSystem();
@@ -74,33 +74,31 @@ void ClientApplication::initSystems()
 	
 	// Graphic systems
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
-	m_world->setSystem( SystemType::GraphicsBackendSystem, graphicsBackend, true );
+	m_world->setSystem( graphicsBackend, true );
 
 	// Controller system for the ship
 	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend);
-	m_world->setSystem(SystemType::ShipControllerSystem, shipController, true);
+	m_world->setSystem( shipController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
 	// to the graphics backend for render
 	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
-	m_world->setSystem( SystemType::CameraSystem, camera , true );
+	m_world->setSystem( camera , true );
 
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
-	m_world->setSystem( SystemType::RenderPrepSystem, renderer , true );
+	m_world->setSystem( renderer , true );
 
 	// Network systems
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
-	m_world->setSystem( SystemType::ProcessingMessagesSystem, msgProcSystem , true );
+	m_world->setSystem( msgProcSystem , true );
 
 	NetworkConnectToServerSystem* connect =
 		new NetworkConnectToServerSystem( m_client );
-	m_world->setSystem( SystemType::NetworkConnectoToServerSystem, connect,
-		false );
+	m_world->setSystem( connect, false );
 
 	NetworkCommunicatorSystem* communicatorSystem =
 		new NetworkCommunicatorSystem( m_client );
-	m_world->setSystem( SystemType::NetworkCommunicatorSystem, communicatorSystem,
-		false );
+	m_world->setSystem( communicatorSystem, false );
 
 	
 	m_world->initialize();

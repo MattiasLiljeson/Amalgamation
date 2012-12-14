@@ -44,7 +44,7 @@ public:
 	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeIdx p_system );
 
 	bitset<NUM_SYSTEM_TYPES> getBit();
-	int getIndex();
+	SystemTypeIdx getIndex();
 
 private:
 
