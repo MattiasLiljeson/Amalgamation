@@ -30,7 +30,7 @@ private:
 public:
 	SphereMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~SphereMesh();
-	void Draw(AglMatrix pWorld);
+	void Draw(AglMatrix pWorld, AglVector3 pColor);
 };
 
 #endif // SPHEREMESH_H

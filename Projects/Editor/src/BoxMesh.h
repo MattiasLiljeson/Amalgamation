@@ -30,7 +30,7 @@ private:
 public:
 	BoxMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~BoxMesh();
-	void Draw(AglMatrix pWorld);
+	void Draw(AglMatrix pWorld, AglVector3 pColor);
 };
 
 #endif // BOXMESH_H

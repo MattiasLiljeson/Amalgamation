@@ -22,12 +22,36 @@ AglJoint* AglSkeleton::getJoints()
 }
 AglJoint* AglSkeleton::getRoot()
 {
+	AglJoint* j = NULL;
+	int ind = -1;
 	for (int i = 0; i < m_header.jointCount; i++)
 	{
 		if (m_joints[i].parentIndex < 0)
-			return &m_joints[i];
+		{
+			j = &m_joints[i];
+			ind = i;
+			break;
+		}
 	}
-	return NULL;
+	int count = 0;
+	do 
+	{
+		int newInd = -1;
+		for (int i = 0; i < m_header.jointCount; i++)
+		{
+			if (m_joints[i].parentIndex == ind)
+			{
+				newInd = i;
+				count++;
+			}
+		}
+		if (count == 1)
+		{
+			ind = newInd;
+			j = &m_joints[ind];
+		}
+	} while (count > 0 && count < 2);
+	return j;
 }
 
 AglMatrix AglSkeleton::getGlobalTransform(int p_joint)

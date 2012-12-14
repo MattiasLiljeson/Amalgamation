@@ -61,11 +61,11 @@ SphereMesh::~SphereMesh()
 {
 
 }
-void SphereMesh::Draw(AglMatrix pWorld)
+void SphereMesh::Draw(AglMatrix pWorld, AglVector3 pColor)
 {
 	RasterManager::getInstance()->setWireframeState();
 	AglMaterial mat;
-	mat.diffuse = AglVector3(100, 0 , 0);
+	mat.diffuse = pColor * 100;
 	mat.specular = AglVector3(0, 0, 0);
 	StandardShader* ss = ShaderManager::GetInstance()->GetStandardShader();
 	ss->SetBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), 1.0f, mat);
