@@ -52,6 +52,13 @@ void Packet::clear()
 	m_data[0] = 0;
 }
 
+Packet& Packet::operator << ( bool p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator << (char p_data)
 {	
 	unsigned int dataSize = sizeof(p_data);
@@ -91,6 +98,13 @@ Packet& Packet::operator << (AglVector3 p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator>>( bool& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
 	return *this;
 }
 

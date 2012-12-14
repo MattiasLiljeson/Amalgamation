@@ -111,6 +111,9 @@
     <ClInclude Include="NetworkUpdateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerInputAction.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">

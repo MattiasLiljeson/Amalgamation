@@ -29,6 +29,17 @@ Describe(a_packet)
 		Assert::That(f_dst, Equals(f_src));
 	}
 
+	It(can_contain_bool_data)
+	{
+		Packet packet;
+		bool b_src = true;
+		packet << b_src;
+		bool b_dst;
+		packet >> b_dst;
+
+		Assert::That(b_dst, Equals(b_src));
+	}
+
 	It(can_contain_char_data)
 	{
 		Packet packet;

@@ -1,29 +1,23 @@
 // =======================================================================================
-//	PacketType
+//	PlayerInputAction
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # PacketType
+/// # PlayerInputAction
 /// Detailed description...
-/// Created on: 12-12-2012 
+/// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class PacketType
+class PlayerInputAction
 {
 public:
 	enum
 	{
-		NON_EXISTENT = -1,
-		// Server -> Client:
-		EntityCreation,
-		EntityUpdate,
-		ClientDisconnect,
-		InitCredentials,
-		// Client -> Server:
-		PlayerInput,
+		NON_EXISTENT_PLAYERINPUTACTION = -1,
+		ThrustForward,
 	};
 
 };
