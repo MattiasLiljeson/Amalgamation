@@ -53,10 +53,14 @@ void XInputFetcher::update()
 		m_btns[i] = InputHelper::calcState( m_btns[i], pressed );
 	}
 
-	m_analogs[InputHelper::THUMB_LX] = m_currentState.Gamepad.sThumbLX;
-	m_analogs[InputHelper::THUMB_LY] = m_currentState.Gamepad.sThumbLY;
-	m_analogs[InputHelper::THUMB_RX] = m_currentState.Gamepad.sThumbRX;
-	m_analogs[InputHelper::THUMB_RY] = m_currentState.Gamepad.sThumbRY;
+	m_analogs[InputHelper::THUMB_LX_POSITIVE] = m_currentState.Gamepad.sThumbLX;
+	m_analogs[InputHelper::THUMB_LY_POSITIVE] = m_currentState.Gamepad.sThumbLY;
+	m_analogs[InputHelper::THUMB_RX_POSITIVE] = m_currentState.Gamepad.sThumbRX;
+	m_analogs[InputHelper::THUMB_RY_POSITIVE] = m_currentState.Gamepad.sThumbRY;
+	m_analogs[InputHelper::THUMB_LX_NEGATIVE] = m_currentState.Gamepad.sThumbLX;
+	m_analogs[InputHelper::THUMB_LY_NEGATIVE] = m_currentState.Gamepad.sThumbLY;
+	m_analogs[InputHelper::THUMB_RX_NEGATIVE] = m_currentState.Gamepad.sThumbRX;
+	m_analogs[InputHelper::THUMB_RY_NEGATIVE] = m_currentState.Gamepad.sThumbRY;
 	m_analogs[InputHelper::TRIGGER_L] = (short)m_currentState.Gamepad.bLeftTrigger;
 	m_analogs[InputHelper::TRIGGER_R] = (short)m_currentState.Gamepad.bRightTrigger;
 	m_currentState = newState;

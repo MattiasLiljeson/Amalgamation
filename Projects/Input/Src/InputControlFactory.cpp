@@ -11,9 +11,9 @@ InputControlFactory::~InputControlFactory()
 }
 
 Control* InputControlFactory::create360controllerAnalog( 
-	InputHelper::XBOX360_CONTROLLER_ANALOG p_axis, InputHelper::SUB_AXIS p_subAxis )
+	InputHelper::XBOX360_CONTROLLER_ANALOG p_axis )
 {
-	Control* ctl = new AnalogueControl( p_axis, p_subAxis );
+	Control* ctl = new AnalogueControl( p_axis );
 	return ctl;
 }
 
@@ -48,9 +48,8 @@ Control* InputControlFactory::createMouseButton( InputHelper::MOUSE_BTN p_btn )
 	return ctl;
 }
 
-Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axis,
-											   InputHelper::SUB_AXIS p_subAxis )
+Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axis )
 {
-	Control* ctl = new MouseMoveControl( p_axis, p_subAxis);
+	Control* ctl = new MouseMoveControl( p_axis );
 	return ctl;
 }

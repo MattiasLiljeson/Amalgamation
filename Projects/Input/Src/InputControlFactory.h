@@ -30,15 +30,6 @@ class KeyControl;
 class InputControlFactory
 {
 public:
-	enum InputType
-	{ 
-		MOUSE_BTN,
-		MOUSE_MOVE,
-		KEYBOARD_KEY,
-		XINPUT_DIGITAL,
-		XINPUT_ANALOG
-	};
-
 	InputControlFactory();
 	~InputControlFactory();
 
@@ -51,13 +42,12 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
-	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis,
-		InputHelper::SUB_AXIS p_subAxis );
+	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis );
 	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
 	vector<Control*> createKeysAToZ();
 	Control* createKeyboardKey( InputHelper::KEYBOARD_KEY p_key );
 	Control* createMouseButton( InputHelper::MOUSE_BTN p_btn );
-	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
+	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );
 
 };
 

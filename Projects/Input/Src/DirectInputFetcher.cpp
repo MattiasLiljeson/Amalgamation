@@ -34,18 +34,24 @@ void DirectInputFetcher::update()
 	detectInput();
 
 	// Mouse travel (delta position / movement)
-	m_mouseTravel[InputHelper::X] = (int)m_mousestate.lX;
-	m_mouseTravel[InputHelper::Y] = (int)m_mousestate.lY;
-	m_mouseTravel[InputHelper::Z] = (int)m_mousestate.lZ;
+	m_mouseTravel[InputHelper::X_POSITIVE] = (int)m_mousestate.lX;
+	m_mouseTravel[InputHelper::Y_POSITIVE] = (int)m_mousestate.lY;
+	m_mouseTravel[InputHelper::Z_POSITIVE] = (int)m_mousestate.lZ;
+	m_mouseTravel[InputHelper::X_NEGATIVE] = (int)m_mousestate.lX;
+	m_mouseTravel[InputHelper::Y_NEGATIVE] = (int)m_mousestate.lY;
+	m_mouseTravel[InputHelper::Z_NEGATIVE] = (int)m_mousestate.lZ;
 
 	//HACK: Could be done by using mouseTravel:
 	// The mouse position is being fetched not through Direct InputHelper but through
 	// the windows api. The z-component (scroll wheel) is fetched through DI.
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
-	m_mousePos[InputHelper::X] = (int)cursorPos.x;
-	m_mousePos[InputHelper::Y] = (int)cursorPos.y;
-	m_mousePos[InputHelper::Z] += (int)m_mousestate.lZ;
+	m_mousePos[InputHelper::X_POSITIVE] = (int)cursorPos.x;
+	m_mousePos[InputHelper::Y_POSITIVE] = (int)cursorPos.y;
+	m_mousePos[InputHelper::Z_POSITIVE] += (int)m_mousestate.lZ;
+	m_mousePos[InputHelper::X_NEGATIVE] = (int)cursorPos.x;
+	m_mousePos[InputHelper::Y_NEGATIVE] = (int)cursorPos.y;
+	m_mousePos[InputHelper::Z_NEGATIVE] += (int)m_mousestate.lZ;
 
 	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
 	{
