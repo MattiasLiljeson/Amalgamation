@@ -23,8 +23,9 @@ void ShipControllerSystem::initialize()
 	m_verticalPositive		= m_inputBackend->getInputControl("Gamepad LY positive");
 	m_verticalNegative		= m_inputBackend->getInputControl("Gamepad LY negative");
 
-	m_roll		= m_inputBackend->getInputControl("L");
-	m_thrust	= m_inputBackend->getInputControl("Gamepad B");
+	m_rollRight		= m_inputBackend->getInputControl("Gamepad R shoulder button");
+	m_rollLeft		= m_inputBackend->getInputControl("Gamepad L shoulder button");
+	m_thrust		= m_inputBackend->getInputControl("Gamepad R analog trigger");
 
 	m_strafeHorizontalPositive	= m_inputBackend->getInputControl("L");
 	m_strafeHorizontalNegative	= m_inputBackend->getInputControl("L");
@@ -38,6 +39,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	// Input controls
 	double horizontalInput = m_horizontalPositive->getStatus() - m_horizontalNegative->getStatus();
 	double verticalInput = m_verticalPositive->getStatus() - m_verticalNegative->getStatus();
+	double rollInput =  m_rollLeft->getStatus()-m_rollRight->getStatus();
 	double thrustInput = m_thrust->getStatus();
 	double strafeHorizontalInput = 0.0;
 	double strafeVerticalInput = 0.0;
@@ -58,7 +60,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Calc rotation from player input
 		float xangle = verticalInput * sensitivityMult/* - Input.GetAxis("Mouse Y")*/;
 		float yangle = horizontalInput * sensitivityMult/* + Input.GetAxis("Mouse X")*/;
-		float zangle = 0.0f;
+		float zangle = rollInput * sensitivityMult;
 		AglVector3 inputAngles(xangle,yangle,zangle);
 
 		// Turning multiplier

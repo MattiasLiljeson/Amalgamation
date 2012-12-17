@@ -40,7 +40,8 @@ private:
 	Control* m_verticalPositive;
 	Control* m_verticalNegative;
 	//
-	Control* m_roll;
+	Control* m_rollRight;
+	Control* m_rollLeft;
 	Control* m_thrust;
 	Control* m_strafeHorizontalPositive;
 	Control* m_strafeHorizontalNegative;
