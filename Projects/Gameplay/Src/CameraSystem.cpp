@@ -63,6 +63,7 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 										lookAt->getMoveSpd()*dt);
 			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
 											lookAt->getRotationSpeed()*dt);
+			rotation.normalize();
 		}
 
 		// Construct view matrix

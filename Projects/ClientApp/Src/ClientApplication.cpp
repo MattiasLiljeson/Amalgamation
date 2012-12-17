@@ -334,4 +334,5 @@ void ClientApplication::initSounds()
 	m_world->addEntity(entity);
 
 	delete basicSoundInfo;
+	
 }
