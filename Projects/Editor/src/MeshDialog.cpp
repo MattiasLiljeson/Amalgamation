@@ -51,6 +51,18 @@ void TW_CALL MeshDialog::GetName(void *value, void *clientData)
 	char *src = (char*)meshName.c_str();
 	TwCopyCDStringToLibrary(destPtr, src);
 }
+void TW_CALL MeshDialog::CreateSphereGrid(void *clientData)
+{
+	int id = (int)clientData;
+	Mesh* m = Scene::GetInstance()->GetMesh(id);
+	m->createSphereGrid();
+}
+void TW_CALL MeshDialog::CreateBspTree(void *clientData)
+{
+	int id = (int)clientData;
+	Mesh* m = Scene::GetInstance()->GetMesh(id);
+	m->createBspTree();
+}
 
 MeshDialog::MeshDialog()
 {
@@ -81,6 +93,13 @@ void MeshDialog::show()
 	TwAddVarCB(m_dialog, "Wireframe", TW_TYPE_BOOLCPP, SetWireframe, GetWireframe, (void*)this, "group=Sponge key=o");
 	TwAddVarCB(m_dialog, "Normal Length", TW_TYPE_FLOAT, SetDrawNormals, GetDrawNormals, (void*)this, "min=0.0 max=1.0 step=0.001");
 	TwAddVarCB(m_dialog, "Current Material", TW_TYPE_FLOAT, SetDrawNormals, GetDrawNormals, (void*)this, "min=0.0 max=1.0 step=0.001");
+	
+	TwAddButton(m_dialog, "CreateSphereGrid", CreateSphereGrid, (void*)m_meshIndex, " label='Create' group='Sphere Grid'");
+	TwAddVarRW(m_dialog, "DrawSphereGrid", TW_TYPE_BOOLCPP, (void*)m->getDrawGrid(), "group='Sphere Grid'");
+
+	TwAddButton(m_dialog, "CreateBspTree", CreateBspTree, (void*)m_meshIndex, " label='Create' group='Bsp Tree'");
+	TwAddVarRW(m_dialog, "DrawBspTree", TW_TYPE_BOOLCPP, (void*)m->getDrawTree(), "group='Bsp Tree'");
+	TwAddVarRW(m_dialog, "BspTreeLevel", TW_TYPE_UINT32, (void*)m->getTreeLevel(), "group='Bsp Tree'");
 	TwDefine(" Mesh visible=true ");
 }
 void MeshDialog::hide()

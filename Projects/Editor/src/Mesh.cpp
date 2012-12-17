@@ -13,6 +13,7 @@
 #include "Globals.h"
 #include "SphereMesh.h"
 #include "AglOBB.h"
+#include "BoxMesh.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene)
 {
@@ -66,12 +67,53 @@ AglVector3 Mesh::GetMax()
 	return mMax;
 }
 
-void Mesh::Draw(AglMatrix pWorld)
-{
-	Draw(pWorld, 1.0f);
-}
 void Mesh::Draw(AglMatrix pWorld, float pScale)
 {
+	if (m_grid && m_drawSphereGrid)
+	{
+		AglInteriorSphereGridHeader gh = m_grid->getHeader();
+		AglInteriorSphere* spheres = m_grid->getSpheres();
+		for (unsigned int i = 0; i < gh.sphereCount; i++)
+		{
+			AglVector3 s(spheres[i].radius, spheres[i].radius, spheres[i].radius);
+			s *= pScale;
+			AglMatrix mat;
+			AglMatrix::componentsToMatrix(mat, s, AglQuaternion::identity(), spheres[i].center * pScale);
+			mat = mat * pWorld;
+			SPHEREMESH->Draw(mat, AglVector3(0, 1, 1));
+		}
+	}
+	if (bsptree && m_drawTree)
+	{
+
+		AglLooseBspTreeHeader h = bsptree->getHeader();
+		unsigned int start = 0;
+		unsigned int stop;
+		for (unsigned int i = 0; i < m_treeLevel; i++)
+		{
+			start = start * 2 + 1;
+		}
+		stop = start * 2 + 1;
+		if (stop > h.nodeCount)
+		{
+			start = 0;
+			stop = 1;
+			m_treeLevel = 0;
+		}
+
+		AglBspNode* nodes = bsptree->getNodes();
+		for (unsigned int i = start; i < stop; i++)
+		{
+			AglVector3 c = (nodes[i].maxPoint + nodes[i].minPoint) * 0.5f;
+			AglVector3 s = (nodes[i].maxPoint - nodes[i].minPoint);
+			s *= pScale;
+			AglMatrix mat;
+			AglMatrix::componentsToMatrix(mat, s, AglQuaternion::identity(), c * pScale);
+			mat = mat * pWorld;
+			BOXMESH->Draw(mat, AglVector3(1, 1, 0));
+		}
+	}
+
 	if (m_normalLength > 0)
 		DrawNormals(pWorld, pScale);
 	if (m_wireframe)
@@ -111,7 +153,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 		}
 		else
 		{
-			if (mSkeletonMappings.size() > 0)
+			if (false)//mSkeletonMappings.size() > 0)
 			{
 				SkeletonMeshShader* ss = ShaderManager::GetInstance()->GetSkeletonMeshShader();
 				ss->SetBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), pScale, Scene::GetInstance()->GetSkeleton(mSkeletonMappings[0]->GetSkeleton()), matp);
@@ -270,4 +312,47 @@ AglOBB Mesh::getMinimumOBB()
 {
 	AglMeshHeader mh = mMesh->getHeader();
 	return mh.minimumOBB;
+}
+void Mesh::createSphereGrid()
+{
+	if (!m_grid)
+	{
+		AglMeshHeader h = mMesh->getHeader();
+		AglVertexSTBN* v = (AglVertexSTBN*)mMesh->getVertices();
+		unsigned int* ind = mMesh->getIndices();
+	
+		vector<AglVector3> vertices;
+		vector<unsigned int> indices;
+		for (unsigned int i = 0; i < h.vertexCount; i++)
+		{
+			vertices.push_back(v[i].position);
+		}
+		for (unsigned int i = 0; i < h.indexCount; i++)
+		{
+			indices.push_back(ind[i]);
+		}
+		m_grid = new AglInteriorSphereGrid(3, vertices, indices, h.id);
+	}
+}
+void Mesh::createBspTree()
+{
+	if (!bsptree)
+	{
+		AglMeshHeader h = mMesh->getHeader();
+		AglVertexSTBN* v = (AglVertexSTBN*)mMesh->getVertices();
+		unsigned int* ind = mMesh->getIndices();
+
+		vector<AglVector3> vertices;
+		vector<unsigned int> indices;
+		for (unsigned int i = 0; i < h.vertexCount; i++)
+		{
+			vertices.push_back(v[i].position);
+		}
+		for (unsigned int i = 0; i < h.indexCount; i++)
+		{
+			indices.push_back(ind[i]);
+		}
+		AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
+		bsptree = constructor.createTree();
+	}
 }
