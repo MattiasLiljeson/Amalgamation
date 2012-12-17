@@ -114,6 +114,7 @@ void ClientApplication::initEntities()
 	Entity* entity;
 	Component* component;
 
+
 	// Load cube model used as graphic representation for all "graphical" entities.
 	EntitySystem* sys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(sys);
@@ -135,6 +136,7 @@ void ClientApplication::initEntities()
 				m_world->addEntity(entity);
 			}
 		}
+
 	}
 	
 
@@ -188,6 +190,7 @@ void ClientApplication::initEntities()
 	
 	m_world->addEntity(entity);
 	int shipId = entity->getIndex();
+
 
 
 	// A camera from which the world is rendered.

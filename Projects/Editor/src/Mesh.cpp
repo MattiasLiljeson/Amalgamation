@@ -11,6 +11,8 @@
 #include "RenderNormalsShader.h"
 #include "AglLooseBspTree.h"
 #include "Globals.h"
+#include "SphereMesh.h"
+#include "AglOBB.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene)
 {
@@ -57,42 +59,10 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 
 AglVector3 Mesh::GetMin()
 {
-	/*AglMatrix w = mScene->GetWorld();
-	Matrix world(w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7], w[8], w[9], w[10], w[11], w[12], w[13], w[14], w[15]);
-	AglVector3 minP, maxP;
-	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->getVertices();
-	AglVector3 p = AglVector3(v[0].position[0], v[0].position[1], v[0].position[2]);
-	Vec3Transform(p, world);
-	minP = maxP = p;
-	for (int i = 1; i < mMesh->GetHeader().VertexCount; i++)
-	{
-		AglVector3 p = AglVector3(v[i].Position[0], v[i].Position[1], v[i].Position[2]);
-		Vec3Transform(p, world);
-		minP = AglVector3(min(minP.x, p.x), min(minP.y, p.y), min(minP.z, p.z));
-		maxP = AglVector3(max(maxP.x, p.x), max(maxP.y, p.y), max(maxP.z, p.z));
-	}
-	mMin = minP;
-	mMax = maxP;*/
 	return mMin;
 }
 AglVector3 Mesh::GetMax()
 {
-	/*AglMatrix w = mScene->GetWorld();
-	Matrix world(w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7], w[8], w[9], w[10], w[11], w[12], w[13], w[14], w[15]);
-	AglVector3 minP, maxP;
-	AglVertexSTBN* v = (AglVertexSTBN*)mMesh->GetVertices();
-	AglVector3 p = AglVector3(v[0].Position[0], v[0].Position[1], v[0].Position[2]);
-	Vec3Transform(p, world);
-	minP = maxP = p;
-	for (int i = 1; i < mMesh->GetHeader().VertexCount; i++)
-	{
-		AglVector3 p = AglVector3(v[i].Position[0], v[i].Position[1], v[i].Position[2]);
-		Vec3Transform(p, world);
-		minP = AglVector3(min(minP.x, p.x), min(minP.y, p.y), min(minP.z, p.z));
-		maxP = AglVector3(max(maxP.x, p.x), max(maxP.y, p.y), max(maxP.z, p.z));
-	}
-	mMin = minP;
-	mMax = maxP;*/
 	return mMax;
 }
 
@@ -290,4 +260,14 @@ void Mesh::update(float p_elapsedTime)
 		for (int i = 0; i < 50; i++)
 			bsptree->evaluate(spos, 0.01f);
 	}
+}
+AglBoundingSphere Mesh::getBoundingSphere()
+{
+	AglMeshHeader mh = mMesh->getHeader();
+	return mh.boundingSphere;
+}
+AglOBB Mesh::getMinimumOBB()
+{
+	AglMeshHeader mh = mMesh->getHeader();
+	return mh.minimumOBB;
 }

@@ -129,5 +129,11 @@ External/XAudio2/
 *.fbx
 *.agl
 
+*.agl
+*.fbx
+*.png
+*.dds
+*.tga
+
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
