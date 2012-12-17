@@ -32,8 +32,19 @@ public:
 	RigidBodyType GetType();
 	AglVector3 GetLocalCenterOfMass(){ return GetPosition(); }
 
-	AglOBB GetOBB(){ return mOBB; }
-	virtual AglBoundingSphere GetBoundingSphere() const{ return mBoundingSphere; }
+	AglOBB GetOBB()
+	{
+		AglOBB obb = mOBB;
+		obb.world *= GetWorld();
+		return obb; 
+	}
+	virtual AglBoundingSphere GetBoundingSphere() const
+	{
+		AglBoundingSphere bs;
+		bs.radius = mBoundingSphere.radius;
+		bs.position = GetPosition() + mBoundingSphere.position;
+		return bs; 
+	}
 };
 
 #endif // RIGIDBODYMESH_H

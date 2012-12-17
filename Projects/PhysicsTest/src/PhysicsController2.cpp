@@ -91,15 +91,15 @@ void PhysicsController2::DrawDebug()
 			AglMatrix mat;
 			AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
 											AglQuaternion::identity(), bs.position);
-			mDebugSphere->draw((mat * world), true);
+			//mDebugSphere->draw(mat, true);
 			AglOBB obb = m->GetOBB();
 
 			AglMatrix::componentsToMatrix(mat, obb.size,
 				AglQuaternion::identity(), AglVector3(0, 0, 0));
 
 			mat = mat * obb.world;
-			mat *= world;
-			mat.SetTranslation(world.GetTranslation()+obb.world.GetTranslation());
+			//mat *= world;
+			mat.SetTranslation(obb.world.GetTranslation());
 			mDebugBox->draw(mat, true);
 		}
 	}

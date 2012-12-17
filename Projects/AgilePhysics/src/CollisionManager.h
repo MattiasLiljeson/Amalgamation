@@ -122,6 +122,8 @@ bool CheckCollision(RigidBodySphere* p_sphere1, RigidBodySphere* p_sphere2,
 ///-----------------------------------------------------------------------------------
 bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box); 
 
+bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box); 
+
 ///-----------------------------------------------------------------------------------
 /// Checks collision between a sphere and an OBB
 /// \param p_sphere The Sphere

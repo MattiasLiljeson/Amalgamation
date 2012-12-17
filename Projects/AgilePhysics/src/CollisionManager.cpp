@@ -28,13 +28,11 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyConvexHull*)p_r2, p_data);
 	else if (p_r1->GetType() == SPHERE && p_r2->GetType() == MESH)
 	{
-		return false;
-		//return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyMesh*)p_r2, p_data);
+		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyMesh*)p_r2, p_data);
 	}
 	else if (p_r1->GetType() == MESH && p_r2->GetType() == SPHERE)
 	{
-		return false;
-		//return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyMesh*)p_r1, p_data);
+		return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyMesh*)p_r1, p_data);
 	}
 	else
 		return false;
@@ -324,6 +322,42 @@ bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
     }
     return false;
 }
+
+bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box)
+{
+	//Find the closest point on the box to the sphere
+	AglVector3 point = p_box.world.GetTranslation();
+	AglVector3 dir = p_sphere.position - point;
+
+	vector<AglVector3> axes;
+	axes.push_back(p_box.world.GetRight());
+	axes.push_back(p_box.world.GetUp());
+	axes.push_back(p_box.world.GetForward());
+	AglVector3 size = p_box.size*0.5f;
+
+	//Axis 1
+	float proj = AglVector3::dotProduct(dir, axes[0]);
+	proj = max(min(proj, size.x), -size.x);
+	point += axes[0] * proj;
+
+	//Axis 2
+	proj = AglVector3::dotProduct(dir, axes[1]);
+	proj = max(min(proj, size.y), -size.y);
+	point += axes[1] * proj;
+
+	//Axis 3
+	proj = AglVector3::dotProduct(dir, axes[2]);
+	proj = max(min(proj, size.z), -size.z);
+	point += axes[2] * proj;
+
+	//Check the distance to this closest point
+	if (AglVector3::lengthSquared(p_sphere.position - point) < p_sphere.radius * p_sphere.radius)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool CheckCollision(AglBoundingSphere pSphere, AglVector3 pMin, AglVector3 pMax)
 {
 	AglVector3 point = (pMax+pMin)*0.5f;
@@ -667,6 +701,7 @@ bool CheckCollision(RigidBodyBox* pB, RigidBodyConvexHull* pH, PhyCollisionData*
 bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData)
 {
+	CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB());
 	return false;
 }
 
