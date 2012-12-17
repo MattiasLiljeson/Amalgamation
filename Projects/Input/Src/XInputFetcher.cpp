@@ -20,23 +20,7 @@ int XInputFetcher::s_btnMaskMap[InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS] =
 
 XInputFetcher::XInputFetcher()
 {
-	DWORD dwResult; 
-	XINPUT_STATE state;
-	ZeroMemory( &state, sizeof(XINPUT_STATE) );
-
-	// Simply get the state of the controller from XInput.
-	dwResult = XInputGetState( 0, &state );
-
-	if( dwResult == ERROR_SUCCESS )
-	{
-		int korv = 1;
-		// Controller is connected 
-	}
-	else
-	{
-		int korv = 0;
-		// Controller is not connected 
-	}
+	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
 }
 
 XInputFetcher::~XInputFetcher()
@@ -45,13 +29,18 @@ XInputFetcher::~XInputFetcher()
 
 void XInputFetcher::update()
 {
-	XINPUT_STATE newState;
-	XInputGetState( 0, &newState );
-	for( int i=0; i<InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS; i++)
+	//XINPUT_STATE newState;
+	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
+	unsigned long result = XInputGetState( 0, &m_currentState );
+	if( result == ERROR_SUCCESS )
 	{
-		bool pressed = newState.Gamepad.wButtons & s_btnMaskMap[i];
-		m_btns[i] = InputHelper::calcState( m_btns[i], pressed );
+		for( int i=0; i<InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS; i++)
+		{
+			bool pressed = m_currentState.Gamepad.wButtons & s_btnMaskMap[i];
+			m_btns[i] = InputHelper::calcState( m_btns[i], pressed );
+		}
 	}
+	//m_currentState = newState;
 
 	m_analogs[InputHelper::THUMB_LX_POSITIVE] = m_currentState.Gamepad.sThumbLX;
 	m_analogs[InputHelper::THUMB_LY_POSITIVE] = m_currentState.Gamepad.sThumbLY;
@@ -63,7 +52,6 @@ void XInputFetcher::update()
 	m_analogs[InputHelper::THUMB_RY_NEGATIVE] = m_currentState.Gamepad.sThumbRY;
 	m_analogs[InputHelper::TRIGGER_L] = (short)m_currentState.Gamepad.bLeftTrigger;
 	m_analogs[InputHelper::TRIGGER_R] = (short)m_currentState.Gamepad.bRightTrigger;
-	m_currentState = newState;
 }
 
 InputHelper::KEY_STATE XInputFetcher::getBtnState( int p_btn )
