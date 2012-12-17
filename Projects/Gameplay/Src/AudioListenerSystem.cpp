@@ -24,8 +24,7 @@ void AudioListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 		listenerInfo.listenerPos = translationInfo->getTranslation();
-		listenerInfo.listenerOrientFront = AglVector3::createDirection(camerInfo->m_lookAt,
-			translationInfo->getTranslation());
+		listenerInfo.listenerOrientFront = translationInfo->getMatrix().GetForward();
 		listenerInfo.listenerOrientTop	= translationInfo->getMatrix().GetUp();
 
 		/************************************************************************/
