@@ -23,7 +23,8 @@ void AudioController::processEntities( const vector<Entity*>& p_entities )
 		for (unsigned int i = 0; i < p_entities.size(); i++)
 		{
 			AudioInfo* comp; 
-			comp = static_cast<AudioInfo*>(p_entities[i]->getComponent(ComponentType::AudioComponent));
+			comp = static_cast<AudioInfo*>(p_entities[i]->getComponent(
+				ComponentType::AudioComponent));
 			if(comp->isPositionalSound())
 				m_audioBackend->getSoundWrapper()->updateOutputMatrix(comp->getSoundId());
 		}

@@ -87,6 +87,13 @@ public:
 	void updateSound(int p_index, const SoundEnums::Instructions& p_soundInstruction);
 
 	///-----------------------------------------------------------------------------------
+	/// Returns the sound instance
+	/// \param p_index
+	/// \return Sound*
+	///-----------------------------------------------------------------------------------
+	Sound* getSound(int p_index);
+
+	///-----------------------------------------------------------------------------------
 	/// Returns a reference to the master volume used to alter the master volume.
 	/// \return float*
 	///-----------------------------------------------------------------------------------
@@ -156,9 +163,6 @@ private:
 	X3DAUDIO_LISTENER		m_listener;
 	X3DAUDIO_HANDLE			m_x3DAudioInstance;
 	X3DAUDIO_DSP_SETTINGS	m_dspSettings;
-
-	FLOAT32*				m_matrixCoefficients;
-	FLOAT32*				m_emitterAzimuths;
 
 	SoundFactory*			m_soundFactory;
 

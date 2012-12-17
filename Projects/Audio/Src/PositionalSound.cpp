@@ -12,6 +12,7 @@ PositionalSound::PositionalSound( IXAudio2SourceVoice* p_sourceVoice,
 PositionalSound::~PositionalSound()
 {
 	delete m_dataInfo.settings.pMatrixCoefficients;
+	delete m_dataInfo.emitter.pChannelAzimuths;
 }
 
 X3DAUDIO_EMITTER PositionalSound::getEmitter()
@@ -25,3 +26,9 @@ void PositionalSound::setPosition( const AglVector3& p_newPos )
 	m_dataInfo.emitter.Position.y = p_newPos.y;
 	m_dataInfo.emitter.Position.z = p_newPos.z;
 }
+
+X3DAUDIO_DSP_SETTINGS PositionalSound::getDSPSettings()
+{
+	return m_dataInfo.settings;
+}
+

@@ -129,6 +129,12 @@
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="AudioBackendSystem.h" />
+    <ClInclude Include="AudioController.h" />
+    <ClInclude Include="AudioListenerSystem.h" />
+    <ClInclude Include="AudioInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -188,5 +194,14 @@
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="AudioBackendSystem.cpp" />
+    <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="AudioInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

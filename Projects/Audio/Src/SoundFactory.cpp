@@ -76,7 +76,7 @@ void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter,
 		p_emitter->pCone->OuterReverb = 1.0f;
 
 		p_emitter->InnerRadius = 2.0f;
-		p_emitter->InnerRadiusAngle = X3DAUDIO_PI/4.0f;;
+		p_emitter->InnerRadiusAngle = X3DAUDIO_PI/4.0f;
 	}
 	else
 	{
@@ -96,9 +96,9 @@ void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter,
 		p_soundOrientation.listenerOrientTop[1],
 		p_soundOrientation.listenerOrientTop[2]};
 	X3DAUDIO_VECTOR velocity	= {
-		p_soundOrientation.listenerOrientTop[0],
-		p_soundOrientation.listenerOrientTop[1],
-		p_soundOrientation.listenerOrientTop[2]};
+		p_soundOrientation.listenerVelocity[0],
+		p_soundOrientation.listenerVelocity[1],
+		p_soundOrientation.listenerVelocity[2]};
 
 	p_emitter->Position		= pos;
 	p_emitter->OrientFront	= orientFront;
@@ -106,7 +106,7 @@ void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter,
 	p_emitter->Velocity		= velocity;
 	p_emitter->ChannelCount		= 1;
 	p_emitter->ChannelRadius	= 1.0f;
-	p_emitter->pChannelAzimuths = NULL; ///< UNKOWN VARIABLE
+	p_emitter->pChannelAzimuths = new FLOAT32[1]; ///< UNKOWN VARIABLE
 
 	p_emitter->pVolumeCurve = (X3DAUDIO_DISTANCE_CURVE*)&X3DAudioDefault_LinearCurve;
 	p_emitter->pLFECurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_LFE_Curve;

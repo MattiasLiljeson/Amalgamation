@@ -42,7 +42,7 @@ int AudioBackendSystem::createAmbientSound(BasicSoundCreationInfo* p_info)
 	string temp = m_label + toString(index) +" "+ p_info->file;
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),temp.c_str(),
 		stopOrPlaySound, (void*)index,"group=Ambient_Sound");
-	//-END-
+		//-END-
 
 	return index;
 }
@@ -56,8 +56,20 @@ int AudioBackendSystem::createPositionalSound(BasicSoundCreationInfo* p_info,
 	/* DEBUG INFO!															*/
 	/************************************************************************/
 	string temp = m_label + toString(index) + " " + p_info->file;
+
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(), temp.c_str(),
 		stopOrPlaySound, (void*)index, "group=Positional_Sound");
+
+	temp = "";
+	temp =  toString(index) + " " + "Left";
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(temp.c_str(),TW_TYPE_FLOAT,
+		m_soundWrapper->getSound(index)->getLeftChannelRef(),"group=Positional_Sound");
+
+	temp = "";
+	temp = toString(index) + " " + "Right";
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(temp.c_str(),TW_TYPE_FLOAT,
+		m_soundWrapper->getSound(index)->getRightChannelRef(),"group=Positional_Sound");
+
 	//-END-
 
 	return index;

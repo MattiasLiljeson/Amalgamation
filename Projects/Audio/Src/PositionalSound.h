@@ -25,6 +25,7 @@ public:
 	virtual ~PositionalSound();
 	X3DAUDIO_EMITTER	getEmitter();
 	void				setPosition(const AglVector3& p_newPos );
+	X3DAUDIO_DSP_SETTINGS getDSPSettings();
 private:
 	PositionalSoundInfo m_dataInfo;
 };

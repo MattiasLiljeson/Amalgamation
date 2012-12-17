@@ -50,4 +50,5 @@ private:
 private:
 	TwBar* m_antBar;
 	static AntTweakBarWrapper* sInstance;
+	const char* m_barName;
 };

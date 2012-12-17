@@ -249,6 +249,28 @@ void ClientApplication::initSounds()
 	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
 	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
 
+
+	/************************************************************************/
+	/* Load positional sound												*/
+	/************************************************************************/
+
+	file = "MusicMono.wav";
+	fullFilePath = TESTMUSICPATH + file;
+
+	basicSoundInfo = new BasicSoundCreationInfo(file.c_str(),fullFilePath.c_str(),true);
+	positionalSoundInfo = new PositionalSoundCreationInfo(AglVector3(3,3,3));
+	soundIdx = audioBackend->createPositionalSound(basicSoundInfo,positionalSoundInfo);
+	entity = m_world->createEntity();
+	component = new Transform( 3.0f, -10.0f, -30.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new AudioInfo(soundIdx,true);
+	entity->addComponent(ComponentType::AudioComponent, component);
+	m_world->addEntity(entity);
+	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
+
+	delete basicSoundInfo;
+	delete positionalSoundInfo;
+
 	/************************************************************************/
 	/* Load positional sound												*/
 	/************************************************************************/
@@ -261,26 +283,6 @@ void ClientApplication::initSounds()
 	soundIdx = audioBackend->createPositionalSound(basicSoundInfo,positionalSoundInfo);
 	entity = m_world->createEntity();
 	component = new Transform( 3.0f, 3.0f, 3.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	delete basicSoundInfo;
-	delete positionalSoundInfo;
-	
-	/************************************************************************/
-	/* Load positional sound												*/
-	/************************************************************************/
-	file = "MusicMono.wav";
-	fullFilePath = TESTMUSICPATH + file;
-
-	basicSoundInfo = new BasicSoundCreationInfo(file.c_str(),fullFilePath.c_str(),true);
-	positionalSoundInfo = new PositionalSoundCreationInfo(AglVector3(3,3,3));
-	soundIdx = audioBackend->createPositionalSound(basicSoundInfo,positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, -10.0f, 3.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	component = new AudioInfo(soundIdx,true);
 	entity->addComponent(ComponentType::AudioComponent, component);

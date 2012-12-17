@@ -6,6 +6,8 @@ SoundWrapper::SoundWrapper()
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
 	m_masterVolume	= 1.0f;
+	
+	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
 
 	/************************************************************************/
 	/* XAudio2 2.7 specific call, this is called behind the scene in later	*/
@@ -30,8 +32,6 @@ SoundWrapper::~SoundWrapper()
 	m_soundDevice->StopEngine();
 	m_soundDevice->Release();
 	
-	delete m_matrixCoefficients;
-	delete m_emitterAzimuths;
 	delete m_soundFactory;
 }
 
@@ -50,9 +50,9 @@ void SoundWrapper::initSoundEngine()
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	/************************************************************************/
+	/* XAudio 2.7 specific variable XAUDIO2_DEVICE_DETAILS					*/
 	/* Get all the juicy details about the sound device.					*/
 	/************************************************************************/
-	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
 	if ( FAILED( hr = m_soundDevice->GetDeviceDetails( 0, &m_details ) ) )
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
@@ -72,9 +72,9 @@ void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 	};
 
 	X3DAUDIO_VECTOR top = {
-		p_sceneInfo.listenerOrientFront[0],
-		p_sceneInfo.listenerOrientFront[1],
-		p_sceneInfo.listenerOrientFront[2],
+		p_sceneInfo.listenerOrientTop[0],
+		p_sceneInfo.listenerOrientTop[1],
+		p_sceneInfo.listenerOrientTop[2],
 	};
 	
 	X3DAUDIO_VECTOR velocity =  {
@@ -114,23 +114,11 @@ int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundI
 void SoundWrapper::init3DSoundSettings()
 {
 	/************************************************************************/
-	/* MatrixCoefficients contains the volume for each output channel. 		*/
-	/* Please see MSDN for more info search "pMatrixCoefficients"			*/
-	/************************************************************************/
-	m_matrixCoefficients	= new FLOAT32[SOURCECHANNELS * m_destChannels];
-	m_emitterAzimuths		= new FLOAT32[SOURCECHANNELS]; //UNKOWN VARIABLE
-
-	/************************************************************************/
 	/* The number of output channels have to be know before the 3D			*/
 	/* calculations can be used. The speed of sound can be altered for		*/
 	/* artistic feeling.													*/
 	/************************************************************************/
 	X3DAudioInitialize( m_channelMask, X3DAUDIO_SPEED_OF_SOUND,	m_x3DAudioInstance);
-
-	ZeroMemory(&m_dspSettings,sizeof(X3DAUDIO_DSP_SETTINGS));
-	m_dspSettings.SrcChannelCount = SOURCECHANNELS;
-	m_dspSettings.DstChannelCount = m_destChannels;
-	m_dspSettings.pMatrixCoefficients = m_matrixCoefficients;
 }
 
 void SoundWrapper::initListener()
@@ -146,15 +134,15 @@ void SoundWrapper::initListener()
 
 void SoundWrapper::updateOutputMatrix(int p_index)
 {
-	/************************************************************************/
-	/* UNSURE what settings should be applied here.							*/
-	/************************************************************************/
-	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, 
-		&static_cast<PositionalSound*>(m_createdSounds[p_index])->getEmitter(),
-		X3DAUDIO_CALCULATE_MATRIX, &m_dspSettings);
+	PositionalSound* sound = static_cast<PositionalSound*>(m_createdSounds[p_index]);
+	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
+		X3DAUDIO_CALCULATE_MATRIX, &sound->getDSPSettings());
 
-	m_createdSounds[p_index]->getSourceVoice()->SetOutputMatrix(m_masterVoice, SOURCECHANNELS,
-		m_destChannels, m_matrixCoefficients);
+	sound->m_left = sound->getDSPSettings().pMatrixCoefficients[0];
+	sound->m_right = sound->getDSPSettings().pMatrixCoefficients[1];
+
+	sound->getSourceVoice()->SetOutputMatrix(m_masterVoice, SOURCECHANNELS,
+		m_destChannels, sound->getDSPSettings().pMatrixCoefficients);
 }
 
 void SoundWrapper::updateSound( int p_index, 
@@ -209,4 +197,9 @@ bool SoundWrapper::isPlaying( const int soundIndex )
 	}
 
 	return false;
+}
+
+Sound* SoundWrapper::getSound( int p_index )
+{
+	return m_createdSounds[p_index];
 }

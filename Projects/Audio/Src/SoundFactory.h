@@ -36,6 +36,12 @@ public:
 	///-----------------------------------------------------------------------------------
 	Sound* createAmbientSound( BasicSoundCreationInfo* p_info );
 
+	///-----------------------------------------------------------------------------------
+	/// Creates a 3D positional sound.
+	/// \param p_basicSoundInfo
+	/// \param p_positionalInfo
+	/// \return PositionalSound*
+	///-----------------------------------------------------------------------------------
 	PositionalSound* createPositionalSound( BasicSoundCreationInfo* p_basicSoundInfo, 
 		PositionalSoundCreationInfo* p_positionalInfo);
 protected:

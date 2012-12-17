@@ -52,7 +52,23 @@ public:
 
 	XAUDIO2_VOICE_STATE* getSourceCurrentState();
 
+	///-----------------------------------------------------------------------------------
+	/// Updates the current sound's states allowing to see if the sound is playing or not.
+	/// \return void
+	///-----------------------------------------------------------------------------------
 	void updateVoiceState();
+
+	/************************************************************************/
+	/* DEBUG STUFFS!														*/
+	/************************************************************************/
+	//-START-
+	float* getLeftChannelRef();
+	float* getRightChannelRef();
+
+public:
+	float					m_left;
+	float					m_right;
+	//-END-
 protected:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;

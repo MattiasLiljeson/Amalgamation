@@ -8,6 +8,9 @@ Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer,
 	m_buffer = p_buffer;
 	m_volume = p_volume;
 
+	m_left	= 0;
+	m_right = 0;
+
 	HRESULT hr = S_OK;
 	hr = m_sourceVoice->SubmitSourceBuffer(&m_buffer);
 	if(FAILED (hr))
@@ -77,4 +80,14 @@ XAUDIO2_VOICE_STATE* Sound::getSourceCurrentState()
 void Sound::updateVoiceState()
 {
 	m_sourceVoice->GetState(m_sourceState);
+}
+
+float* Sound::getLeftChannelRef()
+{
+	return &m_left;
+}
+
+float* Sound::getRightChannelRef()
+{
+	return &m_right;
 }
