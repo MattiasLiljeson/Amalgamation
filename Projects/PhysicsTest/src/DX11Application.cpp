@@ -1,4 +1,5 @@
 #include "DX11Application.h"
+#include "CollisionManager.h"
 
 bool DX11Application::hitbug = false;
 float DX11Application::t1 = 0;
@@ -260,6 +261,8 @@ bool DX11Application::Run()
 			ss << FPS;
 			string s = ss.str();
 			s = "FPS: " + s + " -- t1: " + ToString(t1) + "  t2: " + ToString(t2) + "  t3: " + ToString(t3);
+			if (theGlobal)
+				s += "   AHA!";
 
 			if (hitbug)
 				s += "  HITBUG!";

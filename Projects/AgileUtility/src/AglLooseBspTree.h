@@ -92,6 +92,7 @@ class AglLooseBspTree
 private:
 	AglLooseBspTreeHeader	m_header;
 	unsigned int*			m_triangles;
+	AglVector3*				m_triangles2;
 	AglBspNode*				m_nodes;
 public:
 	AglLooseBspTree(vector<AglBspNode> p_nodes, unsigned int p_root,
@@ -122,6 +123,8 @@ public:
 	/// \return List of nodes
 	///-----------------------------------------------------------------------------------
 	AglBspNode*				getNodes();
+
+	AglVector3*				getTriangles2(){ return m_triangles2; }
 };
 
 #endif

@@ -1,6 +1,8 @@
 #include "CollisionManager.h"
 #include "GJKSolver.h"
 
+bool theGlobal = false;
+
 bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 {
 	//Do a bounding sphere check to provide early outs.
@@ -701,7 +703,23 @@ bool CheckCollision(RigidBodyBox* pB, RigidBodyConvexHull* pH, PhyCollisionData*
 bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData)
 {
-	CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB());
+	if (CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB()))
+	{
+		theGlobal = true;
+		EPACollisionData epaCol;
+		if (p_mesh->EvaluateSphere(p_sphere, &epaCol))
+		{
+			p_collisionData->Body2 = p_sphere;
+			p_collisionData->Body1 = p_mesh;
+			pair<AglVector3, AglVector3> contact;
+			AglVector3 dir = epaCol.Normal;
+			AglVector3::normalize(dir);
+			contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
+			contact.first = contact.second + dir * epaCol.Depth;
+			p_collisionData->Contacts.push_back(contact);
+			return true;
+		}
+	}
 	return false;
 }
 

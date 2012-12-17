@@ -62,6 +62,7 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 	mUserControlled = pUserControlled;
 	mTempStatic = false;
 	mParent = NULL;
+
 	calcInvInertia();
 }
 RigidBody::~RigidBody()

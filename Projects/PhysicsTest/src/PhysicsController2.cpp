@@ -91,7 +91,7 @@ void PhysicsController2::DrawDebug()
 			AglMatrix mat;
 			AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
 											AglQuaternion::identity(), bs.position);
-			//mDebugSphere->draw(mat, true);
+			mDebugSphere->draw(mat, true);
 			AglOBB obb = m->GetOBB();
 
 			AglMatrix::componentsToMatrix(mat, obb.size,

@@ -21,6 +21,7 @@ private:
 	//HACK: TEMP TEMP TEMP FUCKING TEMP!!
 	int Avatar;
 	int toDetach;
+	int mesh;
 
 	Point PreviousMousePos;
 	Point CurrentMousePos;

@@ -4,6 +4,8 @@
 #include "RigidBodyMesh.h"
 #include "PhyUtility.h"
 
+extern bool theGlobal;
+
 //----------------------------PRIMARY COLLISION FUNCTIONS---------------------------------
 
 ///

@@ -16,6 +16,9 @@
 #include <AglOBB.h>
 #include <AglLooseBspTree.h>
 #include <AglInteriorSphereGrid.h>
+#include "GJKSolver.h"
+
+class RigidBodySphere;
 
 class RigidBodyMesh: public RigidBody
 {
@@ -30,7 +33,7 @@ public:
 					AglInteriorSphereGrid* pSphereGrid = NULL);
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();
-	AglVector3 GetLocalCenterOfMass(){ return GetPosition(); }
+	AglVector3 GetLocalCenterOfMass(){ return GetOBB().world.GetTranslation(); }
 
 	AglOBB GetOBB()
 	{
@@ -40,11 +43,16 @@ public:
 	}
 	virtual AglBoundingSphere GetBoundingSphere() const
 	{
+		AglVector3 newPos = mBoundingSphere.position;
+		newPos.transform(GetWorld());
+
 		AglBoundingSphere bs;
 		bs.radius = mBoundingSphere.radius;
-		bs.position = GetPosition() + mBoundingSphere.position;
+		bs.position = newPos;
 		return bs; 
 	}
+	bool EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* pData);
+	bool Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData);
 };
 
 #endif // RIGIDBODYMESH_H

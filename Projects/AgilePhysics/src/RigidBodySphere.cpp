@@ -9,7 +9,7 @@ void RigidBodySphere::CalculateInertiaTensor()
 	if (mUserControlled)
 		SetInertiaTensor(AglMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 }
-RigidBodySphere::RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled): RigidBody(pPosition, ONE_KILOGRAM, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, userControlled)
+RigidBodySphere::RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled): RigidBody(pPosition, ONE_KILOGRAM, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, true)
 {
 	mRadius = pRadius;
 	mBoundingSphere.radius = pRadius;
