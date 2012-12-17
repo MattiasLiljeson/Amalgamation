@@ -27,6 +27,7 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				m_world->getComponentManager()->getComponent(
 				p_entities[i]->getIndex(), ComponentType::Transform ) );
 
+			// Useful debug movement.
 			static float timeElapsed = 0;
 			timeElapsed += m_world->getDelta();
 			AglVector3 pos = transform->getTranslation();
@@ -36,7 +37,8 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			Packet updateShipPacket;
 			updateShipPacket << (char)PacketType::EntityUpdate <<
 				(char)NetworkType::Ship << netSync->getNetworkIdentity() <<
-				transform->getTranslation();
+				transform->getTranslation() << transform->getRotation() <<
+				transform->getScale();
 
 			m_server->broadcastPacket( updateShipPacket );
 		}

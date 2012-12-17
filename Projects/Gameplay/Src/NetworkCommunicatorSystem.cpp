@@ -29,26 +29,52 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 			packet >> networkType;
 			if (networkType == (char)NetworkType::Ship)
 			{
-				int			owner;
-				int			networkId;
-				AglVector3	position;
+				int				owner;
+				int				networkId;
+				AglVector3		position;
+				AglQuaternion	rotation;
+				AglVector3		scale;
 
-				packet >> owner >> networkId >> position;
+				packet >> owner >> networkId >> position >> rotation >> scale;
 
 				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 					SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
+
 				Entity* e = NULL;
 				e = m_world->createEntity();
 				
+				
+				int shipId = e->getIndex();
+
+				e->addComponent( ComponentType::ShipController,
+					new ShipController(0.3f,3.0f) );
 				e->addComponent(ComponentType::Transform,
-					new Transform(position.x, position.y, position.z));
+					new Transform(position, rotation, scale));
 				e->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(networkId, owner, NetworkType::Ship));
 				e->addComponent(ComponentType::RenderInfo,
 					new RenderInfo( meshId ));
 
 				m_world->addEntity(e);
+
+
+				if(owner == m_tcpClient->getId())
+				{
+					// A camera from which the world is rendered.
+					Entity* entity = NULL;
+					Component* component = NULL;
+					entity = m_world->createEntity();
+					component = new CameraInfo( 800/(float)600 );
+					entity->addComponent( ComponentType::CameraInfo, component );
+					component = new Input();
+					entity->addComponent( ComponentType::Input, component );
+					component = new Transform( -5.0f, 0.0f, -5.0f );
+					entity->addComponent( ComponentType::Transform, component );
+					component = new LookAtEntity(shipId, AglVector3(0,3,-10));
+					entity->addComponent( ComponentType::LookAtEntity, component );
+					m_world->addEntity(entity);
+				}
 			}
 		}
 		else if (packetType == (char)PacketType::EntityUpdate)
@@ -59,9 +85,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 			if (networkType == (char)NetworkType::Ship)
 			{
 				int			networkId;
-				AglVector3	position;
+				AglVector3		position;
+				AglQuaternion	rotation;
+				AglVector3		scale;
 
-				packet >> networkId >> position;
+				packet >> networkId >> position >> rotation >> scale;
 
 
 
@@ -80,10 +108,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 							m_world->getComponentManager()->getComponent(
 							p_entities[i]->getIndex(), ComponentType::Transform ) );
 						transform->setTranslation( position );
-						if (transform->getTranslation().z == 0.0f)
-						{
-							int a = 0;
-						}
+						transform->setRotation( rotation );
+						transform->setScale( scale );
 					}
 				}
 			}

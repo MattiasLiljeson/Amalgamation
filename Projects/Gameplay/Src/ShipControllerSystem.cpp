@@ -83,7 +83,8 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		DEBUGPRINT(( (toString(angularVec.x)+string(" ")+toString(angularVec.y)+string(" ")+toString(angularVec.z)+string("\n")).c_str() ));
+		DEBUGPRINT(( (toString(angularVec.x)+string(" ")+toString(angularVec.y)+
+			string(" ")+toString(angularVec.z)+string("\n")).c_str() ));
 
 		// DEBUGPRINT(( (toString(horizontalInput)+string("\n")).c_str() ));
 

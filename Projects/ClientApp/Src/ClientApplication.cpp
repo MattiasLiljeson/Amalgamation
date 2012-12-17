@@ -172,38 +172,38 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::BodyInitData, component);
 
 	m_world->addEntity(entity);
-
-
-	// Create a "spaceship"
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( -5.0f, 0.0f, 0.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(0.3f,3.0f);
-	entity->addComponent( ComponentType::ShipController, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
-
-	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
-	entity->addComponent(ComponentType::BodyInitData, component);
 	
-	m_world->addEntity(entity);
-	int shipId = entity->getIndex();
+//	// Create a "spaceship"
+//	entity = m_world->createEntity();
+//	component = new RenderInfo( cubeMeshId );
+//	entity->addComponent( ComponentType::RenderInfo, component );
+//	component = new Transform( -5.0f, 0.0f, 0.0f );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new ShipController(0.3f,3.0f);
+//	entity->addComponent( ComponentType::ShipController, component );
+//	component = new PhysicsBody();
+//	entity->addComponent(ComponentType::PhysicsBody, component);
+//
+//	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
+//		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+//	entity->addComponent(ComponentType::BodyInitData, component);
+//	
+//	m_world->addEntity(entity);
+//	int shipId = entity->getIndex();
+//
+//
+//	// A camera from which the world is rendered.
+//	entity = m_world->createEntity();
+//	component = new CameraInfo( 800/(float)600 );
+//	entity->addComponent( ComponentType::CameraInfo, component );
+//	component = new Input();
+//	entity->addComponent( ComponentType::Input, component );
+//	component = new Transform( -5.0f, 0.0f, -5.0f );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
+//	entity->addComponent( ComponentType::LookAtEntity, component );
+//	m_world->addEntity(entity);
 
-
-	// A camera from which the world is rendered.
-	entity = m_world->createEntity();
-	component = new CameraInfo( 800/(float)600 );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	component = new Input();
-	entity->addComponent( ComponentType::Input, component );
-	component = new Transform( -5.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
-	entity->addComponent( ComponentType::LookAtEntity, component );
-	m_world->addEntity(entity);
 
 	// Misplaced.
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
