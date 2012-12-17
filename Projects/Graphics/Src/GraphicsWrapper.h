@@ -76,6 +76,16 @@ public:
 	///-----------------------------------------------------------------------------------
 	unsigned int createMesh(const string& p_name);
 
+
+	///-----------------------------------------------------------------------------------
+	/// Used by libRocket //Mattias
+	/// \param p_name
+	/// \param p_mesh
+	/// \param p_texture
+	/// \return unsigned int
+	///-----------------------------------------------------------------------------------
+	unsigned int createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
+
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
 

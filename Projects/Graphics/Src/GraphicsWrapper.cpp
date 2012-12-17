@@ -220,6 +220,24 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name)
 	return meshResultId;
 }
 
+unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
+{
+	// check if resource already exists
+	int meshId = m_meshManager->getResourceId( p_name );
+	if( meshId == -1 ) 
+	{
+		meshId = (int)m_meshManager->addResource( p_name, p_mesh );
+
+		string textureName = p_name + "_tex";
+		int texId = m_textureManager->getResourceId( textureName );
+		if( texId == -1 )
+		{
+			texId = (int)m_textureManager->addResource( textureName, p_texture );
+		}
+		p_mesh->setTextureId( (unsigned int)texId );
+	}
+}
+
 void GraphicsWrapper::initViewport()
 {
 	D3D11_VIEWPORT vp;
