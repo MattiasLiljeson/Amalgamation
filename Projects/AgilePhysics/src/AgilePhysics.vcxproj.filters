@@ -4,31 +4,66 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Body.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="CompoundBody.cpp" />
     <ClCompile Include="ConvexHullShape.cpp" />
     <ClCompile Include="GJKSolver.cpp" />
     <ClCompile Include="ImpulseSolver.cpp" />
     <ClCompile Include="PhysicsController.cpp" />
     <ClCompile Include="PhyUtility.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="RigidBodyBox.cpp" />
-    <ClCompile Include="RigidBodyConvexHull.cpp" />
-    <ClCompile Include="RigidBodySphere.cpp" />
+    <ClCompile Include="Body.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="CompoundBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyBox.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyConvexHull.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodySphere.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyMesh.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Body.h" />
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="CompoundBody.h" />
     <ClInclude Include="ConvexHullShape.h" />
     <ClInclude Include="GJKSolver.h" />
     <ClInclude Include="ImpulseSolver.h" />
     <ClInclude Include="PhysicsController.h" />
     <ClInclude Include="PhyUtility.h" />
-    <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="RigidBodyBox.h" />
-    <ClInclude Include="RigidBodyConvexHull.h" />
-    <ClInclude Include="RigidBodySphere.h" />
+    <ClInclude Include="Body.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="CompoundBody.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyBox.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyConvexHull.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodySphere.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyMesh.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Bodies">
+      <UniqueIdentifier>{6320c0d8-db68-4d9d-9caa-e4768417390b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 
 enum RigidBodyType
 {
-	SPHERE, BOX, CONVEXHULL
+	SPHERE, BOX, CONVEXHULL, MESH
 };
 
 class CompoundBody;
@@ -69,7 +69,7 @@ public:
 	virtual void UpdatePosition(float pElapsedTime); //NOT
 	void RevertVelocity(); //NOT
 	void RevertPosition(); //NOT
-	AglBoundingSphere GetBoundingSphere() const; //NOT
+	virtual AglBoundingSphere GetBoundingSphere() const; //NOT
 
 	AglVector3 GetCenterOfMass();
 	virtual AglVector3 GetLocalCenterOfMass() = 0;

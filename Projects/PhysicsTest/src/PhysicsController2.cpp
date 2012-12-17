@@ -40,6 +40,12 @@ int PhysicsController2::AddCompoundBody(AglVector3 p_position)
 	return mController->AddCompoundBody(p_position);
 }
 
+int PhysicsController2::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+								   AglInteriorSphereGrid* pSphereGrid)
+{
+	return mController->AddMeshBody(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
+}
+
 void PhysicsController2::Update(float pElapsedTime)
 {
 	mController->Update(pElapsedTime);
@@ -69,13 +75,32 @@ void PhysicsController2::DrawDebug()
 				mDebugSphere->draw(m2, true);
 			}
 		}
-		if (bodies[i]->GetType() == SPHERE)
+		else if (bodies[i]->GetType() == SPHERE)
 		{
 			RigidBodySphere* s = (RigidBodySphere*)bodies[i];
 			AglMatrix m = s->GetWorld();
 			AglMatrix m2 = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8],
 								m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
 			mDebugSphere->draw((AglMatrix)(m2 * s->GetRadius()));
+		}
+		else if (bodies[i]->GetType() == MESH)
+		{
+			RigidBodyMesh* m = (RigidBodyMesh*)bodies[i];
+			AglMatrix world = m->GetWorld();
+			AglBoundingSphere bs = m->GetBoundingSphere();
+			AglMatrix mat;
+			AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
+											AglQuaternion::identity(), bs.position);
+			mDebugSphere->draw((mat * world), true);
+			AglOBB obb = m->GetOBB();
+
+			AglMatrix::componentsToMatrix(mat, obb.size,
+				AglQuaternion::identity(), AglVector3(0, 0, 0));
+
+			mat = mat * obb.world;
+			mat *= world;
+			mat.SetTranslation(world.GetTranslation()+obb.world.GetTranslation());
+			mDebugBox->draw(mat, true);
 		}
 	}
 	for (unsigned int i = 0; i < mDebugHullData.size(); i++)

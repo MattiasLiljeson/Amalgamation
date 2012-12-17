@@ -82,6 +82,9 @@ public:
 
 	int AddCompoundBody(AglVector3 p_position);
 
+	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+		AglInteriorSphereGrid* pSphereGrid = NULL);
+
 	///-----------------------------------------------------------------------------------
 	/// Clears all rigid bodies
 	///-----------------------------------------------------------------------------------

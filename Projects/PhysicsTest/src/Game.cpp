@@ -5,6 +5,7 @@
 #include "ShaderManager.h"
 #include "GJKSolver.h"
 #include "Eigen.h"
+#include "AglReader.h"
 
 float Game::Time = 0;
 
@@ -35,7 +36,6 @@ bool Game::Initialize()
 	CurrentMousePos = Point();
 	PreviousMousePos = CurrentMousePos = func();
 	SetCursorPos(CurrentMousePos.x, CurrentMousePos.y);
-	ShowCursor(false);
 
 	AglVector3 e1;
 	AglVector3 e2;
@@ -67,6 +67,7 @@ bool Game::Initialize()
 
 	FindSymmetricEigenVectors(mat, e1, e2, e3);
 
+	ShowCursor(false);
 	return true;
 }
 bool Game::Cleanup()
@@ -239,6 +240,8 @@ bool Game::Draw(float pElapsedTime)
 	if (mPhysics)
 		mPhysics->DrawDebug();
 
+	testMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(20, 0, -40)));
+
     mSwapChain->Present(0,0);
 	return true;
 }
@@ -310,6 +313,17 @@ void Game::Restart()
 			//toDetach =
 			mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, av);
 		}
+
+
+		string file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
+
+		AglReader r((char*)file.c_str());
+
+		AglScene* s = r.getScene();
+
+		vector<AglMesh*> m = s->getMeshes();
+		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
+		mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere);
 	}
 	else if (val == 2)
 	{

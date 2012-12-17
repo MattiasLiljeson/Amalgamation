@@ -19,6 +19,7 @@
     <ClCompile Include="TestTriangle.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="DebugMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -39,5 +40,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="VertexStructures.h" />
+    <ClInclude Include="DebugMesh.h" />
   </ItemGroup>
 </Project>

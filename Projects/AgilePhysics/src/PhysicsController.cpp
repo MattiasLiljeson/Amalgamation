@@ -47,6 +47,14 @@ int PhysicsController::AddCompoundBody(AglVector3 p_position)
 	mCompoundBodies.push_back(cb);
 	return mBodies.size()-1;
 }
+int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+	AglInteriorSphereGrid* pSphereGrid)
+{
+	RigidBodyMesh* rbm = new RigidBodyMesh(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
+	mRigidBodies.push_back(rbm);
+	mBodies.push_back(rbm);
+	return mBodies.size()-1;
+}
 
 void PhysicsController::DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body)
 {

@@ -3,6 +3,9 @@
 
 #include "ImpulseSolver.h"
 #include "CompoundBody.h"
+#include "RigidBodyMesh.h"
+#include <AglInteriorSphereGrid.h>
+#include <AglLooseBspTree.h>
 
 // =================================================================================================
 //                                         PhysicsController
@@ -74,6 +77,9 @@ public:
 	int AddConvexHull(AglVector3 p_position, float p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
 
 	int AddCompoundBody(AglVector3 p_position);
+
+	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
 

@@ -4,6 +4,7 @@
 #include "DX11Application.h"
 #include "PhysicsController2.h"
 #include "Utility.h"
+#include "DebugMesh.h"
 
 class Game: public DX11Application
 {
@@ -23,6 +24,8 @@ private:
 
 	Point PreviousMousePos;
 	Point CurrentMousePos;
+
+	DebugMesh* testMesh;
 
 public:
 	Game(HINSTANCE pInstanceHandle);

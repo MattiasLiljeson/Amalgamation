@@ -26,6 +26,16 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 		return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyConvexHull*)p_r1, p_data);
 	else if (p_r2->GetType() == CONVEXHULL && p_r1->GetType() == SPHERE)
 		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyConvexHull*)p_r2, p_data);
+	else if (p_r1->GetType() == SPHERE && p_r2->GetType() == MESH)
+	{
+		return false;
+		//return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyMesh*)p_r2, p_data);
+	}
+	else if (p_r1->GetType() == MESH && p_r2->GetType() == SPHERE)
+	{
+		return false;
+		//return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyMesh*)p_r1, p_data);
+	}
 	else
 		return false;
 }
@@ -651,6 +661,24 @@ bool CheckCollision(RigidBodyBox* pB, RigidBodyConvexHull* pH, PhyCollisionData*
 		}
 		return true;
 	}
+	return false;
+}
+
+bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
+	return false;
+}
+
+bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
+	return false;
+}
+
+bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
 	return false;
 }
 
