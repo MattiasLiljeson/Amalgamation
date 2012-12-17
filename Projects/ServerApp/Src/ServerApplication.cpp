@@ -44,6 +44,12 @@ void ServerApplication::run()
 
 void ServerApplication::initSystems()
 {
+	/************************************************************************/
+	/* Physics																*/
+	/************************************************************************/
+	PhysicsSystem* physics = new PhysicsSystem();
+	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
+
 	m_world->setSystem( SystemType::PrintPositionsSystem,
 		new PrintPositionsSystem(), true );
 

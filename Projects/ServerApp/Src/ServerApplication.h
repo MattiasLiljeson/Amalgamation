@@ -18,12 +18,15 @@
 #include <boost/thread.hpp>
 
 #include <EntityWorld.h>
+#include <TcpServer.h>
+
+// Systems
+#include <PhysicsSystem.h>
 #include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
 #include <NetworkInputHandlerSystem.h>
 #include <NetworkUpdateSystem.h>
-#include <TcpServer.h>
 
 using namespace std;
 
