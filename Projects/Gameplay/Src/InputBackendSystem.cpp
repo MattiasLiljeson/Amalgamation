@@ -26,10 +26,7 @@ void InputBackendSystem::initialize()
 	Control* tempControl = NULL;
 	int tempControlIdx = -1;
 
-	tempControl = factory.create360controllerDigital( InputHelper::BTN_B );
-	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_DIGITAL,
-		InputHelper::BTN_B, tempControl, "Gamepad B" );
-
+	// Mouse, no factory method for all yet
 	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X_POSITIVE );
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
 		InputHelper::MOUSE_AXIS::X_POSITIVE, tempControl, "Mouse X positive" );
@@ -50,30 +47,32 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 		InputHelper::KEYBOARD_KEY::KEY_SPACE, tempControl, "Space" );
 
-	vector<Control*> keysAtoZ = factory.createKeysAToZ();
-	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
+	// All analogs: stick/triggers on gamepad
+	vector<pair<string, Control*> > analogs = factory.create360controllerAnalogAll();
+	for( int i=0, size = (int)analogs.size(); i<size; i++ )
 	{
-		stringstream ss;
-		ss << "Keyboard key ";
-		ss << (char)('A'+i);
-
-		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
-			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + 1),
-			keysAtoZ[i], ss.str() );
-
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_ANALOG,
+			(InputHelper::XBOX360_CONTROLLER_ANALOG)(InputHelper::THUMB_LX_POSITIVE + i),
+			analogs[i].second, analogs[i].first );
 	}
 
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_L );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key L"] = tempControlIdx;
-//
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_W );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key W"] = tempControlIdx;
-//
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_S );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key S"] = tempControlIdx;
+	// All digital: buttons/dpad on gamepad
+	vector<pair<string, Control*> > digitals = factory.create360controllerDigitalAll();
+	for( int i=0, size = (int)digitals.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_DIGITAL,
+			(InputHelper::XBOX360_CONTROLLER_DIGITAL)(InputHelper::DPAD_UP + i),
+			digitals[i].second, digitals[i].first );
+	}
+
+	// All chars on keyboard
+	vector<pair<string, Control*> > keysAtoZ = factory.createKeysAToZ();
+	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
+			keysAtoZ[i].second, keysAtoZ[i].first );
+	}
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )

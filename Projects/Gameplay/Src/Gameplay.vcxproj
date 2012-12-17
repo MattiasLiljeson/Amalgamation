@@ -19,6 +19,7 @@
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
+    <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="NetworkInputHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
@@ -50,9 +51,6 @@
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />

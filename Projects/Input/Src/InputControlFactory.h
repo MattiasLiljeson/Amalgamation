@@ -8,11 +8,16 @@
 #include "MouseBtnControl.h"
 #include "MouseMoveControl.h"
 
+#include <vector>
+#include <utility>
+
 class AnalogueControl;
 class DigitalControl;
 class Control;
 class DigitalControl;
 class KeyControl;
+
+using namespace std;
 
 // =======================================================================================
 //                                      InputControlFactory
@@ -42,9 +47,14 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
+	// Gamepad
+	vector<pair<string, Control*>> create360controllerAnalogAll();
 	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis );
+	vector<pair<string, Control*>> create360controllerDigitalAll();
 	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
-	vector<Control*> createKeysAToZ();
+
+	// Mouse & Keyboard
+	vector<pair<string, Control*>> createKeysAToZ();
 	Control* createKeyboardKey( InputHelper::KEYBOARD_KEY p_key );
 	Control* createMouseButton( InputHelper::MOUSE_BTN p_btn );
 	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );

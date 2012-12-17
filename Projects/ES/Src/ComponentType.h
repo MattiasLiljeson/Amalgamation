@@ -16,7 +16,6 @@ public:	//Enums
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING = -1,
-		Transform,
 		RenderInfo,
 		Input,
 		NetworkSynced,
@@ -26,6 +25,10 @@ public:	//Enums
 		ShipController,
 		Impulse,
 		BodyInitData,
+		LookAtEntity,
+				   // *FUGLY HACK!*
+		Transform, // There is a bug when an unused component idx is at the last position
+				   // in the enum. Therefore, put transform at the end for now. :/
 		NUM_COMPONENT_TYPES
 	};
 

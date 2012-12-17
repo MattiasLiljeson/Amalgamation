@@ -115,7 +115,7 @@
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="ShipController.h">
-	  <Filter>Components</Filter>
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="ImpulseSystem.h">
       <Filter>Systems</Filter>
@@ -125,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="NetworkUpdateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
@@ -136,9 +139,6 @@
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
@@ -184,7 +184,7 @@
     </ClCompile>
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="ImpulseSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -194,5 +194,8 @@
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
   </ItemGroup>
 </Project>
