@@ -93,9 +93,6 @@
     <ClInclude Include="NetworkInputHandlerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PacketTranslator.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />

@@ -128,5 +128,8 @@
     <ClInclude Include="Packet.h">
       <Filter>Packet</Filter>
     </ClInclude>
+    <ClInclude Include="PacketTranslator.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
