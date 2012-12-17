@@ -136,27 +136,27 @@ Control* InputBackendSystem::getInputControl( const string& p_name )
 	return m_inputManager->getControl(m_controlIdxs[p_name]);
 }
 
-Control* InputBackendSystem::getControlIdxsByEnum( InputHelper::KEYBOARD_KEY p_key )
+Control* InputBackendSystem::getControlByEnum( InputHelper::KEYBOARD_KEY p_key )
 {
 	return m_inputManager->getControl(m_keyIdxsbyEnum[p_key]);
 }
 
-Control* InputBackendSystem::getControlIdxsByEnum( InputHelper::MOUSE_BTN p_btn )
+Control* InputBackendSystem::getControlByEnum( InputHelper::MOUSE_BTN p_btn )
 {
 	return m_inputManager->getControl(m_mouseBtnIdxsbyEnum[p_btn]);
 }
 
-Control* InputBackendSystem::getControlIdxsByEnum( InputHelper::MOUSE_AXIS p_axis )
+Control* InputBackendSystem::getControlByEnum( InputHelper::MOUSE_AXIS p_axis )
 {
 	return m_inputManager->getControl(m_mouseMoveIdxsbyEnum[p_axis]);
 }
 
-Control* InputBackendSystem::getControlIdxsByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital )
+Control* InputBackendSystem::getControlByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital )
 {
 	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_digital]);
 }
 
-Control* InputBackendSystem::getControlIdxsByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog )
+Control* InputBackendSystem::getControlByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog )
 {
 	return m_inputManager->getControl(m_xboxDigitalIdxsbyEnum[p_analog]);
 }

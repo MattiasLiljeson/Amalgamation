@@ -44,11 +44,11 @@ public:
 	void process();
 
 	Control* getInputControl(const string& p_name);
-	Control* getControlIdxsByEnum( InputHelper::KEYBOARD_KEY p_key );
-	Control* getControlIdxsByEnum( InputHelper::MOUSE_BTN p_btn );
-	Control* getControlIdxsByEnum( InputHelper::MOUSE_AXIS p_axis );
-	Control* getControlIdxsByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital );
-	Control* getControlIdxsByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog );
+	Control* getControlByEnum( InputHelper::KEYBOARD_KEY p_key );
+	Control* getControlByEnum( InputHelper::MOUSE_BTN p_btn );
+	Control* getControlByEnum( InputHelper::MOUSE_AXIS p_axis );
+	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital );
+	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog );
 private:
 	void saveControl( InputHelper::INPUT_DEVICE_TYPE p_deviceType, int p_controlType,
 		Control* p_control, const string& p_name );

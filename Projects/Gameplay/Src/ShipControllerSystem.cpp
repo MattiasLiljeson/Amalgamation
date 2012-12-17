@@ -15,18 +15,18 @@ ShipControllerSystem::~ShipControllerSystem()
 
 void ShipControllerSystem::initialize()
 {
-	m_horizontalPositive	= m_inputBackend->getInputControl("Mouse X positive");
-	m_horizontalNegative	= m_inputBackend->getInputControl("Mouse X negative");
-	m_verticalPositive		= m_inputBackend->getInputControl("Mouse Y positive");
-	m_verticalNegative		= m_inputBackend->getInputControl("Mouse Y negative");
+	m_horizontalPositive= m_inputBackend->getControlByEnum( InputHelper::X_POSITIVE );
+	m_horizontalNegative= m_inputBackend->getControlByEnum( InputHelper::X_NEGATIVE );
+	m_verticalPositive	= m_inputBackend->getControlByEnum( InputHelper::Y_POSITIVE );
+	m_verticalNegative	= m_inputBackend->getControlByEnum( InputHelper::Y_NEGATIVE );
 
-	m_roll		= m_inputBackend->getInputControl("L");
-	m_thrust	= m_inputBackend->getInputControl("Gamepad B");
+	m_roll		= m_inputBackend->getControlByEnum( InputHelper::KEY_L );
+	m_thrust	= m_inputBackend->getControlByEnum( InputHelper::BTN_B );
 
-	m_strafeHorizontalPositive	= m_inputBackend->getInputControl("L");
-	m_strafeHorizontalNegative	= m_inputBackend->getInputControl("L");
-	m_strafeVerticalPositive	= m_inputBackend->getInputControl("L");
-	m_strafeVerticalNegative	= m_inputBackend->getInputControl("L");
+	m_strafeHorizontalPositive	= m_inputBackend->getControlByEnum( InputHelper::KEY_L );
+	m_strafeHorizontalNegative	= m_inputBackend->getControlByEnum( InputHelper::KEY_L );
+	m_strafeVerticalPositive	= m_inputBackend->getControlByEnum( InputHelper::KEY_L );
+	m_strafeVerticalNegative	= m_inputBackend->getControlByEnum( InputHelper::KEY_L );
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
