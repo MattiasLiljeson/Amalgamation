@@ -47,8 +47,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				
 				int shipId = e->getIndex();
 
-				e->addComponent( ComponentType::ShipController,
-					new ShipController(0.3f,3.0f) );
+				if(m_tcpClient->getId() == owner)
+				{
+					e->addComponent( ComponentType::ShipController,
+						new ShipController(0.3f,3.0f) );
+				}
 				e->addComponent(ComponentType::Transform,
 					new Transform(position, rotation, scale));
 				e->addComponent(ComponentType::NetworkSynced,

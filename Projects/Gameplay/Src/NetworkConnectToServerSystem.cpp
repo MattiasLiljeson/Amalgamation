@@ -26,7 +26,7 @@ void NetworkConnectToServerSystem::processEntities( const vector<Entity*>& p_ent
 		bool isPressed = pressness == 1.0;
 		if( isPressed && !m_isLookingForConnection )
 		{
-			m_tcpClient->connectToServer( "127.0.0.1", "1337" );
+			m_tcpClient->connectToServer( "194.47.150.135", "1337" );
 			m_isLookingForConnection = true;
 		}
 	}

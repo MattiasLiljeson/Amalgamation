@@ -13,12 +13,12 @@ PrintPositionsSystem::~PrintPositionsSystem()
 
 void PrintPositionsSystem::begin()
 {
-	cout << "Positional entities:\n";
+	//cout << "Positional entities:\n";
 }
 
 void PrintPositionsSystem::end()
 {
-	cout << "\n";
+	//cout << "\n";
 }
 
 void PrintPositionsSystem::processEntities( const vector<Entity*>& p_entities )

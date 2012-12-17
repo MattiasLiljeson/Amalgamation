@@ -42,9 +42,9 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				//cout << "ThrustVec(" << thrustVec.x << ", " <<
 				//	thrustVec.y << ", " <<
 				//	thrustVec.z <<"). ";
-				cout << "AngularVec(" << angularVec.x << ", " <<
-					angularVec.y << ", " <<
-					angularVec.z <<").\n";
+				//cout << "AngularVec(" << angularVec.x << ", " <<
+				//	angularVec.y << ", " <<
+				//	angularVec.z <<").\n";
 
 				Entity* entity = NULL;
 
