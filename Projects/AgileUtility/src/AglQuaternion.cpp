@@ -25,6 +25,16 @@ AglQuaternion AglQuaternion::operator*(const AglQuaternion& p_other) const
 	AglQuaternion quat(mulU, mulV); 
 	return quat;
 }
+AglQuaternion& AglQuaternion::operator*=(const AglQuaternion& p_other)
+{
+	AglVector3 uvec = p_other.u;
+	AglVector3 mulU = AglVector3::crossProduct(this->u, p_other.u) + 
+		uvec * this->v + this->u * p_other.v;
+	float mulV = this->v*p_other.v - AglVector3::dotProduct(this->u, p_other.u);
+	u = mulU;
+	v = mulV;
+	return (*this);
+}
 AglQuaternion AglQuaternion::operator*(const float& p_scalar) const
 {
 	return AglQuaternion(u * p_scalar, v * p_scalar);
@@ -38,7 +48,7 @@ AglQuaternion AglQuaternion::identity()
 {
 	return AglQuaternion(0, 0, 0, 1);
 }
-AglQuaternion AglQuaternion::constructFromAngularVelocity(AglVector3 p_angVel)
+AglQuaternion AglQuaternion::constructFromAngularVelocity(const AglVector3& p_angVel)
 {
 	float a = AglVector3::length(p_angVel);
 	if (a < 0.0000001f)
@@ -49,7 +59,7 @@ AglQuaternion AglQuaternion::constructFromAngularVelocity(AglVector3 p_angVel)
 	AglQuaternion quat(axis * sinV, cosV);
 	return quat;
 }
-AglQuaternion AglQuaternion::constructFromAxisAndAngle(AglVector3 p_axis, float p_angle)
+AglQuaternion AglQuaternion::constructFromAxisAndAngle(const AglVector3& p_axis, const float& p_angle)
 {
 	float cosV = cos(p_angle * 0.5f);
 	float sinV = sin(p_angle * 0.5f);
@@ -100,13 +110,13 @@ void AglQuaternion::transformVector(AglVector3& p_vector)
 }
 
 //Static functions
-AglQuaternion AglQuaternion::lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, float p_t)
+AglQuaternion AglQuaternion::lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t)
 {
 	AglQuaternion q = p_q1 * (1.0f - p_t) + p_q2 * p_t;
 	q.normalize();
 	return q;
 }
-AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, float p_t)
+AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t)
 {
 	float phi = p_q1.u.x*p_q2.u.x + p_q1.u.y*p_q2.u.y + p_q1.u.z*p_q2.u.z + p_q1.v*p_q2.v;
 

@@ -6,6 +6,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	ClientApplication* application;
 	application = new ClientApplication( hInstance );
 
+	SetThreadAffinityMask(GetCurrentThread(), 1);
+
 	application->run();
 
 	delete application;

@@ -11,11 +11,11 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <InstanceData.h>
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "PTVertex.h"
 #include "PTNVertex.h"
-#include "InstanceVertex.h"
 #include "DIndex.h"
 #include "Mesh.h"
 // #include "TextureBuffers.h"
@@ -44,7 +44,7 @@ public:
 	/// \param p_numberOfElements
 	/// \return Buffer<InstanceVertex>*
 	///-----------------------------------------------------------------------------------
-	Buffer<InstanceVertex>* createInstanceBuffer(InstanceVertex* p_instanceList,
+	Buffer<InstanceData>* createInstanceBuffer(InstanceData* p_instanceList,
 												 unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------

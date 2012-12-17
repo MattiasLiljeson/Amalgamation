@@ -53,7 +53,7 @@ public:
 	/// Renders the whole scene
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(unsigned int p_meshId,vector<InstanceVertex>* p_instanceList);
+	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will

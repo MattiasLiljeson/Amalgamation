@@ -5,8 +5,14 @@
 #include "TextureManager.h"
 #include "SkeletonMesh.h"
 #include "Globals.h"
+#include "SphereMesh.h"
+#include "BoxMesh.h"
+
 
 Scene* Scene::sInstance = NULL;
+
+AglMatrix Scene::m_avoidJump = AglMatrix();
+AglMatrix Scene::m_world = AglMatrix();
 
 Scene::Scene()
 {
@@ -57,9 +63,14 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	mAglScene = pAglScene;
 	if (mAglScene->getSkeletonCount() > 0)
 	{
-		AglJoint* j1 = mAglScene->getSkeleton(0)->getRoot();
-		AglNode root = mAglScene->getNode(j1->nodeID);
-		m_world = root.localTransform;
+		AglSkeleton* s = mAglScene->getSkeleton(0);
+		AglJoint* j1 = s->getRoot();
+
+		//What is it?
+		m_world = s->getInverseBindMatrix(j1->id);// * s->getGlobalTransform(j1->id);
+		m_avoidJump = s->getInverseBindMatrix(j1->id) * s->getGlobalTransform(j1->id);
+		//mAglScene->tempFix(m_avoidJump.inverse());
+
 	}
 	else
 		m_world = AglMatrix::identityMatrix();
@@ -75,6 +86,10 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 		AglVector3 maxV = mMeshes[i]->GetMax();
 		mMax = AglVector3(max(mMax.x, maxV.x), max(mMax.y, maxV.y), max(mMax.z, maxV.z)); 
 		mMin = AglVector3(min(mMin.x, minV.x), min(mMin.y, minV.y), min(mMin.z, minV.z)); 
+
+		//Find random colors
+		mSphereColors.push_back(RandomUnitVector3());
+		mBoxColors.push_back(RandomUnitVector3());
 	}
 	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
 	{
@@ -109,9 +124,45 @@ void Scene::Draw()
 		w = w3 * w;
 	}
 
+	if (mAglScene && mAglScene->getSkeletonCount() > 0)
+	{
+		AglSkeleton* s = mAglScene->getSkeleton(0);
+		AglJoint* j1 = s->getRoot();
+		m_avoidJump = s->getInverseBindMatrix(j1->id) * s->getGlobalTransform(j1->id);
+	}
+	else
+		m_world = AglMatrix::identityMatrix();
+
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
+		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
+		if (SPHEREMESH && DRAWDEBUGSPHERE)
+		{
+			AglBoundingSphere bs = mMeshes[i]->getBoundingSphere();
+			AglMatrix sw;
+			AglMatrix::componentsToMatrix(sw, AglVector3(bs.radius, bs.radius, bs.radius), AglQuaternion::identity(), bs.position);
+			sw = sw * m_avoidJump;
+			sw = sw * invMax;
+			sw *= w;
+			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
+			SPHEREMESH->Draw(sw, mSphereColors[i]);
+		}
+		if (BOXMESH && DRAWDEBUGBOX)
+		{
+			AglOBB obb = mMeshes[i]->getMinimumOBB();
+			AglMatrix sw = obb.world;
+			AglMatrix size;
+			AglMatrix::componentsToMatrix(size, obb.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
+			sw = size * sw;
+			sw = sw * m_avoidJump;
+			sw = sw * invMax;
+			sw *= w;
+			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
+			BOXMESH->Draw(sw, mBoxColors[i]);
+		}
+	}
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
@@ -122,10 +173,10 @@ void Scene::Draw()
 	newW.SetTranslation(AglVector3(0, 0, 0));
 	minP.transform(newW*invMax);
 	maxP.transform(newW*invMax);
-	if (mPlaneMesh)
+	/*if (mPlaneMesh)
 	{
 		mPlaneMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(0, min(minP.y, maxP.y), 0)), 1.0f);
-	}
+	}*/
 }
 AglNode Scene::GetNode(int pIndex)
 {

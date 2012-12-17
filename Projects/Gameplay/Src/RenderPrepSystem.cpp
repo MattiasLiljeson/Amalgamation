@@ -62,7 +62,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			// Finally, add the entity to the instance vector
-			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceVertexRef() );
+			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
 		}
 		for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
