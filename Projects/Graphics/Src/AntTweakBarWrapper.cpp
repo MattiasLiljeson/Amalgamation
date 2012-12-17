@@ -6,6 +6,7 @@ AntTweakBarWrapper::AntTweakBarWrapper( ID3D11Device* p_device, const char* p_na
 {
 	TwInit(TW_DIRECT3D11,p_device);
 	m_antBar = TwNewBar(p_nameOfBar);
+	m_barName = p_nameOfBar;
 }
 
 AntTweakBarWrapper::~AntTweakBarWrapper()
@@ -49,4 +50,9 @@ void AntTweakBarWrapper::addWriteVariable(const char* p_name, TwType p_type,
 										  void *p_var, const char* p_misc)
 {
 	TwAddVarRW(m_antBar,p_name,p_type,p_var,p_misc);
+}
+
+TwBar* AntTweakBarWrapper::getMainBar()
+{
+	return m_antBar;
 }

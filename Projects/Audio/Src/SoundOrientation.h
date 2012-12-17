@@ -1,29 +1,22 @@
 #pragma once
-#include <x3daudio.h>
 #include <AglVector3.h>
-#include "SoundOrientation.h"
 
 // =======================================================================================
-//                                      PositionalSoundInfo
+//                                      SoundSceneInfo
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Contains the information needed to use a positional sound
+/// \brief	Contains the needed information for the sound
 ///        
-/// # PositionalSoundInfo
+/// # SoundSceneInfo
 /// Detailed description.....
-/// Created on: 11-12-2012 
+/// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
 
-struct PositionalSoundInfo
+struct SoundOrientation
 {
-	X3DAUDIO_EMITTER		emitter;
-	X3DAUDIO_DSP_SETTINGS	settings;
-	X3DAUDIO_CONE			cone;
-	AglVector3				previousPosition;
-
-	PositionalSoundInfo()
-	{
-
-	}
+	AglVector3 listenerPos;
+	AglVector3 listenerOrientFront;
+	AglVector3 listenerOrientTop;
+	AglVector3 listenerVelocity;
 };

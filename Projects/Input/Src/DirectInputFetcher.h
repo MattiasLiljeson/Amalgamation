@@ -1,8 +1,13 @@
 #pragma once
 
+
+// Below line to stop warnings
+#define DIRECTINPUT_VERSION 0x0800
+
 #include "DirectInputException.h"
 #include "IMouseKeyboardFetcher.h"
 #include "InputHelper.h"
+
 #include <dinput.h>
 
 #pragma comment (lib, "dinput8.lib")

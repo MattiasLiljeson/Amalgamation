@@ -71,6 +71,7 @@ struct AglVector3
 	static float length(const AglVector3& pVector);
 	static void normalize(AglVector3& pVector);
 	static AglVector3 lerp(const AglVector3& p_v1, const AglVector3& p_v2, float p_t);
+	static AglVector3 createDirection(const AglVector3& p_from, const AglVector3& p_to);
 	
 };
 

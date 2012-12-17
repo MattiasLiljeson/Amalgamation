@@ -1,11 +1,14 @@
 #pragma once
 #include <xaudio2.h>
 #include <x3daudio.h>
+#include <AglVector3.h>
 #include "Sound.h"
 #include "PositionalSound.h"
 #include "XAudio2Exception.h"
 #include "SoundDefines.h"
 #include "AudioCurves.h"
+#include "BasicSoundCreationInfo.h"
+#include "PositionalSoundCreationInfo.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -31,17 +34,27 @@ public:
 	/// \param p_flePath
 	/// \return Sound*
 	///-----------------------------------------------------------------------------------
-	Sound* createNonPositionalSound( const char* p_filePath );
-	PositionalSound* createPositionalSound( const char* p_filePath );
+	Sound* createAmbientSound( BasicSoundCreationInfo* p_info );
+
+	///-----------------------------------------------------------------------------------
+	/// Creates a 3D positional sound.
+	/// \param p_basicSoundInfo
+	/// \param p_positionalInfo
+	/// \return PositionalSound*
+	///-----------------------------------------------------------------------------------
+	PositionalSound* createPositionalSound( BasicSoundCreationInfo* p_basicSoundInfo, 
+		PositionalSoundCreationInfo* p_positionalInfo);
 protected:
 private:
-	IXAudio2SourceVoice* fillBuffer(WAVEFORMATEXTENSIBLE& p_waveFormatEx, 
+	IXAudio2SourceVoice* createSourceVoice(const char* p_fullFilePath, 
 		XAUDIO2_BUFFER& p_buffer);
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
-	void initFile(string p_filePath);
-	void initEmitter(X3DAUDIO_EMITTER* p_emitter);
+	void initBuffer(XAUDIO2_BUFFER* p_audioBuffer, BasicSoundCreationInfo* p_basicSoundInfo);
+	void initFile(const char* p_filePath);
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter, SoundOrientation p_soundOrientation);
+	void initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_destChannels);
 private:
 	IXAudio2*	m_soundDevice;
 

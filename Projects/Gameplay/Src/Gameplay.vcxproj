@@ -11,6 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioBackendSystem.h" />
+    <ClInclude Include="AudioController.h" />
+    <ClInclude Include="AudioInfo.h" />
+    <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
@@ -20,6 +24,9 @@
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="Impulse.h" />
+    <ClInclude Include="ImpulseSystem.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="NetworkInputHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
@@ -44,6 +51,10 @@
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioBackendSystem.cpp" />
+    <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="AudioInfo.cpp" />
+    <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
@@ -51,6 +62,9 @@
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
@@ -100,6 +114,8 @@
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(SolutionDir)Projects/AgilePhysics/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
@@ -107,6 +123,8 @@
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(SolutionDir)Projects/AgilePhysics/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(IncludePath);$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,7 +139,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;AgilePhysics_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,7 +159,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_x86_$(Configuration).lib;AgilePhysics_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
