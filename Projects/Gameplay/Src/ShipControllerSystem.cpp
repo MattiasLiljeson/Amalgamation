@@ -1,14 +1,16 @@
 #include "ShipControllerSystem.h"
 
 ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
-										    PhysicsSystem* p_physicsSystem ) : 
-					  EntitySystem( SystemType::ShipControllerSystem, 3,
+										    PhysicsSystem* p_physicsSystem,
+											TcpClient* p_client ) : 
+					  EntitySystem( SystemType::ShipControllerSystem, 2,
 									ComponentType::ComponentTypeIdx::ShipController,
-									ComponentType::ComponentTypeIdx::Transform,
-									ComponentType::ComponentTypeIdx::PhysicsBody)
+									ComponentType::ComponentTypeIdx::Transform
+									/*, ComponentType::ComponentTypeIdx::PhysicsBody*/)
 {
 	m_inputBackend = p_inputBackend;
 	m_physics = p_physicsSystem;
+	m_client = p_client;
 }
 
 ShipControllerSystem::~ShipControllerSystem()
@@ -54,8 +56,8 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-		PhysicsBody* physicsBody = static_cast<PhysicsBody*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody ) );
+//		PhysicsBody* physicsBody = static_cast<PhysicsBody*>(
+//			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody ) );
 
 		// Calc rotation from player input
 		float xangle = verticalInput * sensitivityMult/* - Input.GetAxis("Mouse Y")*/;
@@ -89,7 +91,26 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// DEBUGPRINT(( (toString(horizontalInput)+string("\n")).c_str() ));
 
 		// transform->setTranslation(transform->getTranslation()+thrustVec);
-		m_physics->applyImpulse(physicsBody->m_id,thrustVec,angularVec);
+
+
+		//
+		// Applying (local client) thrust and impulses, to the physics system.
+		// At the moment this is totally replaced by the network thrust-thingy.
+		// Later we will probably have both client and server physics.
+		//
+//		m_physics->applyImpulse(physicsBody->m_id,thrustVec,angularVec);
+
+
+		//
+		// Applying networked thrust and impulses, to the server's own physics system.
+		//
+		Packet thrustPacket;
+		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput <<
+			thrustVec << angularVec;
+		m_client->sendPacket( thrustPacket );
+
+
+
 
 		// Apply force and torque
 		// rigidbody.AddForce(m_thrustVec,ForceMode.Acceleration);

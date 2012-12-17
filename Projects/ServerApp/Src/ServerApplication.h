@@ -17,8 +17,8 @@
 
 #include <boost/thread.hpp>
 
-#include <EntityWorld.h>
 #include <TcpServer.h>
+#include <EntityWorld.h>
 
 // Systems
 #include <PhysicsSystem.h>

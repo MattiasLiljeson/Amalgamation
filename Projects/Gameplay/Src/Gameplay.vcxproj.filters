@@ -126,9 +126,6 @@
     <ClInclude Include="NetworkUpdateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerInputAction.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>

@@ -3,13 +3,17 @@
 // ES
 #include <EntitySystem.h>
 
+// Components
+#include "Transform.h"
+#include "NetworkSynced.h"
+#include "PhysicsBody.h"
+
 // NetComm
 #include <TcpServer.h>
 
-#include "Transform.h"
-
 #include "PacketType.h"
-#include "PlayerInputAction.h"
+#include "NetworkType.h"
+#include "PhysicsSystem.h"
 
 class NetworkInputHandlerSystem : public EntitySystem
 {
@@ -23,4 +27,5 @@ public:
 
 private:
 	TcpServer* m_server;
+	PhysicsSystem* m_physics;
 };

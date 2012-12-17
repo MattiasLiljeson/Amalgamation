@@ -25,7 +25,6 @@
     <ClInclude Include="NetworkConnectToServerSystem.h" />
     <ClInclude Include="NetworkType.h" />
     <ClInclude Include="PacketType.h" />
-    <ClInclude Include="PlayerInputAction.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
     <ClInclude Include="NetworkClientControllable.h" />

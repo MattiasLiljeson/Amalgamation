@@ -83,7 +83,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( inputBackend, true);
 
 	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics);
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
+		m_client );
 	m_world->setSystem( shipController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
