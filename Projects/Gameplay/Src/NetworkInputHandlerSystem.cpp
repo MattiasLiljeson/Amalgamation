@@ -1,8 +1,9 @@
 #include "NetworkInputHandlerSystem.h"
 
 NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
-	: EntitySystem( SystemType::NetworkInputHandlerSystem, 1,
-	ComponentType::NetworkSynced )
+	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
+	ComponentType::NetworkSynced, ComponentType::ShipController,
+	ComponentType::PhysicsBody )
 {
 	m_server = p_server;
 }
@@ -37,6 +38,13 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				AglVector3 angularVec;
 
 				packet >> thrustVec >> angularVec;
+				
+				//cout << "ThrustVec(" << thrustVec.x << ", " <<
+				//	thrustVec.y << ", " <<
+				//	thrustVec.z <<"). ";
+				cout << "AngularVec(" << angularVec.x << ", " <<
+					angularVec.y << ", " <<
+					angularVec.z <<").\n";
 
 				Entity* entity = NULL;
 
@@ -65,6 +73,7 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					if( physicsBody )
 					{
 						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
+						//cout << physicsBody->m_id << endl;
 					}
 				}
 			}
