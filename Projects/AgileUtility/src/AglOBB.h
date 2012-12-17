@@ -27,8 +27,10 @@ struct AglOBB
 	AglOBB(AglVector3 p_position, AglVector3 p_size);
 	AglOBB(AglMatrix p_world, AglVector3 p_size);
 
+	vector<AglVector3> getCorners();
+
 	//Static Functions
-	static AglOBB constructMinimum(vector<AglVector3> p_vertices, vector<int> p_indices);
+	static AglOBB constructMinimum(vector<AglVector3> p_vertices, vector<unsigned int> p_indices);
 };
 
 #endif

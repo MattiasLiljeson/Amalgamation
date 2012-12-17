@@ -26,97 +26,54 @@ void InputBackendSystem::initialize()
 	Control* tempControl = NULL;
 	int tempControlIdx = -1;
 
-	// GAMEPAD
-	tempControl = factory.create360controllerDigital( InputHelper::BTN_B );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad B"] = tempControlIdx;
+	// Mouse, no factory method for all yet
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X_POSITIVE );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
+		InputHelper::MOUSE_AXIS::X_POSITIVE, tempControl, "Mouse X positive" );
 
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad LX positive"] = tempControlIdx;
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X_NEGATIVE );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
+		InputHelper::MOUSE_AXIS::X_NEGATIVE, tempControl, "Mouse X negative" );
 
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX,
-		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad LX negative"] = tempControlIdx;
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y_POSITIVE );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
+		InputHelper::MOUSE_AXIS::Y_POSITIVE, tempControl, "Mouse Y positive" );
 
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad LY positive"] = tempControlIdx;
+	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y_NEGATIVE );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
+		InputHelper::MOUSE_AXIS::Y_NEGATIVE, tempControl, "Mouse Y negative" );
 
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY,
-		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad LY negative"] = tempControlIdx;
-
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_L,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad L trigger"] = tempControlIdx;
-
-	tempControl = factory.create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG::TRIGGER_R,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad R analog trigger"] = tempControlIdx;
-
-	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_R );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad R shoulder button"] = tempControlIdx;
-
-	tempControl = factory.create360controllerDigital( InputHelper::SHOULDER_PRESS_L );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Gamepad L shoulder button"] = tempControlIdx;
-
-	// MOUSE
-	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Mouse X positive"] = tempControlIdx;
-
-	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::X,
-		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Mouse X negative"] = tempControlIdx;
-
-	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
-		InputHelper::SUB_AXIS::AXIS_POSITIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Mouse Y positive"] = tempControlIdx;
-
-	tempControl = factory.createMouseMovement( InputHelper::MOUSE_AXIS::Y,
-		InputHelper::SUB_AXIS::AXIS_NEGATIVE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Mouse Y negative"] = tempControlIdx;
-
-	// KEYBOARD
 	tempControl = factory.createKeyboardKey( InputHelper::KEY_SPACE );
-	tempControlIdx = m_inputManager->addControl( tempControl );
-	m_controlIdxs["Space"] = tempControlIdx;
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+		InputHelper::KEYBOARD_KEY::KEY_SPACE, tempControl, "Space" );
 
-	vector<Control*> keysAtoZ = factory.createKeysAToZ();
-	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
+	// All analogs: stick/triggers on gamepad
+	vector<pair<string, Control*> > analogs = factory.create360controllerAnalogAll();
+	for( int i=0, size = (int)analogs.size(); i<size; i++ )
 	{
-		stringstream ss;
-		ss << "Keyboard key ";
-		ss << (char)('A'+i);
-
-		tempControlIdx = m_inputManager->addControl( keysAtoZ[i] );
-		m_controlIdxs[ss.str()] = tempControlIdx;
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_ANALOG,
+			(InputHelper::XBOX360_CONTROLLER_ANALOG)(InputHelper::THUMB_LX_POSITIVE + i),
+			analogs[i].second, analogs[i].first );
 	}
 
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_L );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key L"] = tempControlIdx;
-//
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_W );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key W"] = tempControlIdx;
-//
-//	tempControl = factory.createKeyboardKey( InputHelper::KEY_S );
-//	tempControlIdx = m_inputManager->addControl( tempControl );
-//	m_controlIdxs["Keyboard key S"] = tempControlIdx;
+	// All digital: buttons/dpad on gamepad
+	vector<pair<string, Control*> > digitals = factory.create360controllerDigitalAll();
+	for( int i=0, size = (int)digitals.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_DIGITAL,
+			(InputHelper::XBOX360_CONTROLLER_DIGITAL)(InputHelper::DPAD_UP + i),
+			digitals[i].second, digitals[i].first );
+	}
+
+	// All chars on keyboard
+	vector<pair<string, Control*> > keysAtoZ = factory.createKeysAToZ();
+
+	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
+			keysAtoZ[i].second, keysAtoZ[i].first );
+	}
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -177,4 +134,83 @@ void InputBackendSystem::process()
 Control* InputBackendSystem::getInputControl( const string& p_name )
 {
 	return m_inputManager->getControl(m_controlIdxs[p_name]);
+}
+
+Control* InputBackendSystem::getControlByEnum( InputHelper::KEYBOARD_KEY p_key )
+{
+	return m_inputManager->getControl(m_keyIdxsbyEnum[p_key]);
+}
+
+Control* InputBackendSystem::getControlByEnum( InputHelper::MOUSE_BTN p_btn )
+{
+	return m_inputManager->getControl(m_mouseBtnIdxsbyEnum[p_btn]);
+}
+
+Control* InputBackendSystem::getControlByEnum( InputHelper::MOUSE_AXIS p_axis )
+{
+	return m_inputManager->getControl(m_mouseMoveIdxsbyEnum[p_axis]);
+}
+
+Control* InputBackendSystem::getControlByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital )
+{
+	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_digital]);
+}
+
+Control* InputBackendSystem::getControlByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog )
+{
+	return m_inputManager->getControl(m_xboxDigitalIdxsbyEnum[p_analog]);
+}
+
+void InputBackendSystem::saveControl( InputHelper::INPUT_DEVICE_TYPE p_deviceType, 
+							int p_controlType, Control* p_control, const string& p_name )
+{
+	// Register Control 
+	int controlIdx = m_inputManager->addControl( p_control );
+
+	// Add idx to "name" map
+	m_controlIdxs[p_name] = controlIdx;
+
+	// Find right "enum" map and add idx to it
+	vector<int>* vectorToAddto = vectorFromDeviceType( p_deviceType );
+	expandIdxVectorIfNecessary( vectorToAddto, p_controlType );
+	(*vectorToAddto)[p_controlType] = controlIdx;
+}
+
+vector<int>* InputBackendSystem::vectorFromDeviceType( InputHelper::INPUT_DEVICE_TYPE p_deviceType )
+{
+	vector<int>* vec = NULL;
+	switch( p_deviceType )
+	{
+	case InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE:
+		vec = &m_mouseMoveIdxsbyEnum;
+		break;
+
+	case InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN:
+		vec = &m_mouseBtnIdxsbyEnum;
+		break;
+
+	case InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD:
+		vec = &m_keyIdxsbyEnum;
+		break;
+
+	case InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_DIGITAL:
+		vec = &m_xboxAnalogIdxsbyEnum;
+		break;
+
+	case InputHelper::INPUT_DEVICE_TYPE::IT_XINPUT_ANALOG:
+		vec = &m_xboxDigitalIdxsbyEnum;
+		break;
+
+	default:
+		vec = NULL;
+	}
+	return vec;
+}
+
+void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_idx )
+{
+	if( p_vec->size() <= p_idx )
+	{
+		p_vec->resize(p_idx+1);
+	}
 }

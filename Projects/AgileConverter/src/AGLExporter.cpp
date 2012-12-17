@@ -21,12 +21,9 @@ void AGLExporter::AddMesh(MeshData* pData)
 	h.indexCount = pData->IndicesCount;
 	h.vertexCount = pData->VertexCount;
 	h.vertexFormat = pData->VertexFormat;
-	AglMesh* m = new AglMesh(h, pData->Vertices, pData->Indices);
-	mMeshes.push_back(m);
-	mScene->addMesh(m);
 
 	//Write a loose bsp tree for the mesh
-	/*vector<AglVector3> verts;
+	vector<AglVector3> verts;
 	AglVertexSTBN* oldV = (AglVertexSTBN*)pData->Vertices;
 	for (int j = 0; j < h.vertexCount; j++)
 	{
@@ -38,12 +35,22 @@ void AGLExporter::AddMesh(MeshData* pData)
 		ind.push_back(pData->Indices[j]);
 	}
 
-	AglInteriorSphereGrid* spheregrid = new AglInteriorSphereGrid(3, verts, ind, h.id);
+	cout << "Creating bounding volumes for mesh " << h.id << endl;
+	//Would be optimal with hulls rather than a generic mesh
+	h.minimumOBB = AglOBB::constructMinimum(verts, ind);
+	h.boundingSphere = AglBoundingSphere::minimumBoundingSphere(h.minimumOBB.getCorners());
+	cout << "Bounding volumes created for mesh " << h.id << endl << endl;
 
-	mScene->addSphereGrid(spheregrid);
+	//AglInteriorSphereGrid* spheregrid = new AglInteriorSphereGrid(3, verts, ind, h.id);
 
-	AglLooseBspTreeConstructor treeConst(h.id, verts, ind);
-	mScene->addBspTree(treeConst.createTree());*/
+	//mScene->addSphereGrid(spheregrid);
+
+	//AglLooseBspTreeConstructor treeConst(h.id, verts, ind);
+	//mScene->addBspTree(treeConst.createTree());
+
+	AglMesh* m = new AglMesh(h, pData->Vertices, pData->Indices);
+	mMeshes.push_back(m);
+	mScene->addMesh(m);
 }
 void AGLExporter::AddNode(NodeData* pData)
 {

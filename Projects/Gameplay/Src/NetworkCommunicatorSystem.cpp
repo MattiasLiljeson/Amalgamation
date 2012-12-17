@@ -50,7 +50,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				if(m_tcpClient->getId() == owner)
 				{
 					e->addComponent( ComponentType::ShipController,
-						new ShipController(0.3f,3.0f) );
+						new ShipController(5.0f, 50.0f) );
 				}
 				e->addComponent(ComponentType::Transform,
 					new Transform(position, rotation, scale));

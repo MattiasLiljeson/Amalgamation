@@ -61,7 +61,7 @@ float4 PShader(VOut pIn) : SV_TARGET
             glow = float3(0, 0, 0); 
         float3 Color = float3(0,0,0);
         float3 lightDir = normalize(float3(0.0f, -1.0f, 0));
-        float DiffuseFactor = max(dot(-lightDir, n), 0.2f);  
+        float DiffuseFactor = min(max(dot(-lightDir, n), 0.2f), 1.0f);  
         if (DiffuseFactor > 0)
         {
             float  Shininess       = Specular.w;

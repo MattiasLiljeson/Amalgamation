@@ -18,37 +18,60 @@
 class Sound
 {
 public:
-	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer);
+	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer, 
+		float p_volume=1.0f);
 	virtual ~Sound();
 
 	///-----------------------------------------------------------------------------------
 	/// Stops the source voice and also flushes the source buffers
-	/// \return HRESULT
+	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT stop();
 
 	///-----------------------------------------------------------------------------------
 	/// Pauses the sound but doesn't clear the source buffers
-	/// \return HRESULT
+	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT pause();
 
 	///-----------------------------------------------------------------------------------
 	/// Submits the original buffer and restarts the sound
-	/// \return HRESULT
+	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT restart();
 
 	///-----------------------------------------------------------------------------------
 	/// Only asks the source voice to begin playing it's sound no matter where the 
 	/// buffer pointer. If the sound has never been played the buffer location will be at
-	/// the begining.
-	/// \return HRESULT
+	/// the beginning.
+	/// \returns HRESULT
 	///-----------------------------------------------------------------------------------
 	HRESULT resumeOrPlay();
 
 	IXAudio2SourceVoice* getSourceVoice();
+
+	XAUDIO2_VOICE_STATE* getSourceCurrentState();
+
+	///-----------------------------------------------------------------------------------
+	/// Updates the current sound's states allowing to see if the sound is playing or not.
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void updateVoiceState();
+
+	/************************************************************************/
+	/* DEBUG STUFFS!														*/
+	/************************************************************************/
+	//-START-
+	float* getLeftChannelRef();
+	float* getRightChannelRef();
+
+public:
+	float					m_left;
+	float					m_right;
+	//-END-
 protected:
 	XAUDIO2_BUFFER			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
+	XAUDIO2_VOICE_STATE*	m_sourceState;
+	float					m_volume;
 };

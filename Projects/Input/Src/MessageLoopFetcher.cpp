@@ -107,10 +107,14 @@ void MessageLoopFetcher::resetCursor()
 	// Convert screen space coords to client space
 	ScreenToClient( m_hWnd, &point );
 
-	m_mouseCurrPos[InputHelper::MOUSE_AXIS::X] = point.x;
-	m_mouseCurrPos[InputHelper::MOUSE_AXIS::Y] = point.y;
-	m_mousePrevPos[InputHelper::MOUSE_AXIS::X] = point.x;
-	m_mousePrevPos[InputHelper::MOUSE_AXIS::Y] = point.y;
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::X_POSITIVE] = point.x;
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::X_NEGATIVE] = point.x;
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::Y_POSITIVE] = point.y;
+	m_mouseCurrPos[InputHelper::MOUSE_AXIS::Y_NEGATIVE] = point.y;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::X_POSITIVE] = point.x;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::X_NEGATIVE] = point.x;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::Y_POSITIVE] = point.y;
+	m_mousePrevPos[InputHelper::MOUSE_AXIS::Y_NEGATIVE] = point.y;
 }
 
 void MessageLoopFetcher::updateStateBuffers()
@@ -171,8 +175,10 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 	switch (p_message)
 	{
 	case WM_MOUSEMOVE:
-		m_mouseCurrPos[InputHelper::X] = LOWORD(p_lParam);
-		m_mouseCurrPos[InputHelper::Y] = HIWORD(p_lParam);
+		m_mouseCurrPos[InputHelper::X_POSITIVE] = LOWORD(p_lParam);
+		m_mouseCurrPos[InputHelper::X_NEGATIVE] = LOWORD(p_lParam);
+		m_mouseCurrPos[InputHelper::Y_POSITIVE] = HIWORD(p_lParam);
+		m_mouseCurrPos[InputHelper::Y_NEGATIVE] = HIWORD(p_lParam);
 		break;
 
 	case WM_KEYDOWN:
@@ -220,7 +226,9 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 		break;
 
 	case WM_MOUSEWHEEL:
-		m_mouseCurrPos[InputHelper::Z] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
+		m_mouseCurrPos[InputHelper::Z_POSITIVE] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
+		m_mouseCurrPos[InputHelper::Z_NEGATIVE] = HIWORD(p_wParam)/* / -WHEEL_DELTA*/;
+
 		break;
 
 	case WM_CHAR:

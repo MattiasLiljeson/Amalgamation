@@ -20,32 +20,42 @@ ShipControllerSystem::~ShipControllerSystem()
 
 void ShipControllerSystem::initialize()
 {
-	m_horizontalPositive	= m_inputBackend->getInputControl("Gamepad LX positive");
-	m_horizontalNegative	= m_inputBackend->getInputControl("Gamepad LX negative");
-	m_verticalPositive		= m_inputBackend->getInputControl("Gamepad LY positive");
-	m_verticalNegative		= m_inputBackend->getInputControl("Gamepad LY negative");
+	m_horizontalPositive	= m_inputBackend->getInputControl( "THUMB_LX_POSITIVE" );
+	m_horizontalNegative	= m_inputBackend->getInputControl( "THUMB_LX_NEGATIVE" );
+	m_verticalPositive		= m_inputBackend->getInputControl( "THUMB_LY_POSITIVE" );
+	m_verticalNegative		= m_inputBackend->getInputControl( "THUMB_LY_NEGATIVE" );
 
-	m_rollRight		= m_inputBackend->getInputControl("Gamepad R shoulder button");
-	m_rollLeft		= m_inputBackend->getInputControl("Gamepad L shoulder button");
-	m_thrust		= m_inputBackend->getInputControl("Gamepad R analog trigger");
+	m_rollRight		= m_inputBackend->getInputControl( "SHOULDER_PRESS_R" );
+	m_rollLeft		= m_inputBackend->getInputControl( "SHOULDER_PRESS_L" );
+	m_thrust		= m_inputBackend->getInputControl( "TRIGGER_R" );
 
-	m_strafeHorizontalPositive	= m_inputBackend->getInputControl("L");
-	m_strafeHorizontalNegative	= m_inputBackend->getInputControl("L");
-	m_strafeVerticalPositive	= m_inputBackend->getInputControl("L");
-	m_strafeVerticalNegative	= m_inputBackend->getInputControl("L");
+	m_strafeHorizontalPositive	= m_inputBackend->getInputControl( "THUMB_RX_POSITIVE" );
+	m_strafeHorizontalNegative	= m_inputBackend->getInputControl( "THUMB_RX_NEGATIVE" );
+	m_strafeVerticalPositive	= m_inputBackend->getInputControl( "THUMB_RY_POSITIVE" );
+	m_strafeVerticalNegative	= m_inputBackend->getInputControl( "THUMB_RY_NEGATIVE" );
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
-	// Input controls
-	double horizontalInput = m_horizontalPositive->getStatus() - m_horizontalNegative->getStatus();
-	double verticalInput = m_verticalPositive->getStatus() - m_verticalNegative->getStatus();
-	double rollInput =  m_rollLeft->getStatus()-m_rollRight->getStatus();
-	double thrustInput = m_thrust->getStatus();
-	double strafeHorizontalInput = 0.0;
-	double strafeVerticalInput = 0.0;
-	double sensitivityMult = 1.0;
+	// Input controls setup
+	double hPositive = m_horizontalPositive->getStatus(),
+		   hNegative = m_horizontalNegative->getStatus(),
+		   vPositive = m_verticalPositive->getStatus(),
+		   vNegative = m_verticalNegative->getStatus(),
+		   shPositive = m_strafeHorizontalPositive->getStatus(),
+		   shNegative = m_strafeHorizontalNegative->getStatus(),
+		   svPositive = m_strafeVerticalPositive->getStatus(),
+		   svNegative = m_strafeVerticalNegative->getStatus();
+	// Store raw float data
+	float horizontalInput = (float)(hPositive - hNegative);
+	float verticalInput = (float)(vPositive - vNegative);
+	float rollInput =  (float)(m_rollLeft->getStatus()-m_rollRight->getStatus());
+	float thrustInput = (float)(m_thrust->getStatus());
+	float strafeHorizontalInput = (float)(shPositive - shNegative);
+	float strafeVerticalInput = (float)(svPositive - svNegative);
+	float sensitivityMult = 1.0f;
+
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -70,17 +80,13 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Thrust multiplier
 		float  thrustPower = controller->getThrustPower() * dt;
 
-		// Create rotation quaternion from angles and turn speed
-		// AglQuaternion rotation = AglQuaternion::constructFromAngularVelocity(inputAngles*turnSpeed);
-
-		// transform->setRotation(transform->getRotation()+rotation);
-
 		// Calc translation from player input
 		AglVector3 thrustVec;
 		thrustVec += transform->getMatrix().GetForward() * thrustInput * thrustPower;
 		thrustVec += transform->getMatrix().GetRight() * strafeHorizontalInput * thrustPower;
 		thrustVec += transform->getMatrix().GetUp()	 * strafeVerticalInput * thrustPower;
 
+		// Calc rotation from player input
 		AglVector3 angularVec=inputAngles*turnSpeed;
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
@@ -109,14 +115,6 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 			thrustVec << angularVec;
 		m_client->sendPacket( thrustPacket );
 
-
-
-
-		// Apply force and torque
-		// rigidbody.AddForce(m_thrustVec,ForceMode.Acceleration);
-		// rigidbody.AddTorque(transform.rotation * m_inputAngles, ForceMode.Acceleration);
-
-		//////////////////////////////////////////////////////////////////////////
 	}
 }
 

@@ -21,6 +21,24 @@ class InputHelper
 {
 	//Sphagnums
 public:
+
+	///\brief Enum for enumerating input devices
+	/// Instead of having all input/control types share the same number space (each 
+	/// control type having its own unique integer) they now share the same integer space
+	/// (eg multiple controls have the integer '2' as identifier in the enumeration). This
+	/// is to make iteration, array-indexing etc easier for each input type. To 
+	/// distinguish between different input one can instead use the device type
+	/// enumeration defined below.
+	enum INPUT_DEVICE_TYPE
+	{ 
+		IT_MOUSE_MOVE,
+		IT_MOUSE_BTN,
+		IT_KEYBOARD,
+		IT_XINPUT_DIGITAL,
+		IT_XINPUT_ANALOG
+	};
+
+	///\brief A general state enumeration used with all digital (on/off) controls. 
 	enum KEY_STATE
 	{
 		NON_EXISTING_STATE = -1,
@@ -31,6 +49,8 @@ public:
 		NUM_KEY_STATES
 	};
 
+	///\brief Enumeration used to specify raw read data from digital controls. 
+	/// Two variables of this enum can be used to generate the above states.
 	enum KEY_RAW_STATE
 	{
 		NON_EXISTING_RAW_STATE = -1,
@@ -39,6 +59,8 @@ public:
 		NUM_RAW_KEY_STATES
 	};
 
+	///\Internal enum used in controls.
+	/// Used to make the controls range from 0.0 - 1.0 instead of -1.0 - 1.0
 	enum SUB_AXIS
 	{ 
 		NON_EXISTING_SUB_AXIS = -1,
@@ -47,6 +69,9 @@ public:
 		NUM_SUB_AXIS
 	};
 
+	///\brief All keyboard keys currently supported. 
+	/// More keys may be added in the future. 
+	/// If so, make sure to update the input fetchers mappings as they depend on this enum.
 	enum KEYBOARD_KEY
 	{
 		NON_EXISTING_KEY = -1,
@@ -86,6 +111,9 @@ public:
 		NUM_KEYBOARD_KEYS
 	};
 
+	///\brief All mouse buttons currently supported. 
+	/// More buttons may be added int he future.
+	/// If so, make sure to update the input fetchers mappings as they depend on this enum.
 	enum MOUSE_BTN
 	{
 		NON_EXISTING_MOUSE_BTN = -1,
@@ -94,15 +122,25 @@ public:
 		M_RBTN,
 		NUM_MOUSE_BTNS
 	};
+
+	///\brief All mouse axises currently supported.
+	/// This will likely stay the same as a player seldom has a 4d mouse.
 	enum MOUSE_AXIS
 	{
 		NON_EXISTING_AXIS = -1,
-		X,
-		Y,
-		Z,
+		X_POSITIVE,
+		X_NEGATIVE,
+		Y_POSITIVE,
+		Y_NEGATIVE,
+		Z_POSITIVE, // Z = Scroll wheel
+		Z_NEGATIVE, // Z = Scroll wheel
 		NUM_MOUSE_AXIS
-	}; // Z = Scroll wheel
+	};
 
+	///\brief The complete listing of all digital buttons on a std xbox360 controller.
+	/// There are not anymore physical buttons on this controller. This listing is 
+	/// therefore probably never* going to change.
+	/// * never say never....
 	enum XBOX360_CONTROLLER_DIGITAL
 	{
 		NON_EXISTING_DIGITAL = -1,
@@ -123,13 +161,21 @@ public:
 		NUM_XBOX360_CONTROLLER_DIGITALS
 	};
 
+	///\brief The complete listing of all analog axes on a std xbox360 controller.
+	/// There are not anymore physical sticks/triggers on this controller. This listing is 
+	/// therefore probably never* going to change.
+	/// * never say never....
 	enum XBOX360_CONTROLLER_ANALOG
 	{
 		NON_EXISTING_ANALOG = -1,
-		THUMB_LX,
-		THUMB_LY,
-		THUMB_RX,
-		THUMB_RY,
+		THUMB_LX_POSITIVE,
+		THUMB_LX_NEGATIVE,
+		THUMB_LY_POSITIVE,
+		THUMB_LY_NEGATIVE,
+		THUMB_RX_POSITIVE,
+		THUMB_RX_NEGATIVE,
+		THUMB_RY_POSITIVE,
+		THUMB_RY_NEGATIVE,
 		TRIGGER_L,
 		TRIGGER_R,
 		NUM_XBOX360_CONTROLLER_ANALOGS
@@ -138,15 +184,6 @@ public:
 
 
 public:
-	//InputHelper();
-	//virtual ~InputHelper();
-
-	//virtual void update() = 0;
-	//virtual int getKeyState( int p_key ) = 0;
-	//virtual int getMouseKeyState( int p_key ) = 0;
-	//virtual int getMousePos( int p_axis ) = 0;
-	//virtual int getMouseTravel( int p_axis ) = 0;
-
 	/// Overrides the default calcState() with a int instead of bool. This is only to
 	/// collect all performance warnings of bool to int conversions to a single place.
 	/// Gives performance warning, therefore commented away.

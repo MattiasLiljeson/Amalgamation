@@ -12,6 +12,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include <InstanceData.h>
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"
 #include "Buffer.h"
@@ -19,7 +20,7 @@
 #include "BufferFactory.h"
 #include "PTVertex.h"
 #include "PTNVertex.h"
-#include "InstanceVertex.h"
+
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -74,7 +75,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderMeshInstanced(Mesh* p_mesh,
 							 Texture* p_texture, 
-							 Buffer<InstanceVertex>* p_instanceBuffer );
+							 Buffer<InstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a fullscreen quad textured with the gbuffer.

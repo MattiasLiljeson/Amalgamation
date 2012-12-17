@@ -5,12 +5,13 @@ SoundWrapper::SoundWrapper()
 {
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
-	m_masterVolume	= 0;
-
+	m_masterVolume	= 1.0f;
+	
+	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
 
 	/************************************************************************/
 	/* XAudio2 2.7 specific call, this is called behind the scene in later	*/
-	/* versions																*/
+	/* versions	of XAudio2.													*/
 	/************************************************************************/
 	CoInitializeEx( NULL, COINIT_MULTITHREADED );
 
@@ -21,10 +22,12 @@ SoundWrapper::SoundWrapper()
 
 SoundWrapper::~SoundWrapper()
 {
-	/************************************************************************/
-	/* Be sure to stop and destroy all the source voices before stopping and*/
-	/* destroying the audio engine.											*/
-	/************************************************************************/
+	for (unsigned int i = 0; i <m_createdSounds.size(); i++)
+	{
+		delete m_createdSounds[i];
+	}
+	m_createdSounds.clear();
+
 	m_masterVoice->DestroyVoice();
 	m_soundDevice->StopEngine();
 	m_soundDevice->Release();
@@ -34,18 +37,33 @@ SoundWrapper::~SoundWrapper()
 
 void SoundWrapper::initSoundEngine()
 {
+	HRESULT hr = S_OK;
+
+	UINT32 flags = 0;
+//#ifdef _DEBUG
+//	flags |= XAUDIO2_DEBUG_ENGINE;
+//#endif
+	if ( FAILED (hr = XAudio2Create(&m_soundDevice,flags)))
+		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+
+	if( FAILED( hr = m_soundDevice->CreateMasteringVoice(&m_masterVoice)))
+		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+
 	/************************************************************************/
-	/* Some of the init code has been separated from SoundWrapper, mainly	*/
-	/* the XAudio2 init and not the XAudio 3D position parts.				*/
+	/* XAudio 2.7 specific variable XAUDIO2_DEVICE_DETAILS					*/
+	/* Get all the juicy details about the sound device.					*/
 	/************************************************************************/
-	m_soundDevice = AudioEngineCreator::createAudioEngine();
-	m_masterVoice = AudioEngineCreator::createMasterVoice(m_soundDevice);
+	if ( FAILED( hr = m_soundDevice->GetDeviceDetails( 0, &m_details ) ) )
+		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+
+	m_destChannels	= m_details.OutputFormat.Format.nChannels;
+	m_channelMask	= m_details.OutputFormat.dwChannelMask; 
 
 	init3DSoundSettings();
 	initListener();
 }
 
-void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
+void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 {
 	X3DAUDIO_VECTOR front = {
 		p_sceneInfo.listenerOrientFront[0],
@@ -54,9 +72,9 @@ void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
 	};
 
 	X3DAUDIO_VECTOR top = {
-		p_sceneInfo.listenerOrientFront[0],
-		p_sceneInfo.listenerOrientFront[1],
-		p_sceneInfo.listenerOrientFront[2],
+		p_sceneInfo.listenerOrientTop[0],
+		p_sceneInfo.listenerOrientTop[1],
+		p_sceneInfo.listenerOrientTop[2],
 	};
 	
 	X3DAUDIO_VECTOR velocity =  {
@@ -78,69 +96,110 @@ void SoundWrapper::updateListener(const SoundSceneInfo& p_sceneInfo)
 	m_listener.pCone		= NULL;
 }
 
-Sound* SoundWrapper::createNewNonPositionalSound( const char* p_filePath )
+int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
-	return m_soundFactory->createNonPositionalSound(p_filePath);
+	m_createdSounds.push_back(m_soundFactory->createAmbientSound(p_info));
+	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 
-PositionalSound* SoundWrapper::createNewPositionalSound( const char* p_filePath )
+int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+										   PositionalSoundCreationInfo* p_positionalInfo)
 {
-	return m_soundFactory->createPositionalSound(p_filePath);
+	p_positionalInfo->destChannels = m_destChannels; // NOTE THE ASSIGNMENT 
+	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_basicSoundInfo, 
+		p_positionalInfo));
+	return m_createdSounds.size()-1; // returns the newly created sound index
 }
 
 void SoundWrapper::init3DSoundSettings()
 {
-	HRESULT hr = S_OK;
-	/************************************************************************/
-	/* Get all the juicy details about the sound device.					*/
-	/************************************************************************/
-	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
-	m_soundDevice->GetDeviceDetails(0,&m_details);
-	hr = m_soundDevice->GetDeviceDetails( 0, &m_details );
-	if ( FAILED(hr) )
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
-
-	DWORD dwChannelMask = m_details.OutputFormat.dwChannelMask;
-	m_destChannels = m_details.OutputFormat.Format.nChannels;
-
-	/************************************************************************/
-	/* MatrixCoefficients contains the volume for each output channel. 		*/
-	/* Please see MSDN for more info search "pMatrixCoefficients"			*/
-	/************************************************************************/
-	m_matrixCoefficients	= new FLOAT32[SOURCECHANNEL* m_destChannels];
-
-	m_emitterAzimuths		= new FLOAT32[SOURCECHANNEL]; //UNKOWN VARIABLE
-
 	/************************************************************************/
 	/* The number of output channels have to be know before the 3D			*/
 	/* calculations can be used. The speed of sound can be altered for		*/
 	/* artistic feeling.													*/
 	/************************************************************************/
-	X3DAudioInitialize( dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, m_x3DAudioInstance);
-
-	ZeroMemory(&m_dspSettings,sizeof(X3DAUDIO_DSP_SETTINGS));
-	m_dspSettings.SrcChannelCount = SOURCECHANNEL;
-	m_dspSettings.DstChannelCount = m_destChannels;
-	m_dspSettings.pMatrixCoefficients = m_matrixCoefficients;
+	X3DAudioInitialize( m_channelMask, X3DAUDIO_SPEED_OF_SOUND,	m_x3DAudioInstance);
 }
 
 void SoundWrapper::initListener()
 {
-	SoundSceneInfo info = {
-		{0,0,0}, {0,0,1}, {0,1,0}, {0,0,0}
-	};
+	SoundOrientation info;
+	info.listenerOrientFront	= AglVector3(1,0,0);
+	info.listenerOrientTop		= AglVector3(0,1,0);
+	info.listenerPos			= AglVector3(0,0,0);
+	info.listenerVelocity		= AglVector3(0,0,0);
 
 	updateListener(info);
 }
 
-void SoundWrapper::update( PositionalSound* p_sound )
+void SoundWrapper::updateOutputMatrix(int p_index)
 {
-	/************************************************************************/
-	/* UNSURE what settings should be applied here.							*/
-	/************************************************************************/
-	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &p_sound->getEmitter(),
-		X3DAUDIO_CALCULATE_MATRIX, &m_dspSettings);
+	PositionalSound* sound = static_cast<PositionalSound*>(m_createdSounds[p_index]);
+	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
+		X3DAUDIO_CALCULATE_MATRIX, &sound->getDSPSettings());
 
-	IXAudio2SourceVoice* voice = p_sound->getSourceVoice();
-	voice->SetOutputMatrix( m_masterVoice, 1, m_destChannels, m_matrixCoefficients);
+	sound->m_left = sound->getDSPSettings().pMatrixCoefficients[0];
+	sound->m_right = sound->getDSPSettings().pMatrixCoefficients[1];
+
+	sound->getSourceVoice()->SetOutputMatrix(m_masterVoice, SOURCECHANNELS,
+		m_destChannels, sound->getDSPSettings().pMatrixCoefficients);
+}
+
+void SoundWrapper::updateSound( int p_index, 
+							   const SoundEnums::Instructions& p_soundInstruction )
+{
+	switch (p_soundInstruction)
+	{
+		case SoundEnums::Instructions::PLAY:
+			m_createdSounds[p_index]->resumeOrPlay();
+			break;
+		case SoundEnums::Instructions::PAUSE:
+			m_createdSounds[p_index]->pause();
+			break;
+		case SoundEnums::Instructions::STOP:
+			m_createdSounds[p_index]->stop();
+			break;
+		case SoundEnums::Instructions::RESTART:
+			m_createdSounds[p_index]->restart();
+			break;
+		default:
+			break;
+	}
+}
+
+float* SoundWrapper::getMasterVolumeRef()
+{
+	return &m_masterVolume;
+}
+
+float SoundWrapper::getMasterVolume() const
+{
+	return m_masterVolume;
+}
+
+void SoundWrapper::setMasterVolume( const float p_value )
+{
+	m_masterVolume = p_value;
+}
+
+void SoundWrapper::updateMasterVolume()
+{
+	m_masterVoice->SetVolume(m_masterVolume,0);
+}
+
+bool SoundWrapper::isPlaying( const int soundIndex )
+{
+	XAUDIO2_VOICE_STATE* state = m_createdSounds[soundIndex]->getSourceCurrentState();
+
+	if (state->BuffersQueued > 0 && state->SamplesPlayed != 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Sound* SoundWrapper::getSound( int p_index )
+{
+	return m_createdSounds[p_index];
 }

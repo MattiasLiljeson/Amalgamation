@@ -1,16 +1,6 @@
-// =======================================================================================
-//	ClientApplication
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief The client application run all systems related to the client logic.
-///        
-/// # ClientApplication
-/// Detailed description...
-/// Created on: 11-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <Globals.h>
 #include <TcpClient.h> /* There is a problem where boost must initialize some socket-
 						related stuff before other things. Therefore TcpClient should
 						be included as soon as possible. Johan: Haven't looked too
@@ -29,6 +19,9 @@
 #include <Transform.h>
 #include <ShipController.h>
 
+#include <Windows.h>
+#include <AudioInfo.h>
+
 
 // Systems
 #include <CameraSystem.h>
@@ -40,6 +33,25 @@
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
 #include <ShipControllerSystem.h>
+#include <AudioBackendSystem.h>
+#include <AudioController.h>
+#include <AudioListenerSystem.h>
+
+//TEMP
+#include <SoundEnums.h>
+
+// =======================================================================================
+//	ClientApplication
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief The client application run all systems related to the client logic.
+///        
+/// # ClientApplication
+/// Detailed description...
+/// Created on: 11-12-2012 
+///---------------------------------------------------------------------------------------
+
 
 class ClientApplication
 {
@@ -52,7 +64,7 @@ public:
 private:
 	void initSystems();
 	void initEntities();
-
+	void initSounds();
 private:
 	HINSTANCE m_hInstance;
 

@@ -1,10 +1,25 @@
 #include "MouseMoveControl.h"
 
 
-MouseMoveControl::MouseMoveControl( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis )
+MouseMoveControl::MouseMoveControl( InputHelper::MOUSE_AXIS p_axis)
 {
 	m_axis = p_axis;
-	m_subAxis = p_subAxis;
+
+	//HACK: Multiple fallthroughs!
+	switch( p_axis )
+	{
+	case InputHelper::X_POSITIVE:
+	case InputHelper::Y_POSITIVE:
+	case InputHelper::Z_POSITIVE:
+		m_subAxis = InputHelper::AXIS_POSITIVE;
+		break;
+
+	case InputHelper::X_NEGATIVE:
+	case InputHelper::Y_NEGATIVE:
+	case InputHelper::Z_NEGATIVE:
+		m_subAxis = InputHelper::AXIS_NEGATIVE;
+		break;
+	}
 }
 
 

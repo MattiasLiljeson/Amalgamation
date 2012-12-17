@@ -2,6 +2,9 @@
 #include <AntTweakBar.h>
 #include "Mesh.h"
 #include "RasterManager.h"
+#include "SphereMesh.h"
+#include "Globals.h"
+#include "BoxMesh.h"
 
 TwBar *bar;
 
@@ -53,6 +56,10 @@ bool Game::Initialize()
 
 
 	m_cameraController = new CameraController(mWindowHandle);
+
+	SPHEREMESH = new SphereMesh(mDevice, mDeviceContext);
+	BOXMESH = new BoxMesh(mDevice, mDeviceContext);
+
 	return true;
 }
 bool Game::Cleanup()
@@ -67,6 +74,7 @@ bool Game::Cleanup()
 	RasterManager::cleanup();
 	TwTerminate();
 	delete m_cameraController;
+	delete SPHEREMESH;
 	return true;
 }
 bool Game::Update(float pElapsedTime)
@@ -84,12 +92,11 @@ bool Game::Draw(float pElapsedTime)
 {
 	DX11Application::Draw(pElapsedTime);
     //mDeviceContext->ClearRenderTargetView(mBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-	float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float color[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	mDeviceContext->ClearRenderTargetView(mBackBuffer, color);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	Scene::GetInstance()->Draw();
-
 	   TwDraw();
 
     mSwapChain->Present(0, 0);

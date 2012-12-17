@@ -21,7 +21,7 @@ void CameraSystem::initialize()
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
-
+	float dt = m_world->getDelta();
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
 
@@ -59,8 +59,11 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			up = targetTransform->getMatrix().GetUp();
 
 			// update transform
-			position = lookTarget+offset;
-			rotation = targetTransform->getRotation();
+			position = AglVector3::lerp(position,lookTarget+offset,
+										lookAt->getMoveSpd()*dt);
+			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+											lookAt->getRotationSpeed()*dt);
+			rotation.normalize();
 		}
 
 		// Construct view matrix

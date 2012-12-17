@@ -91,6 +91,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AGLLoader.cpp" />
+    <ClCompile Include="BoxMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="DomainShader.cpp" />
@@ -118,6 +119,7 @@
     <ClCompile Include="SkeletonMesh.cpp" />
     <ClCompile Include="SkeletonMeshShader.cpp" />
     <ClCompile Include="SkeletonShader.cpp" />
+    <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="StandardShader.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -126,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
+    <ClInclude Include="BoxMesh.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="DomainShader.h" />
@@ -153,6 +156,7 @@
     <ClInclude Include="SkeletonMesh.h" />
     <ClInclude Include="SkeletonMeshShader.h" />
     <ClInclude Include="SkeletonShader.h" />
+    <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="StandardShader.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />

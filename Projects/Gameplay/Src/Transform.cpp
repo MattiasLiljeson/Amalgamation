@@ -82,19 +82,19 @@ const AglMatrix& Transform::getMatrix() const
 	return m_compositionMatrix;
 }
 
-InstanceVertex Transform::getInstanceVertex() const
+InstanceData Transform::getInstanceVertex() const
 {
-	return m_instanceVertex;
+	return m_instanceData;
 }
 
-InstanceVertex& Transform::getInstanceVertexRef()
+InstanceData& Transform::getInstanceDataRef()
 {
-	return m_instanceVertex;
+	return m_instanceData;
 }
 
-InstanceVertex* Transform::getInstanceVertexPtr()
+InstanceData* Transform::getInstanceDataPtr()
 {
-	return &m_instanceVertex;
+	return &m_instanceData;
 }
 
 void Transform::calcCompMatrix()
@@ -108,6 +108,7 @@ void Transform::calcCompMatrix()
 	AglMatrix transMat = AglMatrix::transpose( m_compositionMatrix );
 	for( int i=0; i<16; i++ )
 	{
-		m_instanceVertex.worldTransform[i] = transMat[i];
+		m_instanceData.worldTransform[i] = transMat[i];
 	}
 }
+

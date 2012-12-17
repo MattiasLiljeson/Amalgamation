@@ -108,9 +108,6 @@
     <ClInclude Include="DIndex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
-    <ClInclude Include="InstanceVertex.h">
-      <Filter>Renderer\Vertices</Filter>
-    </ClInclude>
     <ClInclude Include="AntTweakBarWrapper.h">
       <Filter>AntTweakBar</Filter>
     </ClInclude>

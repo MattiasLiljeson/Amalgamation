@@ -1,4 +1,5 @@
 #include "SkeletonShader.h"
+#include "Scene.h"
 
 SkeletonShader::SkeletonShader(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, VertexShader* pVS, PixelShader* pPS)
 {
@@ -60,9 +61,12 @@ void SkeletonShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	
 	AglSkeleton* s = pSkeletonMesh->GetSkeleton();
 	unsigned int jointCount = s->getHeader().jointCount;
+
+	AglMatrix inv = Scene::m_avoidJump.inverse();
 	for (unsigned int i = 0; i < jointCount; i++)
 	{
 		AglMatrix am = s->getGlobalTransform(i);
+		//am *= inv;
 		am = AglMatrix::transpose(am);
 		buffer->Palette[i] = am;
 	}

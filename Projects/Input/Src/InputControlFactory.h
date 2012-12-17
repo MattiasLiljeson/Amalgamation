@@ -8,11 +8,16 @@
 #include "MouseBtnControl.h"
 #include "MouseMoveControl.h"
 
+#include <vector>
+#include <utility>
+
 class AnalogueControl;
 class DigitalControl;
 class Control;
 class DigitalControl;
 class KeyControl;
+
+using namespace std;
 
 // =======================================================================================
 //                                      InputControlFactory
@@ -30,15 +35,6 @@ class KeyControl;
 class InputControlFactory
 {
 public:
-	enum InputType
-	{ 
-		MOUSE_BTN,
-		MOUSE_MOVE,
-		KEYBOARD_KEY,
-		XINPUT_DIGITAL,
-		XINPUT_ANALOG
-	};
-
 	InputControlFactory();
 	~InputControlFactory();
 
@@ -51,13 +47,68 @@ public:
 	/// everything is OK.
 	//Control* addControlByType( InputType p_type, int p_subType );
 
-	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis,
-		InputHelper::SUB_AXIS p_subAxis );
+	// Gamepad
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all analogs (sticks/triggers) on the gamepad.
+	/// \return vector<pair<string, Control*>> A vector of pairs of strings and controls
+	/// where the string denotes a name of the control which is based on its enum 
+	/// identifier.
+	///-----------------------------------------------------------------------------------
+	vector<pair<string, Control*>> create360controllerAnalogAll();
+
+	///-----------------------------------------------------------------------------------
+	/// Create a Control mapped to the supplied input.
+	/// \param p_axis Stick/trigger enum identifier.
+	/// \return Control* A Control allocated on the stack.
+	///-----------------------------------------------------------------------------------
+	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis );
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all digitals (buttons/dpad) on the gamepad.
+	/// \return vector<pair<string, Control*>> A vector of pairs of strings and controls.
+	/// where the string denotes a name of the control which is based on its enum
+	/// identifier.
+	///-----------------------------------------------------------------------------------
+	vector<pair<string, Control*>> create360controllerDigitalAll();
+
+
+	///-----------------------------------------------------------------------------------
+	/// Create a Control mapped to the supplied input.
+	/// \param p_btn Button/dpad enum identifier.
+	/// \return Control* A Control allocated on the stack.
+	///-----------------------------------------------------------------------------------
 	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
-	vector<Control*> createKeysAToZ();
+
+	// Mouse & Keyboard
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all chars on the keyboard.
+	/// \return vector<pair<string, Control*>> A vector of pairs of strings and controls
+	/// where the string denotes a name of the control which is based on its enum 
+	/// identifier.
+	///-----------------------------------------------------------------------------------
+	vector<pair<string, Control*>> createKeysAToZ();
+
+	///-----------------------------------------------------------------------------------
+	/// Create a Control mapped to the supplied input.
+	/// \param p_key Key enum identifier.
+	/// \return Control* A Control allocated on the stack.
+	///----------------------------------------------------------------------------------
 	Control* createKeyboardKey( InputHelper::KEYBOARD_KEY p_key );
+	
+	///-----------------------------------------------------------------------------------
+	/// Create a Control mapped to the supplied input.
+	/// \param p_btn Mouse button enum identifier.
+	/// \return Control* A Control allocated on the stack.
+	///----------------------------------------------------------------------------------
 	Control* createMouseButton( InputHelper::MOUSE_BTN p_btn );
-	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
+
+	///-----------------------------------------------------------------------------------
+	/// Create a Control mapped to the supplied input.
+	/// \param p_axis Mouse axis enum identifier.
+	/// \return Control* A Control allocated on the stack.
+	///----------------------------------------------------------------------------------
+	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );
 
 };
 

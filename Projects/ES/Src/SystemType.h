@@ -27,6 +27,9 @@ public:	//Enums
 		InputBackendSystem,
 		ShipControllerSystem,
 		ImpulseSystem,
+		AudioBackendSystem,
+		AudioControllerSystem,
+		AudioListenerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

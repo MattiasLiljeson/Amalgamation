@@ -63,10 +63,12 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			
 			e->addComponent( ComponentType::Transform, transform);
 			e->addComponent( ComponentType::NetworkSynced, netSync);
-			e->addComponent( ComponentType::ShipController, new ShipController(0.3f,3.0f))
+			e->addComponent( ComponentType::ShipController,
+				new ShipController(5.0f, 50.0f))
 				;
 			e->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3( (float)(id) * 10.0f, 0, 0 ), AglQuaternion::identity(),
+				new BodyInitData( transform->getTranslation(),
+								AglQuaternion::identity(),
 								AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 								AglVector3(0, 0, 0), 0, false));
 			e->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
