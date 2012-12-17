@@ -47,7 +47,7 @@ void ClientApplication::run()
 			currTimeStamp = 0;
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
-			dt = 1/100.0;
+			dt = 0.1;
 			m_prevTimeStamp = currTimeStamp;
 
 			m_world->setDelta((float)dt);

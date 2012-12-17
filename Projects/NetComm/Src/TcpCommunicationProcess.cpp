@@ -19,6 +19,7 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_asyncDataLength = 0;
 	m_asyncDataCapacity = 2048;
 	m_asyncData = new char[m_asyncDataCapacity];
+	m_packetRestSize = 0;
 
 	for(unsigned int i = 0; i < m_asyncDataCapacity; i++)
 	{
@@ -127,15 +128,59 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 			unsigned int readPosition = 0;
 			char* readPtr = m_asyncData;
 
+			// Some debug info:
+			vector<char> dbg_data;
+			dbg_data.resize(p_bytesTransferred);
+			memcpy(&dbg_data[0], m_asyncData, p_bytesTransferred);
+
+			if( m_packetRestSize > 0 )
+			{
+				unsigned int oldReserveBufferSize = m_reserveBuffer.size();
+				m_reserveBuffer.resize( oldReserveBufferSize + m_packetRestSize );
+				
+				memcpy(&m_reserveBuffer[oldReserveBufferSize], readPtr, m_packetRestSize);
+
+				// Create the whole packet now.
+				Packet packet;
+				packet.setSenderId( getId() );
+				packet.setData( &m_reserveBuffer[0], m_reserveBuffer.size() );
+				packets.push( packet );
+
+				// Update readPosition to not start from 0.
+				readPosition = m_packetRestSize;
+				readPtr = m_asyncData + readPosition;
+
+				// Clear the reserve buffer and its help variables
+				m_reserveBuffer.clear();
+				m_packetRestSize = 0;
+			}
+
 			while( readPosition < p_bytesTransferred )
 			{
 				unsigned int currentReadSize = (unsigned int)readPtr[0] + 1;
-				Packet packet;
-				packet.setSenderId( getId() );
-				packet.setData( readPtr, currentReadSize );
-				packets.push( packet );
-				readPosition += currentReadSize;
-				readPtr = m_asyncData + readPosition;
+				
+				if( readPosition + currentReadSize > p_bytesTransferred )
+				{
+					// PacketPartialSize is the size of the first part of the packet
+					// which is split up between two buffers
+					unsigned int packetFirstPartSize = p_bytesTransferred - readPosition;
+
+					// and packetRestSize is the size of the second part of the packet.
+					m_packetRestSize = currentReadSize - packetFirstPartSize;
+
+					m_reserveBuffer.resize( packetFirstPartSize );
+					memcpy(&m_reserveBuffer[0], readPtr, packetFirstPartSize);
+					readPosition = p_bytesTransferred;
+				}
+				else
+				{
+					Packet packet;
+					packet.setSenderId( getId() );
+					packet.setData( readPtr, currentReadSize );
+					packets.push( packet );
+					readPosition += currentReadSize;
+					readPtr = m_asyncData + readPosition;
+				}
 			}
 
 

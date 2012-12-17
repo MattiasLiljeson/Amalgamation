@@ -41,6 +41,8 @@ private:
 	char* m_asyncData;
 	unsigned int m_asyncDataLength;
 	unsigned int m_asyncDataCapacity;
+	vector<char> m_reserveBuffer;
+	unsigned int m_packetRestSize;
 
 	ThreadSafeMessaging* m_parent;
 
