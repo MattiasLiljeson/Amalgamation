@@ -37,42 +37,42 @@
 
 RenderInterfaceDx10::RenderInterfaceDx10(ID3D10Device* _device, ID3D10Effect* _effect, int _techNr, int _passNr)
 {
-	device = _device;
-	effect = _effect;
-	techNr = _techNr;
-	passNr = _passNr;
+	//device = _device;
+	//effect = _effect;
+	//techNr = _techNr;
+	//passNr = _passNr;
 
-	D3D10_RASTERIZER_DESC rasterizerDesc;
-	rasterizerDesc.FillMode = D3D10_FILL_SOLID;
-	rasterizerDesc.CullMode = D3D10_CULL_BACK;
-	rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
-	rasterizerDesc.DepthClipEnable = TRUE;
-	rasterizerDesc.AntialiasedLineEnable = FALSE;
-	rasterizerDesc.MultisampleEnable = FALSE;
-	rasterizerDesc.DepthBias = 0;
-	rasterizerDesc.DepthBiasClamp = 0.0f;
-	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	//D3D10_RASTERIZER_DESC rasterizerDesc;
+	//rasterizerDesc.FillMode = D3D10_FILL_SOLID;
+	//rasterizerDesc.CullMode = D3D10_CULL_BACK;
+	//rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
+	//rasterizerDesc.DepthClipEnable = TRUE;
+	//rasterizerDesc.AntialiasedLineEnable = FALSE;
+	//rasterizerDesc.MultisampleEnable = FALSE;
+	//rasterizerDesc.DepthBias = 0;
+	//rasterizerDesc.DepthBiasClamp = 0.0f;
+	//rasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
-	rasterizerDesc.ScissorEnable = false;
-	HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff));
+	//rasterizerDesc.ScissorEnable = false;
+	//HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff));
 
-	rasterizerDesc.ScissorEnable = true;
-	HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn));
+	//rasterizerDesc.ScissorEnable = true;
+	//HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn));
 
-	device->RSSetState(rs_scissorsOff);
+	//device->RSSetState(rs_scissorsOff);
 
-	defineInputElementDesc();
-	defineBlendState();
-	initPipeline();
-	initFxVars();
+	//defineInputElementDesc();
+	//defineBlendState();
+	//initPipeline();
+	//initFxVars();
 }
 
 RenderInterfaceDx10::~RenderInterfaceDx10()
 {
-	SAFE_RELEASE(rs_scissorsOn);
-	SAFE_RELEASE(rs_scissorsOff);
-	SAFE_RELEASE(inputLayout);
-	delete layoutDesc;
+	//SAFE_RELEASE(rs_scissorsOn);
+	//SAFE_RELEASE(rs_scissorsOff);
+	//SAFE_RELEASE(inputLayout);
+	//delete layoutDesc;
 
 	Rocket::Core::Shutdown();
 }

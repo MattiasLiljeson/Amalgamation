@@ -118,6 +118,7 @@ External/XAudio2/
 # Files
 *.exe
 *.lastcodeanalysissucceeded
+*.dll
 /Build/*.dll.txt
 /Build/*.exe.txt
 
@@ -126,14 +127,7 @@ External/XAudio2/
 *.png
 *.dds
 *.tga
-*.fbx
-*.agl
 
-*.agl
-*.fbx
-*.png
-*.dds
-*.tga
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions

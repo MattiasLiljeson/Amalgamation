@@ -37,9 +37,11 @@
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PrintPositionsSystem.h" />
     <ClInclude Include="QueueList.h" />
+    <ClInclude Include="RenderInterfaceDx10.h" />
     <ClInclude Include="RenderPrepSystem.h" />
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="ShipControllerSystem.h" />
+    <ClInclude Include="SystemInterfaceDx10.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -59,8 +61,10 @@
     <ClCompile Include="PrintPositionsSystem.cpp" />
     <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
+    <ClCompile Include="RenderInterfaceDx10.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="ShipControllerSystem.cpp" />
+    <ClCompile Include="SystemInterfaceDx10.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

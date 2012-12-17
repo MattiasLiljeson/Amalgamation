@@ -40,6 +40,9 @@
     <Filter Include="Systems\Gameplay">
       <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\libRocket">
+      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -135,6 +138,12 @@
     <ClInclude Include="PlayerInputAction.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
+    <ClInclude Include="RenderInterfaceDx10.h">
+      <Filter>Systems\libRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemInterfaceDx10.h">
+      <Filter>Systems\libRocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -200,5 +209,11 @@
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="RenderInterfaceDx10.cpp">
+      <Filter>Systems\libRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemInterfaceDx10.cpp">
+      <Filter>Systems\libRocket</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

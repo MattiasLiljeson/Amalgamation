@@ -45,33 +45,33 @@ struct RocketDx10CompiledGeometry
 class RenderInterfaceDx10 : public Rocket::Core::RenderInterface
 {
 private:
-	typedef VertexRocket VertexType;	//change this per impl
+	typedef PTNVertex VertexType;	//change this per impl
 	ID3D10Device* device;
 
 	//==============================================
 	//Added for dx10
 	//==============================================
 	//States
-	ID3D10RasterizerState* rs_scissorsOn;
-	ID3D10RasterizerState* rs_scissorsOff;
-	ID3D10BlendState* bs_normal;
+	//ID3D10RasterizerState* rs_scissorsOn;
+	//ID3D10RasterizerState* rs_scissorsOff;
+	//ID3D10BlendState* bs_normal;
 
-	//FX
-	ID3D10Effect* effect;			
-	ID3D10EffectTechnique* technique;  
-	ID3D10EffectPass* pass;
-	D3D10_PASS_DESC PassDesc;	
-	int techNr;
-	int passNr;
+	////FX
+	//ID3D10Effect* effect;			
+	//ID3D10EffectTechnique* technique;  
+	//ID3D10EffectPass* pass;
+	//D3D10_PASS_DESC PassDesc;	
+	//int techNr;
+	//int passNr;
 
-	//input layout
-	D3D10_INPUT_ELEMENT_DESC* layoutDesc;
-	UINT numElements;
-	ID3D10InputLayout* inputLayout;	
+	////input layout
+	//D3D10_INPUT_ELEMENT_DESC* layoutDesc;
+	//UINT numElements;
+	//ID3D10InputLayout* inputLayout;	
 
-	//matrices for transformations
-	ID3D10EffectMatrixVariable* fxVar_world;
-	D3DXMATRIX mat_world;
+	////matrices for transformations
+	//ID3D10EffectMatrixVariable* fxVar_world;
+	//D3DXMATRIX mat_world;
 
 public:
 	RenderInterfaceDx10(ID3D10Device* _device, ID3D10Effect* _effect, int _techNr, int _passNr);
