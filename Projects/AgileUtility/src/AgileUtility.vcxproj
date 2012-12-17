@@ -14,11 +14,14 @@
     <ClInclude Include="Agl2DLine.h" />
     <ClInclude Include="AglAABB.h" />
     <ClInclude Include="AglBoundingSphere.h" />
+    <ClInclude Include="AglBoxMesh.h" />
+    <ClInclude Include="AglHull.h" />
     <ClInclude Include="AglInteriorSphereGrid.h" />
     <ClInclude Include="AglLooseBspTree.h" />
     <ClInclude Include="AglMatrix.h" />
     <ClInclude Include="AglOBB.h" />
     <ClInclude Include="AglQuaternion.h" />
+    <ClInclude Include="AglSphereMesh.h" />
     <ClInclude Include="AglVector2.h" />
     <ClInclude Include="AglVector3.h" />
     <ClInclude Include="AglVector4.h" />
@@ -27,11 +30,14 @@
   <ItemGroup>
     <ClCompile Include="AglAABB.cpp" />
     <ClCompile Include="AglBoundingSphere.cpp" />
+    <ClCompile Include="AglBoxMesh.cpp" />
+    <ClCompile Include="AglHull.cpp" />
     <ClCompile Include="AglInteriorSphereGrid.cpp" />
     <ClCompile Include="AglLooseBspTree.cpp" />
     <ClCompile Include="AglMatrix.cpp" />
     <ClCompile Include="AglOBB.cpp" />
     <ClCompile Include="AglQuaternion.cpp" />
+    <ClCompile Include="AglSphereMesh.cpp" />
     <ClCompile Include="AglVector2.cpp" />
     <ClCompile Include="AglVector3.cpp" />
     <ClCompile Include="AglVector4.cpp" />

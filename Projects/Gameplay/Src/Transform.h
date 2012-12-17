@@ -16,14 +16,7 @@
 #include <AglQuaternion.h>
 #include <Component.h>
 
-#include <InstanceVertex.h>
-
-//struct xXxVector3 // HACK: DESTROY THIS, and replace with a real one!
-//{
-//	float x;
-//	float y;
-//	float z;
-//};
+#include <InstanceData.h>
 
 class Transform: public Component
 {
@@ -97,7 +90,7 @@ public:
 	/// Get the translated transform matrix packaged in a InstanceVertex.
 	/// \return The translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
-	InstanceVertex getInstanceVertex() const;
+	InstanceData getInstanceVertex() const;
 
 	///-----------------------------------------------------------------------------------
 	/// Get a reference to the translated transform matrix packaged in a InstanceVertex.
@@ -105,7 +98,7 @@ public:
 	/// be overwritten the next time a setter is called.
 	/// \return A reference to the translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
-	InstanceVertex& getInstanceVertexRef() ;
+	InstanceData& getInstanceDataRef() ;
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the translated transform matrix packaged in a InstanceVertex.
@@ -113,7 +106,7 @@ public:
 	/// be overwritten the next time a setter is called.
 	/// \return A pointer to the translated transform matrix as a InstanceVertex.
 	///----------------------------------------------------------------------------------
-	InstanceVertex* getInstanceVertexPtr() ;
+	InstanceData* getInstanceDataPtr() ;
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -124,7 +117,7 @@ private:
 
 private:
 	AglMatrix m_compositionMatrix;
-	InstanceVertex m_instanceVertex;
+	InstanceData m_instanceData;
 	//AglMatrix m_transposedCompositionMatrix;
 	AglVector3 m_translation;
 	AglVector3 m_scale;

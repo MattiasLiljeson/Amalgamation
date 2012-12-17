@@ -125,4 +125,6 @@ void SkinParser::ArrangeSkeleton(SkeletonData* pSkeleton)
 			}
 		}
 	}
+	//Remove unnecessary nodes in the higher parts of the hierarchy
+
 }

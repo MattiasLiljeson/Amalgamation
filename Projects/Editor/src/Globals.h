@@ -1,16 +1,19 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+class SphereMesh;
+class BoxMesh;
+
 extern bool DIFFUSEON;
 extern bool SPECULARON;
 extern bool GLOWON;
 extern bool NORMALON;
 extern float MOUSEWHEELDELTA;
-enum CoordinateSystem
-{
-	DX, GL, BLENDER
-};
 
-extern CoordinateSystem COSYSTEM;
+extern SphereMesh* SPHEREMESH;
+extern BoxMesh* BOXMESH;
+
+extern bool DRAWDEBUGBOX;
+extern bool DRAWDEBUGSPHERE;
 
 #endif

@@ -20,6 +20,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	Window* window;
 	GraphicsWrapper* graphicsWrapper;
 
+	SetThreadAffinityMask(GetCurrentThread(), 1);
+
 	TextureParser::init();
 
 	try
@@ -46,12 +48,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
 
 	// Create a shitload of instances
-	vector<InstanceVertex>* instances = new vector<InstanceVertex>();
+	vector<InstanceData>* instances = new vector<InstanceData>();
 	for (int i=0;i<100;i++)
 	{
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 				0.0f,1.0f,0.0f,  0.0f,
 				0.0f,0.0f,1.0f,  0.0f,
 				0.0f,0.0f,0.0f,  1.0f};
@@ -59,7 +61,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 	
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
 				0.0f,1.0f,0.0f,  0.0f,
 				0.0f,0.0f,1.0f,  2.0f,
 				0.0f,0.0f,0.0f,  1.0f};
@@ -67,7 +69,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
 			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  0.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -75,7 +77,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 			0.0f,1.0f,0.0f,  0.0f,
 			0.0f,0.0f,1.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -83,7 +85,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
 				0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  -(float)i*2.3f-2.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -91,7 +93,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  -2.0f,
 			0.0f,0.0f,0.0f,  1.0f};

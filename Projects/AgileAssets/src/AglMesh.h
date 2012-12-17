@@ -2,6 +2,8 @@
 #define AGLMESH_H
 
 #include "Agl.h"
+#include "AglBoundingSphere.h"
+#include "AglOBB.h"
 
 // =================================================================================================
 //                                         AglMeshHeader
@@ -16,11 +18,14 @@
 ///-------------------------------------------------------------------------------------------------
 struct AglMeshHeader
 {
-	int				id;				///< Mesh ID
-	int				nameID;			///< Index to the name of the mesh
-	AglVertexFormat	vertexFormat;	///< VertexFormat identifier
-	int				vertexCount;	///< Number of vertices in the mesh
-	int				indexCount;		///< Number of indices in the mesh
+	int					id;				///< Mesh ID
+	int					nameID;			///< Index to the name of the mesh
+	AglVertexFormat		vertexFormat;	///< VertexFormat identifier
+	int					vertexCount;	///< Number of vertices in the mesh
+	int					indexCount;		///< Number of indices in the mesh
+	AglBoundingSphere	boundingSphere; ///< Bounding Sphere of the mesh
+	AglOBB				minimumOBB;		///< Bounding obb of the mesh
+
 };
 
 // =================================================================================================
