@@ -37,13 +37,18 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
 	// Input controls
-	double horizontalInput = m_horizontalPositive->getStatus() - m_horizontalNegative->getStatus();
-	double verticalInput = m_verticalPositive->getStatus() - m_verticalNegative->getStatus();
-	double rollInput =  m_rollLeft->getStatus()-m_rollRight->getStatus();
-	double thrustInput = m_thrust->getStatus();
-	double strafeHorizontalInput = 0.0;
-	double strafeVerticalInput = 0.0;
-	double sensitivityMult = 1.0;
+	double hPositive = m_horizontalPositive->getStatus(),
+		   hNegative = m_horizontalNegative->getStatus(),
+		   vPositive = m_verticalPositive->getStatus(),
+		   vNegative = m_verticalNegative->getStatus();
+
+	float horizontalInput = (float)(hPositive - hNegative);
+	float verticalInput = (float)(vPositive - vNegative);
+	float rollInput =  (float)(m_rollLeft->getStatus()-m_rollRight->getStatus());
+	float thrustInput = (float)(m_thrust->getStatus());
+	float strafeHorizontalInput = 0.0f;
+	float strafeVerticalInput = 0.0f;
+	float sensitivityMult = 1.0f;
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -82,8 +87,6 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3 angularVec=inputAngles*turnSpeed;
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
-
-		DEBUGPRINT(( (toString(angularVec.x)+string(" ")+toString(angularVec.y)+string(" ")+toString(angularVec.z)+string("\n")).c_str() ));
 
 		// DEBUGPRINT(( (toString(horizontalInput)+string("\n")).c_str() ));
 

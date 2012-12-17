@@ -33,6 +33,9 @@ void ClientApplication::run()
 	double dt = 0.0f;
 	__int64 m_prevTimeStamp = 0;
 
+	QueryPerformanceCounter((LARGE_INTEGER*)&m_prevTimeStamp);
+	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+
 	MSG msg = {0};
 	while(WM_QUIT != msg.message)
 	{
@@ -43,11 +46,12 @@ void ClientApplication::run()
 		}
 		else
 		{
-			currTimeStamp = 0;
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
-			dt = 1/100.0;
+
 			m_prevTimeStamp = currTimeStamp;
+			
+			DEBUGPRINT(( (toString(dt)+string("\n")).c_str() ));
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -179,7 +183,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform( -5.0f, 0.0f, 0.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(0.3f,3.0f);
+	component = new ShipController(5.0f, 50.0f);
 	entity->addComponent( ComponentType::ShipController, component );
 	component = new PhysicsBody();
 	entity->addComponent(ComponentType::PhysicsBody, component);

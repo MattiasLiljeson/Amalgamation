@@ -147,12 +147,12 @@ void GraphicsWrapper::beginFrame()
 }
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
-								 vector<InstanceVertex>* p_instanceList)
+								 vector<InstanceData>* p_instanceList)
 {
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 	Texture* tex = m_textureManager->getResource(mesh->getTextureId());
 
-	Buffer<InstanceVertex>* instanceBuffer;
+	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
 
