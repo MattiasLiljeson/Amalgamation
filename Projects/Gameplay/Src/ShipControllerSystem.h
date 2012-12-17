@@ -19,8 +19,6 @@
 #include "Transform.h"
 #include "ShipController.h"
 
-
-
 class ShipControllerSystem : public EntitySystem
 {
 public:
