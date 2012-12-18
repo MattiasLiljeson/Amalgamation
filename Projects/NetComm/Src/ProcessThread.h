@@ -1,8 +1,7 @@
 #pragma once
 
-#include <boost/asio.hpp>
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/bind/bind.hpp>
 
 #include "ThreadSafeMessaging.h"
 #include "ProcessMessageTerminate.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <queue>
-#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include "ProcessMessage.h"
 using namespace std;
