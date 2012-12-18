@@ -1,4 +1,5 @@
 #include "ServerApplication.h"
+
 namespace Srv
 {
 	ServerApplication::ServerApplication()

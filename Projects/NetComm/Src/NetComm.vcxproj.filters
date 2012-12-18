@@ -34,6 +34,9 @@
     <Filter Include="IProcessingMessages">
       <UniqueIdentifier>{4d21f996-7e7c-4586-822d-4357817833b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TcpConnecterProcess">
+      <UniqueIdentifier>{bc897d7f-0859-4dbe-9196-490f3542dfd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProcessThread.cpp">
@@ -80,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="Packet.cpp">
       <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpConnecterProcess.cpp">
+      <Filter>TcpConnecterProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageConnectToServer.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="PacketTranslator.h">
       <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpConnecterProcess.h">
+      <Filter>TcpConnecterProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageConnectToServer.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

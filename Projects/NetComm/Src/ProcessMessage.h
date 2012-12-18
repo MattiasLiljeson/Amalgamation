@@ -30,6 +30,7 @@ struct MessageType
 		TERMINATE,
 		RECEIVE_PACKET,
 		SEND_PACKET,
+		CONNECT_TO_SERVER,
 	};
 };
 
