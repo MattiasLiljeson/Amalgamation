@@ -63,7 +63,7 @@ void ClientApplication::run()
 			m_world->setDelta((float)dt);
 			m_world->process();
 			
-//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 
