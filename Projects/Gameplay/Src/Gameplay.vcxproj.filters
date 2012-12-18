@@ -40,6 +40,9 @@
     <Filter Include="Systems\Gameplay">
       <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Audio">
+      <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -137,11 +140,19 @@
     </ClInclude>
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
-    <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="Impulse.h" />
+    <ClInclude Include="ImpulseSystem.h" />
+    <ClInclude Include="AudioInfo.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioListener.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -209,10 +220,18 @@
     <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
-    <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="AudioInfo.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioListener.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

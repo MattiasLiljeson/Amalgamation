@@ -50,13 +50,25 @@ public:
 
 	IXAudio2SourceVoice* getSourceVoice();
 
-	XAUDIO2_VOICE_STATE* getSourceCurrentState();
+	///-----------------------------------------------------------------------------------
+	/// Updates the current source sounds state to the member variable that can later 
+	/// be used t check the current status of the source.
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void updateSourceCurrentState();
 
 	///-----------------------------------------------------------------------------------
 	/// Updates the current sound's states allowing to see if the sound is playing or not.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void updateVoiceState();
+
+	///-----------------------------------------------------------------------------------
+	/// Checks if the sound is playing determined by the state of the queued buffers or if
+	/// there are non queued.
+	/// \return bool
+	///-----------------------------------------------------------------------------------
+	bool isPlaying();
 
 	/************************************************************************/
 	/* DEBUG STUFFS!														*/

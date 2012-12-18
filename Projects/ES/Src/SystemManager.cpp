@@ -97,7 +97,7 @@ void SystemManager::initializeAll()
 	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	//	it->second->initialize();
 
-	for( int i=0; i<m_systemList.size(); i++ )
+	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		m_systemList[i]->initialize();
 	}
@@ -109,7 +109,7 @@ void SystemManager::updateSynchronous()
 	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	//	it->second->process();
 
-	for( int i=0; i<m_systemList.size(); i++ )
+	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		EntitySystem* system = m_systemList[i];
 		if( system->getEnabled() )

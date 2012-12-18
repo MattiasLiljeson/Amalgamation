@@ -189,14 +189,7 @@ void SoundWrapper::updateMasterVolume()
 
 bool SoundWrapper::isPlaying( const int soundIndex )
 {
-	XAUDIO2_VOICE_STATE* state = m_createdSounds[soundIndex]->getSourceCurrentState();
-
-	if (state->BuffersQueued > 0 && state->SamplesPlayed != 0)
-	{
-		return true;
-	}
-
-	return false;
+	return m_createdSounds[soundIndex]->isPlaying();
 }
 
 Sound* SoundWrapper::getSound( int p_index )

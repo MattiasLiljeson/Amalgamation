@@ -18,10 +18,8 @@
 #include <RenderInfo.h>
 #include <Transform.h>
 #include <ShipController.h>
-
-#include <Windows.h>
+#include <AudioListener.h>
 #include <AudioInfo.h>
-
 
 // Systems
 #include <CameraSystem.h>
@@ -37,6 +35,7 @@
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
 
+#include <Windows.h>
 //TEMP
 #include <SoundEnums.h>
 

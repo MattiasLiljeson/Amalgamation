@@ -1,4 +1,5 @@
 #include "AudioController.h"
+#include <SoundWrapper.h>
 
 AudioController::AudioController(AudioBackendSystem* p_audioBackend) : 
 	EntitySystem(SystemType::AudioControllerSystem, 1, ComponentType::AudioComponent)

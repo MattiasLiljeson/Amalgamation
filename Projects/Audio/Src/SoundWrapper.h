@@ -79,7 +79,7 @@ public:
 	void updateOutputMatrix(int p_index);
 
 	///-----------------------------------------------------------------------------------
-	/// Updates
+	/// Updates the given sound with the specified sound instruction.
 	/// \param p_index
 	/// \param p_soundInstruction
 	/// \return void
@@ -162,7 +162,6 @@ private:
 	/************************************************************************/
 	X3DAUDIO_LISTENER		m_listener;
 	X3DAUDIO_HANDLE			m_x3DAudioInstance;
-	X3DAUDIO_DSP_SETTINGS	m_dspSettings;
 
 	SoundFactory*			m_soundFactory;
 

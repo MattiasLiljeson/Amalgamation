@@ -14,6 +14,7 @@
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
+    <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
@@ -54,6 +55,7 @@
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
+    <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraInfo.cpp" />

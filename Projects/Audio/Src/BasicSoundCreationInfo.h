@@ -1,5 +1,6 @@
 #pragma once
 #include <xaudio2.h>
+#include <string>
 
 // =======================================================================================
 //                                      BasicSoundCreationInfo
@@ -18,16 +19,23 @@ struct BasicSoundCreationInfo
 	float volume;
 	IXAudio2Voice* destinationVoice;
 	const char* file; //ONLY USED FOR DEBUG!
-	const char* fullFilePath;
+	const char* filePath;
 	bool loopPlayback;
 
-	BasicSoundCreationInfo(const char* p_file, const char* p_fullFilePath, 
+	BasicSoundCreationInfo(const char* p_file, const char* p_filePath, 
 		bool p_loopPlayback=false, float p_volume=1.0f)
 	{
 		destinationVoice = NULL;
 		volume = p_volume;
 		file = p_file;
-		fullFilePath = p_fullFilePath;
+		filePath = p_filePath;
 		loopPlayback = p_loopPlayback;
+	}
+
+	std::string getFullFilePathString()
+	{
+		std::string fullFilePath = filePath;
+		fullFilePath += file;
+		return fullFilePath;
 	}
 };

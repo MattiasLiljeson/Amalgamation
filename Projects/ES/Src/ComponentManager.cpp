@@ -101,7 +101,7 @@ Component* ComponentManager::getComponent( int p_entityIdx, ComponentType p_type
 Component* ComponentManager::getComponent( int p_entityIdx,
 										  ComponentType::ComponentTypeIdx p_typeIdx )
 {
-	if(m_componentsByType[p_typeIdx].size() > p_entityIdx)
+	if(m_componentsByType[p_typeIdx].size() > (unsigned int)p_entityIdx)
 	{
 		return m_componentsByType[p_typeIdx][p_entityIdx];
 	}

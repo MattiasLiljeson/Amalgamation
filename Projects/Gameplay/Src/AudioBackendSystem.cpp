@@ -1,4 +1,6 @@
 #include "AudioBackendSystem.h"
+#include <ToString.h>
+#include <SoundWrapper.h>
 
 AudioBackendSystem* AudioBackendSystem::m_theSystem = NULL;
 
@@ -12,13 +14,6 @@ AudioBackendSystem::AudioBackendSystem() : EntitySystem(SystemType::AudioBackend
 AudioBackendSystem::~AudioBackendSystem()
 {
 	delete m_soundWrapper;
-}
-
-void AudioBackendSystem::initialize()
-{
-	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		"Master Volume",TwType::TW_TYPE_FLOAT,m_soundWrapper->getMasterVolumeRef(),
-		"group=Overall min=0 max=10 step=0.001 precision=3");
 }
 
 void AudioBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -92,4 +87,10 @@ void TW_CALL AudioBackendSystem::stopOrPlaySound( void* p_clientData )
 		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::STOP);
 	else
 		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::PLAY);
+}
+
+void AudioBackendSystem::updateListenerVolume( float p_volume )
+{
+	m_soundWrapper->setMasterVolume(p_volume);
+	m_soundWrapper->updateMasterVolume();
 }
