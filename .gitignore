@@ -131,6 +131,7 @@ External/igloo/
 External/Ant/
 External/FreeImage/
 External/XAudio2/
+External/*
 
 # Files
 *.exe
