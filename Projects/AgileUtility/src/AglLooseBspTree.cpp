@@ -177,6 +177,7 @@ AglLooseBspTree::AglLooseBspTree(vector<AglBspNode> p_nodes, unsigned int p_root
 		m_nodes[i] = p_nodes[i];
 	}
 	m_triangles = new unsigned int[m_header.triangleCount];
+
 	m_triangles2 = new AglVector3[m_header.triangleCount*3];
 	for (unsigned int i = 0; i < m_header.triangleCount; i++)
 	{
@@ -184,6 +185,10 @@ AglLooseBspTree::AglLooseBspTree(vector<AglBspNode> p_nodes, unsigned int p_root
 		m_triangles2[i*3] = p_triangles[i].vertices[0];
 		m_triangles2[i*3+1] = p_triangles[i].vertices[1];
 		m_triangles2[i*3+2] = p_triangles[i].vertices[2];
+	}
+	for (unsigned int i = 0; i < m_header.triangleCount; i++)
+	{
+		m_triangles[i] = p_triangles[i].index;
 	}
 }
 AglLooseBspTree::AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles,
@@ -204,6 +209,7 @@ bool AglLooseBspTree::evaluate(AglVector3 p_c, float p_r)
 	toEvaluate.push_back(m_nodes[0]);
 
 	vector<AglVector3> points(3);
+
 	while (toEvaluate.size() > 0)
 	{
 		AglBspNode curr = toEvaluate.back();

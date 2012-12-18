@@ -100,6 +100,7 @@ void MeshDialog::show()
 	TwAddButton(m_dialog, "CreateBspTree", CreateBspTree, (void*)m_meshIndex, " label='Create' group='Bsp Tree'");
 	TwAddVarRW(m_dialog, "DrawBspTree", TW_TYPE_BOOLCPP, (void*)m->getDrawTree(), "group='Bsp Tree'");
 	TwAddVarRW(m_dialog, "BspTreeLevel", TW_TYPE_UINT32, (void*)m->getTreeLevel(), "group='Bsp Tree'");
+
 	TwDefine(" Mesh visible=true ");
 }
 void MeshDialog::hide()

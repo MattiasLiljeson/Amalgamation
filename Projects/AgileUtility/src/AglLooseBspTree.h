@@ -48,6 +48,14 @@ struct AglBspTriangle
 
 };
 
+struct AglLooseBspTreeHeader
+{
+	unsigned int targetMesh;
+	unsigned int root;
+	unsigned int nodeCount;
+	unsigned int triangleCount;
+};
+
 
 // =======================================================================================
 //                                      AglLooseBspTree
@@ -79,28 +87,22 @@ public:
 	AglLooseBspTree* createTree();
 };
 
-struct AglLooseBspTreeHeader
-{
-	unsigned int targetMesh;
-	unsigned int root;
-	unsigned int nodeCount;
-	unsigned int triangleCount;
-};
-
 class AglLooseBspTree
 {
 private:
 	AglLooseBspTreeHeader	m_header;
 	unsigned int*			m_triangles;
 	AglVector3*				m_triangles2;
+
 	AglBspNode*				m_nodes;
 public:
+
 	AglLooseBspTree(vector<AglBspNode> p_nodes, unsigned int p_root,
 						vector<AglBspTriangle> p_triangles, 
 							unsigned int p_targetMesh);
 
 	AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles,
-						AglBspNode* p_nodes);
+		AglBspNode* p_nodes);
 
 	virtual ~AglLooseBspTree();
 

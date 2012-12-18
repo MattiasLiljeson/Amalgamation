@@ -16,7 +16,6 @@ private:
 	static void TW_CALL GetDrawNormals(void *value, void *clientData);
 	static void TW_CALL SetName(const void *value, void *clientData);
 	static void TW_CALL GetName(void *value, void *clientData);
-
 	static void TW_CALL CreateSphereGrid(void *clientData);
 	static void TW_CALL CreateBspTree(void *clientData);
 

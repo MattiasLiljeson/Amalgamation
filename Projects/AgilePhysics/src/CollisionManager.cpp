@@ -734,7 +734,6 @@ bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh,
 	return false;
 }
 
-
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------
 float OverlapAmount(RigidBodyBox* pB1, RigidBodyBox* pB2, AglVector3 pAxis)
 {

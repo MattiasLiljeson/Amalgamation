@@ -49,6 +49,4 @@ ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, ID3D11DeviceContex
 
 string openfilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 
-
-
 #endif
