@@ -271,7 +271,7 @@ void ClientApplication::initSounds()
 	fullFilePath = TESTMUSICPATH + file;
 
 	basicSoundInfo = new BasicSoundCreationInfo(file.c_str(),fullFilePath.c_str(),true);
-	positionalSoundInfo = new PositionalSoundCreationInfo(AglVector3(3,3,3));
+	positionalSoundInfo = new PositionalSoundCreationInfo(AglVector3( 3.0f, -10.0f, -30.0f ));
 	soundIdx = audioBackend->createPositionalSound(basicSoundInfo,positionalSoundInfo);
 	entity = m_world->createEntity();
 	component = new Transform( 3.0f, -10.0f, -30.0f );
