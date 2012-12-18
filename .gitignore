@@ -114,6 +114,7 @@ External/igloo/
 External/Ant/
 External/FreeImage/
 External/XAudio2/
+External/*
 
 # Files
 *.exe
@@ -126,14 +127,7 @@ External/XAudio2/
 *.png
 *.dds
 *.tga
-*.fbx
-*.agl
-
-*.agl
-*.fbx
-*.png
-*.dds
-*.tga
+*.dll
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions
