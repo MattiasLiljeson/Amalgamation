@@ -128,5 +128,4 @@ void Mesh::Init(T* pVertices, int pVertexCount, unsigned int* pIndices, int pInd
 
 	mStride = sizeof(T);
 }
-
 #endif

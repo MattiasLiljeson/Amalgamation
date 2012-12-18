@@ -67,7 +67,6 @@ bool Game::Initialize()
 
 	FindSymmetricEigenVectors(mat, e1, e2, e3);
 
-	ShowCursor(false);
 	return true;
 }
 bool Game::Cleanup()
@@ -309,6 +308,7 @@ void Game::Restart()
 		Avatar = mPhysics->AddCompoundBody(AglVector3(0, 0, -40));
 		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
 		float step = 1.0f / 9.0f * 2 * 3.14159f;
+
 		/*for (unsigned int i = 0; i < 7; i++)
 		{
 			//toDetach =
