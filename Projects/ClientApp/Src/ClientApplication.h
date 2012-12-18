@@ -1,10 +1,18 @@
 #pragma once
 
+#define _COMBINE_CLIENT_AND_SERVER
+
+
 #include <Globals.h>
 #include <TcpClient.h> /* There is a problem where boost must initialize some socket-
 						related stuff before other things. Therefore TcpClient should
 						be included as soon as possible. Johan: Haven't looked too
 						much into this yet. */
+
+//#ifdef _COMBINE_CLIENT_AND_SERVER
+ #include "ServerApplication.h"
+class ServerApplication;
+//#endif
 
 #include <EntityWorld.h>
 #include <Input.h>
@@ -72,4 +80,7 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
+//#ifdef _COMBINE_CLIENT_AND_SERVER
+	ServerApplication m_serverApp;
+//#endif
 };

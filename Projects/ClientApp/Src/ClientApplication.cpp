@@ -63,6 +63,10 @@ void ClientApplication::run()
 			m_world->setDelta((float)dt);
 			m_world->process();
 			
+			//#ifdef _COMBINE_CLIENT_AND_SERVER
+			m_serverApp.step( static_cast<float>(dt) );
+			//#endif
+
 			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
