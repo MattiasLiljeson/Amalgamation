@@ -70,6 +70,18 @@ public:
 	/// \return Box*
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
+
+	///-----------------------------------------------------------------------------------
+	/// Constructs an engine Mesh object from raw data.
+	/// \param p_vertexBlob
+	/// \param p_indexBlob
+	/// \param p_numberOfVertices
+	/// \param p_numberOfIndices
+	/// \return Mesh*
+	///-----------------------------------------------------------------------------------
+	Mesh* createMeshFromRaw(void* p_vertexBlob, void* p_indexBlob,
+							unsigned int p_numberOfVertices,
+							unsigned int p_numberOfIndices);
 protected:
 private:
 	ID3D11Device* m_device;

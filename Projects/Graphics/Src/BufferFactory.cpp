@@ -82,6 +82,42 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instan
 	return instanceBuffer;
 }
 
+Buffer<PTNVertex>* BufferFactory::createVertexBuffer( PTNVertex* p_vertices, 
+													 unsigned int p_numberOfElements )
+{		
+	Buffer<PTNVertex>* vertexBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
+	vertexBufferDesc.ElementSize = sizeof(PTNVertex);
+	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	vertexBufferDesc.NumElements = p_numberOfElements ;
+	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
+										 p_vertices,vertexBufferDesc);
+
+	return vertexBuffer;
+}
+
+Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
+												 unsigned int p_numberOfElements )
+{	
+	Buffer<DIndex>* indexBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
+	indexBufferDesc.ElementSize = sizeof(DIndex);
+	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	indexBufferDesc.NumElements = p_numberOfElements;
+	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
+
+	indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, p_indices,
+									 indexBufferDesc);
+
+	return indexBuffer;
+}
+
 Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data
@@ -148,41 +184,21 @@ Mesh* BufferFactory::createBoxMesh()
 	return newBox;
 }
 
-Buffer<PTNVertex>* BufferFactory::createVertexBuffer( PTNVertex* p_vertices, 
-													 unsigned int p_numberOfElements )
-{		
-	Buffer<PTNVertex>* vertexBuffer;
 
-	// Create description for buffer
-	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
-	vertexBufferDesc.ElementSize = sizeof(PTNVertex);
-	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	vertexBufferDesc.NumElements = p_numberOfElements ;
-	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
 
-	vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
-										 p_vertices,vertexBufferDesc);
+Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob, 
+									   unsigned int p_numberOfVertices, 
+									   unsigned int p_numberOfIndices )
+{
+	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PTNVertex*>(p_vertexBlob),
+												p_numberOfVertices),
+							 createIndexBuffer(static_cast<DIndex*>(p_indexBlob),
+												p_numberOfIndices) 
+							);
 
-	return vertexBuffer;
+	return newMesh;
 }
 
-Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
-												 unsigned int p_numberOfElements )
-{	
-	Buffer<DIndex>* indexBuffer;
-
-	// Create description for buffer
-	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
-	indexBufferDesc.ElementSize = sizeof(DIndex);
-	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	indexBufferDesc.NumElements = p_numberOfElements;
-	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
-
-	indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, p_indices,
-									 indexBufferDesc);
-
-	return indexBuffer;
-}
 
 
 
