@@ -40,9 +40,9 @@ void SoundWrapper::initSoundEngine()
 	HRESULT hr = S_OK;
 
 	UINT32 flags = 0;
-#ifdef _DEBUG
-	flags |= XAUDIO2_DEBUG_ENGINE;
-#endif
+//#ifdef _DEBUG
+//	flags |= XAUDIO2_DEBUG_ENGINE;
+//#endif
 	if ( FAILED (hr = XAudio2Create(&m_soundDevice,flags)))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 

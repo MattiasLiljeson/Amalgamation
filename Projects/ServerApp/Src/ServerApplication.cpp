@@ -24,10 +24,8 @@ void ServerApplication::run()
 	while( m_running )
 	{
 		// HACK: Static delta and really high for testing purposes.
-		m_world->setDelta( 0.01f );
-
-		m_world->process();
-
+		step( 0.01f );
+		
 		// HACK: Maybe place input in systems? :D
 		if( _kbhit() )
 		{
@@ -40,6 +38,13 @@ void ServerApplication::run()
 		// HACK: Really slow update loop for testing purposes.
 		boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 	}
+}
+
+void ServerApplication::step( float p_dt )
+{
+	m_world->setDelta( p_dt );
+
+	m_world->process();
 }
 
 void ServerApplication::initSystems()
