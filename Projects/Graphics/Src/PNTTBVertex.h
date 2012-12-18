@@ -1,19 +1,21 @@
 // =======================================================================================
-//                                      PTNVertex
+//                                      PNTTBVertex
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	A basic struct containing Position Texture Normal 
+/// \brief	A basic struct containing Position Normal Texture Tangent and Binormal
 ///        
-/// # PTNVertex
+/// # PNTTBVertex
 /// Detailed description.....
-/// Created on: 4-12-2012 
+/// Created on: 18-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-struct PTNVertex
+struct PNTTBVertex
 {
 	float pos[3];
+	float normal[3];	
 	float texCoord[2];
-	float normal[3];
+	float tangent[3];
+	float binormal[3];
 };

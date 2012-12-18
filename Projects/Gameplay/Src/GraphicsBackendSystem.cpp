@@ -38,9 +38,15 @@ void GraphicsBackendSystem::process()
 
 }
 
-int GraphicsBackendSystem::getMeshId( string p_meshName )
+unsigned int GraphicsBackendSystem::createMesh( const string& p_meshName, 
+											    const string* p_path/*=NULL */ )
 {
-	return m_graphicsWrapper->createMesh( p_meshName );
+	return m_graphicsWrapper->createMesh(p_meshName,p_path);
+}
+
+int GraphicsBackendSystem::getMeshId( const string& p_meshName )
+{
+	return m_graphicsWrapper->getMeshId(p_meshName);
 }
 
 GraphicsWrapper* GraphicsBackendSystem::getGfxWrapper()

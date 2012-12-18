@@ -153,6 +153,9 @@
     <ClInclude Include="AudioListener.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="Impulse.h" />
+    <ClInclude Include="ImpulseSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -233,5 +236,8 @@
     <ClCompile Include="AudioListener.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
   </ItemGroup>
 </Project>

@@ -1,19 +1,19 @@
 // =======================================================================================
-//                                      DIndex
+//                                      PNTVertex
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	A DWORD index struct
+/// \brief	A basic struct containing Position Normal Texture
 ///        
-/// # DIndex
+/// # PNTVertex
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <wtypes.h>
-
-struct DIndex
+struct PNTVertex
 {
-	unsigned int index;
+	float pos[3];
+	float normal[3];	
+	float texCoord[2];
 };

@@ -42,12 +42,12 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src/;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib/;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src/;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)External/igloo;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib/;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/Gameplay/Lib/;$(SolutionDir)Projects/NetComm/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
