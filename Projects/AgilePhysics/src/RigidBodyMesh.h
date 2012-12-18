@@ -26,6 +26,8 @@ private:
 	AglOBB mOBB;
 	AglLooseBspTree* mBSPTree;
 	AglInteriorSphereGrid* mSphereGrid;
+	vector<pair<float, AglVector3>> normalList;
+	int ind;
 private:
 	void CalculateInertiaTensor();
 public:
@@ -53,6 +55,12 @@ public:
 	}
 	bool EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* pData);
 	bool Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData);
+	vector<pair<float, AglVector3>> GetNormalList(){ return normalList; }
+	virtual void UpdateVelocity(float pElapsedTime)
+	{
+		RigidBody::UpdateVelocity(pElapsedTime);
+		ind++;
+	}
 };
 
 #endif // RIGIDBODYMESH_H

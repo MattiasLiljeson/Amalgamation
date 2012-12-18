@@ -293,6 +293,7 @@ bool CheckCollision(RigidBodySphere* pSphere, RigidBodyBox* pBox, PhyCollisionDa
     }
     return false;
 }
+
 bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
 {
 	//Find the closest point on the box to the sphere
@@ -732,6 +733,74 @@ bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh,
 					PhyCollisionData* p_collisionData)
 {
 	return false;
+}
+
+bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
+					EPACollisionData* p_epaData)
+{
+	//Sphere min = projected pos + radius
+	//Sphere max = projected pos - radius
+
+	AglVector3 p = p_sphere.position;
+	AglVector3 axes[7];
+	axes[0] = AglVector3::crossProduct(p_v2-p_v1, p_v3-p_v2);
+	axes[1] = p_v1 - p;
+	axes[2] = p_v2 - p;
+	axes[3] = p_v3 - p;
+	axes[4] = AglVector3::crossProduct(AglVector3::crossProduct(p_v2-p_v1, p - p_v1), p_v2 - p_v1);
+	axes[5] = AglVector3::crossProduct(AglVector3::crossProduct(p_v3-p_v1, p - p_v1), p_v3 - p_v1);
+	axes[6] = AglVector3::crossProduct(AglVector3::crossProduct(p_v3-p_v2, p - p_v2), p_v3 - p_v2);
+
+	float minA, maxA;
+	float minB, maxB;
+
+	//Project points on the axis
+	float overlap = FLT_MAX;
+	AglVector3 axis;
+	for (unsigned int i = 0; i < 7; i++)
+	{
+		axes[i].normalize();
+		minA = maxA = AglVector3::dotProduct(axes[i], p_v1);
+		minA = min(AglVector3::dotProduct(axes[i], p_v2), minA);
+		minA = min(AglVector3::dotProduct(axes[i], p_v3), minA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_v2), maxA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_v3), maxA);
+
+		minB = AglVector3::dotProduct(axes[i], p) - p_sphere.radius;
+		maxB = AglVector3::dotProduct(axes[i], p) + p_sphere.radius;
+		
+		if (i > 0)
+		{
+			float lengthA = maxA - minA;
+			float lengthB = maxB - minB;
+
+			float minTotal = min(minA, minB);
+			float maxTotal = max(maxA, maxB);
+
+			float newOverlap = (lengthA + lengthB) - (maxTotal - minTotal);
+			if (newOverlap <= 0)
+			{
+				return false;
+			}
+			else if (newOverlap < overlap)
+			{
+				overlap = newOverlap;
+				axis = axes[i];
+			}
+		}
+		else
+		{
+			float newOverlap = min(minA - minB, maxB - minA);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+	}
+
+	p_epaData->Depth = overlap;
+	p_epaData->Normal = axis;
+	return true;
 }
 
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------

@@ -33,6 +33,7 @@ RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSpher
 	mBoundingSphere = pBoundingSphere; 
 	mBSPTree = pBSPTree;
 	mSphereGrid = pSphereGrid;
+	ind = 0;
 	CalculateInertiaTensor();
 }
 
@@ -57,6 +58,7 @@ bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* p
 	{
 		pData->Normal.transformNormal(GetWorld());
 		pData->Normal.normalize();
+		normalList.push_back(pair<float, AglVector3>(pData->Depth, pData->Normal));
 		return true;
 	}
 	return false;
@@ -110,9 +112,9 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 
 				//Prova att endast lägga till kollisionen och inte returnera
 				//därigenom hitta rätt kollision
-				if (gjkCheckCollision(points, bs, pData))
+				if (CheckCollision(bs, points[0], points[1], points[2], pData))//  gjkCheckCollision(points, bs, pData))
 				{
-					if (pData->Depth != 0)
+					if (pData->Depth > 0)
 					{
 						AglVector3 c = (points[0] + points[1] + points[2]) / 3.0f;
 
@@ -121,7 +123,6 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 
 						if (!cached || pData->Depth > cached->Depth)
 							cached = pData;
-
 						return true;
 					}
 				}

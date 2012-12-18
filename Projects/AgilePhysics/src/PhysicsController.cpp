@@ -70,8 +70,6 @@ void PhysicsController::Update(float pElapsedTime)
 	while (mTimeAccum > 0.005f)
 		mTimeAccum -= 0.005f;
 
-	theGlobal = false;
-
 	//New update method stepping
 	//1) Update Velocity and Position
 	//2) Perform collision detection
