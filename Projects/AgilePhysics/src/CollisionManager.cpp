@@ -705,7 +705,6 @@ bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh,
 {
 	if (CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB()))
 	{
-		theGlobal = true;
 		EPACollisionData epaCol;
 		if (p_mesh->EvaluateSphere(p_sphere, &epaCol))
 		{

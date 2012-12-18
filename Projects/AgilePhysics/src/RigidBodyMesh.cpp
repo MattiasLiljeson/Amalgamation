@@ -1,6 +1,7 @@
 #include "RigidBodyMesh.h"
 #include "RigidBodySphere.h"
 #include "GJKSolver.h"
+#include "CollisionManager.h"
 
 void RigidBodyMesh::CalculateInertiaTensor()
 {
@@ -26,7 +27,7 @@ void RigidBodyMesh::CalculateInertiaTensor()
 //How should transforms be handled. Right now obb, bounding sphere, bsp tree and sphere grid are all
 //given in local space but not relative to the mesh.
 RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
-							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false)
+							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, true)
 {
 	mOBB = pOBB;
 	mBoundingSphere = pBoundingSphere; 
@@ -69,6 +70,8 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 	toEvaluate.push_back(m_nodes[0]);
 
 	vector<AglVector3> points(3);
+
+	EPACollisionData* cached = NULL;
 	while (toEvaluate.size() > 0)
 	{
 		AglBspNode curr = toEvaluate.back();
@@ -108,10 +111,25 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 				//därigenom hitta rätt kollision
 				if (gjkCheckCollision(points, bs, pData))
 				{
-					return true;
+					if (pData->Depth != 0)
+					{
+						AglVector3 c = (points[0] + points[1] + points[2]) / 3.0f;
+
+						if (AglVector3::dotProduct(p_c - c, pData->Normal) < 0)
+							pData->Normal = -pData->Normal;
+
+						if (!cached || pData->Depth > cached->Depth)
+							cached = pData;
+
+						theGlobal = true;
+						return true;
+					}
 				}
 			}
 		}
 	}
+	pData = cached;
+	if (pData)
+		return true;
 	return false;
 }
