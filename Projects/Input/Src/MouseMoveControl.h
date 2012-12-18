@@ -29,7 +29,7 @@ class MessageLoopFetcher;
 class MouseMoveControl : public Control
 {
 public:
-	MouseMoveControl( InputHelper::MOUSE_AXIS p_axis, InputHelper::SUB_AXIS p_subAxis );
+	MouseMoveControl( InputHelper::MOUSE_AXIS p_axis );
 	virtual ~MouseMoveControl();
 
 	virtual void update( InputManager* p_manager );

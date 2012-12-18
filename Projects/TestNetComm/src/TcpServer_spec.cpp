@@ -121,16 +121,16 @@ Describe(a_tcp_server)
 	
 		TcpClient client;
 		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
 		
 		Packet packet;
 		packet << (int)0;
 
-		boost::this_thread::sleep(boost::posix_time::millisec(50));
-		server.processMessages();
 		client.sendPacket( packet );
-
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
+
 		Assert::That(server.hasNewPackets(), IsTrue());
 	}
 
@@ -192,7 +192,7 @@ Describe(a_tcp_server)
 	{
 		TcpServer server;
 		
-		//AssertThrows(std::domain_error, server.popNewPacket());
+		AssertThrows(std::domain_error, server.popNewPacket());
 	}
 
 	It(has_an_interface_that_can_be_used_to_process_messages)
@@ -261,6 +261,78 @@ Describe(a_tcp_server)
 		}
 	}
 
+	It(can_multicast_packets_to_a_list_of_clients)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		
+		int i_src = 32;
+		Packet packet_src;
+		packet_src << i_src;
+
+		vector<int> connections;
+		connections = server.getActiveConnections();
+		connections.erase( connections.begin() );
+		server.multicastPacket( connections, packet_src );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<5; i++)
+			client[i].processMessages();
+
+		int numberOfClientsThatReceivedPacket = 0;
+		for(int i=0; i<5; i++)
+		{
+			if( client[i].newPacketsCount() > 0 )
+			{
+				numberOfClientsThatReceivedPacket += 1;
+			}
+		}
+
+		Assert::That(numberOfClientsThatReceivedPacket, Equals(4));
+	}
+
+	It(can_unicast_packets_to_individual_clients)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		
+		TcpClient client[3];
+		for(int i=0; i<3; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		
+		vector<int> currentConnections = server.getActiveConnections();
+
+		Packet packets[3];
+		for (int i = 0; i < 3; i++)
+		{
+			packets[i] << i + 111;
+			server.unicastPacket( packets[i], currentConnections[i] );
+		}
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		for(int i=0; i<3; i++)
+		{
+			client[i].processMessages();
+			
+			Assert::That(client[i].hasNewPackets(), IsTrue());
+			Packet packet = client[i].popNewPacket();
+			int i_dst;
+			packet >> i_dst;
+			Assert::That(i_dst, IsGreaterThan(110)); /** Remember the values set to be
+														i + 111 (greater than 110). */
+		}
+	}
+
 	It(has_no_active_connection_if_the_only_client_has_disconnected)
 	{
 		TcpServer server;
@@ -281,6 +353,57 @@ Describe(a_tcp_server)
 
 
 		Assert::That(server.activeConnectionsCount(), Equals(0));
+	}
+
+	It(can_return_all_active_connections_as_a_vector)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client[5];
+		for(int i=0; i<5; i++)
+			client[i].connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		vector< int > currentConnections;
+		currentConnections = server.getActiveConnections();
+
+		Assert::That(currentConnections.size(), Equals(5));
+	}
+
+	It(can_see_who_sent_the_packet)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient clients[3];
+		for(int i=0; i<3; i++)
+			clients[i].connectToServer( "127.0.0.1", "1337" );
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet src_packets[3];
+		for(int i=0; i<3; i++)
+		{
+			src_packets[i] << ( 'A' + (char)i );
+			clients[i].sendPacket( src_packets[i] );
+		}
+		
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Assert::That(server.newPacketsCount(), Equals(3));
+
+		Packet dst_packets[3];
+		for(int i=0; i<3; i++)
+		{
+			dst_packets[i] = server.popNewPacket();
+			int senderId = dst_packets[i].getSenderId();
+			Assert::That(senderId, Is().Not().EqualTo(-1));
+		}
 	}
 
 //	It(can_see_a_client_disconnecting)

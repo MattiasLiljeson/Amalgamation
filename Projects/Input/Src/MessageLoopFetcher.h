@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IMouseKeyboardFetcher.h"
 #include "InputHelper.h"
 #include <Windows.h>
 #include <deque>
@@ -40,27 +41,32 @@ struct MsgAndParams
 ///\author Mattias Liljeson
 ///---------------------------------------------------------------------------------------
 
-class MessageLoopFetcher
+class MessageLoopFetcher : public IMouseKeyboardFetcher
 {
 public:
-	MessageLoopFetcher( bool p_resetCursor );
+	MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool p_resetCursor = false );
 	~MessageLoopFetcher();
 
 	void update();
-	void resetStateBuffers();
-	void resetCursor();
-	void updateStateBuffers();
 	InputHelper::KEY_STATE getKeyState( int p_key );
 	InputHelper::KEY_STATE getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
-	void processWindowsEvent( MsgAndParams p_msgAndParams );
-	void processWindowsEvent( UINT p_message, WPARAM p_wParam, LPARAM p_lParam );
+
 	static void pushToQue( MsgAndParams p_msgAndParams );
 	static void pushToQue( UINT p_message, WPARAM p_wParam, LPARAM p_lParam );
 
 private:
-	 bool m_resetCursor;
+	void resetStateBuffers();
+	void resetCursor();
+	void updateStateBuffers();
+	void processWindowsEvent( MsgAndParams p_msgAndParams );
+	void processWindowsEvent( UINT p_message, WPARAM p_wParam, LPARAM p_lParam );
+
+private:
+	HINSTANCE m_hInstance;
+	HWND m_hWnd;
+	bool m_resetCursor;
 
 	int m_mouseCurrPos[InputHelper::NUM_MOUSE_AXIS];
 	int m_mousePrevPos[InputHelper::NUM_MOUSE_AXIS];

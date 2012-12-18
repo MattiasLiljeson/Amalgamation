@@ -20,6 +20,7 @@ public:
 
 	int getMeshId( string p_meshName );
 	GraphicsWrapper* getGfxWrapper();
+	HWND getWindowRef();
 
 private:
 	GraphicsWrapper* m_graphicsWrapper;

@@ -37,6 +37,9 @@
     <Filter Include="Systems\Network\Packet Translation">
       <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Gameplay">
+      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -44,9 +47,6 @@
     </ClInclude>
     <ClInclude Include="Vector3.h">
       <Filter>Utilities\Vector3</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PrintPositionsSystem.h">
       <Filter>Systems</Filter>
@@ -97,7 +97,25 @@
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="InputBackendSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipController.h">
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="ImpulseSystem.h">
       <Filter>Systems</Filter>
@@ -108,13 +126,26 @@
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInputAction.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioBackendSystem.h" />
+    <ClInclude Include="AudioController.h" />
+    <ClInclude Include="AudioInfo.h" />
+    <ClInclude Include="AudioListenerSystem.h" />
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="Impulse.h" />
+    <ClInclude Include="ImpulseSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PrintPositionsSystem.cpp">
       <Filter>Systems</Filter>
@@ -150,7 +181,16 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCommunicatorSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="ImpulseSystem.cpp">
       <Filter>Systems</Filter>
@@ -158,5 +198,21 @@
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkUpdateSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="AudioBackendSystem.cpp" />
+    <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="AudioInfo.cpp" />
+    <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
   </ItemGroup>
 </Project>

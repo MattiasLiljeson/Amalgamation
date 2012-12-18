@@ -31,8 +31,18 @@ EntitySystem* SystemManager::setSystem( SystemType p_type, EntitySystem* p_syste
 EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 									   EntitySystem* p_system, bool p_enabled )
 {
+	//find and remove any previous versions of this system
+	vector<EntitySystem*>::iterator it = m_systemList.begin();
+	for( ; it!=m_systemList.end(); it++ )
+	{
+		if((*it)->getSystemTypeIdx() == p_typeIdx )
+			it = m_systemList.erase(it);
+	}
+	m_systemList.push_back( p_system );
+	
 	p_system->setEnabled( p_enabled );
 	m_systems[p_typeIdx] = p_system;
+
 	return p_system;
 }
 
@@ -43,12 +53,30 @@ void SystemManager::deleteSystem( SystemType p_type )
 
 void SystemManager::deleteSystem( SystemType::SystemTypeIdx p_typeIdx )
 {
+	//find and remove the system
+	vector<EntitySystem*>::iterator it = m_systemList.begin();
+	for( ; it!=m_systemList.end(); it++ )
+	{
+		if((*it)->getSystemTypeIdx() == p_typeIdx )
+			it = m_systemList.erase(it);
+	}
+
 	delete m_systems[p_typeIdx];
 	m_systems[p_typeIdx] = NULL;
 }
 
 void SystemManager::deleteSystem( EntitySystem* p_system)
 {
+	int idx = p_system->getSystemTypeIdx();
+	//find and remove the system
+	for( vector<EntitySystem*>::iterator it = m_systemList.begin();
+		it!=m_systemList.end();
+		it++ )
+	{
+		if((*it)->getSystemTypeIdx() == idx )
+			m_systemList.erase(it);
+	}
+
 	//HACK: break in for-loop 
 	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
@@ -64,14 +92,35 @@ void SystemManager::deleteSystem( EntitySystem* p_system)
 
 void SystemManager::initializeAll()
 {
-	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
-	for( it=m_systems.begin(); it != m_systems.end(); it++ )
-		it->second->initialize();
+	// Should be done on the list. For dependency injection.
+	//map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
+	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
+	//	it->second->initialize();
+
+	for( int i=0; i<m_systemList.size(); i++ )
+	{
+		m_systemList[i]->initialize();
+	}
 }
 
 void SystemManager::updateSynchronous()
 {
-	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
-	for( it=m_systems.begin(); it != m_systems.end(); it++ )
-		it->second->process();
+	//map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
+	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
+	//	it->second->process();
+
+	for( int i=0; i<m_systemList.size(); i++ )
+	{
+		EntitySystem* system = m_systemList[i];
+		if( system->getEnabled() )
+			system->process();
+	}
+}
+
+void SystemManager::notifySystems( IPerformer* p_performer, Entity* p_entity )
+{
+	for( unsigned int i = 0; i<m_systemList.size(); i++ ) 
+	{
+		p_performer->perform(m_systemList[i], p_entity);
+	}
 }

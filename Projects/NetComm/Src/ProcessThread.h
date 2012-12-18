@@ -15,7 +15,7 @@ class ProcessThread : public ThreadSafeMessaging
 public:
 	///-----------------------------------------------------------------------------------
 	/// Assigns a unique id to the created ProcessThread.
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	ProcessThread();
 
@@ -23,39 +23,39 @@ public:
 	
 	///-----------------------------------------------------------------------------------
 	/// Starts a new thread running the overridden "body" method.
-	/// \returns int (0 if OK)
+	/// \return int (0 if OK)
 	///-----------------------------------------------------------------------------------
 	int start();
 
 	///-----------------------------------------------------------------------------------
 	/// Tries to stop the thread by sending a "shutdown" message to
 	/// the ProcessThread. Joins (blocks) the thread until it finishes.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void stop();
 
 	///-----------------------------------------------------------------------------------
 	/// Calls Stop() and Start() for convenience.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void restart();
 
 	///-----------------------------------------------------------------------------------
 	/// Get the ProcessThread's unique id.
-	/// \returns int
+	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getId() const;
 
 	///-----------------------------------------------------------------------------------
 	/// Calls the running thread's internal interrupt method. Will most likely give
 	/// unwanted results!
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void interrupt();
 
 	///-----------------------------------------------------------------------------------
 	/// Override the body method in the making of a ProcessThread.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	virtual void body() = 0;
 

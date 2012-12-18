@@ -5,6 +5,7 @@ TcpClient::TcpClient()
 	m_ioService = new boost::asio::io_service();
 	m_numConnections = 0;
 	m_communicationProcess = NULL;
+	m_id = -1;
 }
 
 TcpClient::~TcpClient()
@@ -139,7 +140,22 @@ Packet TcpClient::popNewPacket()
 	}
 	else
 	{
-		throw new domain_error( "Trying to pop from an empty packet queue!" );
+		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return packet;
+}
+
+int TcpClient::getId()
+{
+	return m_id;
+}
+
+int* TcpClient::getIdPointer()
+{
+	return &m_id;
+}
+
+void TcpClient::setId( int p_id )
+{
+	m_id = p_id;
 }

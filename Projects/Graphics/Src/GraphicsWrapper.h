@@ -31,7 +31,7 @@ public:
 	virtual ~GraphicsWrapper();
 	///-----------------------------------------------------------------------------------
 	/// Clears the back buffer with a non black color
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clearRenderTargets();
 
@@ -39,32 +39,32 @@ public:
 	/// Passes the scene info(world-view-projection matrix for example) 
 	/// to the render subsystem.
 	/// \param p_sceneInfo
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Sets up the frame, prepares the renderer for draw calls.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginFrame();
 
 	///-----------------------------------------------------------------------------------
 	/// Renders the whole scene
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderMesh(unsigned int p_meshId,vector<InstanceVertex>* p_instanceList);
+	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
 	/// render to backbuffer here.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void finalizeFrame();
 
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
@@ -72,7 +72,7 @@ public:
 	/// Create a mesh using name.
 	/// Extend this with functionality for loading etc...
 	/// \param p_name
-	/// \returns unsigned int
+	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
 	unsigned int createMesh(const string& p_name);
 
@@ -87,19 +87,19 @@ private:
 	/// render result
 	/// \param p_hWnd
 	/// \param p_windowed
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initHardware(HWND p_hWnd, bool p_windowed);
 
 	///-----------------------------------------------------------------------------------
 	/// Creates the true back buffer
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initBackBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Desc
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initViewport();
 

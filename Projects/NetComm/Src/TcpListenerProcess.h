@@ -20,7 +20,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Overridden from ProcessThread. The method is called from a new thread
 	/// when ProcessThread's start() method is called.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void body();
 
@@ -29,14 +29,14 @@ public:
 private:
 	///-----------------------------------------------------------------------------------
 	/// Start accepting for connections on a socket.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void startAccept();
 
 	///-----------------------------------------------------------------------------------
 	/// Callback function that handles a new connection.
 	/// \param const boost::system_time::error_code & p_error
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void handleAccept( const boost::system::error_code& p_error );
 

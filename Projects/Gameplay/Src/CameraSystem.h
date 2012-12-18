@@ -1,13 +1,16 @@
 #pragma once
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
+#include "InputBackendSystem.h"
+#include "LookAtEntity.h"
 #include "Transform.h"
 #include <EntitySystem.h>
 
 class CameraSystem : public EntitySystem
 {
 public:
-	CameraSystem( GraphicsBackendSystem* p_gfxBackend );
+	CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
+				  InputBackendSystem* p_inputBackend );
 	~CameraSystem();
 
 	virtual void initialize();
@@ -15,6 +18,6 @@ public:
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	float m_ticker;
+	InputBackendSystem* m_inputBackend;
 };
 

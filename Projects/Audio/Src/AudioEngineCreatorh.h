@@ -15,10 +15,7 @@ namespace AudioEngineCreator
 		/************************************************************************/
 		/* Check if we are compiling for debug or not, use debug engine or not. */
 		/************************************************************************/
-		UINT32 flags = 0;
-#ifdef _DEBUG
-		flags |= XAUDIO2_DEBUG_ENGINE;
-#endif
+
 
 		hr = XAudio2Create( &newAudioEngine, flags );
 		if( FAILED( hr ) ) {
@@ -26,6 +23,7 @@ namespace AudioEngineCreator
 		}
 		return newAudioEngine;
 	}
+
 	static IXAudio2MasteringVoice* createMasterVoice(IXAudio2* p_audioEngine)
 	{
 		HRESULT hr = S_OK;

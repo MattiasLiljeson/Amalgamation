@@ -11,11 +11,11 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
+#include <InstanceData.h>
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "PTVertex.h"
 #include "PTNVertex.h"
-#include "InstanceVertex.h"
 #include "DIndex.h"
 #include "Mesh.h"
 // #include "TextureBuffers.h"
@@ -31,7 +31,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Sets up and return a buffer object of type SimpleCBuffer
-	/// \returns SimpleCBuffer*
+	/// \return SimpleCBuffer*
 	///-----------------------------------------------------------------------------------
 	Buffer<SimpleCBuffer>* createSimpleCBuffer();
 
@@ -42,14 +42,14 @@ public:
 	/// Constructs a buffer object of a list of instance transform data
 	/// \param p_instanceList 
 	/// \param p_numberOfElements
-	/// \returns Buffer<InstanceVertex>*
+	/// \return Buffer<InstanceVertex>*
 	///-----------------------------------------------------------------------------------
-	Buffer<InstanceVertex>* createInstanceBuffer(InstanceVertex* p_instanceList,
+	Buffer<InstanceData>* createInstanceBuffer(InstanceData* p_instanceList,
 												 unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.
-	/// \returns Box*
+	/// \return Box*
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
 protected:
