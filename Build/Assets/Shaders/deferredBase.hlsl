@@ -10,9 +10,9 @@ SamplerState pointSampler : register(s0);
 
 struct VertexIn
 {
-	float3 position : POSITION;
-	float2 texCoord : TEXCOORD; 
+	float3 position : POSITION;	
 	float3 normal : NORMAL;
+	float2 texCoord : TEXCOORD; 
 	float4x4 instanceTransform : INSTANCETRANSFORM;
 };
 struct VertexOut

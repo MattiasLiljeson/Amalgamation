@@ -144,7 +144,7 @@ void ClientApplication::initEntities()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	
+	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
 
 
 
@@ -203,7 +203,7 @@ void ClientApplication::initEntities()
 
 	// Create a "spaceship"
 	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
+	component = new RenderInfo( shipMeshId );
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform( -5.0f, 0.0f, 0.0f );
 	entity->addComponent( ComponentType::Transform, component );

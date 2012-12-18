@@ -19,7 +19,7 @@
 #include "ShaderFactory.h"
 #include "BufferFactory.h"
 #include "PTVertex.h"
-#include "PTNVertex.h"
+#include "PNTVertex.h"
 
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"

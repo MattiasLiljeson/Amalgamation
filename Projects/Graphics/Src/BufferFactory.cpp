@@ -82,19 +82,19 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instan
 	return instanceBuffer;
 }
 
-Buffer<PTNVertex>* BufferFactory::createVertexBuffer( PTNVertex* p_vertices, 
+Buffer<PNTVertex>* BufferFactory::createVertexBuffer( PNTVertex* p_vertices, 
 													 unsigned int p_numberOfElements )
 {		
-	Buffer<PTNVertex>* vertexBuffer;
+	Buffer<PNTVertex>* vertexBuffer;
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
-	vertexBufferDesc.ElementSize = sizeof(PTNVertex);
+	vertexBufferDesc.ElementSize = sizeof(PNTVertex);
 	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	vertexBufferDesc.NumElements = p_numberOfElements ;
 	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
 
-	vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
+	vertexBuffer = new Buffer<PNTVertex>(m_device,m_deviceContext,
 										 p_vertices,vertexBufferDesc);
 
 	return vertexBuffer;
@@ -121,36 +121,36 @@ Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices,
 Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data
-	PTNVertex mesh[]= {
-		{	{-1,-1,-1},	{0,1},	{0,0,-1}	},
-		{	{-1,1,-1},	{0,0},	{0,0,-1}	},
-		{	{1,1,-1},	{1,0},	{0,0,-1}	},
-		{	{1,-1,-1},	{1,1},	{0,0,-1}	},
-
-		{	{-1,-1,1},	{1,1},	{0,0,1}		},
-		{	{1,-1,1},	{0,1},	{0,0,1}		},
-		{	{1,1,1},	{0,0},	{0,0,1}		},
-		{	{-1,1,1},	{1,0},	{0,0,1}		},
-			
-		{	{-1,1,-1},	{0,1},	{0,1,0}		},
-		{	{-1,1,1},	{0,0},	{0,1,0}		},
-		{	{1,1,1},	{1,0},	{0,1,0}		},
-		{	{1,1,-1},	{1,1},	{0,1,0}		},
-			
-		{	{-1,-1,-1},	{1,1},	{0,-1,0}	},
-		{	{1,-1,-1},	{0,1},	{0,-1,0}	},
-		{	{1,-1,1},	{0,0},	{0,-1,0}	},
-		{	{-1,-1,1},	{1,0},	{0,-1,0}	},
-			
-		{	{-1,-1,1},	{0,1},	{-1,0,0}	},
-		{	{-1,1,1},	{0,0},	{-1,0,0}	},
-		{	{-1,1,-1},	{1,0},	{-1,0,0}	},
-		{	{-1,-1,-1},	{1,1},	{-1,0,0}	},
-			
-		{	{1,-1,-1},	{0,1},	{1,0,0}		},
-		{	{1,1,-1},	{0,0},	{1,0,0}		},
-		{	{1,1,1},	{1,0},	{1,0,0}		},
-		{	{1,-1,1},	{1,1},	{1,0,0}		}
+	PNTVertex mesh[]= {
+		{	{-1,-1,-1},	{0,0,-1},	{0,1}	},
+		{	{-1,1,-1},	{0,0,-1},	{0,0}	},
+		{	{1,1,-1},	{0,0,-1},	{1,0}	},
+		{	{1,-1,-1},	{0,0,-1},	{1,1}	},
+										
+		{	{-1,-1,1},	{0,0,1}	,	{1,1}	},
+		{	{1,-1,1},	{0,0,1}	,	{0,1}	},
+		{	{1,1,1},	{0,0,1}	,	{0,0}	},
+		{	{-1,1,1},	{0,0,1}	,	{1,0}	},
+										
+		{	{-1,1,-1},	{0,1,0}	,	{0,1}	},
+		{	{-1,1,1},	{0,1,0}	,	{0,0}	},
+		{	{1,1,1},	{0,1,0}	,	{1,0}	},
+		{	{1,1,-1},	{0,1,0}	,	{1,1}	},
+										
+		{	{-1,-1,-1},	{0,-1,0},	{1,1}	},
+		{	{1,-1,-1},	{0,-1,0},	{0,1}	},
+		{	{1,-1,1},	{0,-1,0},	{0,0}	},
+		{	{-1,-1,1},	{0,-1,0},	{1,0}	},
+										
+		{	{-1,-1,1},	{-1,0,0},	{0,1}	},
+		{	{-1,1,1},	{-1,0,0},	{0,0}	},
+		{	{-1,1,-1},	{-1,0,0},	{1,0}	},
+		{	{-1,-1,-1},	{-1,0,0},	{1,1}	},
+										
+		{	{1,-1,-1},	{1,0,0}	,	{0,1}	},
+		{	{1,1,-1},	{1,0,0}	,	{0,0}	},
+		{	{1,1,1},	{1,0,0}	,	{1,0}	},
+		{	{1,-1,1},	{1,0,0}	,	{1,1}	}
 	};
 
 	DIndex indices[] = {
@@ -177,7 +177,7 @@ Mesh* BufferFactory::createBoxMesh()
 
 
 	Mesh* newBox = new Mesh(createVertexBuffer(&mesh[0],
-							sizeof(mesh)/sizeof(PTNVertex)),
+							sizeof(mesh)/sizeof(PNTVertex)),
 							createIndexBuffer(&indices[0],
 							sizeof(indices)/sizeof(DIndex)));
 
@@ -190,7 +190,8 @@ Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob,
 									   unsigned int p_numberOfVertices, 
 									   unsigned int p_numberOfIndices )
 {
-	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PTNVertex*>(p_vertexBlob),
+	int x = sizeof(DIndex);
+	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PNTVertex*>(p_vertexBlob),
 												p_numberOfVertices),
 							 createIndexBuffer(static_cast<DIndex*>(p_indexBlob),
 												p_numberOfIndices) 

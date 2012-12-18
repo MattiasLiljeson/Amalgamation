@@ -105,20 +105,20 @@ private:
 	void createPTVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
 	///-----------------------------------------------------------------------------------
-	/// Creates a inputlayout for PTNVertex
+	/// Creates a inputlayout for PNTVertex
 	/// \param p_vs
 	/// \param p_inputLayout
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void createPTNVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+	void createPNTVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
 	///-----------------------------------------------------------------------------------
-	/// Creates a inputlayout for Instanced PTNVertex
+	/// Creates a inputlayout for Instanced PNTVertex
 	/// \param p_vs
 	/// \param p_inputLayout
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void createInstancedPTNVertexInputLayout(VSData* p_vs, 
+	void createInstancedPNTVertexInputLayout(VSData* p_vs, 
 											 ID3D11InputLayout** p_inputLayout);
 
 private:

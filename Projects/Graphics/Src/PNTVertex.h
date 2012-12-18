@@ -1,19 +1,19 @@
 // =======================================================================================
-//                                      PTNVertex
+//                                      PNTVertex
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	A basic struct containing Position Texture Normal 
+/// \brief	A basic struct containing Position Normal Texture
 ///        
-/// # PTNVertex
+/// # PNTVertex
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-struct PTNVertex
+struct PNTVertex
 {
 	float pos[3];
+	float normal[3];	
 	float texCoord[2];
-	float normal[3];
 };

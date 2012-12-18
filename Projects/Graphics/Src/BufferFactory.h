@@ -15,7 +15,7 @@
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "PTVertex.h"
-#include "PTNVertex.h"
+#include "PNTVertex.h"
 #include "DIndex.h"
 #include "Mesh.h"
 // #include "TextureBuffers.h"
@@ -51,9 +51,9 @@ public:
 	/// Constructs a vertex buffer.
 	/// \param p_vertices
 	/// \param p_numberOfElements
-	/// \return Buffer<PTNVertex>*
+	/// \return Buffer<PNTVertex>*
 	///-----------------------------------------------------------------------------------
-	Buffer<PTNVertex>* createVertexBuffer(PTNVertex* p_vertices,
+	Buffer<PNTVertex>* createVertexBuffer(PNTVertex* p_vertices,
 										  unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------

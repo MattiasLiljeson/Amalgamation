@@ -1,6 +1,6 @@
 #include "AglReader.h"
 
-AglReader::AglReader(char* p_path)
+AglReader::AglReader(const char* p_path)
 {
 	m_scene = new AglScene();
 	AglSceneDesc desc;

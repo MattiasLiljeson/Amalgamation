@@ -97,9 +97,6 @@
     <ClInclude Include="PTVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
-    <ClInclude Include="PTNVertex.h">
-      <Filter>Renderer\Vertices</Filter>
-    </ClInclude>
     <ClInclude Include="DIndex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
@@ -110,6 +107,9 @@
       <Filter>Renderer\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsWrapper.h" />
+    <ClInclude Include="PNTVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

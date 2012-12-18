@@ -15,6 +15,7 @@
 #include <d3d11.h>
 #include <ResourceManager.h>
 #include <Globals.h>
+#include <AglReader.h>
 #include "BufferFactory.h"
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"

@@ -175,11 +175,20 @@ void GraphicsWrapper::flipBackBuffer()
 unsigned int GraphicsWrapper::createMesh( const string& p_name,
 										  const string* p_path/*=NULL*/ )
 {
+	// =============================================
+	//
+	// WORK IN PROGRESS.
+	// Will need refactoring.
+	//
+	// =============================================
 	// check if resource already exists
 	unsigned int meshResultId = 0;
 	int meshFoundId = m_meshManager->getResourceId(p_name);
 	if (meshFoundId==-1)  // if it does not exist, create new
 	{
+		// =============================================
+		// PRIMITIVES
+		// =============================================
 		if (p_name=="P_cube")
 		{
 			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
@@ -194,8 +203,52 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			mesh->setTextureId(texId);
 		}
 		else
+		// =============================================
+		// MODEL FILES
+		// =============================================
 		{
-			// load from path instead
+			// Construct path for loading
+			string fullPath;
+			if (p_path!=NULL) fullPath = *p_path;
+			fullPath += p_name;
+			// read file and extract scene
+			AglReader meshReader(fullPath.c_str());
+			AglScene* aglScene = meshReader.getScene();
+			//
+			if (aglScene)
+			{ 
+				// only handle one mesh for now.
+				AglMesh* aglMesh = aglScene->getMeshes()[0];
+				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
+				// Raw data extraction
+				void* vertices = aglMesh->getVertices();
+				void* indices = static_cast<void*>(aglMesh->getIndices());
+				unsigned int numVertices = static_cast<unsigned int>(aglMeshHeader.vertexCount);
+				unsigned int numIndices =  static_cast<unsigned int>(aglMeshHeader.indexCount);
+				// Internal mesh format creation
+				Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
+																numVertices,
+																numIndices);   
+				// put in manager
+				meshResultId = m_meshManager->addResource(p_name,mesh);	
+				// (Here you might want to do similar checks for textures/materials
+				// For now we have a hard coded texture path, but later on
+				// we probably get this path from a mesh file loader or similar.
+				unsigned int texId = createTexture("testtexture.png",TESTTEXTUREPATH);
+				// and their managers.)
+				// ...
+				// and then set the resulting data to the mesh
+				mesh->setTextureId(texId);
+			}
+			else
+			{
+				// fallback mesh and texture
+				Mesh* mesh = m_bufferFactory->createBoxMesh();
+				meshResultId = m_meshManager->addResource(p_name,mesh);
+				unsigned int texId = createTexture("mesherror.png",TEXTUREPATH);
+				mesh->setTextureId(texId);
+			}
+
 		}
 	}
 	else // the mesh already exists

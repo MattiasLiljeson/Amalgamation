@@ -142,6 +142,9 @@
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
+    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="Impulse.h" />
+    <ClInclude Include="ImpulseSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -211,6 +214,9 @@
     <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
