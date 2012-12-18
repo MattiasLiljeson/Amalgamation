@@ -1,7 +1,10 @@
 #include "RigidBodyBox.h"
 #include "RigidBodyConvexHull.h"
 #include "RigidBodySphere.h"
+#include "RigidBodyMesh.h"
 #include "PhyUtility.h"
+
+extern bool theGlobal;
 
 //----------------------------PRIMARY COLLISION FUNCTIONS---------------------------------
 
@@ -121,6 +124,8 @@ bool CheckCollision(RigidBodySphere* p_sphere1, RigidBodySphere* p_sphere2,
 ///-----------------------------------------------------------------------------------
 bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box); 
 
+bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box); 
+
 ///-----------------------------------------------------------------------------------
 /// Checks collision between a sphere and an OBB
 /// \param p_sphere The Sphere
@@ -196,7 +201,14 @@ bool CheckCollision(RigidBodyConvexHull* p_hull1, RigidBodyConvexHull* p_hull2,
 bool CheckCollision(RigidBodyBox* p_box, RigidBodyConvexHull* p_hull, 
 						PhyCollisionData* p_collisionData);
 
+bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData);
 
+bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData);
+
+bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData);
 
 //--------------------------------SUPPORT FUNCTIONS---------------------------------------
 

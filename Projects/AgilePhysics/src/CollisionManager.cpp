@@ -1,6 +1,8 @@
 #include "CollisionManager.h"
 #include "GJKSolver.h"
 
+bool theGlobal = false;
+
 bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 {
 	//Do a bounding sphere check to provide early outs.
@@ -26,6 +28,14 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 		return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyConvexHull*)p_r1, p_data);
 	else if (p_r2->GetType() == CONVEXHULL && p_r1->GetType() == SPHERE)
 		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyConvexHull*)p_r2, p_data);
+	else if (p_r1->GetType() == SPHERE && p_r2->GetType() == MESH)
+	{
+		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyMesh*)p_r2, p_data);
+	}
+	else if (p_r1->GetType() == MESH && p_r2->GetType() == SPHERE)
+	{
+		return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyMesh*)p_r1, p_data);
+	}
 	else
 		return false;
 }
@@ -314,6 +324,42 @@ bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
     }
     return false;
 }
+
+bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box)
+{
+	//Find the closest point on the box to the sphere
+	AglVector3 point = p_box.world.GetTranslation();
+	AglVector3 dir = p_sphere.position - point;
+
+	vector<AglVector3> axes;
+	axes.push_back(p_box.world.GetRight());
+	axes.push_back(p_box.world.GetUp());
+	axes.push_back(p_box.world.GetForward());
+	AglVector3 size = p_box.size*0.5f;
+
+	//Axis 1
+	float proj = AglVector3::dotProduct(dir, axes[0]);
+	proj = max(min(proj, size.x), -size.x);
+	point += axes[0] * proj;
+
+	//Axis 2
+	proj = AglVector3::dotProduct(dir, axes[1]);
+	proj = max(min(proj, size.y), -size.y);
+	point += axes[1] * proj;
+
+	//Axis 3
+	proj = AglVector3::dotProduct(dir, axes[2]);
+	proj = max(min(proj, size.z), -size.z);
+	point += axes[2] * proj;
+
+	//Check the distance to this closest point
+	if (AglVector3::lengthSquared(p_sphere.position - point) < p_sphere.radius * p_sphere.radius)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool CheckCollision(AglBoundingSphere pSphere, AglVector3 pMin, AglVector3 pMax)
 {
 	AglVector3 point = (pMax+pMin)*0.5f;
@@ -654,6 +700,39 @@ bool CheckCollision(RigidBodyBox* pB, RigidBodyConvexHull* pH, PhyCollisionData*
 	return false;
 }
 
+bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
+	if (CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB()))
+	{
+		EPACollisionData epaCol;
+		if (p_mesh->EvaluateSphere(p_sphere, &epaCol))
+		{
+			p_collisionData->Body2 = p_sphere;
+			p_collisionData->Body1 = p_mesh;
+			pair<AglVector3, AglVector3> contact;
+			AglVector3 dir = epaCol.Normal;
+			AglVector3::normalize(dir);
+			contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
+			contact.first = contact.second + dir * epaCol.Depth;
+			p_collisionData->Contacts.push_back(contact);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
+	return false;
+}
+
+bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
+					PhyCollisionData* p_collisionData)
+{
+	return false;
+}
 
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------
 float OverlapAmount(RigidBodyBox* pB1, RigidBodyBox* pB2, AglVector3 pAxis)

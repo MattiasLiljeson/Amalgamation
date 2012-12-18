@@ -62,6 +62,13 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 	mUserControlled = pUserControlled;
 	mTempStatic = false;
 	mParent = NULL;
+
+	/*if (pPosition.z == -40)
+	{
+		AglQuaternion quat = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 1, 0), 1.0f);
+		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
+	}*/
+
 	calcInvInertia();
 }
 RigidBody::~RigidBody()
