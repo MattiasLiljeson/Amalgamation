@@ -23,7 +23,7 @@ public:
 	/// Desc
 	/// \param int p_numComponents Number of component types passed.
 	/// \param ... Component types that are seen as an aspect by the System.
-	/// \returns
+	/// \return
 	///-----------------------------------------------------------------------------------
 	Aspect( int p_numComponents, ... );
 

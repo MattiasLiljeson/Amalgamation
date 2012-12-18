@@ -11,14 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicSoundCreationInfo.h" />
     <ClInclude Include="AudioCurves.h" />
-    <ClInclude Include="AudioEngineCreatorh.h" />
     <ClInclude Include="PositionalSound.h" />
     <ClInclude Include="PositionalSoundInfo.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="PositionalSoundCreationInfo.h" />
     <ClInclude Include="SoundDefines.h" />
     <ClInclude Include="SoundFactory.h" />
-    <ClInclude Include="SoundSceneInfo.h" />
+    <ClInclude Include="SoundEnums.h" />
+    <ClInclude Include="SoundOrientation.h" />
     <ClInclude Include="SoundWrapper.h" />
     <ClInclude Include="XAudio2Exception.h" />
   </ItemGroup>
@@ -62,15 +64,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(SolutionDir)Projects\AgileUtility\src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(SolutionDir)Projects\AgileUtility\Lib\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(SolutionDir)Projects\AgileUtility\src\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(SolutionDir)Projects\AgileUtility\Lib\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +87,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_$(PlatformShortName)_$(Configuration).lib;X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,7 +107,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgileUtility_$(PlatformShortName)_$(Configuration).lib;X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

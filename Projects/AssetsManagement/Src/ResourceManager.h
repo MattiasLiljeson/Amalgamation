@@ -25,35 +25,35 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Clear the entire resource map and all its data.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clear();
 
 	///-----------------------------------------------------------------------------------
 	/// Get resource data by its name. Uses a map to access the data.
 	/// \param p_uniqueName
-	/// \returns T*
+	/// \return T*
 	///-----------------------------------------------------------------------------------
 	T* getResource(const string& p_uniqueName);
 
 	///-----------------------------------------------------------------------------------
 	/// Get resource data by its id. Uses an UniqueIndexList to access the data O(1);
 	/// \param p_uniqueId
-	/// \returns T*
+	/// \return T*
 	///-----------------------------------------------------------------------------------
 	T* getResource(unsigned int p_uniqueId);
 
 	///-----------------------------------------------------------------------------------
 	/// Get resource data by its id. Uses an UniqueIndexList to access the data O(1);
 	/// \param p_uniqueId
-	/// \returns T*
+	/// \return T*
 	///-----------------------------------------------------------------------------------
 	T* operator[](unsigned int p_uniqueId);
 
 	///-----------------------------------------------------------------------------------
 	/// Get the id of resource data by its name. Uses a map to access the data.
 	/// \param p_uniqueName
-	/// \returns unsigned int
+	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
 	int getResourceId(const string& p_uniqueName);
 
@@ -61,7 +61,7 @@ public:
 	/// Get the name of resource data by its id. 
 	/// Uses an UniqueIndexList to access the data O(1).
 	/// \param p_uniqueId
-	/// \returns const string&
+	/// \return const string&
 	///-----------------------------------------------------------------------------------
 	const string& getResourceName(unsigned int p_uniqueId);
 
@@ -70,14 +70,14 @@ public:
 	/// exist. If it does, the index of the existing data is returned.
 	/// \param p_uniqueName
 	/// \param p_resourceObj
-	/// \returns unsigned int
+	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
 	unsigned int addResource(const string& p_uniqueName, T* p_resourceObj);
 
 	///-----------------------------------------------------------------------------------
 	/// Remove a resource by its name. Uses a map to access the data.
 	/// \param p_uniqueName
-	/// \returns bool
+	/// \return bool
 	///-----------------------------------------------------------------------------------
 	bool removeResource(const string& p_uniqueName);
 
@@ -85,7 +85,7 @@ public:
 	/// Remove a resource by its id. Uses a map to access the data. 
 	/// Uses an UniqueIndexList to access the data O(1).
 	/// \param p_uniqueId
-	/// \returns bool
+	/// \return bool
 	///-----------------------------------------------------------------------------------
 	bool removeResource(unsigned int p_uniqueId);
 private:
@@ -109,7 +109,7 @@ private:
 	/// Help method used in order to get the resource data container from its name.
 	/// ResourceDataContainer is only used internally.
 	/// \param p_uniqueName
-	/// \returns ResourceDataContainer*
+	/// \return ResourceDataContainer*
 	///-----------------------------------------------------------------------------------
 	ResourceDataContainer* getResourceContainerFromName(const string& p_uniqueName);
 

@@ -6,4 +6,8 @@ bool GLOWON = true;
 bool NORMALON = true;
 float MOUSEWHEELDELTA = 0;
 
-CoordinateSystem COSYSTEM = CoordinateSystem::DX;
+SphereMesh* SPHEREMESH = 0;
+BoxMesh* BOXMESH = 0;
+
+bool DRAWDEBUGBOX = false;
+bool DRAWDEBUGSPHERE = false;

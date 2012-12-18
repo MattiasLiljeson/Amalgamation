@@ -83,6 +83,7 @@ ID3D11InputLayout* SkeletonMeshShader::GetInputLayout()
 }
 void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pProjection, float pScale, AglSkeleton* pSkeleton, AglMaterial pMaterial)
 {
+	AglMatrix inv = Scene::m_avoidJump.inverse();
 	pWorld = AglMatrix::transpose(pWorld);
 	pView = AglMatrix::transpose(pView);
 	pProjection = AglMatrix::transpose(pProjection);
@@ -98,11 +99,12 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	buffer->Projection = pProjection;
 	buffer->Scale = pScale;
 	buffer->TextureScale = pMaterial.textureScale;
-	
+
 	unsigned int jointCount = pSkeleton->getHeader().jointCount;
 	for (unsigned int i = 0; i < jointCount; i++)
 	{
 		AglMatrix am = pSkeleton->getInverseBindMatrix(i) * pSkeleton->getGlobalTransform(i);
+		//am *= inv;
 		am = AglMatrix::transpose(am);
 		buffer->Palette[i] = am;
 	}

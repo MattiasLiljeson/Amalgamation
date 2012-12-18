@@ -62,6 +62,7 @@ InputHelper::KEY_STATE InputHelper::calcStateFromEvents(
 	const InputHelper::KEY_STATE p_oldState, const bool p_pressed, const bool p_released )
 {
 	InputHelper::KEY_STATE state = KEY_UP;
+	//static bool dbg = false;
 	if( p_pressed )
 	{
 		state = KEY_PRESSED;
@@ -73,10 +74,19 @@ InputHelper::KEY_STATE InputHelper::calcStateFromEvents(
 	else
 	{
 		if( p_oldState == KEY_PRESSED )
+		{
 			state = KEY_DOWN;
-
+			//dbg = true;
+		}
 		else if( p_oldState == KEY_RELEASED )
+		{
 			state = KEY_UP;
+		}
+		else if( p_oldState == KEY_UP )
+		{
+			// THIS SHOULD NEVER HAPPEN!
+			state = KEY_UP;
+		}
 	}
 
 	return state;

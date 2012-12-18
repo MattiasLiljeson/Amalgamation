@@ -13,7 +13,7 @@ MouseBtnControl::~MouseBtnControl()
 
 void MouseBtnControl::update( InputManager* p_manager )
 {
-	MessageLoopFetcher* fetcher = p_manager->getMessageLoopFetcher();
+	IMouseKeyboardFetcher* fetcher = p_manager->getMouseKeyboardFetcher();
 	InputHelper::KEY_STATE state = fetcher->getMouseBtnState( m_btn );
 
 	m_status = InputHelper::statusFromState( state );

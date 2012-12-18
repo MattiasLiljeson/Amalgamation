@@ -32,7 +32,7 @@ public:
 	void DetachChild(RigidBody* pRigidBody);
 	float GetMass();
 	float GetInvMass();
-	AglMatrix GetWorld();
+	AglMatrix GetWorld() const;
 	AglVector3 GetVelocity();
 	AglVector3 GetAngularVelocity();
 	AglVector3 GetCenterOfMass();

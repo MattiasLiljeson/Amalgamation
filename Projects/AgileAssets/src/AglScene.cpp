@@ -52,6 +52,7 @@ AglNode AglScene::getNode(int p_index)
 {
 	return m_nodes[p_index];
 }
+
 AglAnimationLayer* AglScene::getAnimationLayer(int p_index)
 {
 	return m_animationLayers[p_index];

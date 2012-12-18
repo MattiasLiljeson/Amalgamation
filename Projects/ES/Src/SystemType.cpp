@@ -24,7 +24,7 @@ bitset<SystemType::NUM_SYSTEM_TYPES> SystemType::getBit()
 	return m_bit;
 }
 
-int SystemType::getIndex()
+SystemType::SystemTypeIdx SystemType::getIndex()
 {
 	return m_idx;
 }

@@ -13,11 +13,12 @@
 
 #include <TcpClient.h>
 #include <EntitySystem.h>
+#include "InputBackendSystem.h"
 
 class NetworkConnectToServerSystem: public EntitySystem
 {
 public:
-	NetworkConnectToServerSystem( TcpClient* p_tcpClient );
+	NetworkConnectToServerSystem( TcpClient* p_tcpClient,  InputBackendSystem* p_inputBackend  );
 
 	~NetworkConnectToServerSystem();
 
@@ -27,5 +28,6 @@ public:
 
 private:
 	TcpClient* m_tcpClient;
+	InputBackendSystem* m_inputBackend;
 
 };

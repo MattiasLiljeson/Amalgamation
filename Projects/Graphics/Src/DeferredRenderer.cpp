@@ -89,7 +89,7 @@ void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
 
 
 void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture, 
-										   Buffer<InstanceVertex>* p_instanceBuffer )
+										   Buffer<InstanceData>* p_instanceBuffer )
 {
 	// Specialized, external apply of these buffers
 	// since instanced drawing required a "combined"

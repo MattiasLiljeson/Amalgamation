@@ -1,7 +1,7 @@
 #include "GraphicsBackendSystem.h"
 
 GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth, int p_scrHeight,
-											 bool p_windowed  ) : EntitySystem( SystemType::RenderPrepSystem )
+											 bool p_windowed  ) : EntitySystem( SystemType::GraphicsBackendSystem )
 {
 	m_hInstance = p_hInstance;
 	m_scrWidth = p_scrWidth;
@@ -24,7 +24,7 @@ void GraphicsBackendSystem::initialize()
 	{
 		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
 		m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), m_scrWidth, m_scrHeight, true );
-		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken Bar" );
+		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
 		m_graphicsWrapper->hookUpAntTweakBar();
 	}
 	catch( exception &e )
@@ -46,4 +46,9 @@ int GraphicsBackendSystem::getMeshId( string p_meshName )
 GraphicsWrapper* GraphicsBackendSystem::getGfxWrapper()
 {
 	return m_graphicsWrapper;
+}
+
+HWND GraphicsBackendSystem::getWindowRef()
+{
+	return m_window->getWindowRef();
 }

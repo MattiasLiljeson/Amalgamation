@@ -1,12 +1,11 @@
 #pragma once
-
-/// Not used. Struct defining different types of input.
-
-//struct InputType
+//
+//struct InputTypeStruct
 //{
-//	enum 
+//	enum Types
 //	{ 
-//		IT_MOUSE,
+//		IT_MOUSE_MOVE,
+//		IT_MOUSE_BTN,
 //		IT_KEYBOARD,
 //		IT_XINPUT_DIGITAL,
 //		IT_XINPUT_ANALOG

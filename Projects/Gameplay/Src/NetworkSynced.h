@@ -12,30 +12,40 @@
 #pragma once
 
 #include <Component.h>
+#include "NetworkType.h"
 
 class NetworkSynced: public Component
 {
 public:
 	///-----------------------------------------------------------------------------------
 	/// Sets the networkIdentity and owner to -1 (unspecified).
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced()
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
+		m_networkType.type = NetworkType::NON_EXISTENT;
 	}
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the private networkIdentity to argument's value.
 	/// Sets the private owner to argument's value.
 	/// \param p_networkIdentity
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced( int p_networkIdentity, int p_owner )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
+		m_networkType.type = NetworkType::NON_EXISTENT;
+	}
+
+	NetworkSynced( int p_networkIdentity, int p_owner, NetworkType::Network_T p_networkType )
+	{
+		m_networkIdentity = p_networkIdentity;
+		m_owner = p_owner;
+		m_networkType.type = p_networkType;
 	}
 
 	~NetworkSynced()
@@ -44,7 +54,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the component's networkIdentity.
-	/// \returns int
+	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getNetworkIdentity() const
 	{
@@ -53,7 +63,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the component's owner.
-	/// \returns int
+	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getNetworkOwner() const
 	{
@@ -61,9 +71,18 @@ public:
 	}
 
 	///-----------------------------------------------------------------------------------
+	/// Get the network type.
+	/// \return NetworkType
+	///-----------------------------------------------------------------------------------
+	NetworkType::Network_T getNetworkType() const
+	{
+		return m_networkType.type;
+	}
+
+	///-----------------------------------------------------------------------------------
 	/// Set the private networkIdentity.
 	/// \param p_networkIdentity
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setNetworkIdentity( int p_networkIdentity )
 	{
@@ -73,14 +92,20 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Set the private owner.
 	/// \param p_owner
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setNetworkOwner( int p_owner )
 	{
 		m_owner = p_owner;
 	}
 
+	void setNetworkType( NetworkType::Network_T p_networkType )
+	{
+		m_networkType.type = p_networkType;
+	}
+
 private:
 	int m_networkIdentity;
 	int m_owner;
+	NetworkType m_networkType;
 };

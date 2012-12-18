@@ -43,13 +43,18 @@ public:
 
 	void processMessages();
 
+	int getId();
+	int* getIdPointer();
+	void setId( int p_id );
+
 private:
 	boost::asio::io_service* m_ioService;
 
 	int m_numConnections;
-
 	TcpCommunicationProcess* m_communicationProcess;
 
 	queue< Packet > m_newPackets;
+
+	int m_id;
 
 };

@@ -82,7 +82,7 @@ vector<PhyPlane> RigidBodyConvexHull::GetPlanes()
 		}
 	}
 	vector<AglVector3> verts = mPointsWorld;
-	vector<int> ind = mShape->GetIndices();
+	vector<unsigned int> ind = mShape->GetIndices();
 
 	vector<PhyPlane> planes;
 	for (unsigned int i = 0; i < ind.size(); i+=3)

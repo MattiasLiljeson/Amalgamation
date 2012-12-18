@@ -1,18 +1,18 @@
 #include "InputManager.h"
 
 
-InputManager::InputManager( MessageLoopFetcher* p_mlFetcher, XInputFetcher* p_xiFetcher )
+InputManager::InputManager( IMouseKeyboardFetcher* p_mlFetcher, XInputFetcher* p_xiFetcher )
 {
-	m_mlFetcher = p_mlFetcher;
-	m_xiFetcher = p_xiFetcher;
+	m_mouseKeyboardFetcher = p_mlFetcher;
+	m_xInputFetcher = p_xiFetcher;
 }
 
 InputManager::~InputManager()
 {
-	delete m_mlFetcher;
-	m_mlFetcher = NULL;
-	delete m_xiFetcher;
-	m_xiFetcher = NULL;
+	delete m_mouseKeyboardFetcher;
+	m_mouseKeyboardFetcher = NULL;
+	delete m_xInputFetcher;
+	m_xInputFetcher = NULL;
 
 	for( unsigned int i=0; i<m_controls.size(); i++)
 	{
@@ -35,25 +35,25 @@ Control* InputManager::getControl( int p_idx )
 		return NULL;
 }
 
-MessageLoopFetcher* InputManager::getMessageLoopFetcher() const
+IMouseKeyboardFetcher* InputManager::getMouseKeyboardFetcher() const
 {
-	return m_mlFetcher;
+	return m_mouseKeyboardFetcher;
 }
 
 XInputFetcher* InputManager::getXInputFetcher() const
 {
-	return m_xiFetcher;
+	return m_xInputFetcher;
 }
 
 void InputManager::update()
 {
-	if( m_mlFetcher != NULL )
+	if( m_mouseKeyboardFetcher != NULL )
 	{
-		m_mlFetcher->update();
+		m_mouseKeyboardFetcher->update();
 	}
-	if( m_xiFetcher != NULL )
+	if( m_xInputFetcher != NULL )
 	{
-		m_xiFetcher->update();
+		m_xInputFetcher->update();
 	}
 	for( unsigned int i=0; i<m_controls.size(); i++)
 		m_controls[i]->update( this );

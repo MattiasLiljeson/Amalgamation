@@ -16,6 +16,7 @@
 #include <iostream>
 #include <queue>
 #include <boost/asio.hpp>
+#include <vector>
 
 #include <SystemType.h>
 #include <EntitySystem.h>
@@ -23,6 +24,11 @@
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
 #include <TcpServer.h>
+#include <DebugUtil.h>
+#include <ToString.h>
+
+#include "PacketType.h"
+#include "NetworkType.h"
 
 // Components:
 #include "Transform.h"
@@ -38,7 +44,6 @@ public:
 	NetworkListenerSystem( TcpServer* p_server );
 	~NetworkListenerSystem();
 
-	virtual void process();
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();

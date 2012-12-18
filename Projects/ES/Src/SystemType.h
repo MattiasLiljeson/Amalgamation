@@ -12,18 +12,24 @@ public:	//Enums
 	{
 		NON_EXISTING = -1,
 		EntitySystem,
-		TestSystem,
-		TestSystem2,
+		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
 		NetworkListenerSystem,
 		NetworkInputHandlerSystem,
 		NetworkConnectoToServerSystem,
+		NetworkCommunicatorSystem,
+		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
-		GraphicsBackendSystem,
+		InputBackendSystem,
+		ShipControllerSystem,
+		ImpulseSystem,
+		AudioBackendSystem,
+		AudioControllerSystem,
+		AudioListenerSystem,
 		NUM_SYSTEM_TYPES
 	};
 
@@ -41,7 +47,7 @@ public:
 	static bitset<NUM_SYSTEM_TYPES> getBitFor( SystemTypeIdx p_system );
 
 	bitset<NUM_SYSTEM_TYPES> getBit();
-	int getIndex();
+	SystemTypeIdx getIndex();
 
 private:
 

@@ -32,6 +32,8 @@ private:
 	static Scene* sInstance;
 
 	vector<Mesh*> mMeshes;
+	vector<AglVector3> mSphereColors;
+	vector<AglVector3> mBoxColors;
 	vector<SkeletonMesh*> mSkeletonMeshes;
 	vector<SkeletonMapping*> mSkeletonMappings;
 
@@ -44,7 +46,10 @@ private:
 	AglQuaternion mQuaternionRotation;
 	AglVector3 mPosition;
 
-	AglMatrix m_world;
+public:
+	static AglMatrix m_world;
+	static AglMatrix m_avoidJump;
+private:
 	int mCurrentAnimation;
 
 	string mFolder;

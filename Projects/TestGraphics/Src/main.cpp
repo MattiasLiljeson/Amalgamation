@@ -5,7 +5,6 @@
 #include "AntTweakBarWrapper.h"
 #include "Window.h"
 #include "GraphicsWrapper.h"
-#include <CamMatrixerUtil.h>
 #include <DebugUtil.h>
 
 // temporary usage of these in main for mesh creation
@@ -20,6 +19,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 {
 	Window* window;
 	GraphicsWrapper* graphicsWrapper;
+
+	SetThreadAffinityMask(GetCurrentThread(), 1);
 
 	TextureParser::init();
 
@@ -47,12 +48,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
 
 	// Create a shitload of instances
-	vector<InstanceVertex>* instances = new vector<InstanceVertex>();
+	vector<InstanceData>* instances = new vector<InstanceData>();
 	for (int i=0;i<100;i++)
 	{
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 				0.0f,1.0f,0.0f,  0.0f,
 				0.0f,0.0f,1.0f,  0.0f,
 				0.0f,0.0f,0.0f,  1.0f};
@@ -60,7 +61,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 	
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f, -3.0f-(float)i*2.3f,
 				0.0f,1.0f,0.0f,  0.0f,
 				0.0f,0.0f,1.0f,  2.0f,
 				0.0f,0.0f,0.0f,  1.0f};
@@ -68,7 +69,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f, 3.0f+(float)i*2.3f,
 			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  0.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -76,7 +77,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 			0.0f,1.0f,0.0f,  0.0f,
 			0.0f,0.0f,1.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -84,7 +85,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
+			InstanceData t={1.0f,0.0f,0.0f,  3.0f+(float)i*2.3f,
 				0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  -(float)i*2.3f-2.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -92,7 +93,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		}
 
 		{
-			InstanceVertex t={1.0f,0.0f,0.0f,  0.0f,
+			InstanceData t={1.0f,0.0f,0.0f,  0.0f,
 			0.0f,1.0f,0.0f,  (float)i*2.3f+2.0f,
 			0.0f,0.0f,1.0f,  -2.0f,
 			0.0f,0.0f,0.0f,  1.0f};
@@ -110,8 +111,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	AglVector3 lookAt(0.0f,0.0f,0.0f);
 	AglVector3 up(0.0f,1.0f,0.0f);
 
-	MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
-	MatrixHelper::SetProjMatrix(projMatrix,3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
+	viewMatrix = AglMatrix::createViewMatrix(pos, lookAt, up);
+	projMatrix = AglMatrix::createPerspectiveMatrix(3.14f/2.0f,800.0f/600.0f,0.1f,100.0f);
 
 	camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 
@@ -143,7 +144,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 				pos.x = sin(ticker);
 				pos.y = -2.0f-cos(ticker);
 
-				MatrixHelper::SetLookAtMatrix(viewMatrix, pos, lookAt, up);
+				viewMatrix = AglMatrix::createViewMatrix(pos, lookAt, up);
 
 				camMatrix = AglMatrix::transpose(AglMatrix::identityMatrix()*viewMatrix*projMatrix);
 

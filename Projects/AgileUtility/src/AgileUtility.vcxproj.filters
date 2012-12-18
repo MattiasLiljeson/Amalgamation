@@ -13,6 +13,9 @@
     <ClInclude Include="AglVector3.h" />
     <ClInclude Include="AglVector4.h" />
     <ClInclude Include="Eigen.h" />
+    <ClInclude Include="AglHull.h" />
+    <ClInclude Include="AglBoxMesh.h" />
+    <ClInclude Include="AglSphereMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AglAABB.cpp" />
@@ -26,5 +29,8 @@
     <ClCompile Include="AglVector3.cpp" />
     <ClCompile Include="AglVector4.cpp" />
     <ClCompile Include="Eigen.cpp" />
+    <ClCompile Include="AglHull.cpp" />
+    <ClCompile Include="AglBoxMesh.cpp" />
+    <ClCompile Include="AglSphereMesh.cpp" />
   </ItemGroup>
 </Project>

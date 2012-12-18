@@ -12,6 +12,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include <InstanceData.h>
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"
 #include "Buffer.h"
@@ -19,7 +20,7 @@
 #include "BufferFactory.h"
 #include "PTVertex.h"
 #include "PTNVertex.h"
-#include "InstanceVertex.h"
+
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -38,7 +39,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Clear the buffers used by the deferred renderer.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clearBuffers();
 
@@ -46,13 +47,13 @@ public:
 	/// Sets the scene info, which can be regarded as "global" information to be used 
 	/// when rendering. For example a world-view-projection matrix.
 	/// \param p_sceneInfo
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Set the gbuffer as render target.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginDeferredBasePass();
 
@@ -60,7 +61,7 @@ public:
 	/// Render mesh data
 	/// \param p_mesh
 	/// \param p_texture
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMesh(Mesh* p_mesh,
 		Texture* p_texture);
@@ -70,15 +71,15 @@ public:
 	/// \param p_mesh
 	/// \param p_texture
 	/// \param p_instanceBuffer
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMeshInstanced(Mesh* p_mesh,
 							 Texture* p_texture, 
-							 Buffer<InstanceVertex>* p_instanceBuffer );
+							 Buffer<InstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a fullscreen quad textured with the gbuffer.
-	/// \returns void
+	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
 	void hookUpAntTweakBar();

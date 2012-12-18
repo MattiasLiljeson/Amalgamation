@@ -12,7 +12,7 @@ KeyControl::~KeyControl(void)
 
 void KeyControl::update( InputManager* p_manager )
 {
-	MessageLoopFetcher* fetcher = p_manager->getMessageLoopFetcher();
+	IMouseKeyboardFetcher* fetcher = p_manager->getMouseKeyboardFetcher();
 	InputHelper::KEY_STATE state = fetcher->getKeyState( m_key );
 
 	m_status = InputHelper::statusFromState( state );

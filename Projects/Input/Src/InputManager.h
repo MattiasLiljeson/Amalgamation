@@ -1,10 +1,11 @@
 #pragma once
 
+
 #include "Control.h"
 #include "DirectInputFetcher.h"
+#include "IMouseKeyboardFetcher.h"
 #include "MessageLoopFetcher.h"
 #include "XInputFetcher.h"
-
 #include <vector>
 
 class Control;
@@ -40,7 +41,7 @@ public:
 	/// them in its destructor.
 	///\param p_mlFetcher The Message Loop fetcher to be used by the manager.
 	///\param p_xiFetcher The xInput fetcher to be used by the manager.
-	InputManager( MessageLoopFetcher* p_mlFetcher, XInputFetcher* p_xiFetcher );
+	InputManager( IMouseKeyboardFetcher* p_mlFetcher, XInputFetcher* p_xiFetcher );
 	~InputManager();
 
 	/// @brief Adds a Control to the manager.
@@ -55,7 +56,7 @@ public:
 	Control* getControl( int p_idx );
 
 	/// @brief getters used by controls to update themselves
-	MessageLoopFetcher* getMessageLoopFetcher() const;
+	IMouseKeyboardFetcher* getMouseKeyboardFetcher() const;
 	XInputFetcher* getXInputFetcher() const;
 	void update();
 
@@ -63,7 +64,8 @@ private:
 	static const int DIGITAL_ID_OFFSET = INT_MAX/2;
 	vector<Control*> m_controls;
 
-	MessageLoopFetcher* m_mlFetcher;
-	XInputFetcher* m_xiFetcher;
+	IMouseKeyboardFetcher* m_mouseKeyboardFetcher;
+	XInputFetcher* m_xInputFetcher;
+
 };
 

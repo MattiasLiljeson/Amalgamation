@@ -54,6 +54,9 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
+		TwAddVarRW(sceneDialog->m_dialog, "Sphere", TW_TYPE_BOOLCPP, &DRAWDEBUGSPHERE, "group='Debug'");
+		TwAddVarRW(sceneDialog->m_dialog, "Box", TW_TYPE_BOOLCPP, &DRAWDEBUGBOX, "group='Debug'");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)

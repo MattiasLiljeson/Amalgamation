@@ -18,8 +18,8 @@ private:
 	bool mDown;
 
 	//HACK: TEMP TEMP TEMP FUCKING TEMP!!
-	CompoundBody* Avatar;
-	RigidBody* toDetach;
+	int Avatar;
+	int toDetach;
 
 	Point PreviousMousePos;
 	Point CurrentMousePos;

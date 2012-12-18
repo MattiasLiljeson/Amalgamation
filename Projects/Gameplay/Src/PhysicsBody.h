@@ -19,8 +19,6 @@ public:
 	PhysicsBody()
 	{
 		m_id = -1;
-		m_position = AglVector3(0, 0, 0);
 	}
 	int m_id;
-	AglVector3 m_position;
 };

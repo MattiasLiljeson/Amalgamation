@@ -19,7 +19,7 @@ class NetworkClientControllable: public Component
 public:
 	///-----------------------------------------------------------------------------------
 	/// Sets private clientIdentity to -1 (not specified).
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkClientControllable()
 	{
@@ -29,7 +29,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Sets private clientIdentity to argument's value.
 	/// \param p_clientIdentity
-	/// \returns 
+	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkClientControllable( int p_clientIdentity )
 	{

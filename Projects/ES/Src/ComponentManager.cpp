@@ -101,7 +101,7 @@ Component* ComponentManager::getComponent( int p_entityIdx, ComponentType p_type
 Component* ComponentManager::getComponent( int p_entityIdx,
 										  ComponentType::ComponentTypeIdx p_typeIdx )
 {
-	if(m_componentsByType[p_typeIdx].empty() != true)
+	if(m_componentsByType[p_typeIdx].size() > p_entityIdx)
 	{
 		return m_componentsByType[p_typeIdx][p_entityIdx];
 	}
@@ -124,7 +124,7 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 {
 	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits =
 		p_entity->getComponentBits();
-	for(unsigned int i=0; i<componentBits.size(); i++ )
+	for(unsigned int i=0; i<m_componentsByType.size(); i++ )
 	{
 		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{

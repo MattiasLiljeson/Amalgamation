@@ -9,7 +9,7 @@ DebugHull::DebugHull(ConvexHullShape* p_shape, ID3D11Device* p_device, ID3D11Dev
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 
-	vector<int> shapeInd = p_shape->GetIndices();
+	vector<unsigned int> shapeInd = p_shape->GetIndices();
 	vector<AglVector3> shapeVert = p_shape->GetVertices();
 
 	VertexPC* v = new VertexPC[shapeInd.size()];

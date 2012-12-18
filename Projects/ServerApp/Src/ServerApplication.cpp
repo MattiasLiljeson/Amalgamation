@@ -8,6 +8,7 @@ ServerApplication::ServerApplication()
 
 	m_world = new EntityWorld();
 	initSystems();
+	initEntities();
 }
 
 ServerApplication::~ServerApplication()
@@ -23,7 +24,7 @@ void ServerApplication::run()
 	while( m_running )
 	{
 		// HACK: Static delta and really high for testing purposes.
-		m_world->setDelta( 0.100f );
+		m_world->setDelta( 0.01f );
 
 		m_world->process();
 
@@ -37,7 +38,7 @@ void ServerApplication::run()
 		}
 
 		// HACK: Really slow update loop for testing purposes.
-		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 	}
 }
 
@@ -56,6 +57,28 @@ void ServerApplication::initSystems()
 	m_world->setSystem( SystemType::NetworkInputHandlerSystem,
 		new NetworkInputHandlerSystem( m_server ), true );
 
+	m_world->setSystem( SystemType::NetworkUpdateSystem,
+		new NetworkUpdateSystem( m_server ), true );
+
 	m_world->initialize();
 
+}
+
+void ServerApplication::initEntities()
+{
+	Entity* e;
+
+	e = m_world->createEntity();
+	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+		new Transform( -10.0f, 0, 0 ) );
+	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
+	m_world->addEntity( e );
+
+	e = m_world->createEntity();
+	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
+		new Transform( 0, 0, 0 ) );
+	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
+		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
+	m_world->addEntity( e );
 }

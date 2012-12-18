@@ -29,7 +29,7 @@ class XInputFetcher;
 class AnalogueControl : public Control
 {
 public:
-	AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis, InputHelper::SUB_AXIS p_subAxis );
+	AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis);
 	~AnalogueControl();
 
 	virtual void update( InputManager* p_manager );

@@ -64,8 +64,12 @@ public:
 
 	void initializeAll();
 	void updateSynchronous();
+	void notifySystems( IPerformer* p_performer, Entity* p_entity );
 
 private:
 	map<SystemType::SystemTypeIdx, EntitySystem*> m_systems;
+
+	// Vector that stores systems in the order they've been added. For dependencies
+	vector<EntitySystem*> m_systemList;
 };
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>

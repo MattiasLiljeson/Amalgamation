@@ -83,9 +83,6 @@
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="CamMatrixerUtil.h">
-      <Filter>Graphics Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsWrapper.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -109,9 +106,6 @@
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="DIndex.h">
-      <Filter>Renderer\Vertices</Filter>
-    </ClInclude>
-    <ClInclude Include="InstanceVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="AntTweakBarWrapper.h">

@@ -132,29 +132,17 @@ External/Ant/
 External/FreeImage/
 External/XAudio2/
 
-
 # Files
 *.exe
 *.lastcodeanalysissucceeded
 /Build/*.dll.txt
 /Build/*.exe.txt
 
-
 *.agl
 *.fbx
 *.png
 *.dds
 *.tga
-*.fbx
-*.agl
-
-
-*.agl
-*.fbx
-*.png
-*.dds
-*.tga
-
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
 # Exceptions

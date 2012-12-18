@@ -117,7 +117,7 @@ Packet TcpServer::popNewPacket()
 	}
 	else
 	{
-		throw new domain_error( "Trying to pop from an empty packet queue!" );
+		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return packet;
 }
@@ -185,11 +185,31 @@ void TcpServer::broadcastPacket( Packet p_packet )
 {
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
-		// HACK: Without copying the packet it will probably result in a crash when
-		// the receiving processes deletes it.
-		// This SHOULD work now.
 		m_communicationProcesses[i]->putMessage(
 			new ProcessMessageSendPacket( this, p_packet ) );
+	}
+}
+
+void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_packet )
+{
+	for( unsigned int i=0; i<p_connectionIdentities.size(); i++ )
+	{
+		unicastPacket( p_packet, p_connectionIdentities[i] );
+	}
+}
+
+void TcpServer::unicastPacket( Packet p_packet, int clientId )
+{
+	// NOTE: this might be slow enough to do for individual packets
+	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )
+	{
+		if ( m_communicationProcesses[i]->getId() == clientId )
+		{
+			m_communicationProcesses[i]->putMessage(
+				new ProcessMessageSendPacket( this, p_packet ) );
+
+			break;
+		}
 	}
 }
 
@@ -203,4 +223,16 @@ int TcpServer::popNewConnection()
 	}
 
 	return id;
+}
+
+vector< int > TcpServer::getActiveConnections()
+{
+	vector< int > currentConnections;
+
+	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
+	{
+		currentConnections.push_back( m_communicationProcesses[i]->getId() );
+	}
+
+	return currentConnections;
 }
