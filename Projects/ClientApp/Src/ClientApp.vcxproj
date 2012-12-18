@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ServerApp\Src\ServerApplication.cpp" />
     <ClCompile Include="ClientApplication.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

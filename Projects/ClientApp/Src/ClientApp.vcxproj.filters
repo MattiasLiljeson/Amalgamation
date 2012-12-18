@@ -3,6 +3,9 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ClientApplication.cpp" />
+    <ClCompile Include="..\..\ServerApp\Src\ServerApplication.cpp">
+      <Filter>ServerApplication refs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientApplication.h" />

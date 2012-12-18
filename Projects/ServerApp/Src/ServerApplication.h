@@ -30,43 +30,46 @@
 
 using namespace std;
 
-class ServerApplication
+namespace Srv
 {
-public:
-	ServerApplication();
-	virtual ~ServerApplication();
+	class ServerApplication
+	{
+	public:
+		ServerApplication();
+		virtual ~ServerApplication();
 
-	///-----------------------------------------------------------------------------------
-	/// The run() method starts the whole application. It runs all the
-	/// Let the program's entry point call run().
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void run();
+		///-----------------------------------------------------------------------------------
+		/// The run() method starts the whole application. It runs all the
+		/// Let the program's entry point call run().
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void run();
 
-	///-----------------------------------------------------------------------------------
-	/// Call one "step" on the server, instead of running a game loop.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void step( float p_dt );
+		///-----------------------------------------------------------------------------------
+		/// Call one "step" on the server, instead of running a game loop.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void step( float p_dt );
 
-private:
+	private:
 
-	///-----------------------------------------------------------------------------------
-	/// Creates and initializes all EntitySystems.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void initSystems();
+		///-----------------------------------------------------------------------------------
+		/// Creates and initializes all EntitySystems.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void initSystems();
 	
-	///-----------------------------------------------------------------------------------
-	/// Creates and adds entities to the world.
-	/// \returns void
-	///-----------------------------------------------------------------------------------
-	void initEntities();
+		///-----------------------------------------------------------------------------------
+		/// Creates and adds entities to the world.
+		/// \returns void
+		///-----------------------------------------------------------------------------------
+		void initEntities();
 
-private:
-	bool m_running;
+	private:
+		bool m_running;
 
-	EntityWorld* m_world;
-	TcpServer* m_server;
+		EntityWorld* m_world;
+		TcpServer* m_server;
 
+	};
 };
