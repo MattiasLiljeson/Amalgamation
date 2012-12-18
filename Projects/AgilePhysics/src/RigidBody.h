@@ -65,7 +65,7 @@ public:
 	void AddAngularImpulse(AglVector3 pAngularImpulse);
 
 
-	void UpdateVelocity(float pElapsedTime); //NOT
+	virtual void UpdateVelocity(float pElapsedTime); //NOT
 	virtual void UpdatePosition(float pElapsedTime); //NOT
 	void RevertVelocity(); //NOT
 	void RevertPosition(); //NOT
