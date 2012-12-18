@@ -16,6 +16,7 @@
 #include "CBuffers.h"
 #include "PTVertex.h"
 #include "PNTVertex.h"
+#include "PNTTBVertex.h"
 #include "DIndex.h"
 #include "Mesh.h"
 // #include "TextureBuffers.h"
@@ -48,13 +49,14 @@ public:
 												 unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------
-	/// Constructs a vertex buffer.
+	/// Constructs a vertex buffer of a specified type T.
 	/// \param p_vertices
 	/// \param p_numberOfElements
-	/// \return Buffer<PNTVertex>*
+	/// \return Buffer<T>*
 	///-----------------------------------------------------------------------------------
-	Buffer<PNTVertex>* createVertexBuffer(PNTVertex* p_vertices,
-										  unsigned int p_numberOfElements);
+	template<typename T>
+	Buffer<T>* createVertexBuffer(T* p_vertices,
+								  unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------
 	/// Constructs a index buffer.
@@ -87,3 +89,22 @@ private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
 };
+
+template<typename T>
+Buffer<T>* BufferFactory::createVertexBuffer( T* p_vertices, 
+											  unsigned int p_numberOfElements )
+{		
+	Buffer<T>* vertexBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
+	vertexBufferDesc.ElementSize = sizeof(T);
+	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	vertexBufferDesc.NumElements = p_numberOfElements ;
+	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	vertexBuffer = new Buffer<T>(m_device,m_deviceContext,
+		p_vertices,vertexBufferDesc);
+
+	return vertexBuffer;
+}

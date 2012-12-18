@@ -12,6 +12,7 @@
 #pragma once
 #include <UniqueIndexList.h>
 #include "PNTVertex.h"
+#include "PNTTBVertex.h"
 #include "DIndex.h"
 #include "Buffer.h"
 
@@ -19,7 +20,7 @@
 class Mesh
 {
 public:
-	Mesh( Buffer<PNTVertex>* p_vertexBuffer, Buffer<DIndex>* p_indexBuffer);
+	Mesh( Buffer<PNTTBVertex>* p_vertexBuffer, Buffer<DIndex>* p_indexBuffer);
 	///-----------------------------------------------------------------------------------
 	/// The Managers for the mesh will handle the deletion of each entities data.
 	/// \return 
@@ -30,7 +31,7 @@ public:
 	/// Get a pointer to the vertex buffer.
 	/// \return Buffer<PNTVertex>*
 	///-----------------------------------------------------------------------------------
-	Buffer<PNTVertex>*	getVertexBuffer();
+	Buffer<PNTTBVertex>*	getVertexBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the index buffer.
@@ -42,7 +43,7 @@ public:
 	unsigned int	getTextureId();					// Replace these with
 	void			setTextureId(unsigned int p_id);// material functionality later.
 private:
-	Buffer<PNTVertex>* m_vertexBuffer;
+	Buffer<PNTTBVertex>* m_vertexBuffer;
 	Buffer<DIndex>* m_indexBuffer;
 	unsigned int m_textureId; // replace for material id/material id list
 };

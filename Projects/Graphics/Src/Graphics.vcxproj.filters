@@ -110,6 +110,9 @@
     <ClInclude Include="PNTVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
+    <ClInclude Include="PNTTBVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

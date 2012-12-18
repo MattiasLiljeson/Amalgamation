@@ -16,7 +16,7 @@ Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 	Buffer<SimpleCBuffer>* cBuffer;
 	/// initialization data
 	SimpleCBuffer data={
-		{0.0f,1.0f,0.0f,  1.0f},
+		{1.0f,1.0f,1.0f,  1.0f},// color
 		{1.0f,0.0f,0.0f,  0.0f, // this here is an identity matrix
 		 0.0f,1.0f,0.0f,  0.0f,
 		 0.0f,0.0f,1.0f,  0.0f,
@@ -82,24 +82,6 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instan
 	return instanceBuffer;
 }
 
-Buffer<PNTVertex>* BufferFactory::createVertexBuffer( PNTVertex* p_vertices, 
-													 unsigned int p_numberOfElements )
-{		
-	Buffer<PNTVertex>* vertexBuffer;
-
-	// Create description for buffer
-	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
-	vertexBufferDesc.ElementSize = sizeof(PNTVertex);
-	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	vertexBufferDesc.NumElements = p_numberOfElements ;
-	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
-
-	vertexBuffer = new Buffer<PNTVertex>(m_device,m_deviceContext,
-										 p_vertices,vertexBufferDesc);
-
-	return vertexBuffer;
-}
-
 Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
 												 unsigned int p_numberOfElements )
 {	
@@ -121,36 +103,36 @@ Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices,
 Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data
-	PNTVertex mesh[]= {
-		{	{-1,-1,-1},	{0,0,-1},	{0,1}	},
-		{	{-1,1,-1},	{0,0,-1},	{0,0}	},
-		{	{1,1,-1},	{0,0,-1},	{1,0}	},
-		{	{1,-1,-1},	{0,0,-1},	{1,1}	},
+	PNTTBVertex mesh[]= {
+		{	{-1,-1,-1},	{0,0,-1},	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{-1,1,-1},	{0,0,-1},	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{1,1,-1},	{0,0,-1},	{1,0}, {0,0,0}, {0,0,0}	},
+		{	{1,-1,-1},	{0,0,-1},	{1,1}, {0,0,0}, {0,0,0}	},
 										
-		{	{-1,-1,1},	{0,0,1}	,	{1,1}	},
-		{	{1,-1,1},	{0,0,1}	,	{0,1}	},
-		{	{1,1,1},	{0,0,1}	,	{0,0}	},
-		{	{-1,1,1},	{0,0,1}	,	{1,0}	},
+		{	{-1,-1,1},	{0,0,1}	,	{1,1}, {0,0,0}, {0,0,0}	},
+		{	{1,-1,1},	{0,0,1}	,	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{1,1,1},	{0,0,1}	,	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{-1,1,1},	{0,0,1}	,	{1,0}, {0,0,0}, {0,0,0}	},
 										
-		{	{-1,1,-1},	{0,1,0}	,	{0,1}	},
-		{	{-1,1,1},	{0,1,0}	,	{0,0}	},
-		{	{1,1,1},	{0,1,0}	,	{1,0}	},
-		{	{1,1,-1},	{0,1,0}	,	{1,1}	},
+		{	{-1,1,-1},	{0,1,0}	,	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{-1,1,1},	{0,1,0}	,	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{1,1,1},	{0,1,0}	,	{1,0}, {0,0,0}, {0,0,0}	},
+		{	{1,1,-1},	{0,1,0}	,	{1,1}, {0,0,0}, {0,0,0}	},
 										
-		{	{-1,-1,-1},	{0,-1,0},	{1,1}	},
-		{	{1,-1,-1},	{0,-1,0},	{0,1}	},
-		{	{1,-1,1},	{0,-1,0},	{0,0}	},
-		{	{-1,-1,1},	{0,-1,0},	{1,0}	},
-										
-		{	{-1,-1,1},	{-1,0,0},	{0,1}	},
-		{	{-1,1,1},	{-1,0,0},	{0,0}	},
-		{	{-1,1,-1},	{-1,0,0},	{1,0}	},
-		{	{-1,-1,-1},	{-1,0,0},	{1,1}	},
-										
-		{	{1,-1,-1},	{1,0,0}	,	{0,1}	},
-		{	{1,1,-1},	{1,0,0}	,	{0,0}	},
-		{	{1,1,1},	{1,0,0}	,	{1,0}	},
-		{	{1,-1,1},	{1,0,0}	,	{1,1}	}
+		{	{-1,-1,-1},	{0,-1,0},	{1,1}, {0,0,0}, {0,0,0}	},
+		{	{1,-1,-1},	{0,-1,0},	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{1,-1,1},	{0,-1,0},	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{-1,-1,1},	{0,-1,0},	{1,0}, {0,0,0}, {0,0,0}	},
+										 
+		{	{-1,-1,1},	{-1,0,0},	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{-1,1,1},	{-1,0,0},	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{-1,1,-1},	{-1,0,0},	{1,0}, {0,0,0}, {0,0,0}	},
+		{	{-1,-1,-1},	{-1,0,0},	{1,1}, {0,0,0}, {0,0,0}	},
+										 
+		{	{1,-1,-1},	{1,0,0}	,	{0,1}, {0,0,0}, {0,0,0}	},
+		{	{1,1,-1},	{1,0,0}	,	{0,0}, {0,0,0}, {0,0,0}	},
+		{	{1,1,1},	{1,0,0}	,	{1,0}, {0,0,0}, {0,0,0}	},
+		{	{1,-1,1},	{1,0,0}	,	{1,1}, {0,0,0}, {0,0,0}	}
 	};
 
 	DIndex indices[] = {
@@ -190,8 +172,7 @@ Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob,
 									   unsigned int p_numberOfVertices, 
 									   unsigned int p_numberOfIndices )
 {
-	int x = sizeof(DIndex);
-	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PNTVertex*>(p_vertexBlob),
+	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PNTTBVertex*>(p_vertexBlob),
 												p_numberOfVertices),
 							 createIndexBuffer(static_cast<DIndex*>(p_indexBlob),
 												p_numberOfIndices) 

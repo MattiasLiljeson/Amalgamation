@@ -20,6 +20,7 @@
 #include "BufferFactory.h"
 #include "PTVertex.h"
 #include "PNTVertex.h"
+#include "PNTTBVertex.h"
 
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"

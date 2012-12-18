@@ -145,6 +145,7 @@ void ClientApplication::initEntities()
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
+	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 
 
@@ -200,6 +201,20 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+	// walker
+	entity = m_world->createEntity();
+	component = new RenderInfo( walkerMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(AglVector3(10, 10, 10), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	entity->addComponent( ComponentType::Transform, component );
+	component = new PhysicsBody();
+	entity->addComponent(ComponentType::PhysicsBody, component);
+
+	component = new BodyInitData(AglVector3(10, 10, 10), AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+	entity->addComponent(ComponentType::BodyInitData, component);
+
+	m_world->addEntity(entity);
 
 	// Create a "spaceship"
 	entity = m_world->createEntity();

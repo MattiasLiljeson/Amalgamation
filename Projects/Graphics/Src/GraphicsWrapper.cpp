@@ -248,7 +248,8 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				unsigned int texId = createTexture("mesherror.png",TEXTUREPATH);
 				mesh->setTextureId(texId);
 			}
-
+			// cleanup
+			delete aglScene;
 		}
 	}
 	else // the mesh already exists
