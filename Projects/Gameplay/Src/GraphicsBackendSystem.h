@@ -18,7 +18,9 @@ public:
 	virtual void initialize();
 	void process();
 
-	int getMeshId( string p_meshName );
+	unsigned int createMesh( const string& p_meshName,
+							 const string* p_path=NULL );
+	int getMeshId( const string& p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();
 

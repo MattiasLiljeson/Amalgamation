@@ -143,7 +143,7 @@ void ClientApplication::initEntities()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->getMeshId( "P_cube" );
+	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	
 
 

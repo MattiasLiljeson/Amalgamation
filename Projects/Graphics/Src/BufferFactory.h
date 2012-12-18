@@ -48,6 +48,24 @@ public:
 												 unsigned int p_numberOfElements);
 
 	///-----------------------------------------------------------------------------------
+	/// Constructs a vertex buffer.
+	/// \param p_vertices
+	/// \param p_numberOfElements
+	/// \return Buffer<PTNVertex>*
+	///-----------------------------------------------------------------------------------
+	Buffer<PTNVertex>* createVertexBuffer(PTNVertex* p_vertices,
+										  unsigned int p_numberOfElements);
+
+	///-----------------------------------------------------------------------------------
+	/// Constructs a index buffer.
+	/// \param p_indices
+	/// \param p_numberOfElements
+	/// \return Buffer<DIndex>*
+	///-----------------------------------------------------------------------------------
+	Buffer<DIndex>* createIndexBuffer(DIndex* p_indices,
+									  unsigned int p_numberOfElements);
+
+	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.
 	/// \return Box*
 	///-----------------------------------------------------------------------------------

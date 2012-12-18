@@ -23,9 +23,6 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsWrapper.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredRenderer.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
@@ -35,6 +32,7 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Renderer\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -83,9 +81,6 @@
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsWrapper.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
       <Filter>Renderer\Deferred</Filter>
     </ClInclude>
@@ -114,6 +109,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Renderer\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

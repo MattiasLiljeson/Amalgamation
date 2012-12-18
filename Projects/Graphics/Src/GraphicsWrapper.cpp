@@ -172,7 +172,8 @@ void GraphicsWrapper::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
-unsigned int GraphicsWrapper::createMesh(const string& p_name)
+unsigned int GraphicsWrapper::createMesh( const string& p_name,
+										  const string* p_path/*=NULL*/ )
 {
 	// check if resource already exists
 	unsigned int meshResultId = 0;
@@ -186,26 +187,11 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name)
 			// (Here you might want to do similar checks for textures/materials
 			// For now we have a hard coded texture path, but later on
 			// we probably get this path from a mesh file loader or similar.
-			string texturepath = "Assets/Textures/Test/10x10.png"; 
-			int texFoundId = m_textureManager->getResourceId(texturepath);
-			unsigned int texResultId = 0;
-			// and probably only the file name or Texture sub folder name+file name
-			// like this: rainbow.dds or Test/rainbow.dds
-			if (texFoundId==-1)  // if it does not exist, create new
-			{
-				Texture* tex;
-				tex = new Texture(TextureParser::loadTexture(m_device,
-															 texturepath.c_str()));
-				texResultId = m_textureManager->addResource(texturepath,tex);
-			}
-			else
-			{
-				texResultId = static_cast<unsigned int>(texFoundId);
-			}
-			mesh->setTextureId(texResultId);
+			unsigned int texId = createTexture("10x10.png",TESTTEXTUREPATH);
 			// and their managers.)
 			// ...
 			// and then set the resulting data to the mesh
+			mesh->setTextureId(texId);
 		}
 		else
 		{
@@ -219,6 +205,32 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name)
 	}
 	return meshResultId;
 }
+
+unsigned int GraphicsWrapper::createTexture( const string& p_name, 
+											 const string& p_path)
+{
+	int texFoundId = m_textureManager->getResourceId(p_name);
+	unsigned int texResultId = 0;
+
+	if (texFoundId==-1)  // if it does not exist, create new
+	{
+		Texture* tex;
+		tex = new Texture(TextureParser::loadTexture(m_device,
+			(p_path+p_name).c_str()) );
+		texResultId = m_textureManager->addResource(p_name,tex);
+	}
+	else
+	{
+		texResultId = static_cast<unsigned int>(texFoundId);
+	}
+	return texResultId;
+}
+
+int GraphicsWrapper::getMeshId( const string& p_name )
+{
+	return m_meshManager->getResourceId(p_name);
+}
+
 
 void GraphicsWrapper::initViewport()
 {
@@ -247,3 +259,4 @@ void GraphicsWrapper::hookUpAntTweakBar()
 {
 	m_deferredRenderer->hookUpAntTweakBar();
 }
+

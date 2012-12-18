@@ -45,7 +45,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
 	// Create a cube
-	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
+	unsigned int cubeId = graphicsWrapper->createMeshPrimitive("P_cube");
 
 	// Create a shitload of instances
 	vector<InstanceData>* instances = new vector<InstanceData>();

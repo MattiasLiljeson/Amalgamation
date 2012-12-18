@@ -64,7 +64,7 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 }
 
 Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instanceList, 
-															unsigned int p_numberOfElements)
+														  unsigned int p_numberOfElements)
 {
 	Buffer<InstanceData>* instanceBuffer;
 
@@ -139,26 +139,51 @@ Mesh* BufferFactory::createBoxMesh()
 
 #pragma endregion end of static data
 
+
+	Mesh* newBox = new Mesh(createVertexBuffer(&mesh[0],
+							sizeof(mesh)/sizeof(PTNVertex)),
+							createIndexBuffer(&indices[0],
+							sizeof(indices)/sizeof(DIndex)));
+
+	return newBox;
+}
+
+Buffer<PTNVertex>* BufferFactory::createVertexBuffer( PTNVertex* p_vertices, 
+													 unsigned int p_numberOfElements )
+{		
+	Buffer<PTNVertex>* vertexBuffer;
+
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
 	vertexBufferDesc.ElementSize = sizeof(PTNVertex);
 	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	vertexBufferDesc.NumElements = sizeof(mesh)/vertexBufferDesc.ElementSize;
+	vertexBufferDesc.NumElements = p_numberOfElements ;
 	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
+										 p_vertices,vertexBufferDesc);
+
+	return vertexBuffer;
+}
+
+Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
+												 unsigned int p_numberOfElements )
+{	
+	Buffer<DIndex>* indexBuffer;
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
 	indexBufferDesc.ElementSize = sizeof(DIndex);
 	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
-	indexBufferDesc.NumElements = sizeof(indices)/indexBufferDesc.ElementSize;
+	indexBufferDesc.NumElements = p_numberOfElements;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
 
-	Buffer<PTNVertex>* vertexBuffer = new Buffer<PTNVertex>(m_device,m_deviceContext,
-		&mesh[0],vertexBufferDesc);
-	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, &indices[0],
-		indexBufferDesc);
-	
-	Mesh* newBox = new Mesh(vertexBuffer,indexBuffer);
+	indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, p_indices,
+									 indexBufferDesc);
 
-	return newBox;
+	return indexBuffer;
 }
+
+
+
+
