@@ -26,138 +26,105 @@
  */
 
 //==================================================================
-// DX10 conversion of DX9 sample code from libRocket. This has been 
+// DX11 conversion of DX9 sample code from libRocket. This has been 
 // modified and is NOT the original. Use as you wish. Please Leave 
-// this message and please don't say that it is your work 
+// this message and please don't say that it is your work.
 //
 // - BiceMaster
 //==================================================================
 
 #include "RenderInterfaceDx10.h"
 
-RenderInterfaceDx10::RenderInterfaceDx10(ID3D10Device* _device, ID3D10Effect* _effect, int _techNr, int _passNr)
+RenderInterfaceDx10::RenderInterfaceDx10( BufferFactory* p_factory, GraphicsWrapper* p_wrapper )
 {
-	//device = _device;
-	//effect = _effect;
-	//techNr = _techNr;
-	//passNr = _passNr;
-
-	//D3D10_RASTERIZER_DESC rasterizerDesc;
-	//rasterizerDesc.FillMode = D3D10_FILL_SOLID;
-	//rasterizerDesc.CullMode = D3D10_CULL_BACK;
-	//rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
-	//rasterizerDesc.DepthClipEnable = TRUE;
-	//rasterizerDesc.AntialiasedLineEnable = FALSE;
-	//rasterizerDesc.MultisampleEnable = FALSE;
-	//rasterizerDesc.DepthBias = 0;
-	//rasterizerDesc.DepthBiasClamp = 0.0f;
-	//rasterizerDesc.SlopeScaledDepthBias = 0.0f;
-
-	//rasterizerDesc.ScissorEnable = false;
-	//HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff));
-
-	//rasterizerDesc.ScissorEnable = true;
-	//HR(device->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn));
-
-	//device->RSSetState(rs_scissorsOff);
-
-	//defineInputElementDesc();
-	//defineBlendState();
-	//initPipeline();
-	//initFxVars();
+	m_factory = p_factory;
+	m_wrapper = p_wrapper;
 }
 
 RenderInterfaceDx10::~RenderInterfaceDx10()
 {
-	//SAFE_RELEASE(rs_scissorsOn);
-	//SAFE_RELEASE(rs_scissorsOff);
-	//SAFE_RELEASE(inputLayout);
-	//delete layoutDesc;
-
 	Rocket::Core::Shutdown();
 }
 
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
-void RenderInterfaceDx10 :: RenderGeometry(Rocket::Core::Vertex* ROCKET_UNUSED(vertices), int ROCKET_UNUSED(num_vertices), int* ROCKET_UNUSED(indices), int ROCKET_UNUSED(num_indices), const Rocket::Core::TextureHandle ROCKET_UNUSED(texture), const Rocket::Core::Vector2f& ROCKET_UNUSED(translation))
+void RenderInterfaceDx10 :: RenderGeometry(
+	Rocket::Core::Vertex* ROCKET_UNUSED(vertices),
+	int ROCKET_UNUSED(num_vertices),
+	int* ROCKET_UNUSED(indices), int ROCKET_UNUSED(num_indices),
+	const Rocket::Core::TextureHandle ROCKET_UNUSED(texture),
+	const Rocket::Core::Vector2f& ROCKET_UNUSED(translation))
 {
 	int korv = 1; //debug
 
 	// We've chosen to not support non-compiled geometry in the DirectX renderer. If you wanted to render non-compiled
 	// geometry, for example for very small sections of geometry, you could use DrawIndexedPrimitiveUP or write to a
-	// dynamic vertex buffer which is flushed when either the texture changes or compiled geometry is drawn.
+	// dynamic vertex buffer which is flushed when either the p_texture changes or compiled geometry is drawn.
 }
 
 // Called by Rocket when it wants to compile geometry it believes will be static for the forseeable future.
-Rocket::Core::CompiledGeometryHandle RenderInterfaceDx10 :: CompileGeometry(Rocket::Core::Vertex* vertices, int num_vertices, int* indices, int num_indices, Rocket::Core::TextureHandle texture)
+Rocket::Core::CompiledGeometryHandle RenderInterfaceDx10 :: CompileGeometry(
+	Rocket::Core::Vertex* p_vertices, int p_numVertices, int* p_indices, int p_numIndices,
+	Rocket::Core::TextureHandle p_texture)
 {
-	int korv = 1; //debug
-
 	// Construct a new RocketD3D9CompiledGeometry structure, which will be returned as the handle, and the buffers to store the geometry.
 	RocketDx10CompiledGeometry* geometry = new RocketDx10CompiledGeometry;
 
 	// Fill the vertex vector.
-	VertexType _vertex;
-	for (int i = 0; i < num_vertices; i++)
+	VertexType vertex;
+	vector<VertexType> vertices;
+	vertices.resize( p_numVertices );
+	const int x=0, y=1, z=2;
+	for (int i = 0; i < p_numVertices; i++)
 	{
-		_vertex.pos = D3DXVECTOR3(vertices[i].position.x, vertices[i].position.y, 0);
-		_vertex.color = D3DXCOLOR(vertices[i].colour.red, vertices[i].colour.green, vertices[i].colour.blue, vertices[i].colour.alpha);
-		_vertex.texCoord = D3DXVECTOR2(vertices[i].tex_coord[0], vertices[i].tex_coord[1]);
-
-		geometry->vertices.push_back(_vertex);
+		vertex.pos[x] = p_vertices[i].position.x;
+		vertex.pos[y] = p_vertices[i].position.y;
+		vertex.pos[z] = 0;
+		//vertex.color = D3DXCOLOR(p_vertices[i].colour.red, p_vertices[i].colour.green, p_vertices[i].colour.blue, p_vertices[i].colour.alpha);
+		vertex.tex[x] = p_vertices[i].tex_coord[x];
+		vertex.tex[y] = p_vertices[i].tex_coord[y];
+		vertices.push_back( vertex );
 	}
 
 	// Fill the index vector.
-	geometry->indices.resize(num_indices);
-	memcpy(&geometry->indices[0], indices, sizeof(unsigned int) * num_indices);
+	vector<DIndex> indices;
+	indices.resize(p_numIndices);
+	/************************************************************************/
+	/* SHOULD THE INDEX BE CAST TO AN UNSIGNED? IS IT ALREADY UNSIGNED?		*/
+	/************************************************************************/
+	memcpy(&indices[0], p_indices, sizeof(unsigned int) * p_numIndices);
+	void* indices = p_indices;
+	geometry->mesh = m_factory->createMeshFromPTVerticesAndIndices( p_numVertices,
+		&vertices[0], p_numIndices, &indices[0] );
 
-	//create and fill the vertex buffer
-	D3D10_BUFFER_DESC vbd;
-	vbd.Usage = D3D10_USAGE_DYNAMIC;
-	vbd.ByteWidth = num_vertices*sizeof(VertexType);
-	vbd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
-	vbd.MiscFlags = 0;
-
-	D3D10_SUBRESOURCE_DATA vertBuffSubRes;
-	vertBuffSubRes.pSysMem = &geometry->vertices[0];
-	HR(device->CreateBuffer(&vbd, &vertBuffSubRes, &geometry->vertexBuffer));
-
-	//create and fill the index buffer
-	D3D10_BUFFER_DESC ibd;
-	ibd.Usage = D3D10_USAGE_DYNAMIC;
-	ibd.ByteWidth = num_indices*sizeof(int);
-	ibd.BindFlags = D3D10_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
-	ibd.MiscFlags = 0;
-
-	D3D10_SUBRESOURCE_DATA indBuffSubRes;
-	indBuffSubRes.pSysMem = &geometry->indices[0];
-	HR(device->CreateBuffer(&ibd, &indBuffSubRes, &geometry->indexBuffer));
 
 	//set misc
-	geometry->num_vertices = (DWORD) num_vertices;
-	geometry->num_primitives = (DWORD) num_indices / 3;
-	geometry->texture = texture == NULL ? NULL : (Texture*) texture;
+	geometry->num_vertices = (DWORD) p_numVertices;
+	geometry->num_primitives = (DWORD) p_numIndices / 3;
+	geometry->texture = p_texture == NULL ? NULL : (Texture*) p_texture;
 
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }
 
 // Called by Rocket when it wants to render application-compiled geometry.
-void RenderInterfaceDx10 :: RenderCompiledGeometry(Rocket::Core::CompiledGeometryHandle geometry, const Rocket::Core::Vector2f& translation)
+void RenderInterfaceDx10 :: RenderCompiledGeometry(
+	Rocket::Core::CompiledGeometryHandle geometry,
+	const Rocket::Core::Vector2f& translation)
 {
 	int korv = 1; //debug
 
 	RocketDx10CompiledGeometry* _geometry = (RocketDx10CompiledGeometry*)geometry;
 
 	//set states
-	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	device->OMSetBlendState(bs_normal, blendFactor, 0xffffffff);
+	//float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	//device->OMSetBlendState(bs_normal, blendFactor, 0xffffffff);
 
 	// set which texture to use
-	if(_geometry->texture != NULL)
-		_geometry->texture->useTexture();
+	//if(_geometry->texture != NULL)
+		//_geometry->texture->useTexture();
 
 	// Build and set the transform matrix.
+	AglVector3 translationVec = AglVector3( translation.x, translation.DotProduct, 0.0f )
+	AglMatrix::createTranslationMatrix( translationVec );
 	D3DXMatrixTranslation(&mat_world, translation.x, translation.y, 0);
 	
 	//==================================================================
@@ -209,7 +176,7 @@ void RenderInterfaceDx10 :: ReleaseCompiledGeometry(Rocket::Core::CompiledGeomet
 	SAFE_RELEASE(_geometry->vertexBuffer);
 	SAFE_RELEASE(_geometry->indexBuffer);
 
-	//delete _geometry->texture;
+	//delete _geometry->p_texture;
 	delete _geometry;
 }
 
@@ -254,7 +221,7 @@ struct TGAHeader
 // Restore packing
 #pragma pack()
 
-// Called by Rocket when a texture is required by the library.
+// Called by Rocket when a p_texture is required by the library.
 bool RenderInterfaceDx10 :: LoadTexture(Rocket::Core::TextureHandle& texture_handle, Rocket::Core::Vector2i& texture_dimensions, const Rocket::Core::String& source)
 {
 	Rocket::Core::FileInterface* file_interface = Rocket::Core::GetFileInterface();
@@ -323,7 +290,7 @@ bool RenderInterfaceDx10 :: LoadTexture(Rocket::Core::TextureHandle& texture_han
 	return success;
 }
 
-// Called by Rocket when a texture is required to be built from an internally-generated sequence of pixels.
+// Called by Rocket when a p_texture is required to be built from an internally-generated sequence of pixels.
 bool RenderInterfaceDx10 :: GenerateTexture(Rocket::Core::TextureHandle& texture_handle, const byte* source, const Rocket::Core::Vector2i& source_dimensions)
 {
 	Texture* _texture = new Texture;
@@ -333,12 +300,12 @@ bool RenderInterfaceDx10 :: GenerateTexture(Rocket::Core::TextureHandle& texture
 	_texture->setAllPixels(source);
 	_texture->initTexture();
 
-	// Set the handle on the Rocket texture structure.
+	// Set the handle on the Rocket p_texture structure.
 	texture_handle = (Rocket::Core::TextureHandle)_texture;
 	return true;
 }
 
-// Called by Rocket when a loaded texture is no longer required.
+// Called by Rocket when a loaded p_texture is no longer required.
 void RenderInterfaceDx10 :: ReleaseTexture(Rocket::Core::TextureHandle texture_handle)
 {
 	Texture* _texture = ((Texture*) texture_handle);
@@ -382,7 +349,7 @@ void RenderInterfaceDx10::defineInputElementDesc()
 	layoutDesc[1].InputSlotClass = D3D10_INPUT_PER_VERTEX_DATA;
 	layoutDesc[1].InstanceDataStepRate = 0;
 
-	//texture
+	//p_texture
 	layoutDesc[2].SemanticName = "TEXCOORD";
 	layoutDesc[2].SemanticIndex = 0;
 	layoutDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;

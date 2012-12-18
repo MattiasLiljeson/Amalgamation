@@ -7,10 +7,16 @@
 
 #include <Rocket/Core.h>
 
+#include "BufferFactory.h"
+#include "Mesh.h"
 //#include "Utils.h"
 //#include "VertexTexture.h"
 #include "Texture.h"
-#include "PTNVertex.h"
+#include "PTVertex.h"
+#include <Buffer.h>
+#include <DIndex.h>
+#include "GraphicsWrapper.h"
+#include <AglMatrix.h>
 
 using namespace std;
 
@@ -30,12 +36,15 @@ using namespace std;
 struct RocketDx10CompiledGeometry
 {
 	//vector<VertexRocket> vertices;
-	vector<PTNVertex> vertices;
+	//vector<PTNVertex> vertices;
+	Buffer<PTVertex> vertices;
 	DWORD num_vertices;
 
-	vector<unsigned int> indices;
+	//vector<unsigned int> indices;
+	Buffer<DIndex> indices;
 	DWORD num_primitives;
 
+	Mesh* mesh;
 	Texture* texture;
 
 	ID3D10Buffer* vertexBuffer;
@@ -45,36 +54,12 @@ struct RocketDx10CompiledGeometry
 class RenderInterfaceDx10 : public Rocket::Core::RenderInterface
 {
 private:
-	typedef PTNVertex VertexType;	//change this per impl
-	ID3D10Device* device;
-
-	//==============================================
-	//Added for dx10
-	//==============================================
-	//States
-	//ID3D10RasterizerState* rs_scissorsOn;
-	//ID3D10RasterizerState* rs_scissorsOff;
-	//ID3D10BlendState* bs_normal;
-
-	////FX
-	//ID3D10Effect* effect;			
-	//ID3D10EffectTechnique* technique;  
-	//ID3D10EffectPass* pass;
-	//D3D10_PASS_DESC PassDesc;	
-	//int techNr;
-	//int passNr;
-
-	////input layout
-	//D3D10_INPUT_ELEMENT_DESC* layoutDesc;
-	//UINT numElements;
-	//ID3D10InputLayout* inputLayout;	
-
-	////matrices for transformations
-	//ID3D10EffectMatrixVariable* fxVar_world;
-	//D3DXMATRIX mat_world;
+	typedef PTVertex VertexType;	//change this per impl
+	BufferFactory* m_factory;
+	GraphicsWrapper* m_wrapper;
 
 public:
-	RenderInterfaceDx10(ID3D10Device* _device, ID3D10Effect* _effect, int _techNr, int _passNr);
+	RenderInterfaceDx10( BufferFactory* p_factory, GraphicsWrapper* p_wrapper );
 	virtual ~RenderInterfaceDx10();
 
 	/// Called by Rocket when it wants to render geometry that it does not wish to optimise.
