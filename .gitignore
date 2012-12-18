@@ -114,11 +114,11 @@ External/igloo/
 External/Ant/
 External/FreeImage/
 External/XAudio2/
+External/*
 
 # Files
 *.exe
 *.lastcodeanalysissucceeded
-*.dll
 /Build/*.dll.txt
 /Build/*.exe.txt
 
@@ -127,7 +127,9 @@ External/XAudio2/
 *.png
 *.dds
 *.tga
-
+*.dll
 
 ### ADD EXPCETIONS TO RULES ABOVE HERE!!!
+>>>>>>> sprint3
 # Exceptions
+

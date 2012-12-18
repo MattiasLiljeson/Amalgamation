@@ -1,5 +1,7 @@
 #pragma once
 #include <x3daudio.h>
+#include <AglVector3.h>
+#include "SoundOrientation.h"
 
 // =======================================================================================
 //                                      PositionalSoundInfo
@@ -15,16 +17,11 @@
 
 struct PositionalSoundInfo
 {
-	float pos[3];
+	X3DAUDIO_EMITTER		emitter;
+	X3DAUDIO_DSP_SETTINGS	settings;
+	X3DAUDIO_CONE			cone;
+	AglVector3				previousPosition;
 
-	X3DAUDIO_EMITTER emitter;
-
-	PositionalSoundInfo(float x, float y, float z)
-	{
-		pos[0] = x;
-		pos[1] = y;
-		pos[2] = z;
-	}
 	PositionalSoundInfo()
 	{
 

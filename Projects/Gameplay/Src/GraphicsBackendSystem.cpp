@@ -24,7 +24,7 @@ void GraphicsBackendSystem::initialize()
 	{
 		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
 		m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), m_scrWidth, m_scrHeight, true );
-		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken Bar" );
+		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
 		m_graphicsWrapper->hookUpAntTweakBar();
 	}
 	catch( exception &e )

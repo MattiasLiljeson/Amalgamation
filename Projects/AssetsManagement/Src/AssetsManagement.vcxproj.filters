@@ -9,6 +9,9 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>ResourceManager</Filter>
     </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">

@@ -35,7 +35,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		//InstanceVertex vert;
 
 		//HACK: continues in loop below 
-		for(unsigned int i=0; i<p_entities.size(); i++ )
+		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
 			RenderInfo* renderInfo = static_cast<RenderInfo*>(
 				p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
@@ -56,6 +56,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			// resize vector if the mesh id is outside of the vectors size
+
 			if( m_instanceLists.size() <= static_cast<unsigned int>(renderInfo->m_meshId) )
 			{
 				m_instanceLists.resize( renderInfo->m_meshId + 1 );
@@ -74,7 +75,8 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		AntTweakBarWrapper::getInstance()->render();
 		gfxWrapper->flipBackBuffer();           // flip buffers
 		
-		for(unsigned int i=0; i<m_instanceLists.size(); i++ )
+		// WOW! for each loop in C++!
+		for( unsigned int i=0; i<m_instanceLists.size(); i++ )
 		{
 			m_instanceLists[i].clear();
 		}

@@ -124,7 +124,7 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 {
 	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits =
 		p_entity->getComponentBits();
-	for(unsigned int i=0; i<componentBits.size(); i++ )
+	for(unsigned int i=0; i<m_componentsByType.size(); i++ )
 	{
 		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{

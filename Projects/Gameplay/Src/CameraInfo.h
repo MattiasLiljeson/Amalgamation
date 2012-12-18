@@ -11,11 +11,6 @@ public:
 	CameraInfo( float p_aspectRatio );
 	~CameraInfo();
 
-	//AglMatrix m_viewMatrix;
 	AglMatrix m_projMat;
-	//AglMatrix m_camMatrix; 
-
-	//AglVector3 m_pos;
-	AglVector3 m_lookAt;
 };
 

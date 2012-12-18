@@ -1,7 +1,8 @@
 #pragma once
-//#include <X3DAudio.h>
+
+#include <AglVector3.h>
 #include "Sound.h"
-#include "PositionalSoundInfo.h"
+#include "PositionalSoundInfo.h" 
 // =======================================================================================
 //                                      PositionalSound
 // =======================================================================================
@@ -20,9 +21,11 @@ class PositionalSound : public Sound
 	
 public:
 	PositionalSound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer,
-		const PositionalSoundInfo& p_info);
+		const PositionalSoundInfo& p_info, float p_volume=1.0f);
 	virtual ~PositionalSound();
-	const X3DAUDIO_EMITTER& getEmitter();
+	X3DAUDIO_EMITTER	getEmitter();
+	void				setPosition(const AglVector3& p_newPos );
+	X3DAUDIO_DSP_SETTINGS getDSPSettings();
 private:
 	PositionalSoundInfo m_dataInfo;
 };

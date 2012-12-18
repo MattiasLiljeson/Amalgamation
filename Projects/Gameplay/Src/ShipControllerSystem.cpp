@@ -27,28 +27,33 @@ void ShipControllerSystem::initialize()
 	m_rollLeft		= m_inputBackend->getInputControl( "SHOULDER_PRESS_L" );
 	m_thrust		= m_inputBackend->getInputControl( "TRIGGER_R" );
 
-	m_strafeHorizontalPositive	= m_inputBackend->getInputControl( "KEY_L" );
-	m_strafeHorizontalNegative	= m_inputBackend->getInputControl( "KEY_L" );
-	m_strafeVerticalPositive	= m_inputBackend->getInputControl( "KEY_L" );
-	m_strafeVerticalNegative	= m_inputBackend->getInputControl( "KEY_L" );
+	m_strafeHorizontalPositive	= m_inputBackend->getInputControl( "THUMB_RX_POSITIVE" );
+	m_strafeHorizontalNegative	= m_inputBackend->getInputControl( "THUMB_RX_NEGATIVE" );
+	m_strafeVerticalPositive	= m_inputBackend->getInputControl( "THUMB_RY_POSITIVE" );
+	m_strafeVerticalNegative	= m_inputBackend->getInputControl( "THUMB_RY_NEGATIVE" );
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
-	// Input controls
+	// Input controls setup
 	double hPositive = m_horizontalPositive->getStatus(),
 		   hNegative = m_horizontalNegative->getStatus(),
 		   vPositive = m_verticalPositive->getStatus(),
-		   vNegative = m_verticalNegative->getStatus();
-
+		   vNegative = m_verticalNegative->getStatus(),
+		   shPositive = m_strafeHorizontalPositive->getStatus(),
+		   shNegative = m_strafeHorizontalNegative->getStatus(),
+		   svPositive = m_strafeVerticalPositive->getStatus(),
+		   svNegative = m_strafeVerticalNegative->getStatus();
+	// Store raw float data
 	float horizontalInput = (float)(hPositive - hNegative);
 	float verticalInput = (float)(vPositive - vNegative);
 	float rollInput =  (float)(m_rollLeft->getStatus()-m_rollRight->getStatus());
 	float thrustInput = (float)(m_thrust->getStatus());
-	float strafeHorizontalInput = 0.0f;
-	float strafeVerticalInput = 0.0f;
+	float strafeHorizontalInput = (float)(shPositive - shNegative);
+	float strafeVerticalInput = (float)(svPositive - svNegative);
 	float sensitivityMult = 1.0f;
+
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -73,31 +78,20 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Thrust multiplier
 		float  thrustPower = controller->getThrustPower() * dt;
 
-		// Create rotation quaternion from angles and turn speed
-		// AglQuaternion rotation = AglQuaternion::constructFromAngularVelocity(inputAngles*turnSpeed);
-
-		// transform->setRotation(transform->getRotation()+rotation);
-
 		// Calc translation from player input
 		AglVector3 thrustVec;
 		thrustVec += transform->getMatrix().GetForward() * thrustInput * thrustPower;
 		thrustVec += transform->getMatrix().GetRight() * strafeHorizontalInput * thrustPower;
 		thrustVec += transform->getMatrix().GetUp()	 * strafeVerticalInput * thrustPower;
 
+		// Calc rotation from player input
 		AglVector3 angularVec=inputAngles*turnSpeed;
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		// DEBUGPRINT(( (toString(horizontalInput)+string("\n")).c_str() ));
-
-		// transform->setTranslation(transform->getTranslation()+thrustVec);
+		// Apply physics
 		m_physics->applyImpulse(physicsBody->m_id,thrustVec,angularVec);
 
-		// Apply force and torque
-		// rigidbody.AddForce(m_thrustVec,ForceMode.Acceleration);
-		// rigidbody.AddTorque(transform.rotation * m_inputAngles, ForceMode.Acceleration);
-
-		//////////////////////////////////////////////////////////////////////////
 	}
 }
 
