@@ -12,6 +12,8 @@
 /// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
+#include <TcpClient.h>
+
 #include <EntitySystem.h>
 #include <AglQuaternion.h>
 #include "InputBackendSystem.h"
@@ -19,11 +21,16 @@
 #include "Transform.h"
 #include "ShipController.h"
 
+#include "PacketType.h"
+#include "NetworkType.h"
+
+
 class ShipControllerSystem : public EntitySystem
 {
 public:
 	ShipControllerSystem(InputBackendSystem* p_inputBackend,
-						 PhysicsSystem* p_physicsSystem);
+						 PhysicsSystem* p_physicsSystem,
+						 TcpClient* p_client );
 	~ShipControllerSystem();
 
 	virtual void initialize();
@@ -32,6 +39,7 @@ public:
 private:
 	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
+	TcpClient* m_client;
 
 	Control* m_horizontalPositive;
 	Control* m_horizontalNegative;

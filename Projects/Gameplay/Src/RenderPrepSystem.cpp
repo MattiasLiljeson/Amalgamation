@@ -68,7 +68,8 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
 			// Batch render all entities that share the same mesh
-			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
+			if (!m_instanceLists[meshIdx].empty())
+				gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
 		}
 
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer        

@@ -3,6 +3,7 @@ using namespace igloo;
 
 #include <Packet.h>
 #include <AglVector3.h>
+#include <AglQuaternion.h>
 
 Describe(a_packet)
 {
@@ -99,6 +100,20 @@ Describe(a_packet)
 		Assert::That(vec_dst.x, Equals(vec_src.x));
 		Assert::That(vec_dst.y, Equals(vec_src.y));
 		Assert::That(vec_dst.z, Equals(vec_src.z));
+	}
+
+	It(can_contain_quaternion_data)
+	{
+		Packet packet;
+		AglQuaternion quaternion_src(1.0f, 2.0f, 3.0f, 4.5f);
+		packet << quaternion_src;
+		AglQuaternion quaternion_dst;
+		packet >> quaternion_dst;
+		
+		Assert::That(quaternion_dst.u.x, Equals(quaternion_src.u.x));
+		Assert::That(quaternion_dst.u.y, Equals(quaternion_src.u.y));
+		Assert::That(quaternion_dst.u.z, Equals(quaternion_src.u.z));
+		Assert::That(quaternion_dst.v, Equals(quaternion_src.v));
 	}
 
 	It(can_contain_multiple_int_data)

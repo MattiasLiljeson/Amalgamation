@@ -1,5 +1,6 @@
 #include "ProcessThread.h"
 
+#include <boost/thread/thread.hpp>
 
 ProcessThread::ProcessThread()
 {

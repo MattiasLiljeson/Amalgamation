@@ -96,9 +96,6 @@
     <ClInclude Include="NetworkInputHandlerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PacketTranslator.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
@@ -129,14 +126,11 @@
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="LookAtEntity.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkUpdateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerInputAction.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -153,9 +147,6 @@
     <ClInclude Include="AudioListener.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -236,8 +227,5 @@
     <ClCompile Include="AudioListener.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
   </ItemGroup>
 </Project>

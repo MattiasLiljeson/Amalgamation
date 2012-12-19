@@ -1,5 +1,9 @@
 #include "TcpListenerProcess.h"
 
+#include <boost/thread/thread.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/placeholders.hpp>
 
 TcpListenerProcess::TcpListenerProcess( ThreadSafeMessaging* p_parent, int p_port,
 									   boost::asio::io_service* p_ioService )

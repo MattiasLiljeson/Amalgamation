@@ -1,5 +1,9 @@
 #include "Packet.h"
 
+#include <string>
+#include <stdexcept>
+#include <climits>
+
 Packet::Packet()
 {
 	clear();
@@ -107,6 +111,13 @@ Packet& Packet::operator << (AglVector3 p_data)
 	return *this;
 }
 
+Packet& Packet::operator <<( AglQuaternion p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator>>( bool& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -150,6 +161,13 @@ Packet& Packet::operator >> ( double& p_data )
 }
 
 Packet& Packet::operator >> (AglVector3& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator>>( AglQuaternion& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
 	ReadData(&p_data, dataSize);

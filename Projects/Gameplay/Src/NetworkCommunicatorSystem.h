@@ -15,6 +15,10 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "RenderInfo.h"
+#include "ShipController.h"
+#include "CameraInfo.h"
+#include "Input.h"
+#include "LookAtEntity.h"
 
 #include "GraphicsBackendSystem.h"
 #include "NetworkType.h"

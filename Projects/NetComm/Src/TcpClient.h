@@ -12,16 +12,22 @@
 #pragma once
 
 #include <string>
-#include <exception>
-
-#include <boost/asio.hpp>
 
 #include "Packet.h"
-#include "TcpCommunicationProcess.h"
+#include "TcpConnecterProcess.h"
 #include "ThreadSafeMessaging.h"
 
+namespace boost
+{
+	namespace asio
+	{
+		class io_service;
+	};
+};
+
 using namespace std;
-using namespace boost::asio::ip;
+
+class TcpCommunicationProcess;
 
 class TcpClient: public ThreadSafeMessaging
 {
@@ -30,6 +36,8 @@ public:
 	~TcpClient();
 
 	bool connectToServer( string p_address, string p_port );
+
+	void connectToServerAsync(  string p_address, string p_port );
 
 	void disconnect();
 
@@ -49,6 +57,8 @@ public:
 
 private:
 	boost::asio::io_service* m_ioService;
+
+	TcpConnecterProcess* m_connecterProcess;
 
 	int m_numConnections;
 	TcpCommunicationProcess* m_communicationProcess;

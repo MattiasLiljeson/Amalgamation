@@ -1,4 +1,8 @@
 #include "NetworkCommunicatorSystem.h"
+#include "AudioListener.h"
+#include "PhysicsBody.h"
+#include "BodyInitData.h"
+#include <AntTweakBarWrapper.h>
 
 NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::NetworkCommunicatorSystem, 1, 
@@ -29,26 +33,87 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 			packet >> networkType;
 			if (networkType == (char)NetworkType::Ship)
 			{
-				int			owner;
-				int			networkId;
-				AglVector3	position;
+				int				owner;
+				int				networkId;
+				AglVector3		position;
+				AglQuaternion	rotation;
+				AglVector3		scale;
 
-				packet >> owner >> networkId >> position;
+				packet >> owner >> networkId >> position >> rotation >> scale;
 
-				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->createMesh("P_cube");
+				int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+					SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
 
-				Entity* e = NULL;
-				e = m_world->createEntity();
-				
-				e->addComponent(ComponentType::Transform,
-					new Transform(position.x, position.y, position.z));
-				e->addComponent(ComponentType::NetworkSynced,
+				Transform* transform = new Transform( (float)(owner) * 10.0f, 0, 0 );
+
+				Entity* entity = NULL;
+				Component* component;
+				// Create a "spaceship"
+				entity = m_world->createEntity();
+				component = new RenderInfo( shipMeshId );
+				entity->addComponent( ComponentType::RenderInfo, component );
+				component = transform;
+				entity->addComponent( ComponentType::Transform, component );
+				if(m_tcpClient->getId() == owner)
+				{
+					component = new ShipController(5.0f, 50.0f);
+					entity->addComponent( ComponentType::ShipController, component );
+				}
+				//component = new PhysicsBody();
+				//entity->addComponent(ComponentType::PhysicsBody, component);
+
+				//component = new BodyInitData(transform->getTranslation(), AglQuaternion::identity(),
+				//	AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+				//entity->addComponent(ComponentType::BodyInitData, component);
+				entity->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(networkId, owner, NetworkType::Ship));
-				e->addComponent(ComponentType::RenderInfo,
-					new RenderInfo( meshId ));
+				m_world->addEntity(entity);
+				
+				
+				int shipId = entity->getIndex();
 
-				m_world->addEntity(e);
+				//if(m_tcpClient->getId() == owner)
+				//{
+				//	entity->addComponent( ComponentType::ShipController,
+				//		new ShipController(5.0f, 50.0f) );
+				//}
+				//entity->addComponent(ComponentType::Transform,
+				//	new Transform(position, rotation, scale));
+
+				//entity->addComponent(ComponentType::RenderInfo,
+				//	new RenderInfo( meshId ));
+
+				//m_world->addEntity(entity);
+
+
+				if(owner == m_tcpClient->getId())
+				{
+					// A camera from which the world is rendered.
+					entity = m_world->createEntity();
+					component = new CameraInfo( 800/(float)600 );
+					entity->addComponent( ComponentType::CameraInfo, component );
+					//component = new Input();
+					//entity->addComponent( ComponentType::Input, component );
+					component = new Transform( -5.0f, 0.0f, -5.0f );
+					entity->addComponent( ComponentType::Transform, component );
+					component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
+					entity->addComponent( ComponentType::LookAtEntity, component );
+					component = new AudioListener();
+					entity->addComponent(ComponentType::AudioListener, component);
+					m_world->addEntity(entity);
+
+					/************************************************************************/
+					/* Debug information only and there is no need for this to run the code */
+					/************************************************************************/
+					AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
+						TwType::TW_TYPE_FLOAT, 
+						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+						"group=Sound min=0 max=10 step=0.001 precision=3");
+
+					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
+						TwType::TW_TYPE_INT32,
+						m_tcpClient->getIdPointer(), "" );
+				}
 			}
 		}
 		else if (packetType == (char)PacketType::EntityUpdate)
@@ -59,9 +124,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 			if (networkType == (char)NetworkType::Ship)
 			{
 				int			networkId;
-				AglVector3	position;
+				AglVector3		position;
+				AglQuaternion	rotation;
+				AglVector3		scale;
 
-				packet >> networkId >> position;
+				packet >> networkId >> position >> rotation >> scale;
 
 
 
@@ -70,8 +137,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				for( unsigned int i=0; i<p_entities.size(); i++ )
 				{
 					NetworkSynced* netSync = NULL;
-					netSync = static_cast<NetworkSynced*>(
-						m_world->getComponentManager()->getComponent(
+					netSync = static_cast<NetworkSynced*>(m_world->getComponentManager()->getComponent(
 						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 					if( netSync->getNetworkIdentity() == networkId )
 					{
@@ -80,10 +146,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 							m_world->getComponentManager()->getComponent(
 							p_entities[i]->getIndex(), ComponentType::Transform ) );
 						transform->setTranslation( position );
-						if (transform->getTranslation().z == 0.0f)
-						{
-							int a = 0;
-						}
+						transform->setRotation( rotation );
+						transform->setScale( scale );
 					}
 				}
 			}

@@ -45,6 +45,15 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			int id = m_server->popNewConnection();
 
+			///
+			/// Give the new client its Network Identity.
+			///
+			Packet identityPacket;
+			identityPacket << (char)PacketType::InitCredentials <<
+				(char)NetworkType::Identity << id;
+			m_server->unicastPacket( identityPacket, id );
+
+
 			// Create a new entity for the connecting client, and belonging components
 			Entity* e = m_world->createEntity();
 
@@ -54,6 +63,16 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			
 			e->addComponent( ComponentType::Transform, transform);
 			e->addComponent( ComponentType::NetworkSynced, netSync);
+			e->addComponent( ComponentType::ShipController,
+				new ShipController(5.0f, 50.0f));
+
+			e->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
+			e->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData( transform->getTranslation(),
+								AglQuaternion::identity(),
+								AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+								AglVector3(0, 0, 0), 0, false));
+
 
 			m_world->addEntity( e );
 
@@ -68,7 +87,8 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			newClientConnected << 
 				(char)PacketType::EntityCreation <<
 				(char)NetworkType::Ship << id << e->getIndex() <<
-				transform->getTranslation();
+				transform->getTranslation() << transform->getRotation() <<
+				transform->getScale();
 			
 			m_server->broadcastPacket(newClientConnected);
 
@@ -83,12 +103,6 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			//	int:	entityId
 			//	int:	componentTypeId
 			//	*:		specificComponentData
-
-			// Give the new client its Network Identity.
-			Packet identityPacket;
-			identityPacket << (char)PacketType::InitCredentials <<
-				(char)NetworkType::Identity << id;
-			m_server->unicastPacket( identityPacket, id );
 
 			// Send the old networkSynced stuff:
 			for( unsigned int i=0; i<p_entities.size(); i++ )
@@ -106,7 +120,8 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 					Packet packet;
 					packet << (char)PacketType::EntityCreation <<
 						(char)NetworkType::Ship << netSync->getNetworkOwner() << 
-						entityId << transform->getTranslation();
+						entityId << transform->getTranslation() <<
+						transform->getRotation() << transform->getScale();
 
 					m_server->unicastPacket( packet, id );
 				}

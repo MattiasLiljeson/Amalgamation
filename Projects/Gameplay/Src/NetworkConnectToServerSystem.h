@@ -30,4 +30,5 @@ private:
 	TcpClient* m_tcpClient;
 	InputBackendSystem* m_inputBackend;
 
+	bool m_isLookingForConnection;
 };

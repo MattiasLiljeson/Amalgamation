@@ -33,6 +33,9 @@
 // Components:
 #include "Transform.h"
 #include "NetworkSynced.h"
+#include "ShipController.h"
+#include "BodyInitData.h"
+#include "PhysicsBody.h"
 
 using namespace std;
 using namespace boost::asio::ip;

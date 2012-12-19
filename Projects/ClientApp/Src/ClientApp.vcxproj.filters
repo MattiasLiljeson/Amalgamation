@@ -3,8 +3,19 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ClientApplication.cpp" />
+    <ClCompile Include="..\..\ServerApp\Src\ServerApplication.cpp">
+      <Filter>ServerApplication refs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientApplication.h" />
+    <ClInclude Include="..\..\ServerApp\Src\ServerApplication.h">
+      <Filter>ServerApplication refs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ServerApplication refs">
+      <UniqueIdentifier>{7f38769d-effe-469b-aad1-12f2ce071d4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

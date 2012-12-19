@@ -11,7 +11,6 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <string>
 #include "ProcessMessage.h"
 
 class ProcessMessageTerminate: public ProcessMessage

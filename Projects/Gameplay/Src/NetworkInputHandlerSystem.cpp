@@ -1,8 +1,9 @@
 #include "NetworkInputHandlerSystem.h"
 
 NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
-	: EntitySystem( SystemType::NetworkInputHandlerSystem, 1,
-	ComponentType::NetworkSynced )
+	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
+	ComponentType::NetworkSynced, ComponentType::ShipController,
+	ComponentType::PhysicsBody )
 {
 	m_server = p_server;
 }
@@ -15,7 +16,8 @@ NetworkInputHandlerSystem::~NetworkInputHandlerSystem()
 
 void NetworkInputHandlerSystem::initialize()
 {
-
+	m_physics = static_cast<PhysicsSystem*>(
+		m_world->getSystem( SystemType::PhysicsSystem ) );
 }
 
 void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -24,36 +26,59 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	{
 		Packet packet = m_server->popNewPacket();
 
-		char packetType;
-		packet >> packetType;
-
-		if(packetType == (char)PacketType::PlayerInput)
+		char networkType;
+		packet >> networkType;
+		if( networkType == (char)NetworkType::Ship )
 		{
-			char playerInputAction;
-			packet >> playerInputAction;
-
-			if(playerInputAction == (char)PlayerInputAction::ThrustForward)
+			char packetType;
+			packet >> packetType;
+			if( packetType == (char)PacketType::PlayerInput )
 			{
-				bool thrustForwardState;
-				packet >> thrustForwardState;
+				AglVector3 thrustVec;
+				AglVector3 angularVec;
+
+				packet >> thrustVec >> angularVec;
+				
+				//cout << "ThrustVec(" << thrustVec.x << ", " <<
+				//	thrustVec.y << ", " <<
+				//	thrustVec.z <<"). ";
+				//cout << "AngularVec(" << angularVec.x << ", " <<
+				//	angularVec.y << ", " <<
+				//	angularVec.z <<").\n";
+
+				Entity* entity = NULL;
+
+				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
+				// Locate the entity using networkId by consulting the entitymanager in world
+				//  entities[networkId]
+				// world->getEntityManager->getEntity[networkId]
 
 				for( unsigned int i=0; i<p_entities.size(); i++ )
 				{
-					// TODO: Need to know who sent the packet!
-					if( p_entities[i]->getIndex() == packet.getSenderId() )
-					{
-						Transform* transform = NULL;
-						transform = static_cast<Transform*>(
-							m_world->getComponentManager()->getComponent(
-							p_entities[i]->getIndex(), ComponentType::Transform ) );
+					NetworkSynced* netSync = NULL;
+					netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
+						ComponentType::NetworkSynced ) );
 
-						if( thrustForwardState == true ) // "Using thrust forward".
+					if(packet.getSenderId() == netSync->getNetworkOwner())
+					{
+						if( p_entities[i]->getComponent(ComponentType::ShipController) )
 						{
-							AglVector3 pos = transform->getTranslation();
-							pos.y += 0.5f;
-							transform->setTranslation( pos );
+							// Entity is controllable.
+							entity = p_entities[i];
+							break;
 						}
-							
+					}
+				}
+
+				if(entity)
+				{
+					PhysicsBody* physicsBody = NULL;
+					physicsBody = static_cast<PhysicsBody*>(entity->getComponent(
+						ComponentType::PhysicsBody ) );
+					if( physicsBody )
+					{
+						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
+						//cout << physicsBody->m_id << endl;
 					}
 				}
 			}

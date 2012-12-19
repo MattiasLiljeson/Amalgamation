@@ -1,7 +1,7 @@
 #include "ProcessMessageSocketDisconnected.h"
 
 ProcessMessageSocketDisconnected::ProcessMessageSocketDisconnected()
-	: ProcessMessage( MessageType::SOCKET_DISCONNECTED, NULL )
+	: ProcessMessage( MessageType::SOCKET_DISCONNECTED, 0 )
 {
 }
 

@@ -1,23 +1,25 @@
 // =======================================================================================
-//	PlayerInputAction
+//	PacketTranslator
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief Base class for translating a packet to data and data to a packet.
 ///        
-/// # PlayerInputAction
+/// # PacketTranslator
 /// Detailed description...
-/// Created on: 14-12-2012 
+/// Created on: 17-12-2012 
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class PlayerInputAction
+class PacketTranslator
 {
 public:
-	enum
-	{
-		NON_EXISTENT_PLAYERINPUTACTION = -1,
-		ThrustForward,
-	};
+	PacketTranslator();
 
+	virtual ~PacketTranslator();
+
+	virtual char* getBytes() = 0;
+	virtual void setBytes(char* p_byteData, unsigned int p_bytesSize) = 0;
+
+	unsigned int getBytesSize();
 };

@@ -1,6 +1,8 @@
 #include "ClientApplication.h"
 #include <AntTweakBarWrapper.h>
 
+#include <boost/thread/thread.hpp>
+
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
 	try{
@@ -63,6 +65,10 @@ void ClientApplication::run()
 			m_world->setDelta((float)dt);
 			m_world->process();
 			
+			#ifdef _COMBINE_CLIENT_AND_SERVER
+			m_serverApp.step( static_cast<float>(dt) );
+			#endif
+
 			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
@@ -93,7 +99,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( inputBackend, true);
 
 	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics);
+	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
+		m_client );
 	m_world->setSystem( shipController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
@@ -110,8 +117,17 @@ void ClientApplication::initSystems()
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
+	NetworkConnectToServerSystem* connect =
+		new NetworkConnectToServerSystem( m_client, inputBackend );
+	m_world->setSystem( connect, true );
 
-	//Audio Systems
+	NetworkCommunicatorSystem* communicatorSystem =
+		new NetworkCommunicatorSystem( m_client );
+	m_world->setSystem( communicatorSystem, false );
+
+	/************************************************************************/
+	/* Audio															*/
+	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
@@ -120,15 +136,6 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
-	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client, inputBackend );
-	m_world->setSystem( connect, false );
-
-	NetworkCommunicatorSystem* communicatorSystem =
-		new NetworkCommunicatorSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );
-
 	
 	m_world->initialize();
 }
@@ -201,75 +208,97 @@ void ClientApplication::initEntities()
 	m_world->addEntity(entity);
 
 	// walker
-	entity = m_world->createEntity();
-	component = new RenderInfo( walkerMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(AglVector3(10, 10, 10), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	entity->addComponent( ComponentType::Transform, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
+	//entity = m_world->createEntity();
+	//component = new RenderInfo( walkerMeshId );
+	//entity->addComponent( ComponentType::RenderInfo, component );
+	//component = new Transform(AglVector3(10, 10, 10), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	//entity->addComponent( ComponentType::Transform, component );
+	//component = new PhysicsBody();
+	//entity->addComponent(ComponentType::PhysicsBody, component);
 
-	component = new BodyInitData(AglVector3(10, 10, 10), AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
-	entity->addComponent(ComponentType::BodyInitData, component);
+	//component = new BodyInitData(AglVector3(10, 10, 10), AglQuaternion::identity(),
+	//	AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+	//entity->addComponent(ComponentType::BodyInitData, component);
 
-	m_world->addEntity(entity);
+	//m_world->addEntity(entity);
 
 	// Create a "spaceship"
-	entity = m_world->createEntity();
-	component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( -5.0f, 0.0f, 0.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new ShipController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipController, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
+	//entity = m_world->createEntity();
+	//component = new RenderInfo( shipMeshId );
+	//entity->addComponent( ComponentType::RenderInfo, component );
+	//component = new Transform( -5.0f, 0.0f, 0.0f );
+	//entity->addComponent( ComponentType::Transform, component );
+	//component = new ShipController(5.0f, 50.0f);
+	//entity->addComponent( ComponentType::ShipController, component );
+	//component = new PhysicsBody();
+	//entity->addComponent(ComponentType::PhysicsBody, component);
 
-	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
-	entity->addComponent(ComponentType::BodyInitData, component);
-	
-	m_world->addEntity(entity);
-	int shipId = entity->getIndex();
+	//component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
+	//	AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+	//entity->addComponent(ComponentType::BodyInitData, component);
+	//m_world->addEntity(entity);
+	//int shipId = entity->getIndex();
+
+//	// Create a "spaceship"
+//	entity = m_world->createEntity();
+//	component = new RenderInfo( cubeMeshId );
+//	entity->addComponent( ComponentType::RenderInfo, component );
+//	component = new Transform( -5.0f, 0.0f, 0.0f );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new ShipController(0.3f,3.0f);
+//	entity->addComponent( ComponentType::ShipController, component );
+//	component = new PhysicsBody();
+//	entity->addComponent(ComponentType::PhysicsBody, component);
+//
+//	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
+//		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
+//	entity->addComponent(ComponentType::BodyInitData, component);
+//	
+//	m_world->addEntity(entity);
+//	int shipId = entity->getIndex();
+//
+//
+//	// A camera from which the world is rendered.
+//	entity = m_world->createEntity();
+//	component = new CameraInfo( 800/(float)600 );
+//	entity->addComponent( ComponentType::CameraInfo, component );
+//	component = new Input();
+//	entity->addComponent( ComponentType::Input, component );
+//	component = new Transform( -5.0f, 0.0f, -5.0f );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
+//	entity->addComponent( ComponentType::LookAtEntity, component );
+//	m_world->addEntity(entity);
 
 
 
 	// A camera from which the world is rendered.
-	entity = m_world->createEntity();
-	component = new CameraInfo( 800/(float)600 );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	component = new Input();
-	entity->addComponent( ComponentType::Input, component );
-	component = new Transform( -5.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
-	entity->addComponent( ComponentType::LookAtEntity, component );
-	component = new AudioListener();
-	entity->addComponent(ComponentType::AudioListener, component);
+	//entity = m_world->createEntity();
+	//component = new CameraInfo( 800/(float)600 );
+	//entity->addComponent( ComponentType::CameraInfo, component );
+	//component = new Input();
+	//entity->addComponent( ComponentType::Input, component );
+	//component = new Transform( -5.0f, 0.0f, -5.0f );
+	//entity->addComponent( ComponentType::Transform, component );
+	//component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
+	//entity->addComponent( ComponentType::LookAtEntity, component );
+	//component = new AudioListener();
+	//entity->addComponent(ComponentType::AudioListener, component);
+	//m_world->addEntity(entity);
 
 	/************************************************************************/
 	/* Debug information only and there is no need for this to run the code */
 	/************************************************************************/
-	AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
-		TwType::TW_TYPE_FLOAT, 
-		static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-		"group=Sound min=0 max=10 step=0.001 precision=3");
-	m_world->addEntity(entity);
+	//AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
+	//	TwType::TW_TYPE_FLOAT, 
+	//	static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+	//	"group=Sound min=0 max=10 step=0.001 precision=3");
 
-	// Misplaced.
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
-		TwType::TW_TYPE_INT32,
-		m_client->getIdPointer(), "" );
 
-	// Code below used to test removal of object and components under runtime
-	entity = m_world->createEntity();
-	component = new Transform( 5.0f, 5.0f, 5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
-	m_world->getComponentManager()->removeComponent( entity, ComponentType::Transform );
-	m_world->deleteEntity(entity);
-
+	//// Misplaced.
+	//AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
+	//	TwType::TW_TYPE_INT32,
+	//	m_client->getIdPointer(), "" );
 }
 
 void ClientApplication::initSounds()

@@ -6,6 +6,12 @@
 						be included as soon as possible. Johan: Haven't looked too
 						much into this yet. */
 
+#define _COMBINE_CLIENT_AND_SERVER
+
+#ifdef _COMBINE_CLIENT_AND_SERVER
+ #include "ServerApplication.h"
+#endif
+
 #include <EntityWorld.h>
 #include <Input.h>
 #include <Windows.h>
@@ -71,4 +77,7 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
+#ifdef _COMBINE_CLIENT_AND_SERVER
+	Srv::ServerApplication m_serverApp;
+#endif
 };
