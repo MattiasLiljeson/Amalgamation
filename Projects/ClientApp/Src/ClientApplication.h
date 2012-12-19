@@ -36,7 +36,7 @@
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
-
+#include "..\..\Gameplay\Src\libRocketBackendSystem.h"
 //TEMP
 #include <SoundEnums.h>
 
@@ -65,6 +65,7 @@ private:
 	void initSystems();
 	void initEntities();
 	void initSounds();
+	void initSoundSystem();
 private:
 	HINSTANCE m_hInstance;
 

@@ -1,24 +1,32 @@
+#pragma once
+#include <windows.h>
+#include <FreeImage.h>
+#include <d3d11.h>
+#include "D3DException.h"
+#include "FreeImageException.h"
+
 // =======================================================================================
 //                                      TextureParseer
 // =======================================================================================
-
 ///---------------------------------------------------------------------------------------
-/// \brief	Texture Parser wrapps the functionality behind FreeImage into one light weight
-/// class
+/// \brief	Texture Parser wraps FreeImage and provides Texture parsing functions.
+/// This namespace wraps the functionality behind FreeImage and provides a general 
+/// data-to-DX11-SubResource function which can be used by others into one light weight
+/// namespace. 
 ///        
 /// # TextureParseer
 /// Detailed description.....
 /// Created on: 5-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-#include <FreeImage.h>
-#include <d3d11.h>
-#include <windows.h>
-#include "D3DException.h"
-#include "FreeImageException.h"
 
 namespace TextureParser
 {
+	static void init();
+	static ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, 
+		const char* p_filePath);
+	static ID3D11ShaderResourceView* createTexture( ID3D11Device* p_device,
+		const byte* p_source, int p_width, int p_height, int p_pitch );
+
 	///-----------------------------------------------------------------------------------
 	/// Called once to initialize Free Image properly
 	/// \return void
@@ -50,17 +58,32 @@ namespace TextureParser
 
 		FreeImage_FlipVertical(image);
 
+		ID3D11ShaderResourceView* newShaderResurceView = createTexture(
+			p_device, FreeImage_GetBits(image), FreeImage_GetWidth(image),
+			FreeImage_GetHeight(image), FreeImage_GetPitch(image));
+
+		/************************************************************************/
+		/* Clean up the mess afterwards											*/
+		/************************************************************************/
+		FreeImage_Unload(image);
+
+		return newShaderResurceView;
+	}
+
+	static ID3D11ShaderResourceView* createTexture( ID3D11Device* p_device,
+		const byte* p_source, int p_width, int p_height, int p_pitch )
+	{
 		D3D11_SUBRESOURCE_DATA data;
 		ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-		data.pSysMem = (void*)FreeImage_GetBits(image);
-		data.SysMemPitch = FreeImage_GetPitch(image);
+		data.pSysMem = (void*)p_source;
+		data.SysMemPitch = p_pitch;
 
 		D3D11_TEXTURE2D_DESC texDesc;
 		ZeroMemory(&texDesc,sizeof(D3D11_TEXTURE2D_DESC));
-		texDesc.Width		= FreeImage_GetWidth(image);
-		texDesc.Height		= FreeImage_GetHeight(image);
-		texDesc.MipLevels	= 1;
-		texDesc.ArraySize	= 1;
+		texDesc.Width				= p_width;
+		texDesc.Height				= p_height;
+		texDesc.MipLevels			= 1;
+		texDesc.ArraySize			= 1;
 		texDesc.SampleDesc.Count	= 1;
 		texDesc.SampleDesc.Quality	= 0;
 		texDesc.Usage				= D3D11_USAGE_DEFAULT;
@@ -89,10 +112,6 @@ namespace TextureParser
 		if (FAILED(hr))
 			throw D3DException(hr, __FILE__,__FUNCTION__,__LINE__);
 
-		/************************************************************************/
-		/* Clean up the mess afterwards											*/
-		/************************************************************************/
-		FreeImage_Unload(image);
 		texture->Release();
 
 		return newShaderResurceView;

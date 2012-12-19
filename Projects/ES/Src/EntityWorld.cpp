@@ -90,6 +90,11 @@ void EntityWorld::deleteManager( Manager::ManagerTypeIdx p_managerType )
 	}
 }
 
+float EntityWorld::getElapsedTime()
+{
+	return m_totalGameTime;
+}
+
 float EntityWorld::getDelta()
 {
 	return m_delta;
@@ -228,6 +233,8 @@ void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 
 void EntityWorld::process()
 {
+	m_totalGameTime += m_delta;
+
 	check( m_added,   new AddedPerformer );
 	check( m_changed, new ChangedPerformer );
 	check( m_disable, new DisabledPerformer );

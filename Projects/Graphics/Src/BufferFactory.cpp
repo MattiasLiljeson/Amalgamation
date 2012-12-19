@@ -163,8 +163,8 @@ Mesh* BufferFactory::createBoxMesh()
 	return newBox;
 }
 
-Mesh* BufferFactory::createMeshFromPTVerticesAndIndices( 
-	int p_numVertices, PTVertex* p_vertices, int p_numIndices, DIndex* p_indices )
+Mesh* BufferFactory::createMeshFromPTNVerticesAndIndices( 
+	int p_numVertices, PTNVertex* p_vertices, int p_numIndices, DIndex* p_indices )
 {
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
@@ -180,12 +180,12 @@ Mesh* BufferFactory::createMeshFromPTVerticesAndIndices(
 	indexBufferDesc.NumElements = p_numIndices;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
 
-	Buffer<PTVertex>* vertexBuffer = new Buffer<PTVertex>( m_device, m_deviceContext,
+	Buffer<PTNVertex>* vertexBuffer = new Buffer<PTNVertex>( m_device, m_deviceContext,
 		p_vertices, vertexBufferDesc );
 	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>( m_device, m_deviceContext, p_indices,
 		indexBufferDesc );
 
-	Mesh* newBox = new Mesh(vertexBuffer,indexBuffer);
+	Mesh* mesh = new Mesh( vertexBuffer, indexBuffer );
 
-	return newBox;
+	return mesh;
 }

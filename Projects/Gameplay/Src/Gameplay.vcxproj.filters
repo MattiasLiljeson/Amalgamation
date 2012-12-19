@@ -148,10 +148,13 @@
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
-    <ClInclude Include="RenderInterfaceDx10.h">
+    <ClInclude Include="libRocketBackendSystem.h">
       <Filter>Systems\libRocket</Filter>
     </ClInclude>
-    <ClInclude Include="SystemInterfaceDx10.h">
+    <ClInclude Include="LibRocketRenderInterface.h">
+      <Filter>Systems\libRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketSystemInterface.h">
       <Filter>Systems\libRocket</Filter>
     </ClInclude>
   </ItemGroup>
@@ -221,10 +224,13 @@
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
-    <ClCompile Include="RenderInterfaceDx10.cpp">
+    <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
-    <ClCompile Include="SystemInterfaceDx10.cpp">
+    <ClCompile Include="LibRocketRenderInterface.cpp">
+      <Filter>Systems\libRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketSystemInterface.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
   </ItemGroup>

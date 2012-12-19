@@ -14,12 +14,14 @@
 #include <Window.h>
 #include <Windows.h>
 #include <vld.h>
+#include "libRocketBackendSystem.h"
 
 
 class RenderPrepSystem : public EntitySystem
 {
 public:
-	RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend  );
+	RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend,
+		LibRocketBackendSystem* p_rocketBackend );
 	virtual ~RenderPrepSystem();
 	virtual void initialize();
 
@@ -28,6 +30,7 @@ public:
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	GraphicsBackendSystem* m_gfxBackend;
+	LibRocketBackendSystem* m_rocketBackend;
 
 };
 

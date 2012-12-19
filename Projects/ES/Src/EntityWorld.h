@@ -80,6 +80,10 @@ public:
 	void deleteManager( Manager* p_manager );
 	void deleteManager( Manager::ManagerTypeIdx p_managerType );
 
+	/// Get the number of seconds elapsed since the start of the application
+	/// @returns Seconds elapsed
+	float getElapsedTime();
+
 	/**
 	 * Time since last game loop.
 	 * 
@@ -227,6 +231,7 @@ private:
 
 private:
 	float m_delta;
+	float m_totalGameTime; ///< number of seconds elapsed since the start of the application
 	EntityManager* m_entityManager;
 	ComponentManager* m_componentManager;
 	SystemManager* m_systemManager;

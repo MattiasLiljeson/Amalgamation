@@ -236,6 +236,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		}
 		p_mesh->setTextureId( (unsigned int)texId );
 	}
+	return meshId;
 }
 
 void GraphicsWrapper::initViewport()
@@ -264,4 +265,14 @@ ID3D11DeviceContext* GraphicsWrapper::getDeviceContext()
 void GraphicsWrapper::hookUpAntTweakBar()
 {
 	m_deferredRenderer->hookUpAntTweakBar();
+}
+
+int GraphicsWrapper::getWindowWidth()
+{
+	return m_width;
+}
+
+int GraphicsWrapper::getWindowdHeight()
+{
+	return m_height;
 }

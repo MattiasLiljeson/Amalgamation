@@ -53,7 +53,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
 
-	Mesh* createMeshFromPTVerticesAndIndices( PTVertex* p_vertices, DIndex* p_indices );
+	Mesh* createMeshFromPTNVerticesAndIndices( int p_numVertices, PTNVertex* p_vertices,
+		int p_numIndices, DIndex* p_indices  );
 protected:
 private:
 	ID3D11Device* m_device;

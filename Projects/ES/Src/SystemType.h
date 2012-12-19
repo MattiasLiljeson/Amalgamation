@@ -30,6 +30,7 @@ public:	//Enums
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,
+		LibRocketBackendSystem,
 		NUM_SYSTEM_TYPES
 	};
 

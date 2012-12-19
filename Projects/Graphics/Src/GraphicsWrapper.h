@@ -90,6 +90,10 @@ public:
 	ID3D11DeviceContext* getDeviceContext();
 
 	void hookUpAntTweakBar();
+
+	int getWindowWidth();
+	int getWindowdHeight();
+
 private:
 
 	///-----------------------------------------------------------------------------------

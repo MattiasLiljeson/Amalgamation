@@ -3,15 +3,17 @@
 
 #include <Rocket/Core/SystemInterface.h>
 
-#include "Timer.h"
+#include <EntityWorld.h>
 
-class SystemInterfaceDx10 : public Rocket::Core::SystemInterface
+class EntityWorld;
+
+class LibRocketSystemInterface : public Rocket::Core::SystemInterface
 {
 private:
-	Timer* timer;
+	EntityWorld* m_world;
 
 public:
-	SystemInterfaceDx10(Timer* _timer);
+	LibRocketSystemInterface( EntityWorld* p_world );
 
 	/// Get the number of seconds elapsed since the start of the application
 	/// @returns Seconds elapsed

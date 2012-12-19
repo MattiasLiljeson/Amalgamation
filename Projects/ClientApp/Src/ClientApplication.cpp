@@ -11,9 +11,17 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		m_client = new TcpClient();
 
 		m_world = new EntityWorld();
+		try{
+
+			initSoundSystem();
+			initSounds();
+		}
+		catch(exception& e)
+		{
+			DEBUGPRINT((e.what()));
+		}
 		initSystems();
 		initEntities();
-		initSounds();
 	}
 	catch(exception& e)
 	{
@@ -89,6 +97,9 @@ void ClientApplication::initSystems()
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
 	m_world->setSystem( graphicsBackend, true );
 
+	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend );
+	m_world->setSystem( rocketBackend, true );
+
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
 	m_world->setSystem( inputBackend, true);
 
@@ -101,7 +112,7 @@ void ClientApplication::initSystems()
 	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( camera , true );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend );
+	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
 	m_world->setSystem( renderer , true );
 
 	/************************************************************************/
@@ -110,16 +121,6 @@ void ClientApplication::initSystems()
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
-
-	//Audio Systems
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
 	NetworkConnectToServerSystem* connect =
 		new NetworkConnectToServerSystem( m_client, inputBackend );
@@ -250,6 +251,7 @@ void ClientApplication::initEntities()
 
 void ClientApplication::initSounds()
 {
+
 	EntitySystem*	tempSys			= NULL;
 	Entity*			entity			= NULL;
 	Component*		component		= NULL;
@@ -335,4 +337,18 @@ void ClientApplication::initSounds()
 
 	delete basicSoundInfo;
 	
+}
+
+void ClientApplication::initSoundSystem()
+{
+	//Audio Systems
+	AudioBackendSystem* audioBackend = new AudioBackendSystem();
+	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
+
+	AudioController* audioController = new AudioController(audioBackend);
+	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
+
+	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
+	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+
 }

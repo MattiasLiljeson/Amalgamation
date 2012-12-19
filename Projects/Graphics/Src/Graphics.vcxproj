@@ -22,6 +22,7 @@
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
+    <ClCompile Include="TextureParser.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

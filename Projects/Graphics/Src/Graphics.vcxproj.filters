@@ -35,6 +35,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Renderer\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="TextureParser.cpp">
+      <Filter>Graphics Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />

@@ -107,6 +107,7 @@ Build/Assets/Sound/
 Build/Assets/Maps/
 Build/Assets/Misc/
 Build/Assets/Models/
+Build/Assets/*
 External/LibRocket/
 External/GTest/
 External/Visual Leak Detector/
