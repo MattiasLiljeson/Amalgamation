@@ -153,7 +153,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 		}
 		else
 		{
-			if (false)//mSkeletonMappings.size() > 0)
+			if (mSkeletonMappings.size() > 0)
 			{
 				SkeletonMeshShader* ss = ShaderManager::GetInstance()->GetSkeletonMeshShader();
 				ss->SetBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), pScale, Scene::GetInstance()->GetSkeleton(mSkeletonMappings[0]->GetSkeleton()), matp);

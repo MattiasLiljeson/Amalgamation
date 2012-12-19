@@ -2,6 +2,7 @@
 #include "RigidBodySphere.h"
 #include "GJKSolver.h"
 #include "CollisionManager.h"
+#include "RigidBodyBox.h"
 
 void RigidBodyMesh::CalculateInertiaTensor()
 {
@@ -65,6 +66,29 @@ bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, vector<EPACollision
 		return true;
 	}
 	return false;
+}
+bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
+{
+	AglMatrix a = GetWorld();
+	AglMatrix aInv = a.inverse();
+	AglMatrix b = pBox->GetWorld();
+	b *= aInv;
+
+	vector<AglVector3> corn;
+	AglVector3 HalfSize = pBox->GetSizeAsVector3() / 2;
+	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]));
+	corn.push_back(AglVector3( HalfSize[0], -HalfSize[1], -HalfSize[2]));
+	corn.push_back(AglVector3(-HalfSize[0],  HalfSize[1], -HalfSize[2]));
+	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1],  HalfSize[2]));
+	corn.push_back(AglVector3( HalfSize[0],  HalfSize[1], -HalfSize[2]));
+	corn.push_back(AglVector3( HalfSize[0], -HalfSize[1],  HalfSize[2]));
+	corn.push_back(AglVector3(-HalfSize[0],  HalfSize[1],  HalfSize[2]));
+	corn.push_back(AglVector3( HalfSize[0],  HalfSize[1],  HalfSize[2]));
+	for (int i = 0; i < 8; i++)
+	{
+		AglVec3Transform(corn[i], b);
+	}
+	return Evaluate(corn, b.GetRight(), b.GetUp(), b.GetForward(), pData);
 }
 
 bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData)
@@ -135,4 +159,71 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>
 	if (pData.size() > 0)
 		return true;
 	return false;
+}
+
+bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData)
+{
+	//Skip nine of the axes as they usually prevent few collisions.
+	//This creates deeper traversal but evaluation of each node will
+	//be faster.
+	AglVector3 axes[6];
+	axes[0] = p_u1;
+	axes[1] = p_u2;
+	axes[2] = p_u3;
+	axes[3] = AglVector3(1, 0, 0);
+	axes[4] = AglVector3(0, 1, 0);
+	axes[5] = AglVector3(0, 0, 1);
+
+	AglBspNode* m_nodes = mBSPTree->getNodes();
+	vector<AglBspNode> toEvaluate;
+	toEvaluate.push_back(m_nodes[0]);
+
+	vector<AglVector3> points2(8);
+
+	vector<AglVector3> points(3);
+
+	AglVector3* m_triangles2 = mBSPTree->getTriangles2();
+
+	while (toEvaluate.size() > 0)
+	{
+		AglBspNode curr = toEvaluate.back();
+		toEvaluate.pop_back();
+
+		points2[0] = curr.minPoint;
+		points2[1] = AglVector3(curr.minPoint.x, curr.minPoint.y, curr.maxPoint.z);
+		points2[2] = AglVector3(curr.minPoint.x, curr.maxPoint.y, curr.minPoint.z);
+		points2[3] = AglVector3(curr.minPoint.x, curr.maxPoint.y, curr.maxPoint.z);
+		points2[4] = AglVector3(curr.maxPoint.x, curr.minPoint.y, curr.minPoint.z);
+		points2[5] = AglVector3(curr.maxPoint.x, curr.minPoint.y, curr.maxPoint.z);
+		points2[6] = AglVector3(curr.maxPoint.x, curr.maxPoint.y, curr.minPoint.z);
+		points2[7] = curr.maxPoint;
+
+		bool col = true;
+		for (int i = 0; i < 6; i++)
+		{
+			float overlap = OverlapAmount(p_points, points2, axes[i]);
+			if (overlap <= 0)
+			{
+				col = false;
+				break;
+			}
+		}
+		if (col)
+		{
+			if (curr.leftChild >= 0)
+			{
+				toEvaluate.push_back(m_nodes[curr.leftChild]);
+				toEvaluate.push_back(m_nodes[curr.rightChild]);
+			}
+			else if (curr.triangleID >= 0)
+			{
+				//Add the triangle to the list of collided triangles
+				pData.push_back(m_triangles2[curr.triangleID*3]);
+				pData.push_back(m_triangles2[curr.triangleID*3+1]);
+				pData.push_back(m_triangles2[curr.triangleID*3+2]);
+			}
+		}
+
+	}
+	return pData.size() > 0;
 }

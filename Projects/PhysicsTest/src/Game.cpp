@@ -230,7 +230,7 @@ bool Game::Draw(float pElapsedTime)
 	DX11Application::Draw(pElapsedTime);
     //mDeviceContext->ClearRenderTargetView(mBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 
-	float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float color[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	mDeviceContext->ClearRenderTargetView(mBackBuffer, color);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -314,7 +314,7 @@ void Game::Restart()
 			//toDetach =
 			mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, av);
 		}*/
-		mPhysics->AddSphere(AglVector3(0, 0, 0), 1.0f, false, av);
+		mPhysics->AddBox(AglVector3(0, 0, 0), AglVector3(1, 1, 1), 1.0f, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, av);
 
 
 		string file = openfilename("Agile Files (*.agl*)\0*.agl*\0");

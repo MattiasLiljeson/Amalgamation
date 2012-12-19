@@ -237,6 +237,12 @@ void  CalculateProjectionInterval(RigidBodyBox* p_box, AglVector3 p_axis,
 									float& p_min, float& p_max);
 
 
+float OverlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
+
+void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max);
+
+
 ///-----------------------------------------------------------------------------------
 /// Given a box, a collision axis and a penetration amount find the hit points on the box.
 /// \param p_box The box

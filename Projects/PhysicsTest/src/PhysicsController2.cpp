@@ -23,9 +23,9 @@ int PhysicsController2::AddSphere(AglVector3 pPosition, float pRadius, bool pUse
 {
 	return mController->AddSphere(pPosition, pRadius, pUserControlled, p_parent);
 }
-int PhysicsController2::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
+int PhysicsController2::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* p_parent)
 {
-	return mController->AddBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
+	return mController->AddBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, p_parent);
 }
 int PhysicsController2::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
 {
