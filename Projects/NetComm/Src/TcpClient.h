@@ -14,6 +14,7 @@
 #include <string>
 
 #include "Packet.h"
+#include "TcpConnecterProcess.h"
 #include "ThreadSafeMessaging.h"
 
 namespace boost
@@ -36,6 +37,8 @@ public:
 
 	bool connectToServer( string p_address, string p_port );
 
+	void connectToServerAsync(  string p_address, string p_port );
+
 	void disconnect();
 
 	bool hasActiveConnection();
@@ -54,6 +57,8 @@ public:
 
 private:
 	boost::asio::io_service* m_ioService;
+
+	TcpConnecterProcess* m_connecterProcess;
 
 	int m_numConnections;
 	TcpCommunicationProcess* m_communicationProcess;

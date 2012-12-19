@@ -15,6 +15,7 @@
     <ClInclude Include="PacketTranslator.h" />
     <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageConnectToServer.h" />
     <ClInclude Include="ProcessMessageSocketDisconnected.h" />
     <ClInclude Include="ProcessMessageReceivePacket.h" />
     <ClInclude Include="ProcessMessageSendPacket.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="StringSplit.h" />
     <ClInclude Include="TcpClient.h" />
     <ClInclude Include="TcpCommunicationProcess.h" />
+    <ClInclude Include="TcpConnecterProcess.h" />
     <ClInclude Include="TcpListenerProcess.h" />
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadSafeMessaging.h" />
@@ -32,6 +34,7 @@
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ProcessMessage.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageConnectToServer.cpp" />
     <ClCompile Include="ProcessMessageReceivePacket.cpp" />
     <ClCompile Include="ProcessMessageSendPacket.cpp" />
     <ClCompile Include="ProcessMessageSocketDisconnected.cpp" />
@@ -41,6 +44,7 @@
     <ClCompile Include="StringSplit.cpp" />
     <ClCompile Include="TcpClient.cpp" />
     <ClCompile Include="TcpCommunicationProcess.cpp" />
+    <ClCompile Include="TcpConnecterProcess.cpp" />
     <ClCompile Include="TcpListenerProcess.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="ThreadSafeMessaging.cpp" />

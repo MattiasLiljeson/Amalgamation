@@ -3,6 +3,7 @@
 #include <exception>
 #include <boost/asio/ip/tcp.hpp>
 
+#include "ProcessMessageConnectToServer.h"
 #include "ProcessMessageReceivePacket.h"
 #include "ProcessMessageSendPacket.h"
 #include "ProcessMessageTerminate.h"
@@ -14,6 +15,7 @@ TcpClient::TcpClient()
 	m_ioService = new boost::asio::io_service();
 	m_numConnections = 0;
 	m_communicationProcess = NULL;
+	m_connecterProcess = NULL;
 	m_id = -1;
 }
 
@@ -24,6 +26,13 @@ TcpClient::~TcpClient()
 		m_communicationProcess->putMessage( new ProcessMessageTerminate() );
 		m_communicationProcess->stop();
 		delete m_communicationProcess;
+	}
+
+	if( m_connecterProcess )
+	{
+		m_connecterProcess->putMessage( new ProcessMessageTerminate() );
+		m_connecterProcess->stop();
+		delete m_connecterProcess;
 	}
 
 	delete m_ioService;
@@ -91,6 +100,16 @@ bool TcpClient::connectToServer( string p_adress, string p_port )
 	return success;
 }
 
+void TcpClient::connectToServerAsync( string p_address, string p_port )
+{
+	if( m_connecterProcess == NULL )
+	{
+		m_connecterProcess = new TcpConnecterProcess( this, m_ioService,
+													p_address, p_port );
+		m_connecterProcess->start();
+	}
+}
+
 void TcpClient::processMessages()
 {
 	while( getMessageCount() > 0 )
@@ -102,6 +121,26 @@ void TcpClient::processMessages()
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
+		}
+		else if( message->type == MessageType::CONNECT_TO_SERVER )
+		{
+			ProcessMessageConnectToServer* connectToServerMessage = NULL;
+			connectToServerMessage = static_cast<ProcessMessageConnectToServer*>(
+				message );
+
+			if( connectToServerMessage->socket )
+			{
+				m_numConnections += 1;
+
+				m_communicationProcess = new TcpCommunicationProcess( this,
+					connectToServerMessage->socket, m_ioService );
+				m_communicationProcess->start();
+
+				// Delete the connecter process
+				m_connecterProcess->stop();
+				delete m_connecterProcess;
+				m_connecterProcess = NULL;
+			}
 		}
 
 		delete message;

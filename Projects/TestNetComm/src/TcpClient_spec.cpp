@@ -42,6 +42,23 @@ Describe(a_tcp_client)
 		Assert::That(client.hasActiveConnection(), IsFalse());
 	}
 
+	It(can_also_connect_asyncroniously)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+
+		TcpClient client;
+		// Remember to also process client's process messages when using async!
+		client.connectToServerAsync( "127.0.0.1", "1337" );
+
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		client.processMessages();
+
+		Assert::That(client.hasActiveConnection(), IsTrue());
+	}
+
 	It(can_see_if_there_are_new_packets)
 	{
 		TcpServer server;

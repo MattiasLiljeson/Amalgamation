@@ -1,4 +1,5 @@
 #include "ServerApplication.h"
+
 namespace Srv
 {
 	ServerApplication::ServerApplication()
@@ -33,6 +34,7 @@ namespace Srv
 				if( _getch() == 27 )
 				{
 					m_running = false;
+					_flushall();
 				}
 			}
 

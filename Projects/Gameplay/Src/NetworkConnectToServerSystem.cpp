@@ -12,7 +12,6 @@ NetworkConnectToServerSystem::NetworkConnectToServerSystem( TcpClient* p_tcpClie
 
 NetworkConnectToServerSystem::~NetworkConnectToServerSystem()
 {
-
 }
 
 void NetworkConnectToServerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -26,7 +25,7 @@ void NetworkConnectToServerSystem::processEntities( const vector<Entity*>& p_ent
 		bool isPressed = pressness == 1.0;
 		if( isPressed && !m_isLookingForConnection )
 		{
-			m_tcpClient->connectToServer( "127.0.0.1", "1337" );
+			m_tcpClient->connectToServerAsync( "127.0.0.1", "1337" );
 			m_isLookingForConnection = true;
 		}
 	}
