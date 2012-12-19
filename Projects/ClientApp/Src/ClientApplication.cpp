@@ -247,6 +247,10 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::LookAtEntity, component );
 	component = new AudioListener();
 	entity->addComponent(ComponentType::AudioListener, component);
+
+	/************************************************************************/
+	/* Debug information only and there is no need for this to run the code */
+	/************************************************************************/
 	AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
 		TwType::TW_TYPE_FLOAT, 
 		static_cast<AudioListener*>(component)->getMasterVolumeRef(),
@@ -284,7 +288,7 @@ void ClientApplication::initSounds()
 	/************************************************************************/
 	/* Load positional sound												*/
 	/************************************************************************/
-	file = "MusicMono.wav";
+	file = "Techno_1.wav";
 	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
 		TESTMUSICPATH.c_str(),true);
 	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
@@ -327,12 +331,23 @@ void ClientApplication::initSounds()
 	/************************************************************************/
 	/* Load ambient sound													*/
 	/************************************************************************/
-	file = "spaceship_laser.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(), false);
+	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
 	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
 	entity = m_world->createEntity();
 	component = new AudioInfo(soundIdx,false);
 	entity->addComponent(ComponentType::AudioComponent,component);
 	m_world->addEntity(entity);
-	
+
+	/************************************************************************/
+	/* Load ambient sound													*/
+	/************************************************************************/
+	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
+	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
+	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+	entity = m_world->createEntity();
+	component = new AudioInfo(soundIdx,false);
+	entity->addComponent(ComponentType::AudioComponent, component);
+	m_world->addEntity(entity);
+	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
 }
