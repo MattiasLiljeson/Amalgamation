@@ -13,22 +13,22 @@
 
 #include <queue>
 #include <vector>
-#include <iostream>
-#include <exception>
-
-#include <boost/asio.hpp>
-
 
 #include "ThreadSafeMessaging.h"
-#include "TcpListenerProcess.h"
-#include "TcpCommunicationProcess.h"
-#include "ProcessMessageClientConnected.h"
-#include "ProcessMessageReceivePacket.h"
-#include "StringSplit.h"
 #include "Packet.h"
 
+namespace boost
+{
+	namespace asio
+	{
+		class io_service;
+	};
+};
+
 using namespace std;
-using namespace boost::asio::ip;
+
+class TcpCommunicationProcess;
+class TcpListenerProcess;
 
 class TcpServer: public ThreadSafeMessaging
 {

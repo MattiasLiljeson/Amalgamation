@@ -1,5 +1,6 @@
 #include "ClientApplication.h"
 
+#include <boost/thread/thread.hpp>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {

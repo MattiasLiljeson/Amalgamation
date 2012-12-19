@@ -1,5 +1,14 @@
 #include "TcpClient.h"
 
+#include <exception>
+#include <boost/asio/ip/tcp.hpp>
+
+#include "ProcessMessageReceivePacket.h"
+#include "ProcessMessageSendPacket.h"
+#include "ProcessMessageTerminate.h"
+
+#include "TcpCommunicationProcess.h"
+
 TcpClient::TcpClient()
 {
 	m_ioService = new boost::asio::io_service();

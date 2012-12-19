@@ -1,5 +1,18 @@
 #include "TcpServer.h"
 
+#include <exception>
+#include <boost/asio/io_service.hpp>
+
+#include "ProcessMessageClientConnected.h"
+#include "ProcessMessageReceivePacket.h"
+#include "ProcessMessageSendPacket.h"
+#include "ProcessMessageSocketDisconnected.h"
+#include "ProcessMessageTerminate.h"
+
+#include "TcpCommunicationProcess.h"
+#include "TcpListenerProcess.h"
+
+
 TcpServer::TcpServer()
 {
 	m_isListening = false;

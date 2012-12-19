@@ -1,10 +1,15 @@
 #pragma once
 
 #include <queue>
-#include <boost/thread/mutex.hpp>
+
 
 #include "ProcessMessage.h"
 using namespace std;
+
+namespace boost
+{
+	class mutex;
+};
 
 class ProcessMessage;
 
@@ -51,7 +56,7 @@ private:
 											on the ThreadSafeMessaging instance. Every
 											access to the queue must be thread safe. */
 
-	boost::mutex m_guard; /**< A unique lock that is used when accessing the message
+	boost::mutex* m_guard; /**< A unique lock that is used when accessing the message
 						  queue. */
 
 };

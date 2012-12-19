@@ -11,9 +11,7 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <string>
 #include "ThreadSafeMessaging.h"
-using namespace std;
 
 class ThreadSafeMessaging;
 

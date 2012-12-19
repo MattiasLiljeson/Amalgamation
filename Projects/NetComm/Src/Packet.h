@@ -12,9 +12,6 @@
 #pragma once
 
 #include <vector>
-#include <string>
-#include <stdexcept>
-#include <climits>
 
 #include <AglVector3.h>
 #include <AglQuaternion.h>

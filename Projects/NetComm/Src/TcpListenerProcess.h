@@ -1,13 +1,23 @@
 #pragma once
 
-#include <boost/asio.hpp>
+
 
 #include "ThreadSafeMessaging.h"
 #include "ProcessThread.h"
 #include "ProcessMessageClientConnected.h"
 
+namespace boost
+{
+	namespace asio
+	{
+		class io_service;
+	};
+};
+
 using namespace boost::asio::ip;
 using namespace std;
+
+
 
 class TcpListenerProcess: public ProcessThread
 {

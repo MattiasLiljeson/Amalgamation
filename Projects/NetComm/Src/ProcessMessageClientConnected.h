@@ -11,7 +11,8 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <boost/asio.hpp>
+//#include "stdafx.h"
+#include <boost/asio/ip/tcp.hpp>
 #include "ProcessMessage.h"
 
 using namespace boost::asio::ip;

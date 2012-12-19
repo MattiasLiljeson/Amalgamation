@@ -1,11 +1,11 @@
 #pragma once
 
-#include <boost/thread/thread.hpp>
-#include <boost/bind/bind.hpp>
-
 #include "ThreadSafeMessaging.h"
-#include "ProcessMessageTerminate.h"
 
+namespace boost
+{
+class thread;
+};
 ///
 /// Abstract ProcessThread, used as a "safer" thread.
 ///

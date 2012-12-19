@@ -12,21 +12,21 @@
 #pragma once
 
 #include <string>
-#include <exception>
-
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/ip/basic_resolver.hpp>
-#include <boost/asio/ip/basic_resolver_query.hpp>
-#include <boost/asio/ip/basic_resolver_iterator.hpp>
-#include <boost/asio/basic_stream_socket.hpp>
-#include <boost/system/error_code.hpp>
 
 #include "Packet.h"
-#include "TcpCommunicationProcess.h"
 #include "ThreadSafeMessaging.h"
 
+namespace boost
+{
+	namespace asio
+	{
+		class io_service;
+	};
+};
+
 using namespace std;
-using namespace boost::asio::ip;
+
+class TcpCommunicationProcess;
 
 class TcpClient: public ThreadSafeMessaging
 {

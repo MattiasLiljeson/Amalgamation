@@ -1,5 +1,15 @@
 #include "TcpCommunicationProcess.h"
 
+#include <boost/thread/thread.hpp>
+#include <boost/asio/placeholders.hpp>
+#include <boost/asio/io_service.hpp>
+
+#include "ProcessMessageSendPacket.h"
+#include "ProcessMessageSocketDisconnected.h"
+#include "ProcessMessageReceivePacket.h"
+
+#include "ThreadSafeMessaging.h"
+
 TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent, 
 												 tcp::socket* p_socket,
 												 boost::asio::io_service* p_ioService )

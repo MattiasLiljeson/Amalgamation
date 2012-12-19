@@ -6,6 +6,7 @@
 						be included as soon as possible. Johan: Haven't looked too
 						much into this yet. */
 
+#define _COMBINE_CLIENT_AND_SERVER
 #ifdef _COMBINE_CLIENT_AND_SERVER
  #include "ServerApplication.h"
 #endif

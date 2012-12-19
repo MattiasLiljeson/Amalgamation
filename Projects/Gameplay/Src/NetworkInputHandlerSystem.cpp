@@ -48,6 +48,11 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 				Entity* entity = NULL;
 
+				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
+				// Locate the entity using networkId by consulting the entitymanager in world
+				//  entities[networkId]
+				// world->getEntityManager->getEntity[networkId]
+
 				for( unsigned int i=0; i<p_entities.size(); i++ )
 				{
 					NetworkSynced* netSync = NULL;

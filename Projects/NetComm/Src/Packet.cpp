@@ -1,5 +1,9 @@
 #include "Packet.h"
 
+#include <string>
+#include <stdexcept>
+#include <climits>
+
 Packet::Packet()
 {
 	clear();
