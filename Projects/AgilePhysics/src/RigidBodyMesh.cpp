@@ -46,7 +46,7 @@ RigidBodyType RigidBodyMesh::GetType()
 {
 	return MESH;
 }
-bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* pData)
+bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, vector<EPACollisionData>& pData)
 {
 	AglVector3 pos = pSphere->GetPosition();
 	AglMatrix invW = GetWorld();
@@ -56,15 +56,18 @@ bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* p
 	pos.transform(invW);
 	if (Evaluate(pos, pSphere->GetRadius(), pData))
 	{
-		pData->Normal.transformNormal(GetWorld());
-		pData->Normal.normalize();
-		normalList.push_back(pair<float, AglVector3>(pData->Depth, pData->Normal));
+		for (unsigned int i = 0; i < pData.size(); i++)
+		{
+			pData[i].Normal.transformNormal(GetWorld());
+			pData[i].Normal.normalize();
+			normalList.push_back(pair<float, AglVector3>(pData[i].Depth, pData[i].Normal));
+		}
 		return true;
 	}
 	return false;
 }
 
-bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
+bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData)
 {
 	AglBspNode* m_nodes = mBSPTree->getNodes();
 	AglVector3* m_triangles2 = mBSPTree->getTriangles2();
@@ -74,7 +77,6 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 
 	vector<AglVector3> points(3);
 
-	EPACollisionData* cached = NULL;
 	while (toEvaluate.size() > 0)
 	{
 		AglBspNode curr = toEvaluate.back();
@@ -112,25 +114,25 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData)
 
 				//Prova att endast lägga till kollisionen och inte returnera
 				//därigenom hitta rätt kollision
-				if (CheckCollision(bs, points[0], points[1], points[2], pData))//  gjkCheckCollision(points, bs, pData))
+
+				EPACollisionData data;
+				if (CheckCollision(bs, points[0], points[1], points[2], &data))//  gjkCheckCollision(points, bs, pData))
 				{
-					if (pData->Depth > 0)
+					if (data.Depth > 0)
 					{
 						AglVector3 c = (points[0] + points[1] + points[2]) / 3.0f;
 
-						if (AglVector3::dotProduct(p_c - c, pData->Normal) < 0)
-							pData->Normal = -pData->Normal;
+						if (AglVector3::dotProduct(p_c - c, data.Normal) < 0)
+							data.Normal = -data.Normal;
 
-						if (!cached || pData->Depth > cached->Depth)
-							cached = pData;
-						return true;
+						pData.push_back(data);
+						//return true;
 					}
 				}
 			}
 		}
 	}
-	pData = cached;
-	if (pData)
+	if (pData.size() > 0)
 		return true;
 	return false;
 }

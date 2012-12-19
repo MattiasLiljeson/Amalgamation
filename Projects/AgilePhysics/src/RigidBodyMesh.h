@@ -53,8 +53,8 @@ public:
 		bs.position = newPos;
 		return bs; 
 	}
-	bool EvaluateSphere(RigidBodySphere* pSphere, EPACollisionData* pData);
-	bool Evaluate(AglVector3 p_c, float p_r, EPACollisionData* pData);
+	bool EvaluateSphere(RigidBodySphere* pSphere, vector<EPACollisionData>& pData);
+	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
 	vector<pair<float, AglVector3>> GetNormalList(){ return normalList; }
 	virtual void UpdateVelocity(float pElapsedTime)
 	{

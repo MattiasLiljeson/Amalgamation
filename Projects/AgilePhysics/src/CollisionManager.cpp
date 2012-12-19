@@ -706,17 +706,20 @@ bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh,
 {
 	if (CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB()))
 	{
-		EPACollisionData epaCol;
-		if (p_mesh->EvaluateSphere(p_sphere, &epaCol))
+		vector<EPACollisionData> epaCol;
+		if (p_mesh->EvaluateSphere(p_sphere, epaCol))
 		{
 			p_collisionData->Body2 = p_sphere;
 			p_collisionData->Body1 = p_mesh;
-			pair<AglVector3, AglVector3> contact;
-			AglVector3 dir = epaCol.Normal;
-			AglVector3::normalize(dir);
-			contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
-			contact.first = contact.second + dir * epaCol.Depth;
-			p_collisionData->Contacts.push_back(contact);
+			for (unsigned int i = 0; i < epaCol.size(); i++)
+			{
+				pair<AglVector3, AglVector3> contact;
+				AglVector3 dir = epaCol[i].Normal;
+				AglVector3::normalize(dir);
+				contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
+				contact.first = contact.second + dir * epaCol[i].Depth;
+				p_collisionData->Contacts.push_back(contact);
+			}
 			return true;
 		}
 	}
