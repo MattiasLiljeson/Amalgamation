@@ -28,7 +28,7 @@ void RigidBodyMesh::CalculateInertiaTensor()
 //How should transforms be handled. Right now obb, bounding sphere, bsp tree and sphere grid are all
 //given in local space but not relative to the mesh.
 RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
-							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false)
+							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, true)
 {
 	mOBB = pOBB;
 	mBoundingSphere = pBoundingSphere; 
@@ -89,6 +89,27 @@ bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
 		AglVec3Transform(corn[i], b);
 	}
 	return Evaluate(corn, b.GetRight(), b.GetUp(), b.GetForward(), pData);
+}
+bool RigidBodyMesh::EvaluateMesh(RigidBodyMesh* pMesh, vector<AglVector3>& pData)
+{
+
+	//Skip nine of the axes as they usually prevent few collisions.
+	//This creates deeper traversal but evaluation of each node will
+	//be faster.
+	AglMatrix w1 = GetWorld();
+	AglMatrix w2 = pMesh->GetWorld();
+	AglVector3 axes[6];
+	axes[0] = w1.GetRight();
+	axes[1] = w1.GetUp();
+	axes[2] = w1.GetForward();
+	axes[3] = w2.GetRight();
+	axes[4] = w2.GetUp();
+	axes[5] = w2.GetForward();
+
+	AglBspNode* n1 = mBSPTree->getNodes();
+	AglBspNode* n2 = pMesh->mBSPTree->getNodes();
+
+	return Evaluate(GetPosition(), pMesh->GetPosition(), axes, n1, n2, pMesh, pData);
 }
 
 bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData)
@@ -226,4 +247,105 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 
 	}
 	return pData.size() > 0;
+}
+bool RigidBodyMesh::Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles)
+{
+	vector<pair<AglBspNode, AglBspNode>> toEvaluate;
+	toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[0], p_n2[0]));
+
+	vector<AglVector3> points(8);
+	vector<AglVector3> points2(8);
+
+	vector<AglVector3> tri1(3);
+	vector<AglVector3> tri2(3);
+
+	AglVector3* triangles1 = mBSPTree->getTriangles2();
+	AglVector3* triangles2 = p_other->mBSPTree->getTriangles2();
+
+	AglMatrix w1 = GetWorld();
+	AglMatrix w2 = p_other->GetWorld();
+
+	while (toEvaluate.size() > 0)
+	{
+		AglBspNode n1 = toEvaluate.back().first;
+		AglBspNode n2 = toEvaluate.back().second;
+		toEvaluate.pop_back();
+
+		points[0] = n1.minPoint;
+		points[1] = AglVector3(n1.minPoint.x, n1.minPoint.y, n1.maxPoint.z);
+		points[2] = AglVector3(n1.minPoint.x, n1.maxPoint.y, n1.minPoint.z);
+		points[3] = AglVector3(n1.minPoint.x, n1.maxPoint.y, n1.maxPoint.z);
+		points[4] = AglVector3(n1.maxPoint.x, n1.minPoint.y, n1.minPoint.z);
+		points[5] = AglVector3(n1.maxPoint.x, n1.minPoint.y, n1.maxPoint.z);
+		points[6] = AglVector3(n1.maxPoint.x, n1.maxPoint.y, n1.minPoint.z);
+		points[7] = n1.maxPoint;											
+
+		points2[0] = n2.minPoint;
+		points2[1] = AglVector3(n2.minPoint.x, n2.minPoint.y, n2.maxPoint.z);
+		points2[2] = AglVector3(n2.minPoint.x, n2.maxPoint.y, n2.minPoint.z);
+		points2[3] = AglVector3(n2.minPoint.x, n2.maxPoint.y, n2.maxPoint.z);
+		points2[4] = AglVector3(n2.maxPoint.x, n2.minPoint.y, n2.minPoint.z);
+		points2[5] = AglVector3(n2.maxPoint.x, n2.minPoint.y, n2.maxPoint.z);
+		points2[6] = AglVector3(n2.maxPoint.x, n2.maxPoint.y, n2.minPoint.z);
+		points2[7] = n2.maxPoint;	
+
+		for (unsigned int i = 0; i < 8; i++)
+		{
+			points[i].transform(w1);
+			points2[i].transform(w2);
+		}
+
+		bool col = true;
+		for (int i = 0; i < 6; i++)
+		{
+			float overlap = OverlapAmount(points, points2, p_axes[i]);
+			if (overlap <= 0)
+			{
+				col = false;
+				break;
+			}
+		}
+		if (col)
+		{
+			//If the nodes collide
+			if (n1.triangleID == -1 && n2.triangleID == -1)
+			{
+				//None of them are childs
+				if (AglVector3::lengthSquared(n1.maxPoint - n1.minPoint) > AglVector3::lengthSquared(n2.maxPoint - n2.minPoint))
+				{
+					toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[n1.leftChild], n2));
+					toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[n1.rightChild], n2));
+				}
+				else
+				{
+					toEvaluate.push_back(pair<AglBspNode, AglBspNode>(n1, p_n2[n2.leftChild]));
+					toEvaluate.push_back(pair<AglBspNode, AglBspNode>(n1, p_n2[n2.rightChild]));
+				}
+			}
+			else if (n1.triangleID == -1)
+			{
+				//B2 is a child
+				toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[n1.leftChild], n2));
+				toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[n1.rightChild], n2));
+			}
+			else if (n2.triangleID == -1)
+			{
+				//B1 is a child
+				toEvaluate.push_back(pair<AglBspNode, AglBspNode>(n1, p_n2[n2.leftChild]));
+				toEvaluate.push_back(pair<AglBspNode, AglBspNode>(n1, p_n2[n2.rightChild]));
+			}
+			else
+			{
+				//Both are childs
+				p_triangles.push_back(triangles1[n1.triangleID*3]);
+				p_triangles.push_back(triangles1[n1.triangleID*3+1]);
+				p_triangles.push_back(triangles1[n1.triangleID*3+2]);
+
+				p_triangles.push_back(triangles2[n2.triangleID*3]);
+				p_triangles.push_back(triangles2[n2.triangleID*3+1]);
+				p_triangles.push_back(triangles2[n2.triangleID*3+2]);
+			}
+		}
+	}
+	return p_triangles.size() > 0;
 }

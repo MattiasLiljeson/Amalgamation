@@ -211,6 +211,9 @@ bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh,
 bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData);
 
+bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2, 
+					PhyCollisionData* p_collisionData);
+
 bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
 						EPACollisionData* p_epaData);
 

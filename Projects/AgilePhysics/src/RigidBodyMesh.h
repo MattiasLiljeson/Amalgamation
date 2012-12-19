@@ -33,6 +33,7 @@ private:
 	void CalculateInertiaTensor();
 	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
 	bool Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData);
+	bool Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles);
 
 public:
 	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
@@ -59,6 +60,7 @@ public:
 	}
 	bool EvaluateSphere(RigidBodySphere* pSphere, vector<EPACollisionData>& pData);
 	bool EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData);
+	bool EvaluateMesh(RigidBodyMesh* pMesh, vector<AglVector3>& pData);
 	vector<pair<float, AglVector3>> GetNormalList(){ return normalList; }
 	virtual void UpdateVelocity(float pElapsedTime)
 	{

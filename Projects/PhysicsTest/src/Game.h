@@ -27,6 +27,7 @@ private:
 	Point CurrentMousePos;
 
 	DebugMesh* testMesh;
+	DebugMesh* toDraw;
 
 public:
 	Game(HINSTANCE pInstanceHandle);
