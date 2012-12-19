@@ -23,6 +23,7 @@ public:	//Enums
 		PhysUnknown,
 		CameraInfo,
 		AudioComponent,
+		AudioListener,
 		ShipController,
 		Impulse,
 		BodyInitData,

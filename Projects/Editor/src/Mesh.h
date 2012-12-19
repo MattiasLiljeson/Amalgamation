@@ -41,6 +41,9 @@ private:
 
 	AglLooseBspTree* bsptree;
 	AglInteriorSphereGrid* m_grid;
+	bool m_drawTree;
+	bool m_drawSphereGrid;
+	unsigned int m_treeLevel;
 
 
 	//Temp
@@ -57,8 +60,7 @@ public:
 	AglVector3 GetMin();
 	AglVector3 GetMax();
 
-	void Draw(AglMatrix pWorld);
-	void Draw(AglMatrix pWorld, float pScale);
+	void Draw(AglMatrix pWorld, float pScale = 1.0f);
 	void DrawNormals(AglMatrix pWorld, float pScale);
 
 	void AddSkeletonMapping(SkeletonMapping* pSkeletonMapping);
@@ -83,6 +85,13 @@ public:
 
 	AglBoundingSphere	getBoundingSphere();
 	AglOBB				getMinimumOBB();
+
+	void				createSphereGrid();
+	void				createBspTree();
+
+	bool*				getDrawTree(){ return &m_drawTree; }
+	bool*				getDrawGrid(){ return &m_drawSphereGrid; }
+	unsigned int*		getTreeLevel(){ return &m_treeLevel; }
 };
 
 template <typename T>
@@ -119,5 +128,4 @@ void Mesh::Init(T* pVertices, int pVertexCount, unsigned int* pIndices, int pInd
 
 	mStride = sizeof(T);
 }
-
 #endif

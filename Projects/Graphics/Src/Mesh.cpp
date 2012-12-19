@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(Buffer<PTNVertex>* p_mesh , Buffer<DIndex>* p_indices)
+Mesh::Mesh(Buffer<PNTTBVertex>* p_mesh , Buffer<DIndex>* p_indices)
 {
 	m_vertexBuffer		= p_mesh;
 	m_indexBuffer	= p_indices;
@@ -15,7 +15,7 @@ Mesh::~Mesh()
 	delete m_indexBuffer;
 }
 
-Buffer<PTNVertex>* Mesh::getVertexBuffer()
+Buffer<PNTTBVertex>* Mesh::getVertexBuffer()
 {
 	return m_vertexBuffer;
 }

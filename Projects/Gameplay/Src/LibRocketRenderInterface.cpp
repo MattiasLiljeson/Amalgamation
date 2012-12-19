@@ -100,7 +100,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	/************************************************************************/
 	memcpy(&indices[0], p_indices, sizeof(unsigned int) * p_numIndices);
 	/*void* indices = p_indices;*/
-	Mesh* mesh = m_factory->createMeshFromPTNVerticesAndIndices( p_numVertices,
+	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
 		&vertices[0], p_numIndices, &indices[0] );
 
 	//HACK: static int to enumerate menus

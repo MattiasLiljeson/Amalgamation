@@ -71,15 +71,23 @@ IXAudio2SourceVoice* Sound::getSourceVoice()
 	return m_sourceVoice;
 }
 
-XAUDIO2_VOICE_STATE* Sound::getSourceCurrentState()
+void Sound::updateSourceCurrentState()
 {
 	m_sourceVoice->GetState(m_sourceState);
-	return m_sourceState;
 }
 
 void Sound::updateVoiceState()
 {
 	m_sourceVoice->GetState(m_sourceState);
+}
+
+bool Sound::isPlaying()
+{
+	if (m_sourceState->BuffersQueued > 0 && m_sourceState->SamplesPlayed != 0)
+	{
+		return true;
+	}
+	return false;
 }
 
 float* Sound::getLeftChannelRef()
@@ -91,3 +99,4 @@ float* Sound::getRightChannelRef()
 {
 	return &m_right;
 }
+

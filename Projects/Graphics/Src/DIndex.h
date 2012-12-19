@@ -15,5 +15,5 @@
 
 struct DIndex
 {
-	DWORD index;
+	unsigned int index;
 };

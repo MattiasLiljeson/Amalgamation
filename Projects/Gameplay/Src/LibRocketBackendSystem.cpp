@@ -48,11 +48,11 @@ void LibRocketBackendSystem::initialize()
 	fonts.push_back( "Delicious-Roman.otf" );
 	for( int i=0; i<fonts.size(); i++ )
 	{
-		string tmp = FONTPATH + fonts[i]; 
+		string tmp = ROCKET_FONT_PATH + fonts[i]; 
 		loadFontFace( tmp.c_str() );
 	}
 
-	string tmp = HUDPATH + "demo.rml";
+	string tmp = ROCKET_HUD_PATH + "demo.rml";
 	loadDocument( tmp.c_str() );
 }
 

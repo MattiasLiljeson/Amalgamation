@@ -1,8 +1,7 @@
 #pragma once
-#include "AudioBackendSystem.h"
-#include "CameraInfo.h"
-#include "Transform.h"
 #include "EntitySystem.h"
+
+class AudioBackendSystem;
 
 // =======================================================================================
 //                                      AudioListenerSystem

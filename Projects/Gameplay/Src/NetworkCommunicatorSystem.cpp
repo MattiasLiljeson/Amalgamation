@@ -36,7 +36,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				packet >> owner >> networkId >> position;
 
 				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+					SystemType::GraphicsBackendSystem ))->createMesh("P_cube");
 
 				Entity* e = NULL;
 				e = m_world->createEntity();

@@ -1,6 +1,7 @@
 #include "GJKSolver.h"
 #include <list>
 #include "RigidBody.h"
+#include "CollisionManager.h"
 
 bool gjkCheckCollision(const vector<AglVector3>& pA, const vector<AglVector3>& pB, EPACollisionData* pData)
 {
@@ -504,7 +505,22 @@ void epaProcessCollision(vector<AglVector3>& pSimplex, const vector<AglVector3>&
 	while (true)
 	{
 		float dist;
+		if (simplex.size() == 0)
+		{
+			pData->Normal = AglVector3(1, 0, 0);
+			pData->Depth = 0;
+			theGlobal = true;
+			break;
+		}
 		int index = epaFindClosestTriangle(simplex, dist);
+
+		if (_isnan(dist))
+		{
+			pData->Normal = AglVector3(1, 0, 0);
+			pData->Depth = 0;
+			break;
+		}
+
 		if (index == -1)
 			return;
 

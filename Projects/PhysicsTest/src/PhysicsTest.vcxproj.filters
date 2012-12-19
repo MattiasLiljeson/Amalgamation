@@ -19,25 +19,7 @@
     <ClCompile Include="TestTriangle.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraController.h" />
-    <ClInclude Include="DebugBox.h" />
-    <ClInclude Include="DebugHull.h" />
-    <ClInclude Include="DebugSphere.h" />
-    <ClInclude Include="DX11Application.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="PhysicsController2.h" />
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="SimpleShader.h" />
-    <ClInclude Include="SimpleTessShader.h" />
-    <ClInclude Include="StandardShader.h" />
-    <ClInclude Include="TestTesselatedTriangle.h" />
-    <ClInclude Include="TestTriangle.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Utility.h" />
+    <ClCompile Include="DebugMesh.cpp" />
     <ClInclude Include="VertexStructures.h" />
   </ItemGroup>
 </Project>

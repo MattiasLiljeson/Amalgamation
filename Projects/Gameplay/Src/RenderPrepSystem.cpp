@@ -67,17 +67,17 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 			// Finally, add the entity to the instance vector
 			m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
 		}
-		/*
+		
 		for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
 			// Batch render all entities that share the same mesh
 			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
 		}
-		*/
+		
 
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
 		m_rocketBackend->render();
-		//AntTweakBarWrapper::getInstance()->render();
+		AntTweakBarWrapper::getInstance()->render();
 		gfxWrapper->flipBackBuffer();           // flip buffers
 		
 		// WOW! for each loop in C++!

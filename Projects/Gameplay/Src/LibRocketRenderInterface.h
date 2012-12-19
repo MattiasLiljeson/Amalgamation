@@ -9,7 +9,7 @@
 #include <DIndex.h>
 #include <GraphicsWrapper.h>
 #include <Mesh.h>
-#include <PTNVertex.h>
+#include <PNTTBVertex.h>
 #include <Texture.h>
 
 using namespace std;
@@ -73,7 +73,7 @@ private:
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
 
 private:
-	typedef PTNVertex VertexType;	//change this per impl
+	typedef PNTTBVertex VertexType;	//change this per impl
 	BufferFactory* m_factory;
 	GraphicsWrapper* m_wrapper;
 	AglMatrix m_NDCFrom2dMatrix;

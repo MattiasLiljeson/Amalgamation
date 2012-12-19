@@ -104,6 +104,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyBox.cpp" />
     <ClCompile Include="RigidBodyConvexHull.cpp" />
+    <ClCompile Include="RigidBodyMesh.cpp" />
     <ClCompile Include="RigidBodySphere.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +119,7 @@
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="RigidBodyBox.h" />
     <ClInclude Include="RigidBodyConvexHull.h" />
+    <ClInclude Include="RigidBodyMesh.h" />
     <ClInclude Include="RigidBodySphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

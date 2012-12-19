@@ -4,6 +4,7 @@
 #include "DX11Application.h"
 #include "PhysicsController2.h"
 #include "Utility.h"
+#include "DebugMesh.h"
 
 class Game: public DX11Application
 {
@@ -20,9 +21,12 @@ private:
 	//HACK: TEMP TEMP TEMP FUCKING TEMP!!
 	int Avatar;
 	int toDetach;
+	int mesh;
 
 	Point PreviousMousePos;
 	Point CurrentMousePos;
+
+	DebugMesh* testMesh;
 
 public:
 	Game(HINSTANCE pInstanceHandle);

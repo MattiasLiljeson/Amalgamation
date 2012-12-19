@@ -208,7 +208,7 @@ vector<int>* InputBackendSystem::vectorFromDeviceType( InputHelper::INPUT_DEVICE
 
 void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_idx )
 {
-	if( p_vec->size() <= p_idx )
+	if( p_vec->size() <= ( unsigned int ) p_idx )
 	{
 		p_vec->resize(p_idx+1);
 	}

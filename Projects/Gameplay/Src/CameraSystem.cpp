@@ -2,8 +2,9 @@
 
 CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
 						    InputBackendSystem* p_inputBackend ) : 
-		      EntitySystem( SystemType::CameraSystem, 1,
-							ComponentType::ComponentTypeIdx::CameraInfo )
+		      EntitySystem( SystemType::CameraSystem, 2,
+							ComponentType::ComponentTypeIdx::CameraInfo,
+							ComponentType::ComponentTypeIdx::Transform)
 {
 	m_gfxBackend = p_gfxBackend;
 	m_inputBackend = p_inputBackend;

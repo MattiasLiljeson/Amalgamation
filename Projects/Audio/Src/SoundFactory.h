@@ -47,7 +47,7 @@ public:
 protected:
 private:
 	IXAudio2SourceVoice* createSourceVoice(const char* p_fullFilePath, 
-		XAUDIO2_BUFFER& p_buffer);
+		XAUDIO2_BUFFER& p_buffer, float maxFreqOffset=1.0f);
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);

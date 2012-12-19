@@ -1,4 +1,6 @@
 #include "AudioBackendSystem.h"
+#include <ToString.h>
+#include <SoundWrapper.h>
 
 AudioBackendSystem* AudioBackendSystem::m_theSystem = NULL;
 
@@ -12,13 +14,6 @@ AudioBackendSystem::AudioBackendSystem() : EntitySystem(SystemType::AudioBackend
 AudioBackendSystem::~AudioBackendSystem()
 {
 	delete m_soundWrapper;
-}
-
-void AudioBackendSystem::initialize()
-{
-	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		"Master Volume",TwType::TW_TYPE_FLOAT,m_soundWrapper->getMasterVolumeRef(),
-		"group=Overall min=0 max=10 step=0.001 precision=3");
 }
 
 void AudioBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -39,11 +34,18 @@ int AudioBackendSystem::createAmbientSound(BasicSoundCreationInfo* p_info)
 	/************************************************************************/
 	/* DEBUG INFO!															*/
 	/************************************************************************/
-	string temp = m_label + toString(index) +" "+ p_info->file;
-	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),temp.c_str(),
-		stopOrPlaySound, (void*)index,"group=Ambient_Sound");
-		//-END-
-
+	if( AntTweakBarWrapper::getInstance() != NULL )
+	{
+		string temp = m_label + toString(index) +" "+ p_info->file;
+		TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),temp.c_str(),
+			stopOrPlaySound, (void*)index,"group=Ambient_Sound");
+			//-END-
+	}
+	else
+	{
+		//cast exception
+		int korv = 0;
+	}
 	return index;
 }
 
@@ -56,6 +58,9 @@ int AudioBackendSystem::createPositionalSound(BasicSoundCreationInfo* p_info,
 	/* DEBUG INFO!															*/
 	/************************************************************************/
 	string temp = m_label + toString(index) + " " + p_info->file;
+
+	if( AntTweakBarWrapper::getInstance() != NULL )
+	{
 
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(), temp.c_str(),
 		stopOrPlaySound, (void*)index, "group=Positional_Sound");
@@ -70,6 +75,12 @@ int AudioBackendSystem::createPositionalSound(BasicSoundCreationInfo* p_info,
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(temp.c_str(),TW_TYPE_FLOAT,
 		m_soundWrapper->getSound(index)->getRightChannelRef(),"group=Positional_Sound");
 
+	}
+	else
+	{
+		//cast exception
+		int korv = 0;
+	}
 	//-END-
 
 	return index;
@@ -92,4 +103,10 @@ void TW_CALL AudioBackendSystem::stopOrPlaySound( void* p_clientData )
 		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::STOP);
 	else
 		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::PLAY);
+}
+
+void AudioBackendSystem::updateListenerVolume( float p_volume )
+{
+	m_soundWrapper->setMasterVolume(p_volume);
+	m_soundWrapper->updateMasterVolume();
 }

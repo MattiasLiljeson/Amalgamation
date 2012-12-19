@@ -23,9 +23,6 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsWrapper.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredRenderer.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
@@ -38,6 +35,7 @@
     <ClCompile Include="TextureParser.cpp">
       <Filter>Graphics Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -86,9 +84,6 @@
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsWrapper.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
       <Filter>Renderer\Deferred</Filter>
     </ClInclude>
@@ -105,9 +100,6 @@
     <ClInclude Include="PTVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
-    <ClInclude Include="PTNVertex.h">
-      <Filter>Renderer\Vertices</Filter>
-    </ClInclude>
     <ClInclude Include="DIndex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
@@ -116,6 +108,13 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Renderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsWrapper.h" />
+    <ClInclude Include="PNTVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="PNTTBVertex.h">
+      <Filter>Renderer\Vertices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

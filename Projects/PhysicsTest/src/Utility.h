@@ -47,6 +47,6 @@ float Det(AglVector3 pV1, AglVector3 pV2, AglVector3 pV3);
 ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 									  const char* p_filePath);
 
-
+string openfilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 
 #endif

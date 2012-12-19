@@ -172,13 +172,23 @@ void GraphicsWrapper::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
-unsigned int GraphicsWrapper::createMesh(const string& p_name)
+unsigned int GraphicsWrapper::createMesh( const string& p_name,
+										  const string* p_path/*=NULL*/ )
 {
+	// =============================================
+	//
+	// WORK IN PROGRESS.
+	// Will need refactoring.
+	//
+	// =============================================
 	// check if resource already exists
 	unsigned int meshResultId = 0;
 	int meshFoundId = m_meshManager->getResourceId(p_name);
 	if (meshFoundId==-1)  // if it does not exist, create new
 	{
+		// =============================================
+		// PRIMITIVES
+		// =============================================
 		if (p_name=="P_cube")
 		{
 			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
@@ -186,30 +196,60 @@ unsigned int GraphicsWrapper::createMesh(const string& p_name)
 			// (Here you might want to do similar checks for textures/materials
 			// For now we have a hard coded texture path, but later on
 			// we probably get this path from a mesh file loader or similar.
-			string texturepath = "Assets/Textures/Test/10x10.png"; 
-			int texFoundId = m_textureManager->getResourceId(texturepath);
-			unsigned int texResultId = 0;
-			// and probably only the file name or Texture sub folder name+file name
-			// like this: rainbow.dds or Test/rainbow.dds
-			if (texFoundId==-1)  // if it does not exist, create new
-			{
-				Texture* tex;
-				tex = new Texture(TextureParser::loadTexture(m_device,
-															 texturepath.c_str()));
-				texResultId = m_textureManager->addResource(texturepath,tex);
-			}
-			else
-			{
-				texResultId = static_cast<unsigned int>(texFoundId);
-			}
-			mesh->setTextureId(texResultId);
+			unsigned int texId = createTexture("10x10.png",TESTTEXTUREPATH);
 			// and their managers.)
 			// ...
 			// and then set the resulting data to the mesh
+			mesh->setTextureId(texId);
 		}
 		else
+		// =============================================
+		// MODEL FILES
+		// =============================================
 		{
-			// load from path instead
+			// Construct path for loading
+			string fullPath;
+			if (p_path!=NULL) fullPath = *p_path;
+			fullPath += p_name;
+			// read file and extract scene
+			AglReader meshReader(fullPath.c_str());
+			AglScene* aglScene = meshReader.getScene();
+			//
+			if (aglScene)
+			{ 
+				// only handle one mesh for now.
+				AglMesh* aglMesh = aglScene->getMeshes()[0];
+				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
+				// Raw data extraction
+				void* vertices = aglMesh->getVertices();
+				void* indices = static_cast<void*>(aglMesh->getIndices());
+				unsigned int numVertices = static_cast<unsigned int>(aglMeshHeader.vertexCount);
+				unsigned int numIndices =  static_cast<unsigned int>(aglMeshHeader.indexCount);
+				// Internal mesh format creation
+				Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
+																numVertices,
+																numIndices);   
+				// put in manager
+				meshResultId = m_meshManager->addResource(p_name,mesh);	
+				// (Here you might want to do similar checks for textures/materials
+				// For now we have a hard coded texture path, but later on
+				// we probably get this path from a mesh file loader or similar.
+				unsigned int texId = createTexture("testtexture.png",TESTTEXTUREPATH);
+				// and their managers.)
+				// ...
+				// and then set the resulting data to the mesh
+				mesh->setTextureId(texId);
+			}
+			else
+			{
+				// fallback mesh and texture
+				Mesh* mesh = m_bufferFactory->createBoxMesh();
+				meshResultId = m_meshManager->addResource(p_name,mesh);
+				unsigned int texId = createTexture("mesherror.png",TEXTUREPATH);
+				mesh->setTextureId(texId);
+			}
+			// cleanup
+			delete aglScene;
 		}
 	}
 	else // the mesh already exists
@@ -237,6 +277,31 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		p_mesh->setTextureId( (unsigned int)texId );
 	}
 	return meshId;
+}
+
+unsigned int GraphicsWrapper::createTexture( const string& p_name, 
+											 const string& p_path)
+{
+	int texFoundId = m_textureManager->getResourceId(p_name);
+	unsigned int texResultId = 0;
+
+	if (texFoundId==-1)  // if it does not exist, create new
+	{
+		Texture* tex;
+		tex = new Texture(TextureParser::loadTexture(m_device,
+			(p_path+p_name).c_str()) );
+		texResultId = m_textureManager->addResource(p_name,tex);
+	}
+	else
+	{
+		texResultId = static_cast<unsigned int>(texFoundId);
+	}
+	return texResultId;
+}
+
+int GraphicsWrapper::getMeshId( const string& p_name )
+{
+	return m_meshManager->getResourceId(p_name);
 }
 
 void GraphicsWrapper::initViewport()

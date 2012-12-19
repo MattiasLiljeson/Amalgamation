@@ -14,6 +14,8 @@
 
 #include <d3d11.h>
 #include <ResourceManager.h>
+#include <Globals.h>
+#include <AglReader.h>
 #include "BufferFactory.h"
 #include "AntTweakBarWrapper.h"
 #include "D3DException.h"
@@ -69,12 +71,19 @@ public:
 	void flipBackBuffer();
 
 	///-----------------------------------------------------------------------------------
-	/// Create a mesh using name.
-	/// Extend this with functionality for loading etc...
+	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
 	/// \param p_name
+	/// \param p_path
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
-	unsigned int createMesh(const string& p_name);
+	unsigned int createMesh(const string& p_name,
+							const string* p_path=NULL);
+
+	unsigned int createTexture(const string& p_name,
+							   const string& p_path);
+
+
+	int getMeshId( const string& p_name );
 
 
 	///-----------------------------------------------------------------------------------

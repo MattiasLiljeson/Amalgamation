@@ -111,7 +111,7 @@ public:
 	/// Constructor
 	/// \param p_path The path to read from
 	///
-	AglReader(char* p_path);
+	AglReader(const char* p_path);
 
 	///
 	/// Destructor

@@ -5,6 +5,7 @@
 #include "ShaderManager.h"
 #include "GJKSolver.h"
 #include "Eigen.h"
+#include "AglReader.h"
 
 float Game::Time = 0;
 
@@ -35,7 +36,6 @@ bool Game::Initialize()
 	CurrentMousePos = Point();
 	PreviousMousePos = CurrentMousePos = func();
 	SetCursorPos(CurrentMousePos.x, CurrentMousePos.y);
-	ShowCursor(false);
 
 	AglVector3 e1;
 	AglVector3 e2;
@@ -239,6 +239,9 @@ bool Game::Draw(float pElapsedTime)
 	if (mPhysics)
 		mPhysics->DrawDebug();
 
+	Body* b = mPhysics->GetBody(mesh);
+	testMesh->Draw(b->GetWorld());
+
     mSwapChain->Present(0,0);
 	return true;
 }
@@ -305,11 +308,42 @@ void Game::Restart()
 		Avatar = mPhysics->AddCompoundBody(AglVector3(0, 0, -40));
 		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
 		float step = 1.0f / 9.0f * 2 * 3.14159f;
-		for (unsigned int i = 0; i < 7; i++)
+
+		/*for (unsigned int i = 0; i < 7; i++)
 		{
 			//toDetach =
 			mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, av);
+		}*/
+		mPhysics->AddSphere(AglVector3(0, 0, 0), 1.0f, false, av);
+
+
+		string file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
+
+		AglReader r((char*)file.c_str());
+
+		AglScene* s = r.getScene();
+
+		vector<AglMesh*> m = s->getMeshes();
+
+		AglMeshHeader h = m[0]->getHeader();
+		AglVertexSTBN* v = (AglVertexSTBN*)m[0]->getVertices();
+		unsigned int* ind = m[0]->getIndices();
+
+		vector<AglVector3> vertices;
+		vector<unsigned int> indices;
+		for (unsigned int i = 0; i < h.vertexCount; i++)
+		{
+			vertices.push_back(v[i].position);
 		}
+		for (unsigned int i = 0; i < h.indexCount; i++)
+		{
+			indices.push_back(ind[i]);
+		}
+		AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
+		AglLooseBspTree* bsptree = constructor.createTree();
+
+		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
+		mesh = mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
 	}
 	else if (val == 2)
 	{
