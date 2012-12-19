@@ -77,5 +77,10 @@ private:
 	BufferFactory* m_factory;
 	GraphicsWrapper* m_wrapper;
 	AglMatrix m_NDCFrom2dMatrix;
+
+	//States
+	ID3D11RasterizerState* rs_scissorsOn;
+	ID3D11RasterizerState* rs_scissorsOff;
+
 	//vector<InstanceData> m_NDCFrom2dMatrixVector;
 };

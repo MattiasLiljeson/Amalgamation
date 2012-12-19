@@ -63,6 +63,11 @@ void DeferredRenderer::beginDeferredBasePass()
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
 	
+	updatePerFrameConstantBuffer();
+}
+
+void DeferredRenderer::updatePerFrameConstantBuffer()
+{
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
 	//	cb->accessBuffer.color[0] = 0.5f;
@@ -71,7 +76,7 @@ void DeferredRenderer::beginDeferredBasePass()
 	for (int i=0;i<16;i++)
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
 
-	cb->update();
+		cb->update();
 }
 
 void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)

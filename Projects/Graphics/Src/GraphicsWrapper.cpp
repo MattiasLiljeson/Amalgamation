@@ -146,6 +146,11 @@ void GraphicsWrapper::beginFrame()
 	m_deferredRenderer->beginDeferredBasePass();
 }
 
+void GraphicsWrapper::updatePerFrameConstantBuffer()
+{
+	m_deferredRenderer->updatePerFrameConstantBuffer();
+}
+
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList)
 {

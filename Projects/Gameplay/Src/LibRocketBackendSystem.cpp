@@ -52,8 +52,18 @@ void LibRocketBackendSystem::initialize()
 		loadFontFace( tmp.c_str() );
 	}
 
-	string tmp = ROCKET_HUD_PATH + "demo.rml";
+	string tmp;
+	tmp = ROCKET_HUD_PATH + "demo.rml";
 	loadDocument( tmp.c_str() );
+
+	//tmp = ROCKET_HUD_PATH + "main.rml";
+	//loadDocument( tmp.c_str() );
+
+	//tmp = ROCKET_HUD_PATH + "index.rml";
+	//loadDocument( tmp.c_str() );
+
+	//tmp = ROCKET_HUD_PATH + "window.rml";
+	//loadDocument( tmp.c_str() );
 }
 
 bool LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
