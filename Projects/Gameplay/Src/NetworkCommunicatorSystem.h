@@ -17,6 +17,14 @@ struct NetworkEntityCreationPacket
 	AglVector3		scale;
 };
 
+struct NetworkEntityUpdatePacket
+{
+	char			networkType;
+	int				networkId;
+	AglVector3		position;
+	AglQuaternion	rotation;
+	AglVector3		scale;
+};
 
 // =======================================================================================
 //                                      NetworkCommunicatorSystem
@@ -43,6 +51,7 @@ public:
 
 private:
 	NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
+	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
 
 private:
 	TcpClient* m_tcpClient;

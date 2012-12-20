@@ -192,9 +192,6 @@
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="BodyInitData.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
