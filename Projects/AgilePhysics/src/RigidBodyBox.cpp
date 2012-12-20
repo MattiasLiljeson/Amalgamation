@@ -10,7 +10,7 @@ void RigidBodyBox::CalculateInertiaTensor()
     float z = (xfactor + yfactor) * GetMass() / 12.0f;
 	SetInertiaTensor(AglMatrix(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1));
 }
-RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic): RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic, true)
+RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic): RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic, false)
 {
 	mSize = pSize;
 	CalculateInertiaTensor();

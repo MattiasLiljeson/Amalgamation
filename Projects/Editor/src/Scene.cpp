@@ -120,7 +120,7 @@ void Scene::Draw()
 
 	if (mAglScene)
 	{
-		AglMatrix w3 = mAglScene->getCoordinateSystemAsMatrix();
+		AglMatrix w3 = mAglScene->getCoordinateSystemAsMatrix().inverse();
 		w = w3 * w;
 	}
 

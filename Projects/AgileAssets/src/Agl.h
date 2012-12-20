@@ -24,6 +24,7 @@ struct AglCoordinateSystem
 	AglVector3 forwardVector;
 
 	AglCoordinateSystem();
+	AglCoordinateSystem(AglVector3 p_up, AglVector3 p_forward, Handedness p_handedness);
 	static AglCoordinateSystem DX();
 	static AglCoordinateSystem GL();
 	static AglCoordinateSystem BLENDER();

@@ -82,7 +82,7 @@ public:
 
 	int AddCompoundBody(AglVector3 p_position);
 
-	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+	int AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	///-----------------------------------------------------------------------------------

@@ -7,6 +7,13 @@ AglCoordinateSystem::AglCoordinateSystem()
 	handedness = LEFT;
 }
 
+AglCoordinateSystem::AglCoordinateSystem(AglVector3 p_up, AglVector3 p_forward, Handedness p_handedness)
+{
+	upVector = p_up;
+	forwardVector = p_forward;
+	handedness = p_handedness;
+}
+
 AglCoordinateSystem AglCoordinateSystem::DX()
 {
 	AglCoordinateSystem s;

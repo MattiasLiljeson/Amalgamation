@@ -509,7 +509,6 @@ void epaProcessCollision(vector<AglVector3>& pSimplex, const vector<AglVector3>&
 		{
 			pData->Normal = AglVector3(1, 0, 0);
 			pData->Depth = 0;
-			theGlobal = true;
 			break;
 		}
 		int index = epaFindClosestTriangle(simplex, dist);
@@ -518,7 +517,6 @@ void epaProcessCollision(vector<AglVector3>& pSimplex, const vector<AglVector3>&
 		{
 			pData->Normal = AglVector3(1, 0, 0);
 			pData->Depth = 0;
-			theGlobal = true;
 			break;
 		}
 

@@ -40,10 +40,10 @@ int PhysicsController2::AddCompoundBody(AglVector3 p_position)
 	return mController->AddCompoundBody(p_position);
 }
 
-int PhysicsController2::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+int PhysicsController2::AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
 								   AglInteriorSphereGrid* pSphereGrid)
 {
-	return mController->AddMeshBody(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
+	return mController->AddMeshBody(pCoordinateSystem, pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
 }
 
 void PhysicsController2::Update(float pElapsedTime)
@@ -91,7 +91,7 @@ void PhysicsController2::DrawDebug()
 			AglMatrix mat;
 			AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
 											AglQuaternion::identity(), bs.position);
-			mDebugSphere->draw(mat, true);
+			//mDebugSphere->draw(mat, true);
 			AglOBB obb = m->GetOBB();
 
 			AglMatrix::componentsToMatrix(mat, obb.size,
@@ -100,7 +100,7 @@ void PhysicsController2::DrawDebug()
 			mat = mat * obb.world;
 			//mat *= world;
 			mat.SetTranslation(obb.world.GetTranslation());
-			mDebugBox->draw(mat, true);
+			//mDebugBox->draw(mat, true);
 		}
 	}
 	for (unsigned int i = 0; i < mDebugHullData.size(); i++)

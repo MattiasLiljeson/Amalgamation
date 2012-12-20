@@ -112,9 +112,7 @@ bool Game::Update(float pElapsedTime)
 	if (Avatar && mPhysics)
 	{
 		RigidBody* av = (RigidBody*)mPhysics->GetBody(Avatar);
-		AglMatrix m = av->GetWorld();
-		AglMatrix world = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9],
-								m[10], m[11], m[12], m[13], m[14], m[15]);
+		AglMatrix world = coord * av->GetWorld();
 
 		//Mouse
 		GetCursorPos(&CurrentMousePos);
@@ -253,6 +251,8 @@ bool Game::Draw(float pElapsedTime)
 		drawthat = true;
 	}
 
+	AglMatrix mat = AglMatrix::createTranslationMatrix(AglVector3(0, 0, -40));
+
 	Body* b = mPhysics->GetBody(mesh);
 	if (drawthat)
 		testMesh->Draw(b->GetWorld());
@@ -367,8 +367,9 @@ void Game::Restart()
 		AglLooseBspTree* bsptree = constructor.createTree();
 
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
-		mesh = mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
-		Avatar = mPhysics->AddMeshBody(AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		coord = s->getCoordinateSystemAsMatrix();
+		mesh = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		Avatar = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
 
 

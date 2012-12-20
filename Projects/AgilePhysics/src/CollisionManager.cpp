@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 #include "GJKSolver.h"
 
-bool theGlobal = false;
+float theGlobal = 0;
 
 bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 {

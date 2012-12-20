@@ -5,7 +5,7 @@
 #include "PhyUtility.h"
 #include "GJKSolver.h"
 
-extern bool theGlobal;
+extern float theGlobal;
 
 //----------------------------PRIMARY COLLISION FUNCTIONS---------------------------------
 

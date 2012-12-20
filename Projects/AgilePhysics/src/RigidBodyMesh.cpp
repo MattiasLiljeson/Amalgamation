@@ -27,8 +27,8 @@ void RigidBodyMesh::CalculateInertiaTensor()
 
 //How should transforms be handled. Right now obb, bounding sphere, bsp tree and sphere grid are all
 //given in local space but not relative to the mesh.
-RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
-							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, true)
+RigidBodyMesh::RigidBodyMesh(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pCoordinateSystem, pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), pPosition.x != 0, true)
 {
 	mOBB = pOBB;
 	mBoundingSphere = pBoundingSphere; 
@@ -99,9 +99,9 @@ bool RigidBodyMesh::EvaluateMesh(RigidBodyMesh* pMesh, vector<AglVector3>& pData
 	AglMatrix w1 = GetWorld();
 	AglMatrix w2 = pMesh->GetWorld();
 	AglVector3 axes[6];
-	axes[0] = w1.GetRight();
-	axes[1] = w1.GetUp();
-	axes[2] = w1.GetForward();
+	axes[0] = AglVector3(1, 0, 0);
+	axes[1] = AglVector3(0, 1, 0);
+	axes[2] = AglVector3(0, 0, 1);
 	axes[3] = w2.GetRight();
 	axes[4] = w2.GetUp();
 	axes[5] = w2.GetForward();
@@ -109,7 +109,7 @@ bool RigidBodyMesh::EvaluateMesh(RigidBodyMesh* pMesh, vector<AglVector3>& pData
 	AglBspNode* n1 = mBSPTree->getNodes();
 	AglBspNode* n2 = pMesh->mBSPTree->getNodes();
 
-	return Evaluate(GetPosition(), pMesh->GetPosition(), axes, n1, n2, pMesh, pData);
+	return Evaluate(axes, n1, n2, pMesh, pData);
 }
 
 bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData)
@@ -248,8 +248,118 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 	}
 	return pData.size() > 0;
 }
-bool RigidBodyMesh::Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles)
+bool RigidBodyMesh::Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles)
 {
+	theGlobal = 0;
+	vector<pair<int, int>> toEvaluate;
+	toEvaluate.push_back(pair<int, int>(0, 0));
+
+	vector<AglVector3> points(8);
+	vector<AglVector3> points2(8);
+
+	vector<AglVector3> tri1(3);
+	vector<AglVector3> tri2(3);
+
+	AglVector3* triangles1 = mBSPTree->getTriangles2();
+	AglVector3* triangles2 = p_other->mBSPTree->getTriangles2();
+
+	AglMatrix w1 = GetWorld();
+	AglMatrix w2 = p_other->GetWorld();
+
+	AglMatrix w = w2 * w1.inverse();
+
+	while (toEvaluate.size() > 0)
+	{
+		int i1 = toEvaluate.back().first;
+		int i2 = toEvaluate.back().second;
+		AglBspNode n1 = p_n1[toEvaluate.back().first];
+		AglBspNode n2 = p_n2[toEvaluate.back().second];
+
+		points[0] = n1.minPoint;
+		points[1] = AglVector3(n1.minPoint.x, n1.minPoint.y, n1.maxPoint.z);
+		points[2] = AglVector3(n1.minPoint.x, n1.maxPoint.y, n1.minPoint.z);
+		points[3] = AglVector3(n1.minPoint.x, n1.maxPoint.y, n1.maxPoint.z);
+		points[4] = AglVector3(n1.maxPoint.x, n1.minPoint.y, n1.minPoint.z);
+		points[5] = AglVector3(n1.maxPoint.x, n1.minPoint.y, n1.maxPoint.z);
+		points[6] = AglVector3(n1.maxPoint.x, n1.maxPoint.y, n1.minPoint.z);
+		points[7] = n1.maxPoint;											
+
+		points2[0] = n2.minPoint;
+		points2[1] = AglVector3(n2.minPoint.x, n2.minPoint.y, n2.maxPoint.z);
+		points2[2] = AglVector3(n2.minPoint.x, n2.maxPoint.y, n2.minPoint.z);
+		points2[3] = AglVector3(n2.minPoint.x, n2.maxPoint.y, n2.maxPoint.z);
+		points2[4] = AglVector3(n2.maxPoint.x, n2.minPoint.y, n2.minPoint.z);
+		points2[5] = AglVector3(n2.maxPoint.x, n2.minPoint.y, n2.maxPoint.z);
+		points2[6] = AglVector3(n2.maxPoint.x, n2.maxPoint.y, n2.minPoint.z);
+		points2[7] = n2.maxPoint;	
+
+		for (unsigned int i = 0; i < 8; i++)
+		{
+			points2[i].transform(w);
+		}
+
+		toEvaluate.pop_back();
+
+		bool col = true;
+		for (int i = 0; i < 6; i++)
+		{
+			float overlap = OverlapAmount(points, points2, p_axes[i]);
+			if (overlap <= 0)
+			{
+				col = false;
+				break;
+			}
+		}
+		if (col)
+		{
+			//If the nodes collide
+			if (n1.triangleID == -1 && n2.triangleID == -1)
+			{
+				//None of them are childs
+				if (AglVector3::lengthSquared(n1.maxPoint - n1.minPoint) > AglVector3::lengthSquared(n2.maxPoint - n2.minPoint))
+				{
+					toEvaluate.push_back(pair<int, int>(n1.leftChild, i2));
+					toEvaluate.push_back(pair<int, int>(n1.rightChild, i2));
+				}
+				else
+				{
+					toEvaluate.push_back(pair<int, int>(i1, n2.leftChild));
+					toEvaluate.push_back(pair<int, int>(i1, n2.rightChild));
+				}
+			}
+			else if (n1.triangleID == -1)
+			{
+				//B2 is a child
+				toEvaluate.push_back(pair<int, int>(n1.leftChild, i2));
+				toEvaluate.push_back(pair<int, int>(n1.rightChild, i2));
+			}
+			else if (n2.triangleID == -1)
+			{
+				//B1 is a child
+				toEvaluate.push_back(pair<int, int>(i1, n2.leftChild));
+				toEvaluate.push_back(pair<int, int>(i1, n2.rightChild));
+			}
+			else
+			{
+				//Both are childs
+				p_triangles.push_back(triangles1[n1.triangleID*3]);
+				p_triangles.push_back(triangles1[n1.triangleID*3+1]);
+				p_triangles.push_back(triangles1[n1.triangleID*3+2]);
+
+				p_triangles.push_back(triangles2[n2.triangleID*3]);
+				p_triangles.push_back(triangles2[n2.triangleID*3+1]);
+				p_triangles.push_back(triangles2[n2.triangleID*3+2]);
+
+				theGlobal++;
+			}
+		}
+	}
+	return p_triangles.size() > 0;
+}
+
+/*bool RigidBodyMesh::Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles)
+{
+	theGlobal = 0;
 	vector<pair<AglBspNode, AglBspNode>> toEvaluate;
 	toEvaluate.push_back(pair<AglBspNode, AglBspNode>(p_n1[0], p_n2[0]));
 
@@ -264,6 +374,8 @@ bool RigidBodyMesh::Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, Agl
 
 	AglMatrix w1 = GetWorld();
 	AglMatrix w2 = p_other->GetWorld();
+
+	AglMatrix w = w2 * w1.inverse();
 
 	while (toEvaluate.size() > 0)
 	{
@@ -291,8 +403,7 @@ bool RigidBodyMesh::Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, Agl
 
 		for (unsigned int i = 0; i < 8; i++)
 		{
-			points[i].transform(w1);
-			points2[i].transform(w2);
+			points2[i].transform(w);
 		}
 
 		bool col = true;
@@ -344,8 +455,10 @@ bool RigidBodyMesh::Evaluate(const AglVector3& p_p1, const AglVector3& p_p2, Agl
 				p_triangles.push_back(triangles2[n2.triangleID*3]);
 				p_triangles.push_back(triangles2[n2.triangleID*3+1]);
 				p_triangles.push_back(triangles2[n2.triangleID*3+2]);
+
+				theGlobal++;
 			}
 		}
 	}
 	return p_triangles.size() > 0;
-}
+}*/
