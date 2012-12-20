@@ -262,8 +262,8 @@ bool DX11Application::Run()
 			string s = ss.str();
 			s = "FPS: " + s + " -- t1: " + ToString(t1) + "  t2: " + ToString(t2) + "  t3: " + ToString(t3);
 
-			if (theGlobal)
-				s += "   AHA!";
+			//if (theGlobal)
+				//s += "   AHA! " + ToString(theGlobal);
 
 			if (hitbug)
 				s += "  HITBUG!";

@@ -18,10 +18,14 @@ void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 	int index = (int)clientData;
 	if (index == 0)
 		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
-	if (index == 1)
+	else if (index == 1)
 		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
-	if (index == 2)
+	else if (index == 2)
 		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+	else if (index == 3)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 1, 0), AglVector3(0, 0, 1), AglCoordinateSystem::LEFT));
+	else if (index == 4)
+		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 0, 1), AglVector3(-1, 0, 0), AglCoordinateSystem::LEFT));
 }
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
@@ -54,6 +58,11 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
+
+		TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "Sys2", SetCOSystem, (void*)4, " label='Up: Z Forward: -X L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
 
 		TwAddVarRW(sceneDialog->m_dialog, "Sphere", TW_TYPE_BOOLCPP, &DRAWDEBUGSPHERE, "group='Debug'");
 		TwAddVarRW(sceneDialog->m_dialog, "Box", TW_TYPE_BOOLCPP, &DRAWDEBUGBOX, "group='Debug'");

@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 #include "GJKSolver.h"
 
-bool theGlobal = false;
+float theGlobal = 0;
 
 bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 {
@@ -29,13 +29,15 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 	else if (p_r2->GetType() == CONVEXHULL && p_r1->GetType() == SPHERE)
 		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyConvexHull*)p_r2, p_data);
 	else if (p_r1->GetType() == SPHERE && p_r2->GetType() == MESH)
-	{
 		return CheckCollision((RigidBodySphere*)p_r1, (RigidBodyMesh*)p_r2, p_data);
-	}
 	else if (p_r1->GetType() == MESH && p_r2->GetType() == SPHERE)
-	{
 		return CheckCollision((RigidBodySphere*)p_r2, (RigidBodyMesh*)p_r1, p_data);
-	}
+	else if (p_r1->GetType() == BOX && p_r2->GetType() == MESH)
+		return CheckCollision((RigidBodyBox*)p_r1, (RigidBodyMesh*)p_r2, p_data);
+	else if (p_r1->GetType() == MESH && p_r2->GetType() == BOX)
+		return CheckCollision((RigidBodyBox*)p_r2, (RigidBodyMesh*)p_r1, p_data);
+	else if (p_r1->GetType() == MESH && p_r2->GetType() == MESH)
+		return CheckCollision((RigidBodyMesh*)p_r1, (RigidBodyMesh*)p_r2, p_data);
 	else
 		return false;
 }
@@ -293,6 +295,7 @@ bool CheckCollision(RigidBodySphere* pSphere, RigidBodyBox* pBox, PhyCollisionDa
     }
     return false;
 }
+
 bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
 {
 	//Find the closest point on the box to the sphere
@@ -705,17 +708,20 @@ bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh,
 {
 	if (CheckCollision(p_sphere->GetBoundingSphere(), p_mesh->GetOBB()))
 	{
-		EPACollisionData epaCol;
-		if (p_mesh->EvaluateSphere(p_sphere, &epaCol))
+		vector<EPACollisionData> epaCol;
+		if (p_mesh->EvaluateSphere(p_sphere, epaCol))
 		{
 			p_collisionData->Body2 = p_sphere;
 			p_collisionData->Body1 = p_mesh;
-			pair<AglVector3, AglVector3> contact;
-			AglVector3 dir = epaCol.Normal;
-			AglVector3::normalize(dir);
-			contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
-			contact.first = contact.second + dir * epaCol.Depth;
-			p_collisionData->Contacts.push_back(contact);
+			for (unsigned int i = 0; i < epaCol.size(); i++)
+			{
+				pair<AglVector3, AglVector3> contact;
+				AglVector3 dir = epaCol[i].Normal;
+				AglVector3::normalize(dir);
+				contact.second = p_sphere->GetPosition() - dir * p_sphere->GetRadius();
+				contact.first = contact.second + dir * epaCol[i].Depth;
+				p_collisionData->Contacts.push_back(contact);
+			}
 			return true;
 		}
 	}
@@ -725,13 +731,263 @@ bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh,
 bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData)
 {
-	return false;
+	PhyCollisionData* pData = p_collisionData;
+	if (!CheckCollision(p_mesh->GetBoundingSphere(), p_box))
+		return false;
+	if (!CheckCollision(p_box->GetBoundingSphere(), p_mesh->GetOBB()))
+		return false;
+
+	bool doesCollide = false;
+	vector<AglVector3> triangles;
+	vector<AglVector3> triangle(3);
+	if (p_mesh->EvaluateBox(p_box, triangles))
+	{
+		pData->Body1 = p_box;
+		pData->Body2 = p_mesh;
+
+		AglMatrix meshWorld = p_mesh->GetWorld();
+		for (unsigned int i = 0; i < triangles.size(); i+=3)
+		{
+			triangle[0] = triangles[i];
+			triangle[1] = triangles[i+1];
+			triangle[2] = triangles[i+2];
+			triangle[0].transform(meshWorld);
+			triangle[1].transform(meshWorld);
+			triangle[2].transform(meshWorld);
+
+			EPACollisionData EPAData;
+			bool col = gjkCheckCollision(triangle, p_box->GetCorners(), &EPAData);
+			if (col)
+			{
+				doesCollide = true;
+				AglVector3 Normal = EPAData.Normal;
+				float Penetration = EPAData.Depth;
+
+				if (AglVector3::dotProduct(triangle[0] - p_box->GetPosition(), Normal) < 0)
+					Normal = -Normal;
+
+				vector<AglVector3> apoints = GetHitPoints(p_box, Normal, Penetration);
+				vector<AglVector3> bpoints = GetHitPoints(triangle, -Normal, Penetration);
+
+				//Vertex-Vertex, Vertex-Edge, Vertex-Face, Edge-Edge, Edge-Face, Face-Face
+
+				if (apoints.size() == 4 && bpoints.size() == 3)//Case: Face - Face
+				{
+					vector<AglVector3> points = FindOverlapQuadTriangle(apoints, bpoints, Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 4 && bpoints.size() == 2)//Case: Edge-Face
+				{
+					vector<AglVector3> points = FindOverlapEdgeQuad(bpoints[0], bpoints[1], apoints, -Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 2 && bpoints.size() == 3)//Case: Edge-Face
+				{
+					vector<AglVector3> points = FindOverlapEdgeTriangle(apoints[0], apoints[1], bpoints, Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 2 && bpoints.size() == 2)//Case: Edge-Edge
+				{
+					//Do not ignore! This is vital Do a distance check between edges.
+					float s1 = 0, s2 = 0;
+					EdgeEdgeDistance(apoints[0], apoints[1], bpoints[0], bpoints[1], s1, s2);
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(apoints[0] + (apoints[1] - apoints[0]) * s1, bpoints[0] + (bpoints[1] - bpoints[0]) * s2));
+				}
+				else if (apoints.size() == 1 && bpoints.size() == 3)//Case: Face-Vertex
+				{
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(apoints[0], apoints[0] - Normal * Penetration));
+				}
+				else if (apoints.size() == 4 && bpoints.size() == 1)//Case: Face-Vertex
+				{
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(bpoints[0] + Normal * Penetration, bpoints[0]));
+				}
+				else
+				{
+				}
+			}
+		}
+	}
+	return doesCollide;
 }
 
 bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData)
 {
 	return false;
+}
+
+bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2, 
+					PhyCollisionData* p_collisionData)
+{
+	bool doesCollide = false;
+	PhyCollisionData* pData = p_collisionData;
+	vector<AglVector3> triangles;
+	
+	if (p_mesh1->EvaluateMesh(p_mesh2, triangles))
+	{
+		pData->Body1 = p_mesh1;
+		pData->Body2 = p_mesh2;
+		vector<AglVector3> triangle1(3);
+		vector<AglVector3> triangle2(3);
+		AglMatrix mesh1World = p_mesh1->GetWorld();
+		AglMatrix mesh2World = p_mesh2->GetWorld();
+		for (unsigned int i = 0; i < triangles.size(); i+=6)
+		{
+			triangle1[0] = triangles[i];
+			triangle1[1] = triangles[i+1];
+			triangle1[2] = triangles[i+2];
+			triangle1[0].transform(mesh1World);
+			triangle1[1].transform(mesh1World);
+			triangle1[2].transform(mesh1World);
+
+			triangle2[0] = triangles[i+3];
+			triangle2[1] = triangles[i+4];
+			triangle2[2] = triangles[i+5];
+			triangle2[0].transform(mesh2World);
+			triangle2[1].transform(mesh2World);
+			triangle2[2].transform(mesh2World);
+
+			EPACollisionData EPAData;
+			bool col = gjkCheckCollision(triangle1, triangle2, &EPAData);
+			if (col)
+			{
+				doesCollide = true;
+				AglVector3 Normal = EPAData.Normal;
+				float Penetration = EPAData.Depth;
+
+				AglVector3 c1 = (triangle1[0] + triangle1[1] + triangle1[2]) / 3;
+				AglVector3 c2 = (triangle2[0] + triangle2[1] + triangle2[2]) / 3;
+				if (AglVector3::dotProduct(c1 - c2, Normal) > 0)
+					Normal = -Normal;
+
+				vector<AglVector3> apoints = GetHitPoints(triangle2, Normal, Penetration);
+				vector<AglVector3> bpoints = GetHitPoints(triangle1, -Normal, Penetration);
+
+				//Vertex-Vertex, Vertex-Edge, Vertex-Face, Edge-Edge, Edge-Face, Face-Face
+
+				if (apoints.size() == 3 && bpoints.size() == 3)//Case: Face - Face (Convex hulls are triangle based as opposed to boxes)
+				{
+					vector<AglVector3> points = FindOverlapTriangles(apoints, bpoints, Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 3 && bpoints.size() == 2)//Case: Edge-Face
+				{
+					vector<AglVector3> points = FindOverlapEdgeTriangle(bpoints[0], bpoints[1], apoints, -Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 2 && bpoints.size() == 3)//Case: Edge-Face
+				{
+					vector<AglVector3> points = FindOverlapEdgeTriangle(apoints[0], apoints[1], bpoints, Normal, Penetration);
+					for (unsigned int i = 0; i < points.size(); i++)
+					{
+						pData->Contacts.push_back(pair<AglVector3, AglVector3>(points[i] + Normal * Penetration / 2, points[i] - Normal * Penetration / 2));
+					}
+				}
+				else if (apoints.size() == 2 && bpoints.size() == 2)//Case: Edge-Edge
+				{
+					//Do not ignore! This is vital Do a distance check between edges.
+					float s1 = 0, s2 = 0;
+					EdgeEdgeDistance(apoints[0], apoints[1], bpoints[0], bpoints[1], s1, s2);
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(apoints[0] + (apoints[1] - apoints[0]) * s1, bpoints[0] + (bpoints[1] - bpoints[0]) * s2));
+				}
+				else if (apoints.size() == 1 && bpoints.size() == 3)//Case: Face-Vertex
+				{
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(apoints[0], apoints[0] - Normal * Penetration));
+				}
+				else if (apoints.size() == 3 && bpoints.size() == 1)//Case: Face-Vertex
+				{
+					pData->Contacts.push_back(pair<AglVector3, AglVector3>(bpoints[0] + Normal * Penetration, bpoints[0]));
+				}
+				else
+				{
+				}
+			}
+		}
+	}
+	return doesCollide;
+}
+
+bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
+					EPACollisionData* p_epaData)
+{
+	//Sphere min = projected pos + radius
+	//Sphere max = projected pos - radius
+
+	AglVector3 p = p_sphere.position;
+	AglVector3 axes[7];
+	axes[0] = AglVector3::crossProduct(p_v2-p_v1, p_v3-p_v2);
+	axes[1] = p_v1 - p;
+	axes[2] = p_v2 - p;
+	axes[3] = p_v3 - p;
+	axes[4] = AglVector3::crossProduct(AglVector3::crossProduct(p_v2-p_v1, p - p_v1), p_v2 - p_v1);
+	axes[5] = AglVector3::crossProduct(AglVector3::crossProduct(p_v3-p_v1, p - p_v1), p_v3 - p_v1);
+	axes[6] = AglVector3::crossProduct(AglVector3::crossProduct(p_v3-p_v2, p - p_v2), p_v3 - p_v2);
+
+	float minA, maxA;
+	float minB, maxB;
+
+	//Project points on the axis
+	float overlap = FLT_MAX;
+	AglVector3 axis;
+	for (unsigned int i = 0; i < 7; i++)
+	{
+		axes[i].normalize();
+		minA = maxA = AglVector3::dotProduct(axes[i], p_v1);
+		minA = min(AglVector3::dotProduct(axes[i], p_v2), minA);
+		minA = min(AglVector3::dotProduct(axes[i], p_v3), minA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_v2), maxA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_v3), maxA);
+
+		minB = AglVector3::dotProduct(axes[i], p) - p_sphere.radius;
+		maxB = AglVector3::dotProduct(axes[i], p) + p_sphere.radius;
+		
+		if (i > 0)
+		{
+			float lengthA = maxA - minA;
+			float lengthB = maxB - minB;
+
+			float minTotal = min(minA, minB);
+			float maxTotal = max(maxA, maxB);
+
+			float newOverlap = (lengthA + lengthB) - (maxTotal - minTotal);
+			if (newOverlap <= 0)
+			{
+				return false;
+			}
+			else if (newOverlap < overlap)
+			{
+				overlap = newOverlap;
+				axis = axes[i];
+			}
+		}
+		else
+		{
+			float newOverlap = min(minA - minB, maxB - minA);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+	}
+
+	p_epaData->Depth = overlap;
+	p_epaData->Normal = axis;
+	return true;
 }
 
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------
@@ -769,6 +1025,44 @@ void  CalculateProjectionInterval(RigidBodyBox* pBox, AglVector3 pAxis, float& p
             pMax = curr;
     }
 }
+
+float OverlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis)
+{
+	//Assumed to be normalized
+	//AglVector3::normalize(pAxis);
+
+	float minA = 0, maxA = 0, minB = 0, maxB = 0;
+	CalculateProjectionInterval(p_points1, p_axis, minA, maxA);
+	CalculateProjectionInterval(p_points2, p_axis, minB, maxB);
+
+	float lengthA = maxA - minA;
+	float lengthB = maxB - minB;
+
+	float minTotal = min(minA, minB);
+	float maxTotal = max(maxA, maxB);
+
+	if (maxTotal - minTotal >= lengthA + lengthB)
+	{
+		return 0;
+	}
+	return lengthA + lengthB - (maxTotal - minTotal);
+}
+
+void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max)
+{
+	p_min = p_max = AglVector3::dotProduct(p_axis, p_points[0]);
+	for (int i = 1; i < 8; i++)
+	{
+		float curr = AglVector3::dotProduct(p_axis, p_points[i]);
+		if (curr < p_min)
+			p_min = curr;
+		else if (curr > p_max)
+			p_max = curr;
+	}
+}
+
+
 vector<AglVector3> GetHitPoints(RigidBodyBox* pBox, AglVector3 pNormal, float pPenetration)
 {
 	//Given a collision normal and a penetration amount; find the collision points

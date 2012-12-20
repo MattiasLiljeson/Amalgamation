@@ -3,8 +3,9 @@
 #include "RigidBodySphere.h"
 #include "RigidBodyMesh.h"
 #include "PhyUtility.h"
+#include "GJKSolver.h"
 
-extern bool theGlobal;
+extern float theGlobal;
 
 //----------------------------PRIMARY COLLISION FUNCTIONS---------------------------------
 
@@ -210,6 +211,12 @@ bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh,
 bool CheckCollision(RigidBodyConvexHull* p_hull, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData);
 
+bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2, 
+					PhyCollisionData* p_collisionData);
+
+bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
+						EPACollisionData* p_epaData);
+
 //--------------------------------SUPPORT FUNCTIONS---------------------------------------
 
 
@@ -231,6 +238,12 @@ float OverlapAmount(RigidBodyBox* p_box1, RigidBodyBox* p_box2, AglVector3 p_axi
 ///-----------------------------------------------------------------------------------
 void  CalculateProjectionInterval(RigidBodyBox* p_box, AglVector3 p_axis, 
 									float& p_min, float& p_max);
+
+
+float OverlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
+
+void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max);
 
 
 ///-----------------------------------------------------------------------------------
