@@ -157,9 +157,32 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	for( int i=0; i<16; i++ )
 		scene.viewProjectionMatrix[i] = identity[i];
 
+	// HACK: set blendstate here to get alpha-blending
+	float frush[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	ID3D11BlendState* oldBlendState = NULL;
+	UINT oldMask;
+	m_wrapper->getDeviceContext()->OMGetBlendState( &oldBlendState, frush, &oldMask);
+	ID3D11BlendState* newBlendState = NULL;
+	D3D11_BLEND_DESC BlendState;
+	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+	 
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	m_wrapper->getDevice()->CreateBlendState( &BlendState, &newBlendState ); 
+	m_wrapper->getDeviceContext()->OMSetBlendState( newBlendState, frush, 0xffffffff );
+
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	//m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+
+	m_wrapper->getDeviceContext()->OMSetBlendState( oldBlendState, frush, oldMask );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
@@ -290,7 +313,7 @@ bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& te
 	pitch = source_dimensions.x * 4;
 
 	ID3D11ShaderResourceView* resource = TextureParser::createTexture( 
-		m_wrapper->getDevice(), source, x, y, pitch );
+		m_wrapper->getDevice(), source, x, y, pitch, TextureParser::RGBA );
 	Texture* texture = new Texture( resource );
 
 	// Set the handle on the Rocket p_texture structure.
@@ -341,13 +364,9 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
 	AglVector3 translation( -1.0f, 1.0f, 0.0f );
-	//matScale = AglMatrix::createScaleMatrix( scale );
-	//matTranslate = AglMatrix::createTranslationMatrix( translation );
 
 	AglMatrix::componentsToMatrix(matTranslate, scale, AglQuaternion::identity(), translation);
 	return matTranslate;
-	
-	//return matScale * matTranslate;
 }
 
 vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( const AglMatrix& p_matrix )
