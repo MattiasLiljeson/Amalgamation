@@ -50,7 +50,7 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_NONE;
-	rasterizerDesc.FrontCounterClockwise = FALSE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
+	rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
 	rasterizerDesc.DepthClipEnable = TRUE;
 	rasterizerDesc.AntialiasedLineEnable = FALSE;
 	rasterizerDesc.MultisampleEnable = FALSE;
@@ -121,11 +121,12 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	// Fill the index vector.
 	vector<DIndex> indices;
 	indices.resize(p_numIndices);
-	/************************************************************************/
-	/* SHOULD THE INDEX BE CAST TO AN UNSIGNED? IS IT ALREADY UNSIGNED?		*/
-	/************************************************************************/
-	memcpy(&indices[0], p_indices, sizeof(unsigned int) * p_numIndices);
-	/*void* indices = p_indices;*/
+	for( int i=0; i<p_numIndices; i++)
+	{
+		indices[i].index = p_indices[i];
+	}
+
+
 	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
 		&vertices[0], p_numIndices, &indices[0] );
 
@@ -152,10 +153,12 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	AglMatrix worldMat = AglMatrix::createTranslationMatrix( translationVec );
 	worldMat *= m_NDCFrom2dMatrix;
 
+	worldMat = worldMat.transpose();
+
 	RendererSceneInfo scene;
 	AglMatrix identity = AglMatrix::identityMatrix();
 	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = identity[i];
+		scene.viewProjectionMatrix[i] = worldMat[i];
 
 	// HACK: set blendstate here to get alpha-blending
 	float frush[] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -196,10 +199,10 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
 	//HACK: should not be done here!
-	//if(enable == true)
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
-	//else
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+	if(enable == true)
+		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
+	else
+		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to change the scissor region.

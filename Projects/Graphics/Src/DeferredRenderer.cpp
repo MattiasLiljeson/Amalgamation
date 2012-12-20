@@ -75,13 +75,22 @@ void DeferredRenderer::beginDeferredBasePass()
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
 	
-	updatePerFrameConstantBuffer();
+	// update per frame buffer
+	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	//	cb->accessBuffer.color[0] = 0.5f;
+	//	cb->accessBuffer.color[1] = 0.5f;
+
+	for (int i=0;i<16;i++)
+	{
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
+	}
+	cb->update();
 }
 
 void DeferredRenderer::updatePerFrameConstantBuffer()
 {
 	// update per frame buffer
-	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	Buffer<SimpleCBuffer>* cb = m_rocketShader->getPerFrameBufferPtr();
 	//	cb->accessBuffer.color[0] = 0.5f;
 	//	cb->accessBuffer.color[1] = 0.5f;
 
@@ -153,24 +162,13 @@ void DeferredRenderer::renderComposedImage()
 }
 
 
-void DeferredRenderer::renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-													Buffer<InstanceData>* p_instanceBuffer )
+void DeferredRenderer::renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture )
 {
-	//HACK: Shameless c/p from renderMeshInstanced
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
 
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-		p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-		p_instanceBuffer->getBufferPointer() };
-
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-		DXGI_FORMAT_R32_UINT, 0);
+	// set texture
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
 
 	// set texture
 	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
@@ -178,9 +176,7 @@ void DeferredRenderer::renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_te
 	m_rocketShader->apply();
 
 	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-		p_instanceBuffer->getElementCount(),
-		0,0,0);
+	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
 void DeferredRenderer::unMapGBuffers()

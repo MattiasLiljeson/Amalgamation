@@ -92,14 +92,12 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
-
 	
 	///-----------------------------------------------------------------------------------
 	/// Desc
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-		Buffer<InstanceData>* p_instanceBuffer );
+	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture );
 
 	void hookUpAntTweakBar();
 protected:

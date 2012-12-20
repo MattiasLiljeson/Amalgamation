@@ -189,7 +189,7 @@ void GraphicsWrapper::renderRocketCompiledGeometry( unsigned int p_meshId,
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 		p_instanceList->size() );
 
-	m_deferredRenderer->renderRocketCompiledGeometry( mesh, tex, instanceBuffer );
+	m_deferredRenderer->renderRocketCompiledGeometry( mesh, tex );
 
 	delete instanceBuffer;
 }
