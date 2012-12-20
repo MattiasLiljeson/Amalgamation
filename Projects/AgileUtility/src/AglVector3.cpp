@@ -149,7 +149,7 @@ void AglVector3::transformNormal(const AglMatrix& pMatrix)
 //Static functions
 float AglVector3::dotProduct(const AglVector3& pV1, const AglVector3& pV2)
 {
-	return pV1[0] * pV2[0] + pV1[1] * pV2[1] + pV1[2] * pV2[2];
+	return pV1.x * pV2.x + pV1.y * pV2.y + pV1.z * pV2.z;
 }
 AglVector3 AglVector3::crossProduct(const AglVector3& pV1, const AglVector3& pV2)
 {

@@ -165,10 +165,11 @@ void  AglVector4::normalize()
 void  AglVector4::transform(AglMatrix pMatrix)
 {
 	AglMatrix& mat = pMatrix;
-	*this =  AglVector4(mat[0] * x + mat[4] * y + mat[8]  * z + mat[12] * w,
-						mat[1] * x + mat[5] * y + mat[9]  * z + mat[13] * w,
-						mat[2] * x + mat[6] * y + mat[10] * z + mat[14] * w,
-						mat[3] * x + mat[7] * y + mat[11] * z + mat[15] * w);
+	float* d = pMatrix.data;
+	*this =  AglVector4(d[0] * x + d[4] * y + d[8]  * z + d[12] * w,
+						d[1] * x + d[5] * y + d[9]  * z + d[13] * w,
+						d[2] * x + d[6] * y + d[10] * z + d[14] * w,
+						d[3] * x + d[7] * y + d[11] * z + d[15] * w);
 }
 
 //Static functions
