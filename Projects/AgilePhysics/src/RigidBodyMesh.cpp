@@ -369,7 +369,6 @@ bool RigidBodyMesh::Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p
 			}
 		}
 	}
-	//return false;
 	return p_triangles.size() > 0;
 }
 

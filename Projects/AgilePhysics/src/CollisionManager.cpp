@@ -1176,7 +1176,7 @@ void  CalculateProjectionInterval(const AglVector3* p_points, const AglVector3& 
 	p_min = p_max = AglVector3::dotProduct(p_axis, p_points[0]);
 	for (int i = 1; i < 8; i++)
 	{
-		float curr = AglVector3::dotProduct(p_axis, p_points[i]);
+		float curr = p_axis.x * p_points[i].x + p_axis.y * p_points[i].y + p_axis.z * p_points[i].z;
 		if (curr < p_min)
 			p_min = curr;
 		else if (curr > p_max)
