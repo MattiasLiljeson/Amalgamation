@@ -111,10 +111,8 @@ bool Game::Update(float pElapsedTime)
 
 	if (Avatar && mPhysics)
 	{
-		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
-		AglMatrix m = av->GetWorld();
-		AglMatrix world = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9],
-								m[10], m[11], m[12], m[13], m[14], m[15]);
+		RigidBody* av = (RigidBody*)mPhysics->GetBody(Avatar);
+		AglMatrix world = coord * av->GetWorld();
 
 		//Mouse
 		GetCursorPos(&CurrentMousePos);
@@ -151,6 +149,14 @@ bool Game::Update(float pElapsedTime)
 		else if(GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 		{
 			av->AddImpulse(-world.GetForward()*50.0f * av->GetMass() * pElapsedTime);
+		}
+		else if(GetAsyncKeyState(VK_LEFT) & 0x8000)
+		{
+			av->AddImpulse(world.GetLeft()*50.0f * av->GetMass() * pElapsedTime);
+		}
+		else if(GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		{
+			av->AddImpulse(world.GetRight()*50.0f * av->GetMass() * pElapsedTime);
 		}
 
 		if(GetAsyncKeyState('W') & 0x8000)
@@ -230,7 +236,7 @@ bool Game::Draw(float pElapsedTime)
 	DX11Application::Draw(pElapsedTime);
     //mDeviceContext->ClearRenderTargetView(mBackBuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
 
-	float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float color[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	mDeviceContext->ClearRenderTargetView(mBackBuffer, color);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -239,8 +245,26 @@ bool Game::Draw(float pElapsedTime)
 	if (mPhysics)
 		mPhysics->DrawDebug();
 
+	bool drawthat = false;
+	if(GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		drawthat = true;
+	}
+
+	AglMatrix mat = AglMatrix::createTranslationMatrix(AglVector3(0, 0, -40));
+
 	Body* b = mPhysics->GetBody(mesh);
-	testMesh->Draw(b->GetWorld());
+	if (drawthat)
+		testMesh->Draw(b->GetWorld());
+	else
+		toDraw->Draw(b->GetWorld());
+
+	b = mPhysics->GetBody(Avatar);
+	
+	if (drawthat)
+		testMesh->Draw(b->GetWorld());
+	else
+		toDraw->Draw(b->GetWorld());
 
     mSwapChain->Present(0,0);
 	return true;
@@ -305,7 +329,7 @@ void Game::Restart()
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -25), 1.0f, true);
 
 		//new
-		Avatar = mPhysics->AddCompoundBody(AglVector3(0, 0, -40));
+		/*Avatar = mPhysics->AddCompoundBody(AglVector3(0, 0, -40));
 		CompoundBody* av = (CompoundBody*)mPhysics->GetBody(Avatar);
 		float step = 1.0f / 9.0f * 2 * 3.14159f;
 
@@ -314,7 +338,7 @@ void Game::Restart()
 			//toDetach =
 			mPhysics->AddSphere(AglVector3(cos(step*i)*2.5f, sin(step*i)*2.5f, 0), 1.0f, false, av);
 		}*/
-		mPhysics->AddSphere(AglVector3(0, 0, 0), 1.0f, false, av);
+		//mPhysics->AddBox(AglVector3(0, 0, 0), AglVector3(1, 1, 1), 1.0f, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, av);
 
 
 		string file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
@@ -343,7 +367,24 @@ void Game::Restart()
 		AglLooseBspTree* bsptree = constructor.createTree();
 
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
-		mesh = mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		coord = s->getCoordinateSystemAsMatrix();
+		mesh = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		Avatar = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
+
+
+
+		file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
+
+		AglReader r2((char*)file.c_str());
+
+		AglScene* s2 = r2.getScene();
+
+		vector<AglMesh*> m2 = s2->getMeshes();
+		toDraw = new DebugMesh(mDevice, mDeviceContext, m2[0]);
+
+
+
 	}
 	else if (val == 2)
 	{

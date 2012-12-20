@@ -1,4 +1,5 @@
 #include "ShaderBase.h"
+#include "D3DUtil.h"
 
 ShaderBase::ShaderBase( ShaderInitStruct p_initData )
 {

@@ -1,3 +1,19 @@
+#pragma once
+
+#include <InstanceData.h>
+#include "Buffer.h"
+#include "CBuffers.h"
+#include "PTVertex.h"
+#include "PNTVertex.h"
+#include "PNTTBVertex.h"
+#include "DIndex.h"
+
+// #include "TextureBuffers.h"
+// #include "VertexBuffers.h"
+// etc?
+
+class Mesh;
+
 // =======================================================================================
 //                                      BufferFactory
 // =======================================================================================
@@ -9,20 +25,6 @@
 /// Detailed description.....
 /// Created on: 3-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <InstanceData.h>
-#include "Buffer.h"
-#include "CBuffers.h"
-#include "PTVertex.h"
-#include "PNTVertex.h"
-#include "PNTTBVertex.h"
-#include "DIndex.h"
-#include "Mesh.h"
-// #include "TextureBuffers.h"
-// #include "VertexBuffers.h"
-// etc?
-
 
 class BufferFactory
 {

@@ -1,4 +1,9 @@
 #include "ShaderFactory.h"
+#include "BufferFactory.h"
+#include "D3DException.h"
+#include "DeferredBaseShader.h"
+#include "DeferredComposeShader.h"
+#include "RocketShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)

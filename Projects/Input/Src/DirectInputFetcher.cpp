@@ -1,4 +1,5 @@
 #include "DirectInputFetcher.h"
+#include "DirectInputException.h"
 
 /************************************************************************/
 /* PUBLIC																*/

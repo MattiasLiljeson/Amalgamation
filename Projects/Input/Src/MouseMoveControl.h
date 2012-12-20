@@ -1,12 +1,9 @@
 #pragma once
+
 #include "Control.h"
 #include "InputHelper.h"
-#include "InputManager.h"
-#include "MessageLoopFetcher.h"
 
-class InputHelper;
 class InputManager;
-class MessageLoopFetcher;
 
 // =======================================================================================
 //                                      MouseMoveControl

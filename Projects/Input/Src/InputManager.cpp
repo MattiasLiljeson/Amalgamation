@@ -1,4 +1,9 @@
 #include "InputManager.h"
+#include "Control.h"
+#include "DirectInputFetcher.h"
+#include "IMouseKeyboardFetcher.h"
+#include "MessageLoopFetcher.h"
+#include "XInputFetcher.h"
 
 
 InputManager::InputManager( IMouseKeyboardFetcher* p_mlFetcher, XInputFetcher* p_xiFetcher )

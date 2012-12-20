@@ -1,5 +1,8 @@
 #include "DigitalControl.h"
-
+#include "InputManager.h"
+#include "XInputFetcher.h"
+#include "InputManager.h"
+#include "MessageLoopFetcher.h"
 
 DigitalControl::DigitalControl( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn )
 {

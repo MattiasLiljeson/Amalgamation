@@ -1,4 +1,17 @@
 #include "GraphicsWrapper.h"
+#include "DeferredBaseShader.h"
+#include "DeferredComposeShader.h"
+#include "DeferredRenderer.h"
+#include "Mesh.h"
+#include "BufferFactory.h"
+#include "AntTweakBarWrapper.h"
+#include "TextureParser.h"
+#include "Texture.h"
+#include "Mesh.h"
+
+#include <AglReader.h>
+#include "D3DException.h"
+#include "D3DUtil.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {

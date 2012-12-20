@@ -15,49 +15,60 @@
 
 #include <conio.h>
 
-#include <boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 
+#include <TcpServer.h>
 #include <EntityWorld.h>
-#include <PrintPositionsSystem.h>
+
+// Systems
+#include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
 #include <NetworkInputHandlerSystem.h>
 #include <NetworkUpdateSystem.h>
-#include <TcpServer.h>
 
 using namespace std;
 
-class ServerApplication
+namespace Srv
 {
-public:
-	ServerApplication();
-	virtual ~ServerApplication();
+	class ServerApplication
+	{
+	public:
+		ServerApplication();
+		virtual ~ServerApplication();
 
-	///-----------------------------------------------------------------------------------
-	/// The run() method starts the whole application. It runs all the
-	/// Let the program's entry point call run().
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void run();
+		///-----------------------------------------------------------------------------------
+		/// The run() method starts the whole application. It runs all the
+		/// Let the program's entry point call run().
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void run();
 
-private:
+		///-----------------------------------------------------------------------------------
+		/// Call one "step" on the server, instead of running a game loop.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void step( float p_dt );
 
-	///-----------------------------------------------------------------------------------
-	/// Creates and initializes all EntitySystems.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void initSystems();
+	private:
+
+		///-----------------------------------------------------------------------------------
+		/// Creates and initializes all EntitySystems.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void initSystems();
 	
-	///-----------------------------------------------------------------------------------
-	/// Creates and adds entities to the world.
-	/// \returns void
-	///-----------------------------------------------------------------------------------
-	void initEntities();
+		///-----------------------------------------------------------------------------------
+		/// Creates and adds entities to the world.
+		/// \returns void
+		///-----------------------------------------------------------------------------------
+		void initEntities();
 
-private:
-	bool m_running;
+	private:
+		bool m_running;
 
-	EntityWorld* m_world;
-	TcpServer* m_server;
+		EntityWorld* m_world;
+		TcpServer* m_server;
 
+	};
 };

@@ -1,3 +1,13 @@
+#pragma once
+#include <EntitySystem.h>
+#include <windows.h>
+
+#include "InputHelper.h"
+
+class inputControlFactory;
+class InputManager;
+class GraphicsBackendSystem;
+class Control;
 // =======================================================================================
 //                                      InputSystem
 // =======================================================================================
@@ -9,30 +19,6 @@
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-
-#include "CameraInfo.h"
-#include "GraphicsBackendSystem.h"
-#include "Input.h"
-#include "Transform.h"
-#include <DirectInputFetcher.h>
-#include <EntitySystem.h>
-#include <IMouseKeyboardFetcher.h>
-#include <InputControlFactory.h>
-#include <InputManager.h>
-#include <InputType.h>
-#include <MessageLoopFetcher.h>
-#include <XInputFetcher.h>
-#include <Windows.h>
-#include <map>
-#include <string>
-
-class InputHelper;
-class inputControlFactory;
-class InputManager;
-
-using namespace std;
 
 class InputBackendSystem : public EntitySystem
 {

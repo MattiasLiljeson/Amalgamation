@@ -1,4 +1,12 @@
 #include "GraphicsBackendSystem.h"
+#include <AntTweakBarWrapper.h>
+#include <TextureParser.h>
+#include <DebugUtil.h>
+#include <EntitySystem.h>
+#include <GraphicsWrapper.h>
+#include <Window.h>
+#include <SystemType.h>
+#include <ComponentType.h>
 
 GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth, int p_scrHeight,
 											 bool p_windowed  ) : EntitySystem( SystemType::GraphicsBackendSystem )

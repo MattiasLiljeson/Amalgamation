@@ -1,4 +1,9 @@
 #include "CameraSystem.h"
+#include "CameraInfo.h"
+#include "GraphicsBackendSystem.h"
+#include "InputBackendSystem.h"
+#include "LookAtEntity.h"
+#include "Transform.h"
 
 CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
 						    InputBackendSystem* p_inputBackend ) : 

@@ -1,4 +1,5 @@
 #include "BufferFactory.h"
+#include "Mesh.h"
 
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {

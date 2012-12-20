@@ -1,12 +1,6 @@
 #pragma once
 
-#include "AnalogueControl.h"
-#include "Control.h"
-#include "DigitalControl.h"
 #include "InputHelper.h"
-#include "KeyControl.h"
-#include "MouseBtnControl.h"
-#include "MouseMoveControl.h"
 
 #include <vector>
 #include <utility>

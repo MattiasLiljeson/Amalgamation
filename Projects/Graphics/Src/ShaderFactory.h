@@ -1,19 +1,19 @@
 #pragma once
 
-#include <d3d11.h>
-#include <comdef.h>
-#include <D3DCompiler.h>
-#include "D3DException.h"
-#include "ShaderInitStruct.h"
-#include "ShaderStageData.h"
-#include "DeferredBaseShader.h"
-#include "DeferredComposeShader.h"
-#include "RocketShader.h"
 #include "Buffer.h"
-#include "CBuffers.h"
 #include "BufferConfig.h"
-#include "BufferFactory.h"
+#include "CBuffers.h"
+#include "ShaderInitStruct.h"
 #include "ShaderStageConfig.h"
+#include "ShaderStageData.h"
+#include <D3DCompiler.h>
+#include <comdef.h>
+#include <d3d11.h>
+
+class BufferFactory;
+class DeferredBaseShader;
+class DeferredComposeShader;
+class RocketShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -34,7 +34,7 @@ public:
 	virtual ~ShaderFactory();
 
 	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitivies to 
+	/// This method returns the basic deferred base shader used to draw primitives to 
 	/// various render targets.
 	/// \param p_filePath
 	/// \return DeferredBaseShader*
@@ -42,7 +42,7 @@ public:
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitivies to 
+	/// This method returns the basic deferred base shader used to draw primitives to 
 	/// various render targets.
 	/// \param p_filePath
 	/// \return DeferredComposeShader*

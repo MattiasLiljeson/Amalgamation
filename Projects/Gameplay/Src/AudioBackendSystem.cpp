@@ -2,12 +2,12 @@
 #include <ToString.h>
 #include <SoundWrapper.h>
 
-AudioBackendSystem* AudioBackendSystem::m_theSystem = NULL;
+AudioBackendSystem* AudioBackendSystem::m_selfPointer = NULL;
 
 AudioBackendSystem::AudioBackendSystem() : EntitySystem(SystemType::AudioBackendSystem)
 {
 	m_soundWrapper = new SoundWrapper();
-	m_theSystem = this;
+	m_selfPointer = this;
 	m_label = "P/S: ";
 }
 
@@ -99,14 +99,19 @@ SoundWrapper* AudioBackendSystem::getSoundWrapper()
 
 void TW_CALL AudioBackendSystem::stopOrPlaySound( void* p_clientData )
 {
-	if(m_theSystem->m_soundWrapper->isPlaying((int)p_clientData))
-		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::STOP);
+	if(m_selfPointer->m_soundWrapper->isPlaying((int)p_clientData))
+		m_selfPointer->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::STOP);
 	else
-		m_theSystem->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::PLAY);
+		m_selfPointer->m_soundWrapper->updateSound((int)p_clientData,SoundEnums::PLAY);
 }
 
 void AudioBackendSystem::updateListenerVolume( float p_volume )
 {
 	m_soundWrapper->setMasterVolume(p_volume);
 	m_soundWrapper->updateMasterVolume();
+}
+
+void AudioBackendSystem::updateOutputMatrix( int p_index )
+{
+	m_soundWrapper->updateOutputMatrix(p_index);
 }

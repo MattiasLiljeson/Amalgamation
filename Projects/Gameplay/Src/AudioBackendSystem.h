@@ -1,6 +1,5 @@
 #pragma once
 #include <AntTweakBarWrapper.h>
-#include <string>
 #include <PositionalSoundCreationInfo.h>
 #include <BasicSoundCreationInfo.h>
 #include <SoundEnums.h>
@@ -34,15 +33,14 @@ public:
 		PositionalSoundCreationInfo* p_positionalInfo );
 	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
 	void updateListenerVolume(float p_volume);
+	void updateOutputMatrix(int p_index);
 	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
-
-
 	/************************************************************************/
 	/* DEBUG FUNCTIONS ONLY! */
 	/************************************************************************/
-	static AudioBackendSystem* m_theSystem;
+	static AudioBackendSystem* m_selfPointer;
 private:
 	static void TW_CALL stopOrPlaySound(void* p_clientData);
 	string m_label;

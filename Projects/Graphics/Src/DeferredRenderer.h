@@ -1,3 +1,27 @@
+#pragma once
+
+#include "Buffer.h"
+#include "D3DException.h"
+#include "PTVertex.h"
+#include "RendererSceneInfo.h"
+#include "ResourceManager.h"
+#include <InstanceData.h>
+#include <d3d11.h>
+
+class BufferFactory;
+class DeferredBaseShader;
+class DeferredComposeShader;
+class Mesh;
+class RocketShader;
+class ShaderFactory;
+struct Texture;
+
+
+const static int NUMBUFFERS = 3;
+const static int DEPTH = 2;
+const static int NORMAL = 1;
+const static int DIFFUSE = 0;
+
 // =======================================================================================
 //                                      DeferredRenderer
 // =======================================================================================
@@ -9,27 +33,6 @@
 /// The Geometry buffers (gBuffers) order is, depth, diffuse, normal.
 /// Created on: 29-11-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <d3d11.h>
-#include <InstanceData.h>
-#include "AntTweakBarWrapper.h"
-#include "D3DException.h"
-#include "Buffer.h"
-#include "ShaderFactory.h"
-#include "BufferFactory.h"
-#include "PTVertex.h"
-#include "PNTVertex.h"
-#include "PNTTBVertex.h"
-
-#include "RendererSceneInfo.h"
-#include "ResourceManager.h"
-#include "Texture.h"
-
-const static int NUMBUFFERS = 3;
-const static int DEPTH = 2;
-const static int NORMAL = 1;
-const static int DIFFUSE = 0;
 
 class DeferredRenderer
 {

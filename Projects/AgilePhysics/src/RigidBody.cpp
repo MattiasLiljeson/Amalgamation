@@ -49,6 +49,29 @@ RigidBody::RigidBody(AglVector3 pPosition)
 	mParent = NULL;
 	calcInvInertia();
 }
+RigidBody::RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
+{
+	AglMatrix mat = pCoordinateSystem * AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
+	mLocalTransform = mPreviousLocalTransform = mat;
+	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	mVelocity = mPreviousVelocity = pVelocity;
+	mAngularVelocity = mPreviousAngularVelocity = pAngularVelocity;
+	mForce = AglVector3(0, 0, 0);
+    mStatic = pStatic;
+    mMass = pMass;
+	mInvMass = 1.0f / mMass;
+	mUserControlled = pUserControlled;
+	mTempStatic = false;
+	mParent = NULL;
+
+	/*if (pPosition.z == -40)
+	{
+		AglQuaternion quat = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 1, 0), 1.0f);
+		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
+	}*/
+
+	calcInvInertia();
+}
 RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
 {
 	mLocalTransform = mPreviousLocalTransform = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);

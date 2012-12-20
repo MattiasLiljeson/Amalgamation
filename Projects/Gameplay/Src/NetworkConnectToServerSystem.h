@@ -1,3 +1,10 @@
+#pragma once
+
+#include <EntitySystem.h>
+
+class InputBackendSystem;
+class TcpClient;
+
 // =======================================================================================
 //	NetworkConnectToServerSystem
 // =======================================================================================
@@ -9,11 +16,6 @@
 /// Detailed description...
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <TcpClient.h>
-#include <EntitySystem.h>
-#include "InputBackendSystem.h"
 
 class NetworkConnectToServerSystem: public EntitySystem
 {
@@ -30,4 +32,5 @@ private:
 	TcpClient* m_tcpClient;
 	InputBackendSystem* m_inputBackend;
 
+	bool m_isLookingForConnection;
 };

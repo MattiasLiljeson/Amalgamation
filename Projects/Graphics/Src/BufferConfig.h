@@ -13,8 +13,7 @@
 #pragma once
 
 #include <d3d11.h>
-#include "D3DException.h"
-#include "D3DUtil.h"
+
 
 struct BufferConfig
 {

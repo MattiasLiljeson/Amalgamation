@@ -3,13 +3,20 @@
 // ES
 #include <EntitySystem.h>
 
-// NetComm
-#include <TcpServer.h>
+class TcpServer;
+class PhysicsSystem;
 
-#include "Transform.h"
+// =======================================================================================
+//                                      NetworkInputHandlerSystem
+// =======================================================================================
 
-#include "PacketType.h"
-#include "PlayerInputAction.h"
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # NetworkInputHandlerSystem
+/// Detailed description.....
+/// Created on: 20-12-2012 
+///---------------------------------------------------------------------------------------
 
 class NetworkInputHandlerSystem : public EntitySystem
 {
@@ -23,4 +30,5 @@ public:
 
 private:
 	TcpServer* m_server;
+	PhysicsSystem* m_physics;
 };

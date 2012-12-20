@@ -1,4 +1,6 @@
 #include "BufferConfig.h"
+#include "D3DException.h"
+#include "D3DUtil.h"
 
 BufferConfig::BufferConfig(BUFFER_INIT_DESC& p_initDesc)
 {

@@ -1,5 +1,12 @@
 #pragma once
 
+#include <EntitySystem.h>
+
+class Control;
+class TcpClient;
+class InputBackendSystem;
+class PhysicsSystem;
+
 // =======================================================================================
 //                                ShipControllerSystem
 // =======================================================================================
@@ -12,18 +19,12 @@
 /// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
-#include <EntitySystem.h>
-#include <AglQuaternion.h>
-#include "InputBackendSystem.h"
-#include "PhysicsSystem.h"
-#include "Transform.h"
-#include "ShipController.h"
-
 class ShipControllerSystem : public EntitySystem
 {
 public:
 	ShipControllerSystem(InputBackendSystem* p_inputBackend,
-						 PhysicsSystem* p_physicsSystem);
+						 PhysicsSystem* p_physicsSystem,
+						 TcpClient* p_client );
 	~ShipControllerSystem();
 
 	virtual void initialize();
@@ -32,6 +33,7 @@ public:
 private:
 	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
+	TcpClient* m_client;
 
 	Control* m_horizontalPositive;
 	Control* m_horizontalNegative;

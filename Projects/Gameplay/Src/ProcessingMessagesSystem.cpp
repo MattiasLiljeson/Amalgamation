@@ -1,4 +1,5 @@
 #include "ProcessingMessagesSystem.h"
+#include <ThreadSafeMessaging.h>
 
 
 ProcessingMessagesSystem::ProcessingMessagesSystem(

@@ -12,11 +12,9 @@
 #pragma once
 
 #include <vector>
-#include <string>
-#include <stdexcept>
-#include <climits>
 
 #include <AglVector3.h>
+#include <AglQuaternion.h>
 
 using namespace std;
 
@@ -74,6 +72,7 @@ public:
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3 p_data);
+	Packet& operator << (AglQuaternion p_data);
 	
 	Packet& operator >> (bool&	p_data);
 	Packet& operator >> (char&	 p_data);
@@ -82,6 +81,7 @@ public:
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglVector3& p_data);
+	Packet& operator >> (AglQuaternion& p_data);
 
 private:
 	void WriteData(void* p_data, unsigned int p_dataSize);

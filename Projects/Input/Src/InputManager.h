@@ -1,17 +1,14 @@
 #pragma once
 
 
-#include "Control.h"
-#include "DirectInputFetcher.h"
-#include "IMouseKeyboardFetcher.h"
-#include "MessageLoopFetcher.h"
-#include "XInputFetcher.h"
+
 #include <vector>
 
 class Control;
 class DirectInputFetcher;
 class MessageLoopFetcher;
 class XInputFetcher;
+class IMouseKeyboardFetcher;
 
 using namespace std;
 

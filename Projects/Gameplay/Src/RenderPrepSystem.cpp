@@ -1,4 +1,16 @@
+#include "GraphicsBackendSystem.h"
+#include "RenderInfo.h"
 #include "RenderPrepSystem.h"
+#include "Transform.h"
+#include "LibRocketBackendSystem.h"
+#include <AglMatrix.h>
+#include <AglVector3.h>
+#include <AntTweakBarWrapper.h>
+#include <ComponentType.h>
+#include <DebugUtil.h>
+#include <GraphicsWrapper.h>
+#include <TextureParser.h>
+#include <Windows.h>
 
 RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend,
 								   LibRocketBackendSystem* p_rocketBackend  )
@@ -71,7 +83,8 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
 		{
 			// Batch render all entities that share the same mesh
-			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
+			if (!m_instanceLists[meshIdx].empty())
+				gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
 		}
 		
 

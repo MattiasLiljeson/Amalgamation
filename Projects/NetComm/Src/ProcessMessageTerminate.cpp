@@ -2,7 +2,7 @@
 
 
 ProcessMessageTerminate::ProcessMessageTerminate()
-	: ProcessMessage( MessageType::TERMINATE, NULL )
+	: ProcessMessage( MessageType::TERMINATE, 0 )
 {
 }
 

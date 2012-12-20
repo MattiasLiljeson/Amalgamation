@@ -39,16 +39,11 @@
     <ClInclude Include="InputHelper.h" />
     <ClInclude Include="InputControlFactory.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="InputType.h" />
     <ClInclude Include="KeyControl.h" />
     <ClInclude Include="MessageLoopFetcher.h" />
     <ClInclude Include="MouseBtnControl.h" />
     <ClInclude Include="MouseMoveControl.h" />
     <ClInclude Include="XInputFetcher.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Input.vcxproj" />
-    <None Include="Input.vcxproj.user" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1C8E062E-2E4C-4C6B-BF3A-72A742065BE4}</ProjectGuid>
@@ -106,6 +101,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>dinput8.lib;dxguid.lib;</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -123,6 +121,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>dinput8.lib;dxguid.lib;</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

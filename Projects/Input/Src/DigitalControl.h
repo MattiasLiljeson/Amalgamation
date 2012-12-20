@@ -2,12 +2,8 @@
 
 #include "Control.h"
 #include "InputHelper.h"
-#include "InputManager.h"
-#include "XInputFetcher.h"
 
-class InputHelper;
 class InputManager;
-class XInputFetcher;
 
 // =======================================================================================
 //                                      DigitalControl

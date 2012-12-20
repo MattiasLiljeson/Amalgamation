@@ -1,4 +1,16 @@
+#include "AntTweakBarWrapper.h"
+#include "BufferFactory.h"
 #include "DeferredRenderer.h"
+#include "Mesh.h"
+#include "ShaderFactory.h"
+#include "Texture.h"
+
+#include "DeferredBaseShader.h"
+#include "DeferredComposeShader.h"
+#include "RocketShader.h"
+
+#include "PNTVertex.h"
+#include "PNTTBVertex.h"
 
 DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 				   int p_width, int p_height)

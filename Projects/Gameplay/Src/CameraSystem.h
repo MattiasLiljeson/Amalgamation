@@ -1,10 +1,21 @@
 #pragma once
-#include "CameraInfo.h"
-#include "GraphicsBackendSystem.h"
-#include "InputBackendSystem.h"
-#include "LookAtEntity.h"
-#include "Transform.h"
+
 #include <EntitySystem.h>
+
+class GraphicsBackendSystem;
+class InputBackendSystem;
+
+// =======================================================================================
+//                                      CameraSystem
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # CameraSystem
+/// Detailed description.....
+/// Created on: 20-12-2012 
+///---------------------------------------------------------------------------------------
 
 class CameraSystem : public EntitySystem
 {

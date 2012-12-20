@@ -46,6 +46,15 @@
     <Filter Include="Components\Audio">
       <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Audio">
+      <UniqueIdentifier>{17697685-e7f0-41c7-b82a-0934c2c51555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Physics">
+      <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Input">
+      <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -53,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="Vector3.h">
       <Filter>Utilities\Vector3</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintPositionsSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="NetworkSynced.h">
       <Filter>Components</Filter>
@@ -90,23 +96,14 @@
     <ClInclude Include="NetworkConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="NetworkInputHandlerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PacketTranslator.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems\Network\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkCommunicatorSystem.h">
-      <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
@@ -114,39 +111,22 @@
     <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
-    <ClInclude Include="InputBackendSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="ShipControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ImpulseSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Impulse.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LookAtEntity.h">
-      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="NetworkUpdateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerInputAction.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="AudioBackendSystem.h" />
-    <ClInclude Include="AudioController.h" />
-    <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="Impulse.h" />
     <ClInclude Include="ImpulseSystem.h" />
@@ -165,30 +145,36 @@
     <ClInclude Include="AudioListener.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
+    <ClInclude Include="AudioBackendSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioController.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioListenerSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ImpulseSystem.h">
+      <Filter>Systems\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="InputBackendSystem.h">
+      <Filter>Systems\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Systems\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
       <Filter>Utilities\Vector3</Filter>
     </ClCompile>
-    <ClCompile Include="PrintPositionsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="RenderPrepSystem.cpp">
@@ -215,14 +201,8 @@
     <ClCompile Include="NetworkCommunicatorSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
-    <ClCompile Include="InputBackendSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="ImpulseSystem.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components</Filter>
@@ -231,12 +211,6 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="AudioBackendSystem.cpp" />
-    <ClCompile Include="AudioController.cpp" />
-    <ClCompile Include="AudioListenerSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
@@ -246,6 +220,11 @@
     <ClCompile Include="LibRocketSystemInterface.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
@@ -255,11 +234,29 @@
     <ClCompile Include="AudioListener.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
+    <ClCompile Include="AudioBackendSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioController.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioListenerSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ImpulseSystem.cpp">
+      <Filter>Systems\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Systems\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

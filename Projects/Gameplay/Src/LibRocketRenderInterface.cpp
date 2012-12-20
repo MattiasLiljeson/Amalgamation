@@ -36,6 +36,9 @@
 
 #include "LibRocketRenderInterface.h"
 
+#include <sstream>
+#include <TextureParser.h>
+
 LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 {
 	m_factory = new BufferFactory(p_wrapper->getDevice(), p_wrapper->getDeviceContext());
@@ -156,7 +159,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	//m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
