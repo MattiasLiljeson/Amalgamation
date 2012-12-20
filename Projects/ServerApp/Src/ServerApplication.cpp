@@ -58,9 +58,6 @@ namespace Srv
 		PhysicsSystem* physics = new PhysicsSystem();
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
-		m_world->setSystem( SystemType::PrintPositionsSystem,
-			new PrintPositionsSystem(), true );
-
 		m_world->setSystem( SystemType::ProcessingMessagesSystem,
 			new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
 			true );

@@ -1,4 +1,15 @@
 #include "RenderPrepSystem.h"
+#include "RenderInfo.h"
+#include "GraphicsBackendSystem.h"
+#include "Transform.h"
+
+#include <AglMatrix.h>
+#include <AglVector3.h>
+#include <ComponentType.h>
+#include <DebugUtil.h>
+#include <GraphicsWrapper.h>
+#include <TextureParser.h>
+#include <Windows.h>
 
 RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend  )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,

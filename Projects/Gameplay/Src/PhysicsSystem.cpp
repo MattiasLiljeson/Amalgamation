@@ -1,6 +1,8 @@
 #include "PhysicsSystem.h"
 #include "Transform.h"
 #include "BodyInitData.h"
+#include <PhysicsController.h>
+#include "PhysicsBody.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)

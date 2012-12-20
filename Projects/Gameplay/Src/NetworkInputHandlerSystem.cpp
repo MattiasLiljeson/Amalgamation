@@ -1,5 +1,17 @@
 #include "NetworkInputHandlerSystem.h"
 
+// Components
+#include "Transform.h"
+#include "NetworkSynced.h"
+#include "PhysicsBody.h"
+
+// NetComm
+#include <TcpServer.h>
+
+#include "PacketType.h"
+#include "NetworkType.h"
+#include "PhysicsSystem.h"
+
 NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
 	ComponentType::NetworkSynced, ComponentType::ShipController,

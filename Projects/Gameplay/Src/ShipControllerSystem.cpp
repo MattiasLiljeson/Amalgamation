@@ -1,5 +1,16 @@
 #include "ShipControllerSystem.h"
 
+#include <TcpClient.h>
+#include <AglQuaternion.h>
+#include "InputBackendSystem.h"
+#include "PhysicsSystem.h"
+#include "Transform.h"
+#include "ShipController.h"
+#include "PacketType.h"
+#include "NetworkType.h"
+#include "Control.h"
+
+
 ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
 										    PhysicsSystem* p_physicsSystem,
 											TcpClient* p_client ) : 

@@ -1,4 +1,6 @@
 #include "AnalogueControl.h"
+#include "InputManager.h"
+#include "XInputFetcher.h"
 
 
 AnalogueControl::AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis )

@@ -1,5 +1,6 @@
 #include "AudioController.h"
-#include <SoundWrapper.h>
+#include "AudioBackendSystem.h"
+#include "AudioInfo.h"
 
 AudioController::AudioController(AudioBackendSystem* p_audioBackend) : 
 	EntitySystem(SystemType::AudioControllerSystem, 1, ComponentType::AudioComponent)
@@ -27,7 +28,7 @@ void AudioController::processEntities( const vector<Entity*>& p_entities )
 			comp = static_cast<AudioInfo*>(p_entities[i]->getComponent(
 				ComponentType::AudioComponent));
 			if(comp->isPositionalSound())
-				m_audioBackend->getSoundWrapper()->updateOutputMatrix(comp->getSoundId());
+				m_audioBackend->updateOutputMatrix( comp->getSoundId() );
 		}
 	}
 }

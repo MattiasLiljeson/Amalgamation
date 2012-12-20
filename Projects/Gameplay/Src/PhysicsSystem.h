@@ -1,8 +1,9 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <PhysicsController.h>
-#include "PhysicsBody.h"
+#include "AglVector3.h"
+
+class PhysicsController;
 
 // =======================================================================================
 //                                      PhysicsSystem

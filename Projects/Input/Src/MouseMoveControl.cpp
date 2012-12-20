@@ -1,4 +1,6 @@
 #include "MouseMoveControl.h"
+#include "InputManager.h"
+#include "MessageLoopFetcher.h"
 
 
 MouseMoveControl::MouseMoveControl( InputHelper::MOUSE_AXIS p_axis)

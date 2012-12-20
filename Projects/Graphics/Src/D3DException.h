@@ -1,3 +1,12 @@
+#pragma once
+
+#include <exception>
+#include <string>
+#include <Strsafe.h>
+#include "ToString.h"
+
+using namespace std;
+
 // =======================================================================================
 //                                      D3DException
 // =======================================================================================
@@ -9,14 +18,6 @@
 /// Detailed description.....
 /// Created on: 27-11-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <exception>
-#include <string>
-#include <Strsafe.h>
-#include "ToString.h"
-
-using namespace std;
 
 class D3DException : public exception
 {

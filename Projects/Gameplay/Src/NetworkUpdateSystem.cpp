@@ -1,4 +1,10 @@
 #include "NetworkUpdateSystem.h"
+#include <TcpServer.h>
+#include <Entity.h>
+
+#include "PacketType.h"
+#include "NetworkSynced.h"
+#include "Transform.h"
 
 NetworkUpdateSystem::NetworkUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )

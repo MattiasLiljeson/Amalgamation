@@ -3,17 +3,20 @@
 // ES
 #include <EntitySystem.h>
 
-// Components
-#include "Transform.h"
-#include "NetworkSynced.h"
-#include "PhysicsBody.h"
+class TcpServer;
+class PhysicsSystem;
 
-// NetComm
-#include <TcpServer.h>
+// =======================================================================================
+//                                      NetworkInputHandlerSystem
+// =======================================================================================
 
-#include "PacketType.h"
-#include "NetworkType.h"
-#include "PhysicsSystem.h"
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # NetworkInputHandlerSystem
+/// Detailed description.....
+/// Created on: 20-12-2012 
+///---------------------------------------------------------------------------------------
 
 class NetworkInputHandlerSystem : public EntitySystem
 {

@@ -22,7 +22,6 @@
 
 // Systems
 #include <PhysicsSystem.h>
-#include <PrintPositionsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <NetworkListenerSystem.h>
 #include <NetworkInputHandlerSystem.h>

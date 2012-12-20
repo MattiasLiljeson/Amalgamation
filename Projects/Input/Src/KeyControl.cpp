@@ -1,4 +1,6 @@
 #include "KeyControl.h"
+#include "InputManager.h"
+#include "IMouseKeyboardFetcher.h"
 
 
 KeyControl::KeyControl( InputHelper::KEYBOARD_KEY p_key )

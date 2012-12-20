@@ -1,7 +1,40 @@
 #include "ClientApplication.h"
+#include <boost/thread/thread.hpp>
+
+#ifdef _COMBINE_CLIENT_AND_SERVER
+	#include "ServerApplication.h"
+#endif
+
+#include <EntityWorld.h>
+#include <Input.h>
+
+// Components
+#include <PhysicsBody.h>
+#include <BodyInitData.h>
+#include <PhysicsSystem.h>
+#include <RenderInfo.h>
+#include <Transform.h>
+#include <ShipController.h>
+#include <AudioListener.h>
+#include <AudioInfo.h>
+
+// Systems
+#include <CameraSystem.h>
+#include <GraphicsBackendSystem.h>
+#include <InputBackendSystem.h>
+#include <PhysicsSystem.h>
+#include <NetworkConnectToServerSystem.h>
+#include <NetworkCommunicatorSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <RenderPrepSystem.h>
+#include <ShipControllerSystem.h>
+#include <AudioBackendSystem.h>
+#include <AudioController.h>
+#include <AudioListenerSystem.h>
+
+// MISC
 #include <AntTweakBarWrapper.h>
 
-#include <boost/thread/thread.hpp>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -13,6 +46,13 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		m_client = new TcpClient();
 
 		m_world = new EntityWorld();
+
+
+#ifdef _COMBINE_CLIENT_AND_SERVER
+		m_serverApp = new Srv::ServerApplication();
+#endif // !_COMBINE_CLIENT_AND_SERVER
+
+
 		initSystems();
 		initEntities();
 		initSounds();
@@ -25,6 +65,10 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 
 ClientApplication::~ClientApplication()
 {
+
+#ifdef _COMBINE_CLIENT_AND_SERVER
+	delete m_serverApp;
+#endif // !_COMBINE_CLIENT_AND_SERVER
 	delete m_world;
 	delete m_client;
 }
@@ -66,7 +110,7 @@ void ClientApplication::run()
 			m_world->process();
 			
 			#ifdef _COMBINE_CLIENT_AND_SERVER
-			m_serverApp.step( static_cast<float>(dt) );
+				m_serverApp->step( static_cast<float>(dt) );
 			#endif
 
 			boost::this_thread::sleep(boost::posix_time::milliseconds(10));

@@ -1,3 +1,8 @@
+#pragma once
+#include <EntitySystem.h>
+
+class ThreadSafeMessaging;
+
 // =======================================================================================
 //                                      ProcessMessagesSystem
 // =======================================================================================
@@ -9,10 +14,6 @@
 /// Detailed description...
 /// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <EntitySystem.h>
-#include <ThreadSafeMessaging.h>
 
 class ProcessingMessagesSystem: public EntitySystem
 {

@@ -1,4 +1,6 @@
 #include "MouseBtnControl.h"
+#include "InputManager.h"
+#include "MessageLoopFetcher.h"
 
 
 MouseBtnControl::MouseBtnControl( InputHelper::MOUSE_BTN p_btn )

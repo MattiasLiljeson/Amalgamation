@@ -1,20 +1,9 @@
 #pragma once
 
-#include "RenderInfo.h"
-#include "GraphicsBackendSystem.h"
-#include "Transform.h"
-
-#include <AglMatrix.h>
-#include <AglVector3.h>
-#include <ComponentType.h>
-#include <DebugUtil.h>
 #include <EntitySystem.h>
-#include <GraphicsWrapper.h>
-#include <TextureParser.h>
-#include <Window.h>
-#include <Windows.h>
-#include <vld.h>
+#include <InstanceData.h>
 
+class GraphicsBackendSystem;
 
 class RenderPrepSystem : public EntitySystem
 {

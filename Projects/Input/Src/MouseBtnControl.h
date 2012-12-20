@@ -2,8 +2,8 @@
 
 #include "Control.h"
 #include "InputHelper.h"
-#include "InputManager.h"
-#include "MessageLoopFetcher.h"
+
+class InputManager;
 
 // =======================================================================================
 //                                      MouseBtnControl

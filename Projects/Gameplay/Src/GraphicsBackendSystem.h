@@ -1,12 +1,22 @@
 #pragma once
 
-#include <DebugUtil.h>
 #include <EntitySystem.h>
-#include <GraphicsWrapper.h>
-#include <Window.h>
 #include <Windows.h>
-#include <SystemType.h>
-#include <ComponentType.h>
+
+
+class Window;
+class GraphicsWrapper;
+// =======================================================================================
+//                                      GraphicsBackendSystem
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # GraphicsBackendSystem
+/// Detailed description.....
+/// Created on: 20-12-2012 
+///---------------------------------------------------------------------------------------
 
 class GraphicsBackendSystem : public EntitySystem
 {

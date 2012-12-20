@@ -1,4 +1,25 @@
 #include "NetworkListenerSystem.h"
+#include <iostream>
+#include <queue>
+#include <vector>
+
+#include <SystemType.h>
+#include <ProcessMessageTerminate.h>
+#include <ThreadSafeMessaging.h>
+#include <TcpListenerProcess.h>
+#include <TcpServer.h>
+#include <DebugUtil.h>
+#include <ToString.h>
+
+#include "PacketType.h"
+#include "NetworkType.h"
+
+// Components:
+#include "Transform.h"
+#include "NetworkSynced.h"
+#include "ShipController.h"
+#include "BodyInitData.h"
+#include "PhysicsBody.h"
 
 NetworkListenerSystem::NetworkListenerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)

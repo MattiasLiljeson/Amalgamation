@@ -1,4 +1,18 @@
 #include "InputBackendSystem.h"
+
+#include "CameraInfo.h"
+#include "GraphicsBackendSystem.h"
+#include "Transform.h"
+#include <DirectInputFetcher.h>
+#include <IMouseKeyboardFetcher.h>
+#include <InputControlFactory.h>
+#include <InputManager.h>
+#include <MessageLoopFetcher.h>
+#include <XInputFetcher.h>
+#include <Windows.h>
+#include <map>
+#include <string>
+
 InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 									   GraphicsBackendSystem* p_graphicsBackend )
 	: EntitySystem( SystemType::InputBackendSystem )

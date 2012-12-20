@@ -1,4 +1,11 @@
 #include "InputControlFactory.h"
+#include <sstream>
+#include "AnalogueControl.h"
+#include "Control.h"
+#include "DigitalControl.h"
+#include "KeyControl.h"
+#include "MouseBtnControl.h"
+#include "MouseMoveControl.h"
 
 InputControlFactory::InputControlFactory()
 {

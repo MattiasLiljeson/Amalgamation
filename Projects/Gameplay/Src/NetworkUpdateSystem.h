@@ -1,12 +1,20 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <TcpServer.h>
-#include <Entity.h>
 
-#include "PacketType.h"
-#include "NetworkSynced.h"
-#include "Transform.h"
+class TcpServer;
+
+// =======================================================================================
+//                                      NetworkUpdateSystem
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # NetworkUpdateSystem
+/// Detailed description.....
+/// Created on: 20-12-2012 
+///---------------------------------------------------------------------------------------
 
 class NetworkUpdateSystem: public EntitySystem
 {

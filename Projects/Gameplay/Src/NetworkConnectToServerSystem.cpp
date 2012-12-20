@@ -1,4 +1,7 @@
 #include "NetworkConnectToServerSystem.h"
+#include "Control.h"
+#include <TcpClient.h>
+#include "InputBackendSystem.h"
 
 NetworkConnectToServerSystem::NetworkConnectToServerSystem( TcpClient* p_tcpClient,
 												InputBackendSystem* p_inputBackend  )

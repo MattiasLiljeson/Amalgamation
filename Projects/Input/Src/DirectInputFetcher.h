@@ -4,14 +4,11 @@
 // Below line to stop warnings
 #define DIRECTINPUT_VERSION 0x0800
 
-#include "DirectInputException.h"
 #include "IMouseKeyboardFetcher.h"
+
 #include "InputHelper.h"
 
 #include <dinput.h>
-
-#pragma comment (lib, "dinput8.lib")
-#pragma comment (lib, "dxguid.lib")
 
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0800

@@ -2,11 +2,8 @@
 
 #include "Control.h"
 #include "InputHelper.h"
-#include "InputManager.h"
-#include "XInputFetcher.h"
 
 class Control;
-class InputHelper;
 class InputManager;
 class XInputFetcher;
 
