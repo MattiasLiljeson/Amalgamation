@@ -11,8 +11,6 @@
 #include <Packet.h>
 #include <TcpClient.h>
 
-#include <AglVector3.h>
-
 // Components
 #include "NetworkSynced.h"
 #include "Transform.h"
@@ -25,6 +23,8 @@
 #include "GraphicsBackendSystem.h"
 #include "NetworkType.h"
 #include "PacketType.h"
+
+
 
 NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::NetworkCommunicatorSystem, 1, 
@@ -50,23 +50,14 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		packet >> packetType;
 		if (packetType == (char)PacketType::EntityCreation)
 		{
-			char networkType;
-			
-			packet >> networkType;
-			if (networkType == (char)NetworkType::Ship)
+			NetworkEntityCreationPacket data = readCreationPacket(packet);
+			if (data.networkType == (char)NetworkType::Ship )
 			{
-				int				owner;
-				int				networkId;
-				AglVector3		position;
-				AglQuaternion	rotation;
-				AglVector3		scale;
-
-				packet >> owner >> networkId >> position >> rotation >> scale;
-
 				int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 					SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
 
-				Transform* transform = new Transform( (float)(owner) * 10.0f, 0, 0 );
+				Transform* transform = new Transform( data.position, data.rotation, 
+					data.scale);
 
 				Entity* entity = NULL;
 				Component* component;
@@ -76,7 +67,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
-				if(m_tcpClient->getId() == owner)
+				if(m_tcpClient->getId() == data.owner)
 				{
 					component = new ShipController(5.0f, 50.0f);
 					entity->addComponent( ComponentType::ShipController, component );
@@ -88,7 +79,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				//	AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
 				//entity->addComponent(ComponentType::BodyInitData, component);
 				entity->addComponent(ComponentType::NetworkSynced,
-					new NetworkSynced(networkId, owner, NetworkType::Ship));
+					new NetworkSynced(data.networkId, data.owner, NetworkType::Ship));
 				m_world->addEntity(entity);
 				
 				
@@ -137,6 +128,31 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 						m_tcpClient->getIdPointer(), "" );
 				}
 			}
+			else if ( data.networkType == (char)NetworkType::Prop )
+			{
+				Entity* entity;
+				Component* component;
+				//b1
+				entity = m_world->createEntity();
+				//component = new RenderInfo( cubeMeshId );
+				//entity->addComponent( ComponentType::RenderInfo, component );
+				component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+				entity->addComponent( ComponentType::Transform, component );
+				component = new PhysicsBody();
+				entity->addComponent(ComponentType::PhysicsBody, component);
+
+				component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+					AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+				entity->addComponent(ComponentType::BodyInitData, component);
+
+				// The b1 entity should be synced over the network!
+				component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+				entity->addComponent(ComponentType::NetworkSynced, component);
+
+				m_world->addEntity(entity);
+			}
+
+
 		}
 		else if (packetType == (char)PacketType::EntityUpdate)
 		{
@@ -151,8 +167,6 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				AglVector3		scale;
 
 				packet >> networkId >> position >> rotation >> scale;
-
-
 
 				// HACK: This is VERY inefficient for large amount of
 				// network-synchronized entities. (Solve later)
@@ -193,4 +207,17 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 void NetworkCommunicatorSystem::initialize()
 {
 
+}
+
+NetworkEntityCreationPacket NetworkCommunicatorSystem::readCreationPacket( 
+	Packet& p_packet )
+{
+	NetworkEntityCreationPacket data;
+	p_packet >> data.networkType 
+		>> data.owner 
+		>> data.networkId 
+		>> data.position 
+		>> data.rotation 
+		>> data.scale;
+	return data;
 }
