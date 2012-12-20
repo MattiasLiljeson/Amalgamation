@@ -3,6 +3,8 @@
 #include "GraphicsBackendSystem.h"
 #include "Transform.h"
 
+#include <AntTweakBarWrapper.h>
+
 #include <AglMatrix.h>
 #include <AglVector3.h>
 #include <ComponentType.h>

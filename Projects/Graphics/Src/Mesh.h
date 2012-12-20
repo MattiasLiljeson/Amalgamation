@@ -1,3 +1,10 @@
+#pragma once
+
+#include "PNTVertex.h"
+#include "PNTTBVertex.h"
+#include "DIndex.h"
+#include "Buffer.h"
+
 // =======================================================================================
 //                                      MEsh
 // =======================================================================================
@@ -9,13 +16,6 @@
 /// Detailed description.....
 /// Created on: 4-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-#include <UniqueIndexList.h>
-#include "PNTVertex.h"
-#include "PNTTBVertex.h"
-#include "DIndex.h"
-#include "Buffer.h"
-
 
 class Mesh
 {

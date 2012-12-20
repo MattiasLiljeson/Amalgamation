@@ -1,5 +1,6 @@
 #include "GraphicsBackendSystem.h"
-
+#include <AntTweakBarWrapper.h>
+#include <TextureParser.h>
 #include <DebugUtil.h>
 #include <EntitySystem.h>
 #include <GraphicsWrapper.h>

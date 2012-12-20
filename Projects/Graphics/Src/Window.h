@@ -1,3 +1,6 @@
+#pragma once
+
+#include <Windows.h>
 // =======================================================================================
 //                                      Window
 // =======================================================================================
@@ -9,11 +12,6 @@
 /// Detailed description.....
 /// Created on: 27-11-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <Windows.h>
-#include "AntTweakBarWrapper.h"
-#include "WindowException.h"
 
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 

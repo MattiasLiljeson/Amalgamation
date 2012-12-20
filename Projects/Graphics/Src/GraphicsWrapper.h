@@ -15,16 +15,17 @@
 #include <d3d11.h>
 #include <ResourceManager.h>
 #include <Globals.h>
-#include <AglReader.h>
-#include "BufferFactory.h"
-#include "AntTweakBarWrapper.h"
-#include "D3DException.h"
-#include "D3DUtil.h"
 #include "Buffer.h"
-#include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
-#include "TextureParser.h"
-#include "Texture.h"
+#include "InstanceData.h"
+
+
+class DeferredBaseShader;
+class DeferredComposeShader;
+class DeferredRenderer;
+class BufferFactory;
+class Mesh;
+struct Texture;
 
 class GraphicsWrapper
 {

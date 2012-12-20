@@ -1,3 +1,9 @@
+#pragma once
+#include "ShaderInitStruct.h"
+#include "ShaderBase.h"
+#include "Buffer.h"
+#include "CBuffers.h"
+
 // =======================================================================================
 //                                      Shader
 // =======================================================================================
@@ -9,18 +15,6 @@
 /// Detailed description.....
 /// Created on: 27-11-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <string>
-#include <comdef.h>
-#include "ShaderInitStruct.h"
-#include "ShaderBase.h"
-#include "D3DException.h"
-#include "ToString.h"
-#include "Buffer.h"
-#include "CBuffers.h"
-
-using namespace std;
 
 class DeferredBaseShader : public ShaderBase
 {

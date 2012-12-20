@@ -1,4 +1,5 @@
 #include "DeferredBaseShader.h"
+
 /*
 DeferredBaseShader::DeferredBaseShader(const LPCWSTR& p_path, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {

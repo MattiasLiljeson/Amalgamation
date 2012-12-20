@@ -1,4 +1,6 @@
 #include "Window.h"
+#include "AntTweakBarWrapper.h"
+#include "WindowException.h"
 
 Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindowFlag)
 {

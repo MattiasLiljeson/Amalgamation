@@ -1,4 +1,6 @@
 #include "BufferBase.h"
+#include "D3DUtil.h"
+#include "D3DException.h"
 
 BufferBase::BufferBase(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 					   BufferConfig::BUFFER_INIT_DESC& p_configDesc)
