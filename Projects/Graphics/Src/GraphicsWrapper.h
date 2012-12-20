@@ -64,6 +64,16 @@ public:
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
 	///-----------------------------------------------------------------------------------
+	/// Render compiled rocket geometry. Use this with libRocket so that the correct
+	/// shader is used.
+	/// \param p_mesh
+	/// \param p_texture
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderRocketCompiledGeometry( unsigned int p_meshId,
+		vector<InstanceData>* p_instanceList );
+
+	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
 	/// render to backbuffer here.
 	/// \return void

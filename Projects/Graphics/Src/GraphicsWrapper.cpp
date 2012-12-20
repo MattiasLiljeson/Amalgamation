@@ -166,6 +166,21 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
+void GraphicsWrapper::renderRocketCompiledGeometry( unsigned int p_meshId, 
+												   vector<InstanceData>* p_instanceList )
+{
+	Mesh* mesh = m_meshManager->getResource( p_meshId );
+	Texture* tex = m_textureManager->getResource( mesh->getTextureId() );
+
+	Buffer<InstanceData>* instanceBuffer;
+	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
+		p_instanceList->size() );
+
+	m_deferredRenderer->renderRocketCompiledGeometry( mesh, tex, instanceBuffer );
+
+	delete instanceBuffer;
+}
+
 void GraphicsWrapper::finalizeFrame()
 {
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
@@ -274,7 +289,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		meshId = (int)m_meshManager->addResource( p_name, p_mesh );
 
 		string textureName = p_name + "_tex";
-		int texId = m_textureManager->getResourceId( textureName );
+		int texId = m_textureManager->getResourceId( (void*)p_texture );
 		if( texId == -1 )
 		{
 			texId = (int)m_textureManager->addResource( textureName, p_texture );

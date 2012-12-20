@@ -8,6 +8,7 @@
 #include "ShaderStageData.h"
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "RocketShader.h"
 #include "Buffer.h"
 #include "CBuffers.h"
 #include "BufferConfig.h"
@@ -47,6 +48,13 @@ public:
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+
+	///-----------------------------------------------------------------------------------
+	/// This method returns the rocket shader used in conjuction with librocket.
+	/// \param p_filePath
+	/// \return DeferredComposeShader*
+	///-----------------------------------------------------------------------------------
+	RocketShader* createRocketShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------

@@ -128,6 +128,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 
 	//HACK: static int to enumerate menus
 	static int numMenus = 0;
+	numMenus++;
 	stringstream ss;
 	ss<<"menus nr: "<<numMenus;
 
@@ -155,7 +156,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	m_wrapper->renderMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
@@ -169,10 +170,10 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
 	//HACK: should not be done here!
-	if(enable == true)
-		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
-	else
-		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+	//if(enable == true)
+	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
+	//else
+	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to change the scissor region.
@@ -336,11 +337,11 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
-	AglVector3 translatation( -1.0f, 1.0f, 0.0f );
+	AglVector3 translation( -1.0f, 1.0f, 0.0f );
 	//matScale = AglMatrix::createScaleMatrix( scale );
-	//matTranslate = AglMatrix::createTranslationMatrix( translatation );
+	//matTranslate = AglMatrix::createTranslationMatrix( translation );
 
-	AglMatrix::componentsToMatrix(matTranslate, scale, AglQuaternion::identity(), translatation);
+	AglMatrix::componentsToMatrix(matTranslate, scale, AglQuaternion::identity(), translation);
 	return matTranslate;
 	
 	//return matScale * matTranslate;

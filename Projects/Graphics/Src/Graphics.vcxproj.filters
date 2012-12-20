@@ -36,6 +36,9 @@
       <Filter>Graphics Utilities</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsWrapper.cpp" />
+    <ClCompile Include="RocketShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="PNTTBVertex.h">
       <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

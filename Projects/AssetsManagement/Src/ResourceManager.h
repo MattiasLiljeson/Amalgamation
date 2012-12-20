@@ -58,6 +58,14 @@ public:
 	int getResourceId(const string& p_uniqueName);
 
 	///-----------------------------------------------------------------------------------
+	/// HACK: fetch resource by its ptr. Used when a unique id isnt available but a ptr a
+	/// texture is. This is used by librocket which only handles ptrs. //Mattias L
+	/// \param p_ptr ptr to the resource
+	/// \return int Idx of resource. -1 if not existing; 
+	///-----------------------------------------------------------------------------------
+	int getResourceId( void* p_ptr );
+
+	///-----------------------------------------------------------------------------------
 	/// Get the name of resource data by its id. 
 	/// Uses an UniqueIndexList to access the data O(1).
 	/// \param p_uniqueId
@@ -112,6 +120,15 @@ private:
 	/// \return ResourceDataContainer*
 	///-----------------------------------------------------------------------------------
 	ResourceDataContainer* getResourceContainerFromName(const string& p_uniqueName);
+
+	///-----------------------------------------------------------------------------------
+	/// HACK: Help method used in order to get the resource data container from its ptr. 
+	/// This is used when a name isn't known. /Mattias L
+	/// ResourceDataContainer is only used internally.
+	/// \param p_uniqueName
+	/// \return ResourceDataContainer*
+	///-----------------------------------------------------------------------------------
+	ResourceDataContainer* getResourceContainerFromPtr( void* p_ptr );
 
 	///
 	/// A map of all the resources for access by unique key.
@@ -172,6 +189,16 @@ int ResourceManager<T>::getResourceId(const string& p_uniqueName)
 {
 	ResourceDataContainer* container = getResourceContainerFromName(p_uniqueName);
 	if (container!=NULL)
+		return container->uniqueId;
+	else
+		return -1;
+};
+
+template <class T>
+int ResourceManager<T>::getResourceId( void* p_ptr )
+{
+	ResourceDataContainer* container = getResourceContainerFromPtr( p_ptr );
+	if ( container != NULL )
 		return container->uniqueId;
 	else
 		return -1;
@@ -254,6 +281,23 @@ typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResou
 
 	if(mapIter != m_resourceMap.end()) 
 		resourceContainer = mapIter->second;
+
+	return resourceContainer;
+}
+
+template <class T>
+typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResourceContainerFromPtr( void* p_ptr )
+{
+	ResourceDataContainer* resourceContainer = NULL;
+	MapType::iterator it = m_resourceMap.begin();
+
+	for( ; it != m_resourceMap.end(); it++ )
+	{
+		if( it->second->data == p_ptr)
+		{
+			resourceContainer = it->second; 
+		}
+	}
 
 	return resourceContainer;
 }

@@ -89,6 +89,15 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
+
+	
+	///-----------------------------------------------------------------------------------
+	/// Desc
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
+		Buffer<InstanceData>* p_instanceBuffer );
+
 	void hookUpAntTweakBar();
 protected:
 private:
@@ -111,6 +120,7 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredComposeShader*	m_composeShader;
+	RocketShader*			m_rocketShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 

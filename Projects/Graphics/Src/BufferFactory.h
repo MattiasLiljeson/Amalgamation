@@ -77,6 +77,9 @@ public:
 	Mesh* createMeshFromPNTTBVerticesAndIndices( int p_numVertices, PNTTBVertex* p_vertices,
 		int p_numIndices, DIndex* p_indices  );
 
+	Mesh* createMeshFromPTVerticesAndIndices( int p_numVertices, PTVertex* p_vertices,
+		int p_numIndices, DIndex* p_indices  );
+
 	///-----------------------------------------------------------------------------------
 	/// Constructs an engine Mesh object from raw data.
 	/// \param p_vertexBlob

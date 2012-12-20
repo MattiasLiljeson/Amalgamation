@@ -9,7 +9,7 @@
 #include <DIndex.h>
 #include <GraphicsWrapper.h>
 #include <Mesh.h>
-#include <PNTTBVertex.h>
+#include <PTVertex.h>
 #include <Texture.h>
 
 using namespace std;

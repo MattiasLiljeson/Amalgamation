@@ -94,6 +94,30 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 	return newDeferredComposeShader;
 }
 
+RocketShader* ShaderFactory::createRocketShader( const LPCWSTR& p_filePath )
+{
+	RocketShader* rocketShader = NULL;
+	ID3D11SamplerState* samplerState = NULL;
+	ID3D11InputLayout* inputLayout = NULL;
+
+	VSData* vertexData = new VSData();
+	PSData* pixelData = new PSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
+
+	createAllShaderStages(vertexData,pixelData);
+	createSamplerState(&samplerState);
+	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
+
+	ShaderInitStruct shaderInitData;
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
+
+	rocketShader = new RocketShader(shaderInitData,
+		m_bufferFactory->createSimpleCBuffer());
+	return rocketShader;
+}
+
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
 									    const string &p_entryPoint, 
 										const string &p_profile, ID3DBlob** p_blob )

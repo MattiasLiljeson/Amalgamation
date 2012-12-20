@@ -74,9 +74,10 @@ void DeferredRenderer::updatePerFrameConstantBuffer()
 	//	cb->accessBuffer.color[1] = 0.5f;
 
 	for (int i=0;i<16;i++)
+	{
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
-
-		cb->update();
+	}
+	cb->update();
 }
 
 void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
@@ -140,6 +141,35 @@ void DeferredRenderer::renderComposedImage()
 }
 
 
+void DeferredRenderer::renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
+													Buffer<InstanceData>* p_instanceBuffer )
+{
+	//HACK: Shameless c/p from renderMeshInstanced
+
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+		p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+		p_instanceBuffer->getBufferPointer() };
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	// set texture
+	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+
+	m_rocketShader->apply();
+
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
+		p_instanceBuffer->getElementCount(),
+		0,0,0);
+}
 
 void DeferredRenderer::unMapGBuffers()
 {
@@ -259,6 +289,9 @@ void DeferredRenderer::initTestShaders()
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Assets/Shaders/deferredCompose.hlsl");
+
+	m_rocketShader = m_shaderFactory->createRocketShader(
+		L"Assets/Shaders/rocket.hlsl");
 }
 
 void DeferredRenderer::hookUpAntTweakBar()

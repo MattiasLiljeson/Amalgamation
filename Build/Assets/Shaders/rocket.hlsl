@@ -17,6 +17,7 @@ struct VertexIn
 	float3 binormal : BINORMAL;
 	float4x4 instanceTransform : INSTANCETRANSFORM;
 };
+
 struct VertexOut
 {
     float4 position	: SV_POSITION;
@@ -24,34 +25,20 @@ struct VertexOut
 	float3 normal : NORMAL;
 };
 
-struct PixelOut
-{
-	float4 diffuse	: SV_TARGET0;		//diffuse
-	float4 normal	: SV_TARGET1;		//normal
-};
-
-
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
 
-	float4x4 wvp = mul(p_input.instanceTransform,vp);
-	
-	vout.position = mul(float4(p_input.position,1.0f), wvp);
-	vout.normal = mul(float4(p_input.normal,0.0f), p_input.instanceTransform).xyz;
-
+	vout.position = mul(float4(p_input.position,1.0f), p_input.instanceTransform);
 	vout.texCoord = p_input.texCoord;
     
 	return vout;
 }
 
-PixelOut PS(VertexOut p_input)
+float4 PS(VertexOut p_input) : SV_TARGET
 {
-	//return float4(1.0f, 0.0f, 0.0f, 1.0f);
-	PixelOut pixelOut;
-	pixelOut.diffuse = color * diffuseTexture.Sample(pointSampler, p_input.texCoord);
-	pixelOut.normal = float4(p_input.normal,0.0f);
-
-	return pixelOut;
+	float2 uv = p_input.texCoord;
+	float4 Col = diffuseTexture.Sample( pointSampler, uv );
+	return Col;
 }
 
