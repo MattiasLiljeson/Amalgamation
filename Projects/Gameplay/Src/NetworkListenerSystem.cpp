@@ -136,11 +136,13 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 					getComponent( entityId, ComponentType::Transform );
 
 				// Create entity
-				if( netSync->getNetworkType() == NetworkType::Ship )
+				if( netSync->getNetworkType() == NetworkType::Ship ||
+					netSync->getNetworkType() == NetworkType::Prop
+					)
 				{
 					Packet packet;
 					packet << (char)PacketType::EntityCreation <<
-						(char)NetworkType::Ship << netSync->getNetworkOwner() << 
+						(char)netSync->getNetworkType() << netSync->getNetworkOwner() << 
 						entityId << transform->getTranslation() <<
 						transform->getRotation() << transform->getScale();
 

@@ -49,6 +49,7 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			AglMatrix::matrixToComponents(world, scale, rot, pos);
 			t->setTranslation(pos);
 			t->setRotation(rot);
+			t->setScale(scale);
 		}
 	}
 }

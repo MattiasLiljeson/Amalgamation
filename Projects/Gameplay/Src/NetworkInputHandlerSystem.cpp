@@ -48,8 +48,9 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			{
 				AglVector3 thrustVec;
 				AglVector3 angularVec;
+				int networkId;
 
-				packet >> thrustVec >> angularVec;
+				packet >> thrustVec >> angularVec >> networkId;
 				
 				//cout << "ThrustVec(" << thrustVec.x << ", " <<
 				//	thrustVec.y << ", " <<
@@ -58,29 +59,28 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				//	angularVec.y << ", " <<
 				//	angularVec.z <<").\n";
 
-				Entity* entity = NULL;
-
 				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
 				// Locate the entity using networkId by consulting the entitymanager in world
 				//  entities[networkId]
 				// world->getEntityManager->getEntity[networkId]
+				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
 
-				for( unsigned int i=0; i<p_entities.size(); i++ )
-				{
-					NetworkSynced* netSync = NULL;
-					netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
-						ComponentType::NetworkSynced ) );
+				//for( unsigned int i=0; i<p_entities.size(); i++ )
+				//{
+				//	NetworkSynced* netSync = NULL;
+				//	netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
+				//		ComponentType::NetworkSynced ) );
 
-					if(packet.getSenderId() == netSync->getNetworkOwner())
-					{
-						if( p_entities[i]->getComponent(ComponentType::ShipController) )
-						{
-							// Entity is controllable.
-							entity = p_entities[i];
-							break;
-						}
-					}
-				}
+				//	if(packet.getSenderId() == netSync->getNetworkOwner())
+				//	{
+				//		if( p_entities[i]->getComponent(ComponentType::ShipController) )
+				//		{
+				//			// Entity is controllable.
+				//			entity = p_entities[i];
+				//			break;
+				//		}
+				//	}
+				//}
 
 				if(entity)
 				{

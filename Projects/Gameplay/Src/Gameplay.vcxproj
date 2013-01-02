@@ -21,9 +21,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
-    <ClInclude Include="NetworkUpdateSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="NetworkUpdateSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="NetworkInputHandlerSystem.h" />
@@ -53,7 +51,6 @@
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
-    <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
