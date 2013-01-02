@@ -48,8 +48,21 @@ void Body::UpdatePosition(float pElapsedTime)
 			AglQuaternion r;
 			AglMatrix::matrixToComponents(mLocalTransform, s, r, t);
 			AglQuaternion r2 = AglQuaternion::constructFromAngularVelocity(mAngularVelocity * pElapsedTime);
-			r = r2 * r;
-			AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), r, t);
+		    
+			AglVector3 right = mLocalTransform.GetRight();
+			AglVector3 up = mLocalTransform.GetUp();
+			AglVector3 forward = mLocalTransform.GetForward();
+
+			r2.transformVector(right);
+			r2.transformVector(up);
+			r2.transformVector(forward);
+
+			mLocalTransform.SetRight(right);
+			mLocalTransform.SetUp(up);
+			mLocalTransform.SetForward(forward);
+
+			//r = r2 * r;
+			//AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), r, t);
 		}
 		ComputeInertia();
 	}

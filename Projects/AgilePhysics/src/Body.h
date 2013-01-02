@@ -39,8 +39,8 @@ public:
 	virtual AglMatrix GetWorld() const = 0;
 	virtual void AddImpulse(AglVector3 pImpulse) = 0;
 	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
-	void UpdateVelocity(float pElapsedTime);
-	void UpdatePosition(float pElapsedTime);
+	virtual void UpdateVelocity(float pElapsedTime);
+	virtual void UpdatePosition(float pElapsedTime);
 	virtual void RevertVelocity() = 0;
 	virtual void RevertPosition() = 0;
 

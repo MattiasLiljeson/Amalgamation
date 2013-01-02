@@ -112,7 +112,7 @@ bool Game::Update(float pElapsedTime)
 	if (Avatar && mPhysics)
 	{
 		RigidBody* av = (RigidBody*)mPhysics->GetBody(Avatar);
-		AglMatrix world = coord * av->GetWorld();
+		AglMatrix world = coord * bound.world.inverse() * av->GetWorld();
 
 		//Mouse
 		GetCursorPos(&CurrentMousePos);
@@ -242,14 +242,32 @@ bool Game::Draw(float pElapsedTime)
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//mDeviceContext->RSSetState(mRasterState);
-	if (mPhysics)
-		mPhysics->DrawDebug();
 
 	bool drawthat = false;
 	if(GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		drawthat = true;
 	}
+	static int debuglevel = 0;
+	if(GetAsyncKeyState(0x31) & 0x8000)
+	{
+		debuglevel = 0;
+	}
+	if(GetAsyncKeyState(0x32) & 0x8000)
+	{
+		debuglevel = 1;
+	}
+	if(GetAsyncKeyState(0x33) & 0x8000)
+	{
+		debuglevel = 2;
+	}
+	if(GetAsyncKeyState(0x34) & 0x8000)
+	{
+		debuglevel = 3;
+	}
+
+	if (mPhysics)
+		mPhysics->DrawDebug(debuglevel);
 
 	AglMatrix mat = AglMatrix::createTranslationMatrix(AglVector3(0, 0, -40));
 
@@ -262,9 +280,9 @@ bool Game::Draw(float pElapsedTime)
 	b = mPhysics->GetBody(Avatar);
 	
 	if (drawthat)
-		testMesh->Draw(b->GetWorld());
+		testMesh->Draw(bound.world.inverse()*b->GetWorld());
 	else
-		toDraw->Draw(b->GetWorld());
+		toDraw->Draw(bound.world.inverse()*b->GetWorld());
 
     mSwapChain->Present(0,0);
 	return true;
@@ -368,8 +386,12 @@ void Game::Restart()
 
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
 		coord = s->getCoordinateSystemAsMatrix();
-		mesh = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
-		Avatar = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		mesh = mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+		//Avatar = mPhysics->AddMeshBody(AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+
+		bound = m[0]->getHeader().minimumOBB;
+		
+		Avatar = mPhysics->AddBox(AglVector3(0, 0, -40), bound.size, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, NULL);
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
 
 

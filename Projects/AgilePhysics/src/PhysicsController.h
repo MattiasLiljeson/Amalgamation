@@ -70,6 +70,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
 
+	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 
 	/// \param p_position Position of the hull
@@ -84,7 +86,7 @@ public:
 
 	int AddCompoundBody(AglVector3 p_position);
 
-	int AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);

@@ -28,7 +28,7 @@ public:
 	RigidBody();
 	RigidBody(AglVector3 pPosition);
 	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
-	RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
+	RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
 	virtual ~RigidBody();
 	virtual RigidBodyType	GetType() = 0;
 

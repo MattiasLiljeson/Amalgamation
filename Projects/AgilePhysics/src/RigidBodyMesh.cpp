@@ -28,8 +28,8 @@ void RigidBodyMesh::CalculateInertiaTensor()
 
 //How should transforms be handled. Right now obb, bounding sphere, bsp tree and sphere grid are all
 //given in local space but not relative to the mesh.
-RigidBodyMesh::RigidBodyMesh(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
-							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pCoordinateSystem, pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false)
+RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false)
 {
 	mOBB = pOBB;
 	mBoundingSphere = pBoundingSphere; 
@@ -251,7 +251,6 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 }
 bool RigidBodyMesh::Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles)
 {
-	theGlobal = 0;
 	pair<int, int> toEvaluate[100];
 	int currSize = 1;
 	toEvaluate[0] = pair<int, int>(0, 0);
@@ -364,8 +363,6 @@ bool RigidBodyMesh::Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p
 				p_triangles.push_back(triangles2[n2.triangleID*3]);
 				p_triangles.push_back(triangles2[n2.triangleID*3+1]);
 				p_triangles.push_back(triangles2[n2.triangleID*3+2]);
-
-				theGlobal++;
 			}
 		}
 	}

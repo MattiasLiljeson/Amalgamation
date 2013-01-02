@@ -27,6 +27,15 @@ int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMas
 		pParent->AddChild(b);
 	return mBodies.size()-1;
 }
+int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent)
+{
+	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static);
+	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	mBodies.push_back(b);
+	if (pParent)
+		pParent->AddChild(b);
+	return mBodies.size()-1;
+}
 int PhysicsController::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
 {
 	//Create a new convex hull shape.
@@ -47,10 +56,10 @@ int PhysicsController::AddCompoundBody(AglVector3 p_position)
 	mCompoundBodies.push_back(cb);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
 	AglInteriorSphereGrid* pSphereGrid)
 {
-	RigidBodyMesh* rbm = new RigidBodyMesh(pCoordinateSystem, pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
+	RigidBodyMesh* rbm = new RigidBodyMesh(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(rbm, mBodies.size()));
 	mBodies.push_back(rbm);
 	return mBodies.size()-1;
@@ -108,6 +117,7 @@ void PhysicsController::Update(float pElapsedTime)
 						PhyCollisionData colData;
 						if (CheckCollision(mRigidBodies[i].first, mRigidBodies[j].first, &colData))
 						{
+							theGlobal = 1;
 							//Reg collision
 							mCollisions.push_back(UintPair(mRigidBodies[i].second, mRigidBodies[j].second));
 
