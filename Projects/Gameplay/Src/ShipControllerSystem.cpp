@@ -8,6 +8,7 @@
 #include "ShipController.h"
 #include "PacketType.h"
 #include "NetworkType.h"
+#include "NetworkSynced.h"
 #include "Control.h"
 #include "AntTweakBarWrapper.h"
 
@@ -161,8 +162,11 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Applying networked thrust and impulses, to the server's own physics system.
 		//
 		Packet thrustPacket;
+		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
+			ComponentType::NetworkSynced));
+
 		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-			<< thrustVec << angularVec;
+			<< thrustVec << angularVec << netSync->getNetworkIdentity();
 		m_client->sendPacket( thrustPacket );
 
 	}
