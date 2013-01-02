@@ -89,8 +89,12 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		
 
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
-		m_rocketBackend->render();
 		AntTweakBarWrapper::getInstance()->render();
+		
+		gfxWrapper->beginRenderLibRocket();
+		m_rocketBackend->render();
+		gfxWrapper->endRenderLibRocket();
+		
 		gfxWrapper->flipBackBuffer();           // flip buffers
 		
 		// WOW! for each loop in C++!

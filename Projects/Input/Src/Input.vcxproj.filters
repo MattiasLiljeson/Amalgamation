@@ -37,7 +37,9 @@
     <ClCompile Include="IMouseKeyboardFetcher.cpp">
       <Filter>InputFetchers</Filter>
     </ClCompile>
-    <ClCompile Include="DirectInputFetcher.cpp" />
+    <ClCompile Include="DirectInputFetcher.cpp">
+      <Filter>InputFetchers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -79,7 +81,9 @@
     <ClInclude Include="DirectInputException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="DirectInputFetcher.h" />
+    <ClInclude Include="DirectInputFetcher.h">
+      <Filter>InputFetchers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputFetchers">

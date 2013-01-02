@@ -57,6 +57,11 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
 		InputHelper::MOUSE_AXIS::Y_NEGATIVE, tempControl, "Mouse Y negative" );
 
+	tempControl = factory.createMouseButton( InputHelper::MOUSE_BTN::M_LBTN );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN,
+		InputHelper::MOUSE_BTN::M_LBTN, tempControl, "Mouse left btn" );
+
+
 	tempControl = factory.createKeyboardKey( InputHelper::KEY_SPACE );
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 		InputHelper::KEYBOARD_KEY::KEY_SPACE, tempControl, "Space" );

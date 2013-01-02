@@ -1,9 +1,11 @@
 #include "libRocketBackendSystem.h"
 
-LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend )
+LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
+											   , InputBackendSystem* p_inputBackend )
 	: EntitySystem( SystemType::LibRocketBackendSystem )
 {
 	m_graphicsBackend = p_graphicsBackend;
+	m_inputBackend = p_inputBackend;
 }
 
 
@@ -32,10 +34,10 @@ void LibRocketBackendSystem::initialize()
 	int wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
 
-	m_contextName = "default_name"; // Change the name if using multiple contexts!
+	m_rocketContextName = "default_name"; // Change the name if using multiple contexts!
 
 	m_rocketContext = Rocket::Core::CreateContext(
-		Rocket::Core::String( m_contextName.c_str() ),
+		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
 
 	// Load fonts and documents
@@ -64,6 +66,22 @@ void LibRocketBackendSystem::initialize()
 
 	//tmp = ROCKET_HUD_PATH + "window.rml";
 	//loadDocument( tmp.c_str() );
+
+	//Hard-coded controls
+	m_cursor.click		= m_inputBackend->getControlByEnum( InputHelper::MOUSE_BTN::M_LBTN );
+	m_cursor.xNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_NEGATIVE );
+	m_cursor.xPositive	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_POSITIVE );
+	m_cursor.yNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::Y_NEGATIVE );
+	m_cursor.yPositive	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::Y_POSITIVE );
+
+	AntTweakBarWrapper* dbgGui = AntTweakBarWrapper::getInstance();
+	dbgGui->addReadOnlyVariable( "Cursor X", TwType::TW_TYPE_DOUBLE, &m_cursor.x, "" );
+	dbgGui->addReadOnlyVariable( "Cursor Y", TwType::TW_TYPE_DOUBLE, &m_cursor.y, "" );
+
+	m_cursor.init();
+
+	// HACK: tmp crazy lulz0r cursor.
+	m_rocketContext->LoadMouseCursor(tmp.c_str());
 }
 
 bool LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
@@ -90,6 +108,13 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 
 void LibRocketBackendSystem::process()
 {
+	m_cursor.update();
+	m_rocketContext->ProcessMouseMove(m_cursor.x, m_cursor.y, 0);
+
+	//Rocket::Core::Element* test = m_documents[0]->GetElementById("btn");
+	//if (test != NULL)
+	//	test->SetProperty("width", "800px");
+
 	m_rocketContext->Update();
 }
 
