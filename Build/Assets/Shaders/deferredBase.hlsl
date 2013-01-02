@@ -47,6 +47,7 @@ VertexOut VS(VertexIn p_input)
 
 PixelOut PS(VertexOut p_input)
 {
+	//return float4(1.0f, 0.0f, 0.0f, 1.0f);
 	PixelOut pixelOut;
 	pixelOut.diffuse = color * diffuseTexture.Sample(pointSampler, p_input.texCoord);
 	pixelOut.normal = float4(p_input.normal,0.0f);

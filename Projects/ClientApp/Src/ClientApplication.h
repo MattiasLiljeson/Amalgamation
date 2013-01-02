@@ -5,7 +5,7 @@
 /* a _ before to use the local server. Otherwise start a separate server*/
 /* by compiling the server app and run it.								*/
 /************************************************************************/
-#define COMBINE_CLIENT_AND_SERVER
+#define _COMBINE_CLIENT_AND_SERVER
 
 /************************************************************************/
 /* ????	-Robin & Alex													*/

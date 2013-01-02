@@ -124,9 +124,6 @@
       <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
@@ -150,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -201,9 +201,6 @@
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="ImpulseSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
@@ -227,6 +224,12 @@
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Systems\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackendSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="InputBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
