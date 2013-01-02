@@ -113,6 +113,8 @@ public:
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
 
 	Body* GetBody(int pIndex){ return mController->getBody(pIndex);}
+
+	PhysicsController* GetController(){ return mController;}
 };
 
 #endif

@@ -39,14 +39,16 @@ public:
 	virtual AglMatrix GetWorld() const = 0;
 	virtual void AddImpulse(AglVector3 pImpulse) = 0;
 	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
-	virtual void UpdateVelocity(float pElapsedTime) = 0;
-	virtual void UpdatePosition(float pElapsedTime) = 0;
+	void UpdateVelocity(float pElapsedTime);
+	void UpdatePosition(float pElapsedTime);
 	virtual void RevertVelocity() = 0;
 	virtual void RevertPosition() = 0;
 
 	void Activate();
 	void Inactivate();
 	bool IsActive();
+
+	virtual void ComputeInertia() = 0;
 };
 
 #endif // BODY_H

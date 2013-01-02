@@ -373,7 +373,6 @@ void Game::Restart()
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
 
 
-
 		file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
 
 		AglReader r2((char*)file.c_str());

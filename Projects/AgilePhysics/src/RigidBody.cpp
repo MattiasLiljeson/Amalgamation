@@ -3,7 +3,7 @@
 #include <iostream>
 #include "CompoundBody.h"
 
-void RigidBody::calcInvInertia()
+void RigidBody::ComputeInertia()
 {
     mInvInertiaWorld = AglMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -34,7 +34,7 @@ RigidBody::RigidBody()
 	mUserControlled = false;
 	mTempStatic = false;
 	mParent = NULL;
-	calcInvInertia();
+	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition)
 {
@@ -47,7 +47,7 @@ RigidBody::RigidBody(AglVector3 pPosition)
 	mUserControlled = false;
 	mTempStatic = false;
 	mParent = NULL;
-	calcInvInertia();
+	ComputeInertia();
 }
 RigidBody::RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
 {
@@ -70,7 +70,7 @@ RigidBody::RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pM
 		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
 	}*/
 
-	calcInvInertia();
+	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
 {
@@ -92,7 +92,7 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
 	}*/
 
-	calcInvInertia();
+	ComputeInertia();
 }
 RigidBody::~RigidBody()
 {
@@ -238,46 +238,6 @@ void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse)
 	}
 }
 
-
-void RigidBody::UpdateVelocity(float pElapsedTime)
-{
-	//Updates velocity and angular velocity only
-	if (!mStatic && !mTempStatic)
-	{
-		//mForce += AglVector3(0, -9.815f, 0);
-		mPreviousVelocity = mVelocity;
-		mPreviousAngularVelocity = mAngularVelocity;
-		mVelocity += mForce * pElapsedTime;
-		mForce = AglVector3(0, 0, 0);
-
-		//Damping
-		mVelocity *= (1 - 0.9f * pElapsedTime);
-		mAngularVelocity *= (1 - 0.9f * pElapsedTime);
-	}
-}
-void RigidBody::UpdatePosition(float pElapsedTime)
-{
-	//Updates mWorld only
-	if (!mStatic && !mTempStatic)
-	{
-		mPreviousLocalTransform = mLocalTransform;
-		mLocalTransform[12] += mVelocity.x * pElapsedTime;
-		mLocalTransform[13] += mVelocity.y * pElapsedTime;
-		mLocalTransform[14] += mVelocity.z * pElapsedTime;
-
-		float a = AglVector3::length(mAngularVelocity);
-		if (a > 0)
-		{
-			AglVector3 s, t;
-			AglQuaternion r;
-			AglMatrix::matrixToComponents(mLocalTransform, s, r, t);
-			AglQuaternion r2 = AglQuaternion::constructFromAngularVelocity(mAngularVelocity * pElapsedTime);
-			r = r2 * r;
-			AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), r, t);
-		}
-		calcInvInertia();
-	}
-}
 AglBoundingSphere RigidBody::GetBoundingSphere() const
 {
 	AglBoundingSphere s;
