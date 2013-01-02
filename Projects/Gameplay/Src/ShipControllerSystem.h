@@ -31,6 +31,9 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 private:
+	float* getControllerEpsilonPointer();
+
+private:
 	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
@@ -47,4 +50,9 @@ private:
 	Control* m_strafeHorizontalNegative;
 	Control* m_strafeVerticalPositive;
 	Control* m_strafeVerticalNegative;
+
+	
+	float m_controllerEpsilon;
+	double m_leftStickDir[3];
+	double m_rightStickDir[3];
 };

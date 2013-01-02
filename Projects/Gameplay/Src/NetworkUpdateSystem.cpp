@@ -34,11 +34,11 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				p_entities[i]->getIndex(), ComponentType::Transform ) );
 
 			// Useful debug movement.
-			static float timeElapsed = 0;
-			timeElapsed += m_world->getDelta();
-			AglVector3 pos = transform->getTranslation();
-			pos.z = 5.0f * sinf( timeElapsed ) + 6.0f;;
-			transform->setTranslation( pos );
+//			static float timeElapsed = 0;
+//			timeElapsed += m_world->getDelta();
+//			AglVector3 pos = transform->getTranslation();
+//			pos.z = 5.0f * sinf( timeElapsed ) + 6.0f;;
+//			transform->setTranslation( pos );
 
 			Packet updateShipPacket;
 			updateShipPacket << (char)PacketType::EntityUpdate <<
