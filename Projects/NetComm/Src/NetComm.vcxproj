@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packet.h" />
-    <ClInclude Include="PacketTranslator.h" />
     <ClInclude Include="ProcessMessage.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
     <ClInclude Include="ProcessMessageConnectToServer.h" />
