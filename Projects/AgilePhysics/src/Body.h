@@ -31,12 +31,24 @@ protected:
 	bool		mTempStatic;
 	float		mMass;
 	float		mInvMass;
+
+	bool mActive;
 public:
 	Body();
 	virtual ~Body();
 	virtual AglMatrix GetWorld() const = 0;
 	virtual void AddImpulse(AglVector3 pImpulse) = 0;
 	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
+	virtual void UpdateVelocity(float pElapsedTime);
+	virtual void UpdatePosition(float pElapsedTime);
+	virtual void RevertVelocity() = 0;
+	virtual void RevertPosition() = 0;
+
+	void Activate();
+	void Inactivate();
+	bool IsActive();
+
+	virtual void ComputeInertia() = 0;
 };
 
 #endif // BODY_H

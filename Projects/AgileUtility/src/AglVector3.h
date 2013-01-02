@@ -72,6 +72,15 @@ struct AglVector3
 	static void normalize(AglVector3& pVector);
 	static AglVector3 lerp(const AglVector3& p_v1, const AglVector3& p_v2, float p_t);
 	static AglVector3 createDirection(const AglVector3& p_from, const AglVector3& p_to);
+
+	static AglVector3 right();
+	static AglVector3 left();
+	static AglVector3 up();
+	static AglVector3 down();
+	static AglVector3 forward();
+	static AglVector3 backward();
+	static AglVector3 one();
+	static AglVector3 zero();
 	
 };
 

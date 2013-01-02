@@ -31,6 +31,8 @@ private:
 
 	AglMatrix coord;
 
+	AglOBB bound;
+
 public:
 	Game(HINSTANCE pInstanceHandle);
 	bool Initialize();

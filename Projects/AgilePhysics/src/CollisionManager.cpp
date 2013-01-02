@@ -857,7 +857,9 @@ bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2,
 			triangle2[2].transform(mesh2World);
 
 			EPACollisionData EPAData;
-			bool col = gjkCheckCollision(triangle1, triangle2, &EPAData);
+			bool col = CheckCollision(triangle1[0], triangle1[1], triangle1[2],
+									  triangle2[0], triangle2[1], triangle2[2],
+									  &EPAData);//gjkCheckCollision(triangle1, triangle2, &EPAData);
 			if (col)
 			{
 				doesCollide = true;
@@ -990,6 +992,88 @@ bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, c
 	return true;
 }
 
+bool CheckCollision(const AglVector3& p_t11, const AglVector3& p_t12, const AglVector3& p_t13,
+					const AglVector3& p_t21, const AglVector3& p_t22, const AglVector3& p_t23,
+					EPACollisionData* p_epaData)
+{
+	AglVector3 axes[11];
+	axes[0] = AglVector3::crossProduct(p_t12-p_t11, p_t13-p_t11); //Normal
+	axes[1] = AglVector3::crossProduct(p_t22-p_t21, p_t23-p_t21); //Normal
+	axes[2] = AglVector3::crossProduct(p_t12-p_t11, p_t22 - p_t21);
+	axes[3] = AglVector3::crossProduct(p_t12-p_t11, p_t23 - p_t21);
+	axes[4] = AglVector3::crossProduct(p_t12-p_t11, p_t23 - p_t22);
+	axes[5] = AglVector3::crossProduct(p_t13-p_t11, p_t22 - p_t21);
+	axes[6] = AglVector3::crossProduct(p_t13-p_t11, p_t23 - p_t21);
+	axes[7] = AglVector3::crossProduct(p_t13-p_t11, p_t23 - p_t22);
+	axes[8] = AglVector3::crossProduct(p_t13-p_t12, p_t22 - p_t21);
+	axes[9] = AglVector3::crossProduct(p_t13-p_t12, p_t23 - p_t21);
+	axes[10] = AglVector3::crossProduct(p_t13-p_t12, p_t23 - p_t22);
+
+	float minA, maxA;
+	float minB, maxB;
+
+	//Project points on the axis
+	float overlap = FLT_MAX;
+	AglVector3 axis;
+	for (unsigned int i = 0; i < 11; i++)
+	{
+		// min/max a
+		axes[i].normalize();
+		minA = maxA = AglVector3::dotProduct(axes[i], p_t11);
+		minA = min(AglVector3::dotProduct(axes[i], p_t12), minA);
+		minA = min(AglVector3::dotProduct(axes[i], p_t13), minA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_t12), maxA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_t13), maxA);
+
+		// min/max b
+		minB = maxB = AglVector3::dotProduct(axes[i], p_t21);
+		minB = min(AglVector3::dotProduct(axes[i], p_t22), minB);
+		minB = min(AglVector3::dotProduct(axes[i], p_t23), minB);
+		maxB = max(AglVector3::dotProduct(axes[i], p_t22), maxB);
+		maxB = max(AglVector3::dotProduct(axes[i], p_t23), maxB);
+
+		if (i > 1)
+		{
+			float lengthA = maxA - minA;
+			float lengthB = maxB - minB;
+
+			float minTotal = min(minA, minB);
+			float maxTotal = max(maxA, maxB);
+
+			float newOverlap = (lengthA + lengthB) - (maxTotal - minTotal);
+			if (newOverlap <= 0)
+			{
+				return false;
+			}
+			else if (newOverlap < overlap)
+			{
+				overlap = newOverlap;
+				axis = axes[i];
+			}
+		}
+		else if (i == 0)
+		{
+			float newOverlap = min(minA - minB, maxB - minA);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+		else
+		{
+			float newOverlap = min(minB - minA, maxA - minB);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+	}
+
+	p_epaData->Depth = overlap;
+	p_epaData->Normal = axis;
+	return true;
+}
+
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------
 float OverlapAmount(RigidBodyBox* pB1, RigidBodyBox* pB2, AglVector3 pAxis)
 {
@@ -1061,6 +1145,46 @@ void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglV
 			p_max = curr;
 	}
 }
+
+//NEW - OPTIMIZED
+
+float OverlapAmount(const AglVector3* p_points1, const AglVector3* p_points2, const AglVector3& p_axis)
+{
+	//Assumed to be normalized
+	//AglVector3::normalize(pAxis);
+
+	float minA = 0, maxA = 0, minB = 0, maxB = 0;
+	CalculateProjectionInterval(p_points1, p_axis, minA, maxA);
+	CalculateProjectionInterval(p_points2, p_axis, minB, maxB);
+
+	float lengthA = maxA - minA;
+	float lengthB = maxB - minB;
+
+	float minTotal = min(minA, minB);
+	float maxTotal = max(maxA, maxB);
+
+	if (maxTotal - minTotal >= lengthA + lengthB)
+	{
+		return 0;
+	}
+	return lengthA + lengthB - (maxTotal - minTotal);
+}
+
+void  CalculateProjectionInterval(const AglVector3* p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max)
+{
+	p_min = p_max = AglVector3::dotProduct(p_axis, p_points[0]);
+	for (int i = 1; i < 8; i++)
+	{
+		float curr = p_axis.x * p_points[i].x + p_axis.y * p_points[i].y + p_axis.z * p_points[i].z;
+		if (curr < p_min)
+			p_min = curr;
+		else if (curr > p_max)
+			p_max = curr;
+	}
+}
+
+//NEW -- OPTIMIZED END
 
 
 vector<AglVector3> GetHitPoints(RigidBodyBox* pBox, AglVector3 pNormal, float pPenetration)

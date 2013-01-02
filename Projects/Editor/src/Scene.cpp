@@ -73,7 +73,10 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 
 	}
 	else
+	{
+		m_avoidJump = AglMatrix::identityMatrix();
 		m_world = AglMatrix::identityMatrix();
+	}
 
 	mMeshes = pMeshes;
 	mSkeletonMeshes = pSkeletons;

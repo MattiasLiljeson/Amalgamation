@@ -58,7 +58,7 @@ void DebugMesh::Init(AglVertexSTBN* pVertices, int pVertexCount, unsigned int* p
 	{
 		v[i].position = pVertices[i].position;
 		v[i].normal = pVertices[i].normal;
-		v[i].color = AglVector4(1, 0, 0, 1);
+		v[i].color = AglVector4(1, 0.82f, 0, 1);
 	}
 
 	//Create Vertex Buffer

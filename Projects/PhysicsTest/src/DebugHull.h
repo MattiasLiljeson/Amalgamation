@@ -29,7 +29,7 @@ private:
 public:
 	DebugHull(ConvexHullShape*, ID3D11Device*, ID3D11DeviceContext*);
 	~DebugHull();
-	void draw(AglMatrix pWorld);
+	void draw(AglMatrix pWorld, bool pWire);
 };
 
 struct DebugHullData
@@ -59,7 +59,7 @@ public:
 			}
 		}
 	}
-	void Draw(DebugSphere* p_s, DebugBox* p_b);
+	void Draw(DebugSphere* p_s, DebugBox* p_b, int pLevel);
 };
 
 #endif
