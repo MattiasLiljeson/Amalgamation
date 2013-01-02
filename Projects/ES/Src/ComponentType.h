@@ -16,6 +16,9 @@ public:	//Enums
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING = -1,
+				   // *FUGLY HACK!*
+		Transform, // There is a bug when an unused component idx is at the last position
+				   // in the enum. Therefore, put transform at the end for now. :/
 		RenderInfo,
 		Input,
 		NetworkSynced,
@@ -28,9 +31,10 @@ public:	//Enums
 		Impulse,
 		BodyInitData,
 		LookAtEntity,
-				   // *FUGLY HACK!*
-		Transform, // There is a bug when an unused component idx is at the last position
-				   // in the enum. Therefore, put transform at the end for now. :/
+		UnusedComponent,	// Trying to solve the bug where the last component
+							// must be used.
+		AnotherUnusedComponent,
+		YetAnotherUnusedComponent,
 		NUM_COMPONENT_TYPES
 	};
 

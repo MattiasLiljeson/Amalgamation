@@ -252,6 +252,16 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+
+
+	// Remove entity test
+	entity = m_world->createEntity();
+	component = new Transform();
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity( entity );
+
+	m_world->deleteEntity( entity );
+
 	// walker
 	//entity = m_world->createEntity();
 	//component = new RenderInfo( walkerMeshId );
