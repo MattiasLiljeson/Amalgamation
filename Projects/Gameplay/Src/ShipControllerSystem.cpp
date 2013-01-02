@@ -106,6 +106,15 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	float strafeVerticalInput = (float)(svPositive - svNegative);
 	float sensitivityMult = 1.0f;
 
+	// Calibrate the Gamepad's analogue sticks when pressing the C key.
+	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 )
+	{
+		m_leftStickCorrection[0] = -horizontalInput;
+		m_leftStickCorrection[1] = -verticalInput;
+		m_rightStickCorrection[0] = -strafeHorizontalInput;
+		m_rightStickCorrection[1] = -strafeVerticalInput;
+	}
+
 	// Update the analogue sticks for anttweakbar.
 	m_leftStickDir[0] = horizontalInput;
 	m_leftStickDir[1] = verticalInput;
