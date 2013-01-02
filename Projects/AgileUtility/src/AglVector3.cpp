@@ -182,3 +182,36 @@ AglVector3 AglVector3::createDirection(const AglVector3& p_from, const AglVector
 	dir.normalize();
 	return dir;
 }
+
+AglVector3 AglVector3::right()
+{
+	return AglVector3(1, 0, 0);
+}
+AglVector3 AglVector3::left()
+{
+	return AglVector3(-1, 0, 0);
+}
+AglVector3 AglVector3::up()
+{
+	return AglVector3(0, 1, 0);
+}
+AglVector3 AglVector3::down()
+{
+	return AglVector3(0, -1, 0);
+}
+AglVector3 AglVector3::forward()
+{
+	return AglVector3(0, 0, 1);
+}
+AglVector3 AglVector3::backward()
+{
+	return AglVector3(0, 0, -1);
+}
+AglVector3 AglVector3::one()
+{
+	return AglVector3(1, 1, 1);
+}
+AglVector3 AglVector3::zero()
+{
+	return AglVector3(0, 0, 0);
+}
