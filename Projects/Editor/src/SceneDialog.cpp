@@ -54,6 +54,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		}
 
 		TwAddButton(sceneDialog->m_dialog, "AddMaterial", AddMaterial, sceneDialog, " label='Material' key=c help='Load an Agile file into the editor.' group='Add'");
+		TwAddButton(sceneDialog->m_dialog, "AddParticleEffect", AddPE, sceneDialog, " label='Particle Effect' key=c help='Load an Agile file into the editor.' group='Add'");
+
 
 		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
@@ -83,6 +85,19 @@ void TW_CALL SceneDialog::AddMaterial(void *clientData)
 
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
 	TwAddButton(sceneDialog->m_dialog, ("Material" + toString(mat->id)).c_str(), OpenMaterialDialog, (void*)mat->id, info.c_str());
+}
+void TW_CALL SceneDialog::AddPE(void* clientData)
+{
+	/*AglMaterial* mat = new AglMaterial();
+	mat->nameID = Scene::GetInstance()->AddName("");
+	Scene::GetInstance()->AddMaterial(mat, false, false);
+	string s = Scene::GetInstance()->GetName(mat->nameID);*/
+	string s = "NoName";
+	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
+	int zero = 0;
+
+	SceneDialog* sceneDialog = (SceneDialog*)clientData;
+	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenMaterialDialog, (void*)0, info.c_str());
 }
 
 SceneDialog::SceneDialog()
