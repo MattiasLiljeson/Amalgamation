@@ -20,6 +20,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="LevelGenSystem.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
@@ -55,6 +56,7 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />

@@ -55,6 +55,9 @@
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Level Gen">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -120,9 +123,6 @@
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkUpdateSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -158,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h">
       <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelGenSystem.h">
+      <Filter>Systems\Level Gen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelGenSystem.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
