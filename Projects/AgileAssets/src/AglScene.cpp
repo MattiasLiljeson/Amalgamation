@@ -27,6 +27,7 @@ AglScene::~AglScene()
 void AglScene::init(AglSceneDesc p_desc)
 {
 	m_meshes = p_desc.meshes;
+	m_particleSystems = p_desc.particleSystems;
 	m_nodes = p_desc.nodes;
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
@@ -157,6 +158,10 @@ int AglScene::addName(string p_name)
 	m_names.push_back(p_name);
 	return m_names.size() - 1;
 }
+void AglScene::addParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	m_particleSystems.push_back(pParticleSystem);
+}
 void AglScene::addMesh(AglMesh* p_mesh)
 {
 	m_meshes.push_back(p_mesh);
@@ -210,6 +215,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.materialMappings = this->m_materialMappings;
 	desc.materials = this->m_materials;
 	desc.meshes = this->m_meshes;
+	desc.particleSystems = this->m_particleSystems;
 	desc.names = this->m_names;
 	desc.nodeAnimations = this->m_nodeAnimations;
 	desc.nodes = this->m_nodes;

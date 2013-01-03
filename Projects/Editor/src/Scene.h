@@ -86,6 +86,7 @@ public:
 
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
 	void AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCurrent);
+	void AddParticleSystem(AglParticleSystem* pSystem);
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);

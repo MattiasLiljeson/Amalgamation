@@ -63,6 +63,7 @@ struct AglTopHeader
 };
 
 typedef int AglVertexFormat;
+typedef int AglParticleFormat;
 
 const float AGLVERSION = 0.1f;
 

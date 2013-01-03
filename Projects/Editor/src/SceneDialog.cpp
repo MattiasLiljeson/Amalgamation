@@ -8,6 +8,11 @@ void TW_CALL SceneDialog::OpenMeshDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMesh(index);
 }
+void TW_CALL SceneDialog::OpenParticleSystemDialog(void *clientData)
+{
+	int index = (int)clientData;
+	SceneDialog::GetInstance()->SetCurrentParticleSystem(index);
+}
 void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 {
 	int index = (int)clientData;
@@ -88,16 +93,16 @@ void TW_CALL SceneDialog::AddMaterial(void *clientData)
 }
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
-	/*AglMaterial* mat = new AglMaterial();
-	mat->nameID = Scene::GetInstance()->AddName("");
-	Scene::GetInstance()->AddMaterial(mat, false, false);
-	string s = Scene::GetInstance()->GetName(mat->nameID);*/
+	AglParticleSystem* ps = new AglParticleSystem();
+	//mat->nameID = Scene::GetInstance()->AddName("");
+	//Scene::GetInstance()->AddMaterial(mat, false, false);
+	//string s = Scene::GetInstance()->GetName(mat->nameID);*/
 	string s = "NoName";
 	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
 	int zero = 0;
 
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenMaterialDialog, (void*)0, info.c_str());
+	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)0, info.c_str());
 }
 
 SceneDialog::SceneDialog()
@@ -129,11 +134,13 @@ SceneDialog::SceneDialog()
 
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();
+	m_particleSystemDialog = new ParticleSystemDialog();
 }
 SceneDialog::~SceneDialog()
 {
 	delete m_meshDialog;
 	delete m_materialDialog;
+	delete m_particleSystemDialog;
 }
 
 SceneDialog* SceneDialog::GetInstance()
@@ -149,6 +156,10 @@ void SceneDialog::Release()
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
 	m_meshDialog->setMesh(pIndex);
+}
+void SceneDialog::SetCurrentParticleSystem(int pIndex)
+{
+	m_particleSystemDialog->setPS(pIndex);
 }
 void SceneDialog::SetCurrentMaterial(int pIndex)
 {

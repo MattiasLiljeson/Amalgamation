@@ -124,7 +124,7 @@ void MaterialDialog::setMaterial(int pIndex)
 	// Create a tweak bar
 	m_dialog = TwNewBar("Material");
 	int barSize[2] = {200, 300};
-	TwDefine(" Material position='590 320' ");
+	TwDefine(" Material position='1070 410' ");
 	TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 	m_material = Scene::GetInstance()->GetMaterial(pIndex);

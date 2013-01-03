@@ -23,6 +23,7 @@
 #include "AglSkeletonMapping.h"
 #include "AglLooseBspTree.h"
 #include "AglInteriorSphereGrid.h"
+#include "AglParticleSystem.h"
 #include <vector>
 
 using namespace std;
@@ -30,6 +31,7 @@ using namespace std;
 struct AglSceneDesc
 {
 	vector<AglMesh*>				meshes;
+	vector<AglParticleSystem*>		particleSystems;
 	vector<AglNode>					nodes;
 	vector<AglAnimationLayer*>		animationLayers;
 	vector<AglNodeAnimation*>		nodeAnimations;
@@ -49,6 +51,7 @@ class AglScene
 {
 private:
 	vector<AglMesh*>				m_meshes; ///< List of meshes
+	vector<AglParticleSystem*>		m_particleSystems; ///< List of particle systems
 	vector<AglNode>					m_nodes; ///< List of nodes
 	vector<AglDynamicNode>			m_dynamicNodes; ///< List of animated nodes
 	vector<AglAnimationLayer*>		m_animationLayers; ///< List of animation layers
@@ -226,10 +229,16 @@ public:
 	int	 addName(string pName);
 
 	///
-	/// Adds a name to the scene.
-	/// \param p_name The name to add.
+	/// Adds a mesh to the scene.
+	/// \param p_mesh The mesh to add.
 	///
 	void addMesh(AglMesh* pMesh);
+
+	///
+	/// Adds a particle system to the scene.
+	/// \param p_particleSystem The system to add.
+	///
+	void addParticleSystem(AglParticleSystem* pParticleSystem);
 
 	///
 	/// Adds a material to the scene.

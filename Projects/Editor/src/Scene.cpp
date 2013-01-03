@@ -244,6 +244,10 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 		}
 	}
 }
+void Scene::AddParticleSystem(AglParticleSystem* pSystem)
+{
+	mAglScene->addParticleSystem(pSystem);
+}
 vector<AglGradient*> Scene::GetGradients()
 {
 	if (mAglScene)

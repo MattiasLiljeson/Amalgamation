@@ -36,6 +36,7 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="BoxMesh.cpp" />
+    <ClCompile Include="ParticleSystemDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
@@ -74,5 +75,6 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="BoxMesh.h" />
+    <ClInclude Include="ParticleSystemDialog.h" />
   </ItemGroup>
 </Project>

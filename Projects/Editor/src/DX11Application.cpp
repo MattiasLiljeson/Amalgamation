@@ -41,8 +41,8 @@ DX11Application::DX11Application(HINSTANCE pInstanceHandle)
 	mDevice					= NULL;
 	mDeviceContext			= NULL; 
 	mWindowHandle			= 0;
-	mScreenWidth			= 800;
-	mScreenHeight			= 600;
+	mScreenWidth			= 1280;
+	mScreenHeight			= 720;
 }
 bool DX11Application::Initialize()
 {
