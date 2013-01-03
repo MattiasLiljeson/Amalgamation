@@ -2,13 +2,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="TestGameplayRunner.cpp" />
-    <ClCompile Include="PacketTranslator_spec.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Network">
-      <UniqueIdentifier>{b2ebdd94-8def-40a2-9a2e-b2f05d15f872}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

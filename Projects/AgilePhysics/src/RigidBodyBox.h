@@ -2,6 +2,7 @@
 #define RIGIDBODYBOX_H
 
 #include "RigidBody.h"
+#include "AglOBB.h"
 
 class RigidBodyBox: public RigidBody
 {
@@ -14,6 +15,7 @@ private:
 	void CalculateInertiaTensor();
 public:
 	RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic);
+	RigidBodyBox(AglOBB pShape, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic);
 	~RigidBodyBox();
 	RigidBodyType GetType();
 	const vector<AglVector3>& GetCorners();

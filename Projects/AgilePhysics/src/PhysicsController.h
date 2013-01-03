@@ -6,6 +6,10 @@
 #include "RigidBodyMesh.h"
 #include <AglInteriorSphereGrid.h>
 #include <AglLooseBspTree.h>
+#include <typeindex>
+
+
+typedef pair<unsigned int, unsigned int> UintPair;
 
 // =================================================================================================
 //                                         PhysicsController
@@ -22,10 +26,12 @@ class PhysicsController
 private:
 	const unsigned int COLLISION_REPETITIONS; ///< Number of loops for the iterative collision solver
 	vector<Body*> mBodies; ///< List of all bodies
-	vector<RigidBody*> mRigidBodies; ///< List of rigid bodies
+	vector<pair<RigidBody*, unsigned int>> mRigidBodies; ///< List of rigid bodies
 	vector<CompoundBody*> mCompoundBodies; ///<List of compound bodies
 
-	vector<ConvexHullShape*>	mConvexHullShapes; ///< Debug: Hull Shapes
+	vector<ConvexHullShape*>	mConvexHullShapes; ///< Hull Shapes
+
+	vector<UintPair> mCollisions;
 
 	float mTimeAccum;
 
@@ -64,6 +70,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
 
+	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 
 	/// \param p_position Position of the hull
@@ -78,7 +86,7 @@ public:
 
 	int AddCompoundBody(AglVector3 p_position);
 
-	int AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
@@ -102,11 +110,24 @@ public:
 	///-----------------------------------------------------------------------------------
 	float RaysVsObjects(vector<PhyRay> p_rays, RigidBody* p_ignore, AglBoundingSphere p_sphere);
 
-	vector<RigidBody*> getBodies(){ return mRigidBodies; }
+	vector<RigidBody*> getBodies()
+	{ 
+		vector<RigidBody*> bodies;
+		for (unsigned int i = 0; i < mRigidBodies.size(); i++)
+			bodies.push_back(mRigidBodies[i].first);
+		return bodies; 
+	}
 
 	Body* getBody(int pIndex){ return mBodies[pIndex]; }
 
 	void ApplyExternalImpulse(int p_id, AglVector3 p_impulse, AglVector3 p_angularImpulse);
+
+	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
+	vector<unsigned int> CollidesWith(unsigned int p_b);
+
+	void ActivateBody(unsigned int pBody);
+	void InactivateBody(unsigned int pBody);
+	bool IsActive(unsigned int pBody);
 };
 
 #endif

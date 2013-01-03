@@ -19,6 +19,17 @@ RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, 
 	mBoundingSphere.position = pPosition;
 	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
 }
+RigidBodyBox::RigidBodyBox(AglOBB pShape, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
+	: RigidBody(pShape.world, pMass, pVelocity, pAngularVelocity, pStatic)
+{
+	mSize = pShape.size;
+	CalculateInertiaTensor();
+
+	//Initialize bounding sphere
+	mBoundingSphere.position = pShape.world.GetTranslation();
+	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
+}
+
 RigidBodyBox::~RigidBodyBox()
 {
 

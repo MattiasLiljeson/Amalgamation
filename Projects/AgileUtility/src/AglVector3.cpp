@@ -149,7 +149,7 @@ void AglVector3::transformNormal(const AglMatrix& pMatrix)
 //Static functions
 float AglVector3::dotProduct(const AglVector3& pV1, const AglVector3& pV2)
 {
-	return pV1[0] * pV2[0] + pV1[1] * pV2[1] + pV1[2] * pV2[2];
+	return pV1.x * pV2.x + pV1.y * pV2.y + pV1.z * pV2.z;
 }
 AglVector3 AglVector3::crossProduct(const AglVector3& pV1, const AglVector3& pV2)
 {
@@ -181,4 +181,37 @@ AglVector3 AglVector3::createDirection(const AglVector3& p_from, const AglVector
 	AglVector3 dir = p_to - p_from;
 	dir.normalize();
 	return dir;
+}
+
+AglVector3 AglVector3::right()
+{
+	return AglVector3(1, 0, 0);
+}
+AglVector3 AglVector3::left()
+{
+	return AglVector3(-1, 0, 0);
+}
+AglVector3 AglVector3::up()
+{
+	return AglVector3(0, 1, 0);
+}
+AglVector3 AglVector3::down()
+{
+	return AglVector3(0, -1, 0);
+}
+AglVector3 AglVector3::forward()
+{
+	return AglVector3(0, 0, 1);
+}
+AglVector3 AglVector3::backward()
+{
+	return AglVector3(0, 0, -1);
+}
+AglVector3 AglVector3::one()
+{
+	return AglVector3(1, 1, 1);
+}
+AglVector3 AglVector3::zero()
+{
+	return AglVector3(0, 0, 0);
 }

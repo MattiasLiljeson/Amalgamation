@@ -40,8 +40,6 @@ public:
 	void AddImpulse(AglVector3 pImpulse);
 	void AddAngularImpulse(AglVector3 pAngularImpulse);
 
-	void UpdateVelocity(float pElapsedTime);
-	void UpdatePosition(float pElapsedTime);
 	void RevertVelocity();
 	void RevertPosition();
 

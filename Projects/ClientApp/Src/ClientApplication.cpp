@@ -221,37 +221,41 @@ void ClientApplication::initEntities()
 	}
 	
 
-	//Test physics
+	// NOTE: Test physics entities have been moved to the server since they need to be
+	// synced there. These are entities that are synced over the network, that should
+	// be able to collide with object such as the player ships.
 
-	//b1
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	entity->addComponent( ComponentType::Transform, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
+	////Test physics
 
-	component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-									AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
-	entity->addComponent(ComponentType::BodyInitData, component);
+	////b1
+	//entity = m_world->createEntity();
+	//component = new RenderInfo( cubeMeshId );
+	//entity->addComponent( ComponentType::RenderInfo, component );
+	//component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	//entity->addComponent( ComponentType::Transform, component );
+	//component = new PhysicsBody();
+	//entity->addComponent(ComponentType::PhysicsBody, component);
 
-	m_world->addEntity(entity);
+	//component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+	//								AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+	//entity->addComponent(ComponentType::BodyInitData, component);
 
-	//b2
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	entity->addComponent( ComponentType::Transform, component );
-	component = new PhysicsBody();
-	entity->addComponent(ComponentType::PhysicsBody, component);
-	
-	component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
-	entity->addComponent(ComponentType::BodyInitData, component);
+	//m_world->addEntity(entity);
 
-	m_world->addEntity(entity);
+	////b2
+	//entity = m_world->createEntity();
+	//component = new RenderInfo( cubeMeshId );
+	//entity->addComponent( ComponentType::RenderInfo, component );
+	//component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+	//entity->addComponent( ComponentType::Transform, component );
+	//component = new PhysicsBody();
+	//entity->addComponent(ComponentType::PhysicsBody, component);
+	//
+	//component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
+	//	AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
+	//entity->addComponent(ComponentType::BodyInitData, component);
+
+	//m_world->addEntity(entity);
 
 	// walker
 	//entity = m_world->createEntity();

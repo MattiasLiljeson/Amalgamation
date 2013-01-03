@@ -3,6 +3,7 @@
 #include "ShaderManager.h"
 #include "Camera.h"
 #include "VertexStructures.h"
+#include "DX11Application.h"
 
 DebugHull::DebugHull(ConvexHullShape* p_shape, ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
@@ -69,8 +70,11 @@ DebugHull::~DebugHull()
 	m_vb->Release();
 	m_ib->Release();
 }
-void DebugHull::draw(AglMatrix pWorld)
+void DebugHull::draw(AglMatrix pWorld, bool pWire)
 {
+	if (pWire)
+		m_deviceContext->RSSetState(DX11Application::mWireframeState);
+
 	SimpleShader* ss = ShaderManager::GetInstance()->GetSimpleShader();
 	ss->SetMatrixBuffer(pWorld, Camera::GetInstance()->GetViewMatrix(), Camera::GetInstance()->GetProjectionMatrix(), false);
 	m_deviceContext->VSSetShader(ss->GetVertexShader().Data, 0, 0);
@@ -85,6 +89,7 @@ void DebugHull::draw(AglMatrix pWorld)
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->DrawIndexed(m_indices, 0, 0);
+	m_deviceContext->RSSetState(DX11Application::mRasterState);
 }
 
 
@@ -97,7 +102,7 @@ DebugHullData::~DebugHullData()
 	delete mDebugHull;
 }
 
-void DebugHullData::Draw(DebugSphere* p_s, DebugBox* p_b)
+void DebugHullData::Draw(DebugSphere* p_s, DebugBox* p_b, int pLevel)
 {
 	for (unsigned int i = 0; i < mInstances.size(); i++)
 	{
@@ -107,9 +112,9 @@ void DebugHullData::Draw(DebugSphere* p_s, DebugBox* p_b)
 		m = mInstances[i]->GetSizeAsMatrix();
 		AglMatrix size = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9],
 			m[10], m[11], m[12], m[13], m[14], m[15]);
-		mDebugHull->draw(size * world);
+		mDebugHull->draw(size * world, pLevel < 2);
 
-		if (false)//p_s)
+		if (p_s && pLevel >= 3)
 		{
 			if (!mInstances[i]->IsStatic())
 			{
@@ -118,7 +123,7 @@ void DebugHullData::Draw(DebugSphere* p_s, DebugBox* p_b)
 				p_s->draw(world, true);
 			}
 		}
-		if (p_b)
+		if (p_b && pLevel >= 3)
 		{
 			if (!mInstances[i]->IsStatic())
 			{

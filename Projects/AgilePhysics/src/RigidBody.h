@@ -23,12 +23,12 @@ protected:
 protected:
 	virtual void CalculateInertiaTensor() = 0;
 	void SetInertiaTensor(AglMatrix pTensor);
-	void calcInvInertia();
+	void ComputeInertia();
 public:
 	RigidBody();
 	RigidBody(AglVector3 pPosition);
 	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
-	RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
+	RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
 	virtual ~RigidBody();
 	virtual RigidBodyType	GetType() = 0;
 
@@ -65,8 +65,6 @@ public:
 	void AddImpulse(AglVector3 pImpulse);
 	void AddAngularImpulse(AglVector3 pAngularImpulse);
 
-	virtual void UpdateVelocity(float pElapsedTime); //NOT
-	virtual void UpdatePosition(float pElapsedTime); //NOT
 	void RevertVelocity(); //NOT
 	void RevertPosition(); //NOT
 	virtual AglBoundingSphere GetBoundingSphere() const; //NOT

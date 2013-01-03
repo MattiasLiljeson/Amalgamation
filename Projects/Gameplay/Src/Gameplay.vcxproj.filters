@@ -126,10 +126,6 @@
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
-    <ClInclude Include="Impulse.h" />
-    <ClInclude Include="ImpulseSystem.h" />
     <ClInclude Include="libRocketBackendSystem.h">
       <Filter>Systems\libRocket</Filter>
     </ClInclude>
@@ -153,9 +149,6 @@
     </ClInclude>
     <ClInclude Include="AudioListenerSystem.h">
       <Filter>Systems\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="ImpulseSystem.h">
-      <Filter>Systems\Physics</Filter>
     </ClInclude>
     <ClInclude Include="InputBackendSystem.h">
       <Filter>Systems\Input</Filter>
@@ -204,13 +197,9 @@
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="BodyInitData.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
@@ -220,14 +209,6 @@
     <ClCompile Include="LibRocketSystemInterface.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
-    <ClCompile Include="GraphicsBackendSystem.cpp" />
-    <ClCompile Include="InputBackendSystem.cpp" />
-    <ClCompile Include="ImpulseSystem.cpp" />
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
@@ -243,9 +224,6 @@
     <ClCompile Include="AudioListenerSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="ImpulseSystem.cpp">
-      <Filter>Systems\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="InputBackendSystem.cpp">
       <Filter>Systems\Input</Filter>
     </ClCompile>
@@ -254,9 +232,6 @@
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="InputBackendSystem.cpp">
-      <Filter>Systems\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

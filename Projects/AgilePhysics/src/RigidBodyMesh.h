@@ -36,7 +36,7 @@ private:
 	bool Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles);
 
 public:
-	RigidBodyMesh(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 					AglInteriorSphereGrid* pSphereGrid = NULL);
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();

@@ -8,7 +8,9 @@
 #include "ShipController.h"
 #include "PacketType.h"
 #include "NetworkType.h"
+#include "NetworkSynced.h"
 #include "Control.h"
+#include "AntTweakBarWrapper.h"
 
 
 ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
@@ -22,6 +24,14 @@ ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
 	m_inputBackend = p_inputBackend;
 	m_physics = p_physicsSystem;
 	m_client = p_client;
+
+	m_controllerEpsilon = 0.15f;
+	m_leftStickDir[0] = 0;
+	m_leftStickDir[1] = 0;
+	m_leftStickDir[2] = 0;
+	m_rightStickDir[0] = 0;
+	m_rightStickDir[1] = 0;
+	m_rightStickDir[2] = 0;
 }
 
 ShipControllerSystem::~ShipControllerSystem()
@@ -44,6 +54,15 @@ void ShipControllerSystem::initialize()
 	m_strafeHorizontalNegative	= m_inputBackend->getInputControl( "THUMB_RX_NEGATIVE" );
 	m_strafeVerticalPositive	= m_inputBackend->getInputControl( "THUMB_RY_POSITIVE" );
 	m_strafeVerticalNegative	= m_inputBackend->getInputControl( "THUMB_RY_NEGATIVE" );
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable( "ControllerEpsilon",
+		TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), "min=0.0 max=1.0 step=0.05" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left Stick",
+		TwType::TW_TYPE_DIR3D, &m_leftStickDir, "" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right Stick",
+		TwType::TW_TYPE_DIR3D, &m_rightStickDir, "" );
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -58,6 +77,8 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		   shNegative = m_strafeHorizontalNegative->getStatus(),
 		   svPositive = m_strafeVerticalPositive->getStatus(),
 		   svNegative = m_strafeVerticalNegative->getStatus();
+
+
 	// Store raw float data
 	float horizontalInput = (float)(hPositive - hNegative);
 	float verticalInput = (float)(vPositive - vNegative);
@@ -67,6 +88,25 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	float strafeVerticalInput = (float)(svPositive - svNegative);
 	float sensitivityMult = 1.0f;
 
+	// Update the analog sticks for anttweakbar.
+	m_leftStickDir[0] = horizontalInput;
+	m_leftStickDir[1] = verticalInput;
+	m_leftStickDir[2] = 0;
+
+	m_rightStickDir[0] = strafeHorizontalInput;
+	m_rightStickDir[1] = strafeVerticalInput;
+	m_rightStickDir[2] = 0;
+
+	// Apply a threshold value to eliminate some of the analog stick noise.
+	if( abs(horizontalInput) < m_controllerEpsilon )
+		horizontalInput = 0;
+	if( abs(verticalInput) < m_controllerEpsilon )
+		verticalInput = 0;
+
+	if( abs(strafeHorizontalInput) < m_controllerEpsilon )
+		strafeHorizontalInput = 0;
+	if( abs(strafeVerticalInput) < m_controllerEpsilon )
+		strafeVerticalInput = 0;
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -122,10 +162,19 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Applying networked thrust and impulses, to the server's own physics system.
 		//
 		Packet thrustPacket;
+		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
+			ComponentType::NetworkSynced));
+
 		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-			<< thrustVec << angularVec;
+			<< thrustVec << angularVec << netSync->getNetworkIdentity();
 		m_client->sendPacket( thrustPacket );
 
 	}
 }
+
+float* ShipControllerSystem::getControllerEpsilonPointer()
+{
+	return &m_controllerEpsilon;
+}
+
 

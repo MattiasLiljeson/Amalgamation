@@ -1,5 +1,11 @@
 #include "ServerApplication.h"
 
+#include "RenderInfo.h"
+#include "Transform.h"
+#include "PhysicsBody.h"
+#include "BodyInitData.h"
+#include "NetworkSynced.h"
+
 namespace Srv
 {
 	ServerApplication::ServerApplication()
@@ -77,20 +83,48 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
-	//	Entity* e;
-	//
-	//	e = m_world->createEntity();
-	//	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-	//		new Transform( -10.0f, 0, 0 ) );
-	//	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-	//		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
-	//	m_world->addEntity( e );
-	//
-	//	e = m_world->createEntity();
-	//	e->addComponent( ComponentType::getTypeFor( ComponentType::Transform ),
-	//		new Transform( 0, 0, 0 ) );
-	//	e->addComponent( ComponentType::getTypeFor( ComponentType::NetworkSynced ),
-	//		new NetworkSynced( e->getIndex(), -1, NetworkType::Ship ) );
-	//	m_world->addEntity( e );
+		Entity* entity;
+		Component* component;
+		// Test physics
+		// Entities on the server does not need any render info component
+
+		//b1
+		entity = m_world->createEntity();
+		//component = new RenderInfo( cubeMeshId );
+		//entity->addComponent( ComponentType::RenderInfo, component );
+		component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+		entity->addComponent( ComponentType::Transform, component );
+		component = new PhysicsBody();
+		entity->addComponent(ComponentType::PhysicsBody, component);
+
+		component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+		entity->addComponent(ComponentType::BodyInitData, component);
+
+		// The b1 entity should be synced over the network!
+		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		entity->addComponent(ComponentType::NetworkSynced, component);
+
+		m_world->addEntity(entity);
+
+		//b2
+		entity = m_world->createEntity();
+		//component = new RenderInfo( cubeMeshId );
+		//entity->addComponent( ComponentType::RenderInfo, component );
+		component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+		entity->addComponent( ComponentType::Transform, component );
+		component = new PhysicsBody();
+		entity->addComponent(ComponentType::PhysicsBody, component);
+
+		component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
+		entity->addComponent(ComponentType::BodyInitData, component);
+		// Reminder: the b2 entity is static, hence, this entity could be left to exist
+		// by default on the client, without any physics data. It doesn't need to be
+		// synced over the network every frame, since it can't move. For now, it will be.
+		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		entity->addComponent(ComponentType::NetworkSynced, component);
+
+		m_world->addEntity(entity);
 	}
 };

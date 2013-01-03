@@ -217,6 +217,10 @@ bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2,
 bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
 						EPACollisionData* p_epaData);
 
+bool CheckCollision(const AglVector3& p_t11, const AglVector3& p_t12, const AglVector3& p_t13,
+					const AglVector3& p_t21, const AglVector3& p_t22, const AglVector3& p_t23,
+					EPACollisionData* p_epaData);
+
 //--------------------------------SUPPORT FUNCTIONS---------------------------------------
 
 
@@ -243,6 +247,11 @@ void  CalculateProjectionInterval(RigidBodyBox* p_box, AglVector3 p_axis,
 float OverlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
 
 void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max);
+
+float OverlapAmount(const AglVector3* p_points1, const AglVector3* p_points2, const AglVector3& p_axis);
+
+void  CalculateProjectionInterval(const AglVector3* p_points, const AglVector3& p_axis, 
 								  float& p_min, float& p_max);
 
 

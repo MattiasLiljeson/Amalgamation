@@ -18,7 +18,8 @@ public:
 	{
 		NON_EXISTENT = -1,
 		Ship,
-		Identity,
+		Prop,
+		Identity
 	};
 
 public:

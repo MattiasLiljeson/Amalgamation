@@ -4,6 +4,8 @@ using namespace igloo;
 #include <TcpClient.h>
 #include <TcpServer.h>
 
+#include <boost/thread/thread.hpp>
+
 Describe(a_tcp_client)
 {
 	It(can_have_an_active_connection_if_it_has_connected)
