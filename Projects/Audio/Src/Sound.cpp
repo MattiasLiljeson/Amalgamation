@@ -71,11 +71,6 @@ IXAudio2SourceVoice* Sound::getSourceVoice()
 	return m_sourceVoice;
 }
 
-void Sound::updateSourceCurrentState()
-{
-	m_sourceVoice->GetState(m_sourceState);
-}
-
 void Sound::updateVoiceState()
 {
 	m_sourceVoice->GetState(m_sourceState);
@@ -83,6 +78,7 @@ void Sound::updateVoiceState()
 
 bool Sound::isPlaying()
 {
+	updateVoiceState();
 	if (m_sourceState->BuffersQueued > 0 && m_sourceState->SamplesPlayed != 0)
 	{
 		return true;

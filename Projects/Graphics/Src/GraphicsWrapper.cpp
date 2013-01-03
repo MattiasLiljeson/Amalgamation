@@ -23,8 +23,10 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_width	= p_width;
 	m_height= p_height;
+	m_windowed = p_windowed;
 
-	initHardware(p_hWnd, p_windowed);
+	initSwapChain(p_hWnd);
+	initHardware();
 
 	initBackBuffer();
 	initViewport();
@@ -53,7 +55,23 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_textureManager;
 }
 
-void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
+void GraphicsWrapper::initSwapChain(HWND p_hWnd)
+{
+	ZeroMemory( &m_swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC) );
+	m_swapChainDesc.BufferCount = 1;
+	m_swapChainDesc.BufferDesc.Width = m_width;
+	m_swapChainDesc.BufferDesc.Height = m_height;
+	m_swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+	m_swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	m_swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	m_swapChainDesc.OutputWindow = p_hWnd;
+	m_swapChainDesc.SampleDesc.Count = 1;
+	m_swapChainDesc.SampleDesc.Quality = 0;
+	m_swapChainDesc.Windowed = m_windowed;
+}
+
+void GraphicsWrapper::initHardware()
 {
 	HRESULT hr = S_OK;
 	UINT createDeviceFlags = 0;
@@ -69,20 +87,6 @@ void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
 		D3D_DRIVER_TYPE_REFERENCE,
 	};
 	UINT numDriverTypes = sizeof(driverTypes) / sizeof(driverTypes[0]);
-
-	DXGI_SWAP_CHAIN_DESC sd;
-	ZeroMemory( &sd, sizeof(sd) );
-	sd.BufferCount = 1;
-	sd.BufferDesc.Width = m_width;
-	sd.BufferDesc.Height = m_height;
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	sd.BufferDesc.RefreshRate.Numerator = 60;
-	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sd.OutputWindow = p_hWnd;
-	sd.SampleDesc.Count = 1;
-	sd.SampleDesc.Quality = 0;
-	sd.Windowed = p_windowed;
 
 	D3D_FEATURE_LEVEL featureLevelsToTry[] = {
 		D3D_FEATURE_LEVEL_11_0,
@@ -104,7 +108,7 @@ void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
 			featureLevelsToTry,
 			ARRAYSIZE(featureLevelsToTry),
 			D3D11_SDK_VERSION,
-			&sd,
+			&m_swapChainDesc,
 			&m_swapChain,
 			&m_device,
 			&initiatedFeatureLevel,
@@ -116,7 +120,6 @@ void GraphicsWrapper::initHardware(HWND p_hWnd, bool p_windowed)
 			break;
 		}
 	}
-
 	if ( selectedDriverType > 0 )
 		throw D3DException("Couldn't create a D3D Hardware-device, software render enabled."
 		,__FILE__, __FUNCTION__, __LINE__);
