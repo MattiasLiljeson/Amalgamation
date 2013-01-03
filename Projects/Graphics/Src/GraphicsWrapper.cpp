@@ -374,3 +374,26 @@ int GraphicsWrapper::getWindowdHeight()
 {
 	return m_height;
 }
+
+void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height )
+{
+	m_width = p_width;
+	m_height = p_height;
+
+	m_deviceContext->OMSetRenderTargets(0, 0, 0);
+
+	SAFE_RELEASE( m_backBuffer );
+
+	HRESULT hr;
+	// Resize swap chain to window's size.
+	hr = m_swapChain->ResizeBuffers(0, p_width, p_height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+	initBackBuffer();
+
+	DXGI_SWAP_CHAIN_DESC desc;
+	m_swapChain->GetDesc( &desc );
+
+	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
+
+	initViewport();
+}

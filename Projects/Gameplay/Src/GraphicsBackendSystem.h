@@ -25,6 +25,8 @@ public:
 		int p_scrHeight = 720, bool p_windowed = true );
 	~GraphicsBackendSystem(void);
 
+	void changeResolution( int p_scrWidth, int p_scrHeight );
+
 	virtual void initialize();
 	void process();
 

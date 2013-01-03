@@ -57,6 +57,12 @@ HWND Window::getWindowRef()
 	return m_hWnd;
 }
 
+void Window::changeWindowRes( int p_width, int p_height )
+{
+	SetWindowPos( m_hWnd, HWND_TOP, 0, 0, p_width, p_height,
+		SWP_NOMOVE );
+}
+
 LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	PAINTSTRUCT ps;

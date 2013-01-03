@@ -8,8 +8,9 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 
-GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth, int p_scrHeight,
-											 bool p_windowed  ) : EntitySystem( SystemType::GraphicsBackendSystem )
+GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth,
+	int p_scrHeight, bool p_windowed )
+	: EntitySystem( SystemType::GraphicsBackendSystem )
 {
 	m_hInstance = p_hInstance;
 	m_scrWidth = p_scrWidth;
@@ -24,6 +25,18 @@ GraphicsBackendSystem::~GraphicsBackendSystem(void)
 	AntTweakBarWrapper::destroy();
 }
 
+void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
+{
+	m_scrWidth = p_scrWidth;
+	m_scrHeight = p_scrHeight;
+
+	// Resize the actual window.
+	m_window->changeWindowRes( p_scrWidth, p_scrHeight );
+
+	// Resize the back buffer.
+	m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );
+}
+
 void GraphicsBackendSystem::initialize()
 {
 	TextureParser::init();
@@ -31,7 +44,8 @@ void GraphicsBackendSystem::initialize()
 	try
 	{
 		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
-		m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), m_scrWidth, m_scrHeight, true );
+		m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(),
+			m_scrWidth, m_scrHeight, true );
 		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
 		m_graphicsWrapper->hookUpAntTweakBar();
 	}
@@ -39,6 +53,9 @@ void GraphicsBackendSystem::initialize()
 	{
 		DEBUGPRINT( (e.what()) );
 	}
+
+	// HACK: Should REALLY not be here!!!
+	changeResolution( (int)(m_scrWidth * 0.5f), (int)(m_scrHeight * 0.5f) );
 }
 
 void GraphicsBackendSystem::process()

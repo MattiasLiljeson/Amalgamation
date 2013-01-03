@@ -120,6 +120,8 @@ public:
 	int getWindowWidth();
 	int getWindowdHeight();
 
+	void changeBackbufferRes( int p_width, int p_height );
+
 private:
 
 	///-----------------------------------------------------------------------------------
