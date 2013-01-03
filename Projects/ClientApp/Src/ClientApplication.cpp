@@ -41,11 +41,8 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
 	try{
 		m_running = false;
-
 		m_hInstance = p_hInstance;
-
 		m_client = new TcpClient();
-
 		m_world = new EntityWorld();
 
 #ifdef _COMBINE_CLIENT_AND_SERVER

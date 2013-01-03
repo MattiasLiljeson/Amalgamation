@@ -377,3 +377,23 @@ int GraphicsWrapper::getWindowdHeight()
 {
 	return m_height;
 }
+
+void GraphicsWrapper::changeToWindowed( BOOL p_windowed )
+{
+	HRESULT hr = S_OK;
+	if(hr = m_swapChain->GetFullscreenState(&p_windowed, nullptr) != S_OK)
+		OutputDebugStringA("Failed to get fullscreen state.\n");
+
+	m_swapChain->GetDesc(&m_swapChainDesc);
+	m_swapChainDesc.Windowed = !p_windowed;
+	m_swapChainDesc.Flags = 0;
+	if(p_windowed)
+		m_swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	/************************************************************************/
+	/* TODO: RELEASE ALL THE RENDER TARGETS!!!!								*/
+	/************************************************************************/
+	depthStencilView_->Release();
+	depthStencil_->Release();
+	renderTarget_->Release();
+}

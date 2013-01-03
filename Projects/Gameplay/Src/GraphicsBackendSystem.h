@@ -1,5 +1,6 @@
 #pragma once
 
+#include <AntTweakBarWrapper.h>
 #include <EntitySystem.h>
 #include <Windows.h>
 
@@ -43,5 +44,11 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
+	/************************************************************************/
+	/* DEBUG FUNCTIONS ONLY! */
+	/************************************************************************/
+	static GraphicsBackendSystem* m_selfPointer;
+private:
+	static void TW_CALL toggleFullScreen();
 };
 

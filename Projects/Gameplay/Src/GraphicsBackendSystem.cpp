@@ -8,6 +8,8 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 
+GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
+
 GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, 
 											 int p_scrWidth /* = 800 */, 
 											 int p_scrHeight /* = 600 */, 
@@ -20,6 +22,11 @@ GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance,
 	m_scrWidth = p_scrWidth;
 	m_scrHeight = p_scrHeight;
 	m_windowed = p_windowed;
+
+	/************************************************************************/
+	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
+	/************************************************************************/
+	m_selfPointer = this;
 }
 
 
@@ -74,4 +81,14 @@ GraphicsWrapper* GraphicsBackendSystem::getGfxWrapper()
 HWND GraphicsBackendSystem::getWindowRef()
 {
 	return m_window->getWindowRef();
+}
+
+void TW_CALL GraphicsBackendSystem::toggleFullScreen()
+{
+	if (m_selfPointer->m_windowed)
+		m_selfPointer->m_windowed = false;
+	else 
+		m_selfPointer->m_windowed = true;
+
+	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
 }
