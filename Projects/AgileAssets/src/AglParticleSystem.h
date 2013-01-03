@@ -48,6 +48,8 @@ public:
 	AglParticleSystemHeader getHeader();
 	vector<void*> getParticles();
 
+	void setSpawnPoint(AglVector3 p_spawnPoint);
+
 	void update(float p_dt);
 };
 

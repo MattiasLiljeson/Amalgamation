@@ -148,6 +148,8 @@ public:
 	///
 	AglGradient*			getGradient(int p_index);
 
+	AglParticleSystem*		getParticleSystem(int p_index);
+
 	///
 	/// Gets all materials
 	/// \return The materials

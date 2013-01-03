@@ -79,6 +79,10 @@ public:
 	AglMaterial* GetMaterial(int pIndex);
 	void SetCurrentAnimation(int pIndex);
 	Mesh* GetMesh(int pIndex);
+	AglParticleSystem* GetParticleSystem(int pIndex)
+	{
+		return mAglScene->getParticleSystem(pIndex);
+	}
 	vector<Mesh*> GetMeshes() { return mMeshes; }
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);

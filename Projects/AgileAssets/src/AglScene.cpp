@@ -117,6 +117,10 @@ AglGradient* AglScene::getGradient(int p_index)
 {
 	return m_gradients[p_index];
 }
+AglParticleSystem* AglScene::getParticleSystem(int p_index)
+{
+	return m_particleSystems[p_index];
+}
 void AglScene::addGradient(AglGradient* p_gradient)
 {
 	m_gradients.push_back(p_gradient);

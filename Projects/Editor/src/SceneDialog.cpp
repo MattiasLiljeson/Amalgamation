@@ -94,6 +94,7 @@ void TW_CALL SceneDialog::AddMaterial(void *clientData)
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
 	AglParticleSystem* ps = new AglParticleSystem();
+	Scene::GetInstance()->AddParticleSystem(ps);
 	//mat->nameID = Scene::GetInstance()->AddName("");
 	//Scene::GetInstance()->AddMaterial(mat, false, false);
 	//string s = Scene::GetInstance()->GetName(mat->nameID);*/

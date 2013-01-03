@@ -8,6 +8,10 @@ class ParticleSystemDialog
 {
 private:
 	TwBar* m_dialog;
+	int mPSIndex;
+private:
+	static void TW_CALL SetSpawn(const void *value, void *clientData);
+	static void TW_CALL GetSpawn(void *value, void *clientData);
 public:
 	ParticleSystemDialog();
 	~ParticleSystemDialog();
