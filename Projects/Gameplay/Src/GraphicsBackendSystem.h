@@ -21,8 +21,8 @@ class GraphicsWrapper;
 class GraphicsBackendSystem : public EntitySystem
 {
 public:
-	GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth = 800, 
-		int p_scrHeight = 600, bool p_windowed = true );
+	GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth = 1280, 
+		int p_scrHeight = 720, bool p_windowed = true );
 	~GraphicsBackendSystem(void);
 
 	virtual void initialize();
