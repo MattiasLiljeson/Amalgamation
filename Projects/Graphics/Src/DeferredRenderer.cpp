@@ -192,10 +192,9 @@ void DeferredRenderer::renderLibRocket( Mesh* p_mesh, Texture* p_texture )
 	p_mesh->getIndexBuffer()->apply();
 
 	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
-
-	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	//HACK: fix so that a placeholder tex is used instead of the last working one
+	if( p_texture != NULL )
+		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
 
 	m_rocketShader->apply();
 

@@ -18,8 +18,8 @@ struct Cursor
 {
 	double x; // double used internally in input
 	double y; // double used internally in input
-	bool pressed;
-	Control* click;
+	/*int leftBtnState;*/
+	Control* leftBtn;
 	Control* xNegative;
 	Control* xPositive;
 	Control* yNegative;
@@ -27,7 +27,7 @@ struct Cursor
 
 	Cursor() // init all members to zero/NULL
 	{
-		pressed = false;
+		//leftBtnState = InputHelper::KEY_STATE::KEY_UP;
 		x = y = 0;
 		xPositive = xNegative = yPositive = yNegative = NULL;
 	}
@@ -39,13 +39,13 @@ struct Cursor
 
 	void update()
 	{
-		if( click->getDelta() == -1 )
-			pressed = true;
-		else
-			pressed = false;
+		// raw data for the mouse buttons are enums of type KEY_STATE
+		//leftBtnState = leftBtn->getRawData();
 
-		x += xNegative->getRawData();
-		y += yNegative->getRawData();
+		x -= xNegative->getStatus()*25000;
+		y -= yNegative->getStatus()*25000;
+		x += xPositive->getStatus()*25000;
+		y += yPositive->getStatus()*25000;
 	}
 };
 

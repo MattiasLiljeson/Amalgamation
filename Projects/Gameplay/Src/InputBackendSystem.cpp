@@ -33,7 +33,7 @@ void InputBackendSystem::initialize()
 	XInputFetcher* xInput = new XInputFetcher();
 	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
 	HWND hWnd = m_graphicsBackend->getWindowRef();
-	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, true );
 	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;

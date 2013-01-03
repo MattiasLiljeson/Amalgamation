@@ -68,7 +68,7 @@ void LibRocketBackendSystem::initialize()
 	//loadDocument( tmp.c_str() );
 
 	//Hard-coded controls
-	m_cursor.click		= m_inputBackend->getControlByEnum( InputHelper::MOUSE_BTN::M_LBTN );
+	m_cursor.leftBtn	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_BTN::M_LBTN );
 	m_cursor.xNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_NEGATIVE );
 	m_cursor.xPositive	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_POSITIVE );
 	m_cursor.yNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::Y_NEGATIVE );
@@ -81,7 +81,11 @@ void LibRocketBackendSystem::initialize()
 	m_cursor.init();
 
 	// HACK: tmp crazy lulz0r cursor.
-	m_rocketContext->LoadMouseCursor(tmp.c_str());
+	string cursorPath = ROCKET_CURSOR_PATH + "cursor.rml";
+	if( m_rocketContext->LoadMouseCursor(cursorPath.c_str()) == NULL )
+	{
+		int breakHere = 0;
+	}
 }
 
 bool LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
@@ -110,6 +114,15 @@ void LibRocketBackendSystem::process()
 {
 	m_cursor.update();
 	m_rocketContext->ProcessMouseMove(m_cursor.x, m_cursor.y, 0);
+
+	if( m_cursor.leftBtn->getRawData() == InputHelper::KEY_STATE::KEY_PRESSED )
+	{
+		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
+	}
+	else if( m_cursor.leftBtn->getRawData() == InputHelper::KEY_STATE::KEY_RELEASED )
+	{
+		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
+	}
 
 	//Rocket::Core::Element* test = m_documents[0]->GetElementById("btn");
 	//if (test != NULL)

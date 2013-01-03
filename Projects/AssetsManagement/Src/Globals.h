@@ -24,6 +24,7 @@ static const string& TEXTUREPATH = "Assets/Textures/";
 /* LIBROCKET PATHS!														*/
 /************************************************************************/
 // EFFING LOWER CASE! DO NOT CHANGE! HIT ME - Mattias L
+static const string& ROCKET_CURSOR_PATH = "Assets/libRocket/cursor/";
 static const string& ROCKET_FONT_PATH = "Assets/libRocket/fonts/";
 static const string& ROCKET_HUD_PATH = "Assets/libRocket/hud/";
 static const string& ROCKET_MENU_PATH = "Assets/libRocket/menu/";
