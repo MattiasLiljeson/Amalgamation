@@ -1,8 +1,8 @@
 #include "lightLib.hlsl"
 
-
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
+Texture2D gSpecular : register(t2);
 
 SamplerState pointSampler : register(s0);
 
@@ -17,8 +17,6 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 };
 
-
-
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
@@ -32,7 +30,9 @@ float4 PS(VertexOut p_input) : SV_TARGET
 {
 	float4 diffuseColor = float4(gDiffuseMap.Sample(pointSampler, p_input.texCoord));
 	float4 normalColor = float4(gNormalMap.Sample(pointSampler, p_input.texCoord));	
+	float4 specular = float4(gSpecular.Sample(pointSampler, p_input.texCoord));
 	
+	return specular;
 	// Normal in -1 to 1 range
 	float4 normal = normalColor*2.0f-1.0f;
 	
