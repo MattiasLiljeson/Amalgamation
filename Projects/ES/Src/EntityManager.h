@@ -31,6 +31,7 @@ public:
 	int getTotalCreated() const;
 	int getTotalAdded() const;
 	int getTotalDeleted() const;
+	Entity* getFirstEntityByComponentType( ComponentType::ComponentTypeIdx p_componentType );
 
 private:
 	// Use deque instead of vector maybe? 

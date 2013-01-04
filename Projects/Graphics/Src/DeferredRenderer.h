@@ -102,6 +102,9 @@ public:
 		Buffer<InstanceData>* p_instanceBuffer );
 
 	void hookUpAntTweakBar();
+
+	void releaseRenderTargetsAndDepthStencil();
+	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 protected:
 private:
 	void initDepthStencil();
