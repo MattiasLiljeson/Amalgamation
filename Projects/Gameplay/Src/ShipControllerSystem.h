@@ -32,26 +32,45 @@ public:
 
 private:
 	float* getControllerEpsilonPointer();
+	void initGamePad();
+	void initKeyboard();
+	void initMouse();
 
 private:
 	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
 
-	Control* m_horizontalPositive;
-	Control* m_horizontalNegative;
-	Control* m_verticalPositive;
-	Control* m_verticalNegative;
-	//
-	Control* m_rollRight;
-	Control* m_rollLeft;
-	Control* m_thrust;
-	Control* m_strafeHorizontalPositive;
-	Control* m_strafeHorizontalNegative;
-	Control* m_strafeVerticalPositive;
-	Control* m_strafeVerticalNegative;
+	/************************************************************************/
+	/* Different Control listeners											*/
+	/************************************************************************/
 
-	
+	Control* m_gamepadHorizontalPositive;
+	Control* m_gamepadHorizontalNegative;
+	Control* m_gamepadVerticalPositive;
+	Control* m_gamepadVerticalNegative;
+
+	Control* m_mouseHorizontalPositive;
+	Control* m_mouseHorizontalNegative;
+	Control* m_mouseVerticalPositive;
+	Control* m_mouseVerticalNegative;
+
+	Control* m_gamepadRollRight;
+	Control* m_gamepadRollLeft;
+	Control* m_gamepadThrust;
+	Control* m_gamepadStrafeHorizontalPositive;
+	Control* m_gamepadStrafeHorizontalNegative;
+	Control* m_gamepadStrafeVerticalNegative;
+	Control* m_gamepadStrafeVerticalPositive;
+
+	Control* m_keyboardRollRight;
+	Control* m_keyboardRollLeft;
+	Control* m_keyboardThrust;
+	Control* m_keyboarStrafeHorizontalPos;
+	Control* m_keyboarStrafeHorizontalNeg;
+	Control* m_keyboardStrafeVerticalPos;
+	Control* m_keyboardStrafeVerticalNeg;
+
 	// The values of analogue sticks as a vector3 (used in anttweakbar).
 	double m_leftStickDir[3];
 	double m_rightStickDir[3];
@@ -60,6 +79,8 @@ private:
 	
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
+
+	float m_mouseSensitivity;
 
 	// Correction vectors for the left and right thumb sticks.
 	double m_leftStickCorrection[2];
