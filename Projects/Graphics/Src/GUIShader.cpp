@@ -1,24 +1,24 @@
-#include "RocketShader.h"
+#include "GUIShader.h"
 
-RocketShader::RocketShader( ShaderInitStruct p_initData, 
+GUIShader::GUIShader( ShaderInitStruct p_initData, 
 									   Buffer<SimpleCBuffer>* p_cBuffer ) 
 									   : ShaderBase(p_initData)
 {
 	m_perFrameBuffer = p_cBuffer;
 }
 
-RocketShader::~RocketShader()
+GUIShader::~GUIShader()
 {
 	delete m_perFrameBuffer;
 }
 
-void RocketShader::apply()
+void GUIShader::apply()
 {
 	m_perFrameBuffer->apply();
 	applyStages();
 }
 
-Buffer<SimpleCBuffer>* RocketShader::getPerFrameBufferPtr()
+Buffer<SimpleCBuffer>* GUIShader::getPerFrameBufferPtr()
 {
 	return m_perFrameBuffer;
 }

@@ -7,7 +7,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
-#include "RocketShader.h"
+#include "GUIShader.h"
 
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
@@ -90,7 +90,7 @@ void DeferredRenderer::beginDeferredBasePass()
 void DeferredRenderer::updatePerFrameConstantBuffer()
 {
 	// update per frame buffer
-	Buffer<SimpleCBuffer>* cb = m_rocketShader->getPerFrameBufferPtr();
+	Buffer<SimpleCBuffer>* cb = m_guiShader->getPerFrameBufferPtr();
 	//	cb->accessBuffer.color[0] = 0.5f;
 	//	cb->accessBuffer.color[1] = 0.5f;
 
@@ -196,7 +196,7 @@ void DeferredRenderer::renderLibRocket( Mesh* p_mesh, Texture* p_texture )
 	if( p_texture != NULL )
 		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
 
-	m_rocketShader->apply();
+	m_guiShader->apply();
 
 	// Draw instanced data
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
@@ -343,7 +343,7 @@ void DeferredRenderer::initTestShaders()
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
 
-	m_rocketShader = m_shaderFactory->createRocketShader(
+	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
 }
 

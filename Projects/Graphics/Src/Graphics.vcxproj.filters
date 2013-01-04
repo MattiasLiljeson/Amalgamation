@@ -36,7 +36,7 @@
       <Filter>Graphics Utilities</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsWrapper.cpp" />
-    <ClCompile Include="RocketShader.cpp">
+    <ClCompile Include="GUIShader.cpp">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,7 +119,7 @@
     <ClInclude Include="PNTTBVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
-    <ClInclude Include="RocketShader.h">
+    <ClInclude Include="GUIShader.h">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>
@@ -135,6 +135,9 @@
     </Filter>
     <Filter Include="Renderer\Buffer">
       <UniqueIdentifier>{bd084ec0-9a62-4ac7-b5f4-2229da7a11f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Deferred">
+      <UniqueIdentifier>{a0426606-0273-4997-a7c8-accf0ab8341f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{f522370d-24a2-4452-958f-a48920f9d6a0}</UniqueIdentifier>
@@ -153,9 +156,6 @@
     </Filter>
     <Filter Include="Renderer\Mesh">
       <UniqueIdentifier>{305044c6-2e69-440e-9427-d7e62138ac39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Deferred">
-      <UniqueIdentifier>{a0426606-0273-4997-a7c8-accf0ab8341f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

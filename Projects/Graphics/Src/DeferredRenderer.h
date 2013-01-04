@@ -12,7 +12,7 @@ class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class Mesh;
-class RocketShader;
+class GUIShader;
 class ShaderFactory;
 struct Texture;
 
@@ -123,7 +123,7 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredComposeShader*	m_composeShader;
-	RocketShader*			m_rocketShader;
+	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 
