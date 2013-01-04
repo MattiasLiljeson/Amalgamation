@@ -64,6 +64,12 @@ public:
 	///\return the raw data
 	virtual int getRawData();
 
+	///-----------------------------------------------------------------------------------
+	/// Returns a reference of the variable that can be used by e.g. anttweakbar
+	/// \return double*
+	///-----------------------------------------------------------------------------------
+	virtual double* getStatusRef();
+
 protected:
 	// Current amount of "Pressness" on the control 
 	double m_status;

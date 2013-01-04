@@ -25,3 +25,8 @@ int Control::getRawData()
 {
 	return m_rawData;
 }
+
+double* Control::getStatusRef()
+{
+	return &m_status;
+}
