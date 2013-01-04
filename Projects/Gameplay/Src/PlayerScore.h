@@ -27,6 +27,8 @@ public:
 
 	int* getScorePointer();
 
+	void incrementScore( int p_incrementValue );
+
 private:
 	int m_score;
 

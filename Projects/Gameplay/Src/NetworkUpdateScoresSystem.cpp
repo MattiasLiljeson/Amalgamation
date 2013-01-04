@@ -36,6 +36,7 @@ void NetworkUpdateScoresSystem::processEntities( const vector<Entity*>& p_entiti
 
 			PlayerScore* score = static_cast<PlayerScore*>(
 				p_entities[i]->getComponent(ComponentType::PlayerScore));
+			score->incrementScore( 1 );
 
 			Packet packet;
 			packet << (char)PacketType::ScoresUpdate;

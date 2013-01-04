@@ -28,3 +28,8 @@ int* PlayerScore::getScorePointer()
 {
 	return &m_score;
 }
+
+void PlayerScore::incrementScore( int p_incrementValue )
+{
+	m_score += p_incrementValue;
+}
