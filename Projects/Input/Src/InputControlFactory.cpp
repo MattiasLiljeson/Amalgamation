@@ -1,11 +1,12 @@
-#include "InputControlFactory.h"
-#include <sstream>
 #include "AnalogueControl.h"
 #include "Control.h"
+#include "Cursor.h"
 #include "DigitalControl.h"
+#include "InputControlFactory.h"
 #include "KeyControl.h"
 #include "MouseBtnControl.h"
 #include "MouseMoveControl.h"
+#include <sstream>
 
 InputControlFactory::InputControlFactory()
 {
@@ -141,3 +142,31 @@ Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axi
 	Control* ctl = new MouseMoveControl( p_axis );
 	return ctl;
 }
+
+// BELOW DOESN'T WORK
+//========================================================================================
+//Cursor* InputControlFactory::createMouseCursor()
+//{
+//	Cursor* cursor = new Cursor();
+//	cursor->setControls( createMouseMovement(InputHelper::MOUSE_AXIS::X_NEGATIVE),
+//		createMouseMovement(InputHelper::MOUSE_AXIS::X_POSITIVE),
+//		createMouseMovement(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
+//		createMouseMovement(InputHelper::MOUSE_AXIS::Y_POSITIVE),
+//		createMouseButton( InputHelper::MOUSE_BTN::M_LBTN ),
+//		createMouseButton( InputHelper::MOUSE_BTN::M_RBTN ) );
+//	return cursor;
+//}
+//
+//Cursor* InputControlFactory::createGamepadCursor()
+//{
+//	Cursor* cursor = new Cursor();
+//	cursor->setControls( 
+//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
+//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
+//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_NEGATIVE),
+//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
+//		create360controllerDigital(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
+//		create360controllerDigital(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
+//	return cursor;
+//}
+//========================================================================================

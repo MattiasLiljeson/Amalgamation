@@ -71,8 +71,10 @@ public:
 	/// \param p_texture
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( unsigned int p_meshId,
+	void beginRenderLibRocket();
+	void renderLibRocket( unsigned int p_meshId,
 		vector<InstanceData>* p_instanceList );
+	void endRenderLibRocket();
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will

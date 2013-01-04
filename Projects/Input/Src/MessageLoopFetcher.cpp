@@ -8,7 +8,7 @@ MessageLoopFetcher::MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool
 	m_hWnd = p_hWnd;
 	m_resetCursor = p_resetCursor;
 
-	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS+1; i++ )
+	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS; i++ )
 	{
 		m_mouseCurrPos[i] = 0;
 		m_mouseMoveDelta[i] = 0;

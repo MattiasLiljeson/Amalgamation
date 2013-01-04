@@ -141,11 +141,12 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( graphicsBackend, true );
 
-	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend );
-	m_world->setSystem( rocketBackend, true );
-
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
 	m_world->setSystem( inputBackend, true);
+
+	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
+		inputBackend );
+	m_world->setSystem( rocketBackend, true );
 
 	// Controller system for the ship
 	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,

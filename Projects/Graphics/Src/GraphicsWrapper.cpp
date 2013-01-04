@@ -180,7 +180,12 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::renderRocketCompiledGeometry( unsigned int p_meshId, 
+void GraphicsWrapper::beginRenderLibRocket()
+{
+	m_deferredRenderer->beginRenderLibRocket();
+}
+
+void GraphicsWrapper::renderLibRocket( unsigned int p_meshId, 
 												   vector<InstanceData>* p_instanceList )
 {
 	Mesh* mesh = m_meshManager->getResource( p_meshId );
@@ -190,9 +195,14 @@ void GraphicsWrapper::renderRocketCompiledGeometry( unsigned int p_meshId,
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 		p_instanceList->size() );
 
-	m_deferredRenderer->renderRocketCompiledGeometry( mesh, tex, instanceBuffer );
+	m_deferredRenderer->renderLibRocket( mesh, tex );
 
 	delete instanceBuffer;
+}
+
+void GraphicsWrapper::endRenderLibRocket()
+{
+	m_deferredRenderer->endRenderLibRocket();
 }
 
 void GraphicsWrapper::finalizeFrame()
@@ -375,6 +385,7 @@ int GraphicsWrapper::getWindowdHeight()
 {
 	return m_height;
 }
+
 void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height ){
 	m_width = p_width;
 	m_height = p_height;

@@ -1,19 +1,25 @@
 #pragma once
 
-#include <EntitySystem.h>
 
 #include "Globals.h"
+#include "GraphicsBackendSystem.h"
+#include "InputBackendSystem.h"
 #include "LibRocketRenderInterface.h"
 #include "LibRocketSystemInterface.h"
-#include "GraphicsBackendSystem.h"
+#include <EntitySystem.h>
 
 #include <string>
 #include <vector>
 
+#include <Control.h>
+#include <Cursor.h>
+#include <AntTweakBarWrapper.h>
+
 class LibRocketBackendSystem : public EntitySystem
 {
 public:
-	LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend );
+	LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend,
+		InputBackendSystem* p_inputBackend );
 	~LibRocketBackendSystem();
 
 	void initialize();
@@ -26,7 +32,11 @@ public:
 
 private:
 	GraphicsBackendSystem* m_graphicsBackend;
-	std::string m_contextName;
+	InputBackendSystem* m_inputBackend;
+
+	Cursor* m_cursor;
+
+	std::string m_rocketContextName;
 	Rocket::Core::Context* m_rocketContext;
 	LibRocketRenderInterface* m_renderInterface;
 	LibRocketSystemInterface* m_systemInterface;

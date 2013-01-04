@@ -15,7 +15,6 @@ struct VertexIn
 	float2 texCoord : TEXCOORD; 
 	float3 tangent : TANGENT;	
 	float3 binormal : BINORMAL;
-	float4x4 instanceTransform : INSTANCETRANSFORM;
 };
 
 struct VertexOut
@@ -29,7 +28,8 @@ VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
 
-	vout.position = mul(float4(p_input.position,1.0f), p_input.instanceTransform);
+	p_input.position.z = 0.99f - p_input.position.z;
+	vout.position = mul(float4(p_input.position,1.0f), vp);
 	vout.texCoord = p_input.texCoord;
     
 	return vout;
