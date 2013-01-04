@@ -51,13 +51,6 @@ public:
 	IXAudio2SourceVoice* getSourceVoice();
 
 	///-----------------------------------------------------------------------------------
-	/// Updates the current source sounds state to the member variable that can later 
-	/// be used t check the current status of the source.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void updateSourceCurrentState();
-
-	///-----------------------------------------------------------------------------------
 	/// Updates the current sound's states allowing to see if the sound is playing or not.
 	/// \return void
 	///-----------------------------------------------------------------------------------

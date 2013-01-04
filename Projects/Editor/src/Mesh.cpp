@@ -41,6 +41,24 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 
 	unsigned int* ind = pMesh->getIndices();
 
+	AglMatrix mat = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+
+	for (int i = 0; i < h.vertexCount; i++)
+	{
+		v[i].position.transform(mat);
+		v[i].normal.transformNormal(mat);
+		v[i].binormal.transformNormal(mat);
+		v[i].tangent.transformNormal(mat);
+	}
+
+	for (int i = 0; i < h.indexCount; i+=3)
+	{
+		unsigned int temp = ind[i];
+		ind[i] = ind[i+1];
+		ind[i+1] = temp;
+
+	}
+
 	Init<AglVertexSTBN>(v, h.vertexCount, pMesh->getIndices(), h.indexCount);
 
 	AglVector3 minP, maxP;

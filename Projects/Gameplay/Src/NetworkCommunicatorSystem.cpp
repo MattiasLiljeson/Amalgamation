@@ -17,6 +17,7 @@
 #include "RenderInfo.h"
 #include "ShipController.h"
 #include "CameraInfo.h"
+#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 
@@ -81,10 +82,16 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 				if(data.owner == m_tcpClient->getId())
 				{
+					float aspectRatio = 
+						static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+						SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
 					// A camera from which the world is rendered.
 					entity = m_world->createEntity();
-					component = new CameraInfo( 800/(float)600 );
+					component = new CameraInfo( aspectRatio );
 					entity->addComponent( ComponentType::CameraInfo, component );
+					component = new MainCamera();
+					entity->addComponent( ComponentType::MainCamera, component );
 					//component = new Input();
 					//entity->addComponent( ComponentType::Input, component );
 					component = new Transform( -5.0f, 0.0f, -5.0f );

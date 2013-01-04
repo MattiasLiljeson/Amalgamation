@@ -52,7 +52,16 @@ private:
 	Control* m_strafeVerticalNegative;
 
 	
-	float m_controllerEpsilon;
+	// The values of analogue sticks as a vector3 (used in anttweakbar).
 	double m_leftStickDir[3];
 	double m_rightStickDir[3];
+	double m_leftStickDirWithCorrection[3];
+	double m_rightStickDirWithCorrection[3];
+	
+	// Threshold value for the Gamepad's analogue stick error.
+	float m_controllerEpsilon;
+
+	// Correction vectors for the left and right thumb sticks.
+	double m_leftStickCorrection[2];
+	double m_rightStickCorrection[2];
 };

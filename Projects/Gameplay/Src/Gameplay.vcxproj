@@ -21,6 +21,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
+    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />

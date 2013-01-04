@@ -100,10 +100,12 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	buffer->Scale = pScale;
 	buffer->TextureScale = pMaterial.textureScale;
 
+	AglMatrix mat = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+
 	unsigned int jointCount = pSkeleton->getHeader().jointCount;
 	for (unsigned int i = 0; i < jointCount; i++)
 	{
-		AglMatrix am = pSkeleton->getInverseBindMatrix(i) * pSkeleton->getGlobalTransform(i);
+		AglMatrix am = mat * pSkeleton->getInverseBindMatrix(i) * pSkeleton->getGlobalTransform(i) * mat;
 		//am *= inv;
 		am = AglMatrix::transpose(am);
 		buffer->Palette[i] = am;
