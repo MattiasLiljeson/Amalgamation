@@ -22,6 +22,8 @@ struct AglStandardParticle
 	AglVector3	velocity;
 	float		size;
 	float		age;
+
+	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, float p_size);
 };
 
 
@@ -40,6 +42,8 @@ class AglParticleSystem
 private:
 	AglParticleSystemHeader m_header;
 	vector<void*> m_particles;
+	float		  m_age;
+	float		  m_timeSinceSpawn;
 public:
 	AglParticleSystem();
 	AglParticleSystem(AglParticleSystemHeader p_header);

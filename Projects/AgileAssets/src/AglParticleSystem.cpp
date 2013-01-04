@@ -1,14 +1,24 @@
 #include "AglParticleSystem.h"
 
+AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, float p_size)
+{
+	position = p_position;
+	velocity = p_velocity;
+	size = p_size;
+	age = 0;
+}
+
 AglParticleSystem::AglParticleSystem()
 {
 	m_header.particleAge = 0;
 	m_header.spawnPoint = AglVector3(0, 0, 0);
 	m_header.particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
+	m_age = 0;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
 	m_header = p_header;
+	m_age = 0;
 }
 AglParticleSystem::~AglParticleSystem()
 {
@@ -47,6 +57,16 @@ void AglParticleSystem::update(float p_dt)
 				p->position += p->velocity * p_dt;
 			}
 		}
+
+		m_age += p_dt;
+		m_timeSinceSpawn += p_dt;
+		if (m_timeSinceSpawn > 1.0f)
+		{
+			AglStandardParticle* p = new AglStandardParticle(m_header.spawnPoint, AglVector3(1, 0, 0), 0.02f);
+			m_particles.push_back(p);
+			m_timeSinceSpawn -= 1.0f;
+		}
+
 	}
 	else
 	{
