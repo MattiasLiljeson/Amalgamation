@@ -5,6 +5,7 @@
 #include "PTVertex.h"
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
+#include "RenderStateHelper.h"
 #include <InstanceData.h>
 #include <d3d11.h>
 
@@ -15,6 +16,11 @@ class Mesh;
 class GUIShader;
 class ShaderFactory;
 struct Texture;
+class RenderStateHelper;
+struct RasterizerFillMode;
+struct RasterizerCullMode;
+struct RasterizerFaceVertexOrder;
+struct BlendState;
 
 
 const static int NUMBUFFERS = 3;
@@ -37,6 +43,9 @@ const static int DIFFUSE = 0;
 class DeferredRenderer
 {
 public:
+	// ===================================================================================
+	// Setup
+	// ===================================================================================
 	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		int p_width, int p_height);
 	virtual ~DeferredRenderer();
@@ -54,6 +63,11 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
+
+
+	// ===================================================================================
+	// Mesh Render
+	// ===================================================================================
 
 	///-----------------------------------------------------------------------------------
 	/// Set the gbuffer as render target.
@@ -93,6 +107,12 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
 	
+
+
+	// ===================================================================================
+	// GUI Render
+	// ===================================================================================
+
 	///-----------------------------------------------------------------------------------
 	/// Set up for GUI render pass
 	/// \return void
@@ -113,13 +133,49 @@ public:
 	///-----------------------------------------------------------------------------------
 	void finalizeGUIPass();
 
+
+
+	// ===================================================================================
+	// Blend states
+	// ===================================================================================
+
+	///-----------------------------------------------------------------------------------
+	/// Set blend state to draw with
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setBlendState(BlendState::Mode p_state);
+	
+	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
+	void setBlendFactors(float p_oneValue);
+
+	void setBlendMask(UINT p_mask);
+
+	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
+
+	// ===================================================================================
+	// Rasterizer States
+	// ===================================================================================
+
+	///-----------------------------------------------------------------------------------
+	/// Set settings for rasterizer states
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+
+	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
+
+	// ===================================================================================
+	// Debug
+	// ===================================================================================
 	void hookUpAntTweakBar();
 protected:
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
+	void buildBlendStates();
+	void buildRasterizerStates();
 	void unMapGBuffers();
-	void initTestShaders();
+	void initShaders();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -139,9 +195,15 @@ private:
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 
-	// librocket stuph
-	ID3D11BlendState* m_stdBlendState;
-	UINT m_stdMask;
+	// blend states
+	vector<ID3D11BlendState*> m_blendStates;
+	BlendState::Mode m_currentBlendStateType;
+	float m_blendFactors[4];
+	UINT m_blendMask;
+
+	// rasterizer states
+	vector<ID3D11RasterizerState*> m_rasterizerStates;
+	RasterizerState::Mode m_currentRasterizerStateType;
 
 	int m_width;
 	int m_height;

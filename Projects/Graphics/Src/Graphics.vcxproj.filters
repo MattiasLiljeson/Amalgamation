@@ -39,6 +39,9 @@
     <ClCompile Include="GUIShader.cpp">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClCompile>
+    <ClCompile Include="RenderStateHelper.cpp">
+      <Filter>Renderer\Deferred</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -121,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="GUIShader.h">
       <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateEnums.h">
+      <Filter>Renderer\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateHelper.h">
+      <Filter>Renderer\Deferred</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

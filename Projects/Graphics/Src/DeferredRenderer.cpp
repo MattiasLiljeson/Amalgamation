@@ -30,7 +30,15 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 
 	initDepthStencil();
 	initGeometryBuffers();
-	initTestShaders();
+	initShaders();
+
+	buildBlendStates();
+	setBlendFactors(0);
+	setBlendMask(0xffffffff);
+	m_currentBlendStateType = BlendState::DEFAULT;
+
+	buildRasterizerStates();
+	m_currentRasterizerStateType = RasterizerState::DEFAULT;
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -41,6 +49,16 @@ DeferredRenderer::~DeferredRenderer()
 	{
 		SAFE_RELEASE(m_gBuffers[i]);
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
+	}
+
+	for (int i = 0; i < m_blendStates.size(); i++)
+	{
+		SAFE_RELEASE(m_blendStates[i]);
+	}
+
+	for (int i = 0; i < m_blendStates.size(); i++)
+	{
+		SAFE_RELEASE(m_rasterizerStates[i]);
 	}
 
 	delete m_shaderFactory;
@@ -71,6 +89,13 @@ void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 
 void DeferredRenderer::beginDeferredBasePass()
 {
+	setBlendState(BlendState::DEFAULT);
+	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
+	setBlendMask(0xffffff);
+
+	setRasterizerStateSettings(RasterizerState::DEFAULT);
+
+
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
@@ -165,24 +190,28 @@ void DeferredRenderer::beginGUIPass()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// HACK: set blendstate here to get alpha-blending
-	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	m_deviceContext->OMGetBlendState( &m_stdBlendState, blendFactors, &m_stdMask);
-	ID3D11BlendState* newBlendState = NULL;
-	D3D11_BLEND_DESC BlendState;
-	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+	setBlendState(BlendState::ALPHA);
+	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
+	setBlendMask(0xffffff);
 
-	BlendState.RenderTarget[0].BlendEnable = TRUE;
-	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
-
-	m_device->CreateBlendState( &BlendState, &newBlendState ); 
-	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
+// 	// HACK: set blendstate here to get alpha-blending
+// 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+// 	m_deviceContext->OMGetBlendState( &m_stdBlendState, blendFactors, &m_stdMask);
+// 	ID3D11BlendState* newBlendState = NULL;
+// 	D3D11_BLEND_DESC BlendState;
+// 	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+// 
+// 	BlendState.RenderTarget[0].BlendEnable = TRUE;
+// 	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+// 	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+// 	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+// 	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+// 	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+// 	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+// 	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+// 
+// 	m_device->CreateBlendState( &BlendState, &newBlendState ); 
+// 	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
 }
 
 void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
@@ -205,8 +234,9 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
 void DeferredRenderer::finalizeGUIPass()
 {
 	//reset blend states
-	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	m_deviceContext->OMSetBlendState( m_stdBlendState, blendFactors, m_stdMask );
+	setBlendState(BlendState::DEFAULT);
+	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
+	setBlendMask(0xffffff);
 
 	// Reset world matrix to identity matrix
 	RendererSceneInfo scene;
@@ -335,7 +365,7 @@ void DeferredRenderer::initGeometryBuffers()
 	}
 }
 
-void DeferredRenderer::initTestShaders()
+void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
@@ -352,3 +382,50 @@ void DeferredRenderer::hookUpAntTweakBar()
 	AntTweakBarWrapper::getInstance()->addWriteVariable("Color",TW_TYPE_COLOR4F,
 		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");
 }
+
+void DeferredRenderer::setBlendState(BlendState::Mode p_state)
+{
+	unsigned int idx = static_cast<unsigned int>(p_state);
+	m_deviceContext->OMSetBlendState( m_blendStates[idx], m_blendFactors, m_blendMask );
+	m_currentBlendStateType = p_state;
+}
+
+void DeferredRenderer::setBlendFactors( float p_red, float p_green, float p_blue, 
+									    float p_alpha )
+{
+	m_blendFactors[0]=p_red;
+	m_blendFactors[1]=p_green;
+	m_blendFactors[2]=p_blue;
+	m_blendFactors[3]=p_alpha;
+}
+
+void DeferredRenderer::setBlendFactors( float p_oneValue )
+{
+	for (int i=0;i<4;i++)
+		m_blendFactors[i]=p_oneValue;
+}
+
+void DeferredRenderer::setBlendMask( UINT p_mask )
+{
+	m_blendMask = p_mask;
+}
+
+
+
+void DeferredRenderer::setRasterizerStateSettings(RasterizerState::Mode p_state)
+{
+	unsigned int idx = static_cast<unsigned int>(p_state);
+	m_deviceContext->RSSetState( m_rasterizerStates[idx] );
+	m_currentRasterizerStateType = p_state;
+}
+
+void DeferredRenderer::buildBlendStates()
+{
+	RenderStateHelper::fillBlendStateList(m_device,m_blendStates);
+}
+
+void DeferredRenderer::buildRasterizerStates()
+{
+	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
+}
+

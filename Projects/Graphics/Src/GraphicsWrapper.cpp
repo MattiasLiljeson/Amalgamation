@@ -179,6 +179,23 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
+void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state)
+{
+	m_deferredRenderer->setRasterizerStateSettings(p_state);
+}
+
+
+void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
+{
+	D3D11_RECT scissor_rect;
+	scissor_rect.left = x;
+	scissor_rect.right = x + width;
+	scissor_rect.top = y;
+	scissor_rect.bottom = y + height;
+
+	m_deviceContext->RSSetScissorRects(1, &scissor_rect);
+}
+
 void GraphicsWrapper::beginGUIPass()
 {
 	m_deferredRenderer->beginGUIPass();

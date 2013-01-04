@@ -21,6 +21,7 @@
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
@@ -47,6 +48,8 @@
     <ClInclude Include="DeferredBaseShader.h" />
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="RenderStateEnums.h" />
+    <ClInclude Include="RenderStateHelper.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />

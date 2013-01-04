@@ -16,6 +16,7 @@
 #include <ResourceManager.h>
 #include <Globals.h>
 #include "Buffer.h"
+#include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
 
@@ -63,6 +64,11 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
+
+
+	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+
+	void setScissorRegion(int x, int y, int width, int height);
 
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
