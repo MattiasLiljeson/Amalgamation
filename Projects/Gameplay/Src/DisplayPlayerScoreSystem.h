@@ -1,33 +1,30 @@
 #pragma once
 
-#include <Component.h>
+#include <EntitySystem.h>
 
 // =======================================================================================
-//	PlayerScore
+//	DisplayPlayerScoreSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief Prints players' score using anttweakbar.
 ///        
-/// # PlayerScore
+/// # DisplayPlayerScoreSystem
 /// Detailed description...
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class PlayerScore: public Component
+class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	PlayerScore();
-	PlayerScore( int p_score );
+	DisplayPlayerScoreSystem();
 
-	~PlayerScore();
+	~DisplayPlayerScoreSystem();
 
-	int getScore() const;
-	void setScore( int p_score );
+	void processEntities( const vector<Entity*>& p_entities );
 
-	int* getScorePointer();
+	void initialize();
 
-private:
-	int m_score;
+	void added( Entity* p_entity );
 
 };

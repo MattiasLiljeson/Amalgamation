@@ -33,6 +33,7 @@ public:	//Enums
 		LibRocketBackendSystem,
 		DebugPlayerScoresSystem,
 		NetworkUpdateScoresSystem,
+		DisplayPlayerScoreSystem,
 		NUM_SYSTEM_TYPES
 	};
 

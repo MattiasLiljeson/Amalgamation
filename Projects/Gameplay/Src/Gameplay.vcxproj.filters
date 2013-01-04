@@ -177,6 +177,9 @@
     <ClInclude Include="NetworkUpdateScoresSystem.h">
       <Filter>Systems\Network\Server only\Sending Updates</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayPlayerScoreSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="NetworkUpdateScoresSystem.cpp">
       <Filter>Systems\Network\Server only\Sending Updates</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayPlayerScoreSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

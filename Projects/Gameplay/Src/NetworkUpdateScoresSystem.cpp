@@ -39,7 +39,8 @@ void NetworkUpdateScoresSystem::processEntities( const vector<Entity*>& p_entiti
 
 			Packet packet;
 			packet << (char)PacketType::ScoresUpdate;
-			packet << (char)netSync->getNetworkOwner();
+			packet << netSync->getNetworkIdentity();
+			packet << netSync->getNetworkOwner();
 			packet << score->getScore();
 
 			m_server->broadcastPacket( packet );

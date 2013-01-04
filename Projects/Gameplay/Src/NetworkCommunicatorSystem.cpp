@@ -69,8 +69,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
-//				component = new PlayerScore();												// Server first :)
-//				entity->addComponent( ComponentType::PlayerScore, component );				// Server first :)
+
+				// HACK: Should be located in another entity:
+				component = new PlayerScore();
+				entity->addComponent( ComponentType::PlayerScore, component );
+
 				if(m_tcpClient->getId() == data.owner)
 				{
 					// If "this client" is the entity owner, it may control the ship:
@@ -187,6 +190,36 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				packet >> id;
 
 				m_tcpClient->setId( id );
+			}
+		}
+		else if(packetType == (char)PacketType::ScoresUpdate)
+		{
+			int netId;
+			int ownerId;
+			int score;
+			packet >> netId;
+			packet >> ownerId;
+			packet >> score;
+
+			// HACK: This is VERY inefficient for large amount of
+			// network-synchronized entities. (Solve later)
+			for( unsigned int i=0; i<p_entities.size(); i++ )
+			{
+				NetworkSynced* netSync = NULL;
+				netSync = static_cast<NetworkSynced*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+
+				if( netSync->getNetworkIdentity() == netId )
+				{
+					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
+						m_world->getComponentManager()->getComponent(
+						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
+					if( scoreComponent )
+					{
+						scoreComponent->setScore( score );
+					}
+				}
 			}
 		}
 	}

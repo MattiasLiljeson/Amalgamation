@@ -23,3 +23,8 @@ void PlayerScore::setScore( int p_score )
 {
 	m_score = p_score;
 }
+
+int* PlayerScore::getScorePointer()
+{
+	return &m_score;
+}
