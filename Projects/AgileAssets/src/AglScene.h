@@ -150,6 +150,8 @@ public:
 
 	AglParticleSystem*		getParticleSystem(int p_index);
 
+	vector<AglParticleSystem*> getParticleSystems();
+
 	///
 	/// Gets all materials
 	/// \return The materials

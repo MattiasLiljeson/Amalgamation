@@ -260,3 +260,7 @@ bool AglScene::isRightHanded()
 {
 	return m_coordinateSystem.handedness == AglCoordinateSystem::RIGHT;
 }
+vector<AglParticleSystem*> AglScene::getParticleSystems()
+{
+	return m_particleSystems;
+}

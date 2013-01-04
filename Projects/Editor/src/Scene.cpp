@@ -113,6 +113,8 @@ void Scene::Update(float pElapsedTime)
 }
 void Scene::Draw()
 {
+	if (!mAglScene)
+		return;
 	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
 	float invMax = 1.0f / maxV;
 	
@@ -168,6 +170,20 @@ void Scene::Draw()
 	}
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
+
+	vector<AglParticleSystem*> pslist = mAglScene->getParticleSystems();
+	for (unsigned int i = 0; i < pslist.size(); i++)
+	{
+		AglMatrix psWorld = AglMatrix::createTranslationMatrix(pslist[i]->getHeader().spawnPoint);
+		psWorld[0] = 0.1f;
+		psWorld[5] = 0.1f;
+		psWorld[10] = 0.1f;
+		SPHEREMESH->Draw(psWorld, AglVector3(1, 0.5f, 0));
+		psWorld[0] = 0.01f;
+		psWorld[5] = 0.01f;
+		psWorld[10] = 0.01f;
+		SPHEREMESH->Draw(psWorld, AglVector3(0, 0.0f, 0));
+	}
 
 	AglVector3 minP = mMin;
 	AglVector3 maxP = mMax;
