@@ -2,7 +2,7 @@
 
 
 MenuSystem::MenuSystem()
-	: EntitySystem( SystemType::MenuSystem )
+	: EntitySystem( SystemType::MenuSystem, 1, ComponentType::MenuItem )
 {
 }
 
