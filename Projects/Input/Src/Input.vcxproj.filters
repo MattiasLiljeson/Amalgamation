@@ -40,6 +40,9 @@
     <ClCompile Include="DirectInputFetcher.cpp">
       <Filter>InputFetchers</Filter>
     </ClCompile>
+    <ClCompile Include="Cursor.cpp">
+      <Filter>InputManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="DirectInputFetcher.h">
       <Filter>InputFetchers</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>InputManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

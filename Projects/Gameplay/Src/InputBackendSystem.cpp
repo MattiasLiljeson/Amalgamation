@@ -3,13 +3,14 @@
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
 #include "Transform.h"
+#include <Cursor.h>
 #include <DirectInputFetcher.h>
 #include <IMouseKeyboardFetcher.h>
 #include <InputControlFactory.h>
 #include <InputManager.h>
 #include <MessageLoopFetcher.h>
-#include <XInputFetcher.h>
 #include <Windows.h>
+#include <XInputFetcher.h>
 #include <map>
 #include <string>
 
@@ -19,12 +20,20 @@ InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 {
 	m_hInstance = p_hInstance;
 	m_graphicsBackend = p_graphicsBackend;
+
+	m_gamepadCursor = NULL;
+	m_mouseCursor = NULL;
 }
 
 InputBackendSystem::~InputBackendSystem()
 {
 	delete m_inputManager;
 	m_inputManager = NULL;
+
+	delete m_gamepadCursor;
+	m_gamepadCursor = NULL;
+	delete m_mouseCursor;
+	m_mouseCursor = NULL;
 }
 
 void InputBackendSystem::initialize()
@@ -92,6 +101,9 @@ void InputBackendSystem::initialize()
 			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
+
+	m_gamepadCursor = factory.createGamepadCursor();
+	m_mouseCursor = factory.createMouseCursor();
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -147,6 +159,18 @@ void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 void InputBackendSystem::process()
 {
 	m_inputManager->update();
+	m_gamepadCursor->update();
+	m_mouseCursor->update();
+}
+
+Cursor* InputBackendSystem::getGamepadCursor()
+{
+	return m_gamepadCursor;
+}
+
+Cursor* InputBackendSystem::getMouseCursor()
+{
+	return m_mouseCursor;
 }
 
 Control* InputBackendSystem::getInputControl( const string& p_name )

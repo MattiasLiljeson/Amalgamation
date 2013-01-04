@@ -40,6 +40,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
 
+	m_cursor = m_inputBackend->getMouseCursor();
+
 	// Load fonts and documents
 	// TODO: Should be done by assemblage
 
@@ -67,20 +69,6 @@ void LibRocketBackendSystem::initialize()
 	//tmp = ROCKET_HUD_PATH + "window.rml";
 	//loadDocument( tmp.c_str() );
 
-	//Hard-coded controls
-	m_cursor.leftBtn	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_BTN::M_LBTN );
-	m_cursor.xNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_NEGATIVE );
-	m_cursor.xPositive	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::X_POSITIVE );
-	m_cursor.yNegative	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::Y_NEGATIVE );
-	m_cursor.yPositive	= m_inputBackend->getControlByEnum( InputHelper::MOUSE_AXIS::Y_POSITIVE );
-
-	AntTweakBarWrapper* dbgGui = AntTweakBarWrapper::getInstance();
-	dbgGui->addReadOnlyVariable( "Cursor X", TwType::TW_TYPE_DOUBLE, &m_cursor.x, "" );
-	dbgGui->addReadOnlyVariable( "Cursor Y", TwType::TW_TYPE_DOUBLE, &m_cursor.y, "" );
-
-	m_cursor.init();
-
-	// HACK: tmp crazy lulz0r cursor.
 	string cursorPath = ROCKET_CURSOR_PATH + "cursor.rml";
 	if( m_rocketContext->LoadMouseCursor(cursorPath.c_str()) == NULL )
 	{
@@ -112,14 +100,13 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 
 void LibRocketBackendSystem::process()
 {
-	m_cursor.update();
-	m_rocketContext->ProcessMouseMove(m_cursor.x, m_cursor.y, 0);
+	m_rocketContext->ProcessMouseMove( m_cursor->getX(), m_cursor->getY(), 0 );
 
-	if( m_cursor.leftBtn->getRawData() == InputHelper::KEY_STATE::KEY_PRESSED )
+	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
 	{
 		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
 	}
-	else if( m_cursor.leftBtn->getRawData() == InputHelper::KEY_STATE::KEY_RELEASED )
+	else if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
 	{
 		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
 	}
