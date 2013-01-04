@@ -338,13 +338,13 @@ void DeferredRenderer::initGeometryBuffers()
 void DeferredRenderer::initTestShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
-		L"Assets/Shaders/deferredBase.hlsl");
+		L"Shaders/Game/deferredBase.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
-		L"Assets/Shaders/deferredCompose.hlsl");
+		L"Shaders/Game/deferredCompose.hlsl");
 
 	m_rocketShader = m_shaderFactory->createRocketShader(
-		L"Assets/Shaders/rocket.hlsl");
+		L"Shaders/GUI/rocket.hlsl");
 }
 
 void DeferredRenderer::hookUpAntTweakBar()
