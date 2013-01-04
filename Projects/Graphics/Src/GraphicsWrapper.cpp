@@ -320,6 +320,30 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 	return meshResultId;
 }
 
+unsigned int GraphicsWrapper::createMesh( const string& p_name, 
+										 int p_numVertices, PNTTBVertex* p_vertices, 
+										 int p_numIndices, DIndex* p_indices, 
+										 Texture* p_texture/*=NULL*/ )
+{
+	// check if resource already exists
+	unsigned int meshResultId = 0;
+	int meshFoundId = m_meshManager->getResourceId(p_name);
+	if (meshFoundId==-1)  // if it does not exist, create new
+	{
+		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
+		p_vertices, p_numIndices, p_indices );
+
+		meshResultId = registerMesh( p_name, mesh, p_texture ); // HACK: textures should be handled 
+																// by index instead
+	}
+	else // the mesh already exists
+	{
+		meshResultId = static_cast<unsigned int>(meshFoundId);
+	}
+	return meshResultId;
+}
+
+
 unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
 {
 	// check if resource already exists

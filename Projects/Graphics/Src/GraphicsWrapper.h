@@ -16,6 +16,7 @@
 #include <ResourceManager.h>
 #include <Globals.h>
 #include "Buffer.h"
+#include "BufferFactory.h"
 #include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
@@ -104,6 +105,12 @@ public:
 	unsigned int createMesh(const string& p_name,
 							const string* p_path=NULL);
 
+	// WIP, should not use texture pointer, but texture id
+	unsigned int createMesh(const string& p_name,
+							int p_numVertices, PNTTBVertex* p_vertices, 
+							int p_numIndices, DIndex* p_indices,
+							Texture* p_texture=NULL);
+
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
 
@@ -111,6 +118,7 @@ public:
 	int getMeshId( const string& p_name );
 
 
+	// HACK: Pointer to texture should not be used. A texture id should be used instead.
 	///-----------------------------------------------------------------------------------
 	/// WIP! Decide how to handle this when several textures/materials are present.
 	/// Should texture even be sent in here??
@@ -121,6 +129,7 @@ public:
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
 	unsigned int registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
+
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();

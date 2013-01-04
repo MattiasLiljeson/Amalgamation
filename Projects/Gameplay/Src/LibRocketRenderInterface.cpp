@@ -126,17 +126,23 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 		indices[i].index = p_indices[i];
 	}
 
-
-	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
-		&vertices[0], p_numIndices, &indices[0] );
-
 	//HACK: static int to enumerate menus
 	static int numMenus = 0;
 	numMenus++;
 	stringstream ss;
 	ss<<"menus nr: "<<numMenus;
 
-	geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
+	// HACK: Texture pointers should not be used. Instead the texture should be
+	// created using CreateTexture in GraphicsWrapper, and then its id should be
+	// passed along here instead.
+	geometry->meshId = m_wrapper->createMesh(ss.str(), 
+											 p_numVertices,&vertices[0], 
+											 p_numIndices, &indices[0],
+											 (Texture*)p_texture);
+
+
+
+	// geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
 
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }
