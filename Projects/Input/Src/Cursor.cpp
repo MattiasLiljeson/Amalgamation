@@ -42,8 +42,8 @@ void Cursor::update()
 	//leftBtnState = m_primaryBtn->getRawData();
 
 	m_x -= m_xNegative->getStatus()*m_sensitivity;
-	m_y -= m_yNegative->getStatus()*m_sensitivity;
 	m_x += m_xPositive->getStatus()*m_sensitivity;
+	m_y -= m_yNegative->getStatus()*m_sensitivity;
 	m_y += m_yPositive->getStatus()*m_sensitivity;
 }
 

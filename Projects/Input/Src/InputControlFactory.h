@@ -104,8 +104,9 @@ public:
 	///----------------------------------------------------------------------------------
 	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );
 
-	Cursor* createMouseCursor();
-	Cursor* createGamepadCursor();
+	// DOESNT WORK!
+	//Cursor* createMouseCursor();
+	//Cursor* createGamepadCursor();
 
 };
 

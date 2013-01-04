@@ -42,7 +42,7 @@ void InputBackendSystem::initialize()
 	XInputFetcher* xInput = new XInputFetcher();
 	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
 	HWND hWnd = m_graphicsBackend->getWindowRef();
-	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, true );
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
 	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;
@@ -69,6 +69,10 @@ void InputBackendSystem::initialize()
 	tempControl = factory.createMouseButton( InputHelper::MOUSE_BTN::M_LBTN );
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN,
 		InputHelper::MOUSE_BTN::M_LBTN, tempControl, "Mouse left btn" );
+
+	tempControl = factory.createMouseButton( InputHelper::MOUSE_BTN::M_RBTN );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN,
+		InputHelper::MOUSE_BTN::M_RBTN, tempControl, "Mouse right btn" );
 
 
 	tempControl = factory.createKeyboardKey( InputHelper::KEY_SPACE );
@@ -102,8 +106,26 @@ void InputBackendSystem::initialize()
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
 
-	m_gamepadCursor = factory.createGamepadCursor();
-	m_mouseCursor = factory.createMouseCursor();
+	m_mouseCursor = new Cursor();
+	m_mouseCursor->setControls( 
+		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::Y_POSITIVE),
+		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
+		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
+
+	m_gamepadCursor = new Cursor();
+	m_gamepadCursor->setSensitivity( 10.0 );
+	m_gamepadCursor->setControls( 
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_NEGATIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
+
+
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
