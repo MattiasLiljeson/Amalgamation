@@ -75,13 +75,22 @@ void DeferredRenderer::beginDeferredBasePass()
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
 	
-	updatePerFrameConstantBuffer();
+	// update per frame buffer
+	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	//	cb->accessBuffer.color[0] = 0.5f;
+	//	cb->accessBuffer.color[1] = 0.5f;
+
+	for (int i=0;i<16;i++)
+	{
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
+	}
+	cb->update();
 }
 
 void DeferredRenderer::updatePerFrameConstantBuffer()
 {
 	// update per frame buffer
-	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	Buffer<SimpleCBuffer>* cb = m_rocketShader->getPerFrameBufferPtr();
 	//	cb->accessBuffer.color[0] = 0.5f;
 	//	cb->accessBuffer.color[1] = 0.5f;
 
@@ -152,36 +161,68 @@ void DeferredRenderer::renderComposedImage()
 	m_deviceContext->Draw(6,0);
 }
 
-
-void DeferredRenderer::renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-													Buffer<InstanceData>* p_instanceBuffer )
+void DeferredRenderer::beginRenderLibRocket()
 {
-	//HACK: Shameless c/p from renderMeshInstanced
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-		p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-		p_instanceBuffer->getBufferPointer() };
+	// HACK: set blendstate here to get alpha-blending
+	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	m_deviceContext->OMGetBlendState( &m_stdBlendState, blendFactors, &m_stdMask);
+	ID3D11BlendState* newBlendState = NULL;
+	D3D11_BLEND_DESC BlendState;
+	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
 
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-		DXGI_FORMAT_R32_UINT, 0);
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	m_device->CreateBlendState( &BlendState, &newBlendState ); 
+	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
+}
+
+void DeferredRenderer::renderLibRocket( Mesh* p_mesh, Texture* p_texture )
+{
+
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
 
 	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	//HACK: fix so that a placeholder tex is used instead of the last working one
+	if( p_texture != NULL )
+		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
 
 	m_rocketShader->apply();
 
 	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-		p_instanceBuffer->getElementCount(),
-		0,0,0);
+	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
+
+void DeferredRenderer::endRenderLibRocket()
+{
+	//reset blend states
+	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	m_deviceContext->OMSetBlendState( m_stdBlendState, blendFactors, m_stdMask );
+
+	// Reset world matrix to identity matrix
+	RendererSceneInfo scene;
+	float identity[16] = 
+	{
+		1.0, 0.0f, 0.0f, 0.0f,
+		0.0, 1.0f, 0.0f, 0.0f, 
+		0.0, 0.0f, 1.0f, 0.0f, 
+		0.0, 0.0f, 0.0f, 1.0f 
+	};
+	for( int i=0; i<16; i++ )
+		scene.viewProjectionMatrix[i] = identity[i];
+
+	setSceneInfo( scene );
+}
+
 
 void DeferredRenderer::unMapGBuffers()
 {

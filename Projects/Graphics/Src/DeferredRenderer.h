@@ -92,14 +92,14 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
-
 	
 	///-----------------------------------------------------------------------------------
 	/// Desc
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-		Buffer<InstanceData>* p_instanceBuffer );
+	void beginRenderLibRocket();
+	void renderLibRocket( Mesh* p_mesh, Texture* p_texture );
+	void endRenderLibRocket();
 
 	void hookUpAntTweakBar();
 protected:
@@ -126,6 +126,10 @@ private:
 	RocketShader*			m_rocketShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
+
+	// librocket stuph
+	ID3D11BlendState* m_stdBlendState;
+	UINT m_stdMask;
 
 	int m_width;
 	int m_height;
