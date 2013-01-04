@@ -11,7 +11,7 @@
 /* Enables or disables the sound creation for easy use of instead of	*/
 /* removing code														*/
 /************************************************************************/
-#define ENABLE_SOUND
+#define _ENABLE_SOUND
 
 /************************************************************************/
 /* ????	-Robin & Alex													*/

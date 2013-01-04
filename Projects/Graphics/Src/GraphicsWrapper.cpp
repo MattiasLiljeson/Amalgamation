@@ -78,9 +78,6 @@ void GraphicsWrapper::initHardware()
 #ifdef _DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-
-	D3D_DRIVER_TYPE driverType;
-
 	D3D_DRIVER_TYPE driverTypes[] = 
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -99,6 +96,7 @@ void GraphicsWrapper::initHardware()
 
 	for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
 	{
+		D3D_DRIVER_TYPE driverType;
 		driverType = driverTypes[driverTypeIndex];
 		hr = D3D11CreateDeviceAndSwapChain(
 			NULL,
@@ -378,22 +376,11 @@ int GraphicsWrapper::getWindowdHeight()
 	return m_height;
 }
 
-void GraphicsWrapper::changeToWindowed( BOOL p_windowed )
+void GraphicsWrapper::changeToWindowed( bool p_windowed )
 {
 	HRESULT hr = S_OK;
-	if(hr = m_swapChain->GetFullscreenState(&p_windowed, nullptr) != S_OK)
-		OutputDebugStringA("Failed to get fullscreen state.\n");
-
-	m_swapChain->GetDesc(&m_swapChainDesc);
-	m_swapChainDesc.Windowed = !p_windowed;
-	m_swapChainDesc.Flags = 0;
-	if(p_windowed)
-		m_swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-	/************************************************************************/
-	/* TODO: RELEASE ALL THE RENDER TARGETS!!!!								*/
-	/************************************************************************/
-	depthStencilView_->Release();
-	depthStencil_->Release();
-	renderTarget_->Release();
+	m_windowed = !p_windowed;
+	hr = m_swapChain->SetFullscreenState((BOOL)m_windowed,nullptr);
+	if( FAILED(hr))
+		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 }

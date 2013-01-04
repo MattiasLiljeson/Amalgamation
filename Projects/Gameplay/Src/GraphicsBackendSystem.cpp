@@ -48,8 +48,14 @@ void GraphicsBackendSystem::initialize()
 			m_scrWidth, 
 			m_scrHeight, 
 			m_windowed );
+
 		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
+		TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+			"Toggle_Windowed/FullScreen",
+			toggleFullScreen, (void*)NULL, "");
+
 		m_graphicsWrapper->hookUpAntTweakBar();
+
 	}
 	catch( exception &e )
 	{
@@ -83,12 +89,8 @@ HWND GraphicsBackendSystem::getWindowRef()
 	return m_window->getWindowRef();
 }
 
-void TW_CALL GraphicsBackendSystem::toggleFullScreen()
+void TW_CALL GraphicsBackendSystem::toggleFullScreen(void* p_clientData)
 {
-	if (m_selfPointer->m_windowed)
-		m_selfPointer->m_windowed = false;
-	else 
-		m_selfPointer->m_windowed = true;
-
+	m_selfPointer->m_windowed = !m_selfPointer->m_windowed;
 	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
 }

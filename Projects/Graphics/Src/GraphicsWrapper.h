@@ -120,7 +120,7 @@ public:
 	int getWindowWidth();
 	int getWindowdHeight();
 
-	void changeToWindowed(BOOL p_windowed);
+	void changeToWindowed(bool p_windowed);
 private:
 	void initSwapChain(HWND p_hWnd);
 

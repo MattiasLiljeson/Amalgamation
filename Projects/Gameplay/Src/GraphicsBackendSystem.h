@@ -49,6 +49,6 @@ private:
 	/************************************************************************/
 	static GraphicsBackendSystem* m_selfPointer;
 private:
-	static void TW_CALL toggleFullScreen();
+	static void TW_CALL toggleFullScreen(void* p_clientData);
 };
 
