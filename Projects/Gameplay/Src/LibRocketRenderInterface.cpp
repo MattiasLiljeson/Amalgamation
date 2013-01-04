@@ -100,6 +100,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	Rocket::Core::Vertex* p_vertices, int p_numVertices, int* p_indices, int p_numIndices,
 	Rocket::Core::TextureHandle p_texture)
 {
+	//HACK: NOT DELETED NOW! MUST BE DONE!
 	// Construct a new RocketD3D9CompiledGeometry structure, which will be returned as the handle, and the buffers to store the geometry.
 	RocketCompiledGeometry* geometry = new RocketCompiledGeometry;
 

@@ -10,3 +10,13 @@ MenuSystem::MenuSystem()
 MenuSystem::~MenuSystem()
 {
 }
+
+void MenuSystem::initialize()
+{
+
+}
+
+void MenuSystem::processEntities( const vector<Entity*>& p_entities )
+{
+
+}
