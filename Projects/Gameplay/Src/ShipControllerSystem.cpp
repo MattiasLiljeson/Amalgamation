@@ -133,99 +133,26 @@ void ShipControllerSystem::initialize()
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( "MouseSensitivity",
 		TwType::TW_TYPE_FLOAT, &m_mouseSensitivity, "");
-
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
 	// Fetch the status of the various input methods.
-	double	hPositive,hNegative,
-			vPositive,vNegative,
-			shPositive,shNegative,
-			svPositive,svNegative,
-			rRight, rLeft,
-			thrust;
-
-	hPositive = m_gamepadHorizontalPositive->getStatus();
-	hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
-
-	hNegative = m_gamepadHorizontalNegative->getStatus();
-	hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
-
-	vPositive = m_gamepadVerticalPositive->getStatus();
-	vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
-
-	vNegative = m_gamepadVerticalNegative->getStatus();
-	vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
-
-	shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
-	shPositive += m_keyboarStrafeHorizontalPos->getStatus();
-
-	shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
-	shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
-
-	svPositive = m_gamepadStrafeVerticalPositive->getStatus();
-	svPositive += m_keyboardStrafeVerticalPos->getStatus();
-
-	svNegative = m_gamepadStrafeVerticalNegative->getStatus();
-	svNegative += m_keyboardStrafeVerticalNeg->getStatus();
-
-	rRight = m_gamepadRollRight->getStatus();
-	rRight += m_keyboardRollRight->getStatus();
-
-	rLeft = m_gamepadRollLeft->getStatus();
-	rLeft += m_keyboardRollLeft->getStatus();
+	ResultingInputForces input = readAllTheInput();
 	
-	thrust =  m_gamepadThrust->getStatus();
-	thrust += m_keyboardThrust->getStatus();
-
-	// Store raw float data
-	float horizontalInput = (float)(hPositive - hNegative);
-	float verticalInput = (float)(vPositive - vNegative);
-	float rollInput =  (float)(rLeft - rRight);
-	float thrustInput = (float)(thrust);
-	float strafeHorizontalInput = (float)(shPositive - shNegative);
-	float strafeVerticalInput = (float)(svPositive - svNegative);
-	float sensitivityMult = 1.0f;
-
-	// Calibrate the Gamepad's analogue sticks when pressing the C key.
-	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 )
-	{
-		m_leftStickCorrection[0] = -horizontalInput;
-		m_leftStickCorrection[1] = -verticalInput;
-		m_rightStickCorrection[0] = -strafeHorizontalInput;
-		m_rightStickCorrection[1] = -strafeVerticalInput;
-	}
-
-	// Update the analogue sticks for anttweakbar.
-	m_leftStickDir[0] = horizontalInput;
-	m_leftStickDir[1] = verticalInput;
-	m_leftStickDir[2] = 0;
-
-	m_rightStickDir[0] = strafeHorizontalInput;
-	m_rightStickDir[1] = strafeVerticalInput;
-	m_rightStickDir[2] = 0;
-
-	// Update the corrected values for the sticks, in for anttweakbar.
-	m_leftStickDirWithCorrection[0] = horizontalInput + m_leftStickCorrection[0];
-	m_leftStickDirWithCorrection[1] = verticalInput + m_leftStickCorrection[1];
-	m_leftStickDirWithCorrection[2] = 0;
-
-	m_rightStickDirWithCorrection[0] = strafeHorizontalInput + m_rightStickCorrection[0];
-	m_rightStickDirWithCorrection[1] = strafeVerticalInput + m_rightStickCorrection[1];
-	m_rightStickDirWithCorrection[2] = 0;
+	updateAntTweakBar(input);
 
 	// Apply correction vectors to the analogue sticks.
-	horizontalInput += m_leftStickCorrection[0];
-	verticalInput += m_leftStickCorrection[1];
+	input.horizontalInput += m_leftStickCorrection[0];
+	input.verticalInput += m_leftStickCorrection[1];
 
 	// Apply a threshold value to eliminate some of the analogue stick noise.
-	if( abs(horizontalInput) < m_controllerEpsilon ) horizontalInput = 0;
-	if( abs(verticalInput) < m_controllerEpsilon ) verticalInput = 0;
+	if( abs(input.horizontalInput) < m_controllerEpsilon ) input.horizontalInput = 0;
+	if( abs(input.verticalInput) < m_controllerEpsilon ) input.verticalInput = 0;
 
-	if( abs(strafeHorizontalInput) < m_controllerEpsilon ) strafeHorizontalInput = 0;
-	if( abs(strafeVerticalInput) < m_controllerEpsilon ) strafeVerticalInput = 0;
+	if( abs(input.strafeHorizontalInput) < m_controllerEpsilon ) input.strafeHorizontalInput = 0;
+	if( abs(input.strafeVerticalInput) < m_controllerEpsilon ) input.strafeVerticalInput = 0;
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -236,10 +163,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 		// Calc rotation from player input
-		float xangle = verticalInput * sensitivityMult;
-		float yangle = horizontalInput * sensitivityMult;
-		float zangle = rollInput * sensitivityMult;
-		AglVector3 inputAngles(xangle,yangle,zangle);
+		AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
 
 		// Turning multiplier
 		float  turnSpeed = controller->getTurningSpeed() * dt;
@@ -248,9 +172,12 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// Calc translation from player input
 		AglVector3 thrustVec;
-		thrustVec += transform->getMatrix().GetForward() * thrustInput * thrustPower;
-		thrustVec += transform->getMatrix().GetRight() * strafeHorizontalInput * thrustPower;
-		thrustVec += transform->getMatrix().GetUp()	 * strafeVerticalInput * thrustPower;
+		thrustVec += transform->getMatrix().GetForward()	* input.thrustInput 
+			* thrustPower;
+		thrustVec += transform->getMatrix().GetRight()		* input.strafeHorizontalInput 
+			* thrustPower;
+		thrustVec += transform->getMatrix().GetUp()			* input.strafeVerticalInput 
+			* thrustPower;
 
 		// Calc rotation from player input
 		AglVector3 angularVec=inputAngles*turnSpeed;
@@ -272,4 +199,73 @@ float* ShipControllerSystem::getControllerEpsilonPointer()
 	return &m_controllerEpsilon;
 }
 
+ResultingInputForces ShipControllerSystem::readAllTheInput()
+{
+	RawInputForces input;
+	input.hPositive = m_gamepadHorizontalPositive->getStatus();
+	input.hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
 
+	input.hNegative = m_gamepadHorizontalNegative->getStatus();
+	input.hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
+
+	input.vPositive = m_gamepadVerticalPositive->getStatus();
+	input.vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
+
+	input.vNegative = m_gamepadVerticalNegative->getStatus();
+	input.vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
+
+	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
+	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
+
+	input.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
+	input.shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
+
+	input.svPositive = m_gamepadStrafeVerticalPositive->getStatus();
+	input.svPositive += m_keyboardStrafeVerticalPos->getStatus();
+
+	input.svNegative = m_gamepadStrafeVerticalNegative->getStatus();
+	input.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
+
+	input.rRight = m_gamepadRollRight->getStatus();
+	input.rRight += m_keyboardRollRight->getStatus();
+
+	input.rLeft = m_gamepadRollLeft->getStatus();
+	input.rLeft += m_keyboardRollLeft->getStatus();
+
+	input.thrust =  m_gamepadThrust->getStatus();
+	input.thrust += m_keyboardThrust->getStatus();
+
+
+	ResultingInputForces resultingInput(input);
+	return resultingInput;
+}
+
+void ShipControllerSystem::updateAntTweakBar(const ResultingInputForces& p_input)
+{
+	// Calibrate the Gamepad's analogue sticks when pressing the C key.
+	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 )
+	{
+		m_leftStickCorrection[0] = -p_input.horizontalInput;
+		m_leftStickCorrection[1] = -p_input.verticalInput;
+		m_rightStickCorrection[0] = -p_input.strafeHorizontalInput;
+		m_rightStickCorrection[1] = -p_input.strafeVerticalInput;
+	}
+
+	// Update the analogue sticks for anttweakbar.
+	m_leftStickDir[0] = p_input.horizontalInput;
+	m_leftStickDir[1] = p_input.verticalInput;
+	m_leftStickDir[2] = 0.5f;
+
+	m_rightStickDir[0] = p_input.strafeHorizontalInput;
+	m_rightStickDir[1] = p_input.strafeVerticalInput;
+	m_rightStickDir[2] = 0.5f;
+
+	// Update the corrected values for the sticks, in for anttweakbar.
+	m_leftStickDirWithCorrection[0] = p_input.horizontalInput + m_leftStickCorrection[0];
+	m_leftStickDirWithCorrection[1] = p_input.verticalInput + m_leftStickCorrection[1];
+	m_leftStickDirWithCorrection[2] = 0.5f;
+
+	m_rightStickDirWithCorrection[0] = p_input.strafeHorizontalInput + m_rightStickCorrection[0];
+	m_rightStickDirWithCorrection[1] = p_input.strafeVerticalInput + m_rightStickCorrection[1];
+	m_rightStickDirWithCorrection[2] = 0.5f;
+}
