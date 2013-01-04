@@ -40,8 +40,7 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
 
-	m_mouseCursor = m_inputBackend->getMouseCursor();
-	m_gamepadCursor = m_inputBackend->getGamepadCursor();
+	m_cursor = m_inputBackend->getCursor();
 
 	// Load fonts and documents
 	// TODO: Should be done by assemblage
@@ -101,24 +100,17 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 
 void LibRocketBackendSystem::process()
 {
-	// Use mouse
-	m_rocketContext->ProcessMouseMove( m_mouseCursor->getX(), m_mouseCursor->getY(), 0 );
-	if( m_mouseCursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
-	{
-		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
-	}
-	else if( m_mouseCursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
-	{
-		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
-	}
+	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
+	int windowHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
+	int screenSpaceX = (m_cursor->getX()+1) * windowWidth;
+	int screenSpaceY = (m_cursor->getY()+1) * windowHeight;
 
-	// Use gamepad 
-	m_rocketContext->ProcessMouseMove( m_gamepadCursor->getX(), m_gamepadCursor->getY(), 0 );
-	if( m_gamepadCursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
+	m_rocketContext->ProcessMouseMove( screenSpaceX, screenSpaceY, 0 );
+	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
 	{
 		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
 	}
-	else if( m_gamepadCursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
+	else if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
 	{
 		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
 	}

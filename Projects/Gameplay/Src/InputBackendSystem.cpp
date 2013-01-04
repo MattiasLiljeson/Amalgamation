@@ -21,8 +21,7 @@ InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 	m_hInstance = p_hInstance;
 	m_graphicsBackend = p_graphicsBackend;
 
-	m_gamepadCursor = NULL;
-	m_mouseCursor = NULL;
+	m_cursor = NULL;
 }
 
 InputBackendSystem::~InputBackendSystem()
@@ -30,10 +29,8 @@ InputBackendSystem::~InputBackendSystem()
 	delete m_inputManager;
 	m_inputManager = NULL;
 
-	delete m_gamepadCursor;
-	m_gamepadCursor = NULL;
-	delete m_mouseCursor;
-	m_mouseCursor = NULL;
+	delete m_cursor;
+	m_cursor = NULL;
 }
 
 void InputBackendSystem::initialize()
@@ -106,25 +103,24 @@ void InputBackendSystem::initialize()
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
 
-	m_mouseCursor = new Cursor();
-	m_mouseCursor->setControls( 
+	m_cursor = new Cursor();
+	// HACK: hard coded window size!
+	m_cursor->addControlSet(
+		25000.0/800, 25000.0/600,
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
 		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
-
-	m_gamepadCursor = new Cursor();
-	m_gamepadCursor->setSensitivity( 10.0 );
-	m_gamepadCursor->setControls( 
+	m_cursor->addControlSet(
+		10.0/800, 10.0/600, 
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_NEGATIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
-
 
 }
 /*
@@ -181,18 +177,12 @@ void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 void InputBackendSystem::process()
 {
 	m_inputManager->update();
-	m_gamepadCursor->update();
-	m_mouseCursor->update();
+	m_cursor->update();
 }
 
-Cursor* InputBackendSystem::getGamepadCursor()
+Cursor* InputBackendSystem::getCursor()
 {
-	return m_gamepadCursor;
-}
-
-Cursor* InputBackendSystem::getMouseCursor()
-{
-	return m_mouseCursor;
+	return m_cursor;
 }
 
 Control* InputBackendSystem::getInputControl( const string& p_name )

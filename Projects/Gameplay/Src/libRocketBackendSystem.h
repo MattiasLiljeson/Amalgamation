@@ -34,8 +34,7 @@ private:
 	GraphicsBackendSystem* m_graphicsBackend;
 	InputBackendSystem* m_inputBackend;
 
-	Cursor* m_mouseCursor;
-	Cursor* m_gamepadCursor;
+	Cursor* m_cursor;
 
 	std::string m_rocketContextName;
 	Rocket::Core::Context* m_rocketContext;

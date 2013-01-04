@@ -42,8 +42,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	void process();
 	
-	Cursor* getGamepadCursor();
-	Cursor* getMouseCursor();
+	Cursor* getCursor();
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to a Control by supplying a string with the name the Control has
@@ -103,8 +102,7 @@ private:
 	HINSTANCE m_hInstance;
 	InputManager* m_inputManager;
 
-	Cursor* m_gamepadCursor;
-	Cursor* m_mouseCursor;
+	Cursor* m_cursor;
 
 	map<string, int> m_controlIdxs;
 	vector<int> m_mouseMoveIdxsbyEnum;
