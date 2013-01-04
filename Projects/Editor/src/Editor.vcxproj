@@ -106,6 +106,7 @@
     <ClCompile Include="MaterialMap.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshDialog.cpp" />
+    <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="ParticleSystemDialog.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Quaternion.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="MaterialMapDialog.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshDialog.h" />
+    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="ParticleSystemDialog.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Quaternion.h" />
