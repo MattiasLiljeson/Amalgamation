@@ -1,5 +1,15 @@
 #include "libRocketBackendSystem.h"
 
+#include "GraphicsBackendSystem.h"
+#include "InputBackendSystem.h"
+#include "LibRocketRenderInterface.h"
+#include "LibRocketSystemInterface.h"
+#include <AntTweakBarWrapper.h>
+#include <Control.h>
+#include <Cursor.h>
+#include <Globals.h>
+#include <GraphicsWrapper.h>
+
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
 	: EntitySystem( SystemType::LibRocketBackendSystem )
@@ -52,24 +62,24 @@ void LibRocketBackendSystem::initialize()
 	fonts.push_back( "Delicious-Roman.otf" );
 	for( int i=0; i<fonts.size(); i++ )
 	{
-		string tmp = ROCKET_FONT_PATH + fonts[i]; 
+		string tmp = GUI_FONT_PATH + fonts[i]; 
 		loadFontFace( tmp.c_str() );
 	}
 
 	string tmp;
-	tmp = ROCKET_HUD_PATH + "demo.rml";
+	tmp = GUI_HUD_PATH + "demo.rml";
 	loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "main.rml";
+	//tmp = GUI_HUD_PATH + "main.rml";
 	//loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "index.rml";
+	//tmp = GUI_HUD_PATH + "index.rml";
 	//loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "window.rml";
+	//tmp = GUI_HUD_PATH + "window.rml";
 	//loadDocument( tmp.c_str() );
 
-	string cursorPath = ROCKET_CURSOR_PATH + "cursor.rml";
+	string cursorPath = GUI_CURSOR_PATH + "cursor.rml";
 	if( m_rocketContext->LoadMouseCursor(cursorPath.c_str()) == NULL )
 	{
 		int breakHere = 0;

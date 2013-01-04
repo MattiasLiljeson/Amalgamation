@@ -1,5 +1,7 @@
 #include "LibRocketSystemInterface.h"
 
+#include <EntityWorld.h>
+
 LibRocketSystemInterface::LibRocketSystemInterface( EntityWorld* p_world )
 {
 	m_world = p_world;

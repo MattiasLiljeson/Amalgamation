@@ -36,8 +36,14 @@
 
 #include "LibRocketRenderInterface.h"
 
-#include <sstream>
+#include <BufferFactory.h>
+#include <DIndex.h>
+#include <InstanceData.h>
+#include <Mesh.h>
+#include <PNTTBVertex.h>
+#include <Texture.h>
 #include <TextureParser.h>
+#include <sstream>
 
 LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 {

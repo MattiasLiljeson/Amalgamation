@@ -1,19 +1,26 @@
 #pragma once
 
-
-#include "Globals.h"
-#include "GraphicsBackendSystem.h"
-#include "InputBackendSystem.h"
-#include "LibRocketRenderInterface.h"
-#include "LibRocketSystemInterface.h"
 #include <EntitySystem.h>
-
 #include <string>
 #include <vector>
+#include <Rocket/Core.h>
 
-#include <Control.h>
-#include <Cursor.h>
-#include <AntTweakBarWrapper.h>
+class AntTweakBarWrapper;
+class Control;
+class Cursor;
+class GraphicsBackendSystem;
+class InputBackendSystem;
+class LibRocketRenderInterface;
+class LibRocketSystemInterface;
+
+//namespace Rocket
+//{
+//	namespace Core
+//	{
+//		class Context;
+//		class ElementDocument;
+//	}
+//}
 
 class LibRocketBackendSystem : public EntitySystem
 {
