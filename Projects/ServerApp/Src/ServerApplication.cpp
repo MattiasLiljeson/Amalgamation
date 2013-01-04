@@ -1,5 +1,13 @@
 #include "ServerApplication.h"
 
+// Systems
+#include <PhysicsSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <DebugPlayerScoresSystem.h>
+#include <NetworkListenerSystem.h>
+#include <NetworkInputHandlerSystem.h>
+#include <NetworkUpdateSystem.h>
+
 #include "RenderInfo.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -76,6 +84,9 @@ namespace Srv
 
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
 			new NetworkUpdateSystem( m_server ), true );
+
+		m_world->setSystem( SystemType::DebugPlayerScoresSystem,
+			new DebugPlayerScoresSystem(), true );
 
 		m_world->initialize();
 

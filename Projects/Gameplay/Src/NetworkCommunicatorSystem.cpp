@@ -20,6 +20,7 @@
 #include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
+#include "PlayerScore.h"
 
 #include "GraphicsBackendSystem.h"
 #include "NetworkType.h"
@@ -68,8 +69,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
+//				component = new PlayerScore();												// Server first :)
+//				entity->addComponent( ComponentType::PlayerScore, component );				// Server first :)
 				if(m_tcpClient->getId() == data.owner)
 				{
+					// If "this client" is the entity owner, it may control the ship:
 					component = new ShipController(5.0f, 50.0f);
 					entity->addComponent( ComponentType::ShipController, component );
 				}

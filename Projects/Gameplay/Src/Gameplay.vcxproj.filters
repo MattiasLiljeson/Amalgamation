@@ -159,6 +159,12 @@
     <ClInclude Include="MainCamera.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugPlayerScoresSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -232,6 +238,12 @@
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPlayerScoresSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
