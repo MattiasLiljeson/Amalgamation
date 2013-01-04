@@ -1,5 +1,4 @@
 #include "GraphicsBackendSystem.h"
-#include <AntTweakBarWrapper.h>
 #include <TextureParser.h>
 #include <DebugUtil.h>
 #include <EntitySystem.h>
@@ -54,8 +53,12 @@ void GraphicsBackendSystem::initialize()
 		DEBUGPRINT( (e.what()) );
 	}
 
-	// HACK: Should REALLY not be here!!!
-	changeResolution( (int)(m_scrWidth * 0.5f), (int)(m_scrHeight * 0.5f) );
+	// Anttweakbar resolution
+	AntTweakBarWrapper::getInstance()->addWriteVariable( "Win width",
+		TwType::TW_TYPE_INT32, &m_scrWidth, "min=800 max=4096" );
+	
+	AntTweakBarWrapper::getInstance()->addWriteVariable( "Win height",
+		TwType::TW_TYPE_INT32, &m_scrHeight, "min=480 max=4096" );
 }
 
 void GraphicsBackendSystem::process()
