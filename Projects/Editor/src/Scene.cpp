@@ -7,6 +7,7 @@
 #include "Globals.h"
 #include "SphereMesh.h"
 #include "BoxMesh.h"
+#include "ParticleSystem.h"
 
 
 Scene* Scene::sInstance = NULL;
@@ -36,6 +37,10 @@ Scene::~Scene()
 	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
 	{
 		delete mSkeletonMappings[i];
+	}
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		delete mParticleSystems[i];
 	}
 	if (mAglScene)
 		delete mAglScene;
@@ -98,6 +103,13 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	{
 		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
 	}
+	vector<AglParticleSystem*> ps = mAglScene->getParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		mParticleSystems.push_back(new ParticleSystem(ps[i]));
+	}
+
+
 	AglAnimation* anim = mAglScene->getAnimation(0);
 	anim->play();
 	mFolder = pFolder;
@@ -171,18 +183,9 @@ void Scene::Draw()
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
-	vector<AglParticleSystem*> pslist = mAglScene->getParticleSystems();
-	for (unsigned int i = 0; i < pslist.size(); i++)
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
 	{
-		AglMatrix psWorld = AglMatrix::createTranslationMatrix(pslist[i]->getHeader().spawnPoint);
-		psWorld[0] = 0.1f;
-		psWorld[5] = 0.1f;
-		psWorld[10] = 0.1f;
-		SPHEREMESH->Draw(psWorld, AglVector3(1, 0.5f, 0));
-		psWorld[0] = 0.01f;
-		psWorld[5] = 0.01f;
-		psWorld[10] = 0.01f;
-		SPHEREMESH->Draw(psWorld, AglVector3(0, 0.0f, 0));
+		mParticleSystems[i]->Draw();
 	}
 
 	AglVector3 minP = mMin;
@@ -263,6 +266,7 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 void Scene::AddParticleSystem(AglParticleSystem* pSystem)
 {
 	mAglScene->addParticleSystem(pSystem);
+	mParticleSystems.push_back(new ParticleSystem(pSystem));
 }
 vector<AglGradient*> Scene::GetGradients()
 {

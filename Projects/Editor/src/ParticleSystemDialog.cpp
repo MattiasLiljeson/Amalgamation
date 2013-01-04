@@ -6,14 +6,14 @@
 void TW_CALL ParticleSystemDialog::SetSpawn(const void *value, void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
-	AglParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
-	ps->setSpawnPoint(*(const AglVector3*)value);
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->SetSpawnPoint(*(const AglVector3*)value);
 }
 void TW_CALL ParticleSystemDialog::GetSpawn(void *value, void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
-	AglParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
-	*(AglVector3*)value = ps->getHeader().spawnPoint;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(AglVector3*)value = ps->GetHeader().spawnPoint;
 }
 
 ParticleSystemDialog::ParticleSystemDialog()

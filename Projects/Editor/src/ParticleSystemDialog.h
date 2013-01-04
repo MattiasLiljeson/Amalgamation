@@ -3,6 +3,7 @@
 
 #include <AntTweakBar.h>
 #include "Utility.h"
+#include "ParticleSystem.h"
 
 class ParticleSystemDialog
 {

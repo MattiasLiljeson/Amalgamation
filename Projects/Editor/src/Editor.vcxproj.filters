@@ -66,6 +66,7 @@
     <ClCompile Include="ParticleShader.cpp">
       <Filter>ShaderPrograms</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="ParticleShader.h">
       <Filter>ShaderPrograms</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
