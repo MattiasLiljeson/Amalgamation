@@ -41,26 +41,18 @@ void GraphicsBackendSystem::initialize()
 {
 	TextureParser::init();
 
-	try
-	{
-		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
-		m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), 
-			m_scrWidth, 
-			m_scrHeight, 
-			m_windowed );
+	m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
+	m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), 
+		m_scrWidth, 
+		m_scrHeight, 
+		m_windowed );
 
-		AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
-		TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
-			"Toggle_Windowed/FullScreen",
-			toggleFullScreen, (void*)NULL, "");
+	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
+	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+		"Toggle_Windowed/FullScreen",
+		toggleFullScreen, (void*)NULL, "");
 
-		m_graphicsWrapper->hookUpAntTweakBar();
-
-	}
-	catch( exception &e )
-	{
-		DEBUGPRINT( (e.what()) );
-	}
+	m_graphicsWrapper->hookUpAntTweakBar();
 }
 
 void GraphicsBackendSystem::process()
