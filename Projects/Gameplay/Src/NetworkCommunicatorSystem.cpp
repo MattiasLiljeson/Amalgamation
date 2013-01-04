@@ -194,12 +194,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::ScoresUpdate)
 		{
-			int netId;
-			int ownerId;
-			int score;
-			packet >> netId;
-			packet >> ownerId;
-			packet >> score;
+			NetworkScoreUpdatePacket scoreUpdateData;
+			scoreUpdateData = readScorePacket( packet );
 
 			// HACK: This is VERY inefficient for large amount of
 			// network-synchronized entities. (Solve later)
@@ -210,14 +206,14 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 					m_world->getComponentManager()->getComponent(
 					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-				if( netSync->getNetworkIdentity() == netId )
+				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
 				{
 					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
 						m_world->getComponentManager()->getComponent(
 						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
 					if( scoreComponent )
 					{
-						scoreComponent->setScore( score );
+						scoreComponent->setScore( scoreUpdateData.score );
 					}
 				}
 			}
@@ -251,5 +247,14 @@ NetworkEntityUpdatePacket NetworkCommunicatorSystem::readUpdatePacket( Packet& p
 		>> data.position 
 		>> data.rotation 
 		>> data.scale;
+	return data;
+}
+
+NetworkScoreUpdatePacket NetworkCommunicatorSystem::readScorePacket( Packet& p_packet )
+{
+	NetworkScoreUpdatePacket data;
+	p_packet >> data.networkId;
+	p_packet >> data.score;
+
 	return data;
 }
