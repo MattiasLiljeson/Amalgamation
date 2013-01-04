@@ -51,6 +51,44 @@ void TW_CALL ParticleSystemDialog::GetParticleSpeed(void *value, void *clientDat
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
 	*(float*)value = ps->GetHeader().spawnSpeed;
 }
+void TW_CALL ParticleSystemDialog::SetColor(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setColor(*(const AglVector4*)value);
+}
+void TW_CALL ParticleSystemDialog::GetColor(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(AglVector4*)value = ps->getColor();
+}
+
+void TW_CALL ParticleSystemDialog::SetFadeIn(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setFadeInStop(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetFadeIn(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->getFadeInStop();
+}
+void TW_CALL ParticleSystemDialog::SetFadeOut(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setFadeOutStart(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetFadeOut(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->getFadeOutStart();
+}
+
 void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
@@ -128,6 +166,10 @@ void ParticleSystemDialog::setPS(int pIndex)
 
 	TwAddVarCB(m_dialog, "Spread", TW_TYPE_FLOAT, SetSpread, GetSpread, (void*)this, "group=Sponge key=o step=0.01 min=0.0 max=1.0");
 	TwAddVarCB(m_dialog, "Spawn Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Color", TW_TYPE_COLOR4F, SetColor, GetColor, (void*)this, "group=Sponge key=o");
+
+	TwAddVarCB(m_dialog, "Fade-In Stop", TW_TYPE_FLOAT, SetFadeIn, GetFadeIn, (void*)this, "group=Sponge key=o step=0.01");
+	TwAddVarCB(m_dialog, "Fade-Out Start", TW_TYPE_FLOAT, SetFadeOut, GetFadeOut, (void*)this, "group=Sponge key=o step=0.01");
 
 	TwAddButton(m_dialog, "Load Texture", LoadTexture, this, " label='Load Texture'");
 

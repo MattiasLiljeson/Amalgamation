@@ -27,6 +27,9 @@ private:
 	ID3D11DepthStencilState* mDepthStencilState;
 
 	int mTextureIndex;
+	AglVector4 mColor;
+	float mFadeInStop;
+	float mFadeOutStart;
 public:
 	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
@@ -67,6 +70,32 @@ public:
 	{
 		return mTextureIndex;
 	}
+	AglVector4 getColor()
+	{
+		return mColor;
+	}
+	void setColor(AglVector4 pColor)
+	{
+		mColor = pColor;
+	}
+
+	float getFadeInStop()
+	{
+		return mFadeInStop;
+	}
+	void setFadeInStop(float pFadeInStop)
+	{
+		mFadeInStop = pFadeInStop;
+	}
+	float getFadeOutStart()
+	{
+		return mFadeOutStart;
+	}
+	void setFadeOutStart(float pFadeOutStart)
+	{
+		mFadeOutStart = pFadeOutStart;
+	}
+
 	void Draw();
 };
 

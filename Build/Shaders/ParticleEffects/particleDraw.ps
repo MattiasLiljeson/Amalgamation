@@ -2,7 +2,7 @@ struct GS_OUT
 {
 	float4 posH  : SV_POSITION;
 	float2 texC  : TEXCOORD;
-	float opacity : OPACITY;
+	float4 color : COLOR;
 };
 
 Texture2D Texture : register(t0);
@@ -11,7 +11,7 @@ SamplerState SampleType : register(s0);
 float4 PShader(GS_OUT pIn) : SV_TARGET
 {
 	float4 color = Texture.Sample(SampleType, pIn.texC);
-	color.a *= pIn.opacity;
+	color *= pIn.color;
 	return color;
     float2 val = 2 * (pIn.texC - float2(0.5f, 0.5f));
     float c = 1.0f - sqrt(dot(val, val));

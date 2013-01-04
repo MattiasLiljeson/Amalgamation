@@ -23,6 +23,15 @@ private:
 	static void TW_CALL GetFrequency(void *value, void *clientData);
 	static void TW_CALL SetSpread(const void *value, void *clientData);
 	static void TW_CALL GetSpread(void *value, void *clientData);
+	static void TW_CALL SetColor(const void *value, void *clientData);
+	static void TW_CALL GetColor(void *value, void *clientData);
+
+	static void TW_CALL SetFadeIn(const void *value, void *clientData);
+	static void TW_CALL GetFadeIn(void *value, void *clientData);
+	static void TW_CALL SetFadeOut(const void *value, void *clientData);
+	static void TW_CALL GetFadeOut(void *value, void *clientData);
+
+
 	static void TW_CALL LoadTexture(void *clientData);
 public:
 	ParticleSystemDialog();

@@ -151,7 +151,7 @@ void Scene::Draw()
 		m_world = AglMatrix::identityMatrix();
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
-	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	/*for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
@@ -179,7 +179,7 @@ void Scene::Draw()
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
 		}
-	}
+	}*/
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 

@@ -25,6 +25,11 @@ struct ParticleBuffer
 	AglVector4 EyePosition;
 	AglMatrix View;
 	AglMatrix Projection;
+	AglVector4 Color;
+	float FadeIn;
+	float FadeOut;
+	float ParticleMaxAge;
+	float buff[1];
 };
 
 class ParticleShader
@@ -45,7 +50,7 @@ public:
 	ID3D11PixelShader*  GetPixelShader();
 	ID3D11GeometryShader* GetGeometryShader();
 	ID3D11InputLayout*	GetInputLayout();
-	void SetBuffer(int pTextureIndex);
+	void SetBuffer(int pTextureIndex, AglVector4 pColor, float pFadeIn, float pFadeOut, float pParticleMaxAge);
 };
 
 #endif // PARTICLESHADER_H

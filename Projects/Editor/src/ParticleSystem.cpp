@@ -57,6 +57,9 @@ ParticleSystem::ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice
 
 
 	mTextureIndex = -1;
+	mColor = AglVector4(1, 1, 1, 1);
+	mFadeInStop = 0;
+	mFadeOutStart = 100;
 }
 
 ParticleSystem::~ParticleSystem()
@@ -96,9 +99,6 @@ void ParticleSystem::Draw()
 		mDevice->CreateBuffer(&bd, &vertexData, &mVB);
 	}
 
-
-
-	//Draw the fucking particle system or else...
 	if (mVB)
 	{
 		ID3D11DepthStencilState* old;
@@ -108,7 +108,7 @@ void ParticleSystem::Draw()
 		mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
 
 		ParticleShader* ps = ShaderManager::GetInstance()->GetParticleShader();
-		ps->SetBuffer(mTextureIndex);
+		ps->SetBuffer(mTextureIndex, mColor, mFadeInStop, mFadeOutStart, mSystem->getHeader().particleAge);
 		mDeviceContext->VSSetShader(ps->GetVertexShader(), 0, 0);
 		mDeviceContext->PSSetShader(ps->GetPixelShader(), 0, 0);	
 		mDeviceContext->HSSetShader(NULL, 0, 0);

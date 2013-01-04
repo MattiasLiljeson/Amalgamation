@@ -3,6 +3,11 @@ cbuffer cbPerFrame : register(b0)
 	float4 gEyePosW;
 	matrix gView; 
     matrix gProj;
+	float4 Color;
+	float fadeIn;
+	float fadeOut;
+	float particleMaxAge;
+	float buff[1];
 };
 
 cbuffer cbFixed
@@ -27,7 +32,7 @@ struct GS_OUT
 {
 	float4 posH  : SV_POSITION;
 	float2 texC  : TEXCOORD;
-	float opacity : OPACITY;
+	float4 color : COLOR;
 };
 
 [maxvertexcount(4)]
@@ -62,10 +67,12 @@ void GShader(point VS_OUT gIn[1],
 	t[3] = float2(1.0f, 0.0f);
 	
 	float opacity;
-	if (gIn[0].Age < 5.0f/5)
-		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / (5.0f/5)); 
+	if (gIn[0].Age < fadeIn) //Fade in
+		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
+	else if (gIn[0].Age > fadeOut)//Fade out
+		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);              //1.0f - gIn[0].Age/(5.0f);
 	else
-		opacity = 1.0f - gIn[0].Age/(5.0f);
+		opacity = 1.0f;
 	
 	GS_OUT gOut;
 	[unroll]
@@ -73,7 +80,7 @@ void GShader(point VS_OUT gIn[1],
 	{
 		gOut.posH  = mul(v[i], WVP);
 		gOut.texC  = t[i];
-		gOut.opacity = opacity;
+		gOut.color = float4(Color.x, Color.y, Color.z, opacity);
 		triStream.Append(gOut);
 	}	
 }

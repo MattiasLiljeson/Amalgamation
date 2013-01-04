@@ -58,7 +58,7 @@ ID3D11InputLayout* ParticleShader::GetInputLayout()
 {
 	return mIL;
 }
-void ParticleShader::SetBuffer(int pTextureIndex)
+void ParticleShader::SetBuffer(int pTextureIndex, AglVector4 pColor, float pFadeIn, float pFadeOut, float pParticleMaxAge)
 {
 	AglMatrix v = Camera::GetInstance()->GetViewMatrix();
 	AglMatrix p = Camera::GetInstance()->GetProjectionMatrix();
@@ -74,6 +74,10 @@ void ParticleShader::SetBuffer(int pTextureIndex)
 	buffer->View = v;
 	buffer->Projection = p;
 	buffer->EyePosition = AglVector4(pos.x, pos.y, pos.z, 1);
+	buffer->Color = pColor;
+	buffer->FadeIn = pFadeIn;
+	buffer->FadeOut = pFadeOut;
+	buffer->ParticleMaxAge = pParticleMaxAge;
 
 	mDeviceContext->Unmap(mBuffer, 0);
 
