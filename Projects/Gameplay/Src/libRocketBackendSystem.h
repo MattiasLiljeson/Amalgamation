@@ -13,15 +13,6 @@ class InputBackendSystem;
 class LibRocketRenderInterface;
 class LibRocketSystemInterface;
 
-//namespace Rocket
-//{
-//	namespace Core
-//	{
-//		class Context;
-//		class ElementDocument;
-//	}
-//}
-
 class LibRocketBackendSystem : public EntitySystem
 {
 public:

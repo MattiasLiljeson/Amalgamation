@@ -31,6 +31,8 @@ public:	//Enums
 		AudioControllerSystem,
 		AudioListenerSystem,
 		LibRocketBackendSystem,
+		MenuSystem,
+		HudSystem,
 		NUM_SYSTEM_TYPES
 	};
 
