@@ -32,6 +32,7 @@
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
 #include <ShipControllerSystem.h>
+#include <LevelGenSystem.h>
 
 // MISC
 #include <AntTweakBarWrapper.h>
@@ -182,6 +183,13 @@ void ClientApplication::initSystems()
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 	
+	/************************************************************************/
+	/* Level Gen															*/
+	/************************************************************************/
+	LevelGenSystem* levelGenerator = new LevelGenSystem();
+	m_world->setSystem( levelGenerator, true);
+
+
 	m_world->initialize();
 }
 
