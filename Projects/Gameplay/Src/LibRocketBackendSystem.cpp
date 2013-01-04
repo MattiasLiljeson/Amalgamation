@@ -102,8 +102,9 @@ void LibRocketBackendSystem::process()
 {
 	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int windowHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
-	int screenSpaceX = (m_cursor->getX()+1) * windowWidth;
-	int screenSpaceY = (m_cursor->getY()+1) * windowHeight;
+	// NDC -> Screenspace
+	int screenSpaceX = (m_cursor->getX()+1) * windowWidth/2;
+	int screenSpaceY = (m_cursor->getY()+1) * windowHeight/2;
 
 	m_rocketContext->ProcessMouseMove( screenSpaceX, screenSpaceY, 0 );
 	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )

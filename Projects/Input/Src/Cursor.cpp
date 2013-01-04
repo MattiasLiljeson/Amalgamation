@@ -51,14 +51,22 @@ void Cursor::update()
 
 	// Keep cursor inside NDC
 	if( m_x < -1.0)
+	{
 		m_x = -1.0;
+	}
 	else if( m_x > 1.0)
+	{
 		m_x = 1.0;
+	}
 
 	if( m_y < -1.0)
+	{
 		m_y = -1.0;
+	}
 	else if( m_y > 1.0)
+	{
 		m_y = 1.0;
+	}
 }
 
 double Cursor::getX()

@@ -106,7 +106,7 @@ void InputBackendSystem::initialize()
 	m_cursor = new Cursor();
 	// HACK: hard coded window size!
 	m_cursor->addControlSet(
-		25000.0/800, 25000.0/600,
+		25000.0/1280, 25000.0/800,
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
@@ -114,7 +114,7 @@ void InputBackendSystem::initialize()
 		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
 		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
 	m_cursor->addControlSet(
-		10.0/800, 10.0/600, 
+		10.0/1280, 10.0/800, 
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
