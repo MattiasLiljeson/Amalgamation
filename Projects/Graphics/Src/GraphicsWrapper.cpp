@@ -312,7 +312,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		meshId = (int)m_meshManager->addResource( p_name, p_mesh );
 
 		string textureName = p_name + "_tex";
-		int texId = m_textureManager->getResourceId( (void*)p_texture );
+		int texId = m_textureManager->getResourceId( p_texture );
 		if( texId == -1 )
 		{
 			texId = (int)m_textureManager->addResource( textureName, p_texture );
