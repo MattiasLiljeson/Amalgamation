@@ -22,6 +22,7 @@ public:
 		EntityUpdate,
 		ClientDisconnect,
 		InitCredentials,
+		ScoresUpdate,
 		// Client -> Server:
 		PlayerInput,
 	};

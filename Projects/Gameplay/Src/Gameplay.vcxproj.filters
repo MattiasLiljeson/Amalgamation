@@ -55,6 +55,12 @@
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Network\Server only\Sending Updates">
+      <UniqueIdentifier>{337fbbdf-e44a-4dac-8b13-69bc1a8280cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Server only\Debugging">
+      <UniqueIdentifier>{86e85e1a-3181-4517-9e1c-ec027da16991}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -162,8 +168,14 @@
     <ClInclude Include="PlayerScore.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkUpdateSystem.h">
+      <Filter>Systems\Network\Server only\Sending Updates</Filter>
+    </ClInclude>
     <ClInclude Include="DebugPlayerScoresSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUpdateScoresSystem.h">
+      <Filter>Systems\Network\Server only\Sending Updates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,9 +215,6 @@
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkUpdateSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\libRocket</Filter>
     </ClCompile>
@@ -242,8 +251,14 @@
     <ClCompile Include="PlayerScore.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkUpdateSystem.cpp">
+      <Filter>Systems\Network\Server only\Sending Updates</Filter>
+    </ClCompile>
     <ClCompile Include="DebugPlayerScoresSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkUpdateScoresSystem.cpp">
+      <Filter>Systems\Network\Server only\Sending Updates</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

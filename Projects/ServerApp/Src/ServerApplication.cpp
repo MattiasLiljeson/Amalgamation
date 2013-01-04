@@ -7,6 +7,7 @@
 #include <NetworkListenerSystem.h>
 #include <NetworkInputHandlerSystem.h>
 #include <NetworkUpdateSystem.h>
+#include <NetworkUpdateScoresSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -84,6 +85,9 @@ namespace Srv
 
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
 			new NetworkUpdateSystem( m_server ), true );
+
+		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
+			new NetworkUpdateScoresSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::DebugPlayerScoresSystem,
 			new DebugPlayerScoresSystem(), true );
