@@ -1,5 +1,8 @@
 #include "Cursor.h"
 
+#include "Control.h"
+#include "ControlSet.h"
+
 // For NULL
 #include <wchar.h>
 
