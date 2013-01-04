@@ -1,16 +1,17 @@
 #pragma once
 
+#include <AglMatrix.h>
+#include <Buffer.h>
+#include <GraphicsWrapper.h>
 #include <Rocket/Core.h>
 #include <vector>
 
-#include <AglMatrix.h>
-#include <Buffer.h>
-#include <BufferFactory.h>
-#include <DIndex.h>
-#include <GraphicsWrapper.h>
-#include <Mesh.h>
-#include <PTVertex.h>
-#include <Texture.h>
+class BufferFactory;
+class DIndex;
+class InstanceData;
+class Mesh;
+class PNTTBVertex;
+class Texture;
 
 using namespace std;
 

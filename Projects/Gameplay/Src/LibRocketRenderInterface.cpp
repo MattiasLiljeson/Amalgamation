@@ -36,8 +36,14 @@
 
 #include "LibRocketRenderInterface.h"
 
-#include <sstream>
+#include <BufferFactory.h>
+#include <DIndex.h>
+#include <InstanceData.h>
+#include <Mesh.h>
+#include <PNTTBVertex.h>
+#include <Texture.h>
 #include <TextureParser.h>
+#include <sstream>
 
 LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 {
@@ -50,7 +56,7 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_NONE;
-	rasterizerDesc.FrontCounterClockwise = FALSE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
+	rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
 	rasterizerDesc.DepthClipEnable = TRUE;
 	rasterizerDesc.AntialiasedLineEnable = FALSE;
 	rasterizerDesc.MultisampleEnable = FALSE;
@@ -94,6 +100,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	Rocket::Core::Vertex* p_vertices, int p_numVertices, int* p_indices, int p_numIndices,
 	Rocket::Core::TextureHandle p_texture)
 {
+	//HACK: NOT DELETED NOW! MUST BE DONE!
 	// Construct a new RocketD3D9CompiledGeometry structure, which will be returned as the handle, and the buffers to store the geometry.
 	RocketCompiledGeometry* geometry = new RocketCompiledGeometry;
 
@@ -121,11 +128,12 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	// Fill the index vector.
 	vector<DIndex> indices;
 	indices.resize(p_numIndices);
-	/************************************************************************/
-	/* SHOULD THE INDEX BE CAST TO AN UNSIGNED? IS IT ALREADY UNSIGNED?		*/
-	/************************************************************************/
-	memcpy(&indices[0], p_indices, sizeof(unsigned int) * p_numIndices);
-	/*void* indices = p_indices;*/
+	for( int i=0; i<p_numIndices; i++)
+	{
+		indices[i].index = p_indices[i];
+	}
+
+
 	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
 		&vertices[0], p_numIndices, &indices[0] );
 
@@ -152,14 +160,15 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	AglMatrix worldMat = AglMatrix::createTranslationMatrix( translationVec );
 	worldMat *= m_NDCFrom2dMatrix;
 
+	worldMat = worldMat.transpose();
+
 	RendererSceneInfo scene;
-	AglMatrix identity = AglMatrix::identityMatrix();
 	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = identity[i];
+		scene.viewProjectionMatrix[i] = worldMat[i];
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	//m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderLibRocket( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
@@ -173,10 +182,10 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
 	//HACK: should not be done here!
-	//if(enable == true)
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
-	//else
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+	if(enable == true)
+		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
+	else
+		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to change the scissor region.
@@ -290,7 +299,7 @@ bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& te
 	pitch = source_dimensions.x * 4;
 
 	ID3D11ShaderResourceView* resource = TextureParser::createTexture( 
-		m_wrapper->getDevice(), source, x, y, pitch );
+		m_wrapper->getDevice(), source, x, y, pitch, TextureParser::RGBA );
 	Texture* texture = new Texture( resource );
 
 	// Set the handle on the Rocket p_texture structure.
@@ -341,13 +350,9 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
 	AglVector3 translation( -1.0f, 1.0f, 0.0f );
-	//matScale = AglMatrix::createScaleMatrix( scale );
-	//matTranslate = AglMatrix::createTranslationMatrix( translation );
 
 	AglMatrix::componentsToMatrix(matTranslate, scale, AglQuaternion::identity(), translation);
 	return matTranslate;
-	
-	//return matScale * matTranslate;
 }
 
 vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( const AglMatrix& p_matrix )

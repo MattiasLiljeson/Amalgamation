@@ -1,0 +1,14 @@
+<template name="window" content="content">
+	<head>
+		<link type="text/rcss" href="style.rcss"/>
+	</head>
+	<body class="outer">
+		<div class="inner">
+			<div  id="title_bar">
+				<span id="title" onclick="main.rml" >anuZ</span>
+			</div>
+			<div id="content">
+			</div>
+		</div>
+	</body>
+</template>

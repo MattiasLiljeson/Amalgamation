@@ -1,0 +1,14 @@
+body
+{
+	color: black;
+
+	background-decorator: image;
+	background-image-src: ../../Assets/gui/texture/cursor.tga;
+	margin: auto;
+	
+	min-width: 9px;
+	max-width: 9px;
+	
+	min-height: 16x;
+	max-height: 16px;
+}

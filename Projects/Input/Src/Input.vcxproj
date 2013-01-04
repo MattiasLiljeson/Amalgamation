@@ -13,6 +13,8 @@
   <ItemGroup>
     <ClCompile Include="AnalogueControl.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="ControlSet.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DigitalControl.cpp" />
     <ClCompile Include="DirectInputFetcher.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -29,6 +31,8 @@
     <ClCompile Include="XInputFetcher.cpp" />
     <ClInclude Include="AnalogueControl.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="ControlSet.h" />
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="DigitalControl.h" />
     <ClInclude Include="DirectInputException.h" />
     <ClInclude Include="DirectInputFetcher.h">

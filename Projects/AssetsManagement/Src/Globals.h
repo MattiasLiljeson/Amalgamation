@@ -24,10 +24,11 @@ static const string& TEXTUREPATH = "Assets/Textures/";
 /* LIBROCKET PATHS!														*/
 /************************************************************************/
 // EFFING LOWER CASE! DO NOT CHANGE! HIT ME - Mattias L
-static const string& ROCKET_FONT_PATH = "Assets/libRocket/fonts/";
-static const string& ROCKET_HUD_PATH = "Assets/libRocket/hud/";
-static const string& ROCKET_MENU_PATH = "Assets/libRocket/menu/";
-static const string& ROCKET_TEXTURE_PATH = "Assets/libRocket/texture";
+static const string& GUI_CURSOR_PATH	= "gui/cursor/";
+static const string& GUI_HUD_PATH		= "gui/hud/";
+static const string& GUI_MENU_PATH		= "gui/menu/";
+static const string& GUI_FONT_PATH		= "Assets/gui/fonts/";
+static const string& GUI_TEXTURE_PATH	= "Assets/gui/texture/";
 
 static const string& TESTSOUNDEFFECTPATH = "Assets/Sound/SoundEffect/Test/";
 static const string& TESTMUSICPATH = "Assets/Sound/Music/Test/";

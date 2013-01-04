@@ -1,0 +1,87 @@
+/*
+* Default styles for all the basic elements.
+*/
+
+body
+{
+	font-family: Delicious;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 15;
+	
+	color: black;
+}
+
+body.outer
+{
+	color: black;
+
+	background-decorator: image;
+	background-image-src: ../../Assets/gui/texture/templateBack3.tga;
+	margin: auto;
+	
+	min-width: 512px;
+	max-width: 512px;
+	
+	min-height: 512x;
+	max-height: 512px;
+}
+
+.inner
+{
+	padding: 50px;
+	padding-left: 60px;
+	color: black;
+}
+
+div#title_bar span#title:hover
+{
+	font-size: 24;
+	font-weight: bold;
+	color: rgb( 0%, 0%, 200% );
+	
+	outline-font-effect: outline;
+	outline-width: 1px;
+	outline-color: rgb(200,0,0);
+}
+
+div
+{
+	display: block;
+}
+
+p
+{
+	display: block;
+}
+
+h1
+{
+	display: block;
+}
+
+em
+{
+	font-style: italic;
+}
+
+strong
+{
+	font-weight: bold;
+}
+
+datagrid
+{
+	display: block;
+}
+
+select, dataselect, datacombo
+{
+	text-align: left;
+}
+
+tabset tabs
+{
+	display: block;
+}
+

@@ -1,0 +1,7 @@
+<template name="window" content="content">
+	<head>
+		<link type="text/rcss" href="cursor.rcss"/>
+	</head>
+	<body>
+	</body>
+</template>

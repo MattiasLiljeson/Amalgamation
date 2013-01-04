@@ -16,11 +16,15 @@ class RocketShader;
 class ShaderFactory;
 struct Texture;
 
-
-const static int NUMBUFFERS = 3;
-const static int DEPTH = 2;
-const static int NORMAL = 1;
-const static int DIFFUSE = 0;
+/************************************************************************/
+/* See wiki for more details.											*/
+/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
+/************************************************************************/
+const static int NUMBUFFERS = 4;
+const static int RT0 = 0;
+const static int RT1 = 1;
+const static int RT2 = 2;
+const static int DEPTH = 3;
 
 // =======================================================================================
 //                                      DeferredRenderer
@@ -92,20 +96,19 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
-
 	
 	///-----------------------------------------------------------------------------------
 	/// Desc
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-		Buffer<InstanceData>* p_instanceBuffer );
+	void beginRenderLibRocket();
+	void renderLibRocket( Mesh* p_mesh, Texture* p_texture );
+	void endRenderLibRocket();
 
 	void hookUpAntTweakBar();
 
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
-protected:
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
@@ -129,6 +132,10 @@ private:
 	RocketShader*			m_rocketShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
+
+	// librocket stuph
+	ID3D11BlendState* m_stdBlendState;
+	UINT m_stdMask;
 
 	int m_width;
 	int m_height;

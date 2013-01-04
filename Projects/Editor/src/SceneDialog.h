@@ -30,7 +30,6 @@ private:
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
 	static void TW_CALL AddPE(void* clientData);
-
 	static void TW_CALL SetCOSystem(void *clientData);
 public:
 	//Static functions
