@@ -2,6 +2,9 @@
 
 #include <EntitySystem.h>
 
+class Transform;
+
+using namespace std;
 // =======================================================================================
 //                                      LevelGenSystem
 // =======================================================================================
@@ -24,6 +27,11 @@ public:
 protected:
 
 private:
-	void generateLevelPieces(int p_depth);
+	void getFreeAttachments(Transform* p_piece, vector<Transform*>& out_attachments);
+
+	void generateLevelPieces(int p_maxDepth);
+	void generatePiecesOnPiece(Transform* p_targetPiece, vector<Transform*>& out_result);
+	void connectPieces(Transform* p_sourcePiece, Transform* p_sourceConnector,
+						Transform* p_otherPiece, Transform* p_otherConnector);
 
 };
