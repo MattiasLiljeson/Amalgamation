@@ -10,9 +10,13 @@ AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_vel
 
 AglParticleSystem::AglParticleSystem()
 {
-	m_header.particleAge = 1.0f;
+	m_header.particleAge = 4.0f;
 	m_header.spawnPoint = AglVector3(0, 0, 0);
 	m_header.particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
+	m_header.spawnDirection = AglVector3::left();
+	m_header.spawnSpeed = 0;
+	m_header.spread = 0;
+	m_header.spawnFrequency = 1.0f;
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 }
@@ -39,6 +43,31 @@ void AglParticleSystem::setSpawnPoint(AglVector3 p_spawnPoint)
 {
 	m_header.spawnPoint = p_spawnPoint;
 }
+void AglParticleSystem::setParticleAge(float p_age)
+{
+	m_header.particleAge = p_age;
+}
+void AglParticleSystem::setSpawnDirection(AglVector3 p_direction)
+{
+	p_direction.normalize();
+	m_header.spawnDirection = p_direction;
+}
+void AglParticleSystem::setSpawnSpeed(float p_speed)
+{
+	if (p_speed >= 0)
+		m_header.spawnSpeed = p_speed;
+}
+void AglParticleSystem::setSpread(float p_spread)
+{
+	if (p_spread >= 0 && p_spread <= 1.0f)
+		m_header.spread = p_spread;
+}
+void AglParticleSystem::setSpawnFrequency(float p_frequency)
+{
+	if (p_frequency >= 0)
+		m_header.spawnFrequency = p_frequency;
+}
+
 
 void AglParticleSystem::update(float p_dt)
 {
@@ -62,11 +91,15 @@ void AglParticleSystem::update(float p_dt)
 
 		m_age += p_dt;
 		m_timeSinceSpawn += p_dt;
-		if (m_timeSinceSpawn > 0.2f)
+		if (m_header.spawnFrequency > 0 && m_timeSinceSpawn > 1.0f / m_header.spawnFrequency)
 		{
-			AglStandardParticle p(m_header.spawnPoint + AglVector3(0, 0, 0), AglVector3(0, 1, 0), 0.05f);
+			AglVector3 rndDir = AglVector3(2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f));
+			rndDir.normalize();
+			AglVector3 dir = m_header.spawnDirection * (1.0f - m_header.spread) + rndDir * m_header.spread;
+			dir.normalize();
+			AglStandardParticle p(m_header.spawnPoint + AglVector3(0, 0, 0), dir*m_header.spawnSpeed, 0.05f);
 			m_particles.push_back(p);
-			m_timeSinceSpawn -= 0.2f;
+			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
 		}
 
 	}

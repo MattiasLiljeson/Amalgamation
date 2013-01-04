@@ -15,6 +15,83 @@ void TW_CALL ParticleSystemDialog::GetSpawn(void *value, void *clientData)
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
 	*(AglVector3*)value = ps->GetHeader().spawnPoint;
 }
+void TW_CALL ParticleSystemDialog::SetParticleAge(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setParticleAge(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetParticleAge(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().particleAge;
+}
+void TW_CALL ParticleSystemDialog::SetParticleDirection(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnDirection(*(const AglVector3*)value);
+}
+void TW_CALL ParticleSystemDialog::GetParticleDirection(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(AglVector3*)value = ps->GetHeader().spawnDirection;
+}
+void TW_CALL ParticleSystemDialog::SetParticleSpeed(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnSpeed(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetParticleSpeed(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().spawnSpeed;
+}
+void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+
+	string file = openfilename();
+	if (file != "")
+	{
+		removePath(file);
+		file = Scene::GetInstance()->GetFolder() + file;
+		TextureManager::GetInstance()->LoadTexture(file);
+		ps->setTextureIndex(Scene::GetInstance()->AddName(file));
+	}
+}
+
+
+void TW_CALL ParticleSystemDialog::SetFrequency(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnFrequency(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetFrequency(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().spawnFrequency;
+}
+
+void TW_CALL ParticleSystemDialog::SetSpread(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpread(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetSpread(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().spread;
+}
 
 ParticleSystemDialog::ParticleSystemDialog()
 {
@@ -44,6 +121,15 @@ void ParticleSystemDialog::setPS(int pIndex)
 
 
 	TwAddVarCB(m_dialog, "Spawn Point", TW_TYPE_DIR3F, SetSpawn, GetSpawn, (void*)this, "group=Sponge key=o");
+	TwAddVarCB(m_dialog, "Particle Age", TW_TYPE_FLOAT, SetParticleAge, GetParticleAge, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+
+	TwAddVarCB(m_dialog, "Spawn Speed", TW_TYPE_FLOAT, SetParticleSpeed, GetParticleSpeed, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Spawn Direction", TW_TYPE_DIR3F, SetParticleDirection, GetParticleDirection, (void*)this, "group=Sponge key=o");
+
+	TwAddVarCB(m_dialog, "Spread", TW_TYPE_FLOAT, SetSpread, GetSpread, (void*)this, "group=Sponge key=o step=0.01 min=0.0 max=1.0");
+	TwAddVarCB(m_dialog, "Spawn Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+
+	TwAddButton(m_dialog, "Load Texture", LoadTexture, this, " label='Load Texture'");
 
 	show();
 }

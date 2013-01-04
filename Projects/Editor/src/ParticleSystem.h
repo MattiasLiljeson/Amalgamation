@@ -22,6 +22,11 @@ private:
 	ID3D11Buffer*	   mVB;
 	ID3D11Device*	   mDevice;
 	ID3D11DeviceContext* mDeviceContext;
+
+	ID3D11BlendState* mBlendState;
+	ID3D11DepthStencilState* mDepthStencilState;
+
+	int mTextureIndex;
 public:
 	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
@@ -30,9 +35,37 @@ public:
 	{
 		mSystem->setSpawnPoint(pSpawnPoint);
 	}
+	void setParticleAge(float pAge)
+	{
+		mSystem->setParticleAge(pAge);
+	}
+	void setSpawnDirection(AglVector3 pDirection)
+	{
+		mSystem->setSpawnDirection(pDirection);
+	}
+	void setSpawnSpeed(float pSpeed)
+	{
+		mSystem->setSpawnSpeed(pSpeed);
+	}
+	void setSpread(float p_spread)
+	{
+		mSystem->setSpread(p_spread);
+	}
+	void setSpawnFrequency(float p_frequency)
+	{
+		mSystem->setSpawnFrequency(p_frequency);
+	}
 	AglParticleSystemHeader GetHeader()
 	{
 		return mSystem->getHeader();
+	}
+	void setTextureIndex(int p_index)
+	{
+		mTextureIndex = p_index;
+	}
+	int getTextureIndex()
+	{
+		return mTextureIndex;
 	}
 	void Draw();
 };

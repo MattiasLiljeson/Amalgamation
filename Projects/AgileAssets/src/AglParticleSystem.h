@@ -12,7 +12,11 @@ using namespace std;
 struct AglParticleSystemHeader
 {
 	AglVector3			spawnPoint;
+	AglVector3			spawnDirection;
+	float				spawnSpeed;
 	float				particleAge;
+	float				spread; ///< 0 -> 1
+	float				spawnFrequency;
 	AglParticleFormat	particleFormat;
 };
 
@@ -53,6 +57,11 @@ public:
 	vector<AglStandardParticle> getParticles();
 
 	void setSpawnPoint(AglVector3 p_spawnPoint);
+	void setParticleAge(float p_age);
+	void setSpawnDirection(AglVector3 p_direction);
+	void setSpawnSpeed(float p_speed);
+	void setSpread(float p_spread);
+	void setSpawnFrequency(float p_frequency);
 
 	void update(float p_dt);
 };

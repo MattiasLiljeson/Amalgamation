@@ -45,7 +45,7 @@ public:
 	ID3D11PixelShader*  GetPixelShader();
 	ID3D11GeometryShader* GetGeometryShader();
 	ID3D11InputLayout*	GetInputLayout();
-	void SetBuffer();
+	void SetBuffer(int pTextureIndex);
 };
 
 #endif // PARTICLESHADER_H

@@ -58,7 +58,7 @@ ID3D11InputLayout* ParticleShader::GetInputLayout()
 {
 	return mIL;
 }
-void ParticleShader::SetBuffer()
+void ParticleShader::SetBuffer(int pTextureIndex)
 {
 	AglMatrix v = Camera::GetInstance()->GetViewMatrix();
 	AglMatrix p = Camera::GetInstance()->GetProjectionMatrix();
@@ -79,5 +79,15 @@ void ParticleShader::SetBuffer()
 
 	unsigned int bufferNumber = 0;
 	mDeviceContext->GSSetConstantBuffers(bufferNumber, 1, &mBuffer);
+
+	if (pTextureIndex >= 0)
+	{
+		string s = Scene::GetInstance()->GetName(pTextureIndex);
+		removePath(s);
+		s = Scene::GetInstance()->GetFolder() + s;
+		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
+		if (data)
+			mDeviceContext->PSSetShaderResources(0, 1, &data->SRV);
+	}
 }
 

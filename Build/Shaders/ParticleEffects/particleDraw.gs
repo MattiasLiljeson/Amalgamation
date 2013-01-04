@@ -20,12 +20,14 @@ struct VS_OUT
 {
 	float3 Position  : POSITION;
 	float Size : SIZE;
+	float  Age	: AGE;
 };
 
 struct GS_OUT
 {
 	float4 posH  : SV_POSITION;
 	float2 texC  : TEXCOORD;
+	float opacity : OPACITY;
 };
 
 [maxvertexcount(4)]
@@ -59,12 +61,19 @@ void GShader(point VS_OUT gIn[1],
 	t[2] = float2(0.0f, 0.0f);
 	t[3] = float2(1.0f, 0.0f);
 	
+	float opacity;
+	if (gIn[0].Age < 5.0f/5)
+		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / (5.0f/5)); 
+	else
+		opacity = 1.0f - gIn[0].Age/(5.0f);
+	
 	GS_OUT gOut;
 	[unroll]
 	for(int i = 0; i < 4; ++i)
 	{
 		gOut.posH  = mul(v[i], WVP);
 		gOut.texC  = t[i];
+		gOut.opacity = opacity;
 		triStream.Append(gOut);
 	}	
 }
