@@ -12,8 +12,10 @@
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
 
-DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-				   int p_width, int p_height)
+DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, 
+								   ID3D11DeviceContext* p_deviceContext, 
+								   int p_width, 
+								   int p_height)
 {
 	m_device		= p_device;
 	m_deviceContext = p_deviceContext;
@@ -21,7 +23,8 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 	m_width		= p_width;
 	m_height	= p_height;
 
-	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, m_device->GetFeatureLevel());
+	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
+		m_device->GetFeatureLevel());
 
 	m_fullscreenQuad =	 NULL;
 	m_depthStencilView = NULL;
@@ -34,8 +37,7 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 
-
-	initRendertargetsAndDepthStencil( p_width, p_height );
+	initRendertargetsAndDepthStencil( m_width, m_height );
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -61,11 +63,6 @@ void DeferredRenderer::clearBuffers()
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
-{
-	m_sceneInfo = p_sceneInfo;
 }
 
 void DeferredRenderer::beginDeferredBasePass()
@@ -150,8 +147,9 @@ void DeferredRenderer::renderComposedImage()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[DIFFUSE]);
-	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[NORMAL]);
+	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[RT0]);
+	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[RT1]);
+	m_deviceContext->PSSetShaderResources(2,1,&m_gBuffersShaderResource[RT2]);
 
 	m_fullscreenQuad->apply();
 
@@ -225,7 +223,7 @@ void DeferredRenderer::endRenderLibRocket()
 
 void DeferredRenderer::unMapGBuffers()
 {
-	ID3D11ShaderResourceView * nulz[NUMBUFFERS];
+	ID3D11ShaderResourceView* nulz[NUMBUFFERS];
 	for (int i=0; i<NUMBUFFERS; i++)
 		nulz[i]=NULL;
 	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
@@ -325,7 +323,7 @@ void DeferredRenderer::initGeometryBuffers()
 	/* !!! Note that the for loop starts at index 1 since depthbuffer		*/
 	/* already in init !!!													*/
 	/************************************************************************/
-	for (unsigned int i = DIFFUSE; i < NUMBUFFERS-1; i++){
+	for (unsigned int i = 0; i < NUMBUFFERS-1; i++){
 		hr = m_device->CreateShaderResourceView(gBufferTextures[i],&shaderResourceDesc,
 			&m_gBuffersShaderResource[i]);
 		gBufferTextures[i]->Release();
@@ -372,4 +370,9 @@ void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_heig
 	initDepthStencil();
 	initGeometryBuffers();
 	initTestShaders();
+}
+
+void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
+{
+	m_sceneInfo = p_sceneInfo;
 }
