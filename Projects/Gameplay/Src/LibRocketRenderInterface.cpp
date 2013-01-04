@@ -136,7 +136,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	stringstream ss;
 	ss<<"menus nr: "<<numMenus;
 
-	geometry->meshId = m_wrapper->createMesh( ss.str(), mesh, (Texture*)p_texture );
+	geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
 
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }

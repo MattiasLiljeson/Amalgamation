@@ -303,7 +303,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 	return meshResultId;
 }
 
-unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
+unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
 {
 	// check if resource already exists
 	int meshId = m_meshManager->getResourceId( p_name );
@@ -315,9 +315,9 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		int texId = m_textureManager->getResourceId( p_texture );
 		if( texId == -1 )
 		{
-			texId = (int)m_textureManager->addResource( textureName, p_texture );
+			texId = static_cast<int>(m_textureManager->addResource( textureName, p_texture ));
 		}
-		p_mesh->setTextureId( (unsigned int)texId );
+		p_mesh->setTextureId( static_cast<unsigned int>(texId) );
 	}
 	return meshId;
 }

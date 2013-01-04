@@ -106,13 +106,15 @@ public:
 
 
 	///-----------------------------------------------------------------------------------
-	/// Used by libRocket //Mattias
+	/// WIP! Decide how to handle this when several textures/materials are present.
+	/// Should texture even be sent in here??
+	/// Register an externally created mesh in the graphics system
 	/// \param p_name
 	/// \param p_mesh
 	/// \param p_texture
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
-	unsigned int createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
+	unsigned int registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
