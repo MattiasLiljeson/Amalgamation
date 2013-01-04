@@ -43,6 +43,7 @@
     <ClCompile Include="Cursor.cpp">
       <Filter>InputManager</Filter>
     </ClCompile>
+    <ClCompile Include="ControlSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -90,6 +91,7 @@
     <ClInclude Include="Cursor.h">
       <Filter>InputManager</Filter>
     </ClInclude>
+    <ClInclude Include="ControlSet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputFetchers">

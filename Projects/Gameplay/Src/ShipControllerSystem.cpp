@@ -32,6 +32,17 @@ ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
 	m_rightStickDir[0] = 0;
 	m_rightStickDir[1] = 0;
 	m_rightStickDir[2] = 0;
+	m_leftStickDirWithCorrection[0] = 0;
+	m_leftStickDirWithCorrection[1] = 0;
+	m_leftStickDirWithCorrection[2] = 0;
+	m_rightStickDirWithCorrection[0] = 0;
+	m_rightStickDirWithCorrection[1] = 0;
+	m_rightStickDirWithCorrection[2] = 0;
+	
+	m_leftStickCorrection[0] = 0.1;
+	m_leftStickCorrection[1] = 0.1;
+	m_rightStickCorrection[0] = 0;
+	m_rightStickCorrection[1] = 0;
 }
 
 ShipControllerSystem::~ShipControllerSystem()
@@ -58,11 +69,18 @@ void ShipControllerSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addWriteVariable( "ControllerEpsilon",
 		TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), "min=0.0 max=1.0 step=0.05" );
 
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left Stick",
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left Stick (raw)",
 		TwType::TW_TYPE_DIR3D, &m_leftStickDir, "" );
 
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right Stick",
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right Stick (raw)",
 		TwType::TW_TYPE_DIR3D, &m_rightStickDir, "" );
+	
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left W/ Correction",
+		TwType::TW_TYPE_DIR3D, &m_leftStickDirWithCorrection, "" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right W/ Correction",
+		TwType::TW_TYPE_DIR3D, &m_rightStickDirWithCorrection, "" );
+
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -88,7 +106,16 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	float strafeVerticalInput = (float)(svPositive - svNegative);
 	float sensitivityMult = 1.0f;
 
-	// Update the analog sticks for anttweakbar.
+	// Calibrate the Gamepad's analogue sticks when pressing the C key.
+	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 )
+	{
+		m_leftStickCorrection[0] = -horizontalInput;
+		m_leftStickCorrection[1] = -verticalInput;
+		m_rightStickCorrection[0] = -strafeHorizontalInput;
+		m_rightStickCorrection[1] = -strafeVerticalInput;
+	}
+
+	// Update the analogue sticks for anttweakbar.
 	m_leftStickDir[0] = horizontalInput;
 	m_leftStickDir[1] = verticalInput;
 	m_leftStickDir[2] = 0;
@@ -97,7 +124,20 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	m_rightStickDir[1] = strafeVerticalInput;
 	m_rightStickDir[2] = 0;
 
-	// Apply a threshold value to eliminate some of the analog stick noise.
+	// Update the corrected values for the sticks, in for anttweakbar.
+	m_leftStickDirWithCorrection[0] = horizontalInput + m_leftStickCorrection[0];
+	m_leftStickDirWithCorrection[1] = verticalInput + m_leftStickCorrection[1];
+	m_leftStickDirWithCorrection[2] = 0;
+
+	m_rightStickDirWithCorrection[0] = strafeHorizontalInput + m_rightStickCorrection[0];
+	m_rightStickDirWithCorrection[1] = strafeVerticalInput + m_rightStickCorrection[1];
+	m_rightStickDirWithCorrection[2] = 0;
+
+	// Apply correction vectors to the analogue sticks.
+	horizontalInput += m_leftStickCorrection[0];
+	verticalInput += m_leftStickCorrection[1];
+
+	// Apply a threshold value to eliminate some of the analogue stick noise.
 	if( abs(horizontalInput) < m_controllerEpsilon )
 		horizontalInput = 0;
 	if( abs(verticalInput) < m_controllerEpsilon )

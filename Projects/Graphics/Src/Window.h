@@ -21,6 +21,7 @@ public:
 	Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindowFlag);
 	virtual ~Window();
 	HWND getWindowRef();
+	void changeWindowRes( int p_width, int p_height );
 protected:
 private:
 	int m_width;

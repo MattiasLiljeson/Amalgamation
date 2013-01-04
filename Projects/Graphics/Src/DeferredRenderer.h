@@ -102,6 +102,9 @@ public:
 	void endRenderLibRocket();
 
 	void hookUpAntTweakBar();
+
+	void releaseRenderTargetsAndDepthStencil();
+	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 protected:
 private:
 	void initDepthStencil();

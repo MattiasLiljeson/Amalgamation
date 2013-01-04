@@ -8,7 +8,6 @@
 
 Cursor::Cursor()
 {
-	//leftBtnState = InputHelper::KEY_STATE::KEY_UP;
 	m_x = 0;
 	m_y = 0;
 }
