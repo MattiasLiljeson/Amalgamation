@@ -32,7 +32,7 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	float4 normalColor = float4(gNormalMap.Sample(pointSampler, p_input.texCoord));	
 	float4 specular = float4(gSpecular.Sample(pointSampler, p_input.texCoord));
 	
-	return specular;
+	//return specular;
 	// Normal in -1 to 1 range
 	float4 normal = normalColor*2.0f-1.0f;
 	
