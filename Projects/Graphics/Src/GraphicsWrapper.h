@@ -122,16 +122,16 @@ public:
 
 	void changeBackbufferRes( int p_width, int p_height );
 
+	void changeToWindowed(bool p_windowed);
 private:
+	void initSwapChain(HWND p_hWnd);
 
 	///-----------------------------------------------------------------------------------
 	/// Initialize the graphic card, need input is a win32 window used to present the 
 	/// render result
-	/// \param p_hWnd
-	/// \param p_windowed
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void initHardware(HWND p_hWnd, bool p_windowed);
+	void initHardware();
 
 	void releaseBackBuffer();
 
@@ -146,10 +146,10 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initViewport();
-
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
+	DXGI_SWAP_CHAIN_DESC	m_swapChainDesc;
 	IDXGISwapChain*			m_swapChain;
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
@@ -167,4 +167,5 @@ private:
 
 	int m_height;
 	int m_width;
+	bool m_windowed;
 };
