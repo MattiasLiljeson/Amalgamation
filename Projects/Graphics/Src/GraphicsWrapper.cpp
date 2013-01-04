@@ -44,7 +44,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	SAFE_RELEASE(m_device);
 	SAFE_RELEASE(m_deviceContext);
 	SAFE_RELEASE(m_swapChain);
-	SAFE_RELEASE(m_backBuffer);
+	releaseBackBuffer();
 	
 	delete m_deferredRenderer;
 	delete m_deferredBaseShader;
@@ -382,18 +382,22 @@ void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height )
 
 	m_deviceContext->OMSetRenderTargets(0, 0, 0);
 
-	SAFE_RELEASE( m_backBuffer );
+	releaseBackBuffer();
+	m_deferredRenderer->releaseRenderTargetsAndDepthStencil();
 
 	HRESULT hr;
 	// Resize swap chain to window's size.
 	hr = m_swapChain->ResizeBuffers(0, p_width, p_height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	if(FAILED(hr))
+		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	initBackBuffer();
-
-	DXGI_SWAP_CHAIN_DESC desc;
-	m_swapChain->GetDesc( &desc );
-
-	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
-
 	initViewport();
+
+	m_deferredRenderer->initRendertargetsAndDepthStencil( m_width, m_height );
+}
+
+void GraphicsWrapper::releaseBackBuffer()
+{
+	SAFE_RELEASE( m_backBuffer );
 }

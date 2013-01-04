@@ -23,25 +23,24 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* 
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, m_device->GetFeatureLevel());
 
-	m_fullscreenQuad = NULL;
+	m_fullscreenQuad =	 NULL;
+	m_depthStencilView = NULL;
+	for(int i = 0; i < NUMBUFFERS; i++)
+	{
+		m_gBuffers[i] = NULL;
+		m_gBuffersShaderResource[i] = NULL;
+	}
 
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 
-	initDepthStencil();
-	initGeometryBuffers();
-	initTestShaders();
+
+	initRendertargetsAndDepthStencil( p_width, p_height );
 }
 
 DeferredRenderer::~DeferredRenderer()
 {
-	SAFE_RELEASE(m_depthStencilView);
-
-	for (int i = 0; i < NUMBUFFERS; i++)
-	{
-		SAFE_RELEASE(m_gBuffers[i]);
-		SAFE_RELEASE(m_gBuffersShaderResource[i]);
-	}
+	releaseRenderTargetsAndDepthStencil();
 
 	delete m_shaderFactory;
 	delete m_bufferFactory;
@@ -310,4 +309,26 @@ void DeferredRenderer::hookUpAntTweakBar()
 {
 	AntTweakBarWrapper::getInstance()->addWriteVariable("Color",TW_TYPE_COLOR4F,
 		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");
+}
+
+void DeferredRenderer::releaseRenderTargetsAndDepthStencil()
+{
+	// Release all buffers
+	SAFE_RELEASE(m_depthStencilView);
+
+	for (int i = 0; i < NUMBUFFERS; i++)
+	{
+		SAFE_RELEASE(m_gBuffers[i]);
+		SAFE_RELEASE(m_gBuffersShaderResource[i]);
+	}
+}
+
+void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_height )
+{
+	m_width = p_width;
+	m_height = p_height;
+
+	initDepthStencil();
+	initGeometryBuffers();
+	initTestShaders();
 }

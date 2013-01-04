@@ -133,6 +133,8 @@ private:
 	///-----------------------------------------------------------------------------------
 	void initHardware(HWND p_hWnd, bool p_windowed);
 
+	void releaseBackBuffer();
+
 	///-----------------------------------------------------------------------------------
 	/// Creates the true back buffer
 	/// \return void
