@@ -49,6 +49,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_baseShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
+	delete m_rocketShader;
 }
 
 void DeferredRenderer::clearBuffers()
