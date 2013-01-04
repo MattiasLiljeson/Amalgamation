@@ -111,3 +111,16 @@ int EntityManager::getTotalDeleted() const
 {
 	return m_deleted;
 }
+
+Entity* EntityManager::getFirstEntityByComponentType( ComponentType::ComponentTypeIdx p_componentType )
+{
+	for(unsigned int i=0; i<m_entities.size(); i++)
+	{
+		if(m_entities[i]->getComponent( p_componentType ) != NULL)
+		{
+			return m_entities[i];
+		}
+	}
+
+	return NULL;
+}

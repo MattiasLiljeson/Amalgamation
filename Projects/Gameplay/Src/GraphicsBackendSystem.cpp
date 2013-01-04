@@ -6,6 +6,7 @@
 #include <Window.h>
 #include <SystemType.h>
 #include <ComponentType.h>
+#include "CameraInfo.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -119,9 +120,22 @@ void TW_CALL GraphicsBackendSystem::applyNewResolution( void* p_clientData )
 		m_selfPointer->m_scrHeight );
 	m_selfPointer->m_graphicsWrapper->changeBackbufferRes( m_selfPointer->m_scrWidth,
 		m_selfPointer->m_scrHeight );
+
+	Entity* mainCamera =
+		m_selfPointer->m_world->getEntityManager()->getFirstEntityByComponentType(
+		ComponentType::MainCamera );
+	if( mainCamera != NULL )
+	{
+		
+		CameraInfo* cameraInfo = static_cast<CameraInfo*>( mainCamera->getComponent(
+			ComponentType::CameraInfo ) );
+		cameraInfo->createPerspectiveMatrix(m_selfPointer->getAspectRatio());
+
+	}
+
 }
 
 float GraphicsBackendSystem::getAspectRatio()
 {
-	return m_scrWidth / m_scrHeight;
+	return (float)m_scrWidth / m_scrHeight;
 }
