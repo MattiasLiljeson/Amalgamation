@@ -94,12 +94,24 @@ public:
 	void renderComposedImage();
 	
 	///-----------------------------------------------------------------------------------
-	/// Desc
+	/// Set up for GUI render pass
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void beginRenderLibRocket();
-	void renderLibRocket( Mesh* p_mesh, Texture* p_texture );
-	void endRenderLibRocket();
+	void beginGUIPass();
+
+	///-----------------------------------------------------------------------------------
+	/// Render a mesh in the GUI
+	/// \param p_mesh
+	/// \param p_texture
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderGUIMesh( Mesh* p_mesh, Texture* p_texture );
+
+	///-----------------------------------------------------------------------------------
+	/// Finalize the GUI render pass
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void finalizeGUIPass();
 
 	void hookUpAntTweakBar();
 protected:

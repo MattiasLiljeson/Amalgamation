@@ -179,13 +179,13 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::beginRenderLibRocket()
+void GraphicsWrapper::beginGUIPass()
 {
-	m_deferredRenderer->beginRenderLibRocket();
+	m_deferredRenderer->beginGUIPass();
 }
 
-void GraphicsWrapper::renderLibRocket( unsigned int p_meshId, 
-												   vector<InstanceData>* p_instanceList )
+void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
+									 vector<InstanceData>* p_instanceList )
 {
 	Mesh* mesh = m_meshManager->getResource( p_meshId );
 	Texture* tex = m_textureManager->getResource( mesh->getTextureId() );
@@ -194,14 +194,14 @@ void GraphicsWrapper::renderLibRocket( unsigned int p_meshId,
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 		p_instanceList->size() );
 
-	m_deferredRenderer->renderLibRocket( mesh, tex );
+	m_deferredRenderer->renderGUIMesh( mesh, tex );
 
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::endRenderLibRocket()
+void GraphicsWrapper::finalizeGUIPass()
 {
-	m_deferredRenderer->endRenderLibRocket();
+	m_deferredRenderer->finalizeGUIPass();
 }
 
 void GraphicsWrapper::finalizeFrame()

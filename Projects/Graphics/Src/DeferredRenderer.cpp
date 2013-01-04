@@ -161,7 +161,7 @@ void DeferredRenderer::renderComposedImage()
 	m_deviceContext->Draw(6,0);
 }
 
-void DeferredRenderer::beginRenderLibRocket()
+void DeferredRenderer::beginGUIPass()
 {
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -185,7 +185,7 @@ void DeferredRenderer::beginRenderLibRocket()
 	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
 }
 
-void DeferredRenderer::renderLibRocket( Mesh* p_mesh, Texture* p_texture )
+void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
 {
 
 	p_mesh->getVertexBuffer()->apply();
@@ -202,7 +202,7 @@ void DeferredRenderer::renderLibRocket( Mesh* p_mesh, Texture* p_texture )
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-void DeferredRenderer::endRenderLibRocket()
+void DeferredRenderer::finalizeGUIPass()
 {
 	//reset blend states
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
