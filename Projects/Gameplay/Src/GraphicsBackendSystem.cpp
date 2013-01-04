@@ -120,3 +120,8 @@ void TW_CALL GraphicsBackendSystem::applyNewResolution( void* p_clientData )
 	m_selfPointer->m_graphicsWrapper->changeBackbufferRes( m_selfPointer->m_scrWidth,
 		m_selfPointer->m_scrHeight );
 }
+
+float GraphicsBackendSystem::getAspectRatio()
+{
+	return m_scrWidth / m_scrHeight;
+}

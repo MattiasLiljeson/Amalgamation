@@ -120,9 +120,6 @@
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkUpdateSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -158,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h">
       <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

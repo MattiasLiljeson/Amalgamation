@@ -31,6 +31,7 @@ public:	//Enums
 				   // *FUGLY HACK!*
 		Transform, // There is a bug when an unused component idx is at the last position
 				   // in the enum. Therefore, put transform at the end for now. :/
+		MainCamera,
 		NUM_COMPONENT_TYPES
 	};
 

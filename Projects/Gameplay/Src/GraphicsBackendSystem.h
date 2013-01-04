@@ -36,6 +36,7 @@ public:
 	int getMeshId( const string& p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();
+	float getAspectRatio();
 
 private:
 	GraphicsWrapper* m_graphicsWrapper;
