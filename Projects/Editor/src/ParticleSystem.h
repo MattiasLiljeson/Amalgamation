@@ -13,13 +13,16 @@
 #define PARTICLESYSTEM_H
 
 #include "AglParticleSystem.h"
+#include "Utility.h"
 
 class ParticleSystem
 {
 private:
 	AglParticleSystem* mSystem;
+	ID3D11Buffer*	   mVB;
+	ID3D11Device*	   mDevice;
 public:
-	ParticleSystem(AglParticleSystem* pSystem);
+	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice);
 	virtual ~ParticleSystem();
 
 	void SetSpawnPoint(AglVector3 pSpawnPoint)

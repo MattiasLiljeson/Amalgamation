@@ -14,15 +14,24 @@ AglParticleSystem::AglParticleSystem()
 	m_header.spawnPoint = AglVector3(0, 0, 0);
 	m_header.particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
 	m_age = 0;
+	m_timeSinceSpawn = 0;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
 	m_header = p_header;
 	m_age = 0;
+	m_timeSinceSpawn = 0;
 }
 AglParticleSystem::~AglParticleSystem()
 {
-
+	if (m_header.particleFormat == AGL_PARTICLE_FORMAT_STANDARD)
+	{
+		for (unsigned int i = 0; i < m_particles.size(); i++)
+		{
+			AglStandardParticle* p = (AglStandardParticle*)m_particles[i];
+			delete p;
+		}
+	}
 }
 
 AglParticleSystemHeader AglParticleSystem::getHeader()

@@ -106,7 +106,7 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	vector<AglParticleSystem*> ps = mAglScene->getParticleSystems();
 	for (unsigned int i = 0; i < ps.size(); i++)
 	{
-		mParticleSystems.push_back(new ParticleSystem(ps[i]));
+		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice));
 	}
 
 
@@ -266,7 +266,7 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 void Scene::AddParticleSystem(AglParticleSystem* pSystem)
 {
 	mAglScene->addParticleSystem(pSystem);
-	mParticleSystems.push_back(new ParticleSystem(pSystem));
+	mParticleSystems.push_back(new ParticleSystem(pSystem, mDevice));
 }
 vector<AglGradient*> Scene::GetGradients()
 {

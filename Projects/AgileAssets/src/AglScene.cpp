@@ -23,6 +23,8 @@ AglScene::~AglScene()
 		delete m_bspTrees[i];
 	for (unsigned int i = 0; i < m_sphereGrids.size(); i++)
 		delete m_sphereGrids[i];
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		delete m_particleSystems[i];
 }
 void AglScene::init(AglSceneDesc p_desc)
 {
@@ -100,6 +102,8 @@ void AglScene::update(float p_dt)
 	}
 	if (m_animations.size() > 0)
 		m_animations[m_currentAnimation]->update(p_dt);
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		m_particleSystems[i]->update(p_dt);
 }
 AglMaterial* AglScene::getMaterial(int p_index)
 {
