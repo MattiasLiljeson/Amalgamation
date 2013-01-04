@@ -20,6 +20,13 @@ class VertexShader;
 class PixelShader;
 class GeometryShader;
 
+struct ParticleBuffer
+{
+	AglVector4 EyePosition;
+	AglMatrix View;
+	AglMatrix Projection;
+};
+
 class ParticleShader
 {
 private:
@@ -27,7 +34,6 @@ private:
 	ID3D11DeviceContext*	mDeviceContext; 
 	ID3D11InputLayout*		mIL;
 	ID3D11Buffer*			mBuffer;
-	ID3D11Buffer*			mGradientBuffer;
 
 	VertexShader*			mVS;
 	PixelShader*			mPS;
@@ -39,6 +45,7 @@ public:
 	ID3D11PixelShader*  GetPixelShader();
 	ID3D11GeometryShader* GetGeometryShader();
 	ID3D11InputLayout*	GetInputLayout();
+	void SetBuffer();
 };
 
 #endif // PARTICLESHADER_H

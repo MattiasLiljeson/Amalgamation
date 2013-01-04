@@ -106,7 +106,7 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	vector<AglParticleSystem*> ps = mAglScene->getParticleSystems();
 	for (unsigned int i = 0; i < ps.size(); i++)
 	{
-		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice));
+		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice, mDeviceContext));
 	}
 
 
@@ -151,7 +151,7 @@ void Scene::Draw()
 		m_world = AglMatrix::identityMatrix();
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
-	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	/*for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
@@ -179,7 +179,7 @@ void Scene::Draw()
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
 		}
-	}
+	}*/
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
@@ -266,7 +266,7 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 void Scene::AddParticleSystem(AglParticleSystem* pSystem)
 {
 	mAglScene->addParticleSystem(pSystem);
-	mParticleSystems.push_back(new ParticleSystem(pSystem, mDevice));
+	mParticleSystems.push_back(new ParticleSystem(pSystem, mDevice, mDeviceContext));
 }
 vector<AglGradient*> Scene::GetGradients()
 {

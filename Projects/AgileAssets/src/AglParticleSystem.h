@@ -41,7 +41,7 @@ class AglParticleSystem
 {
 private:
 	AglParticleSystemHeader m_header;
-	vector<void*> m_particles;
+	vector<AglStandardParticle> m_particles;
 	float		  m_age;
 	float		  m_timeSinceSpawn;
 public:
@@ -50,7 +50,7 @@ public:
 	virtual ~AglParticleSystem();
 
 	AglParticleSystemHeader getHeader();
-	vector<void*> getParticles();
+	vector<AglStandardParticle> getParticles();
 
 	void setSpawnPoint(AglVector3 p_spawnPoint);
 

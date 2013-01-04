@@ -10,7 +10,7 @@ AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_vel
 
 AglParticleSystem::AglParticleSystem()
 {
-	m_header.particleAge = 0;
+	m_header.particleAge = 1.0f;
 	m_header.spawnPoint = AglVector3(0, 0, 0);
 	m_header.particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
 	m_age = 0;
@@ -24,21 +24,13 @@ AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 }
 AglParticleSystem::~AglParticleSystem()
 {
-	if (m_header.particleFormat == AGL_PARTICLE_FORMAT_STANDARD)
-	{
-		for (unsigned int i = 0; i < m_particles.size(); i++)
-		{
-			AglStandardParticle* p = (AglStandardParticle*)m_particles[i];
-			delete p;
-		}
-	}
 }
 
 AglParticleSystemHeader AglParticleSystem::getHeader()
 {
 	return m_header;
 }
-vector<void*> AglParticleSystem::getParticles()
+vector<AglStandardParticle> AglParticleSystem::getParticles()
 {
 	return m_particles;
 }
@@ -54,26 +46,27 @@ void AglParticleSystem::update(float p_dt)
 	{
 		for (unsigned int i = 0; i < m_particles.size(); i++)
 		{
-			AglStandardParticle* p = (AglStandardParticle*)m_particles[i];
+			AglStandardParticle& p = m_particles[i];
 			
-			if (p->age > m_header.particleAge) //Kill Particle
+			p.age += p_dt;
+			if (p.age > m_header.particleAge) //Kill Particle
 			{
 				m_particles[i] = m_particles.back();
 				m_particles.pop_back();
 			}
 			else
 			{
-				p->position += p->velocity * p_dt;
+				p.position += p.velocity * p_dt;
 			}
 		}
 
 		m_age += p_dt;
 		m_timeSinceSpawn += p_dt;
-		if (m_timeSinceSpawn > 1.0f)
+		if (m_timeSinceSpawn > 0.2f)
 		{
-			AglStandardParticle* p = new AglStandardParticle(m_header.spawnPoint, AglVector3(1, 0, 0), 0.02f);
+			AglStandardParticle p(m_header.spawnPoint + AglVector3(0, 0, 0), AglVector3(0, 1, 0), 0.05f);
 			m_particles.push_back(p);
-			m_timeSinceSpawn -= 1.0f;
+			m_timeSinceSpawn -= 0.2f;
 		}
 
 	}

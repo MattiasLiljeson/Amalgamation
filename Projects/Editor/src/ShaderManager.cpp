@@ -124,3 +124,8 @@ SkeletonShader* ShaderManager::GetSkeletonShader()
 {
 	return mSkeletonShader;
 }
+
+ParticleShader* ShaderManager::GetParticleShader()
+{
+	return mParticleShader;
+}

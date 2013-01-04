@@ -19,8 +19,7 @@ cbuffer cbFixed
 struct VS_OUT
 {
 	float3 Position  : POSITION;
-	float2 Size : SIZE;
-	uint   Type  : TYPE;
+	float Size : SIZE;
 };
 
 struct GS_OUT
@@ -46,8 +45,8 @@ void GShader(point VS_OUT gIn[1],
 	matrix vp = mul(gView, gProj);
 	matrix WVP = mul(W, vp);
 	
-	float halfWidth  = 0.5f*gIn[0].Size.x;
-	float halfHeight = 0.5f*gIn[0].Size.y;
+	float halfWidth  = 0.5f*gIn[0].Size;
+	float halfHeight = 0.5f*gIn[0].Size;
 
 	float4 v[4];
 	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);

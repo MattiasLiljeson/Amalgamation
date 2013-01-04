@@ -1,11 +1,15 @@
 #include "ParticleSystem.h"
 #include "Globals.h"
 #include "SphereMesh.h"
+#include "ShaderManager.h"
+#include "ParticleShader.h"
+#include "Camera.h"
 
-ParticleSystem::ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice)
+ParticleSystem::ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
 	mSystem = pSystem;
 	mDevice = pDevice;
+	mDeviceContext = pDeviceContext;
 	mVB = NULL;
 }
 
@@ -20,15 +24,14 @@ void ParticleSystem::Draw()
 	psWorld[0] = 0.1f;
 	psWorld[5] = 0.1f;
 	psWorld[10] = 0.1f;
-	SPHEREMESH->Draw(psWorld, AglVector3(1, 0.5f, 0));
+	//SPHEREMESH->Draw(psWorld, AglVector3(1, 0.5f, 0));
 	psWorld[0] = 0.01f;
 	psWorld[5] = 0.01f;
 	psWorld[10] = 0.01f;
-	SPHEREMESH->Draw(psWorld, AglVector3(0, 0.0f, 0));
+	//SPHEREMESH->Draw(psWorld, AglVector3(0, 0.0f, 0));
 
 
-	vector<void*> particles = mSystem->getParticles();
-
+	vector<AglStandardParticle> particles = mSystem->getParticles();
 	//Update vertex buffer
 	if (particles.size() > 0)
 	{
@@ -46,6 +49,28 @@ void ParticleSystem::Draw()
 		vertexData.SysMemSlicePitch = 0;
 
 		mDevice->CreateBuffer(&bd, &vertexData, &mVB);
+	}
+
+
+
+	//Draw the fucking particle system or else...
+	if (mVB)
+	{
+		ParticleShader* ps = ShaderManager::GetInstance()->GetParticleShader();
+		ps->SetBuffer();
+		mDeviceContext->VSSetShader(ps->GetVertexShader(), 0, 0);
+		mDeviceContext->PSSetShader(ps->GetPixelShader(), 0, 0);	
+		mDeviceContext->HSSetShader(NULL, 0, 0);
+		mDeviceContext->DSSetShader(NULL, 0, 0);
+		mDeviceContext->GSSetShader(ps->GetGeometryShader(), 0, 0);
+		mDeviceContext->IASetInputLayout(ps->GetInputLayout());
+
+		UINT stride = sizeof(AglStandardParticle);
+		UINT offset = 0;
+		mDeviceContext->IASetVertexBuffers(0, 1, &mVB, &stride, &offset);
+		mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+		mDeviceContext->Draw(particles.size(), 0);
 	}
 }
 

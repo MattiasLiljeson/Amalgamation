@@ -21,8 +21,9 @@ private:
 	AglParticleSystem* mSystem;
 	ID3D11Buffer*	   mVB;
 	ID3D11Device*	   mDevice;
+	ID3D11DeviceContext* mDeviceContext;
 public:
-	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice);
+	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
 
 	void SetSpawnPoint(AglVector3 pSpawnPoint)

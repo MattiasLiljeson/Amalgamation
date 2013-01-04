@@ -48,6 +48,7 @@ public:
 	GradientShader* GetGradientShader();
 	RenderNormalsShader* GetRenderNormals();
 	SkeletonShader* GetSkeletonShader();
+	ParticleShader* GetParticleShader();
 
 };
 
