@@ -180,13 +180,30 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::beginRenderLibRocket()
+void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state)
 {
-	m_deferredRenderer->beginRenderLibRocket();
+	m_deferredRenderer->setRasterizerStateSettings(p_state);
 }
 
-void GraphicsWrapper::renderLibRocket( unsigned int p_meshId, 
-												   vector<InstanceData>* p_instanceList )
+
+void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
+{
+	D3D11_RECT scissor_rect;
+	scissor_rect.left = x;
+	scissor_rect.right = x + width;
+	scissor_rect.top = y;
+	scissor_rect.bottom = y + height;
+
+	m_deviceContext->RSSetScissorRects(1, &scissor_rect);
+}
+
+void GraphicsWrapper::beginGUIPass()
+{
+	m_deferredRenderer->beginGUIPass();
+}
+
+void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
+									 vector<InstanceData>* p_instanceList )
 {
 	Mesh* mesh = m_meshManager->getResource( p_meshId );
 	Texture* tex = m_textureManager->getResource( mesh->getTextureId() );
@@ -195,14 +212,14 @@ void GraphicsWrapper::renderLibRocket( unsigned int p_meshId,
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 		p_instanceList->size() );
 
-	m_deferredRenderer->renderLibRocket( mesh, tex );
+	m_deferredRenderer->renderGUIMesh( mesh, tex );
 
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::endRenderLibRocket()
+void GraphicsWrapper::finalizeGUIPass()
 {
-	m_deferredRenderer->endRenderLibRocket();
+	m_deferredRenderer->finalizeGUIPass();
 }
 
 void GraphicsWrapper::finalizeFrame()
@@ -304,7 +321,58 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 	return meshResultId;
 }
 
-unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
+unsigned int GraphicsWrapper::createMesh( const string& p_name, 
+										 int p_numVertices, PNTTBVertex* p_vertices, 
+										 int p_numIndices, DIndex* p_indices, 
+										 Texture* p_texture/*=NULL*/ )
+{
+	// check if resource already exists
+	unsigned int meshResultId = 0;
+	int meshFoundId = m_meshManager->getResourceId(p_name);
+	if (meshFoundId==-1)  // if it does not exist, create new
+	{
+		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
+		p_vertices, p_numIndices, p_indices );
+
+		meshResultId = registerMesh( p_name, mesh, p_texture ); // HACK: textures should be handled 
+																// by index instead
+	}
+	else // the mesh already exists
+	{
+		meshResultId = static_cast<unsigned int>(meshFoundId);
+	}
+	return meshResultId;
+}
+
+
+
+unsigned int GraphicsWrapper::createMesh( const string& p_name, 
+										 int p_numVertices, PNTTBVertex* p_vertices, 
+										 int p_numIndices, DIndex* p_indices, 
+										 int p_textureId )
+{
+	// check if resource already exists
+	unsigned int meshResultId = 0;
+	int meshFoundId = m_meshManager->getResourceId(p_name);
+	if (meshFoundId==-1)  // if it does not exist, create new
+	{
+		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
+			p_vertices, p_numIndices, p_indices );
+
+		meshResultId = (int)m_meshManager->addResource( p_name, mesh );
+		if( p_textureId != -1 )
+			mesh->setTextureId( static_cast<unsigned int>(p_textureId) );
+		
+	}
+	else // the mesh already exists
+	{
+		meshResultId = static_cast<unsigned int>(meshFoundId);
+	}
+	return meshResultId;
+}
+
+
+unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
 {
 	// check if resource already exists
 	int meshId = m_meshManager->getResourceId( p_name );
@@ -313,12 +381,12 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name, Mesh* p_mesh, Te
 		meshId = (int)m_meshManager->addResource( p_name, p_mesh );
 
 		string textureName = p_name + "_tex";
-		int texId = m_textureManager->getResourceId( (void*)p_texture );
+		int texId = m_textureManager->getResourceId( p_texture );
 		if( texId == -1 )
 		{
-			texId = (int)m_textureManager->addResource( textureName, p_texture );
+			texId = static_cast<int>(m_textureManager->addResource( textureName, p_texture ));
 		}
-		p_mesh->setTextureId( (unsigned int)texId );
+		p_mesh->setTextureId( static_cast<unsigned int>(texId) );
 	}
 	return meshId;
 }

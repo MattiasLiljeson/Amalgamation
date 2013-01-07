@@ -60,7 +60,7 @@ void LibRocketBackendSystem::initialize()
 	fonts.push_back( "Delicious-Bold.otf" );
 	fonts.push_back( "Delicious-Italic.otf" );
 	fonts.push_back( "Delicious-Roman.otf" );
-	for( int i=0; i<fonts.size(); i++ )
+	for( unsigned int i=0; i<fonts.size(); i++ )
 	{
 		string tmp = GUI_FONT_PATH + fonts[i]; 
 		loadFontFace( tmp.c_str() );
@@ -113,8 +113,8 @@ void LibRocketBackendSystem::process()
 	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int windowHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
 	// NDC -> Screenspace
-	int screenSpaceX = (m_cursor->getX()+1) * windowWidth/2;
-	int screenSpaceY = (m_cursor->getY()+1) * windowHeight/2;
+	int screenSpaceX = static_cast<int>((m_cursor->getX()+1) * windowWidth/2);
+	int screenSpaceY = static_cast<int>((m_cursor->getY()+1) * windowHeight/2);
 
 	m_rocketContext->ProcessMouseMove( screenSpaceX, screenSpaceY, 0 );
 	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )

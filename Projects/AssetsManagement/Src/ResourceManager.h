@@ -53,17 +53,16 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Get the id of resource data by its name. Uses a map to access the data.
 	/// \param p_uniqueName
-	/// \return unsigned int
+	/// \return unsigned int Idx of resource. -1 if not existing.
 	///-----------------------------------------------------------------------------------
 	int getResourceId(const string& p_uniqueName);
 
 	///-----------------------------------------------------------------------------------
-	/// HACK: fetch resource by its ptr. Used when a unique id isnt available but a ptr a
-	/// texture is. This is used by librocket which only handles ptrs. //Mattias L
+	/// Fetch resource by its ptr.
 	/// \param p_ptr ptr to the resource
-	/// \return int Idx of resource. -1 if not existing; 
+	/// \return int Idx of resource. -1 if not existing.
 	///-----------------------------------------------------------------------------------
-	int getResourceId( void* p_ptr );
+	int getResourceId( T* p_ptr );
 
 	///-----------------------------------------------------------------------------------
 	/// Get the name of resource data by its id. 
@@ -122,13 +121,13 @@ private:
 	ResourceDataContainer* getResourceContainerFromName(const string& p_uniqueName);
 
 	///-----------------------------------------------------------------------------------
-	/// HACK: Help method used in order to get the resource data container from its ptr. 
-	/// This is used when a name isn't known. /Mattias L
+	/// Help method used in order to get the resource data container from its ptr. 
+	/// This is to be used when a name or index isn't known.
 	/// ResourceDataContainer is only used internally.
 	/// \param p_uniqueName
 	/// \return ResourceDataContainer*
 	///-----------------------------------------------------------------------------------
-	ResourceDataContainer* getResourceContainerFromPtr( void* p_ptr );
+	ResourceDataContainer* getResourceContainerFromPtr( T* p_ptr );
 
 	///
 	/// A map of all the resources for access by unique key.
@@ -150,7 +149,6 @@ void ResourceManager<T>::clear()
 	MapType::iterator mapIter = m_resourceMap.begin();
 	for (; mapIter!=m_resourceMap.end(); mapIter++)
 	{
-			// delete *mapIter->second;
 			delete mapIter->second;
 	}
 	m_resourceMap.clear();
@@ -195,7 +193,7 @@ int ResourceManager<T>::getResourceId(const string& p_uniqueName)
 };
 
 template <class T>
-int ResourceManager<T>::getResourceId( void* p_ptr )
+int ResourceManager<T>::getResourceId( T* p_ptr )
 {
 	ResourceDataContainer* container = getResourceContainerFromPtr( p_ptr );
 	if ( container != NULL )
@@ -286,17 +284,14 @@ typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResou
 }
 
 template <class T>
-typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResourceContainerFromPtr( void* p_ptr )
+typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResourceContainerFromPtr( T* p_ptr )
 {
 	ResourceDataContainer* resourceContainer = NULL;
-	MapType::iterator it = m_resourceMap.begin();
 
-	for( ; it != m_resourceMap.end(); it++ )
+	for(unsigned int i=0; i<m_resourceList.getSize(); i++ )
 	{
-		if( it->second->data == p_ptr)
-		{
-			resourceContainer = it->second; 
-		}
+		if( m_resourceList[i]->data == p_ptr)
+			resourceContainer = m_resourceList[i]; 
 	}
 
 	return resourceContainer;
