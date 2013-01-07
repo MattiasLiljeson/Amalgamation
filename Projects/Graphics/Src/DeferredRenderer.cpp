@@ -140,8 +140,8 @@ void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-
-void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture, 
+void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArray, 
+										   unsigned int p_textureArraySize, 
 										   Buffer<InstanceData>* p_instanceBuffer )
 {
 	// Specialized, external apply of these buffers
@@ -162,8 +162,22 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture,
 	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
 									  DXGI_FORMAT_R32_UINT, 0);
 
-	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	/************************************************************************/
+	/* Unsure on what the values, startSlot and numVIews, represent.		*/
+	/* -Robin T																*/
+	/************************************************************************/
+	UINT startSlot = 0;
+	UINT numViews = 1;
+	for (unsigned int i = 0; i < p_textureArraySize; i++)
+	{
+		if(p_textureArray[i] != NULL)
+		{
+			// set textures
+			m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+				&p_textureArray[i]->data );
+			startSlot++;
+		}
+	}
 
 	m_baseShader->apply();
 

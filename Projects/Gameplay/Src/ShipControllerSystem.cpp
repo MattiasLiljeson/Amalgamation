@@ -144,8 +144,8 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	updateAntTweakBar(input);
 
 	// Apply correction vectors to the analogue sticks.
-	input.horizontalInput += m_leftStickCorrection[0];
-	input.verticalInput += m_leftStickCorrection[1];
+	input.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
+	input.verticalInput += static_cast<float>(m_leftStickCorrection[1]);
 
 	// Apply a threshold value to eliminate some of the analogue stick noise.
 	if( abs(input.horizontalInput) < m_controllerEpsilon ) input.horizontalInput = 0;
