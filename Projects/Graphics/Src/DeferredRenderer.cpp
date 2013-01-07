@@ -45,18 +45,18 @@ DeferredRenderer::~DeferredRenderer()
 {
 	SAFE_RELEASE(m_depthStencilView);
 
-	for (int i = 0; i < NUMBUFFERS; i++)
+	for (unsigned int i = 0; i < NUMBUFFERS; i++)
 	{
 		SAFE_RELEASE(m_gBuffers[i]);
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
 	}
 
-	for (int i = 0; i < m_blendStates.size(); i++)
+	for (unsigned int i = 0; i < m_blendStates.size(); i++)
 	{
 		SAFE_RELEASE(m_blendStates[i]);
 	}
 
-	for (int i = 0; i < m_blendStates.size(); i++)
+	for (unsigned int i = 0; i < m_blendStates.size(); i++)
 	{
 		SAFE_RELEASE(m_rasterizerStates[i]);
 	}

@@ -138,7 +138,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	geometry->meshId = m_wrapper->createMesh(ss.str(), 
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
-											 (Texture*)p_texture);
+											 (Texture*)p_texture); // <-- change this to texture id (int)
 
 
 

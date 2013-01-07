@@ -288,7 +288,7 @@ typename ResourceManager<T>::ResourceDataContainer* ResourceManager<T>::getResou
 {
 	ResourceDataContainer* resourceContainer = NULL;
 
-	for(int i=0; i<m_resourceList.getSize(); i++ )
+	for(unsigned int i=0; i<m_resourceList.getSize(); i++ )
 	{
 		if( m_resourceList[i]->data == p_ptr)
 			resourceContainer = m_resourceList[i]; 
