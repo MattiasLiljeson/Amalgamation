@@ -50,14 +50,44 @@ void FBXParser::Parse()
 		//OurAxisSystem.ConvertScene(scene);
 	}
 
-	FbxNode* root = mScene->GetRootNode();
-	const char* n = root->GetName();
-	int cnt = mScene->GetNodeCount();
 	for (int i = 0; i < mScene->GetNodeCount(); i++)
 	{
 		const char* n = mScene->GetNode(i)->GetName();
 		ParseNode(mScene->GetNode(i));
+	}
 
+	//Find NUll nodes
+	vector<const char*> nodeNames;
+	for (int i = 0; i < mScene->GetNodeCount(); i++)
+	{
+		FbxNode* node = mScene->GetNode(i);
+		const char* n = node->GetName();
+		FbxNodeAttribute* attr = node->GetNodeAttribute();
+		if (attr)
+		{
+			FbxNodeAttribute::EType attrType = attr->GetAttributeType();
+			if (attrType == FbxNodeAttribute::eNull)
+			{
+				AglConnectionPoint cp;
+
+				cp.parentMesh = -1;
+				for (unsigned int i = 0; i < mMeshes.size(); i++)
+				{
+					if (node->GetParent() == mMeshes[i]->SourceNode)
+					{
+						cp.parentMesh = i;
+						break;
+					}
+				}
+
+				nodeNames.push_back(node->GetParent()->GetName()); 
+				FbxMatrix transform = node->EvaluateLocalTransform();
+				for (int row = 0; row < 4; row++)
+					for (int column = 0; column < 4; column++)
+						cp.transform[row*4 + column] = (float)transform.Get(row, column);
+				mConnectionPoints.push_back(cp);
+			}
+		}
 	}
 
 	AnimationParser ap(this);
@@ -317,4 +347,8 @@ MaterialData* FBXParser::GetMaterial(FbxSurfaceMaterial* pMaterial)
 			return mMaterials[i];
 	}
 	return NULL;
+}
+vector<AglConnectionPoint> FBXParser::GetConnectionPoints()
+{
+	return mConnectionPoints;
 }

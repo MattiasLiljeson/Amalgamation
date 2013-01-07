@@ -43,6 +43,7 @@ struct AglSceneDesc
 	vector<AglSkeletonMapping*>		skeletonMappings;
 	vector<AglLooseBspTree*>		bspTrees;
 	vector<AglInteriorSphereGrid*>	sphereGrids;
+	vector<AglConnectionPoint>		connectionPoints;
 	string							textureDirectory;
 	AglCoordinateSystem				coordinateSystem;
 };
@@ -65,6 +66,7 @@ private:
 	vector<AglSkeletonMapping*>		m_skeletonMappings; ///< List of skeleton mappings
 	vector<AglLooseBspTree*>		m_bspTrees;			///< List of Bsp trees
 	vector<AglInteriorSphereGrid*>	m_sphereGrids;		///< List of sphere grids
+	vector<AglConnectionPoint>		m_connectionPoints;	///< List of connection points on various meshes
 	AglCoordinateSystem				m_coordinateSystem; ///< Coordinate system of the scene
 
 	unsigned int m_currentAnimation; ///< Currently played animation
@@ -194,6 +196,18 @@ public:
 	///-----------------------------------------------------------------------------------
 	vector<AglInteriorSphereGrid*> getSphereGrids();
 
+	///-----------------------------------------------------------------------------------
+	/// Get all the connection points
+	/// \return The connection points in the scene
+	///-----------------------------------------------------------------------------------
+	vector<AglConnectionPoint> getConnectionPoints();
+
+	///-----------------------------------------------------------------------------------
+	/// Get a connection points
+	/// \return The connection point
+	///-----------------------------------------------------------------------------------
+	AglConnectionPoint getConnectionPoints(unsigned int p_index);
+
 	///
 	/// Gets all scene data
 	/// \return The scene data
@@ -303,6 +317,12 @@ public:
 	/// \param The sphere grid to add
 	///-----------------------------------------------------------------------------------
 	void addSphereGrid(AglInteriorSphereGrid* p_sphereGrid);
+
+	///-----------------------------------------------------------------------------------
+	/// Adds a connection point to the scene
+	/// \param The connection point to add
+	///-----------------------------------------------------------------------------------
+	void addConnectionPoint(AglConnectionPoint p_connectionPoint);
 
 	///-----------------------------------------------------------------------------------
 	/// Gets a matrix corresponding to the axes in the coordinate system

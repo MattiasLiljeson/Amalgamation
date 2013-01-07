@@ -47,6 +47,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_skeletonMappings = p_desc.skeletonMappings;
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
+	m_connectionPoints = p_desc.connectionPoints;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
 }
@@ -154,6 +155,16 @@ vector<AglInteriorSphereGrid*> AglScene::getSphereGrids()
 	return m_sphereGrids;
 }
 
+vector<AglConnectionPoint> AglScene::getConnectionPoints()
+{
+	return m_connectionPoints;
+}
+
+AglConnectionPoint AglScene::getConnectionPoints(unsigned int p_index)
+{
+	return m_connectionPoints[p_index];
+}
+
 int AglScene::addName(string p_name)
 {
 	if (p_name.compare("") == 0)
@@ -215,6 +226,10 @@ void AglScene::addSphereGrid(AglInteriorSphereGrid* p_sphereGrid)
 {
 	m_sphereGrids.push_back(p_sphereGrid);
 }
+void AglScene::addConnectionPoint(AglConnectionPoint p_connectionPoint)
+{
+	m_connectionPoints.push_back(p_connectionPoint);
+}
 AglSceneDesc AglScene::getSceneData()
 {
 	AglSceneDesc desc;
@@ -231,6 +246,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.skeletons = this->m_skeletons;
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
+	desc.connectionPoints = this->m_connectionPoints;
 	desc.coordinateSystem = this->m_coordinateSystem;
 	return desc;
 }
