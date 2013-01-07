@@ -112,13 +112,13 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 					/************************************************************************/
 					/* Debug information only and there is no need for this to run the code */
 					/************************************************************************/
-					AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
-						TwType::TW_TYPE_FLOAT, 
+					AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+						"Master_volume", TwType::TW_TYPE_FLOAT, 
 						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
 						"group=Sound min=0 max=10 step=0.001 precision=3");
 
-					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
-						TwType::TW_TYPE_INT32,
+					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::NETWORK,
+						"NetId", TwType::TW_TYPE_INT32,
 						m_tcpClient->getIdPointer(), "" );
 				}
 			}

@@ -116,23 +116,24 @@ void ShipControllerSystem::initialize()
 	initMouse();
 	initKeyboard();
 
-	AntTweakBarWrapper::getInstance()->addWriteVariable( "ControllerEpsilon",
-		TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), "min=0.0 max=1.0 step=0.05" );
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::INPUT,
+		"ControllerEpsilon", TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), 
+		"min=0.0 max=1.0 step=0.05" );
 
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left Stick (raw)",
-		TwType::TW_TYPE_DIR3D, &m_leftStickDir, "" );
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::INPUT,
+		"Left Stick (raw)",	TwType::TW_TYPE_DIR3D, &m_leftStickDir, "" );
 
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right Stick (raw)",
-		TwType::TW_TYPE_DIR3D, &m_rightStickDir, "" );
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::INPUT,
+		"Right Stick (raw)", TwType::TW_TYPE_DIR3D, &m_rightStickDir, "" );
 	
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Left W/ Correction",
-		TwType::TW_TYPE_DIR3D, &m_leftStickDirWithCorrection, "" );
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::INPUT,
+		"Left W/ Correction", TwType::TW_TYPE_DIR3D, &m_leftStickDirWithCorrection, "" );
 
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Right W/ Correction",
-		TwType::TW_TYPE_DIR3D, &m_rightStickDirWithCorrection, "" );
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::INPUT,
+		"Right W/ Correction", TwType::TW_TYPE_DIR3D, &m_rightStickDirWithCorrection, "" );
 
-	AntTweakBarWrapper::getInstance()->addWriteVariable( "MouseSensitivity",
-		TwType::TW_TYPE_FLOAT, &m_mouseSensitivity, "");
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::INPUT,
+		"MouseSensitivity", TwType::TW_TYPE_FLOAT, &m_mouseSensitivity, "");
 }
 
 void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )

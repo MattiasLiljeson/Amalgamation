@@ -1,7 +1,17 @@
 #pragma once
 #include <AntTweakBar.h>
 #include <d3d11.h>
+#include <string>
 
+using namespace std;
+namespace AntTweakBarStrings{
+	static const string& overall	= "Overall";
+	static const string& sound		= "Sound";
+	static const string& graphics	= "Graphics";
+	static const string& input		= "Input";
+	static const string& network	= "Network";
+}
+using namespace AntTweakBarStrings;
 // =======================================================================================
 //                                      AntTweakBar
 // =======================================================================================
@@ -19,6 +29,11 @@
 class AntTweakBarWrapper
 {
 public:
+	enum Bar
+	{
+		OVERALL, SOUND, GRAPHICS, INPUT, NETWORK
+	};
+public:
 	///-----------------------------------------------------------------------------------
 	/// This function should only be called with parameters once to init Ant Tweak Bar 
 	/// Wrapper(ATBW) properly. Afterwards just call the function without any parameters
@@ -26,8 +41,7 @@ public:
 	/// \param p_nameOfBar
 	/// \return AntTweakBarWrapper*
 	///-----------------------------------------------------------------------------------
-	static AntTweakBarWrapper* getInstance(ID3D11Device* p_device=NULL, 
-		const char* p_nameOfBar=NULL);
+	static AntTweakBarWrapper* getInstance(ID3D11Device* p_device=NULL);
 
 	///-----------------------------------------------------------------------------------
 	/// Called to destroy the ATBW
@@ -35,20 +49,24 @@ public:
 	///-----------------------------------------------------------------------------------
 	static void destroy();
 
-	void	addReadOnlyVariable(const char* p_name, TwType p_type, const void *p_var, 
-		const char* p_misc);
+	void	addReadOnlyVariable(Bar p_barType, const char* p_name, TwType p_type, 
+		const void *p_var, const char* p_misc);
 
-	void	addWriteVariable(const char* p_name, TwType p_type, void *p_var,
+	void	addWriteVariable(Bar p_barType, const char* p_name, TwType p_type, void *p_var,
 		const char* p_misc);
 
 	void	render();
 	void	handleMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	TwBar*	getMainBar();
+	TwBar*	getAntBar(Bar p_barType);
 private:
-	AntTweakBarWrapper(ID3D11Device* p_device, const char* p_nameOfBar);
+	AntTweakBarWrapper(ID3D11Device* p_device);
 	virtual ~AntTweakBarWrapper();
 private:
-	TwBar* m_antBar;
+	TwBar* m_overallBar;
+	TwBar* m_soundBar;
+	TwBar* m_graphicsBar;
+	TwBar* m_input;
+	TwBar* m_network;
+
 	static AntTweakBarWrapper* sInstance;
-	const char* m_barName;
 };
