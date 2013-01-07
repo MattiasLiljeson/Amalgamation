@@ -123,6 +123,10 @@ public:
 	{
 		mSystem->setSpreadType(p_type);
 	}
+	void setParticleSize(float p_size)
+	{
+		mSystem->setParticleSize(p_size);
+	}
 
 	void Draw();
 };
