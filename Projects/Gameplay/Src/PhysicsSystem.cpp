@@ -39,31 +39,13 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 		}
 		else
 		{
-			// If the rigidbody is a compound body, handle compound specifics
-
-			// If the body has a parent, handle changes
-			if (body->isParentChanged())
-			{
-				// First, retrieve the ids
-				int oldId = body->getOldParentId();
-				int newId = body->getParentId();
-				Body* oldparent = NULL;
-				Body* newparent = NULL;
-
-				// Then the pointers to the bodies
-				if (oldId!=-1)
-					oldparent = m_physicsController->getBody(body->getOldParentId());
-
-				if (newId!=-1)
-					newparent = m_physicsController->getBody(body->getParentId());
-
-				CompoundBody* cb = dynamic_cast<CompoundBody*>(oldparent);
-				
-				// Reset dirtybit
-				body->resetParentChangedStatus();
-			}
-			// Update the rigidbody
+			// Get rigidbody from id
 			Body* b = m_physicsController->getBody(body->m_id);
+
+			// Handle parenting
+			handleCompoundBodyDependencies(body,b);
+
+			// Update the rigidbody
 			AglMatrix world = b->GetWorld();
 			Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
 				ComponentType::Transform));
@@ -115,5 +97,42 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			m_world->getComponentManager()->getComponent( p_entity,
 			ComponentType::getTypeFor(ComponentType::Transform)));
 		body->m_id = m_physicsController->AddBox(t->getTranslation(), t->getScale()*2, 1, AglVector3(0,0,0), AglVector3(0, 0, 0), false);
+	}
+}
+
+void PhysicsSystem::handleCompoundBodyDependencies( PhysicsBody* p_bodyComponent, 
+												   Body* p_rigidBody )
+{
+	if (p_bodyComponent->isParentChanged())
+	{
+		// First, retrieve the ids
+		int oldId = p_bodyComponent->getOldParentId();
+		int newId = p_bodyComponent->getParentId();
+
+		// Then the pointers to the bodies
+		Body* oldparent = NULL;
+		Body* newparent = NULL;
+		RigidBody* thisBody = static_cast<RigidBody*>(p_rigidBody);
+
+		if (oldId!=-1)
+			oldparent = m_physicsController->getBody(p_bodyComponent->getOldParentId());
+
+		if (newId!=-1)
+			newparent = m_physicsController->getBody(p_bodyComponent->getParentId());
+
+		// Detach this body from old parent
+		if (oldparent!=NULL && oldparent->IsCompoundBody())
+		{
+			static_cast<CompoundBody*>(oldparent)->DetachChild(thisBody);
+		}
+
+		// Attach this body to new parent
+		if (newparent!=NULL && newparent->IsCompoundBody())
+		{
+			static_cast<CompoundBody*>(newparent)->AddChild(thisBody);
+		}
+
+		// Reset dirtybit
+		p_bodyComponent->resetParentChangedStatus();
 	}
 }

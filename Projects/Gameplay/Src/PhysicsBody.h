@@ -18,23 +18,15 @@ using namespace std;
 class PhysicsBody : public Component
 {
 public:
-	enum BodyType
-	{
-		SINGLE,
-		COMPOUND
-	};
 
-	PhysicsBody(BodyType p_type=SINGLE)
+	PhysicsBody()
 	{
 		m_id = -1;
 		m_parentId = -1;
 		m_parentChanged = false;
-		m_type = p_type;
 	}
 
 	int m_id;
-	
-	BodyType getType() {return m_type;}
 
 	int		getParentId() {return m_parentId;}
 	int		getOldParentId() {return m_oldParentId;}
@@ -59,5 +51,4 @@ private:
 	int m_parentId;
 	int m_oldParentId;
 	bool m_parentChanged;
-	BodyType m_type;
 };

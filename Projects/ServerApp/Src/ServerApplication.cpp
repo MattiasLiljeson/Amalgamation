@@ -113,7 +113,8 @@ namespace Srv
 		entity->addComponent(ComponentType::PhysicsBody, component);
 
 		component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
 
 		// The b1 entity should be synced over the network!
@@ -132,7 +133,8 @@ namespace Srv
 		entity->addComponent(ComponentType::PhysicsBody, component);
 
 		component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
+			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, 
+			BodyInitData::STATIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
 		// Reminder: the b2 entity is static, hence, this entity could be left to exist
 		// by default on the client, without any physics data. It doesn't need to be
