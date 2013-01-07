@@ -79,18 +79,38 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 
 	if (init)
 	{
+		CompoundBody* cb = NULL;
+		int t=0;
+		int* bodyId = &t; // temp storage of id
+		if (init->m_compound)
+		{
+			// Add compound body as id to component
+			body->m_id = m_physicsController->AddCompoundBody(init->m_position);
+			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->m_id));
+		}
+		else // repoint id storage; only add shape id to body component if not compound
+			bodyId = &(body->m_id); 
+		
+		// Add shape
 		if (init->m_type == 0)
 		{
-			body->m_id = m_physicsController->AddBox(init->m_position, init->m_scale*2, 1, init->m_velocity, init->m_angularVelocity, init->m_static);
+			*bodyId = m_physicsController->AddBox(init->m_position,
+				init->m_scale*2, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb);
 		}
 		else
 		{
 			//Not Supported
 		}
+		
+		// remove settings component
 		m_world->getComponentManager()->removeComponent(
 			p_entity, ComponentType::BodyInitData);
 	}
-	else
+	else // fallback settings
 	{
 		Transform* t =
 			static_cast<Transform*>(
