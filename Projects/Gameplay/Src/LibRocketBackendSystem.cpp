@@ -112,6 +112,13 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 	return id;
 }
 
+void LibRocketBackendSystem::updateElement( string p_element, string p_value )
+{
+	Rocket::Core::Element* element;
+	element = m_documents[0]->GetElementById( p_element.c_str() );
+	element->SetInnerRML( p_value.c_str() );
+}
+
 void LibRocketBackendSystem::process()
 {
 	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();

@@ -1,4 +1,4 @@
-
+body
 {
 	font-family: Delicious;
 	font-weight: normal;
@@ -48,10 +48,17 @@ div#score
 
 div#scoreText
 {
-	margin-left:auto;
-	margin-right:auto;
+/* 	min-width: 100%;
+	max-width: 100%;
+	
+	min-height: 100%;
+	max-height: 100%; */
 
-	font-family: delicous;
+	vertical-align:middle;
+	margin-left:50%;
+	margin-right:50%;
+
+	font-family: delicious;
 	font-weight: bold;
 	font-style: italic;
 	font-size: 24;

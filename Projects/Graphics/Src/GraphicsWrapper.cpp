@@ -466,6 +466,23 @@ unsigned int GraphicsWrapper::createTexture( const string& p_name,
 	return texResultId;
 }
 
+unsigned int GraphicsWrapper::createTexture( const byte* p_source, int p_width,
+	int p_height, int p_pitch, TextureParser::TEXTURE_TYPE p_type )
+{
+	// Create texture name used by manager
+	static int createdTextureCount = 0;
+	createdTextureCount++;
+	stringstream ss;
+	ss<<"Created Texture "<< createdTextureCount;
+	string textureName = ss.str();
+	
+	// Create texture
+	Texture* tex = new Texture(
+		TextureParser::createTexture( m_device, p_source, p_width, p_height, p_pitch, p_type) );
+	int textureId = m_textureManager->addResource( textureName, tex );
+	return textureId;
+}
+
 int GraphicsWrapper::getMeshId( const string& p_name )
 {
 	return m_meshManager->getResourceId(p_name);

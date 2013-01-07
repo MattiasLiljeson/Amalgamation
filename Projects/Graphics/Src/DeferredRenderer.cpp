@@ -217,7 +217,9 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
 	// set texture
 	//HACK: fix so that a placeholder tex is used instead of the last working one
 	if( p_texture != NULL )
+	{
 		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	}
 
 	m_guiShader->apply();
 
