@@ -239,8 +239,6 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 		Packet packet;
 		packet << (char)PacketType::Ping;
-		packet << (unsigned short)m_timestamp.wSecond;
-		packet << (unsigned short)m_timestamp.wMilliseconds;
 
 		m_tcpClient->sendPacket( packet );
 	}
