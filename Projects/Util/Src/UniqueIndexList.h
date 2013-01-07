@@ -26,20 +26,16 @@ public:
 	T			 at(unsigned int p_index);
 	T			 operator[](unsigned int p_index);
 
-	void		clear();
+	unsigned int getSize();
+
+	void		 clear();
 protected:
 private:
 	vector<T> m_list;
 	stack<unsigned int> m_freeIndices;
 };
 
-template<class T>
-void UniqueIndexList<T>::clear()
-{
-	m_list.clear();
-	while(!m_freeIndices.empty())
-		m_freeIndices.pop();
-}
+
 
 template<class T>
 unsigned int UniqueIndexList<T>::add(T p_valueRef)
@@ -81,4 +77,19 @@ template<class T>
 T UniqueIndexList<T>::operator[](unsigned int p_index)
 {
 	return m_list[p_index];
+}
+
+template<class T>
+unsigned int UniqueIndexList<T>::getSize()
+{
+	return m_list.size();
+}
+
+
+template<class T>
+void UniqueIndexList<T>::clear()
+{
+	m_list.clear();
+	while(!m_freeIndices.empty())
+		m_freeIndices.pop();
 }

@@ -20,6 +20,7 @@
 #include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
+#include "PlayerScore.h"
 
 #include "GraphicsBackendSystem.h"
 #include "NetworkType.h"
@@ -68,8 +69,14 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
+
+				// HACK: Should be located in another entity:
+				component = new PlayerScore();
+				entity->addComponent( ComponentType::PlayerScore, component );
+
 				if(m_tcpClient->getId() == data.owner)
 				{
+					// If "this client" is the entity owner, it may control the ship:
 					component = new ShipController(5.0f, 50.0f);
 					entity->addComponent( ComponentType::ShipController, component );
 				}
@@ -185,6 +192,32 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				m_tcpClient->setId( id );
 			}
 		}
+		else if(packetType == (char)PacketType::ScoresUpdate)
+		{
+			NetworkScoreUpdatePacket scoreUpdateData;
+			scoreUpdateData = readScorePacket( packet );
+
+			// HACK: This is VERY inefficient for large amount of
+			// network-synchronized entities. (Solve later)
+			for( unsigned int i=0; i<p_entities.size(); i++ )
+			{
+				NetworkSynced* netSync = NULL;
+				netSync = static_cast<NetworkSynced*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+
+				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
+				{
+					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
+						m_world->getComponentManager()->getComponent(
+						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
+					if( scoreComponent )
+					{
+						scoreComponent->setScore( scoreUpdateData.score );
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -214,5 +247,14 @@ NetworkEntityUpdatePacket NetworkCommunicatorSystem::readUpdatePacket( Packet& p
 		>> data.position 
 		>> data.rotation 
 		>> data.scale;
+	return data;
+}
+
+NetworkScoreUpdatePacket NetworkCommunicatorSystem::readScorePacket( Packet& p_packet )
+{
+	NetworkScoreUpdatePacket data;
+	p_packet >> data.networkId;
+	p_packet >> data.score;
+
 	return data;
 }

@@ -13,7 +13,7 @@
 class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
-class RocketShader;
+class GUIShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -50,11 +50,11 @@ public:
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
-	/// This method returns the rocket shader used in conjuction with librocket.
+	/// This method returns the GUI shader used for menus and HUDs.
 	/// \param p_filePath
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
-	RocketShader* createRocketShader(const LPCWSTR& p_filePath);
+	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------

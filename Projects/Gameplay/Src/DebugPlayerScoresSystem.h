@@ -1,30 +1,34 @@
+#pragma once
+
+#define WINAPI
+
+#include <EntitySystem.h>
+
 // =======================================================================================
-//	PacketType
+//	DebugPlayerScoresSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # PacketType
+/// # DebugPlayerScoresSystem
 /// Detailed description...
-/// Created on: 12-12-2012 
+/// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
-#pragma once
 
-class PacketType
+class DebugPlayerScoresSystem: public EntitySystem
 {
 public:
-	enum
-	{
-		NON_EXISTENT = -1,
-		// Server -> Client:
-		EntityCreation,
-		EntityUpdate,
-		ClientDisconnect,
-		InitCredentials,
-		ScoresUpdate,
-		// Client -> Server:
-		PlayerInput,
-	};
+	DebugPlayerScoresSystem();
+
+	~DebugPlayerScoresSystem();
+
+	void initialize();
+
+	void processEntities( const vector<Entity*>& p_entities );
+
+private:
+	float m_timerResetValue;
+	float m_timer;
 
 };

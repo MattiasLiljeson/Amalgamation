@@ -7,11 +7,11 @@
 #include <vector>
 
 class BufferFactory;
-class DIndex;
-class InstanceData;
+struct DIndex;
+struct InstanceData;
 class Mesh;
-class PNTTBVertex;
-class Texture;
+struct PNTTBVertex;
+struct Texture;
 
 using namespace std;
 
@@ -83,8 +83,8 @@ private:
 	AglMatrix m_NDCFrom2dMatrix;
 
 	//States
-	ID3D11RasterizerState* rs_scissorsOn;
-	ID3D11RasterizerState* rs_scissorsOff;
+	// ID3D11RasterizerState* rs_scissorsOn; // state functionality abstracted and moved 
+	// ID3D11RasterizerState* rs_scissorsOff; // to graphicswrapper and renderer --Jarl
 
 	//vector<InstanceData> m_NDCFrom2dMatrixVector;
 };

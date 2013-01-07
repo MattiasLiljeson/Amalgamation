@@ -32,6 +32,7 @@
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
 #include <ShipControllerSystem.h>
+#include <DisplayPlayerScoreSystem.h>
 
 // MISC
 #include <AntTweakBarWrapper.h>
@@ -186,6 +187,11 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+
+	/************************************************************************/
+	/* Gameplay																 */
+	/************************************************************************/
+	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	
 	m_world->initialize();
 }

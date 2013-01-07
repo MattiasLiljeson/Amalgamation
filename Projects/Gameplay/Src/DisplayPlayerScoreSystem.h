@@ -1,30 +1,30 @@
-// =======================================================================================
-//	PacketType
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief Brief description...
-///        
-/// # PacketType
-/// Detailed description...
-/// Created on: 12-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
 
-class PacketType
+#include <EntitySystem.h>
+
+// =======================================================================================
+//	DisplayPlayerScoreSystem
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Prints players' score using anttweakbar.
+///        
+/// # DisplayPlayerScoreSystem
+/// Detailed description...
+/// Created on: 4-1-2013 
+///---------------------------------------------------------------------------------------
+
+class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	enum
-	{
-		NON_EXISTENT = -1,
-		// Server -> Client:
-		EntityCreation,
-		EntityUpdate,
-		ClientDisconnect,
-		InitCredentials,
-		ScoresUpdate,
-		// Client -> Server:
-		PlayerInput,
-	};
+	DisplayPlayerScoreSystem();
+
+	~DisplayPlayerScoreSystem();
+
+	void processEntities( const vector<Entity*>& p_entities );
+
+	void initialize();
+
+	void added( Entity* p_entity );
 
 };

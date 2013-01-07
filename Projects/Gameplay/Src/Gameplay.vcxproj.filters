@@ -58,6 +58,9 @@
     <Filter Include="Components\GUI">
       <UniqueIdentifier>{9b451e1d-4250-48a9-b153-f724e60047a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Network\Server only\Debugging">
+      <UniqueIdentifier>{5fb8467e-10e8-48aa-8d1a-99fff307a38c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -172,6 +175,21 @@
       <Filter>Components\GUI</Filter>
     </ClInclude>
     <ClInclude Include="MenuItem.h" />
+    <ClInclude Include="NetworkUpdateScoresSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugPlayerScoresSystem.h">
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayPlayerScoreSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -256,5 +274,17 @@
       <Filter>Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="MenuItem.cpp" />
+    <ClCompile Include="NetworkUpdateScoresSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPlayerScoresSystem.cpp">
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayPlayerScoreSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

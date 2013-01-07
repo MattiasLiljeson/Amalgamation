@@ -1,30 +1,35 @@
+#pragma once
+
+#include <Component.h>
+
 // =======================================================================================
-//	PacketType
+//	PlayerScore
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # PacketType
+/// # PlayerScore
 /// Detailed description...
-/// Created on: 12-12-2012 
+/// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
-#pragma once
 
-class PacketType
+class PlayerScore: public Component
 {
 public:
-	enum
-	{
-		NON_EXISTENT = -1,
-		// Server -> Client:
-		EntityCreation,
-		EntityUpdate,
-		ClientDisconnect,
-		InitCredentials,
-		ScoresUpdate,
-		// Client -> Server:
-		PlayerInput,
-	};
+	PlayerScore();
+	PlayerScore( int p_score );
+
+	~PlayerScore();
+
+	int getScore() const;
+	void setScore( int p_score );
+
+	int* getScorePointer();
+
+	void incrementScore( int p_incrementValue );
+
+private:
+	int m_score;
 
 };

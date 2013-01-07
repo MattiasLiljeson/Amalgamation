@@ -54,24 +54,24 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 
 	numCompiledGeometries = 0;
 
-	D3D11_RASTERIZER_DESC rasterizerDesc;
-	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	rasterizerDesc.CullMode = D3D11_CULL_NONE;
-	rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
-	rasterizerDesc.DepthClipEnable = TRUE;
-	rasterizerDesc.AntialiasedLineEnable = FALSE;
-	rasterizerDesc.MultisampleEnable = FALSE;
-	rasterizerDesc.DepthBias = 0;
-	rasterizerDesc.DepthBiasClamp = 0.0f;
-	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
-
-	rasterizerDesc.ScissorEnable = false;
-	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff);
-
-	rasterizerDesc.ScissorEnable = true;
-	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn);
-
-	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+// 	D3D11_RASTERIZER_DESC rasterizerDesc;
+// 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+// 	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+// 	rasterizerDesc.FrontCounterClockwise = TRUE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
+// 	rasterizerDesc.DepthClipEnable = TRUE;
+// 	rasterizerDesc.AntialiasedLineEnable = FALSE;
+// 	rasterizerDesc.MultisampleEnable = FALSE;
+// 	rasterizerDesc.DepthBias = 0;
+// 	rasterizerDesc.DepthBiasClamp = 0.0f;
+// 	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+// 
+// 	rasterizerDesc.ScissorEnable = false;
+// 	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff);
+// 
+// 	rasterizerDesc.ScissorEnable = true;
+// 	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn);
+// 
+// 	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
 }
 
 LibRocketRenderInterface::~LibRocketRenderInterface()
@@ -79,8 +79,8 @@ LibRocketRenderInterface::~LibRocketRenderInterface()
 	delete m_factory;
 	Rocket::Core::Shutdown();
 
-	SAFE_RELEASE(rs_scissorsOn);
-	SAFE_RELEASE(rs_scissorsOff);
+	// SAFE_RELEASE(rs_scissorsOn);
+	// SAFE_RELEASE(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
@@ -135,17 +135,23 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 		indices[i].index = p_indices[i];
 	}
 
-
-	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
-		&vertices[0], p_numIndices, &indices[0] );
-
 	//HACK: static int to enumerate menus
 	static int numMenus = 0;
 	numMenus++;
 	stringstream ss;
 	ss<<"menus nr: "<<numMenus;
 
-	geometry->meshId = m_wrapper->createMesh( ss.str(), mesh, (Texture*)p_texture );
+	// HACK: Texture pointers should not be used. Instead the texture should be
+	// created using CreateTexture in GraphicsWrapper, and then its id should be
+	// passed along here instead.
+	geometry->meshId = m_wrapper->createMesh(ss.str(), 
+											 p_numVertices,&vertices[0], 
+											 p_numIndices, &indices[0],
+											 (Texture*)p_texture); // <-- change this to texture id (int)
+
+
+
+	// geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
 
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }
@@ -170,7 +176,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	m_wrapper->renderLibRocket( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
@@ -186,21 +192,15 @@ void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
 	//HACK: should not be done here!
 	if(enable == true)
-		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW_SCISSOR);
 	else
-		m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW);
 }
 
 // Called by Rocket when it wants to change the scissor region.
 void LibRocketRenderInterface :: SetScissorRegion(int x, int y, int width, int height)
 {
-	D3D11_RECT scissor_rect;
-	scissor_rect.left = x;
-	scissor_rect.right = x + width;
-	scissor_rect.top = y;
-	scissor_rect.bottom = y + height;
-
-	m_wrapper->getDeviceContext()->RSSetScissorRects(1, &scissor_rect);
+	m_wrapper->setScissorRegion(x,y,width,height);
 }
 
 // Set to byte packing, or the compiler will expand our struct, which means it won't read correctly from file

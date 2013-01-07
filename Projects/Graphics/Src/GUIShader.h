@@ -1,9 +1,9 @@
 // =======================================================================================
-//                                      Shader
+//                                     GUI Shader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	RocketShader class based on deferred base shader 
+/// \brief	GUIShader class based on deferred base shader 
 ///        
 /// # Shader
 /// Detailed description.....
@@ -22,11 +22,11 @@
 
 using namespace std;
 
-class RocketShader : public ShaderBase
+class GUIShader : public ShaderBase
 {
 public:
-	RocketShader( ShaderInitStruct p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
-	virtual ~RocketShader();
+	GUIShader( ShaderInitStruct p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
+	virtual ~GUIShader();
 
 	Buffer<SimpleCBuffer>* getPerFrameBufferPtr();
 

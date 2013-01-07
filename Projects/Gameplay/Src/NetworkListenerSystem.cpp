@@ -20,6 +20,7 @@
 #include "ShipController.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include "PlayerScore.h"
 
 NetworkListenerSystem::NetworkListenerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
@@ -86,6 +87,8 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			e->addComponent( ComponentType::NetworkSynced, netSync);
 			e->addComponent( ComponentType::ShipController,
 				new ShipController(5.0f, 50.0f));
+			e->addComponent( ComponentType::PlayerScore,
+				new PlayerScore(0) );
 
 			e->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
 			e->addComponent( ComponentType::BodyInitData, 
