@@ -21,9 +21,10 @@ using namespace std;
 ///---------------------------------------------------------------------------------------
 struct TransformNode
 {
-	Transform*			parent;
-	Transform*			transform;
-	vector<Transform*>	children;
+	int						type;
+	TransformNode*			parent;
+	Transform*				transform;
+	vector<TransformNode*>	children;
 };
 
 // =======================================================================================
@@ -48,12 +49,19 @@ public:
 protected:
 
 private:
-	void getFreeAttachments(Transform* p_piece, vector<Transform*>& out_attachments);
+	void getFreeConnectPointSlots(TransformNode* p_piece, vector<int>& out_slots);
 
-	Transform* popTransformVector(vector<Transform*>& p_vector);
+	int popIntVector(vector<int>& p_vector);
+
+	TransformNode*	createTransformNodeFromType(int p_type);
+	void			deleteTransformNodeRecursive(TransformNode* p_node);
+
+	void createAndAddEntity(int p_type, Transform* p_transform);
 
 	void generateLevelPieces(int p_maxDepth);
-	void generatePiecesOnPiece(Transform* p_targetPiece, vector<Transform*>& out_pieces);
+	void generatePiecesOnPiece(TransformNode* p_targetPiece, 
+								vector<TransformNode*>& out_pieces);
+
 	void connectPieces(Transform* p_sourcePiece, Transform* p_sourceConnector,
 						Transform* p_otherPiece, Transform* p_otherConnector);
 	void addEndPlug(Transform* p_atConnector);
@@ -63,7 +71,7 @@ private:
 	void debugPrintTransformTree();
 
 	map<Transform*, TransformNode*> m_transformHierarchy;
-
+	
 	Transform* m_invalidAttachment;
-	Transform* m_rootTransform;
+	TransformNode* m_rootTransform;
 };
