@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <Rocket/Core.h>
+#include <Rocket/Debugger.h>
 
 class AntTweakBarWrapper;
 class Control;

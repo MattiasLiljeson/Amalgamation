@@ -41,6 +41,7 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::SetRenderInterface(m_renderInterface);
 	Rocket::Core::Initialise();
 
+
 	int wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
 
@@ -50,6 +51,9 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
 
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( true );
+	
 	m_cursor = m_inputBackend->getCursor();
 
 	// Load fonts and documents
