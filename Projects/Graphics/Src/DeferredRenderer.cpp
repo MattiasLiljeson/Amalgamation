@@ -375,7 +375,8 @@ void DeferredRenderer::initShaders()
 
 void DeferredRenderer::hookUpAntTweakBar()
 {
-	AntTweakBarWrapper::getInstance()->addWriteVariable("Color",TW_TYPE_COLOR4F,
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::GRAPHICS,
+		"Color",TW_TYPE_COLOR4F, 
 		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");
 }
 

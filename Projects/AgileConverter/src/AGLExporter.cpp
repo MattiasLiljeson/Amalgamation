@@ -169,6 +169,10 @@ void AGLExporter::AddMaterialMapping(AglMaterialMapping* pData)
 	mMaterialMappings.push_back(m);
 	mScene->addMaterialMapping(m);
 }
+void AGLExporter::AddConnectionPoint(AglConnectionPoint pCP)
+{
+	mScene->addConnectionPoint(pCP);
+}
 
 void AGLExporter::Write()
 {

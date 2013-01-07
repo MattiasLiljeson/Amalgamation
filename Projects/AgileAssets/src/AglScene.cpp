@@ -23,10 +23,13 @@ AglScene::~AglScene()
 		delete m_bspTrees[i];
 	for (unsigned int i = 0; i < m_sphereGrids.size(); i++)
 		delete m_sphereGrids[i];
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		delete m_particleSystems[i];
 }
 void AglScene::init(AglSceneDesc p_desc)
 {
 	m_meshes = p_desc.meshes;
+	m_particleSystems = p_desc.particleSystems;
 	m_nodes = p_desc.nodes;
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
@@ -44,6 +47,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_skeletonMappings = p_desc.skeletonMappings;
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
+	m_connectionPoints = p_desc.connectionPoints;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
 }
@@ -91,7 +95,7 @@ void AglScene::appendTransform(int p_index, AglMatrix p_transform)
 	}
 }
 
-void AglScene::update(float p_dt)
+void AglScene::update(float p_dt, AglVector3 p_cameraPosition)
 {
 	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
 	{
@@ -99,6 +103,8 @@ void AglScene::update(float p_dt)
 	}
 	if (m_animations.size() > 0)
 		m_animations[m_currentAnimation]->update(p_dt);
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		m_particleSystems[i]->update(p_dt, p_cameraPosition);
 }
 AglMaterial* AglScene::getMaterial(int p_index)
 {
@@ -115,6 +121,10 @@ vector<AglGradient*> AglScene::getGradients()
 AglGradient* AglScene::getGradient(int p_index)
 {
 	return m_gradients[p_index];
+}
+AglParticleSystem* AglScene::getParticleSystem(int p_index)
+{
+	return m_particleSystems[p_index];
 }
 void AglScene::addGradient(AglGradient* p_gradient)
 {
@@ -145,6 +155,16 @@ vector<AglInteriorSphereGrid*> AglScene::getSphereGrids()
 	return m_sphereGrids;
 }
 
+vector<AglConnectionPoint> AglScene::getConnectionPoints()
+{
+	return m_connectionPoints;
+}
+
+AglConnectionPoint AglScene::getConnectionPoints(unsigned int p_index)
+{
+	return m_connectionPoints[p_index];
+}
+
 int AglScene::addName(string p_name)
 {
 	if (p_name.compare("") == 0)
@@ -156,6 +176,10 @@ int AglScene::addName(string p_name)
 	}
 	m_names.push_back(p_name);
 	return m_names.size() - 1;
+}
+void AglScene::addParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	m_particleSystems.push_back(pParticleSystem);
 }
 void AglScene::addMesh(AglMesh* p_mesh)
 {
@@ -202,6 +226,10 @@ void AglScene::addSphereGrid(AglInteriorSphereGrid* p_sphereGrid)
 {
 	m_sphereGrids.push_back(p_sphereGrid);
 }
+void AglScene::addConnectionPoint(AglConnectionPoint p_connectionPoint)
+{
+	m_connectionPoints.push_back(p_connectionPoint);
+}
 AglSceneDesc AglScene::getSceneData()
 {
 	AglSceneDesc desc;
@@ -210,6 +238,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.materialMappings = this->m_materialMappings;
 	desc.materials = this->m_materials;
 	desc.meshes = this->m_meshes;
+	desc.particleSystems = this->m_particleSystems;
 	desc.names = this->m_names;
 	desc.nodeAnimations = this->m_nodeAnimations;
 	desc.nodes = this->m_nodes;
@@ -217,6 +246,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.skeletons = this->m_skeletons;
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
+	desc.connectionPoints = this->m_connectionPoints;
 	desc.coordinateSystem = this->m_coordinateSystem;
 	return desc;
 }
@@ -249,4 +279,8 @@ bool AglScene::isLeftHanded()
 bool AglScene::isRightHanded()
 {
 	return m_coordinateSystem.handedness == AglCoordinateSystem::RIGHT;
+}
+vector<AglParticleSystem*> AglScene::getParticleSystems()
+{
+	return m_particleSystems;
 }

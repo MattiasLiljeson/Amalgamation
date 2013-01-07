@@ -15,6 +15,7 @@ class DomainShader;
 class GeometryShader;
 class RenderNormalsShader;
 class SkeletonShader;
+class ParticleShader;
 
 class ShaderManager
 {
@@ -24,6 +25,7 @@ private:
 	GradientShader* mGradientShader;
 	RenderNormalsShader* mRenderNormals;
 	SkeletonShader*	mSkeletonShader;
+	ParticleShader* mParticleShader;
 
 	vector<VertexShader*> m_vertexShaders;
 	vector<GeometryShader*> m_geometryShaders;
@@ -46,6 +48,7 @@ public:
 	GradientShader* GetGradientShader();
 	RenderNormalsShader* GetRenderNormals();
 	SkeletonShader* GetSkeletonShader();
+	ParticleShader* GetParticleShader();
 
 };
 

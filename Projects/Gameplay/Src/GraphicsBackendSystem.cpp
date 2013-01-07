@@ -61,26 +61,26 @@ void GraphicsBackendSystem::initialize()
 		m_scrHeight, 
 		m_windowed );
 
-	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice(), "Drunken_Bar" );
+	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
-	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
 		"Toggle_Windowed/FullScreen",
 		toggleFullScreen, (void*)NULL, "");
 
 	m_graphicsWrapper->hookUpAntTweakBar();
 
 	// Anttweakbar resolution
-	AntTweakBarWrapper::getInstance()->addWriteVariable( "Win width",
-		TwType::TW_TYPE_INT32, &m_newWidth, "min=800 max=4096" );
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL, 
+		"Win width", TwType::TW_TYPE_INT32, &m_newWidth, "min=800 max=4096" );
 	
-	AntTweakBarWrapper::getInstance()->addWriteVariable( "Win height",
-		TwType::TW_TYPE_INT32, &m_newHeight, "min=480 max=4096" );
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+		"Win height", TwType::TW_TYPE_INT32, &m_newHeight, "min=480 max=4096" );
 
-	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
 		"Apply resolution",
 		applyNewResolution, (void*)NULL, "");
 
-	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
 		"Toggle wireframe",
 		toggleWireframe, (void*)NULL, "");
 }

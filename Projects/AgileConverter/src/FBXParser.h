@@ -20,6 +20,7 @@ private:
 	vector<AnimationData*> mAnimations;
 	vector<MaterialData*> mMaterials;
 	vector<AglMaterialMapping*> mMaterialMappings;
+	vector<AglConnectionPoint> mConnectionPoints;
 
 
 private:
@@ -47,6 +48,7 @@ public:
 	vector<AnimationData*> GetAnimations();
 	vector<MaterialData*> GetMaterials();
 	vector<AglMaterialMapping*> GetMaterialMappings();
+	vector<AglConnectionPoint> GetConnectionPoints();
 
 	FbxScene* GetScene();
 
