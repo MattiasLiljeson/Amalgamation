@@ -47,6 +47,7 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
+	bool m_wireframe;
 	/************************************************************************/
 	/* DEBUG FUNCTIONS ONLY! */
 	/************************************************************************/
@@ -56,6 +57,7 @@ private:
 	int m_newHeight;
 private:
 	static void TW_CALL toggleFullScreen(void* p_clientData);
+	static void TW_CALL toggleWireframe(void* p_clientData);
 	static void TW_CALL applyNewResolution(void* p_clientData);
 };
 

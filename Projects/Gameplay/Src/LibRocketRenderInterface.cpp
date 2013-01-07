@@ -187,11 +187,10 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 // Called by Rocket when it wants to enable or disable scissoring to clip content.
 void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
-	//HACK: should not be done here!
 	if(enable == true)
-		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW_SCISSOR);
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW_SCISSOR,false);
 	else
-		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW);
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW,false);
 }
 
 // Called by Rocket when it wants to change the scissor region.

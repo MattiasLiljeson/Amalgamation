@@ -94,9 +94,6 @@ void DeferredRenderer::beginDeferredBasePass()
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
 	setBlendMask(0xffffff);
 
-	setRasterizerStateSettings(RasterizerState::DEFAULT);
-
-
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
@@ -209,25 +206,6 @@ void DeferredRenderer::beginGUIPass()
 	setBlendState(BlendState::ALPHA);
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
 	setBlendMask(0xffffff);
-
-// 	// HACK: set blendstate here to get alpha-blending
-// 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
-// 	m_deviceContext->OMGetBlendState( &m_stdBlendState, blendFactors, &m_stdMask);
-// 	ID3D11BlendState* newBlendState = NULL;
-// 	D3D11_BLEND_DESC BlendState;
-// 	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
-// 
-// 	BlendState.RenderTarget[0].BlendEnable = TRUE;
-// 	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-// 	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-// 	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-// 	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-// 	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-// 	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-// 	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
-// 
-// 	m_device->CreateBlendState( &BlendState, &newBlendState ); 
-// 	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
 }
 
 void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
