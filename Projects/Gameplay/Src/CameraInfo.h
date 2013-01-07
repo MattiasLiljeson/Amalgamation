@@ -9,7 +9,10 @@ class CameraInfo : public Component
 {
 public:
 	CameraInfo( float p_aspectRatio );
-	~CameraInfo();
+	~CameraInfo(){};
+
+	void createPerspectiveMatrix( float p_aspectRatio , float p_nearClip = 0.1f, 
+		float p_farClip = 100.0f);
 
 	AglMatrix m_projMat;
 };

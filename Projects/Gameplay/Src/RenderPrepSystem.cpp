@@ -48,6 +48,9 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		// Pre-alloc for speed
 		//InstanceVertex vert;
 
+		// ===============================================================================
+		// Prepare rendering of game meshes
+		// ===============================================================================
 		//HACK: continues in loop below 
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
@@ -87,14 +90,35 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 				gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
 		}
 		
-
+		// ===============================================================================
+		// Finalize deferred
+		// ===============================================================================
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
+
+
+		// ===============================================================================
+		// Draw GUI
+		// ===============================================================================
+		gfxWrapper->beginGUIPass();
 		m_rocketBackend->render();
+		gfxWrapper->finalizeGUIPass();
+
+
+		// ===============================================================================
+		// Draw 2D debug 
+		// ===============================================================================
 		AntTweakBarWrapper::getInstance()->render();
+
+
+		// ===============================================================================
+		// Flip
+		// ===============================================================================
 		gfxWrapper->flipBackBuffer();           // flip buffers
 		
-		// WOW! for each loop in C++!
-		for( unsigned int i=0; i<m_instanceLists.size(); i++ )
+		// ===============================================================================
+		// Cleanup
+		// ===============================================================================
+		for(unsigned int i=0; i<m_instanceLists.size(); i++ )
 		{
 			m_instanceLists[i].clear();
 		}

@@ -32,8 +32,8 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 		"Windos 32",
 		"Windos 32",
 		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
+		0,
+		0,
 		rc.right - rc.left,
 		rc.bottom - rc.top,
 		NULL,
@@ -55,6 +55,12 @@ Window::~Window()
 HWND Window::getWindowRef()
 {
 	return m_hWnd;
+}
+
+void Window::changeWindowRes( int p_width, int p_height )
+{
+	SetWindowPos( m_hWnd, HWND_TOP, 0, 0, p_width, p_height,
+		SWP_NOMOVE );
 }
 
 LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )

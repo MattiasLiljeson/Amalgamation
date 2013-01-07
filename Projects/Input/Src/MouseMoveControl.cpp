@@ -44,5 +44,5 @@ void MouseMoveControl::update( InputManager* p_manager )
 	
 	m_statusDelta = newStatus - m_status;
 	m_status = newStatus;
-	m_rawData = travel;
+	m_rawData = fetcher->getMouseTravel( m_axis );;
 }

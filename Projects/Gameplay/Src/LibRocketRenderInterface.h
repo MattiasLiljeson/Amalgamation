@@ -1,16 +1,17 @@
 #pragma once
 
+#include <AglMatrix.h>
+#include <Buffer.h>
+#include <GraphicsWrapper.h>
 #include <Rocket/Core.h>
 #include <vector>
 
-#include <AglMatrix.h>
-#include <Buffer.h>
-#include <BufferFactory.h>
-#include <DIndex.h>
-#include <GraphicsWrapper.h>
-#include <Mesh.h>
-#include <PTVertex.h>
-#include <Texture.h>
+class BufferFactory;
+struct DIndex;
+struct InstanceData;
+class Mesh;
+struct PNTTBVertex;
+struct Texture;
 
 using namespace std;
 
@@ -79,8 +80,8 @@ private:
 	AglMatrix m_NDCFrom2dMatrix;
 
 	//States
-	ID3D11RasterizerState* rs_scissorsOn;
-	ID3D11RasterizerState* rs_scissorsOff;
+	// ID3D11RasterizerState* rs_scissorsOn; // state functionality abstracted and moved 
+	// ID3D11RasterizerState* rs_scissorsOff; // to graphicswrapper and renderer --Jarl
 
 	//vector<InstanceData> m_NDCFrom2dMatrixVector;
 };

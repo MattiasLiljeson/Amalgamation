@@ -9,6 +9,10 @@
 #include "InputHelper.h"
 
 #include <dinput.h>
+#include <wtypesbase.h>
+#include <string>
+
+using namespace std;
 
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0800
@@ -51,6 +55,9 @@ public:
 private:
 	void init();
 	void createInterfacesAndDevices();
+	void acquireDevices();
+	void checkDirectInputHr( HRESULT p_hr, const string &p_file, const string& p_func,
+		int p_line );
 	void setCooperation();
 	void createDikKeyMap();
 	void reset();

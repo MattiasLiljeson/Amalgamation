@@ -6,8 +6,8 @@
 #include <utility>
 
 class AnalogueControl;
-class DigitalControl;
 class Control;
+class Cursor;
 class DigitalControl;
 class KeyControl;
 
@@ -103,6 +103,10 @@ public:
 	/// \return Control* A Control allocated on the stack.
 	///----------------------------------------------------------------------------------
 	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );
+
+	// DOESNT WORK!
+	//Cursor* createMouseCursor();
+	//Cursor* createGamepadCursor();
 
 };
 

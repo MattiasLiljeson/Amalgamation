@@ -3,7 +3,7 @@
 #include "D3DException.h"
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
-#include "RocketShader.h"
+#include "GUIShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -99,9 +99,9 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR&
 	return newDeferredComposeShader;
 }
 
-RocketShader* ShaderFactory::createRocketShader( const LPCWSTR& p_filePath )
+GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 {
-	RocketShader* rocketShader = NULL;
+	GUIShader* guiShader = NULL;
 	ID3D11SamplerState* samplerState = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
 
@@ -118,9 +118,9 @@ RocketShader* ShaderFactory::createRocketShader( const LPCWSTR& p_filePath )
 	ShaderInitStruct shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
-	rocketShader = new RocketShader(shaderInitData,
+	guiShader = new GUIShader(shaderInitData,
 		m_bufferFactory->createSimpleCBuffer());
-	return rocketShader;
+	return guiShader;
 }
 
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 

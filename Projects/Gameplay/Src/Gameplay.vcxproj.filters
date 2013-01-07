@@ -40,9 +40,6 @@
     <Filter Include="Systems\Gameplay">
       <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\libRocket">
-      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Audio">
       <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,15 @@
     </Filter>
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GUI">
+      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\GUI">
+      <UniqueIdentifier>{9b451e1d-4250-48a9-b153-f724e60047a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Server only\Debugging">
+      <UniqueIdentifier>{5fb8467e-10e8-48aa-8d1a-99fff307a38c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,20 +126,17 @@
     <ClInclude Include="BodyInitData.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkUpdateSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="libRocketBackendSystem.h">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="LibRocketRenderInterface.h">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="LibRocketSystemInterface.h">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
@@ -157,6 +160,34 @@
       <Filter>Systems\Physics</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCommunicatorSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HudSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HudElement.h">
+      <Filter>Components\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h" />
+    <ClInclude Include="NetworkUpdateScoresSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugPlayerScoresSystem.h">
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
   </ItemGroup>
@@ -201,13 +232,13 @@
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketBackendSystem.cpp">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketRenderInterface.cpp">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketSystemInterface.cpp">
-      <Filter>Systems\libRocket</Filter>
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
@@ -232,6 +263,28 @@
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HudSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HudElement.cpp">
+      <Filter>Components\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp" />
+    <ClCompile Include="NetworkUpdateScoresSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugPlayerScoresSystem.cpp">
+      <Filter>Systems\Network\Server only\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayPlayerScoreSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -110,32 +110,50 @@ void DirectInputFetcher::init()
 void DirectInputFetcher::createInterfacesAndDevices()
 {
 	HRESULT hr = S_OK;
-	if( FAILED(hr = DirectInput8Create(m_hInstance,    // the handle to the application
+	hr = DirectInput8Create( m_hInstance,    // the handle to the application
 		DIRECTINPUT_VERSION,    // the compatible version
 		IID_IDirectInput8,    // the DirectInput interface version
 		(void**)&m_din,    // the pointer to the interface
-		NULL)))    // COM stuff, so we'll set it to NULL
-	{
-		throw DirectInputException(hr, __FILE__, __FUNCTION__, __LINE__);
-	}
+		NULL);				// COM stuff, so we'll set it to NULL
+	checkDirectInputHr( hr, __FILE__, __FUNCTION__, __LINE__ );
 
-	if( FAILED(hr = m_din->CreateDevice(GUID_SysKeyboard,    // the default keyboard ID being used
+	hr = m_din->CreateDevice( GUID_SysKeyboard,    // the default keyboard ID being used
 		&m_dinkeyboard,    // the pointer to the device interface
-		NULL)))    // COM stuff, so we'll set it to NULL
-	{
-		throw DirectInputException(hr, __FILE__, __FUNCTION__, __LINE__);
-	}
+		NULL);		// COM stuff, so we'll set it to NULL
+	checkDirectInputHr( hr, __FILE__, __FUNCTION__, __LINE__ );
 
-	if( FAILED(hr = m_din->CreateDevice(GUID_SysMouse,
+	hr = m_din->CreateDevice( GUID_SysMouse,
 		&m_dinmouse,
-		NULL)))
-	{
-		throw DirectInputException(hr, __FILE__, __FUNCTION__, __LINE__);
-	}
+		NULL);
+	checkDirectInputHr( hr, __FILE__, __FUNCTION__, __LINE__ );
 
 	// set the data format to keyboard format
 	m_dinkeyboard->SetDataFormat(&c_dfDIKeyboard);
 	m_dinmouse->SetDataFormat(&c_dfDIMouse);
+}
+
+void DirectInputFetcher::acquireDevices()
+{
+	HRESULT hr = S_OK;
+	
+	// Get access if we don't have it already
+	hr = m_dinkeyboard->Acquire();
+	checkDirectInputHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+
+	hr = m_dinmouse->Acquire();
+	checkDirectInputHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+}
+
+void DirectInputFetcher::checkDirectInputHr( HRESULT p_hr, const string &p_file,
+											const string& p_func, int p_line )
+{
+	if( FAILED(p_hr) )
+	{
+		if( !m_onlyForeground && p_hr == E_ACCESSDENIED )
+		{
+			throw DirectInputException( p_hr, p_file, p_func, p_line );
+		}
+	}
 }
 
 void DirectInputFetcher::setCooperation()
@@ -204,12 +222,16 @@ void DirectInputFetcher::createDikKeyMap()
 void DirectInputFetcher::reset()
 {
 	for( int i=0; i<InputHelper::NUM_MOUSE_BTNS; i++)
+	{
 		m_mouseBtns[i] = InputHelper::KEY_UP;
+	}
 
 	for( int i=0; i<InputHelper::NUM_KEYBOARD_KEYS; i++)
-		m_mouseBtns[i] = InputHelper::KEY_UP;
+	{
+		m_kbKeys[i] = InputHelper::KEY_UP;
+	}
 
-	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS+1; i++ )
+	for( int i=0; i<InputHelper::NUM_MOUSE_AXIS; i++ )
 	{
 		m_mousePos[i] = 0;
 		m_mouseTravel[i] = 0;
@@ -218,24 +240,19 @@ void DirectInputFetcher::reset()
 
 void DirectInputFetcher::detectInput(void)
 {
-	// Get access if we don't have it already
-	m_dinkeyboard->Acquire();
-	m_dinmouse->Acquire();
-
 	// Get the input data
-	m_dinkeyboard->GetDeviceState(256, (LPVOID)m_keystate);
-	m_dinmouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mousestate);
-
-	// Bogus data is returned when the window lost focus. Do not let that corrupt the fine
-	// input data
-	if(m_mousestate.rgbButtons[0] == 0xcdcdcdcd &&
-		m_keystate[0] == 205)
+	if( m_dinkeyboard->GetDeviceState(256, (LPVOID)m_keystate) != DI_OK )
 	{
+		acquireDevices();
 		for( int i=0; i<NUM_KEYS; i++)
 		{
 			m_keystate[i] = '\0';
 		}
-
+	}
+	
+	if( m_dinmouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mousestate) != DI_OK )
+	{
+		acquireDevices();
 		for( int i=0; i<4; i++)
 		{
 			m_mousestate.rgbButtons[i] = 0;
@@ -243,5 +260,9 @@ void DirectInputFetcher::detectInput(void)
 		m_mousestate.lX = 0;
 		m_mousestate.lY = 0;
 		m_mousestate.lZ = 0;
+	}
+	else
+	{
+		int breakHere = 0;
 	}
 }

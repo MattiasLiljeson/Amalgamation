@@ -1,9 +1,21 @@
 #include "libRocketBackendSystem.h"
 
-LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend )
+#include "GraphicsBackendSystem.h"
+#include "InputBackendSystem.h"
+#include "LibRocketRenderInterface.h"
+#include "LibRocketSystemInterface.h"
+#include <AntTweakBarWrapper.h>
+#include <Control.h>
+#include <Cursor.h>
+#include <Globals.h>
+#include <GraphicsWrapper.h>
+
+LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
+											   , InputBackendSystem* p_inputBackend )
 	: EntitySystem( SystemType::LibRocketBackendSystem )
 {
 	m_graphicsBackend = p_graphicsBackend;
+	m_inputBackend = p_inputBackend;
 }
 
 
@@ -32,11 +44,13 @@ void LibRocketBackendSystem::initialize()
 	int wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
 
-	m_contextName = "default_name"; // Change the name if using multiple contexts!
+	m_rocketContextName = "default_name"; // Change the name if using multiple contexts!
 
 	m_rocketContext = Rocket::Core::CreateContext(
-		Rocket::Core::String( m_contextName.c_str() ),
+		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
+
+	m_cursor = m_inputBackend->getCursor();
 
 	// Load fonts and documents
 	// TODO: Should be done by assemblage
@@ -46,24 +60,30 @@ void LibRocketBackendSystem::initialize()
 	fonts.push_back( "Delicious-Bold.otf" );
 	fonts.push_back( "Delicious-Italic.otf" );
 	fonts.push_back( "Delicious-Roman.otf" );
-	for( int i=0; i<fonts.size(); i++ )
+	for( unsigned int i=0; i<fonts.size(); i++ )
 	{
-		string tmp = ROCKET_FONT_PATH + fonts[i]; 
+		string tmp = GUI_FONT_PATH + fonts[i]; 
 		loadFontFace( tmp.c_str() );
 	}
 
 	string tmp;
-	tmp = ROCKET_HUD_PATH + "demo.rml";
+	tmp = GUI_HUD_PATH + "demo.rml";
 	loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "main.rml";
+	//tmp = GUI_HUD_PATH + "main.rml";
 	//loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "index.rml";
+	//tmp = GUI_HUD_PATH + "index.rml";
 	//loadDocument( tmp.c_str() );
 
-	//tmp = ROCKET_HUD_PATH + "window.rml";
+	//tmp = GUI_HUD_PATH + "window.rml";
 	//loadDocument( tmp.c_str() );
+
+	string cursorPath = GUI_CURSOR_PATH + "cursor.rml";
+	if( m_rocketContext->LoadMouseCursor(cursorPath.c_str()) == NULL )
+	{
+		int breakHere = 0;
+	}
 }
 
 bool LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
@@ -90,6 +110,26 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 
 void LibRocketBackendSystem::process()
 {
+	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
+	int windowHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
+	// NDC -> Screenspace
+	int screenSpaceX = static_cast<int>((m_cursor->getX()+1) * windowWidth/2);
+	int screenSpaceY = static_cast<int>((m_cursor->getY()+1) * windowHeight/2);
+
+	m_rocketContext->ProcessMouseMove( screenSpaceX, screenSpaceY, 0 );
+	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
+	{
+		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
+	}
+	else if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
+	{
+		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
+	}
+
+	//Rocket::Core::Element* test = m_documents[0]->GetElementById("btn");
+	//if (test != NULL)
+	//	test->SetProperty("width", "800px");
+
 	m_rocketContext->Update();
 }
 

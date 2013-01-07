@@ -26,6 +26,12 @@ struct NetworkEntityUpdatePacket
 	AglVector3		scale;
 };
 
+struct NetworkScoreUpdatePacket
+{
+	int networkId;
+	int score;
+};
+
 // =======================================================================================
 //                                      NetworkCommunicatorSystem
 // =======================================================================================
@@ -52,6 +58,7 @@ public:
 private:
 	NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
 	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
+	NetworkScoreUpdatePacket readScorePacket(Packet& p_packet);
 
 private:
 	TcpClient* m_tcpClient;
