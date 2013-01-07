@@ -25,6 +25,8 @@ struct TransformNode
 	TransformNode*			parent;
 	Transform*				transform;
 	vector<TransformNode*>	children;
+
+	static void connect(TransformNode* p_parent, TransformNode* p_child, int p_childSlot);
 };
 
 // =======================================================================================

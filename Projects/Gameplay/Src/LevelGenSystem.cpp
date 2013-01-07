@@ -4,6 +4,13 @@
 #include <sstream>
 #include <DebugUtil.h>
 
+void TransformNode::connect( TransformNode* p_parent, TransformNode* p_child, 
+							int p_childSlot )
+{
+	p_parent->children[p_childSlot] = p_child;
+	p_child->parent = p_parent;
+}
+
 LevelGenSystem::LevelGenSystem() : EntitySystem(SystemType::LevelGenSystem)
 {
 	m_invalidAttachment = new Transform();
@@ -127,7 +134,10 @@ void LevelGenSystem::generatePiecesOnPiece( TransformNode* p_targetPiece,
 			//connectPieces(generatedPieces[i]->transform, sourceConnector, 
 			//			  p_targetPiece->transform, otherConnector);
 
-
+			// NOTE: This is temporary!
+			TransformNode::connect(p_targetPiece, generatedPieces[i], i);
+			
+			
 			out_pieces.push_back(generatedPieces[i]);
 		}
 	}
@@ -179,7 +189,7 @@ void LevelGenSystem::addEndPlug( Transform* p_atConnector )
 	Transform* endplug = new Transform(p_atConnector->getTranslation(), 
 										p_atConnector->getRotation(),
 										p_atConnector->getScale());
-
+	
 	entity->addComponent(ComponentType::Transform, endplug);
 
 	// NOTE: Here misses some components, such as model mesh and collider, yaddayadda
