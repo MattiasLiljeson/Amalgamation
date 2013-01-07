@@ -23,10 +23,12 @@ GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance,
 	m_newHeight = m_scrHeight = p_scrHeight;
 	m_windowed = p_windowed;
 
+
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
 	/************************************************************************/
-	m_selfPointer = this;
+	m_selfPointer = this;	
+	m_wireframe = false;
 }
 
 
@@ -77,6 +79,10 @@ void GraphicsBackendSystem::initialize()
 	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
 		"Apply resolution",
 		applyNewResolution, (void*)NULL, "");
+
+	TwAddButton(AntTweakBarWrapper::getInstance()->getMainBar(),
+		"Toggle wireframe",
+		toggleWireframe, (void*)NULL, "");
 }
 
 void GraphicsBackendSystem::process()
@@ -109,6 +115,12 @@ void TW_CALL GraphicsBackendSystem::toggleFullScreen(void* p_clientData)
 {
 	m_selfPointer->m_windowed = !m_selfPointer->m_windowed;
 	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
+}
+
+void TW_CALL GraphicsBackendSystem::toggleWireframe(void* p_clientData)
+{
+	m_selfPointer->m_wireframe = !m_selfPointer->m_wireframe;
+	m_selfPointer->m_graphicsWrapper->setWireframeMode(m_selfPointer->m_wireframe);
 }
 
 void TW_CALL GraphicsBackendSystem::applyNewResolution( void* p_clientData )

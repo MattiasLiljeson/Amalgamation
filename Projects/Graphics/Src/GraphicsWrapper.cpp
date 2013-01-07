@@ -24,6 +24,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_width	= p_width;
 	m_height= p_height;
 	m_windowed = p_windowed;
+	m_wireframeMode = false;
 
 	initSwapChain(p_hWnd);
 	initHardware();
@@ -157,6 +158,7 @@ void GraphicsWrapper::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 
 void GraphicsWrapper::beginFrame()
 {
+	setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_deferredRenderer->beginDeferredBasePass();
 }
 
@@ -180,9 +182,19 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state)
+void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state, 
+												 bool p_allowWireframeModeOverride)
 {
-	m_deferredRenderer->setRasterizerStateSettings(p_state);
+	RasterizerState::Mode state = m_deferredRenderer->getCurrentRasterizerStateType();
+	// accept rasterizer state change if not in wireframe mode or 
+	// if set to not allow wireframe mode
+	if (!m_wireframeMode || !p_allowWireframeModeOverride)
+		m_deferredRenderer->setRasterizerStateSettings(p_state);
+	else if (state != RasterizerState::WIREFRAME) 
+	{   
+		// otherwise, force wireframe(if not already set)
+		m_deferredRenderer->setRasterizerStateSettings(RasterizerState::WIREFRAME);
+	}
 }
 
 
@@ -224,6 +236,7 @@ void GraphicsWrapper::finalizeGUIPass()
 
 void GraphicsWrapper::finalizeFrame()
 {
+	setRasterizerStateSettings(RasterizerState::DEFAULT,false);
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
 	m_deferredRenderer->renderComposedImage();
 }
@@ -486,4 +499,9 @@ void GraphicsWrapper::changeToWindowed( bool p_windowed )
 	hr = m_swapChain->SetFullscreenState((BOOL)m_windowed,nullptr);
 	if( FAILED(hr))
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+}
+
+void GraphicsWrapper::setWireframeMode( bool p_wireframe )
+{
+	m_wireframeMode = p_wireframe;
 }
