@@ -89,6 +89,19 @@ void TW_CALL ParticleSystemDialog::GetFadeOut(void *value, void *clientData)
 	*(float*)value = ps->getFadeOutStart();
 }
 
+void TW_CALL ParticleSystemDialog::SetSpawnOffset(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnOffset(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetSpawnOffset(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().spawnOffset;
+}
+
 void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
@@ -131,6 +144,19 @@ void TW_CALL ParticleSystemDialog::GetSpread(void *value, void *clientData)
 	*(float*)value = ps->GetHeader().spread;
 }
 
+void TW_CALL ParticleSystemDialog::SetMaxOpacity(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setMaxOpacity(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetMaxOpacity(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().maxOpacity;
+}
+
 ParticleSystemDialog::ParticleSystemDialog()
 {
 	hide();
@@ -170,6 +196,8 @@ void ParticleSystemDialog::setPS(int pIndex)
 
 	TwAddVarCB(m_dialog, "Fade-In Stop", TW_TYPE_FLOAT, SetFadeIn, GetFadeIn, (void*)this, "group=Sponge key=o step=0.01");
 	TwAddVarCB(m_dialog, "Fade-Out Start", TW_TYPE_FLOAT, SetFadeOut, GetFadeOut, (void*)this, "group=Sponge key=o step=0.01");
+	TwAddVarCB(m_dialog, "Spawn Offset", TW_TYPE_FLOAT, SetSpawnOffset, GetSpawnOffset, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Maximum Opacity", TW_TYPE_FLOAT, SetMaxOpacity, GetMaxOpacity, (void*)this, "group=Sponge key=o step=0.01 min=0.0 max=1.0");
 
 	TwAddButton(m_dialog, "Load Texture", LoadTexture, this, " label='Load Texture'");
 

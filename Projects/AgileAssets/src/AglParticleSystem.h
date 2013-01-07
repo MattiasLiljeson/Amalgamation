@@ -9,15 +9,25 @@ using namespace std;
 
 #define AGL_PARTICLE_FORMAT_STANDARD 0
 
+struct AglSpawnOffsetType
+{
+	enum
+	{
+		ONSPHERE, INSPHERE, ONRING, INRING
+	};
+};
+
 struct AglParticleSystemHeader
 {
 	AglVector3			spawnPoint;
+	float				spawnOffset;
 	AglVector3			spawnDirection;
 	float				spawnSpeed;
 	float				particleAge;
 	float				spread; ///< 0 -> 1
 	float				spawnFrequency;
 	AglParticleFormat	particleFormat;
+	float				maxOpacity; ///< 0 -> 1
 };
 
 struct AglStandardParticle
@@ -62,8 +72,10 @@ public:
 	void setSpawnSpeed(float p_speed);
 	void setSpread(float p_spread);
 	void setSpawnFrequency(float p_frequency);
+	void setSpawnOffset(float p_offset);
+	void setMaxOpacity(float p_maxOpacity);
 
-	void update(float p_dt);
+	void update(float p_dt, AglVector3 p_cameraPosition);
 };
 
 #endif // AGLPARTICLESYSTEM_H

@@ -31,6 +31,11 @@ private:
 	static void TW_CALL SetFadeOut(const void *value, void *clientData);
 	static void TW_CALL GetFadeOut(void *value, void *clientData);
 
+	static void TW_CALL SetSpawnOffset(const void *value, void *clientData);
+	static void TW_CALL GetSpawnOffset(void *value, void *clientData);
+
+	static void TW_CALL SetMaxOpacity(const void *value, void *clientData);
+	static void TW_CALL GetMaxOpacity(void *value, void *clientData);
 
 	static void TW_CALL LoadTexture(void *clientData);
 public:

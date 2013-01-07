@@ -8,6 +8,7 @@
 #include "SphereMesh.h"
 #include "BoxMesh.h"
 #include "ParticleSystem.h"
+#include "Camera.h"
 
 
 Scene* Scene::sInstance = NULL;
@@ -120,7 +121,7 @@ void Scene::Update(float pElapsedTime)
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
 		mMeshes[i]->update(pElapsedTime);
 	if (mAglScene)
-		mAglScene->update(pElapsedTime);
+		mAglScene->update(pElapsedTime, Camera::GetInstance()->GetPosition());
 	mRotation += pElapsedTime;
 }
 void Scene::Draw()

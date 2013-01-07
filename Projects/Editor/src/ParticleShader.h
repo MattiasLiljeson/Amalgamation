@@ -14,6 +14,7 @@
 
 #include "SimpleShader.h"
 #include <AglGradient.h>
+#include "ParticleSystem.h"
 
 class Gradient;
 class VertexShader;
@@ -29,7 +30,7 @@ struct ParticleBuffer
 	float FadeIn;
 	float FadeOut;
 	float ParticleMaxAge;
-	float buff[1];
+	float Opacity;
 };
 
 class ParticleShader
@@ -50,7 +51,7 @@ public:
 	ID3D11PixelShader*  GetPixelShader();
 	ID3D11GeometryShader* GetGeometryShader();
 	ID3D11InputLayout*	GetInputLayout();
-	void SetBuffer(int pTextureIndex, AglVector4 pColor, float pFadeIn, float pFadeOut, float pParticleMaxAge);
+	void SetBuffer(ParticleSystem* pPS);
 };
 
 #endif // PARTICLESHADER_H

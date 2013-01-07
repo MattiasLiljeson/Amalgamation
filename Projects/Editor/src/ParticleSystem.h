@@ -95,6 +95,14 @@ public:
 	{
 		mFadeOutStart = pFadeOutStart;
 	}
+	void setSpawnOffset(float pOffset)
+	{
+		mSystem->setSpawnOffset(pOffset);
+	}
+	void setMaxOpacity(float pOpacity)
+	{
+		mSystem->setMaxOpacity(pOpacity);
+	}
 
 	void Draw();
 };

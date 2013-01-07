@@ -94,7 +94,7 @@ void AglScene::appendTransform(int p_index, AglMatrix p_transform)
 	}
 }
 
-void AglScene::update(float p_dt)
+void AglScene::update(float p_dt, AglVector3 p_cameraPosition)
 {
 	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
 	{
@@ -103,7 +103,7 @@ void AglScene::update(float p_dt)
 	if (m_animations.size() > 0)
 		m_animations[m_currentAnimation]->update(p_dt);
 	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
-		m_particleSystems[i]->update(p_dt);
+		m_particleSystems[i]->update(p_dt, p_cameraPosition);
 }
 AglMaterial* AglScene::getMaterial(int p_index)
 {

@@ -223,7 +223,7 @@ public:
 	/// Updates the scene
 	/// \param p_dt Elapsed time.
 	///
-	void update(float p_dt);
+	void update(float p_dt, AglVector3 p_cameraPosition);
 
 	///
 	/// Adds a name to the scene.

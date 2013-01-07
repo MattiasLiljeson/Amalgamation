@@ -58,7 +58,7 @@ ID3D11InputLayout* ParticleShader::GetInputLayout()
 {
 	return mIL;
 }
-void ParticleShader::SetBuffer(int pTextureIndex, AglVector4 pColor, float pFadeIn, float pFadeOut, float pParticleMaxAge)
+void ParticleShader::SetBuffer(ParticleSystem* pPS)
 {
 	AglMatrix v = Camera::GetInstance()->GetViewMatrix();
 	AglMatrix p = Camera::GetInstance()->GetProjectionMatrix();
@@ -74,19 +74,21 @@ void ParticleShader::SetBuffer(int pTextureIndex, AglVector4 pColor, float pFade
 	buffer->View = v;
 	buffer->Projection = p;
 	buffer->EyePosition = AglVector4(pos.x, pos.y, pos.z, 1);
-	buffer->Color = pColor;
-	buffer->FadeIn = pFadeIn;
-	buffer->FadeOut = pFadeOut;
-	buffer->ParticleMaxAge = pParticleMaxAge;
+	buffer->Color = pPS->getColor();
+	buffer->FadeIn = pPS->getFadeInStop();
+	buffer->FadeOut = pPS->getFadeOutStart();
+	buffer->ParticleMaxAge = pPS->GetHeader().particleAge;
+	buffer->Opacity = pPS->GetHeader().maxOpacity;
 
 	mDeviceContext->Unmap(mBuffer, 0);
 
 	unsigned int bufferNumber = 0;
 	mDeviceContext->GSSetConstantBuffers(bufferNumber, 1, &mBuffer);
 
-	if (pTextureIndex >= 0)
+	int textureIndex = pPS->getTextureIndex();
+	if (textureIndex >= 0)
 	{
-		string s = Scene::GetInstance()->GetName(pTextureIndex);
+		string s = Scene::GetInstance()->GetName(textureIndex);
 		removePath(s);
 		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);

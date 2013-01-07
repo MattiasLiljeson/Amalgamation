@@ -7,7 +7,7 @@ cbuffer cbPerFrame : register(b0)
 	float fadeIn;
 	float fadeOut;
 	float particleMaxAge;
-	float buff[1];
+	float maxOpacity;
 };
 
 cbuffer cbFixed
@@ -74,6 +74,7 @@ void GShader(point VS_OUT gIn[1],
 	else
 		opacity = 1.0f;
 	
+	opacity *= maxOpacity;
 	GS_OUT gOut;
 	[unroll]
 	for(int i = 0; i < 4; ++i)
