@@ -39,6 +39,30 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 		}
 		else
 		{
+			// If the rigidbody is a compound body, handle compound specifics
+
+			// If the body has a parent, handle changes
+			if (body->isParentChanged())
+			{
+				// First, retrieve the ids
+				int oldId = body->getOldParentId();
+				int newId = body->getParentId();
+				Body* oldparent = NULL;
+				Body* newparent = NULL;
+
+				// Then the pointers to the bodies
+				if (oldId!=-1)
+					oldparent = m_physicsController->getBody(body->getOldParentId());
+
+				if (newId!=-1)
+					newparent = m_physicsController->getBody(body->getParentId());
+
+				CompoundBody* cb = dynamic_cast<CompoundBody*>(oldparent);
+				
+				// Reset dirtybit
+				body->resetParentChangedStatus();
+			}
+			// Update the rigidbody
 			Body* b = m_physicsController->getBody(body->m_id);
 			AglMatrix world = b->GetWorld();
 			Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(

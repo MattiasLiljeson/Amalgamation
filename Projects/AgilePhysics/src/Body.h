@@ -44,6 +44,8 @@ public:
 	virtual void RevertVelocity() = 0;
 	virtual void RevertPosition() = 0;
 
+	virtual bool IsCompoundBody();
+
 	void Activate();
 	void Inactivate();
 	bool IsActive();

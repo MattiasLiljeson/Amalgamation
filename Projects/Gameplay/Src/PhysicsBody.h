@@ -37,6 +37,7 @@ public:
 	BodyType getType() {return m_type;}
 
 	int		getParentId() {return m_parentId;}
+	int		getOldParentId() {return m_oldParentId;}
 
 	///-----------------------------------------------------------------------------------
 	/// Sets a parent to this body, will only work if parent is compound body.
@@ -50,6 +51,9 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void	unspecifyParent();
+
+	int		isParentChanged() {return m_parentChanged;}
+	void	resetParentChangedStatus() {m_parentChanged=false;}
 
 private:
 	int m_parentId;

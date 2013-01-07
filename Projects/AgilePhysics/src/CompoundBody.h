@@ -37,6 +37,8 @@ public:
 	AglVector3 GetAngularVelocity();
 	AglVector3 GetCenterOfMass();
 
+	bool IsCompoundBody();
+
 	void AddImpulse(AglVector3 pImpulse);
 	void AddAngularImpulse(AglVector3 pAngularImpulse);
 

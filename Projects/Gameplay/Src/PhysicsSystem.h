@@ -29,7 +29,7 @@ public:
 
 private:
 	void initializeEntity(Entity* p_entity);
-
+	void handleCompoundBody();
 private:
 	PhysicsController* m_physicsController;
 
