@@ -61,6 +61,10 @@ AglReader::AglReader(const char* p_path)
 	{
 		desc.sphereGrids.push_back(readSphereGrid());
 	}
+	for (int i = 0; i < m_topHeader.connectionPointCount; i++)
+	{
+		desc.connectionPoints.push_back(readConnectionPoint());
+	}
 
 	desc.coordinateSystem = m_topHeader.coordinateSystem;
 
@@ -214,6 +218,13 @@ AglInteriorSphereGrid* AglReader::readSphereGrid()
 	m_file.read((char*)&spheres[0], sizeof(AglInteriorSphere)*header.sphereCount);
 
 	return new AglInteriorSphereGrid(header, spheres);
+}
+
+AglConnectionPoint AglReader::readConnectionPoint()
+{
+	AglConnectionPoint cp;
+	m_file.read((char*)&cp, sizeof(AglConnectionPoint));
+	return cp;
 }
 
 AglScene* AglReader::getScene()

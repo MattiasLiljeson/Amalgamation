@@ -10,6 +10,7 @@
 #include "GeometryShader.h"
 #include "RenderNormalsShader.h"
 #include "SkeletonShader.h"
+#include "ParticleShader.h"
 
 ShaderManager* ShaderManager::sInstance = NULL;
 
@@ -20,6 +21,7 @@ ShaderManager::ShaderManager()
 	mGradientShader = NULL;
 	mSkeletonShader = NULL;
 	mRenderNormals = NULL;
+	mParticleShader = NULL;
 }
 ShaderManager::~ShaderManager()
 {
@@ -33,12 +35,15 @@ ShaderManager::~ShaderManager()
 		delete mSkeletonShader;
 	if (mRenderNormals)
 		delete mRenderNormals;
+	if (mParticleShader)
+		delete mParticleShader;
 
 	mStandardShader = NULL;
 	mSkeletonMeshShader = NULL;
 	mGradientShader = NULL;
 	mSkeletonShader = NULL;
 	mRenderNormals = NULL;
+	mParticleShader = NULL;
 
 	for (unsigned int i = 0; i < m_vertexShaders.size(); i++)
 		delete m_vertexShaders[i];
@@ -91,6 +96,11 @@ bool ShaderManager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 	m_pixelShaders.push_back(new PixelShader(pDevice, "Shaders/Skeleton/skeleton.ps", "PShader"));
 	mSkeletonShader = new SkeletonShader(pDevice, pDeviceContext, m_vertexShaders.back(), m_pixelShaders.back());
 
+	//Render particles
+	m_vertexShaders.push_back(new VertexShader(pDevice, "Shaders/ParticleEffects/particleDraw.vs", "VShader"));
+	m_geometryShaders.push_back(new GeometryShader(pDevice, "Shaders/ParticleEffects/particleDraw.gs", "GShader"));
+	m_pixelShaders.push_back(new PixelShader(pDevice, "Shaders/ParticleEffects/particleDraw.ps", "PShader"));
+	mParticleShader = new ParticleShader(pDevice, pDeviceContext, m_vertexShaders.back(), m_pixelShaders.back(), m_geometryShaders.back());
 
 	return true;
 }
@@ -113,4 +123,9 @@ RenderNormalsShader* ShaderManager::GetRenderNormals()
 SkeletonShader* ShaderManager::GetSkeletonShader()
 {
 	return mSkeletonShader;
+}
+
+ParticleShader* ShaderManager::GetParticleShader()
+{
+	return mParticleShader;
 }
