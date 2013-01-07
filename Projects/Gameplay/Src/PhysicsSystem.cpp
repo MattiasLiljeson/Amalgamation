@@ -82,11 +82,13 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		CompoundBody* cb = NULL;
 		int t=0;
 		int* bodyId = &t; // temp storage of id
+		AglVector3 offset=AglVector3(0.0f,0.0f,0.0f);
 		if (init->m_compound)
 		{
 			// Add compound body as id to component
 			body->m_id = m_physicsController->AddCompoundBody(init->m_position);
 			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->m_id));
+			offset = init->m_position;
 		}
 		else // repoint id storage; only add shape id to body component if not compound
 			bodyId = &(body->m_id); 
@@ -94,7 +96,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		// Add shape
 		if (init->m_type == 0)
 		{
-			*bodyId = m_physicsController->AddBox(init->m_position,
+			*bodyId = m_physicsController->AddBox(init->m_position-offset,
 				init->m_scale*2, 1, 
 				init->m_velocity, 
 				init->m_angularVelocity, 
