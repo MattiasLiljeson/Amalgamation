@@ -1,46 +1,54 @@
 #include "TextureParser.h"
 
-///-----------------------------------------------------------------------------------
-/// Called once to initialize Free Image properly
-/// \return void
-///-----------------------------------------------------------------------------------
+
 void TextureParser::init()
 {
 	FreeImage_Initialise();
 }
 
-///-----------------------------------------------------------------------------------
-/// Handles the loading and creation of textures files. Supports various of types and
-/// throws exception if creation wasn't successfully.
-/// \param p_device
-/// \param p_filePath
-/// \return ID3D11ShaderResourceView*
-///-----------------------------------------------------------------------------------
 ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device, 
 											 const char* p_filePath)
 {
 	FREE_IMAGE_FORMAT imageFormat;
 	FIBITMAP* image;
+	bool succeededLoadingFile = false;
+	ID3D11ShaderResourceView* newShaderResurceView;
 
 	imageFormat = FreeImage_GetFIFFromFilename(p_filePath);
 	if( imageFormat != FIF_UNKNOWN )
 		image = FreeImage_Load(imageFormat, p_filePath);
 	else
+	{
+		/************************************************************************/
+		/* Made reverting back to a fallback texture will be enough? Instead	*/
+		/* of throwing a exception.												*/
+		/************************************************************************/
+		succeededLoadingFile = false;
 		throw FreeImageException("Unknown file format, cannot parse the file, " + 
 		toString(p_filePath),__FILE__,__FUNCTION__,__LINE__);
+	}
+	if(succeededLoadingFile)
+	{
+		FreeImage_FlipVertical(image);
 
-	FreeImage_FlipVertical(image);
+		newShaderResurceView = createTexture(
+			p_device, FreeImage_GetBits(image), FreeImage_GetWidth(image),
+			FreeImage_GetHeight(image), FreeImage_GetPitch(image),
+			TextureParser::TEXTURE_TYPE::BGRA);
 
-	ID3D11ShaderResourceView* newShaderResurceView = createTexture(
-		p_device, FreeImage_GetBits(image), FreeImage_GetWidth(image),
-		FreeImage_GetHeight(image), FreeImage_GetPitch(image),
-		TextureParser::TEXTURE_TYPE::BGRA);
+		/************************************************************************/
+		/* Clean up the mess afterwards											*/
+		/************************************************************************/
+		FreeImage_Unload(image);
+	}
+	else
+	{
+		BYTE* data = generateFallbackTexture();
+		newShaderResurceView = createTexture(p_device,data,10,10,32,
+			TextureParser::TEXTURE_TYPE::RGBA);
 
-	/************************************************************************/
-	/* Clean up the mess afterwards											*/
-	/************************************************************************/
-	FreeImage_Unload(image);
-
+		delete data;
+	}
 	return newShaderResurceView;
 }
 
@@ -68,15 +76,15 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	switch( p_type )
 	{
 	case RGBA:
-		texDesc.Format				= DXGI_FORMAT_R8G8B8A8_UNORM;
-		break;
-	
-	case BGRA:
-		texDesc.Format				= DXGI_FORMAT_B8G8R8A8_UNORM;
-		break;
+		texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		break;		   
 
-	default:
-		texDesc.Format				= DXGI_FORMAT_B8G8R8A8_UNORM;
+	case BGRA:		   
+		texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		break;		   
+
+	default:		   
+		texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		break;
 	}
 
@@ -103,4 +111,55 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	texture->Release();
 
 	return newShaderResurceView;
+}
+
+BYTE* TextureParser::generateFallbackTexture()
+{
+	int dimension = 10;
+	int size = dimension*dimension;
+	int bitDepth = 4;
+	BYTE* textureData = new BYTE[size*bitDepth];
+
+	unsigned int counterX = 0;
+	unsigned int counterY = 0;
+	bool pink = true;
+	for (int i = 0; i < size*bitDepth;i+=4)
+	{
+		if(counterX == dimension)
+		{
+			counterY++;
+			counterX = 0;
+		}
+
+		//Top LEFT
+		if(counterX < 5 && counterY < 5)
+			pink = true;
+		//Top RIGHT
+		else if(counterX > 4 && counterY < 5)
+			pink = false;
+		//Bot LEFT
+		else if(counterX < 5 && counterY > 4)
+			pink = false;
+		//Bot RIGHT
+		else 
+			pink = true;
+
+		if(pink)
+		{
+			textureData[i]		= 255;	//RED
+			textureData[i+1]	= 0;	//BLUE
+			textureData[i+2]	= 255;	//GREEN
+			textureData[i+3]	= 255;	//ALPHA
+		}
+		else
+		{
+			textureData[i]		= 0;
+			textureData[i+1]	= 0;
+			textureData[i+2]	= 0;
+			textureData[i+3]	= 255;
+		}
+		counterX++;
+	}	
+
+	return textureData;
 }
