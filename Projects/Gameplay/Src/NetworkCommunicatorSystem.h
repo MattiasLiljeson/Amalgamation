@@ -4,6 +4,8 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <ctime>
+#include <Windows.h>
 
 class TcpClient;
 
@@ -58,9 +60,13 @@ public:
 private:
 	NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
 	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
-	NetworkScoreUpdatePacket readScorePacket(Packet& p_packet);
+	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
 
 private:
 	TcpClient* m_tcpClient;
+
+	float m_timer;
+	float m_timerStartValue;
+	SYSTEMTIME m_timestamp;
 
 };

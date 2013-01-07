@@ -33,6 +33,8 @@ NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
 					ComponentType::NetworkSynced)
 {
 	m_tcpClient = p_tcpClient;
+
+	m_timer = m_timerStartValue = 5.0f;
 }
 
 NetworkCommunicatorSystem::~NetworkCommunicatorSystem()
@@ -218,6 +220,29 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::Ping)
+		{
+			// TODO: Implement later.
+		}
+		else if(packetType == (char)PacketType::Pong)
+		{
+
+		}
+	}
+
+	m_timer -= m_world->getDelta();
+	if( m_timer <= 0 )
+	{
+		m_timer = m_timerStartValue;
+
+		GetSystemTime( &m_timestamp );
+
+		Packet packet;
+		packet << (char)PacketType::Ping;
+		packet << (unsigned short)m_timestamp.wSecond;
+		packet << (unsigned short)m_timestamp.wMilliseconds;
+
+		m_tcpClient->sendPacket( packet );
 	}
 }
 
