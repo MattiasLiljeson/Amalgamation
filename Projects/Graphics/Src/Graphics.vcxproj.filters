@@ -131,6 +131,9 @@
     <ClInclude Include="RenderStateHelper.h">
       <Filter>Renderer\Deferred</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialInfo.h">
+      <Filter>Renderer\Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -165,6 +168,9 @@
     </Filter>
     <Filter Include="Renderer\Mesh">
       <UniqueIdentifier>{305044c6-2e69-440e-9427-d7e62138ac39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Materials">
+      <UniqueIdentifier>{e1cf790f-831f-4fb7-9d60-94a94a88a36e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

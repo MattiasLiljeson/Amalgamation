@@ -97,16 +97,18 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Render instanced mesh data
 	/// \param p_mesh
-	/// \param p_texture
+	/// \param p_textureArray
+	/// \param p_textureArraySize
 	/// \param p_instanceBuffer
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMeshInstanced(Mesh* p_mesh,
-							 Texture* p_texture, 
+							 Texture** p_textureArray,
+							 unsigned int p_textureArraySize,
 							 Buffer<InstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
-	/// Render a fullscreen quad textured with the gbuffer.
+	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();

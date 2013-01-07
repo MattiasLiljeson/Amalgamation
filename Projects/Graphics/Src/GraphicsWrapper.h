@@ -67,7 +67,16 @@ public:
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
 
-	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+	///-----------------------------------------------------------------------------------
+	/// Set the current rasterizer state. By default it will allow to be overriden by the 
+	/// wireframe mode setting.
+	/// \param p_state
+	/// \param p_allowWireframeModeOverride If true: will ignore change if global 
+	/// wireframe mode is on. Will ignore wireframe mode if set to false. True by default.
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
+									bool p_allowWireframeModeOverride=true);
 
 	void setScissorRegion(int x, int y, int width, int height);
 
@@ -148,6 +157,15 @@ public:
 	void changeBackbufferRes( int p_width, int p_height );
 
 	void changeToWindowed(bool p_windowed);
+
+	///-----------------------------------------------------------------------------------
+	/// Sets the global wireframe mode. Causes everything to be displayed in wireframe.
+	/// Separate rasterizer change calls can force to ignore global wireframe mode 
+	/// explicitly though.
+	/// \param p_wireframe
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setWireframeMode(bool p_wireframe);
 private:
 	void initSwapChain(HWND p_hWnd);
 
@@ -193,4 +211,5 @@ private:
 	int m_height;
 	int m_width;
 	bool m_windowed;
+	bool m_wireframeMode;
 };

@@ -25,13 +25,12 @@ Buffer<DIndex>* Mesh::getIndexBuffer()
 	return m_indexBuffer;
 }
 
-unsigned int Mesh::getTextureId()
+MaterialInfo Mesh::getMaterialInfo()
 {
-	return m_textureId;
+	return m_materialInfo;
 }
 
-void Mesh::setTextureId( unsigned int p_id )
+void Mesh::setTextureId( const MaterialInfo& p_materialInfo )
 {
-	m_textureId = p_id;
+	m_materialInfo = p_materialInfo;
 }
-

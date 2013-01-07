@@ -5,6 +5,9 @@ cbuffer VertexProgramCBuffer
 };
 
 Texture2D diffuseTexture : register(t0);
+Texture2D normalTexture : register(t1);
+Texture2D specularTexture : register(t2);
+Texture2D glowTexture : register(t3);
 
 SamplerState pointSampler : register(s0);
 
@@ -28,7 +31,7 @@ struct PixelOut
 {
 	float4 diffuse	: SV_TARGET0;		//diffuse
 	float4 normal	: SV_TARGET1;		//normal
-	float4 specular : SV_TARGET2;
+	float4 specular : SV_TARGET2;		//specular
 };
 
 // Input: It uses texture coords as the random number seed.

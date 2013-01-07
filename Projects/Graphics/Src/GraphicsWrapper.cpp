@@ -24,6 +24,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_width	= p_width;
 	m_height= p_height;
 	m_windowed = p_windowed;
+	m_wireframeMode = false;
 
 	initSwapChain(p_hWnd);
 	initHardware();
@@ -34,6 +35,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
+	createTexture("mesherror.png",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
@@ -157,6 +159,7 @@ void GraphicsWrapper::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 
 void GraphicsWrapper::beginFrame()
 {
+	setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_deferredRenderer->beginDeferredBasePass();
 }
 
@@ -169,20 +172,50 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList)
 {
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
-	Texture* tex = m_textureManager->getResource(mesh->getTextureId());
+	
+	/************************************************************************/
+	/* Get the size of the materials and use it to create a new texture		*/
+	/* array.																*/
+	/************************************************************************/
+	unsigned int arraySize = mesh->getMaterialInfo().SIZE;
+	Texture** textureArray = new Texture*[arraySize];
+	for (unsigned int i = 0; i < arraySize; i++)
+	{
+		unsigned int textureId;
+		textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
+
+		/************************************************************************/
+		/* Check if the texture ID is active and get the texture resource or	*/
+		/* set the value in the texture array to NULL							*/
+		/************************************************************************/
+		if(textureId != 0)
+			textureArray[i] = m_textureManager->getResource(textureId);
+		else
+			textureArray[i] = NULL;
+	}
 
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
+	m_deferredRenderer->renderMeshInstanced(mesh, textureArray, arraySize, instanceBuffer);
 
-	m_deferredRenderer->renderMeshInstanced(mesh,tex,instanceBuffer);
-
+	delete textureArray;
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state)
+void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state, 
+												 bool p_allowWireframeModeOverride)
 {
-	m_deferredRenderer->setRasterizerStateSettings(p_state);
+	RasterizerState::Mode state = m_deferredRenderer->getCurrentRasterizerStateType();
+	// accept rasterizer state change if not in wireframe mode or 
+	// if set to not allow wireframe mode
+	if (!m_wireframeMode || !p_allowWireframeModeOverride)
+		m_deferredRenderer->setRasterizerStateSettings(p_state);
+	else if (state != RasterizerState::WIREFRAME) 
+	{   
+		// otherwise, force wireframe(if not already set)
+		m_deferredRenderer->setRasterizerStateSettings(RasterizerState::WIREFRAME);
+	}
 }
 
 
@@ -206,7 +239,8 @@ void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId,
 									 vector<InstanceData>* p_instanceList )
 {
 	Mesh* mesh = m_meshManager->getResource( p_meshId );
-	Texture* tex = m_textureManager->getResource( mesh->getTextureId() );
+	Texture* tex = m_textureManager->getResource( 
+		mesh->getMaterialInfo().getTextureType(MaterialInfo::DIFFUSEMAP) );
 
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
@@ -224,6 +258,7 @@ void GraphicsWrapper::finalizeGUIPass()
 
 void GraphicsWrapper::finalizeFrame()
 {
+	setRasterizerStateSettings(RasterizerState::DEFAULT,false);
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
 	m_deferredRenderer->renderComposedImage();
 }
@@ -252,16 +287,20 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 		// =============================================
 		if (p_name=="P_cube")
 		{
+			MaterialInfo materialInfo;
 			Mesh* mesh = m_bufferFactory->createBoxMesh(); // construct a mesh
 			meshResultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
 			// (Here you might want to do similar checks for textures/materials
 			// For now we have a hard coded texture path, but later on
 			// we probably get this path from a mesh file loader or similar.
-			unsigned int texId = createTexture("10x10.png",TESTTEXTUREPATH);
+			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
+				createTexture("10x10.png",TESTTEXTUREPATH));
+			materialInfo.setTextureId(MaterialInfo::NORMALMAP,
+				createTexture("testtexture.png",TESTTEXTUREPATH));
 			// and their managers.)
 			// ...
 			// and then set the resulting data to the mesh
-			mesh->setTextureId(texId);
+			mesh->setTextureId(materialInfo);
 		}
 		else
 		// =============================================
@@ -281,6 +320,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// only handle one mesh for now.
 				AglMesh* aglMesh = aglScene->getMeshes()[0];
 				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
+				MaterialInfo materialInfo;
 				// Raw data extraction
 				void* vertices = aglMesh->getVertices();
 				void* indices = static_cast<void*>(aglMesh->getIndices());
@@ -295,19 +335,26 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// (Here you might want to do similar checks for textures/materials
 				// For now we have a hard coded texture path, but later on
 				// we probably get this path from a mesh file loader or similar.
-				unsigned int texId = createTexture("testtexture.png",TESTTEXTUREPATH);
+				materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, 
+					createTexture("testtexture.png",TESTTEXTUREPATH));
+				materialInfo.setTextureId(MaterialInfo::NORMALMAP,
+					createTexture("testtexture.png",TESTTEXTUREPATH));
 				// and their managers.)
 				// ...
 				// and then set the resulting data to the mesh
-				mesh->setTextureId(texId);
+				mesh->setTextureId(materialInfo);
 			}
 			else
 			{
 				// fallback mesh and texture
 				Mesh* mesh = m_bufferFactory->createBoxMesh();
+				MaterialInfo materialInfo;
 				meshResultId = m_meshManager->addResource(p_name,mesh);
-				unsigned int texId = createTexture("mesherror.png",TEXTUREPATH);
-				mesh->setTextureId(texId);
+				materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
+					createTexture("mesherror.png",TEXTUREPATH));
+				materialInfo.setTextureId(MaterialInfo::NORMALMAP,
+					createTexture("testtexture.png",TESTTEXTUREPATH));
+				mesh->setTextureId(materialInfo);
 			}
 			// cleanup
 			delete aglScene;
@@ -358,10 +405,14 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 	{
 		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
 			p_vertices, p_numIndices, p_indices );
-
 		meshResultId = (int)m_meshManager->addResource( p_name, mesh );
+
 		if( p_textureId != -1 )
-			mesh->setTextureId( static_cast<unsigned int>(p_textureId) );
+		{
+			MaterialInfo materialInfo;
+			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, p_textureId);
+			mesh->setTextureId( materialInfo );
+		}
 		
 	}
 	else // the mesh already exists
@@ -372,7 +423,8 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 }
 
 
-unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture )
+unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, 
+										   Texture* p_texture )
 {
 	// check if resource already exists
 	int meshId = m_meshManager->getResourceId( p_name );
@@ -384,9 +436,12 @@ unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, 
 		int texId = m_textureManager->getResourceId( p_texture );
 		if( texId == -1 )
 		{
-			texId = static_cast<int>(m_textureManager->addResource( textureName, p_texture ));
+			texId = static_cast<int>(m_textureManager->addResource( textureName, 
+				p_texture ));
 		}
-		p_mesh->setTextureId( static_cast<unsigned int>(texId) );
+		MaterialInfo materialInfo;
+		materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, texId);
+		p_mesh->setTextureId( materialInfo );
 	}
 	return meshId;
 }
@@ -486,4 +541,9 @@ void GraphicsWrapper::changeToWindowed( bool p_windowed )
 	hr = m_swapChain->SetFullscreenState((BOOL)m_windowed,nullptr);
 	if( FAILED(hr))
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+}
+
+void GraphicsWrapper::setWireframeMode( bool p_wireframe )
+{
+	m_wireframeMode = p_wireframe;
 }

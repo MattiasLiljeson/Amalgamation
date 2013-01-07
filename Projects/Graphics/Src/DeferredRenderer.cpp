@@ -94,9 +94,6 @@ void DeferredRenderer::beginDeferredBasePass()
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
 	setBlendMask(0xffffff);
 
-	setRasterizerStateSettings(RasterizerState::DEFAULT);
-
-
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
@@ -140,8 +137,8 @@ void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-
-void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture, 
+void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArray, 
+										   unsigned int p_textureArraySize, 
 										   Buffer<InstanceData>* p_instanceBuffer )
 {
 	// Specialized, external apply of these buffers
@@ -162,8 +159,22 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture* p_texture,
 	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
 									  DXGI_FORMAT_R32_UINT, 0);
 
-	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	/************************************************************************/
+	/* Unsure on what the values, startSlot and numVIews, represent.		*/
+	/* -Robin T																*/
+	/************************************************************************/
+	UINT startSlot = 0;
+	UINT numViews = 1;
+	for (unsigned int i = 0; i < p_textureArraySize; i++)
+	{
+		if(p_textureArray[i] != NULL)
+		{
+			// set textures
+			m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+				&p_textureArray[i]->data );
+			startSlot++;
+		}
+	}
 
 	m_baseShader->apply();
 
@@ -195,25 +206,6 @@ void DeferredRenderer::beginGUIPass()
 	setBlendState(BlendState::ALPHA);
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
 	setBlendMask(0xffffff);
-
-// 	// HACK: set blendstate here to get alpha-blending
-// 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
-// 	m_deviceContext->OMGetBlendState( &m_stdBlendState, blendFactors, &m_stdMask);
-// 	ID3D11BlendState* newBlendState = NULL;
-// 	D3D11_BLEND_DESC BlendState;
-// 	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
-// 
-// 	BlendState.RenderTarget[0].BlendEnable = TRUE;
-// 	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-// 	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-// 	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-// 	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-// 	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-// 	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-// 	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
-// 
-// 	m_device->CreateBlendState( &BlendState, &newBlendState ); 
-// 	m_deviceContext->OMSetBlendState( newBlendState, blendFactors, 0xffffffff );
 }
 
 void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
