@@ -15,5 +15,5 @@ float4 PShader(GS_OUT pIn) : SV_TARGET
 	return color;
     float2 val = 2 * (pIn.texC - float2(0.5f, 0.5f));
     float c = 1.0f - sqrt(dot(val, val));
-	return float4(max(c, 0), 0, 0, max(c, 0));
+	return float4(1, 1, 1, max(c, 0)) * pIn.color;
 }

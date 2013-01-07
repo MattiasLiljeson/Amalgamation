@@ -37,6 +37,21 @@ private:
 	static void TW_CALL SetMaxOpacity(const void *value, void *clientData);
 	static void TW_CALL GetMaxOpacity(void *value, void *clientData);
 
+	static void TW_CALL SetOffsetOnSphere(void* clientData);
+	static void TW_CALL SetOffsetInSphere(void* clientData);
+	static void TW_CALL SetOffsetOnCircle(void* clientData);
+	static void TW_CALL SetOffsetInCircle(void* clientData);
+
+	static void TW_CALL SetSpawnOnce(void* clientData);
+	static void TW_CALL SetSpawnContinously(void* clientData);
+
+	static void TW_CALL SetSpreadPlane(void* clientData);
+	static void TW_CALL SetSpreadSpace(void* clientData);
+
+	static void TW_CALL SetParticlesPerSpawn(const void *value, void *clientData);
+	static void TW_CALL GetParticlesPerSpawn(void *value, void *clientData);
+
+	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);
 public:
 	ParticleSystemDialog();

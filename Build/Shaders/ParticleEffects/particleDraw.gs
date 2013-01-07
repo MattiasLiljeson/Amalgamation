@@ -48,7 +48,13 @@ void GShader(point VS_OUT gIn[1],
 	W[1] = float4(up,          0.0f);
 	W[2] = float4(look,        0.0f);
 	W[3] = float4(gIn[0].Position, 1.0f);
+	
+	matrix rot = matrix(cos(gIn[0].Age), -sin(gIn[0].Age), 0, 0,
+						sin(gIn[0].Age), cos(gIn[0].Age), 0, 0,
+						0, 0, 0, 0,
+						0, 0, 0, 1);
 
+	W = mul(rot, W);
 	matrix vp = mul(gView, gProj);
 	matrix WVP = mul(W, vp);
 	

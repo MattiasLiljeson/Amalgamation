@@ -60,7 +60,6 @@ void Scene::Release()
 	sInstance = NULL;
 }
 
-
 void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
 				 ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
@@ -152,7 +151,7 @@ void Scene::Draw()
 		m_world = AglMatrix::identityMatrix();
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
-	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	/*for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
@@ -180,13 +179,19 @@ void Scene::Draw()
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
 		}
-	}
+	}*/
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
 	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
 	{
 		mParticleSystems[i]->Draw();
+	}
+
+	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
+	for (unsigned int i = 0; i < cp.size(); i++)
+	{
+		SPHEREMESH->Draw(cp[i].transform*invMax, AglVector3(1, 0, 1));
 	}
 
 	AglVector3 minP = mMin;

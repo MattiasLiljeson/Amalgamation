@@ -18,7 +18,11 @@ AglParticleSystem::AglParticleSystem()
 	m_header.spread = 0;
 	m_header.spawnFrequency = 1.0f;
 	m_header.spawnOffset = 0.0f;
+	m_header.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+	m_header.spawnType = AglParticleSystemHeader::CONTINUOUSLY;
 	m_header.maxOpacity = 1.0f;
+	m_header.particlesPerSpawn = 1;
+	m_header.spreadType = AglParticleSystemHeader::INSPACE;
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 }
@@ -73,7 +77,75 @@ void AglParticleSystem::setMaxOpacity(float p_maxOpacity)
 {
 	m_header.maxOpacity = p_maxOpacity;
 }
+void AglParticleSystem::setOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type)
+{
+	m_header.spawnOffsetType = p_type;
+}
+void AglParticleSystem::setSpawnType(AglParticleSystemHeader::AglSpawnType p_type)
+{
+	m_header.spawnType = p_type;
+}
 
+AglVector3 AglParticleSystem::requestSpawnPoint()
+{
+	AglVector3 rndDir = AglVector3(2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f));
+	if (m_header.spawnOffsetType == AglParticleSystemHeader::ONSPHERE)
+	{
+		rndDir.normalize();
+		return m_header.spawnPoint + rndDir*m_header.spawnOffset;
+	}
+	else if (m_header.spawnOffsetType == AglParticleSystemHeader::INSPHERE)
+	{
+		rndDir.normalize();
+		float frac = (float)rand() / RAND_MAX;
+		return m_header.spawnPoint + rndDir*m_header.spawnOffset*frac;
+	}
+	else if (m_header.spawnOffsetType == AglParticleSystemHeader::ONRING)
+	{
+		rndDir = rndDir - m_header.spawnDirection * AglVector3::dotProduct(m_header.spawnDirection, rndDir);
+		rndDir.normalize();
+		return m_header.spawnPoint + rndDir*m_header.spawnOffset;
+	}
+	else if (m_header.spawnOffsetType == AglParticleSystemHeader::INRING)
+	{
+		rndDir = rndDir - m_header.spawnDirection * AglVector3::dotProduct(m_header.spawnDirection, rndDir);
+		rndDir.normalize();
+		float frac = (float)rand() / RAND_MAX;
+		return m_header.spawnPoint + rndDir*m_header.spawnOffset*frac;
+	}
+	else
+		return m_header.spawnPoint;
+}
+AglVector3 AglParticleSystem::requestSpawnVelocity()
+{
+	AglVector3 rndDir = AglVector3(2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f));
+
+	if (m_header.spreadType == AglParticleSystemHeader::INPLANE)
+	{
+		rndDir = rndDir - m_header.spawnDirection * AglVector3::dotProduct(m_header.spawnDirection, rndDir);
+	}
+
+	rndDir.normalize();
+	AglVector3 dir = m_header.spawnDirection * (1.0f - m_header.spread) + rndDir * m_header.spread;
+	dir.normalize();
+
+	return dir*m_header.spawnSpeed;
+}
+void AglParticleSystem::setParticlesPerSpawn(unsigned int p_particlesPerSpawn)
+{
+	m_header.particlesPerSpawn = p_particlesPerSpawn;
+}
+void AglParticleSystem::setSpreadType(AglParticleSystemHeader::AglSpreadType p_type)
+{
+	m_header.spreadType = p_type;
+}
+
+void AglParticleSystem::restart()
+{
+	m_age = 0;
+	m_particles.clear();
+	m_timeSinceSpawn = 0;
+}
 
 void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 {
@@ -109,23 +181,29 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			}
 		}
 
-
-		m_age += p_dt;
-		m_timeSinceSpawn += p_dt;
-		if (m_header.spawnFrequency > 0 && m_timeSinceSpawn > 1.0f / m_header.spawnFrequency)
+		if (m_header.spawnType == AglParticleSystemHeader::CONTINUOUSLY)
 		{
-			AglVector3 rndDir = AglVector3(2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f));
-			rndDir.normalize();
-			AglVector3 dir = m_header.spawnDirection * (1.0f - m_header.spread) + rndDir * m_header.spread;
-			dir.normalize();
-
-
-			rndDir = AglVector3(2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f), 2*(((float)rand() / RAND_MAX)-0.5f));
-			rndDir.normalize();
-			AglStandardParticle p(m_header.spawnPoint + rndDir*m_header.spawnOffset, dir*m_header.spawnSpeed, 0.05f);
-			m_particles.push_back(p);
+			if (m_header.spawnFrequency > 0 && m_timeSinceSpawn > 1.0f / m_header.spawnFrequency)
+			{
+				for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
+				{
+					AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), 0.05f);
+					m_particles.push_back(p);
+				}
+				m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
+			}
+		}
+		else if (m_header.spawnType == AglParticleSystemHeader::ONCE && m_age == 0)
+		{
+			for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
+			{
+				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), 0.05f);
+				m_particles.push_back(p);
+			}
 			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
 		}
+		m_age += p_dt;
+		m_timeSinceSpawn += p_dt;
 
 	}
 	else

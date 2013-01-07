@@ -9,25 +9,35 @@ using namespace std;
 
 #define AGL_PARTICLE_FORMAT_STANDARD 0
 
-struct AglSpawnOffsetType
+struct AglParticleSystemHeader
 {
-	enum
+	enum AglSpawnType
+	{
+		ONCE, CONTINUOUSLY
+	};
+	enum AglSpawnOffsetType
 	{
 		ONSPHERE, INSPHERE, ONRING, INRING
 	};
-};
+	enum AglSpreadType
+	{
+		INPLANE, INSPACE
+	};
 
-struct AglParticleSystemHeader
-{
+
 	AglVector3			spawnPoint;
+	AglSpawnType		spawnType;
 	float				spawnOffset;
+	AglSpawnOffsetType	spawnOffsetType;
 	AglVector3			spawnDirection;
 	float				spawnSpeed;
 	float				particleAge;
 	float				spread; ///< 0 -> 1
+	AglSpreadType		spreadType;
 	float				spawnFrequency;
 	AglParticleFormat	particleFormat;
 	float				maxOpacity; ///< 0 -> 1
+	unsigned int		particlesPerSpawn;
 };
 
 struct AglStandardParticle
@@ -58,6 +68,10 @@ private:
 	vector<AglStandardParticle> m_particles;
 	float		  m_age;
 	float		  m_timeSinceSpawn;
+
+private:
+	AglVector3 requestSpawnPoint();
+	AglVector3 requestSpawnVelocity();
 public:
 	AglParticleSystem();
 	AglParticleSystem(AglParticleSystemHeader p_header);
@@ -72,8 +86,14 @@ public:
 	void setSpawnSpeed(float p_speed);
 	void setSpread(float p_spread);
 	void setSpawnFrequency(float p_frequency);
+	void setSpawnType(AglParticleSystemHeader::AglSpawnType p_type);
 	void setSpawnOffset(float p_offset);
 	void setMaxOpacity(float p_maxOpacity);
+	void setOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type);
+	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn);
+	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
+
+	void restart();
 
 	void update(float p_dt, AglVector3 p_cameraPosition);
 };

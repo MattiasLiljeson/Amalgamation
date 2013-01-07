@@ -157,6 +157,77 @@ void TW_CALL ParticleSystemDialog::GetMaxOpacity(void *value, void *clientData)
 	*(float*)value = ps->GetHeader().maxOpacity;
 }
 
+void TW_CALL ParticleSystemDialog::SetOffsetOnSphere(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnOffsetType(AglParticleSystemHeader::ONSPHERE);
+}
+void TW_CALL ParticleSystemDialog::SetOffsetInSphere(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnOffsetType(AglParticleSystemHeader::INSPHERE);
+}
+void TW_CALL ParticleSystemDialog::SetOffsetOnCircle(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnOffsetType(AglParticleSystemHeader::ONRING);
+}
+void TW_CALL ParticleSystemDialog::SetOffsetInCircle(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnOffsetType(AglParticleSystemHeader::INRING);
+}
+
+void TW_CALL ParticleSystemDialog::SetSpawnOnce(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnType(AglParticleSystemHeader::ONCE);
+}
+void TW_CALL ParticleSystemDialog::SetSpawnContinously(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+}
+
+void TW_CALL ParticleSystemDialog::SetSpreadPlane(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpreadType(AglParticleSystemHeader::INPLANE);
+}
+void TW_CALL ParticleSystemDialog::SetSpreadSpace(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpreadType(AglParticleSystemHeader::INSPACE);
+}
+
+void TW_CALL ParticleSystemDialog::SetParticlesPerSpawn(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setParticlesPerSpawn(*(const unsigned int*)value);
+}
+void TW_CALL ParticleSystemDialog::GetParticlesPerSpawn(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(unsigned int*)value = ps->GetHeader().particlesPerSpawn;
+}
+
+void TW_CALL ParticleSystemDialog::Restart(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->restart();
+}
+
 ParticleSystemDialog::ParticleSystemDialog()
 {
 	hide();
@@ -184,22 +255,40 @@ void ParticleSystemDialog::setPS(int pIndex)
 	TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 
-	TwAddVarCB(m_dialog, "Spawn Point", TW_TYPE_DIR3F, SetSpawn, GetSpawn, (void*)this, "group=Sponge key=o");
-	TwAddVarCB(m_dialog, "Particle Age", TW_TYPE_FLOAT, SetParticleAge, GetParticleAge, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Spawn Point", TW_TYPE_DIR3F, SetSpawn, GetSpawn, (void*)this, "key=o");
+	TwAddVarCB(m_dialog, "Particle Age", TW_TYPE_FLOAT, SetParticleAge, GetParticleAge, (void*)this, "key=o step=0.01 min=0.0");
 
-	TwAddVarCB(m_dialog, "Spawn Speed", TW_TYPE_FLOAT, SetParticleSpeed, GetParticleSpeed, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
-	TwAddVarCB(m_dialog, "Spawn Direction", TW_TYPE_DIR3F, SetParticleDirection, GetParticleDirection, (void*)this, "group=Sponge key=o");
+	TwAddVarCB(m_dialog, "Spawn Speed", TW_TYPE_FLOAT, SetParticleSpeed, GetParticleSpeed, (void*)this, "key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Spawn Direction", TW_TYPE_DIR3F, SetParticleDirection, GetParticleDirection, (void*)this, "key=o");
 
-	TwAddVarCB(m_dialog, "Spread", TW_TYPE_FLOAT, SetSpread, GetSpread, (void*)this, "group=Sponge key=o step=0.01 min=0.0 max=1.0");
-	TwAddVarCB(m_dialog, "Spawn Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
-	TwAddVarCB(m_dialog, "Color", TW_TYPE_COLOR4F, SetColor, GetColor, (void*)this, "group=Sponge key=o");
+	TwAddVarCB(m_dialog, "Spread", TW_TYPE_FLOAT, SetSpread, GetSpread, (void*)this, "key=o step=0.01 min=0.0 max=1.0");
+	TwAddVarCB(m_dialog, "Spawn Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, (void*)this, "key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Color", TW_TYPE_COLOR4F, SetColor, GetColor, (void*)this, "key=o");
 
-	TwAddVarCB(m_dialog, "Fade-In Stop", TW_TYPE_FLOAT, SetFadeIn, GetFadeIn, (void*)this, "group=Sponge key=o step=0.01");
-	TwAddVarCB(m_dialog, "Fade-Out Start", TW_TYPE_FLOAT, SetFadeOut, GetFadeOut, (void*)this, "group=Sponge key=o step=0.01");
-	TwAddVarCB(m_dialog, "Spawn Offset", TW_TYPE_FLOAT, SetSpawnOffset, GetSpawnOffset, (void*)this, "group=Sponge key=o step=0.01 min=0.0");
-	TwAddVarCB(m_dialog, "Maximum Opacity", TW_TYPE_FLOAT, SetMaxOpacity, GetMaxOpacity, (void*)this, "group=Sponge key=o step=0.01 min=0.0 max=1.0");
+	TwAddVarCB(m_dialog, "Fade-In Stop", TW_TYPE_FLOAT, SetFadeIn, GetFadeIn, (void*)this, "key=o step=0.01");
+	TwAddVarCB(m_dialog, "Fade-Out Start", TW_TYPE_FLOAT, SetFadeOut, GetFadeOut, (void*)this, "key=o step=0.01");
+	TwAddVarCB(m_dialog, "Spawn Offset", TW_TYPE_FLOAT, SetSpawnOffset, GetSpawnOffset, (void*)this, "key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Maximum Opacity", TW_TYPE_FLOAT, SetMaxOpacity, GetMaxOpacity, (void*)this, "key=o step=0.01 min=0.0 max=1.0");
 
+	//Offset types
+	TwAddButton(m_dialog, "On Sphere", SetOffsetOnSphere, (void*)this, " label='On Sphere' group='Offset Type'");
+	TwAddButton(m_dialog, "In Sphere", SetOffsetInSphere, (void*)this, " label='In Sphere' group='Offset Type'");
+	TwAddButton(m_dialog, "On Circle", SetOffsetOnCircle, (void*)this, " label='On Circle' group='Offset Type'");
+	TwAddButton(m_dialog, "In Circle", SetOffsetInCircle, (void*)this, " label='In Circle' group='Offset Type'");
+
+	//Spawn types
+	TwAddButton(m_dialog, "Once", SetSpawnOnce, (void*)this, " label='Once' group='Spawn Type'");
+	TwAddButton(m_dialog, "Continuously", SetSpawnContinously, (void*)this, " label='Continuously' group='Spawn Type'");
+
+	//Spread Types
+	TwAddButton(m_dialog, "In Plane", SetSpreadPlane, (void*)this, " label='In Plane' group='Spread Type'");
+	TwAddButton(m_dialog, "In Space", SetSpreadSpace, (void*)this, " label='In Space' group='Spread Type'");
+
+	TwAddButton(m_dialog, "Restart", Restart, (void*)this, " label='Restart'");
 	TwAddButton(m_dialog, "Load Texture", LoadTexture, this, " label='Load Texture'");
+
+	//Particles per spawn
+	TwAddVarCB(m_dialog, "Particles Per Spawn", TW_TYPE_UINT32, SetParticlesPerSpawn, GetParticlesPerSpawn, (void*)this, "key=o");
 
 	show();
 }

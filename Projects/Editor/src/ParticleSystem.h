@@ -103,6 +103,26 @@ public:
 	{
 		mSystem->setMaxOpacity(pOpacity);
 	}
+	void setSpawnOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type)
+	{
+		mSystem->setOffsetType(p_type);
+	}
+	void restart()
+	{
+		mSystem->restart();
+	}
+	void setSpawnType(AglParticleSystemHeader::AglSpawnType p_type)
+	{
+		mSystem->setSpawnType(p_type);
+	}
+	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn)
+	{
+		mSystem->setParticlesPerSpawn(p_particlesPerSpawn);
+	}
+	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type)
+	{
+		mSystem->setSpreadType(p_type);
+	}
 
 	void Draw();
 };
