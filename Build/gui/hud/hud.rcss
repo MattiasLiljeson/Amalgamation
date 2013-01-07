@@ -1,4 +1,4 @@
-body
+
 {
 	font-family: Delicious;
 	font-weight: normal;
@@ -33,7 +33,7 @@ div#logo
 }
 
 div#score
-{
+{ 
 	background: rgba(100,100,200,128);
 
 	min-width: 400px;
@@ -46,8 +46,11 @@ div#score
 	left: 10px;
 }
 
-p
+div#scoreText
 {
+	margin-left:auto;
+	margin-right:auto;
+
 	font-family: delicous;
 	font-weight: bold;
 	font-style: italic;

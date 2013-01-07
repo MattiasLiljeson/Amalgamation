@@ -4,10 +4,11 @@
 	</head>
 	<body class="content">
 		<div id="logo">
-			asd
 		</div>
 		<div id="score">
-			yo!
+			<div id="scoreText">
+				yo!
+			</div>
 		</div>
 	</body>
 </rml>
