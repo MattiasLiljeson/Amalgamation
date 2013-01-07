@@ -1,3 +1,13 @@
+body
+{
+	font-family: Delicious;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 15;
+	
+	color: white;
+}
+
 body.content
 {
 	color: black;
@@ -7,7 +17,7 @@ body.content
 	height: 100%;
 }
 
-div#inner
+div#logo
 {
 	background-decorator: image;
 	background-image-src: ../../Assets/gui/texture/logo.tga;
@@ -20,4 +30,26 @@ div#inner
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
+}
+
+div#score
+{
+	background: rgba(100,100,200,128);
+
+	min-width: 400px;
+	max-width: 400px;
+	
+	min-height: 110x;
+	max-height: 110x;	
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+
+p
+{
+	font-family: delicous;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 24;
 }
