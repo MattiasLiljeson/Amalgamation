@@ -54,7 +54,7 @@ namespace Srv
 			}
 
 			// HACK: Really slow update loop for testing purposes.
-			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 

@@ -1,8 +1,8 @@
+#include <boost/asio/ip/tcp.hpp>
 #include "TcpClient.h"
 
 #include <exception>
 #include <iostream>
-#include <boost/asio/ip/tcp.hpp>
 
 #include "ProcessMessageConnectToServer.h"
 #include "ProcessMessageReceivePacket.h"

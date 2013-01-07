@@ -19,7 +19,9 @@ public:
 		NON_EXISTENT = -1,
 		Ship,
 		Prop,
-		Identity
+		Identity,
+		Other,
+		// Johan: We could probably remove this whole enum.
 	};
 
 public:

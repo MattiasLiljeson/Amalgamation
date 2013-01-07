@@ -7,6 +7,7 @@
 #include <Component.h>
 #include <ComponentType.h>
 #include <SystemType.h>
+#include <AntTweakBarWrapper.h>
 
 #include <Packet.h>
 #include <TcpClient.h>
@@ -34,7 +35,8 @@ NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
 {
 	m_tcpClient = p_tcpClient;
 
-	m_timer = m_timerStartValue = 5.0f;
+	m_timer = m_timerStartValue = 0.25f;
+	m_currentPing = 0;
 }
 
 NetworkCommunicatorSystem::~NetworkCommunicatorSystem()
@@ -226,7 +228,10 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::Pong)
 		{
-
+			SYSTEMTIME serverTimestamp;
+			packet >> serverTimestamp;
+			m_currentPing = serverTimestamp.wSecond * 1000 - m_timestamp.wSecond * 1000 +
+				serverTimestamp.wMilliseconds - m_timestamp.wMilliseconds;
 		}
 	}
 
@@ -238,6 +243,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		GetSystemTime( &m_timestamp );
 
 		Packet packet;
+		packet << (char)NetworkType::Other;
 		packet << (char)PacketType::Ping;
 
 		m_tcpClient->sendPacket( packet );
@@ -246,7 +252,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 void NetworkCommunicatorSystem::initialize()
 {
-
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Ping", TwType::TW_TYPE_INT32,
+		&m_currentPing, "" );
 }
 
 NetworkEntityCreationPacket NetworkCommunicatorSystem::readCreationPacket( 
