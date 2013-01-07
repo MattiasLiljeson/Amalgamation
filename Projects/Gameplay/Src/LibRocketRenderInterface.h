@@ -74,6 +74,9 @@ private:
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
 
 private:
+	//DEBUG:
+	int numCompiledGeometries; 
+
 	typedef PNTTBVertex VertexType;	//change this per impl
 	BufferFactory* m_factory;
 	GraphicsWrapper* m_wrapper;

@@ -67,7 +67,7 @@ void LibRocketBackendSystem::initialize()
 	}
 
 	string tmp;
-	tmp = GUI_HUD_PATH + "demo.rml";
+	tmp = GUI_HUD_PATH + "hud.rml";
 	loadDocument( tmp.c_str() );
 
 	//tmp = GUI_HUD_PATH + "main.rml";
