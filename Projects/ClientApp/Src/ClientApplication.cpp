@@ -17,6 +17,7 @@
 #include <RenderInfo.h>
 #include <ShipController.h>
 #include <Transform.h>
+#include <HudElement.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -33,6 +34,7 @@
 #include <RenderPrepSystem.h>
 #include <ShipControllerSystem.h>
 #include <DisplayPlayerScoreSystem.h>
+#include <HudSystem.h>
 
 // MISC
 #include <AntTweakBarWrapper.h>
@@ -149,6 +151,9 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
+	HudSystem* hud = new HudSystem( rocketBackend );
+	m_world->setSystem( hud, true );
+
 	// Controller system for the ship
 	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
 		m_client );
@@ -229,6 +234,13 @@ void ClientApplication::initEntities()
 		}
 
 	}
+
+	// HUD score element
+	entity = m_world->createEntity();
+	component = new HudElement( "scoreText" );
+	entity->addComponent( ComponentType::HudElement, component );
+	m_world->addEntity(entity);
+
 }
 
 void ClientApplication::initSounds()

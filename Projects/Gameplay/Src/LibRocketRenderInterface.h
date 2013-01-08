@@ -74,6 +74,12 @@ private:
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
 
 private:
+	//DEBUG:
+	int numCompiledGeometries; 
+
+	// Std texture used when no texture is specified for the geometry
+	unsigned int m_stdTextureId;
+
 	typedef PNTTBVertex VertexType;	//change this per impl
 	BufferFactory* m_factory;
 	GraphicsWrapper* m_wrapper;

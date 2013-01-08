@@ -4,6 +4,8 @@
 #include "AglVector3.h"
 
 class PhysicsController;
+class PhysicsBody;
+class Body;
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -29,7 +31,7 @@ public:
 
 private:
 	void initializeEntity(Entity* p_entity);
-
+	void handleCompoundBodyDependencies(PhysicsBody* p_bodyComponent, Body* p_rigidBody);
 private:
 	PhysicsController* m_physicsController;
 

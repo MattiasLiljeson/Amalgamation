@@ -41,6 +41,7 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::SetRenderInterface(m_renderInterface);
 	Rocket::Core::Initialise();
 
+
 	int wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
 
@@ -50,6 +51,9 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( wndWidth, wndHeight) );
 
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( true );
+	
 	m_cursor = m_inputBackend->getCursor();
 
 	// Load fonts and documents
@@ -67,7 +71,7 @@ void LibRocketBackendSystem::initialize()
 	}
 
 	string tmp;
-	tmp = GUI_HUD_PATH + "demo.rml";
+	tmp = GUI_HUD_PATH + "hud.rml";
 	loadDocument( tmp.c_str() );
 
 	//tmp = GUI_HUD_PATH + "main.rml";
@@ -106,6 +110,13 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath )
 	}
 
 	return id;
+}
+
+void LibRocketBackendSystem::updateElement( string p_element, string p_value )
+{
+	Rocket::Core::Element* element;
+	element = m_documents[0]->GetElementById( p_element.c_str() );
+	element->SetInnerRML( p_value.c_str() );
 }
 
 void LibRocketBackendSystem::process()

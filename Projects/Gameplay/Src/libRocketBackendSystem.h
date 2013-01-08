@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <Rocket/Core.h>
+#include <Rocket/Debugger.h>
 
 class AntTweakBarWrapper;
 class Control;
@@ -24,6 +25,8 @@ public:
 
 	bool loadFontFace( const char* p_fontPath );
 	int loadDocument( const char* p_filePath );
+
+	void updateElement( string p_element, string p_value );
 
 	void process();
 	void render();
