@@ -269,7 +269,8 @@ void GraphicsWrapper::flipBackBuffer()
 }
 
 unsigned int GraphicsWrapper::createMesh( const string& p_name,
-										  const string* p_path/*=NULL*/ )
+										  const string* p_path/*=NULL*/,
+										  ConnectionPointCollection* p_outConnectionPoints/*=NULL*/)
 {
 	// =============================================
 	//
@@ -317,6 +318,9 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			//
 			if (aglScene)
 			{ 
+				// ---------------
+				// Mesh
+				// ---------------
 				// only handle one mesh for now.
 				AglMesh* aglMesh = aglScene->getMeshes()[0];
 				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
@@ -329,7 +333,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// Internal mesh format creation
 				Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
 																numVertices,
-																numIndices);   
+																numIndices);
 				// put in manager
 				meshResultId = m_meshManager->addResource(p_name,mesh);	
 				// (Here you might want to do similar checks for textures/materials
@@ -343,6 +347,21 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// ...
 				// and then set the resulting data to the mesh
 				mesh->setTextureId(materialInfo);
+
+				// ---------------
+				// Hardpoints
+				// ---------------
+				if (p_outConnectionPoints!=NULL)
+				{
+					for (unsigned int i=0;i<aglScene->getConnectionPointCount();i++)
+					{
+						InstanceData dat;
+						AglMatrix mat = aglScene->getConnectionPoint(i).transform;
+						for (unsigned int n=0;n<16;n++)
+							dat.worldTransform[n] = mat.data[n];
+						p_outConnectionPoints->m_collection.push_back(dat);
+					}
+				}
 			}
 			else
 			{
