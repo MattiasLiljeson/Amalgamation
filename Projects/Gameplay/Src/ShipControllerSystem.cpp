@@ -141,7 +141,6 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	float dt = m_world->getDelta();
 	// Fetch the status of the various input methods.
 	ResultingInputForces input = readAllTheInput();
-	
 	updateAntTweakBar(input);
 
 	// Apply correction vectors to the analogue sticks.
