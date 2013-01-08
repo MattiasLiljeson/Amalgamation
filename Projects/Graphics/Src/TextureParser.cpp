@@ -1,5 +1,5 @@
 #include "TextureParser.h"
-
+#include <DebugUtil.h>
 
 void TextureParser::init()
 {
@@ -24,8 +24,18 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 		/* of throwing a exception.												*/
 		/************************************************************************/
 		succeededLoadingFile = false;
-		throw FreeImageException("Unknown file format, cannot parse the file, " + 
-		toString(p_filePath),__FILE__,__FUNCTION__,__LINE__);
+		DEBUGWARNING(((string("Unknown texture file format, cannot parse the file, reverting to fallback texture. ") + 
+					  toString(p_filePath)).c_str()));
+	}
+	/************************************************************************/
+	/* If the width of the image is equal to zero, then the file wasn't		*/
+	/* found																*/
+	/************************************************************************/
+	if (succeededLoadingFile && FreeImage_GetWidth(image)==0)
+	{
+		DEBUGWARNING(((string("Texture file not found, reverting to fallback texture. ") + 
+			toString(p_filePath)).c_str()));
+		succeededLoadingFile = false;
 	}
 	if(succeededLoadingFile)
 	{

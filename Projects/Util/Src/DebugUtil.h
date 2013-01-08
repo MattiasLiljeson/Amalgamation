@@ -31,7 +31,7 @@ static void debugWarn(const char* msg);
 void debugWarn(const char* msg)
 {
 	OutputDebugStringA(msg);
-	MessageBoxA(NULL, msg, "Exception!", MB_ICONWARNING);
+	MessageBoxA(NULL, msg, "Warning!", MB_ICONWARNING);
 }
 #else
 #include <iostream>
