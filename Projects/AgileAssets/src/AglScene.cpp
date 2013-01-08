@@ -160,9 +160,14 @@ vector<AglConnectionPoint> AglScene::getConnectionPoints()
 	return m_connectionPoints;
 }
 
-AglConnectionPoint AglScene::getConnectionPoints(unsigned int p_index)
+AglConnectionPoint AglScene::getConnectionPoint(unsigned int p_index)
 {
 	return m_connectionPoints[p_index];
+}
+
+unsigned int AglScene::getConnectionPointCount()
+{
+	return m_connectionPoints.size();
 }
 
 int AglScene::addName(string p_name)

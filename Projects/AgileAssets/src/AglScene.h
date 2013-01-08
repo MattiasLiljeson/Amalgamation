@@ -203,10 +203,17 @@ public:
 	vector<AglConnectionPoint> getConnectionPoints();
 
 	///-----------------------------------------------------------------------------------
-	/// Get a connection points
+	/// Get a connection point
 	/// \return The connection point
 	///-----------------------------------------------------------------------------------
-	AglConnectionPoint getConnectionPoints(unsigned int p_index);
+	AglConnectionPoint getConnectionPoint(unsigned int p_index);
+
+
+	///-----------------------------------------------------------------------------------
+	/// Get the amount of connection points
+	/// \return unsigned int The size
+	///-----------------------------------------------------------------------------------
+	unsigned int getConnectionPointCount();
 
 	///
 	/// Gets all scene data

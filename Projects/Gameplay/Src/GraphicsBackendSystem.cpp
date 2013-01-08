@@ -91,9 +91,10 @@ void GraphicsBackendSystem::process()
 }
 
 unsigned int GraphicsBackendSystem::createMesh( const string& p_meshName, 
-											    const string* p_path/*=NULL */ )
+											    const string* p_path/*=NULL */,
+												ConnectionPointCollection* p_outConnectionPoints/*=NULL*/)
 {
-	return m_graphicsWrapper->createMesh(p_meshName,p_path);
+	return m_graphicsWrapper->createMesh(p_meshName,p_path,p_outConnectionPoints);
 }
 
 int GraphicsBackendSystem::getMeshId( const string& p_meshName )
