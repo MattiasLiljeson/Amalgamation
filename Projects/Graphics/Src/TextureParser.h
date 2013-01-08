@@ -23,11 +23,29 @@ class TextureParser
 {
 public:
 	enum TEXTURE_TYPE { RGBA, BGRA, RGB, BGR };
-
+public:
+	///-----------------------------------------------------------------------------------
+	/// Called once to initialize Free Image properly
+	/// \return void
+	///-----------------------------------------------------------------------------------
 	static void init();
+
+	///-----------------------------------------------------------------------------------
+	/// Handles the loading and creation of textures files. Supports various of types and
+	/// throws exception if creation wasn't successfully.
+	/// \param p_device
+	/// \param p_filePath
+	/// \return ID3D11ShaderResourceView*
+	///-----------------------------------------------------------------------------------
 	static ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, 
 		const char* p_filePath);
 	static ID3D11ShaderResourceView* createTexture( ID3D11Device* p_device,
 		const byte* p_source, int p_width, int p_height, int p_pitch,
 		TEXTURE_TYPE p_type );
+
+	///-----------------------------------------------------------------------------------
+	/// Generates a fallback texture used when the provided path or file is not valid
+	/// \return BYTE*
+	///-----------------------------------------------------------------------------------
+	static BYTE* generateFallbackTexture();
 };
