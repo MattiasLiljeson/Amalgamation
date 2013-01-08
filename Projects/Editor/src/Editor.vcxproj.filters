@@ -4,75 +4,145 @@
     <ClCompile Include="AGLLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
-    <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="DX11Application.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GeometryShader.cpp" />
-    <ClCompile Include="GradientShader.cpp" />
-    <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaterialDialog.cpp" />
     <ClCompile Include="MaterialMap.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshDialog.cpp" />
-    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RasterManager.cpp" />
-    <ClCompile Include="RenderNormalsShader.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneDialog.cpp" />
-    <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="SimpleShader.cpp" />
-    <ClCompile Include="SimpleTessShader.cpp" />
     <ClCompile Include="SkeletonMapping.cpp" />
     <ClCompile Include="SkeletonMesh.cpp" />
-    <ClCompile Include="SkeletonMeshShader.cpp" />
-    <ClCompile Include="SkeletonShader.cpp" />
-    <ClCompile Include="StandardShader.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="BoxMesh.cpp" />
+    <ClCompile Include="ParticleSystemDialog.cpp" />
+    <ClCompile Include="DomainShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleTessShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonMeshShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderNormalsShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>ShaderPrograms</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
-    <ClInclude Include="DomainShader.h" />
     <ClInclude Include="DX11Application.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GeometryShader.h" />
-    <ClInclude Include="GradientShader.h" />
-    <ClInclude Include="HullShader.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MaterialDialog.h" />
     <ClInclude Include="MaterialMapDialog.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshDialog.h" />
-    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RasterManager.h" />
-    <ClInclude Include="RenderNormalsShader.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneDialog.h" />
-    <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="SimpleShader.h" />
-    <ClInclude Include="SimpleTessShader.h" />
     <ClInclude Include="SkeletonMapping.h" />
     <ClInclude Include="SkeletonMesh.h" />
-    <ClInclude Include="SkeletonMeshShader.h" />
-    <ClInclude Include="SkeletonShader.h" />
-    <ClInclude Include="StandardShader.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utility.h" />
-    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="VertexStructures.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="BoxMesh.h" />
+    <ClInclude Include="ParticleSystemDialog.h" />
+    <ClInclude Include="DomainShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleTessShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonMeshShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderNormalsShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>ShaderPrograms</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{9234a1b3-2e9c-40ab-8df7-8510d69c2009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderPrograms">
+      <UniqueIdentifier>{1210999d-ecdc-4a80-9841-e686206a302a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

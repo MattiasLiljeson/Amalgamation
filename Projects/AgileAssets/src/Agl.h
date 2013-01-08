@@ -58,12 +58,20 @@ struct AglTopHeader
 	int		animationCount;			///< Number of animations in the file
 	int		looseBspCount;			///< Number of loose bsp trees in the file
 	int		SphereGridCount;		///< Number of sphere grids in the file
+	int		connectionPointCount;	///< Number of connection points in the file
 	
 	AglCoordinateSystem coordinateSystem; ///< Coordinate System of the scene
 };
 
 typedef int AglVertexFormat;
+typedef int AglParticleFormat;
 
 const float AGLVERSION = 0.1f;
+
+struct AglConnectionPoint
+{
+	AglMatrix transform; ///< Local Transform relative to the parent
+	int		  parentMesh; ///< Index to the mesh in the list of meshes
+};
 
 #endif

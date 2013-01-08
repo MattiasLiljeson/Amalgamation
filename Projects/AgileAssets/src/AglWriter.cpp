@@ -14,6 +14,7 @@ AglWriter::AglWriter(string p_path)
 	m_header.nodeAnimationCount = 0;
 	m_header.animationLayerCount = 0;
 	m_header.animationCount = 0;
+	m_header.connectionPointCount = 0;
 }
 void AglWriter::write(AglScene* p_scene)
 {
@@ -43,6 +44,7 @@ void AglWriter::write(AglScene* p_scene)
 	m_header.animationCount			= d.animations.size();
 	m_header.looseBspCount			= d.bspTrees.size();
 	m_header.SphereGridCount		= d.sphereGrids.size();
+	m_header.connectionPointCount	= d.connectionPoints.size();
 	m_header.coordinateSystem		= d.coordinateSystem;
 
 	ofstream file;
@@ -198,6 +200,13 @@ void AglWriter::write(AglScene* p_scene)
 		AglInteriorSphere* spheres = d.sphereGrids[i]->getSpheres();
 		buf = (char*)&spheres[0];
 		file.write(buf, sizeof(AglInteriorSphere) * gridheader.sphereCount);
+	}
+
+	//Write all the connection points to the file
+	if (d.connectionPoints.size() > 0)
+	{
+		buf = (char*)&d.connectionPoints[0];
+		file.write(buf, sizeof(AglConnectionPoint) * m_header.connectionPointCount);
 	}
 
 	file.close();

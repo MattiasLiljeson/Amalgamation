@@ -84,7 +84,7 @@ void MeshDialog::show()
 
 	m_dialog = TwNewBar("Mesh");
     int barSize[2] = {200, 300};
-	TwDefine(" Mesh position='590 10' ");
+	TwDefine(" Mesh position='1070 10'  ");
     TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 	
 	Mesh* m = Scene::GetInstance()->GetMesh(m_meshIndex);

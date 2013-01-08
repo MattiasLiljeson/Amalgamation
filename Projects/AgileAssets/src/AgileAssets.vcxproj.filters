@@ -19,6 +19,7 @@
     <ClInclude Include="AglSkeleton.h" />
     <ClInclude Include="AglSkeletonMapping.h" />
     <ClInclude Include="AglWriter.h" />
+    <ClInclude Include="AglParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AglAnimation.cpp" />
@@ -35,5 +36,6 @@
     <ClCompile Include="AglSkeletonMapping.cpp" />
     <ClCompile Include="AglWriter.cpp" />
     <ClCompile Include="Agl.cpp" />
+    <ClCompile Include="AglParticleSystem.cpp" />
   </ItemGroup>
 </Project>
