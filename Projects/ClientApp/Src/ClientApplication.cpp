@@ -66,7 +66,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 	}
 	catch(exception& e)
 	{
-		DEBUGPRINT((e.what()));
+		DEBUGWARNING((e.what()));
 	}
 }
 

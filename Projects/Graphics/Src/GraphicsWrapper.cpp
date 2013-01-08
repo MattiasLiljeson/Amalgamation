@@ -8,8 +8,10 @@
 #include "TextureParser.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "MeshLoadException.h"
 
 #include <AglReader.h>
+#include <FileCheck.h>
 #include "D3DException.h"
 #include "D3DUtil.h"
 
@@ -329,6 +331,10 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			string fullPath;
 			if (p_path!=NULL) fullPath = *p_path;
 			fullPath += p_name;
+			// test file
+			string fileChkMsg;
+			if (!isFileOk(fullPath,fileChkMsg,__FILE__,__FUNCTION__,__LINE__))
+				throw MeshLoadException(fileChkMsg);
 			// read file and extract scene
 			AglReader meshReader(fullPath.c_str());
 			AglScene* aglScene = meshReader.getScene();

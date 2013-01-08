@@ -134,6 +134,9 @@
     <ClInclude Include="MaterialInfo.h">
       <Filter>Renderer\Materials</Filter>
     </ClInclude>
+    <ClInclude Include="MeshLoadException.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
