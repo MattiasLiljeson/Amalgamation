@@ -193,6 +193,7 @@
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="ShipModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -292,5 +293,6 @@
     <ClCompile Include="PhysicsBody.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="ShipModule.cpp" />
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
+    <ClInclude Include="ShipModule.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="NetworkUpdateScoresSystem.h" />
@@ -72,6 +73,7 @@
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
+    <ClCompile Include="ShipModule.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />

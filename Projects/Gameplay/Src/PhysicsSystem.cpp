@@ -238,14 +238,18 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 				m_world->getComponentManager()->getComponent(p_others[i],
 				ComponentType::getTypeFor(ComponentType::PhysicsBody)));
 
-			for (unsigned int j = 0; j < collisions.size(); j++)
+			if (p_others[i]->getComponent(ComponentType::ShipModule))
 			{
-				if (collisions[j] == module->m_id)
+				for (unsigned int j = 0; j < collisions.size(); j++)
 				{
-					CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
-					RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
-					m_physicsController->AttachBodyToCompound(comp, r, AglMatrix::createTranslationMatrix(pos[counter]));
-					counter++;
+					if (collisions[j] == module->m_id)
+					{
+						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
+						RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
+						m_physicsController->AttachBodyToCompound(comp, r, AglMatrix::createTranslationMatrix(pos[counter]));
+						module->setParentId(body->getParentId());
+						counter++;
+					}
 				}
 			}
 		}

@@ -18,6 +18,7 @@
 #include <ShipController.h>
 #include <Transform.h>
 #include <HudElement.h>
+#include <ShipModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -279,6 +280,8 @@ void ClientApplication::initEntities()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE));
 
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
 	m_world->addEntity(entity);
 
 	entity = m_world->createEntity();
@@ -298,6 +301,8 @@ void ClientApplication::initEntities()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE));
 
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
 	m_world->addEntity(entity);
 
 	entity = m_world->createEntity();
@@ -316,6 +321,8 @@ void ClientApplication::initEntities()
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE));
+
+	//entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 	m_world->addEntity(entity);
 
