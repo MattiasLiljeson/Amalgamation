@@ -265,6 +265,23 @@ void RigidBody::SetParent(CompoundBody* pParent)
 	}
 	mParent = pParent;
 }
+void RigidBody::SetParent(CompoundBody* pParent, AglMatrix pLocalTransform)
+{
+	if (mParent && !pParent)
+	{
+		mLocalTransform = this->GetWorld();
+		mVelocity = this->GetVelocity();
+		mAngularVelocity = this->GetAngularVelocity();
+
+	}
+	else
+	{
+		mLocalTransform = mPreviousLocalTransform = pLocalTransform;
+		mVelocity = mPreviousVelocity = AglVector3(0, 0, 0);
+		mAngularVelocity = mPreviousAngularVelocity = AglVector3(0, 0, 0);
+	}
+	mParent = pParent;
+}
 CompoundBody* RigidBody::GetParent()
 {
 	return mParent;

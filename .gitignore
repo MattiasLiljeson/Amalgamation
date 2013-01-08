@@ -129,6 +129,7 @@ External/*
 *.dds
 *.tga
 *.dll
+*.lib
 
 [Ll]oc[Mm]etrics*.*
 

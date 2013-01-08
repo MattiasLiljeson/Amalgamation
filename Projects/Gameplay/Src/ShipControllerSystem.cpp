@@ -11,6 +11,7 @@
 #include "NetworkSynced.h"
 #include "Control.h"
 #include "AntTweakBarWrapper.h"
+#include "PhysicsBody.h"
 
 
 ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
@@ -185,13 +186,22 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		Packet thrustPacket;
+		/*Packet thrustPacket;
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
 			ComponentType::NetworkSynced));
 
 		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
 			<< thrustVec << angularVec << netSync->getNetworkIdentity();
-		m_client->sendPacket( thrustPacket );
+		m_client->sendPacket( thrustPacket );*/
+
+		PhysicsBody* physicsBody = NULL;
+		physicsBody = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+			ComponentType::PhysicsBody ) );
+		if( physicsBody )
+		{
+			m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
+			//cout << physicsBody->m_id << endl;
+		}
 	}
 }
 

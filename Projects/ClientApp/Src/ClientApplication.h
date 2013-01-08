@@ -64,6 +64,7 @@ private:
 	void initEntities();
 	void initSounds();
 	void initSoundSystem();
+
 private:
 	HINSTANCE m_hInstance;
 
