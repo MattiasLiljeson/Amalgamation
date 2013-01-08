@@ -51,6 +51,9 @@ private:
 	static void TW_CALL SetParticlesPerSpawn(const void *value, void *clientData);
 	static void TW_CALL GetParticlesPerSpawn(void *value, void *clientData);
 
+	static void TW_CALL SetParticleSize(const void *value, void *clientData);
+	static void TW_CALL GetParticleSize(void *value, void *clientData);
+
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);
 public:

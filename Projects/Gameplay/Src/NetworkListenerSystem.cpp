@@ -90,13 +90,17 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			e->addComponent( ComponentType::PlayerScore,
 				new PlayerScore(0) );
 
-			e->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
+			e->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
+
 			e->addComponent( ComponentType::BodyInitData, 
 				new BodyInitData( transform->getTranslation(),
 								AglQuaternion::identity(),
 								AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-								AglVector3(0, 0, 0), 0, false));
-
+								AglVector3(0, 0, 0), 0, 
+								BodyInitData::DYNAMIC, 
+								BodyInitData::COMPOUND));
+			
 
 			m_world->addEntity( e );
 

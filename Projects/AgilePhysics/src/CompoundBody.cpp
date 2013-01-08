@@ -107,6 +107,11 @@ AglVector3 CompoundBody::GetCenterOfMass()
 	return com;
 }
 
+bool CompoundBody::IsCompoundBody()
+{
+	return true;
+}
+
 void CompoundBody::AddImpulse(AglVector3 pImpulse)
 {
 	if (!mStatic && !mTempStatic)

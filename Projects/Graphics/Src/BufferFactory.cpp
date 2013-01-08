@@ -161,7 +161,7 @@ Mesh* BufferFactory::createBoxMesh()
 
 
 	Mesh* newBox = new Mesh(createVertexBuffer(&mesh[0],
-							sizeof(mesh)/sizeof(PNTVertex)),
+							sizeof(mesh)/sizeof(PNTTBVertex)),
 							createIndexBuffer(&indices[0],
 							sizeof(indices)/sizeof(DIndex)));
 

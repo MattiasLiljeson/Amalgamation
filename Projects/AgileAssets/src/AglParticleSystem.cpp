@@ -23,6 +23,7 @@ AglParticleSystem::AglParticleSystem()
 	m_header.maxOpacity = 1.0f;
 	m_header.particlesPerSpawn = 1;
 	m_header.spreadType = AglParticleSystemHeader::INSPACE;
+	m_header.particleSize = 1.0f;
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 }
@@ -84,6 +85,10 @@ void AglParticleSystem::setOffsetType(AglParticleSystemHeader::AglSpawnOffsetTyp
 void AglParticleSystem::setSpawnType(AglParticleSystemHeader::AglSpawnType p_type)
 {
 	m_header.spawnType = p_type;
+}
+void AglParticleSystem::setParticleSize(float p_size)
+{
+	m_header.particleSize = p_size;
 }
 
 AglVector3 AglParticleSystem::requestSpawnPoint()
@@ -187,7 +192,7 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			{
 				for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
 				{
-					AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), 0.05f);
+					AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize);
 					m_particles.push_back(p);
 				}
 				m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
@@ -197,7 +202,7 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 		{
 			for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
 			{
-				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), 0.05f);
+				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize);
 				m_particles.push_back(p);
 			}
 			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);

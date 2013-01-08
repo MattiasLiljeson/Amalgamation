@@ -151,7 +151,7 @@ void Scene::Draw()
 		m_world = AglMatrix::identityMatrix();
 
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
-	/*for (unsigned int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
 		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
@@ -179,7 +179,7 @@ void Scene::Draw()
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
 		}
-	}*/
+	}
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
@@ -345,7 +345,7 @@ void Scene::CreateScenePlane()
 	h.nameID = -1;
 	AglMesh* m = new AglMesh(h, verts, ind);
 	mPlaneMesh = new Mesh(mDevice, mDeviceContext, this);
-	mPlaneMesh->Init(m, NULL);
+	mPlaneMesh->Init(m);
 }
 bool Scene::IsLeftHanded()
 {
@@ -359,4 +359,36 @@ bool Scene::IsLeftHanded()
 void Scene::SetCoordinateSystem(AglCoordinateSystem pSystem)
 {
 	mAglScene->setCoordinateSystem(pSystem);
+}
+void Scene::Transform(AglMatrix p_transform)
+{
+	mAglScene->transform(p_transform);
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
+		delete mMeshes[i];
+	mMeshes.clear();
+	vector<AglMesh*> meshes = mAglScene->getMeshes();
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		Mesh* m = new Mesh(mDevice, mDeviceContext, this);
+		m->Init(meshes[i]);
+		mMeshes.push_back(m);
+	}
+
+	mMax = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	mMin = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
+		AglVector3 minV = mMeshes[i]->GetMin();
+		AglVector3 maxV = mMeshes[i]->GetMax();
+		mMax = AglVector3(max(mMax.x, maxV.x), max(mMax.y, maxV.y), max(mMax.z, maxV.z)); 
+		mMin = AglVector3(min(mMin.x, minV.x), min(mMin.y, minV.y), min(mMin.z, minV.z)); 
+
+		//Find random colors
+		mSphereColors.push_back(RandomUnitVector3());
+		mBoxColors.push_back(RandomUnitVector3());
+	}
+	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
+	{
+		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
+	}
 }

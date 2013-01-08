@@ -78,6 +78,7 @@
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="NetworkUpdateScoresSystem.cpp" />
     <ClCompile Include="NetworkUpdateSystem.cpp" />
+    <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PlayerScore.cpp" />
     <ClCompile Include="ProcessingMessagesSystem.cpp" />

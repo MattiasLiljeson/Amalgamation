@@ -66,11 +66,15 @@ AglMatrix AglSkeleton::getGlobalTransform(int p_joint)
 
 	if (j.parentIndex >= 0)
 		return transform * getGlobalTransform(j.parentIndex);
-	return transform;
+	return transform * m_header.baseTransform;
 }
 AglMatrix AglSkeleton::getInverseBindMatrix(int p_joint)
 {
 	AglJoint j = m_joints[p_joint];
 	AglNode n = m_scene->getNode(j.nodeID);
 	return n.inverseBindMatrix;
+}
+void AglSkeleton::transform(AglMatrix p_transform)
+{
+	m_header.baseTransform *= p_transform;
 }

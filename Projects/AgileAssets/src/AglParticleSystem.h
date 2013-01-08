@@ -38,6 +38,7 @@ struct AglParticleSystemHeader
 	AglParticleFormat	particleFormat;
 	float				maxOpacity; ///< 0 -> 1
 	unsigned int		particlesPerSpawn;
+	float				particleSize;
 };
 
 struct AglStandardParticle
@@ -92,6 +93,7 @@ public:
 	void setOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type);
 	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn);
 	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
+	void setParticleSize(float p_size);
 
 	void restart();
 

@@ -107,6 +107,10 @@ public:
 
 	bool IsLeftHanded();
 	void SetCoordinateSystem(AglCoordinateSystem pSystem);
+
+	void Transform(AglMatrix p_transform);
+
+	AglScene* getAglScene(){ return mAglScene; }
 };
 
 #endif
