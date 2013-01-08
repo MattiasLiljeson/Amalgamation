@@ -7,6 +7,7 @@
 
 class Window;
 class GraphicsWrapper;
+struct ConnectionPointCollection;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================
@@ -32,7 +33,8 @@ public:
 	void process();
 
 	unsigned int createMesh( const string& p_meshName,
-							 const string* p_path=NULL );
+							 const string* p_path=NULL,
+							 ConnectionPointCollection* p_outConnectionPoints=NULL);
 	int getMeshId( const string& p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();

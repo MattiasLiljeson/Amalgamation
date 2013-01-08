@@ -36,8 +36,12 @@
 #include <DisplayPlayerScoreSystem.h>
 #include <HudSystem.h>
 
+// Helpers
+#include <ConnectionPointCollection.h>
+
 // MISC
 #include <AntTweakBarWrapper.h>
+
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -213,8 +217,19 @@ void ClientApplication::initEntities()
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
-	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
+	ConnectionPointCollection connectionPoints;
+	int testchamberId = graphicsBackend->createMesh( "test_parts_3sphere.agl", 
+													 &TESTMODELPATH,
+													 &connectionPoints);
+
+	// Testchamber
+	entity = m_world->createEntity();
+	component = new RenderInfo( testchamberId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform( 5.0f, 10.0f, 19.0f);
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
 
 	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )

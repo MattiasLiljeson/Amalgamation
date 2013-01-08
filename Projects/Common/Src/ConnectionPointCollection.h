@@ -1,18 +1,18 @@
 #pragma once
 
-#include "InstanceData.h"
+#include "RawTransformData.h"
 #include <vector>
 
 using namespace std;
 
-struct InstanceData;
+struct RawTransformData;
 
 // =======================================================================================
 //                                ConnectionPointCollection
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Collection of connection point data
 ///        
 /// # HardPointCollection
 /// Detailed description.....
@@ -21,5 +21,10 @@ struct InstanceData;
 
 struct ConnectionPointCollection
 {
-	vector<InstanceData> m_collection;
+public:
+	ConnectionPointCollection(bool transformByParent=false) {m_localSpace=!transformByParent;}
+	vector<RawTransformData> m_collection;
+	bool isLocalSpace() {return m_localSpace;}
+private:
+	bool m_localSpace; // not used yet
 };

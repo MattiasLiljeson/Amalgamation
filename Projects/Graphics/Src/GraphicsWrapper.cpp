@@ -318,9 +318,9 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			//
 			if (aglScene)
 			{ 
-				// ---------------
+				// ------------------
 				// Mesh
-				// ---------------
+				// ------------------
 				// only handle one mesh for now.
 				AglMesh* aglMesh = aglScene->getMeshes()[0];
 				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
@@ -348,17 +348,17 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// and then set the resulting data to the mesh
 				mesh->setTextureId(materialInfo);
 
-				// ---------------
-				// Hardpoints
-				// ---------------
+				// ------------------
+				// Connection points
+				// ------------------
 				if (p_outConnectionPoints!=NULL)
 				{
 					for (unsigned int i=0;i<aglScene->getConnectionPointCount();i++)
 					{
-						InstanceData dat;
+						RawTransformData dat;
 						AglMatrix mat = aglScene->getConnectionPoint(i).transform;
 						for (unsigned int n=0;n<16;n++)
-							dat.worldTransform[n] = mat.data[n];
+							dat.transform[n] = mat.data[n];
 						p_outConnectionPoints->m_collection.push_back(dat);
 					}
 				}

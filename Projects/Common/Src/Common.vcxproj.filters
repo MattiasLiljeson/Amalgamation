@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClInclude Include="InstanceData.h" />
     <ClInclude Include="ConnectionPointCollection.h" />
+    <ClInclude Include="RawTransformData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InstanceData.cpp" />
