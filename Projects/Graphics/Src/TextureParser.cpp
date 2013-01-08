@@ -11,7 +11,7 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 {
 	FREE_IMAGE_FORMAT imageFormat;
 	FIBITMAP* image;
-	bool succeededLoadingFile = false;
+	bool succeededLoadingFile = true;
 	ID3D11ShaderResourceView* newShaderResurceView;
 
 	imageFormat = FreeImage_GetFIFFromFilename(p_filePath);
@@ -119,47 +119,44 @@ BYTE* TextureParser::generateFallbackTexture()
 	int size = dimension*dimension;
 	int bitDepth = 4;
 	BYTE* textureData = new BYTE[size*bitDepth];
-
-	unsigned int counterX = 0;
-	unsigned int counterY = 0;
 	bool pink = true;
-	for (int i = 0; i < size*bitDepth;i+=4)
+
+	/************************************************************************/
+	/* DOSEN'T GENERATE A CHECKSQUARED TEXTURE, but cannot find the issue.  */
+	/* -Robin																*/
+	/************************************************************************/
+	for (int y = 0; y < dimension; y++)
 	{
-		if(counterX == dimension)
+		for (int x = 0; x < dimension; x++)
 		{
-			counterY++;
-			counterX = 0;
+			if(x == 4)
+			{
+				if(pink)
+					pink = false;
+				else
+					pink = true;
+			}
+			if(pink)
+			{
+				textureData[dimension*y*bitDepth + x*bitDepth]		= 255;	//RED
+				textureData[dimension*y*bitDepth + x*bitDepth+1]	= 0;	//BLUE
+				textureData[dimension*y*bitDepth + x*bitDepth+2]	= 255;	//GREEN
+				textureData[dimension*y*bitDepth + x*bitDepth+3]	= 255;	//ALPHA
+			}
+			else
+			{
+				textureData[dimension*y*bitDepth + x*bitDepth]		= 0;
+				textureData[dimension*y*bitDepth + x*bitDepth+1]	= 0;
+				textureData[dimension*y*bitDepth + x*bitDepth+2]	= 0;
+				textureData[dimension*y*bitDepth + x*bitDepth+3]	= 255;
+			}
 		}
 
-		//Top LEFT
-		if(counterX < 5 && counterY < 5)
+		if(y < 5)
 			pink = true;
-		//Top RIGHT
-		else if(counterX > 4 && counterY < 5)
-			pink = false;
-		//Bot LEFT
-		else if(counterX < 5 && counterY > 4)
-			pink = false;
-		//Bot RIGHT
-		else 
-			pink = true;
-
-		if(pink)
-		{
-			textureData[i]		= 255;	//RED
-			textureData[i+1]	= 0;	//BLUE
-			textureData[i+2]	= 255;	//GREEN
-			textureData[i+3]	= 255;	//ALPHA
-		}
 		else
-		{
-			textureData[i]		= 0;
-			textureData[i+1]	= 0;
-			textureData[i+2]	= 0;
-			textureData[i+3]	= 255;
-		}
-		counterX++;
-	}	
-
+			pink = false;
+	}
+	
 	return textureData;
 }
