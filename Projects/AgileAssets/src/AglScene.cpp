@@ -284,3 +284,18 @@ vector<AglParticleSystem*> AglScene::getParticleSystems()
 {
 	return m_particleSystems;
 }
+void AglScene::transform(AglMatrix p_transform)
+{
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
+	{
+		m_meshes[i]->transform(p_transform);
+	}
+	for (unsigned int i = 0; i < m_skeletons.size(); i++)
+	{
+		m_skeletons[i]->transform(p_transform);
+	}
+	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	{
+		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
+	}
+}

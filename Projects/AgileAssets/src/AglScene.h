@@ -347,6 +347,8 @@ public:
 	/// \return If the system is right-handed
 	///-----------------------------------------------------------------------------------
 	bool isRightHanded();
+
+	void transform(AglMatrix p_transform);
 };
 
 #endif

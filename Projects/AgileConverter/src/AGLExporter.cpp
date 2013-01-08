@@ -69,6 +69,7 @@ void AGLExporter::AddSkeleton(SkeletonData* pData)
 	AglSkeletonHeader h;
 	h.jointCount = pData->Joints.size();
 	h.nameID = mScene->addName(pData->Name);
+	h.baseTransform = AglMatrix::identityMatrix();
 
 	AglJoint* joints = new AglJoint[pData->Joints.size()];
 	for (unsigned int i = 0; i < pData->Joints.size(); i++)

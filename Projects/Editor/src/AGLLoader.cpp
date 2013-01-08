@@ -42,7 +42,7 @@ void AGLLoader::Load(string pPath)
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
 		Mesh* m = new Mesh(mDevice, mDeviceContext, Scene::GetInstance());
-		m->Init(meshes[i], mReader);
+		m->Init(meshes[i]);
 		modmeshes.push_back(m);
 	}
 

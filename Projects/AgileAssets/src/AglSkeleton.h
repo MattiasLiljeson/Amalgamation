@@ -18,8 +18,10 @@ class AglScene;
 ///-------------------------------------------------------------------------------------------------
 struct AglSkeletonHeader
 {
-	int		nameID;		///< Index to the name of the skeleton
-	int		jointCount;	///< The number of the joints in the skeleton
+	int			nameID;		///< Index to the name of the skeleton
+	int			jointCount;	///< The number of the joints in the skeleton
+	AglMatrix	baseTransform; ///< Acts as an extra transform above the root node. 
+							   ///< Useful for coordinate switches
 };
 
 // =================================================================================================
@@ -106,6 +108,8 @@ public:
 	/// \return A 4x4 matrix
 	///
 	AglMatrix	  getInverseBindMatrix(int p_joint);
+
+	void transform(AglMatrix p_transform);
 };
 
 #endif
