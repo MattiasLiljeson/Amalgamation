@@ -302,6 +302,23 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			// and then set the resulting data to the mesh
 			mesh->setTextureId(materialInfo);
 		}
+		else if (p_name=="P_sphere")
+		{
+			MaterialInfo materialInfo;
+			Mesh* mesh = m_bufferFactory->createSphereMesh(); // construct a mesh
+			meshResultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
+			// (Here you might want to do similar checks for textures/materials
+			// For now we have a hard coded texture path, but later on
+			// we probably get this path from a mesh file loader or similar.
+			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
+				createTexture("10x10.png",TESTTEXTUREPATH));
+			materialInfo.setTextureId(MaterialInfo::NORMALMAP,
+				createTexture("testtexture.png",TESTTEXTUREPATH));
+			// and their managers.)
+			// ...
+			// and then set the resulting data to the mesh
+			mesh->setTextureId(materialInfo);
+		}
 		else
 		// =============================================
 		// MODEL FILES

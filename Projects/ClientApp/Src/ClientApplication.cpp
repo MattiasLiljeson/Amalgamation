@@ -214,7 +214,7 @@ void ClientApplication::initEntities()
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
 	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
-
+	int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
 
 	// Add a grid of cubes to test instancing.
 	for( int x=0; x<8; x++ )
@@ -224,7 +224,7 @@ void ClientApplication::initEntities()
 			for( int z=0; z<8; z++ )
 			{
 				entity = m_world->createEntity();
-				component = new RenderInfo( cubeMeshId );
+				component = new RenderInfo( sphereMeshId );
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
 				entity->addComponent( ComponentType::Transform, component );

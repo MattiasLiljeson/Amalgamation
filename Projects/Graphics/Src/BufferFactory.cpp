@@ -1,5 +1,6 @@
 #include "BufferFactory.h"
 #include "Mesh.h"
+#include <AglSphereMesh.h>
 
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
@@ -165,6 +166,47 @@ Mesh* BufferFactory::createBoxMesh()
 							sizeof(indices)/sizeof(DIndex)));
 
 	return newBox;
+}
+
+Mesh* BufferFactory::createSphereMesh()
+{
+	AglSphereMesh sphereMesh;
+	int vertexCount = sphereMesh.positions.size();
+	int indexCount	= sphereMesh.indices.size();
+
+	PNTTBVertex* mesh = new PNTTBVertex[vertexCount];
+	for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+	{
+		mesh[vertexIndex].pos[0] = sphereMesh.positions[vertexIndex].x;
+		mesh[vertexIndex].pos[1] = sphereMesh.positions[vertexIndex].y;
+		mesh[vertexIndex].pos[2] = sphereMesh.positions[vertexIndex].z;
+
+		mesh[vertexIndex].normal[0] = sphereMesh.normals[vertexIndex].x;
+		mesh[vertexIndex].normal[1] = sphereMesh.normals[vertexIndex].y;
+		mesh[vertexIndex].normal[2] = sphereMesh.normals[vertexIndex].z;
+
+		mesh[vertexIndex].texCoord[0] = sphereMesh.texCoord[vertexIndex].x;
+		mesh[vertexIndex].texCoord[1] = sphereMesh.texCoord[vertexIndex].y;
+
+		mesh[vertexIndex].tangent[0] = 0;
+		mesh[vertexIndex].tangent[1] = 0;
+		mesh[vertexIndex].tangent[2] = 0;
+
+		mesh[vertexIndex].binormal[0] = 0;
+		mesh[vertexIndex].binormal[1] = 0;
+		mesh[vertexIndex].binormal[2] = 0;
+	}
+
+	DIndex* indices = new DIndex[indexCount];
+	memcpy(indices, &sphereMesh.indices[0], sizeof(unsigned int) * indexCount);
+
+	Mesh* newSphere = new Mesh( createVertexBuffer(mesh, vertexCount),
+								createIndexBuffer(indices, indexCount));
+
+	delete mesh;
+	delete indices;
+
+	return newSphere;
 }
 
 Mesh* BufferFactory::createMeshFromPNTTBVerticesAndIndices( 
