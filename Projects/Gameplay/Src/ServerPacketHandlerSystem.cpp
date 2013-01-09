@@ -31,6 +31,11 @@ void ServerPacketHandlerSystem::initialize()
 {
 	m_physics = static_cast<PhysicsSystem*>(
 		m_world->getSystem( SystemType::PhysicsSystem ) );
+
+	/************************************************************************/
+	/* Determines the frequency on how often ping packets will be sent.		*/
+	/************************************************************************/
+	m_timerStartValue = m_timer = 0.5;
 }
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -95,6 +100,26 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			info.ping = (totalElapsedTime - timeWhenSent)*1000.0f;
 			m_clients[packet.getSenderId()] = info;
+
+			/************************************************************************/
+			/* Send the "real" ping back to the client as a "your ping" message.    */
+			/************************************************************************/
+			Packet newClientStats((char)PacketType::UpdateClientStats);
+			newClientStats << info.ping;
+			m_server->unicastPacket(newClientStats, packet.getSenderId());
+		}
+
+		m_timer -= m_world->getDelta();
+		if( m_timer <= 0 )
+		{
+			m_timer = m_timerStartValue;
+
+			float timeStamp = m_world->getElapsedTime();
+
+			Packet packet((char)PacketType::Ping);
+			packet << timeStamp;
+
+			m_server->broadcastPacket( packet );
 		}
 		
 	}

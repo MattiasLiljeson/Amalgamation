@@ -64,9 +64,5 @@ private:
 
 private:
 	TcpClient* m_tcpClient;
-
-	float m_timer;
-	float m_timerStartValue;
 	float m_currentPing;
-
 };

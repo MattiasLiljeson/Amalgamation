@@ -35,7 +35,6 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 {
 	m_tcpClient = p_tcpClient;
 
-	m_timer = m_timerStartValue = 1;
 	m_currentPing = 0;
 }
 
@@ -233,7 +232,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::Ping)
 		{
-			// TODO: Implement later.
+			float serverTime;
+			packet >> serverTime;
+
+			Packet response((char)PacketType::Pong);
+			response << serverTime;
+
+			m_tcpClient->sendPacket(response);
 		}
 		else if(packetType == (char)PacketType::Pong)
 		{
@@ -247,19 +252,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			m_currentPing = (totalElapsedTime - timeWhenSent)*1000.0f;
 		}
-	}
-
-	m_timer -= m_world->getDelta();
-	if( m_timer <= 0 )
-	{
-		m_timer = m_timerStartValue;
-
-		float timeStamp = m_world->getElapsedTime();
-
-		Packet packet((char)PacketType::Ping);
-		packet << timeStamp;
-
-		m_tcpClient->sendPacket( packet );
+		else if(packetType == (char)PacketType::UpdateClientStats)
+		{
+			packet >> m_currentPing;
+		}
 	}
 }
 
