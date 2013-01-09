@@ -36,6 +36,11 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_tcpClient = p_tcpClient;
 
 	m_currentPing = 0;
+
+	m_numberOfSentPackets = 0;
+	m_numberOfReceivedPackets = 0;
+	m_totalDataSent = 0;
+	m_totalDataReceived = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -45,6 +50,7 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	updateCounters();
 
 	while (m_tcpClient->hasNewPackets())
 	{
@@ -261,10 +267,33 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 void ClientPacketHandlerSystem::initialize()
 {
+	AntTweakBarWrapper::getInstance()->modifyTheRefreshRate(AntTweakBarWrapper::NETWORK,
+		0.1f );
+
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::OVERALL,
 		"Ping", TwType::TW_TYPE_FLOAT,
 		&m_currentPing, "" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Received packets", TwType::TW_TYPE_UINT32,
+		&m_numberOfReceivedPackets, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Sent packets", TwType::TW_TYPE_UINT32,
+		&m_numberOfSentPackets, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Data received", TwType::TW_TYPE_UINT32,
+		&m_totalDataReceived, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Data sent", TwType::TW_TYPE_UINT32,
+		&m_totalDataSent, "group='Per frame'" );
 }
 
 NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket( 
@@ -298,4 +327,19 @@ NetworkScoreUpdatePacket ClientPacketHandlerSystem::readScorePacket( Packet& p_p
 	p_packet >> data.score;
 
 	return data;
+}
+
+void ClientPacketHandlerSystem::updateCounters()
+{
+	m_numberOfReceivedPackets = m_tcpClient->getNumberOfReceivedPackets();
+	m_tcpClient->resetNumberOfReceivedPackets();
+
+	m_numberOfSentPackets = m_tcpClient->getNumberOfSentPackets();
+	m_tcpClient->resetNumberOfSentPackets();
+
+	m_totalDataReceived = m_tcpClient->getTotalDataReceived();
+	m_tcpClient->resetTotalDataReceived();
+
+	m_totalDataSent = m_tcpClient->getTotalDataSent();
+	m_tcpClient->resetTotalDataSent();
 }

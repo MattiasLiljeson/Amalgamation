@@ -62,7 +62,14 @@ private:
 	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
 
+	void updateCounters();
+
 private:
 	TcpClient* m_tcpClient;
 	float m_currentPing;
+
+	unsigned int m_numberOfSentPackets;
+	unsigned int m_numberOfReceivedPackets;
+	unsigned int m_totalDataSent;
+	unsigned int m_totalDataReceived;
 };

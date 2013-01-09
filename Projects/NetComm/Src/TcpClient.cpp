@@ -18,6 +18,10 @@ TcpClient::TcpClient()
 	m_communicationProcess = NULL;
 	m_connecterProcess = NULL;
 	m_id = -1;
+	m_numberOfSentPackets = 0;
+	m_numberOfReceivedPackets = 0;
+	m_totalDataSent = 0;
+	m_totalDataReceived = 0;
 }
 
 TcpClient::~TcpClient()
@@ -167,7 +171,13 @@ bool TcpClient::hasActiveConnection()
 void TcpClient::sendPacket( Packet p_packet )
 {
 	if (m_communicationProcess)
-		m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
+	{
+		m_numberOfSentPackets += 1;
+		m_totalDataSent += p_packet.getDataSize() + 1;
+
+		m_communicationProcess->putMessage(
+			new ProcessMessageSendPacket( this, p_packet ) );
+	}
 }
 
 bool TcpClient::hasNewPackets()
@@ -182,11 +192,14 @@ unsigned int TcpClient::newPacketsCount()
 
 Packet TcpClient::popNewPacket()
 {
-
 	if ( !m_newPackets.empty() )
 	{	
 		Packet packet = m_newPackets.front();
 		m_newPackets.pop();
+
+		m_numberOfReceivedPackets += 1;
+		m_totalDataReceived += packet.getDataSize() + 1;
+
 		return packet;
 	}
 	else
@@ -209,4 +222,44 @@ int* TcpClient::getIdPointer()
 void TcpClient::setId( int p_id )
 {
 	m_id = p_id;
+}
+
+unsigned int TcpClient::getNumberOfSentPackets()
+{
+	return m_numberOfSentPackets;
+}
+
+void TcpClient::resetNumberOfSentPackets()
+{
+	m_numberOfSentPackets = 0;
+}
+
+unsigned int TcpClient::getNumberOfReceivedPackets()
+{
+	return m_numberOfReceivedPackets;
+}
+
+void TcpClient::resetNumberOfReceivedPackets()
+{
+	m_numberOfReceivedPackets = 0;
+}
+
+unsigned int TcpClient::getTotalDataSent()
+{
+	return m_totalDataSent;
+}
+
+unsigned int TcpClient::getTotalDataReceived()
+{
+	return m_totalDataReceived;
+}
+
+void TcpClient::resetTotalDataSent()
+{
+	m_totalDataSent = 0;
+}
+
+void TcpClient::resetTotalDataReceived()
+{
+	m_totalDataReceived = 0;
 }
