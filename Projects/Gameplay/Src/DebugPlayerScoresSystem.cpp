@@ -42,11 +42,5 @@ void DebugPlayerScoresSystem::processEntities( const vector<Entity*>& p_entities
 			if( i < numEntities - 1 )
 				ss << ", ";
 		}
-		ss << "\n";
-
-		string str = ss.str();
-	
-		DEBUGPRINT(( str.c_str() ));
-		cout << str.c_str();
 	}
 }
