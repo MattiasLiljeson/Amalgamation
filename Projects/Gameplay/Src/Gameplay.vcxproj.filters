@@ -126,7 +126,6 @@
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
     </ClInclude>
-    </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -196,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="PhysicsBody.cpp">
       <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelGenSystem.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
