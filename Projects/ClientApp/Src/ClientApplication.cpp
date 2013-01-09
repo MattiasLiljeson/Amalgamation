@@ -20,6 +20,7 @@
 #include <HudElement.h>
 #include <ShipModule.h>
 #include <ConnectionPointSet.h>
+#include <SpeedBoosterModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -375,6 +376,7 @@ void ClientApplication::initEntities()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
 
 	m_world->addEntity(entity);
 
