@@ -70,7 +70,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		{		
 			// Set up look-at vars for the view matrix
 			// Create offset vector from look-at component in the space of the target
-			AglVector3 offset = lookAt->getOffset();
+			AglVector3 offset = lookAt->getObservingPositionalOffset();
 			offset.transformNormal(targetTransform->getMatrix());
 			// update transform
 
@@ -79,7 +79,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
 			//							abs(lookAt->getRotationSpeed())*dt);
 			position = lookTarget+offset;
-			rotation = targetTransform->getRotation();
+			rotation = targetTransform->getRotation()*lookAt->getObservingRotationalOffset();
 			rotation.normalize();
 
 			// update
@@ -96,8 +96,10 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// just lookat behaviour
 		if (!lookAtOrbit && !lookAtFollow)
 		{
+			AglQuaternion offset = lookAt->getObservingRotationalOffset();
 			AglVector3 dir = lookTarget-position;
 			AglVector3::normalize(dir);
+			offset.transformVector(dir);
 			transform->setForward(dir);
 		}
 		
