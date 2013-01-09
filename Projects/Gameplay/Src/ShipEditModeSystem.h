@@ -1,11 +1,13 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include "ShipSystemsInputHelper.h"
 
 class Control;
 class TcpClient;
 class InputBackendSystem;
 class PhysicsSystem;
+class ShipSystemsInputHelper;
 
 // =======================================================================================
 //                                      ShipEditModeSystem
@@ -32,4 +34,9 @@ public:
 
 protected:
 private:
+	InputBackendSystem* m_inputBackend;
+	PhysicsSystem* m_physics;
+	// TcpClient* m_client;
+
+	ShipSystemsInputHelper m_shipInput;	
 };

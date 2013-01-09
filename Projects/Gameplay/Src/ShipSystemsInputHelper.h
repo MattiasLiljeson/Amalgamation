@@ -69,7 +69,7 @@ public:
 			thrustInput,
 			strafeHorizontalInput,
 			strafeVerticalInput,
-			editModeSwitchInput;
+			stateSwitchInput;
 
 		ResultingInputForces(RawInputForces p_rawInput)
 		{
@@ -79,7 +79,7 @@ public:
 			thrustInput = p_rawInput.getThrust();
 			strafeHorizontalInput	= p_rawInput.getStrafeHorizontalInput();
 			strafeVerticalInput		= p_rawInput.getStrafeVerticalInput();
-			editModeSwitchInput = p_rawInput.getEditModeSwitch();
+			stateSwitchInput = p_rawInput.getEditModeSwitch();
 		}
 	};
 

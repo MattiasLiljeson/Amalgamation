@@ -37,8 +37,5 @@ private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
 
-	/************************************************************************/
-	/* Different Control listeners											*/
-	/************************************************************************/
 	ShipSystemsInputHelper m_shipInput;	
 };

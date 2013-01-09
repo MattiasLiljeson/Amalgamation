@@ -47,6 +47,7 @@
 
 // MISC
 #include <AntTweakBarWrapper.h>
+#include <ShipEditModeSystem.h>
 
 
 
@@ -164,10 +165,14 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
-	// Controller system for the ship
-	ShipFlyControllerSystem* shipController = new ShipFlyControllerSystem(inputBackend, physics,
+	// Controller systems for the ship
+	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(inputBackend, physics,
 		m_client );
-	m_world->setSystem( shipController, true);
+	m_world->setSystem( shipFlyController, true);
+
+	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(inputBackend, physics/*,
+		m_client*/ );
+	m_world->setSystem( shipEditController, true);
 
 	// Camera system updates camera based on input and sets its viewport info
 	// to the graphics backend for render
@@ -283,8 +288,8 @@ void ClientApplication::initEntities()
 	component = new ShipEditController();
 	entity->addComponent( ComponentType::ShipEditController, component);
 
-	 // default tag is fly
-	 entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+	// default tag is fly
+	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
 
 	m_world->addEntity(entity);
 

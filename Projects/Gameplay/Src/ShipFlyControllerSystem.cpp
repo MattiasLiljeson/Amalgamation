@@ -141,10 +141,10 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			}
 
 			// State switch handling
-			if (input.editModeSwitchInput>0.0f)
+			if (input.stateSwitchInput>0.0f)
 			{
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
-				ship->removeComponent(ComponentType::TAG_ShipEditMode); // ...and switch to edit state.
+				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
 			}
 		}
