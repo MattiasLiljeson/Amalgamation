@@ -19,8 +19,8 @@ ShipFlyControllerSystem::ShipFlyControllerSystem( InputBackendSystem* p_inputBac
 											TcpClient* p_client ) : 
 					  EntitySystem( SystemType::ShipFlyControllerSystem, 2,
 									ComponentType::ComponentTypeIdx::ShipFlyController,
-									ComponentType::ComponentTypeIdx::TAG_ShipFlyMode,
-									ComponentType::ComponentTypeIdx::Transform)
+									ComponentType::ComponentTypeIdx::Transform,
+									ComponentType::ComponentTypeIdx::TAG_ShipFlyMode)
 {
 	m_inputBackend = p_inputBackend;
 	m_physics = p_physicsSystem;
@@ -77,6 +77,8 @@ void ShipFlyControllerSystem::initGamePad()
 		InputHelper::THUMB_RY_POSITIVE);
 	m_gamepadStrafeVerticalNegative	= m_inputBackend->getControlByEnum(
 		InputHelper::THUMB_RY_NEGATIVE);
+
+	m_gamepadEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::BTN_BACK );
 }
 
 
@@ -110,6 +112,8 @@ void ShipFlyControllerSystem::initKeyboard()
 		InputHelper::KEY_E);
 	m_keyboarStrafeHorizontalNeg = m_inputBackend->getControlByEnum(
 		InputHelper::KEY_Q);
+
+	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KEY_C );
 }
 
 void ShipFlyControllerSystem::initialize()

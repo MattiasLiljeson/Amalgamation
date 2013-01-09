@@ -121,6 +121,8 @@ private:
 	Control* m_gamepadStrafeVerticalNegative;
 	Control* m_gamepadStrafeVerticalPositive;
 
+	Control* m_gamepadEditModeTrig;
+
 	Control* m_keyboardRollRight;
 	Control* m_keyboardRollLeft;
 	Control* m_keyboardThrust;
@@ -128,6 +130,8 @@ private:
 	Control* m_keyboarStrafeHorizontalNeg;
 	Control* m_keyboardStrafeVerticalPos;
 	Control* m_keyboardStrafeVerticalNeg;
+
+	Control* m_keyboardEditModeTrig;
 
 	// The values of analogue sticks as a vector3 (used in anttweakbar).
 	double m_leftStickDir[3];
