@@ -19,18 +19,21 @@ int PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUser
 	return mBodies.size()-1;
 }
 int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, 
-								AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent, bool pImpulseEnabled)
+								AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent, bool pImpulseEnabled, bool pCollisionEnabled)
 {
 	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, pImpulseEnabled);
+	b->SetCollisionEnabled(pCollisionEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent, bool pImpulseEnabled)
+int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, 
+							  CompoundBody* pParent, bool pImpulseEnabled, bool pCollisionEnabled)
 {
 	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static, pImpulseEnabled);
+	b->SetCollisionEnabled(pCollisionEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
@@ -104,11 +107,11 @@ void PhysicsController::Update(float pElapsedTime)
 	vector<PhyCollisionData> collisions;
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (mRigidBodies[i].first->IsActive())
+		if (mRigidBodies[i].first->IsActive() && mRigidBodies[i].first->IsCollisionEnabled())
 		{
 			for (unsigned int j = i + 1; j < mRigidBodies.size(); j++)
 			{
-				if (mRigidBodies[j].first->IsActive())
+				if (mRigidBodies[j].first->IsActive() && mRigidBodies[j].first->IsCollisionEnabled())
 				{
 					if (!mRigidBodies[i].first->IsStatic() || !mRigidBodies[j].first->IsStatic())
 					{

@@ -205,6 +205,12 @@
     <ClInclude Include="ConnectionPointSet.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="MinigunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModuleControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -312,6 +318,12 @@
     </ClCompile>
     <ClCompile Include="ConnectionPointSet.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

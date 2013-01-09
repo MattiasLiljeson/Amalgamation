@@ -60,6 +60,16 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			t->setTranslation(pos);
 			t->setRotation(rot);
 			t->setScale(scale);
+
+			if (!b->IsCompoundBody())
+			{
+				if (((RigidBody*)b)->GetType() == BOX)
+				{
+					RigidBodyBox* box = (RigidBodyBox*)b;
+					t->setScale(box->GetSizeAsVector3()*0.5f);
+				}
+			}
+
 		}
 
 		//Check if the object is a ship
@@ -118,7 +128,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
-				cb, init->m_impulseEnabled);
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
 		else
 		{

@@ -5,6 +5,10 @@
 
 void RigidBody::ComputeInertia()
 {
+	//Can apply special solution for spheres? Spheres are uniform
+	if (!mCollisionEnabled && !mParent)
+		return;
+
     mInvInertiaWorld = AglMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     AglMatrix orientation = mLocalTransform;
@@ -35,6 +39,7 @@ RigidBody::RigidBody()
 	mTempStatic = false;
 	mParent = NULL;
 	mImpulseEnabled = true;
+	mCollisionEnabled = true;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition, bool pImpulseEnabled)
@@ -49,6 +54,7 @@ RigidBody::RigidBody(AglVector3 pPosition, bool pImpulseEnabled)
 	mTempStatic = false;
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
@@ -65,6 +71,7 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 	mTempStatic = false;
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
@@ -81,6 +88,7 @@ RigidBody::RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVec
 	mTempStatic = false;
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
 	ComputeInertia();
 }
 RigidBody::~RigidBody()

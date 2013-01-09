@@ -17,6 +17,7 @@ class RigidBody : public Body
 private:
 		CompoundBody* mParent;
 		bool mImpulseEnabled;
+		bool mCollisionEnabled;
 
 protected:
 		AglBoundingSphere mBoundingSphere;
@@ -78,6 +79,9 @@ public:
 	CompoundBody* GetParent();
 
 	bool IsImpulseEnabled(){ return mImpulseEnabled; }
+	bool IsCollisionEnabled(){ return mCollisionEnabled; }
+
+	void SetCollisionEnabled(bool pEnabled){ mCollisionEnabled = pEnabled; }
 };
 
 #endif

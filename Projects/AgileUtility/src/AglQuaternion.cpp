@@ -87,7 +87,7 @@ AglQuaternion AglQuaternion::rotateToFrom(AglVector3 p_from, AglVector3 p_to)
 	return constructFromAxisAndAngle(axis, angle);
 }
 
-AglQuaternion AglQuaternion::conjugate()
+AglQuaternion AglQuaternion::conjugate() const
 {
 	return AglQuaternion(-u, v);
 }
@@ -99,7 +99,7 @@ void AglQuaternion::normalize()
 	u.z *= frac;
 	v *= frac;
 }
-void AglQuaternion::transformVector(AglVector3& p_vector)
+void AglQuaternion::transformVector(AglVector3& p_vector) const
 {
 	AglQuaternion quat(p_vector, 0);
 

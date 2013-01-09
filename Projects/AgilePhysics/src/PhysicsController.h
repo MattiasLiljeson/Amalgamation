@@ -69,9 +69,10 @@ public:
 	/// \return The box
 	///-----------------------------------------------------------------------------------
 	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL,
-					bool pImpulseEnabled = NULL);
+					bool pImpulseEnabled = NULL, bool pCollisionEnabled = true);
 
-	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL);
+	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+				bool pCollisionEnabled = true);
 
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 

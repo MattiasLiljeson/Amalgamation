@@ -38,9 +38,9 @@ struct AglQuaternion
 	static AglQuaternion rotateToFrom(AglVector3 p_from, AglVector3 p_to);
 	
 	//Functions
-	AglQuaternion conjugate();
+	AglQuaternion conjugate() const;
 	void		  normalize();
-	void		  transformVector(AglVector3& p_vector);
+	void		  transformVector(AglVector3& p_vector) const;
 
 	//Static functions
 	static AglQuaternion lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t);
