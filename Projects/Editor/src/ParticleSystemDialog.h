@@ -51,8 +51,10 @@ private:
 	static void TW_CALL SetParticlesPerSpawn(const void *value, void *clientData);
 	static void TW_CALL GetParticlesPerSpawn(void *value, void *clientData);
 
-	static void TW_CALL SetParticleSize(const void *value, void *clientData);
-	static void TW_CALL GetParticleSize(void *value, void *clientData);
+	static void TW_CALL SetParticleSizeX(const void *value, void *clientData);
+	static void TW_CALL GetParticleSizeX(void *value, void *clientData);
+	static void TW_CALL SetParticleSizeY(const void *value, void *clientData);
+	static void TW_CALL GetParticleSizeY(void *value, void *clientData);
 
 	static void TW_CALL SetAlphaBlending(void* clientData);
 

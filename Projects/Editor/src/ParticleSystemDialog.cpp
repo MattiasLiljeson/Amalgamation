@@ -246,18 +246,32 @@ void TW_CALL ParticleSystemDialog::GetParticlesPerSpawn(void *value, void *clien
 	*(unsigned int*)value = ps->GetHeader().particlesPerSpawn;
 }
 
-void TW_CALL ParticleSystemDialog::SetParticleSize(const void *value, void *clientData)
+void TW_CALL ParticleSystemDialog::SetParticleSizeX(const void *value, void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
-	ps->setParticleSize(*(const float*)value);
+	ps->setParticleSizeX(*(const float*)value);
 }
-void TW_CALL ParticleSystemDialog::GetParticleSize(void *value, void *clientData)
+void TW_CALL ParticleSystemDialog::GetParticleSizeX(void *value, void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
-	*(float*)value = ps->GetHeader().particleSize;
+	*(float*)value = ps->GetHeader().particleSize.x;
 }
+
+void TW_CALL ParticleSystemDialog::SetParticleSizeY(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setParticleSizeY(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetParticleSizeY(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().particleSize.y;
+}
+
 
 void TW_CALL ParticleSystemDialog::Restart(void* clientData)
 {
@@ -323,7 +337,8 @@ void ParticleSystemDialog::setPS(int pIndex)
 	TwAddButton(m_dialog, "In Space", SetSpreadSpace, (void*)this, " label='In Space' group='Spread Type'");
 
 	//Particle Size
-	TwAddVarCB(m_dialog, "Particle Size", TW_TYPE_FLOAT, SetParticleSize, GetParticleSize, (void*)this, "key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Width", TW_TYPE_FLOAT, SetParticleSizeX, GetParticleSizeX, (void*)this, "key=o step=0.01 min=0.0");
+	TwAddVarCB(m_dialog, "Height", TW_TYPE_FLOAT, SetParticleSizeY, GetParticleSizeY, (void*)this, "key=o step=0.01 min=0.0");
 
 	TwAddButton(m_dialog, "Restart", Restart, (void*)this, " label='Restart'");
 	TwAddButton(m_dialog, "Load Texture", LoadTexture, this, " label='Load Texture'");

@@ -125,9 +125,13 @@ public:
 	{
 		mSystem->setSpreadType(p_type);
 	}
-	void setParticleSize(float p_size)
+	void setParticleSizeX(float p_size)
 	{
-		mSystem->setParticleSize(p_size);
+		mSystem->setParticleSize(AglVector2(p_size, mSystem->getHeader().particleSize.y));
+	}
+	void setParticleSizeY(float p_size)
+	{
+		mSystem->setParticleSize(AglVector2(mSystem->getHeader().particleSize.x, p_size));
 	}
 	AglParticleSystemHeader::AglAlignmentType getAlignment()
 	{

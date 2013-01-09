@@ -1,6 +1,6 @@
 #include "AglParticleSystem.h"
 
-AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, float p_size)
+AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size)
 {
 	position = p_position;
 	velocity = p_velocity;
@@ -23,7 +23,7 @@ AglParticleSystem::AglParticleSystem()
 	m_header.maxOpacity = 1.0f;
 	m_header.particlesPerSpawn = 1;
 	m_header.spreadType = AglParticleSystemHeader::INSPACE;
-	m_header.particleSize = 1.0f;
+	m_header.particleSize = AglVector2(1.0f, 1.0f);
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 }
@@ -86,7 +86,7 @@ void AglParticleSystem::setSpawnType(AglParticleSystemHeader::AglSpawnType p_typ
 {
 	m_header.spawnType = p_type;
 }
-void AglParticleSystem::setParticleSize(float p_size)
+void AglParticleSystem::setParticleSize(AglVector2 p_size)
 {
 	m_header.particleSize = p_size;
 }
