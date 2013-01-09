@@ -102,6 +102,23 @@ void TW_CALL ParticleSystemDialog::GetSpawnOffset(void *value, void *clientData)
 	*(float*)value = ps->GetHeader().spawnOffset;
 }
 
+void TW_CALL ParticleSystemDialog::SetScreenAlignment(void* clientData)
+{
+
+}
+void TW_CALL ParticleSystemDialog::SetWorldAlignment(void* clientData)
+{
+
+}
+void TW_CALL ParticleSystemDialog::SetVelocityDirAlignment(void* clientData)
+{
+
+}
+void TW_CALL ParticleSystemDialog::SetObserverAlignment(void* clientData)
+{
+
+}
+
 void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
@@ -306,5 +323,17 @@ void ParticleSystemDialog::setPS(int pIndex)
 	//Particles per spawn
 	TwAddVarCB(m_dialog, "Particles Per Spawn", TW_TYPE_UINT32, SetParticlesPerSpawn, GetParticlesPerSpawn, (void*)this, "key=o");
 
+	//Particle Alignment
+	//TwDefine("ParticleSystem/'Billboard Alignment' opened=false ");
+	TwAddButton(m_dialog, "Screen Alignment", SetScreenAlignment, (void*)this, " label='Screen Alignment' group='Billboard Alignment'");
+	TwAddButton(m_dialog, "World Alignment", SetWorldAlignment, (void*)this, " label='World Alignment' group='Billboard Alignment'");
+	TwAddButton(m_dialog, "Velocity Alignment", SetVelocityDirAlignment, (void*)this, " label='Velocity Alignment' group='Billboard Alignment'");
+	TwAddButton(m_dialog, "Observer Alignment", SetObserverAlignment, (void*)this, " label='Observer Alignment' group='Billboard Alignment'");
+
 	show();
 }
+
+static void TW_CALL SetScreenAlignment(void* clientData);
+static void TW_CALL SetWorldAlignment(void* clientData);
+static void TW_CALL SetVelocityDirAlignment(void* clientData);
+static void TW_CALL SetObserverAlignment(void* clientData);

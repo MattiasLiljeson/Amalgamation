@@ -94,6 +94,10 @@ private:
 	void initMouse();
 	ResultingInputForces readAllTheInput();
 	void updateAntTweakBar(const ResultingInputForces& p_input);
+
+	//Anton - 9/1-13
+	float getSpeedBoost(Entity* p_entity, float p_baseThrust);
+
 private:
 	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;

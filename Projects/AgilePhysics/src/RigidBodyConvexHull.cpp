@@ -25,7 +25,9 @@ void RigidBodyConvexHull::CalculateInertiaTensor()
     float z = (xfactor + yfactor) * GetMass() / 12.0f;
 	SetInertiaTensor(AglMatrix(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1));
 }
-RigidBodyConvexHull::RigidBodyConvexHull(ConvexHullShape* pShape, AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic): RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic)
+RigidBodyConvexHull::RigidBodyConvexHull(ConvexHullShape* pShape, AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, 
+										 AglVector3 pAngularVelocity, bool pStatic, bool pImpulseEnabled): 
+RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic, pImpulseEnabled)
 {
 	mShape = pShape;
 	mSize  = pSize;
