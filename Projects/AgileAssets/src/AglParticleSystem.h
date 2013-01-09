@@ -24,6 +24,11 @@ struct AglParticleSystemHeader
 		INPLANE, INSPACE
 	};
 
+	enum AglAlignmentType
+	{
+		SCREEN, WORLD, VELOCITY, OBSERVER
+	};
+
 
 	AglVector3			spawnPoint;
 	AglSpawnType		spawnType;

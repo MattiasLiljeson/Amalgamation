@@ -11,6 +11,7 @@ struct VS_OUT
 	float3 Position  : POSITION;
 	float  Size : SIZE;
 	float  Age	: AGE;
+	float3 Velocity : VELOCITY;
 };
 
 VS_OUT VShader(Particle vIn)
@@ -19,5 +20,6 @@ VS_OUT VShader(Particle vIn)
 	vOut.Position = vIn.Position;
 	vOut.Size = vIn.Size;
 	vOut.Age = vIn.Age;
+	vOut.Velocity = vIn.Velocity;
 	return vOut;
 }

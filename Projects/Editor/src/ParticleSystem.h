@@ -30,6 +30,8 @@ private:
 	AglVector4 mColor;
 	float mFadeInStop;
 	float mFadeOutStart;
+
+	AglParticleSystemHeader::AglAlignmentType mAlignment;
 public:
 	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
@@ -126,6 +128,14 @@ public:
 	void setParticleSize(float p_size)
 	{
 		mSystem->setParticleSize(p_size);
+	}
+	AglParticleSystemHeader::AglAlignmentType getAlignment()
+	{
+		return mAlignment;
+	}
+	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType pType)
+	{
+		mAlignment = pType;
 	}
 
 	void Draw();

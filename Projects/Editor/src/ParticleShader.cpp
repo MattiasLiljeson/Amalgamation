@@ -80,6 +80,20 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	buffer->ParticleMaxAge = pPS->GetHeader().particleAge;
 	buffer->Opacity = pPS->GetHeader().maxOpacity;
 
+	AglVector3 y = Camera::GetInstance()->LocalYAxis();
+	AglVector3 z = Camera::GetInstance()->LocalZAxis();
+	buffer->CameraY = AglVector4(y.x, y.y, y.z, 0);
+	buffer->CameraZ = AglVector4(z.x, z.y, z.z, 0);
+
+	if (pPS->getAlignment() == AglParticleSystemHeader::OBSERVER)
+		buffer->Alignment = 0;
+	else if (pPS->getAlignment() == AglParticleSystemHeader::SCREEN)
+		buffer->Alignment = 1;
+	else if (pPS->getAlignment() == AglParticleSystemHeader::WORLD)
+		buffer->Alignment = 2;
+	else
+		buffer->Alignment = 3;
+
 	mDeviceContext->Unmap(mBuffer, 0);
 
 	unsigned int bufferNumber = 0;

@@ -104,19 +104,27 @@ void TW_CALL ParticleSystemDialog::GetSpawnOffset(void *value, void *clientData)
 
 void TW_CALL ParticleSystemDialog::SetScreenAlignment(void* clientData)
 {
-
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setAlignmentType(AglParticleSystemHeader::SCREEN);
 }
 void TW_CALL ParticleSystemDialog::SetWorldAlignment(void* clientData)
 {
-
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setAlignmentType(AglParticleSystemHeader::WORLD);
 }
 void TW_CALL ParticleSystemDialog::SetVelocityDirAlignment(void* clientData)
 {
-
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setAlignmentType(AglParticleSystemHeader::VELOCITY);
 }
 void TW_CALL ParticleSystemDialog::SetObserverAlignment(void* clientData)
 {
-
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setAlignmentType(AglParticleSystemHeader::OBSERVER);
 }
 
 void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
