@@ -306,15 +306,41 @@ bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 
 vector<unsigned int> PhysicsController::CollidesWith(unsigned int p_b)
 {
-	vector<unsigned int> list;
-	for (unsigned int i = 0; i < mCollisions.size(); i++)
+	if (mBodies[p_b]->IsCompoundBody())
 	{
-		if (mCollisions[i].first == p_b)
-			list.push_back(mCollisions[i].second);
-		if (mCollisions[i].second == p_b)
-			list.push_back(mCollisions[i].first);
+		CompoundBody* body = (CompoundBody*)mBodies[p_b];
+		vector<RigidBody*> children = body->GetChildren();
+		vector<unsigned int> list;
+		for (unsigned int i = 0; i < children.size(); i++)
+		{
+			for (unsigned int j = 0; j < mCollisions.size(); j++)
+			{
+				RigidBody* b = (RigidBody*)mBodies[mCollisions[j].first];
+				if (b == children[i])
+				{
+					list.push_back(mCollisions[j].second);
+				}
+				b = (RigidBody*)mBodies[mCollisions[j].second];
+				if (b == children[i])
+				{
+					list.push_back(mCollisions[j].first);
+				}
+			}
+		}
+		return list;
 	}
-	return list;
+	else
+	{
+		vector<unsigned int> list;
+		for (unsigned int i = 0; i < mCollisions.size(); i++)
+		{
+			if (mCollisions[i].first == p_b)
+				list.push_back(mCollisions[i].second);
+			if (mCollisions[i].second == p_b)
+				list.push_back(mCollisions[i].first);
+		}
+		return list;
+	}
 }
 
 void PhysicsController::ActivateBody(unsigned int pBody)
@@ -328,4 +354,9 @@ void PhysicsController::InactivateBody(unsigned int pBody)
 bool PhysicsController::IsActive(unsigned int pBody)
 {
 	return mBodies[pBody]->IsActive();
+}
+
+void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform)
+{
+	p_compound->AddChild(p_body, p_localTransform);
 }

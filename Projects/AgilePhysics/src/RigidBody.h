@@ -73,6 +73,7 @@ public:
 	virtual AglVector3 GetLocalCenterOfMass() = 0;
 
 	void SetParent(CompoundBody* pParent);
+	void SetParent(CompoundBody* pParent, AglMatrix pLocalTransform);
 	CompoundBody* GetParent();
 };
 

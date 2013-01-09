@@ -90,6 +90,8 @@ public:
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
+	
+	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
 
 	///-----------------------------------------------------------------------------------
 	/// Clears all rigid bodies

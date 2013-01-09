@@ -18,6 +18,7 @@
 #include <ShipController.h>
 #include <Transform.h>
 #include <HudElement.h>
+#include <ShipModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -35,6 +36,9 @@
 #include <ShipControllerSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <HudSystem.h>
+#include <CameraInfo.h>
+#include <LookAtEntity.h>
+#include <MainCamera.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -174,7 +178,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	/*ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
 	NetworkConnectToServerSystem* connect =
@@ -183,7 +187,7 @@ void ClientApplication::initSystems()
 
 	NetworkCommunicatorSystem* communicatorSystem =
 		new NetworkCommunicatorSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );
+	m_world->setSystem( communicatorSystem, false );*/
 
 	/************************************************************************/
 	/* Audio															*/
@@ -252,12 +256,110 @@ void ClientApplication::initEntities()
 
 	}
 
-	// HUD score element
+	// Create a "spaceship"
 	entity = m_world->createEntity();
-	component = new HudElement( "scoreText" );
-	entity->addComponent( ComponentType::HudElement, component );
+	int shipId = entity->getIndex();
+	component = new RenderInfo( shipMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(0, 0, 0);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(0, 0, 0),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::COMPOUND));
+
+	component = new ShipController(5.0f, 50.0f);
+	entity->addComponent( ComponentType::ShipController, component );
 	m_world->addEntity(entity);
 
+	// Create a box that the spaceship can pickup
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(10, 0, 0);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(10, 0, 0),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(20, 0, 0);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(20, 0, 0),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(30, 0, 0);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(30, 0, 0),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE));
+
+	//entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+	m_world->addEntity(entity);
+
+	//Create a camera
+	float aspectRatio = 
+		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+		SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
+	entity = m_world->createEntity();
+	component = new CameraInfo( aspectRatio );
+	entity->addComponent( ComponentType::CameraInfo, component );
+	component = new MainCamera();
+	entity->addComponent( ComponentType::MainCamera, component );
+	//component = new Input();
+	//entity->addComponent( ComponentType::Input, component );
+	component = new Transform( -5.0f, 0.0f, -5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
+	entity->addComponent( ComponentType::LookAtEntity, component );
+	m_world->addEntity(entity);
 }
 
 void ClientApplication::initSounds()
