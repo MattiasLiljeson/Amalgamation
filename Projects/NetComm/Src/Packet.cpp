@@ -12,7 +12,7 @@ Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
 	setData(p_data,p_size);
 }
 
-Packet::Packet( int p_packetType )
+Packet::Packet( char p_packetType )
 {
 	m_packetType = p_packetType;
 	clear();

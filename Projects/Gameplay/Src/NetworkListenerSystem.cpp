@@ -67,14 +67,10 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			int id = m_server->popNewConnection();
 
-			///
-			/// Give the new client its Network Identity.
-			///
-			Packet identityPacket;
-			identityPacket << (char)PacketType::InitCredentials <<
-				(char)EntityType::Identity << id;
+			// Give the new client its Network Identity.
+			Packet identityPacket( (char)PacketType::InitCredentials );
+			identityPacket << (char)EntityType::Identity << id;
 			m_server->unicastPacket( identityPacket, id );
-
 
 			// Create a new entity for the connecting client, and belonging components
 			Entity* e = m_world->createEntity();
@@ -83,6 +79,9 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			NetworkSynced* netSync = 
 				new NetworkSynced( e->getIndex(), id, EntityType::Ship );
 			
+			/************************************************************************/
+			/* Creating the ship entity.											*/
+			/************************************************************************/
 			e->addComponent( ComponentType::Transform, transform);
 			e->addComponent( ComponentType::NetworkSynced, netSync);
 			e->addComponent( ComponentType::ShipController,
@@ -100,8 +99,6 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 								AglVector3(0, 0, 0), 0, 
 								BodyInitData::DYNAMIC, 
 								BodyInitData::COMPOUND));
-			
-
 			m_world->addEntity( e );
 
 			// When a client is connecting, the server must broadcast to all other
@@ -111,47 +108,36 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			//	And entity creation.
 
 			// Broadcast the new client's entity to all clients, even the new one.
-			Packet newClientConnected;
-			newClientConnected << 
-				(char)PacketType::EntityCreation <<
-				(char)EntityType::Ship << id << e->getIndex() <<
-				transform->getTranslation() << transform->getRotation() <<
-				transform->getScale();
+			Packet newClientConnected(PacketType::EntityCreation);
+			newClientConnected << (char)EntityType::Ship << id << e->getIndex() 
+				<< transform->getTranslation() << transform->getRotation() 
+				<< transform->getScale();
 			
 			m_server->broadcastPacket(newClientConnected);
 
-			//m_server->multicastPacket( currentConnections, newClientConnected );
-			
-			// The server must then initialize data for the new client.
-			// Suggestion
-			// Packets needed: CREATE_ENTITY
-			//	int:	id
-			//	string: name (debug)
-			// Packets	needed: ADD_COMPONENT
-			//	int:	entityId
-			//	int:	componentTypeId
-			//	*:		specificComponentData
-
-			// Send the old networkSynced stuff:
+			/************************************************************************/
+			/* Send the already networkSynced objects located on the server to the	*/
+			/* newly connected client.												*/
+			/************************************************************************/ 
 			for( unsigned int i=0; i<p_entities.size(); i++ )
 			{
 				int entityId = p_entities[i]->getIndex();
 				netSync = (NetworkSynced*)m_world->getComponentManager()->
 					getComponent( entityId, ComponentType::NetworkSynced );
 				
-				transform = (Transform*)m_world->getComponentManager()->
-					getComponent( entityId, ComponentType::Transform );
-
 				// Create entity
 				if( netSync->getNetworkType() == EntityType::Ship ||
 					netSync->getNetworkType() == EntityType::Prop
 					)
-				{
-					Packet packet;
-					packet << (char)PacketType::EntityCreation <<
-						(char)netSync->getNetworkType() << netSync->getNetworkOwner() << 
-						entityId << transform->getTranslation() <<
-						transform->getRotation() << transform->getScale();
+				{				
+					transform = (Transform*)m_world->getComponentManager()->
+						getComponent( entityId, ComponentType::Transform );
+
+					Packet packet((char)PacketType::EntityCreation);
+					packet << (char)netSync->getNetworkType() 
+						<< netSync->getNetworkOwner() 
+						<< entityId << transform->getTranslation() 
+						<< transform->getRotation() << transform->getScale();
 
 					m_server->unicastPacket( packet, id );
 				}

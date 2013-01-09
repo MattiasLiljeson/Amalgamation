@@ -45,7 +45,7 @@ public:
 	/// \param p_senderId
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Packet( int p_packetType );
+	Packet( char p_packetType );
 
 
 	~Packet();
@@ -124,6 +124,6 @@ private:
 private:
 	int m_readPos;
 	vector<char> m_data;
-	int m_packetType;
+	char m_packetType;
 	int m_senderId;
 };

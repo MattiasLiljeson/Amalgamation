@@ -16,7 +16,7 @@ using namespace std;
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # NetworkInputHandlerSystem
+/// # ServerPacketHandlerSystem
 /// Detailed description.....
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
