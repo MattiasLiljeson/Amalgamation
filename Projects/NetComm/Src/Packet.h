@@ -62,7 +62,9 @@ public:
 	bool isEmpty() const;
 
 	///-----------------------------------------------------------------------------------
-	/// Desc
+	/// Clears the data array and sets it to size 1. The first position of the array is
+	/// reserved for the length of the array.
+	/// Used when packing and unpacking the data array.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clear();
