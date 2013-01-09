@@ -103,6 +103,7 @@
     <ClInclude Include="AglMesh.h" />
     <ClInclude Include="AglNode.h" />
     <ClInclude Include="AglNodeAnimation.h" />
+    <ClInclude Include="AglParticleSystem.h" />
     <ClInclude Include="AglReader.h" />
     <ClInclude Include="AglScene.h" />
     <ClInclude Include="AglSkeleton.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="AglMesh.cpp" />
     <ClCompile Include="AglNode.cpp" />
     <ClCompile Include="AglNodeAnimation.cpp" />
+    <ClCompile Include="AglParticleSystem.cpp" />
     <ClCompile Include="AglReader.cpp" />
     <ClCompile Include="AglScene.cpp" />
     <ClCompile Include="AglSkeleton.cpp" />

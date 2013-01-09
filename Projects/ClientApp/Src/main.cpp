@@ -1,3 +1,5 @@
+#include <vld.h>
+
 #include "ClientApplication.h"
 #include <vld.h>
 

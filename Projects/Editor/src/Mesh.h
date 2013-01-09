@@ -53,7 +53,7 @@ public:
 	Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene);
 	~Mesh();
 
-	void Init(AglMesh* pMesh, AglReader* pReader);
+	void Init(AglMesh* pMesh);
 	template <class T>
 	void Init(T* pVertices, int pVertexCount, unsigned int* pIndices, int pIndexCount);
 

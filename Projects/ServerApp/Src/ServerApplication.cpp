@@ -1,5 +1,14 @@
 #include "ServerApplication.h"
 
+// Systems
+#include <PhysicsSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <DebugPlayerScoresSystem.h>
+#include <NetworkListenerSystem.h>
+#include <NetworkInputHandlerSystem.h>
+#include <NetworkUpdateSystem.h>
+#include <NetworkUpdateScoresSystem.h>
+
 #include "RenderInfo.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -45,7 +54,7 @@ namespace Srv
 			}
 
 			// HACK: Really slow update loop for testing purposes.
-			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			//boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 
@@ -77,6 +86,12 @@ namespace Srv
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
 			new NetworkUpdateSystem( m_server ), true );
 
+		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
+			new NetworkUpdateScoresSystem( m_server ), true );
+
+		m_world->setSystem( SystemType::DebugPlayerScoresSystem,
+			new DebugPlayerScoresSystem(), true );
+
 		m_world->initialize();
 
 	}
@@ -98,7 +113,8 @@ namespace Srv
 		entity->addComponent(ComponentType::PhysicsBody, component);
 
 		component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
+			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
 
 		// The b1 entity should be synced over the network!
@@ -117,7 +133,8 @@ namespace Srv
 		entity->addComponent(ComponentType::PhysicsBody, component);
 
 		component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
+			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, 
+			BodyInitData::STATIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
 		// Reminder: the b2 entity is static, hence, this entity could be left to exist
 		// by default on the client, without any physics data. It doesn't need to be

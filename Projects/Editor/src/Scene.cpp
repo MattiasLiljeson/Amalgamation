@@ -7,6 +7,8 @@
 #include "Globals.h"
 #include "SphereMesh.h"
 #include "BoxMesh.h"
+#include "ParticleSystem.h"
+#include "Camera.h"
 
 
 Scene* Scene::sInstance = NULL;
@@ -37,6 +39,10 @@ Scene::~Scene()
 	{
 		delete mSkeletonMappings[i];
 	}
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		delete mParticleSystems[i];
+	}
 	if (mAglScene)
 		delete mAglScene;
 }
@@ -53,7 +59,6 @@ void Scene::Release()
 		delete sInstance;
 	sInstance = NULL;
 }
-
 
 void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
 				 ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
@@ -98,6 +103,13 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	{
 		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
 	}
+	vector<AglParticleSystem*> ps = mAglScene->getParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice, mDeviceContext));
+	}
+
+
 	AglAnimation* anim = mAglScene->getAnimation(0);
 	anim->play();
 	mFolder = pFolder;
@@ -108,11 +120,13 @@ void Scene::Update(float pElapsedTime)
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
 		mMeshes[i]->update(pElapsedTime);
 	if (mAglScene)
-		mAglScene->update(pElapsedTime);
+		mAglScene->update(pElapsedTime, Camera::GetInstance()->GetPosition());
 	mRotation += pElapsedTime;
 }
 void Scene::Draw()
 {
+	if (!mAglScene)
+		return;
 	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
 	float invMax = 1.0f / maxV;
 	
@@ -168,6 +182,17 @@ void Scene::Draw()
 	}
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
+
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		mParticleSystems[i]->Draw();
+	}
+
+	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
+	for (unsigned int i = 0; i < cp.size(); i++)
+	{
+		SPHEREMESH->Draw(cp[i].transform*invMax, AglVector3(1, 0, 1));
+	}
 
 	AglVector3 minP = mMin;
 	AglVector3 maxP = mMax;
@@ -244,6 +269,11 @@ void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCu
 		}
 	}
 }
+void Scene::AddParticleSystem(AglParticleSystem* pSystem)
+{
+	mAglScene->addParticleSystem(pSystem);
+	mParticleSystems.push_back(new ParticleSystem(pSystem, mDevice, mDeviceContext));
+}
 vector<AglGradient*> Scene::GetGradients()
 {
 	if (mAglScene)
@@ -315,7 +345,7 @@ void Scene::CreateScenePlane()
 	h.nameID = -1;
 	AglMesh* m = new AglMesh(h, verts, ind);
 	mPlaneMesh = new Mesh(mDevice, mDeviceContext, this);
-	mPlaneMesh->Init(m, NULL);
+	mPlaneMesh->Init(m);
 }
 bool Scene::IsLeftHanded()
 {
@@ -329,4 +359,36 @@ bool Scene::IsLeftHanded()
 void Scene::SetCoordinateSystem(AglCoordinateSystem pSystem)
 {
 	mAglScene->setCoordinateSystem(pSystem);
+}
+void Scene::Transform(AglMatrix p_transform)
+{
+	mAglScene->transform(p_transform);
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
+		delete mMeshes[i];
+	mMeshes.clear();
+	vector<AglMesh*> meshes = mAglScene->getMeshes();
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		Mesh* m = new Mesh(mDevice, mDeviceContext, this);
+		m->Init(meshes[i]);
+		mMeshes.push_back(m);
+	}
+
+	mMax = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	mMin = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
+		AglVector3 minV = mMeshes[i]->GetMin();
+		AglVector3 maxV = mMeshes[i]->GetMax();
+		mMax = AglVector3(max(mMax.x, maxV.x), max(mMax.y, maxV.y), max(mMax.z, maxV.z)); 
+		mMin = AglVector3(min(mMin.x, minV.x), min(mMin.y, minV.y), min(mMin.z, minV.z)); 
+
+		//Find random colors
+		mSphereColors.push_back(RandomUnitVector3());
+		mBoxColors.push_back(RandomUnitVector3());
+	}
+	for (unsigned int i = 0; i < mSkeletonMappings.size(); i++)
+	{
+		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
+	}
 }

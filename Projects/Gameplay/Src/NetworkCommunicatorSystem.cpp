@@ -17,8 +17,10 @@
 #include "RenderInfo.h"
 #include "ShipController.h"
 #include "CameraInfo.h"
+#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
+#include "PlayerScore.h"
 
 #include "GraphicsBackendSystem.h"
 #include "NetworkType.h"
@@ -67,8 +69,14 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
+
+				// HACK: Should be located in another entity:
+				component = new PlayerScore();
+				entity->addComponent( ComponentType::PlayerScore, component );
+
 				if(m_tcpClient->getId() == data.owner)
 				{
+					// If "this client" is the entity owner, it may control the ship:
 					component = new ShipController(5.0f, 50.0f);
 					entity->addComponent( ComponentType::ShipController, component );
 				}
@@ -81,10 +89,16 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 				if(data.owner == m_tcpClient->getId())
 				{
+					float aspectRatio = 
+						static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+						SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
 					// A camera from which the world is rendered.
 					entity = m_world->createEntity();
-					component = new CameraInfo( 800/(float)600 );
+					component = new CameraInfo( aspectRatio );
 					entity->addComponent( ComponentType::CameraInfo, component );
+					component = new MainCamera();
+					entity->addComponent( ComponentType::MainCamera, component );
 					//component = new Input();
 					//entity->addComponent( ComponentType::Input, component );
 					component = new Transform( -5.0f, 0.0f, -5.0f );
@@ -98,13 +112,13 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 					/************************************************************************/
 					/* Debug information only and there is no need for this to run the code */
 					/************************************************************************/
-					AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
-						TwType::TW_TYPE_FLOAT, 
+					AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+						"Master_volume", TwType::TW_TYPE_FLOAT, 
 						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
 						"group=Sound min=0 max=10 step=0.001 precision=3");
 
-					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
-						TwType::TW_TYPE_INT32,
+					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::NETWORK,
+						"NetId", TwType::TW_TYPE_INT32,
 						m_tcpClient->getIdPointer(), "" );
 				}
 			}
@@ -178,6 +192,32 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				m_tcpClient->setId( id );
 			}
 		}
+		else if(packetType == (char)PacketType::ScoresUpdate)
+		{
+			NetworkScoreUpdatePacket scoreUpdateData;
+			scoreUpdateData = readScorePacket( packet );
+
+			// HACK: This is VERY inefficient for large amount of
+			// network-synchronized entities. (Solve later)
+			for( unsigned int i=0; i<p_entities.size(); i++ )
+			{
+				NetworkSynced* netSync = NULL;
+				netSync = static_cast<NetworkSynced*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+
+				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
+				{
+					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
+						m_world->getComponentManager()->getComponent(
+						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
+					if( scoreComponent )
+					{
+						scoreComponent->setScore( scoreUpdateData.score );
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -207,5 +247,14 @@ NetworkEntityUpdatePacket NetworkCommunicatorSystem::readUpdatePacket( Packet& p
 		>> data.position 
 		>> data.rotation 
 		>> data.scale;
+	return data;
+}
+
+NetworkScoreUpdatePacket NetworkCommunicatorSystem::readScorePacket( Packet& p_packet )
+{
+	NetworkScoreUpdatePacket data;
+	p_packet >> data.networkId;
+	p_packet >> data.score;
+
 	return data;
 }

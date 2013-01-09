@@ -4,6 +4,7 @@
 #include "PNTTBVertex.h"
 #include "DIndex.h"
 #include "Buffer.h"
+#include "MaterialInfo.h"
 
 // =======================================================================================
 //                                      MEsh
@@ -41,10 +42,10 @@ public:
 	Buffer<DIndex>*		getIndexBuffer();
 
 
-	unsigned int	getTextureId();					// Replace these with
-	void			setTextureId(unsigned int p_id);// material functionality later.
+	MaterialInfo	getMaterialInfo();					
+	void			setTextureId(const MaterialInfo& p_materialInfo);
 private:
 	Buffer<PNTTBVertex>* m_vertexBuffer;
 	Buffer<DIndex>* m_indexBuffer;
-	unsigned int m_textureId; // replace for material id/material id list
+	MaterialInfo m_materialInfo;
 };

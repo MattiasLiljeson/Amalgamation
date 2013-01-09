@@ -5,6 +5,7 @@
 #include "PTVertex.h"
 #include "RendererSceneInfo.h"
 #include "ResourceManager.h"
+#include "RenderStateHelper.h"
 #include <InstanceData.h>
 #include <d3d11.h>
 
@@ -12,15 +13,24 @@ class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class Mesh;
-class RocketShader;
+class GUIShader;
 class ShaderFactory;
 struct Texture;
+class RenderStateHelper;
+struct RasterizerFillMode;
+struct RasterizerCullMode;
+struct RasterizerFaceVertexOrder;
+struct BlendState;
 
-
-const static int NUMBUFFERS = 3;
-const static int DEPTH = 2;
-const static int NORMAL = 1;
-const static int DIFFUSE = 0;
+/************************************************************************/
+/* See wiki for more details.											*/
+/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
+/************************************************************************/
+const static int NUMBUFFERS = 4;
+const static int RT0 = 0;
+const static int RT1 = 1;
+const static int RT2 = 2;
+const static int DEPTH = 3;
 
 // =======================================================================================
 //                                      DeferredRenderer
@@ -37,6 +47,9 @@ const static int DIFFUSE = 0;
 class DeferredRenderer
 {
 public:
+	// ===================================================================================
+	// Setup
+	// ===================================================================================
 	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		int p_width, int p_height);
 	virtual ~DeferredRenderer();
@@ -54,6 +67,11 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
+
+
+	// ===================================================================================
+	// Mesh Render
+	// ===================================================================================
 
 	///-----------------------------------------------------------------------------------
 	/// Set the gbuffer as render target.
@@ -79,35 +97,93 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Render instanced mesh data
 	/// \param p_mesh
-	/// \param p_texture
+	/// \param p_textureArray
+	/// \param p_textureArraySize
 	/// \param p_instanceBuffer
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMeshInstanced(Mesh* p_mesh,
-							 Texture* p_texture, 
+							 Texture** p_textureArray,
+							 unsigned int p_textureArraySize,
 							 Buffer<InstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
-	/// Render a fullscreen quad textured with the gbuffer.
+	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderComposedImage();
-
 	
+
+
+	// ===================================================================================
+	// GUI Render
+	// ===================================================================================
+
 	///-----------------------------------------------------------------------------------
-	/// Desc
+	/// Set up for GUI render pass
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-		Buffer<InstanceData>* p_instanceBuffer );
+	void beginGUIPass();
 
+	///-----------------------------------------------------------------------------------
+	/// Render a mesh in the GUI
+	/// \param p_mesh
+	/// \param p_texture
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderGUIMesh( Mesh* p_mesh, Texture* p_texture );
+
+	///-----------------------------------------------------------------------------------
+	/// Finalize the GUI render pass
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void finalizeGUIPass();
+
+
+
+	// ===================================================================================
+	// Blend states
+	// ===================================================================================
+
+	///-----------------------------------------------------------------------------------
+	/// Set blend state to draw with
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setBlendState(BlendState::Mode p_state);
+	
+	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
+	void setBlendFactors(float p_oneValue);
+
+	void setBlendMask(UINT p_mask);
+
+	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
+
+	// ===================================================================================
+	// Rasterizer States
+	// ===================================================================================
+
+	///-----------------------------------------------------------------------------------
+	/// Set settings for rasterizer states
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+
+	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
+
+	// ===================================================================================
+	// Debug
+	// ===================================================================================
 	void hookUpAntTweakBar();
-protected:
+
+	void releaseRenderTargetsAndDepthStencil();
+	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
+	void buildBlendStates();
+	void buildRasterizerStates();
 	void unMapGBuffers();
-	void initTestShaders();
+	void initShaders();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -123,9 +199,19 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredComposeShader*	m_composeShader;
-	RocketShader*			m_rocketShader;
+	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
+
+	// blend states
+	vector<ID3D11BlendState*> m_blendStates;
+	BlendState::Mode m_currentBlendStateType;
+	float m_blendFactors[4];
+	UINT m_blendMask;
+
+	// rasterizer states
+	vector<ID3D11RasterizerState*> m_rasterizerStates;
+	RasterizerState::Mode m_currentRasterizerStateType;
 
 	int m_width;
 	int m_height;

@@ -20,7 +20,8 @@
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
-    <ClCompile Include="RocketShader.cpp" />
+    <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
@@ -41,12 +43,15 @@
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
+    <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
     <ClInclude Include="RendererSceneInfo.h" />
-    <ClInclude Include="RocketShader.h" />
+    <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="RenderStateEnums.h" />
+    <ClInclude Include="RenderStateHelper.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />
@@ -95,11 +100,11 @@
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.lib</TargetExt>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>

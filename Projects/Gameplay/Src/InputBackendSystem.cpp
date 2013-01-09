@@ -3,13 +3,14 @@
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
 #include "Transform.h"
+#include <Cursor.h>
 #include <DirectInputFetcher.h>
 #include <IMouseKeyboardFetcher.h>
 #include <InputControlFactory.h>
 #include <InputManager.h>
 #include <MessageLoopFetcher.h>
-#include <XInputFetcher.h>
 #include <Windows.h>
+#include <XInputFetcher.h>
 #include <map>
 #include <string>
 
@@ -19,12 +20,17 @@ InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 {
 	m_hInstance = p_hInstance;
 	m_graphicsBackend = p_graphicsBackend;
+
+	m_cursor = NULL;
 }
 
 InputBackendSystem::~InputBackendSystem()
 {
 	delete m_inputManager;
 	m_inputManager = NULL;
+
+	delete m_cursor;
+	m_cursor = NULL;
 }
 
 void InputBackendSystem::initialize()
@@ -57,6 +63,15 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_MOVE,
 		InputHelper::MOUSE_AXIS::Y_NEGATIVE, tempControl, "Mouse Y negative" );
 
+	tempControl = factory.createMouseButton( InputHelper::MOUSE_BTN::M_LBTN );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN,
+		InputHelper::MOUSE_BTN::M_LBTN, tempControl, "Mouse left btn" );
+
+	tempControl = factory.createMouseButton( InputHelper::MOUSE_BTN::M_RBTN );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_MOUSE_BTN,
+		InputHelper::MOUSE_BTN::M_RBTN, tempControl, "Mouse right btn" );
+
+
 	tempControl = factory.createKeyboardKey( InputHelper::KEY_SPACE );
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 		InputHelper::KEYBOARD_KEY::KEY_SPACE, tempControl, "Space" );
@@ -87,6 +102,26 @@ void InputBackendSystem::initialize()
 			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
+
+	m_cursor = new Cursor();
+	// HACK: hard coded window size!
+	m_cursor->addControlSet(
+		25000.0/1280, 25000.0/800,
+		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
+		getControlByEnum(InputHelper::MOUSE_AXIS::Y_POSITIVE),
+		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
+		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
+	m_cursor->addControlSet(
+		10.0/1280, 10.0/800, 
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_NEGATIVE),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
+		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
+
 }
 /*
 void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
@@ -142,6 +177,12 @@ void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
 void InputBackendSystem::process()
 {
 	m_inputManager->update();
+	m_cursor->update();
+}
+
+Cursor* InputBackendSystem::getCursor()
+{
+	return m_cursor;
 }
 
 Control* InputBackendSystem::getInputControl( const string& p_name )

@@ -97,6 +97,8 @@ private:
 	///-----------------------------------------------------------------------------------
 	AglInteriorSphereGrid* readSphereGrid();
 
+	AglConnectionPoint readConnectionPoint();
+
 	///
 	/// Reads a vertex array from an AGL file
 	/// \return An array of a certain vertex type

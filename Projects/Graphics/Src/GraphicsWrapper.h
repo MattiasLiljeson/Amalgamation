@@ -16,8 +16,12 @@
 #include <ResourceManager.h>
 #include <Globals.h>
 #include "Buffer.h"
+#include "BufferFactory.h"
+#include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
+#include "ConnectionPointCollection.h"
+#include "TextureParser.h"
 
 
 class DeferredBaseShader;
@@ -64,6 +68,20 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
+
+	///-----------------------------------------------------------------------------------
+	/// Set the current rasterizer state. By default it will allow to be overriden by the 
+	/// wireframe mode setting.
+	/// \param p_state
+	/// \param p_allowWireframeModeOverride If true: will ignore change if global 
+	/// wireframe mode is on. Will ignore wireframe mode if set to false. True by default.
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
+									bool p_allowWireframeModeOverride=true);
+
+	void setScissorRegion(int x, int y, int width, int height);
+
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
@@ -71,8 +89,10 @@ public:
 	/// \param p_texture
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( unsigned int p_meshId,
+	void beginGUIPass();
+	void renderGUIMesh( unsigned int p_meshId,
 		vector<InstanceData>* p_instanceList );
+	void finalizeGUIPass();
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
@@ -93,24 +113,49 @@ public:
 	/// \param p_path
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
+	///-----------------------------------------------------------------------------------
+	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
+	/// \param p_name Filename
+	/// \param p_path Path, without filename
+	/// \param p_outHardPoints Optional container for storing connection points.
+	/// \return unsigned int Mesh id
+	///-----------------------------------------------------------------------------------
 	unsigned int createMesh(const string& p_name,
-							const string* p_path=NULL);
+							const string* p_path=NULL,
+							ConnectionPointCollection* p_outConnectionPoints=NULL);
+
+	// WIP, should not use texture pointer, but texture id
+	unsigned int createMesh(const string& p_name,
+							int p_numVertices, PNTTBVertex* p_vertices, 
+							int p_numIndices, DIndex* p_indices,
+							Texture* p_texture=NULL);
+
+	// This is the preferred method for creating meshes from raw data
+	unsigned int createMesh(const string& p_name,
+							int p_numVertices, PNTTBVertex* p_vertices, 
+							int p_numIndices, DIndex* p_indices,
+							int p_textureId);
 
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
-
+	unsigned int createTexture( const byte* p_source, int p_width, int p_height,
+		int p_pitch, TextureParser::TEXTURE_TYPE p_type );
 
 	int getMeshId( const string& p_name );
 
 
+	// HACK: Pointer to texture should not be used. A texture id should be used instead.
 	///-----------------------------------------------------------------------------------
-	/// Used by libRocket //Mattias
+	/// WIP! Decide how to handle this when several textures/materials are present.
+	/// Should texture even be sent in here??
+	/// Register an externally created mesh in the graphics system
 	/// \param p_name
 	/// \param p_mesh
 	/// \param p_texture
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
-	unsigned int createMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
+	unsigned int registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
+
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
@@ -120,16 +165,29 @@ public:
 	int getWindowWidth();
 	int getWindowdHeight();
 
+	void changeBackbufferRes( int p_width, int p_height );
+
+	void changeToWindowed(bool p_windowed);
+
+	///-----------------------------------------------------------------------------------
+	/// Sets the global wireframe mode. Causes everything to be displayed in wireframe.
+	/// Separate rasterizer change calls can force to ignore global wireframe mode 
+	/// explicitly though.
+	/// \param p_wireframe
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setWireframeMode(bool p_wireframe);
 private:
+	void initSwapChain(HWND p_hWnd);
 
 	///-----------------------------------------------------------------------------------
 	/// Initialize the graphic card, need input is a win32 window used to present the 
 	/// render result
-	/// \param p_hWnd
-	/// \param p_windowed
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void initHardware(HWND p_hWnd, bool p_windowed);
+	void initHardware();
+
+	void releaseBackBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Creates the true back buffer
@@ -142,10 +200,10 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initViewport();
-
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
+	DXGI_SWAP_CHAIN_DESC	m_swapChainDesc;
 	IDXGISwapChain*			m_swapChain;
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
@@ -163,4 +221,6 @@ private:
 
 	int m_height;
 	int m_width;
+	bool m_windowed;
+	bool m_wireframeMode;
 };

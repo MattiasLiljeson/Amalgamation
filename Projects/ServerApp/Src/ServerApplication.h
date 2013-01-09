@@ -20,13 +20,6 @@
 #include <TcpServer.h>
 #include <EntityWorld.h>
 
-// Systems
-#include <PhysicsSystem.h>
-#include <ProcessingMessagesSystem.h>
-#include <NetworkListenerSystem.h>
-#include <NetworkInputHandlerSystem.h>
-#include <NetworkUpdateSystem.h>
-
 using namespace std;
 
 namespace Srv

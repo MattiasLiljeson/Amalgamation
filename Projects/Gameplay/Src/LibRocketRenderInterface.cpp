@@ -25,19 +25,24 @@
  *
  */
 
-//==================================================================
-// DX11 conversion of DX9 sample code from libRocket. This has been 
-// modified and is NOT the original. Use as you wish. Please Leave 
-// this message and please don't say that it is your work. Follow 
-// the ToS above!
+//=============================================================================
+// DX11 conversion of DX9 sample code from libRocket. This has been modified
+// and is NOT the original. The same license applies for the changed code as
+// for the original.
 //
 // - BiceMaster
 //==================================================================
 
 #include "LibRocketRenderInterface.h"
 
-#include <sstream>
+#include <BufferFactory.h>
+#include <DIndex.h>
+#include <InstanceData.h>
+#include <Mesh.h>
+#include <PNTTBVertex.h>
+#include <Texture.h>
 #include <TextureParser.h>
+#include <sstream>
 
 LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 {
@@ -46,25 +51,10 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 
 	m_NDCFrom2dMatrix = createWorldMatrix();
 
+	numCompiledGeometries = 0;
 
-	D3D11_RASTERIZER_DESC rasterizerDesc;
-	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	rasterizerDesc.CullMode = D3D11_CULL_NONE;
-	rasterizerDesc.FrontCounterClockwise = FALSE;	// Changed it from CounterClockwise false to true, since it otherwise will be culled
-	rasterizerDesc.DepthClipEnable = TRUE;
-	rasterizerDesc.AntialiasedLineEnable = FALSE;
-	rasterizerDesc.MultisampleEnable = FALSE;
-	rasterizerDesc.DepthBias = 0;
-	rasterizerDesc.DepthBiasClamp = 0.0f;
-	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
-
-	rasterizerDesc.ScissorEnable = false;
-	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOff);
-
-	rasterizerDesc.ScissorEnable = true;
-	m_wrapper->getDevice()->CreateRasterizerState(&rasterizerDesc, &rs_scissorsOn);
-
-	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+	byte pix[4] = { 32, 64, 128, 64 };
+	m_stdTextureId = m_wrapper->createTexture( pix, 1, 1, 4, TextureParser::RGBA);
 }
 
 LibRocketRenderInterface::~LibRocketRenderInterface()
@@ -72,8 +62,8 @@ LibRocketRenderInterface::~LibRocketRenderInterface()
 	delete m_factory;
 	Rocket::Core::Shutdown();
 
-	SAFE_RELEASE(rs_scissorsOn);
-	SAFE_RELEASE(rs_scissorsOff);
+	// SAFE_RELEASE(rs_scissorsOn);
+	// SAFE_RELEASE(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
@@ -94,6 +84,8 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	Rocket::Core::Vertex* p_vertices, int p_numVertices, int* p_indices, int p_numIndices,
 	Rocket::Core::TextureHandle p_texture)
 {
+	numCompiledGeometries++;
+	// BUG: SOME GEOMETRIES NOT DELETED! MUST BE DONE!
 	// Construct a new RocketD3D9CompiledGeometry structure, which will be returned as the handle, and the buffers to store the geometry.
 	RocketCompiledGeometry* geometry = new RocketCompiledGeometry;
 
@@ -121,13 +113,10 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	// Fill the index vector.
 	vector<DIndex> indices;
 	indices.resize(p_numIndices);
-	/************************************************************************/
-	/* SHOULD THE INDEX BE CAST TO AN UNSIGNED? IS IT ALREADY UNSIGNED?		*/
-	/************************************************************************/
-	memcpy(&indices[0], p_indices, sizeof(unsigned int) * p_numIndices);
-	/*void* indices = p_indices;*/
-	Mesh* mesh = m_factory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
-		&vertices[0], p_numIndices, &indices[0] );
+	for( int i=0; i<p_numIndices; i++)
+	{
+		indices[i].index = p_indices[i];
+	}
 
 	//HACK: static int to enumerate menus
 	static int numMenus = 0;
@@ -135,7 +124,19 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	stringstream ss;
 	ss<<"menus nr: "<<numMenus;
 
-	geometry->meshId = m_wrapper->createMesh( ss.str(), mesh, (Texture*)p_texture );
+	
+	// Make sure to use the std tex if no texture is defined
+	if( p_texture == 0)
+	{
+		p_texture = 1;
+	}
+
+	geometry->meshId = m_wrapper->createMesh(ss.str(), 
+											 p_numVertices,&vertices[0], 
+											 p_numIndices, &indices[0],
+											 (unsigned int)p_texture);
+
+	// geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
 
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }
@@ -152,14 +153,15 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	AglMatrix worldMat = AglMatrix::createTranslationMatrix( translationVec );
 	worldMat *= m_NDCFrom2dMatrix;
 
+	worldMat = worldMat.transpose();
+
 	RendererSceneInfo scene;
-	AglMatrix identity = AglMatrix::identityMatrix();
 	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = identity[i];
+		scene.viewProjectionMatrix[i] = worldMat[i];
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
-	//m_wrapper->renderRocketCompiledGeometry( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.
@@ -167,28 +169,22 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 {
 	RocketCompiledGeometry* geometry = (RocketCompiledGeometry*) p_geometry;
 	delete geometry;
+	numCompiledGeometries--;
 }
 
 // Called by Rocket when it wants to enable or disable scissoring to clip content.
 void LibRocketRenderInterface :: EnableScissorRegion(bool enable)
 {
-	//HACK: should not be done here!
-	//if(enable == true)
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOn);
-	//else
-	//	m_wrapper->getDeviceContext()->RSSetState(rs_scissorsOff);
+	if(enable == true)
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW_SCISSOR,false);
+	else
+		m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CCW,false);
 }
 
 // Called by Rocket when it wants to change the scissor region.
 void LibRocketRenderInterface :: SetScissorRegion(int x, int y, int width, int height)
 {
-	D3D11_RECT scissor_rect;
-	scissor_rect.left = x;
-	scissor_rect.right = x + width;
-	scissor_rect.top = y;
-	scissor_rect.bottom = y + height;
-
-	m_wrapper->getDeviceContext()->RSSetScissorRects(1, &scissor_rect);
+	m_wrapper->setScissorRegion(x,y,width,height);
 }
 
 // Set to byte packing, or the compiler will expand our struct, which means it won't read correctly from file
@@ -212,97 +208,52 @@ struct TGAHeader
 #pragma pack()
 
 // Called by Rocket when a p_texture is required by the library.
-bool LibRocketRenderInterface :: LoadTexture(Rocket::Core::TextureHandle& texture_handle, Rocket::Core::Vector2i& texture_dimensions, const Rocket::Core::String& source)
+bool LibRocketRenderInterface :: LoadTexture(Rocket::Core::TextureHandle& texture_handle,
+	Rocket::Core::Vector2i& texture_dimensions, const Rocket::Core::String& source)
 {
-	Rocket::Core::FileInterface* file_interface = Rocket::Core::GetFileInterface();
-	Rocket::Core::FileHandle file_handle = file_interface->Open(source);
-	if (file_handle == NULL)
-		return false;
+	bool fileFound = false;
+	int slashPos = source.RFind("/", source.Length());
+	if( slashPos != -1) //slash found
+	{
+		// Split string
+		Rocket::Core::String& path = source.Substring( 0, slashPos );
+		Rocket::Core::String& file = source.Substring( slashPos, source.Length() );
 
-	file_interface->Seek(file_handle, 0, SEEK_END);
-	size_t buffer_size = file_interface->Tell(file_handle);
-	file_interface->Seek(file_handle, 0, SEEK_SET);
-	
-	char* buffer = new char[buffer_size];
-	file_interface->Read(buffer, buffer_size, file_handle);
-	file_interface->Close(file_handle);
+		// Fetch it
+		texture_handle = (unsigned int)m_wrapper->createTexture( string(file.CString()),
+			string(path.CString()) );
 
-	TGAHeader header;
-	memcpy(&header, buffer, sizeof(TGAHeader));
-	
-	int color_mode = header.bitsPerPixel / 8;
-	int image_size = header.width * header.height * 4; // We always make 32bit textures 
-	
-	if (header.dataType != 2)
-	{
-		Rocket::Core::Log::Message(Rocket::Core::Log::LT_ERROR, "Only 24/32bit uncompressed TGAs are supported.");
-		return false;
+		fileFound = true;
 	}
-	
-	// Ensure we have at least 3 colors
-	if (color_mode < 3)
+	else
 	{
-		Rocket::Core::Log::Message(Rocket::Core::Log::LT_ERROR, "Only 24 and 32bit textures are supported");
-		return false;
-	}
-	
-	const char* image_src = buffer + sizeof(TGAHeader);
-	unsigned char* image_dest = new unsigned char[image_size];
-	
-	// Targa is BGR, swap to RGB and flip Y axis
-	for (long y = 0; y < header.height; y++)
-	{
-		long read_index = y * header.width * color_mode;
-		long write_index = ((header.imageDescriptor & 32) != 0) ? read_index : (header.height - y - 1) * header.width * color_mode;
-		for (long x = 0; x < header.width; x++)
-		{
-			image_dest[write_index] = image_src[read_index+2];
-			image_dest[write_index+1] = image_src[read_index+1];
-			image_dest[write_index+2] = image_src[read_index];
-			if (color_mode == 4)
-				image_dest[write_index+3] = image_src[read_index+3];
-			else
-				image_dest[write_index+3] = 255;
-			
-			write_index += 4;
-			read_index += color_mode;
-		}
+		// Use std texture
+		texture_handle = 0;
+		fileFound = false;
 	}
 
-	texture_dimensions.x = header.width;
-	texture_dimensions.y = header.height;
-	
-	bool success = GenerateTexture(texture_handle, image_dest, texture_dimensions);
-	
-	delete [] image_dest;
-	delete [] buffer;
-	
-	return success;
+	return fileFound;
 }
 
 // Called by Rocket when a p_texture is required to be built from an internally-generated sequence of pixels.
-bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& texture_handle, const byte* source, const Rocket::Core::Vector2i& source_dimensions)
+bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& texture_handle,
+	const byte* source, const Rocket::Core::Vector2i& source_dimensions)
 {
 	//pitch: 4  = RGBA = 4 bytes
-	int x, y, pitch;
-	x = source_dimensions.x;
-	y = source_dimensions.y;
-	pitch = source_dimensions.x * 4;
+	int pitch = source_dimensions.x * 4;
 
-	ID3D11ShaderResourceView* resource = TextureParser::createTexture( 
-		m_wrapper->getDevice(), source, x, y, pitch );
-	Texture* texture = new Texture( resource );
+	unsigned int texId = m_wrapper->createTexture(
+		source, source_dimensions.x, source_dimensions.y, pitch, TextureParser::RGBA );
 
 	// Set the handle on the Rocket p_texture structure.
-	texture_handle = (Rocket::Core::TextureHandle)texture;
+	texture_handle = (Rocket::Core::TextureHandle)texId;
 	return true;
 }
 
 // Called by Rocket when a loaded p_texture is no longer required.
 void LibRocketRenderInterface :: ReleaseTexture(Rocket::Core::TextureHandle texture_handle)
 {
-//	Texture* texture = ((Texture*) texture_handle);
-//	delete texture;
+	// Texture are not allocated here but just function as indices to the graphics wrapper.
 }
 
 // Returns the native horizontal texel offset for the renderer.
@@ -341,13 +292,9 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
 	AglVector3 translation( -1.0f, 1.0f, 0.0f );
-	//matScale = AglMatrix::createScaleMatrix( scale );
-	//matTranslate = AglMatrix::createTranslationMatrix( translation );
 
 	AglMatrix::componentsToMatrix(matTranslate, scale, AglQuaternion::identity(), translation);
 	return matTranslate;
-	
-	//return matScale * matTranslate;
 }
 
 vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( const AglMatrix& p_matrix )

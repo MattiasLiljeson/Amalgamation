@@ -7,6 +7,7 @@
 #include "AGLLoader.h"
 #include "MeshDialog.h"
 #include "MaterialDialog.h"
+#include "ParticleSystemDialog.h"
 
 class SceneDialog
 {
@@ -18,6 +19,7 @@ private:
 	//Spawned Dialog
 	MeshDialog* m_meshDialog;
 	MaterialDialog* m_materialDialog;
+	ParticleSystemDialog* m_particleSystemDialog;
 private:
 	//Private Functions
 	SceneDialog();
@@ -25,12 +27,12 @@ private:
 private:
 	//Callbacks
 	static void TW_CALL OpenMeshDialog(void *clientData);
+	static void TW_CALL OpenParticleSystemDialog(void *clientData);
 	static void TW_CALL OpenMaterialDialog(void *clientData);
 	static void TW_CALL LoadAGL(void *clientData);
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
 	static void TW_CALL AddPE(void* clientData);
-
 	static void TW_CALL SetCOSystem(void *clientData);
 public:
 	//Static functions
@@ -38,6 +40,7 @@ public:
 	static void Release();
 public:
 	void SetCurrentMesh(int pIndex);
+	void SetCurrentParticleSystem(int pIndex);
 	void SetCurrentMaterial(int pIndex);
 };
 

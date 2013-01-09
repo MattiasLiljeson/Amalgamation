@@ -6,8 +6,8 @@
 #include "Transform.h"
 
 CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
-						    InputBackendSystem* p_inputBackend ) : 
-		      EntitySystem( SystemType::CameraSystem, 2,
+							InputBackendSystem* p_inputBackend ) : 
+			  EntitySystem( SystemType::CameraSystem, 2,
 							ComponentType::ComponentTypeIdx::CameraInfo,
 							ComponentType::ComponentTypeIdx::Transform)
 {
@@ -65,10 +65,13 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			up = targetTransform->getMatrix().GetUp();
 
 			// update transform
-			position = AglVector3::lerp(position,lookTarget+offset,
-										lookAt->getMoveSpd()*dt);
-			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-											lookAt->getRotationSpeed()*dt);
+			
+			// position = AglVector3::lerp(position,lookTarget+offset,
+			//							abs(lookAt->getMoveSpd())*dt);
+			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+			//							abs(lookAt->getRotationSpeed())*dt);
+			position = lookTarget+offset;
+			rotation = targetTransform->getRotation();
 			rotation.normalize();
 		}
 
@@ -79,7 +82,7 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// update of position
 		transform->setTranslation( position );
-	    transform->setRotation( rotation );
+		transform->setRotation( rotation );
 		
 
 		// Rendering preparations

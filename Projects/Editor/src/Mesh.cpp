@@ -33,7 +33,7 @@ Mesh::~Mesh()
 	mIB->Release();
 }
 
-void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
+void Mesh::Init(AglMesh* pMesh)
 {
 	AglMeshHeader h = pMesh->getHeader();
 
@@ -41,7 +41,7 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 
 	unsigned int* ind = pMesh->getIndices();
 
-	AglMatrix mat = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+	/*AglMatrix mat = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
 
 	for (int i = 0; i < h.vertexCount; i++)
 	{
@@ -57,7 +57,7 @@ void Mesh::Init(AglMesh* pMesh, AglReader* pReader)
 		ind[i] = ind[i+1];
 		ind[i+1] = temp;
 
-	}
+	}*/
 
 	Init<AglVertexSTBN>(v, h.vertexCount, pMesh->getIndices(), h.indexCount);
 

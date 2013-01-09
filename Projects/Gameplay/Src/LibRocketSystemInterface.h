@@ -3,8 +3,6 @@
 
 #include <Rocket/Core/SystemInterface.h>
 
-#include <EntityWorld.h>
-
 class EntityWorld;
 
 class LibRocketSystemInterface : public Rocket::Core::SystemInterface

@@ -8,6 +8,11 @@ void TW_CALL SceneDialog::OpenMeshDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMesh(index);
 }
+void TW_CALL SceneDialog::OpenParticleSystemDialog(void *clientData)
+{
+	int index = (int)clientData;
+	SceneDialog::GetInstance()->SetCurrentParticleSystem(index);
+}
 void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 {
 	int index = (int)clientData;
@@ -17,15 +22,36 @@ void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 {
 	int index = (int)clientData;
 	if (index == 0)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
+	{
+		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
+	}
 	else if (index == 1)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
+	{
+		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
+	}
 	else if (index == 2)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+	{
+		AglMatrix mat(0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+	}
 	else if (index == 3)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 1, 0), AglVector3(0, 0, 1), AglCoordinateSystem::LEFT));
+	{
+		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 1, 0), AglVector3(0, 0, 1), AglCoordinateSystem::LEFT));
+	}
 	else if (index == 4)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 0, 1), AglVector3(-1, 0, 0), AglCoordinateSystem::LEFT));
+	{
+		AglMatrix mat(0, 0, 1, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
+		Scene::GetInstance()->Transform(mat);
+		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 0, 1), AglVector3(-1, 0, 0), AglCoordinateSystem::LEFT));
+	}
 }
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
@@ -62,8 +88,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 
 
-		TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "Sys2", SetCOSystem, (void*)4, " label='Up: Z Forward: -X L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		//TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		//TwAddButton(sceneDialog->m_dialog, "Sys2", SetCOSystem, (void*)4, " label='Up: Z Forward: -X L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 
 
 		TwAddVarRW(sceneDialog->m_dialog, "Sphere", TW_TYPE_BOOLCPP, &DRAWDEBUGSPHERE, "group='Debug'");
@@ -88,16 +114,17 @@ void TW_CALL SceneDialog::AddMaterial(void *clientData)
 }
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
-	/*AglMaterial* mat = new AglMaterial();
-	mat->nameID = Scene::GetInstance()->AddName("");
-	Scene::GetInstance()->AddMaterial(mat, false, false);
-	string s = Scene::GetInstance()->GetName(mat->nameID);*/
+	AglParticleSystem* ps = new AglParticleSystem();
+	Scene::GetInstance()->AddParticleSystem(ps);
+	//mat->nameID = Scene::GetInstance()->AddName("");
+	//Scene::GetInstance()->AddMaterial(mat, false, false);
+	//string s = Scene::GetInstance()->GetName(mat->nameID);*/
 	string s = "NoName";
 	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
 	int zero = 0;
 
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenMaterialDialog, (void*)0, info.c_str());
+	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)0, info.c_str());
 }
 
 SceneDialog::SceneDialog()
@@ -129,11 +156,13 @@ SceneDialog::SceneDialog()
 
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();
+	m_particleSystemDialog = new ParticleSystemDialog();
 }
 SceneDialog::~SceneDialog()
 {
 	delete m_meshDialog;
 	delete m_materialDialog;
+	delete m_particleSystemDialog;
 }
 
 SceneDialog* SceneDialog::GetInstance()
@@ -149,6 +178,10 @@ void SceneDialog::Release()
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
 	m_meshDialog->setMesh(pIndex);
+}
+void SceneDialog::SetCurrentParticleSystem(int pIndex)
+{
+	m_particleSystemDialog->setPS(pIndex);
 }
 void SceneDialog::SetCurrentMaterial(int pIndex)
 {

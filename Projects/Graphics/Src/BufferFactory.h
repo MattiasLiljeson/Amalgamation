@@ -75,7 +75,13 @@ public:
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
 
+	///-----------------------------------------------------------------------------------
+	/// This function should create a sphere mesh only.
+	/// \return Sphere*
+	///-----------------------------------------------------------------------------------
+	Mesh* createSphereMesh();
 
+	///
 	Mesh* createMeshFromPNTTBVerticesAndIndices( int p_numVertices, PNTTBVertex* p_vertices,
 		int p_numIndices, DIndex* p_indices  );
 

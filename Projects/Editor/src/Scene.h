@@ -17,6 +17,7 @@ class NodeAnimation;
 struct Node;
 struct MeshConfigurableData;
 class SkeletonMesh;
+class ParticleSystem;
 
 
 ///Need to add support for various 
@@ -32,6 +33,7 @@ private:
 	static Scene* sInstance;
 
 	vector<Mesh*> mMeshes;
+	vector<ParticleSystem*> mParticleSystems;
 	vector<AglVector3> mSphereColors;
 	vector<AglVector3> mBoxColors;
 	vector<SkeletonMesh*> mSkeletonMeshes;
@@ -79,6 +81,10 @@ public:
 	AglMaterial* GetMaterial(int pIndex);
 	void SetCurrentAnimation(int pIndex);
 	Mesh* GetMesh(int pIndex);
+	ParticleSystem* GetParticleSystem(int pIndex)
+	{
+		return mParticleSystems[pIndex];
+	}
 	vector<Mesh*> GetMeshes() { return mMeshes; }
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);
@@ -86,6 +92,7 @@ public:
 
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
 	void AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCurrent);
+	void AddParticleSystem(AglParticleSystem* pSystem);
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);
@@ -100,6 +107,10 @@ public:
 
 	bool IsLeftHanded();
 	void SetCoordinateSystem(AglCoordinateSystem pSystem);
+
+	void Transform(AglMatrix p_transform);
+
+	AglScene* getAglScene(){ return mAglScene; }
 };
 
 #endif

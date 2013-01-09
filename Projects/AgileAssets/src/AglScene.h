@@ -23,6 +23,7 @@
 #include "AglSkeletonMapping.h"
 #include "AglLooseBspTree.h"
 #include "AglInteriorSphereGrid.h"
+#include "AglParticleSystem.h"
 #include <vector>
 
 using namespace std;
@@ -30,6 +31,7 @@ using namespace std;
 struct AglSceneDesc
 {
 	vector<AglMesh*>				meshes;
+	vector<AglParticleSystem*>		particleSystems;
 	vector<AglNode>					nodes;
 	vector<AglAnimationLayer*>		animationLayers;
 	vector<AglNodeAnimation*>		nodeAnimations;
@@ -41,6 +43,7 @@ struct AglSceneDesc
 	vector<AglSkeletonMapping*>		skeletonMappings;
 	vector<AglLooseBspTree*>		bspTrees;
 	vector<AglInteriorSphereGrid*>	sphereGrids;
+	vector<AglConnectionPoint>		connectionPoints;
 	string							textureDirectory;
 	AglCoordinateSystem				coordinateSystem;
 };
@@ -49,6 +52,7 @@ class AglScene
 {
 private:
 	vector<AglMesh*>				m_meshes; ///< List of meshes
+	vector<AglParticleSystem*>		m_particleSystems; ///< List of particle systems
 	vector<AglNode>					m_nodes; ///< List of nodes
 	vector<AglDynamicNode>			m_dynamicNodes; ///< List of animated nodes
 	vector<AglAnimationLayer*>		m_animationLayers; ///< List of animation layers
@@ -62,6 +66,7 @@ private:
 	vector<AglSkeletonMapping*>		m_skeletonMappings; ///< List of skeleton mappings
 	vector<AglLooseBspTree*>		m_bspTrees;			///< List of Bsp trees
 	vector<AglInteriorSphereGrid*>	m_sphereGrids;		///< List of sphere grids
+	vector<AglConnectionPoint>		m_connectionPoints;	///< List of connection points on various meshes
 	AglCoordinateSystem				m_coordinateSystem; ///< Coordinate system of the scene
 
 	unsigned int m_currentAnimation; ///< Currently played animation
@@ -145,6 +150,10 @@ public:
 	///
 	AglGradient*			getGradient(int p_index);
 
+	AglParticleSystem*		getParticleSystem(int p_index);
+
+	vector<AglParticleSystem*> getParticleSystems();
+
 	///
 	/// Gets all materials
 	/// \return The materials
@@ -187,6 +196,25 @@ public:
 	///-----------------------------------------------------------------------------------
 	vector<AglInteriorSphereGrid*> getSphereGrids();
 
+	///-----------------------------------------------------------------------------------
+	/// Get all the connection points
+	/// \return The connection points in the scene
+	///-----------------------------------------------------------------------------------
+	vector<AglConnectionPoint> getConnectionPoints();
+
+	///-----------------------------------------------------------------------------------
+	/// Get a connection point
+	/// \return The connection point
+	///-----------------------------------------------------------------------------------
+	AglConnectionPoint getConnectionPoint(unsigned int p_index);
+
+
+	///-----------------------------------------------------------------------------------
+	/// Get the amount of connection points
+	/// \return unsigned int The size
+	///-----------------------------------------------------------------------------------
+	unsigned int getConnectionPointCount();
+
 	///
 	/// Gets all scene data
 	/// \return The scene data
@@ -216,7 +244,7 @@ public:
 	/// Updates the scene
 	/// \param p_dt Elapsed time.
 	///
-	void update(float p_dt);
+	void update(float p_dt, AglVector3 p_cameraPosition);
 
 	///
 	/// Adds a name to the scene.
@@ -226,10 +254,16 @@ public:
 	int	 addName(string pName);
 
 	///
-	/// Adds a name to the scene.
-	/// \param p_name The name to add.
+	/// Adds a mesh to the scene.
+	/// \param p_mesh The mesh to add.
 	///
 	void addMesh(AglMesh* pMesh);
+
+	///
+	/// Adds a particle system to the scene.
+	/// \param p_particleSystem The system to add.
+	///
+	void addParticleSystem(AglParticleSystem* pParticleSystem);
 
 	///
 	/// Adds a material to the scene.
@@ -292,6 +326,12 @@ public:
 	void addSphereGrid(AglInteriorSphereGrid* p_sphereGrid);
 
 	///-----------------------------------------------------------------------------------
+	/// Adds a connection point to the scene
+	/// \param The connection point to add
+	///-----------------------------------------------------------------------------------
+	void addConnectionPoint(AglConnectionPoint p_connectionPoint);
+
+	///-----------------------------------------------------------------------------------
 	/// Gets a matrix corresponding to the axes in the coordinate system
 	/// \return Matrix representing the coordinate system
 	///-----------------------------------------------------------------------------------
@@ -314,6 +354,8 @@ public:
 	/// \return If the system is right-handed
 	///-----------------------------------------------------------------------------------
 	bool isRightHanded();
+
+	void transform(AglMatrix p_transform);
 };
 
 #endif

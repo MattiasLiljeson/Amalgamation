@@ -19,6 +19,7 @@ struct AGLData
 	vector<AnimationData*> Animations;
 	vector<MaterialData*> Materials;
 	vector<AglMaterialMapping*> MaterialMappings;
+	vector<AglConnectionPoint> CP;
 };
 
 vector<string> FindFolders(string pFolder)
@@ -161,11 +162,15 @@ void Save(string pFolder, vector<AGLData>& pData)
 		{
 			writer.AddMaterialMapping(pData[i].MaterialMappings[j]);
 		}
+		for (unsigned int j = 0; j < pData[i].CP.size(); j++)
+		{
+			writer.AddConnectionPoint(pData[i].CP[j]);
+		}
 
 		writer.Write();
 
-		AGLTester tester(path);
-		tester.PerformTest();
+		//AGLTester tester(path);
+		//tester.PerformTest();
 	}
 
 }
@@ -262,6 +267,10 @@ int main()
 					vector<AglMaterialMapping*> materialmappings = parsers.back()->GetMaterialMappings();
 					for (unsigned int j = 0; j < materialmappings.size(); j++)
 						d.MaterialMappings.push_back(materialmappings[j]);
+
+					vector<AglConnectionPoint> cp = parsers.back()->GetConnectionPoints();
+					for (unsigned int j = 0; j < cp.size(); j++)
+						d.CP.push_back(cp[j]);
 
 					data.push_back(d);
 

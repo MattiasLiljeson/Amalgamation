@@ -4,10 +4,11 @@
 
 #include "InputHelper.h"
 
-class inputControlFactory;
-class InputManager;
-class GraphicsBackendSystem;
 class Control;
+class Cursor;
+class GraphicsBackendSystem;
+class InputManager;
+class inputControlFactory;
 // =======================================================================================
 //                                      InputSystem
 // =======================================================================================
@@ -41,6 +42,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void process();
 	
+	Cursor* getCursor();
+
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to a Control by supplying a string with the name the Control has
 	/// been registered with. O(log(n)).
@@ -98,6 +101,8 @@ private:
 	GraphicsBackendSystem* m_graphicsBackend;
 	HINSTANCE m_hInstance;
 	InputManager* m_inputManager;
+
+	Cursor* m_cursor;
 
 	map<string, int> m_controlIdxs;
 	vector<int> m_mouseMoveIdxsbyEnum;

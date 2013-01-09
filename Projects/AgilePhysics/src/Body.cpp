@@ -68,6 +68,11 @@ void Body::UpdatePosition(float pElapsedTime)
 	}
 }
 
+bool Body::IsCompoundBody()
+{
+	return false;
+}
+
 void Body::Activate()
 {
 	mActive = true;
