@@ -56,6 +56,7 @@
     <ClInclude Include="ShipFlyControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="GameplayTags.h" />
+    <ClInclude Include="ShipSystemsInputHelper.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -93,6 +94,7 @@
     <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
+    <ClCompile Include="ShipSystemsInputHelper.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

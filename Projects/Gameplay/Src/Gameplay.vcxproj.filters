@@ -206,6 +206,9 @@
     <ClInclude Include="GameplayTags.h">
       <Filter>Components\Tags</Filter>
     </ClInclude>
+    <ClInclude Include="ShipSystemsInputHelper.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -307,6 +310,9 @@
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="ShipFlyControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipSystemsInputHelper.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
