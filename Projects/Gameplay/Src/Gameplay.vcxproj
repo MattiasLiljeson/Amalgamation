@@ -55,7 +55,7 @@
     <ClInclude Include="ShipFlyController.h" />
     <ClInclude Include="ShipFlyControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
-    <ClInclude Include="Tags.h" />
+    <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>

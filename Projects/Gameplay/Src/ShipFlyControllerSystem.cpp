@@ -19,7 +19,7 @@ ShipFlyControllerSystem::ShipFlyControllerSystem( InputBackendSystem* p_inputBac
 											TcpClient* p_client ) : 
 					  EntitySystem( SystemType::ShipFlyControllerSystem, 2,
 									ComponentType::ComponentTypeIdx::ShipFlyController,
-									ComponentType::ComponentTypeIdx::ShipFlyMode_TAG,
+									ComponentType::ComponentTypeIdx::TAG_ShipFlyMode,
 									ComponentType::ComponentTypeIdx::Transform)
 {
 	m_inputBackend = p_inputBackend;

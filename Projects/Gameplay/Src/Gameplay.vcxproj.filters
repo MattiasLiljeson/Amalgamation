@@ -203,7 +203,7 @@
     <ClInclude Include="ShipEditController.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Tags.h">
+    <ClInclude Include="GameplayTags.h">
       <Filter>Components\Tags</Filter>
     </ClInclude>
   </ItemGroup>

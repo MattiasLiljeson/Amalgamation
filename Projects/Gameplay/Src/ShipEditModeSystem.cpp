@@ -3,9 +3,9 @@
 ShipEditControllerSystem::ShipEditControllerSystem( InputBackendSystem* p_inputBackend, 
 									   PhysicsSystem* p_physicsSystem/*, 
 									   TcpClient* p_client */ ) : 
-					EntitySystem( SystemType::ShipFlyControllerSystem, 2,
+					EntitySystem( SystemType::ShipEditControllerSystem, 2,
 								  ComponentType::ComponentTypeIdx::ShipEditController,
-								  ComponentType::ComponentTypeIdx::ShipEditMode_TAG,
+								  ComponentType::ComponentTypeIdx::TAG_ShipEditMode,
 								  ComponentType::ComponentTypeIdx::Transform)
 
 {

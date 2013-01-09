@@ -1,17 +1,6 @@
 #pragma once
 
-#include <Component.h>
-
-///
-/// TAG
-///
-class Tag : public Component
-{
-public:
-	Tag();
-
-	virtual ~Tag();
-};
+#include <Tag.h>
 
 ///
 /// ShipFlyMode_TAG

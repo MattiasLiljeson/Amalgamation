@@ -63,6 +63,11 @@ void Entity::addComponent( ComponentType p_type, Component* p_component )
 	m_world->getComponentManager()->addComponent( this, p_type, p_component );
 }
 
+void Entity::addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag )
+{
+	addComponent( p_typeIdx, static_cast<Component*>(p_tag) );
+}
+
 Component* Entity::getComponent( ComponentType::ComponentTypeIdx p_typeIdx )
 {
 	return m_world->getComponentManager()->getComponent( this, p_typeIdx );

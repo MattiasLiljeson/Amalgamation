@@ -5,6 +5,8 @@
 #include "SystemType.h"
 #include "ComponentManager.h"
 
+#include "Tag.h" // Added by Jarl 2013-01-09, temporary management of tags
+
 class ComponentType;
 class EntityWorld;
 class SystemType;
@@ -58,6 +60,16 @@ public:
 	 */
 	void addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component );
 	void addComponent( ComponentType p_type, Component* p_component );
+
+	///-----------------------------------------------------------------------------------
+	/// Temporary hadnling of tags. Tags are right now basically just a component
+	/// However this special interfacing add function was implemented to clarify that there
+	/// should be a difference later on. (Added by Jarl, 2013-01-09)
+	/// \param p_typeIdx
+	/// \param p_tag
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag );
 
 
 	///\brief Shorthand function for fetching a components component from the worlds 

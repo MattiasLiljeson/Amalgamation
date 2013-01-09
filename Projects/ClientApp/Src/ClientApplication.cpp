@@ -19,6 +19,7 @@
 #include <Transform.h>
 #include <HudElement.h>
 #include <ShipModule.h>
+#include <GameplayTags.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -277,7 +278,13 @@ void ClientApplication::initEntities()
 
 	component = new ShipFlyController(5.0f, 50.0f);
 	entity->addComponent( ComponentType::ShipFlyController, component );
+
+	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+
 	m_world->addEntity(entity);
+
+	
+
 
 	// Create a box that the spaceship can pickup
 	entity = m_world->createEntity();
@@ -301,6 +308,8 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+	// ------
+
 	entity = m_world->createEntity();
 	component = new RenderInfo( cubeMeshId );
 	entity->addComponent( ComponentType::RenderInfo, component );
@@ -321,6 +330,8 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 	m_world->addEntity(entity);
+
+	// ------
 
 	entity = m_world->createEntity();
 	component = new RenderInfo( cubeMeshId );

@@ -16,6 +16,9 @@ public:	//Enums
 	enum ComponentTypeIdx
 	{
 		NON_EXISTING = -1,
+		// -------------------
+		// Regular Components
+		// -------------------
 		RenderInfo,
 		Input,
 		NetworkSynced,
@@ -26,10 +29,6 @@ public:	//Enums
 		AudioListener,
 		ShipFlyController,
 		ShipEditController,
-		ShipFlyMode_TAG,		// Replace with dedicated ES-tag management?
-		ShipEditMode_TAG,		// Replace with dedicated ES-tag management?
-		CameraFollowMode_TAG,	// Replace with dedicated ES-tag management?
-		CameraOrbitMode_TAG,	// Replace with dedicated ES-tag management?
 		Impulse,
 		BodyInitData,
 		LookAtEntity,
@@ -37,6 +36,16 @@ public:	//Enums
 		PlayerScore,
 		MenuItem,
 		HudElement,
+		// -------------------
+		// Tags									(Replace with dedicated ES-tag management?)
+		// -------------------
+		TAG_ShipFlyMode,		
+		TAG_ShipEditMode,
+		TAG_CameraFollowMode,
+		TAG_CameraOrbitMode,
+		// -------------------
+		// Transform component
+		// -------------------
 				   // *FUGLY HACK!*
 		Transform, // There is a bug when an unused component idx is at the last position
 				   // in the enum. Therefore, put transform at the end for now. :/
