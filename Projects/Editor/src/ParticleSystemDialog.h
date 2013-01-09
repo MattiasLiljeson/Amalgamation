@@ -64,6 +64,9 @@ private:
 	static void TW_CALL SetVelocityDirAlignment(void* clientData);
 	static void TW_CALL SetObserverAlignment(void* clientData);
 
+	//Angular Velocity
+	static void TW_CALL SetSpawnAngularVelocity(const void *value, void *clientData);
+	static void TW_CALL GetSpawnAngularVelocity(void *value, void *clientData);
 
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);

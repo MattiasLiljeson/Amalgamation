@@ -272,6 +272,19 @@ void TW_CALL ParticleSystemDialog::GetParticleSizeY(void *value, void *clientDat
 	*(float*)value = ps->GetHeader().particleSize.y;
 }
 
+void TW_CALL ParticleSystemDialog::SetSpawnAngularVelocity(const void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->setSpawnAngularVelocity(*(const float*)value);
+}
+void TW_CALL ParticleSystemDialog::GetSpawnAngularVelocity(void *value, void *clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	*(float*)value = ps->GetHeader().spawnAngularVelocity;
+}
+
 
 void TW_CALL ParticleSystemDialog::Restart(void* clientData)
 {
@@ -352,6 +365,9 @@ void ParticleSystemDialog::setPS(int pIndex)
 	TwAddButton(m_dialog, "World Alignment", SetWorldAlignment, (void*)this, " label='World Alignment' group='Billboard Alignment'");
 	TwAddButton(m_dialog, "Velocity Alignment", SetVelocityDirAlignment, (void*)this, " label='Velocity Alignment' group='Billboard Alignment'");
 	TwAddButton(m_dialog, "Observer Alignment", SetObserverAlignment, (void*)this, " label='Observer Alignment' group='Billboard Alignment'");
+
+	//Spawn Angular Velocity
+	TwAddVarCB(m_dialog, "Spawn Angular Velocity", TW_TYPE_FLOAT, SetSpawnAngularVelocity, GetSpawnAngularVelocity, (void*)this, "key=o");
 
 	show();
 }

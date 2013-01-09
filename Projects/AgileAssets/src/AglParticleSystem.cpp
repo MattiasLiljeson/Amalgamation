@@ -1,10 +1,13 @@
 #include "AglParticleSystem.h"
 
-AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size)
+AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
+										 float p_angularVelocity, float p_rotation)
 {
 	position = p_position;
 	velocity = p_velocity;
 	size = p_size;
+	angularVelocity = p_angularVelocity;
+	rotation = p_rotation;
 	age = 0;
 }
 
@@ -15,6 +18,7 @@ AglParticleSystem::AglParticleSystem()
 	m_header.particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
 	m_header.spawnDirection = AglVector3::left();
 	m_header.spawnSpeed = 0;
+	m_header.spawnAngularVelocity = 0;
 	m_header.spread = 0;
 	m_header.spawnFrequency = 1.0f;
 	m_header.spawnOffset = 0.0f;
@@ -90,6 +94,10 @@ void AglParticleSystem::setParticleSize(AglVector2 p_size)
 {
 	m_header.particleSize = p_size;
 }
+void AglParticleSystem::setSpawnAngularVelocity(float p_angularVelocity)
+{
+	m_header.spawnAngularVelocity = p_angularVelocity;
+}
 
 AglVector3 AglParticleSystem::requestSpawnPoint()
 {
@@ -159,7 +167,6 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 		for (unsigned int i = 0; i < m_particles.size(); i++)
 		{
 			AglStandardParticle& p = m_particles[i];
-			
 			p.age += p_dt;
 			if (p.age > m_header.particleAge) //Kill Particle
 			{
@@ -169,6 +176,7 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			else
 			{
 				p.position += p.velocity * p_dt;
+				p.rotation += p.angularVelocity * p_dt;
 			}
 		}
 		for (unsigned int i = 0; i < 5; i++)
@@ -192,7 +200,8 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			{
 				for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
 				{
-					AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize);
+					AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize,
+											m_header.spawnAngularVelocity, 0);
 					m_particles.push_back(p);
 				}
 				m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
@@ -202,7 +211,8 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 		{
 			for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
 			{
-				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize);
+				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize,
+										0, 0);
 				m_particles.push_back(p);
 			}
 			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);

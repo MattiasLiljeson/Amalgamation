@@ -4,6 +4,8 @@ struct Particle
 	float3 Velocity        : VELOCITY;
 	float2 Size            : SIZE;
 	float Age			   : AGE;
+	float AngularVelocity  : ANGULARVELOCITY;
+	float Rotation		   : ROTATION;
 };
   
 struct VS_OUT
@@ -12,6 +14,8 @@ struct VS_OUT
 	float2  Size : SIZE;
 	float  Age	: AGE;
 	float3 Velocity : VELOCITY;
+	float AngularVelocity  : ANGULARVELOCITY;
+	float Rotation		   : ROTATION;
 };
 
 VS_OUT VShader(Particle vIn)
@@ -21,5 +25,7 @@ VS_OUT VShader(Particle vIn)
 	vOut.Size = vIn.Size;
 	vOut.Age = vIn.Age;
 	vOut.Velocity = vIn.Velocity;
+	vOut.AngularVelocity = vIn.AngularVelocity;
+	vOut.Rotation = vIn.Rotation;
 	return vOut;
 }

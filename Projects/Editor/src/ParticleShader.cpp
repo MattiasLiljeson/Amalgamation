@@ -21,8 +21,10 @@ ParticleShader::ParticleShader(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 		{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"AGE", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ANGULARVELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	mDevice->CreateInputLayout(PositionNormalTexCoord, 4, mVS->GetCompiledData(), mVS->GetCompiledSize(), &mIL);
+	mDevice->CreateInputLayout(PositionNormalTexCoord, 6, mVS->GetCompiledData(), mVS->GetCompiledSize(), &mIL);
 
 	D3D11_BUFFER_DESC BufferDesc;
 	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;

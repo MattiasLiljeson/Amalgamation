@@ -141,6 +141,10 @@ public:
 	{
 		mAlignment = pType;
 	}
+	void setSpawnAngularVelocity(float p_angularVelocity)
+	{
+		mSystem->setSpawnAngularVelocity(p_angularVelocity);
+	}
 
 	void Draw();
 };

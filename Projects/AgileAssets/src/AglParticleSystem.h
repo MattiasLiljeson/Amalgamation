@@ -36,6 +36,7 @@ struct AglParticleSystemHeader
 	AglSpawnOffsetType	spawnOffsetType;
 	AglVector3			spawnDirection;
 	float				spawnSpeed;
+	float				spawnAngularVelocity;
 	float				particleAge;
 	float				spread; ///< 0 -> 1
 	AglSpreadType		spreadType;
@@ -52,8 +53,11 @@ struct AglStandardParticle
 	AglVector3	velocity;
 	AglVector2	size;
 	float		age;
+	float		angularVelocity;
+	float		rotation;
 
-	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size);
+	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
+						float p_angularVelocity, float p_rotation);
 };
 
 
@@ -99,6 +103,7 @@ public:
 	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn);
 	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
 	void setParticleSize(AglVector2 p_size);
+	void setSpawnAngularVelocity(float p_angularVelocity);
 
 	void restart();
 
