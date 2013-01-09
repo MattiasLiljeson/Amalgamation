@@ -2,31 +2,19 @@
 #define WINAPI
 
 #include <EntitySystem.h>
+#include <ConnectionPointCollection.h>
 #include <vector>
 #include <map>
 
 class Transform;
+class GraphicsBackendSystem;
+class LevelPiece;
 
 using namespace std;
-// =======================================================================================
-//                                      TransformNode
-// =======================================================================================
 
-///---------------------------------------------------------------------------------------
-/// \brief	Brief
-///        
-/// # TransformNode
-/// Detailed description.....
-/// Created on: 3-1-2013 
-///---------------------------------------------------------------------------------------
-struct TransformNode
+class TransformNode
 {
-	int						type;
-	TransformNode*			parent;
-	Transform*				transform;
-	vector<TransformNode*>	children;
 
-	static void connect(TransformNode* p_parent, TransformNode* p_child, int p_childSlot);
 };
 
 // =======================================================================================
@@ -47,22 +35,25 @@ public:
 	LevelGenSystem();
 	virtual ~LevelGenSystem();
 
+	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes);
+
 	void initialize();
+
+	void run();
 protected:
 
 private:
-	void getFreeConnectPointSlots(TransformNode* p_piece, vector<int>& out_slots);
-
 	int popIntVector(vector<int>& p_vector);
 
 	TransformNode*	createTransformNodeFromType(int p_type);
 	void			deleteTransformNodeRecursive(TransformNode* p_node);
+	int				getRandomPieceType();
 
 	void createAndAddEntity(int p_type, Transform* p_transform);
 
 	void generateLevelPieces(int p_maxDepth);
-	void generatePiecesOnPiece(TransformNode* p_targetPiece, 
-								vector<TransformNode*>& out_pieces);
+	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
+								vector<LevelPiece*>& out_pieces);
 
 	void connectPieces(Transform* p_sourcePiece, Transform* p_sourceConnector,
 						Transform* p_otherPiece, Transform* p_otherConnector);
@@ -72,8 +63,12 @@ private:
 								int currentDepth);
 	void debugPrintTransformTree();
 
+	vector<ConnectionPointCollection> m_pieceTypes;
+
 	map<Transform*, TransformNode*> m_transformHierarchy;
 	
 	Transform* m_invalidAttachment;
 	TransformNode* m_rootTransform;
+
+	GraphicsBackendSystem* graphicsBackend;
 };

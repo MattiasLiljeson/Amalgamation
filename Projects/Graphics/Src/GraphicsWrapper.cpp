@@ -383,6 +383,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 						for (unsigned int n=0;n<16;n++)
 							dat.transform[n] = mat.data[n];
 						p_outConnectionPoints->m_collection.push_back(dat);
+						p_outConnectionPoints->m_meshId = meshResultId;
 					}
 				}
 			}

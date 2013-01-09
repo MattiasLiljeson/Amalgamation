@@ -1,17 +1,15 @@
 #include "LevelGenSystem.h"
 #include "Transform.h"
+#include "RenderInfo.h"
 #include <AglVector3.h>
 #include <sstream>
 #include <DebugUtil.h>
+#include "GraphicsBackendSystem.h"
+#include "LevelPiece.h"
+#include <cstdlib>
 
-void TransformNode::connect( TransformNode* p_parent, TransformNode* p_child, 
-							int p_childSlot )
-{
-	p_parent->children[p_childSlot] = p_child;
-	p_child->parent = p_parent;
-}
-
-LevelGenSystem::LevelGenSystem() : EntitySystem(SystemType::LevelGenSystem)
+LevelGenSystem::LevelGenSystem() 
+	: EntitySystem(SystemType::LevelGenSystem)
 {
 	m_invalidAttachment = new Transform();
 	m_rootTransform = nullptr;
@@ -27,71 +25,85 @@ LevelGenSystem::~LevelGenSystem()
 
 void LevelGenSystem::initialize()
 {
-	generateLevelPieces(4);
-	debugPrintTransformTree();
+	graphicsBackend = static_cast<GraphicsBackendSystem*>(
+						m_world->getSystem(SystemType::GraphicsBackendSystem));
 }
 
+void LevelGenSystem::run()
+{
+	generateLevelPieces(1);
+	//debugPrintTransformTree();
+}
 
 TransformNode* LevelGenSystem::createTransformNodeFromType( int p_type )
 {
 	TransformNode* node = new TransformNode();
 	
-	int nrOfAttachments = 2; // TODO: Fetch transform data using p_type
+	//int nrOfAttachments = 2; // TODO: Fetch transform data using p_type
 
-	node->parent	= nullptr;
-	node->transform = new Transform();
-	node->children.resize(nrOfAttachments);
-	// Init to null
-	memset(&node->children[0], 0, sizeof(TransformNode*) * nrOfAttachments);
+	//node->parent	= nullptr;
+	//node->transform = new Transform();
+	//node->children.resize(nrOfAttachments);
+	//// Init to null
+	//memset(&node->children[0], 0, sizeof(TransformNode*) * nrOfAttachments);
 	return node;
 }
 
 void LevelGenSystem::deleteTransformNodeRecursive( TransformNode* p_node )
 {
-	for (int i = p_node->children.size() - 1; i >= 0; i--)
-	{
-		if (p_node->children[i])
-			deleteTransformNodeRecursive(p_node->children[i]);
-	}
+	//for (int i = p_node->children.size() - 1; i >= 0; i--)
+	//{
+	//	if (p_node->children[i])
+	//		deleteTransformNodeRecursive(p_node->children[i]);
+	//}
 	delete p_node;
 }
 
 
+int LevelGenSystem::getRandomPieceType()
+{
+	return rand() % m_pieceTypes.size();
+}
+
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
-	// Create the first entity piece
-	Entity* entity = m_world->createEntity();
+	// Create a initial piece.
+	Transform* transform = new Transform(AglVector3(10, 10, 10), 
+										AglQuaternion::identity(),
+										AglVector3::one());
+	// Create the entity and specify a mesh for it
+	createAndAddEntity(m_pieceTypes[0].m_meshId, transform);
+	// Create the level piece to use later
+	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], transform);
 
-	// Create root transform
-	// TODO: Insert a randomly chosen identity, instead of 0
-	TransformNode* transformNode = createTransformNodeFromType( 0 ); 
-	Transform* transform = transformNode->transform;
+	// The first time, this vector will only contain the initial piece.
+	vector<LevelPiece*> pieces;
+	pieces.push_back(piece);
 
-	// Add root transform to the hierarchy
-	// m_transformHierarchy[transform] = transformNode;
+	//	AglMatrix compMatrix(m_pieceTypes[0].m_collection[i].transform);
 
-	entity->addComponent(ComponentType::Transform, transform);
+	//	
+	//	Component*	component	= new Transform(transform->getTranslation() + 
+	//											compMatrix.GetTranslation(), 
+	//											AglQuaternion::identity(),
+	//											AglVector3::one());
 	
-	// TODO: There needs to be added more components to the entity before it is added to
-	// the world
-	m_world->addEntity(entity);
-
-	// The first time, this vector will only contain the first root transform.
-	vector<TransformNode*> pieces;
-	pieces.push_back(transformNode);
-	m_rootTransform = transformNode;
-
+	// The algorithm generates pieces outwards based on a so called depth. For each depth
+	// the pieces from the previous depth are used to create and connect new pieces.
 	for (int currentDepth = 0; currentDepth < p_maxDepth; currentDepth++)
 	{
-		vector<TransformNode*> temps;
+		// Stores created pieces temporarily
+		vector<LevelPiece*> temps;
 		for (int i = 0; i < pieces.size(); i++)
 			generatePiecesOnPiece(pieces[i], temps);
 
+		// Creates a piece entity and adds it to the world
 		for (int i = 0; i < temps.size(); i++)
-			createAndAddEntity(0, temps[i]->transform);
+			createAndAddEntity(temps[i]->getMeshId(), temps[i]->getTransform());
 		
-		pieces = vector<TransformNode*>(temps);
+		// For the next iteration round
+		pieces = vector<LevelPiece*>(temps);
 	}
 }
 
@@ -100,62 +112,37 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
 	Entity* entity = m_world->createEntity();
 
 	entity->addComponent(ComponentType::Transform, p_transform);
-
+	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(p_type) );
 	// TODO: There needs to be added more components to the entity before it is added to
 	// the world
+
 	m_world->addEntity(entity);
 }
 
-void LevelGenSystem::generatePiecesOnPiece( TransformNode* p_targetPiece, 
-										   vector<TransformNode*>& out_pieces )
+void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
+										   vector<LevelPiece*>& out_pieces )
 {
-	vector<int> freeConnectSlots;
-	getFreeConnectPointSlots(p_targetPiece, freeConnectSlots);
+	vector<int> freeConnectSlots = p_targetPiece->findFreeConnectionPointSlots();
 
 	// Check that there's any available pipes
 	if ( !freeConnectSlots.empty() )
 	{
 		// Prepare and connect newly created transform pieces to the target.
-		vector<TransformNode*> generatedPieces(freeConnectSlots.size());
+		vector<LevelPiece*> generatedPieces(freeConnectSlots.size());
 		for (int i = 0; i < generatedPieces.size(); i++)
 		{
-			// NOTE: The hard-coded value 0 should be replaced by a random piece type id
-			generatedPieces[i] = createTransformNodeFromType( 0 );
+			// Find a random piece type to use
+			int pieceType = getRandomPieceType();
+			// Create a level piece
+			LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], new Transform() );
 
-			// NOTE: Need to find a way to fetch the proper attachment point here.
-			Transform* sourceConnector; // = getAttachmentPoint(generatedPieces[i]);
-
-			// NOTE: This is unfinished... needs to have more insight of the structure
-			// before continuing
-			//Transform* otherConnector = p_targetPiece->
-			//							children[popIntVector(freeConnectSlots)]->
-			//							transform;
-
-			//connectPieces(generatedPieces[i]->transform, sourceConnector, 
-			//			  p_targetPiece->transform, otherConnector);
-
-			// NOTE: This is temporary!
-			TransformNode::connect(p_targetPiece, generatedPieces[i], i);
+			piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
 			
-			
-			out_pieces.push_back(generatedPieces[i]);
+			out_pieces.push_back(piece);
 		}
 	}
 
 }
-
-void LevelGenSystem::getFreeConnectPointSlots( TransformNode* p_piece, vector<int>& out_slots )
-{
-	// NOTE: This method is subjected to change, and is not yet finished.
-
-	// Check for an unoccupied slot
-	for (int i = 0; i < p_piece->children.size(); i++)
-	{
-		if ( !p_piece->children[i] )
-			out_slots.push_back(i);
-	}
-}
-
 
 void LevelGenSystem::connectPieces( Transform* p_sourcePiece, Transform* p_sourceConnector,
 								   Transform* p_otherPiece, Transform* p_otherConnector )
@@ -185,16 +172,10 @@ void LevelGenSystem::connectPieces( Transform* p_sourcePiece, Transform* p_sourc
 
 void LevelGenSystem::addEndPlug( Transform* p_atConnector )
 {
-	Entity* entity = m_world->createEntity();
-	Transform* endplug = new Transform(p_atConnector->getTranslation(), 
-										p_atConnector->getRotation(),
-										p_atConnector->getScale());
-	
-	entity->addComponent(ComponentType::Transform, endplug);
+	// Connector is assumed to be in world space!
+	int cubeId = graphicsBackend->getMeshId("P_cube");
 
-	// NOTE: Here misses some components, such as model mesh and collider, yaddayadda
-
-	m_world->addEntity(entity);
+	createAndAddEntity(cubeId, p_atConnector);
 }
 
 int LevelGenSystem::popIntVector( vector<int>& p_vector )
@@ -221,16 +202,21 @@ void LevelGenSystem::debugPrintTransformNode( TransformNode* p_node,
 											 stringstream& p_stream,
 											 int currentDepth)
 {
-	for (int i = 0; i < currentDepth; i++)
-		p_stream << '\t';
+//	for (int i = 0; i < currentDepth; i++)
+//		p_stream << '\t';
+//
+//	if (p_node)
+//	{
+//		p_stream << "-> " << p_node->transform << '\n';
+//		currentDepth++;
+//		for (int i = 0; i < p_node->children.size(); i++)
+//			debugPrintTransformNode(p_node->children[i], p_stream, currentDepth);
+//	}
+//	else
+//		p_stream << "-> " << "(empty)" << '\n';
+}
 
-	if (p_node)
-	{
-		p_stream << "-> " << p_node->transform << '\n';
-		currentDepth++;
-		for (int i = 0; i < p_node->children.size(); i++)
-			debugPrintTransformNode(p_node->children[i], p_stream, currentDepth);
-	}
-	else
-		p_stream << "-> " << "(empty)" << '\n';
+void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes )
+{
+	m_pieceTypes = p_pieceTypes;
 }
