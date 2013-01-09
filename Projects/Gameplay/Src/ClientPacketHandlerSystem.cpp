@@ -41,6 +41,12 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_numberOfReceivedPackets = 0;
 	m_totalDataSent = 0;
 	m_totalDataReceived = 0;
+	m_dataSentPerSecond = 0;
+	m_dataReceivedPerSecond = 0;
+	m_dataSentCounter = 0;
+	m_dataReceivedCounter;
+
+	m_timerPerSecond = 1.0f;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -275,6 +281,9 @@ void ClientPacketHandlerSystem::initialize()
 		"Ping", TwType::TW_TYPE_FLOAT,
 		&m_currentPing, "" );
 
+	/************************************************************************/
+	/* Per frame data.														*/
+	/************************************************************************/
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Received packets", TwType::TW_TYPE_UINT32,
@@ -287,13 +296,27 @@ void ClientPacketHandlerSystem::initialize()
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
-		"Data received", TwType::TW_TYPE_UINT32,
+		"Data received/f", TwType::TW_TYPE_UINT32,
 		&m_totalDataReceived, "group='Per frame'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
-		"Data sent", TwType::TW_TYPE_UINT32,
+		"Data sent/f", TwType::TW_TYPE_UINT32,
 		&m_totalDataSent, "group='Per frame'" );
+
+	/************************************************************************/
+	/* Per second data.														*/
+	/************************************************************************/
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Data received/s", TwType::TW_TYPE_UINT32,
+		&m_dataReceivedPerSecond, "group='Per second'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Data sent/s", TwType::TW_TYPE_UINT32,
+		&m_dataSentPerSecond, "group='Per second'" );
+
 }
 
 NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket( 
@@ -339,7 +362,21 @@ void ClientPacketHandlerSystem::updateCounters()
 
 	m_totalDataReceived = m_tcpClient->getTotalDataReceived();
 	m_tcpClient->resetTotalDataReceived();
+	m_dataReceivedCounter += m_totalDataReceived;
 
 	m_totalDataSent = m_tcpClient->getTotalDataSent();
 	m_tcpClient->resetTotalDataSent();
+	m_dataSentCounter += m_totalDataSent;
+
+	m_timerPerSecond -= m_world->getDelta();
+	if( m_timerPerSecond <= 0 )
+	{
+		m_timerPerSecond = 1.0f;
+
+		m_dataSentPerSecond = m_dataSentCounter;
+		m_dataReceivedPerSecond = m_dataReceivedCounter;
+
+		m_dataSentCounter = 0;
+		m_dataReceivedCounter = 0;
+	}
 }

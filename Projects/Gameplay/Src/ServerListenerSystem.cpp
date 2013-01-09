@@ -1,4 +1,4 @@
-#include "NetworkListenerSystem.h"
+#include "ServerListenerSystem.h"
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -22,18 +22,18 @@
 #include "PhysicsBody.h"
 #include "PlayerScore.h"
 
-NetworkListenerSystem::NetworkListenerSystem( TcpServer* p_server )
+ServerListenerSystem::ServerListenerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;
 }
 
-NetworkListenerSystem::~NetworkListenerSystem()
+ServerListenerSystem::~ServerListenerSystem()
 {
 	m_server->stopListening();
 }
 
-void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
+void ServerListenerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	while (m_server->hasNewDisconnections())
 	{
@@ -147,7 +147,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
-void NetworkListenerSystem::initialize()
+void ServerListenerSystem::initialize()
 {
 	m_server->startListening(1337);
 }

@@ -3,10 +3,10 @@
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <NetworkListenerSystem.h>
+#include <ServerListenerSystem.h>
 #include <ServerPacketHandlerSystem.h>
-#include <NetworkUpdateSystem.h>
-#include <NetworkUpdateScoresSystem.h>
+#include <ServerUpdateSystem.h>
+#include <ServerScoreSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -95,16 +95,16 @@ namespace Srv
 			true );
 
 		m_world->setSystem( SystemType::NetworkListenerSystem,
-			new NetworkListenerSystem( m_server ), true );
+			new ServerListenerSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
 			new ServerPacketHandlerSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
-			new NetworkUpdateSystem( m_server ), true );
+			new ServerUpdateSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
-			new NetworkUpdateScoresSystem( m_server ), true );
+			new ServerScoreSystem( m_server ), true );
 
 		m_world->initialize();
 

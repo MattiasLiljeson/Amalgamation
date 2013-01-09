@@ -1,4 +1,4 @@
-#include "NetworkUpdateScoresSystem.h"
+#include "ServerScoreSystem.h"
 #include "PlayerScore.h"
 #include "NetworkSynced.h"
 #include "PacketType.h"
@@ -7,7 +7,7 @@
 #include <Packet.h>
 
 
-NetworkUpdateScoresSystem::NetworkUpdateScoresSystem( TcpServer* p_server )
+ServerScoreSystem::ServerScoreSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateScoresSystem,
 	2, ComponentType::NetworkSynced, ComponentType::PlayerScore )
 {
@@ -17,11 +17,11 @@ NetworkUpdateScoresSystem::NetworkUpdateScoresSystem( TcpServer* p_server )
 	m_updateTimer = m_updateTimerStartValue = 1.0f;
 }
 
-NetworkUpdateScoresSystem::~NetworkUpdateScoresSystem()
+ServerScoreSystem::~ServerScoreSystem()
 {
 }
 
-void NetworkUpdateScoresSystem::processEntities( const vector<Entity*>& p_entities )
+void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	m_updateTimer -= m_world->getDelta();
 
@@ -48,7 +48,7 @@ void NetworkUpdateScoresSystem::processEntities( const vector<Entity*>& p_entiti
 	}
 }
 
-void NetworkUpdateScoresSystem::initialize()
+void ServerScoreSystem::initialize()
 {
 
 }

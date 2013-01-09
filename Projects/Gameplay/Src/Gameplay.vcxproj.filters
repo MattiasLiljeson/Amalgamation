@@ -99,9 +99,6 @@
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkListenerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -163,12 +160,6 @@
       <Filter>Components\GUI</Filter>
     </ClInclude>
     <ClInclude Include="MenuItem.h" />
-    <ClInclude Include="NetworkUpdateScoresSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkUpdateSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerScore.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -193,6 +184,15 @@
     <ClInclude Include="ClientInfo.h">
       <Filter>Systems\Network\Server only\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="ServerListenerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerScoreSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -213,9 +213,6 @@
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
     </ClCompile>
     <ClCompile Include="ShipControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkUpdateSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\GUI</Filter>
@@ -271,9 +265,6 @@
       <Filter>Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="MenuItem.cpp" />
-    <ClCompile Include="NetworkUpdateScoresSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerScore.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -288,6 +279,15 @@
     </ClCompile>
     <ClCompile Include="ClientPacketHandlerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerListenerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerScoreSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerUpdateSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

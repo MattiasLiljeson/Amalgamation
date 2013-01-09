@@ -5,7 +5,7 @@
 class TcpServer;
 
 // =======================================================================================
-//	NetworkUpdateScoresSystem
+//	ServerScoreSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -17,12 +17,12 @@ class TcpServer;
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class NetworkUpdateScoresSystem: public EntitySystem
+class ServerScoreSystem: public EntitySystem
 {
 public:
-	NetworkUpdateScoresSystem( TcpServer* p_server );
+	ServerScoreSystem( TcpServer* p_server );
 
-	~NetworkUpdateScoresSystem();
+	~ServerScoreSystem();
 
 	void processEntities( const vector<Entity*>& p_entities );
 

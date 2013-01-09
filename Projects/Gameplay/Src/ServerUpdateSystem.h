@@ -5,7 +5,7 @@
 class TcpServer;
 
 // =======================================================================================
-//                                      NetworkUpdateSystem
+//                                      ServerUpdateSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -16,12 +16,12 @@ class TcpServer;
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkUpdateSystem: public EntitySystem
+class ServerUpdateSystem : public EntitySystem
 {
 public:
-	NetworkUpdateSystem( TcpServer* p_server );
+	ServerUpdateSystem( TcpServer* p_server );
 
-	~NetworkUpdateSystem();
+	~ServerUpdateSystem();
 	
 	void processEntities( const vector<Entity*>& p_entities );
 

@@ -31,8 +31,8 @@
     <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="EntityType.h" />
-    <ClInclude Include="NetworkUpdateScoresSystem.h" />
-    <ClInclude Include="NetworkUpdateSystem.h" />
+    <ClInclude Include="ServerScoreSystem.h" />
+    <ClInclude Include="ServerUpdateSystem.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
@@ -43,7 +43,7 @@
     <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputBackendSystem.h" />
-    <ClInclude Include="NetworkListenerSystem.h" />
+    <ClInclude Include="ServerListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="QueueList.h" />
@@ -74,9 +74,9 @@
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
-    <ClCompile Include="NetworkListenerSystem.cpp" />
-    <ClCompile Include="NetworkUpdateScoresSystem.cpp" />
-    <ClCompile Include="NetworkUpdateSystem.cpp" />
+    <ClCompile Include="ServerListenerSystem.cpp" />
+    <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PlayerScore.cpp" />
