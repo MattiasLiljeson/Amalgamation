@@ -151,9 +151,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				memcpy(&m_reserveBuffer[oldReserveBufferSize], readPtr, m_packetRestSize);
 
 				// Create the whole packet now.
-				Packet packet;
-				packet.setSenderId( getId() );
-				packet.setData( &m_reserveBuffer[0], m_reserveBuffer.size() );
+				Packet packet(getId(),&m_reserveBuffer[0], m_reserveBuffer.size());
 				packets.push( packet );
 
 				// Update readPosition to not start from 0.
@@ -184,9 +182,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				}
 				else
 				{
-					Packet packet;
-					packet.setSenderId( getId() );
-					packet.setData( readPtr, currentReadSize );
+					Packet packet(getId(), readPtr, currentReadSize );
 					packets.push( packet );
 					readPosition += currentReadSize;
 					readPtr = m_asyncData + readPosition;

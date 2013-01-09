@@ -35,7 +35,7 @@ struct NetworkScoreUpdatePacket
 };
 
 // =======================================================================================
-//                                      NetworkCommunicatorSystem
+//                                      ClientPacketHandlerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -46,12 +46,12 @@ struct NetworkScoreUpdatePacket
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkCommunicatorSystem: public EntitySystem
+class ClientPacketHandlerSystem: public EntitySystem
 {
 public:
-	NetworkCommunicatorSystem( TcpClient* p_tcpClient );
+	ClientPacketHandlerSystem( TcpClient* p_tcpClient );
 
-	~NetworkCommunicatorSystem();
+	~ClientPacketHandlerSystem();
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
 

@@ -23,17 +23,30 @@ class Packet
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Creates a packet with sender id set to -1 (no sender).
+	/// Deprecated! Use one of the other constructors instead!!!!
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	Packet();
+
+	///-----------------------------------------------------------------------------------
+	/// Creates a new packet from raw data.
+	/// Sets the raw data of the packet. It is possible to stream out so much data
+	///	that equals to the byte size p_size - 1, since one byte is allocated to
+	///	the packet size itself.
+	/// \param p_senderId
+	/// \param p_data
+	/// \param p_size
+	/// \return 
+	///-----------------------------------------------------------------------------------
+	Packet(int p_senderId,char* p_data, unsigned int p_size );
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a packet with its sender id.
 	/// \param p_senderId
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Packet( int p_senderId );
+	Packet( int p_packetType );
+
 
 	~Packet();
 
@@ -46,11 +59,12 @@ public:
 	/// getDataSize() method will return 13.
 	unsigned int getDataSize() const;
 
-	/// Sets the raw data of the packet. It is possible to stream out so much data
-	/// that equals to the byte size p_size - 1, since one byte is allocated to
-	/// the packet size itself.
-	void setData(char* p_data, unsigned int p_size);
 	bool isEmpty() const;
+
+	///-----------------------------------------------------------------------------------
+	/// Desc
+	/// \return void
+	///-----------------------------------------------------------------------------------
 	void clear();
 
 	///-----------------------------------------------------------------------------------
@@ -58,6 +72,14 @@ public:
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getSenderId();
+
+
+	///-----------------------------------------------------------------------------------
+	/// Returns the packet type, it's the overall packet type and not be confused with 
+	/// EntityType
+	/// \return int
+	///-----------------------------------------------------------------------------------
+	int getPacketType();
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the identity of the sender.
@@ -92,10 +114,14 @@ private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
 	void ReadData(void* p_data, unsigned int p_dataSize);
 
+	/// Sets the raw data of the packet. It is possible to stream out so much data
+	/// that equals to the byte size p_size - 1, since one byte is allocated to
+	/// the packet size itself.
+	void setData(char* p_data, unsigned int p_size);
+
 private:
 	int m_readPos;
 	vector<char> m_data;
-
+	int m_packetType;
 	int m_senderId;
-
 };

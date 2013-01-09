@@ -27,7 +27,7 @@
 #include <GraphicsBackendSystem.h>
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
-#include <NetworkCommunicatorSystem.h>
+#include <ClientPacketHandlerSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -181,8 +181,8 @@ void ClientApplication::initSystems()
 		new NetworkConnectToServerSystem( m_client, inputBackend );
 	m_world->setSystem( connect, true );
 
-	NetworkCommunicatorSystem* communicatorSystem =
-		new NetworkCommunicatorSystem( m_client );
+	ClientPacketHandlerSystem* communicatorSystem =
+		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/

@@ -19,6 +19,7 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -27,7 +28,7 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="NetworkUpdateScoresSystem.h" />
@@ -70,7 +71,7 @@
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
-    <ClCompile Include="NetworkCommunicatorSystem.cpp" />
+    <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />

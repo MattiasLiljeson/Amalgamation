@@ -1,4 +1,4 @@
-#include "NetworkCommunicatorSystem.h"
+#include "ClientPacketHandlerSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -29,8 +29,8 @@
 
 
 
-NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
-	: EntitySystem( SystemType::NetworkCommunicatorSystem, 1, 
+ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
+	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
 					ComponentType::NetworkSynced)
 {
 	m_tcpClient = p_tcpClient;
@@ -39,12 +39,12 @@ NetworkCommunicatorSystem::NetworkCommunicatorSystem( TcpClient* p_tcpClient )
 	m_currentPing = 0;
 }
 
-NetworkCommunicatorSystem::~NetworkCommunicatorSystem()
+ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 {
 
 }
 
-void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entities )
+void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 
 	while (m_tcpClient->hasNewPackets())
@@ -250,7 +250,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 	}
 }
 
-void NetworkCommunicatorSystem::initialize()
+void ClientPacketHandlerSystem::initialize()
 {
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
@@ -258,7 +258,7 @@ void NetworkCommunicatorSystem::initialize()
 		&m_currentPing, "" );
 }
 
-NetworkEntityCreationPacket NetworkCommunicatorSystem::readCreationPacket( 
+NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket( 
 	Packet& p_packet )
 {
 	NetworkEntityCreationPacket data;
@@ -271,7 +271,7 @@ NetworkEntityCreationPacket NetworkCommunicatorSystem::readCreationPacket(
 	return data;
 }
 
-NetworkEntityUpdatePacket NetworkCommunicatorSystem::readUpdatePacket( Packet& p_packet )
+NetworkEntityUpdatePacket ClientPacketHandlerSystem::readUpdatePacket( Packet& p_packet )
 {
 	NetworkEntityUpdatePacket data;
 	p_packet >> data.networkType
@@ -282,7 +282,7 @@ NetworkEntityUpdatePacket NetworkCommunicatorSystem::readUpdatePacket( Packet& p
 	return data;
 }
 
-NetworkScoreUpdatePacket NetworkCommunicatorSystem::readScorePacket( Packet& p_packet )
+NetworkScoreUpdatePacket ClientPacketHandlerSystem::readScorePacket( Packet& p_packet )
 {
 	NetworkScoreUpdatePacket data;
 	p_packet >> data.networkId;

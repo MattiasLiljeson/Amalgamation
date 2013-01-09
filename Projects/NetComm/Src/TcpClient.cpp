@@ -182,17 +182,18 @@ unsigned int TcpClient::newPacketsCount()
 
 Packet TcpClient::popNewPacket()
 {
-	Packet packet;
+
 	if ( !m_newPackets.empty() )
 	{	
-		packet = m_newPackets.front();
+		Packet packet = m_newPackets.front();
 		m_newPackets.pop();
+		return packet;
 	}
 	else
 	{
 		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
-	return packet;
+	return NULL;
 }
 
 int TcpClient::getId()

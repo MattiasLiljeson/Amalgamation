@@ -1,13 +1,16 @@
 #pragma once
 
-// ES
+#include <map>
 #include <EntitySystem.h>
+#include "ClientInfo.h"
 
 class TcpServer;
 class PhysicsSystem;
 
+using namespace std;
+
 // =======================================================================================
-//                                      ServerPacketHandlerSystem
+//                                  ServerPacketHandlerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -29,6 +32,10 @@ public:
 	void processEntities( const vector<Entity*>& p_entities );
 
 private:
-	TcpServer* m_server;
-	PhysicsSystem* m_physics;
+	TcpServer*		m_server;
+	PhysicsSystem*	m_physics;
+	map<int,ClientInfo> m_clients; ///< The key is the clientID
+	
+	float m_timer;
+	float m_timerStartValue;
 };
