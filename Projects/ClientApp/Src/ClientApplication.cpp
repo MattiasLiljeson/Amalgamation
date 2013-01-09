@@ -120,7 +120,7 @@ void ClientApplication::run()
 				m_serverApp->step( static_cast<float>(dt) );
 			#endif
 
-			//boost::this_thread::sleep(boost::posix_time::milliseconds(00));
+//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 

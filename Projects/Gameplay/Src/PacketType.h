@@ -17,6 +17,9 @@ public:
 	enum
 	{
 		NON_EXISTENT = -1,
+		// Server -><- Client:
+		Ping,
+		Pong,
 		// Server -> Client:
 		EntityCreation,
 		EntityUpdate,
