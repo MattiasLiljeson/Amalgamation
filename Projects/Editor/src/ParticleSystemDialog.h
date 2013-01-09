@@ -54,6 +54,15 @@ private:
 	static void TW_CALL SetParticleSize(const void *value, void *clientData);
 	static void TW_CALL GetParticleSize(void *value, void *clientData);
 
+	static void TW_CALL SetAlphaBlending(void* clientData);
+
+	//Alignment
+	static void TW_CALL SetScreenAlignment(void* clientData);
+	static void TW_CALL SetWorldAlignment(void* clientData);
+	static void TW_CALL SetVelocityDirAlignment(void* clientData);
+	static void TW_CALL SetObserverAlignment(void* clientData);
+
+
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);
 public:
