@@ -24,7 +24,7 @@
 #include "PlayerScore.h"
 
 #include "GraphicsBackendSystem.h"
-#include "NetworkType.h"
+#include "EntityType.h"
 #include "PacketType.h"
 
 
@@ -57,7 +57,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		if (packetType == (char)PacketType::EntityCreation)
 		{
 			NetworkEntityCreationPacket data = readCreationPacket(packet);
-			if (data.networkType == (char)NetworkType::Ship )
+			if (data.networkType == (char)EntityType::Ship )
 			{
 				int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 					SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
@@ -85,7 +85,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 					entity->addComponent( ComponentType::ShipController, component );
 				}
 				entity->addComponent(ComponentType::NetworkSynced,
-					new NetworkSynced(data.networkId, data.owner, NetworkType::Ship));
+					new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
 				m_world->addEntity(entity);
 				
 				
@@ -126,7 +126,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 						m_tcpClient->getIdPointer(), "" );
 				}
 			}
-			else if ( data.networkType == (char)NetworkType::Prop )
+			else if ( data.networkType == (char)EntityType::Prop )
 			{
 				Entity* entity;
 				Component* component;
@@ -138,7 +138,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent( ComponentType::Transform, component );
 
 				// The b1 entity should be synced over the network!
-				component = new NetworkSynced(data.networkId, -1, NetworkType::Prop);
+				component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
 				entity->addComponent(ComponentType::NetworkSynced, component);
 
 				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
@@ -154,11 +154,11 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		else if (packetType == (char)PacketType::EntityUpdate)
 		{
 			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
-			if (data.networkType == (char)NetworkType::Ship ||
-				data.networkType == (char)NetworkType::Prop)
+			if (data.networkType == (char)EntityType::Ship ||
+				data.networkType == (char)EntityType::Prop)
 			{
 
-				if(data.networkType == (char)NetworkType::Prop)
+				if(data.networkType == (char)EntityType::Prop)
 				{
 					data.networkType = data.networkType;
 				}
@@ -188,7 +188,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 			char networkType;
 
 			packet >> networkType;
-			if(networkType == (char)NetworkType::Identity)
+			if(networkType == (char)EntityType::Identity)
 			{
 				int id;
 				packet >> id;
@@ -243,7 +243,7 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 		GetSystemTime( &m_timestamp );
 
 		Packet packet;
-		packet << (char)NetworkType::Other;
+		packet << (char)EntityType::Other;
 		packet << (char)PacketType::Ping;
 
 		m_tcpClient->sendPacket( packet );

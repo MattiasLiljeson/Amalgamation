@@ -7,7 +7,7 @@ class TcpServer;
 class PhysicsSystem;
 
 // =======================================================================================
-//                                      NetworkInputHandlerSystem
+//                                      ServerPacketHandlerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -18,11 +18,11 @@ class PhysicsSystem;
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkInputHandlerSystem : public EntitySystem
+class ServerPacketHandlerSystem : public EntitySystem
 {
 public:
-	NetworkInputHandlerSystem( TcpServer* p_server );
-	~NetworkInputHandlerSystem();
+	ServerPacketHandlerSystem( TcpServer* p_server );
+	~ServerPacketHandlerSystem();
 
 	void initialize();
 

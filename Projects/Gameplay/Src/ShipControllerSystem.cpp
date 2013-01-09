@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "ShipController.h"
 #include "PacketType.h"
-#include "NetworkType.h"
+#include "EntityType.h"
 #include "NetworkSynced.h"
 #include "Control.h"
 #include "AntTweakBarWrapper.h"
@@ -189,7 +189,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
 			ComponentType::NetworkSynced));
 
-		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
+		thrustPacket << (char)EntityType::Ship << (char)PacketType::PlayerInput 
 			<< thrustVec << angularVec << netSync->getNetworkIdentity();
 		m_client->sendPacket( thrustPacket );
 	}

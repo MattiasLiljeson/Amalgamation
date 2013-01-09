@@ -27,8 +27,8 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			m_world->getComponentManager()->getComponent(
 			p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-		if( netSync->getNetworkType() == NetworkType::Ship ||
-			netSync->getNetworkType() == NetworkType::Prop)
+		if( netSync->getNetworkType() == EntityType::Ship ||
+			netSync->getNetworkType() == EntityType::Prop)
 		{
 
 

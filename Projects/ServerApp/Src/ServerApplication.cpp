@@ -3,9 +3,8 @@
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <DebugPlayerScoresSystem.h>
 #include <NetworkListenerSystem.h>
-#include <NetworkInputHandlerSystem.h>
+#include <ServerPacketHandlerSystem.h>
 #include <NetworkUpdateSystem.h>
 #include <NetworkUpdateScoresSystem.h>
 
@@ -80,17 +79,14 @@ namespace Srv
 		m_world->setSystem( SystemType::NetworkListenerSystem,
 			new NetworkListenerSystem( m_server ), true );
 
-		m_world->setSystem( SystemType::NetworkInputHandlerSystem,
-			new NetworkInputHandlerSystem( m_server ), true );
+		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
+			new ServerPacketHandlerSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
 			new NetworkUpdateSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new NetworkUpdateScoresSystem( m_server ), true );
-
-		m_world->setSystem( SystemType::DebugPlayerScoresSystem,
-			new DebugPlayerScoresSystem(), true );
 
 		m_world->initialize();
 
@@ -118,7 +114,7 @@ namespace Srv
 		entity->addComponent(ComponentType::BodyInitData, component);
 
 		// The b1 entity should be synced over the network!
-		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
 		entity->addComponent(ComponentType::NetworkSynced, component);
 
 		m_world->addEntity(entity);
@@ -139,7 +135,7 @@ namespace Srv
 		// Reminder: the b2 entity is static, hence, this entity could be left to exist
 		// by default on the client, without any physics data. It doesn't need to be
 		// synced over the network every frame, since it can't move. For now, it will be.
-		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
 		entity->addComponent(ComponentType::NetworkSynced, component);
 
 		m_world->addEntity(entity);

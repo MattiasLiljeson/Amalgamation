@@ -1,4 +1,4 @@
-#include "NetworkInputHandlerSystem.h"
+#include "ServerPacketHandlerSystem.h"
 
 // Components
 #include "Transform.h"
@@ -9,31 +9,31 @@
 #include <TcpServer.h>
 
 #include "PacketType.h"
-#include "NetworkType.h"
+#include "EntityType.h"
 #include "PhysicsSystem.h"
 #include <Windows.h>
 
-NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
-	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
+ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
+	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
 	ComponentType::NetworkSynced, ComponentType::ShipController,
 	ComponentType::PhysicsBody )
 {
 	m_server = p_server;
 }
 
-NetworkInputHandlerSystem::~NetworkInputHandlerSystem()
+ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
 {
 
 }
 
 
-void NetworkInputHandlerSystem::initialize()
+void ServerPacketHandlerSystem::initialize()
 {
 	m_physics = static_cast<PhysicsSystem*>(
 		m_world->getSystem( SystemType::PhysicsSystem ) );
 }
 
-void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entities )
+void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	while( m_server->hasNewPackets() )
 	{
@@ -41,7 +41,7 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char networkType;
 		packet >> networkType;
-		if( networkType == (char)NetworkType::Ship )
+		if( networkType == (char)EntityType::Ship )
 		{
 			char packetType;
 			packet >> packetType;
@@ -73,7 +73,7 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
-		else if( networkType == (char)NetworkType::Other )
+		else if( networkType == (char)EntityType::Other )
 		{
 			char packetType;
 			packet >> packetType;

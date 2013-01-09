@@ -58,9 +58,6 @@
     <Filter Include="Components\GUI">
       <UniqueIdentifier>{9b451e1d-4250-48a9-b153-f724e60047a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Network\Server only\Debugging">
-      <UniqueIdentifier>{5fb8467e-10e8-48aa-8d1a-99fff307a38c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Physics">
       <UniqueIdentifier>{e0545ecf-2bca-4bcb-b57a-5431f87bec15}</UniqueIdentifier>
     </Filter>
@@ -105,16 +102,10 @@
     <ClInclude Include="NetworkConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkInputHandlerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
     <ClInclude Include="PacketType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
     <ClInclude Include="ShipControllerSystem.h">
@@ -181,9 +172,6 @@
     <ClInclude Include="PlayerScore.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="DebugPlayerScoresSystem.h">
-      <Filter>Systems\Network\Server only\Debugging</Filter>
-    </ClInclude>
     <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -192,6 +180,12 @@
     </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPacketHandlerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,9 +212,6 @@
     </ClCompile>
     <ClCompile Include="NetworkConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkInputHandlerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
@@ -283,14 +274,14 @@
     <ClCompile Include="PlayerScore.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="DebugPlayerScoresSystem.cpp">
-      <Filter>Systems\Network\Server only\Debugging</Filter>
-    </ClCompile>
     <ClCompile Include="DisplayPlayerScoreSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsBody.cpp">
       <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPacketHandlerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

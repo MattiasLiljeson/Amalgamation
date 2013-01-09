@@ -1,5 +1,5 @@
 // =======================================================================================
-//	NetworkType
+//	EntityType
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -11,20 +11,18 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-class NetworkType
+class EntityType
 {
 public:
-	enum Network_T
+	enum EntityEnums
 	{
 		NON_EXISTENT = -1,
 		Ship,
 		Prop,
 		Identity,
 		Other,
-		// Johan: We could probably remove this whole enum.
 	};
 
 public:
-	Network_T type;
-
+	EntityEnums type;
 };

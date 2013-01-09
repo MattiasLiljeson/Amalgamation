@@ -12,7 +12,7 @@
 #include <ToString.h>
 
 #include "PacketType.h"
-#include "NetworkType.h"
+#include "EntityType.h"
 
 // Components:
 #include "Transform.h"
@@ -72,7 +72,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			///
 			Packet identityPacket;
 			identityPacket << (char)PacketType::InitCredentials <<
-				(char)NetworkType::Identity << id;
+				(char)EntityType::Identity << id;
 			m_server->unicastPacket( identityPacket, id );
 
 
@@ -81,7 +81,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 
 			Transform* transform = new Transform( (float)(id) * 10.0f, 0, 0 );
 			NetworkSynced* netSync = 
-				new NetworkSynced( e->getIndex(), id, NetworkType::Ship );
+				new NetworkSynced( e->getIndex(), id, EntityType::Ship );
 			
 			e->addComponent( ComponentType::Transform, transform);
 			e->addComponent( ComponentType::NetworkSynced, netSync);
@@ -114,7 +114,7 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			Packet newClientConnected;
 			newClientConnected << 
 				(char)PacketType::EntityCreation <<
-				(char)NetworkType::Ship << id << e->getIndex() <<
+				(char)EntityType::Ship << id << e->getIndex() <<
 				transform->getTranslation() << transform->getRotation() <<
 				transform->getScale();
 			
@@ -143,8 +143,8 @@ void NetworkListenerSystem::processEntities( const vector<Entity*>& p_entities )
 					getComponent( entityId, ComponentType::Transform );
 
 				// Create entity
-				if( netSync->getNetworkType() == NetworkType::Ship ||
-					netSync->getNetworkType() == NetworkType::Prop
+				if( netSync->getNetworkType() == EntityType::Ship ||
+					netSync->getNetworkType() == EntityType::Prop
 					)
 				{
 					Packet packet;

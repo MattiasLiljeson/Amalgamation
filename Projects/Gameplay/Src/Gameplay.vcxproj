@@ -19,7 +19,6 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
-    <ClInclude Include="DebugPlayerScoresSystem.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -30,12 +29,12 @@
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
+    <ClInclude Include="EntityType.h" />
     <ClInclude Include="NetworkUpdateScoresSystem.h" />
     <ClInclude Include="NetworkUpdateSystem.h" />
     <ClInclude Include="PhysicsBody.h" />
-    <ClInclude Include="NetworkInputHandlerSystem.h" />
+    <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="NetworkConnectToServerSystem.h" />
-    <ClInclude Include="NetworkType.h" />
     <ClInclude Include="PacketType.h" />
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
@@ -63,7 +62,6 @@
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
-    <ClCompile Include="DebugPlayerScoresSystem.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
@@ -73,7 +71,7 @@
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
-    <ClCompile Include="NetworkInputHandlerSystem.cpp" />
+    <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="NetworkConnectToServerSystem.cpp" />
     <ClCompile Include="NetworkListenerSystem.cpp" />
     <ClCompile Include="NetworkUpdateScoresSystem.cpp" />
