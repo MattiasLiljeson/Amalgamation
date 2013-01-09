@@ -15,7 +15,7 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "RenderInfo.h"
-#include "ShipController.h"
+#include "ShipFlyController.h"
 #include "CameraInfo.h"
 #include "MainCamera.h"
 #include "Input.h"
@@ -77,8 +77,8 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 				if(m_tcpClient->getId() == data.owner)
 				{
 					// If "this client" is the entity owner, it may control the ship:
-					component = new ShipController(5.0f, 50.0f);
-					entity->addComponent( ComponentType::ShipController, component );
+					component = new ShipFlyController(5.0f, 50.0f);
+					entity->addComponent( ComponentType::ShipFlyController, component );
 				}
 				entity->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(data.networkId, data.owner, NetworkType::Ship));

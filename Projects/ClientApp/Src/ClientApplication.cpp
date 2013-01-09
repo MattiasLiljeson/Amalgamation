@@ -15,7 +15,7 @@
 #include <PhysicsBody.h>
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
-#include <ShipController.h>
+#include <ShipFlyController.h>
 #include <Transform.h>
 #include <HudElement.h>
 #include <ShipModule.h>
@@ -33,7 +33,7 @@
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
-#include <ShipControllerSystem.h>
+#include <ShipFlyControllerSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <HudSystem.h>
 #include <CameraInfo.h>
@@ -163,7 +163,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( hud, true );
 
 	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
+	ShipFlyControllerSystem* shipController = new ShipFlyControllerSystem(inputBackend, physics,
 		m_client );
 	m_world->setSystem( shipController, true);
 
@@ -275,8 +275,8 @@ void ClientApplication::initEntities()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::COMPOUND));
 
-	component = new ShipController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipController, component );
+	component = new ShipFlyController(5.0f, 50.0f);
+	entity->addComponent( ComponentType::ShipFlyController, component );
 	m_world->addEntity(entity);
 
 	// Create a box that the spaceship can pickup

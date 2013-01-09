@@ -28,6 +28,8 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
+    <ClInclude Include="ShipEditController.h" />
+    <ClInclude Include="ShipEditModeSystem.h" />
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="NetworkCommunicatorSystem.h" />
     <ClInclude Include="LookAtEntity.h" />
@@ -50,9 +52,10 @@
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="RenderPrepSystem.h" />
-    <ClInclude Include="ShipController.h" />
-    <ClInclude Include="ShipControllerSystem.h" />
+    <ClInclude Include="ShipFlyController.h" />
+    <ClInclude Include="ShipFlyControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
+    <ClInclude Include="Tags.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -73,6 +76,7 @@
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
+    <ClCompile Include="ShipEditModeSystem.cpp" />
     <ClCompile Include="ShipModule.cpp" />
     <ClCompile Include="NetworkCommunicatorSystem.cpp" />
     <ClCompile Include="NetworkInputHandlerSystem.cpp" />
@@ -87,7 +91,7 @@
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="LibRocketRenderInterface.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
-    <ClCompile Include="ShipControllerSystem.cpp" />
+    <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />

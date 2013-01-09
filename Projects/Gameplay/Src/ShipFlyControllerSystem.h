@@ -76,13 +76,13 @@ struct ResultingInputForces
 };
 
 
-class ShipControllerSystem : public EntitySystem
+class ShipFlyControllerSystem : public EntitySystem
 {
 public:
-	ShipControllerSystem(InputBackendSystem* p_inputBackend,
+	ShipFlyControllerSystem(InputBackendSystem* p_inputBackend,
 						 PhysicsSystem* p_physicsSystem,
 						 TcpClient* p_client );
-	~ShipControllerSystem();
+	~ShipFlyControllerSystem();
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );

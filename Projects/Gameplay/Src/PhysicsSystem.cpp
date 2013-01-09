@@ -5,7 +5,7 @@
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
 #include "GraphicsBackendSystem.h"
-#include "ShipController.h"
+#include "ShipFlyController.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -62,10 +62,10 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 		}
 
 		//Check if the object is a ship
-		ShipController* sc =
-			static_cast<ShipController*>(
+		ShipFlyController* sc =
+			static_cast<ShipFlyController*>(
 			m_world->getComponentManager()->getComponent( p_entities[i],
-			ComponentType::getTypeFor(ComponentType::ShipController)));
+			ComponentType::getTypeFor(ComponentType::ShipFlyController)));
 		if (sc)
 		{
 			queryShipCollision(p_entities[i], p_entities);

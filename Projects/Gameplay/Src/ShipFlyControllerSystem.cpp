@@ -1,11 +1,11 @@
-#include "ShipControllerSystem.h"
+#include "ShipFlyControllerSystem.h"
 
 #include <TcpClient.h>
 #include <AglQuaternion.h>
 #include "InputBackendSystem.h"
 #include "PhysicsSystem.h"
 #include "Transform.h"
-#include "ShipController.h"
+#include "ShipFlyController.h"
 #include "PacketType.h"
 #include "NetworkType.h"
 #include "NetworkSynced.h"
@@ -14,11 +14,12 @@
 #include "PhysicsBody.h"
 
 
-ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
+ShipFlyControllerSystem::ShipFlyControllerSystem( InputBackendSystem* p_inputBackend,
 										    PhysicsSystem* p_physicsSystem,
 											TcpClient* p_client ) : 
-					  EntitySystem( SystemType::ShipControllerSystem, 2,
-									ComponentType::ComponentTypeIdx::ShipController,
+					  EntitySystem( SystemType::ShipFlyControllerSystem, 2,
+									ComponentType::ComponentTypeIdx::ShipFlyController,
+									ComponentType::ComponentTypeIdx::ShipFlyMode_TAG,
 									ComponentType::ComponentTypeIdx::Transform)
 {
 	m_inputBackend = p_inputBackend;
@@ -47,12 +48,12 @@ ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
 	m_rightStickCorrection[1] = 0;
 }
 
-ShipControllerSystem::~ShipControllerSystem()
+ShipFlyControllerSystem::~ShipFlyControllerSystem()
 {
 }
 
 
-void ShipControllerSystem::initGamePad()
+void ShipFlyControllerSystem::initGamePad()
 {
 	m_gamepadHorizontalPositive	= m_inputBackend->getControlByEnum( 
 		InputHelper::THUMB_LX_POSITIVE);
@@ -79,7 +80,7 @@ void ShipControllerSystem::initGamePad()
 }
 
 
-void ShipControllerSystem::initMouse()
+void ShipFlyControllerSystem::initMouse()
 {
 	m_mouseHorizontalPositive	= m_inputBackend->getControlByEnum( 
 		InputHelper::MOUSE_AXIS::X_POSITIVE);
@@ -91,7 +92,7 @@ void ShipControllerSystem::initMouse()
 		InputHelper::MOUSE_AXIS::Y_NEGATIVE);
 }
 
-void ShipControllerSystem::initKeyboard()
+void ShipFlyControllerSystem::initKeyboard()
 {
 	m_keyboardRollRight = m_inputBackend->getControlByEnum(
 		InputHelper::KEY_D);
@@ -111,7 +112,7 @@ void ShipControllerSystem::initKeyboard()
 		InputHelper::KEY_Q);
 }
 
-void ShipControllerSystem::initialize()
+void ShipFlyControllerSystem::initialize()
 {
 	initGamePad();
 	initMouse();
@@ -137,7 +138,7 @@ void ShipControllerSystem::initialize()
 		"MouseSensitivity", TwType::TW_TYPE_FLOAT, &m_mouseSensitivity, "");
 }
 
-void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
+void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
 	// Fetch the status of the various input methods.
@@ -158,8 +159,8 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
-		ShipController* controller = static_cast<ShipController*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::ShipController ) );
+		ShipFlyController* controller = static_cast<ShipFlyController*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
 
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
@@ -205,12 +206,12 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
-float* ShipControllerSystem::getControllerEpsilonPointer()
+float* ShipFlyControllerSystem::getControllerEpsilonPointer()
 {
 	return &m_controllerEpsilon;
 }
 
-ResultingInputForces ShipControllerSystem::readAllTheInput()
+ResultingInputForces ShipFlyControllerSystem::readAllTheInput()
 {
 	RawInputForces input;
 	input.hPositive = m_gamepadHorizontalPositive->getStatus();
@@ -251,7 +252,7 @@ ResultingInputForces ShipControllerSystem::readAllTheInput()
 	return resultingInput;
 }
 
-void ShipControllerSystem::updateAntTweakBar(const ResultingInputForces& p_input)
+void ShipFlyControllerSystem::updateAntTweakBar(const ResultingInputForces& p_input)
 {
 	// Calibrate the Gamepad's analogue sticks when pressing the C key.
 	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 )

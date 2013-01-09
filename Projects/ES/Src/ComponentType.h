@@ -24,7 +24,12 @@ public:	//Enums
 		CameraInfo,
 		AudioComponent,
 		AudioListener,
-		ShipController,
+		ShipFlyController,
+		ShipEditController,
+		ShipFlyMode_TAG,		// Replace with dedicated ES-tag management?
+		ShipEditMode_TAG,		// Replace with dedicated ES-tag management?
+		CameraFollowMode_TAG,	// Replace with dedicated ES-tag management?
+		CameraOrbitMode_TAG,	// Replace with dedicated ES-tag management?
 		Impulse,
 		BodyInitData,
 		LookAtEntity,

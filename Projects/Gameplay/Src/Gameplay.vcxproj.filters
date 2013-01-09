@@ -64,6 +64,9 @@
     <Filter Include="Components\Physics">
       <UniqueIdentifier>{e0545ecf-2bca-4bcb-b57a-5431f87bec15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Tags">
+      <UniqueIdentifier>{77380be9-4a6b-4d01-95d8-768c58e62bc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -116,12 +119,6 @@
     </ClInclude>
     <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipController.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="LookAtEntity.h">
       <Filter>Components\GFX</Filter>
@@ -194,6 +191,21 @@
       <Filter>Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="ShipModule.h" />
+    <ClInclude Include="ShipEditModeSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Tags.h">
+      <Filter>Components\Tags</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -228,9 +240,6 @@
     </ClCompile>
     <ClCompile Include="NetworkCommunicatorSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
@@ -294,5 +303,11 @@
       <Filter>Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="ShipModule.cpp" />
+    <ClCompile Include="ShipEditModeSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipFlyControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
