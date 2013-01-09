@@ -37,10 +37,28 @@ namespace Srv
 	{
 		m_running = true;
 
+		// simple timer
+		__int64 countsPerSec = 0;
+		__int64 currTimeStamp = 0;
+		QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
+		double secsPerCount = 1.0f / (float)countsPerSec;
+
+		double dt = 0.0f;
+		__int64 m_prevTimeStamp = 0;
+
+		QueryPerformanceCounter((LARGE_INTEGER*)&m_prevTimeStamp);
+		QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+
 		while( m_running )
 		{
+			// Update timer
+			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
+
+			m_prevTimeStamp = currTimeStamp;
+
 			// HACK: Static delta and really high for testing purposes.
-			step( 0.01f );
+			step( static_cast<float>(dt) );
 		
 			// HACK: Maybe place input in systems? :D
 			if( _kbhit() )
@@ -53,7 +71,7 @@ namespace Srv
 			}
 
 			// HACK: Really slow update loop for testing purposes.
-//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 
