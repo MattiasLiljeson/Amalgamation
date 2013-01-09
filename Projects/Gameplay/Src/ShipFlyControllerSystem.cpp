@@ -13,11 +13,14 @@
 #include "AntTweakBarWrapper.h"
 #include "PhysicsBody.h"
 
+#include "GameplayTags.h"
+
+
 
 ShipFlyControllerSystem::ShipFlyControllerSystem( InputBackendSystem* p_inputBackend,
 										    PhysicsSystem* p_physicsSystem,
 											TcpClient* p_client ) : 
-					  EntitySystem( SystemType::ShipFlyControllerSystem, 2,
+					  EntitySystem( SystemType::ShipFlyControllerSystem, 3,
 									ComponentType::ComponentTypeIdx::ShipFlyController,
 									ComponentType::ComponentTypeIdx::Transform,
 									ComponentType::ComponentTypeIdx::TAG_ShipFlyMode)
@@ -144,68 +147,82 @@ void ShipFlyControllerSystem::initialize()
 
 void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	float dt = m_world->getDelta();
-	// Fetch the status of the various input methods.
-	ResultingInputForces input = readAllTheInput();
-	
-	updateAntTweakBar(input);
-
-	// Apply correction vectors to the analogue sticks.
-	input.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
-	input.verticalInput += static_cast<float>(m_leftStickCorrection[1]);
-
-	// Apply a threshold value to eliminate some of the analogue stick noise.
-	if( abs(input.horizontalInput) < m_controllerEpsilon ) input.horizontalInput = 0;
-	if( abs(input.verticalInput) < m_controllerEpsilon ) input.verticalInput = 0;
-
-	if( abs(input.strafeHorizontalInput) < m_controllerEpsilon ) input.strafeHorizontalInput = 0;
-	if( abs(input.strafeVerticalInput) < m_controllerEpsilon ) input.strafeVerticalInput = 0;
-
-	for(unsigned int i=0; i<p_entities.size(); i++ )
+	if (p_entities.size()>0)
 	{
-		ShipFlyController* controller = static_cast<ShipFlyController*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
+		float dt = m_world->getDelta();
+		// Fetch the status of the various input methods.
+		RawInputForces rawInput;
+		readAllTheInput(rawInput);
+		// processed input
+		ResultingInputForces input(rawInput);
+	
+		updateAntTweakBar(input);
 
-		Transform* transform = static_cast<Transform*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+		// Apply correction vectors to the analogue sticks.
+		input.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
+		input.verticalInput += static_cast<float>(m_leftStickCorrection[1]);
 
-		// Calc rotation from player input
-		AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
+		// Apply a threshold value to eliminate some of the analogue stick noise.
+		if( abs(input.horizontalInput) < m_controllerEpsilon ) input.horizontalInput = 0;
+		if( abs(input.verticalInput) < m_controllerEpsilon ) input.verticalInput = 0;
 
-		// Turning multiplier
-		float  turnSpeed = controller->getTurningSpeed() * dt;
-		// Thrust multiplier
-		float  thrustPower = controller->getThrustPower() * dt;
+		if( abs(input.strafeHorizontalInput) < m_controllerEpsilon ) input.strafeHorizontalInput = 0;
+		if( abs(input.strafeVerticalInput) < m_controllerEpsilon ) input.strafeVerticalInput = 0;
 
-		// Calc translation from player input
-		AglVector3 thrustVec;
-		thrustVec += transform->getMatrix().GetForward()	* input.thrustInput 
-			* thrustPower;
-		thrustVec += transform->getMatrix().GetRight()		* input.strafeHorizontalInput 
-			* thrustPower;
-		thrustVec += transform->getMatrix().GetUp()			* input.strafeVerticalInput 
-			* thrustPower;
-
-		// Calc rotation from player input
-		AglVector3 angularVec=inputAngles*turnSpeed;
-		AglQuaternion quat = transform->getRotation();
-		quat.transformVector(angularVec);
-
-		/*Packet thrustPacket;
-		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
-			ComponentType::NetworkSynced));
-
-		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-			<< thrustVec << angularVec << netSync->getNetworkIdentity();
-		m_client->sendPacket( thrustPacket );*/
-
-		PhysicsBody* physicsBody = NULL;
-		physicsBody = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
-			ComponentType::PhysicsBody ) );
-		if( physicsBody )
+		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
-			m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-			//cout << physicsBody->m_id << endl;
+			Entity* ship = p_entities[i];
+			ShipFlyController* controller = static_cast<ShipFlyController*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
+
+			Transform* transform = static_cast<Transform*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+			// Calc rotation from player input
+			AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
+
+			// Turning multiplier
+			float  turnSpeed = controller->getTurningSpeed() * dt;
+			// Thrust multiplier
+			float  thrustPower = controller->getThrustPower() * dt;
+
+			// Calc translation from player input
+			AglVector3 thrustVec;
+			thrustVec += transform->getMatrix().GetForward()	* input.thrustInput 
+				* thrustPower;
+			thrustVec += transform->getMatrix().GetRight()		* input.strafeHorizontalInput 
+				* thrustPower;
+			thrustVec += transform->getMatrix().GetUp()			* input.strafeVerticalInput 
+				* thrustPower;
+
+			// Calc rotation from player input
+			AglVector3 angularVec=inputAngles*turnSpeed;
+			AglQuaternion quat = transform->getRotation();
+			quat.transformVector(angularVec);
+
+			/*Packet thrustPacket;
+			NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+				ComponentType::NetworkSynced));
+
+			thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
+				<< thrustVec << angularVec << netSync->getNetworkIdentity();
+			m_client->sendPacket( thrustPacket );*/
+
+			PhysicsBody* physicsBody = NULL;
+			physicsBody = static_cast<PhysicsBody*>(ship->getComponent(
+				ComponentType::PhysicsBody ) );
+			if( physicsBody )
+			{
+				m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
+				//cout << physicsBody->m_id << endl;
+			}
+
+			// State switch handling
+			if (input.editModeSwitchInput>0.0f)
+			{
+				ship->removeComponent(ComponentType::TAG_ShipFlyMode);
+				ship->applyComponentChanges();
+			}
 		}
 	}
 }
@@ -215,45 +232,42 @@ float* ShipFlyControllerSystem::getControllerEpsilonPointer()
 	return &m_controllerEpsilon;
 }
 
-ResultingInputForces ShipFlyControllerSystem::readAllTheInput()
+void ShipFlyControllerSystem::readAllTheInput(RawInputForces& p_outInput)
 {
-	RawInputForces input;
-	input.hPositive = m_gamepadHorizontalPositive->getStatus();
-	input.hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
+	p_outInput.hPositive = m_gamepadHorizontalPositive->getStatus();
+	p_outInput.hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
 
-	input.hNegative = m_gamepadHorizontalNegative->getStatus();
-	input.hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
+	p_outInput.hNegative = m_gamepadHorizontalNegative->getStatus();
+	p_outInput.hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
 
-	input.vPositive = m_gamepadVerticalPositive->getStatus();
-	input.vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
+	p_outInput.vPositive = m_gamepadVerticalPositive->getStatus();
+	p_outInput.vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
 
-	input.vNegative = m_gamepadVerticalNegative->getStatus();
-	input.vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
+	p_outInput.vNegative = m_gamepadVerticalNegative->getStatus();
+	p_outInput.vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
 
-	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
-	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
+	p_outInput.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
+	p_outInput.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
 
-	input.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
-	input.shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
+	p_outInput.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
+	p_outInput.shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
 
-	input.svPositive = m_gamepadStrafeVerticalPositive->getStatus();
-	input.svPositive += m_keyboardStrafeVerticalPos->getStatus();
+	p_outInput.svPositive = m_gamepadStrafeVerticalPositive->getStatus();
+	p_outInput.svPositive += m_keyboardStrafeVerticalPos->getStatus();
 
-	input.svNegative = m_gamepadStrafeVerticalNegative->getStatus();
-	input.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
+	p_outInput.svNegative = m_gamepadStrafeVerticalNegative->getStatus();
+	p_outInput.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
 
-	input.rRight = m_gamepadRollRight->getStatus();
-	input.rRight += m_keyboardRollRight->getStatus();
+	p_outInput.rRight = m_gamepadRollRight->getStatus();
+	p_outInput.rRight += m_keyboardRollRight->getStatus();
 
-	input.rLeft = m_gamepadRollLeft->getStatus();
-	input.rLeft += m_keyboardRollLeft->getStatus();
+	p_outInput.rLeft = m_gamepadRollLeft->getStatus();
+	p_outInput.rLeft += m_keyboardRollLeft->getStatus();
 
-	input.thrust =  m_gamepadThrust->getStatus();
-	input.thrust += m_keyboardThrust->getStatus();
+	p_outInput.thrust =  m_gamepadThrust->getStatus();
+	p_outInput.thrust += m_keyboardThrust->getStatus();
 
-
-	ResultingInputForces resultingInput(input);
-	return resultingInput;
+	p_outInput.editSwitchTrig = m_keyboardEditModeTrig->getStatus();
 }
 
 void ShipFlyControllerSystem::updateAntTweakBar(const ResultingInputForces& p_input)

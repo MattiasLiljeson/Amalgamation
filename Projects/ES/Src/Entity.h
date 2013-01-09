@@ -72,6 +72,18 @@ public:
 	void addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag );
 
 
+	///-----------------------------------------------------------------------------------
+	/// Shorthand function for removing components for the entity
+	/// \param p_typeIdx
+	/// \param p_component
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void removeComponent( ComponentType::ComponentTypeIdx p_typeIdx );
+	void removeComponent( ComponentType p_type );
+
+	void applyComponentChanges();
+	
+
 	///\brief Shorthand function for fetching a components component from the worlds 
 	/// component manager
 	///\param p_typeIdx The type of component wished for

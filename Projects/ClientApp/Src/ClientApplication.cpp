@@ -16,6 +16,7 @@
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
 #include <ShipFlyController.h>
+#include <ShipEditController.h>
 #include <Transform.h>
 #include <HudElement.h>
 #include <ShipModule.h>
@@ -279,7 +280,11 @@ void ClientApplication::initEntities()
 	component = new ShipFlyController(5.0f, 50.0f);
 	entity->addComponent( ComponentType::ShipFlyController, component );
 
-	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+	component = new ShipEditController();
+	entity->addComponent( ComponentType::ShipEditController, component);
+
+	 // default tag is fly
+	 entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
 
 	m_world->addEntity(entity);
 

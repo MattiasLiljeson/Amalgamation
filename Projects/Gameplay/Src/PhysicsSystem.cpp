@@ -130,8 +130,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 		
 		// remove settings component
-		m_world->getComponentManager()->removeComponent(
-			p_entity, ComponentType::BodyInitData);
+		p_entity->removeComponent(ComponentType::BodyInitData);
+		p_entity->applyComponentChanges();
 	}
 	else // fallback settings
 	{

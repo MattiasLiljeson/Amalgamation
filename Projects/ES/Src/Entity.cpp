@@ -68,6 +68,21 @@ void Entity::addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag )
 	addComponent( p_typeIdx, static_cast<Component*>(p_tag) );
 }
 
+void Entity::removeComponent( ComponentType::ComponentTypeIdx p_typeIdx )
+{
+	removeComponent( ComponentType::getTypeFor(p_typeIdx) );
+}
+
+void Entity::removeComponent( ComponentType p_type )
+{
+	m_world->getComponentManager()->removeComponent( this, p_type );
+}
+
+void Entity::applyComponentChanges()
+{
+	m_world->changedEntity(this);
+}
+
 Component* Entity::getComponent( ComponentType::ComponentTypeIdx p_typeIdx )
 {
 	return m_world->getComponentManager()->getComponent( this, p_typeIdx );
