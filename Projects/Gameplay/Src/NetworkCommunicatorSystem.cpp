@@ -252,7 +252,9 @@ void NetworkCommunicatorSystem::processEntities( const vector<Entity*>& p_entiti
 
 void NetworkCommunicatorSystem::initialize()
 {
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "Ping", TwType::TW_TYPE_INT32,
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Ping", TwType::TW_TYPE_INT32,
 		&m_currentPing, "" );
 }
 
