@@ -6,6 +6,7 @@
 #include "RenderInfo.h"
 #include "GraphicsBackendSystem.h"
 #include "ShipController.h"
+#include "ConnectionPointSet.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -213,10 +214,20 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 {
 	static int counter=0;
 
-	AglVector3 pos[3];
-	pos[0] = AglVector3(2.5f, 0, 0);
-	pos[1] = AglVector3(0, 2.5f, 0);
-	pos[2] = AglVector3(-2.5f, 0, 0);
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent( ship,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	if (!cps)
+		return;
+
+	int cp = 0;
+	while (cp < cps->m_connectionPoints.size() && cps->m_connectionPoints[cp].cpConnectedEntity >= 0)
+		cp++;
+
+	if (cp >= cps->m_connectionPoints.size())
+		return;
+
 
 	PhysicsBody* body =
 		static_cast<PhysicsBody*>(
@@ -241,9 +252,13 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 					{
 						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
 						RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
-						m_physicsController->AttachBodyToCompound(comp, r, AglMatrix::createTranslationMatrix(pos[counter]));
+						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
+						cps->m_connectionPoints[cp].cpConnectedEntity = p_others[i]->getIndex();
 						module->setParentId(body->getParentId());
-						counter++;
+
+						cp++;
+						if (cp >= cps->m_connectionPoints.size())
+							return;
 					}
 				}
 			}

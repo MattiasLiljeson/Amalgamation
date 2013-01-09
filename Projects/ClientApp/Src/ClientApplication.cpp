@@ -19,6 +19,7 @@
 #include <Transform.h>
 #include <HudElement.h>
 #include <ShipModule.h>
+#include <ConnectionPointSet.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -260,6 +261,15 @@ void ClientApplication::initEntities()
 
 	component = new ShipController(5.0f, 50.0f);
 	entity->addComponent( ComponentType::ShipController, component );
+
+
+	ConnectionPointSet* connectionPoints = new ConnectionPointSet();
+	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+
+	entity->addComponent(ComponentType::ConnectionPointSet, connectionPoints);
+
 	m_world->addEntity(entity);
 
 	// Create a box that the spaceship can pickup

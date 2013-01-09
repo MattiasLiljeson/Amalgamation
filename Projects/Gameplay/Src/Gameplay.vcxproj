@@ -19,6 +19,7 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="DebugPlayerScoresSystem.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="ShipControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
+    <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>
@@ -64,6 +66,7 @@
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="DebugPlayerScoresSystem.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
@@ -89,6 +92,7 @@
     <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="ShipControllerSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
+    <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>

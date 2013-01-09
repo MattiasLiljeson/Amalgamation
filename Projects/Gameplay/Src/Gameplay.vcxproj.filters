@@ -64,6 +64,9 @@
     <Filter Include="Components\Physics">
       <UniqueIdentifier>{e0545ecf-2bca-4bcb-b57a-5431f87bec15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Modules">
+      <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -193,7 +196,15 @@
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="ShipModule.h" />
+    <ClInclude Include="SpeedBoosterModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -293,6 +304,14 @@
     <ClCompile Include="PhysicsBody.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ShipModule.cpp" />
+    <ClCompile Include="ShipModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoosterModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
