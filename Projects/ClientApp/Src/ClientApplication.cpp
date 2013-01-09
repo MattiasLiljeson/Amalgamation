@@ -46,6 +46,9 @@
 
 // Helpers
 #include <ConnectionPointCollection.h>
+#include <vector>
+
+using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
@@ -284,12 +287,12 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::ShipController, component );
 
 
-	ConnectionPointSet* connectionPoints = new ConnectionPointSet();
-	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPoints->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPoints);
+	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	m_world->addEntity(entity);
 
