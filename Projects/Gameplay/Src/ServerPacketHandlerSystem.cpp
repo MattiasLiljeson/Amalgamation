@@ -39,13 +39,14 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	{
 		Packet packet = m_server->popNewPacket();
 
-		char networkType;
-		packet >> networkType;
-		if( networkType == (char)EntityType::Ship )
+		char packetType;
+		packet >> packetType;
+
+		if(packetType == (char)PacketType::PlayerInput)
 		{
-			char packetType;
-			packet >> packetType;
-			if( packetType == (char)PacketType::PlayerInput )
+			char entityType;
+			packet >> entityType;
+			if(entityType == (char)EntityType::Ship)
 			{
 				AglVector3 thrustVec;
 				AglVector3 angularVec;
@@ -59,7 +60,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				// world->getEntityManager->getEntity[networkId]
 				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
 
-
 				if(entity)
 				{
 					PhysicsBody* physicsBody = NULL;
@@ -68,27 +68,21 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					if( physicsBody )
 					{
 						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-						//cout << physicsBody->m_id << endl;
 					}
 				}
 			}
 		}
-		else if( networkType == (char)EntityType::Other )
+		else if( packetType == (char)PacketType::Ping )
 		{
-			char packetType;
-			packet >> packetType;
+			SYSTEMTIME timestamp;
+			GetSystemTime( &timestamp );
 
-			if( packetType == (char)PacketType::Ping )
-			{
-				SYSTEMTIME timestamp;
-				GetSystemTime( &timestamp );
+			Packet response;
+			response << (char)PacketType::Pong;
+			response << timestamp;
 
-				Packet response;
-				response << (char)PacketType::Pong;
-				response << timestamp;
-
-				m_server->unicastPacket( response, packet.getSenderId() );
-			}
+			m_server->unicastPacket( response, packet.getSenderId() );
 		}
+		
 	}
 }

@@ -67,14 +67,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 				Entity* entity = NULL;
 				Component* component;
-				// Create a "spaceship"
+
+				/************************************************************************/
+				/* This ship creation code have to be located somewhere else.			*/
+				/************************************************************************/
 				entity = m_world->createEntity();
 				component = new RenderInfo( shipMeshId );
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = transform;
 				entity->addComponent( ComponentType::Transform, component );
 
-				// HACK: Should be located in another entity:
+				/************************************************************************/
+				/* HACK: Score should probably be located in another entity.			*/
+				/************************************************************************/
 				component = new PlayerScore();
 				entity->addComponent( ComponentType::PlayerScore, component );
 
@@ -87,12 +92,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				entity->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
 				m_world->addEntity(entity);
-				
-				
-				int shipId = entity->getIndex();
 
 				if(data.owner == m_tcpClient->getId())
 				{
+					int shipId = entity->getIndex();
 					float aspectRatio = 
 						static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 						SystemType::GraphicsBackendSystem ))->getAspectRatio();
@@ -103,8 +106,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					entity->addComponent( ComponentType::CameraInfo, component );
 					component = new MainCamera();
 					entity->addComponent( ComponentType::MainCamera, component );
-					//component = new Input();
-					//entity->addComponent( ComponentType::Input, component );
 					component = new Transform( -5.0f, 0.0f, -5.0f );
 					entity->addComponent( ComponentType::Transform, component );
 					component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
@@ -114,16 +115,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					m_world->addEntity(entity);
 
 					/************************************************************************/
-					/* Debug information only and there is no need for this to run the code */
+					/* This is where the audio listener is created and therefor the master  */
+					/* volume is added to Ant Tweak Bar here.								*/
 					/************************************************************************/
-					AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+					AntTweakBarWrapper::getInstance()->addWriteVariable( 
+						AntTweakBarWrapper::OVERALL,
 						"Master_volume", TwType::TW_TYPE_FLOAT, 
 						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
 						"group=Sound min=0 max=10 step=0.001 precision=3");
-
-					AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::NETWORK,
-						"NetId", TwType::TW_TYPE_INT32,
-						m_tcpClient->getIdPointer(), "" );
 				}
 			}
 			else if ( data.networkType == (char)EntityType::Prop )
@@ -192,8 +191,15 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			{
 				int id;
 				packet >> id;
-
 				m_tcpClient->setId( id );
+
+				/************************************************************************/
+				/* Debug info!															*/
+				/************************************************************************/
+				AntTweakBarWrapper::getInstance()->addReadOnlyVariable( 
+					AntTweakBarWrapper::NETWORK,
+					"NetId", TwType::TW_TYPE_INT32,
+					m_tcpClient->getIdPointer(), "" );
 			}
 		}
 		else if(packetType == (char)PacketType::ScoresUpdate)

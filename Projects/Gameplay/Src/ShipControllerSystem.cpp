@@ -185,12 +185,12 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		Packet thrustPacket;
+		Packet thrustPacket((char)PacketType::PlayerInput );
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
 			ComponentType::NetworkSynced));
 
-		thrustPacket << (char)EntityType::Ship << (char)PacketType::PlayerInput 
-			<< thrustVec << angularVec << netSync->getNetworkIdentity();
+		thrustPacket << (char)EntityType::Ship << thrustVec << angularVec 
+			<< netSync->getNetworkIdentity();
 		m_client->sendPacket( thrustPacket );
 	}
 }
