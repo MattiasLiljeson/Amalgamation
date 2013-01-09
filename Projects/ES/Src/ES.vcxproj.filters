@@ -13,6 +13,9 @@
     <Filter Include="System">
       <UniqueIdentifier>{3a1cb503-ecdf-480a-ba3c-be3acbc1b363}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assemblages">
+      <UniqueIdentifier>{2c8bf551-870d-4bba-be33-84fcd2479c04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -41,6 +44,24 @@
     </ClCompile>
     <ClCompile Include="Aspect.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>Assemblages</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblageReader.cpp">
+      <Filter>Assemblages</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentReader.cpp">
+      <Filter>Assemblages</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblageHelper.cpp">
+      <Filter>Assemblages</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentData.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -74,5 +95,23 @@
     <ClInclude Include="EntityWorld.h" />
     <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="IPerformer.h" />
+    <ClInclude Include="EntityFactory.h">
+      <Filter>Assemblages</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblageReader.h">
+      <Filter>Assemblages</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentReader.h">
+      <Filter>Assemblages</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblageHelper.h">
+      <Filter>Assemblages</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentData.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
