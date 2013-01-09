@@ -278,7 +278,7 @@ void ClientApplication::initEntities()
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE));
+		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
@@ -299,7 +299,7 @@ void ClientApplication::initEntities()
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE));
+		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 

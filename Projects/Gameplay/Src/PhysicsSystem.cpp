@@ -105,11 +105,6 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			body->m_id = m_physicsController->AddCompoundBody(init->m_position);
 			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->m_id));
 			offset = init->m_position;
-
-			/*addModulesToShip(body, AglVector3(2.5f, 0, 0));
-			addModulesToShip(body, AglVector3(-2.5f, 0, 0));
-			addModulesToShip(body, AglVector3(0, -2.5f, 0));
-			addModulesToShip(body, AglVector3(0, 2.5f, 0));*/
 		}
 		else // repoint id storage; only add shape id to body component if not compound
 			bodyId = &(body->m_id); 
@@ -122,7 +117,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
-				cb);
+				cb, init->m_impulseEnabled);
 		}
 		else
 		{

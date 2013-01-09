@@ -68,9 +68,10 @@ public:
 	/// \param p_static Bool indicating whether or not the box is immovable
 	/// \return The box
 	///-----------------------------------------------------------------------------------
-	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL,
+					bool pImpulseEnabled = NULL);
 
-	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL);
 
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 

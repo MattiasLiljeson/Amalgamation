@@ -37,7 +37,7 @@ private:
 
 public:
 	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
-					AglInteriorSphereGrid* pSphereGrid = NULL);
+					AglInteriorSphereGrid* pSphereGrid = NULL, bool pImpulseEnabled = true);
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();
 	AglVector3 GetLocalCenterOfMass(){ return GetOBB().world.GetTranslation(); }

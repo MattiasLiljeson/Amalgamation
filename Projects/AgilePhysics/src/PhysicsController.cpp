@@ -18,18 +18,19 @@ int PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUser
 		pParent->AddChild(s);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
+int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, 
+								AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent, bool pImpulseEnabled)
 {
-	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
+	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, pImpulseEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent)
+int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent, bool pImpulseEnabled)
 {
-	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static);
+	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static, pImpulseEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
@@ -121,24 +122,27 @@ void PhysicsController::Update(float pElapsedTime)
 							//Reg collision
 							mCollisions.push_back(UintPair(mRigidBodies[i].second, mRigidBodies[j].second));
 
-							//Solves high impulse issues for boxes
-							if (colData.Contacts.size() == 4)
+							if (mRigidBodies[i].first->IsImpulseEnabled() && mRigidBodies[j].first->IsImpulseEnabled())
 							{
-								pair<AglVector3, AglVector3> av;
-								av.first = AglVector3(0, 0, 0);
-								av.second = AglVector3(0, 0, 0);
-								for (int i = 0; i < 4; i++)
+								//Solves high impulse issues for boxes
+								if (colData.Contacts.size() == 4)
 								{
-									av.first += colData.Contacts[i].first;
-									av.second += colData.Contacts[i].second;
+									pair<AglVector3, AglVector3> av;
+									av.first = AglVector3(0, 0, 0);
+									av.second = AglVector3(0, 0, 0);
+									for (int i = 0; i < 4; i++)
+									{
+										av.first += colData.Contacts[i].first;
+										av.second += colData.Contacts[i].second;
+									}
+									av.first *= 0.25f;
+									av.second *= 0.25f;
+									pair<AglVector3, AglVector3> temp = colData.Contacts[0];
+									colData.Contacts[0] = av;
+									colData.Contacts.push_back(temp);		
 								}
-								av.first *= 0.25f;
-								av.second *= 0.25f;
-								pair<AglVector3, AglVector3> temp = colData.Contacts[0];
-								colData.Contacts[0] = av;
-								colData.Contacts.push_back(temp);		
+								collisions.push_back(colData);
 							}
-							collisions.push_back(colData);
 						}
 					}
 				}

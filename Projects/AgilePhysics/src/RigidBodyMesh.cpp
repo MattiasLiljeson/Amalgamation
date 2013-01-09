@@ -29,7 +29,7 @@ void RigidBodyMesh::CalculateInertiaTensor()
 //How should transforms be handled. Right now obb, bounding sphere, bsp tree and sphere grid are all
 //given in local space but not relative to the mesh.
 RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
-							  AglInteriorSphereGrid* pSphereGrid) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false)
+							  AglInteriorSphereGrid* pSphereGrid, bool pImpulseEnabled) : RigidBody(pPosition, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false, pImpulseEnabled)
 {
 	mOBB = pOBB;
 	mBoundingSphere = pBoundingSphere; 

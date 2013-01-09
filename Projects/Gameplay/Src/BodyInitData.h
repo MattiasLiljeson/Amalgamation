@@ -24,7 +24,7 @@ public:
 					AglVector3 p_scale, AglVector3 p_velocity,
 					AglVector3 p_angularVelocity, int p_type,
 					ResponseMode p_responseMode = ResponseMode::DYNAMIC,
-					CompoundMode p_compoundMode = CompoundMode::SINGLE)
+					CompoundMode p_compoundMode = CompoundMode::SINGLE, bool p_impulseEnabled = true)
 	{
 		m_position = p_position;
 		m_orientation = p_orientation;
@@ -35,6 +35,7 @@ public:
 
 		m_static = p_responseMode==ResponseMode::STATIC; // change these?
 		m_compound = p_compoundMode==CompoundMode::COMPOUND;
+		m_impulseEnabled = p_impulseEnabled;
 	}
 	AglVector3 m_position;
 	AglQuaternion m_orientation;
@@ -47,4 +48,6 @@ public:
 	bool m_static;
 
 	bool m_compound;
+
+	bool m_impulseEnabled;
 };
