@@ -7,22 +7,22 @@
 
 Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
 {
-	m_senderId = p_senderId;
 	clear();
+	m_senderId = p_senderId;
 	setData(p_data,p_size);
 }
 
 Packet::Packet( char p_packetType )
 {
-	m_packetType = p_packetType;
 	clear();
+	m_packetType = p_packetType;
 	*this << m_packetType;
 }
 
 Packet::Packet()
 {
-	m_packetType = -1;
 	clear();
+	m_packetType = -1;
 }
 
 Packet::~Packet()

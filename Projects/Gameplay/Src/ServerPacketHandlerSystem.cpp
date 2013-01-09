@@ -74,14 +74,27 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if( packetType == (char)PacketType::Ping )
 		{
-			SYSTEMTIME timestamp;
-			GetSystemTime( &timestamp );
+			float clientTime;
+			packet >> clientTime;
 
-			Packet response;
-			response << (char)PacketType::Pong;
-			response << timestamp;
+			Packet response((char)PacketType::Pong);
+			response << clientTime;
 
 			m_server->unicastPacket( response, packet.getSenderId() );
+		}
+		else if( packetType == (char)PacketType::Pong)
+		{
+			ClientInfo info;
+			float totalElapsedTime = m_world->getElapsedTime();
+			float timeWhenSent;
+
+			packet >> timeWhenSent;
+
+			/************************************************************************/
+			/* Convert from seconds to milliseconds.								*/
+			/************************************************************************/
+			info.ping = (totalElapsedTime - timeWhenSent)*1000.0f;
+			m_clients[packet.getSenderId()] = info;
 		}
 		
 	}

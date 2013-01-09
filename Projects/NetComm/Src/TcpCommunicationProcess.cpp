@@ -188,9 +188,6 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 					readPtr = m_asyncData + readPosition;
 				}
 			}
-
-
-
 			while( !packets.empty() )
 			{
 				m_parent->putMessage( new ProcessMessageReceivePacket(

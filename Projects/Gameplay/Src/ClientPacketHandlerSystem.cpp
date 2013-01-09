@@ -35,7 +35,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 {
 	m_tcpClient = p_tcpClient;
 
-	m_timer = m_timerStartValue = 0.25f;
+	m_timer = m_timerStartValue = 1;
 	m_currentPing = 0;
 }
 
@@ -54,6 +54,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		
 		packet >> packetType;
+#pragma region EntityCreation
 		if (packetType == (char)PacketType::EntityCreation)
 		{
 			NetworkEntityCreationPacket data = readCreationPacket(packet);
@@ -147,9 +148,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 				m_world->addEntity(entity);
 			}
-
-
 		}
+#pragma endregion
+
+#pragma region EntityUpdate
 		else if (packetType == (char)PacketType::EntityUpdate)
 		{
 			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
@@ -182,6 +184,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+#pragma endregion 
 		else if(packetType == (char)PacketType::InitCredentials)
 		{
 			char networkType;
@@ -234,10 +237,15 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::Pong)
 		{
-			SYSTEMTIME serverTimestamp;
-			packet >> serverTimestamp;
-			m_currentPing = serverTimestamp.wSecond * 1000 - m_timestamp.wSecond * 1000 +
-				serverTimestamp.wMilliseconds - m_timestamp.wMilliseconds;
+			float totalElapsedTime = m_world->getElapsedTime();
+			float timeWhenSent;
+
+			packet >> timeWhenSent;
+
+			/************************************************************************/
+			/* Convert from seconds to milliseconds.								*/
+			/************************************************************************/
+			m_currentPing = (totalElapsedTime - timeWhenSent)*1000.0f;
 		}
 	}
 
@@ -246,11 +254,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	{
 		m_timer = m_timerStartValue;
 
-		GetSystemTime( &m_timestamp );
+		float timeStamp = m_world->getElapsedTime();
 
-		Packet packet;
-		packet << (char)EntityType::Other;
-		packet << (char)PacketType::Ping;
+		Packet packet((char)PacketType::Ping);
+		packet << timeStamp;
 
 		m_tcpClient->sendPacket( packet );
 	}
@@ -259,8 +266,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 void ClientPacketHandlerSystem::initialize()
 {
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
-		"Ping", TwType::TW_TYPE_INT32,
+		AntTweakBarWrapper::getInstance()->BarType::OVERALL,
+		"Ping", TwType::TW_TYPE_FLOAT,
 		&m_currentPing, "" );
 }
 

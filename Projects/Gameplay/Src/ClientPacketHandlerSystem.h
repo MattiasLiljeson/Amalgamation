@@ -67,7 +67,6 @@ private:
 
 	float m_timer;
 	float m_timerStartValue;
-	SYSTEMTIME m_timestamp;
-	int m_currentPing;
+	float m_currentPing;
 
 };
