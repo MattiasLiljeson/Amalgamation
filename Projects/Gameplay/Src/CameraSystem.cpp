@@ -38,11 +38,12 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
 		// optional component for lookat
+		/*
 		LookAtEntity* lookAt=NULL;
 		Component* t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity );
 		if (t!=NULL)
 			lookAt = static_cast<LookAtEntity*>(t);
-
+			*/
 		// Retrieve initial info
 		AglVector3 position = transform->getTranslation();
 		AglQuaternion rotation = transform->getRotation();
@@ -50,6 +51,7 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3 up = transform->getMatrix().GetUp();
 
 		// Prepare lookat values if used
+		/*
 		if (lookAt)
 		{
 			// Extract look-at entity and its transform
@@ -74,15 +76,16 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 			rotation = targetTransform->getRotation();
 			rotation.normalize();
 		}
+		*/
 
 		// Construct view matrix
 		AglMatrix view = AglMatrix::createViewMatrix(position,
 													 lookTarget,
 													 up);
 
-		// update of position
-		transform->setTranslation( position );
-		transform->setRotation( rotation );
+// 		// update of position
+// 		transform->setTranslation( position );
+// 		transform->setRotation( rotation );
 		
 
 		// Rendering preparations

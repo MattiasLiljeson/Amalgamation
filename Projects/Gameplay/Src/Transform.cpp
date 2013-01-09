@@ -30,7 +30,8 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	calcCompMatrix();
 }
 
-Transform::Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale)
+Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
+					 const AglVector3& p_scale)
 {
 	m_translation = p_translation;
 	m_rotation = p_rotation;
@@ -49,7 +50,7 @@ const AglVector3& Transform::getTranslation() const
 	return m_translation;
 }
 
-void Transform::setTranslation( const AglVector3 p_translation )
+void Transform::setTranslation( const AglVector3& p_translation )
 {
 	m_translation = p_translation;
 	calcCompMatrix();
@@ -60,7 +61,7 @@ const AglVector3& Transform::getScale() const
 	return m_scale;
 }
 
-void Transform::setScale( const AglVector3 p_scale )
+void Transform::setScale( const AglVector3& p_scale )
 {
 	m_scale = p_scale;
 	calcCompMatrix();
@@ -71,11 +72,28 @@ const AglQuaternion& Transform::getRotation() const
 	return m_rotation;
 }
 
-void Transform::setRotation( const AglQuaternion p_rotation )
+void Transform::setRotation( const AglQuaternion& p_rotation )
 {
 	m_rotation = p_rotation;
 	calcCompMatrix();
 }
+
+void Transform::setForward( const AglVector3& p_forward )
+{
+	m_compositionMatrix.SetForward(p_forward);
+}
+
+void Transform::setRight( const AglVector3& p_right )
+{
+	m_compositionMatrix.SetRight(p_right);
+}
+
+void Transform::setUp( const AglVector3& p_up )
+{
+	m_compositionMatrix.SetUp(p_up);
+}
+
+
 
 const AglMatrix& Transform::getMatrix() const
 {

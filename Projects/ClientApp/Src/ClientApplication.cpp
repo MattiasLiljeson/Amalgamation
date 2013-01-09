@@ -37,6 +37,7 @@
 #include <RenderPrepSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <DisplayPlayerScoreSystem.h>
+#include <LookAtSystem.h>
 #include <HudSystem.h>
 #include <CameraInfo.h>
 #include <LookAtEntity.h>
@@ -146,6 +147,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	PhysicsSystem* physics = new PhysicsSystem();
 	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
+
+	/************************************************************************/
+	/* General controlling													*/
+	/************************************************************************/
+	LookAtSystem* lookAtSystem = new LookAtSystem();
+	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 	
 	/************************************************************************/
 	/* Graphics																*/

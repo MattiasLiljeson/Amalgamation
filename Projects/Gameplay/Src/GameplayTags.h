@@ -15,9 +15,9 @@ class ShipEditMode_TAG : public Tag {};
 ///
 /// ShipFollowMode_TAG
 ///
-class CameraFollowMode_TAG : public Tag {};
+class LookAtFollowMode_TAG : public Tag {};
 
 ///
 /// ShipFlyMode_TAG
 ///
-class CameraOrbitMode_TAG : public Tag {};
+class LookAtOrbitMode_TAG : public Tag {};

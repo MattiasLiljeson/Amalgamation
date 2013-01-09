@@ -41,8 +41,8 @@ public:	//Enums
 		// -------------------
 		TAG_ShipFlyMode,		
 		TAG_ShipEditMode,
-		TAG_CameraFollowMode,
-		TAG_CameraOrbitMode,
+		TAG_LookAtFollowMode,
+		TAG_LookAtOrbitMode,
 		// -------------------
 		// Transform component
 		// -------------------
