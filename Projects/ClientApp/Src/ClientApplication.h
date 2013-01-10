@@ -64,6 +64,10 @@ private:
 	void initEntities();
 	void initSounds();
 	void initSoundSystem();
+
+	//Temp
+	void InitModulesTestByAnton();
+
 private:
 	HINSTANCE m_hInstance;
 

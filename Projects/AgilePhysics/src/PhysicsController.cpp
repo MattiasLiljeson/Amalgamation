@@ -18,18 +18,22 @@ int PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUser
 		pParent->AddChild(s);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
+int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, 
+								AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent, bool pImpulseEnabled, bool pCollisionEnabled)
 {
-	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic);
+	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, pImpulseEnabled);
+	b->SetCollisionEnabled(pCollisionEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent)
+int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, 
+							  CompoundBody* pParent, bool pImpulseEnabled, bool pCollisionEnabled)
 {
-	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static);
+	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static, pImpulseEnabled);
+	b->SetCollisionEnabled(pCollisionEnabled);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	mBodies.push_back(b);
 	if (pParent)
@@ -103,11 +107,11 @@ void PhysicsController::Update(float pElapsedTime)
 	vector<PhyCollisionData> collisions;
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (mRigidBodies[i].first->IsActive())
+		if (mRigidBodies[i].first->IsActive() && mRigidBodies[i].first->IsCollisionEnabled())
 		{
 			for (unsigned int j = i + 1; j < mRigidBodies.size(); j++)
 			{
-				if (mRigidBodies[j].first->IsActive())
+				if (mRigidBodies[j].first->IsActive() && mRigidBodies[j].first->IsCollisionEnabled())
 				{
 					if (!mRigidBodies[i].first->IsStatic() || !mRigidBodies[j].first->IsStatic())
 					{
@@ -121,24 +125,27 @@ void PhysicsController::Update(float pElapsedTime)
 							//Reg collision
 							mCollisions.push_back(UintPair(mRigidBodies[i].second, mRigidBodies[j].second));
 
-							//Solves high impulse issues for boxes
-							if (colData.Contacts.size() == 4)
+							if (mRigidBodies[i].first->IsImpulseEnabled() && mRigidBodies[j].first->IsImpulseEnabled())
 							{
-								pair<AglVector3, AglVector3> av;
-								av.first = AglVector3(0, 0, 0);
-								av.second = AglVector3(0, 0, 0);
-								for (int i = 0; i < 4; i++)
+								//Solves high impulse issues for boxes
+								if (colData.Contacts.size() == 4)
 								{
-									av.first += colData.Contacts[i].first;
-									av.second += colData.Contacts[i].second;
+									pair<AglVector3, AglVector3> av;
+									av.first = AglVector3(0, 0, 0);
+									av.second = AglVector3(0, 0, 0);
+									for (int i = 0; i < 4; i++)
+									{
+										av.first += colData.Contacts[i].first;
+										av.second += colData.Contacts[i].second;
+									}
+									av.first *= 0.25f;
+									av.second *= 0.25f;
+									pair<AglVector3, AglVector3> temp = colData.Contacts[0];
+									colData.Contacts[0] = av;
+									colData.Contacts.push_back(temp);		
 								}
-								av.first *= 0.25f;
-								av.second *= 0.25f;
-								pair<AglVector3, AglVector3> temp = colData.Contacts[0];
-								colData.Contacts[0] = av;
-								colData.Contacts.push_back(temp);		
+								collisions.push_back(colData);
 							}
-							collisions.push_back(colData);
 						}
 					}
 				}
@@ -306,15 +313,41 @@ bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 
 vector<unsigned int> PhysicsController::CollidesWith(unsigned int p_b)
 {
-	vector<unsigned int> list;
-	for (unsigned int i = 0; i < mCollisions.size(); i++)
+	if (mBodies[p_b]->IsCompoundBody())
 	{
-		if (mCollisions[i].first == p_b)
-			list.push_back(mCollisions[i].second);
-		if (mCollisions[i].second == p_b)
-			list.push_back(mCollisions[i].first);
+		CompoundBody* body = (CompoundBody*)mBodies[p_b];
+		vector<RigidBody*> children = body->GetChildren();
+		vector<unsigned int> list;
+		for (unsigned int i = 0; i < children.size(); i++)
+		{
+			for (unsigned int j = 0; j < mCollisions.size(); j++)
+			{
+				RigidBody* b = (RigidBody*)mBodies[mCollisions[j].first];
+				if (b == children[i])
+				{
+					list.push_back(mCollisions[j].second);
+				}
+				b = (RigidBody*)mBodies[mCollisions[j].second];
+				if (b == children[i])
+				{
+					list.push_back(mCollisions[j].first);
+				}
+			}
+		}
+		return list;
 	}
-	return list;
+	else
+	{
+		vector<unsigned int> list;
+		for (unsigned int i = 0; i < mCollisions.size(); i++)
+		{
+			if (mCollisions[i].first == p_b)
+				list.push_back(mCollisions[i].second);
+			if (mCollisions[i].second == p_b)
+				list.push_back(mCollisions[i].first);
+		}
+		return list;
+	}
 }
 
 void PhysicsController::ActivateBody(unsigned int pBody)
@@ -328,4 +361,9 @@ void PhysicsController::InactivateBody(unsigned int pBody)
 bool PhysicsController::IsActive(unsigned int pBody)
 {
 	return mBodies[pBody]->IsActive();
+}
+
+void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform)
+{
+	p_compound->AddChild(p_body, p_localTransform);
 }

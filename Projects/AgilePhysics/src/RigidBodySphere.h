@@ -13,7 +13,7 @@ private:
 private:
 	void CalculateInertiaTensor();
 public:
-	RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled = false);
+	RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled = false, bool pImpulseEnabled = true);
 	~RigidBodySphere();
 	RigidBodyType GetType();
 	float			GetRadius() const;

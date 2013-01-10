@@ -3,6 +3,7 @@
 
 #include <EntitySystem.h>
 #include <ConnectionPointCollection.h>
+#include <AglMesh.h>
 #include <vector>
 #include <map>
 
@@ -35,7 +36,8 @@ public:
 	LevelGenSystem();
 	virtual ~LevelGenSystem();
 
-	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes);
+	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
+						vector<AglMeshHeader> p_aglMeshHeaders);
 
 	void initialize();
 
@@ -64,6 +66,7 @@ private:
 	void debugPrintTransformTree();
 
 	vector<ConnectionPointCollection> m_pieceTypes;
+	vector<AglMeshHeader> m_meshHeaders;
 
 	map<Transform*, TransformNode*> m_transformHierarchy;
 	

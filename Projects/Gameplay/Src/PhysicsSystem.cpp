@@ -3,6 +3,10 @@
 #include "BodyInitData.h"
 #include <PhysicsController.h>
 #include "PhysicsBody.h"
+#include "RenderInfo.h"
+#include "GraphicsBackendSystem.h"
+#include "ShipController.h"
+#include "ConnectionPointSet.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -56,6 +60,26 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			t->setTranslation(pos);
 			t->setRotation(rot);
 			t->setScale(scale);
+
+			if (!b->IsCompoundBody())
+			{
+				if (((RigidBody*)b)->GetType() == BOX)
+				{
+					RigidBodyBox* box = (RigidBodyBox*)b;
+					t->setScale(box->GetSizeAsVector3()*0.5f);
+				}
+			}
+
+		}
+
+		//Check if the object is a ship
+		ShipController* sc =
+			static_cast<ShipController*>(
+			m_world->getComponentManager()->getComponent( p_entities[i],
+			ComponentType::getTypeFor(ComponentType::ShipController)));
+		if (sc)
+		{
+			queryShipCollision(p_entities[i], p_entities);
 		}
 	}
 }
@@ -80,6 +104,9 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 	if (init)
 	{
 		CompoundBody* cb = NULL;
+		if (body->getParentId() >= 0)
+			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->getParentId()));
+
 		int t=0;
 		int* bodyId = &t; // temp storage of id
 		AglVector3 offset=AglVector3(0.0f,0.0f,0.0f);
@@ -101,7 +128,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
-				cb);
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
 		else
 		{
@@ -156,5 +183,95 @@ void PhysicsSystem::handleCompoundBodyDependencies( PhysicsBody* p_bodyComponent
 
 		// Reset dirtybit
 		p_bodyComponent->resetParentChangedStatus();
+	}
+}
+
+void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
+{
+	EntitySystem* tempSys = NULL;
+
+	// Load cube model used as graphic representation for all "graphical" entities.
+	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
+
+	//Create modules that attaches to the ship
+	Entity* entity = m_world->createEntity();
+	int shipId = entity->getIndex();
+	Component* component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(p_position.x, p_position.y, p_position.z);
+	entity->addComponent( ComponentType::Transform, component );
+
+	PhysicsBody* body = new PhysicsBody();
+	body->setParentId(p_body->m_id);
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		body);
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(p_position,
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE));
+
+	m_world->addEntity(entity);
+}
+
+void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_others)
+{
+	static int counter=0;
+
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent( ship,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	if (!cps)
+		return;
+
+	int cp = 0;
+	while (cp < cps->m_connectionPoints.size() && cps->m_connectionPoints[cp].cpConnectedEntity >= 0)
+		cp++;
+
+	if (cp >= cps->m_connectionPoints.size())
+		return;
+
+
+	PhysicsBody* body =
+		static_cast<PhysicsBody*>(
+		m_world->getComponentManager()->getComponent( ship,
+		ComponentType::getTypeFor(ComponentType::PhysicsBody)));
+
+	vector<unsigned int> collisions = m_physicsController->CollidesWith(body->m_id);
+	if (collisions.size() > 0)
+	{
+		for (unsigned int i = 0; i < p_others.size(); i++)
+		{
+			PhysicsBody* module =
+				static_cast<PhysicsBody*>(
+				m_world->getComponentManager()->getComponent(p_others[i],
+				ComponentType::getTypeFor(ComponentType::PhysicsBody)));
+
+			if (p_others[i]->getComponent(ComponentType::ShipModule))
+			{
+				for (unsigned int j = 0; j < collisions.size(); j++)
+				{
+					if (collisions[j] == module->m_id)
+					{
+						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
+						RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
+						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
+						cps->m_connectionPoints[cp].cpConnectedEntity = p_others[i]->getIndex();
+						module->setParentId(body->getParentId());
+
+						cp++;
+						if (cp >= cps->m_connectionPoints.size())
+							return;
+					}
+				}
+			}
+		}
 	}
 }

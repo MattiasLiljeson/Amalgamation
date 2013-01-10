@@ -272,7 +272,8 @@ void GraphicsWrapper::flipBackBuffer()
 
 unsigned int GraphicsWrapper::createMesh( const string& p_name,
 										  const string* p_path/*=NULL*/,
-										  ConnectionPointCollection* p_outConnectionPoints/*=NULL*/)
+										  ConnectionPointCollection* p_outConnectionPoints,/*=NULL*/
+										  AglMeshHeader* p_outAglMeshHeader/*=NULL*/)
 {
 	// =============================================
 	//
@@ -385,6 +386,13 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 						p_outConnectionPoints->m_collection.push_back(dat);
 						p_outConnectionPoints->m_meshId = meshResultId;
 					}
+				}
+				// ------------------
+				// Agl mesh header
+				// ------------------
+				if (p_outAglMeshHeader!=NULL)
+				{
+					memcpy(p_outAglMeshHeader, &aglMeshHeader, sizeof(aglMeshHeader));
 				}
 			}
 			else

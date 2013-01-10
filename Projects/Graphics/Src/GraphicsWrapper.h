@@ -31,6 +31,8 @@ class BufferFactory;
 class Mesh;
 struct Texture;
 
+struct AglMeshHeader;
+
 class GraphicsWrapper
 {
 public:
@@ -118,11 +120,13 @@ public:
 	/// \param p_name Filename
 	/// \param p_path Path, without filename
 	/// \param p_outHardPoints Optional container for storing connection points.
+	/// \param p_outAglMeshHeader Optional out param that returns an agl mesh header.
 	/// \return unsigned int Mesh id
 	///-----------------------------------------------------------------------------------
 	unsigned int createMesh(const string& p_name,
 							const string* p_path=NULL,
-							ConnectionPointCollection* p_outConnectionPoints=NULL);
+							ConnectionPointCollection* p_outConnectionPoints=NULL,
+							AglMeshHeader* p_outAglMeshHeader=NULL);
 
 	// WIP, should not use texture pointer, but texture id
 	unsigned int createMesh(const string& p_name,

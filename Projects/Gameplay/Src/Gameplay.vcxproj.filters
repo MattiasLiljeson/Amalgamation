@@ -64,7 +64,10 @@
     <Filter Include="Components\Physics">
       <UniqueIdentifier>{e0545ecf-2bca-4bcb-b57a-5431f87bec15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Audio\Gameplay">
+    <Filter Include="Components\Modules">
+      <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay">
       <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -121,7 +124,7 @@
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
     <ClInclude Include="ShipControllerSystem.h">
-      <Filter>Systems\Audio\Gameplay</Filter>
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
@@ -202,6 +205,21 @@
     <ClInclude Include="LevelPiece.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedBoosterModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModuleControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -238,7 +256,7 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
     <ClCompile Include="ShipControllerSystem.cpp">
-      <Filter>Systems\Audio\Gameplay</Filter>
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="NetworkUpdateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
@@ -306,6 +324,21 @@
     </ClCompile>
     <ClCompile Include="LevelPiece.cpp">
       <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoosterModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

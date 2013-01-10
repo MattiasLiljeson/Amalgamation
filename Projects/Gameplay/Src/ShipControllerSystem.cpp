@@ -11,6 +11,9 @@
 #include "NetworkSynced.h"
 #include "Control.h"
 #include "AntTweakBarWrapper.h"
+#include "PhysicsBody.h"
+#include "ConnectionPointSet.h"
+#include "SpeedBoosterModule.h"
 
 
 ShipControllerSystem::ShipControllerSystem( InputBackendSystem* p_inputBackend,
@@ -169,7 +172,7 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		// Turning multiplier
 		float  turnSpeed = controller->getTurningSpeed() * dt;
 		// Thrust multiplier
-		float  thrustPower = controller->getThrustPower() * dt;
+		float  thrustPower = (controller->getThrustPower() + getSpeedBoost(p_entities[i], controller->getThrustPower())) * dt;
 
 		// Calc translation from player input
 		AglVector3 thrustVec;
@@ -185,13 +188,22 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		Packet thrustPacket;
+		/*Packet thrustPacket;
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
 			ComponentType::NetworkSynced));
 
 		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
 			<< thrustVec << angularVec << netSync->getNetworkIdentity();
-		m_client->sendPacket( thrustPacket );
+		m_client->sendPacket( thrustPacket );*/
+
+		PhysicsBody* physicsBody = NULL;
+		physicsBody = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+			ComponentType::PhysicsBody ) );
+		if( physicsBody )
+		{
+			m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
+			//cout << physicsBody->m_id << endl;
+		}
 	}
 }
 
@@ -269,4 +281,30 @@ void ShipControllerSystem::updateAntTweakBar(const ResultingInputForces& p_input
 	m_rightStickDirWithCorrection[0] = p_input.strafeHorizontalInput + m_rightStickCorrection[0];
 	m_rightStickDirWithCorrection[1] = p_input.strafeVerticalInput + m_rightStickCorrection[1];
 	m_rightStickDirWithCorrection[2] = 0.5f;
+}
+
+//Anton - 9/1-13
+float ShipControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrust)
+{
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::ConnectionPointSet ) );
+	if (!cps)
+		return 0;
+
+	float speedBoost = 0;
+	vector<ConnectionPoint> list = cps->m_connectionPoints;
+	for (unsigned int i = 0; i < list.size(); i++)
+	{
+		if (list[i].cpConnectedEntity >= 0)
+		{
+			Entity* module = m_world->getEntity(list[i].cpConnectedEntity);
+
+			SpeedBoosterModule* booster = static_cast<SpeedBoosterModule*>(
+				module->getComponent( ComponentType::ComponentTypeIdx::SpeedBoosterModule ) );
+
+			if (booster)
+				speedBoost += 5.0f*p_baseThrust;
+		}
+	}
+	return speedBoost;
 }

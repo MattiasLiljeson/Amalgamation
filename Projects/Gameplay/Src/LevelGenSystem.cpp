@@ -75,7 +75,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	// Create the entity and specify a mesh for it
 	createAndAddEntity(m_pieceTypes[0].m_meshId, transform);
 	// Create the level piece to use later
-	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], transform);
+	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -129,15 +129,23 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 	{
 		// Prepare and connect newly created transform pieces to the target.
 		vector<LevelPiece*> generatedPieces(freeConnectSlots.size());
+
+		//generatedPieces.resize(1);
+
 		for (int i = 0; i < generatedPieces.size(); i++)
 		{
 			// Find a random piece type to use
 			int pieceType = getRandomPieceType();
 			// Create a level piece
-			LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], new Transform() );
-
-			piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
+			 LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
+												 &m_meshHeaders[pieceType], 
+												 new Transform() );
+			// Debug: Create all pieces in order using second piece type!
+			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], new Transform() );
 			
+			piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
+			//piece->connectTo(p_targetPiece, i);
+
 			out_pieces.push_back(piece);
 		}
 	}
@@ -216,7 +224,9 @@ void LevelGenSystem::debugPrintTransformNode( TransformNode* p_node,
 //		p_stream << "-> " << "(empty)" << '\n';
 }
 
-void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes )
+void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes,
+									vector<AglMeshHeader> p_aglMeshHeaders)
 {
-	m_pieceTypes = p_pieceTypes;
+	m_pieceTypes	= p_pieceTypes;
+	m_meshHeaders	= p_aglMeshHeaders;
 }

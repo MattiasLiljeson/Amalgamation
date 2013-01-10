@@ -54,7 +54,7 @@ namespace Srv
 			}
 
 			// HACK: Really slow update loop for testing purposes.
-			//boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
 
@@ -103,7 +103,7 @@ namespace Srv
 		// Test physics
 		// Entities on the server does not need any render info component
 
-		//b1
+		//Ship
 		entity = m_world->createEntity();
 		//component = new RenderInfo( cubeMeshId );
 		//entity->addComponent( ComponentType::RenderInfo, component );
@@ -123,22 +123,19 @@ namespace Srv
 
 		m_world->addEntity(entity);
 
-		//b2
+
+		//Module 1
 		entity = m_world->createEntity();
-		//component = new RenderInfo( cubeMeshId );
-		//entity->addComponent( ComponentType::RenderInfo, component );
-		component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
+		component = new Transform(AglVector3(1, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
 		entity->addComponent( ComponentType::Transform, component );
 		component = new PhysicsBody();
 		entity->addComponent(ComponentType::PhysicsBody, component);
 
-		component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, 
-			BodyInitData::STATIC);
+		component = new BodyInitData(AglVector3(1, 0, 0), AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
-		// Reminder: the b2 entity is static, hence, this entity could be left to exist
-		// by default on the client, without any physics data. It doesn't need to be
-		// synced over the network every frame, since it can't move. For now, it will be.
+
 		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
 		entity->addComponent(ComponentType::NetworkSynced, component);
 

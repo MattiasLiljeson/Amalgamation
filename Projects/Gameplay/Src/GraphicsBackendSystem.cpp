@@ -7,6 +7,7 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 #include "CameraInfo.h"
+#include <AglMesh.h>
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -92,9 +93,10 @@ void GraphicsBackendSystem::process()
 
 unsigned int GraphicsBackendSystem::createMesh( const string& p_meshName, 
 											    const string* p_path/*=NULL */,
-												ConnectionPointCollection* p_outConnectionPoints/*=NULL*/)
+												ConnectionPointCollection* p_outConnectionPoints/*=NULL*/,
+												AglMeshHeader* p_outMeshHeader/*=NULL*/)
 {
-	return m_graphicsWrapper->createMesh(p_meshName,p_path,p_outConnectionPoints);
+	return m_graphicsWrapper->createMesh(p_meshName,p_path,p_outConnectionPoints,p_outMeshHeader);
 }
 
 int GraphicsBackendSystem::getMeshId( const string& p_meshName )

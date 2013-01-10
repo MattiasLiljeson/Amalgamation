@@ -15,6 +15,7 @@
 
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <Windows.h>
 
 using namespace std;
 
@@ -68,20 +69,24 @@ public:
 	Packet& operator << (bool	p_data);
 	Packet& operator << (char	p_data);
 	Packet& operator << (short	p_data);
+	Packet& operator << (unsigned short p_data);
 	Packet& operator << (int	p_data);
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3 p_data);
 	Packet& operator << (AglQuaternion p_data);
+	Packet& operator << (SYSTEMTIME p_data);
 	
 	Packet& operator >> (bool&	p_data);
 	Packet& operator >> (char&	 p_data);
 	Packet& operator >> (short&	 p_data);
+	Packet& operator >> (unsigned short& p_data);
 	Packet& operator >> (int&	 p_data);
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglVector3& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
+	Packet& operator >> (SYSTEMTIME& p_data);
 
 private:
 	void WriteData(void* p_data, unsigned int p_dataSize);

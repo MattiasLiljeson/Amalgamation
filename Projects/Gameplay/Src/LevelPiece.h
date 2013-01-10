@@ -6,6 +6,7 @@ using namespace std;
 
 class Transform;
 struct ConnectionPointCollection;
+struct AglMeshHeader;
 
 // =======================================================================================
 //                                      LevelPiece
@@ -22,7 +23,9 @@ struct ConnectionPointCollection;
 class LevelPiece
 {
 public:
-	LevelPiece(ConnectionPointCollection* p_connectionPoints, Transform* p_transform);
+	LevelPiece(ConnectionPointCollection* p_connectionPoints,
+				AglMeshHeader* p_meshHeader, 
+				Transform* p_transform);
 
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex);
 	vector<int> findFreeConnectionPointSlots();
@@ -34,6 +37,7 @@ public:
 protected:
 private:
 	ConnectionPointCollection*	m_connectionPoints;
+	AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;

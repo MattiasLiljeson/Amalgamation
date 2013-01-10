@@ -68,9 +68,11 @@ public:
 	/// \param p_static Bool indicating whether or not the box is immovable
 	/// \return The box
 	///-----------------------------------------------------------------------------------
-	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+	int AddBox(AglVector3 p_position, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL,
+					bool pImpulseEnabled = NULL, bool pCollisionEnabled = true);
 
-	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
+	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+				bool pCollisionEnabled = true);
 
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 
@@ -90,6 +92,8 @@ public:
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
 	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
+	
+	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
 
 	///-----------------------------------------------------------------------------------
 	/// Clears all rigid bodies

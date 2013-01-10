@@ -77,7 +77,14 @@ Packet& Packet::operator << (char p_data)
 }
 
 Packet& Packet::operator << (short p_data)
-{	
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator<<( unsigned short p_data )
+{
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
 	return *this;
@@ -118,6 +125,13 @@ Packet& Packet::operator <<( AglQuaternion p_data )
 	return *this;
 }
 
+Packet& Packet::operator<<( SYSTEMTIME p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator>>( bool& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -138,6 +152,14 @@ Packet& Packet::operator >> (short& p_data)
 	ReadData(&p_data, dataSize);
 	return *this;
 }
+
+Packet& Packet::operator>>( unsigned short& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
 
 Packet& Packet::operator >> (int& p_data)
 {
@@ -174,6 +196,12 @@ Packet& Packet::operator>>( AglQuaternion& p_data )
 	return *this;
 }
 
+Packet& Packet::operator>>( SYSTEMTIME& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
 
 void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 {
