@@ -69,13 +69,13 @@ int LevelGenSystem::getRandomPieceType()
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(10, 10, 10), 
+	Transform* transform = new Transform(AglVector3(15, 20, 15), 
 										AglQuaternion::identity(),
 										AglVector3::one());
 	// Create the entity and specify a mesh for it
-	createAndAddEntity(m_pieceTypes[0].m_meshId, transform);
+	createAndAddEntity(m_pieceTypes[1].m_meshId, transform);
 	// Create the level piece to use later
-	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
+	LevelPiece* piece = new LevelPiece( &m_pieceTypes[1], &m_meshHeaders[1], transform);
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -130,21 +130,33 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 		// Prepare and connect newly created transform pieces to the target.
 		vector<LevelPiece*> generatedPieces(freeConnectSlots.size());
 
-		//generatedPieces.resize(1);
+		generatedPieces.resize(2);
 
 		for (int i = 0; i < generatedPieces.size(); i++)
 		{
 			// Find a random piece type to use
 			int pieceType = getRandomPieceType();
 			// Create a level piece
-			 LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
-												 &m_meshHeaders[pieceType], 
-												 new Transform() );
+			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
+			//									 &m_meshHeaders[pieceType], 
+			//									 new Transform() );
 			// Debug: Create all pieces in order using second piece type!
-			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], new Transform() );
+			LevelPiece* piece = new LevelPiece( &m_pieceTypes[1], 
+												&m_meshHeaders[1],
+												new Transform() );
 			
-			piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
-			//piece->connectTo(p_targetPiece, i);
+			//piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
+			piece->connectTo(p_targetPiece, i);
+
+			// DEBUG: Attach a cube between the connections!
+			// Reminder that fetching of sprint 4 needs to be done to get new help methods
+			AglVector3 pos, scale;
+			AglQuaternion rot;
+			piece->getConnectionPointMatrix(0, Space_GLOBAL).toComponents(scale, rot, pos);
+			createAndAddEntity(0, new Transform(pos, rot, AglVector3::one() * 0.5f));
+			p_targetPiece->getConnectionPointMatrix(i, Space_GLOBAL).toComponents(scale, rot, pos);
+			createAndAddEntity(0, new Transform(pos, rot, AglVector3::one() * 0.5f));
+
 
 			out_pieces.push_back(piece);
 		}

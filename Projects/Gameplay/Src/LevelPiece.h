@@ -8,6 +8,12 @@ class Transform;
 struct ConnectionPointCollection;
 struct AglMeshHeader;
 
+enum E_Space
+{
+	Space_LOCAL,
+	Space_GLOBAL
+};
+
 // =======================================================================================
 //                                      LevelPiece
 // =======================================================================================
@@ -27,7 +33,7 @@ public:
 				AglMeshHeader* p_meshHeader, 
 				Transform* p_transform);
 
-	AglMatrix	getConnectionPointMatrix(int p_vectorIndex);
+	AglMatrix	getConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	vector<int> findFreeConnectionPointSlots();
 	Transform*	getTransform();
 	int			getMeshId();

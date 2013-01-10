@@ -51,23 +51,37 @@ void LevelPiece::setChild( int p_inSlot, Transform* p_transform )
 
 void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 {
+	// From Proto \\ Jarl & Alex
+
+	// Set this connection to be occupied!
+	p_targetPiece->setChild(p_targetSlot, m_transform);
+	setChild(0, p_targetPiece->getTransform());
+
+	return;
+	// From Proto \\ Anton & Alex
+
 	// Set the position of this piece to the position of the target, with the offset of
 	// the target connection point and this connection point
 	// connectionPoints are assumed to be in local space relative its parent (piece).
 	// Pieces are assumed to be in global space.
 
-	AglMatrix targetLocalConnectMat = p_targetPiece->
-												getConnectionPointMatrix(p_targetSlot);
 	AglMatrix thisLocalConnectMat = getConnectionPointMatrix(0);
 
 	// Target connection point matrix in world space
-	AglMatrix targetGlobalConnectMat = targetLocalConnectMat *
-												p_targetPiece->getTransform()->getMatrix();
+	AglMatrix targetGlobalConnectMat = p_targetPiece->getConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
+	AglQuaternion rotation;
+	AglVector3 scale, translation;
+	targetGlobalConnectMat.toComponents(scale, rotation, translation);
 
 	AglMatrix thisNewGlobalMat = targetGlobalConnectMat * 
 									thisLocalConnectMat.inverse();
 
-	// TODO: Get rotation from the new matrix!
+	// TODO: Fetch new code from sprint 4 that has AglMatrix::GetRotation()
+	thisNewGlobalMat.toComponents(scale, rotation, translation);
+
+	rotation *= AglQuaternion::constructFromAxisAndAngle(thisLocalConnectMat.GetRight(), 3.141592f);
+	m_transform->setRotation(rotation);
+	
 
 	// Positioning
 	// -----------
@@ -91,7 +105,11 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	setChild(0, p_targetPiece->getTransform());
 }
 
-AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex )
+AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
 {
-	return AglMatrix( m_connectionPoints->m_collection[p_vectorIndex].transform );
+	if (p_inSpace == Space_LOCAL)
+		return AglMatrix( m_connectionPoints->m_collection[p_vectorIndex].transform );
+	else
+		return AglMatrix( m_connectionPoints->m_collection[p_vectorIndex].transform ) *
+				m_transform->getMatrix();
 }
