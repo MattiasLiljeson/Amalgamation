@@ -12,7 +12,7 @@
 #pragma once
 
 #include <Component.h>
-#include "NetworkType.h"
+#include "EntityType.h"
 
 class NetworkSynced: public Component
 {
@@ -25,7 +25,7 @@ public:
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
-		m_networkType.type = NetworkType::NON_EXISTENT;
+		m_networkType = EntityType::NON_EXISTENT;
 	}
 
 	///-----------------------------------------------------------------------------------
@@ -38,14 +38,14 @@ public:
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
-		m_networkType.type = NetworkType::NON_EXISTENT;
+		m_networkType = EntityType::NON_EXISTENT;
 	}
 
-	NetworkSynced( int p_networkIdentity, int p_owner, NetworkType::Network_T p_networkType )
+	NetworkSynced( int p_networkIdentity, int p_owner, EntityType::EntityEnums p_networkType )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
-		m_networkType.type = p_networkType;
+		m_networkType = p_networkType;
 	}
 
 	~NetworkSynced()
@@ -74,9 +74,9 @@ public:
 	/// Get the network type.
 	/// \return NetworkType
 	///-----------------------------------------------------------------------------------
-	NetworkType::Network_T getNetworkType() const
+	EntityType::EntityEnums getNetworkType() const
 	{
-		return m_networkType.type;
+		return m_networkType;
 	}
 
 	///-----------------------------------------------------------------------------------
@@ -99,13 +99,13 @@ public:
 		m_owner = p_owner;
 	}
 
-	void setNetworkType( NetworkType::Network_T p_networkType )
+	void setNetworkType( EntityType::EntityEnums p_networkType )
 	{
-		m_networkType.type = p_networkType;
+		m_networkType = p_networkType;
 	}
 
 private:
 	int m_networkIdentity;
 	int m_owner;
-	NetworkType m_networkType;
+	EntityType::EntityEnums m_networkType;
 };

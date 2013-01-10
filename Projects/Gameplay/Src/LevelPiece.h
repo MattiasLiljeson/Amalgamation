@@ -32,7 +32,7 @@ public:
 	LevelPiece(ConnectionPointCollection* p_connectionPoints,
 				AglMeshHeader* p_meshHeader, 
 				Transform* p_transform);
-
+	void		updateConnectionPoints();
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	vector<int> findFreeConnectionPointSlots();
 	Transform*	getTransform();
@@ -48,6 +48,5 @@ private:
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;
-	vector<Transform*>			m_connectionPoints;
-
+	vector<AglMatrix>			m_connectionPoints;
 };

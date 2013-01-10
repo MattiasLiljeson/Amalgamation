@@ -56,6 +56,8 @@ struct AglMatrix
 	AglVector3 GetUp() const;
 	AglVector3 GetDown() const;
 	AglVector3 GetTranslation() const;
+	AglQuaternion GetRotation() const;
+	AglVector3 GetScale() const;
 
 	//Member Setters
 	void SetForward(const AglVector3& pValue);

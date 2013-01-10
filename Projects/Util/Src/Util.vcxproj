@@ -77,6 +77,7 @@
   <ItemGroup>
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="FileCheck.h" />
+    <ClInclude Include="ValueClamp.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />
   </ItemGroup>

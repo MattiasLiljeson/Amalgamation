@@ -1,7 +1,7 @@
 #include "ClientApplication.h"
-#include <boost/thread/thread.hpp>
+#include <windows.h>
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 	#include "ServerApplication.h"
 #endif
 
@@ -15,13 +15,17 @@
 #include <PhysicsBody.h>
 #include <PhysicsSystem.h>
 #include <RenderInfo.h>
-#include <ShipController.h>
+#include <ShipFlyController.h>
+#include <ShipEditController.h>
 #include <Transform.h>
 #include <HudElement.h>
 #include <ShipModule.h>
 #include <ConnectionPointSet.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
+#include <GameplayTags.h>
+#include <PlayerCameraController.h>
+
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -31,19 +35,23 @@
 #include <GraphicsBackendSystem.h>
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
-#include <NetworkCommunicatorSystem.h>
+#include <ClientPacketHandlerSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
-#include <ShipControllerSystem.h>
+#include <ShipFlyControllerSystem.h>
+#include <ShipEditControllerSystem.h>
+#include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
+#include <LookAtSystem.h>
 #include <HudSystem.h>
 #include <LevelGenSystem.h>
 #include <CameraInfo.h>
 #include <LookAtEntity.h>
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
+#include <PlayerCameraControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -64,9 +72,9 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		m_client = new TcpClient();
 		m_world = new EntityWorld();
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 		m_serverApp = new Srv::ServerApplication();
-#endif // !_COMBINE_CLIENT_AND_SERVER
+#endif
 
 		initSystems();
 		initEntities();
@@ -75,6 +83,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		initSoundSystem();
 		initSounds();
 #endif
+
 	}
 	catch(exception& e)
 	{
@@ -85,15 +94,21 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 ClientApplication::~ClientApplication()
 {
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
+	ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+	m_serverApp->putMessage( newMessage );
+	m_serverApp->stop();
 	delete m_serverApp;
-#endif // !_COMBINE_CLIENT_AND_SERVER
+#endif
 	delete m_world;
 	delete m_client;
 }
 
 void ClientApplication::run()
 {
+#ifdef COMBINE_CLIENT_AND_SERVER
+	m_serverApp->start();
+#endif
 	m_running = true;
 
 	// simple timer
@@ -122,20 +137,12 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
-			
-			// DEBUGPRINT(( (toString(dt)+string("\n")).c_str() ));
 
 			m_world->setDelta((float)dt);
 			m_world->process();
 			
-			#ifdef _COMBINE_CLIENT_AND_SERVER
-				m_serverApp->step( static_cast<float>(dt) );
-			#endif
-
-//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
-
 }
 
 void ClientApplication::initSystems()
@@ -151,6 +158,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	PhysicsSystem* physics = new PhysicsSystem();
 	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
+
+	/************************************************************************/
+	/* General controlling													*/
+	/************************************************************************/
+	LookAtSystem* lookAtSystem = new LookAtSystem();
+	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 	
 	/************************************************************************/
 	/* Graphics																*/
@@ -170,14 +183,32 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
-	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
-		m_client );
-	m_world->setSystem( shipController, true);
+	/************************************************************************/
+	/* Player    															*/
+	/************************************************************************/
+	// Input system for ships
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	m_world->setSystem( shipInputProc, true);
 
-	// Camera system updates camera based on input and sets its viewport info
-	// to the graphics backend for render
-	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
+	// Controller systems for the ship
+	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,
+		m_client );
+	m_world->setSystem( shipFlyController, true);
+
+	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
+		m_client*/ );
+	m_world->setSystem( shipEditController, true);
+
+
+	/************************************************************************/
+	/* Camera																*/
+	/************************************************************************/
+
+	// Controller logic for camera
+	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc );
+	m_world->setSystem( cameraControl , true );
+	// Camera system sets its viewport info to the graphics backend for render
+	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
@@ -193,8 +224,8 @@ void ClientApplication::initSystems()
 		new NetworkConnectToServerSystem( m_client, inputBackend );
 	m_world->setSystem( connect, true );
 
-	NetworkCommunicatorSystem* communicatorSystem =
-		new NetworkCommunicatorSystem( m_client );
+	ClientPacketHandlerSystem* communicatorSystem =
+		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );*/
 
 	/************************************************************************/
@@ -309,9 +340,15 @@ void ClientApplication::initEntities()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::COMPOUND));
 
-	component = new ShipController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipController, component );
 
+	component = new ShipFlyController(5.0f, 50.0f);
+	entity->addComponent( ComponentType::ShipFlyController, component );
+
+	component = new ShipEditController();
+	entity->addComponent( ComponentType::ShipEditController, component);
+
+	// default tag is fly
+	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
@@ -321,6 +358,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	m_world->addEntity(entity);
+
 
 	InitModulesTestByAnton();
 
@@ -339,8 +377,19 @@ void ClientApplication::initEntities()
 	//entity->addComponent( ComponentType::Input, component );
 	component = new Transform( -5.0f, 0.0f, -5.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
+	component = new LookAtEntity(shipId, 
+								 AglVector3(0,3,-10),
+								 AglQuaternion::identity(),
+								 10.0f,
+								 10.0f,
+								 4.0f);
 	entity->addComponent( ComponentType::LookAtEntity, component );
+	// default tag is follow
+	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
+	component = new AudioListener();
+	entity->addComponent(ComponentType::AudioListener, component);
+	
 	m_world->addEntity(entity);
 }
 
@@ -451,11 +500,7 @@ void ClientApplication::InitModulesTestByAnton()
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
-	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
-
-
-
-
+//	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup
 	entity = m_world->createEntity();

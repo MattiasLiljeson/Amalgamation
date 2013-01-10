@@ -36,6 +36,7 @@
     <ClInclude Include="Manager.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="SystemType.h" />
+    <ClInclude Include="Tag.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{78BCBBD0-888F-41CD-8B6F-29539812F67E}</ProjectGuid>

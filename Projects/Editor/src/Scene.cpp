@@ -107,6 +107,14 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	for (unsigned int i = 0; i < ps.size(); i++)
 	{
 		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice, mDeviceContext));
+
+		if (ps[i]->getHeader().textureNameIndex >= 0)
+		{
+			string textureFile = mAglScene->getName(ps[i]->getHeader().textureNameIndex);
+			removePath(textureFile);
+			textureFile = pFolder + textureFile;
+			TextureManager::GetInstance()->LoadTexture(textureFile);
+		}
 	}
 
 

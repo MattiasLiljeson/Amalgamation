@@ -20,8 +20,7 @@ class InputBackendSystem;
 class CameraSystem : public EntitySystem
 {
 public:
-	CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
-				  InputBackendSystem* p_inputBackend );
+	CameraSystem( GraphicsBackendSystem* p_gfxBackend );
 	~CameraSystem();
 
 	virtual void initialize();
@@ -29,6 +28,5 @@ public:
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	InputBackendSystem* m_inputBackend;
 };
 

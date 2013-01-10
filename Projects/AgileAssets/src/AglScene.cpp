@@ -48,6 +48,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
 	m_connectionPoints = p_desc.connectionPoints;
+	m_particleSystems = p_desc.particleSystems;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
 }
@@ -252,6 +253,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
 	desc.connectionPoints = this->m_connectionPoints;
+	desc.particleSystems = this->m_particleSystems;
 	desc.coordinateSystem = this->m_coordinateSystem;
 	return desc;
 }

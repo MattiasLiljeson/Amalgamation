@@ -4,19 +4,38 @@
 #include <stdexcept>
 #include <climits>
 
+
+Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
+{
+	clear();
+	m_senderId = p_senderId;
+	setData(p_data,p_size);
+}
+
+Packet::Packet( char p_packetType )
+{
+	clear();
+	m_packetType = p_packetType;
+	*this << m_packetType;
+}
+
 Packet::Packet()
 {
 	clear();
-}
-
-Packet::Packet( int p_senderId )
-{
-	m_senderId = p_senderId;
+	m_packetType = -1;
 }
 
 Packet::~Packet()
 {
 
+}
+
+void Packet::clear()
+{
+	m_readPos = 1;
+	m_data.resize(1);
+	m_data[0] = 0;  
+	m_senderId = -1;
 }
 
 char* Packet::getDataPtr()
@@ -52,14 +71,6 @@ bool Packet::isEmpty() const
 	empty = (m_data.size() <= 1);
 
 	return empty;
-}
-
-void Packet::clear()
-{
-	m_readPos = 1;
-	m_data.resize(1);
-	m_data[0] = 0;
-	m_senderId = -1;
 }
 
 Packet& Packet::operator << ( bool p_data )

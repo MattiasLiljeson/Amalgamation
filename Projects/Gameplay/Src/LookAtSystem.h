@@ -1,34 +1,27 @@
 #pragma once
 
-// ES
 #include <EntitySystem.h>
 
-class TcpServer;
-class PhysicsSystem;
-
 // =======================================================================================
-//                                      NetworkInputHandlerSystem
+//                                   LookAtSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Changes transforms to look at a target, further behaviour can be enabled
+/// using tags for now.
 ///        
-/// # NetworkInputHandlerSystem
+/// # CameraSystem
 /// Detailed description.....
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkInputHandlerSystem : public EntitySystem
+class LookAtSystem : public EntitySystem
 {
 public:
-	NetworkInputHandlerSystem( TcpServer* p_server );
-	~NetworkInputHandlerSystem();
+	LookAtSystem();
+	~LookAtSystem();
 
-	void initialize();
+	virtual void initialize();
+	virtual void processEntities( const vector<Entity*>& p_entities );
 
-	void processEntities( const vector<Entity*>& p_entities );
-
-private:
-	TcpServer* m_server;
-	PhysicsSystem* m_physics;
 };

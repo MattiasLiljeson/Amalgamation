@@ -103,7 +103,7 @@ void MeshParser::Parse()
 	m->VertexFormat = AGL_VERTEX_FORMAT_PNTTBN;
 	m->Indices = indices;
 	m->IndicesCount = count;
-	m->Name = mMesh->GetName();
+	m->Name = mNode->GetName();
 	m->Vertices = vertices;
 	m->VertexCount = verts.size();
 	m->ControlIndices = indexToControl;

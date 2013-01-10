@@ -3,6 +3,8 @@
 
 EntityWorld::EntityWorld()
 {
+	m_totalGameTime = 0;
+
 	m_componentManager = new ComponentManager();
 	setManager( Manager::ComponentManager, m_componentManager );
 		

@@ -80,12 +80,13 @@ void FBXParser::Parse()
 					}
 				}
 
-				nodeNames.push_back(node->GetParent()->GetName()); 
+				nodeNames.push_back(node->GetName()); 
+				string name = node->GetName();
 				FbxMatrix transform = node->EvaluateLocalTransform();
 				for (int row = 0; row < 4; row++)
 					for (int column = 0; column < 4; column++)
 						cp.transform[row*4 + column] = (float)transform.Get(row, column);
-				mConnectionPoints.push_back(cp);
+				mConnectionPoints.push_back(pair<AglConnectionPoint, string>(cp, name));
 			}
 		}
 	}
@@ -348,7 +349,7 @@ MaterialData* FBXParser::GetMaterial(FbxSurfaceMaterial* pMaterial)
 	}
 	return NULL;
 }
-vector<AglConnectionPoint> FBXParser::GetConnectionPoints()
+vector<pair<AglConnectionPoint, string>> FBXParser::GetConnectionPoints()
 {
 	return mConnectionPoints;
 }

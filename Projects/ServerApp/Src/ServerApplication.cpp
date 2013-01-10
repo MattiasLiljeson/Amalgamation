@@ -3,11 +3,10 @@
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <DebugPlayerScoresSystem.h>
-#include <NetworkListenerSystem.h>
-#include <NetworkInputHandlerSystem.h>
-#include <NetworkUpdateSystem.h>
-#include <NetworkUpdateScoresSystem.h>
+#include <ServerListenerSystem.h>
+#include <ServerPacketHandlerSystem.h>
+#include <ServerUpdateSystem.h>
+#include <ServerScoreSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -34,15 +33,33 @@ namespace Srv
 		delete m_server;
 	}
 
-	void ServerApplication::run()
+	void ServerApplication::body()
 	{
 		m_running = true;
 
+		// simple timer
+		__int64 countsPerSec = 0;
+		__int64 currTimeStamp = 0;
+		QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
+		double secsPerCount = 1.0f / (float)countsPerSec;
+
+		double dt = 0.0f;
+		__int64 m_prevTimeStamp = 0;
+
+		QueryPerformanceCounter((LARGE_INTEGER*)&m_prevTimeStamp);
+		QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+
 		while( m_running )
 		{
+			// Update timer
+			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
+			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
+
+			m_prevTimeStamp = currTimeStamp;
+
 			// HACK: Static delta and really high for testing purposes.
-			step( 0.01f );
-		
+			step( static_cast<float>(dt) );
+
 			// HACK: Maybe place input in systems? :D
 			if( _kbhit() )
 			{
@@ -52,9 +69,8 @@ namespace Srv
 					_flushall();
 				}
 			}
-
-			// HACK: Really slow update loop for testing purposes.
-//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			processMessages();
+			sleep(10);
 		}
 	}
 
@@ -78,19 +94,16 @@ namespace Srv
 			true );
 
 		m_world->setSystem( SystemType::NetworkListenerSystem,
-			new NetworkListenerSystem( m_server ), true );
+			new ServerListenerSystem( m_server ), true );
 
-		m_world->setSystem( SystemType::NetworkInputHandlerSystem,
-			new NetworkInputHandlerSystem( m_server ), true );
+		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
+			new ServerPacketHandlerSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateSystem,
-			new NetworkUpdateSystem( m_server ), true );
+			new ServerUpdateSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
-			new NetworkUpdateScoresSystem( m_server ), true );
-
-		m_world->setSystem( SystemType::DebugPlayerScoresSystem,
-			new DebugPlayerScoresSystem(), true );
+			new ServerScoreSystem( m_server ), true );
 
 		m_world->initialize();
 
@@ -118,7 +131,7 @@ namespace Srv
 		entity->addComponent(ComponentType::BodyInitData, component);
 
 		// The b1 entity should be synced over the network!
-		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
 		entity->addComponent(ComponentType::NetworkSynced, component);
 
 		m_world->addEntity(entity);
@@ -136,9 +149,31 @@ namespace Srv
 			BodyInitData::DYNAMIC);
 		entity->addComponent(ComponentType::BodyInitData, component);
 
-		component = new NetworkSynced(entity->getIndex(), -1, NetworkType::Prop);
+		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
 		entity->addComponent(ComponentType::NetworkSynced, component);
 
 		m_world->addEntity(entity);
 	}
+
+	
+	void ServerApplication::processMessages()
+	{
+
+		while( getMessageCount() > 0 )
+		{
+			ProcessMessage* message = popMessage();
+
+			if( message->type == MessageType::TERMINATE )
+			{
+				m_running = false;
+			}
+			delete message;
+		}
+	}
+
+	void ServerApplication::run()
+	{
+		body();
+	}
+
 };

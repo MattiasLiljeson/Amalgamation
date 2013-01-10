@@ -1,13 +1,14 @@
 #pragma once
 
 // =======================================================================================
-//                                      ShipController
+//                                    ShipFlyController
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Ship controller component. Defines controller properties of the ship.
+/// \brief	Ship fly controller component. Defines flying controller 
+/// properties of the ship.
 ///        
-/// # ShipController
+/// # ShipFlyController
 /// Detailed description.....
 /// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
@@ -16,22 +17,22 @@
 #include <DebugUtil.h>
 #include <ToString.h>
 
-class ShipController : public Component
+class ShipFlyController : public Component
 {
 public:
-	ShipController()
+	ShipFlyController()
 	{
 		m_turnSpeed = 10.0f;
 		m_thrustPower = 0.2f;
 	}
 
-	ShipController(float p_turnSpeed, float p_thrustPower)
+	ShipFlyController(float p_turnSpeed, float p_thrustPower)
 	{
 		m_turnSpeed = p_turnSpeed;
 		m_thrustPower = p_thrustPower;
 	}
 
-	~ShipController() {}
+	~ShipFlyController() {}
 
 	void setTurningSpeed(float p_turnSpeed) {m_turnSpeed = p_turnSpeed;}
 	void setThrustPower(float p_thrustPower) {m_thrustPower = p_thrustPower;}
@@ -39,7 +40,6 @@ public:
 	float getTurningSpeed() {return m_turnSpeed;}
 	float getThrustPower() {return m_thrustPower;}
 
-private:
 	float m_turnSpeed;
 	float m_thrustPower;
 };

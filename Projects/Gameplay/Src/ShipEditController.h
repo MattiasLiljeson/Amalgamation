@@ -1,33 +1,34 @@
 #pragma once
 
-#include <EntitySystem.h>
-
-class TcpServer;
-
 // =======================================================================================
-//                                      NetworkUpdateSystem
+//                                      ShipEditController
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Ship edit controller component. Defines editing controller properties of 
+/// the ship.
 ///        
-/// # NetworkUpdateSystem
+/// # ShipController
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkUpdateSystem: public EntitySystem
+#include <Component.h>
+#include <DebugUtil.h>
+#include <ToString.h>
+
+class ShipEditController : public Component
 {
 public:
-	NetworkUpdateSystem( TcpServer* p_server );
+	ShipEditController()
+	{
+		m_nada=0.0f;
+	}
 
-	~NetworkUpdateSystem();
-	
-	void processEntities( const vector<Entity*>& p_entities );
 
-	void initialize();
+	~ShipEditController() {}
+
 
 private:
-	TcpServer* m_server;
-
+	float m_nada;
 };

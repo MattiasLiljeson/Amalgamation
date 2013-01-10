@@ -15,6 +15,7 @@ AglWriter::AglWriter(string p_path)
 	m_header.animationLayerCount = 0;
 	m_header.animationCount = 0;
 	m_header.connectionPointCount = 0;
+	m_header.particleSystemCount = 0;
 }
 void AglWriter::write(AglScene* p_scene)
 {
@@ -45,6 +46,7 @@ void AglWriter::write(AglScene* p_scene)
 	m_header.looseBspCount			= d.bspTrees.size();
 	m_header.SphereGridCount		= d.sphereGrids.size();
 	m_header.connectionPointCount	= d.connectionPoints.size();
+	m_header.particleSystemCount	= d.particleSystems.size();
 	m_header.coordinateSystem		= d.coordinateSystem;
 
 	ofstream file;
@@ -207,6 +209,13 @@ void AglWriter::write(AglScene* p_scene)
 	{
 		buf = (char*)&d.connectionPoints[0];
 		file.write(buf, sizeof(AglConnectionPoint) * m_header.connectionPointCount);
+	}
+	for (unsigned int i = 0; i < d.particleSystems.size(); i++)
+	{
+		//Write the particle system headers to the file
+		AglParticleSystemHeader psheader = d.particleSystems[i]->getHeader();
+		buf = (char*)&psheader;
+		file.write(buf, sizeof(AglParticleSystemHeader));
 	}
 
 	file.close();

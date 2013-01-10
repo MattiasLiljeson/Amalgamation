@@ -11,11 +11,10 @@
 #include "PacketType.h"
 #include "NetworkType.h"
 #include "PhysicsSystem.h"
-#include <Windows.h>
 
 NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
-	ComponentType::NetworkSynced, ComponentType::ShipController,
+	ComponentType::NetworkSynced, ComponentType::ShipFlyController,
 	ComponentType::PhysicsBody )
 {
 	m_server = p_server;
@@ -52,6 +51,13 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				int networkId;
 
 				packet >> thrustVec >> angularVec >> networkId;
+				
+				//cout << "ThrustVec(" << thrustVec.x << ", " <<
+				//	thrustVec.y << ", " <<
+				//	thrustVec.z <<"). ";
+				//cout << "AngularVec(" << angularVec.x << ", " <<
+				//	angularVec.y << ", " <<
+				//	angularVec.z <<").\n";
 
 				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
 				// Locate the entity using networkId by consulting the entitymanager in world
@@ -59,6 +65,22 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				// world->getEntityManager->getEntity[networkId]
 				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
 
+				//for( unsigned int i=0; i<p_entities.size(); i++ )
+				//{
+				//	NetworkSynced* netSync = NULL;
+				//	netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
+				//		ComponentType::NetworkSynced ) );
+
+				//	if(packet.getSenderId() == netSync->getNetworkOwner())
+				//	{
+				//		if( p_entities[i]->getComponent(ComponentType::ShipController) )
+				//		{
+				//			// Entity is controllable.
+				//			entity = p_entities[i];
+				//			break;
+				//		}
+				//	}
+				//}
 
 				if(entity)
 				{
@@ -71,23 +93,6 @@ void NetworkInputHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						//cout << physicsBody->m_id << endl;
 					}
 				}
-			}
-		}
-		else if( networkType == (char)NetworkType::Other )
-		{
-			char packetType;
-			packet >> packetType;
-
-			if( packetType == (char)PacketType::Ping )
-			{
-				SYSTEMTIME timestamp;
-				GetSystemTime( &timestamp );
-
-				Packet response;
-				response << (char)PacketType::Pong;
-				response << timestamp;
-
-				m_server->unicastPacket( response, packet.getSenderId() );
 			}
 		}
 	}
