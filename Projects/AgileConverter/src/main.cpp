@@ -19,7 +19,7 @@ struct AGLData
 	vector<AnimationData*> Animations;
 	vector<MaterialData*> Materials;
 	vector<AglMaterialMapping*> MaterialMappings;
-	vector<AglConnectionPoint> CP;
+	vector<pair<AglConnectionPoint, string>> CP;
 };
 
 vector<string> FindFolders(string pFolder)
@@ -268,7 +268,7 @@ int main()
 					for (unsigned int j = 0; j < materialmappings.size(); j++)
 						d.MaterialMappings.push_back(materialmappings[j]);
 
-					vector<AglConnectionPoint> cp = parsers.back()->GetConnectionPoints();
+					vector<pair<AglConnectionPoint, string>> cp = parsers.back()->GetConnectionPoints();
 					for (unsigned int j = 0; j < cp.size(); j++)
 						d.CP.push_back(cp[j]);
 

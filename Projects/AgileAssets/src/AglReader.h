@@ -99,6 +99,8 @@ private:
 
 	AglConnectionPoint readConnectionPoint();
 
+	AglParticleSystemHeader readParticleSystem();
+
 	///
 	/// Reads a vertex array from an AGL file
 	/// \return An array of a certain vertex type

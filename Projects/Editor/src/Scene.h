@@ -85,6 +85,14 @@ public:
 	{
 		return mParticleSystems[pIndex];
 	}
+	vector<ParticleSystem*> GetParticleSystems()
+	{
+		return mParticleSystems;
+	}
+	vector<AglConnectionPoint> getConnectionPoints()
+	{
+		return mAglScene->getConnectionPoints();
+	}
 	vector<Mesh*> GetMeshes() { return mMeshes; }
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);

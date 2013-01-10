@@ -257,10 +257,13 @@ void PhysicsController::Clear()
 {
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 		delete mRigidBodies[i].first;
+	for (unsigned int i = 0; i < mCompoundBodies.size(); i++)
+		delete mCompoundBodies[i];
 	for (unsigned int i = 0; i < mConvexHullShapes.size(); i++)
 		delete mConvexHullShapes[i];
 
 	mRigidBodies.clear();
+	mCompoundBodies.clear();
 	mConvexHullShapes.clear();
 }
 float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore, AglBoundingSphere p_sphere)

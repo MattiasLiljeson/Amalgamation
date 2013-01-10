@@ -94,6 +94,23 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 
 		TwAddVarRW(sceneDialog->m_dialog, "Sphere", TW_TYPE_BOOLCPP, &DRAWDEBUGSPHERE, "group='Debug'");
 		TwAddVarRW(sceneDialog->m_dialog, "Box", TW_TYPE_BOOLCPP, &DRAWDEBUGBOX, "group='Debug'");
+
+		vector<AglConnectionPoint> cps = Scene::GetInstance()->getConnectionPoints();
+		for (unsigned int i = 0; i < cps.size(); i++)
+		{
+			string name = Scene::GetInstance()->GetName(cps[i].nameID);
+			TwAddButton(sceneDialog->m_dialog, name.c_str(), NULL, (void*)0, "group='Connection Points'");
+		}
+		vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
+		for (unsigned int i = 0; i < ps.size(); i++)
+		{
+			string s = "NoName";
+			string info = " label='" + s + "' group='Particle Effects'";
+			int zero = i;
+
+			SceneDialog* sceneDialog = (SceneDialog*)clientData;
+			TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)i, info.c_str());
+		}
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)
@@ -116,15 +133,22 @@ void TW_CALL SceneDialog::AddPE(void* clientData)
 {
 	AglParticleSystem* ps = new AglParticleSystem();
 	Scene::GetInstance()->AddParticleSystem(ps);
-	//mat->nameID = Scene::GetInstance()->AddName("");
-	//Scene::GetInstance()->AddMaterial(mat, false, false);
-	//string s = Scene::GetInstance()->GetName(mat->nameID);*/
 	string s = "NoName";
 	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
-	int zero = 0;
+	int zero = Scene::GetInstance()->GetParticleSystems().size()-1;
 
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)0, info.c_str());
+	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)zero, info.c_str());
+}
+void SceneDialog::ClonePE(AglParticleSystemHeader pHeader)
+{
+	AglParticleSystem* ps = new AglParticleSystem(pHeader);
+	Scene::GetInstance()->AddParticleSystem(ps);
+	string s = "NoName";
+	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
+	int zero = Scene::GetInstance()->GetParticleSystems().size()-1;
+
+	TwAddButton(this->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)zero, info.c_str());
 }
 
 SceneDialog::SceneDialog()

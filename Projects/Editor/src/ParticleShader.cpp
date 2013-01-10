@@ -19,10 +19,12 @@ ParticleShader::ParticleShader(ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"SIZE", 0, DXGI_FORMAT_R32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"AGE", 0, DXGI_FORMAT_R32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"AGE", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ANGULARVELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	mDevice->CreateInputLayout(PositionNormalTexCoord, 4, mVS->GetCompiledData(), mVS->GetCompiledSize(), &mIL);
+	mDevice->CreateInputLayout(PositionNormalTexCoord, 6, mVS->GetCompiledData(), mVS->GetCompiledSize(), &mIL);
 
 	D3D11_BUFFER_DESC BufferDesc;
 	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -79,6 +81,20 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	buffer->FadeOut = pPS->getFadeOutStart();
 	buffer->ParticleMaxAge = pPS->GetHeader().particleAge;
 	buffer->Opacity = pPS->GetHeader().maxOpacity;
+
+	AglVector3 y = Camera::GetInstance()->LocalYAxis();
+	AglVector3 z = Camera::GetInstance()->LocalZAxis();
+	buffer->CameraY = AglVector4(y.x, y.y, y.z, 0);
+	buffer->CameraZ = AglVector4(z.x, z.y, z.z, 0);
+
+	if (pPS->getAlignment() == AglParticleSystemHeader::OBSERVER)
+		buffer->Alignment = 0;
+	else if (pPS->getAlignment() == AglParticleSystemHeader::SCREEN)
+		buffer->Alignment = 1;
+	else if (pPS->getAlignment() == AglParticleSystemHeader::WORLD)
+		buffer->Alignment = 2;
+	else
+		buffer->Alignment = 3;
 
 	mDeviceContext->Unmap(mBuffer, 0);
 
