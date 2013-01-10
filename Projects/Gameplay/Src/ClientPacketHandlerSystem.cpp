@@ -30,6 +30,8 @@
 
 // Debug
 #include <DebugUtil.h>
+#include "ShipEditController.h"
+#include "ConnectionPointSet.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -67,15 +69,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		
 		packet >> packetType;
-#pragma region EntityCreation
-		if (packetType == (char)PacketType::EntityCreation)
-		{
-			handleEntityCreationPacket(packet);
-		}
-#pragma endregion
-
 #pragma region EntityUpdate
-		else if (packetType == (char)PacketType::EntityUpdate)
+		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
 			if (data.networkType == (char)EntityType::Ship ||
@@ -106,6 +101,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					}
 				}
 			}
+		}
+		else if(packetType == (char)PacketType::ShipLocationResponse)
+		{
+			/************************************************************************/
+			/* Check if the packet is position approve or correction.				*/
+			/* If not approve set the position, rotation and scale.					*/
+			/* If approve do nothing.												*/
+			/************************************************************************/
 		}
 #pragma endregion 
 		else if(packetType == (char)PacketType::WelcomePacket)
@@ -164,6 +167,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			packet >> m_currentPing;
 		}
+		else if(packetType == (char)PacketType::EntityCreation)
+		{
+			handleEntityCreationPacket(packet);
+		}
 	}
 }
 
@@ -191,18 +198,30 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
 		/************************************************************************/
 		entity = m_world->createEntity();
-		component = new RenderInfo( shipMeshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
+
 		Transform* transform = new Transform( data.position, data.rotation, 
 			data.scale);
-		component = transform;
-		entity->addComponent( ComponentType::Transform, component );		
+
+		component = new RenderInfo( shipMeshId );
+		entity->addComponent( ComponentType::RenderInfo, component );
+		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(data.position,
+			AglQuaternion::identity(),
+			data.scale, AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::COMPOUND));
+
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
 		/************************************************************************/
@@ -210,6 +229,21 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		{
 			component = new ShipFlyController(5.0f, 50.0f);
 			entity->addComponent( ComponentType::ShipFlyController, component );
+
+			component = new ShipEditController();
+			entity->addComponent( ComponentType::ShipEditController, component);
+
+			entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+
+			ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+
+			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 		}	
 
 		/************************************************************************/
@@ -229,20 +263,23 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 				static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 				SystemType::GraphicsBackendSystem ))->getAspectRatio();
 
-			// A camera from which the world is rendered.
 			entity = m_world->createEntity();
 			component = new CameraInfo( aspectRatio );
 			entity->addComponent( ComponentType::CameraInfo, component );
 			component = new MainCamera();
 			entity->addComponent( ComponentType::MainCamera, component );
+			//component = new Input();
+			//entity->addComponent( ComponentType::Input, component );
 			component = new Transform( -5.0f, 0.0f, -5.0f );
 			entity->addComponent( ComponentType::Transform, component );
-			component = new LookAtEntity(shipId, AglVector3(0,3,-10),
-				AglQuaternion::identity(),0.0f,10.0f);
+			component = new LookAtEntity(shipId, AglVector3(0,3,-10),AglQuaternion::identity(),
+				10.0f,10.0f);
+			entity->addComponent( ComponentType::LookAtEntity, component );
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
 			component = new AudioListener();
 			entity->addComponent(ComponentType::AudioListener, component);
+
 			m_world->addEntity(entity);
 
 			/************************************************************************/

@@ -26,8 +26,19 @@ public:
 		ClientDisconnect,
 		WelcomePacket,
 		ScoresUpdate,
+
+		/************************************************************************/
+		/* Sends back the location for the ship. Can be approved or not			*/
+		/************************************************************************/
+		ShipLocationResponse, 
 		// Client -> Server:
 		PlayerInput,
+
+		/************************************************************************/
+		/* Client handles input and updates position, then sends it to the		*/
+		/* server for verification.												*/
+		/************************************************************************/
+		ShipTransform,
 
 		UpdateClientStats,
 	};

@@ -282,35 +282,6 @@ void ClientApplication::initEntities()
 
 	}
 
-	// Create a "spaceship"
-	entity = m_world->createEntity();
-	int shipId = entity->getIndex();
-	component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(0, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(0, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));
-
-
-	component = new ShipFlyController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipFlyController, component );
-
-	component = new ShipEditController();
-	entity->addComponent( ComponentType::ShipEditController, component);
-
-	// default tag is fly
-	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
-
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
@@ -322,31 +293,6 @@ void ClientApplication::initEntities()
 
 
 	InitModulesTestByAnton();
-
-
-	//Create a camera
-	float aspectRatio = 
-		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-	entity = m_world->createEntity();
-	component = new CameraInfo( aspectRatio );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	component = new MainCamera();
-	entity->addComponent( ComponentType::MainCamera, component );
-	//component = new Input();
-	//entity->addComponent( ComponentType::Input, component );
-	component = new Transform( -5.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, AglVector3(0,3,-10),AglQuaternion::identity(),
-								 10.0f,10.0f);
-	entity->addComponent( ComponentType::LookAtEntity, component );
-	// default tag is follow
-	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
-	component = new AudioListener();
-	entity->addComponent(ComponentType::AudioListener, component);
-	
-	m_world->addEntity(entity);
 }
 
 void ClientApplication::initSounds()

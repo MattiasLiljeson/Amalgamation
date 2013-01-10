@@ -50,7 +50,6 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	{
 		float dt = m_world->getDelta();
 		
-
 		// Fetch the status of the various input methods.
 		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
 
@@ -86,8 +85,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			quat.transformVector(angularVec);
 
 			/*Packet thrustPacket;
-			NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
-				ComponentType::NetworkSynced));
+			
 
 			thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
 				<< thrustVec << angularVec << netSync->getNetworkIdentity();
@@ -99,10 +97,11 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			if( physicsBody )
 			{
 				m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-				//cout << physicsBody->m_id << endl;
-			}
 
-			// State switch handling
+				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+					ComponentType::NetworkSynced));
+				sendTransformInfoToServer(netSync,transform);
+			}
 			if (input.stateSwitchInput>0.0f)
 			{
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
@@ -137,4 +136,18 @@ float ShipFlyControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrus
 		}
 	}
 	return speedBoost;
+}
+
+void ShipFlyControllerSystem::sendTransformInfoToServer(NetworkSynced* p_syncedInfo, 
+														Transform* p_transformInfo)
+{
+	Packet shipTransform = Packet((char)PacketType::ShipTransform);
+	shipTransform << (char)PacketType::EntityUpdate
+		<< (char)p_syncedInfo->getNetworkType()
+		<< (char)p_syncedInfo->getNetworkIdentity()
+		<< p_transformInfo->getTranslation()  
+		<< p_transformInfo->getRotation() 
+		<< p_transformInfo->getScale();
+
+	m_client->sendPacket(shipTransform);
 }

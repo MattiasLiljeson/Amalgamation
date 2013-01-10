@@ -45,38 +45,26 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char packetType;
 		packet >> packetType;
-
-		if(packetType == (char)PacketType::PlayerInput)
+		
+		if(packetType == (char)PacketType::ShipTransform)
 		{
-			char entityType;
-			packet >> entityType;
-			if(entityType == (char)EntityType::Ship)
-			{
-				AglVector3 thrustVec;
-				AglVector3 angularVec;
-				int networkId;
+			/************************************************************************/
+			/* Check collision: Ship vs Ship.										*/
+			/************************************************************************/
 
-				packet >> thrustVec >> angularVec >> networkId;
+			/************************************************************************/
+			/* Check collision: Ship vs Other Dynamic Objects.						*/
+			/************************************************************************/
 
-				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
-				// Locate the entity using networkId by consulting the entitymanager in world
-				//  entities[networkId]
-				// world->getEntityManager->getEntity[networkId]
-				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
+			/************************************************************************/
+			/* If the position is corrected then send the new transform.			*/
+			/************************************************************************/
 
-				if(entity)
-				{
-					PhysicsBody* physicsBody = NULL;
-					physicsBody = static_cast<PhysicsBody*>(entity->getComponent(
-						ComponentType::PhysicsBody ) );
-					if( physicsBody )
-					{
-						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-					}
-				}
-			}
+			/************************************************************************/
+			/* If not send a packet back too the client letting it know.			*/
+			/************************************************************************/
 		}
-		else if( packetType == (char)PacketType::Ping )
+		if( packetType == (char)PacketType::Ping )
 		{
 			float clientTime;
 			packet >> clientTime;
@@ -106,20 +94,18 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			Packet newClientStats((char)PacketType::UpdateClientStats);
 			newClientStats << info.ping;
 			m_server->unicastPacket(newClientStats, packet.getSenderId());
-		}
+		}		
+	}
+	m_timer -= m_world->getDelta();
+	if( m_timer <= 0 )
+	{
+		m_timer = m_timerStartValue;
 
-		m_timer -= m_world->getDelta();
-		if( m_timer <= 0 )
-		{
-			m_timer = m_timerStartValue;
+		float timeStamp = m_world->getElapsedTime();
 
-			float timeStamp = m_world->getElapsedTime();
+		Packet packet((char)PacketType::Ping);
+		packet << timeStamp;
 
-			Packet packet((char)PacketType::Ping);
-			packet << timeStamp;
-
-			m_server->broadcastPacket( packet );
-		}
-		
+		m_server->broadcastPacket( packet );
 	}
 }

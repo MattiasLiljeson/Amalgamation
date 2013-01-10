@@ -48,7 +48,6 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 													 lookTarget,
 													 up);
 		
-
 		// Rendering preparations
 		AglMatrix viewProj = AglMatrix::identityMatrix();
 		viewProj = view * camInfo->m_projMat;

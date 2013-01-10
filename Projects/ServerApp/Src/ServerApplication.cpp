@@ -111,48 +111,6 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
-		Entity* entity;
-		Component* component;
-		// Test physics
-		// Entities on the server does not need any render info component
-
-		//Ship
-		entity = m_world->createEntity();
-		//component = new RenderInfo( cubeMeshId );
-		//entity->addComponent( ComponentType::RenderInfo, component );
-		component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-		entity->addComponent( ComponentType::Transform, component );
-		component = new PhysicsBody();
-		entity->addComponent(ComponentType::PhysicsBody, component);
-
-		component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC);
-		entity->addComponent(ComponentType::BodyInitData, component);
-
-		// The b1 entity should be synced over the network!
-		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
-
-		m_world->addEntity(entity);
-
-
-		//Module 1
-		entity = m_world->createEntity();
-		component = new Transform(AglVector3(1, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-		entity->addComponent( ComponentType::Transform, component );
-		component = new PhysicsBody();
-		entity->addComponent(ComponentType::PhysicsBody, component);
-
-		component = new BodyInitData(AglVector3(1, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC);
-		entity->addComponent(ComponentType::BodyInitData, component);
-
-		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
-
-		m_world->addEntity(entity);
 	}
 
 	
