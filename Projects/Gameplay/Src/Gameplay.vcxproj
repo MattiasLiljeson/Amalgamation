@@ -35,7 +35,7 @@
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
-    <ClInclude Include="ServerListenerSystem.h" />
+    <ClInclude Include="ServerWelcomeSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
@@ -88,7 +88,7 @@
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
-    <ClCompile Include="ServerListenerSystem.cpp" />
+    <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />

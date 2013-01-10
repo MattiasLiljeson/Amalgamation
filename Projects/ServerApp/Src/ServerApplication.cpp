@@ -94,7 +94,7 @@ namespace Srv
 			true );
 
 		m_world->setSystem( SystemType::NetworkListenerSystem,
-			new ServerListenerSystem( m_server ), true );
+			new ServerWelcomeSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
 			new ServerPacketHandlerSystem( m_server ), true );

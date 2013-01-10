@@ -24,7 +24,7 @@ public:
 		EntityCreation,
 		EntityUpdate,
 		ClientDisconnect,
-		InitCredentials,
+		WelcomePacket,
 		ScoresUpdate,
 		// Client -> Server:
 		PlayerInput,

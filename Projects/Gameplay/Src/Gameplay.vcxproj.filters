@@ -187,9 +187,6 @@
     <ClInclude Include="MinigunModuleControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="ServerListenerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="ServerPacketHandlerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
     </ClInclude>
     <ClInclude Include="ClientConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerWelcomeSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -322,9 +322,6 @@
     <ClCompile Include="MinigunModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="ServerListenerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="ServerPacketHandlerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
@@ -351,6 +348,9 @@
     </ClCompile>
     <ClCompile Include="ClientConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerWelcomeSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

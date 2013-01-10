@@ -60,6 +60,9 @@ private:
 	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
 
+	void handleWelcomePacket(Packet p_packet);
+	void handleEntityCreationPacket(Packet p_packet);
+
 	void updateCounters();
 
 private:

@@ -69,99 +69,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma region EntityCreation
 		if (packetType == (char)PacketType::EntityCreation)
 		{
-			NetworkEntityCreationPacket data = readCreationPacket(packet);
-			if (data.networkType == (char)EntityType::Ship )
-			{
-				int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-				Transform* transform = new Transform( data.position, data.rotation, 
-					data.scale);
-
-				Entity* entity = NULL;
-				Component* component;
-
-				/************************************************************************/
-				/* This ship creation code have to be located somewhere else.			*/
-				/************************************************************************/
-				entity = m_world->createEntity();
-				component = new RenderInfo( shipMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = transform;
-				entity->addComponent( ComponentType::Transform, component );
-
-				/************************************************************************/
-				/* HACK: Score should probably be located in another entity.			*/
-				/************************************************************************/
-				component = new PlayerScore();
-				entity->addComponent( ComponentType::PlayerScore, component );
-
-				if(m_tcpClient->getId() == data.owner)
-				{
-					// If "this client" is the entity owner, it may control the ship:
-					component = new ShipFlyController(5.0f, 50.0f);
-					entity->addComponent( ComponentType::ShipFlyController, component );
-				}
-				entity->addComponent(ComponentType::NetworkSynced,
-					new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
-				m_world->addEntity(entity);
-
-				if(data.owner == m_tcpClient->getId())
-				{
-					int shipId = entity->getIndex();
-					float aspectRatio = 
-						static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-						SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-					// A camera from which the world is rendered.
-					entity = m_world->createEntity();
-					component = new CameraInfo( aspectRatio );
-					entity->addComponent( ComponentType::CameraInfo, component );
-					component = new MainCamera();
-					entity->addComponent( ComponentType::MainCamera, component );
-					component = new Transform( -5.0f, 0.0f, -5.0f );
-					entity->addComponent( ComponentType::Transform, component );
-					component = new LookAtEntity(shipId, AglVector3(0,3,-10),
-						AglQuaternion::identity(),0.0f,10.0f);
-					// default tag is follow
-					entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
-					component = new AudioListener();
-					entity->addComponent(ComponentType::AudioListener, component);
-					m_world->addEntity(entity);
-
-					/************************************************************************/
-					/* This is where the audio listener is created and therefor the master  */
-					/* volume is added to Ant Tweak Bar here.								*/
-					/************************************************************************/
-					AntTweakBarWrapper::getInstance()->addWriteVariable( 
-						AntTweakBarWrapper::OVERALL,
-						"Master_volume", TwType::TW_TYPE_FLOAT, 
-						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-						"group=Sound min=0 max=10 step=0.001 precision=3");
-				}
-			}
-			else if ( data.networkType == (char)EntityType::Prop )
-			{
-				Entity* entity;
-				Component* component;
-				//b1
-				entity = m_world->createEntity();
-				//component = new RenderInfo( cubeMeshId );
-				//entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform(data.position, data.rotation, data.scale);
-				entity->addComponent( ComponentType::Transform, component );
-
-				// The b1 entity should be synced over the network!
-				component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
-				entity->addComponent(ComponentType::NetworkSynced, component);
-
-				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-				component = new RenderInfo(meshId);
-				entity->addComponent(ComponentType::RenderInfo, component);
-
-				m_world->addEntity(entity);
-			}
+			handleEntityCreationPacket(packet);
 		}
 #pragma endregion
 
@@ -199,25 +107,9 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			}
 		}
 #pragma endregion 
-		else if(packetType == (char)PacketType::InitCredentials)
+		else if(packetType == (char)PacketType::WelcomePacket)
 		{
-			char networkType;
-
-			packet >> networkType;
-			if(networkType == (char)EntityType::Identity)
-			{
-				int id;
-				packet >> id;
-				m_tcpClient->setId( id );
-
-				/************************************************************************/
-				/* Debug info!															*/
-				/************************************************************************/
-				AntTweakBarWrapper::getInstance()->addReadOnlyVariable( 
-					AntTweakBarWrapper::NETWORK,
-					"NetId", TwType::TW_TYPE_INT32,
-					m_tcpClient->getIdPointer(), "" );
-			}
+			handleWelcomePacket(packet);
 		}
 		else if(packetType == (char)PacketType::ScoresUpdate)
 		{
@@ -271,6 +163,120 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			packet >> m_currentPing;
 		}
+	}
+}
+
+void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
+{
+	int id;
+	p_packet >> id;
+	m_tcpClient->setId( id );
+
+	/************************************************************************/
+	/* Debug info!															*/
+	/************************************************************************/
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( 
+		AntTweakBarWrapper::NETWORK,
+		"NetId", TwType::TW_TYPE_INT32,
+		m_tcpClient->getIdPointer(), "" );
+}
+
+void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
+{
+	NetworkEntityCreationPacket data = readCreationPacket(p_packet);
+
+	if (data.networkType == (char)EntityType::Ship )
+	{
+		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		Entity* entity = NULL;
+		Component* component;
+
+		/************************************************************************/
+		/* This ship creation code have to be located somewhere else.			*/
+		/************************************************************************/
+		entity = m_world->createEntity();
+		component = new RenderInfo( shipMeshId );
+		entity->addComponent( ComponentType::RenderInfo, component );
+		Transform* transform = new Transform( data.position, data.rotation, 
+			data.scale);
+		component = transform;
+		entity->addComponent( ComponentType::Transform, component );
+
+		/************************************************************************/
+		/* HACK: Score should probably be located in another entity.			*/
+		/************************************************************************/
+		//component = new PlayerScore();
+		//entity->addComponent( ComponentType::PlayerScore, component );
+
+		/************************************************************************/
+		/* Check if the owner is the same as this client.						*/
+		/************************************************************************/
+		if(m_tcpClient->getId() == data.owner)
+		{
+			component = new ShipFlyController(5.0f, 50.0f);
+			entity->addComponent( ComponentType::ShipFlyController, component );
+		}
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+		m_world->addEntity(entity);
+
+		if(data.owner == m_tcpClient->getId())
+		{
+			int shipId = entity->getIndex();
+			float aspectRatio = 
+				static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
+			// A camera from which the world is rendered.
+			entity = m_world->createEntity();
+			component = new CameraInfo( aspectRatio );
+			entity->addComponent( ComponentType::CameraInfo, component );
+			component = new MainCamera();
+			entity->addComponent( ComponentType::MainCamera, component );
+			component = new Transform( -5.0f, 0.0f, -5.0f );
+			entity->addComponent( ComponentType::Transform, component );
+			component = new LookAtEntity(shipId, AglVector3(0,3,-10),
+				AglQuaternion::identity(),0.0f,10.0f);
+			// default tag is follow
+			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
+			component = new AudioListener();
+			entity->addComponent(ComponentType::AudioListener, component);
+			m_world->addEntity(entity);
+
+			/************************************************************************/
+			/* This is where the audio listener is created and therefor the master  */
+			/* volume is added to Ant Tweak Bar here.								*/
+			/************************************************************************/
+			AntTweakBarWrapper::getInstance()->addWriteVariable( 
+				AntTweakBarWrapper::OVERALL,
+				"Master_volume", TwType::TW_TYPE_FLOAT, 
+				static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+				"group=Sound min=0 max=10 step=0.001 precision=3");
+		}
+	}
+	else if ( data.networkType == (char)EntityType::Prop )
+	{
+		Entity* entity;
+		Component* component;
+		//b1
+		entity = m_world->createEntity();
+		//component = new RenderInfo( cubeMeshId );
+		//entity->addComponent( ComponentType::RenderInfo, component );
+		component = new Transform(data.position, data.rotation, data.scale);
+		entity->addComponent( ComponentType::Transform, component );
+
+		// The b1 entity should be synced over the network!
+		component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
+		entity->addComponent(ComponentType::NetworkSynced, component);
+
+		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		component = new RenderInfo(meshId);
+		entity->addComponent(ComponentType::RenderInfo, component);
+
+		m_world->addEntity(entity);
 	}
 }
 
