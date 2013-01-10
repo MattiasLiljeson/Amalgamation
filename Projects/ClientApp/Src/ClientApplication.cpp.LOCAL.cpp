@@ -32,7 +32,7 @@
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
 #include <ClientPacketHandlerSystem.h>
-#include <ClientConnectToServerSystem.h>
+#include <NetworkConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
@@ -184,16 +184,16 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	/*ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
-	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client, inputBackend );
+	NetworkConnectToServerSystem* connect =
+		new NetworkConnectToServerSystem( m_client, inputBackend );
 	m_world->setSystem( connect, true );
 
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );
+	m_world->setSystem( communicatorSystem, false );*/
 
 	/************************************************************************/
 	/* Audio															*/
@@ -424,6 +424,7 @@ void ClientApplication::InitModulesTestByAnton()
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
 	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
+//	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup
 	entity = m_world->createEntity();
