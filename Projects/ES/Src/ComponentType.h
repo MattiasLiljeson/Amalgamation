@@ -33,6 +33,7 @@ public:	//Enums
 		BodyInitData,
 		LookAtEntity,
 		MainCamera,
+		PlayerCameraController,
 		PlayerScore,
 		MenuItem,
 		HudElement,

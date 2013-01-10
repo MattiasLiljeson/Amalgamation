@@ -122,7 +122,7 @@ AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternio
 
 	float denom = sin(phi);
 
-	float factor1 = sin(phi*(1-p_t)) / denom;
+	float factor1 = sin(phi*(1.0f-p_t)) / denom;
 	float factor2 = sin(phi*p_t) / denom;
 
 	return p_q1 * factor1 + p_q2 * factor2;

@@ -5,14 +5,12 @@
 #include "LookAtEntity.h"
 #include "Transform.h"
 
-CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
-							InputBackendSystem* p_inputBackend ) : 
+CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend ) : 
 			  EntitySystem( SystemType::CameraSystem, 2,
 							ComponentType::ComponentTypeIdx::CameraInfo,
 							ComponentType::ComponentTypeIdx::Transform)
 {
 	m_gfxBackend = p_gfxBackend;
-	m_inputBackend = p_inputBackend;
 }
 
 

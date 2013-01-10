@@ -24,6 +24,7 @@ public:	//Enums
 		PhysicsSystem,
 		RenderPrepSystem,
 		CameraSystem,
+		PlayerCameraControllerSystem,
 		LookAtSystem,
 		InputBackendSystem,
 		ShipFlyControllerSystem,

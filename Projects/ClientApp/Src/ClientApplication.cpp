@@ -24,6 +24,7 @@
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
 #include <GameplayTags.h>
+#include <PlayerCameraController.h>
 
 
 // Systems
@@ -49,6 +50,7 @@
 #include <LookAtEntity.h>
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
+#include <PlayerCameraControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -58,6 +60,7 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
+
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -179,6 +182,9 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
+	/************************************************************************/
+	/* Player    															*/
+	/************************************************************************/
 	// Input system for ships
 	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
 	m_world->setSystem( shipInputProc, true);
@@ -192,9 +198,16 @@ void ClientApplication::initSystems()
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
 
-	// Camera system updates camera based on input and sets its viewport info
-	// to the graphics backend for render
-	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
+
+	/************************************************************************/
+	/* Camera																*/
+	/************************************************************************/
+
+	// Controller logic for camera
+	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc );
+	m_world->setSystem( cameraControl , true );
+	// Camera system sets its viewport info to the graphics backend for render
+	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
 	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
@@ -338,11 +351,16 @@ void ClientApplication::initEntities()
 	//entity->addComponent( ComponentType::Input, component );
 	component = new Transform( -5.0f, 0.0f, -5.0f );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, AglVector3(0,3,-10),AglQuaternion::identity(),
-								 10.0f,10.0f);
+	component = new LookAtEntity(shipId, 
+								 AglVector3(0,3,-10),
+								 AglQuaternion::identity(),
+								 10.0f,
+								 10.0f,
+								 4.0f);
 	entity->addComponent( ComponentType::LookAtEntity, component );
 	// default tag is follow
-	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
+	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
 	component = new AudioListener();
 	entity->addComponent(ComponentType::AudioListener, component);
 	
