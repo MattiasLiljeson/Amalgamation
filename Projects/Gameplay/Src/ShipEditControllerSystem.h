@@ -1,22 +1,21 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "ShipSystemsInputHelper.h"
 
 class Control;
 class TcpClient;
 class InputBackendSystem;
 class PhysicsSystem;
-class ShipSystemsInputHelper;
+class ShipInputProcessingSystem;
 
 // =======================================================================================
-//                                      ShipEditModeSystem
+//                                   ShipEditControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	System that handles the edit mode for the ship
 ///        
-/// # ShipEditModeSystem
+/// # ShipEditControllerSystem
 /// Detailed description.....
 /// Created on: 9-1-2013 
 ///---------------------------------------------------------------------------------------
@@ -24,7 +23,7 @@ class ShipSystemsInputHelper;
 class ShipEditControllerSystem : public EntitySystem
 {
 public:
-	ShipEditControllerSystem(InputBackendSystem* p_inputBackend,
+	ShipEditControllerSystem(ShipInputProcessingSystem* p_shipInput,
 					   PhysicsSystem* p_physicsSystem/*,
 					   TcpClient* p_client */);
 	~ShipEditControllerSystem();
@@ -34,9 +33,8 @@ public:
 
 protected:
 private:
-	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
 	// TcpClient* m_client;
 
-	ShipSystemsInputHelper m_shipInput;	
+	ShipInputProcessingSystem* m_shipInput;	
 };

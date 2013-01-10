@@ -28,6 +28,7 @@ public:	//Enums
 		InputBackendSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,
+		ShipInputProcessingSystem,
 		ImpulseSystem,
 		AudioBackendSystem,
 		AudioControllerSystem,

@@ -1,7 +1,11 @@
 #pragma once
 
+#include <EntitySystem.h>
+#include "ShipInputProcessingSystem.h"
+
 class Control;
 class InputBackendSystem;
+
 
 // =======================================================================================
 //                              ShipSystemsInputHelper
@@ -15,11 +19,14 @@ class InputBackendSystem;
 /// Created on: 9-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipSystemsInputHelper
+class ShipInputProcessingSystem : public EntitySystem
 {
 public:
-	ShipSystemsInputHelper();
-	virtual ~ShipSystemsInputHelper() {}
+	ShipInputProcessingSystem(InputBackendSystem* p_inputBackend);
+	virtual ~ShipInputProcessingSystem() {}
+
+	virtual void initialize();
+	virtual void process();
 
 	struct RawInputForces
 	{
@@ -29,7 +36,7 @@ public:
 			svPositive,svNegative,
 			rRight, rLeft,
 			thrust;
-		bool editSwitchTrig;
+		bool stateSwitchTrig;
 
 		float getHorizontalInput()
 		{
@@ -55,9 +62,9 @@ public:
 		{
 			return (float)(svPositive - svNegative);
 		}
-		bool getEditModeSwitch()
+		bool getStateModeSwitch()
 		{
-			return editSwitchTrig;
+			return stateSwitchTrig;
 		}
 	};
 
@@ -69,8 +76,10 @@ public:
 			rollInput,
 			thrustInput,
 			strafeHorizontalInput,
-			strafeVerticalInput,
-			stateSwitchInput;
+			strafeVerticalInput;
+		bool stateSwitchInput;
+
+		ResultingInputForces() {}
 
 		ResultingInputForces(RawInputForces p_rawInput)
 		{
@@ -80,17 +89,19 @@ public:
 			thrustInput = p_rawInput.getThrust();
 			strafeHorizontalInput	= p_rawInput.getStrafeHorizontalInput();
 			strafeVerticalInput		= p_rawInput.getStrafeVerticalInput();
-			stateSwitchInput = p_rawInput.getEditModeSwitch();
+			stateSwitchInput = p_rawInput.getStateModeSwitch();
 		}
 	};
 
-	void initGamePad(InputBackendSystem* p_inputBackend);
-	void initMouse(InputBackendSystem* p_inputBackend);
-	void initKeyboard(InputBackendSystem* p_inputBackend);
+	ResultingInputForces& getProcessedInput();
+
+private:
+
 	float* getControllerEpsilonPointer();
 	void readAllTheInput(RawInputForces& p_outInput);
-	void updateAntTweakBar(const ResultingInputForces& p_input,
-						   InputBackendSystem* p_inputBackend);
+	void updateAntTweakBar(const ResultingInputForces& p_input);
+
+	ResultingInputForces m_processedInput;
 
 	Control* m_gamepadHorizontalPositive;
 	Control* m_gamepadHorizontalNegative;
@@ -136,6 +147,11 @@ public:
 	// Correction vectors for the left and right thumb sticks.
 	double m_leftStickCorrection[2];
 	double m_rightStickCorrection[2];
-private:
+
+	void initGamePad();
+	void initMouse();
+	void initKeyboard();
+
 	bool m_editSwitchTrigReleased;
+	InputBackendSystem* m_inputBackend;
 };

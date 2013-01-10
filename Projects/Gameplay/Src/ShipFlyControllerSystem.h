@@ -1,13 +1,11 @@
 #pragma once
 
-#include "ShipSystemsInputHelper.h"
 #include <EntitySystem.h>
 
 class Control;
 class TcpClient;
-class InputBackendSystem;
 class PhysicsSystem;
-class ShipSystemsInputHelper;
+class ShipInputProcessingSystem;
 
 // =======================================================================================
 //                                ShipControllerSystem
@@ -24,7 +22,7 @@ class ShipSystemsInputHelper;
 class ShipFlyControllerSystem : public EntitySystem
 {
 public:
-	ShipFlyControllerSystem(InputBackendSystem* p_inputBackend,
+	ShipFlyControllerSystem(ShipInputProcessingSystem* p_inputBackend,
 						 PhysicsSystem* p_physicsSystem,
 						 TcpClient* p_client );
 	~ShipFlyControllerSystem();
@@ -33,9 +31,8 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 private:
-	InputBackendSystem* m_inputBackend;
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
 
-	ShipSystemsInputHelper m_shipInput;	
+	ShipInputProcessingSystem* m_shipInput;	
 };

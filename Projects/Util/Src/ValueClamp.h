@@ -13,13 +13,13 @@ float clamp (float p_val, float p_min, float p_max)
 }
 
 
-float clamp (double p_val, double p_min, double p_max)
+double clamp (double p_val, double p_min, double p_max)
 {
 	return max(p_min,min(p_max,p_val));
 }
 
 
-float clamp (int p_val, int p_min, int p_max)
+int clamp (int p_val, int p_min, int p_max)
 {
 	return max(p_min,min(p_max,p_val));
 }
@@ -39,7 +39,7 @@ float saturate (float p_val)
 /// \param val
 /// \return float
 ///-----------------------------------------------------------------------------------
-float saturate (double p_val)
+double saturate (double p_val)
 {
 	return clamp(p_val,0.0,1.0);
 }
@@ -49,7 +49,7 @@ float saturate (double p_val)
 /// \param val
 /// \return float
 ///-----------------------------------------------------------------------------------
-float saturate (int p_val)
+int saturate (int p_val)
 {
 	return clamp(p_val,0,1);
 }

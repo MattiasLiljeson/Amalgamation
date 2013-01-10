@@ -191,9 +191,6 @@
       <Filter>Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="ShipModule.h" />
-    <ClInclude Include="ShipEditModeSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="ShipFlyControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
@@ -206,10 +203,13 @@
     <ClInclude Include="GameplayTags.h">
       <Filter>Components\Tags</Filter>
     </ClInclude>
-    <ClInclude Include="ShipSystemsInputHelper.h">
+    <ClInclude Include="LookAtSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="LookAtSystem.h">
+    <ClInclude Include="ShipInputProcessingSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
@@ -309,16 +309,16 @@
       <Filter>Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="ShipModule.cpp" />
-    <ClCompile Include="ShipEditModeSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="ShipFlyControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="ShipSystemsInputHelper.cpp">
+    <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="LookAtSystem.cpp">
+    <ClCompile Include="ShipInputProcessingSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEditControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>

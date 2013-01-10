@@ -36,6 +36,8 @@
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
 #include <ShipFlyControllerSystem.h>
+#include <ShipEditControllerSystem.h>
+#include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <LookAtSystem.h>
 #include <HudSystem.h>
@@ -48,7 +50,7 @@
 
 // MISC
 #include <AntTweakBarWrapper.h>
-#include <ShipEditModeSystem.h>
+
 
 
 
@@ -172,12 +174,16 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
+	// Input system for ships
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	m_world->setSystem( shipInputProc, true);
+
 	// Controller systems for the ship
-	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(inputBackend, physics,
+	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,
 		m_client );
 	m_world->setSystem( shipFlyController, true);
 
-	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(inputBackend, physics/*,
+	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
 
