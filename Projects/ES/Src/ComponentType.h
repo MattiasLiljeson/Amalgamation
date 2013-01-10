@@ -40,6 +40,7 @@ public:	//Enums
 		SpeedBoosterModule,
 		MinigunModule,
 		ShieldModule,
+		MineLayerModule,
 		NUM_COMPONENT_TYPES
 	};
 

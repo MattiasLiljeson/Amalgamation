@@ -211,6 +211,9 @@
     <ClInclude Include="ShieldModuleControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="MineLayerModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -324,6 +327,9 @@
     </ClCompile>
     <ClCompile Include="ShieldModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModule.cpp">
+      <Filter>Components\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

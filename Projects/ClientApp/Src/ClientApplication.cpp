@@ -23,6 +23,7 @@
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
 #include <ShieldModule.h>
+#include <MineLayerModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -510,6 +511,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false));
 
+	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 	m_world->addEntity(entity);
