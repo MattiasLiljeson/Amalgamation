@@ -117,6 +117,8 @@ public:
 	void setTextureNameIndex(int p_textureNameIndex);
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
 
+	float getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir);
+
 	void restart();
 
 	void update(float p_dt, AglVector3 p_cameraPosition);
