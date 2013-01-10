@@ -214,6 +214,9 @@
     <ClInclude Include="MineLayerModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="MineLayerModuleControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -330,6 +333,9 @@
     </ClCompile>
     <ClCompile Include="MineLayerModule.cpp">
       <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -46,6 +46,7 @@
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -216,6 +217,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new MinigunModuleControllerSystem(), true);
 	m_world->setSystem(new ShieldModuleControllerSystem(), true);
+	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
 
 	m_world->initialize();
 }
