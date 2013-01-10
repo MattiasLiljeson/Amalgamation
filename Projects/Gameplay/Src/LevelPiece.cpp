@@ -57,8 +57,8 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	// From Proto \\ Jarl & Alex
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
-	// used this connector.
-	m_transform->getMatrix() * m_connectionPoints[0].inverse();
+	// used this-connector.
+	m_transform->setMatrix(m_transform->getMatrix() * m_connectionPoints[0].inverse());
 	updateConnectionPoints();
 
 	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
