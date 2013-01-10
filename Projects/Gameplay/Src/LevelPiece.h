@@ -36,15 +36,18 @@ public:
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	vector<int> findFreeConnectionPointSlots();
 	Transform*	getTransform();
+	void		setTransform();
 	int			getMeshId();
 	Transform*	getChild(int p_inSlot);
 	void		setChild(int p_inSlot, Transform* p_transform);
 	void		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
 protected:
 private:
-	ConnectionPointCollection*	m_connectionPoints;
+	ConnectionPointCollection*	m_localSpaceConnectionPoints;
 	AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;
+	vector<Transform*>			m_connectionPoints;
+
 };

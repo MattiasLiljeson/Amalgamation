@@ -7,13 +7,16 @@ LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 					   AglMeshHeader* p_meshHeader, 
 					   Transform* p_transform )
 {
-	m_connectionPoints	= p_connectionPoints;
+	m_localSpaceConnectionPoints	= p_connectionPoints;
 	m_transform			= p_transform;
 	m_meshHeader		= p_meshHeader;
 
-	int maxChildCount = m_connectionPoints->m_collection.size();
+	int maxChildCount = m_localSpaceConnectionPoints->m_collection.size();
 	m_childSlotsOccupied.resize(maxChildCount);
 	m_children.resize(maxChildCount, nullptr);
+	m_connectionPoints.resize(maxChildCount);
+
+	updateConnectionPoints();
 }
 
 vector<int> LevelPiece::findFreeConnectionPointSlots()
@@ -35,7 +38,7 @@ Transform* LevelPiece::getTransform()
 
 int LevelPiece::getMeshId()
 {
-	return m_connectionPoints->m_meshId;
+	return m_localSpaceConnectionPoints->m_meshId;
 }
 
 Transform* LevelPiece::getChild( int p_inSlot )
@@ -52,6 +55,16 @@ void LevelPiece::setChild( int p_inSlot, Transform* p_transform )
 void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 {
 	// From Proto \\ Jarl & Alex
+
+	// 1) Transform this piece and all its connection points with the inverse matrix of the
+	// used this connector.
+	m_transform->getMatrix() * m_connectionPoints[0].inverse();
+	updateConnectionPoints();
+
+	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
+
+	// 2) Transform this piece and connection points with target piece connector matrix or blä.
+
 
 	// Set this connection to be occupied!
 	p_targetPiece->setChild(p_targetSlot, m_transform);
@@ -108,8 +121,18 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
 {
 	if (p_inSpace == Space_LOCAL)
-		return AglMatrix( m_connectionPoints->m_collection[p_vectorIndex].transform );
+		return AglMatrix( m_localSpaceConnectionPoints->m_collection[p_vectorIndex].transform );
 	else
-		return AglMatrix( m_connectionPoints->m_collection[p_vectorIndex].transform ) *
+		return AglMatrix( m_localSpaceConnectionPoints->m_collection[p_vectorIndex].transform ) *
 				m_transform->getMatrix();
+}
+
+void LevelPiece::updateConnectionPoints()
+{
+	for (int i = 0; i < m_connectionPoints.size(); i++)
+	{
+		m_connectionPoints[i] = 
+			AglMatrix( m_localSpaceConnectionPoints->m_collection[i].transform ) *
+			m_transform->getMatrix();
+	}
 }
