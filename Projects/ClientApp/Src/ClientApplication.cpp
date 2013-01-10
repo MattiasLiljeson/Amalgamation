@@ -49,6 +49,7 @@
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -221,6 +222,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem(new ShieldModuleControllerSystem(), true);
 	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
 	m_world->setSystem(new MineControllerSystem(), true);
+	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
 
 	m_world->initialize();
 }
@@ -496,7 +498,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule());
+	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 
 	m_world->addEntity(entity);
 

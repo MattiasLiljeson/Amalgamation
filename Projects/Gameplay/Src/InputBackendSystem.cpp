@@ -76,6 +76,10 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 		InputHelper::KEYBOARD_KEY::KEY_SPACE, tempControl, "Space" );
 
+	tempControl = factory.createKeyboardKey( InputHelper::KEY_LCTRL );
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+		InputHelper::KEYBOARD_KEY::KEY_LCTRL, tempControl, "LCtrl" );
+
 	// All analogs: stick/triggers on gamepad
 	vector<pair<string, Control*> > analogs = factory.create360controllerAnalogAll();
 	for( int i=0, size = (int)analogs.size(); i<size; i++ )

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Component.h>
+#include <AglVector3.h>
 
 // =======================================================================================
 //	MineLayerModule
@@ -17,8 +18,14 @@
 class RocketLauncherModule: public Component
 {
 public:
-	RocketLauncherModule();
+	RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~RocketLauncherModule();
-private:
+
+	AglVector3 muzzleOffset;
+	AglVector3 fireDirection;
+	float	   coolDown;
+
+	//Maybe temporary
+	int		   laserSightEntity;
 
 };
