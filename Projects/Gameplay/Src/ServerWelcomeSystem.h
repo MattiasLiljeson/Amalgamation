@@ -3,6 +3,7 @@
 #include <AglVector3.h>
 #include <EntitySystem.h>
 
+class Transform;
 class TcpServer;
 
 // =======================================================================================
@@ -32,9 +33,9 @@ public:
 
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
-	Entity* createTheShipEntity(int p_newlyConnectedClientId, AglVector3 p_shipPos);
+	Entity* createTheShipEntity(int p_newlyConnectedClientId, Transform* p_shipTransform);
 	void announceConnectedClient(Entity* p_entity, int p_newlyConnectedClientId, 
-		AglVector3 p_shipPos);
+		Transform* p_shipTransform);
 private:
 	TcpServer* m_server;
 	int		m_activePort;

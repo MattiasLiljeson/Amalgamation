@@ -122,29 +122,26 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	identityPacket << p_newlyConnectedClientId;
 	m_server->unicastPacket( identityPacket, p_newlyConnectedClientId );
 
-	AglVector3 pos = AglVector3(10*p_newlyConnectedClientId,0,0);
-	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, pos);
+	Transform* transformComp = new Transform( 
+		10*static_cast<float>(p_newlyConnectedClientId), 0, 0);
+	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
 	m_world->addEntity(newShip);
 
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */
 	/************************************************************************/
-	announceConnectedClient(newShip,p_newlyConnectedClientId,pos);
+	announceConnectedClient(newShip,p_newlyConnectedClientId, transformComp);
 }
 
 Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, 
-												 AglVector3 p_shipPos)
+												 Transform* p_shipTransform)
 {
 	/************************************************************************/
 	/* Creating the ship entity.											*/
 	/************************************************************************/
 	Entity* e = m_world->createEntity();
 
-	e->addComponent(ComponentType::Transform, new Transform(
-		p_shipPos.x,
-		p_shipPos.y,
-		p_shipPos.z));
-
+	e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
 
@@ -152,7 +149,7 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		new PhysicsBody() );
 
 	e->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData( p_shipPos,
+		new BodyInitData( p_shipTransform->getTranslation(),
 		AglQuaternion::identity(),
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
@@ -164,12 +161,16 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 
 void ServerWelcomeSystem::announceConnectedClient(Entity* p_entity, 
 												  int p_newlyConnectedClientId, 
-												  AglVector3 p_shipPos)
+												  Transform* p_shipTransform)
 {
 	Packet newClientConnected(PacketType::EntityCreation);
-	newClientConnected << (char)EntityType::Ship << p_newlyConnectedClientId 
+	newClientConnected 
+		<< (char)EntityType::Ship 
+		<< p_newlyConnectedClientId 
 		<< p_entity->getIndex() 
-		<< p_shipPos;
+		<< p_shipTransform->getTranslation()
+		<< p_shipTransform->getRotation()
+		<< p_shipTransform->getScale();
 
 	m_server->broadcastPacket(newClientConnected);
 }

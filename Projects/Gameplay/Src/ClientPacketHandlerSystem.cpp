@@ -28,7 +28,8 @@
 #include "EntityType.h"
 #include "PacketType.h"
 
-
+// Debug
+#include <DebugUtil.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -183,16 +184,13 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 
 void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 {
+	Entity* entity;
+	Component* component;
 	NetworkEntityCreationPacket data = readCreationPacket(p_packet);
-
 	if (data.networkType == (char)EntityType::Ship )
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-		Entity* entity = NULL;
-		Component* component;
-
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
 		/************************************************************************/
@@ -202,14 +200,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		Transform* transform = new Transform( data.position, data.rotation, 
 			data.scale);
 		component = transform;
-		entity->addComponent( ComponentType::Transform, component );
-
-		/************************************************************************/
-		/* HACK: Score should probably be located in another entity.			*/
-		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
-
+		entity->addComponent( ComponentType::Transform, component );		
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
 		/************************************************************************/
@@ -217,11 +210,18 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		{
 			component = new ShipFlyController(5.0f, 50.0f);
 			entity->addComponent( ComponentType::ShipFlyController, component );
-		}
-		entity->addComponent(ComponentType::NetworkSynced,
-			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+		}	
+
+		/************************************************************************/
+		/* HACK: Score should probably be located in another entity.			*/
+		/************************************************************************/
+		//component = new PlayerScore();
+		//entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
+		/************************************************************************/
+		/* Attach a camera if it's the clients ship!							*/
+		/************************************************************************/
 		if(data.owner == m_tcpClient->getId())
 		{
 			int shipId = entity->getIndex();
@@ -258,25 +258,22 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 	}
 	else if ( data.networkType == (char)EntityType::Prop )
 	{
-		Entity* entity;
-		Component* component;
-		//b1
-		entity = m_world->createEntity();
-		//component = new RenderInfo( cubeMeshId );
-		//entity->addComponent( ComponentType::RenderInfo, component );
-		component = new Transform(data.position, data.rotation, data.scale);
-		entity->addComponent( ComponentType::Transform, component );
-
-		// The b1 entity should be synced over the network!
-		component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
-
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+
+		entity = m_world->createEntity();
+		component = new Transform(data.position, data.rotation, data.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
+		entity->addComponent(ComponentType::NetworkSynced, component);
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
 
 		m_world->addEntity(entity);
+	}
+	else
+	{
+		DEBUGPRINT(("Network Warning: Received unkown entity type from server"));
 	}
 }
 
