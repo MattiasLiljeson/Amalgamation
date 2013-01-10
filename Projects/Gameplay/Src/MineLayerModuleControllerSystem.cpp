@@ -10,9 +10,10 @@
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
+#include "StandardMine.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem()
-	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MineLayerModule)
+	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 1, ComponentType::MineLayerModule)
 {
 }
 
@@ -67,5 +68,8 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 
 	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.5f, 0.5f, 0.5f));
 	entity->addComponent( ComponentType::Transform, t);
+
+	entity->addComponent(ComponentType::StandardMine, new StandardMine());
+
 	m_world->addEntity(entity);
 }

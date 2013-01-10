@@ -38,6 +38,7 @@ public:	//Enums
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,
 		MineLayerModuleControllerSystem,
+		MineControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

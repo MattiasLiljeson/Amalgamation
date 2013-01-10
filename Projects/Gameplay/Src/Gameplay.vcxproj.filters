@@ -64,6 +64,9 @@
     <Filter Include="Components\Modules">
       <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Gameplay">
+      <UniqueIdentifier>{1ca29702-6777-423d-a727-46202f89623b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -217,6 +220,12 @@
     <ClInclude Include="MineLayerModuleControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="StandardMine.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="MineControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -335,6 +344,12 @@
       <Filter>Components\Modules</Filter>
     </ClCompile>
     <ClCompile Include="MineLayerModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMine.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="MineControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>

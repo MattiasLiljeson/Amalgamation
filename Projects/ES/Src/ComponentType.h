@@ -41,6 +41,7 @@ public:	//Enums
 		MinigunModule,
 		ShieldModule,
 		MineLayerModule,
+		StandardMine,
 		NUM_COMPONENT_TYPES
 	};
 
