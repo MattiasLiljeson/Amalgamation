@@ -59,22 +59,36 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 			ComponentType::getTypeFor(ComponentType::Transform))); 
 		transform->setTranslation(parentTransform->getTranslation());
 		transform->setRotation(parentTransform->getRotation());
+
+		p_module->m_shieldAge += m_world->getDelta();
+		if (p_module->m_shieldAge > 2)
+		{
+			m_world->deleteEntity(shield);
+			p_module->m_shieldEntity = -1;
+			p_module->m_shieldAge = 0;
+		}
 	}
 	else
 	{
-		//Create Shield
-		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+		p_module->m_cooldown -= m_world->getDelta();
 
-		Entity* entity = m_world->createEntity();
-		Component* component = new RenderInfo( sphereMeshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
+		if (p_module->m_cooldown <= 0)
+		{
+			p_module->m_cooldown = 2;
+			//Create Shield
+			EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+			GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+			int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+
+			Entity* entity = m_world->createEntity();
+			Component* component = new RenderInfo( sphereMeshId );
+			entity->addComponent( ComponentType::RenderInfo, component );
 
 
-		Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
-		entity->addComponent( ComponentType::Transform, t);
-		m_world->addEntity(entity);
-		p_module->m_shieldEntity = entity->getIndex();
+			Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
+			entity->addComponent( ComponentType::Transform, t);
+			m_world->addEntity(entity);
+			p_module->m_shieldEntity = entity->getIndex();
+		}
 	}
 }

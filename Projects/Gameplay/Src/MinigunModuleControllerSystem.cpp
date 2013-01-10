@@ -9,6 +9,7 @@
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
+#include "ShipModule.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem()
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -34,7 +35,11 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
-		if (gun)
+		ShipModule* module = static_cast<ShipModule*>(
+			m_world->getComponentManager()->getComponent(p_entities[i],
+			ComponentType::getTypeFor(ComponentType::ShipModule)));
+
+		if (gun && module && module->m_parentEntity >= 0)
 		{
 			handleLaserSight(p_entities[i]);
 
