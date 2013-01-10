@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include <AntTweakBarWrapper.h>
 #include <string>
+#include <ToString.h>
 
 using namespace std;
 
@@ -20,10 +21,13 @@ struct NetworkAdress
 	string getIpAddress()
 	{
 		string tmp;
-		tmp = octets1;
-		tmp += octets2;
-		tmp += octets3;
-		tmp += octets4;
+		tmp = toString(octets1);
+		tmp += ".";
+		tmp += toString(octets2);
+		tmp += ".";
+		tmp += toString(octets3);
+		tmp += ".";
+		tmp += toString(octets4);
 
 		return tmp;
 	}
@@ -31,7 +35,7 @@ struct NetworkAdress
 	string getPortAddress()
 	{
 		string tmp;
-		tmp = port;
+		tmp = toString(port);
 		return tmp;
 	}
 };

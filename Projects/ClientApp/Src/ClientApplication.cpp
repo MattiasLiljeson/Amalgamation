@@ -207,7 +207,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( msgProcSystem , true );
 
 	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client, inputBackend );
+		new ClientConnectToServerSystem( m_client);
 	m_world->setSystem( connect, true );
 
 	ClientPacketHandlerSystem* communicatorSystem =

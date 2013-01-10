@@ -62,6 +62,9 @@ void TW_CALL ClientConnectToServerSystem::callbackConnectToNetworkAddress( void*
 
 void ClientConnectToServerSystem::connectToNetworkAddress()
 {
+	string address = m_connectionAddress.getIpAddress();
+	address = m_connectionAddress.getPortAddress();
+
 	m_tcpClient->connectToServerAsync( m_connectionAddress.getIpAddress(), 
 		m_connectionAddress.getPortAddress() );
 	m_isLookingForConnection = true;
