@@ -13,19 +13,23 @@ struct ComponentData
 	void** data;
 	int dataSize;
 
+	ComponentData();
+	void release();
+	AssemblageHelper::E_FileStatus setDataAsCharArray( char p_dataType, string p_dataName,
+		const char* p_src, int p_size );
+	AssemblageHelper::E_FileStatus getDataAsCharArray( char** out_src );
+	
 	template<typename T>
-	AssemblageHelper::E_FileStatus setData( ComponentData* p_data, stringstream* p_ss );
+	AssemblageHelper::E_FileStatus setData( stringstream* p_ss );
 	template<typename T>
 	AssemblageHelper::E_FileStatus getData( T* out_value );
 
-	ComponentData();
-	void release();
 };
 
 // HACK: Will never return conversion failed as raw memcpy is used. No type 
 // checking is done!
 template<typename T>
-AssemblageHelper::E_FileStatus ComponentData::setData( ComponentData* p_data, stringstream* p_ss )
+AssemblageHelper::E_FileStatus ComponentData::setData( stringstream* p_ss )
 {
 	// Make sure no memory leaks 
 	release();
@@ -38,8 +42,8 @@ AssemblageHelper::E_FileStatus ComponentData::setData( ComponentData* p_data, st
 	dataSize = sizeof(rawData);
 
 	// Convert data to void* and save it.
-	p_data->data = new void*[dataSize];
-	memcpy( p_data->data, &rawData, dataSize);
+	data = new void*[dataSize];
+	memcpy( data, &rawData, dataSize );
 
 	return AssemblageHelper::FileStatus_OK;
 }

@@ -94,31 +94,53 @@ AssemblageHelper::E_FileStatus ComponentReader::readComponentDataLine( const str
 	switch( dataType )
 	{
 	case 'b':
-		data.setData<bool>( &data, &ss );
+		data.setData<bool>( &ss );
 	case 'i':
-		data.setData<int>( &data, &ss );
+		data.setData<int>( &ss );
 		break;
 	case 'u':
-		data.setData<unsigned int>( &data, &ss );
+		data.setData<unsigned int>( &ss );
 		break;
 	case 'f':
-		data.setData<float>( &data, &ss );
+		data.setData<float>( &ss );
 		break;
 	case 'd':
-		data.setData<double>( &data, &ss );
+		data.setData<double>( &ss );
 		break;
 	case 'c':
-		data.setData<char>( &data, &ss );
+		data.setData<char>( &ss );
 		break;
 	case 's':
-		data.setData<string>( &data, &ss );
+		{
+			//Special case for strings
+			char dataType;
+			string dataName;
+			ss>>dataType;
+			ss>>dataName;
+
+			string dataString = "";
+			string tempString = "";
+
+			while( ss.good() )
+			{
+				ss>>tempString;
+				if(dataString != "")
+				{
+					dataString += " ";
+				}
+				dataString += tempString; 
+			}
+
+			data.setDataAsCharArray( dataType, dataName,
+				dataString.c_str(), dataString.length()+1 );
+		}
 		break;
 	default:
 		status = AssemblageHelper::FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED;
 		break;
 	}
 
-	if( status == AssemblageHelper::FileStatus_OK)
+	if( status == AssemblageHelper::FileStatus_OK )
 	{
 		m_componentDataList.push_back( data );
 	}

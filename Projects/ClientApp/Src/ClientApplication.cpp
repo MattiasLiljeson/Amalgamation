@@ -266,8 +266,9 @@ void ClientApplication::initEntities()
 
 	// HUD score element
 	entity = m_world->createEntity();
-	component = new HudElement( "scoreText" );
-	entity->addComponent( ComponentType::HudElement, component );
+	//component = new HudElement( "scoreText" );
+	//entity->addComponent( ComponentType::HudElement, component );
+	status = factory.readAssemblageFile( entity, "Assemblages/test6.asd" );
 	m_world->addEntity(entity);
 
 }
