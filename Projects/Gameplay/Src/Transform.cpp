@@ -1,5 +1,7 @@
 #include "Transform.h"
 
+ComponentRegister<Transform> Transform::s_reg("Transform");
+
 Transform::Transform()
 {
 	m_translation.x = 0.0f;
@@ -13,6 +15,7 @@ Transform::Transform()
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform( float p_posX, float p_posY, float p_posZ )
@@ -28,6 +31,7 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale)
@@ -37,11 +41,23 @@ Transform::Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVect
 	m_scale = p_scale;
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::~Transform()
 {
 
+}
+
+void Transform::init( vector<ComponentData> p_initData )
+{
+	for( unsigned int i=0; i<p_initData.size(); i++ )
+	{
+		if( p_initData[i].dataName == "scaleX" )
+		{
+			p_initData[i].getData<float>(&m_scale.x);
+		}
+	}
 }
 
 const AglVector3& Transform::getTranslation() const

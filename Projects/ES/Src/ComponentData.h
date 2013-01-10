@@ -18,6 +18,7 @@ struct ComponentData
 	template<typename T>
 	AssemblageHelper::E_FileStatus getData( T* out_value );
 
+	ComponentData();
 	void release();
 };
 
@@ -49,12 +50,14 @@ template<typename T>
 AssemblageHelper::E_FileStatus ComponentData::getData( T* out_value )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	T* value:
+	T* value;
 	if( true )
 	{
-		value = reinterpret_cast<T*>(data)
+		value = reinterpret_cast<T*>( data );
 		status = AssemblageHelper::FileStatus_OK;
 	}
+
+	*out_value = *value;
 
 	return status;
 }

@@ -4,12 +4,12 @@
 #include "Component.h"
 #include "ComponentData.h"
 
-ComponentReader::ComponentReader(void)
+ComponentReader::ComponentReader()
 {
 }
 
 
-ComponentReader::~ComponentReader(void)
+ComponentReader::~ComponentReader()
 {
 	for( unsigned int i=0; i<m_componentDataList.size(); i++ )
 	{
@@ -23,7 +23,8 @@ AssemblageHelper::E_FileStatus ComponentReader::createComponent(
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	Component* component = NULL;
 
-	char componentPrefix = AssemblageHelper::peekCharFromStream( &componentPrefix, p_file );
+	char componentPrefix = ' ';
+	status = AssemblageHelper::peekCharFromStream( &componentPrefix, p_file );
 	// If there's no error and componentName defines a component
 	if( status == AssemblageHelper::FileStatus_OK && componentPrefix == 'c' )
 	{
@@ -39,11 +40,11 @@ AssemblageHelper::E_FileStatus ComponentReader::createComponent(
 		else
 		{
 			// As long as the file is ok and the next line defines data. Create Componentdata
-			char nextPrefix = '\0';
+			char nextPrefix = ' ';
 			status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
 			while( status == AssemblageHelper::FileStatus_OK && nextPrefix == 'd')
 			{
-				char dataPrefix = '\0';
+				char dataPrefix = ' ';
 				string dataLine = "";
 
 				// read componentName, make sure it's data
@@ -52,15 +53,30 @@ AssemblageHelper::E_FileStatus ComponentReader::createComponent(
 				{
 					status = readComponentDataLine( dataLine );
 				}
-
-				component->init( m_componentDataList );
 			}
+			component->init( m_componentDataList );
 		}
 	}
 
-	if( out_component != NULL )
+	ComponentType::ComponentTypeIdx type = ComponentType::NON_EXISTING;
+	if( component != NULL )
+	{
+		type = component->getType();
+	}
+
+	if( out_type != NULL)
+	{
+		*out_type = type;
+	}
+
+	if( out_component != NULL)
 	{
 		*out_component = component;
+	}
+	else
+	{
+		delete component;
+		component = NULL;
 	}
 
 	return status;
@@ -71,9 +87,11 @@ AssemblageHelper::E_FileStatus ComponentReader::readComponentDataLine( const str
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	stringstream ss( p_dataLine );
 
+	char dataType = ss.peek();
+
 	ComponentData data;
 
-	switch(data.dataType)
+	switch( dataType )
 	{
 	case 'b':
 		data.setData<bool>( &data, &ss );

@@ -37,7 +37,7 @@ void EntityFactory::initAssamblageReaders()
 
 AssemblageHelper::E_FileStatus EntityFactory::parseFile( Entity* out_entity, ifstream* p_file )
 {
-	char prefix = '\0';
+	char prefix = ' ';
 	string line = "";
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::readLineFromStream( &prefix, &line, p_file );
 

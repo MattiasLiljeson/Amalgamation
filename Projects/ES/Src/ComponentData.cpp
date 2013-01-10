@@ -1,5 +1,11 @@
 #include "ComponentData.h"
 
+ComponentData::ComponentData()
+{
+	data = NULL;
+	release();
+}
+
 void ComponentData::release()
 {
 	dataType = -1;

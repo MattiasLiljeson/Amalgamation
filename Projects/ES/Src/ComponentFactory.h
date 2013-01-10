@@ -19,18 +19,20 @@ public:
 
 	static Component* createInstance(std::string& p_componentName);
 
-//protected:
+protected:
 	static map_type* getMap();
-//
-//private:
-	static map_type* map;
+
+private:
+	static map_type s_map; //TODO: Change to stack allocation
 };
 
 template<typename T>
 class ComponentRegister : ComponentFactory 
 { 
 public:
-	ComponentRegister(std::string const& s) { 
-		getMap()->insert(std::make_pair(s, &createT<T>));
+	ComponentRegister(std::string const& s)
+	{ 
+		map_type* map = getMap();
+		map->insert(std::make_pair(s, &createT<T>));
 	}
 };

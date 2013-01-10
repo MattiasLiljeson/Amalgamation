@@ -19,6 +19,8 @@
 #include <Transform.h>
 #include <HudElement.h>
 
+#include <EntityFactory.h>
+
 // Systems
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
@@ -203,8 +205,35 @@ void ClientApplication::initSystems()
 
 void ClientApplication::initEntities()
 {
-	Entity* entity;
-	Component* component;
+	Entity* entity = NULL;
+	Component* component = NULL;
+	
+	EntityFactory factory;
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
+	
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/asd" );
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/test1.asd" );
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/test2.asd" );
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/test3.asd" );
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/test4.asd" );
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	status = factory.readAssemblageFile( entity, "Assemblages/test5.asd" );
+	m_world->addEntity(entity);
 
 	EntitySystem* tempSys = NULL;
 

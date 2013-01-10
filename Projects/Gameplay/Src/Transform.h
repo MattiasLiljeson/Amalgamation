@@ -15,8 +15,10 @@
 #include <AglVector3.h>
 #include <AglQuaternion.h>
 #include <Component.h>
-
+#include <ComponentFactory.h>
 #include <InstanceData.h>
+
+
 
 class Transform: public Component
 {
@@ -46,6 +48,8 @@ public:
 	Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale);
 
 	~Transform();
+
+	virtual void init( vector<ComponentData> p_initData );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The translation vector.
@@ -116,6 +120,8 @@ private:
 	void calcCompMatrix();
 
 private:
+	static ComponentRegister<Transform> s_reg;
+
 	AglMatrix m_compositionMatrix;
 	InstanceData m_instanceData;
 	//AglMatrix m_transposedCompositionMatrix;

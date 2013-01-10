@@ -9,29 +9,36 @@ AssemblageHelper::~AssemblageHelper(void)
 {
 }
 
-AssemblageHelper::E_FileStatus AssemblageHelper::peekCharFromStream( char* out_prefix, ifstream* p_file )
+AssemblageHelper::E_FileStatus AssemblageHelper::peekCharFromStream( char* out_prefix,
+																	ifstream* p_file )
 {
-	char prefix = '\0';
+	char nextPrefix = '\0';
 	E_FileStatus status = controlStream( p_file);
 	if( status == FileStatus_OK )
 	{
-		prefix = p_file->peek();
+		nextPrefix = p_file->peek();
+		while( status == FileStatus_OK && skipLine( nextPrefix ) )
+		{
+			string discard = "";
+			getline( *p_file, discard );
+			nextPrefix = p_file->peek();
+			status = controlStream( p_file );
+		};
 	}
-	status = controlStream( p_file);
 	
 	if( out_prefix != NULL )
 	{
-		*out_prefix = prefix;
+		*out_prefix = nextPrefix;
 	}
 	
 	return status;
 }
 
 AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_prefix,
-																	 string* out_line, ifstream* p_file )
+													string* out_line, ifstream* p_file )
 {
 	int prefixPos = 0;
-	char prefix = '\0';
+	char prefix = ' ';
 	string line = "";
 	
 	// Make sure stream is good to go before trying to work with it
@@ -42,16 +49,13 @@ AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_p
 		do{
 			getline( *p_file, line );
 		
-			prefixPos = 0;
-			while( skipChar(prefix) )
-			{
+			prefixPos = -1;
+			do {
 				prefixPos++;
 				prefix = line[prefixPos];
-			}	
+			} while( skipChar(prefix) );
 		} while( skipLine(prefix) && p_file->good() );
 	}
-	// Check for stream failure
-	status = controlStream( p_file );
 	
 	string subLine = "";
 	if( status == FileStatus_OK )
@@ -68,6 +72,9 @@ AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_p
 	{
 		*out_prefix = prefix;
 	}
+
+	// Check for stream failure
+	status = controlStream( p_file );
 	return status;
 }
 
@@ -106,6 +113,9 @@ bool AssemblageHelper::skipChar( char p_prefix )
 	{
 	case '\t':
 	case ' ':
+	
+	// Should probably not be here as tehre is a risk of reading outside of a variable
+	//case '\0':
 		skip = true;
 		break;
 	default:
