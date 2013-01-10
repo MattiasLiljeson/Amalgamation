@@ -46,7 +46,10 @@ public:
 	Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
 		const AglVector3& p_scale);
 
+	Transform(const AglMatrix& p_matrix);
+
 	~Transform();
+
 
 	///-----------------------------------------------------------------------------------
 	/// \return The translation vector.
@@ -102,6 +105,12 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setUp( const AglVector3& p_up );
 
+	///-----------------------------------------------------------------------------------
+	/// Set the matrix and update vectors
+	/// \param p_matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMatrix(const AglMatrix& p_matrix);
 
 	///-----------------------------------------------------------------------------------
 	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
@@ -137,6 +146,12 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void calcCompMatrix();
+
+	///-----------------------------------------------------------------------------------
+	/// Calculate components from matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void calcComponents();
 
 private:
 	AglMatrix m_compositionMatrix;

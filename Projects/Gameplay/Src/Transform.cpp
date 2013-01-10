@@ -40,6 +40,11 @@ Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rot
 	calcCompMatrix();
 }
 
+Transform::Transform(const AglMatrix& p_matrix)
+{
+	setMatrix(p_matrix);
+}
+
 Transform::~Transform()
 {
 
@@ -93,7 +98,11 @@ void Transform::setUp( const AglVector3& p_up )
 	m_compositionMatrix.SetUp(p_up);
 }
 
-
+void Transform::setMatrix(const AglMatrix& p_matrix)
+{
+	m_compositionMatrix = p_matrix;
+	calcComponents();
+}
 
 const AglMatrix& Transform::getMatrix() const
 {
@@ -129,4 +138,17 @@ void Transform::calcCompMatrix()
 		m_instanceData.worldTransform[i] = transMat[i];
 	}
 }
+
+void Transform::calcComponents()
+{
+	// implement this for scale and rotation as well
+	m_translation = m_compositionMatrix.GetTranslation();
+
+	AglMatrix transMat = AglMatrix::transpose( m_compositionMatrix );
+	for( int i=0; i<16; i++ )
+	{
+		m_instanceData.worldTransform[i] = transMat[i];
+	}
+}
+
 
