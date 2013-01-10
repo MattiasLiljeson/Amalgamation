@@ -1,5 +1,5 @@
 #include "ClientApplication.h"
-#include <boost/thread/thread.hpp>
+#include <windows.h>
 
 #ifdef COMBINE_CLIENT_AND_SERVER
 	#include "ServerApplication.h"
@@ -54,7 +54,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 
 #ifdef COMBINE_CLIENT_AND_SERVER
 		m_serverApp = new Srv::ServerApplication();
-#endif // !_COMBINE_CLIENT_AND_SERVER
+#endif
 
 		initSystems();
 		initEntities();
@@ -63,6 +63,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		initSoundSystem();
 		initSounds();
 #endif
+
 	}
 	catch(exception& e)
 	{
@@ -78,7 +79,7 @@ ClientApplication::~ClientApplication()
 	m_serverApp->putMessage( newMessage );
 	m_serverApp->stop();
 	delete m_serverApp;
-#endif // !_COMBINE_CLIENT_AND_SERVER
+#endif
 	delete m_world;
 	delete m_client;
 }

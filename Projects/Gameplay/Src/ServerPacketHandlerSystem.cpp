@@ -11,7 +11,6 @@
 #include "PacketType.h"
 #include "EntityType.h"
 #include "PhysicsSystem.h"
-#include <Windows.h>
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,

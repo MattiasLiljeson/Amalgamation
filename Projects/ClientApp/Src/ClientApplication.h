@@ -27,7 +27,11 @@
 /************************************************************************/
 #include <TcpClient.h> 
 #include <Globals.h>
-#include <windows.h>
+
+#ifndef _WINDEF_
+	class HINSTANCE__; // Forward or never
+	typedef HINSTANCE__* HINSTANCE;
+#endif
 
 class EntityWorld;
 class TcpClient;

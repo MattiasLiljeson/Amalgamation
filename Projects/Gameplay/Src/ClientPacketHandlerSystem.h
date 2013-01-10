@@ -4,8 +4,6 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
-#include <ctime>
-#include <Windows.h>
 
 class TcpClient;
 
