@@ -1,7 +1,7 @@
 #include "ClientApplication.h"
 #include <boost/thread/thread.hpp>
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 	#include "ServerApplication.h"
 #endif
 
@@ -52,7 +52,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		m_client = new TcpClient();
 		m_world = new EntityWorld();
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 		m_serverApp = new Srv::ServerApplication();
 #endif // !_COMBINE_CLIENT_AND_SERVER
 
@@ -73,7 +73,10 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 ClientApplication::~ClientApplication()
 {
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
+	ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+	m_serverApp->putMessage( newMessage );
+	m_serverApp->stop();
 	delete m_serverApp;
 #endif // !_COMBINE_CLIENT_AND_SERVER
 	delete m_world;
@@ -82,6 +85,9 @@ ClientApplication::~ClientApplication()
 
 void ClientApplication::run()
 {
+#ifdef COMBINE_CLIENT_AND_SERVER
+	m_serverApp->start();
+#endif
 	m_running = true;
 
 	// simple timer
@@ -110,20 +116,12 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
-			
-			// DEBUGPRINT(( (toString(dt)+string("\n")).c_str() ));
 
 			m_world->setDelta((float)dt);
 			m_world->process();
 			
-			#ifdef _COMBINE_CLIENT_AND_SERVER
-				m_serverApp->step( static_cast<float>(dt) );
-			#endif
-
-//			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 		}
 	}
-
 }
 
 void ClientApplication::initSystems()

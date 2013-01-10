@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ThreadSafeMessaging.h"
+#include <basetsd.h>
 
 namespace boost
 {
@@ -57,6 +58,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	virtual void body() = 0;
+
+	void sleep(UINT32 p_milliSeconds);
 
 private:
 	int m_id; ///< Unique id.

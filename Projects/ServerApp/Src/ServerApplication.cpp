@@ -33,7 +33,7 @@ namespace Srv
 		delete m_server;
 	}
 
-	void ServerApplication::run()
+	void ServerApplication::body()
 	{
 		m_running = true;
 
@@ -59,7 +59,7 @@ namespace Srv
 
 			// HACK: Static delta and really high for testing purposes.
 			step( static_cast<float>(dt) );
-		
+
 			// HACK: Maybe place input in systems? :D
 			if( _kbhit() )
 			{
@@ -69,9 +69,8 @@ namespace Srv
 					_flushall();
 				}
 			}
-
-			// HACK: Really slow update loop for testing purposes.
-			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			processMessages();
+			sleep(10);
 		}
 	}
 
@@ -157,5 +156,21 @@ namespace Srv
 		entity->addComponent(ComponentType::NetworkSynced, component);
 
 		m_world->addEntity(entity);
+	}
+
+	
+	void ServerApplication::processMessages()
+	{
+
+		while( getMessageCount() > 0 )
+		{
+			ProcessMessage* message = popMessage();
+
+			if( message->type == MessageType::TERMINATE )
+			{
+				m_running = false;
+			}
+			delete message;
+		}
 	}
 };

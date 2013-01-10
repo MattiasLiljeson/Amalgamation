@@ -1,3 +1,12 @@
+#pragma once
+
+#include <conio.h>
+
+#include <TcpServer.h>
+#include <EntityWorld.h>
+#include <ProcessThread.h>
+
+using namespace std;
 // =======================================================================================
 //                                      ServerApplication
 // =======================================================================================
@@ -11,20 +20,10 @@
 /// It also calls the EntityWorld's update (or rather "tick") method.
 /// Created on: 3-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <conio.h>
-
-#include <boost/thread/thread.hpp>
-
-#include <TcpServer.h>
-#include <EntityWorld.h>
-
-using namespace std;
 
 namespace Srv
 {
-	class ServerApplication
+	class ServerApplication : public ProcessThread
 	{
 	public:
 		ServerApplication();
@@ -35,13 +34,25 @@ namespace Srv
 		/// Let the program's entry point call run().
 		/// \return void
 		///-----------------------------------------------------------------------------------
-		void run();
+		//void run();
 
 		///-----------------------------------------------------------------------------------
 		/// Call one "step" on the server, instead of running a game loop.
 		/// \return void
 		///-----------------------------------------------------------------------------------
 		void step( float p_dt );
+
+		///-----------------------------------------------------------------------------------
+		/// Contains the main server loop
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void body();
+
+		///-----------------------------------------------------------------------------------
+		/// Empty implemenation.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void processMessages();
 
 	private:
 
