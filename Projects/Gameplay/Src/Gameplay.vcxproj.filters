@@ -208,6 +208,9 @@
     <ClInclude Include="ShieldModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ShieldModuleControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -318,6 +321,9 @@
     </ClCompile>
     <ClCompile Include="ShieldModule.cpp">
       <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

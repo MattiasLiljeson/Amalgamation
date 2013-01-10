@@ -36,6 +36,7 @@ public:	//Enums
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
 		MinigunModuleControllerSystem,
+		ShieldModuleControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 
