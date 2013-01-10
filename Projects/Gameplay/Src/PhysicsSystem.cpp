@@ -265,6 +265,8 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 				{
 					if (collisions[j] == PhysModule->m_id)
 					{
+
+						//BUG! Ibland läggs en entity till två gånger pga att kollisionssystemet inte updaterat kollisionslistan
 						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
 						RigidBody* r = (RigidBody*)m_physicsController->getBody(PhysModule->m_id);
 						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
