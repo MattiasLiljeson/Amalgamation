@@ -23,10 +23,12 @@
     <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
+    <ClInclude Include="LookAtSystem.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
@@ -36,6 +38,11 @@
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
+    <ClInclude Include="ShipEditController.h" />
+    <ClInclude Include="ShipEditControllerSystem.h" />
+    <ClInclude Include="ShipFlyController.h" />
+    <ClInclude Include="ShipFlyControllerSystem.h" />
+    <ClInclude Include="ShipInputProcessingSystem.h" />
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
@@ -53,7 +60,6 @@
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="RenderPrepSystem.h" />
     <ClInclude Include="ShipController.h" />
-    <ClInclude Include="ShipControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="Transform.h" />
@@ -75,6 +81,7 @@
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
@@ -83,6 +90,9 @@
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
+    <ClCompile Include="ShipEditControllerSystem.cpp" />
+    <ClCompile Include="ShipFlyControllerSystem.cpp" />
+    <ClCompile Include="ShipInputProcessingSystem.cpp" />
     <ClCompile Include="ShipModule.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
@@ -91,7 +101,6 @@
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="LibRocketRenderInterface.cpp" />
     <ClCompile Include="RenderPrepSystem.cpp" />
-    <ClCompile Include="ShipControllerSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="Transform.cpp" />

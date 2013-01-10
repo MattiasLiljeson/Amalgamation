@@ -64,6 +64,12 @@
     <Filter Include="Components\Modules">
       <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Tags">
+      <UniqueIdentifier>{3b95b3e8-1f89-4116-8a09-3aa212603498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Gameplay">
+      <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -108,14 +114,8 @@
     <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
-    <ClInclude Include="ShipControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LookAtEntity.h">
-      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="libRocketBackendSystem.h">
       <Filter>Systems\GUI</Filter>
@@ -205,6 +205,30 @@
     <ClInclude Include="ClientInfo.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="GameplayTags.h">
+      <Filter>Components\Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipInputProcessingSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -227,9 +251,6 @@
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\GUI</Filter>
@@ -312,6 +333,18 @@
     </ClCompile>
     <ClCompile Include="ClientPacketHandlerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEditControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipFlyControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipInputProcessingSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LookAtSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
