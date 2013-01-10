@@ -53,14 +53,6 @@ ParticleSystem::ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice
 
 
 	mDevice->CreateDepthStencilState(&depthStencilDesc, &mDepthStencilState);
-
-
-
-	mTextureIndex = -1;
-	mColor = AglVector4(1, 1, 1, 1);
-	mFadeInStop = 0;
-	mFadeOutStart = 100;
-	mAlignment = AglParticleSystemHeader::OBSERVER;
 }
 
 ParticleSystem::~ParticleSystem()

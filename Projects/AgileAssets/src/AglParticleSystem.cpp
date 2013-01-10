@@ -28,6 +28,14 @@ AglParticleSystem::AglParticleSystem()
 	m_header.particlesPerSpawn = 1;
 	m_header.spreadType = AglParticleSystemHeader::INSPACE;
 	m_header.particleSize = AglVector2(1.0f, 1.0f);
+	m_header.color = AglVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_header.fadeInStop = 0;
+	m_header.fadeOutStart = m_header.particleAge;
+	m_header.textureNameIndex = -1;
+	m_header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	m_header.spawnRotation = 0;
+	m_header.spawnRotationOffset = 0;
+
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 }
@@ -98,6 +106,10 @@ void AglParticleSystem::setSpawnAngularVelocity(float p_angularVelocity)
 {
 	m_header.spawnAngularVelocity = p_angularVelocity;
 }
+void AglParticleSystem::setColor(AglVector4 p_color)
+{
+	m_header.color = p_color;
+}
 
 AglVector3 AglParticleSystem::requestSpawnPoint()
 {
@@ -151,6 +163,14 @@ void AglParticleSystem::setParticlesPerSpawn(unsigned int p_particlesPerSpawn)
 void AglParticleSystem::setSpreadType(AglParticleSystemHeader::AglSpreadType p_type)
 {
 	m_header.spreadType = p_type;
+}
+void AglParticleSystem::setTextureNameIndex(int p_textureNameIndex)
+{
+	m_header.textureNameIndex = p_textureNameIndex;
+}
+void AglParticleSystem::setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment)
+{
+	m_header.alignmentType = p_alignment;
 }
 
 void AglParticleSystem::restart()
@@ -229,4 +249,12 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 void AglParticleSystem::setSpawnOffset(float p_offset)
 {
 	m_header.spawnOffset = p_offset;
+}
+void AglParticleSystem::setFadeOutStart(float p_fadeOutStart)
+{
+	m_header.fadeOutStart = p_fadeOutStart;
+}
+void AglParticleSystem::setFadeInStop(float p_fadeInStop)
+{
+	m_header.fadeInStop = p_fadeInStop;
 }

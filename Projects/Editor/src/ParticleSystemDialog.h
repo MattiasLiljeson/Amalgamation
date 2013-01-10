@@ -68,6 +68,9 @@ private:
 	static void TW_CALL SetSpawnAngularVelocity(const void *value, void *clientData);
 	static void TW_CALL GetSpawnAngularVelocity(void *value, void *clientData);
 
+	//Clone
+	static void TW_CALL Clone(void* clientData);
+
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);
 public:

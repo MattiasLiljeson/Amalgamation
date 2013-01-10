@@ -33,11 +33,14 @@ private:
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
 	static void TW_CALL AddPE(void* clientData);
+
 	static void TW_CALL SetCOSystem(void *clientData);
 public:
 	//Static functions
 	static SceneDialog* GetInstance();
 	static void Release();
+
+	void ClonePE(AglParticleSystemHeader pHeader);
 public:
 	void SetCurrentMesh(int pIndex);
 	void SetCurrentParticleSystem(int pIndex);

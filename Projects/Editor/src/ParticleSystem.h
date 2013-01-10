@@ -25,13 +25,6 @@ private:
 
 	ID3D11BlendState* mBlendState;
 	ID3D11DepthStencilState* mDepthStencilState;
-
-	int mTextureIndex;
-	AglVector4 mColor;
-	float mFadeInStop;
-	float mFadeOutStart;
-
-	AglParticleSystemHeader::AglAlignmentType mAlignment;
 public:
 	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
@@ -66,36 +59,36 @@ public:
 	}
 	void setTextureIndex(int p_index)
 	{
-		mTextureIndex = p_index;
+		mSystem->setTextureNameIndex(p_index);
 	}
 	int getTextureIndex()
 	{
-		return mTextureIndex;
+		return mSystem->getHeader().textureNameIndex;
 	}
 	AglVector4 getColor()
 	{
-		return mColor;
+		return mSystem->getHeader().color;
 	}
 	void setColor(AglVector4 pColor)
 	{
-		mColor = pColor;
+		mSystem->setColor(pColor);
 	}
 
 	float getFadeInStop()
 	{
-		return mFadeInStop;
+		return mSystem->getHeader().fadeInStop;
 	}
 	void setFadeInStop(float pFadeInStop)
 	{
-		mFadeInStop = pFadeInStop;
+		mSystem->setFadeInStop(pFadeInStop);
 	}
 	float getFadeOutStart()
 	{
-		return mFadeOutStart;
+		return mSystem->getHeader().fadeOutStart;
 	}
 	void setFadeOutStart(float pFadeOutStart)
 	{
-		mFadeOutStart = pFadeOutStart;
+		mSystem->setFadeOutStart(pFadeOutStart);
 	}
 	void setSpawnOffset(float pOffset)
 	{
@@ -135,11 +128,11 @@ public:
 	}
 	AglParticleSystemHeader::AglAlignmentType getAlignment()
 	{
-		return mAlignment;
+		return mSystem->getHeader().alignmentType;
 	}
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType pType)
 	{
-		mAlignment = pType;
+		mSystem->setAlignmentType(pType);
 	}
 	void setSpawnAngularVelocity(float p_angularVelocity)
 	{

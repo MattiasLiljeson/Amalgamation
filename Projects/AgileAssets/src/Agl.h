@@ -59,6 +59,7 @@ struct AglTopHeader
 	int		looseBspCount;			///< Number of loose bsp trees in the file
 	int		SphereGridCount;		///< Number of sphere grids in the file
 	int		connectionPointCount;	///< Number of connection points in the file
+	int		particleSystemCount;	///< Number of particle systems in the file
 	
 	AglCoordinateSystem coordinateSystem; ///< Coordinate System of the scene
 };
@@ -72,6 +73,7 @@ struct AglConnectionPoint
 {
 	AglMatrix transform; ///< Local Transform relative to the parent
 	int		  parentMesh; ///< Index to the mesh in the list of meshes
+	int		  nameID;	  ///< Index to the name in the global name array
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "TextureManager.h"
 #include <AglVector4.h>
+#include "SceneDialog.h"
 
 void TW_CALL ParticleSystemDialog::SetSpawn(const void *value, void *clientData)
 {
@@ -285,6 +286,13 @@ void TW_CALL ParticleSystemDialog::GetSpawnAngularVelocity(void *value, void *cl
 	*(float*)value = ps->GetHeader().spawnAngularVelocity;
 }
 
+void TW_CALL ParticleSystemDialog::Clone(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	SceneDialog::GetInstance()->ClonePE(ps->GetHeader());
+}
+
 
 void TW_CALL ParticleSystemDialog::Restart(void* clientData)
 {
@@ -367,7 +375,10 @@ void ParticleSystemDialog::setPS(int pIndex)
 	TwAddButton(m_dialog, "Observer Alignment", SetObserverAlignment, (void*)this, " label='Observer Alignment' group='Billboard Alignment'");
 
 	//Spawn Angular Velocity
-	TwAddVarCB(m_dialog, "Spawn Angular Velocity", TW_TYPE_FLOAT, SetSpawnAngularVelocity, GetSpawnAngularVelocity, (void*)this, "key=o");
+	TwAddVarCB(m_dialog, "Spawn Angular Velocity", TW_TYPE_FLOAT, SetSpawnAngularVelocity, GetSpawnAngularVelocity, (void*)this, "key=o step=0.01");
+
+	//Clone
+	TwAddButton(m_dialog, "Clone", Clone, (void*)this, " label='Clone'");
 
 	show();
 }

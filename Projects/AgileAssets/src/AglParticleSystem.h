@@ -45,6 +45,13 @@ struct AglParticleSystemHeader
 	float				maxOpacity; ///< 0 -> 1
 	unsigned int		particlesPerSpawn;
 	AglVector2			particleSize;
+	AglVector4			color;
+	float				fadeInStop;
+	float				fadeOutStart;
+	int					textureNameIndex;
+	AglAlignmentType	alignmentType;
+	float				spawnRotation;
+	float				spawnRotationOffset;
 };
 
 struct AglStandardParticle
@@ -104,6 +111,11 @@ public:
 	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
 	void setParticleSize(AglVector2 p_size);
 	void setSpawnAngularVelocity(float p_angularVelocity);
+	void setColor(AglVector4 p_color);
+	void setFadeOutStart(float p_fadeOutStart);
+	void setFadeInStop(float p_fadeInStop);
+	void setTextureNameIndex(int p_textureNameIndex);
+	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
 
 	void restart();
 
