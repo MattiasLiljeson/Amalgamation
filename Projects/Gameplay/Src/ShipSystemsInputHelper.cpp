@@ -1,6 +1,7 @@
 #include "ShipSystemsInputHelper.h"
 #include "InputBackendSystem.h"
 #include "Control.h"
+#include <ValueClamp.h>
 
 ShipSystemsInputHelper::ShipSystemsInputHelper()
 {
@@ -100,39 +101,53 @@ void ShipSystemsInputHelper::readAllTheInput(RawInputForces& p_outInput)
 {
 	p_outInput.hPositive = m_gamepadHorizontalPositive->getStatus();
 	p_outInput.hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
+	saturate(p_outInput.hPositive); // ?
 
 	p_outInput.hNegative = m_gamepadHorizontalNegative->getStatus();
 	p_outInput.hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
+	saturate(p_outInput.hNegative); // ?
 
 	p_outInput.vPositive = m_gamepadVerticalPositive->getStatus();
 	p_outInput.vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
+	saturate(p_outInput.vPositive); // ?
 
 	p_outInput.vNegative = m_gamepadVerticalNegative->getStatus();
 	p_outInput.vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
+	saturate(p_outInput.vNegative); // ?
 
 	p_outInput.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
 	p_outInput.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
+	saturate(p_outInput.shPositive);
 
 	p_outInput.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
 	p_outInput.shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
+	saturate(p_outInput.shNegative);
 
 	p_outInput.svPositive = m_gamepadStrafeVerticalPositive->getStatus();
 	p_outInput.svPositive += m_keyboardStrafeVerticalPos->getStatus();
+	saturate(p_outInput.svPositive);
 
 	p_outInput.svNegative = m_gamepadStrafeVerticalNegative->getStatus();
 	p_outInput.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
+	saturate(p_outInput.svNegative);
 
 	p_outInput.rRight = m_gamepadRollRight->getStatus();
 	p_outInput.rRight += m_keyboardRollRight->getStatus();
+	saturate(p_outInput.rRight);
 
 	p_outInput.rLeft = m_gamepadRollLeft->getStatus();
 	p_outInput.rLeft += m_keyboardRollLeft->getStatus();
+	saturate(p_outInput.rLeft);
 
 	p_outInput.thrust =  m_gamepadThrust->getStatus();
 	p_outInput.thrust += m_keyboardThrust->getStatus();
+	saturate(p_outInput.thrust);
 
 	p_outInput.editSwitchTrig = m_gamepadEditModeTrig->getStatus();
-	p_outInput.editSwitchTrig = m_keyboardEditModeTrig->getStatus();
+	p_outInput.editSwitchTrig += m_keyboardEditModeTrig->getStatus();
+	saturate(p_outInput.editSwitchTrig);
+
+
 }
 
 
