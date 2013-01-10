@@ -8,16 +8,16 @@
 class ShipFlyMode_TAG : public Tag {};
 
 ///
-/// ShipFlyMode_TAG
+/// ShipEditMode_TAG
 ///
 class ShipEditMode_TAG : public Tag {};
 
 ///
-/// ShipFollowMode_TAG
+/// LookAtFollowMode_TAG
 ///
 class LookAtFollowMode_TAG : public Tag {};
 
 ///
-/// ShipFlyMode_TAG
+/// LookatOrbitMode_TAG
 ///
 class LookAtOrbitMode_TAG : public Tag {};

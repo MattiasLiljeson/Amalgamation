@@ -28,7 +28,8 @@ public:
 			shPositive,shNegative,
 			svPositive,svNegative,
 			rRight, rLeft,
-			thrust, editSwitchTrig;
+			thrust;
+		bool editSwitchTrig;
 
 		float getHorizontalInput()
 		{
@@ -54,9 +55,9 @@ public:
 		{
 			return (float)(svPositive - svNegative);
 		}
-		float getEditModeSwitch()
+		bool getEditModeSwitch()
 		{
-			return (float)(editSwitchTrig);
+			return editSwitchTrig;
 		}
 	};
 
@@ -135,4 +136,6 @@ public:
 	// Correction vectors for the left and right thumb sticks.
 	double m_leftStickCorrection[2];
 	double m_rightStickCorrection[2];
+private:
+	bool m_editSwitchTrigReleased;
 };

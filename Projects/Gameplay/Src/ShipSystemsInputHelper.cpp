@@ -4,7 +4,7 @@
 
 ShipSystemsInputHelper::ShipSystemsInputHelper()
 {
-	m_mouseSensitivity = 2000;
+	m_mouseSensitivity = 5000;
 
 	m_controllerEpsilon = 0.15f;
 	m_leftStickDir[0] = 0;
@@ -24,6 +24,8 @@ ShipSystemsInputHelper::ShipSystemsInputHelper()
 	m_leftStickCorrection[1] = 0.1;
 	m_rightStickCorrection[0] = 0;
 	m_rightStickCorrection[1] = 0;
+
+	m_editSwitchTrigReleased = true;
 }
 
 void ShipSystemsInputHelper::initGamePad(InputBackendSystem* p_inputBackend)
@@ -129,6 +131,7 @@ void ShipSystemsInputHelper::readAllTheInput(RawInputForces& p_outInput)
 	p_outInput.thrust =  m_gamepadThrust->getStatus();
 	p_outInput.thrust += m_keyboardThrust->getStatus();
 
+	p_outInput.editSwitchTrig = m_gamepadEditModeTrig->getStatus();
 	p_outInput.editSwitchTrig = m_keyboardEditModeTrig->getStatus();
 }
 
