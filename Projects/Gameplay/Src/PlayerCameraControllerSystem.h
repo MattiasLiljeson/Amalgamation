@@ -2,31 +2,31 @@
 
 #include <EntitySystem.h>
 
-class GraphicsBackendSystem;
-class InputBackendSystem;
+class ShipInputProcessingSystem;
 
 // =======================================================================================
-//                                      CameraSystem
+//                              PlayerCameraControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	System that handles camera behaviour based on input
 ///        
-/// # CameraSystem
+/// #PlayerCameraControllerSystem
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 9-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class CameraSystem : public EntitySystem
+class PlayerCameraControllerSystem : public EntitySystem
 {
 public:
-	CameraSystem( GraphicsBackendSystem* p_gfxBackend );
-	~CameraSystem();
+	PlayerCameraControllerSystem(ShipInputProcessingSystem* p_shipInput);
+	~PlayerCameraControllerSystem();
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
+protected:
 private:
-	GraphicsBackendSystem* m_gfxBackend;
-};
 
+	ShipInputProcessingSystem* m_shipInput;	
+};

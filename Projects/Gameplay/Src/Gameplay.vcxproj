@@ -34,6 +34,8 @@
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="PlayerCameraController.h" />
+    <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="ServerListenerSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
@@ -86,6 +88,7 @@
     <ClCompile Include="MenuSystem.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="ServerListenerSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />

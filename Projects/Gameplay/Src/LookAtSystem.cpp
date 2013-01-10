@@ -7,6 +7,7 @@
 #include "LookAtEntity.h"
 #include "Transform.h"
 #include "GameplayTags.h"
+#include "ValueClamp.h"
 
 LookAtSystem::LookAtSystem() : 
 EntitySystem( SystemType::LookAtSystem, 1,
@@ -62,7 +63,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* targetTransform = static_cast<Transform*>(
 			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
 
-		AglVector3 lookTarget = targetTransform->getTranslation();
+		AglVector3 lookTargetPos = targetTransform->getTranslation();
 
 
 		// Follow behaviour
@@ -70,16 +71,19 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		{		
 			// Set up look-at vars for the view matrix
 			// Create offset vector from look-at component in the space of the target
-			AglVector3 offset = lookAt->getObservingPositionalOffset();
+			AglVector3 offset = lookAt->getFollowPositionOffset();
 			offset.transformNormal(targetTransform->getMatrix());
 			// update transform
 
 			// position = AglVector3::lerp(position,lookTarget+offset,
-			//							abs(lookAt->getMoveSpd())*dt);
-			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-			//							abs(lookAt->getRotationSpeed())*dt);
-			position = lookTarget+offset;
-			rotation = targetTransform->getRotation()*lookAt->getObservingRotationalOffset();
+			//							/*abs(lookAt->getMoveSpd())*/saturate(10.0f*dt));
+
+			position = lookTargetPos+offset;			
+			
+			
+ //			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+ //				/*lookAt->getRotationSpeed()*/saturate(10.0f*dt));
+			 rotation = targetTransform->getRotation();
 			rotation.normalize();
 
 			// update
@@ -90,16 +94,23 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// orbit behaviour
 		if (lookAtOrbit)
 		{
+			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
+			// rotation.normalize();
+
+			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
+			rotation.transformVector(offset);
+			position = lookTargetPos + offset;
 			
+			// update
+			transform->setTranslation( position );
+			transform->setRotation( rotation );
 		}
 
 		// just lookat behaviour
 		if (!lookAtOrbit && !lookAtFollow)
 		{
-			AglQuaternion offset = lookAt->getObservingRotationalOffset();
-			AglVector3 dir = lookTarget-position;
+			AglVector3 dir = lookTargetPos-position;
 			AglVector3::normalize(dir);
-			offset.transformVector(dir);
 			transform->setForward(dir);
 		}
 		

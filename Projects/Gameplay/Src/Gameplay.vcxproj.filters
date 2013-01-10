@@ -229,6 +229,12 @@
     <ClInclude Include="LookAtSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerCameraControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCameraController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -344,6 +350,9 @@
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="LookAtSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCameraControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
