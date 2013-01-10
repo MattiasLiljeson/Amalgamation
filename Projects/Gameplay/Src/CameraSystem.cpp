@@ -37,52 +37,16 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-		// optional component for lookat
-		LookAtEntity* lookAt=NULL;
-		Component* t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity );
-		if (t!=NULL)
-			lookAt = static_cast<LookAtEntity*>(t);
-
 		// Retrieve initial info
 		AglVector3 position = transform->getTranslation();
 		AglQuaternion rotation = transform->getRotation();
 		AglVector3 lookTarget = position+transform->getMatrix().GetForward();
 		AglVector3 up = transform->getMatrix().GetUp();
 
-		// Prepare lookat values if used
-		if (lookAt)
-		{
-			// Extract look-at entity and its transform
-			Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
-			Transform* targetTransform = static_cast<Transform*>(
-				targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
-			lookTarget = targetTransform->getTranslation();
-			// Set up look-at vars for the view matrix
-			// Create offset vector from look-at component in the space of the target
-			AglVector3 offset = lookAt->getOffset();
-			offset.transformNormal(targetTransform->getMatrix());
-			// Transform camera up
-			up = targetTransform->getMatrix().GetUp();
-
-			// update transform
-			
-			// position = AglVector3::lerp(position,lookTarget+offset,
-			//							abs(lookAt->getMoveSpd())*dt);
-			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-			//							abs(lookAt->getRotationSpeed())*dt);
-			position = lookTarget+offset;
-			rotation = targetTransform->getRotation();
-			rotation.normalize();
-		}
-
 		// Construct view matrix
 		AglMatrix view = AglMatrix::createViewMatrix(position,
 													 lookTarget,
 													 up);
-
-		// update of position
-		transform->setTranslation( position );
-		transform->setRotation( rotation );
 		
 
 		// Rendering preparations

@@ -16,12 +16,13 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "RenderInfo.h"
-#include "ShipController.h"
+#include "ShipFlyController.h"
 #include "CameraInfo.h"
 #include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 #include "PlayerScore.h"
+#include "GameplayTags.h"
 
 #include "GraphicsBackendSystem.h"
 #include "EntityType.h"
@@ -98,8 +99,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				if(m_tcpClient->getId() == data.owner)
 				{
 					// If "this client" is the entity owner, it may control the ship:
-					component = new ShipController(5.0f, 50.0f);
-					entity->addComponent( ComponentType::ShipController, component );
+					component = new ShipFlyController(5.0f, 50.0f);
+					entity->addComponent( ComponentType::ShipFlyController, component );
 				}
 				entity->addComponent(ComponentType::NetworkSynced,
 					new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
@@ -120,8 +121,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					entity->addComponent( ComponentType::MainCamera, component );
 					component = new Transform( -5.0f, 0.0f, -5.0f );
 					entity->addComponent( ComponentType::Transform, component );
-					component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
-					entity->addComponent( ComponentType::LookAtEntity, component );
+					component = new LookAtEntity(shipId, AglVector3(0,3,-10),
+						AglQuaternion::identity(),0.0f,10.0f);
+					// default tag is follow
+					entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
 					component = new AudioListener();
 					entity->addComponent(ComponentType::AudioListener, component);
 					m_world->addEntity(entity);

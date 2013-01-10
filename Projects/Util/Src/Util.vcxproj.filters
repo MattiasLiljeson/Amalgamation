@@ -7,6 +7,7 @@
     <ClInclude Include="FileCheck.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
+    <ClInclude Include="ValueClamp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />

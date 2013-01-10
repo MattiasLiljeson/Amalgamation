@@ -17,7 +17,7 @@
 // Components:
 #include "Transform.h"
 #include "NetworkSynced.h"
-#include "ShipController.h"
+#include "ShipFlyController.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "PlayerScore.h"
@@ -84,8 +84,8 @@ void ServerListenerSystem::processEntities( const vector<Entity*>& p_entities )
 			/************************************************************************/
 			e->addComponent( ComponentType::Transform, transform);
 			e->addComponent( ComponentType::NetworkSynced, netSync);
-			e->addComponent( ComponentType::ShipController,
-				new ShipController(5.0f, 50.0f));
+			e->addComponent( ComponentType::ShipFlyController,
+				new ShipFlyController(5.0f, 50.0f));
 			e->addComponent( ComponentType::PlayerScore,
 				new PlayerScore(0) );
 
