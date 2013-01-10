@@ -205,6 +205,9 @@
     <ClInclude Include="ClientInfo.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="ShieldModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -312,6 +315,9 @@
     </ClCompile>
     <ClCompile Include="ClientPacketHandlerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldModule.cpp">
+      <Filter>Components\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

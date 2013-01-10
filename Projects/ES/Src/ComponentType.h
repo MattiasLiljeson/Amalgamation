@@ -39,6 +39,7 @@ public:	//Enums
 		ConnectionPointSet,
 		SpeedBoosterModule,
 		MinigunModule,
+		ShieldModule,
 		NUM_COMPONENT_TYPES
 	};
 

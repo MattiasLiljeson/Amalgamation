@@ -29,6 +29,8 @@ public:
 
 	void applyImpulse(int p_bodyID, AglVector3 p_impulse, AglVector3 p_angularImpulse);
 
+	PhysicsController* getController(){ return m_physicsController; }
+
 private:
 	void initializeEntity(Entity* p_entity);
 	void handleCompoundBodyDependencies(PhysicsBody* p_bodyComponent, Body* p_rigidBody);

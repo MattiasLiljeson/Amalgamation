@@ -36,6 +36,7 @@
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
+    <ClInclude Include="ShieldModule.h" />
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
+    <ClCompile Include="ShieldModule.cpp" />
     <ClCompile Include="ShipModule.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />

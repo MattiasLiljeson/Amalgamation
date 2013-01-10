@@ -8,6 +8,7 @@
 #include "..\..\Input\Src\Control.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "PhysicsSystem.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem()
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -121,6 +122,10 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
+
+	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	//physics->getController()
+
 
 	Entity* entity = m_world->createEntity();
 	Component* component = new RenderInfo( cubeMeshId );

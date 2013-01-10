@@ -22,6 +22,7 @@
 #include <ConnectionPointSet.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
+#include <ShieldModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -466,7 +467,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
+	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	m_world->addEntity(entity);
 
 	entity = m_world->createEntity();
