@@ -24,6 +24,7 @@
 #include <MinigunModule.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
+#include <RocketLauncherModule.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -492,9 +493,10 @@ void ClientApplication::InitModulesTestByAnton()
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE));
+		BodyInitData::SINGLE, false));
 
-	//entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule());
 
 	m_world->addEntity(entity);
 

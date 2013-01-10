@@ -226,6 +226,9 @@
     <ClInclude Include="MineControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="RocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -351,6 +354,9 @@
     </ClCompile>
     <ClCompile Include="MineControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
