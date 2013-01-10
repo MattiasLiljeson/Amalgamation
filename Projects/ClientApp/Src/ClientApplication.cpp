@@ -60,8 +60,6 @@ using namespace std;
 #include <AntTweakBarWrapper.h>
 
 
-
-
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
 	try{
