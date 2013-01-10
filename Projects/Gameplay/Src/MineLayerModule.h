@@ -17,6 +17,7 @@
 class MineLayerModule: public Component
 {
 public:
+	float m_cooldown;
 	MineLayerModule();
 	~MineLayerModule();
 private:

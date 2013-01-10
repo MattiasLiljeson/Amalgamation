@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "MineLayerModule.h"
+#include "Transform.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -22,4 +23,7 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+
+private:
+	void spawnMine(Transform* p_transform);
 };
