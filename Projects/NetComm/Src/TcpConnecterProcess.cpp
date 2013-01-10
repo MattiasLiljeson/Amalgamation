@@ -7,6 +7,7 @@
 
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/thread/thread.hpp>
 
 using namespace boost::asio::ip;
 
@@ -94,6 +95,7 @@ void TcpConnecterProcess::processMessages()
 
 		while( messages.size() > 0 )
 		{
+			boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 			ProcessMessage* msg = messages.front();
 			messages.pop();
 

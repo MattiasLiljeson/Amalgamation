@@ -1,34 +1,28 @@
-#pragma once
-
-#define WINAPI
-
-#include <EntitySystem.h>
-
 // =======================================================================================
-//	DebugPlayerScoresSystem
+//	EntityType
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # DebugPlayerScoresSystem
+/// # NetworkType
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 13-12-2012 
 ///---------------------------------------------------------------------------------------
+#pragma once
 
-class DebugPlayerScoresSystem: public EntitySystem
+class EntityType
 {
 public:
-	DebugPlayerScoresSystem();
+	enum EntityEnums
+	{
+		NON_EXISTENT = -1,
+		Ship,
+		Prop,
+		Identity,
+		Other,
+	};
 
-	~DebugPlayerScoresSystem();
-
-	void initialize();
-
-	void processEntities( const vector<Entity*>& p_entities );
-
-private:
-	float m_timerResetValue;
-	float m_timer;
-
+public:
+	EntityEnums type;
 };

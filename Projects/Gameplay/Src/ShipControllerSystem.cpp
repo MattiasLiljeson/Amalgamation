@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "ShipController.h"
 #include "PacketType.h"
-#include "NetworkType.h"
+#include "EntityType.h"
 #include "NetworkSynced.h"
 #include "Control.h"
 #include "AntTweakBarWrapper.h"
@@ -188,12 +188,12 @@ void ShipControllerSystem::processEntities( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		/*Packet thrustPacket;
+		/*Packet thrustPacket((char)PacketType::PlayerInput );
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(
 			ComponentType::NetworkSynced));
 
-		thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-			<< thrustVec << angularVec << netSync->getNetworkIdentity();
+		thrustPacket << (char)EntityType::Ship << thrustVec << angularVec 
+			<< netSync->getNetworkIdentity();
 		m_client->sendPacket( thrustPacket );*/
 
 		PhysicsBody* physicsBody = NULL;

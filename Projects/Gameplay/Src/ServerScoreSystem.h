@@ -1,34 +1,37 @@
 #pragma once
 
-// ES
 #include <EntitySystem.h>
 
 class TcpServer;
-class PhysicsSystem;
 
 // =======================================================================================
-//                                      NetworkInputHandlerSystem
+//	ServerScoreSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief A system that broadcasts the player's score.
 ///        
-/// # NetworkInputHandlerSystem
-/// Detailed description.....
-/// Created on: 20-12-2012 
+/// # NetworkUpdateScoresSystem
+/// Broadcasts every connected players' score to every connected player, with a timer
+/// that allows the sending to take place at given intervals.
+/// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class NetworkInputHandlerSystem : public EntitySystem
+class ServerScoreSystem: public EntitySystem
 {
 public:
-	NetworkInputHandlerSystem( TcpServer* p_server );
-	~NetworkInputHandlerSystem();
+	ServerScoreSystem( TcpServer* p_server );
 
-	void initialize();
+	~ServerScoreSystem();
 
 	void processEntities( const vector<Entity*>& p_entities );
 
+	void initialize();
+
 private:
 	TcpServer* m_server;
-	PhysicsSystem* m_physics;
+
+	float m_updateTimer;
+	float m_updateTimerStartValue;
+
 };

@@ -28,6 +28,8 @@ public:
 		ScoresUpdate,
 		// Client -> Server:
 		PlayerInput,
+
+		UpdateClientStats,
 	};
 
 };

@@ -1,33 +1,41 @@
 #pragma once
 
+#include <map>
 #include <EntitySystem.h>
+#include "ClientInfo.h"
 
 class TcpServer;
+class PhysicsSystem;
+
+using namespace std;
 
 // =======================================================================================
-//                                      NetworkUpdateSystem
+//                                  ServerPacketHandlerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # NetworkUpdateSystem
+/// # ServerPacketHandlerSystem
 /// Detailed description.....
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class NetworkUpdateSystem: public EntitySystem
+class ServerPacketHandlerSystem : public EntitySystem
 {
 public:
-	NetworkUpdateSystem( TcpServer* p_server );
-
-	~NetworkUpdateSystem();
-	
-	void processEntities( const vector<Entity*>& p_entities );
+	ServerPacketHandlerSystem( TcpServer* p_server );
+	~ServerPacketHandlerSystem();
 
 	void initialize();
 
-private:
-	TcpServer* m_server;
+	void processEntities( const vector<Entity*>& p_entities );
 
+private:
+	TcpServer*		m_server;
+	PhysicsSystem*	m_physics;
+	map<int,ClientInfo> m_clients; ///< The key is the clientID
+	
+	float m_timer;
+	float m_timerStartValue;
 };
