@@ -229,6 +229,9 @@
     <ClInclude Include="LookAtSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ClientConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -345,6 +348,9 @@
     </ClCompile>
     <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnectToServerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

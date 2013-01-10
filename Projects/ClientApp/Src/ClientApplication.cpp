@@ -35,7 +35,7 @@
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
 #include <ClientPacketHandlerSystem.h>
-#include <NetworkConnectToServerSystem.h>
+#include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
@@ -203,16 +203,16 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	/*ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
-	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client, inputBackend );
+	ClientConnectToServerSystem* connect =
+		new ClientConnectToServerSystem( m_client, inputBackend );
 	m_world->setSystem( connect, true );
 
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );*/
+	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/
 	/* Audio															*/
