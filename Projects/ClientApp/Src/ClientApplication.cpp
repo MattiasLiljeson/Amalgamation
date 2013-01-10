@@ -53,8 +53,6 @@ using namespace std;
 // MISC
 #include <AntTweakBarWrapper.h>
 
-
-
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
 	try{
