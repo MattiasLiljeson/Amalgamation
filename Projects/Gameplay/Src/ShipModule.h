@@ -17,6 +17,7 @@
 class ShipModule: public Component
 {
 public:
+	int m_parentEntity;
 	ShipModule();
 	~ShipModule();
 };

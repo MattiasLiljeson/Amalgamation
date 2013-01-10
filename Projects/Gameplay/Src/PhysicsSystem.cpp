@@ -7,6 +7,7 @@
 #include "GraphicsBackendSystem.h"
 #include "ShipController.h"
 #include "ConnectionPointSet.h"
+#include "ShipModule.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -249,22 +250,28 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 	{
 		for (unsigned int i = 0; i < p_others.size(); i++)
 		{
-			PhysicsBody* module =
+			PhysicsBody* PhysModule =
 				static_cast<PhysicsBody*>(
 				m_world->getComponentManager()->getComponent(p_others[i],
 				ComponentType::getTypeFor(ComponentType::PhysicsBody)));
 
-			if (p_others[i]->getComponent(ComponentType::ShipModule))
+			ShipModule* module = static_cast<ShipModule*>(
+				m_world->getComponentManager()->getComponent(p_others[i],
+				ComponentType::getTypeFor(ComponentType::ShipModule)));
+
+			if (module)
 			{
 				for (unsigned int j = 0; j < collisions.size(); j++)
 				{
-					if (collisions[j] == module->m_id)
+					if (collisions[j] == PhysModule->m_id)
 					{
 						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
-						RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
+						RigidBody* r = (RigidBody*)m_physicsController->getBody(PhysModule->m_id);
 						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
 						cps->m_connectionPoints[cp].cpConnectedEntity = p_others[i]->getIndex();
-						module->setParentId(body->getParentId());
+						
+						module->m_parentEntity = ship->getIndex();
+						PhysModule->setParentId(body->getParentId());
 
 						cp++;
 						if (cp >= cps->m_connectionPoints.size())

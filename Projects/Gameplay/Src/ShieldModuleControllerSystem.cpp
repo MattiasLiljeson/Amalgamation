@@ -9,6 +9,7 @@
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
+#include "ShipModule.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem()
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 1, ComponentType::ShieldModule)
@@ -30,5 +31,50 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
+		ShipModule* module = static_cast<ShipModule*>(
+			m_world->getComponentManager()->getComponent(p_entities[i],
+			ComponentType::getTypeFor(ComponentType::ShipModule)));
+		if (module && module->m_parentEntity >= 0)
+		{
+			ShieldModule* shieldModule = static_cast<ShieldModule*>(
+				m_world->getComponentManager()->getComponent(p_entities[i],
+				ComponentType::getTypeFor(ComponentType::ShieldModule)));
+			
+			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity));
+		}
+	}
+}
+void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity)
+{
+	Transform* parentTransform = static_cast<Transform*>(
+		m_world->getComponentManager()->getComponent(p_parentEntity,
+		ComponentType::getTypeFor(ComponentType::Transform))); 
+
+	if (p_module->m_shieldEntity >= 0)
+	{
+		//Update shield
+		Entity* shield = m_world->getEntity(p_module->m_shieldEntity);
+		Transform* transform = static_cast<Transform*>(
+			m_world->getComponentManager()->getComponent(shield,
+			ComponentType::getTypeFor(ComponentType::Transform))); 
+		transform->setTranslation(parentTransform->getTranslation());
+		transform->setRotation(parentTransform->getRotation());
+	}
+	else
+	{
+		//Create Shield
+		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+		int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+
+		Entity* entity = m_world->createEntity();
+		Component* component = new RenderInfo( sphereMeshId );
+		entity->addComponent( ComponentType::RenderInfo, component );
+
+
+		Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
+		entity->addComponent( ComponentType::Transform, t);
+		m_world->addEntity(entity);
+		p_module->m_shieldEntity = entity->getIndex();
 	}
 }

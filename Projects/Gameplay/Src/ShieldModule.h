@@ -17,6 +17,7 @@
 class ShieldModule: public Component
 {
 public:
+	int m_shieldEntity;
 	ShieldModule();
 	~ShieldModule();
 private:
