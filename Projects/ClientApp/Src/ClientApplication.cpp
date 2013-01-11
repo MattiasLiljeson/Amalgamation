@@ -587,7 +587,11 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::Connector1to2Module, new Connector1to2Module());
+
+
+	AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
+	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(1, -2, 0));
+	entity->addComponent(ComponentType::Connector1to2Module, new Connector1to2Module(ConnectionPoint(target1), ConnectionPoint(target2)));
 
 	m_world->addEntity(entity);
 

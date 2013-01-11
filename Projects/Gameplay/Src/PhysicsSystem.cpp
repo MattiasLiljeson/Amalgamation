@@ -8,6 +8,7 @@
 #include "ShipController.h"
 #include "ConnectionPointSet.h"
 #include "ShipModule.h"
+#include "Connector1to2Module.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -232,12 +233,12 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 	if (!cps)
 		return;
 
-	int cp = 0;
-	while (cp < cps->m_connectionPoints.size() && cps->m_connectionPoints[cp].cpConnectedEntity >= 0)
-		cp++;
+	vector<pair<ConnectionPoint*, Entity*>> connectionPoints = getFreeConnectionPoints(cps, ship);
 
-	if (cp >= cps->m_connectionPoints.size())
+	if (connectionPoints.size() == 0)
 		return;
+
+	int curr = 0;
 
 
 	PhysicsBody* body =
@@ -265,22 +266,75 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 				{
 					if (collisions[j] == PhysModule->m_id)
 					{
-
-						//BUG! Ibland läggs en entity till två gånger pga att kollisionssystemet inte updaterat kollisionslistan
 						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
 						RigidBody* r = (RigidBody*)m_physicsController->getBody(PhysModule->m_id);
-						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
-						cps->m_connectionPoints[cp].cpConnectedEntity = p_others[i]->getIndex();
+
+
+
+						AglMatrix transform = offset(connectionPoints[curr].second, connectionPoints[curr].first->cpTransform);
+						m_physicsController->AttachBodyToCompound(comp, r, transform);
+						connectionPoints[curr].first->cpConnectedEntity = p_others[i]->getIndex();
 						
-						module->m_parentEntity = ship->getIndex();
+						module->m_parentEntity = connectionPoints[curr].second->getIndex();
 						PhysModule->setParentId(body->getParentId());
 
-						cp++;
-						if (cp >= cps->m_connectionPoints.size())
+						curr++;
+						if (curr >= connectionPoints.size())
 							return;
 					}
 				}
 			}
 		}
+	}
+}
+
+vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent)
+{
+	vector<pair<ConnectionPoint*, Entity*>> free;
+	for (unsigned int i = 0; i < p_set->m_connectionPoints.size(); i++)
+	{
+		if (p_set->m_connectionPoints[i].cpConnectedEntity < 0)
+			free.push_back(pair<ConnectionPoint*, Entity*>(
+				&p_set->m_connectionPoints[i], p_parent));
+		else
+		{
+			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
+
+			Connector1to2Module* connector =
+				static_cast<Connector1to2Module*>(
+				m_world->getComponentManager()->getComponent(module,
+				ComponentType::getTypeFor(ComponentType::Connector1to2Module)));
+			if (connector)
+			{
+				if (connector->m_target1.cpConnectedEntity < 0)
+					free.push_back(pair<ConnectionPoint*, Entity*>(&connector->m_target1, module));
+				if (connector->m_target2.cpConnectedEntity < 0)
+					free.push_back(pair<ConnectionPoint*, Entity*>(&connector->m_target2, module));
+			}
+		}
+	}
+	return free;
+}
+AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
+{
+	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+	if (module)
+	{
+		Entity* parent = m_world->getEntity(module->m_parentEntity);
+
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(parent,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		unsigned int ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				ind = i;
+
+		return p_base * cps->m_connectionPoints[ind].cpTransform;
+	}
+	else
+	{
+		return p_base;
 	}
 }

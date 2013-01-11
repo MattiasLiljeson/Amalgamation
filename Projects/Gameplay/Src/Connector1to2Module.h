@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Component.h>
+#include "ConnectionPointSet.h"
 
 // =======================================================================================
 //	MineLayerModule
@@ -17,8 +18,9 @@
 class Connector1to2Module: public Component
 {
 public:
-	Connector1to2Module();
+	Connector1to2Module(ConnectionPoint p_target1, ConnectionPoint p_target2);
 	~Connector1to2Module();
-private:
 
+	ConnectionPoint m_target1;
+	ConnectionPoint m_target2;
 };
