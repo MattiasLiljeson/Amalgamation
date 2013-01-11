@@ -369,4 +369,26 @@ bool PhysicsController::IsActive(unsigned int pBody)
 void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform)
 {
 	p_compound->AddChild(p_body, p_localTransform);
+
+	unsigned int index = -1;
+	//Invalidate all collisions with the body
+	for (unsigned int i = 0; i < mBodies.size(); i++)
+	{
+		if ((RigidBody*)mBodies[i] == p_body)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	for (unsigned int i = 0; i < mCollisions.size(); i++)
+	{
+		if (mCollisions[i].first == index ||
+			mCollisions[i].second == index)
+		{
+			mCollisions[i] = mCollisions.back();
+			mCollisions.pop_back();
+			i--;
+		}
+	}
 }
