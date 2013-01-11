@@ -114,9 +114,6 @@
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -237,6 +234,18 @@
     </ClInclude>
     <ClInclude Include="TimerSystem.h">
       <Filter>Systems\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticProp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStaticObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +369,12 @@
     </ClCompile>
     <ClCompile Include="TimerSystem.cpp">
       <Filter>Systems\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerStaticObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

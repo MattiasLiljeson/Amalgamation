@@ -53,6 +53,11 @@ public:	//Enums
 		ConnectionPointSet,
 		SpeedBoosterModule,
 		MinigunModule,
+		/************************************************************************/
+		/* Things that should be sent to all clients but its not synced			*/
+		/* afterwards.															*/
+		/************************************************************************/
+		StaticProp,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -165,7 +165,8 @@ void EntitySystem::check(Entity* p_entity)
 		bool contains = p_entity->getSystemBits()[m_type.getIndex()];
 		bool interested = true; // possibly interested, let's try to prove it wrong.
 		
-		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
+		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = 
+			p_entity->getComponentBits();
 
 		// Check if the entity possesses ALL of the components defined in the system component bits.
 		for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )

@@ -32,6 +32,7 @@
 #include <DebugUtil.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
+#include "TimerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -48,9 +49,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataSentPerSecond = 0;
 	m_dataReceivedPerSecond = 0;
 	m_dataSentCounter = 0;
-	m_dataReceivedCounter;
-
-	m_timerPerSecond = 1.0f;
+	m_dataReceivedCounter = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -73,13 +72,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
-			if (data.networkType == (char)EntityType::Ship ||
-				data.networkType == (char)EntityType::Prop)
+			if (data.entityType == (char)EntityType::Ship ||
+				data.entityType == (char)EntityType::Prop)
 			{
 
-				if(data.networkType == (char)EntityType::Prop)
+				if(data.entityType == (char)EntityType::Prop)
 				{
-					data.networkType = data.networkType;
+					data.entityType = data.entityType;
 				}
 				// HACK: This is VERY inefficient for large amount of
 				// network-synchronized entities. (Solve later)
@@ -194,7 +193,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 	Entity* entity;
 	Component* component;
 	NetworkEntityCreationPacket data = readCreationPacket(p_packet);
-	if (data.networkType == (char)EntityType::Ship )
+	if (data.entityType == (char)EntityType::Ship )
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
@@ -284,7 +283,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 				"group=Sound min=0 max=10 step=0.001 precision=3");
 		}
 	}
-	else if ( data.networkType == (char)EntityType::Prop )
+	else if ( data.entityType == (char)EntityType::StaticProp )
 	{
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
@@ -292,8 +291,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		entity = m_world->createEntity();
 		component = new Transform(data.position, data.rotation, data.scale);
 		entity->addComponent( ComponentType::Transform, component );
-		component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
 
@@ -301,7 +298,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 	}
 	else
 	{
-		DEBUGPRINT(("Network Warning: Received unkown entity type from server"));
+		DEBUGPRINT(("Network Warning: Received unkown entity type from server!\n"));
 	}
 }
 
@@ -357,7 +354,7 @@ NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket(
 	Packet& p_packet )
 {
 	NetworkEntityCreationPacket data;
-	p_packet >> data.networkType 
+	p_packet >> data.entityType 
 		>> data.owner 
 		>> data.networkId 
 		>> data.position 
@@ -369,7 +366,7 @@ NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket(
 NetworkEntityUpdatePacket ClientPacketHandlerSystem::readUpdatePacket( Packet& p_packet )
 {
 	NetworkEntityUpdatePacket data;
-	p_packet >> data.networkType
+	p_packet >> data.entityType
 		>> data.networkId 
 		>> data.position 
 		>> data.rotation 
@@ -402,11 +399,9 @@ void ClientPacketHandlerSystem::updateCounters()
 	m_tcpClient->resetTotalDataSent();
 	m_dataSentCounter += m_totalDataSent;
 
-	m_timerPerSecond -= m_world->getDelta();
-	if( m_timerPerSecond <= 0 )
+	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::EverySecond))
 	{
-		m_timerPerSecond = 1.0f;
-
 		m_dataSentPerSecond = m_dataSentCounter;
 		m_dataReceivedPerSecond = m_dataReceivedCounter;
 

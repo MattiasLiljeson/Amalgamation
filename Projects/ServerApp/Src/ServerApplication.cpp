@@ -7,6 +7,8 @@
 #include <ServerPacketHandlerSystem.h>
 #include <ServerUpdateSystem.h>
 #include <ServerScoreSystem.h>
+#include <ServerDynamicObjectsSystem.h>
+#include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 
 #include "RenderInfo.h"
@@ -14,6 +16,7 @@
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "NetworkSynced.h"
+#include "StaticProp.h"
 
 namespace Srv
 {
@@ -96,6 +99,15 @@ namespace Srv
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
 		/************************************************************************/
+		/* Objects Systems														*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerDynamicObjectsSystem, 
+			new ServerDynamicObjectsSystem(), true);
+
+		m_world->setSystem(SystemType::ServerStaticObjectsSystem, 
+			new ServerStaticObjectsSystem(), true);
+
+		/************************************************************************/
 		/* Threading															*/
 		/************************************************************************/
 		m_world->setSystem( SystemType::ProcessingMessagesSystem,
@@ -123,6 +135,25 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
+		Entity* entity;
+		Component* component;
+		// Add a grid of cubes to test instancing.
+		for( int x=0; x<8; x++ )
+		{
+			for( int y=0; y<8; y++ )
+			{
+				for( int z=0; z<8; z++ )
+				{
+					entity = m_world->createEntity();
+					component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+					entity->addComponent( ComponentType::Transform, component );
+					entity->addComponent( ComponentType::StaticProp, new StaticProp());
+
+					m_world->addEntity(entity);
+				}
+			}
+
+		}
 	}
 
 	

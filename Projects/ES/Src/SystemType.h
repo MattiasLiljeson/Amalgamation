@@ -40,6 +40,8 @@ public:	//Enums
 		DisplayPlayerScoreSystem,
 		MinigunModuleControllerSystem,
 		TimerSystem,
+		ServerDynamicObjectsSystem,
+		ServerStaticObjectsSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -23,6 +23,7 @@
     <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="EntityType.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -35,6 +36,8 @@
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
+    <ClInclude Include="ServerDynamicObjectsSystem.h" />
+    <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerWelcomeSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
@@ -47,7 +50,6 @@
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
-    <ClInclude Include="NetworkType.h" />
     <ClInclude Include="PacketType.h" />
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
@@ -63,6 +65,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
+    <ClInclude Include="StaticProp.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector3.h" />
@@ -89,6 +92,8 @@
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />

@@ -14,6 +14,8 @@
 #include "PacketType.h"
 #include "EntityType.h"
 
+#include "ServerStaticObjectsSystem.h"
+
 // Components:
 #include "Transform.h"
 #include "NetworkSynced.h"
@@ -106,6 +108,29 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 
 				m_server->unicastPacket( packet, id );
 			}
+
+			/************************************************************************/
+			/* Send static objects to the newly connected client.					*/
+			/************************************************************************/
+			vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
+				getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
+
+			for (unsigned int i= 0; i < entities.size(); i++)
+			{
+				transform = static_cast<Transform*>(entities[i]->
+					getComponent(ComponentType::Transform));
+
+				Packet packet((char)PacketType::EntityCreation);
+				packet << (char)EntityType::StaticProp
+					<< -1 //NO OWNER
+					<< entities[i]->getIndex()
+					<< transform->getTranslation()
+					<< transform->getRotation()
+					<< transform->getScale();
+				
+				m_server->unicastPacket( packet, id );
+			}
+			
 		}
 	}
 }

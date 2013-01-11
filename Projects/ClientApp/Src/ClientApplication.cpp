@@ -267,25 +267,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 
-
-	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
-	{
-		for( int y=0; y<8; y++ )
-		{
-			for( int z=0; z<8; z++ )
-			{
-				entity = m_world->createEntity();
-				component = new RenderInfo( sphereMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-				entity->addComponent( ComponentType::Transform, component );
-
-				m_world->addEntity(entity);
-			}
-		}
-
-	}
+	
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));

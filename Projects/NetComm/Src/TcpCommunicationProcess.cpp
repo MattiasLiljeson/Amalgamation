@@ -27,7 +27,10 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_activeSocket->io_control( nonBlocking );
 
 	m_asyncDataLength = 0;
-	m_asyncDataCapacity = 2048;
+	/************************************************************************/
+	/* We need to find the appropriate size for received data buffer.		*/
+	/************************************************************************/
+	m_asyncDataCapacity = 2048*4;
 	m_asyncData = new char[m_asyncDataCapacity];
 	m_packetRestSize = 0;
 
