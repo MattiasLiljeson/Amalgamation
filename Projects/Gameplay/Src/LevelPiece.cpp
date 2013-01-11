@@ -69,11 +69,19 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
 	//mat.SetForward( mat.GetBackward() );
 	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
-	temp.setForwardDirection( -temp.getForward() );
+	//temp.setForwardDirection( -temp.getForward() );
 	//temp.setForwardDirection( AglVector3::up() );
 
+	// Test: Extract translation and rotation from the target piece connector, and then
+	// rotate it PI radians around its axis
+	AglMatrix mat( AglVector3::one(), 
+					temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getRight(), 3.1415f),
+					temp.getTranslation() );
+
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
-	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
+	//m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
+	m_transform->setMatrix( m_transform->getMatrix() * mat );
+	m_transform->setScale(temp.getScale());
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!

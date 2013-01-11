@@ -31,7 +31,7 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::run()
 {
-	generateLevelPieces(1);
+	generateLevelPieces(2);
 	//debugPrintTransformTree();
 }
 
@@ -73,9 +73,9 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 										AglQuaternion::identity(),
 										AglVector3::one());
 	// Create the entity and specify a mesh for it
-	createAndAddEntity(m_pieceTypes[1].m_meshId, transform);
+	createAndAddEntity(m_pieceTypes[0].m_meshId, transform);
 	// Create the level piece to use later
-	LevelPiece* piece = new LevelPiece( &m_pieceTypes[1], &m_meshHeaders[1], transform);
+	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
