@@ -107,33 +107,48 @@ void EntityWorld::setDelta( float p_dt )
 
 void EntityWorld::addEntity( Entity* p_entity )
 {
-	m_added.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		m_added.push_back(p_entity);
+	}
 }
 
 void EntityWorld::changedEntity( Entity* p_entity )
 {
-	m_changed.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		m_changed.push_back(p_entity);
+	}
 }
 
 void EntityWorld::deleteEntity( Entity* p_entity )
 {
-	// Add only to vector if not already in the m_deleted vector
-	// HACK: Early return in for-loop below!
-	for( unsigned int i=0; i<m_deleted.size(); i++ )
-		if( m_deleted[i] == p_entity )
-			return;
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_deleted vector
+		// HACK: Early return in for-loop below!
+		for( unsigned int i=0; i<m_deleted.size(); i++ )
+			if( m_deleted[i] == p_entity )
+				return;
 
-	m_deleted.push_back(p_entity);
+		m_deleted.push_back(p_entity);
+	}
 }
 
 void EntityWorld::enable( Entity* p_entity )
 {
-	m_enable.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		m_enable.push_back(p_entity);
+	}
 }
 
 void EntityWorld::disable( Entity* p_entity )
 {
-	m_disable.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		m_disable.push_back(p_entity);
+	}
 }
 
 Entity* EntityWorld::createEntity()

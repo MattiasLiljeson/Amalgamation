@@ -14,10 +14,59 @@ AssemblageReader::~AssemblageReader()
 {
 }
 
-AssemblageHelper::E_FileStatus AssemblageReader::readFile( Entity* out_entity,
+AssemblageHelper::E_FileStatus AssemblageReader::readAssemblageFile( Recipe** out_recipe, string p_filePath )
+{
+	ifstream file( p_filePath, ifstream::in );
+
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::controlStream( &file );
+	if( status == AssemblageHelper::FileStatus_OK )
+	{
+		// File ok, read!
+		AssemblageReader reader;
+		status = reader.parseFile( out_recipe, &file );
+	}
+
+	file.close();
+
+	return status;
+}
+
+AssemblageHelper::E_FileStatus AssemblageReader::parseFile( Recipe** out_recipe, ifstream* p_file )
+{
+	Recipe* recipe = NULL;
+	char prefix = ' ';
+	string entityName = "";
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::readLineFromStream( &prefix, &entityName, p_file );
+
+	if( status == AssemblageHelper::FileStatus_OK )
+	{
+		if( prefix != 'e' )
+		{
+			status = AssemblageHelper::FileStatus_WRONG_FILE_FORMAT;
+		}
+
+		recipe = new Recipe( entityName );
+		status = parseRecipe( recipe, p_file );
+	}
+
+	if( status == AssemblageHelper::FileStatus_OK ||
+		status == AssemblageHelper::FileStatus_END_OF_FILE )
+	{
+		*out_recipe = recipe;
+	}
+	else
+	{
+		delete recipe;
+		recipe = NULL;
+	}
+
+	return status;
+}
+
+AssemblageHelper::E_FileStatus AssemblageReader::parseRecipe( Recipe* out_recipe,
 														  ifstream* p_file )
 {
-	// Read first line.
+	// Read first entityName.
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	char nextPrefix;
 
@@ -27,7 +76,7 @@ AssemblageHelper::E_FileStatus AssemblageReader::readFile( Entity* out_entity,
 		status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
 		if( nextPrefix != 'c' )
 		{
-			//swallow next line and look for next component
+			// Swallow next line and look for next component
 			status = AssemblageHelper::readLineFromStream( NULL, NULL, p_file );
 			//status = AssemblageHelper::FileStatus_WRONG_FILE_FORMAT;
 
@@ -35,22 +84,33 @@ AssemblageHelper::E_FileStatus AssemblageReader::readFile( Entity* out_entity,
 		else
 		{
 			// The next line defines a component
-			Component* component = NULL;
-			ComponentType::ComponentTypeIdx type = ComponentType::NON_EXISTING;
+			//Component* component = NULL;
+			//ComponentType::ComponentTypeIdx type = ComponentType::NON_EXISTING;
 			ComponentReader reader;
 			// Read component data
-			status = reader.createComponent( &type, &component, p_file );
+			Ingredient* ingredient = NULL;
+			status = reader.parseIngredient( &ingredient, p_file );
 			
-			// If the component exists
-			if( type != ComponentType::ComponentTypeIdx::NON_EXISTING )
+			//// If the component exists
+			//if( type != ComponentType::ComponentTypeIdx::NON_EXISTING )
+			//{
+			//	out_entity->addComponent( type, component );
+			//}
+
+			if( ingredient != NULL )
 			{
-				out_entity->addComponent( type, component );
-			}
-			else
-			{
-				delete component;
-				component = NULL;
-				status = AssemblageHelper::FileStatus_COMPONENT_TYPE_IDX_NOT_SET;
+				if( status == AssemblageHelper::FileStatus_OK ||
+					status == AssemblageHelper::FileStatus_END_OF_FILE )
+
+				{
+					out_recipe->addIngredient( ingredient );
+				}
+				else
+				{
+					delete ingredient;
+					ingredient = NULL;
+					//status = AssemblageHelper::FileStatus_COMPONENT_TYPE_IDX_NOT_SET;
+				}
 			}
 		}
 	}

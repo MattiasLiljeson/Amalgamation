@@ -24,10 +24,11 @@
 /* be included as soon as possible. Johan: Haven't looked too			*/
 /* much into this yet.													*/
 /************************************************************************/
-#include <TcpClient.h> 
 #include <Globals.h>
+#include <TcpClient.h> 
 #include <windows.h>
 
+class EntityFactory;
 class EntityWorld;
 class TcpClient;
 
@@ -56,7 +57,6 @@ class ClientApplication
 public:
 	ClientApplication( HINSTANCE p_hInstance );
 	~ClientApplication();
-
 	void run();
 
 private:
@@ -64,6 +64,7 @@ private:
 	void initEntities();
 	void initSounds();
 	void initSoundSystem();
+
 private:
 	HINSTANCE m_hInstance;
 

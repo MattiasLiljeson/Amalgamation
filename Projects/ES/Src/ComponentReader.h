@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "Ingredient.h"
 
 using namespace std;
 
@@ -18,11 +19,10 @@ public:
 	ComponentReader();
 	~ComponentReader();
 
-	AssemblageHelper::E_FileStatus createComponent( ComponentType::ComponentTypeIdx* out_type,
-		Component** out_component, ifstream* p_file );
+	AssemblageHelper::E_FileStatus parseIngredient( Ingredient** out_ingredient, ifstream* p_file );
 
 private:
-	AssemblageHelper::E_FileStatus readComponentDataLine( const string& p_dataLine );
+	AssemblageHelper::E_FileStatus parseComponentDataLine( ComponentData* out_data, const string& p_dataLine );
 
 private:
 	vector<ComponentData> m_componentDataList;

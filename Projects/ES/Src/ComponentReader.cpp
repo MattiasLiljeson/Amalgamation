@@ -17,11 +17,11 @@ ComponentReader::~ComponentReader()
 	}
 }
 
-AssemblageHelper::E_FileStatus ComponentReader::createComponent( 
-	ComponentType::ComponentTypeIdx* out_type, Component** out_component, ifstream* p_file )
+AssemblageHelper::E_FileStatus ComponentReader::parseIngredient( 
+	Ingredient** out_ingredient, ifstream* p_file )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	Component* component = NULL;
+	Ingredient* ingredient = NULL;
 
 	char componentPrefix = ' ';
 	status = AssemblageHelper::peekCharFromStream( &componentPrefix, p_file );
@@ -29,60 +29,65 @@ AssemblageHelper::E_FileStatus ComponentReader::createComponent(
 	if( status == AssemblageHelper::FileStatus_OK && componentPrefix == 'c' )
 	{
 		string componentName ="";
-		status = AssemblageHelper::readLineFromStream( &componentPrefix, &componentName, p_file );
-		
-		// Create correct component
-		component = ComponentFactory::createInstance( componentName );
-		if( component == NULL)
+		status = AssemblageHelper::readLineFromStream( NULL, &componentName, p_file );
+
+		if( !ComponentFactory::isComponentRegistrered( componentName ))
 		{
 			status = AssemblageHelper::FileStatus_COMPONENT_NOT_FOUND;
 		}
 		else
 		{
-			// As long as the file is ok and the next line defines data. Create Componentdata
-			char nextPrefix = ' ';
-			status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
-			while( status == AssemblageHelper::FileStatus_OK && nextPrefix == 'd')
+			Component* comp = ComponentFactory::createInstance( componentName );
+			if( comp->getType() == ComponentType::NON_EXISTING)
 			{
-				char dataPrefix = ' ';
-				string dataLine = "";
-
-				// read componentName, make sure it's data
-				status = AssemblageHelper::readLineFromStream( &dataPrefix, &dataLine, p_file );
-				if( dataPrefix == 'd')
-				{
-					status = readComponentDataLine( dataLine );
-				}
+				status = AssemblageHelper::FileStatus_COMPONENT_TYPE_IDX_NOT_SET;
 			}
-			component->init( m_componentDataList );
+			else
+			{
+				ingredient = new Ingredient( componentName );
+
+				char nextPrefix = ' ';
+				// As long as the file is ok and the next line defines data. Create ComponentData
+				do {
+					status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
+					string dataLine = "";
+
+					if( nextPrefix == 'd')
+					{
+						// read componentName, make sure it's data
+						status = AssemblageHelper::readLineFromStream( NULL, &dataLine, p_file );
+
+						ComponentData data;
+						status = parseComponentDataLine( &data, dataLine );
+
+						if( status == AssemblageHelper::FileStatus_OK ||
+							status == AssemblageHelper::FileStatus_END_OF_FILE )
+						{
+							ingredient->addData( data );
+						}
+					} 
+				} while( status == AssemblageHelper::FileStatus_OK && nextPrefix == 'd');
+			}
+
+			delete comp;
 		}
 	}
 
-	ComponentType::ComponentTypeIdx type = ComponentType::NON_EXISTING;
-	if( component != NULL )
+	if( out_ingredient != NULL)
 	{
-		type = component->getType();
-	}
-
-	if( out_type != NULL)
-	{
-		*out_type = type;
-	}
-
-	if( out_component != NULL)
-	{
-		*out_component = component;
+		*out_ingredient = ingredient;
 	}
 	else
 	{
-		delete component;
-		component = NULL;
+		delete ingredient;
+		ingredient = NULL;
 	}
 
 	return status;
 }
 
-AssemblageHelper::E_FileStatus ComponentReader::readComponentDataLine( const string& p_dataLine )
+AssemblageHelper::E_FileStatus ComponentReader::parseComponentDataLine(
+	ComponentData* out_data,  const string& p_dataLine )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	stringstream ss( p_dataLine );
@@ -111,38 +116,21 @@ AssemblageHelper::E_FileStatus ComponentReader::readComponentDataLine( const str
 		data.setData<char>( &ss );
 		break;
 	case 's':
-		{
-			//Special case for strings
-			char dataType;
-			string dataName;
-			ss>>dataType;
-			ss>>dataName;
-
-			string dataString = "";
-			string tempString = "";
-
-			while( ss.good() )
-			{
-				ss>>tempString;
-				if(dataString != "")
-				{
-					dataString += " ";
-				}
-				dataString += tempString; 
-			}
-
-			data.setDataAsCharArray( dataType, dataName,
-				dataString.c_str(), dataString.length()+1 );
-		}
+		data.setDataAsString( &ss );
 		break;
 	default:
 		status = AssemblageHelper::FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED;
 		break;
 	}
 
-	if( status == AssemblageHelper::FileStatus_OK )
+	if( status == AssemblageHelper::FileStatus_OK ||
+		status == AssemblageHelper::FileStatus_END_OF_FILE )
 	{
-		m_componentDataList.push_back( data );
+		*out_data = data;
+	}
+	else
+	{
+		data.release();
 	}
 
 	return status;

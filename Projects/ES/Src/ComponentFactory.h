@@ -17,7 +17,8 @@ public:
 	ComponentFactory();
 	~ComponentFactory();
 
-	static Component* createInstance(std::string& p_componentName);
+	static bool isComponentRegistrered( std::string& p_componentName );
+	static Component* createInstance( std::string& p_componentName );
 
 protected:
 	static map_type* getMap();

@@ -130,7 +130,8 @@ void ClientApplication::initSystems()
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
-
+	EntityFactory* factory = new EntityFactory( m_world );
+	m_world->setSystem( factory, true);
 
 	/************************************************************************/
 	/* Physics																*/
@@ -207,33 +208,13 @@ void ClientApplication::initEntities()
 {
 	Entity* entity = NULL;
 	Component* component = NULL;
-	
-	EntityFactory factory;
+
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/asd" );
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/test1.asd" );
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/test2.asd" );
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/test3.asd" );
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/test4.asd" );
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	status = factory.readAssemblageFile( entity, "Assemblages/test5.asd" );
-	m_world->addEntity(entity);
+	EntityFactory* factory = static_cast<EntityFactory*>
+		( m_world->getSystem( SystemType::EntityFactory ) );
+	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
+	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 
@@ -263,14 +244,6 @@ void ClientApplication::initEntities()
 		}
 
 	}
-
-	// HUD score element
-	entity = m_world->createEntity();
-	//component = new HudElement( "scoreText" );
-	//entity->addComponent( ComponentType::HudElement, component );
-	status = factory.readAssemblageFile( entity, "Assemblages/test6.asd" );
-	m_world->addEntity(entity);
-
 }
 
 void ClientApplication::initSounds()

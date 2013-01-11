@@ -3,23 +3,27 @@
 #include <fstream>
 #include <map>
 #include "AssemblageHelper.h"
+#include "Recipe.h"
+#include "EntitySystem.h"
 
 class Entity;
+class EntityWorld;
 class AssemblageReader;
 
 using namespace std;
 
-class EntityFactory
+class EntityFactory : public EntitySystem
 {
 public:
-	EntityFactory();
+	EntityFactory( EntityWorld* p_world );
 	~EntityFactory();
 
-	AssemblageHelper::E_FileStatus readAssemblageFile( Entity* out_entity,
-		string p_filePath );
+	AssemblageHelper::E_FileStatus readAssemblageFile( string p_filePath );
+
+	Entity* entityFromRecipe( const string& p_entityName );
 
 private:
-	void initAssamblageReaders();
-	AssemblageHelper::E_FileStatus parseFile( Entity* out_entity, ifstream* p_file );
+	EntityWorld* m_world;
+	map<string, Recipe*> m_entityRecipes;
 };
 

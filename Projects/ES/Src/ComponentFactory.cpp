@@ -20,7 +20,7 @@ Component* ComponentFactory::createInstance( std::string& p_componentName )
 {
 	map_type* map = getMap();
 	map_type::iterator it = map->find( p_componentName );
-	if(it == map->end())
+	if( it == map->end() )
 	{
 		return 0;
 	}
@@ -39,4 +39,15 @@ ComponentFactory::map_type* ComponentFactory::getMap()
 
 	static map_type instance;
 	return &instance;
+}
+
+bool ComponentFactory::isComponentRegistrered( std::string& p_componentName )
+{
+	map_type* map = getMap();
+	map_type::iterator it = map->find( p_componentName );
+	if( it == map->end() )
+	{
+		return false;
+	}
+	return true;
 }

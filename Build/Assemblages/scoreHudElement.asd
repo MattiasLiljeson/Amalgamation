@@ -1,4 +1,4 @@
-e scoreHudElement
+e ScoreHudElement
 
 c HudElement
 d s m_value assemblage fungerar!

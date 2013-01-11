@@ -23,7 +23,8 @@ public:
 		// Add data type to ComponentReader if you want to parse it or split it to built
 		// in types and reconstruct it in the components init-function.
 		FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED,
-		// Are you casting to correct classes?
+		// Are you casting to correct classes? have you supplied a non-NULL ptr into which
+		// the data will be read?
 		FileStatus_COMPONENT_DATA_CONVERSION_FAILED,
 		FileStatus_ELEMENT_COUNT
 	};

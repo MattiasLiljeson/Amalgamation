@@ -3,58 +3,55 @@
 #include "AssemblageReader.h"
 #include "Entity.h"
 
-EntityFactory::EntityFactory()
+EntityFactory::EntityFactory( EntityWorld* p_world ) 
+	: EntitySystem( SystemType::EntityFactory ) 
 {
+	m_world = p_world;
 }
-
 
 EntityFactory::~EntityFactory()
 {
-}
+	map<string, Recipe*>::iterator it;
 
-AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( Entity* out_entity, string p_filePath )
-{
-	ifstream file( p_filePath, ifstream::in );
-
-	AssemblageHelper::E_FileStatus status = AssemblageHelper::controlStream( &file );
-	if( status != AssemblageHelper::FileStatus_OK )
+	for( it = m_entityRecipes.begin(); it != m_entityRecipes.end(); it++)
 	{
-		file.close();
+		delete it->second;
+		it->second = NULL;
 	}
-	else
-	{
-		// File ok, read!
-		status = parseFile( out_entity, &file );
-	}
-
-	return status;
+	m_entityRecipes.clear();
 }
 
-void EntityFactory::initAssamblageReaders()
+AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_filePath )
 {
+	Recipe* newRecipe = NULL;
+	AssemblageReader reader;
+	AssemblageHelper::E_FileStatus status = reader.readAssemblageFile( &newRecipe, p_filePath );
 
-}
-
-AssemblageHelper::E_FileStatus EntityFactory::parseFile( Entity* out_entity, ifstream* p_file )
-{
-	char prefix = ' ';
-	string line = "";
-	AssemblageHelper::E_FileStatus status = AssemblageHelper::readLineFromStream( &prefix, &line, p_file );
-
-	if( status == AssemblageHelper::FileStatus_OK )
+	// The file was parsed correctly and a entity was defined in it
+	if( status == AssemblageHelper::FileStatus_OK ||
+		status == AssemblageHelper::FileStatus_END_OF_FILE )
 	{
-		if( prefix != 'e' )
+		if( newRecipe != NULL )
 		{
-			status = AssemblageHelper::FileStatus_WRONG_FILE_FORMAT;
+			// Delete previous recipe with the same name, it existing.
+			delete m_entityRecipes[newRecipe->getName()];
+			m_entityRecipes[newRecipe->getName()] = newRecipe;
 		}
 	}
 	
-	// Create Entity
-	AssemblageReader reader;
-	if( status == AssemblageHelper::FileStatus_OK )
+	return status;
+}
+
+Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
+{
+	Entity* meal = NULL;
+
+	map<string, Recipe*>::iterator it = m_entityRecipes.find( p_entityName );
+	if( it != m_entityRecipes.end())
 	{
-		status = reader.readFile( out_entity, p_file );
+		meal = m_world->createEntity();
+		it->second->cook( meal );
 	}
 
-	return status;
+	return meal;
 }

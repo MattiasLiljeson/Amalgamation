@@ -36,6 +36,7 @@ public:	//Enums
 		DebugPlayerScoresSystem,
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
+		EntityFactory,
 		NUM_SYSTEM_TYPES
 	};
 
