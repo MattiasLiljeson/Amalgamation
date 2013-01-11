@@ -210,7 +210,10 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KEY_Y]		= DIK_Y;
 	m_dikFromKeyMap[InputHelper::KEY_Z]		= DIK_Z;
 
-	m_dikFromKeyMap[InputHelper::KEY_SPACE]	= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::KEY_SPACE]		= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::KEY_BACKSPACE]	= DIK_BACKSPACE;
+	m_dikFromKeyMap[InputHelper::KEY_RETURN]	= DIK_RETURN;
+
 	m_dikFromKeyMap[InputHelper::KEY_LCTRL]	= DIK_LCONTROL;
 	m_dikFromKeyMap[InputHelper::KEY_ESC]	= DIK_ESCAPE;
 	m_dikFromKeyMap[InputHelper::KEY_F1]	= DIK_F1;

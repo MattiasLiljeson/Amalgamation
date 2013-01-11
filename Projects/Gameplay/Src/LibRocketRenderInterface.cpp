@@ -287,7 +287,7 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	AglMatrix matTranslate = AglMatrix::identityMatrix();
 
 	int wndWidth = m_wrapper->getWindowWidth();
-	int wndHeight = m_wrapper->getWindowdHeight();
+	int wndHeight = m_wrapper->getWindowHeight();
 
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );

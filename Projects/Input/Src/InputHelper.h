@@ -102,6 +102,8 @@ public:
 		KEY_Y,
 		KEY_Z,
 		KEY_SPACE,
+		KEY_BACKSPACE,
+		KEY_RETURN,
 		KEY_LCTRL,
 		KEY_ESC,
 		KEY_F1,

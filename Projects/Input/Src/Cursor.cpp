@@ -8,8 +8,9 @@
 
 Cursor::Cursor()
 {
-	m_x = 0;
-	m_y = 0;
+	reset();
+	m_screenWidth=1280.0f;
+	m_screenHeight=800.0f;
 }
 
 Cursor::~Cursor()
@@ -38,15 +39,15 @@ void Cursor::addControlSet( ControlSet p_controlSet )
 	m_controlSets.push_back( p_controlSet );
 }
 
-void Cursor::update()
+void Cursor::update(float p_dt)
 {
 	// raw data for the mouse buttons are enums of type KEY_STATE
 	//leftBtnState = m_primaryBtn->getRawData();
 
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		m_x += m_controlSets[setIdx].dx();
-		m_y += m_controlSets[setIdx].dy();
+		m_x += m_controlSets[setIdx].dx((double)m_screenWidth)*(double)p_dt;
+		m_y += m_controlSets[setIdx].dy((double)m_screenHeight)*(double)p_dt;
 	}
 
 	// Keep cursor inside NDC
@@ -67,6 +68,12 @@ void Cursor::update()
 	{
 		m_y = 1.0;
 	}
+}
+
+void Cursor::setScreenSize( int p_width, int p_height )
+{
+	m_screenWidth=p_width;
+	m_screenHeight=p_height;
 }
 
 double Cursor::getX()
@@ -151,4 +158,10 @@ double Cursor::getSecondaryDelta()
 	}
 
 	return 0.0;
+}
+
+void Cursor::reset()
+{
+	m_x = 0.0;
+	m_y = 0.0;
 }

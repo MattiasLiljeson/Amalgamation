@@ -183,3 +183,8 @@ void AntTweakBarWrapper::modifyTheRefreshRate(BarType p_barType, float p_value)
 		break;
 	}
 }
+
+void AntTweakBarWrapper::setWindowSize( int p_width, int p_height )
+{
+	TwWindowSize(p_width, p_height);
+}

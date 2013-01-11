@@ -563,7 +563,7 @@ int GraphicsWrapper::getWindowWidth()
 	return m_width;
 }
 
-int GraphicsWrapper::getWindowdHeight()
+int GraphicsWrapper::getWindowHeight()
 {
 	return m_height;
 }

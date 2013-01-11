@@ -42,14 +42,14 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::Initialise();
 
 
-	int wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
-	int wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
+	m_wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
+	m_wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowHeight();
 
 	m_rocketContextName = "default_name"; // Change the name if using multiple contexts!
 
 	m_rocketContext = Rocket::Core::CreateContext(
 		Rocket::Core::String( m_rocketContextName.c_str() ),
-		Rocket::Core::Vector2i( wndWidth, wndHeight) );
+		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
 	Rocket::Debugger::Initialise( m_rocketContext );
 	Rocket::Debugger::SetVisible( true );
@@ -122,6 +122,17 @@ void LibRocketBackendSystem::updateElement( string p_element, string p_value )
 void LibRocketBackendSystem::process()
 {
 	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+
+
+
+// 	if (m_wndWidth!=gfx->getWindowWidth() || m_wndHeight!=gfx->getWindowHeight())
+// 	{
+// 		m_wndWidth = gfx->getWindowWidth();
+// 		m_wndHeight = gfx->getWindowHeight();
+// 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
+// 	}
+	
+
 	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
 														   m_cursor->getY());
 	int mouseX = mousePos.first;
