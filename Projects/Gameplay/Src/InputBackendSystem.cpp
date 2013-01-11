@@ -225,20 +225,27 @@ void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_i
 void InputBackendSystem::updateAntTweakBar()
 {
 	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+	AntTweakBarWrapper* atb = AntTweakBarWrapper::getInstance();
+
+	// mouse pos
 	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
 		m_cursor->getY());
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
-
-	// mouse
-	AntTweakBarWrapper* atb = AntTweakBarWrapper::getInstance();
-	Control* t_control=NULL;
 	atb->setMousePos(mouseX,mouseY);
-	// keyboard
+
+	// mouse key
+	double l_btn = m_cursor->getPrimaryDelta();
+	double r_btn = m_cursor->getSecondaryDelta();
+	if (l_btn<-0.5f || l_btn>0.5f) atb->setMouseBtn((int)(l_btn+1.0)/2,1);
+	if (r_btn<-0.5f || r_btn>0.5f) atb->setMouseBtn((int)(r_btn+1.0)/2,3);
+
+	// keyboard	
+	Control* kb_control=NULL;
 	for (int i=InputHelper::KEY_A;i<=InputHelper::KEY_Z;i++)
 	{
-		t_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
-		if (t_control && t_control->getStatus()>0.0)
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getStatus()>0.0)
 		{
 			atb->setKeyPressed(i+65,0);// A = 65 in ASCII
 		}

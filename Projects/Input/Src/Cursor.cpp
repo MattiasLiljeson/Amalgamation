@@ -110,7 +110,7 @@ double Cursor::getPrimaryDelta()
 	//HACK: Return the first set that where the input has moved
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		if( m_controlSets[setIdx].m_primaryBtn->getDelta() > 0.0f )
+		if( m_controlSets[setIdx].m_primaryBtn->getDelta() != 0.0f )
 			return m_controlSets[setIdx].m_primaryBtn->getDelta(); 
 	}
 
@@ -146,7 +146,7 @@ double Cursor::getSecondaryDelta()
 	//HACK: Return the first set that where the input has moved
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		if( m_controlSets[setIdx].m_secondaryBtn->getDelta() > 0.0f )
+		if( m_controlSets[setIdx].m_secondaryBtn->getDelta() != 0.0f )
 			return m_controlSets[setIdx].m_secondaryBtn->getDelta(); 
 	}
 
