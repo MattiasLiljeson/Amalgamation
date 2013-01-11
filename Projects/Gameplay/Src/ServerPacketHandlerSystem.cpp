@@ -11,6 +11,7 @@
 #include "PacketType.h"
 #include "EntityType.h"
 #include "PhysicsSystem.h"
+#include "TimerSystem.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -30,11 +31,6 @@ void ServerPacketHandlerSystem::initialize()
 {
 	m_physics = static_cast<PhysicsSystem*>(
 		m_world->getSystem( SystemType::PhysicsSystem ) );
-
-	/************************************************************************/
-	/* Determines the frequency on how often ping packets will be sent.		*/
-	/************************************************************************/
-	m_timerStartValue = m_timer = 0.5;
 }
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -90,11 +86,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			m_server->unicastPacket(newClientStats, packet.getSenderId());
 		}		
 	}
-	m_timer -= m_world->getDelta();
-	if( m_timer <= 0 )
+	
+	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::HalfSecond))
 	{
-		m_timer = m_timerStartValue;
-
 		float timeStamp = m_world->getElapsedTime();
 
 		Packet packet((char)PacketType::Ping);

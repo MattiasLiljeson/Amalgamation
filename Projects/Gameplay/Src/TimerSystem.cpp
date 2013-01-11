@@ -9,6 +9,7 @@ TimerSystem::TimerSystem()
 	m_timerIntervals[TimerIntervals::EverySecond] = 1.0f;
 	m_timerIntervals[TimerIntervals::HalfSecond] = 0.5f;
 	m_timerIntervals[TimerIntervals::Every16Millisecond] = 0.016f;
+	m_timerIntervals[TimerIntervals::Every8Millisecond] = 0.008f;
 
 
 	for(int i=0; i<TimerIntervals::NUM_TIMERINTERVALS; i++ )

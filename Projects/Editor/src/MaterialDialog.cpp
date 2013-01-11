@@ -136,7 +136,7 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddVarRW(m_dialog, "Specular", TW_TYPE_COLOR3F, (void*)&m_material->specular, " help='Light color.' group='Properties'");
 	TwAddVarRW(m_dialog, "Emissive", TW_TYPE_COLOR3F, (void*)&m_material->emissive, " help='Light color.' group='Properties'");
 
-	TwAddVarRW(m_dialog, "Opacity", TW_TYPE_FLOAT, (void*)&m_material->opacity, " help='Light color.' group='Properties' min=0.0 max=1.0 step=0.01");
+	TwAddVarRW(m_dialog, "Opacity", TW_TYPE_FLOAT, (void*)&m_material->opacity, " help='Light color.' group='Properties' min=0.0 max=1.0wwwwwwwwwwwwwwwwwwwwwwwwwwwwww step=0.01");
 	TwAddVarRW(m_dialog, "Reflectivity", TW_TYPE_FLOAT, (void*)&m_material->reflectivity, " help='Light color.' group='Properties' min=0.0 max=1.0 step=0.01");
 	TwAddVarRW(m_dialog, "Shininess", TW_TYPE_FLOAT, (void*)&m_material->shininess, " help='Light color.' group='Properties' min=0.0 max=100.0 step=1.0");
 	TwAddVarRW(m_dialog, "Texture Scale", TW_TYPE_FLOAT, (void*)&m_material->textureScale, " help='Light color.' group='Properties' min=0.0 max=10.0 step=0.01");
