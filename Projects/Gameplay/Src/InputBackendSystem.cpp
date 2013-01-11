@@ -96,12 +96,29 @@ void InputBackendSystem::initialize()
 	}
 
 	// All chars on keyboard
+	// letters
 	vector<pair<string, Control*> > keysAtoZ = factory.createKeysAToZ();
 	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
 	{
 		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
 			keysAtoZ[i].second, keysAtoZ[i].first );
+	}
+	// numbers
+	vector<pair<string, Control*> > keysZeroToNine = factory.createKeysZeroToNine();
+	for( int i=0, size = (int)keysZeroToNine.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_0 + i),
+			keysZeroToNine[i].second, keysZeroToNine[i].first );
+	}
+	// numpad numbers
+	vector<pair<string, Control*> > keysNumZeroToNumNine = factory.createKeysNumZeroToNumNine();
+	for( int i=0, size = (int)keysNumZeroToNumNine.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_NUM0 + i),
+			keysNumZeroToNumNine[i].second, keysNumZeroToNumNine[i].first );
 	}
 
 	m_cursor = new Cursor();
@@ -240,15 +257,38 @@ void InputBackendSystem::updateAntTweakBar()
 	if (l_btn<-0.5f || l_btn>0.5f) atb->setMouseBtn((int)(l_btn+1.0)/2,1);
 	if (r_btn<-0.5f || r_btn>0.5f) atb->setMouseBtn((int)(r_btn+1.0)/2,3);
 
-	// keyboard	
+	// keyboard	A-Z
 	Control* kb_control=NULL;
 	for (int i=InputHelper::KEY_A;i<=InputHelper::KEY_Z;i++)
 	{
 		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
 		if (kb_control && kb_control->getStatus()>0.0)
 		{
-			atb->setKeyPressed(i+65,0);// A = 65 in ASCII
+			atb->setKeyPressed(i+'A',0);
 		}
 	}
+
+	// keyboard	0-9
+	kb_control=NULL;
+	for (int i=InputHelper::KEY_0;i<=InputHelper::KEY_9;i++)
+	{
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getDelta()>0.5f)
+		{
+			atb->setKeyPressed(i-(int)InputHelper::KEY_0+'0',0);
+		}
+	}
+
+	// keyboard	numpad 0-9
+	kb_control=NULL;
+	for (int i=InputHelper::KEY_NUM0;i<=InputHelper::KEY_NUM9;i++)
+	{
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getDelta()>0.5f)
+		{
+			atb->setKeyPressed(i-(int)InputHelper::KEY_NUM0+'0',0);
+		}
+	}
+
 
 }

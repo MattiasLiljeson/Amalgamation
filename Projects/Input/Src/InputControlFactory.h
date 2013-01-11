@@ -83,6 +83,19 @@ public:
 	///-----------------------------------------------------------------------------------
 	vector<pair<string, Control*>> createKeysAToZ();
 
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all numbers on the keyboard.
+	/// \return vector<pair<string, Control*>>
+	///-----------------------------------------------------------------------------------
+	vector<pair<string, Control*>> createKeysZeroToNine();
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all numpad numbers on the keyboard.
+	/// \return vector<pair<string, Control*>>
+	///-----------------------------------------------------------------------------------
+	vector<pair<string, Control*>> createKeysNumZeroToNumNine();
+
 	///-----------------------------------------------------------------------------------
 	/// Create a Control mapped to the supplied input.
 	/// \param p_key Key enum identifier.
