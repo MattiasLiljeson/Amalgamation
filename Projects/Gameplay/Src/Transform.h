@@ -118,6 +118,14 @@ public:
 	///----------------------------------------------------------------------------------
 	const AglMatrix& getMatrix() const;
 
+
+	inline AglVector3 getForward() const;
+
+	inline AglVector3 getRight() const;
+
+	inline AglVector3 getUp() const;
+
+
 	///-----------------------------------------------------------------------------------
 	/// Get the translated transform matrix packaged in a InstanceVertex.
 	/// \return The translated transform matrix as a InstanceVertex.
