@@ -63,9 +63,13 @@ void TcpCommunicationProcess::body()
 
 void TcpCommunicationProcess::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue<ProcessMessage*> messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		ProcessMessage* message = popMessage();
+		ProcessMessage* message = messages.front();
+		messages.pop();
 
 		if( message->type == MessageType::TERMINATE )
 		{
@@ -188,13 +192,16 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 					readPtr = m_asyncData + readPosition;
 				}
 			}
+
+			queue<ProcessMessage*> receivePacketMessages;
 			while( !packets.empty() )
 			{
-				m_parent->putMessage( new ProcessMessageReceivePacket(
+				receivePacketMessages.push( new ProcessMessageReceivePacket(
 					this,
-					packets.front() ) );
+					packets.front() ));
 				packets.pop();
 			}
+			m_parent->putMessages( receivePacketMessages );
 
 			startPacketReceiveCallback();
 		}

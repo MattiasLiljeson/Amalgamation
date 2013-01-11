@@ -116,10 +116,13 @@ namespace Srv
 	
 	void ServerApplication::processMessages()
 	{
+		queue< ProcessMessage* > messages;
+		messages = checkoutMessageQueue();
 
-		while( getMessageCount() > 0 )
+		while( messages.size() > 0 )
 		{
-			ProcessMessage* message = popMessage();
+			ProcessMessage* message = messages.front();
+			messages.pop();
 
 			if( message->type == MessageType::TERMINATE )
 			{

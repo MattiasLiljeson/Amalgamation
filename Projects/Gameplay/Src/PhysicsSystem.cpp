@@ -4,7 +4,6 @@
 #include <PhysicsController.h>
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
-#include "GraphicsBackendSystem.h"
 #include "ConnectionPointSet.h"
 #include "ShipFlyController.h"
 
@@ -190,7 +189,7 @@ void PhysicsSystem::handleCompoundBodyDependencies( PhysicsBody* p_bodyComponent
 void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 {
 	EntitySystem* tempSys = NULL;
-
+/*
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
@@ -219,6 +218,7 @@ void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 		BodyInitData::SINGLE));
 
 	m_world->addEntity(entity);
+	*/
 }
 
 void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_others)
