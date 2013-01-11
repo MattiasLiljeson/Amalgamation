@@ -92,6 +92,23 @@ public:
 	///-----------------------------------------------------------------------------------
 	void handleMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of mouse movement change
+	/// \param p_mouseX
+	/// \param p_mouseY
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMousePos(int p_mouseX, int p_mouseY);
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of a pressed key
+	/// \param p_keyASCII
+	/// \param p_modifier
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setKeyPressed(int p_keyASCII, int p_modifier);
+
 	///-----------------------------------------------------------------------------------
 	/// Returns the specified AntTweakBar
 	/// \param p_barType

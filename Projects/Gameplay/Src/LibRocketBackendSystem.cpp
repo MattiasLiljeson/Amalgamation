@@ -121,13 +121,13 @@ void LibRocketBackendSystem::updateElement( string p_element, string p_value )
 
 void LibRocketBackendSystem::process()
 {
-	int windowWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
-	int windowHeight = m_graphicsBackend->getGfxWrapper()->getWindowdHeight();
-	// NDC -> Screenspace
-	int screenSpaceX = static_cast<int>((m_cursor->getX()+1) * windowWidth/2);
-	int screenSpaceY = static_cast<int>((m_cursor->getY()+1) * windowHeight/2);
+	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
+														   m_cursor->getY());
+	int mouseX = mousePos.first;
+	int mouseY = mousePos.second;
 
-	m_rocketContext->ProcessMouseMove( screenSpaceX, screenSpaceY, 0 );
+	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
 	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
 	{
 		m_rocketContext->ProcessMouseButtonDown( 0, 0 );

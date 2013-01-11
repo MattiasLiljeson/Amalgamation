@@ -109,9 +109,17 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// just lookat behaviour
 		if (!lookAtOrbit && !lookAtFollow)
 		{
-			AglVector3 dir = lookTargetPos-position;
-			AglVector3::normalize(dir);
-			transform->setForward(dir);
+ 			AglVector3 dir = position-lookTargetPos;
+ 			AglVector3::normalize(dir);
+ 			transform->setForwardDirection(dir);
+			transform->setTranslation( position );
+			// transform->setRotation(AglQuaternion:: );
+// 			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
+// 			rotation.normalize();
+// 
+// 			// update
+// 			transform->setTranslation( position );
+// 			transform->setRotation( rotation );
 		}
 		
 	}

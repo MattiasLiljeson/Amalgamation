@@ -164,19 +164,19 @@ float* ShipInputProcessingSystem::getControllerEpsilonPointer()
 void ShipInputProcessingSystem::readAllTheInput(RawInputForces& p_outInput)
 {
 	p_outInput.hPositive = m_gamepadHorizontalPositive->getStatus();
-	p_outInput.hPositive += m_mouseHorizontalPositive->getStatus()*m_mouseSensitivity;
+	p_outInput.hPositive += m_mouseHorizontalPositive->getStatus()/*m_mouseSensitivity*/;
 	saturate(p_outInput.hPositive); // ?
 
 	p_outInput.hNegative = m_gamepadHorizontalNegative->getStatus();
-	p_outInput.hNegative += m_mouseHorizontalNegative->getStatus()*m_mouseSensitivity;
+	p_outInput.hNegative += m_mouseHorizontalNegative->getStatus()/*m_mouseSensitivity*/;
 	saturate(p_outInput.hNegative); // ?
 
 	p_outInput.vPositive = m_gamepadVerticalPositive->getStatus();
-	p_outInput.vPositive += m_mouseVerticalPositive->getStatus()*m_mouseSensitivity;
+	p_outInput.vPositive += m_mouseVerticalPositive->getStatus()/*m_mouseSensitivity*/;
 	saturate(p_outInput.vPositive); // ?
 
 	p_outInput.vNegative = m_gamepadVerticalNegative->getStatus();
-	p_outInput.vNegative += m_mouseVerticalNegative->getStatus()*m_mouseSensitivity;
+	p_outInput.vNegative += m_mouseVerticalNegative->getStatus()/*m_mouseSensitivity*/;
 	saturate(p_outInput.vNegative); // ?
 
 	p_outInput.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
