@@ -75,7 +75,7 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	// Test: Extract translation and rotation from the target piece connector, and then
 	// rotate it PI radians around its axis
 	AglMatrix mat( AglVector3::one(), 
-					temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getRight(), 3.1415f),
+					temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getForward(), 3.1415f),
 					temp.getTranslation() );
 
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
