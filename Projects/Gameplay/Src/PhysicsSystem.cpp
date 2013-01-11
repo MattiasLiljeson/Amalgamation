@@ -276,8 +276,11 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 						connectionPoints[curr].first->cpConnectedEntity = p_others[i]->getIndex();
 						
 						module->m_parentEntity = connectionPoints[curr].second->getIndex();
-						PhysModule->setParentId(body->getParentId());
 
+						PhysModule->setParentId(body->m_id);
+
+						//Kör en return just nu. Kan ändras sen. Tror inte det blir problem
+						return;
 						curr++;
 						if (curr >= connectionPoints.size())
 							return;
@@ -329,11 +332,14 @@ AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
 
 		unsigned int ind = 0;
 		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
 			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
 				ind = i;
+		}
 
 		transform = transform * cps->m_connectionPoints[ind].cpTransform;
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
+		p_entity = parent;
 	}
 	return transform;
 }
