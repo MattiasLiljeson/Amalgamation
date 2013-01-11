@@ -39,6 +39,7 @@ public:	//Enums
 		HudSystem,
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
+		EntityFactory,
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,
 		MineLayerModuleControllerSystem,

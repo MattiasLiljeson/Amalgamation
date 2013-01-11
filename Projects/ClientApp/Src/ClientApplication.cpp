@@ -12,15 +12,17 @@
 #include <AudioInfo.h>
 #include <AudioListener.h>
 #include <BodyInitData.h>
+#include <ConnectionPointSet.h>
+#include <GameplayTags.h>
+#include <HudElement.h>
+#include <MinigunModule.h>
 #include <PhysicsBody.h>
 #include <PhysicsSystem.h>
+#include <PlayerCameraController.h>
 #include <RenderInfo.h>
-#include <ShipFlyController.h>
 #include <ShipEditController.h>
-#include <Transform.h>
-#include <HudElement.h>
+#include <ShipFlyController.h>
 #include <ShipModule.h>
-#include <ConnectionPointSet.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
 #include <GameplayTags.h>
@@ -29,22 +31,32 @@
 #include <MineLayerModule.h>
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
+#include <Transform.h>
 
 // Systems
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
+#include <CameraInfo.h>
 #include <CameraSystem.h>
+#include <ClientPacketHandlerSystem.h>
+#include <DisplayPlayerScoreSystem.h>
+#include <EntityFactory.h>
 #include <GraphicsBackendSystem.h>
+#include <HudSystem.h>
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
-#include <ClientPacketHandlerSystem.h>
+#include <LookAtEntity.h>
+#include <LookAtSystem.h>
+#include <MainCamera.h>
+#include <MinigunModuleControllerSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <PhysicsSystem.h>
+#include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
-#include <ShipFlyControllerSystem.h>
 #include <ShipEditControllerSystem.h>
+#include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <LookAtSystem.h>
@@ -158,7 +170,8 @@ void ClientApplication::initSystems()
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
-
+	EntityFactory* factory = new EntityFactory( m_world );
+	m_world->setSystem( factory, true);
 
 	/************************************************************************/
 	/* Physics																*/
@@ -263,8 +276,15 @@ void ClientApplication::initSystems()
 
 void ClientApplication::initEntities()
 {
-	Entity* entity;
-	Component* component;
+	Entity* entity = NULL;
+	Component* component = NULL;
+
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
+	EntityFactory* factory = static_cast<EntityFactory*>
+		( m_world->getSystem( SystemType::EntityFactory ) );
+	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
+	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 
