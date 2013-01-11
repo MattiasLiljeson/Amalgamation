@@ -368,6 +368,7 @@ bool PhysicsController::IsActive(unsigned int pBody)
 
 void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform)
 {
+	p_body->SetImpulseEnabled(true);
 	p_compound->AddChild(p_body, p_localTransform);
 
 	unsigned int index = -1;

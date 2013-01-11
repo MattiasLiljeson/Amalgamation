@@ -43,6 +43,7 @@ public:	//Enums
 		MineLayerModule,
 		StandardMine,
 		RocketLauncherModule,
+		Connector1to2Module,
 		NUM_COMPONENT_TYPES
 	};
 

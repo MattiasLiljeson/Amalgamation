@@ -22,6 +22,7 @@
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="ConnectionPointSet.h" />
+    <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -77,6 +78,7 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
+    <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
