@@ -96,14 +96,14 @@ public:
 	/// \param p_right
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setRightDirection( const AglVector3& p_right );
+	// void setRightDirection( const AglVector3& p_right ); TODO
 
 	///-----------------------------------------------------------------------------------
 	/// Set up direction of matrix, doesn't affect scale.
 	/// \param p_up
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setUpDirection( const AglVector3& p_up );
+	// void setUpDirection( const AglVector3& p_up ); TODO
 
 	///-----------------------------------------------------------------------------------
 	/// Set the matrix and update vectors
