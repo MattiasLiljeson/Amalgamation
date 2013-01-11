@@ -162,7 +162,6 @@
     <ClInclude Include="HudElement.h">
       <Filter>Components\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="MenuItem.h" />
     <ClInclude Include="PlayerScore.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -234,7 +233,7 @@
     </ClInclude>
     <ClInclude Include="PlayerCameraController.h">
       <Filter>Components\Gameplay</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="ShieldModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -267,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="ShipModulesControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Systems\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -333,7 +335,6 @@
     <ClCompile Include="HudElement.cpp">
       <Filter>Components\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="PlayerScore.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -382,7 +383,8 @@
     <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCameraControllerSystem.cpp"></ClCompile>
+    <ClCompile Include="PlayerCameraControllerSystem.cpp">
+    </ClCompile>
     <ClCompile Include="ShieldModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
@@ -415,6 +417,9 @@
     </ClCompile>
     <ClCompile Include="ShipModulesControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

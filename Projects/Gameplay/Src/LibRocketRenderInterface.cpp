@@ -62,6 +62,12 @@ LibRocketRenderInterface::~LibRocketRenderInterface()
 	delete m_factory;
 	Rocket::Core::Shutdown();
 
+	for( unsigned int i=0; i<m_compiledGeometries.size(); i++ )
+	{
+		delete m_compiledGeometries[i];
+		m_compiledGeometries[i] = NULL;
+	}
+
 	// SAFE_RELEASE(rs_scissorsOn);
 	// SAFE_RELEASE(rs_scissorsOff);
 }
@@ -138,6 +144,8 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 
 	// geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
 
+	m_compiledGeometries.push_back( geometry );
+
 	return (Rocket::Core::CompiledGeometryHandle)geometry;
 }
 
@@ -168,6 +176,17 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledGeometryHandle p_geometry)
 {
 	RocketCompiledGeometry* geometry = (RocketCompiledGeometry*) p_geometry;
+
+	vector<RocketCompiledGeometry*>::iterator it = m_compiledGeometries.begin();
+	for( ; it != m_compiledGeometries.end(); it++ )
+	{
+		if( (*it) == geometry )
+		{
+			m_compiledGeometries.erase(it);
+			break;
+		}
+	}
+
 	delete geometry;
 	numCompiledGeometries--;
 }

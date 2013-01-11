@@ -73,6 +73,9 @@ private:
 	AglMatrix createWorldMatrix();
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
 
+	// Used to make sure that all geometries are released.
+	vector<RocketCompiledGeometry*> m_compiledGeometries;
+
 private:
 	//DEBUG:
 	int numCompiledGeometries; 
