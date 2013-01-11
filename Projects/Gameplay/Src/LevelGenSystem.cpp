@@ -7,6 +7,7 @@
 #include "GraphicsBackendSystem.h"
 #include "LevelPiece.h"
 #include <cstdlib>
+#include <ctime>
 
 LevelGenSystem::LevelGenSystem() 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -31,6 +32,7 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::run()
 {
+	srand(time(NULL));
 	generateLevelPieces(2);
 	//debugPrintTransformTree();
 }
@@ -145,15 +147,16 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 												&m_meshHeaders[0],
 												new Transform() );
 			
-			//piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
-			piece->connectTo(p_targetPiece, i);
+			int slot = popIntVector(freeConnectSlots);
+			piece->connectTo(p_targetPiece, slot);
+			//piece->connectTo(p_targetPiece, i);
 
 			// DEBUG: Attach a cube between the connections!
 			// Reminder that fetching of sprint 4 needs to be done to get new help methods
 			//AglVector3 pos, scale;
 			//AglQuaternion rot;
 
-			AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(i);
+			AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
 			AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
 
 			//piece->getConnectionPointMatrix(0, Space_GLOBAL).toComponents(scale, rot, pos);

@@ -2,6 +2,7 @@
 
 #include <ConnectionPointCollection.h>
 #include "Transform.h"
+#include <cstdlib>
 
 LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 					   AglMeshHeader* p_meshHeader, 
@@ -59,6 +60,12 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	// To prevent issues with scale, fetch this scale temporarily
 	AglVector3 tempScale = m_transform->getScale();
 
+	// Rotate the connection point arbitrarily around its forward!
+	Transform transform = m_connectionPoints[0];
+	transform.setRotation(transform.getRotation() 
+		* AglQuaternion::constructFromAxisAndAngle(transform.getForward(), (rand() % 360) * 3.1415f / 180.0f));
+	m_connectionPoints[0] = transform;
+
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
 	m_transform->setMatrix(m_transform->getMatrix() * m_connectionPoints[0].getMatrix().inverse());
@@ -69,18 +76,18 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
 	//mat.SetForward( mat.GetBackward() );
 	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
-	//temp.setForwardDirection( -temp.getForward() );
+	temp.setForwardDirection( -temp.getForward() );
 	//temp.setForwardDirection( AglVector3::up() );
 
 	// Test: Extract translation and rotation from the target piece connector, and then
 	// rotate it PI radians around its axis
-	AglMatrix mat( AglVector3::one(), 
-					temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getForward(), 3.1415f),
-					temp.getTranslation() );
+	//AglMatrix mat( AglVector3::one(), 
+	//				temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getForward(), 3.1415f),
+	//				temp.getTranslation() );
 
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
-	//m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
-	m_transform->setMatrix( m_transform->getMatrix() * mat );
+	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
+	//m_transform->setMatrix( m_transform->getMatrix() * mat );
 	m_transform->setScale(temp.getScale());
 	updateConnectionPoints();
 
