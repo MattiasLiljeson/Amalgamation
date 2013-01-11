@@ -65,6 +65,11 @@ AglReader::AglReader(const char* p_path)
 	{
 		desc.connectionPoints.push_back(readConnectionPoint());
 	}
+	for (int i = 0; i < m_topHeader.particleSystemCount; i++)
+	{
+		AglParticleSystem* ps = new AglParticleSystem(readParticleSystem());
+		desc.particleSystems.push_back(ps);
+	}
 
 	desc.coordinateSystem = m_topHeader.coordinateSystem;
 
@@ -225,6 +230,13 @@ AglConnectionPoint AglReader::readConnectionPoint()
 	AglConnectionPoint cp;
 	m_file.read((char*)&cp, sizeof(AglConnectionPoint));
 	return cp;
+}
+
+AglParticleSystemHeader AglReader::readParticleSystem()
+{
+	AglParticleSystemHeader ps;
+	m_file.read((char*)&ps, sizeof(AglParticleSystemHeader));
+	return ps;
 }
 
 AglScene* AglReader::getScene()

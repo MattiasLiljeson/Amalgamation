@@ -17,7 +17,7 @@ private:
 private:
 	void CalculateInertiaTensor();
 public:
-	RigidBodyConvexHull(ConvexHullShape* pShape, AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic);
+	RigidBodyConvexHull(ConvexHullShape* pShape, AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pImpulseEnabled = true);
 	~RigidBodyConvexHull();
 	RigidBodyType GetType();
 	const vector<AglVector3>& GetExteriorPoints();

@@ -58,6 +58,18 @@ void CompoundBody::AddChild(RigidBody* pRigidBody)
 	mChildren.push_back(pRigidBody);
 	pRigidBody->SetParent(this);
 }
+void CompoundBody::AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform)
+{
+	if (pRigidBody->IsStatic() != mStatic)
+	{
+		//CANNOT COMBINE STATIC AND NON-STATIC COMPONENTS
+		float k = 0;
+		k = 1.0f / k;
+		return;
+	}
+	mChildren.push_back(pRigidBody);
+	pRigidBody->SetParent(this, pLocalTransform);
+}
 void CompoundBody::DetachChild(RigidBody* pRigidBody)
 {
 	for (unsigned int i = 0; i < mChildren.size(); i++)
@@ -105,6 +117,11 @@ AglVector3 CompoundBody::GetCenterOfMass()
 	}
 	com /= m;
 	return com;
+}
+
+bool CompoundBody::IsCompoundBody()
+{
+	return true;
 }
 
 void CompoundBody::AddImpulse(AglVector3 pImpulse)

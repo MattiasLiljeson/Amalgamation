@@ -48,6 +48,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
 	m_connectionPoints = p_desc.connectionPoints;
+	m_particleSystems = p_desc.particleSystems;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
 }
@@ -160,9 +161,14 @@ vector<AglConnectionPoint> AglScene::getConnectionPoints()
 	return m_connectionPoints;
 }
 
-AglConnectionPoint AglScene::getConnectionPoints(unsigned int p_index)
+AglConnectionPoint AglScene::getConnectionPoint(unsigned int p_index)
 {
 	return m_connectionPoints[p_index];
+}
+
+unsigned int AglScene::getConnectionPointCount()
+{
+	return m_connectionPoints.size();
 }
 
 int AglScene::addName(string p_name)
@@ -247,6 +253,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
 	desc.connectionPoints = this->m_connectionPoints;
+	desc.particleSystems = this->m_particleSystems;
 	desc.coordinateSystem = this->m_coordinateSystem;
 	return desc;
 }
@@ -283,4 +290,19 @@ bool AglScene::isRightHanded()
 vector<AglParticleSystem*> AglScene::getParticleSystems()
 {
 	return m_particleSystems;
+}
+void AglScene::transform(AglMatrix p_transform)
+{
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
+	{
+		m_meshes[i]->transform(p_transform);
+	}
+	for (unsigned int i = 0; i < m_skeletons.size(); i++)
+	{
+		m_skeletons[i]->transform(p_transform);
+	}
+	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	{
+		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
+	}
 }

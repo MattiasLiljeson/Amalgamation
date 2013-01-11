@@ -20,6 +20,7 @@
 #include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
+#include "ConnectionPointCollection.h"
 #include "TextureParser.h"
 
 
@@ -112,8 +113,16 @@ public:
 	/// \param p_path
 	/// \return unsigned int
 	///-----------------------------------------------------------------------------------
+	///-----------------------------------------------------------------------------------
+	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
+	/// \param p_name Filename
+	/// \param p_path Path, without filename
+	/// \param p_outHardPoints Optional container for storing connection points.
+	/// \return unsigned int Mesh id
+	///-----------------------------------------------------------------------------------
 	unsigned int createMesh(const string& p_name,
-							const string* p_path=NULL);
+							const string* p_path=NULL,
+							ConnectionPointCollection* p_outConnectionPoints=NULL);
 
 	// WIP, should not use texture pointer, but texture id
 	unsigned int createMesh(const string& p_name,

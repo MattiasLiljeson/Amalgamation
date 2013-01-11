@@ -112,7 +112,7 @@ bool Game::Update(float pElapsedTime)
 	if (Avatar && mPhysics)
 	{
 		RigidBody* av = (RigidBody*)mPhysics->GetBody(Avatar);
-		AglMatrix world = coord * bound.world.inverse() * av->GetWorld();
+		AglMatrix world = bound.world.inverse() * av->GetWorld();
 
 		//Mouse
 		GetCursorPos(&CurrentMousePos);
@@ -271,18 +271,10 @@ bool Game::Draw(float pElapsedTime)
 
 	AglMatrix mat = AglMatrix::createTranslationMatrix(AglVector3(0, 0, -40));
 
-	Body* b = mPhysics->GetBody(mesh);
-	if (drawthat)
-		testMesh->Draw(b->GetWorld());
-	else
-		toDraw->Draw(b->GetWorld());
 
-	b = mPhysics->GetBody(Avatar);
+	Body* b = mPhysics->GetBody(Avatar);
 	
-	if (drawthat)
-		testMesh->Draw(bound.world.inverse()*b->GetWorld());
-	else
-		toDraw->Draw(bound.world.inverse()*b->GetWorld());
+	testMesh->Draw(bound.world.inverse()*b->GetWorld());
 
     mSwapChain->Present(0,0);
 	return true;
@@ -381,31 +373,13 @@ void Game::Restart()
 		{
 			indices.push_back(ind[i]);
 		}
-		AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
-		AglLooseBspTree* bsptree = constructor.createTree();
 
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
-		coord = s->getCoordinateSystemAsMatrix();
-		mesh = mPhysics->AddMeshBody(AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
-		//Avatar = mPhysics->AddMeshBody(AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
 
 		bound = m[0]->getHeader().minimumOBB;
 		
 		Avatar = mPhysics->AddBox(AglVector3(0, 0, -40), bound.size, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, NULL);
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
-
-
-		file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
-
-		AglReader r2((char*)file.c_str());
-
-		AglScene* s2 = r2.getScene();
-
-		vector<AglMesh*> m2 = s2->getMeshes();
-		toDraw = new DebugMesh(mDevice, mDeviceContext, m2[0]);
-
-
-
 	}
 	else if (val == 2)
 	{

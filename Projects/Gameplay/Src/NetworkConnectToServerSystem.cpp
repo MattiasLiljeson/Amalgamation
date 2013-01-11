@@ -35,7 +35,7 @@ void NetworkConnectToServerSystem::processEntities( const vector<Entity*>& p_ent
 	else
 	{
 		m_isLookingForConnection = false;
-		m_world->getSystem(SystemType::NetworkCommunicatorSystem)->setEnabled(true);
+		m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
 		setEnabled(false);
 	}
 }

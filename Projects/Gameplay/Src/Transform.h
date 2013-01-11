@@ -45,7 +45,10 @@ public:
 	/// \param p_scale
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale);
+	Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
+		const AglVector3& p_scale);
+
+	Transform(const AglMatrix& p_matrix);
 
 	~Transform();
 
@@ -60,7 +63,7 @@ public:
 	/// \param p_translation The new translation as a vector
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setTranslation( const AglVector3 p_translation );
+	void setTranslation( const AglVector3& p_translation );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The scale vector.
@@ -71,7 +74,7 @@ public:
 	/// \param p_scale The new scale as a vector
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setScale( const AglVector3 p_scale );
+	void setScale( const AglVector3& p_scale );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The rotation quaternion.
@@ -82,7 +85,35 @@ public:
 	/// \param p_rotation The new rotation as a quaternion
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setRotation( const AglQuaternion p_rotation );
+	void setRotation( const AglQuaternion& p_rotation );
+
+	///-----------------------------------------------------------------------------------
+	/// Set forward vector
+	/// \param p_forward
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setForward( const AglVector3& p_forward );
+
+	///-----------------------------------------------------------------------------------
+	/// Set right vector
+	/// \param p_right
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setRight( const AglVector3& p_right );
+
+	///-----------------------------------------------------------------------------------
+	/// Set up vector
+	/// \param p_up
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setUp( const AglVector3& p_up );
+
+	///-----------------------------------------------------------------------------------
+	/// Set the matrix and update vectors
+	/// \param p_matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMatrix(const AglMatrix& p_matrix);
 
 	///-----------------------------------------------------------------------------------
 	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
@@ -118,6 +149,12 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void calcCompMatrix();
+
+	///-----------------------------------------------------------------------------------
+	/// Calculate components from matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void calcComponents();
 
 private:
 	static ComponentRegister<Transform> s_reg;

@@ -14,7 +14,7 @@
 
 NetworkInputHandlerSystem::NetworkInputHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkInputHandlerSystem, 3,
-	ComponentType::NetworkSynced, ComponentType::ShipController,
+	ComponentType::NetworkSynced, ComponentType::ShipFlyController,
 	ComponentType::PhysicsBody )
 {
 	m_server = p_server;

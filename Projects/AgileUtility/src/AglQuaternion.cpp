@@ -87,7 +87,7 @@ AglQuaternion AglQuaternion::rotateToFrom(AglVector3 p_from, AglVector3 p_to)
 	return constructFromAxisAndAngle(axis, angle);
 }
 
-AglQuaternion AglQuaternion::conjugate()
+AglQuaternion AglQuaternion::conjugate() const
 {
 	return AglQuaternion(-u, v);
 }
@@ -99,7 +99,7 @@ void AglQuaternion::normalize()
 	u.z *= frac;
 	v *= frac;
 }
-void AglQuaternion::transformVector(AglVector3& p_vector)
+void AglQuaternion::transformVector(AglVector3& p_vector) const
 {
 	AglQuaternion quat(p_vector, 0);
 
@@ -122,7 +122,7 @@ AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternio
 
 	float denom = sin(phi);
 
-	float factor1 = sin(phi*(1-p_t)) / denom;
+	float factor1 = sin(phi*(1.0f-p_t)) / denom;
 	float factor2 = sin(phi*p_t) / denom;
 
 	return p_q1 * factor1 + p_q2 * factor2;

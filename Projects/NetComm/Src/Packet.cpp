@@ -4,19 +4,38 @@
 #include <stdexcept>
 #include <climits>
 
+
+Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
+{
+	clear();
+	m_senderId = p_senderId;
+	setData(p_data,p_size);
+}
+
+Packet::Packet( char p_packetType )
+{
+	clear();
+	m_packetType = p_packetType;
+	*this << m_packetType;
+}
+
 Packet::Packet()
 {
 	clear();
-}
-
-Packet::Packet( int p_senderId )
-{
-	m_senderId = p_senderId;
+	m_packetType = -1;
 }
 
 Packet::~Packet()
 {
 
+}
+
+void Packet::clear()
+{
+	m_readPos = 1;
+	m_data.resize(1);
+	m_data[0] = 0;  
+	m_senderId = -1;
 }
 
 char* Packet::getDataPtr()
@@ -54,14 +73,6 @@ bool Packet::isEmpty() const
 	return empty;
 }
 
-void Packet::clear()
-{
-	m_readPos = 1;
-	m_data.resize(1);
-	m_data[0] = 0;
-	m_senderId = -1;
-}
-
 Packet& Packet::operator << ( bool p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -77,7 +88,14 @@ Packet& Packet::operator << (char p_data)
 }
 
 Packet& Packet::operator << (short p_data)
-{	
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator<<( unsigned short p_data )
+{
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
 	return *this;
@@ -118,6 +136,13 @@ Packet& Packet::operator <<( AglQuaternion p_data )
 	return *this;
 }
 
+Packet& Packet::operator<<( SYSTEMTIME p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator>>( bool& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -138,6 +163,14 @@ Packet& Packet::operator >> (short& p_data)
 	ReadData(&p_data, dataSize);
 	return *this;
 }
+
+Packet& Packet::operator>>( unsigned short& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
 
 Packet& Packet::operator >> (int& p_data)
 {
@@ -174,6 +207,12 @@ Packet& Packet::operator>>( AglQuaternion& p_data )
 	return *this;
 }
 
+Packet& Packet::operator>>( SYSTEMTIME& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
 
 void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 {

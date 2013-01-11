@@ -5,11 +5,12 @@
 /* a _ before to use the local server. Otherwise start a separate server*/
 /* by compiling the server app and run it.								*/
 /************************************************************************/
-#define _COMBINE_CLIENT_AND_SERVER
+#define COMBINE_CLIENT_AND_SERVER
 
 /************************************************************************/
 /* Enables or disables the sound creation for easy use of instead of	*/
-/* removing code														*/
+/* removing code, ENABLE_SOUND = enables sound							*/
+/* _ENABLE_SOUND = disable sound										*/
 /************************************************************************/
 #define _ENABLE_SOUND
 
@@ -28,11 +29,16 @@
 #include <TcpClient.h> 
 #include <windows.h>
 
+#ifndef _WINDEF_
+	class HINSTANCE__; // Forward or never
+	typedef HINSTANCE__* HINSTANCE;
+#endif
+
 class EntityFactory;
 class EntityWorld;
 class TcpClient;
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 namespace Srv
 {
 	class ServerApplication;
@@ -65,6 +71,8 @@ private:
 	void initSounds();
 	void initSoundSystem();
 
+	void InitModulesTestByAnton();
+
 private:
 	HINSTANCE m_hInstance;
 
@@ -72,7 +80,7 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
-#ifdef _COMBINE_CLIENT_AND_SERVER
+#ifdef COMBINE_CLIENT_AND_SERVER
 	Srv::ServerApplication* m_serverApp;
 #endif
 };

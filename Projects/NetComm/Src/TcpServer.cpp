@@ -1,7 +1,7 @@
+#include <boost/asio/io_service.hpp>
 #include "TcpServer.h"
 
 #include <exception>
-#include <boost/asio/io_service.hpp>
 
 #include "ProcessMessageClientConnected.h"
 #include "ProcessMessageReceivePacket.h"
@@ -122,17 +122,18 @@ unsigned int TcpServer::newPacketsCount()
 
 Packet TcpServer::popNewPacket()
 {
-	Packet packet;
+	
 	if ( !m_newPackets.empty() )
 	{	
-		packet = m_newPackets.front();
+		Packet packet = m_newPackets.front();
 		m_newPackets.pop();
+		return packet;
 	}
 	else
 	{
 		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
-	return packet;
+	return NULL;
 }
 
 void TcpServer::processMessages()

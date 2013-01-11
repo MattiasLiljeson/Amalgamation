@@ -8,8 +8,10 @@
 #include "TextureParser.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "MeshLoadException.h"
 
 #include <AglReader.h>
+#include <FileCheck.h>
 #include "D3DException.h"
 #include "D3DUtil.h"
 
@@ -269,7 +271,8 @@ void GraphicsWrapper::flipBackBuffer()
 }
 
 unsigned int GraphicsWrapper::createMesh( const string& p_name,
-										  const string* p_path/*=NULL*/ )
+										  const string* p_path/*=NULL*/,
+										  ConnectionPointCollection* p_outConnectionPoints/*=NULL*/)
 {
 	// =============================================
 	//
@@ -302,6 +305,23 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			// and then set the resulting data to the mesh
 			mesh->setTextureId(materialInfo);
 		}
+		else if (p_name=="P_sphere")
+		{
+			MaterialInfo materialInfo;
+			Mesh* mesh = m_bufferFactory->createSphereMesh(); // construct a mesh
+			meshResultId = m_meshManager->addResource(p_name,mesh);	   // put in manager
+			// (Here you might want to do similar checks for textures/materials
+			// For now we have a hard coded texture path, but later on
+			// we probably get this path from a mesh file loader or similar.
+			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
+				createTexture("10x10.png",TESTTEXTUREPATH));
+			materialInfo.setTextureId(MaterialInfo::NORMALMAP,
+				createTexture("testtexture.png",TESTTEXTUREPATH));
+			// and their managers.)
+			// ...
+			// and then set the resulting data to the mesh
+			mesh->setTextureId(materialInfo);
+		}
 		else
 		// =============================================
 		// MODEL FILES
@@ -311,12 +331,19 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 			string fullPath;
 			if (p_path!=NULL) fullPath = *p_path;
 			fullPath += p_name;
+			// test file
+			string fileChkMsg;
+			if (!isFileOk(fullPath,fileChkMsg,__FILE__,__FUNCTION__,__LINE__))
+				throw MeshLoadException(fileChkMsg);
 			// read file and extract scene
 			AglReader meshReader(fullPath.c_str());
 			AglScene* aglScene = meshReader.getScene();
 			//
 			if (aglScene)
 			{ 
+				// ------------------
+				// Mesh
+				// ------------------
 				// only handle one mesh for now.
 				AglMesh* aglMesh = aglScene->getMeshes()[0];
 				AglMeshHeader aglMeshHeader = aglMesh->getHeader();
@@ -329,7 +356,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// Internal mesh format creation
 				Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
 																numVertices,
-																numIndices);   
+																numIndices);
 				// put in manager
 				meshResultId = m_meshManager->addResource(p_name,mesh);	
 				// (Here you might want to do similar checks for textures/materials
@@ -343,6 +370,21 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 				// ...
 				// and then set the resulting data to the mesh
 				mesh->setTextureId(materialInfo);
+
+				// ------------------
+				// Connection points
+				// ------------------
+				if (p_outConnectionPoints!=NULL)
+				{
+					for (unsigned int i=0;i<aglScene->getConnectionPointCount();i++)
+					{
+						RawTransformData dat;
+						AglMatrix mat = aglScene->getConnectionPoint(i).transform;
+						for (unsigned int n=0;n<16;n++)
+							dat.transform[n] = mat.data[n];
+						p_outConnectionPoints->m_collection.push_back(dat);
+					}
+				}
 			}
 			else
 			{

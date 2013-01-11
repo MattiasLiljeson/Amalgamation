@@ -51,6 +51,26 @@ private:
 	static void TW_CALL SetParticlesPerSpawn(const void *value, void *clientData);
 	static void TW_CALL GetParticlesPerSpawn(void *value, void *clientData);
 
+	static void TW_CALL SetParticleSizeX(const void *value, void *clientData);
+	static void TW_CALL GetParticleSizeX(void *value, void *clientData);
+	static void TW_CALL SetParticleSizeY(const void *value, void *clientData);
+	static void TW_CALL GetParticleSizeY(void *value, void *clientData);
+
+	static void TW_CALL SetAlphaBlending(void* clientData);
+
+	//Alignment
+	static void TW_CALL SetScreenAlignment(void* clientData);
+	static void TW_CALL SetWorldAlignment(void* clientData);
+	static void TW_CALL SetVelocityDirAlignment(void* clientData);
+	static void TW_CALL SetObserverAlignment(void* clientData);
+
+	//Angular Velocity
+	static void TW_CALL SetSpawnAngularVelocity(const void *value, void *clientData);
+	static void TW_CALL GetSpawnAngularVelocity(void *value, void *clientData);
+
+	//Clone
+	static void TW_CALL Clone(void* clientData);
+
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);
 public:

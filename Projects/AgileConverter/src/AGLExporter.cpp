@@ -69,6 +69,7 @@ void AGLExporter::AddSkeleton(SkeletonData* pData)
 	AglSkeletonHeader h;
 	h.jointCount = pData->Joints.size();
 	h.nameID = mScene->addName(pData->Name);
+	h.baseTransform = AglMatrix::identityMatrix();
 
 	AglJoint* joints = new AglJoint[pData->Joints.size()];
 	for (unsigned int i = 0; i < pData->Joints.size(); i++)
@@ -169,9 +170,10 @@ void AGLExporter::AddMaterialMapping(AglMaterialMapping* pData)
 	mMaterialMappings.push_back(m);
 	mScene->addMaterialMapping(m);
 }
-void AGLExporter::AddConnectionPoint(AglConnectionPoint pCP)
+void AGLExporter::AddConnectionPoint(pair<AglConnectionPoint, string> pCP)
 {
-	mScene->addConnectionPoint(pCP);
+	pCP.first.nameID = mScene->addName(pCP.second);
+	mScene->addConnectionPoint(pCP.first);
 }
 
 void AGLExporter::Write()

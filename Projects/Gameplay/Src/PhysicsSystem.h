@@ -4,6 +4,8 @@
 #include "AglVector3.h"
 
 class PhysicsController;
+class PhysicsBody;
+class Body;
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -29,7 +31,11 @@ public:
 
 private:
 	void initializeEntity(Entity* p_entity);
+	void handleCompoundBodyDependencies(PhysicsBody* p_bodyComponent, Body* p_rigidBody);
 
+	//Temp
+	void addModulesToShip(PhysicsBody* p_body, AglVector3 p_position);
+	void queryShipCollision(Entity* ship, const vector<Entity*>& p_others);
 private:
 	PhysicsController* m_physicsController;
 

@@ -31,6 +31,10 @@ struct ParticleBuffer
 	float FadeOut;
 	float ParticleMaxAge;
 	float Opacity;
+	AglVector4 CameraZ;
+	AglVector4 CameraY;
+	int Alignment;
+	float buff[3];
 };
 
 class ParticleShader

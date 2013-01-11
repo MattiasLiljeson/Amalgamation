@@ -55,6 +55,16 @@ public:
 	int* getIdPointer();
 	void setId( int p_id );
 
+	unsigned int getNumberOfSentPackets();
+	unsigned int getNumberOfReceivedPackets();
+	unsigned int getTotalDataSent();
+	unsigned int getTotalDataReceived();
+
+	void resetNumberOfSentPackets();
+	void resetNumberOfReceivedPackets();
+	void resetTotalDataSent();
+	void resetTotalDataReceived();
+
 private:
 	boost::asio::io_service* m_ioService;
 
@@ -66,5 +76,10 @@ private:
 	queue< Packet > m_newPackets;
 
 	int m_id;
+
+	unsigned int m_numberOfSentPackets;
+	unsigned int m_numberOfReceivedPackets;
+	unsigned int m_totalDataSent;
+	unsigned int m_totalDataReceived;
 
 };

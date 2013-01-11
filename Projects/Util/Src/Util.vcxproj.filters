@@ -4,8 +4,20 @@
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />
+    <ClInclude Include="FileCheck.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueClamp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="FileCheck.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{b264805b-dc01-4223-a1cd-30c3db85cb3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

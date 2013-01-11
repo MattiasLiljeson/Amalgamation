@@ -24,6 +24,11 @@ struct AglParticleSystemHeader
 		INPLANE, INSPACE
 	};
 
+	enum AglAlignmentType
+	{
+		SCREEN, WORLD, VELOCITY, OBSERVER
+	};
+
 
 	AglVector3			spawnPoint;
 	AglSpawnType		spawnType;
@@ -31,6 +36,7 @@ struct AglParticleSystemHeader
 	AglSpawnOffsetType	spawnOffsetType;
 	AglVector3			spawnDirection;
 	float				spawnSpeed;
+	float				spawnAngularVelocity;
 	float				particleAge;
 	float				spread; ///< 0 -> 1
 	AglSpreadType		spreadType;
@@ -38,16 +44,27 @@ struct AglParticleSystemHeader
 	AglParticleFormat	particleFormat;
 	float				maxOpacity; ///< 0 -> 1
 	unsigned int		particlesPerSpawn;
+	AglVector2			particleSize;
+	AglVector4			color;
+	float				fadeInStop;
+	float				fadeOutStart;
+	int					textureNameIndex;
+	AglAlignmentType	alignmentType;
+	float				spawnRotation;
+	float				spawnRotationOffset;
 };
 
 struct AglStandardParticle
 {
 	AglVector3	position;
 	AglVector3	velocity;
-	float		size;
+	AglVector2	size;
 	float		age;
+	float		angularVelocity;
+	float		rotation;
 
-	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, float p_size);
+	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
+						float p_angularVelocity, float p_rotation);
 };
 
 
@@ -92,6 +109,13 @@ public:
 	void setOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type);
 	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn);
 	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
+	void setParticleSize(AglVector2 p_size);
+	void setSpawnAngularVelocity(float p_angularVelocity);
+	void setColor(AglVector4 p_color);
+	void setFadeOutStart(float p_fadeOutStart);
+	void setFadeInStop(float p_fadeInStop);
+	void setTextureNameIndex(int p_textureNameIndex);
+	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
 
 	void restart();
 

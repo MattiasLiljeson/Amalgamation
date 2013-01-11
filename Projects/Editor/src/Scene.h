@@ -85,6 +85,14 @@ public:
 	{
 		return mParticleSystems[pIndex];
 	}
+	vector<ParticleSystem*> GetParticleSystems()
+	{
+		return mParticleSystems;
+	}
+	vector<AglConnectionPoint> getConnectionPoints()
+	{
+		return mAglScene->getConnectionPoints();
+	}
 	vector<Mesh*> GetMeshes() { return mMeshes; }
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);
@@ -107,6 +115,10 @@ public:
 
 	bool IsLeftHanded();
 	void SetCoordinateSystem(AglCoordinateSystem pSystem);
+
+	void Transform(AglMatrix p_transform);
+
+	AglScene* getAglScene(){ return mAglScene; }
 };
 
 #endif

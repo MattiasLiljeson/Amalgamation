@@ -16,6 +16,8 @@ class RigidBody : public Body
 {
 private:
 		CompoundBody* mParent;
+		bool mImpulseEnabled;
+		bool mCollisionEnabled;
 
 protected:
 		AglBoundingSphere mBoundingSphere;
@@ -26,9 +28,9 @@ protected:
 	void ComputeInertia();
 public:
 	RigidBody();
-	RigidBody(AglVector3 pPosition);
-	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
-	RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
+	RigidBody(AglVector3 pPosition, bool pImpulseEnabled = false);
+	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false, bool pImpulseEnabled = false);
+	RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false, bool pImpulseEnabled = false);
 	virtual ~RigidBody();
 	virtual RigidBodyType	GetType() = 0;
 
@@ -73,7 +75,13 @@ public:
 	virtual AglVector3 GetLocalCenterOfMass() = 0;
 
 	void SetParent(CompoundBody* pParent);
+	void SetParent(CompoundBody* pParent, AglMatrix pLocalTransform);
 	CompoundBody* GetParent();
+
+	bool IsImpulseEnabled(){ return mImpulseEnabled; }
+	bool IsCollisionEnabled(){ return mCollisionEnabled; }
+
+	void SetCollisionEnabled(bool pEnabled){ mCollisionEnabled = pEnabled; }
 };
 
 #endif

@@ -29,6 +29,7 @@ public:
 	virtual ~CompoundBody();
 
 	void AddChild(RigidBody* pRigidBody);
+	void AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform);
 	void DetachChild(RigidBody* pRigidBody);
 	float GetMass();
 	float GetInvMass();
@@ -37,6 +38,8 @@ public:
 	AglVector3 GetAngularVelocity();
 	AglVector3 GetCenterOfMass();
 
+	bool IsCompoundBody();
+
 	void AddImpulse(AglVector3 pImpulse);
 	void AddAngularImpulse(AglVector3 pAngularImpulse);
 
@@ -44,6 +47,8 @@ public:
 	void RevertPosition();
 
 	AglMatrix GetInverseInertiaWorld();
+
+	vector<RigidBody*> GetChildren(){ return mChildren; }
 };
 
 #endif // HEADER_H

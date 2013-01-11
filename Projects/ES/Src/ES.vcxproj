@@ -51,6 +51,7 @@
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="SystemType.h" />
+    <ClInclude Include="Tag.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ingredient.h" />

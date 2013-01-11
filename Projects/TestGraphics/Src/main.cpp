@@ -33,7 +33,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 	catch (exception &e)
 	{
-		DEBUGPRINT((e.what()));
+		DEBUGWARNING((e.what()));
 		return -1;
 	}
 

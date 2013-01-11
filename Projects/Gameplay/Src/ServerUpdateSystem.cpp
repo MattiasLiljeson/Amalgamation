@@ -1,4 +1,4 @@
-#include "NetworkUpdateSystem.h"
+#include "ServerUpdateSystem.h"
 #include <TcpServer.h>
 #include <Entity.h>
 
@@ -6,17 +6,17 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 
-NetworkUpdateSystem::NetworkUpdateSystem( TcpServer* p_server )
+ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
 {
 	m_server = p_server;
 }
 
-NetworkUpdateSystem::~NetworkUpdateSystem()
+ServerUpdateSystem::~ServerUpdateSystem()
 {
 }
 	
-void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
+void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
@@ -27,8 +27,8 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			m_world->getComponentManager()->getComponent(
 			p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-		if( netSync->getNetworkType() == NetworkType::Ship ||
-			netSync->getNetworkType() == NetworkType::Prop)
+		if( netSync->getNetworkType() == EntityType::Ship ||
+			netSync->getNetworkType() == EntityType::Prop)
 		{
 
 
@@ -49,6 +49,6 @@ void NetworkUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
-void NetworkUpdateSystem::initialize()
+void ServerUpdateSystem::initialize()
 {
 }

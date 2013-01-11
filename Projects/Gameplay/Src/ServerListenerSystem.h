@@ -5,7 +5,7 @@
 class TcpServer;
 
 // =======================================================================================
-//                                      NetworkListenerSystem
+//                                      ServerListenerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -19,11 +19,11 @@ class TcpServer;
 ///---------------------------------------------------------------------------------------
 
 
-class NetworkListenerSystem: public EntitySystem
+class ServerListenerSystem: public EntitySystem
 {
 public:
-	NetworkListenerSystem( TcpServer* p_server );
-	~NetworkListenerSystem();
+	ServerListenerSystem( TcpServer* p_server );
+	~ServerListenerSystem();
 
 	virtual void processEntities(const vector<Entity*>& p_entities );
 

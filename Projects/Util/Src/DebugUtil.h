@@ -21,3 +21,25 @@
 #else
 	#define DEBUGPRINT(x)
 #endif
+
+// Warning version
+#ifdef _DEBUG
+static void debugWarn(const char* msg);
+#define DEBUGWARNING(x) debugWarn x
+#ifdef WINAPI
+#include <Windows.h>
+void debugWarn(const char* msg)
+{
+	OutputDebugStringA(msg);
+	MessageBoxA(NULL, msg, "Warning!", MB_ICONWARNING);
+}
+#else
+#include <iostream>
+void debugWarn(const char* msg)
+{
+	std::cout<<msg;
+}
+#endif
+#else
+#define DEBUGWARNING(x)
+#endif

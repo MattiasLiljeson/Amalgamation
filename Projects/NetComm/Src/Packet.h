@@ -15,6 +15,7 @@
 
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <Windows.h>
 
 using namespace std;
 
@@ -22,17 +23,30 @@ class Packet
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Creates a packet with sender id set to -1 (no sender).
+	/// Deprecated! Use one of the other constructors instead!!!!
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	Packet();
+
+	///-----------------------------------------------------------------------------------
+	/// Creates a new packet from raw data.
+	/// Sets the raw data of the packet. It is possible to stream out so much data
+	///	that equals to the byte size p_size - 1, since one byte is allocated to
+	///	the packet size itself.
+	/// \param p_senderId
+	/// \param p_data
+	/// \param p_size
+	/// \return 
+	///-----------------------------------------------------------------------------------
+	Packet(int p_senderId,char* p_data, unsigned int p_size );
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a packet with its sender id.
 	/// \param p_senderId
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Packet( int p_senderId );
+	Packet( char p_packetType );
+
 
 	~Packet();
 
@@ -45,11 +59,14 @@ public:
 	/// getDataSize() method will return 13.
 	unsigned int getDataSize() const;
 
-	/// Sets the raw data of the packet. It is possible to stream out so much data
-	/// that equals to the byte size p_size - 1, since one byte is allocated to
-	/// the packet size itself.
-	void setData(char* p_data, unsigned int p_size);
 	bool isEmpty() const;
+
+	///-----------------------------------------------------------------------------------
+	/// Clears the data array and sets it to size 1. The first position of the array is
+	/// reserved for the length of the array.
+	/// Used when packing and unpacking the data array.
+	/// \return void
+	///-----------------------------------------------------------------------------------
 	void clear();
 
 	///-----------------------------------------------------------------------------------
@@ -57,6 +74,14 @@ public:
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	int getSenderId();
+
+
+	///-----------------------------------------------------------------------------------
+	/// Returns the packet type, it's the overall packet type and not be confused with 
+	/// EntityType
+	/// \return int
+	///-----------------------------------------------------------------------------------
+	int getPacketType();
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the identity of the sender.
@@ -68,29 +93,37 @@ public:
 	Packet& operator << (bool	p_data);
 	Packet& operator << (char	p_data);
 	Packet& operator << (short	p_data);
+	Packet& operator << (unsigned short p_data);
 	Packet& operator << (int	p_data);
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3 p_data);
 	Packet& operator << (AglQuaternion p_data);
+	Packet& operator << (SYSTEMTIME p_data);
 	
 	Packet& operator >> (bool&	p_data);
 	Packet& operator >> (char&	 p_data);
 	Packet& operator >> (short&	 p_data);
+	Packet& operator >> (unsigned short& p_data);
 	Packet& operator >> (int&	 p_data);
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglVector3& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
+	Packet& operator >> (SYSTEMTIME& p_data);
 
 private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
 	void ReadData(void* p_data, unsigned int p_dataSize);
 
+	/// Sets the raw data of the packet. It is possible to stream out so much data
+	/// that equals to the byte size p_size - 1, since one byte is allocated to
+	/// the packet size itself.
+	void setData(char* p_data, unsigned int p_size);
+
 private:
 	int m_readPos;
 	vector<char> m_data;
-
+	char m_packetType;
 	int m_senderId;
-
 };

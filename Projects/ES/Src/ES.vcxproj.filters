@@ -123,5 +123,8 @@
     <None Include="Ingredient.h">
       <Filter>Assemblages</Filter>
     </None>
+    <ClInclude Include="Tag.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

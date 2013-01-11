@@ -8,6 +8,9 @@ cbuffer cbPerFrame : register(b0)
 	float fadeOut;
 	float particleMaxAge;
 	float maxOpacity;
+	float4 CameraZ;
+	float4 CameraY;
+	int Alignment;
 };
 
 cbuffer cbFixed
@@ -24,8 +27,11 @@ cbuffer cbFixed
 struct VS_OUT
 {
 	float3 Position  : POSITION;
-	float Size : SIZE;
+	float2 Size : SIZE;
 	float  Age	: AGE;
+	float3 Velocity : VELOCITY;
+	float AngularVelocity  : ANGULARVELOCITY;
+	float Rotation		   : ROTATION;
 };
 
 struct GS_OUT
@@ -38,28 +44,61 @@ struct GS_OUT
 [maxvertexcount(4)]
 void GShader(point VS_OUT gIn[1], 
             inout TriangleStream<GS_OUT> triStream)
-{	
-	float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
-	float3 right = normalize(cross(float3(0,1,0), look));
-	float3 up    = cross(look, right);
-	
+{		
 	matrix W;
-	W[0] = float4(right,       0.0f);
-	W[1] = float4(up,          0.0f);
-	W[2] = float4(look,        0.0f);
-	W[3] = float4(gIn[0].Position, 1.0f);
+	if (Alignment == 0) //Observer
+	{
+		float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
+		float3 right = normalize(cross(float3(0,1,0), look));
+		float3 up    = cross(look, right);
+		W[0] = float4(right,       0.0f);
+		W[1] = float4(up,          0.0f);
+		W[2] = float4(look,        0.0f);
+		W[3] = float4(gIn[0].Position, 1.0f);
+	}
+	else if (Alignment == 1) //Screen
+	{
+		float3 look  = -CameraZ.xyz;
+		float3 up    = CameraY.xyz;
+		float3 right = normalize(cross(up, look));
+		W[0] = float4(right,       0.0f);
+		W[1] = float4(up,          0.0f);
+		W[2] = float4(look,        0.0f);
+		W[3] = float4(gIn[0].Position, 1.0f);
+	}
+	else if (Alignment == 2) //World Up
+	{
+		float3 up 	 = float3(0, 1, 0);
+		float3 right = normalize(cross(up, gEyePosW.xyz - gIn[0].Position));
+		float3 look  = cross(right, up);
+		W[0] = float4(right,       0.0f);
+		W[1] = float4(up,          0.0f);
+		W[2] = float4(look,        0.0f);
+		W[3] = float4(gIn[0].Position, 1.0f);
+	}
+	else //Velocity
+	{
+		float3 right = normalize(gIn[0].Velocity);
+		float3 up 	 = normalize(cross(gEyePosW.xyz - gIn[0].Position, right));
+		float3 look  = cross(right, up);
+		W[0] = float4(right,       0.0f);
+		W[1] = float4(up,          0.0f);
+		W[2] = float4(look,        0.0f);
+		W[3] = float4(gIn[0].Position, 1.0f);
+	}
 	
-	matrix rot = matrix(cos(gIn[0].Age), -sin(gIn[0].Age), 0, 0,
-						sin(gIn[0].Age), cos(gIn[0].Age), 0, 0,
-						0, 0, 0, 0,
+	
+	matrix rot = matrix(cos(gIn[0].Rotation), -sin(gIn[0].Rotation), 0, 0,
+						sin(gIn[0].Rotation), cos(gIn[0].Rotation), 0, 0,
+						0, 0, 1, 0,
 						0, 0, 0, 1);
 
 	W = mul(rot, W);
 	matrix vp = mul(gView, gProj);
 	matrix WVP = mul(W, vp);
 	
-	float halfWidth  = 0.5f*gIn[0].Size;
-	float halfHeight = 0.5f*gIn[0].Size;
+	float halfWidth  = 0.5f*gIn[0].Size.x;
+	float halfHeight = 0.5f*gIn[0].Size.y;
 
 	float4 v[4];
 	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);
