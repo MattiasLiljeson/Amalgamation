@@ -31,7 +31,7 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::run()
 {
-	generateLevelPieces(2);
+	generateLevelPieces(1);
 	//debugPrintTransformTree();
 }
 

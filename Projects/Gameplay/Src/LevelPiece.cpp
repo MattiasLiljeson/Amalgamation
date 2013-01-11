@@ -69,7 +69,8 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
 	//mat.SetForward( mat.GetBackward() );
 	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
-	temp.setForward( -temp.getMatrix().GetForward() );
+	temp.setForwardDirection( -temp.getForward() );
+	//temp.setForwardDirection( AglVector3::up() );
 
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
 	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );

@@ -302,24 +302,6 @@ void ClientApplication::initEntities()
 	//m_world->addEntity(entity);
 
 
-	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
-	{
-		for( int y=0; y<8; y++ )
-		{
-			for( int z=0; z<8; z++ )
-			{
-				entity = m_world->createEntity();
-				component = new RenderInfo( sphereMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-				entity->addComponent( ComponentType::Transform, component );
-
-				m_world->addEntity(entity);
-			}
-		}
-
-	}
 
 	// Create a "spaceship"
 	entity = m_world->createEntity();
@@ -362,6 +344,28 @@ void ClientApplication::initEntities()
 
 	InitModulesTestByAnton();
 
+	// Add a grid of cubes to test instancing.
+	for( int x=0; x<8; x++ )
+	{
+		for( int y=0; y<8; y++ )
+		{
+			for( int z=0; z<8; z++ )
+			{
+				entity = m_world->createEntity();
+				component = new RenderInfo( cubeMeshId );
+				entity->addComponent( ComponentType::RenderInfo, component );
+				component = new Transform( AglVector3(.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z),
+											AglQuaternion::identity(), 
+										   AglVector3(1.0f,1.0f,5.0f)
+										   );
+				entity->addComponent( ComponentType::Transform, component );
+				component = new LookAtEntity(shipId);
+				entity->addComponent( ComponentType::LookAtEntity, component );
+				m_world->addEntity(entity);
+			}
+		}
+
+	}
 
 	//Create a camera
 	float aspectRatio = 

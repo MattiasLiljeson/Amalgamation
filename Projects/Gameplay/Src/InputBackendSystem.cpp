@@ -39,7 +39,7 @@ void InputBackendSystem::initialize()
 	XInputFetcher* xInput = new XInputFetcher();
 	//IMouseKeyboardFetcher* milf = new MessageLoopFetcher( false );
 	HWND hWnd = m_graphicsBackend->getWindowRef();
-	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, true );
 	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;
@@ -123,61 +123,13 @@ void InputBackendSystem::initialize()
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
 
 }
-/*
-void InputBackendSystem::processEntities( const vector<Entity*>& p_entities )
-{
-	
-	m_inputManager->update();
-	
-	if( p_entities.size() > 0 )
-	{
-		Input* input = static_cast<Input*>(
-			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Input ) );
 
-		CameraInfo* cameraInfo = static_cast<CameraInfo*>(
-			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
 
-		Transform* transform = static_cast<Transform*>(
-			p_entities[0]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
-		if( cameraInfo != NULL )
-		{
-			double x = 0.0, y = 0.0, z = 0.0;
-			x += m_inputManager->getControl(m_controlIdxs["Mouse X positive"])->getStatus();
-			x -= m_inputManager->getControl(m_controlIdxs["Mouse X negative"])->getStatus();
-			y += m_inputManager->getControl(m_controlIdxs["Mouse Y positive"])->getStatus();
-			y -= m_inputManager->getControl(m_controlIdxs["Mouse Y negative"])->getStatus();
-			z += m_inputManager->getControl(m_controlIdxs["Keyboard key W"])->getStatus();
-			z -= m_inputManager->getControl(m_controlIdxs["Keyboard key S"])->getStatus();
-
-			AglVector3 position = transform->getTranslation();
-			double sensitivityMult = 1000.0;
-			position.x -= x*sensitivityMult;
-			position.y -= y*sensitivityMult;
-			position.z -= z; 
-			transform->setTranslation( position );
-		}
-
-	}
-	if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == 1.0 )
-	{
-		// L pressed
-		EntitySystem* connectionSystem = m_world->getSystem(
-			SystemType::NetworkConnectoToServerSystem );
-
-		connectionSystem->setEnabled( true );
-	}
-	else if( m_inputManager->getControl( m_controlIdxs["Keyboard key L"] )->getDelta() == -1.0 )
-	{
-		// L released
-	}
-	
-}
-*/
 void InputBackendSystem::process()
 {
 	m_inputManager->update();
 	m_cursor->update();
+	updateAntTweakBar();
 }
 
 Cursor* InputBackendSystem::getCursor()
@@ -267,4 +219,16 @@ void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_i
 	{
 		p_vec->resize(p_idx+1);
 	}
+}
+
+void InputBackendSystem::updateAntTweakBar()
+{
+	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
+		m_cursor->getY());
+	int mouseX = mousePos.first;
+	int mouseY = mousePos.second;
+
+	AntTweakBarWrapper::getInstance()->setMousePos(mouseX,mouseY);
+	// for (int i=0;i<
 }

@@ -60,6 +60,18 @@ void AntTweakBarWrapper::handleMessage( HWND hWnd, UINT message, WPARAM wParam,
 		return; // event has been handled by AntTweakBar
 }
 
+
+void AntTweakBarWrapper::setMousePos( int p_mouseX, int p_mouseY )
+{
+	TwMouseMotion(p_mouseX,p_mouseY);
+}
+
+void AntTweakBarWrapper::setKeyPressed( int p_keyASCII, int p_modifier )
+{
+	TwKeyPressed(p_keyASCII,p_modifier);
+}
+
+
 void AntTweakBarWrapper::addReadOnlyVariable(BarType p_barType, const char* p_name, 
 											 TwType p_type, const void *p_var, 
 											 const char* p_misc)
