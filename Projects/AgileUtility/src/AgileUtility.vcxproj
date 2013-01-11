@@ -15,6 +15,7 @@
     <ClInclude Include="AglAABB.h" />
     <ClInclude Include="AglBoundingSphere.h" />
     <ClInclude Include="AglBoxMesh.h" />
+    <ClInclude Include="AglCollision.h" />
     <ClInclude Include="AglHull.h" />
     <ClInclude Include="AglInteriorSphereGrid.h" />
     <ClInclude Include="AglLooseBspTree.h" />
@@ -31,6 +32,7 @@
     <ClCompile Include="AglAABB.cpp" />
     <ClCompile Include="AglBoundingSphere.cpp" />
     <ClCompile Include="AglBoxMesh.cpp" />
+    <ClCompile Include="AglCollision.cpp" />
     <ClCompile Include="AglHull.cpp" />
     <ClCompile Include="AglInteriorSphereGrid.cpp" />
     <ClCompile Include="AglLooseBspTree.cpp" />
