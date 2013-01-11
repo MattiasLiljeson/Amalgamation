@@ -51,7 +51,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			double pressed = leftBtnControl->getStatus();
 			if(pressed == 1.0)
 			{
-				if (gun->coolDown == 0)
+				if (gun->coolDown == 0 && module->m_highlighted)
 				{
 					spawnBullet(p_entities[i]);
 				}

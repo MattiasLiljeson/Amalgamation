@@ -40,6 +40,7 @@ public:	//Enums
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
 		RocketLauncherModuleControllerSystem,
+		ShipModulesControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

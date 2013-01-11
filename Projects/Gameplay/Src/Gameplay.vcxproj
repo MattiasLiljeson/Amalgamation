@@ -63,6 +63,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="ShipControllerSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
+    <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="Transform.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="RenderPrepSystem.cpp" />
     <ClCompile Include="ShipControllerSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
+    <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="Transform.cpp" />
