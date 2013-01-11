@@ -69,8 +69,6 @@
     </Filter>
     <Filter Include="Components\Gameplay">
       <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
-    <Filter Include="Components\Gameplay">
-      <UniqueIdentifier>{1ca29702-6777-423d-a727-46202f89623b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Gameplay\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
@@ -236,6 +234,7 @@
     </ClInclude>
     <ClInclude Include="PlayerCameraController.h">
       <Filter>Components\Gameplay</Filter>
+	</ClInclude>
     <ClInclude Include="ShieldModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -383,7 +382,7 @@
     <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCameraControllerSystem.cpp">
+    <ClCompile Include="PlayerCameraControllerSystem.cpp"></ClCompile>
     <ClCompile Include="ShieldModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
