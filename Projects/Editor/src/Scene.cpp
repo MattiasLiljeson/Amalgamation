@@ -191,10 +191,35 @@ void Scene::Draw()
 	for (unsigned int i = 0; i < mSkeletonMeshes.size(); i++)
 		mSkeletonMeshes[i]->Draw(w, invMax);
 
+	//Get Particle systems
+	vector<pair<ParticleSystem*, float>> sortedPS;
 	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
 	{
-		mParticleSystems[i]->Draw();
+		float dist = mParticleSystems[i]->getCameraDistance(Camera::GetInstance()->GetPosition(), Camera::GetInstance()->LocalZAxis());
+		sortedPS.push_back(pair<ParticleSystem*, float>(mParticleSystems[i], dist));
 	}
+
+	//Sort Particle systems
+	for (unsigned int i = 0; i < sortedPS.size(); i++)
+	{
+		for (unsigned int j = 1; j < sortedPS.size(); j++)
+		{
+			if (sortedPS[j].second > sortedPS[j-1].second)
+			{
+				pair<ParticleSystem*, float> temp = sortedPS[j];
+				sortedPS[j] = sortedPS[j-1];
+				sortedPS[j-1] = temp;
+			}
+		}
+	}
+
+
+	//Draw Particle systems
+	for (unsigned int i = 0; i < sortedPS.size(); i++)
+	{
+		sortedPS[i].first->Draw();
+	}
+
 
 	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
 	for (unsigned int i = 0; i < cp.size(); i++)

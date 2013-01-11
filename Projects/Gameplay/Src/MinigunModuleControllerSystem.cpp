@@ -8,6 +8,8 @@
 #include "..\..\Input\Src\Control.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "PhysicsSystem.h"
+#include "ShipModule.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem()
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -33,7 +35,11 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
-		if (gun)
+		ShipModule* module = static_cast<ShipModule*>(
+			m_world->getComponentManager()->getComponent(p_entities[i],
+			ComponentType::getTypeFor(ComponentType::ShipModule)));
+
+		if (gun && module && module->m_parentEntity >= 0)
 		{
 			handleLaserSight(p_entities[i]);
 
@@ -45,7 +51,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			double pressed = leftBtnControl->getStatus();
 			if(pressed == 1.0)
 			{
-				if (gun->coolDown == 0)
+				if (gun->coolDown == 0 && module->m_highlighted)
 				{
 					spawnBullet(p_entities[i]);
 				}
@@ -121,6 +127,10 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
+
+	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	//physics->getController()
+
 
 	Entity* entity = m_world->createEntity();
 	Component* component = new RenderInfo( cubeMeshId );

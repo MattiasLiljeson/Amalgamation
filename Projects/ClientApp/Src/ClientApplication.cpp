@@ -12,36 +12,51 @@
 #include <AudioInfo.h>
 #include <AudioListener.h>
 #include <BodyInitData.h>
+#include <ConnectionPointSet.h>
+#include <GameplayTags.h>
+#include <HudElement.h>
+#include <MinigunModule.h>
 #include <PhysicsBody.h>
 #include <PhysicsSystem.h>
+#include <PlayerCameraController.h>
 #include <RenderInfo.h>
-#include <ShipFlyController.h>
 #include <ShipEditController.h>
-#include <Transform.h>
-#include <HudElement.h>
+#include <ShipFlyController.h>
 #include <ShipModule.h>
-#include <ConnectionPointSet.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
 #include <GameplayTags.h>
 #include <PlayerCameraController.h>
-
+#include <ShieldModule.h>
+#include <MineLayerModule.h>
+#include <RocketLauncherModule.h>
+#include <Connector1to2Module.h>
+#include <Transform.h>
 
 // Systems
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
+#include <CameraInfo.h>
 #include <CameraSystem.h>
+#include <ClientPacketHandlerSystem.h>
+#include <DisplayPlayerScoreSystem.h>
+#include <EntityFactory.h>
 #include <GraphicsBackendSystem.h>
+#include <HudSystem.h>
 #include <InputBackendSystem.h>
 #include <LibRocketBackendSystem.h>
-#include <ClientPacketHandlerSystem.h>
+#include <LookAtEntity.h>
+#include <LookAtSystem.h>
+#include <MainCamera.h>
+#include <MinigunModuleControllerSystem.h>
 #include <NetworkConnectToServerSystem.h>
 #include <PhysicsSystem.h>
+#include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
-#include <ShipFlyControllerSystem.h>
 #include <ShipEditControllerSystem.h>
+#include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <LookAtSystem.h>
@@ -52,6 +67,11 @@
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <PlayerCameraControllerSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MineControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ShipModulesControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -151,7 +171,8 @@ void ClientApplication::initSystems()
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
-
+	EntityFactory* factory = new EntityFactory( m_world );
+	m_world->setSystem( factory, true);
 
 	/************************************************************************/
 	/* Physics																*/
@@ -245,7 +266,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new MinigunModuleControllerSystem(), true);
-	
+	m_world->setSystem(new ShieldModuleControllerSystem(), true);
+	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
+	m_world->setSystem(new MineControllerSystem(), true);
+	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
+	m_world->setSystem(new ShipModulesControllerSystem, true);
+
 	/************************************************************************/
 	/* Level Gen															*/
 	/************************************************************************/
@@ -258,8 +284,15 @@ void ClientApplication::initSystems()
 
 void ClientApplication::initEntities()
 {
-	Entity* entity;
-	Component* component;
+	Entity* entity = NULL;
+	Component* component = NULL;
+
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
+	EntityFactory* factory = static_cast<EntityFactory*>
+		( m_world->getSystem( SystemType::EntityFactory ) );
+	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
+	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 
@@ -546,7 +579,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
+	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	m_world->addEntity(entity);
 
 	entity = m_world->createEntity();
@@ -564,9 +597,10 @@ void ClientApplication::InitModulesTestByAnton()
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE));
+		BodyInitData::SINGLE, false));
 
-	//entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 
 	m_world->addEntity(entity);
 
@@ -587,6 +621,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false));
 
+	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 	m_world->addEntity(entity);
@@ -612,6 +647,85 @@ void ClientApplication::InitModulesTestByAnton()
 	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
 
 	m_world->addEntity(entity);
+
+
+
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(50, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(50, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, true, true));
+
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(40, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(40, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+	ConnectionPointSet* cpset = new ConnectionPointSet();
+	AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
+	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+
+	m_world->addEntity(entity);
+
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(30, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(30, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+	cpset = new ConnectionPointSet();
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+
+	m_world->addEntity(entity); 
 
 
 	//Ray entity

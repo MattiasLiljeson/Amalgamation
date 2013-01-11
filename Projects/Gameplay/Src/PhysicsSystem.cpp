@@ -7,7 +7,8 @@
 #include "GraphicsBackendSystem.h"
 #include "ConnectionPointSet.h"
 #include "ShipFlyController.h"
-
+#include "ShipModule.h"
+#include "Connector1to2Module.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -232,12 +233,12 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 	if (!cps)
 		return;
 
-	int cp = 0;
-	while (cp < cps->m_connectionPoints.size() && cps->m_connectionPoints[cp].cpConnectedEntity >= 0)
-		cp++;
+	vector<pair<ConnectionPoint*, Entity*>> connectionPoints = getFreeConnectionPoints(cps, ship);
 
-	if (cp >= cps->m_connectionPoints.size())
+	if (connectionPoints.size() == 0)
 		return;
+
+	int curr = 0;
 
 
 	PhysicsBody* body =
@@ -250,29 +251,95 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 	{
 		for (unsigned int i = 0; i < p_others.size(); i++)
 		{
-			PhysicsBody* module =
+			PhysicsBody* PhysModule =
 				static_cast<PhysicsBody*>(
 				m_world->getComponentManager()->getComponent(p_others[i],
 				ComponentType::getTypeFor(ComponentType::PhysicsBody)));
 
-			if (p_others[i]->getComponent(ComponentType::ShipModule))
+			ShipModule* module = static_cast<ShipModule*>(
+				m_world->getComponentManager()->getComponent(p_others[i],
+				ComponentType::getTypeFor(ComponentType::ShipModule)));
+
+			if (module)
 			{
 				for (unsigned int j = 0; j < collisions.size(); j++)
 				{
-					if (collisions[j] == module->m_id)
+					if (collisions[j] == PhysModule->m_id)
 					{
 						CompoundBody* comp = (CompoundBody*)m_physicsController->getBody(body->m_id);
-						RigidBody* r = (RigidBody*)m_physicsController->getBody(module->m_id);
-						m_physicsController->AttachBodyToCompound(comp, r, cps->m_connectionPoints[cp].cpTransform);
-						cps->m_connectionPoints[cp].cpConnectedEntity = p_others[i]->getIndex();
-						module->setParentId(body->getParentId());
+						RigidBody* r = (RigidBody*)m_physicsController->getBody(PhysModule->m_id);
 
-						cp++;
-						if (cp >= cps->m_connectionPoints.size())
+
+
+						AglMatrix transform = offset(connectionPoints[curr].second, connectionPoints[curr].first->cpTransform);
+						m_physicsController->AttachBodyToCompound(comp, r, transform);
+						connectionPoints[curr].first->cpConnectedEntity = p_others[i]->getIndex();
+						
+						module->m_parentEntity = connectionPoints[curr].second->getIndex();
+
+						PhysModule->setParentId(body->m_id);
+
+						//Kör en return just nu. Kan ändras sen. Tror inte det blir problem
+						return;
+						curr++;
+						if (curr >= connectionPoints.size())
 							return;
 					}
 				}
 			}
 		}
 	}
+}
+
+vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent)
+{
+	vector<pair<ConnectionPoint*, Entity*>> free;
+	for (unsigned int i = 0; i < p_set->m_connectionPoints.size(); i++)
+	{
+		if (p_set->m_connectionPoints[i].cpConnectedEntity < 0)
+			free.push_back(pair<ConnectionPoint*, Entity*>(
+				&p_set->m_connectionPoints[i], p_parent));
+		else
+		{
+			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
+
+			ConnectionPointSet* connector =
+				static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(module,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			if (connector)
+			{
+				vector<pair<ConnectionPoint*, Entity*>> moreFree 
+					= getFreeConnectionPoints(connector, module);
+				for (unsigned int j = 0; j < moreFree.size(); j++)
+					free.push_back(moreFree[j]);
+			}
+		}
+	}
+	return free;
+}
+AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
+{
+	AglMatrix transform = p_base;
+	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+	while (module)
+	{
+		Entity* parent = m_world->getEntity(module->m_parentEntity);
+
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(parent,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		unsigned int ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
+			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				ind = i;
+		}
+
+		transform = transform * cps->m_connectionPoints[ind].cpTransform;
+		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
+		p_entity = parent;
+	}
+	return transform;
 }

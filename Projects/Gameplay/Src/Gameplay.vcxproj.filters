@@ -73,6 +73,9 @@
     <Filter Include="Components\Gameplay">
       <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Gameplay\Modules">
+      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -193,9 +196,6 @@
     <ClInclude Include="MinigunModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="MinigunModuleControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="ServerListenerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
@@ -243,6 +243,39 @@
     </ClInclude>
     <ClInclude Include="PlayerCameraController.h">
       <Filter>Components\Gameplay</Filter>
+	</ClInclude>
+    <ClInclude Include="ShieldModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MineLayerModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardMine.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="MineControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Connector1to2Module.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MineLayerModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketLauncherModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModulesControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -337,9 +370,6 @@
     <ClCompile Include="MinigunModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="MinigunModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="ServerListenerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
@@ -367,7 +397,38 @@
     <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCameraControllerSystem.cpp">
+    <ClCompile Include="PlayerCameraControllerSystem.cpp"></ClCompile>
+    <ClCompile Include="ShieldModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMine.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="MineControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Connector1to2Module.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="RockerLauncherModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>

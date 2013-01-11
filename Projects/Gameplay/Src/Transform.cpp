@@ -1,5 +1,7 @@
 #include "Transform.h"
 
+ComponentRegister<Transform> Transform::s_reg("Transform");
+
 Transform::Transform()
 {
 	m_translation.x = 0.0f;
@@ -13,6 +15,7 @@ Transform::Transform()
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform( float p_posX, float p_posY, float p_posZ )
@@ -28,6 +31,7 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
@@ -38,6 +42,7 @@ Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rot
 	m_scale = p_scale;
 
 	calcCompMatrix();
+	m_type = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglMatrix& p_matrix)
@@ -48,6 +53,37 @@ Transform::Transform(const AglMatrix& p_matrix)
 Transform::~Transform()
 {
 
+}
+
+void Transform::init( vector<ComponentData> p_initData )
+{
+	for( unsigned int i=0; i<p_initData.size(); i++ )
+	{
+		if( p_initData[i].dataName == "m_translationX" )
+			p_initData[i].getData<float>(&m_translation.x);
+		else if( p_initData[i].dataName == "m_translationY" )
+			p_initData[i].getData<float>(&m_translation.y);
+		else if( p_initData[i].dataName == "m_translationZ" )
+			p_initData[i].getData<float>(&m_translation.z);
+
+		else if( p_initData[i].dataName == "m_scaleX" )
+			p_initData[i].getData<float>(&m_scale.x);
+		else if( p_initData[i].dataName == "m_scaleY" )
+			p_initData[i].getData<float>(&m_scale.y);
+		else if( p_initData[i].dataName == "m_scaleZ" )
+			p_initData[i].getData<float>(&m_scale.z);
+
+		AglVector3 u = m_rotation.u;
+		if( p_initData[i].dataName == "m_rotationX" )
+			p_initData[i].getData<float>(&u.x);
+		else if( p_initData[i].dataName == "m_rotationY" )
+			p_initData[i].getData<float>(&u.x);
+		else if( p_initData[i].dataName == "m_rotationZ" )
+			p_initData[i].getData<float>(&u.x);
+		m_rotation.u = u;
+		if( p_initData[i].dataName == "m_rotationW" )
+			p_initData[i].getData<float>(&m_rotation.v);
+	}
 }
 
 const AglVector3& Transform::getTranslation() const

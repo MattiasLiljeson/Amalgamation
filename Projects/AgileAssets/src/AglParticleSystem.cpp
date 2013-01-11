@@ -173,6 +173,18 @@ void AglParticleSystem::setAlignmentType(AglParticleSystemHeader::AglAlignmentTy
 	m_header.alignmentType = p_alignment;
 }
 
+float AglParticleSystem::getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir)
+{
+	if (m_particles.size() == 0)
+		return 0;
+	float minD = abs(AglVector3::dotProduct(m_particles[0].position-p_cameraPos, p_cameraDir));
+	for (unsigned int i = 1; i < m_particles.size(); i++)
+	{
+		minD += abs(AglVector3::dotProduct(m_particles[i].position-p_cameraPos, p_cameraDir));
+	}
+	return minD / m_particles.size();
+}
+
 void AglParticleSystem::restart()
 {
 	m_age = 0;

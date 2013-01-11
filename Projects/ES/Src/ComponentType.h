@@ -54,6 +54,11 @@ public:	//Enums
 		ConnectionPointSet,
 		SpeedBoosterModule,
 		MinigunModule,
+		ShieldModule,
+		MineLayerModule,
+		StandardMine,
+		RocketLauncherModule,
+		Connector1to2Module,
 		NUM_COMPONENT_TYPES
 	};
 

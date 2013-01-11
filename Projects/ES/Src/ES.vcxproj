@@ -12,6 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aspect.cpp" />
+    <ClCompile Include="AssemblageHelper.cpp" />
+    <ClCompile Include="AssemblageReader.cpp" />
+    <ClCompile Include="ComponentData.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentReader.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentType.cpp" />
@@ -19,11 +25,19 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
+    <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="SystemType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
+    <ClInclude Include="AssemblageHelper.h" />
+    <ClInclude Include="AssemblageReader.h" />
+    <ClInclude Include="ComponentData.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentReader.h" />
+    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentType.h" />
@@ -34,9 +48,13 @@
     <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="IPerformer.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="Recipe.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="SystemType.h" />
     <ClInclude Include="Tag.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ingredient.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{78BCBBD0-888F-41CD-8B6F-29539812F67E}</ProjectGuid>
