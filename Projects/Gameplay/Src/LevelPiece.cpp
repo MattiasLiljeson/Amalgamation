@@ -61,7 +61,7 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
-	m_transform->setMatrix(m_transform->getMatrix() * m_connectionPoints[0].inverse());
+	m_transform->setMatrix(m_transform->getMatrix() * m_connectionPoints[0].getMatrix().inverse());
 	m_transform->setScale(tempScale);
 	updateConnectionPoints();
 
@@ -77,52 +77,52 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	p_targetPiece->setChild(p_targetSlot, m_transform);
 	setChild(0, p_targetPiece->getTransform());
 
-	return;
-	// From Proto \\ Anton & Alex
+	//return;
+	//// From Proto \\ Anton & Alex
 
-	// Set the position of this piece to the position of the target, with the offset of
-	// the target connection point and this connection point
-	// connectionPoints are assumed to be in local space relative its parent (piece).
-	// Pieces are assumed to be in global space.
+	//// Set the position of this piece to the position of the target, with the offset of
+	//// the target connection point and this connection point
+	//// connectionPoints are assumed to be in local space relative its parent (piece).
+	//// Pieces are assumed to be in global space.
 
-	AglMatrix thisLocalConnectMat = getLocalConnectionPointMatrix(0);
+	//AglMatrix thisLocalConnectMat = getLocalConnectionPointMatrix(0);
 
-	// Target connection point matrix in world space
-	AglMatrix targetGlobalConnectMat = p_targetPiece->getLocalConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
-	AglQuaternion rotation;
-	AglVector3 scale, translation;
-	targetGlobalConnectMat.toComponents(scale, rotation, translation);
+	//// Target connection point matrix in world space
+	//AglMatrix targetGlobalConnectMat = p_targetPiece->getLocalConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
+	//AglQuaternion rotation;
+	//AglVector3 scale, translation;
+	//targetGlobalConnectMat.toComponents(scale, rotation, translation);
 
-	AglMatrix thisNewGlobalMat = targetGlobalConnectMat * 
-									thisLocalConnectMat.inverse();
+	//AglMatrix thisNewGlobalMat = targetGlobalConnectMat * 
+	//								thisLocalConnectMat.inverse();
 
-	// TODO: Fetch new code from sprint 4 that has AglMatrix::GetRotation()
-	thisNewGlobalMat.toComponents(scale, rotation, translation);
+	//// TODO: Fetch new code from sprint 4 that has AglMatrix::GetRotation()
+	//thisNewGlobalMat.toComponents(scale, rotation, translation);
 
-	rotation *= AglQuaternion::constructFromAxisAndAngle(thisLocalConnectMat.GetRight(), 3.141592f);
-	m_transform->setRotation(rotation);
-	
+	//rotation *= AglQuaternion::constructFromAxisAndAngle(thisLocalConnectMat.GetRight(), 3.141592f);
+	//m_transform->setRotation(rotation);
+	//
 
-	// Positioning
-	// -----------
-	// Get distance from this piece and its connection point. This can be found by taking
-	// the length of the connection point's position since it is defined in local space.
-	AglVector3 thisConnectionPointPosition = thisLocalConnectMat.GetTranslation();
-	float length = thisConnectionPointPosition.length();
-	AglVector3 globalTargetConnectionPointPosition = targetGlobalConnectMat.
-													GetTranslation();
+	//// Positioning
+	//// -----------
+	//// Get distance from this piece and its connection point. This can be found by taking
+	//// the length of the connection point's position since it is defined in local space.
+	//AglVector3 thisConnectionPointPosition = thisLocalConnectMat.GetTranslation();
+	//float length = thisConnectionPointPosition.length();
+	//AglVector3 globalTargetConnectionPointPosition = targetGlobalConnectMat.
+	//												GetTranslation();
 
-	// Move this piece using the forward direction of the target point connection
-	m_transform->setTranslation( globalTargetConnectionPointPosition + 
-								targetGlobalConnectMat.GetForward() * length);
+	//// Move this piece using the forward direction of the target point connection
+	//m_transform->setTranslation( globalTargetConnectionPointPosition + 
+	//							targetGlobalConnectMat.GetForward() * length);
 
-	//m_transform->setTranslation( p_targetPiece->getTransform()->getTranslation() +
-	//							targetConnectionPointMatrix.GetTranslation() +
-	//							thisConnectionPointMatrix.GetTranslation() );
+	////m_transform->setTranslation( p_targetPiece->getTransform()->getTranslation() +
+	////							targetConnectionPointMatrix.GetTranslation() +
+	////							thisConnectionPointMatrix.GetTranslation() );
 
-	// Set this connection to be occupied!
-	p_targetPiece->setChild(p_targetSlot, m_transform);
-	setChild(0, p_targetPiece->getTransform());
+	//// Set this connection to be occupied!
+	//p_targetPiece->setChild(p_targetSlot, m_transform);
+	//setChild(0, p_targetPiece->getTransform());
 }
 
 AglMatrix LevelPiece::getLocalConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
@@ -138,13 +138,13 @@ void LevelPiece::updateConnectionPoints()
 {
 	for (int i = 0; i < m_connectionPoints.size(); i++)
 	{
-		m_connectionPoints[i] = 
+		m_connectionPoints[i] = Transform(
 			AglMatrix( m_localSpaceConnectionPoints->m_collection[i].transform ) *
-			m_transform->getMatrix();
+			m_transform->getMatrix());
 	}
 }
 
 AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex )
 {
-	return m_connectionPoints[p_vectorIndex];
+	return m_connectionPoints[p_vectorIndex].getMatrix();
 }

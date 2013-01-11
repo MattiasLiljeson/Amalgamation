@@ -49,5 +49,5 @@ private:
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;
-	vector<AglMatrix>			m_connectionPoints;
+	vector<Transform>			m_connectionPoints;
 };
