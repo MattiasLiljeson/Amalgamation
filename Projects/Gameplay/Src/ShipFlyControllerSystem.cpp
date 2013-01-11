@@ -13,6 +13,7 @@
 #include "AntTweakBarWrapper.h"
 #include "PhysicsBody.h"
 #include "ShipInputProcessingSystem.h"
+#include "TimerSystem.h"
 
 #include "GameplayTags.h"
 #include "ConnectionPointSet.h"
@@ -40,8 +41,6 @@ ShipFlyControllerSystem::~ShipFlyControllerSystem()
 
 void ShipFlyControllerSystem::initialize()
 {
-
-
 }
 
 void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -84,12 +83,22 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			/************************************************************************/
-			/* Send the thrust packet to the server!								*/
-			/************************************************************************/
-			NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
-				ComponentType::NetworkSynced));
-			sendThrustPacketToServer(netSync,thrustVec, angularVec);
+			m_thrustVec += thrustVec;
+			m_angularVec += angularVec;
+
+			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+				checkTimeInterval(TimerIntervals::Every16Millisecond))
+			{
+				/************************************************************************/
+				/* Send the thrust packet to the server!								*/
+				/************************************************************************/
+				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+					ComponentType::NetworkSynced));
+				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+
+				m_thrustVec = AglVector3();
+				m_angularVec = AglVector3();
+			}
 
 			if (input.stateSwitchInput != 0)
 			{

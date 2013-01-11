@@ -7,6 +7,7 @@
 #include <ServerPacketHandlerSystem.h>
 #include <ServerUpdateSystem.h>
 #include <ServerScoreSystem.h>
+#include <TimerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -84,15 +85,26 @@ namespace Srv
 	void ServerApplication::initSystems()
 	{
 		/************************************************************************/
+		/* Timer																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
+		/************************************************************************/
+		/* Threading															*/
+		/************************************************************************/
 		m_world->setSystem( SystemType::ProcessingMessagesSystem,
 			new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
 			true );
 
+		/************************************************************************/
+		/* Network																*/
+		/************************************************************************/
 		m_world->setSystem( SystemType::NetworkListenerSystem,
 			new ServerWelcomeSystem( m_server ), true );
 

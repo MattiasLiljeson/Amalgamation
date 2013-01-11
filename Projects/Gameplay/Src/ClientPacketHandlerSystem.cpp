@@ -212,17 +212,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
-		/*
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(data.position,
-			AglQuaternion::identity(),
-			data.scale, AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::COMPOUND));
-		*/
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
@@ -246,7 +235,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-		}	
+		}
 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/

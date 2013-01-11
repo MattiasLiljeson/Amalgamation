@@ -70,6 +70,9 @@
     <Filter Include="Components\Gameplay">
       <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Timer">
+      <UniqueIdentifier>{aef8dbad-f361-4ad2-84e9-d250945b623a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -232,6 +235,9 @@
     <ClInclude Include="ServerWelcomeSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="TimerSystem.h">
+      <Filter>Systems\Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -351,6 +357,9 @@
     </ClCompile>
     <ClCompile Include="ServerWelcomeSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerSystem.cpp">
+      <Filter>Systems\Timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

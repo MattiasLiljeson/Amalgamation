@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <AglVector3.h>
 
 class Control;
 class TcpClient;
@@ -8,7 +9,6 @@ class PhysicsSystem;
 class ShipInputProcessingSystem;
 class NetworkSynced;
 class Transform;
-struct AglVector3;
 
 // =======================================================================================
 //                                ShipControllerSystem
@@ -42,5 +42,8 @@ private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
 
-	ShipInputProcessingSystem* m_shipInput;	
+	ShipInputProcessingSystem* m_shipInput;
+
+	AglVector3 m_thrustVec;
+	AglVector3 m_angularVec;
 };

@@ -49,6 +49,7 @@
 #include <LookAtEntity.h>
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
+#include <TimerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -148,6 +149,10 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
+	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 	/************************************************************************/
 	/* Physics																*/
