@@ -27,7 +27,10 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_activeSocket->io_control( nonBlocking );
 
 	m_asyncDataLength = 0;
-	m_asyncDataCapacity = 2048;
+	/************************************************************************/
+	/* We need to find the appropriate size for received data buffer.		*/
+	/************************************************************************/
+	m_asyncDataCapacity = 2048*4;
 	m_asyncData = new char[m_asyncDataCapacity];
 	m_packetRestSize = 0;
 
@@ -63,9 +66,13 @@ void TcpCommunicationProcess::body()
 
 void TcpCommunicationProcess::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue<ProcessMessage*> messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		ProcessMessage* message = popMessage();
+		ProcessMessage* message = messages.front();
+		messages.pop();
 
 		if( message->type == MessageType::TERMINATE )
 		{
@@ -188,13 +195,16 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 					readPtr = m_asyncData + readPosition;
 				}
 			}
+
+			queue<ProcessMessage*> receivePacketMessages;
 			while( !packets.empty() )
 			{
-				m_parent->putMessage( new ProcessMessageReceivePacket(
+				receivePacketMessages.push( new ProcessMessageReceivePacket(
 					this,
-					packets.front() ) );
+					packets.front() ));
 				packets.pop();
 			}
+			m_parent->putMessages( receivePacketMessages );
 
 			startPacketReceiveCallback();
 		}

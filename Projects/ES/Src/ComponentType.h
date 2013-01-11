@@ -59,6 +59,11 @@ public:	//Enums
 		StandardMine,
 		RocketLauncherModule,
 		Connector1to2Module,
+		/************************************************************************/
+		/* Things that should be sent to all clients but its not synced			*/
+		/* afterwards.															*/
+		/************************************************************************/
+		StaticProp,
 		NUM_COMPONENT_TYPES
 	};
 

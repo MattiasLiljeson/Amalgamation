@@ -1,6 +1,7 @@
 #include "ServerUpdateSystem.h"
 #include <TcpServer.h>
 #include <Entity.h>
+#include "TimerSystem.h"
 
 #include "PacketType.h"
 #include "NetworkSynced.h"
@@ -20,31 +21,35 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
-
-	for( unsigned int i=0; i<p_entities.size(); i++ )
+	
+	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::Every8Millisecond) )
 	{
-		netSync = static_cast<NetworkSynced*>(
-			m_world->getComponentManager()->getComponent(
-			p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-
-		if( netSync->getNetworkType() == EntityType::Ship ||
-			netSync->getNetworkType() == EntityType::Prop)
+		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
 
-
-			transform = static_cast<Transform*>(
+			netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent(
-				p_entities[i]->getIndex(), ComponentType::Transform ) );
+				p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-			Packet updateEntityPacket;
-			updateEntityPacket << (char)PacketType::EntityUpdate 
-				<< (char)netSync->getNetworkType() 
-				<< netSync->getNetworkIdentity() 
-				<< transform->getTranslation() 
-				<< transform->getRotation() 
-				<< transform->getScale();
+			if( netSync->getNetworkType() == EntityType::Ship ||
+				netSync->getNetworkType() == EntityType::Prop)
+			{
 
-			m_server->broadcastPacket( updateEntityPacket );
+
+				transform = static_cast<Transform*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::Transform ) );
+
+				Packet updateEntityPacket( (char)PacketType::EntityUpdate );
+				updateEntityPacket << (char)netSync->getNetworkType() 
+					<< netSync->getNetworkIdentity() 
+					<< transform->getTranslation() 
+					<< transform->getRotation() 
+					<< transform->getScale();
+
+				m_server->broadcastPacket( updateEntityPacket );
+			}
 		}
 	}
 }

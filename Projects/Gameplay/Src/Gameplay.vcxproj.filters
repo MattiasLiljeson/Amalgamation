@@ -73,6 +73,9 @@
     <Filter Include="Systems\Gameplay\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Timer">
+      <UniqueIdentifier>{72cfdd05-70c4-46af-b896-f310e2ad1fa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueList.h">
@@ -112,9 +115,6 @@
       <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
     <ClInclude Include="PacketType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
     </ClInclude>
     <ClInclude Include="ShipController.h">
@@ -185,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="MinigunModule.h">
       <Filter>Components\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerListenerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
     <ClInclude Include="ServerPacketHandlerSystem.h">
       <Filter>Systems\Network\Server only</Filter>
@@ -269,6 +266,24 @@
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStaticObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerWelcomeSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerSystem.h">
+      <Filter>Systems\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -356,9 +371,6 @@
     <ClCompile Include="MinigunModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ServerListenerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="ServerPacketHandlerSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
@@ -420,6 +432,21 @@
     </ClCompile>
     <ClCompile Include="MenuItem.cpp">
       <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnectToServerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerStaticObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerWelcomeSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerSystem.cpp">
+      <Filter>Systems\Timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

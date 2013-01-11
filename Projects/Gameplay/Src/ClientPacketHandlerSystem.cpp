@@ -28,7 +28,11 @@
 #include "EntityType.h"
 #include "PacketType.h"
 
-
+// Debug
+#include <DebugUtil.h>
+#include "ShipEditController.h"
+#include "ConnectionPointSet.h"
+#include "TimerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -45,9 +49,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataSentPerSecond = 0;
 	m_dataReceivedPerSecond = 0;
 	m_dataSentCounter = 0;
-	m_dataReceivedCounter;
-
-	m_timerPerSecond = 1.0f;
+	m_dataReceivedCounter = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -66,116 +68,17 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		
 		packet >> packetType;
-#pragma region EntityCreation
-		if (packetType == (char)PacketType::EntityCreation)
-		{
-			NetworkEntityCreationPacket data = readCreationPacket(packet);
-			if (data.networkType == (char)EntityType::Ship )
-			{
-				int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-				Transform* transform = new Transform( data.position, data.rotation, 
-					data.scale);
-
-				Entity* entity = NULL;
-				Component* component;
-
-				/************************************************************************/
-				/* This ship creation code have to be located somewhere else.			*/
-				/************************************************************************/
-				entity = m_world->createEntity();
-				component = new RenderInfo( shipMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = transform;
-				entity->addComponent( ComponentType::Transform, component );
-
-				/************************************************************************/
-				/* HACK: Score should probably be located in another entity.			*/
-				/************************************************************************/
-				component = new PlayerScore();
-				entity->addComponent( ComponentType::PlayerScore, component );
-
-				if(m_tcpClient->getId() == data.owner)
-				{
-					// If "this client" is the entity owner, it may control the ship:
-					component = new ShipFlyController(5.0f, 50.0f);
-					entity->addComponent( ComponentType::ShipFlyController, component );
-				}
-				entity->addComponent(ComponentType::NetworkSynced,
-					new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
-				m_world->addEntity(entity);
-
-				if(data.owner == m_tcpClient->getId())
-				{
-					int shipId = entity->getIndex();
-					float aspectRatio = 
-						static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-						SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-					// A camera from which the world is rendered.
-					entity = m_world->createEntity();
-					component = new CameraInfo( aspectRatio );
-					entity->addComponent( ComponentType::CameraInfo, component );
-					component = new MainCamera();
-					entity->addComponent( ComponentType::MainCamera, component );
-					component = new Transform( -5.0f, 0.0f, -5.0f );
-					entity->addComponent( ComponentType::Transform, component );
-					component = new LookAtEntity(shipId, AglVector3(0,3,-10),
-						AglQuaternion::identity(),0.0f,10.0f);
-					// default tag is follow
-					entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
-					component = new AudioListener();
-					entity->addComponent(ComponentType::AudioListener, component);
-					m_world->addEntity(entity);
-
-					/************************************************************************/
-					/* This is where the audio listener is created and therefor the master  */
-					/* volume is added to Ant Tweak Bar here.								*/
-					/************************************************************************/
-					AntTweakBarWrapper::getInstance()->addWriteVariable( 
-						AntTweakBarWrapper::OVERALL,
-						"Master_volume", TwType::TW_TYPE_FLOAT, 
-						static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-						"group=Sound min=0 max=10 step=0.001 precision=3");
-				}
-			}
-			else if ( data.networkType == (char)EntityType::Prop )
-			{
-				Entity* entity;
-				Component* component;
-				//b1
-				entity = m_world->createEntity();
-				//component = new RenderInfo( cubeMeshId );
-				//entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform(data.position, data.rotation, data.scale);
-				entity->addComponent( ComponentType::Transform, component );
-
-				// The b1 entity should be synced over the network!
-				component = new NetworkSynced(data.networkId, -1, EntityType::Prop);
-				entity->addComponent(ComponentType::NetworkSynced, component);
-
-				int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-					SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-				component = new RenderInfo(meshId);
-				entity->addComponent(ComponentType::RenderInfo, component);
-
-				m_world->addEntity(entity);
-			}
-		}
-#pragma endregion
-
 #pragma region EntityUpdate
-		else if (packetType == (char)PacketType::EntityUpdate)
+		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
-			if (data.networkType == (char)EntityType::Ship ||
-				data.networkType == (char)EntityType::Prop)
+			if (data.entityType == (char)EntityType::Ship ||
+				data.entityType == (char)EntityType::Prop)
 			{
 
-				if(data.networkType == (char)EntityType::Prop)
+				if(data.entityType == (char)EntityType::Prop)
 				{
-					data.networkType = data.networkType;
+					data.entityType = data.entityType;
 				}
 				// HACK: This is VERY inefficient for large amount of
 				// network-synchronized entities. (Solve later)
@@ -198,26 +101,18 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
-#pragma endregion 
-		else if(packetType == (char)PacketType::InitCredentials)
+		else if(packetType == (char)PacketType::ShipLocationResponse)
 		{
-			char networkType;
-
-			packet >> networkType;
-			if(networkType == (char)EntityType::Identity)
-			{
-				int id;
-				packet >> id;
-				m_tcpClient->setId( id );
-
-				/************************************************************************/
-				/* Debug info!															*/
-				/************************************************************************/
-				AntTweakBarWrapper::getInstance()->addReadOnlyVariable( 
-					AntTweakBarWrapper::NETWORK,
-					"NetId", TwType::TW_TYPE_INT32,
-					m_tcpClient->getIdPointer(), "" );
-			}
+			/************************************************************************/
+			/* Check if the packet is position approve or correction.				*/
+			/* If not approve set the position, rotation and scale.					*/
+			/* If approve do nothing.												*/
+			/************************************************************************/
+		}
+#pragma endregion 
+		else if(packetType == (char)PacketType::WelcomePacket)
+		{
+			handleWelcomePacket(packet);
 		}
 		else if(packetType == (char)PacketType::ScoresUpdate)
 		{
@@ -271,6 +166,139 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			packet >> m_currentPing;
 		}
+		else if(packetType == (char)PacketType::EntityCreation)
+		{
+			handleEntityCreationPacket(packet);
+		}
+	}
+}
+
+void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
+{
+	int id;
+	p_packet >> id;
+	m_tcpClient->setId( id );
+
+	/************************************************************************/
+	/* Debug info!															*/
+	/************************************************************************/
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( 
+		AntTweakBarWrapper::NETWORK,
+		"NetId", TwType::TW_TYPE_INT32,
+		m_tcpClient->getIdPointer(), "" );
+}
+
+void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
+{
+	Entity* entity;
+	Component* component;
+	NetworkEntityCreationPacket data = readCreationPacket(p_packet);
+	if (data.entityType == (char)EntityType::Ship )
+	{
+		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		/************************************************************************/
+		/* This ship creation code have to be located somewhere else.			*/
+		/************************************************************************/
+		entity = m_world->createEntity();
+
+		Transform* transform = new Transform( data.position, data.rotation, 
+			data.scale);
+
+		component = new RenderInfo( shipMeshId );
+		entity->addComponent( ComponentType::RenderInfo, component );
+		entity->addComponent( ComponentType::Transform, transform );		
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+
+		/************************************************************************/
+		/* Check if the owner is the same as this client.						*/
+		/************************************************************************/
+		if(m_tcpClient->getId() == data.owner)
+		{
+			component = new ShipFlyController(5.0f, 50.0f);
+			entity->addComponent( ComponentType::ShipFlyController, component );
+
+			component = new ShipEditController();
+			entity->addComponent( ComponentType::ShipEditController, component);
+
+			entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+
+			ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+
+			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+		}
+
+		/************************************************************************/
+		/* HACK: Score should probably be located in another entity.			*/
+		/************************************************************************/
+		//component = new PlayerScore();
+		//entity->addComponent( ComponentType::PlayerScore, component );
+		m_world->addEntity(entity);
+
+		/************************************************************************/
+		/* Attach a camera if it's the clients ship!							*/
+		/************************************************************************/
+		if(data.owner == m_tcpClient->getId())
+		{
+			int shipId = entity->getIndex();
+			float aspectRatio = 
+				static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
+			entity = m_world->createEntity();
+			component = new CameraInfo( aspectRatio );
+			entity->addComponent( ComponentType::CameraInfo, component );
+			component = new MainCamera();
+			entity->addComponent( ComponentType::MainCamera, component );
+			//component = new Input();
+			//entity->addComponent( ComponentType::Input, component );
+			component = new Transform( -5.0f, 0.0f, -5.0f );
+			entity->addComponent( ComponentType::Transform, component );
+			component = new LookAtEntity(shipId, AglVector3(0,3,-10),AglQuaternion::identity(),
+				10.0f,10.0f);
+			entity->addComponent( ComponentType::LookAtEntity, component );
+			// default tag is follow
+			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
+			component = new AudioListener();
+			entity->addComponent(ComponentType::AudioListener, component);
+
+			m_world->addEntity(entity);
+
+			/************************************************************************/
+			/* This is where the audio listener is created and therefor the master  */
+			/* volume is added to Ant Tweak Bar here.								*/
+			/************************************************************************/
+			AntTweakBarWrapper::getInstance()->addWriteVariable( 
+				AntTweakBarWrapper::OVERALL,
+				"Master_volume", TwType::TW_TYPE_FLOAT, 
+				static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+				"group=Sound min=0 max=10 step=0.001 precision=3");
+		}
+	}
+	else if ( data.entityType == (char)EntityType::StaticProp )
+	{
+		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+
+		entity = m_world->createEntity();
+		component = new Transform(data.position, data.rotation, data.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		component = new RenderInfo(meshId);
+		entity->addComponent(ComponentType::RenderInfo, component);
+
+		m_world->addEntity(entity);
+	}
+	else
+	{
+		DEBUGPRINT(("Network Warning: Received unkown entity type from server!\n"));
 	}
 }
 
@@ -326,7 +354,7 @@ NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket(
 	Packet& p_packet )
 {
 	NetworkEntityCreationPacket data;
-	p_packet >> data.networkType 
+	p_packet >> data.entityType 
 		>> data.owner 
 		>> data.networkId 
 		>> data.position 
@@ -338,7 +366,7 @@ NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket(
 NetworkEntityUpdatePacket ClientPacketHandlerSystem::readUpdatePacket( Packet& p_packet )
 {
 	NetworkEntityUpdatePacket data;
-	p_packet >> data.networkType
+	p_packet >> data.entityType
 		>> data.networkId 
 		>> data.position 
 		>> data.rotation 
@@ -371,11 +399,9 @@ void ClientPacketHandlerSystem::updateCounters()
 	m_tcpClient->resetTotalDataSent();
 	m_dataSentCounter += m_totalDataSent;
 
-	m_timerPerSecond -= m_world->getDelta();
-	if( m_timerPerSecond <= 0 )
+	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::EverySecond))
 	{
-		m_timerPerSecond = 1.0f;
-
 		m_dataSentPerSecond = m_dataSentCounter;
 		m_dataReceivedPerSecond = m_dataReceivedCounter;
 

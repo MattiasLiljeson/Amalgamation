@@ -4,7 +4,6 @@
 #include <PhysicsController.h>
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
-#include "GraphicsBackendSystem.h"
 #include "ConnectionPointSet.h"
 #include "ShipFlyController.h"
 #include "ShipModule.h"
@@ -207,7 +206,7 @@ void PhysicsSystem::handleCompoundBodyDependencies(Entity* p_entity)
 void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 {
 	EntitySystem* tempSys = NULL;
-
+/*
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
@@ -236,6 +235,7 @@ void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 		BodyInitData::SINGLE));
 
 	m_world->addEntity(entity);
+	*/
 }
 
 void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_others)
@@ -306,9 +306,7 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 		}
 	}
 }
-
-vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent)
-{
+vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent){
 	vector<pair<ConnectionPoint*, Entity*>> free;
 	for (unsigned int i = 0; i < p_set->m_connectionPoints.size(); i++)
 	{
@@ -358,4 +356,8 @@ AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
 		p_entity = parent;
 	}
 	return transform;
+}
+PhysicsController* PhysicsSystem::getPhysicsController()
+{
+	return m_physicsController;
 }

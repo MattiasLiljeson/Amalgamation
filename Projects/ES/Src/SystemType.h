@@ -46,6 +46,9 @@ public:	//Enums
 		MineControllerSystem,
 		RocketLauncherModuleControllerSystem,
 		ShipModulesControllerSystem,
+		TimerSystem,
+		ServerDynamicObjectsSystem,
+		ServerStaticObjectsSystem,
 		NUM_SYSTEM_TYPES
 	};
 

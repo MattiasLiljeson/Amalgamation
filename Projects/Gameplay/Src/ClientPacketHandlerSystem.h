@@ -9,7 +9,7 @@ class TcpClient;
 
 struct NetworkEntityCreationPacket
 {
-	char			networkType;
+	char			entityType;
 	int				owner;
 	int				networkId;
 	AglVector3		position;
@@ -19,7 +19,7 @@ struct NetworkEntityCreationPacket
 
 struct NetworkEntityUpdatePacket
 {
-	char			networkType;
+	char			entityType;
 	int				networkId;
 	AglVector3		position;
 	AglQuaternion	rotation;
@@ -60,6 +60,9 @@ private:
 	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
 
+	void handleWelcomePacket(Packet p_packet);
+	void handleEntityCreationPacket(Packet p_packet);
+
 	void updateCounters();
 
 private:
@@ -74,6 +77,4 @@ private:
 	unsigned int m_dataReceivedPerSecond;
 	unsigned int m_dataSentCounter;
 	unsigned int m_dataReceivedCounter;
-
-	float m_timerPerSecond;
 };

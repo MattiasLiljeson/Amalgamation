@@ -117,10 +117,13 @@ void TcpClient::connectToServerAsync( string p_address, string p_port )
 
 void TcpClient::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue< ProcessMessage* > messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		ProcessMessage* message;
-		message = this->popMessage();
+		ProcessMessage* message = messages.front();
+		messages.pop();
 
 		if( message->type == MessageType::RECEIVE_PACKET )
 		{

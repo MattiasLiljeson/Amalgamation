@@ -13,6 +13,7 @@
 #include "AntTweakBarWrapper.h"
 #include "PhysicsBody.h"
 #include "ShipInputProcessingSystem.h"
+#include "TimerSystem.h"
 
 #include "GameplayTags.h"
 #include "ConnectionPointSet.h"
@@ -40,8 +41,6 @@ ShipFlyControllerSystem::~ShipFlyControllerSystem()
 
 void ShipFlyControllerSystem::initialize()
 {
-
-
 }
 
 void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -50,7 +49,6 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	{
 		float dt = m_world->getDelta();
 		
-
 		// Fetch the status of the various input methods.
 		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
 
@@ -85,25 +83,24 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			/*Packet thrustPacket;
-			NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
-				ComponentType::NetworkSynced));
+			m_thrustVec += thrustVec;
+			m_angularVec += angularVec;
 
-			thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-				<< thrustVec << angularVec << netSync->getNetworkIdentity();
-			m_client->sendPacket( thrustPacket );*/
-
-			PhysicsBody* physicsBody = NULL;
-			physicsBody = static_cast<PhysicsBody*>(ship->getComponent(
-				ComponentType::PhysicsBody ) );
-			if( physicsBody )
+			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+				checkTimeInterval(TimerIntervals::Every16Millisecond))
 			{
-				m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-				//cout << physicsBody->m_id << endl;
+				/************************************************************************/
+				/* Send the thrust packet to the server!								*/
+				/************************************************************************/
+				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+					ComponentType::NetworkSynced));
+				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+
+				m_thrustVec = AglVector3();
+				m_angularVec = AglVector3();
 			}
 
-			// State switch handling
-			if (input.stateSwitchInput>0.0f)
+			if (input.stateSwitchInput != 0)
 			{
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
@@ -137,4 +134,16 @@ float ShipFlyControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrus
 		}
 	}
 	return speedBoost;
+}
+
+void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
+													   AglVector3 p_thrust, 
+													   AglVector3 p_angularVec)
+{
+	Packet shipTransform = Packet((char)PacketType::ThrustPacket);
+	shipTransform << p_syncedInfo->getNetworkIdentity()
+		<< p_thrust
+		<< p_angularVec;
+
+	m_client->sendPacket(shipTransform);
 }

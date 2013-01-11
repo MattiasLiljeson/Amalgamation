@@ -11,6 +11,7 @@
 #include "PacketType.h"
 #include "EntityType.h"
 #include "PhysicsSystem.h"
+#include "TimerSystem.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -30,11 +31,6 @@ void ServerPacketHandlerSystem::initialize()
 {
 	m_physics = static_cast<PhysicsSystem*>(
 		m_world->getSystem( SystemType::PhysicsSystem ) );
-
-	/************************************************************************/
-	/* Determines the frequency on how often ping packets will be sent.		*/
-	/************************************************************************/
-	m_timerStartValue = m_timer = 0.5;
 }
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -45,38 +41,20 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char packetType;
 		packet >> packetType;
-
-		if(packetType == (char)PacketType::PlayerInput)
+		
+		if(packetType == (char)PacketType::ThrustPacket)
 		{
-			char entityType;
-			packet >> entityType;
-			if(entityType == (char)EntityType::Ship)
-			{
-				AglVector3 thrustVec;
-				AglVector3 angularVec;
-				int networkId;
+			int entityId;
+			AglVector3 thrust,angularVec;
 
-				packet >> thrustVec >> angularVec >> networkId;
+			packet >> entityId >> thrust >> angularVec;
 
-				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
-				// Locate the entity using networkId by consulting the entitymanager in world
-				//  entities[networkId]
-				// world->getEntityManager->getEntity[networkId]
-				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
+			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
+				(m_world->getEntity(entityId)->getComponent(ComponentType::PhysicsBody));
 
-				if(entity)
-				{
-					PhysicsBody* physicsBody = NULL;
-					physicsBody = static_cast<PhysicsBody*>(entity->getComponent(
-						ComponentType::PhysicsBody ) );
-					if( physicsBody )
-					{
-						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-					}
-				}
-			}
+			m_physics->applyImpulse(physicsBody->m_id,thrust,angularVec);
 		}
-		else if( packetType == (char)PacketType::Ping )
+		if( packetType == (char)PacketType::Ping )
 		{
 			float clientTime;
 			packet >> clientTime;
@@ -106,20 +84,17 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			Packet newClientStats((char)PacketType::UpdateClientStats);
 			newClientStats << info.ping;
 			m_server->unicastPacket(newClientStats, packet.getSenderId());
-		}
+		}		
+	}
+	
+	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::HalfSecond))
+	{
+		float timeStamp = m_world->getElapsedTime();
 
-		m_timer -= m_world->getDelta();
-		if( m_timer <= 0 )
-		{
-			m_timer = m_timerStartValue;
+		Packet packet((char)PacketType::Ping);
+		packet << timeStamp;
 
-			float timeStamp = m_world->getElapsedTime();
-
-			Packet packet((char)PacketType::Ping);
-			packet << timeStamp;
-
-			m_server->broadcastPacket( packet );
-		}
-		
+		m_server->broadcastPacket( packet );
 	}
 }

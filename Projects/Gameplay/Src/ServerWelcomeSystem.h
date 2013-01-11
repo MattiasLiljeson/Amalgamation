@@ -1,11 +1,13 @@
 #pragma once
 
+#include <AglVector3.h>
 #include <EntitySystem.h>
 
+class Transform;
 class TcpServer;
 
 // =======================================================================================
-//                                      ServerListenerSystem
+//                                      ServerWelcomeSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -19,17 +21,22 @@ class TcpServer;
 ///---------------------------------------------------------------------------------------
 
 
-class ServerListenerSystem: public EntitySystem
+class ServerWelcomeSystem: public EntitySystem
 {
 public:
-	ServerListenerSystem( TcpServer* p_server );
-	~ServerListenerSystem();
+	ServerWelcomeSystem( TcpServer* p_server, int p_activePort=1337 );
+	~ServerWelcomeSystem();
 
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
 
 private:
+	void sendWelcomePacket(int p_newlyConnectedClientId);
+	Entity* createTheShipEntity(int p_newlyConnectedClientId, Transform* p_shipTransform);
+	void announceConnectedClient(Entity* p_entity, int p_newlyConnectedClientId, 
+		Transform* p_shipTransform);
+private:
 	TcpServer* m_server;
-
+	int		m_activePort;
 };

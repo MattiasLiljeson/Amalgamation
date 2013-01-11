@@ -17,19 +17,29 @@ public:
 	enum
 	{
 		NON_EXISTENT = -1,
-		// Server -><- Client:
+		// Server <--> Client:
 		Ping,
 		Pong,
+
 		// Server -> Client:
 		EntityCreation,
 		EntityUpdate,
 		ClientDisconnect,
-		InitCredentials,
+		WelcomePacket,
 		ScoresUpdate,
-		// Client -> Server:
-		PlayerInput,
-
+		/************************************************************************/
+		/* Sends back the location for the ship. Can be approved or not			*/
+		/************************************************************************/
+		ShipLocationResponse, 
 		UpdateClientStats,
+
+		// Client -> Server:
+		/************************************************************************/
+		/* Client handles input and updates position, then sends it to the		*/
+		/* server for verification.												*/
+		/************************************************************************/
+		ShipTransform,
+		ThrustPacket,
 	};
 
 };

@@ -50,7 +50,7 @@
 #include <LookAtSystem.h>
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
-#include <NetworkConnectToServerSystem.h>
+#include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -71,6 +71,7 @@
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
+#include <TimerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -174,6 +175,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( factory, true);
 
 	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
 	PhysicsSystem* physics = new PhysicsSystem();
@@ -237,16 +243,16 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	/*ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
-	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client, inputBackend );
+	ClientConnectToServerSystem* connect =
+		new ClientConnectToServerSystem( m_client);
 	m_world->setSystem( connect, true );
 
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );*/
+	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/
 	/* Audio															*/
@@ -308,54 +314,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 
-
-	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
-	{
-		for( int y=0; y<8; y++ )
-		{
-			for( int z=0; z<8; z++ )
-			{
-				entity = m_world->createEntity();
-				component = new RenderInfo( sphereMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-				entity->addComponent( ComponentType::Transform, component );
-
-				m_world->addEntity(entity);
-			}
-		}
-
-	}
-
-	// Create a "spaceship"
-	entity = m_world->createEntity();
-	int shipId = entity->getIndex();
-	component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(0, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(0, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));
-
-
-	component = new ShipFlyController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipFlyController, component );
-
-	component = new ShipEditController();
-	entity->addComponent( ComponentType::ShipEditController, component);
-
-	// default tag is fly
-	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+	
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
@@ -369,7 +328,7 @@ void ClientApplication::initEntities()
 
 	InitModulesTestByAnton();
 
-
+	/*
 	//Create a camera
 	float aspectRatio = 
 		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
@@ -398,6 +357,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::AudioListener, component);
 	
 	m_world->addEntity(entity);
+	*/
 }
 
 void ClientApplication::initSounds()

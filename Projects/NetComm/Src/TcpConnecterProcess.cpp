@@ -88,21 +88,19 @@ void TcpConnecterProcess::body()
 
 void TcpConnecterProcess::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue< ProcessMessage* > messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		queue< ProcessMessage* > messages;
-		messages = checkoutMessageQueue();
+		ProcessMessage* msg = messages.front();
+		messages.pop();
 
-		while( messages.size() > 0 )
-		{
-			boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-			ProcessMessage* msg = messages.front();
-			messages.pop();
+		boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-			if( msg->type = MessageType::TERMINATE )
-				m_running = false;
+		if( msg->type = MessageType::TERMINATE )
+			m_running = false;
 
-			delete msg;
-		}
+		delete msg;
 	}
 }

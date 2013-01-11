@@ -3,16 +3,20 @@
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <ServerListenerSystem.h>
+#include <ServerWelcomeSystem.h>
 #include <ServerPacketHandlerSystem.h>
 #include <ServerUpdateSystem.h>
 #include <ServerScoreSystem.h>
+#include <ServerDynamicObjectsSystem.h>
+#include <ServerStaticObjectsSystem.h>
+#include <TimerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "NetworkSynced.h"
+#include "StaticProp.h"
 
 namespace Srv
 {
@@ -70,7 +74,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			sleep(10);
+			sleep(1);
 		}
 	}
 
@@ -84,17 +88,37 @@ namespace Srv
 	void ServerApplication::initSystems()
 	{
 		/************************************************************************/
+		/* Timer																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
+		/************************************************************************/
+		/* Objects Systems														*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerDynamicObjectsSystem, 
+			new ServerDynamicObjectsSystem(), true);
+
+		m_world->setSystem(SystemType::ServerStaticObjectsSystem, 
+			new ServerStaticObjectsSystem(), true);
+
+		/************************************************************************/
+		/* Threading															*/
+		/************************************************************************/
 		m_world->setSystem( SystemType::ProcessingMessagesSystem,
 			new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
 			true );
 
+		/************************************************************************/
+		/* Network																*/
+		/************************************************************************/
 		m_world->setSystem( SystemType::NetworkListenerSystem,
-			new ServerListenerSystem( m_server ), true );
+			new ServerWelcomeSystem( m_server ), true );
 
 		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
 			new ServerPacketHandlerSystem( m_server ), true );
@@ -113,55 +137,35 @@ namespace Srv
 	{
 		Entity* entity;
 		Component* component;
-		// Test physics
-		// Entities on the server does not need any render info component
+		// Add a grid of cubes to test instancing.
+		for( int x=0; x<8; x++ )
+		{
+			for( int y=0; y<8; y++ )
+			{
+				for( int z=0; z<8; z++ )
+				{
+					entity = m_world->createEntity();
+					component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+					entity->addComponent( ComponentType::Transform, component );
+					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
-		//Ship
-		entity = m_world->createEntity();
-		//component = new RenderInfo( cubeMeshId );
-		//entity->addComponent( ComponentType::RenderInfo, component );
-		component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-		entity->addComponent( ComponentType::Transform, component );
-		component = new PhysicsBody();
-		entity->addComponent(ComponentType::PhysicsBody, component);
+					m_world->addEntity(entity);
+				}
+			}
 
-		component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC);
-		entity->addComponent(ComponentType::BodyInitData, component);
-
-		// The b1 entity should be synced over the network!
-		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
-
-		m_world->addEntity(entity);
-
-
-		//Module 1
-		entity = m_world->createEntity();
-		component = new Transform(AglVector3(1, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-		entity->addComponent( ComponentType::Transform, component );
-		component = new PhysicsBody();
-		entity->addComponent(ComponentType::PhysicsBody, component);
-
-		component = new BodyInitData(AglVector3(1, 0, 0), AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC);
-		entity->addComponent(ComponentType::BodyInitData, component);
-
-		component = new NetworkSynced(entity->getIndex(), -1, EntityType::Prop);
-		entity->addComponent(ComponentType::NetworkSynced, component);
-
-		m_world->addEntity(entity);
+		}
 	}
 
 	
 	void ServerApplication::processMessages()
 	{
+		queue< ProcessMessage* > messages;
+		messages = checkoutMessageQueue();
 
-		while( getMessageCount() > 0 )
+		while( messages.size() > 0 )
 		{
-			ProcessMessage* message = popMessage();
+			ProcessMessage* message = messages.front();
+			messages.pop();
 
 			if( message->type == MessageType::TERMINATE )
 			{
