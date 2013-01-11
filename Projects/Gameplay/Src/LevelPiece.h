@@ -35,6 +35,7 @@ public:
 	void		updateConnectionPoints();
 	AglMatrix	getLocalConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex);
+	Transform	getConnectionPoint(int p_vectorIndex);
 	vector<int> findFreeConnectionPointSlots();
 	Transform*	getTransform();
 	void		setTransform();

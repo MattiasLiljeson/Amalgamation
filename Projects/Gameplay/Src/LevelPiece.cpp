@@ -66,11 +66,13 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	updateConnectionPoints();
 
 	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
-	AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
-	mat.SetForward( mat.GetBackward() );
+	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
+	//mat.SetForward( mat.GetBackward() );
+	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
+	temp.setForward( -temp.getMatrix().GetForward() );
 
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
-	m_transform->setMatrix(m_transform->getMatrix() * mat);
+	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!
@@ -147,4 +149,9 @@ void LevelPiece::updateConnectionPoints()
 AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex )
 {
 	return m_connectionPoints[p_vectorIndex].getMatrix();
+}
+
+Transform LevelPiece::getConnectionPoint( int p_vectorIndex )
+{
+	return m_connectionPoints[p_vectorIndex];
 }
