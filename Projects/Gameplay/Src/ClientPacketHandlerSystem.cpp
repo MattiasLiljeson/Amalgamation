@@ -212,6 +212,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+		/*
 		entity->addComponent( ComponentType::PhysicsBody, 
 			new PhysicsBody() );
 		entity->addComponent( ComponentType::BodyInitData, 
@@ -221,6 +222,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 			AglVector3(0, 0, 0), 0, 
 			BodyInitData::DYNAMIC, 
 			BodyInitData::COMPOUND));
+		*/
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/

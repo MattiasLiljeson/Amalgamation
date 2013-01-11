@@ -46,23 +46,17 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		packet >> packetType;
 		
-		if(packetType == (char)PacketType::ShipTransform)
+		if(packetType == (char)PacketType::ThrustPacket)
 		{
-			/************************************************************************/
-			/* Check collision: Ship vs Ship.										*/
-			/************************************************************************/
+			int entityId;
+			AglVector3 thrust,angularVec;
 
-			/************************************************************************/
-			/* Check collision: Ship vs Other Dynamic Objects.						*/
-			/************************************************************************/
+			packet >> entityId >> thrust >> angularVec;
 
-			/************************************************************************/
-			/* If the position is corrected then send the new transform.			*/
-			/************************************************************************/
+			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
+				(m_world->getEntity(entityId)->getComponent(ComponentType::PhysicsBody));
 
-			/************************************************************************/
-			/* If not send a packet back too the client letting it know.			*/
-			/************************************************************************/
+			m_physics->applyImpulse(physicsBody->m_id,thrust,angularVec);
 		}
 		if( packetType == (char)PacketType::Ping )
 		{

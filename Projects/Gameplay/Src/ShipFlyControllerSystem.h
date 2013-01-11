@@ -8,6 +8,7 @@ class PhysicsSystem;
 class ShipInputProcessingSystem;
 class NetworkSynced;
 class Transform;
+struct AglVector3;
 
 // =======================================================================================
 //                                ShipControllerSystem
@@ -35,7 +36,8 @@ public:
 private:
 	//Anton - 9/1-13
 	float	getSpeedBoost(Entity* p_entity, float p_baseThrust);
-	void	sendTransformInfoToServer(NetworkSynced* p_syncedInfo, Transform* p_transformInfo);
+	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3 p_thrust,
+		AglVector3 p_angularVec);
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;

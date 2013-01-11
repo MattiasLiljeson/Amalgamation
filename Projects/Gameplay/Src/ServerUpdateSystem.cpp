@@ -20,7 +20,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
-	/*
+	
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
 		
@@ -37,9 +37,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				m_world->getComponentManager()->getComponent(
 				p_entities[i]->getIndex(), ComponentType::Transform ) );
 
-			Packet updateEntityPacket;
-			updateEntityPacket << (char)PacketType::EntityUpdate 
-				<< (char)netSync->getNetworkType() 
+			Packet updateEntityPacket( (char)PacketType::EntityUpdate );
+			updateEntityPacket << (char)netSync->getNetworkType() 
 				<< netSync->getNetworkIdentity() 
 				<< transform->getTranslation() 
 				<< transform->getRotation() 
@@ -48,7 +47,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			m_server->broadcastPacket( updateEntityPacket );
 		}
 	}
-	*/
 }
 
 void ServerUpdateSystem::initialize()

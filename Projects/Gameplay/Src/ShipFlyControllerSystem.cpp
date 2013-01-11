@@ -84,25 +84,14 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			/*Packet thrustPacket;
-			
+			/************************************************************************/
+			/* Send the thrust packet to the server!								*/
+			/************************************************************************/
+			NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+				ComponentType::NetworkSynced));
+			sendThrustPacketToServer(netSync,thrustVec, angularVec);
 
-			thrustPacket << (char)NetworkType::Ship << (char)PacketType::PlayerInput 
-				<< thrustVec << angularVec << netSync->getNetworkIdentity();
-			m_client->sendPacket( thrustPacket );*/
-
-			PhysicsBody* physicsBody = NULL;
-			physicsBody = static_cast<PhysicsBody*>(ship->getComponent(
-				ComponentType::PhysicsBody ) );
-			if( physicsBody )
-			{
-				m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-
-				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
-					ComponentType::NetworkSynced));
-				sendTransformInfoToServer(netSync,transform);
-			}
-			if (input.stateSwitchInput>0.0f)
+			if (input.stateSwitchInput != 0)
 			{
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
@@ -138,16 +127,14 @@ float ShipFlyControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrus
 	return speedBoost;
 }
 
-void ShipFlyControllerSystem::sendTransformInfoToServer(NetworkSynced* p_syncedInfo, 
-														Transform* p_transformInfo)
+void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
+													   AglVector3 p_thrust, 
+													   AglVector3 p_angularVec)
 {
-	Packet shipTransform = Packet((char)PacketType::ShipTransform);
-	shipTransform << (char)PacketType::EntityUpdate
-		<< (char)p_syncedInfo->getNetworkType()
-		<< (char)p_syncedInfo->getNetworkIdentity()
-		<< p_transformInfo->getTranslation()  
-		<< p_transformInfo->getRotation() 
-		<< p_transformInfo->getScale();
+	Packet shipTransform = Packet((char)PacketType::ThrustPacket);
+	shipTransform << p_syncedInfo->getNetworkIdentity()
+		<< p_thrust
+		<< p_angularVec;
 
 	m_client->sendPacket(shipTransform);
 }

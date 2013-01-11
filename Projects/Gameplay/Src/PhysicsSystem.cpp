@@ -276,3 +276,8 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 		}
 	}
 }
+
+PhysicsController* PhysicsSystem::getPhysicsController()
+{
+	return m_physicsController;
+}
