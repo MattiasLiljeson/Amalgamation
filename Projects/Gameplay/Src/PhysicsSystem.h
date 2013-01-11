@@ -34,7 +34,7 @@ public:
 
 private:
 	void initializeEntity(Entity* p_entity);
-	void handleCompoundBodyDependencies(PhysicsBody* p_bodyComponent, Body* p_rigidBody);
+	void handleCompoundBodyDependencies(Entity* p_entity);
 
 	//Temp
 	void addModulesToShip(PhysicsBody* p_body, AglVector3 p_position);

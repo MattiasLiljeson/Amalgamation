@@ -63,9 +63,9 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		p_module->m_shieldAge += m_world->getDelta();
 		if (p_module->m_shieldAge > 2)
 		{
-			m_world->deleteEntity(shield);
 			p_module->m_shieldEntity = -1;
 			p_module->m_shieldAge = 0;
+			m_world->deleteEntity(shield);
 		}
 	}
 	else

@@ -268,9 +268,9 @@ void RigidBody::SetParent(CompoundBody* pParent)
 {
 	if (mParent && !pParent)
 	{
-		mLocalTransform = this->GetWorld();
-		mVelocity = this->GetVelocity();
-		mAngularVelocity = this->GetAngularVelocity();
+		mLocalTransform = mPreviousLocalTransform = this->GetWorld();
+		mVelocity = mPreviousVelocity = this->GetVelocity();
+		mAngularVelocity = mPreviousAngularVelocity = this->GetAngularVelocity();
 
 	}
 	mParent = pParent;

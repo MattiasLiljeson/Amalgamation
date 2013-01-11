@@ -69,9 +69,15 @@ int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundin
 	return mBodies.size()-1;
 }
 
-void PhysicsController::DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body)
+void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
 {
-	p_compound->DetachChild(p_body);
+	if (p_compound)
+		p_compound->DetachChild(p_body);
+	else
+	{
+		CompoundBody* parent = p_body->GetParent();
+		parent->DetachChild(p_body);
+	}
 }
 
 void PhysicsController::Update(float pElapsedTime)

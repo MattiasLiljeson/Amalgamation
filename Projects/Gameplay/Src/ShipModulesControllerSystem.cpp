@@ -2,6 +2,8 @@
 #include "ShipModule.h"
 #include "InputBackendSystem.h"
 #include "Control.h"
+#include "PhysicsBody.h"
+#include "PhysicsSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem()
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::ShipFlyController)
@@ -19,7 +21,7 @@ void ShipModulesControllerSystem::initialize()
 
 void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
-	double keys[5];
+	double keys[6];
 	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
 	Control* ctrl = input->getControlByEnum(InputHelper::KEY_T);
 	keys[0] = ctrl->getDelta();
@@ -31,6 +33,8 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 	keys[3] = ctrl->getDelta();
 	ctrl = input->getControlByEnum(InputHelper::KEY_SPACE);
 	keys[4] = ctrl->getDelta();
+	ctrl = input->getControlByEnum(InputHelper::KEY_LCTRL);
+	keys[5] = ctrl->getDelta();
 
 	int toHighlight = -1;
 	for (unsigned int i = 0; i < 4; i++)
@@ -60,7 +64,28 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				ShipModule* module = static_cast<ShipModule*>(child->getComponent(ComponentType::ShipModule));
 				if (toHighlight >= 0)
 					module->m_highlighted = toHighlight==j;
+
+				if (module->m_highlighted && keys[5] > 0)
+				{
+					//Drop Module
+					dropModule(p_entities[i], j);
+				}
 			}
 		}
 	}
+}
+void ShipModulesControllerSystem::dropModule(Entity* p_parent, unsigned int p_slot)
+{
+	ConnectionPointSet* connected =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_parent,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	Entity* child = m_world->getEntity(connected->m_connectionPoints[p_slot].cpConnectedEntity);
+
+	connected->m_connectionPoints[p_slot].cpConnectedEntity = -1;
+
+	ShipModule* module = static_cast<ShipModule*>(child->getComponent(ComponentType::ShipModule));
+
+	module->m_parentEntity = -1;
 }

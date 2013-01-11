@@ -49,7 +49,7 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			Body* b = m_physicsController->getBody(body->m_id);
 
 			// Handle parenting
-			handleCompoundBodyDependencies(body,b);
+			handleCompoundBodyDependencies(p_entities[i]);
 
 			// Update the rigidbody
 			AglMatrix world = b->GetWorld();
@@ -151,10 +151,26 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 	}
 }
 
-void PhysicsSystem::handleCompoundBodyDependencies( PhysicsBody* p_bodyComponent, 
-												   Body* p_rigidBody )
+void PhysicsSystem::handleCompoundBodyDependencies(Entity* p_entity)
 {
-	if (p_bodyComponent->isParentChanged())
+	ShipModule* module = static_cast<ShipModule*>(
+		p_entity->getComponent(ComponentType::ShipModule));
+	if (module)
+	{
+		PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
+		if (module->m_parentEntity < 0 && body->getParentId() >= 0)
+		{
+			//Remove dependency in physics
+
+			RigidBody* rb = (RigidBody*)m_physicsController->getBody(body->m_id);
+
+			m_physicsController->DetachBodyFromCompound(rb);
+			body->unspecifyParent();
+			return;
+		}
+	}
+
+	/*if (p_bodyComponent->isParentChanged())
 	{
 		// First, retrieve the ids
 		int oldId = p_bodyComponent->getOldParentId();
@@ -185,7 +201,7 @@ void PhysicsSystem::handleCompoundBodyDependencies( PhysicsBody* p_bodyComponent
 
 		// Reset dirtybit
 		p_bodyComponent->resetParentChangedStatus();
-	}
+	}*/
 }
 
 void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)

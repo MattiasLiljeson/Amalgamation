@@ -91,7 +91,7 @@ public:
 	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
-	void DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body);
+	void DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound = NULL);
 	
 	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
 
