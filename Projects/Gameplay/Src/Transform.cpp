@@ -85,21 +85,30 @@ void Transform::setRotation( const AglQuaternion& p_rotation )
 
 void Transform::setForwardDirection( const AglVector3& p_forward )
 {
+	AglVector3 t_up = m_compositionMatrix.GetUp();
+	t_up = t_up - p_forward * AglVector3::dotProduct(t_up,p_forward) / AglVector3::dotProduct(t_up,t_up);
+	t_up.normalize();
+	AglVector3 t_right = AglVector3::crossProduct(t_up,p_forward);
+    t_right.normalize();
+
 	m_compositionMatrix.SetForward(p_forward);
+ 	m_compositionMatrix.SetRight(t_right);
+ 	m_compositionMatrix.SetUp(t_up);
+
 	calcComponents(false,true,true);
+
+	setScale(m_scale);
 }
 
-void Transform::setRightDirection( const AglVector3& p_right )
-{
-	m_compositionMatrix.SetRight(p_right);
-	calcComponents(false,true,true);
-}
+// void Transform::setRightDirection( const AglVector3& p_right )
+// {
+// 	// Not implemented yet
+// }
 
-void Transform::setUpDirection( const AglVector3& p_up )
-{
-	m_compositionMatrix.SetUp(p_up);
-	calcComponents(false,true,true);
-}
+// void Transform::setUpDirection( const AglVector3& p_up )
+// {
+// 	// Not implemented yet
+// }
 
 void Transform::setMatrix(const AglMatrix& p_matrix)
 {

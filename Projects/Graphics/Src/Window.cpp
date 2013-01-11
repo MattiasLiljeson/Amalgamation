@@ -68,7 +68,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 	PAINTSTRUCT ps;
 	HDC hdc;
 
-	// AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
+	AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
 
 	switch (message) 
 	{

@@ -72,6 +72,11 @@ void AntTweakBarWrapper::setKeyPressed( int p_keyASCII, int p_modifier )
 }
 
 
+void AntTweakBarWrapper::setMouseBtn( int p_action, int p_buttonID )
+{
+	// TwMouseButton((TwMouseAction)p_action, (TwMouseAction)p_button)
+}
+
 void AntTweakBarWrapper::addReadOnlyVariable(BarType p_barType, const char* p_name, 
 											 TwType p_type, const void *p_var, 
 											 const char* p_misc)

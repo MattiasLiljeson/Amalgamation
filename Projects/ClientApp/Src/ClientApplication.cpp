@@ -326,7 +326,7 @@ void ClientApplication::initEntities()
 			for( int z=0; z<8; z++ )
 			{
 				entity = m_world->createEntity();
-				component = new RenderInfo( cubeMeshId );
+				component = new RenderInfo( sphereMeshId );
 				entity->addComponent( ComponentType::RenderInfo, component );
 				component = new Transform( AglVector3(.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z),
 											AglQuaternion::identity(), 

@@ -112,7 +112,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
  			AglVector3 dir = position-lookTargetPos;
  			AglVector3::normalize(dir);
  			transform->setForwardDirection(dir);
-			transform->setTranslation( position );
+			// transform->setTranslation( position );
 			// transform->setRotation(AglQuaternion:: );
 // 			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
 // 			rotation.normalize();

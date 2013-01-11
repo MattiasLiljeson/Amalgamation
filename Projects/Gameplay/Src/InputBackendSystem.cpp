@@ -4,6 +4,7 @@
 #include "GraphicsBackendSystem.h"
 #include "Transform.h"
 #include <Cursor.h>
+#include <Control.h>
 #include <DirectInputFetcher.h>
 #include <IMouseKeyboardFetcher.h>
 #include <InputControlFactory.h>
@@ -229,6 +230,18 @@ void InputBackendSystem::updateAntTweakBar()
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
 
-	AntTweakBarWrapper::getInstance()->setMousePos(mouseX,mouseY);
-	// for (int i=0;i<
+	// mouse
+	AntTweakBarWrapper* atb = AntTweakBarWrapper::getInstance();
+	Control* t_control=NULL;
+	atb->setMousePos(mouseX,mouseY);
+	// keyboard
+	for (int i=InputHelper::KEY_A;i<=InputHelper::KEY_Z;i++)
+	{
+		t_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (t_control && t_control->getStatus()>0.0)
+		{
+			atb->setKeyPressed(i+65,0);// A = 65 in ASCII
+		}
+	}
+
 }

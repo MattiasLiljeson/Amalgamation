@@ -101,6 +101,15 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setMousePos(int p_mouseX, int p_mouseY);
 
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of mouse input
+	/// \param p_action
+	/// \param p_buttonID
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMouseBtn(int p_action, int p_buttonID);
+
 	///-----------------------------------------------------------------------------------
 	/// Alerts AntTweakBar of a pressed key
 	/// \param p_keyASCII
