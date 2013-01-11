@@ -82,6 +82,7 @@ public:
 	bool IsCollisionEnabled(){ return mCollisionEnabled; }
 
 	void SetCollisionEnabled(bool pEnabled){ mCollisionEnabled = pEnabled; }
+	void SetImpulseEnabled(bool pEnabled){ mImpulseEnabled = pEnabled;}
 };
 
 #endif

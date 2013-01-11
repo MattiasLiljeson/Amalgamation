@@ -138,6 +138,10 @@ public:
 	{
 		mSystem->setSpawnAngularVelocity(p_angularVelocity);
 	}
+	float getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir)
+	{
+		return mSystem->getCameraDistance(p_cameraPos, p_cameraDir);
+	}
 
 	void Draw();
 };

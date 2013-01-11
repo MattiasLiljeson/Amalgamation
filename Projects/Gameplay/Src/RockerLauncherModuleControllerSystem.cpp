@@ -1,4 +1,4 @@
-#include "MinigunModuleControllerSystem.h"
+#include "RocketLauncherModuleControllerSystem.h"
 #include "Transform.h"
 #include "RenderInfo.h"
 #include "GraphicsBackendSystem.h"
@@ -10,30 +10,31 @@
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
+#include "RocketLauncherModule.h"
 
-MinigunModuleControllerSystem::MinigunModuleControllerSystem()
-	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
+RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem()
+	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
 {
 }
 
 
-MinigunModuleControllerSystem::~MinigunModuleControllerSystem()
+RocketLauncherModuleControllerSystem::~RocketLauncherModuleControllerSystem()
 {
 }
 
-void MinigunModuleControllerSystem::initialize()
+void RocketLauncherModuleControllerSystem::initialize()
 {
 }
 
-void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_entities)
+void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
 
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
-		MinigunModule* gun = static_cast<MinigunModule*>(
+		RocketLauncherModule* gun = static_cast<RocketLauncherModule*>(
 			m_world->getComponentManager()->getComponent(p_entities[i],
-			ComponentType::getTypeFor(ComponentType::MinigunModule)));
+			ComponentType::getTypeFor(ComponentType::RocketLauncherModule)));
 
 		ShipModule* module = static_cast<ShipModule*>(
 			m_world->getComponentManager()->getComponent(p_entities[i],
@@ -47,24 +48,24 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			gun->coolDown = max(0, gun->coolDown - dt);
 
 			InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
-			Control* leftBtnControl = input->getControlByEnum(InputHelper::KEY_SPACE);
+			Control* leftBtnControl = input->getControlByEnum(InputHelper::KEY_LCTRL);
 			double pressed = leftBtnControl->getStatus();
 			if(pressed == 1.0)
 			{
-				if (gun->coolDown == 0 && module->m_highlighted)
+				if (gun->coolDown == 0)
 				{
-					spawnBullet(p_entities[i]);
+					spawnRocket(p_entities[i]);
 				}
 			}
 		}
 	}
 }
 
-void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
+void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 {
-	MinigunModule* gun = static_cast<MinigunModule*>(
+	RocketLauncherModule* gun = static_cast<RocketLauncherModule*>(
 		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::MinigunModule)));
+		ComponentType::getTypeFor(ComponentType::RocketLauncherModule)));
 
 	if (gun->laserSightEntity < 0)
 	{
@@ -104,20 +105,20 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		//laserTransform->setTranslation(scale);
 	}
 }
-void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
+void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 {
-	MinigunModule* gun = static_cast<MinigunModule*>(
+	RocketLauncherModule* gun = static_cast<RocketLauncherModule*>(
 		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::MinigunModule)));
+		ComponentType::getTypeFor(ComponentType::RocketLauncherModule)));
 
-	gun->coolDown = 0.1f;
+	gun->coolDown = 1.0f;
 
 	//Create Bullet
 	Transform* gunTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
 
-	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::identity(), AglVector3(0.2f, 0.2f, 0.2f));
+	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::identity(), AglVector3(0.8f, 0.8f, 0.8f));
 
 	AglVector3 dir = gun->fireDirection;
 	const AglQuaternion& rot = gunTransform->getRotation();
@@ -142,7 +143,7 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::identity(),
-		AglVector3(0.2f, 0.2f, 0.2f), dir * 20.0f, 
+		AglVector3(0.8f, 0.8f, 0.8f), dir * 20.0f, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, false));

@@ -25,7 +25,10 @@
 #include <MinigunModule.h>
 #include <GameplayTags.h>
 #include <PlayerCameraController.h>
-
+#include <ShieldModule.h>
+#include <MineLayerModule.h>
+#include <RocketLauncherModule.h>
+#include <Connector1to2Module.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -51,6 +54,11 @@
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <PlayerCameraControllerSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MineControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ShipModulesControllerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -244,7 +252,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new MinigunModuleControllerSystem(), true);
-	
+	m_world->setSystem(new ShieldModuleControllerSystem(), true);
+	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
+	m_world->setSystem(new MineControllerSystem(), true);
+	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
+	m_world->setSystem(new ShipModulesControllerSystem, true);
+
 	m_world->initialize();
 }
 
@@ -516,7 +529,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::SINGLE, false));
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
+	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	m_world->addEntity(entity);
 
 	entity = m_world->createEntity();
@@ -534,9 +547,10 @@ void ClientApplication::InitModulesTestByAnton()
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE));
+		BodyInitData::SINGLE, false));
 
-	//entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 
 	m_world->addEntity(entity);
 
@@ -557,6 +571,7 @@ void ClientApplication::InitModulesTestByAnton()
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false));
 
+	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 	m_world->addEntity(entity);
@@ -582,6 +597,85 @@ void ClientApplication::InitModulesTestByAnton()
 	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
 
 	m_world->addEntity(entity);
+
+
+
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(50, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(50, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, true, true));
+
+	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(40, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(40, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+	ConnectionPointSet* cpset = new ConnectionPointSet();
+	AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
+	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+
+	m_world->addEntity(entity);
+
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(30, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(30, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+	cpset = new ConnectionPointSet();
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+
+	m_world->addEntity(entity); 
 
 
 	//Ray entity

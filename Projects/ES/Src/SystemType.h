@@ -40,6 +40,11 @@ public:	//Enums
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
 		MinigunModuleControllerSystem,
+		ShieldModuleControllerSystem,
+		MineLayerModuleControllerSystem,
+		MineControllerSystem,
+		RocketLauncherModuleControllerSystem,
+		ShipModulesControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

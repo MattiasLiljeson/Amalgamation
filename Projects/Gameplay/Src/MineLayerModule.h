@@ -3,22 +3,23 @@
 #include <Component.h>
 
 // =======================================================================================
-//	Module
+//	MineLayerModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that can be attached to a ship
+/// \brief Describes a module that deploys mines
 ///        
 /// # PlayerScore
 /// Detailed description...
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipModule: public Component
+class MineLayerModule: public Component
 {
 public:
-	int m_parentEntity;
-	bool m_highlighted;
-	ShipModule();
-	~ShipModule();
+	float m_cooldown;
+	MineLayerModule();
+	~MineLayerModule();
+private:
+
 };

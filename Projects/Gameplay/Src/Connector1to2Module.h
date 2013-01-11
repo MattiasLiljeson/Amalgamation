@@ -1,24 +1,26 @@
 #pragma once
 
 #include <Component.h>
+#include "ConnectionPointSet.h"
 
 // =======================================================================================
-//	Module
+//	MineLayerModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that can be attached to a ship
+/// \brief Describes a module that deploys mines
 ///        
 /// # PlayerScore
 /// Detailed description...
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipModule: public Component
+class Connector1to2Module: public Component
 {
 public:
-	int m_parentEntity;
-	bool m_highlighted;
-	ShipModule();
-	~ShipModule();
+	Connector1to2Module(ConnectionPoint p_target1, ConnectionPoint p_target2);
+	~Connector1to2Module();
+
+	ConnectionPoint m_target1;
+	ConnectionPoint m_target2;
 };
