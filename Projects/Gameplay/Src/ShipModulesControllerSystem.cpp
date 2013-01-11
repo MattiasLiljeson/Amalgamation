@@ -76,12 +76,26 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 }
 void ShipModulesControllerSystem::dropModule(Entity* p_parent, unsigned int p_slot)
 {
+
 	ConnectionPointSet* connected =
 		static_cast<ConnectionPointSet*>(
 		m_world->getComponentManager()->getComponent(p_parent,
 		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
 	Entity* child = m_world->getEntity(connected->m_connectionPoints[p_slot].cpConnectedEntity);
+
+	ConnectionPointSet* childConnected = static_cast<ConnectionPointSet*>(child->getComponent(ComponentType::ConnectionPointSet));
+	if (childConnected)
+	{
+		for (unsigned int i = 0; i < childConnected->m_connectionPoints.size(); i++)
+		{
+			if (childConnected->m_connectionPoints[i].cpConnectedEntity >= 0)
+				dropModule(child, i);
+		}
+	}
+
+
+
 
 	connected->m_connectionPoints[p_slot].cpConnectedEntity = -1;
 
