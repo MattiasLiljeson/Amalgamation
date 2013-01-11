@@ -589,11 +589,42 @@ void ClientApplication::InitModulesTestByAnton()
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 
+	ConnectionPointSet* cpset = new ConnectionPointSet();
 	AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
-	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(1, -2, 0));
-	entity->addComponent(ComponentType::Connector1to2Module, new Connector1to2Module(ConnectionPoint(target1), ConnectionPoint(target2)));
+	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
 
 	m_world->addEntity(entity);
+
+
+	entity = m_world->createEntity();
+	component = new RenderInfo( cubeMeshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	component = new Transform(30, 0, -10);
+	entity->addComponent( ComponentType::Transform, component );
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(AglVector3(30, 0, -10),
+		AglQuaternion::identity(),
+		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+	cpset = new ConnectionPointSet();
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+
+	m_world->addEntity(entity); 
 
 
 	//Ray entity

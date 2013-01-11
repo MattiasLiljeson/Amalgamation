@@ -300,16 +300,16 @@ vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(C
 		{
 			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
 
-			Connector1to2Module* connector =
-				static_cast<Connector1to2Module*>(
+			ConnectionPointSet* connector =
+				static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(module,
-				ComponentType::getTypeFor(ComponentType::Connector1to2Module)));
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 			if (connector)
 			{
-				if (connector->m_target1.cpConnectedEntity < 0)
-					free.push_back(pair<ConnectionPoint*, Entity*>(&connector->m_target1, module));
-				if (connector->m_target2.cpConnectedEntity < 0)
-					free.push_back(pair<ConnectionPoint*, Entity*>(&connector->m_target2, module));
+				vector<pair<ConnectionPoint*, Entity*>> moreFree 
+					= getFreeConnectionPoints(connector, module);
+				for (unsigned int j = 0; j < moreFree.size(); j++)
+					free.push_back(moreFree[j]);
 			}
 		}
 	}
@@ -317,8 +317,9 @@ vector<pair<ConnectionPoint*, Entity*>> PhysicsSystem::getFreeConnectionPoints(C
 }
 AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
 {
+	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
-	if (module)
+	while (module)
 	{
 		Entity* parent = m_world->getEntity(module->m_parentEntity);
 
@@ -331,10 +332,8 @@ AglMatrix PhysicsSystem::offset(Entity* p_entity, AglMatrix p_base)
 			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
 				ind = i;
 
-		return p_base * cps->m_connectionPoints[ind].cpTransform;
+		transform = transform * cps->m_connectionPoints[ind].cpTransform;
+		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 	}
-	else
-	{
-		return p_base;
-	}
+	return transform;
 }
