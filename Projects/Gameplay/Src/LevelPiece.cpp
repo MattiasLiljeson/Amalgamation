@@ -56,15 +56,22 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 {
 	// From Proto \\ Jarl & Alex
 
+	// To prevent issues with scale, fetch this scale temporarily
+	AglVector3 tempScale = m_transform->getScale();
+
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
 	m_transform->setMatrix(m_transform->getMatrix() * m_connectionPoints[0].inverse());
+	m_transform->setScale(tempScale);
 	updateConnectionPoints();
 
 	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
+	AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
+	mat.SetForward( mat.GetBackward() );
 
 	// 2) Transform this piece and connection points with target piece connector matrix or blä.
-
+	m_transform->setMatrix(m_transform->getMatrix() * mat);
+	updateConnectionPoints();
 
 	// Set this connection to be occupied!
 	p_targetPiece->setChild(p_targetSlot, m_transform);
@@ -78,10 +85,10 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	// connectionPoints are assumed to be in local space relative its parent (piece).
 	// Pieces are assumed to be in global space.
 
-	AglMatrix thisLocalConnectMat = getConnectionPointMatrix(0);
+	AglMatrix thisLocalConnectMat = getLocalConnectionPointMatrix(0);
 
 	// Target connection point matrix in world space
-	AglMatrix targetGlobalConnectMat = p_targetPiece->getConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
+	AglMatrix targetGlobalConnectMat = p_targetPiece->getLocalConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
 	AglQuaternion rotation;
 	AglVector3 scale, translation;
 	targetGlobalConnectMat.toComponents(scale, rotation, translation);
@@ -118,7 +125,7 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	setChild(0, p_targetPiece->getTransform());
 }
 
-AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
+AglMatrix LevelPiece::getLocalConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
 {
 	if (p_inSpace == Space_LOCAL)
 		return AglMatrix( m_localSpaceConnectionPoints->m_collection[p_vectorIndex].transform );
@@ -135,4 +142,9 @@ void LevelPiece::updateConnectionPoints()
 			AglMatrix( m_localSpaceConnectionPoints->m_collection[i].transform ) *
 			m_transform->getMatrix();
 	}
+}
+
+AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex )
+{
+	return m_connectionPoints[p_vectorIndex];
 }

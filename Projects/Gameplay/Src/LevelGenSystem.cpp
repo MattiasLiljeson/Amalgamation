@@ -31,7 +31,7 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::run()
 {
-	generateLevelPieces(1);
+	generateLevelPieces(2);
 	//debugPrintTransformTree();
 }
 
@@ -130,7 +130,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 		// Prepare and connect newly created transform pieces to the target.
 		vector<LevelPiece*> generatedPieces(freeConnectSlots.size());
 
-		generatedPieces.resize(2);
+		//generatedPieces.resize(2);
 
 		for (int i = 0; i < generatedPieces.size(); i++)
 		{
@@ -141,8 +141,8 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			//									 &m_meshHeaders[pieceType], 
 			//									 new Transform() );
 			// Debug: Create all pieces in order using second piece type!
-			LevelPiece* piece = new LevelPiece( &m_pieceTypes[1], 
-												&m_meshHeaders[1],
+			LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], 
+												&m_meshHeaders[0],
 												new Transform() );
 			
 			//piece->connectTo(p_targetPiece, popIntVector(freeConnectSlots));
@@ -150,13 +150,20 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 
 			// DEBUG: Attach a cube between the connections!
 			// Reminder that fetching of sprint 4 needs to be done to get new help methods
-			AglVector3 pos, scale;
-			AglQuaternion rot;
-			piece->getConnectionPointMatrix(0, Space_GLOBAL).toComponents(scale, rot, pos);
-			createAndAddEntity(0, new Transform(pos, rot, AglVector3::one() * 0.5f));
-			p_targetPiece->getConnectionPointMatrix(i, Space_GLOBAL).toComponents(scale, rot, pos);
-			createAndAddEntity(0, new Transform(pos, rot, AglVector3::one() * 0.5f));
+			//AglVector3 pos, scale;
+			//AglQuaternion rot;
 
+			AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(i);
+			AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
+
+			//piece->getConnectionPointMatrix(0, Space_GLOBAL).toComponents(scale, rot, pos);
+			createAndAddEntity(0, new Transform(targetConnectorMatrix.GetTranslation(), 
+												targetConnectorMatrix.GetRotation(),
+												AglVector3::one() * 0.5f));
+			//p_targetPiece->getLocalConnectionPointMatrix(i, Space_GLOBAL).toComponents(scale, rot, pos);
+			createAndAddEntity(0, new Transform(thisConnectorMatrix.GetTranslation(), 
+												thisConnectorMatrix.GetRotation(),
+												AglVector3::one() * 0.5f));
 
 			out_pieces.push_back(piece);
 		}

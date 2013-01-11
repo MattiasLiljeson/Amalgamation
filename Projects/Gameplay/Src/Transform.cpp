@@ -141,8 +141,7 @@ void Transform::calcCompMatrix()
 
 void Transform::calcComponents()
 {
-	// implement this for scale and rotation as well
-	m_translation = m_compositionMatrix.GetTranslation();
+	m_compositionMatrix.toComponents(m_scale, m_rotation, m_translation);
 
 	AglMatrix transMat = AglMatrix::transpose( m_compositionMatrix );
 	for( int i=0; i<16; i++ )
