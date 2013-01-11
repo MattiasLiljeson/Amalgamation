@@ -571,8 +571,8 @@ int GraphicsWrapper::getWindowHeight()
 pair<int,int> GraphicsWrapper::getScreenPixelPosFromNDC( float p_x, float p_y )
 {
 	// NDC -> Screenspace
-	int screenSpaceX = static_cast<int>((p_x+1.0f) * m_width/2);
-	int screenSpaceY = static_cast<int>((p_y+1.0f) * m_height/2);
+	int screenSpaceX = static_cast<int>((p_x+1.0f)/2 * (m_width));
+	int screenSpaceY = static_cast<int>((p_y+1.0f)/2 * (m_height));
 	return pair<int,int>(screenSpaceX,screenSpaceY);
 }
 
