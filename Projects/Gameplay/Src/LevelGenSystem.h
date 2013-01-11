@@ -47,9 +47,7 @@ protected:
 private:
 	int popIntVector(vector<int>& p_vector);
 
-	TransformNode*	createTransformNodeFromType(int p_type);
-	void			deleteTransformNodeRecursive(TransformNode* p_node);
-	int				getRandomPieceType();
+	int	getRandomPieceType();
 
 	void createAndAddEntity(int p_type, Transform* p_transform);
 
@@ -57,21 +55,11 @@ private:
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
 								vector<LevelPiece*>& out_pieces);
 
-	void connectPieces(Transform* p_sourcePiece, Transform* p_sourceConnector,
-						Transform* p_otherPiece, Transform* p_otherConnector);
 	void addEndPlug(Transform* p_atConnector);
-
-	void debugPrintTransformNode(TransformNode* p_node, stringstream& p_stream, 
-								int currentDepth);
-	void debugPrintTransformTree();
 
 	vector<ConnectionPointCollection> m_pieceTypes;
 	vector<AglMeshHeader> m_meshHeaders;
-
-	map<Transform*, TransformNode*> m_transformHierarchy;
-	
-	Transform* m_invalidAttachment;
-	TransformNode* m_rootTransform;
+	vector<LevelPiece*> m_generatedPieces;
 
 	GraphicsBackendSystem* graphicsBackend;
 };

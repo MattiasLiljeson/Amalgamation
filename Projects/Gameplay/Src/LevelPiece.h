@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <AglMatrix.h>
+#include <AglOBB.h>
+#include <AglBoundingSphere.h>
 using namespace std;
 
 class Transform;
@@ -32,23 +34,30 @@ public:
 	LevelPiece(ConnectionPointCollection* p_connectionPoints,
 				AglMeshHeader* p_meshHeader, 
 				Transform* p_transform);
+	~LevelPiece();
+
 	void		updateConnectionPoints();
 	AglMatrix	getLocalConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex);
 	Transform	getConnectionPoint(int p_vectorIndex);
 	vector<int> findFreeConnectionPointSlots();
-	Transform*	getTransform();
-	void		setTransform();
+	Transform*  getTransform() const;
 	int			getMeshId();
-	Transform*	getChild(int p_inSlot);
+	const Transform* getChild(int p_inSlot) const;
 	void		setChild(int p_inSlot, Transform* p_transform);
-	void		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
+	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
+	const AglOBB& getBoundingBox() const;
+	const AglBoundingSphere& getBoundingSphere() const;
 protected:
 private:
+	void updateBoundingVolumes();
+
 	ConnectionPointCollection*	m_localSpaceConnectionPoints;
 	AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;
 	vector<Transform>			m_connectionPoints;
+	AglOBB						m_boundingBox;
+	AglBoundingSphere			m_boundingSphere;
 };

@@ -3,6 +3,7 @@
 #include <ConnectionPointCollection.h>
 #include "Transform.h"
 #include <cstdlib>
+#include <AglMesh.h>
 
 LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 					   AglMeshHeader* p_meshHeader, 
@@ -18,6 +19,12 @@ LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 	m_connectionPoints.resize(maxChildCount);
 
 	updateConnectionPoints();
+	updateBoundingVolumes();
+}
+
+LevelPiece::~LevelPiece()
+{
+	delete m_transform;
 }
 
 vector<int> LevelPiece::findFreeConnectionPointSlots()
@@ -32,7 +39,7 @@ vector<int> LevelPiece::findFreeConnectionPointSlots()
 	return freeSlots;
 }
 
-Transform* LevelPiece::getTransform()
+Transform* LevelPiece::getTransform() const
 {
 	return m_transform;
 }
@@ -42,7 +49,7 @@ int LevelPiece::getMeshId()
 	return m_localSpaceConnectionPoints->m_meshId;
 }
 
-Transform* LevelPiece::getChild( int p_inSlot )
+const Transform* LevelPiece::getChild( int p_inSlot ) const
 {
 	return m_children[p_inSlot];
 }
@@ -53,18 +60,18 @@ void LevelPiece::setChild( int p_inSlot, Transform* p_transform )
 	m_childSlotsOccupied[p_inSlot]	= true;
 }
 
-void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
+bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 {
-	// From Proto \\ Jarl & Alex
+	// TODO: ? Checking collision before pieces are created to reduce overhead?
 
 	// To prevent issues with scale, fetch this scale temporarily
 	AglVector3 tempScale = m_transform->getScale();
 
 	// Rotate the connection point arbitrarily around its forward!
-	Transform transform = m_connectionPoints[0];
-	transform.setRotation(transform.getRotation() 
-		* AglQuaternion::constructFromAxisAndAngle(transform.getForward(), (rand() % 360) * 3.1415f / 180.0f));
-	m_connectionPoints[0] = transform;
+	//Transform transform = m_connectionPoints[0];
+	//transform.setRotation(transform.getRotation() 
+	//	* AglQuaternion::constructFromAxisAndAngle(transform.getForward(), (rand() % 90) * 3.1415f / 180.0f));
+	//m_connectionPoints[0] = transform;
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
@@ -95,52 +102,9 @@ void LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	p_targetPiece->setChild(p_targetSlot, m_transform);
 	setChild(0, p_targetPiece->getTransform());
 
-	//return;
-	//// From Proto \\ Anton & Alex
+	updateBoundingVolumes();
 
-	//// Set the position of this piece to the position of the target, with the offset of
-	//// the target connection point and this connection point
-	//// connectionPoints are assumed to be in local space relative its parent (piece).
-	//// Pieces are assumed to be in global space.
-
-	//AglMatrix thisLocalConnectMat = getLocalConnectionPointMatrix(0);
-
-	//// Target connection point matrix in world space
-	//AglMatrix targetGlobalConnectMat = p_targetPiece->getLocalConnectionPointMatrix(p_targetSlot, Space_GLOBAL);
-	//AglQuaternion rotation;
-	//AglVector3 scale, translation;
-	//targetGlobalConnectMat.toComponents(scale, rotation, translation);
-
-	//AglMatrix thisNewGlobalMat = targetGlobalConnectMat * 
-	//								thisLocalConnectMat.inverse();
-
-	//// TODO: Fetch new code from sprint 4 that has AglMatrix::GetRotation()
-	//thisNewGlobalMat.toComponents(scale, rotation, translation);
-
-	//rotation *= AglQuaternion::constructFromAxisAndAngle(thisLocalConnectMat.GetRight(), 3.141592f);
-	//m_transform->setRotation(rotation);
-	//
-
-	//// Positioning
-	//// -----------
-	//// Get distance from this piece and its connection point. This can be found by taking
-	//// the length of the connection point's position since it is defined in local space.
-	//AglVector3 thisConnectionPointPosition = thisLocalConnectMat.GetTranslation();
-	//float length = thisConnectionPointPosition.length();
-	//AglVector3 globalTargetConnectionPointPosition = targetGlobalConnectMat.
-	//												GetTranslation();
-
-	//// Move this piece using the forward direction of the target point connection
-	//m_transform->setTranslation( globalTargetConnectionPointPosition + 
-	//							targetGlobalConnectMat.GetForward() * length);
-
-	////m_transform->setTranslation( p_targetPiece->getTransform()->getTranslation() +
-	////							targetConnectionPointMatrix.GetTranslation() +
-	////							thisConnectionPointMatrix.GetTranslation() );
-
-	//// Set this connection to be occupied!
-	//p_targetPiece->setChild(p_targetSlot, m_transform);
-	//setChild(0, p_targetPiece->getTransform());
+	return true;
 }
 
 AglMatrix LevelPiece::getLocalConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
@@ -170,4 +134,29 @@ AglMatrix LevelPiece::getConnectionPointMatrix( int p_vectorIndex )
 Transform LevelPiece::getConnectionPoint( int p_vectorIndex )
 {
 	return m_connectionPoints[p_vectorIndex];
+}
+
+const AglOBB& LevelPiece::getBoundingBox() const
+{
+	return m_boundingBox;
+}
+
+void LevelPiece::updateBoundingVolumes()
+{
+	// Update the bounding sphere!
+	m_boundingSphere.position	= m_transform->getTranslation() + 
+									m_meshHeader->boundingSphere.position;
+	m_boundingSphere.radius		= m_transform->getScale().x * m_meshHeader->boundingSphere.radius;
+
+	// TODO: Updating bounding box. Incomplete now! world requires translation and rotation,
+	// then, size needs to be set!
+	m_boundingBox.size = m_transform->getScale() * m_meshHeader->minimumOBB.size;
+
+	AglMatrix mat(AglVector3::one(), m_transform->getRotation(), m_transform->getTranslation());
+	m_boundingBox.world = m_meshHeader->minimumOBB.world * mat;
+}
+
+const AglBoundingSphere& LevelPiece::getBoundingSphere() const
+{
+	return m_boundingSphere;
 }
