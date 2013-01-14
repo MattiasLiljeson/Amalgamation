@@ -10,6 +10,7 @@ Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
 	clear();
 	m_senderId = p_senderId;
 	setData(p_data,p_size);
+	*this >> m_packetType;
 }
 
 Packet::Packet( char p_packetType )
@@ -251,4 +252,9 @@ int Packet::getSenderId()
 void Packet::setSenderId( int p_senderId )
 {
 	m_senderId = p_senderId;
+}
+
+char Packet::getPacketType()
+{
+	return m_packetType;
 }

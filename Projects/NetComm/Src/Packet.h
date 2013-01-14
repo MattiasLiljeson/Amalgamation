@@ -79,9 +79,9 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Returns the packet type, it's the overall packet type and not be confused with 
 	/// EntityType
-	/// \return int
+	/// \return char
 	///-----------------------------------------------------------------------------------
-	int getPacketType();
+	char getPacketType();
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the identity of the sender.
