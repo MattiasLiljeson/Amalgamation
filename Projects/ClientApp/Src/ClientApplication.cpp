@@ -171,7 +171,7 @@ void ClientApplication::initSystems()
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
-	EntityFactory* factory = new EntityFactory( m_world );
+	EntityFactory* factory = new EntityFactory();
 	m_world->setSystem( factory, true);
 
 	/************************************************************************/

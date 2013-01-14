@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{8573d510-e781-4bb1-9a99-5cfb1ae614c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities\QueueList">
-      <UniqueIdentifier>{6f7c2329-cd25-41f7-b8b9-beceae9ff2a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities\Vector3">
-      <UniqueIdentifier>{451be5ff-6e8c-49f6-a74f-ffdff8c1de41}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems">
       <UniqueIdentifier>{3b4ffbfb-44ad-46fd-9668-cf5457cf2378}</UniqueIdentifier>
     </Filter>
@@ -78,12 +69,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="QueueList.h">
-      <Filter>Utilities\QueueList</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Utilities\Vector3</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkSynced.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -287,9 +272,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Utilities\Vector3</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -395,8 +377,6 @@
     <ClCompile Include="LookAtSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCameraControllerSystem.cpp">
-    </ClCompile>
     <ClCompile Include="ShieldModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
@@ -447,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="TimerSystem.cpp">
       <Filter>Systems\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCameraControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
