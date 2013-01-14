@@ -15,6 +15,7 @@
 #include "ThrustPacket.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
+#include "UpdateClientStatsPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -86,9 +87,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			/* Send the "real" ping back to the client as a "your ping" message.    */
 			/************************************************************************/
-			Packet newClientStats((char)PacketType::UpdateClientStats);
-			newClientStats << info.ping;
-			m_server->unicastPacket(newClientStats, packet.getSenderId());
+			UpdateClientStatsPacket updatedClientPacket;
+			updatedClientPacket.ping = info.ping;
+			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}		
 	}
 	

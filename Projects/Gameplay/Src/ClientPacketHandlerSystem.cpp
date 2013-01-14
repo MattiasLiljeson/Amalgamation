@@ -38,6 +38,7 @@
 #include "EntityUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
+#include "UpdateClientStatsPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -105,7 +106,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			}
 		}
 #pragma endregion 
-
+		/************************************************************************/
+		/* Score is now included in player update client stats packets.			*/
+		/************************************************************************/
+		/*
 		else if(packetType == (char)PacketType::ScoresUpdate)
 		{
 			NetworkScoreUpdatePacket scoreUpdateData;
@@ -132,6 +136,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		*/
 		else if(packetType == (char)PacketType::Ping)
 		{
 			PingPacket pingPacket;
@@ -143,19 +148,20 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::Pong)
 		{
+			PongPacket pongPacket;
+			pongPacket.unpack(packet);
 			float totalElapsedTime = m_world->getElapsedTime();
-			float timeWhenSent;
-
-			packet >> timeWhenSent;
 
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
 			/************************************************************************/
-			m_currentPing = (totalElapsedTime - timeWhenSent)*1000.0f;
+			m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
 		}
 		else if(packetType == (char)PacketType::UpdateClientStats)
 		{
-			packet >> m_currentPing;
+			UpdateClientStatsPacket updateClientPacket;
+			updateClientPacket.unpack(packet);
+			m_currentPing = updateClientPacket.ping;
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{

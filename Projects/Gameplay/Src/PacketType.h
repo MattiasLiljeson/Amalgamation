@@ -26,7 +26,6 @@ public:
 		EntityUpdate,
 		ClientDisconnect,
 		WelcomePacket,
-		ScoresUpdate,
 		UpdateClientStats,
 
 		// Client -> Server:

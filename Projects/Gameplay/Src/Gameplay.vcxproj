@@ -84,6 +84,7 @@
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
