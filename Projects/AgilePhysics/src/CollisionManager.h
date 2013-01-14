@@ -28,6 +28,8 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data);
 bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, 
 						RayCollisionData* p_collisionData);
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody);
+
 ///-----------------------------------------------------------------------------------
 /// Check collision between a bounding sphere and a rigid body
 /// \param p_sphere The sphere

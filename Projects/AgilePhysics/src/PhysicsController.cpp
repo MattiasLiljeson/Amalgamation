@@ -98,6 +98,7 @@ void PhysicsController::Update(float pElapsedTime)
 
 
 	mCollisions.clear();
+	mLineSegmentCollisions.clear();
 	//New update method stepping
 	//1) Update Velocity and Position
 	//2) Perform collision detection
@@ -122,6 +123,7 @@ void PhysicsController::Update(float pElapsedTime)
 	{
 		if (mRigidBodies[i].first->IsActive() && mRigidBodies[i].first->IsCollisionEnabled())
 		{
+			//Check collisions against other rigid bodies
 			for (unsigned int j = i + 1; j < mRigidBodies.size(); j++)
 			{
 				if (mRigidBodies[j].first->IsActive() && mRigidBodies[j].first->IsCollisionEnabled())
@@ -161,6 +163,14 @@ void PhysicsController::Update(float pElapsedTime)
 							}
 						}
 					}
+				}
+			}
+			//Check for collision against line segments
+			for (unsigned int j = 0; j < mLineSegments.size(); j++)
+			{
+				if (CheckCollision(mLineSegments[j], mRigidBodies[i].first))
+				{
+					mLineSegmentCollisions.push_back(UintPair(j, mRigidBodies[i].second));
 				}
 			}
 		}

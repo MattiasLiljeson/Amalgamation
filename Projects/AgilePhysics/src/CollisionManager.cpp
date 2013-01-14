@@ -55,6 +55,18 @@ bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, RayCollisionData* p_co
 		return CheckCollision(p_ray, (RigidBodyConvexHull*)p_rigidBody, p_collisionData);
 	return false;
 }
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody)
+{
+	//Check types and do appropriate tests.
+	if (p_rigidBody->GetType() == BOX)
+		return CheckCollision(p_lineSegment, (RigidBodyBox*)p_rigidBody);
+	else if (p_rigidBody->GetType() == SPHERE)
+		return CheckCollision(p_lineSegment, (RigidBodySphere*)p_rigidBody);
+	else if (p_rigidBody->GetType() == CONVEXHULL)
+		return false;
+	return false;
+}
+
 bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody)
 {
 	if (p_rigidBody->GetType() == BOX)

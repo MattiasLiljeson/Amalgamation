@@ -29,9 +29,13 @@ private:
 	vector<pair<RigidBody*, unsigned int>> mRigidBodies; ///< List of rigid bodies
 	vector<CompoundBody*> mCompoundBodies; ///<List of compound bodies
 
+	vector<LineSegment> mLineSegments; //< List of line segments
+
 	vector<ConvexHullShape*>	mConvexHullShapes; ///< Hull Shapes
 
 	vector<UintPair> mCollisions;
+
+	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
 
 	float mTimeAccum;
 
