@@ -3,10 +3,9 @@
 #include "AssemblageReader.h"
 #include "Entity.h"
 
-EntityFactory::EntityFactory( EntityWorld* p_world ) 
+EntityFactory::EntityFactory() 
 	: EntitySystem( SystemType::EntityFactory ) 
 {
-	m_world = p_world;
 }
 
 EntityFactory::~EntityFactory()

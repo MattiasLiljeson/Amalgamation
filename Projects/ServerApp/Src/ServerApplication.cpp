@@ -10,6 +10,7 @@
 #include <ServerDynamicObjectsSystem.h>
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
+#include <EntityFactory.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
