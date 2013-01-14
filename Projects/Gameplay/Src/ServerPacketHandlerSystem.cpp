@@ -1,4 +1,5 @@
 #include "ServerPacketHandlerSystem.h"
+#include "ServerPickingSystem.h"
 
 // Components
 #include "Transform.h"
@@ -93,9 +94,12 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{
+			ServerPickingSystem* picking = 
+				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+
 			RayPacket rayPacket;
 			rayPacket.unpack( packet );
-			packet.getSenderId();
+			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
 	}
 	

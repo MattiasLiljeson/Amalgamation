@@ -10,10 +10,12 @@ public:
 	{
 		m_rayIndex = -1;
 		m_latestPick = -1;
+		m_clientIndex = -1;
 	}
 
 	~PickComponent() {}
 
 	int m_rayIndex;
+	int m_clientIndex;
 	int m_latestPick;
 };

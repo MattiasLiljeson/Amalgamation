@@ -11,6 +11,7 @@
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 #include <EntityFactory.h>
+#include <ServerPickingSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -132,6 +133,10 @@ namespace Srv
 
 		m_world->initialize();
 
+		/************************************************************************/
+		/* Picking																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(), true);
 	}
 
 	void ServerApplication::initEntities()

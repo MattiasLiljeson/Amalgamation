@@ -41,7 +41,7 @@
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="PickComponent.h" />
-    <ClInclude Include="PickingSystem.h" />
+    <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
@@ -52,6 +52,7 @@
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
+    <ClInclude Include="ServerPickingSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
     <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
@@ -112,7 +113,7 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
-    <ClCompile Include="PickingSystem.cpp" />
+    <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
+    <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
