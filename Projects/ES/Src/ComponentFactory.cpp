@@ -3,9 +3,6 @@
 #include "Component.h"
 #include <string>
 
-//ComponentFactory::map_type* ComponentFactory::s_map = NULL;
-//ComponentFactory::map_type ComponentFactory::s_map;
-
 ComponentFactory::ComponentFactory()
 {
 

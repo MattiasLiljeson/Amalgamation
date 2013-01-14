@@ -26,7 +26,7 @@ using namespace std;
 ///        
 /// Detailed description.....
 /// Created on: 4-12-2012 
-///\author Mattias Liljeson
+///	\author		Mattias Liljeson
 ///---------------------------------------------------------------------------------------
 
 class DirectInputFetcher : public IMouseKeyboardFetcher

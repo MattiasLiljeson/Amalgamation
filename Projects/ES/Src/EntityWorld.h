@@ -226,6 +226,10 @@ public:
 
 	//<T extends Component> ComponentMapper<T> getMapper(Class<T> type);
 
+	void requestToShutDown();
+
+	bool shouldShutDown();
+
 private:
 	//void deleteSystemFromBag(EntitySystem* system);
 
@@ -246,5 +250,7 @@ private:
 
 	// From Java, needed?
 	vector<Manager*> m_managersBag;
+
+	bool m_shutdown;
 };
 

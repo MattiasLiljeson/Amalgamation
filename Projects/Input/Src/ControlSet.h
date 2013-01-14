@@ -54,13 +54,13 @@ struct ControlSet
 	/// returns the latest negative axis plus the positive axis times the sensitivity
 	/// \return double
 	///-----------------------------------------------------------------------------------
-	double dx();
+	double dx(double p_screenWidth);
 
 	///-----------------------------------------------------------------------------------
 	/// returns the latest negative axis plus the positive axis times the sensitivity
 	/// \return double
 	///-----------------------------------------------------------------------------------
-	double dy();
+	double dy(double p_screenHeight);
 
 };
 

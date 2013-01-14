@@ -24,6 +24,10 @@
 #include "PhysicsBody.h"
 #include "PlayerScore.h"
 
+// Packets
+#include "EntityCreationPacket.h"
+#include "WelcomePacket.h"
+
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
 	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
@@ -98,15 +102,15 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				transform = (Transform*)m_world->getComponentManager()->
 					getComponent( entityId, ComponentType::Transform );
 
-				Packet packet((char)PacketType::EntityCreation);
-				packet << (char)netSync->getNetworkType() 
-					<< netSync->getNetworkOwner() 
-					<< entityId 
-					<< transform->getTranslation() 
-					<< transform->getRotation() 
-					<< transform->getScale();
+				EntityCreationPacket data;
+				data.entityType		= static_cast<char>(netSync->getNetworkType());
+				data.owner			= netSync->getNetworkOwner();
+				data.networkIdentity = netSync->getNetworkIdentity();
+				data.translation	= transform->getTranslation();
+				data.rotation		= transform->getRotation();
+				data.scale			= transform->getScale();
 
-				m_server->unicastPacket( packet, id );
+				m_server->unicastPacket( data.pack(), id );
 			}
 
 			/************************************************************************/
@@ -120,15 +124,15 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 
-				Packet packet((char)PacketType::EntityCreation);
-				packet << (char)EntityType::StaticProp
-					<< -1 //NO OWNER
-					<< entities[i]->getIndex()
-					<< transform->getTranslation()
-					<< transform->getRotation()
-					<< transform->getScale();
+				EntityCreationPacket data;
+				data.entityType = static_cast<char>(EntityType::StaticProp);
+				data.owner = -1; //NO OWNER
+				data.networkIdentity = entities[i]->getIndex();
+				data.translation = transform->getTranslation();
+				data.rotation = transform->getRotation();
+				data.scale = transform->getScale();
 				
-				m_server->unicastPacket( packet, id );
+				m_server->unicastPacket( data.pack(), id );
 			}
 			
 		}
@@ -143,9 +147,9 @@ void ServerWelcomeSystem::initialize()
 void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 {
 	// Give the new client its Network Identity.
-	Packet identityPacket( (char)PacketType::WelcomePacket );
-	identityPacket << p_newlyConnectedClientId;
-	m_server->unicastPacket( identityPacket, p_newlyConnectedClientId );
+	WelcomePacket welcomePacket;
+	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
+	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
 	Transform* transformComp = new Transform( 
 		0, 0, 10*static_cast<float>(p_newlyConnectedClientId));
@@ -155,7 +159,15 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */
 	/************************************************************************/
-	announceConnectedClient(newShip,p_newlyConnectedClientId, transformComp);
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::Ship);
+	data.owner			= p_newlyConnectedClientId;
+	data.networkIdentity = newShip->getIndex();
+	data.translation	= transformComp->getTranslation();
+	data.rotation		= transformComp->getRotation();
+	data.scale			= transformComp->getScale();
+
+	m_server->broadcastPacket(data.pack());
 }
 
 Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, 
@@ -182,20 +194,4 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		BodyInitData::COMPOUND));
 
 	return e;
-}
-
-void ServerWelcomeSystem::announceConnectedClient(Entity* p_entity, 
-												  int p_newlyConnectedClientId, 
-												  Transform* p_shipTransform)
-{
-	Packet newClientConnected(PacketType::EntityCreation);
-	newClientConnected 
-		<< (char)EntityType::Ship 
-		<< p_newlyConnectedClientId 
-		<< p_entity->getIndex() 
-		<< p_shipTransform->getTranslation()
-		<< p_shipTransform->getRotation()
-		<< p_shipTransform->getScale();
-
-	m_server->broadcastPacket(newClientConnected);
 }

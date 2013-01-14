@@ -119,26 +119,55 @@ void Transform::setRotation( const AglQuaternion& p_rotation )
 	calcCompMatrix();
 }
 
-void Transform::setForward( const AglVector3& p_forward )
+void Transform::setForwardDirection( const AglVector3& p_forward )
 {
+	AglVector3 t_up = m_compositionMatrix.GetUp();
+	t_up = t_up - p_forward * AglVector3::dotProduct(t_up,p_forward) / AglVector3::dotProduct(t_up,t_up);
+	t_up.normalize();
+	AglVector3 t_right = AglVector3::crossProduct(t_up,p_forward);
+    t_right.normalize();
+
 	m_compositionMatrix.SetForward(p_forward);
+ 	m_compositionMatrix.SetRight(t_right);
+ 	m_compositionMatrix.SetUp(t_up);
+
+	calcComponents(false,true,true);
+
+	setScale(m_scale);
 }
 
-void Transform::setRight( const AglVector3& p_right )
-{
-	m_compositionMatrix.SetRight(p_right);
-}
+// void Transform::setRightDirection( const AglVector3& p_right )
+// {
+// 	// Not implemented yet
+// }
 
-void Transform::setUp( const AglVector3& p_up )
-{
-	m_compositionMatrix.SetUp(p_up);
-}
+// void Transform::setUpDirection( const AglVector3& p_up )
+// {
+// 	// Not implemented yet
+// }
 
 void Transform::setMatrix(const AglMatrix& p_matrix)
 {
 	m_compositionMatrix = p_matrix;
 	calcComponents();
 }
+
+
+AglVector3 Transform::getForward() const
+{
+	return m_compositionMatrix.GetForward();
+}
+
+AglVector3 Transform::getRight() const
+{
+	return m_compositionMatrix.GetRight();
+}
+
+AglVector3 Transform::getUp() const
+{
+	return m_compositionMatrix.GetUp();
+}
+
 
 const AglMatrix& Transform::getMatrix() const
 {
@@ -175,10 +204,15 @@ void Transform::calcCompMatrix()
 	}
 }
 
-void Transform::calcComponents()
+void Transform::calcComponents(bool p_calcScale/*=true*/, bool p_calcRotation/*=true*/, bool p_calcTranslation/*=true*/)
 {
-	// implement this for scale and rotation as well
-	m_translation = m_compositionMatrix.GetTranslation();
+	AglVector3* temp_scale = &m_scale;
+	AglVector3* temp_translation = &m_translation;
+	AglQuaternion* temp_rotation = &m_rotation;
+	if (!p_calcScale) temp_scale = &AglVector3::one();
+	if (!p_calcTranslation) temp_translation = &AglVector3::zero();
+	if (!p_calcRotation) temp_rotation = &AglQuaternion::identity();
+	m_compositionMatrix.toComponents(*temp_scale,*temp_rotation,*temp_translation);
 
 	AglMatrix transMat = AglMatrix::transpose( m_compositionMatrix );
 	for( int i=0; i<16; i++ )
@@ -186,5 +220,3 @@ void Transform::calcComponents()
 		m_instanceData.worldTransform[i] = transMat[i];
 	}
 }
-
-

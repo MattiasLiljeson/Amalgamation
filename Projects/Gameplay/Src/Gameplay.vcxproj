@@ -25,7 +25,9 @@
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
+    <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -40,8 +42,11 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="Packetizer.h" />
+    <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
+    <ClInclude Include="PongPacket.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
@@ -76,8 +81,11 @@
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
+    <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioBackendSystem.cpp" />
@@ -92,6 +100,8 @@
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EntityCreationPacket.cpp" />
+    <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
@@ -105,7 +115,9 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
@@ -131,8 +143,11 @@
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
+    <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>
