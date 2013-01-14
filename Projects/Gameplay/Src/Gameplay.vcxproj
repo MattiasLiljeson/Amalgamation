@@ -26,6 +26,7 @@
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="EntityType.h" />
+    <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
