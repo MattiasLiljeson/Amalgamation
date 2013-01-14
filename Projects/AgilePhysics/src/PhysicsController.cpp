@@ -76,6 +76,33 @@ int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundin
 	return mBodies.size()-1;
 }
 
+int PhysicsController::AddLineSegment(AglVector3 p_p1, AglVector3 p_p2)
+{
+	LineSegment ls;
+	ls.p1 = p_p1;
+	ls.p2 = p_p2;
+	mLineSegments.push_back(ls);
+	return mLineSegments.size()-1;
+}
+void PhysicsController::SetLineSegment(AglVector3 p_p1, AglVector3 p_p2, int p_index)
+{
+	mLineSegments[p_index].p1 = p_p1;
+	mLineSegments[p_index].p2 = p_p2;
+}
+int PhysicsController::AddRay(AglVector3 p_o, AglVector3 p_dir, float maxLength)
+{
+	LineSegment ls;
+	ls.p1 = p_o;
+	ls.p2 = p_o + p_dir * maxLength;
+	mLineSegments.push_back(ls);
+	return mLineSegments.size()-1;
+}
+void PhysicsController::SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength)
+{
+	mLineSegments[p_index].p1 = p_o;
+	mLineSegments[p_index].p2 = p_o + p_dir * maxLength;
+}
+
 void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
 {
 	if (p_compound)

@@ -52,6 +52,7 @@
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
+#include <PickingSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RenderPrepSystem.h>
@@ -276,6 +277,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem(new MineControllerSystem(), true);
 	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
 	m_world->setSystem(new ShipModulesControllerSystem, true);
+	m_world->setSystem(new PickingSystem(), true);
 
 	m_world->initialize();
 }

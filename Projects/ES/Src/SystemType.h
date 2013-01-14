@@ -49,6 +49,7 @@ public:	//Enums
 		TimerSystem,
 		ServerDynamicObjectsSystem,
 		ServerStaticObjectsSystem,
+		PickingSystem,
 		NUM_SYSTEM_TYPES
 	};
 
