@@ -7,7 +7,7 @@ AnalogueControl::AnalogueControl( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis 
 {
 	m_axis = p_axis;
 
-	//HACK: Multiple fallthroughs!
+	//NOTE: Multiple fallthroughs!
 	switch( p_axis )
 	{
 	case InputHelper::TRIGGER_L:

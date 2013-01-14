@@ -77,7 +77,7 @@ void SystemManager::deleteSystem( EntitySystem* p_system)
 			m_systemList.erase(it);
 	}
 
-	//HACK: break in for-loop 
+	//NOTE: break in for-loop 
 	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	{

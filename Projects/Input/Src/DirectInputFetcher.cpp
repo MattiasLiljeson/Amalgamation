@@ -42,7 +42,7 @@ void DirectInputFetcher::update()
 	m_mouseTravel[InputHelper::Y_NEGATIVE] = (int)m_mousestate.lY;
 	m_mouseTravel[InputHelper::Z_NEGATIVE] = (int)m_mousestate.lZ;
 
-	//HACK: Could be done by using mouseTravel:
+	//NOTE: Could be done by using mouseTravel:
 	// The mouse position is being fetched not through Direct InputHelper but through
 	// the windows api. The z-component (scroll wheel) is fetched through DI.
 	POINT cursorPos;

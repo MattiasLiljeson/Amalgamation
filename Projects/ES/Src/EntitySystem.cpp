@@ -272,7 +272,7 @@ int EntitySystem::findEntityInActive( Entity* p_entity )
 {
 	int idx = -1;
 
-	//HACK: break in for-loop
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_actives.size(); i++ )
 	{
 		if( m_actives[i] == p_entity )
