@@ -10,6 +10,7 @@
 #include "ProcessMessageTerminate.h"
 
 #include "TcpCommunicationProcess.h"
+#include "ProcessMessagePacketOverflow.h"
 
 TcpClient::TcpClient()
 {
@@ -150,6 +151,13 @@ void TcpClient::processMessages()
 				m_connecterProcess = NULL;
 			}
 		}
+		else if( message->type == MessageType::PACKET_OVERFLOW )
+		{
+			ProcessMessagePacketOverflow* packetOverflowMessage = NULL;
+			packetOverflowMessage = static_cast<ProcessMessagePacketOverflow*>( message );
+			m_totalNumberOfOverflowPackets =
+				packetOverflowMessage->numberOfOverflowPackets;
+		}
 
 		delete message;
 	}
@@ -240,6 +248,11 @@ void TcpClient::resetNumberOfSentPackets()
 unsigned int TcpClient::getNumberOfReceivedPackets()
 {
 	return m_numberOfReceivedPackets;
+}
+
+unsigned int TcpClient::getTotalNumberOfOverflowPackets()
+{
+	return m_totalNumberOfOverflowPackets;
 }
 
 void TcpClient::resetNumberOfReceivedPackets()

@@ -77,4 +77,5 @@ private:
 	unsigned int m_dataReceivedPerSecond;
 	unsigned int m_dataSentCounter;
 	unsigned int m_dataReceivedCounter;
+	unsigned int m_totalNumberOfOverflowPackets;
 };

@@ -155,7 +155,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */
 	/************************************************************************/
-	announceConnectedClient(newShip,p_newlyConnectedClientId, transformComp);
+	announceConnectedClients(newShip,p_newlyConnectedClientId, transformComp);
 }
 
 Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, 
@@ -184,7 +184,7 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	return e;
 }
 
-void ServerWelcomeSystem::announceConnectedClient(Entity* p_entity, 
+void ServerWelcomeSystem::announceConnectedClients(Entity* p_entity, 
 												  int p_newlyConnectedClientId, 
 												  Transform* p_shipTransform)
 {

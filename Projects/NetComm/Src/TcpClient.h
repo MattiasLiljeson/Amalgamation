@@ -59,6 +59,7 @@ public:
 	unsigned int getNumberOfReceivedPackets();
 	unsigned int getTotalDataSent();
 	unsigned int getTotalDataReceived();
+	unsigned int getTotalNumberOfOverflowPackets();
 
 	void resetNumberOfSentPackets();
 	void resetNumberOfReceivedPackets();
@@ -81,5 +82,7 @@ private:
 	unsigned int m_numberOfReceivedPackets;
 	unsigned int m_totalDataSent;
 	unsigned int m_totalDataReceived;
+
+	unsigned int m_totalNumberOfOverflowPackets;
 
 };

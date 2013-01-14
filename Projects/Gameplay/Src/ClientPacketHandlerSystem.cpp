@@ -52,6 +52,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataReceivedPerSecond = 0;
 	m_dataSentCounter = 0;
 	m_dataReceivedCounter = 0;
+	m_totalNumberOfOverflowPackets = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -337,6 +338,11 @@ void ClientPacketHandlerSystem::initialize()
 		"Data sent/f", TwType::TW_TYPE_UINT32,
 		&m_totalDataSent, "group='Per frame'" );
 
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::OVERALL,
+		"Total overflow packets", TwType::TW_TYPE_UINT32,
+		&m_totalNumberOfOverflowPackets, "group='network bug'" );
+
 	/************************************************************************/
 	/* Per second data.														*/
 	/************************************************************************/
@@ -400,6 +406,8 @@ void ClientPacketHandlerSystem::updateCounters()
 	m_totalDataSent = m_tcpClient->getTotalDataSent();
 	m_tcpClient->resetTotalDataSent();
 	m_dataSentCounter += m_totalDataSent;
+
+	m_totalNumberOfOverflowPackets = m_tcpClient->getTotalNumberOfOverflowPackets();
 
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 		checkTimeInterval(TimerIntervals::EverySecond))
