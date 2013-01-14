@@ -40,7 +40,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		Packet packet = m_server->popNewPacket();
 
 		char packetType;
-		packet >> packetType;
+		packetType = packet.getPacketType();
 		
 		if(packetType == (char)PacketType::ThrustPacket)
 		{

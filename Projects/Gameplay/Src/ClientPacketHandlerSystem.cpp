@@ -67,7 +67,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char packetType;
 		
-		packet >> packetType;
+		packetType = packet.getPacketType();
+
 #pragma region EntityUpdate
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
