@@ -146,10 +146,5 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 	thrustPacket.thrustVector = p_thrust;
 	thrustPacket.angularVector = p_angularVec;
 
-//	Packet shipTransform = Packet((char)PacketType::ThrustPacket);
-//	shipTransform << p_syncedInfo->getNetworkIdentity()
-//		<< p_thrust
-//		<< p_angularVec;
-
 	m_client->sendPacket( thrustPacket.pack() );
 }

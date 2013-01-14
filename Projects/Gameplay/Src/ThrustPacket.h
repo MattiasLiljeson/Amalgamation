@@ -20,8 +20,6 @@ class ThrustPacket: Packetizer
 public:
 	ThrustPacket();
 
-	~ThrustPacket();
-
 	///-----------------------------------------------------------------------------------
 	/// Generate a packet from the ThrustPacket's variables.
 	/// \return Packet

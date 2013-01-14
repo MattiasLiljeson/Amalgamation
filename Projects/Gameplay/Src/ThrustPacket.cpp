@@ -8,10 +8,6 @@ ThrustPacket::ThrustPacket()
 	angularVector = AglVector3();
 }
 
-ThrustPacket::~ThrustPacket()
-{
-}
-
 Packet ThrustPacket::pack()
 {
 	Packet packet( (char)PacketType::ThrustPacket );
