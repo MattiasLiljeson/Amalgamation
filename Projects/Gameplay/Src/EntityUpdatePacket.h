@@ -27,7 +27,8 @@ public:
 
 public:
 	/************************************************************************/
-	/* Might not be needed as the networkIdentity can fetch the type?		*/
+	/* EntityType Might not be needed as the networkIdentity can fetch the	*/
+	/* type?																*/
 	/************************************************************************/
 	char entityType; 
 	int networkIdentity;

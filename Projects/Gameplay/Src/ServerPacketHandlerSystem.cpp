@@ -63,7 +63,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			pingPacket.unpack( packet );
 
 			Packet response((char)PacketType::Pong);
-			response << pingPacket.clientTime;
+			response << pingPacket.timeStamp;
 
 			m_server->unicastPacket( response, packet.getSenderId() );
 		}
@@ -75,7 +75,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			PongPacket pongPacket;
 			pongPacket.unpack( packet );
-			timeWhenSent = pongPacket.clientTime;
+			timeWhenSent = pongPacket.timeStamp;
 
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
@@ -98,7 +98,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		float timeStamp = m_world->getElapsedTime();
 
 		PingPacket pingPacket;
-		pingPacket.clientTime = timeStamp;
+		pingPacket.timeStamp = timeStamp;
 
 		m_server->broadcastPacket( pingPacket.pack() );
 	}

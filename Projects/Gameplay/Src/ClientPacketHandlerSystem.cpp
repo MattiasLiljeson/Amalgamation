@@ -35,6 +35,9 @@
 #include "TimerSystem.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
+#include "EntityUpdatePacket.h"
+#include "EntityCreationPacket.h"
+#include "WelcomePacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -74,15 +77,12 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma region EntityUpdate
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
-			NetworkEntityUpdatePacket data = readUpdatePacket(packet);
+			EntityUpdatePacket data;
+			data.unpack(packet);
 			if (data.entityType == (char)EntityType::Ship ||
 				data.entityType == (char)EntityType::Prop)
 			{
 
-				if(data.entityType == (char)EntityType::Prop)
-				{
-					data.entityType = data.entityType;
-				}
 				// HACK: This is VERY inefficient for large amount of
 				// network-synchronized entities. (Solve later)
 				for( unsigned int i=0; i<p_entities.size(); i++ )
@@ -91,32 +91,21 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					netSync = static_cast<NetworkSynced*>(
 						m_world->getComponentManager()->getComponent(
 						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-					if( netSync->getNetworkIdentity() == data.networkId )
+					if( netSync->getNetworkIdentity() == data.networkIdentity )
 					{
 						Transform* transform = NULL;
 						transform = static_cast<Transform*>(
 							m_world->getComponentManager()->getComponent(
 							p_entities[i]->getIndex(), ComponentType::Transform ) );
-						transform->setTranslation( data.position );
+						transform->setTranslation( data.translation );
 						transform->setRotation( data.rotation );
 						transform->setScale( data.scale );
 					}
 				}
 			}
 		}
-		else if(packetType == (char)PacketType::ShipLocationResponse)
-		{
-			/************************************************************************/
-			/* Check if the packet is position approve or correction.				*/
-			/* If not approve set the position, rotation and scale.					*/
-			/* If approve do nothing.												*/
-			/************************************************************************/
-		}
 #pragma endregion 
-		else if(packetType == (char)PacketType::WelcomePacket)
-		{
-			handleWelcomePacket(packet);
-		}
+
 		else if(packetType == (char)PacketType::ScoresUpdate)
 		{
 			NetworkScoreUpdatePacket scoreUpdateData;
@@ -149,7 +138,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			pingPacket.unpack( packet );
 
 			PongPacket pongPacket;
-			pongPacket.clientTime = pingPacket.clientTime;
+			pongPacket.timeStamp = pingPacket.timeStamp;
 			m_tcpClient->sendPacket( pongPacket.pack() );
 		}
 		else if(packetType == (char)PacketType::Pong)
@@ -170,16 +159,22 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
-			handleEntityCreationPacket(packet);
+			EntityCreationPacket data;
+			data.unpack(packet);
+			handleEntityCreationPacket(data);
+		}
+		else if(packetType == (char)PacketType::WelcomePacket)
+		{
+			handleWelcomePacket(packet);
 		}
 	}
 }
 
 void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 {
-	int id;
-	p_packet >> id;
-	m_tcpClient->setId( id );
+	WelcomePacket data;
+	data.unpack(p_packet);
+	m_tcpClient->setId( data.clientNetworkIdentity );
 
 	/************************************************************************/
 	/* Debug info!															*/
@@ -190,12 +185,14 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 		m_tcpClient->getIdPointer(), "" );
 }
 
-void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
+void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
+	/************************************************************************/
+	/* Mainly assemblage things!											*/
+	/************************************************************************/
 	Entity* entity;
 	Component* component;
-	NetworkEntityCreationPacket data = readCreationPacket(p_packet);
-	if (data.entityType == (char)EntityType::Ship )
+	if (p_packet.entityType == (char)EntityType::Ship )
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
@@ -205,19 +202,19 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		/************************************************************************/
 		entity = m_world->createEntity();
 
-		Transform* transform = new Transform( data.position, data.rotation, 
-			data.scale);
+		Transform* transform = new Transform( p_packet.translation, p_packet.rotation, 
+			p_packet.scale);
 
 		component = new RenderInfo( shipMeshId );
 		entity->addComponent( ComponentType::RenderInfo, component );
 		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
-			new NetworkSynced(data.networkId, data.owner, EntityType::Ship));
+			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
 		/************************************************************************/
-		if(m_tcpClient->getId() == data.owner)
+		if(m_tcpClient->getId() == p_packet.owner)
 		{
 			component = new ShipFlyController(5.0f, 50.0f);
 			entity->addComponent( ComponentType::ShipFlyController, component );
@@ -248,7 +245,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 		/************************************************************************/
 		/* Attach a camera if it's the clients ship!							*/
 		/************************************************************************/
-		if(data.owner == m_tcpClient->getId())
+		if(p_packet.owner == m_tcpClient->getId())
 		{
 			int shipId = entity->getIndex();
 			float aspectRatio = 
@@ -285,13 +282,13 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 				"group=Sound min=0 max=10 step=0.001 precision=3");
 		}
 	}
-	else if ( data.entityType == (char)EntityType::StaticProp )
+	else if ( p_packet.entityType == (char)EntityType::StaticProp )
 	{
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
 		entity = m_world->createEntity();
-		component = new Transform(data.position, data.rotation, data.scale);
+		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
@@ -350,30 +347,6 @@ void ClientPacketHandlerSystem::initialize()
 		"Data sent/s", TwType::TW_TYPE_UINT32,
 		&m_dataSentPerSecond, "group='Per second'" );
 
-}
-
-NetworkEntityCreationPacket ClientPacketHandlerSystem::readCreationPacket( 
-	Packet& p_packet )
-{
-	NetworkEntityCreationPacket data;
-	p_packet >> data.entityType 
-		>> data.owner 
-		>> data.networkId 
-		>> data.position 
-		>> data.rotation 
-		>> data.scale;
-	return data;
-}
-
-NetworkEntityUpdatePacket ClientPacketHandlerSystem::readUpdatePacket( Packet& p_packet )
-{
-	NetworkEntityUpdatePacket data;
-	p_packet >> data.entityType
-		>> data.networkId 
-		>> data.position 
-		>> data.rotation 
-		>> data.scale;
-	return data;
 }
 
 NetworkScoreUpdatePacket ClientPacketHandlerSystem::readScorePacket( Packet& p_packet )
