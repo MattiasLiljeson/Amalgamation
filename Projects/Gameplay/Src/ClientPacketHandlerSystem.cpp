@@ -23,6 +23,7 @@
 #include "LookAtEntity.h"
 #include "PlayerScore.h"
 #include "GameplayTags.h"
+#include "PlayerCameraController.h"
 
 #include "GraphicsBackendSystem.h"
 #include "EntityType.h"
@@ -264,11 +265,18 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 			//entity->addComponent( ComponentType::Input, component );
 			component = new Transform( -5.0f, 0.0f, -5.0f );
 			entity->addComponent( ComponentType::Transform, component );
-			component = new LookAtEntity(shipId, AglVector3(0,3,-10),AglQuaternion::identity(),
-				10.0f,10.0f);
+			entity->addComponent( ComponentType::LookAtEntity, component );
+			component = new LookAtEntity(shipId, 
+				AglVector3(0,3,-10),
+				AglQuaternion::identity(),
+				10.0f,
+				10.0f,
+				4.0f);
 			entity->addComponent( ComponentType::LookAtEntity, component );
 			// default tag is follow
-			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
+			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+			entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
+			// listener
 			component = new AudioListener();
 			entity->addComponent(ComponentType::AudioListener, component);
 
