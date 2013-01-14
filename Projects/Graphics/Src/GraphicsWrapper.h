@@ -163,7 +163,8 @@ public:
 	void hookUpAntTweakBar();
 
 	int getWindowWidth();
-	int getWindowdHeight();
+	int getWindowHeight();
+	pair<int,int> getScreenPixelPosFromNDC(float p_x,float p_y);
 
 	void changeBackbufferRes( int p_width, int p_height );
 

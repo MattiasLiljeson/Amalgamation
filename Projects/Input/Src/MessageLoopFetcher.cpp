@@ -233,7 +233,7 @@ void MessageLoopFetcher::processWindowsEvent( UINT p_message, WPARAM p_wParam, L
 
 	case WM_CHAR:
 		{
-			//HACK: Ignore for now
+			//NOTE: Ignore for now
 
 			//// Only send through printable characters.
 			//if (w_param >= 32)

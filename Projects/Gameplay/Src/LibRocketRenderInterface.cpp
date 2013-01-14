@@ -49,7 +49,7 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 	m_factory = new BufferFactory(p_wrapper->getDevice(), p_wrapper->getDeviceContext());
 	m_wrapper = p_wrapper;
 
-	m_NDCFrom2dMatrix = createWorldMatrix();
+	UpdateOnWindowResize();
 
 	numCompiledGeometries = 0;
 
@@ -67,9 +67,6 @@ LibRocketRenderInterface::~LibRocketRenderInterface()
 		delete m_compiledGeometries[i];
 		m_compiledGeometries[i] = NULL;
 	}
-
-	// SAFE_RELEASE(rs_scissorsOn);
-	// SAFE_RELEASE(rs_scissorsOff);
 }
 
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
@@ -91,8 +88,8 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	Rocket::Core::TextureHandle p_texture)
 {
 	numCompiledGeometries++;
-	// BUG: SOME GEOMETRIES NOT DELETED! MUST BE DONE!
-	// Construct a new RocketD3D9CompiledGeometry structure, which will be returned as the handle, and the buffers to store the geometry.
+	// Construct a new RocketCompiledGeometry structure, which will be returned as the
+	// handle, and the buffers to store the geometry.
 	RocketCompiledGeometry* geometry = new RocketCompiledGeometry;
 
 	// Fill the vertex vector.
@@ -124,12 +121,6 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 		indices[i].index = p_indices[i];
 	}
 
-	//HACK: static int to enumerate menus
-	static int numMenus = 0;
-	numMenus++;
-	stringstream ss;
-	ss<<"menus nr: "<<numMenus;
-
 	
 	// Make sure to use the std tex if no texture is defined
 	if( p_texture == 0)
@@ -137,6 +128,8 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 		p_texture = 1;
 	}
 
+	stringstream ss;
+	ss<<"menus nr: "<<numCompiledGeometries;
 	geometry->meshId = m_wrapper->createMesh(ss.str(), 
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
@@ -306,7 +299,7 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	AglMatrix matTranslate = AglMatrix::identityMatrix();
 
 	int wndWidth = m_wrapper->getWindowWidth();
-	int wndHeight = m_wrapper->getWindowdHeight();
+	int wndHeight = m_wrapper->getWindowHeight();
 
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
@@ -331,4 +324,9 @@ vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( con
 	instances.push_back( data );
 
 	return instances;
+}
+
+void LibRocketRenderInterface::UpdateOnWindowResize()
+{
+	m_NDCFrom2dMatrix = createWorldMatrix();
 }

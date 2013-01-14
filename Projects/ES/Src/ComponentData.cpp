@@ -18,7 +18,7 @@ void ComponentData::release()
 
 AssemblageHelper::E_FileStatus ComponentData::setDataAsString( stringstream* p_ss )
 {
-	//Special case for strings
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_COMPONENT_DATA_NOT_SPECIFIED;
 	char dataType;
 	string dataName;
 	(*p_ss)>>dataType;
@@ -29,6 +29,7 @@ AssemblageHelper::E_FileStatus ComponentData::setDataAsString( stringstream* p_s
 
 	while( p_ss->good() )
 	{
+		status = AssemblageHelper::FileStatus_OK;
 		(*p_ss)>>tempString;
 		if(dataString != "")
 		{
@@ -38,7 +39,7 @@ AssemblageHelper::E_FileStatus ComponentData::setDataAsString( stringstream* p_s
 	}
 
 	setDataAsCharArray( dataType, dataName,dataString.c_str(), dataString.length()+1 );
-	return AssemblageHelper::FileStatus_OK;
+	return status;
 }
 
 AssemblageHelper::E_FileStatus ComponentData::getDataAsString( string* out_data )

@@ -37,6 +37,7 @@ public:	//Enums
 		PlayerScore,
 		MenuItem,
 		HudElement,
+
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
 		// -------------------
@@ -44,12 +45,8 @@ public:	//Enums
 		TAG_ShipEditMode,
 		TAG_LookAtFollowMode,
 		TAG_LookAtOrbitMode,
-		// -------------------
-		// Transform component
-		// -------------------
-				   // *FUGLY HACK!*
-		Transform, // There is a bug when an unused component idx is at the last position
-				   // in the enum. Therefore, put transform at the end for now. :/
+
+		Transform,
 		ShipModule,
 		ConnectionPointSet,
 		SpeedBoosterModule,
@@ -59,11 +56,13 @@ public:	//Enums
 		StandardMine,
 		RocketLauncherModule,
 		Connector1to2Module,
+
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		PickComponent,
 		NUM_COMPONENT_TYPES
 	};
 

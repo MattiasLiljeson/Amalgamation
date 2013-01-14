@@ -9,11 +9,13 @@
 #include "CameraInfo.h"
 #include "GraphicsBackendSystem.h"
 #include <PhysicsController.h>
+#include "InputBackendSystem.h"
+#include <Cursor.h>
+#include "PickComponent.h"
 
 PickingSystem::PickingSystem()
-	: EntitySystem(SystemType::PickingSystem, 1, ComponentType::CameraInfo)
+	: EntitySystem(SystemType::PickingSystem, 2, ComponentType::CameraInfo, ComponentType::PickComponent)
 {
-	m_rayID = -1;
 }
 
 
@@ -27,13 +29,16 @@ void PickingSystem::initialize()
 
 void PickingSystem::processEntities(const vector<Entity*>& p_entities)
 {
-	if (m_rayID < 0)
-		createRay();
-
 	float dt = m_world->getDelta();
 
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
+		PickComponent* ray = static_cast<PickComponent*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::PickComponent ) );
+
+		if (ray->m_rayIndex < 0)
+			ray->m_rayIndex = createRay();
+
 		CameraInfo* camInfo = static_cast<CameraInfo*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
 
@@ -57,32 +62,27 @@ void PickingSystem::processEntities(const vector<Entity*>& p_entities)
 		inv = AglMatrix::inverse(inv);
 
 		//Transform target location from screen space to world space
-		AglVector4 targetNDC(0, 0, 1, 1);
+		InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(
+			SystemType::InputBackendSystem ));
+		double x = input->getCursor()->getX();
+		double y = -input->getCursor()->getY();
+		AglVector4 targetNDC(x, y, 1, 1);
 		targetNDC.transform(inv);
 		targetNDC /= targetNDC.w;
 		AglVector3 target(targetNDC.x, targetNDC.y, targetNDC.z);
 		AglVector3 dir = target - position;
 		dir.normalize();
 
-		setRay(m_rayID, position, dir);
-
-
-
-
-
-		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ));
-
-		//gfx->getGfxWrapper()->
+		setRay(ray->m_rayIndex, position, dir);
 	}
 }
 
-void PickingSystem::createRay()
+int PickingSystem::createRay()
 {
 	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 		SystemType::PhysicsSystem));
 
-	m_rayID = physX->getPhysicsController()->AddRay(AglVector3(0, 0, 0), AglVector3(0, 0, 1));
+	return physX->getPhysicsController()->AddRay(AglVector3(0, 0, 0), AglVector3(0, 0, 1));
 }
 void PickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_dir)
 {

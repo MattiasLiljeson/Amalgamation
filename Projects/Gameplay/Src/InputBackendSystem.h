@@ -98,6 +98,12 @@ private:
 	static void expandIdxVectorIfNecessary( vector<int>* p_vec, int p_idx );
 
 private:
+	///-----------------------------------------------------------------------------------
+	/// Update input information to AntTweakBar
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void updateAntTweakBar();
+
 	GraphicsBackendSystem* m_graphicsBackend;
 	HINSTANCE m_hInstance;
 	InputManager* m_inputManager;

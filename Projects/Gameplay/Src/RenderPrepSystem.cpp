@@ -51,7 +51,7 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		// ===============================================================================
 		// Prepare rendering of game meshes
 		// ===============================================================================
-		//HACK: continues in loop below 
+		//NOTE: continues in loop below 
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
 			RenderInfo* renderInfo = static_cast<RenderInfo*>(

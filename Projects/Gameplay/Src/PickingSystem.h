@@ -23,9 +23,8 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+
 private:
-	int m_rayID;
-private:
-	void createRay();
+	int createRay();
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_dir);
 };

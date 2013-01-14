@@ -26,6 +26,8 @@ public:
 		// Are you casting to correct classes? have you supplied a non-NULL ptr into which
 		// the data will be read?
 		FileStatus_COMPONENT_DATA_CONVERSION_FAILED,
+		// The variable wasn't given any value
+		FileStatus_COMPONENT_DATA_NOT_SPECIFIED,
 		FileStatus_ELEMENT_COUNT
 	};
 

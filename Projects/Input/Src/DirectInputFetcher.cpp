@@ -42,7 +42,7 @@ void DirectInputFetcher::update()
 	m_mouseTravel[InputHelper::Y_NEGATIVE] = (int)m_mousestate.lY;
 	m_mouseTravel[InputHelper::Z_NEGATIVE] = (int)m_mousestate.lZ;
 
-	//HACK: Could be done by using mouseTravel:
+	//NOTE: Could be done by using mouseTravel:
 	// The mouse position is being fetched not through Direct InputHelper but through
 	// the windows api. The z-component (scroll wheel) is fetched through DI.
 	POINT cursorPos;
@@ -210,13 +210,38 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KEY_Y]		= DIK_Y;
 	m_dikFromKeyMap[InputHelper::KEY_Z]		= DIK_Z;
 
-	m_dikFromKeyMap[InputHelper::KEY_SPACE]	= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::KEY_SPACE]		= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::KEY_BACKSPACE]	= DIK_BACKSPACE;
+	m_dikFromKeyMap[InputHelper::KEY_RETURN]	= DIK_RETURN;
+
 	m_dikFromKeyMap[InputHelper::KEY_LCTRL]	= DIK_LCONTROL;
 	m_dikFromKeyMap[InputHelper::KEY_ESC]	= DIK_ESCAPE;
 	m_dikFromKeyMap[InputHelper::KEY_F1]	= DIK_F1;
 	m_dikFromKeyMap[InputHelper::KEY_F2]	= DIK_F2;
 	m_dikFromKeyMap[InputHelper::KEY_F3]	= DIK_F3;
 	m_dikFromKeyMap[InputHelper::KEY_F4]	= DIK_F4;
+
+	m_dikFromKeyMap[InputHelper::KEY_0]	= DIK_0;
+	m_dikFromKeyMap[InputHelper::KEY_1]	= DIK_1;
+	m_dikFromKeyMap[InputHelper::KEY_2]	= DIK_2;
+	m_dikFromKeyMap[InputHelper::KEY_3]	= DIK_3;
+	m_dikFromKeyMap[InputHelper::KEY_4]	= DIK_4;
+	m_dikFromKeyMap[InputHelper::KEY_5]	= DIK_5;
+	m_dikFromKeyMap[InputHelper::KEY_6]	= DIK_6;
+	m_dikFromKeyMap[InputHelper::KEY_7]	= DIK_7;
+	m_dikFromKeyMap[InputHelper::KEY_8]	= DIK_8;
+	m_dikFromKeyMap[InputHelper::KEY_9]	= DIK_9;
+
+	m_dikFromKeyMap[InputHelper::KEY_NUM0]	= DIK_NUMPAD0;
+	m_dikFromKeyMap[InputHelper::KEY_NUM1]	= DIK_NUMPAD1;
+	m_dikFromKeyMap[InputHelper::KEY_NUM2]	= DIK_NUMPAD2;
+	m_dikFromKeyMap[InputHelper::KEY_NUM3]	= DIK_NUMPAD3;
+	m_dikFromKeyMap[InputHelper::KEY_NUM4]	= DIK_NUMPAD4;
+	m_dikFromKeyMap[InputHelper::KEY_NUM5]	= DIK_NUMPAD5;
+	m_dikFromKeyMap[InputHelper::KEY_NUM6]	= DIK_NUMPAD6;
+	m_dikFromKeyMap[InputHelper::KEY_NUM7]	= DIK_NUMPAD7;
+	m_dikFromKeyMap[InputHelper::KEY_NUM8]	= DIK_NUMPAD8;
+	m_dikFromKeyMap[InputHelper::KEY_NUM9]	= DIK_NUMPAD9;
 }
 
 void DirectInputFetcher::reset()

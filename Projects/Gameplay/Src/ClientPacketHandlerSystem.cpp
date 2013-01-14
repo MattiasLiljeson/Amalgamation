@@ -27,12 +27,15 @@
 #include "GraphicsBackendSystem.h"
 #include "EntityType.h"
 #include "PacketType.h"
+#include "PickComponent.h"
 
 // Debug
 #include <DebugUtil.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
+#include "PingPacket.h"
+#include "PongPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -67,7 +70,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char packetType;
 		
-		packet >> packetType;
+		packetType = packet.getPacketType();
+
 #pragma region EntityUpdate
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
@@ -142,13 +146,12 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if(packetType == (char)PacketType::Ping)
 		{
-			float serverTime;
-			packet >> serverTime;
+			PingPacket pingPacket;
+			pingPacket.unpack( packet );
 
-			Packet response((char)PacketType::Pong);
-			response << serverTime;
-
-			m_tcpClient->sendPacket(response);
+			PongPacket pongPacket;
+			pongPacket.clientTime = pingPacket.clientTime;
+			m_tcpClient->sendPacket( pongPacket.pack() );
 		}
 		else if(packetType == (char)PacketType::Pong)
 		{
@@ -269,6 +272,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());
 			component = new AudioListener();
 			entity->addComponent(ComponentType::AudioListener, component);
+
+			//Add a picking ray to the camera so that edit mode can be performed
+			entity->addComponent(ComponentType::PickComponent, new PickComponent());
 
 			m_world->addEntity(entity);
 

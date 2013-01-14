@@ -22,8 +22,8 @@ struct ComponentData
 	template<typename T>
 	AssemblageHelper::E_FileStatus getData( T* out_value );
 	
-	// HACK: Will never return conversion failed as raw memcpy is used. No type 
-	// checking is done!
+	// NOTE: Will never return conversion failed as raw memcpy is used. No type 
+	// checking is done! Only returns if the variable wasn't defined.
 	AssemblageHelper::E_FileStatus setDataAsString( stringstream* p_ss );
 	AssemblageHelper::E_FileStatus getDataAsString( string* out_data );
 
