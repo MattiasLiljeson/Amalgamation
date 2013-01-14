@@ -49,7 +49,7 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 	m_factory = new BufferFactory(p_wrapper->getDevice(), p_wrapper->getDeviceContext());
 	m_wrapper = p_wrapper;
 
-	m_NDCFrom2dMatrix = createWorldMatrix();
+	UpdateOnWindowResize();
 
 	numCompiledGeometries = 0;
 
@@ -299,7 +299,7 @@ AglMatrix LibRocketRenderInterface::createWorldMatrix()
 	AglMatrix matTranslate = AglMatrix::identityMatrix();
 
 	int wndWidth = m_wrapper->getWindowWidth();
-	int wndHeight = m_wrapper->getWindowdHeight();
+	int wndHeight = m_wrapper->getWindowHeight();
 
 	// Flip Y-axis
 	AglVector3 scale( 2.0f/wndWidth, -2.0f/wndHeight, 1.0f );
@@ -324,4 +324,9 @@ vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( con
 	instances.push_back( data );
 
 	return instances;
+}
+
+void LibRocketRenderInterface::UpdateOnWindowResize()
+{
+	m_NDCFrom2dMatrix = createWorldMatrix();
 }

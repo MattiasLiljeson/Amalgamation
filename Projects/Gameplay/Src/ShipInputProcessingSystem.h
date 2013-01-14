@@ -142,7 +142,7 @@ private:
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
 
-	float m_mouseSensitivity;
+	float m_angleInputMultiplier;
 
 	// Correction vectors for the left and right thumb sticks.
 	double m_leftStickCorrection[2];

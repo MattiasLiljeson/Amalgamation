@@ -88,25 +88,25 @@ public:
 	void setRotation( const AglQuaternion& p_rotation );
 
 	///-----------------------------------------------------------------------------------
-	/// Set forward vector
+	/// Set forward direction of matrix, doesn't affect scale.
 	/// \param p_forward
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setForward( const AglVector3& p_forward );
+	void setForwardDirection( const AglVector3& p_forward );
 
 	///-----------------------------------------------------------------------------------
-	/// Set right vector
+	/// Set right direction of matrix, doesn't affect scale.
 	/// \param p_right
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setRight( const AglVector3& p_right );
+	// void setRightDirection( const AglVector3& p_right ); TODO
 
 	///-----------------------------------------------------------------------------------
-	/// Set up vector
+	/// Set up direction of matrix, doesn't affect scale.
 	/// \param p_up
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setUp( const AglVector3& p_up );
+	// void setUpDirection( const AglVector3& p_up ); TODO
 
 	///-----------------------------------------------------------------------------------
 	/// Set the matrix and update vectors
@@ -120,6 +120,14 @@ public:
 	/// \return A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
 	const AglMatrix& getMatrix() const;
+
+
+	inline AglVector3 getForward() const;
+
+	inline AglVector3 getRight() const;
+
+	inline AglVector3 getUp() const;
+
 
 	///-----------------------------------------------------------------------------------
 	/// Get the translated transform matrix packaged in a InstanceVertex.
@@ -154,7 +162,8 @@ private:
 	/// Calculate components from matrix
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void calcComponents();
+	void calcComponents(bool p_calcScale=true, bool p_calcRotation=true, 
+						bool p_calcTranslation=true);
 
 private:
 	static ComponentRegister<Transform> s_reg;
