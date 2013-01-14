@@ -32,7 +32,7 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	/************************************************************************/
 	/* We need to find the appropriate size for received data buffer.		*/
 	/************************************************************************/
-	m_asyncDataCapacity = 2048;
+	m_asyncDataCapacity = 512 * 51;
 	m_asyncDataLength = 0;
 	m_packetRestSize = 0;
 
@@ -102,7 +102,7 @@ void TcpCommunicationProcess::processMessages()
 
 void TcpCommunicationProcess::startPacketReceiveCallback()
 {
-	m_ioService->reset();
+//	m_ioService->reset();
 	m_activeSocket->async_receive(
 		boost::asio::buffer( m_asyncData, m_asyncDataCapacity ),
 		boost::bind( &TcpCommunicationProcess::onReceivePacket, this,

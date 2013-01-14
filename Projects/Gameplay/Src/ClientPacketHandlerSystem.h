@@ -78,4 +78,5 @@ private:
 	unsigned int m_dataSentCounter;
 	unsigned int m_dataReceivedCounter;
 	unsigned int m_totalNumberOfOverflowPackets;
+	unsigned int m_totalNumberOfStaticPropPacketsReceived;
 };

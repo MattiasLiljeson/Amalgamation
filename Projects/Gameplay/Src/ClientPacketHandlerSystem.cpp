@@ -53,6 +53,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataSentCounter = 0;
 	m_dataReceivedCounter = 0;
 	m_totalNumberOfOverflowPackets = 0;
+	m_totalNumberOfStaticPropPacketsReceived = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -288,6 +289,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 	}
 	else if ( data.entityType == (char)EntityType::StaticProp )
 	{
+		m_totalNumberOfStaticPropPacketsReceived += 1;
+
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
@@ -339,9 +342,14 @@ void ClientPacketHandlerSystem::initialize()
 		&m_totalDataSent, "group='Per frame'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::getInstance()->BarType::OVERALL,
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Total overflow packets", TwType::TW_TYPE_UINT32,
 		&m_totalNumberOfOverflowPackets, "group='network bug'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Total static props", TwType::TW_TYPE_UINT32,
+		&m_totalNumberOfStaticPropPacketsReceived, "group='network bug'" );
 
 	/************************************************************************/
 	/* Per second data.														*/

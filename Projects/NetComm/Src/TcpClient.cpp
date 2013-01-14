@@ -23,6 +23,7 @@ TcpClient::TcpClient()
 	m_numberOfReceivedPackets = 0;
 	m_totalDataSent = 0;
 	m_totalDataReceived = 0;
+	m_totalNumberOfOverflowPackets = 0;
 }
 
 TcpClient::~TcpClient()
