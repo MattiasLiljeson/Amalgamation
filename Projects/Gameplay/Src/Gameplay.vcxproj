@@ -69,7 +69,6 @@
     <ClInclude Include="InputBackendSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
-    <ClInclude Include="QueueList.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="RenderPrepSystem.h" />
     <ClInclude Include="ShipController.h" />
@@ -79,7 +78,6 @@
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioBackendSystem.cpp" />
@@ -135,7 +133,6 @@
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>
