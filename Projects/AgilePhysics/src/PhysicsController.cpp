@@ -402,6 +402,16 @@ vector<unsigned int> PhysicsController::CollidesWith(unsigned int p_b)
 		return list;
 	}
 }
+vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_b)
+{
+	vector<unsigned int> cols;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].first == p_b)
+			cols.push_back(mLineSegmentCollisions[i].second);
+	}
+	return cols;
+}
 
 void PhysicsController::ActivateBody(unsigned int pBody)
 {

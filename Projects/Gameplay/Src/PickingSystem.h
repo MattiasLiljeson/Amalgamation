@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "MainCamera.h"
 #include "Transform.h"
+#include "PickComponent.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -27,4 +28,5 @@ public:
 private:
 	int createRay();
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_dir);
+	void checkPicking(PickComponent* p_pickComponent);
 };

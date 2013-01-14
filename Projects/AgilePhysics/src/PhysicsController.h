@@ -138,6 +138,8 @@ public:
 	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
 	vector<unsigned int> CollidesWith(unsigned int p_b);
 
+	vector<unsigned int> LineCollidesWith(unsigned int p_b);
+
 	void ActivateBody(unsigned int pBody);
 	void InactivateBody(unsigned int pBody);
 	bool IsActive(unsigned int pBody);

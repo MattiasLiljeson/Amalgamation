@@ -7,11 +7,8 @@
 #include "InputBackendSystem.h"
 #include "PhysicsSystem.h"
 #include "CameraInfo.h"
-#include "GraphicsBackendSystem.h"
 #include <PhysicsController.h>
-#include "InputBackendSystem.h"
 #include <Cursor.h>
-#include "PickComponent.h"
 
 PickingSystem::PickingSystem()
 	: EntitySystem(SystemType::PickingSystem, 2, ComponentType::CameraInfo, ComponentType::PickComponent)
@@ -38,6 +35,8 @@ void PickingSystem::processEntities(const vector<Entity*>& p_entities)
 
 		if (ray->m_rayIndex < 0)
 			ray->m_rayIndex = createRay();
+
+		checkPicking(ray);
 
 		CameraInfo* camInfo = static_cast<CameraInfo*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
@@ -90,4 +89,18 @@ void PickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_dir)
 		SystemType::PhysicsSystem));
 
 	physX->getPhysicsController()->SetRay(p_o, p_dir, p_index);
+}
+void PickingSystem::checkPicking(PickComponent* p_pickComponent)
+{
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	vector<unsigned int> cols = physX->getPhysicsController()->LineCollidesWith(p_pickComponent->m_rayIndex);
+	if (cols.size() > 0)
+	{
+		p_pickComponent->m_latestPick = cols[0];
+		physX->getController()->ApplyExternalImpulse(cols[0], AglVector3(1, 0, 0), AglVector3(0, 0, 0));
+	}
+	else
+		p_pickComponent->m_latestPick = -1;
 }
