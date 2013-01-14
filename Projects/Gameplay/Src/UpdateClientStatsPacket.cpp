@@ -5,7 +5,7 @@ UpdateClientStatsPacket::UpdateClientStatsPacket()
 	ping = -1;
 
 	for (int i=0;i<MAXPLAYERS;i++)
-		score[i] = -1;
+		scores[i] = -1;
 }
 
 UpdateClientStatsPacket::~UpdateClientStatsPacket()
@@ -19,7 +19,7 @@ Packet UpdateClientStatsPacket::pack()
 	packet << ping;
 	for (int i = 0; i < MAXPLAYERS ; i++)
 	{
-		packet << score[i];
+		packet << scores[i];
 	}
 
 	return packet;
@@ -30,6 +30,6 @@ void UpdateClientStatsPacket::unpack( Packet p_packet )
 	p_packet >> ping;
 	for (int i = 0; i < MAXPLAYERS ; i++)
 	{
-		p_packet >> score[i];
+		p_packet >> scores[i];
 	}
 }
