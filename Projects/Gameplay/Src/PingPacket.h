@@ -24,6 +24,6 @@ public:
 	void unpack( Packet p_packet );
 
 public:
-	float clientTime;
+	float timeStamp;
 
 };

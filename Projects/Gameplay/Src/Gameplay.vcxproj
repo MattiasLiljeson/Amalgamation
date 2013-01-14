@@ -25,7 +25,9 @@
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
+    <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -82,6 +84,8 @@
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioBackendSystem.cpp" />
@@ -96,6 +100,8 @@
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EntityCreationPacket.cpp" />
+    <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
@@ -140,6 +146,8 @@
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>

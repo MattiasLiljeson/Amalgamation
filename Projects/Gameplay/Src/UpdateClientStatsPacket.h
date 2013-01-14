@@ -1,24 +1,28 @@
 #pragma once
-
-#include "PacketType.h"
-#include <Packet.h>
+#include "Packetizer.h"
 
 // =======================================================================================
-//	Packetizer
+//                                      UpdateClientStatsPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Handles the packing and unpacking of UpdateClientsPacket
 ///        
-/// # Packetizer
-/// Detailed description...
+/// # UpdateClientStatsPacket
+/// Detailed description.....
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class Packetizer
+class UpdateClientStatsPacket : public Packetizer
 {
 public:
-	virtual Packet pack() = 0;
-	virtual void unpack( Packet p_packet ) = 0;
+	UpdateClientStatsPacket();
+	~UpdateClientStatsPacket();
 
+	Packet pack();
+
+	void unpack( Packet p_packet );
+public:
+	float ping;
+	int score[8];
 };
