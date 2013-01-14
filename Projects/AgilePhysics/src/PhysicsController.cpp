@@ -3,6 +3,13 @@
 PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5)
 {
 	mTimeAccum = 0;
+
+
+	RigidBodySphere* s = new RigidBodySphere(AglVector3(0, 4, 0), 2, false);
+	LineSegment ls;
+	ls.p1 = AglVector3(0, 0, 0);
+	ls.p2 = AglVector3(0, 2.1f, 0);
+	CheckCollision(ls, AglVector3(-1, 2.11f, -1), AglVector3(1, 5, 1));
 }
 PhysicsController::~PhysicsController()
 {

@@ -91,6 +91,11 @@ bool CheckCollision(PhyRay p_ray, RigidBodyBox* p_box,
 ///-----------------------------------------------------------------------------------
 bool CheckCollision(PhyRay p_ray, RigidBodyConvexHull* p_hull, RayCollisionData* p_collisionData);
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodySphere* p_sphere);
+bool CheckCollision(const LineSegment& p_lineSegment, AglVector3 p_min, AglVector3 p_max);
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box);
+
+
 ///-----------------------------------------------------------------------------------
 /// Checks collision between two spheres
 /// \param p_sphere1 First Sphere
