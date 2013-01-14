@@ -18,6 +18,7 @@
 #include "GameplayTags.h"
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
+#include "ThrustPacket.h"
 
 
 
@@ -140,10 +141,15 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 													   AglVector3 p_thrust, 
 													   AglVector3 p_angularVec)
 {
-	Packet shipTransform = Packet((char)PacketType::ThrustPacket);
-	shipTransform << p_syncedInfo->getNetworkIdentity()
-		<< p_thrust
-		<< p_angularVec;
+	ThrustPacket thrustPacket;
+	thrustPacket.entityId = p_syncedInfo->getNetworkIdentity();
+	thrustPacket.thrustVector = p_thrust;
+	thrustPacket.angularVector = p_angularVec;
 
-	m_client->sendPacket(shipTransform);
+//	Packet shipTransform = Packet((char)PacketType::ThrustPacket);
+//	shipTransform << p_syncedInfo->getNetworkIdentity()
+//		<< p_thrust
+//		<< p_angularVec;
+
+	m_client->sendPacket( thrustPacket.pack() );
 }

@@ -12,6 +12,7 @@
 #include "EntityType.h"
 #include "PhysicsSystem.h"
 #include "TimerSystem.h"
+#include "ThrustPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -44,15 +45,19 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		
 		if(packetType == (char)PacketType::ThrustPacket)
 		{
-			int entityId;
-			AglVector3 thrust,angularVec;
+			ThrustPacket thrustPacket;
+			thrustPacket.unpack( packet );
+//			int entityId;
+//			AglVector3 thrust,angularVec;
 
-			packet >> entityId >> thrust >> angularVec;
+//			packet >> entityId >> thrust >> angularVec;
 
 			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
-				(m_world->getEntity(entityId)->getComponent(ComponentType::PhysicsBody));
+				(m_world->getEntity(thrustPacket.entityId)->getComponent(
+				ComponentType::PhysicsBody));
 
-			m_physics->applyImpulse(physicsBody->m_id,thrust,angularVec);
+			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector,
+				thrustPacket.angularVector );
 		}
 		if( packetType == (char)PacketType::Ping )
 		{

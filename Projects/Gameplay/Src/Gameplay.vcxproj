@@ -40,6 +40,7 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="Packetizer.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
+    <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
@@ -131,6 +133,7 @@
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
+    <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
