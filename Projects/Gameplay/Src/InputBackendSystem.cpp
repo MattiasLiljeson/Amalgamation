@@ -137,7 +137,14 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
 		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_RETURN),
 		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_RETURN), "KEY_RETURN" );
-
+	// esc
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD, 
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_ESC),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_ESC), "KEY_ESCAPE" );
+	// f4
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD, 
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_F4),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_F4), "KEY_F4" );
 
 	m_cursor = new Cursor();
 
@@ -178,11 +185,11 @@ void InputBackendSystem::process()
 		m_cursor->reset();
 		m_cursor->setScreenSize(currentWidth,currentHeight);
 	}
-
+	Control* kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_ESC);
+	if( kb_control && kb_control->getDelta()>0.5f )
+		m_world->requestToShutDown();
 
 	m_cursor->update(dt);
-
-
 
 	updateAntTweakBar();
 }
@@ -344,6 +351,12 @@ void InputBackendSystem::updateAntTweakBar()
 	if (kb_control && kb_control->getDelta()>0.5f)
 	{
 		atb->setKeyPressed(13,0); // Return in ASCII = 13
+	}
+	// F4
+	kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_F4);
+	if (kb_control && kb_control->getDelta()>0.5f)
+	{
+		atb->setKeyPressed(TW_KEY_F4,0);
 	}
 
 }
