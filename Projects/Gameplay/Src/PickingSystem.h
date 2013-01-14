@@ -4,6 +4,7 @@
 #include "MainCamera.h"
 #include "Transform.h"
 #include "PickComponent.h"
+#include "TcpClient.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -19,7 +20,7 @@
 class PickingSystem: public EntitySystem
 {
 public:
-	PickingSystem();
+	PickingSystem(TcpClient* p_client);
 	~PickingSystem();
 
 	virtual void initialize();
@@ -29,4 +30,6 @@ private:
 	int createRay();
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_dir);
 	void checkPicking(PickComponent* p_pickComponent);
+private:
+	TcpClient* m_client;
 };

@@ -291,6 +291,9 @@
     <ClInclude Include="PickComponent.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="RayPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -462,6 +465,9 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="PongPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="RayPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

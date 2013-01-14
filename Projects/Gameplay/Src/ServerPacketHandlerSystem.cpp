@@ -15,6 +15,7 @@
 #include "ThrustPacket.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
+#include "RayPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -89,7 +90,13 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			Packet newClientStats((char)PacketType::UpdateClientStats);
 			newClientStats << info.ping;
 			m_server->unicastPacket(newClientStats, packet.getSenderId());
-		}		
+		}	
+		else if (packetType == (char)PacketType::RayPacket)
+		{
+			RayPacket rayPacket;
+			rayPacket.unpack( packet );
+			packet.getSenderId();
+		}
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->

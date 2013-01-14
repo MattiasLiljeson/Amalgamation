@@ -9,10 +9,12 @@
 #include "CameraInfo.h"
 #include <PhysicsController.h>
 #include <Cursor.h>
+#include "RayPacket.h"
 
-PickingSystem::PickingSystem()
+PickingSystem::PickingSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::PickingSystem, 2, ComponentType::CameraInfo, ComponentType::PickComponent)
 {
+	m_client = p_client;
 }
 
 
@@ -73,6 +75,11 @@ void PickingSystem::processEntities(const vector<Entity*>& p_entities)
 		dir.normalize();
 
 		setRay(ray->m_rayIndex, position, dir);
+
+		RayPacket rp;
+		rp.o = position;
+		rp.d = dir;
+		m_client->sendPacket(rp.pack());
 	}
 }
 
