@@ -48,7 +48,21 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
 	m_window->changeWindowRes( p_scrWidth, p_scrHeight );
 
 	// Resize the back buffer.
-	m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );
+	m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );	
+
+	// recalc projection matrix
+	Entity* mainCamera =
+		m_world->getEntityManager()->getFirstEntityByComponentType(
+		ComponentType::MainCamera );
+	if( mainCamera != NULL )
+	{
+		CameraInfo* cameraInfo = static_cast<CameraInfo*>( mainCamera->getComponent(
+			ComponentType::CameraInfo ) );
+		cameraInfo->createPerspectiveMatrix(getAspectRatio());
+	}
+
+	// Inform AntTweakBar
+	AntTweakBarWrapper::getInstance()->setWindowSize( p_scrWidth, p_scrHeight );
 }
 
 void GraphicsBackendSystem::initialize()
@@ -126,26 +140,8 @@ void TW_CALL GraphicsBackendSystem::toggleWireframe(void* p_clientData)
 
 void TW_CALL GraphicsBackendSystem::applyNewResolution( void* p_clientData )
 {
-	m_selfPointer->m_scrWidth = m_selfPointer->m_newWidth;
-	m_selfPointer->m_scrHeight = m_selfPointer->m_newHeight;
-
-	m_selfPointer->m_window->changeWindowRes(  m_selfPointer->m_scrWidth,
-		m_selfPointer->m_scrHeight );
-	m_selfPointer->m_graphicsWrapper->changeBackbufferRes( m_selfPointer->m_scrWidth,
-		m_selfPointer->m_scrHeight );
-
-	Entity* mainCamera =
-		m_selfPointer->m_world->getEntityManager()->getFirstEntityByComponentType(
-		ComponentType::MainCamera );
-	if( mainCamera != NULL )
-	{
-		
-		CameraInfo* cameraInfo = static_cast<CameraInfo*>( mainCamera->getComponent(
-			ComponentType::CameraInfo ) );
-		cameraInfo->createPerspectiveMatrix(m_selfPointer->getAspectRatio());
-
-	}
-
+	m_selfPointer->changeResolution(m_selfPointer->m_newWidth,
+									m_selfPointer->m_newHeight);
 }
 
 float GraphicsBackendSystem::getAspectRatio()

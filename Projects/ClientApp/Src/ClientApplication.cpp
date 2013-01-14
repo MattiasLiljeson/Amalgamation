@@ -144,7 +144,7 @@ void ClientApplication::run()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 
 	MSG msg = {0};
-	while(WM_QUIT != msg.message)
+	while(m_running)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
 		{
@@ -160,6 +160,9 @@ void ClientApplication::run()
 
 			m_world->setDelta((float)dt);
 			m_world->process();
+
+			if(m_world->shouldShutDown())
+				m_running = false;
 			
 		}
 	}

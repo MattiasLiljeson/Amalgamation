@@ -32,6 +32,9 @@ public:
 	void render();
 
 private:
+	int m_wndHeight;
+	int m_wndWidth;
+
 	GraphicsBackendSystem* m_graphicsBackend;
 	InputBackendSystem* m_inputBackend;
 

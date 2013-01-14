@@ -149,7 +149,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
 
-
 protected:
 	int findEntityInActive( Entity* p_entity );
 	EntityWorld* m_world;
