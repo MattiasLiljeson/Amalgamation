@@ -44,6 +44,7 @@
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
+    <ClInclude Include="PongPacket.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />

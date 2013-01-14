@@ -14,6 +14,7 @@
 #include "TimerSystem.h"
 #include "ThrustPacket.h"
 #include "PingPacket.h"
+#include "PongPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -61,9 +62,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			PingPacket pingPacket;
 			pingPacket.unpack( packet );
 
-//			float clientTime;
-//			packet >> clientTime;
-
 			Packet response((char)PacketType::Pong);
 			response << pingPacket.clientTime;
 
@@ -75,7 +73,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			float totalElapsedTime = m_world->getElapsedTime();
 			float timeWhenSent;
 
-			packet >> timeWhenSent;
+			PongPacket pongPacket;
+			pongPacket.unpack( packet );
+			timeWhenSent = pongPacket.clientTime;
 
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
@@ -97,9 +97,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	{
 		float timeStamp = m_world->getElapsedTime();
 
-		Packet packet((char)PacketType::Ping);
-		packet << timeStamp;
+		PingPacket pingPacket;
+		pingPacket.clientTime = timeStamp;
 
-		m_server->broadcastPacket( packet );
+		m_server->broadcastPacket( pingPacket.pack() );
 	}
 }

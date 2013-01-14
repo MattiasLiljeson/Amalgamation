@@ -8,7 +8,7 @@ PingPacket::PingPacket()
 
 Packet PingPacket::pack()
 {
-	Packet packet( PacketType::Ping );
+	Packet packet( (char)PacketType::Ping );
 	packet << clientTime;
 
 	return packet;
