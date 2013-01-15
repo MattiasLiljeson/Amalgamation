@@ -252,6 +252,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Audio															*/
 	/************************************************************************/
+#ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
@@ -260,6 +261,7 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+#endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Gameplay																 */

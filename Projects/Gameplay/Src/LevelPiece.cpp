@@ -68,10 +68,10 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	AglVector3 tempScale = m_transform->getScale();
 
 	// Rotate the connection point arbitrarily around its forward!
-	//Transform transform = m_connectionPoints[0];
-	//transform.setRotation(transform.getRotation() 
-	//	* AglQuaternion::constructFromAxisAndAngle(transform.getForward(), (rand() % 90) * 3.1415f / 180.0f));
-	//m_connectionPoints[0] = transform;
+	Transform transform = m_connectionPoints[0];
+	transform.setRotation(transform.getRotation() 
+		* AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(), (rand() % 360) * 3.1415f / 180.0f));
+	m_connectionPoints[0] = transform;
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
