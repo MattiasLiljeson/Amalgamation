@@ -5,6 +5,7 @@
 #include "PhysicsSystem.h"
 #include <PhysicsController.h>
 #include "RayPacket.h"
+#include "PhysicsBody.h"
 
 ServerPickingSystem::ServerPickingSystem()
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
@@ -59,7 +60,15 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 	vector<unsigned int> cols = physX->getPhysicsController()->LineCollidesWith(p_pc.m_rayIndex);
 	if (cols.size() > 0)
 	{
-		p_pc.m_latestPick = cols[0];
+		for (unsigned int i = 0; i < p_entities.size(); i++)
+		{
+			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
+			if (pb && pb->m_id == cols[0])
+			{
+				p_pc.m_latestPick = p_entities[i]->getIndex();
+				break;
+			}
+		}
 	}
 	else
 		p_pc.m_latestPick = -1;
