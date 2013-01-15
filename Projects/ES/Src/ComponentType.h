@@ -56,7 +56,9 @@ public:	//Enums
 		StandardMine,
 		RocketLauncherModule,
 		Connector1to2Module,
-
+		LightSources,
+		ParticleEmitters,
+		PickComponent,
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/

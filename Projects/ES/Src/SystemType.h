@@ -49,6 +49,12 @@ public:	//Enums
 		TimerSystem,
 		ServerDynamicObjectsSystem,
 		ServerStaticObjectsSystem,
+		ClientPickingSystem,
+		ServerPickingSystem,
+		LibRocketRenderSystem,
+		ParticleRenderSystem,
+		LightRenderSystem,
+		AntTweakBarSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -52,9 +52,10 @@
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
+#include <ClientPickingSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <RenderPrepSystem.h>
+#include <MeshRenderSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -81,6 +82,10 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
+#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
+#include "..\..\Gameplay\Src\LightRenderSystem.h"
+#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
+#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
 
 
 
@@ -209,6 +214,7 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
+
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
@@ -216,7 +222,7 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship
@@ -240,8 +246,24 @@ void ClientApplication::initSystems()
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
+	/************************************************************************/
+	/* Renderers															*/
+	/************************************************************************/
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
+
+	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
+	m_world->setSystem( particleRender, true );
+
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+		rocketBackend );
+	m_world->setSystem( rocketRender, true );
+
+	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	m_world->setSystem( antTweakBar, true );
+
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -273,12 +295,7 @@ void ClientApplication::initSystems()
 	/* Gameplay																 */
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
-	m_world->setSystem(new MinigunModuleControllerSystem(), true);
-	m_world->setSystem(new ShieldModuleControllerSystem(), true);
-	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
-	m_world->setSystem(new MineControllerSystem(), true);
-	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
-	m_world->setSystem(new ShipModulesControllerSystem, true);
+	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
 	m_world->initialize();
 }
@@ -328,8 +345,7 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
-
-	InitModulesTestByAnton();
+	//InitModulesTestByAnton();
 
 	/*
 	//Create a camera

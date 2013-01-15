@@ -1,17 +1,15 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <InstanceData.h>
 
 class GraphicsBackendSystem;
-class LibRocketBackendSystem;
+struct InstanceData;
 
-class RenderPrepSystem : public EntitySystem
+class MeshRenderSystem : public EntitySystem
 {
 public:
-	RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend,
-		LibRocketBackendSystem* p_rocketBackend );
-	virtual ~RenderPrepSystem();
+	MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend );
+	virtual ~MeshRenderSystem();
 	virtual void initialize();
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
@@ -19,7 +17,5 @@ public:
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	GraphicsBackendSystem* m_gfxBackend;
-	LibRocketBackendSystem* m_rocketBackend;
-
 };
 

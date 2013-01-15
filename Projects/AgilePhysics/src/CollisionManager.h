@@ -28,6 +28,8 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data);
 bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, 
 						RayCollisionData* p_collisionData);
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody);
+
 ///-----------------------------------------------------------------------------------
 /// Check collision between a bounding sphere and a rigid body
 /// \param p_sphere The sphere
@@ -90,6 +92,11 @@ bool CheckCollision(PhyRay p_ray, RigidBodyBox* p_box,
 /// \return Returns true if there is a collision. False otherwise.
 ///-----------------------------------------------------------------------------------
 bool CheckCollision(PhyRay p_ray, RigidBodyConvexHull* p_hull, RayCollisionData* p_collisionData);
+
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodySphere* p_sphere);
+bool CheckCollision(const LineSegment& p_lineSegment, AglVector3 p_min, AglVector3 p_max);
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box);
+
 
 ///-----------------------------------------------------------------------------------
 /// Checks collision between two spheres

@@ -68,6 +68,8 @@ namespace Srv
 		///-----------------------------------------------------------------------------------
 		void initEntities();
 
+		void InitModulesTestByAnton();
+
 	private:
 		bool m_running;
 

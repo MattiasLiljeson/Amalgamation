@@ -1,34 +1,31 @@
 #pragma once
+
 #include "Packetizer.h"
+#include "EntityType.h"
 
 // =======================================================================================
-//                                      EntityCreationPacket
+//                                      HighlightSlotPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles the packing and unpacking of entity creations.
+/// \brief
 ///        
-/// # EntityCreationPacket
+/// # EntityUpdatePacket
 /// Detailed description.....
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class EntityCreationPacket : public Packetizer
+class HighlightSlotPacket : public Packetizer
 {
 public:
-	EntityCreationPacket();
-	~EntityCreationPacket();
+	HighlightSlotPacket();
+	~HighlightSlotPacket();
 
-	virtual Packet pack();
+	Packet pack();
 
-	virtual void unpack( Packet p_packet );
+	void unpack( Packet p_packet );
 
 public:
-	char			entityType;
-	int				owner;
-	int				networkIdentity;
-	int				meshInfo;
-	AglVector3		translation;
-	AglVector3		scale;
-	AglQuaternion	rotation;
+	int id;
+
 };

@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "MineLayerModule.h"
 #include "Transform.h"
+#include "TcpServer.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -18,7 +19,7 @@
 class MineLayerModuleControllerSystem: public EntitySystem
 {
 public:
-	MineLayerModuleControllerSystem();
+	MineLayerModuleControllerSystem(TcpServer* p_server);
 	~MineLayerModuleControllerSystem();
 
 	virtual void initialize();
@@ -26,4 +27,6 @@ public:
 
 private:
 	void spawnMine(Transform* p_transform);
+private:
+	TcpServer* m_server;
 };

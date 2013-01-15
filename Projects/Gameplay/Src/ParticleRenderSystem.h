@@ -1,30 +1,24 @@
-// =======================================================================================
-//	EntityType
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief Brief description...
-///        
-/// # NetworkType
-/// Detailed description...
-/// Created on: 13-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
+#include <EntitySystem.h>
 
-class EntityType
+class GraphicsBackendSystem;
+
+// =======================================================================================
+//                                      ParticleRenderSystem
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # ParticleRenderSystem
+/// Detailed description.....
+/// Created on: 15-1-2013 
+///---------------------------------------------------------------------------------------
+
+class ParticleRenderSystem : public EntitySystem
 {
 public:
-	enum EntityEnums
-	{
-		NON_EXISTENT = -1,
-		Ship,
-		Prop,
-		StaticProp,
-		Identity,
-		ShipModule,
-		Other,
-	};
-
-public:
-	EntityEnums type;
+	ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend );
+	~ParticleRenderSystem();
 };
+
