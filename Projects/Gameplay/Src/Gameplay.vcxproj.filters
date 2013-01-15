@@ -309,6 +309,8 @@
     <ClInclude Include="ParticleRenderSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="LightSources.h" />
+    <ClInclude Include="ParticleEmitters.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -503,5 +505,7 @@
     <ClCompile Include="ParticleRenderSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="LightSources.cpp" />
+    <ClCompile Include="ParticleEmitters.cpp" />
   </ItemGroup>
 </Project>
