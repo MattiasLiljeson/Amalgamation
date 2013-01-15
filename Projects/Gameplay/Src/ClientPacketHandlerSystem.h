@@ -63,7 +63,7 @@ private:
 	unsigned int m_dataReceivedCounter;
 	unsigned int m_totalNumberOfOverflowPackets;
 	unsigned int m_totalNumberOfStaticPropPacketsReceived;
-	vector<string> m_staticPropIdentitiesForAntTweakBar;
+	vector< pair<int,int> > m_staticPropIdentitiesForAntTweakBar;
 
 	queue<int> m_staticPropIdentities;
 };

@@ -88,9 +88,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				/* end */
 				"\n").c_str() ));
 
-			m_staticPropIdentitiesForAntTweakBar.push_back(
-				ToString(0) + " to " +
-				ToString(511));
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(0, 511));
 		}
 
 		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
@@ -105,10 +104,9 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
-
-			m_staticPropIdentitiesForAntTweakBar.push_back(
-				ToString(0) + " to " +
-				ToString(m_staticPropIdentities.front()));
+			
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(0, m_staticPropIdentities.front()));
 		}
 
 		while( m_staticPropIdentities.size() >= 2 )
@@ -131,8 +129,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					"\n").c_str() ));
 
 				m_staticPropIdentitiesForAntTweakBar.push_back(
-					ToString(firstValue) + " to " +
-					ToString(secondValue - 1));
+					pair<int, int>(firstValue, secondValue));
 			}
 		}
 
@@ -152,8 +149,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					"\n").c_str() ));
 
 				m_staticPropIdentitiesForAntTweakBar.push_back(
-					ToString(m_staticPropIdentities.front()) + " to " +
-					ToString(511));
+					pair<int, int>(m_staticPropIdentities.front(), 511));
 
 					m_staticPropIdentities.pop();
 			}
@@ -163,8 +159,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 				AntTweakBarWrapper::NETWORK,
-				ToString(i).c_str(), TwType::TW_TYPE_STDSTRING,
-				&m_staticPropIdentitiesForAntTweakBar[i],
+				("min" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				&m_staticPropIdentitiesForAntTweakBar[i].first,
+				"group='Missing packets range'" );
+
+			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+				AntTweakBarWrapper::NETWORK,
+				("max" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				&m_staticPropIdentitiesForAntTweakBar[i].second,
 				"group='Missing packets range'" );
 		}
 	}
