@@ -7,6 +7,8 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "EntityUpdatePacket.h"
+#include "PhysicsBody.h"
+#include "PhysicsSystem.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -22,6 +24,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
+	PhysicsBody* physicsBody = NULL;
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 		checkTimeInterval(TimerIntervals::Every8Millisecond) )
@@ -37,11 +40,15 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				netSync->getNetworkType() == EntityType::Prop ||
 				netSync->getNetworkType() == EntityType::ShipModule)
 			{
-
-				
 				transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(
 					p_entities[i]->getIndex(), ComponentType::Transform ) );
+
+				physicsBody = static_cast<PhysicsBody*>(
+					p_entities[i]->getComponent(ComponentType::PhysicsBody));
+				AglVector3 velocity = AglVector3(100.0f, 0, 0);
+					//static_cast<PhysicsSystem*>(m_world->getSystem(
+					//SystemType::PhysicsSystem))->getController()->getBody(physicsBody->m_id)->getVelocity();
 
 				EntityUpdatePacket updatePacket;
 				updatePacket.networkIdentity = netSync->getNetworkIdentity();
@@ -49,6 +56,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.translation	= transform->getTranslation();
 				updatePacket.rotation		= transform->getRotation();
 				updatePacket.scale			= transform->getScale();
+				updatePacket.timestamp		= m_world->getElapsedTime();
+				updatePacket.velocity		= velocity;
+
 
 				m_server->broadcastPacket( updatePacket.pack() );
 			}
