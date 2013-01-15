@@ -13,6 +13,8 @@
 #include <EntityFactory.h>
 #include <ServerPickingSystem.h>
 #include <MinigunModuleControllerSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -152,8 +154,8 @@ namespace Srv
 		/* Gameplay															*/
 		/************************************************************************/
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
-		/*m_world->setSystem(new ShieldModuleControllerSystem(), true);
-		m_world->setSystem(new MineLayerModuleControllerSystem(), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		/*m_world->setSystem(new MineLayerModuleControllerSystem(), true);
 		m_world->setSystem(new MineControllerSystem(), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
 		m_world->setSystem(new ShipModulesControllerSystem, true);
