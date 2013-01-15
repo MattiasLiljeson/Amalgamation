@@ -23,7 +23,8 @@ public:
 
 	void unpack( Packet p_packet );
 public:
-	const static int MAXPLAYERS = 8;
 	float ping;
+	float currentServerTimestamp;
+	const static int MAXPLAYERS = 8;
 	int scores[MAXPLAYERS];
 };

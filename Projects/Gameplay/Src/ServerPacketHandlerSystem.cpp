@@ -94,6 +94,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			UpdateClientStatsPacket updatedClientPacket;
 			updatedClientPacket.ping = info.ping;
+			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
 			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}	
 		else if (packetType == (char)PacketType::RayPacket)

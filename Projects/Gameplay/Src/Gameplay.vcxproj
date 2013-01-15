@@ -29,6 +29,7 @@
     <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />

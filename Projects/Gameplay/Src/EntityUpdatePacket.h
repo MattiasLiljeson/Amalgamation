@@ -32,6 +32,7 @@ public:
 	/************************************************************************/
 	char entityType; 
 	int networkIdentity;
+	float timestamp;
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;

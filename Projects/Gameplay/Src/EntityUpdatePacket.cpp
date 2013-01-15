@@ -22,7 +22,8 @@ Packet EntityUpdatePacket::pack()
 		<< networkIdentity
 		<< translation
 		<< rotation
-		<< scale;
+		<< scale
+		<< timestamp;
 
 	return packet;
 }
@@ -33,5 +34,6 @@ void EntityUpdatePacket::unpack( Packet p_packet )
 		>> networkIdentity 
 		>> translation 
 		>> rotation 
-		>> scale;
+		>> scale
+		>> timestamp;
 }
