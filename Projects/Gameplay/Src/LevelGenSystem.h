@@ -10,14 +10,9 @@
 class Transform;
 class GraphicsBackendSystem;
 class LevelPiece;
+class TcpServer;
 
 using namespace std;
-
-class TransformNode
-{
-
-};
-
 // =======================================================================================
 //                                      LevelGenSystem
 // =======================================================================================
@@ -33,13 +28,13 @@ class TransformNode
 class LevelGenSystem : public EntitySystem
 {
 public:
-	LevelGenSystem();
+	LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server);
 	virtual ~LevelGenSystem();
 
 	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
 						vector<AglMeshHeader> p_aglMeshHeaders);
 
-	vector<LevelPiece*> getGeneratedLevelPieces() const;
+	const vector<LevelPiece*>& getGeneratedLevelPieces() const;
 	void initialize();
 
 	void run();
@@ -62,5 +57,6 @@ private:
 	vector<AglMeshHeader> m_meshHeaders;
 	vector<LevelPiece*> m_generatedPieces;
 
-	GraphicsBackendSystem* graphicsBackend;
+	GraphicsBackendSystem*	m_graphicsBackend;
+	TcpServer*				m_server;
 };

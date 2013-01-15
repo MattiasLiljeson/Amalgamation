@@ -60,8 +60,8 @@
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <LookAtSystem.h>
-#include <HudSystem.h>
 #include <LevelGenSystem.h>
+#include <HudSystem.h>
 #include <CameraInfo.h>
 #include <LookAtEntity.h>
 #include <MainCamera.h>
@@ -273,6 +273,12 @@ void ClientApplication::initSystems()
 #endif // ENABLE_SOUND
 
 	/************************************************************************/
+	/* Level Gen															*/
+	/************************************************************************/
+	LevelGenSystem* levelGenerator = new LevelGenSystem(graphicsBackend, NULL);
+	m_world->setSystem( levelGenerator, true);
+
+	/************************************************************************/
 	/* Gameplay																 */
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
@@ -282,13 +288,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem(new MineControllerSystem(), true);
 	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
 	m_world->setSystem(new ShipModulesControllerSystem, true);
-
-	/************************************************************************/
-	/* Level Gen															*/
-	/************************************************************************/
-	LevelGenSystem* levelGenerator = new LevelGenSystem();
-	m_world->setSystem( levelGenerator, true);
-
 
 	m_world->initialize();
 }
@@ -319,17 +318,17 @@ void ClientApplication::initEntities()
 	ConnectionPointCollection			connectionPoints;
 	AglMeshHeader						aglMeshHeader;
 	int testchamberId = graphicsBackend->createMesh( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH,
-													 &connectionPoints,
-													 &aglMeshHeader);
+		&TESTMODELPATH,
+		&connectionPoints,
+		&aglMeshHeader);
 	levelPiecesInfo.push_back(connectionPoints);
 	meshHeaders.push_back(aglMeshHeader);
 	connectionPoints.clear();
 
 	int tunnelId = graphicsBackend->createMesh( "test_parts_4tunnel.agl",
-												&TESTMODELPATH,
-												&connectionPoints,
-												&aglMeshHeader);
+		&TESTMODELPATH,
+		&connectionPoints,
+		&aglMeshHeader);
 	levelPiecesInfo.push_back(connectionPoints);
 	meshHeaders.push_back(aglMeshHeader);
 	tempSys = m_world->getSystem(SystemType::LevelGenSystem);

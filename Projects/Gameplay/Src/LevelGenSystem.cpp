@@ -10,10 +10,15 @@
 #include <ctime>
 #include <AglCollision.h>
 #include "StaticProp.h"
+#include <TcpServer.h>
+#include "EntityCreationPacket.h"
+#include "EntityType.h"
 
-LevelGenSystem::LevelGenSystem() 
+LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
 {
+	m_graphicsBackend = p_graphicsBackend;
+	m_server = p_server;
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -28,8 +33,6 @@ LevelGenSystem::~LevelGenSystem()
 
 void LevelGenSystem::initialize()
 {
-	graphicsBackend = static_cast<GraphicsBackendSystem*>(
-						m_world->getSystem(SystemType::GraphicsBackendSystem));
 }
 
 void LevelGenSystem::run()
@@ -87,9 +90,20 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
 	entity->addComponent(ComponentType::StaticProp, new StaticProp());
 	// TODO: There needs to be added more components to the entity before it is added to
 	// the world
-	
-
 	m_world->addEntity(entity);
+
+	if (m_server)
+	{
+		EntityCreationPacket packet;
+		packet.entityType		= static_cast<char>(EntityType::StaticProp);
+		packet.networkIdentity	= -1;
+		packet.owner			= -1;
+		packet.translation		= p_transform->getTranslation();
+		packet.rotation			= p_transform->getRotation();
+		packet.scale			= p_transform->getScale();
+
+		m_server->broadcastPacket(packet.pack());
+	}
 }
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
@@ -170,7 +184,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 void LevelGenSystem::addEndPlug( Transform* p_atConnector )
 {
 	// Connector is assumed to be in world space!
-	int cubeId = graphicsBackend->getMeshId("P_cube");
+	int cubeId = m_graphicsBackend->getMeshId("P_cube");
 
 	createAndAddEntity(cubeId, p_atConnector);
 }

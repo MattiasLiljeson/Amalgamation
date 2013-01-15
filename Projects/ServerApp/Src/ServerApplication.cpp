@@ -11,6 +11,7 @@
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 #include <EntityFactory.h>
+#include <LevelGenSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -130,8 +131,18 @@ namespace Srv
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new ServerScoreSystem( m_server ), true );
 
-		m_world->initialize();
+		/************************************************************************/
+		/* Level Gen															*/
+		/************************************************************************/
+		// TODO: GraphicsBackend is required for the level gen at the moment.
+		// This does not currently work for the server!
+		// Awaiting refactoring of model management.
 
+		//LevelGenSystem* levelGenerator = new LevelGenSystem(NULL, m_server);
+		//m_world->setSystem( levelGenerator, true);
+
+
+		m_world->initialize();
 	}
 
 	void ServerApplication::initEntities()

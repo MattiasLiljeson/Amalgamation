@@ -148,8 +148,7 @@ void LevelPiece::updateBoundingVolumes()
 									m_meshHeader->boundingSphere.position;
 	m_boundingSphere.radius		= m_transform->getScale().x * m_meshHeader->boundingSphere.radius;
 
-	// TODO: Updating bounding box. Incomplete now! world requires translation and rotation,
-	// then, size needs to be set!
+	// Updating bounding box.
 	m_boundingBox.size = m_transform->getScale() * m_meshHeader->minimumOBB.size;
 
 	AglMatrix mat(AglVector3::one(), m_transform->getRotation(), m_transform->getTranslation());
