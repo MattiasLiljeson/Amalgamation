@@ -3,18 +3,18 @@
 
 PongPacket::PongPacket()
 {
-	clientTime = 0;
+	timeStamp = 0;
 }
 
 Packet PongPacket::pack()
 {
 	Packet packet( (char)PacketType::Pong );
-	packet << clientTime;
+	packet << timeStamp;
 
 	return packet;
 }
 
 void PongPacket::unpack( Packet p_packet )
 {
-	p_packet >> clientTime;
+	p_packet >> timeStamp;
 }

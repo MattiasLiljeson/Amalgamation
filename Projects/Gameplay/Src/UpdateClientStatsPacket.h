@@ -1,29 +1,29 @@
 #pragma once
-
 #include "Packetizer.h"
 
 // =======================================================================================
-//	PongPacket
+//                                      UpdateClientStatsPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Handles the packing and unpacking of UpdateClientsPacket
 ///        
-/// # PongPacket
-/// Detailed description...
+/// # UpdateClientStatsPacket
+/// Detailed description.....
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class PongPacket: public Packetizer
+class UpdateClientStatsPacket : public Packetizer
 {
 public:
-	PongPacket();
+	UpdateClientStatsPacket();
+	~UpdateClientStatsPacket();
 
 	Packet pack();
 
 	void unpack( Packet p_packet );
-
 public:
-	float timeStamp;
-
+	const static int MAXPLAYERS = 8;
+	float ping;
+	int scores[MAXPLAYERS];
 };

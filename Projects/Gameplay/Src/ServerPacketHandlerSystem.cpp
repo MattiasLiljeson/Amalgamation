@@ -17,6 +17,7 @@
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "RayPacket.h"
+#include "UpdateClientStatsPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -65,7 +66,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			pingPacket.unpack( packet );
 
 			Packet response((char)PacketType::Pong);
-			response << pingPacket.clientTime;
+			response << pingPacket.timeStamp;
 
 			m_server->unicastPacket( response, packet.getSenderId() );
 		}
@@ -77,7 +78,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			PongPacket pongPacket;
 			pongPacket.unpack( packet );
-			timeWhenSent = pongPacket.clientTime;
+			timeWhenSent = pongPacket.timeStamp;
 
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
@@ -88,9 +89,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			/* Send the "real" ping back to the client as a "your ping" message.    */
 			/************************************************************************/
-			Packet newClientStats((char)PacketType::UpdateClientStats);
-			newClientStats << info.ping;
-			m_server->unicastPacket(newClientStats, packet.getSenderId());
+			UpdateClientStatsPacket updatedClientPacket;
+			updatedClientPacket.ping = info.ping;
+			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{
@@ -101,6 +102,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
+		
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
@@ -109,7 +111,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		float timeStamp = m_world->getElapsedTime();
 
 		PingPacket pingPacket;
-		pingPacket.clientTime = timeStamp;
+		pingPacket.timeStamp = timeStamp;
 
 		m_server->broadcastPacket( pingPacket.pack() );
 	}

@@ -45,7 +45,7 @@ AssemblageHelper::E_FileStatus ComponentData::setDataAsString( stringstream* p_s
 AssemblageHelper::E_FileStatus ComponentData::getDataAsString( string* out_data )
 {
 	char* cStr;
-	getDataAsCharArray(&cStr);
+	getDataAsCharArray( (char**)&cStr );
 
 	if(out_data != NULL )
 	{

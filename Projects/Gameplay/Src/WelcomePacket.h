@@ -1,24 +1,27 @@
 #pragma once
-
-#include "PacketType.h"
-#include <Packet.h>
+#include "Packetizer.h"
 
 // =======================================================================================
-//	Packetizer
+//                                      WelcomePacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Handles the packing and unpacking of WelcomePacket
 ///        
-/// # Packetizer
-/// Detailed description...
+/// # WelcomePacket
+/// Detailed description.....
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class Packetizer
+class WelcomePacket : public Packetizer
 {
 public:
-	virtual Packet pack() = 0;
-	virtual void unpack( Packet p_packet ) = 0;
+	WelcomePacket();
+	 ~WelcomePacket();
 
+	Packet pack();
+
+	void unpack( Packet p_packet );
+public:
+	int clientNetworkIdentity;
 };

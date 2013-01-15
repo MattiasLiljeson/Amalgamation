@@ -26,11 +26,6 @@ public:
 		EntityUpdate,
 		ClientDisconnect,
 		WelcomePacket,
-		ScoresUpdate,
-		/************************************************************************/
-		/* Sends back the location for the ship. Can be approved or not			*/
-		/************************************************************************/
-		ShipLocationResponse, 
 		UpdateClientStats,
 
 		// Client -> Server:
