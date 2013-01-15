@@ -30,6 +30,7 @@
     <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />

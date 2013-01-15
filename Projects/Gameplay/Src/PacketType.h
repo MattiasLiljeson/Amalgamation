@@ -36,6 +36,7 @@ public:
 		ShipTransform,
 		ThrustPacket,
 		RayPacket,
+		ModuleHighlightPacket,
 	};
 
 };

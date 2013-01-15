@@ -217,7 +217,7 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship

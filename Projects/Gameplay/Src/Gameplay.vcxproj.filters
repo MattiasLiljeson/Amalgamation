@@ -315,6 +315,9 @@
     <ClInclude Include="ServerPickingSystem.h">
       <Filter>Systems\Gameplay\Server Only</Filter>
     </ClInclude>
+    <ClInclude Include="HighlightSlotPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -505,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="ServerPickingSystem.cpp">
       <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightSlotPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
