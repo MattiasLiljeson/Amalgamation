@@ -274,7 +274,7 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 				m_world->getComponentManager()->getComponent(p_others[i],
 				ComponentType::getTypeFor(ComponentType::ShipModule)));
 
-			if (module)
+			if (module && module->m_parentEntity < 0)
 			{
 				for (unsigned int j = 0; j < collisions.size(); j++)
 				{
