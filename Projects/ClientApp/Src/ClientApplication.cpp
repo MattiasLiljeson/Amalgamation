@@ -55,7 +55,7 @@
 #include <ClientPickingSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <RenderPrepSystem.h>
+#include <MeshRenderSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -82,6 +82,10 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
+#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
+#include "..\..\Gameplay\Src\LightRenderSystem.h"
+#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
+#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
 
 
 
@@ -210,6 +214,7 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
+
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
@@ -241,8 +246,24 @@ void ClientApplication::initSystems()
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
+	/************************************************************************/
+	/* Renderers															*/
+	/************************************************************************/
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
+
+	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
+	m_world->setSystem( particleRender, true );
+
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+		rocketBackend );
+	m_world->setSystem( rocketRender, true );
+
+	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	m_world->setSystem( antTweakBar, true );
+
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -323,7 +344,6 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	m_world->addEntity(entity);
-
 
 	//InitModulesTestByAnton();
 
