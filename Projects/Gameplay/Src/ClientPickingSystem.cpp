@@ -29,12 +29,12 @@ void ClientPickingSystem::initialize()
 
 void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 {
-	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
+	/*InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
 	Control* leftBtnControl = input->getControlByEnum(InputHelper::KEY_K);
 	double pressed = leftBtnControl->getDelta();
 
 	if (pressed <= 0)
-		return;
+		return;*/
 
 	float dt = m_world->getDelta();
 

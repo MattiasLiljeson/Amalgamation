@@ -28,5 +28,5 @@ public:
 private:
 	vector<PickComponent> m_pickComponents;
 private:
-	void handleRay(PickComponent& p_pc);
+	void handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities);
 };
