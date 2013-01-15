@@ -346,7 +346,7 @@ void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, Agl
 	mBodies[p_id]->AddImpulse(p_impulse);
 	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
 }
-void PhysicsController::ApplyExternalForce(AglVector3 p_position, float p_magnitude)
+void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_magnitude)
 {
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{

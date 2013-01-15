@@ -47,7 +47,7 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			Body* b = ps->getController()->getBody(pb->m_id);
 			if (mine->m_age > 2 && col.size() > 0)
 			{
-				ps->getController()->ApplyExternalForce(b->GetWorld().GetTranslation(), 300);
+				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
 				mine->m_age = 0;
 			}
 		}	
