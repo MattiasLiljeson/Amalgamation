@@ -4,6 +4,9 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <queue>
+
+using namespace std;
 
 class TcpClient;
 class EntityCreationPacket;
@@ -60,4 +63,7 @@ private:
 	unsigned int m_dataReceivedCounter;
 	unsigned int m_totalNumberOfOverflowPackets;
 	unsigned int m_totalNumberOfStaticPropPacketsReceived;
+	vector<string> m_staticPropIdentitiesForAntTweakBar;
+
+	queue<int> m_staticPropIdentities;
 };

@@ -124,10 +124,10 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 
 			for (unsigned int i= 0; i < entities.size(); i++)
 			{
-				if( i%20 == 0 )
-				{
-					boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-				}
+//				if( i%20 == 0 )
+//				{
+//					boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+//				}
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 

@@ -26,6 +26,7 @@
 #include "PlayerCameraController.h"
 
 #include "GraphicsBackendSystem.h"
+#include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
 
@@ -40,6 +41,8 @@
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "..\..\PhysicsTest\src\Utility.h"
+#include "InputBackendSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -68,6 +71,105 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	if( static_cast<InputBackendSystem*>(m_world->getSystem(
+		SystemType::InputBackendSystem))->getControlByEnum(
+		InputHelper::KEY_0)->getDelta() > 0 )
+	{
+		if( m_staticPropIdentities.empty() )
+		{
+			DEBUGPRINT(( string(
+				/* 0 - 511 */
+				ToString(0) + " - " +
+				ToString(511) +
+				/* byte size */
+				" = " +
+				ToString(511 * 51) +
+				" bytes" +
+				/* end */
+				"\n").c_str() ));
+
+			m_staticPropIdentitiesForAntTweakBar.push_back(
+				ToString(0) + " to " +
+				ToString(511));
+		}
+
+		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
+		{
+			DEBUGPRINT(( string(
+				/* 0 - x */
+				ToString(0) + " - " +
+				ToString(m_staticPropIdentities.front()) +
+				/* byte size */
+				" = " +
+				ToString((m_staticPropIdentities.front() + 1) * 51) +
+				" bytes" +
+				/* end */
+				"\n").c_str() ));
+
+			m_staticPropIdentitiesForAntTweakBar.push_back(
+				ToString(0) + " to " +
+				ToString(m_staticPropIdentities.front()));
+		}
+
+		while( m_staticPropIdentities.size() >= 2 )
+		{
+			int firstValue = m_staticPropIdentities.front();
+			m_staticPropIdentities.pop();
+			int secondValue = m_staticPropIdentities.front();
+
+			if( secondValue - firstValue > 1 )
+			{
+				DEBUGPRINT(( string(
+					/* x - y */
+					ToString(firstValue) + " - " +
+					ToString(secondValue - 1) +
+					/* byte size */
+					" = " +
+					ToString((secondValue - firstValue) * 51) +
+					" bytes" +
+					/* end */
+					"\n").c_str() ));
+
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					ToString(firstValue) + " to " +
+					ToString(secondValue - 1));
+			}
+		}
+
+		if( m_staticPropIdentities.size() == 1 )
+		{
+			if( m_staticPropIdentities.front() < 511 )
+			{
+				DEBUGPRINT(( string(
+					/* x - 511 */
+					ToString(m_staticPropIdentities.front()) + " - " +
+					ToString(511) +
+					/* byte size */
+					" = " +
+					ToString((511 - m_staticPropIdentities.front()) * 51) +
+					" bytes" +
+					/* end */
+					"\n").c_str() ));
+
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					ToString(m_staticPropIdentities.front()) + " to " +
+					ToString(511));
+
+					m_staticPropIdentities.pop();
+			}
+		}
+
+		for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
+		{
+			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+				AntTweakBarWrapper::NETWORK,
+				ToString(i).c_str(), TwType::TW_TYPE_STDSTRING,
+				&m_staticPropIdentitiesForAntTweakBar[i],
+				"group='Missing packets range'" );
+		}
+	}
+
+
 	updateCounters();
 
 	while (m_tcpClient->hasNewPackets())
@@ -301,6 +403,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	else if ( p_packet.entityType == (char)EntityType::StaticProp )
 	{
 		m_totalNumberOfStaticPropPacketsReceived += 1;
+		m_staticPropIdentities.push( p_packet.networkIdentity );
 
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
