@@ -10,10 +10,14 @@
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
+#include "EntityCreationPacket.h"
+#include "EntityType.h"
+#include "NetworkSynced.h"
 
-MinigunModuleControllerSystem::MinigunModuleControllerSystem()
+MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
 {
+	m_server = p_server;
 }
 
 
@@ -46,7 +50,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
 
-			InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
+			/*InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
 			Control* leftBtnControl = input->getControlByEnum(InputHelper::KEY_SPACE);
 			double pressed = leftBtnControl->getStatus();
 			if(pressed == 1.0)
@@ -55,11 +59,10 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 				{
 					spawnBullet(p_entities[i]);
 				}
-			}
+			}*/
 		}
 	}
 }
-
 void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 {
 	MinigunModule* gun = static_cast<MinigunModule*>(
@@ -68,20 +71,25 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 	if (gun->laserSightEntity < 0)
 	{
-		//Create Ray entity
-		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-
 		Entity* entity = m_world->createEntity();
-		Component* component = new RenderInfo( cubeMeshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
-
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
 		entity->addComponent( ComponentType::Transform, t);
 		m_world->addEntity(entity);
 		gun->laserSightEntity = entity->getIndex();
+
+		EntityCreationPacket data;
+		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.owner			= -1;
+		data.networkIdentity = entity->getIndex();
+		data.translation	= t->getTranslation();
+		data.rotation		= t->getRotation();
+		data.scale			= t->getScale();
+
+		entity->addComponent(ComponentType::NetworkSynced, 
+			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+
+		m_server->broadcastPacket(data.pack());
 	}
 	else
 	{

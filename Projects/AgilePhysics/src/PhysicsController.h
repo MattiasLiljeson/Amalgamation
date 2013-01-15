@@ -29,9 +29,13 @@ private:
 	vector<pair<RigidBody*, unsigned int>> mRigidBodies; ///< List of rigid bodies
 	vector<CompoundBody*> mCompoundBodies; ///<List of compound bodies
 
+	vector<LineSegment> mLineSegments; //< List of line segments
+
 	vector<ConvexHullShape*>	mConvexHullShapes; ///< Hull Shapes
 
 	vector<UintPair> mCollisions;
+
+	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
 
 	float mTimeAccum;
 
@@ -91,6 +95,11 @@ public:
 	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
+	int AddLineSegment(AglVector3 p_p1, AglVector3 p_p2);
+	void SetLineSegment(AglVector3 p_p1, AglVector3 p_p2, int p_index);
+	int AddRay(AglVector3 p_o, AglVector3 p_dir, float maxLength = 1000000000);
+	void SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength = 1000000000);
+
 	void DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound = NULL);
 	
 	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
@@ -128,6 +137,8 @@ public:
 
 	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
 	vector<unsigned int> CollidesWith(unsigned int p_b);
+
+	vector<unsigned int> LineCollidesWith(unsigned int p_b);
 
 	void ActivateBody(unsigned int pBody);
 	void InactivateBody(unsigned int pBody);

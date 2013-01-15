@@ -3,9 +3,10 @@
 #include "Control.h"
 #include <ValueClamp.h>
 #include "AntTweakBarWrapper.h"
+#include "HighlightSlotPacket.h"
 
 
-ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
+ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
 	m_angleInputMultiplier = 5000;
@@ -31,6 +32,7 @@ ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_input
 
 	m_editSwitchTrigReleased = true;
 	m_inputBackend = p_inputBackend;
+	m_client = p_client;
 }
 
 void ShipInputProcessingSystem::initialize()
@@ -132,6 +134,10 @@ void ShipInputProcessingSystem::initMouse()
 		InputHelper::MOUSE_AXIS::Y_POSITIVE);
 	m_mouseVerticalNegative		= m_inputBackend->getControlByEnum( 
 		InputHelper::MOUSE_AXIS::Y_NEGATIVE);
+
+	//Added by Anton 15/1 - 13
+	m_mouseModuleActivation = m_inputBackend->getControlByEnum(
+		InputHelper::M_LBTN);
 }
 
 void ShipInputProcessingSystem::initKeyboard()
@@ -154,6 +160,16 @@ void ShipInputProcessingSystem::initKeyboard()
 		InputHelper::KEY_Q);
 
 	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KEY_C );
+
+	//Added by Anton 15/1 - 13
+	m_keyboardModuleSlots[0] = m_inputBackend->getControlByEnum(
+		InputHelper::KEY_1);
+	m_keyboardModuleSlots[1] = m_inputBackend->getControlByEnum(
+		InputHelper::KEY_2);
+	m_keyboardModuleSlots[2] = m_inputBackend->getControlByEnum(
+		InputHelper::KEY_3);
+	m_keyboardModuleSlots[3] = m_inputBackend->getControlByEnum(
+		InputHelper::KEY_4);
 }
 
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
@@ -227,7 +243,26 @@ void ShipInputProcessingSystem::readAllTheInput(RawInputForces& p_outInput)
 		p_outInput.stateSwitchTrig=false;
 	}
 
+	//Added by Anton 15/1 - 13
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		if (m_keyboardModuleSlots[i]->getDelta() > 0)
+		{
+			//Highlight slot
+			sendModuleSlotHighlight(i);
+		}
+	}
 	
+	if (m_mouseModuleActivation->getDelta() > 0)
+	{
+		//Send activation
+		sendSlotActivation();
+	}
+	else if (m_mouseModuleActivation->getDelta() < 0)
+	{
+		//Send deactivation
+		sendSlotDeactivation();
+	}
 
 }
 
@@ -261,4 +296,20 @@ void ShipInputProcessingSystem::updateAntTweakBar(const ResultingInputForces& p_
 	m_rightStickDirWithCorrection[0] = p_input.strafeHorizontalInput + m_rightStickCorrection[0];
 	m_rightStickDirWithCorrection[1] = p_input.strafeVerticalInput + m_rightStickCorrection[1];
 	m_rightStickDirWithCorrection[2] = 0.5f;
+}
+
+void ShipInputProcessingSystem::sendModuleSlotHighlight(int p_slot)
+{
+	HighlightSlotPacket packet;
+	packet.id = p_slot;
+
+	m_client->sendPacket( packet.pack() );
+}
+void ShipInputProcessingSystem::sendSlotActivation()
+{
+
+}
+void ShipInputProcessingSystem::sendSlotDeactivation()
+{
+
 }

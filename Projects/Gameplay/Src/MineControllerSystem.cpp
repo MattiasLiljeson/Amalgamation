@@ -34,7 +34,9 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 	{
 		StandardMine* mine = static_cast<StandardMine*>(p_entities[i]->getComponent(ComponentType::StandardMine));
 		mine->m_age += dt;
-		if (mine->m_age > 5)
-			m_world->deleteEntity(p_entities[i]);
+
+		//Do not delete. Handle some other way.
+		//if (mine->m_age > 5)
+			//m_world->deleteEntity(p_entities[i]);
 	}
 }

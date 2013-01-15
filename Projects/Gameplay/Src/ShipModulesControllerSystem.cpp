@@ -21,7 +21,7 @@ void ShipModulesControllerSystem::initialize()
 
 void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
-	double keys[6];
+	/*double keys[6];
 	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
 	Control* ctrl = input->getControlByEnum(InputHelper::KEY_T);
 	keys[0] = ctrl->getDelta();
@@ -72,7 +72,7 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				}
 			}
 		}
-	}
+	}*/
 }
 void ShipModulesControllerSystem::dropModule(Entity* p_parent, unsigned int p_slot)
 {

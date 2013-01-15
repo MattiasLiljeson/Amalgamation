@@ -1,4 +1,5 @@
 #include "ServerPacketHandlerSystem.h"
+#include "ServerPickingSystem.h"
 
 // Components
 #include "Transform.h"
@@ -15,6 +16,7 @@
 #include "ThrustPacket.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
+#include "RayPacket.h"
 #include "UpdateClientStatsPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
@@ -90,7 +92,17 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			UpdateClientStatsPacket updatedClientPacket;
 			updatedClientPacket.ping = info.ping;
 			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
-		}		
+		}	
+		else if (packetType == (char)PacketType::RayPacket)
+		{
+			ServerPickingSystem* picking = 
+				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+
+			RayPacket rayPacket;
+			rayPacket.unpack( packet );
+			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
+		}
+		
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
