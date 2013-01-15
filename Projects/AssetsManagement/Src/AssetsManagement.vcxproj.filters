@@ -27,10 +27,10 @@
     <ClInclude Include="ConnectionPointCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="ParticleSystemCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemCollection.h">
+    <ClInclude Include="ModelResource.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
   </ItemGroup>

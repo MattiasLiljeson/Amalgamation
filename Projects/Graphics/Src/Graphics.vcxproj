@@ -21,16 +21,16 @@
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="GUIShader.cpp" />
-    <ClCompile Include="ModelBaseFactory.cpp" />
+    <ClCompile Include="ModelExtendedFactory.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
+    <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
-    <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
@@ -46,10 +46,7 @@
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="MeshLoadException.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelBaseFactory.h" />
     <ClInclude Include="ModelExtendedFactory.h" />
-    <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />
@@ -64,6 +61,7 @@
     <ClInclude Include="ShaderInitStruct.h" />
     <ClInclude Include="ShaderStageData.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />
     <ClInclude Include="WindowException.h" />
     <ClInclude Include="Window.h" />

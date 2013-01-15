@@ -37,6 +37,11 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
+
+	m_textureFactory	= new TextureFactory(m_device,m_textureManager);
+	m_modelFactory		= new ModelExtendedFactory(m_device,m_bufferFactory,m_meshManager,
+												   m_textureFactory);
+
 	createTexture("mesherror.png",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
@@ -57,6 +62,8 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_bufferFactory;
 	delete m_meshManager;
 	delete m_textureManager;
+	delete m_textureFactory;
+	delete m_modelFactory;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -270,66 +277,58 @@ void GraphicsWrapper::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
+Model* createModelFromFile(const string& p_name,
+						   const string& p_path)
+{
 
+}
 
-unsigned int GraphicsWrapper::registerMesh( const string& p_name, Mesh* p_mesh, 
-										   Texture* p_texture )
+vector<Model*>* createModelsFromFile(const string& p_name,
+									 const string& p_path)
+{
+
+}
+
+unsigned int GraphicsWrapper::createMeshFromRaw( const string& p_name, 
+												int p_numVertices, PNTTBVertex* p_vertices, 
+												int p_numIndices, DIndex* p_indices, 
+												int p_textureId )
 {
 	// check if resource already exists
-	int meshId = m_meshManager->getResourceId( p_name );
-	if( meshId == -1 ) 
+	unsigned int meshResultId = 0;
+	int meshFoundId = m_meshManager->getResourceId(p_name);
+	if (meshFoundId==-1)  // if it does not exist, create new
 	{
-		meshId = (int)m_meshManager->addResource( p_name, p_mesh );
+		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
+			p_vertices, p_numIndices, p_indices );
+		meshResultId = (int)m_meshManager->addResource( p_name, mesh );
 
-		string textureName = p_name + "_tex";
-		int texId = m_textureManager->getResourceId( p_texture );
-		if( texId == -1 )
+		if( p_textureId != -1 )
 		{
-			texId = static_cast<int>(m_textureManager->addResource( textureName, 
-				p_texture ));
+			MaterialInfo materialInfo;
+			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, p_textureId);
+			mesh->setMaterial( materialInfo );
 		}
-		MaterialInfo materialInfo;
-		materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, texId);
-		p_mesh->setMaterial( materialInfo );
+
 	}
-	return meshId;
+	else // the mesh already exists
+	{
+		meshResultId = static_cast<unsigned int>(meshFoundId);
+	}
+	return meshResultId;
 }
+
 
 unsigned int GraphicsWrapper::createTexture( const string& p_name, 
 											 const string& p_path)
 {
-	int texFoundId = m_textureManager->getResourceId(p_name);
-	unsigned int texResultId = 0;
-
-	if (texFoundId==-1)  // if it does not exist, create new
-	{
-		Texture* tex;
-		tex = new Texture(TextureParser::loadTexture(m_device,
-			(p_path+p_name).c_str()) );
-		texResultId = m_textureManager->addResource(p_name,tex);
-	}
-	else
-	{
-		texResultId = static_cast<unsigned int>(texFoundId);
-	}
-	return texResultId;
+	return m_textureFactory->createTexture(p_name,p_path);
 }
 
 unsigned int GraphicsWrapper::createTexture( const byte* p_source, int p_width,
 	int p_height, int p_pitch, TextureParser::TEXTURE_TYPE p_type )
 {
-	// Create texture name used by manager
-	static int createdTextureCount = 0;
-	createdTextureCount++;
-	stringstream ss;
-	ss<<"Created Texture "<< createdTextureCount;
-	string textureName = ss.str();
-	
-	// Create texture
-	Texture* tex = new Texture(
-		TextureParser::createTexture( m_device, p_source, p_width, p_height, p_pitch, p_type) );
-	int textureId = m_textureManager->addResource( textureName, tex );
-	return textureId;
+	return m_textureFactory->createTexture(p_source,p_width,p_height,p_pitch,p_type);
 }
 
 int GraphicsWrapper::getMeshId( const string& p_name )

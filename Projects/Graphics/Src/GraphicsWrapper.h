@@ -20,8 +20,9 @@
 #include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
-#include "ConnectionPointCollection.h"
 #include "TextureParser.h"
+#include "ModelExtendedFactory.h"
+#include "TextureFactory.h"
 
 
 class DeferredBaseShader;
@@ -29,6 +30,7 @@ class DeferredComposeShader;
 class DeferredRenderer;
 class BufferFactory;
 class Mesh;
+struct Model;
 struct Texture;
 
 class GraphicsWrapper
@@ -107,6 +109,18 @@ public:
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
+	Model* createModelFromFile(const string& p_name,
+							   const string& p_path);
+
+	vector<Model*>* createModelsFromFile(const string& p_name,
+		const string& p_path);
+
+	// This is the preferred method for creating meshes from raw data
+	unsigned int createMeshFromRaw(const string& p_name,
+		int p_numVertices, PNTTBVertex* p_vertices, 
+		int p_numIndices, DIndex* p_indices,
+		int p_textureId);
+
 
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
@@ -115,18 +129,6 @@ public:
 
 	int getMeshId( const string& p_name );
 
-
-	// HACK: Pointer to texture should not be used. A texture id should be used instead.
-	///-----------------------------------------------------------------------------------
-	/// WIP! Decide how to handle this when several textures/materials are present.
-	/// Should texture even be sent in here??
-	/// Register an externally created mesh in the graphics system
-	/// \param p_name
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return unsigned int
-	///-----------------------------------------------------------------------------------
-	unsigned int registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
 
 
 	ID3D11Device* getDevice();
@@ -188,6 +190,8 @@ private:
 
 	// Creation & storage
 	BufferFactory*			m_bufferFactory;
+	TextureFactory*			m_textureFactory;
+	ModelExtendedFactory*	m_modelFactory;
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;

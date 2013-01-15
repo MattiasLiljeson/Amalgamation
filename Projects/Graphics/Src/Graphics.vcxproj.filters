@@ -42,7 +42,10 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
-    <ClCompile Include="ModelBaseFactory.cpp">
+    <ClCompile Include="ModelExtendedFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,19 +143,10 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="ModelBaseFactory.h">
+    <ClInclude Include="ModelExtendedFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ConnectionPointCollection.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystemCollection.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelExtendedFactory.h">
+    <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
@@ -192,9 +186,6 @@
     </Filter>
     <Filter Include="Renderer\Materials">
       <UniqueIdentifier>{e1cf790f-831f-4fb7-9d60-94a94a88a36e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{0b401b1b-86a7-4628-864d-da21dd878bdb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Model.h"
+#include "ModelResource.h"
 #include <FileCheck.h>
 #include "MeshLoadException.h"
 
@@ -29,10 +29,10 @@ public:
 	ModelBaseFactory();
 	virtual ~ModelBaseFactory();
 
-	virtual ModelResource* createModelDescription(const string& p_name,
+	virtual ModelResource* createModelResource(const string& p_name,
 										  const string* p_path=NULL);
 
-	virtual vector<ModelResource*>* createModelDescriptions(const string& p_name,
+	virtual vector<ModelResource*>* createModelResources(const string& p_name,
 												    const string* p_path=NULL);
 
 

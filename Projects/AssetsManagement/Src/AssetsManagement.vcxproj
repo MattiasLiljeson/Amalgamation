@@ -14,7 +14,7 @@
     <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="MeshLoadException.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelBaseFactory.h" />
     <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="ResourceManager.h" />

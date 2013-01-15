@@ -42,7 +42,7 @@ vector<ModelResource*>* ModelBaseFactory::createModelDescriptions(const string& 
 
 
 #ifdef BLARGU
-unsigned int GraphicsWrapper::createMesh( const string& p_name, 
+unsigned int GraphicsWrapper::createMeshFromRaw( const string& p_name, 
 										 int p_numVertices, PNTTBVertex* p_vertices, 
 										 int p_numIndices, DIndex* p_indices, 
 										 Texture* p_texture/*=NULL*/ )
@@ -67,34 +67,7 @@ unsigned int GraphicsWrapper::createMesh( const string& p_name,
 
 
 
-unsigned int GraphicsWrapper::createMesh( const string& p_name, 
-										 int p_numVertices, PNTTBVertex* p_vertices, 
-										 int p_numIndices, DIndex* p_indices, 
-										 int p_textureId )
-{
-	// check if resource already exists
-	unsigned int meshResultId = 0;
-	int meshFoundId = m_meshManager->getResourceId(p_name);
-	if (meshFoundId==-1)  // if it does not exist, create new
-	{
-		Mesh* mesh = m_bufferFactory->createMeshFromPNTTBVerticesAndIndices( p_numVertices,
-			p_vertices, p_numIndices, p_indices );
-		meshResultId = (int)m_meshManager->addResource( p_name, mesh );
 
-		if( p_textureId != -1 )
-		{
-			MaterialInfo materialInfo;
-			materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, p_textureId);
-			mesh->setMaterial( materialInfo );
-		}
-		
-	}
-	else // the mesh already exists
-	{
-		meshResultId = static_cast<unsigned int>(meshFoundId);
-	}
-	return meshResultId;
-}
 #endif
 
 AglScene* ModelBaseFactory::readScene(const string& p_name,
