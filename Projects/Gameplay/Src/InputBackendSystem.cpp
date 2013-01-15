@@ -185,6 +185,8 @@ void InputBackendSystem::process()
 	if (currentHeight != cursorHeight || 
 		currentWidth  != cursorWidth)
 	{
+		// Fetch old cursor pixel position and use it to then get a new ndc position,
+		// based on the new window width and height.
 		auto oldCursorPixelPos = m_graphicsBackend->getGfxWrapper()->
 			getScreenPixelPosFromNDC(m_cursor->getX(), m_cursor->getY(), cursorWidth, cursorHeight);
 		auto newNdcPos = m_graphicsBackend->getGfxWrapper()->
