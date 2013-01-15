@@ -570,11 +570,26 @@ int GraphicsWrapper::getWindowHeight()
 
 pair<int,int> GraphicsWrapper::getScreenPixelPosFromNDC( float p_x, float p_y )
 {
+	return getScreenPixelPosFromNDC(p_x, p_y, m_width, m_height);
+}
+
+pair<int,int> GraphicsWrapper::getScreenPixelPosFromNDC( float p_x, float p_y,
+														int p_width, int p_height )
+{
 	// NDC -> Screenspace
-	int screenSpaceX = static_cast<int>((p_x+1.0f)/2 * (m_width));
-	int screenSpaceY = static_cast<int>((p_y+1.0f)/2 * (m_height));
+	int screenSpaceX = static_cast<int>((p_x+1.0f)/2 * (p_width));
+	int screenSpaceY = static_cast<int>((p_y+1.0f)/2 * (p_height));
 	return pair<int,int>(screenSpaceX,screenSpaceY);
 }
+
+pair<float,float> GraphicsWrapper::getNDCPosFromScreenPixel( int p_x, int p_y )
+{
+	// Screenspace -> NDC
+	float ndcX = 2.0f * p_x / m_width - 1.0f;
+	float ndcY = 2.0f * p_y / m_height - 1.0f;;
+	return pair<float,float>(ndcX, ndcY);
+}
+
 
 void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height ){
 	m_width = p_width;
@@ -614,5 +629,4 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 {
 	m_wireframeMode = p_wireframe;
 }
-
 

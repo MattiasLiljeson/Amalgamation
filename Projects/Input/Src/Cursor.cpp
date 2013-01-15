@@ -165,3 +165,9 @@ void Cursor::reset()
 	m_x = 0.0;
 	m_y = 0.0;
 }
+
+void Cursor::overridePosition( float p_ndcX, float p_ndcY )
+{
+	m_x = p_ndcX;
+	m_y = p_ndcY;
+}

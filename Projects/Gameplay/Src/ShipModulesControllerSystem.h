@@ -33,6 +33,7 @@ private:
 	void dropModule(Entity* p_parent, unsigned int p_slot);
 	void changeHighlight(Entity* p_entity, int p_new);
 	void setActivation(Entity* p_entity, bool p_value);
+	void setActivationChildren(Entity* p_entity, bool p_value);
 private:
 	vector<pair<int, int>> m_toHighlight;
 	vector<int> m_toActivate;

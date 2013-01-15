@@ -7,7 +7,7 @@
 #include "RayPacket.h"
 
 ServerPickingSystem::ServerPickingSystem()
-	: EntitySystem(SystemType::ServerPickingSystem)
+	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 }
 
@@ -28,7 +28,7 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
 	{
-		handleRay(m_pickComponents[i]);
+		handleRay(m_pickComponents[i], p_entities);
 	}
 }
 void ServerPickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_d)
@@ -51,7 +51,7 @@ void ServerPickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_d)
 	pc.m_clientIndex = p_index;
 	m_pickComponents.push_back(pc);
 }
-void ServerPickingSystem::handleRay(PickComponent& p_pc)
+void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities)
 {
 	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 		SystemType::PhysicsSystem));

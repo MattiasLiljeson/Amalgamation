@@ -97,7 +97,8 @@ public:
 	int getCurrentScreenHeight() {return m_screenHeight;}
 
 	void reset();
-
+	
+	void overridePosition(float p_ndcX, float p_ndcY);
 
 	///-----------------------------------------------------------------------------------
 	/// Get the primary buttons state

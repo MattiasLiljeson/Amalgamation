@@ -134,6 +134,7 @@ public:
 	Body* getBody(int pIndex){ return mBodies[pIndex]; }
 
 	void ApplyExternalImpulse(int p_id, AglVector3 p_impulse, AglVector3 p_angularImpulse);
+	void ApplyExternalImpulse(AglVector3 p_position, float p_magnitude);
 
 	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
 	vector<unsigned int> CollidesWith(unsigned int p_b);

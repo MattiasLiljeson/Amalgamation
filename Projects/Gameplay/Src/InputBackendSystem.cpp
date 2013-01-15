@@ -176,13 +176,22 @@ void InputBackendSystem::process()
 
 	m_inputManager->update();
 
-	int currentWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
-	int currentHeight = m_graphicsBackend->getGfxWrapper()->getWindowHeight();
+	int currentWidth	= m_graphicsBackend->getGfxWrapper()->getWindowWidth();
+	int currentHeight	= m_graphicsBackend->getGfxWrapper()->getWindowHeight();
 
-	if (currentHeight!=m_cursor->getCurrentScreenHeight() || 
-		currentWidth!=m_cursor->getCurrentScreenWidth())
+	int cursorWidth		= m_cursor->getCurrentScreenWidth();
+	int cursorHeight	= m_cursor->getCurrentScreenHeight();
+
+	if (currentHeight != cursorHeight || 
+		currentWidth  != cursorWidth)
 	{
-		m_cursor->reset();
+		// Fetch old cursor pixel position and use it to then get a new ndc position,
+		// based on the new window width and height.
+		auto oldCursorPixelPos = m_graphicsBackend->getGfxWrapper()->
+			getScreenPixelPosFromNDC(m_cursor->getX(), m_cursor->getY(), cursorWidth, cursorHeight);
+		auto newNdcPos = m_graphicsBackend->getGfxWrapper()->
+			getNDCPosFromScreenPixel(oldCursorPixelPos.first, oldCursorPixelPos.second);
+		m_cursor->overridePosition(newNdcPos.first, newNdcPos.second);
 		m_cursor->setScreenSize(currentWidth,currentHeight);
 	}
 	Control* kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_ESC);

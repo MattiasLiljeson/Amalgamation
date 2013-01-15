@@ -333,11 +333,13 @@
     <ClInclude Include="SimpleEventPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="Extrapolate.h">
-      <Filter>Components\Gameplay</Filter>
-    </ClInclude>
+    <ClInclude Include="LightSources.h" />
+    <ClInclude Include="ParticleEmitters.h" />
     <ClInclude Include="ExtrapolationSystem.h">
-      <Filter>Systems\Gameplay</Filter>
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolate.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -548,8 +550,10 @@
     <ClCompile Include="SimpleEventPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="LightSources.cpp" />
+    <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

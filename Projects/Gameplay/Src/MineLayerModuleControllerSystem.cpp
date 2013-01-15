@@ -46,7 +46,7 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				ComponentType::getTypeFor(ComponentType::MineLayerModule)));
 
 			mineLayer->m_cooldown -= dt;
-			if (mineLayer->m_cooldown <= 0)
+			if (mineLayer->m_cooldown <= 0 && module->m_active)
 			{
 				mineLayer->m_cooldown = 2;
 				Transform* transform = static_cast<Transform*>(
@@ -62,10 +62,22 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 {
 	Entity* entity = m_world->createEntity();
 
-	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.5f, 0.5f, 0.5f));
+	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.8f, 0.8f, 0.8f));
 	entity->addComponent( ComponentType::Transform, t);
 
 	entity->addComponent(ComponentType::StandardMine, new StandardMine());
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(p_transform->getTranslation(),
+		p_transform->getRotation(),
+		AglVector3(0.8f, 0.8f, 0.8f), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false, true));
+
 
 	EntityCreationPacket data;
 	data.entityType		= static_cast<char>(EntityType::ShipModule);

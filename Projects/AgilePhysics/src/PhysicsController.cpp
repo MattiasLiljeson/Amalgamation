@@ -346,6 +346,26 @@ void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, Agl
 	mBodies[p_id]->AddImpulse(p_impulse);
 	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
 }
+void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_magnitude)
+{
+	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
+	{
+		if (!mRigidBodies[i].first->GetParent())
+		{
+			AglVector3 dir = mRigidBodies[i].first->GetCenterOfMass() - p_position;
+			float l = dir.length();
+			dir.normalize();
+			mRigidBodies[i].first->AddImpulse(dir*p_magnitude/l);
+		}
+	}
+	for (unsigned int i = 0; i < mCompoundBodies.size(); i++)
+	{
+		AglVector3 dir = mCompoundBodies[i]->GetCenterOfMass() - p_position;
+		float l = dir.length();
+		dir.normalize();
+		mCompoundBodies[i]->AddImpulse(dir*p_magnitude/l);
+	}
+}
 
 bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 {

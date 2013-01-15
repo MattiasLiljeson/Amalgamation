@@ -11,6 +11,8 @@
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
 #include "StandardMine.h"
+#include "PhysicsSystem.h"
+#include <PhysicsController.h>
 
 MineControllerSystem::MineControllerSystem()
 	: EntitySystem(SystemType::MineControllerSystem, 1, ComponentType::StandardMine)
@@ -35,8 +37,19 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 		StandardMine* mine = static_cast<StandardMine*>(p_entities[i]->getComponent(ComponentType::StandardMine));
 		mine->m_age += dt;
 
-		//Do not delete. Handle some other way.
-		//if (mine->m_age > 5)
-			//m_world->deleteEntity(p_entities[i]);
+		//Check collision
+		if (mine->m_age > 2)
+		{
+			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
+			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+
+			vector<unsigned int> col = ps->getController()->CollidesWith(pb->m_id);
+			Body* b = ps->getController()->getBody(pb->m_id);
+			if (mine->m_age > 2 && col.size() > 0)
+			{
+				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
+				mine->m_age = 0;
+			}
+		}	
 	}
 }

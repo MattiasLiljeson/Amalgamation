@@ -182,6 +182,27 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 		Entity* currEn = m_world->getEntity(current);
 		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
 		currModule->m_active = p_value;
+		setActivationChildren(currEn, p_value);
+	}
+}
+void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
+{
+	ConnectionPointSet* connected =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	if (connected)
+	{
+		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
+		{
+			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+			{
+				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				currModule->m_active = p_value;
+				setActivationChildren(currEn, p_value);
+			}
+		}
 	}
 }
 void ShipModulesControllerSystem::addActivateEvent(int p_index)

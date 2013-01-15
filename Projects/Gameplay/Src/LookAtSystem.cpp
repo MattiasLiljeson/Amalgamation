@@ -94,7 +94,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// orbit behaviour
 		if (lookAtOrbit)
 		{
-			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
+			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), 0); ///CHANGED BY ANTON!!!
 			rotation.normalize();
 
 			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
