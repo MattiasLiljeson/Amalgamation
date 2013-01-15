@@ -32,7 +32,7 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	/************************************************************************/
 	/* We need to find the appropriate size for received data buffer.		*/
 	/************************************************************************/
-	m_asyncDataCapacity = 512 * 51;
+	m_asyncDataCapacity = 512;
 	m_asyncDataLength = 0;
 	m_packetRestSize = 0;
 
