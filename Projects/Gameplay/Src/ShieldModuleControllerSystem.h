@@ -24,7 +24,7 @@ public:
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
 private:
-	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity);
+	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active);
 private:
 	TcpServer* m_server;
 };

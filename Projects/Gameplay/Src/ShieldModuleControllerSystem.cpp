@@ -43,11 +43,11 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 				m_world->getComponentManager()->getComponent(p_entities[i],
 				ComponentType::getTypeFor(ComponentType::ShieldModule)));
 			
-			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity));
+			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->m_active);
 		}
 	}
 }
-void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity)
+void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active)
 {
 	Transform* parentTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_parentEntity,
@@ -57,11 +57,21 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 	{
 		//Update shield
 		Entity* shield = m_world->getEntity(p_module->m_shieldEntity);
+		
 		Transform* transform = static_cast<Transform*>(
 			m_world->getComponentManager()->getComponent(shield,
 			ComponentType::getTypeFor(ComponentType::Transform))); 
-		transform->setTranslation(parentTransform->getTranslation());
-		transform->setRotation(parentTransform->getRotation());
+		
+		if (p_active)
+		{
+			transform->setTranslation(parentTransform->getTranslation());
+			transform->setRotation(parentTransform->getRotation());
+			transform->setScale(AglVector3(2, 2, 2));
+		}
+		else
+		{
+			transform->setScale(AglVector3(0, 0, 0));
+		}
 	}
 	else
 	{
