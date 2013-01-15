@@ -21,23 +21,6 @@ ModelResource* ModelBaseFactory::createModelDescription( const string& p_name,
 	return model;
 }
 
-vector<ModelResource*>* ModelBaseFactory::createModelDescriptions(const string& p_name,
-																  const string* p_path/*=NULL*/)
-{
-	vector<ModelResource*>* models = NULL;
-	// Check and read the file
-	AglScene* scene = readScene(p_name,p_path);
-	//
-	if (scene)
-	{ 
-		models = createAllModelData(scene,scene->getMeshes().size());
-	}
-	// cleanup
-	delete scene;
-
-	return models;
-}
-
 
 
 

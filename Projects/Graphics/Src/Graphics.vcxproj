@@ -48,6 +48,7 @@
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelBaseFactory.h" />
+    <ClInclude Include="ModelExtendedFactory.h" />
     <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />

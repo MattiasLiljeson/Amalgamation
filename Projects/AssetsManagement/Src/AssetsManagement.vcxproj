@@ -11,10 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="MeshLoadException.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelBaseFactory.h" />
+    <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ModelBaseFactory.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -51,15 +57,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
