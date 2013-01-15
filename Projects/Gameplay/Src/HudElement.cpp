@@ -26,6 +26,7 @@ HudElement::~HudElement()
 void HudElement::init( vector<ComponentData> p_initData )
 {
 	char* cStr;
+	//cStr = new char[256];
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
 		if( p_initData[i].dataName == "m_element" )

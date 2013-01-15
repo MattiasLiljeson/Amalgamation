@@ -125,6 +125,61 @@ vector<pair<string, Control*>> InputControlFactory::createKeysAToZ()
 	return controls;
 }
 
+
+vector<pair<string, Control*>> InputControlFactory::createKeysZeroToNine()
+{
+	// 10 numbers
+	const int NUM_NUMBERS = 10;
+	string names[NUM_NUMBERS];
+	vector<pair<string, Control*>> controls;
+	pair<string, Control*> nameAndControl;
+
+	// Generate strings used as names;
+	for( int i=0; i<NUM_NUMBERS; i++ )
+	{
+		stringstream ss;
+		ss << "KEY_";
+		ss << (char)( '0' + i );
+		names[i] = ss.str();
+	}
+
+	for( int i=0; i<NUM_NUMBERS; i++ )
+	{
+		nameAndControl.first = names[i];
+		nameAndControl.second = createKeyboardKey((InputHelper::KEYBOARD_KEY)
+			(InputHelper::KEY_0 + i));
+		controls.push_back( nameAndControl );
+	}
+	return controls;
+}
+
+vector<pair<string, Control*>> InputControlFactory::createKeysNumZeroToNumNine()
+{
+	// 10 numbers
+	const int NUM_NUMBERS = 10;
+	string names[NUM_NUMBERS];
+	vector<pair<string, Control*>> controls;
+	pair<string, Control*> nameAndControl;
+
+	// Generate strings used as names;
+	for( int i=0; i<NUM_NUMBERS; i++ )
+	{
+		stringstream ss;
+		ss << "KEY_NUM";
+		ss << (char)( '0' + i );
+		names[i] = ss.str();
+	}
+
+	for( int i=0; i<NUM_NUMBERS; i++ )
+	{
+		nameAndControl.first = names[i];
+		nameAndControl.second = createKeyboardKey((InputHelper::KEYBOARD_KEY)
+			(InputHelper::KEY_NUM0 + i));
+		controls.push_back( nameAndControl );
+	}
+	return controls;
+}
+
 Control* InputControlFactory::createKeyboardKey( InputHelper::KEYBOARD_KEY p_key )
 {
 	Control* ctl = new KeyControl( p_key );

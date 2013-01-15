@@ -19,6 +19,7 @@ public:
 		NON_EXISTENT = -1,
 		Ship,
 		Prop,
+		StaticProp,
 		Identity,
 		Other,
 	};

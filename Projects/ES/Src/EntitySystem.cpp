@@ -165,7 +165,8 @@ void EntitySystem::check(Entity* p_entity)
 		bool contains = p_entity->getSystemBits()[m_type.getIndex()];
 		bool interested = true; // possibly interested, let's try to prove it wrong.
 		
-		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
+		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = 
+			p_entity->getComponentBits();
 
 		// Check if the entity possesses ALL of the components defined in the system component bits.
 		for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
@@ -271,7 +272,7 @@ int EntitySystem::findEntityInActive( Entity* p_entity )
 {
 	int idx = -1;
 
-	//HACK: break in for-loop
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_actives.size(); i++ )
 	{
 		if( m_actives[i] == p_entity )

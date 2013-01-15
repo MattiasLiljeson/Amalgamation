@@ -126,6 +126,14 @@ public:
 	TwBar* getAntBar(BarType p_barType);
 
 	///-----------------------------------------------------------------------------------
+	/// Inform AntTweakBar of the window size
+	/// \param p_width
+	/// \param p_height
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setWindowSize(int p_width, int p_height);
+
+	///-----------------------------------------------------------------------------------
 	/// Allows for modification on the refresh-rate for any Bar, negative values are not
 	/// a valid input.
 	/// \param p_barType

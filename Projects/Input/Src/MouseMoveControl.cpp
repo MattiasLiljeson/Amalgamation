@@ -7,7 +7,7 @@ MouseMoveControl::MouseMoveControl( InputHelper::MOUSE_AXIS p_axis)
 {
 	m_axis = p_axis;
 
-	//HACK: Multiple fallthroughs!
+	//NOTE: Multiple fallthroughs!
 	switch( p_axis )
 	{
 	case InputHelper::X_POSITIVE:

@@ -4,6 +4,7 @@
 EntityWorld::EntityWorld()
 {
 	m_totalGameTime = 0;
+	m_shutdown = false;
 
 	m_componentManager = new ComponentManager();
 	setManager( Manager::ComponentManager, m_componentManager );
@@ -65,7 +66,7 @@ void EntityWorld::deleteManager( Manager* p_manager )
 {
 	// Find the correct manager-object in the vector and delete it from both the vector
 	// and the bag by using the other overloaded variant of this function;
-	// HACK: break in for-loop below
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_managers.size(); i++ )
 	{
 		if(m_managers[i] == p_manager)
@@ -79,7 +80,7 @@ void EntityWorld::deleteManager( Manager* p_manager )
 void EntityWorld::deleteManager( Manager::ManagerTypeIdx p_managerType )
 {
 	// Find the correct manager-object in the bag and delete it;
-	// HACK: break in for-loop below
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_managersBag.size(); i++ )
 	{
 		if( m_managersBag[i] == m_managers[p_managerType])
@@ -128,7 +129,7 @@ void EntityWorld::deleteEntity( Entity* p_entity )
 	if( p_entity != NULL )
 	{
 		// Add only to vector if not already in the m_deleted vector
-		// HACK: Early return in for-loop below!
+		//NOTE: early return in for-loop 
 		for( unsigned int i=0; i<m_deleted.size(); i++ )
 			if( m_deleted[i] == p_entity )
 				return;
@@ -244,7 +245,7 @@ void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 		p_entities.clear();
 	}
 
-	// HACK: Performance killer. Result of direct port of Java impl.
+	// NOTE: This may be a performance issue. Result of direct port of Java impl.
 	delete p_performer;
 }
 
@@ -261,16 +262,12 @@ void EntityWorld::process()
 	m_systemManager->updateSynchronous();
 }
 
-//void EntityWorld::deleteSystemFromBag(EntitySystem* system)
-//{
-//	//HACK: break in for-loop
-//	vector<EntitySystem*>::iterator it;
-//	for( it=m_systemsBag.begin(); it != m_systemsBag.end(); it++ )
-//	{
-//		if( *it == system )
-//		{
-//			m_systemsBag.erase(it);
-//			break;
-//		}
-//	}
-//}
+void EntityWorld::requestToShutDown()
+{
+	m_shutdown = true;
+}
+
+bool EntityWorld::shouldShutDown()
+{
+	return m_shutdown;
+}

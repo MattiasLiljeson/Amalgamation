@@ -19,11 +19,15 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ClientConnectToServerSystem.h" />
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="EntityCreationPacket.h" />
+    <ClInclude Include="EntityType.h" />
+    <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="LevelGenSystem.h" />
@@ -40,14 +44,19 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="Packetizer.h" />
+    <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
+    <ClInclude Include="PongPacket.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
-    <ClInclude Include="ServerListenerSystem.h" />
+    <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
+    <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
+    <ClInclude Include="ServerWelcomeSystem.h" />
     <ClInclude Include="ShipEditController.h" />
     <ClInclude Include="ShipEditControllerSystem.h" />
     <ClInclude Include="ShipFlyController.h" />
@@ -58,7 +67,6 @@
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
-    <ClInclude Include="NetworkType.h" />
     <ClInclude Include="PacketType.h" />
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
@@ -68,7 +76,6 @@
     <ClInclude Include="InputBackendSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
-    <ClInclude Include="QueueList.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="RenderPrepSystem.h" />
     <ClInclude Include="ShipController.h" />
@@ -76,8 +83,11 @@
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
+    <ClInclude Include="ThrustPacket.h" />
+    <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioBackendSystem.cpp" />
@@ -87,10 +97,13 @@
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EntityCreationPacket.cpp" />
+    <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
@@ -106,13 +119,17 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
-    <ClCompile Include="ServerListenerSystem.cpp" />
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
+    <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="ShipInputProcessingSystem.cpp" />
@@ -130,8 +147,11 @@
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
+    <ClCompile Include="ThrustPacket.cpp" />
+    <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>

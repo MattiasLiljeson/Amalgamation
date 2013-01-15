@@ -23,6 +23,7 @@ ServerScoreSystem::~ServerScoreSystem()
 
 void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	/*
 	m_updateTimer -= m_world->getDelta();
 
 	if( m_updateTimer <= 0 )
@@ -46,6 +47,7 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 			m_server->broadcastPacket( packet );
 		}
 	}
+	*/
 }
 
 void ServerScoreSystem::initialize()

@@ -69,9 +69,14 @@ public:
 	/// Returns the native vertical texel offset for the renderer.
 	float GetVerticalTexelOffset();
 
+	void UpdateOnWindowResize();
+
 private:
 	AglMatrix createWorldMatrix();
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
+
+	// Used to make sure that all geometries are released.
+	vector<RocketCompiledGeometry*> m_compiledGeometries;
 
 private:
 	//DEBUG:

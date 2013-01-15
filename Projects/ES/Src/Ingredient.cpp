@@ -21,6 +21,9 @@ void Ingredient::addData( ComponentData p_data )
 Component* Ingredient::prepare()
 {
 	Component* comp = ComponentFactory::createInstance( m_name );
-	comp->init( m_data );
+	if( comp != NULL )
+	{
+		comp->init( m_data );
+	}
 	return comp;
 }

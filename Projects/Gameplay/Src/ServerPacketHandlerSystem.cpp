@@ -11,6 +11,11 @@
 #include "PacketType.h"
 #include "EntityType.h"
 #include "PhysicsSystem.h"
+#include "TimerSystem.h"
+#include "ThrustPacket.h"
+#include "PingPacket.h"
+#include "PongPacket.h"
+#include "UpdateClientStatsPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -30,11 +35,6 @@ void ServerPacketHandlerSystem::initialize()
 {
 	m_physics = static_cast<PhysicsSystem*>(
 		m_world->getSystem( SystemType::PhysicsSystem ) );
-
-	/************************************************************************/
-	/* Determines the frequency on how often ping packets will be sent.		*/
-	/************************************************************************/
-	m_timerStartValue = m_timer = 0.5;
 }
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -44,45 +44,27 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		Packet packet = m_server->popNewPacket();
 
 		char packetType;
-		packet >> packetType;
-
-		if(packetType == (char)PacketType::PlayerInput)
+		packetType = packet.getPacketType();
+		
+		if(packetType == (char)PacketType::ThrustPacket)
 		{
-			char entityType;
-			packet >> entityType;
-			if(entityType == (char)EntityType::Ship)
-			{
-				AglVector3 thrustVec;
-				AglVector3 angularVec;
-				int networkId;
+			ThrustPacket thrustPacket;
+			thrustPacket.unpack( packet );
 
-				packet >> thrustVec >> angularVec >> networkId;
+			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
+				(m_world->getEntity(thrustPacket.entityId)->getComponent(
+				ComponentType::PhysicsBody));
 
-				// Netsync networkId can be used to find an entity in O(1) instead of O(n)
-				// Locate the entity using networkId by consulting the entitymanager in world
-				//  entities[networkId]
-				// world->getEntityManager->getEntity[networkId]
-				Entity* entity = m_world->getEntityManager()->getEntity(networkId);
-
-				if(entity)
-				{
-					PhysicsBody* physicsBody = NULL;
-					physicsBody = static_cast<PhysicsBody*>(entity->getComponent(
-						ComponentType::PhysicsBody ) );
-					if( physicsBody )
-					{
-						m_physics->applyImpulse(physicsBody->m_id, thrustVec, angularVec);
-					}
-				}
-			}
+			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector,
+				thrustPacket.angularVector );
 		}
-		else if( packetType == (char)PacketType::Ping )
+		if( packetType == (char)PacketType::Ping )
 		{
-			float clientTime;
-			packet >> clientTime;
+			PingPacket pingPacket;
+			pingPacket.unpack( packet );
 
 			Packet response((char)PacketType::Pong);
-			response << clientTime;
+			response << pingPacket.timeStamp;
 
 			m_server->unicastPacket( response, packet.getSenderId() );
 		}
@@ -92,7 +74,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			float totalElapsedTime = m_world->getElapsedTime();
 			float timeWhenSent;
 
-			packet >> timeWhenSent;
+			PongPacket pongPacket;
+			pongPacket.unpack( packet );
+			timeWhenSent = pongPacket.timeStamp;
 
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
@@ -103,23 +87,20 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			/* Send the "real" ping back to the client as a "your ping" message.    */
 			/************************************************************************/
-			Packet newClientStats((char)PacketType::UpdateClientStats);
-			newClientStats << info.ping;
-			m_server->unicastPacket(newClientStats, packet.getSenderId());
-		}
+			UpdateClientStatsPacket updatedClientPacket;
+			updatedClientPacket.ping = info.ping;
+			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
+		}		
+	}
+	
+	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::HalfSecond))
+	{
+		float timeStamp = m_world->getElapsedTime();
 
-		m_timer -= m_world->getDelta();
-		if( m_timer <= 0 )
-		{
-			m_timer = m_timerStartValue;
+		PingPacket pingPacket;
+		pingPacket.timeStamp = timeStamp;
 
-			float timeStamp = m_world->getElapsedTime();
-
-			Packet packet((char)PacketType::Ping);
-			packet << timeStamp;
-
-			m_server->broadcastPacket( packet );
-		}
-		
+		m_server->broadcastPacket( pingPacket.pack() );
 	}
 }

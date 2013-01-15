@@ -138,9 +138,13 @@ Packet TcpServer::popNewPacket()
 
 void TcpServer::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue< ProcessMessage* > messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		ProcessMessage* message = popMessage();
+		ProcessMessage* message = messages.front();
+		messages.pop();
 
 		if( message->type == MessageType::CLIENT_CONNECTED )
 		{

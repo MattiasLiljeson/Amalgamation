@@ -50,7 +50,7 @@
 #include <LookAtSystem.h>
 #include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
-#include <NetworkConnectToServerSystem.h>
+#include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -72,6 +72,7 @@
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
+#include <TimerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -144,7 +145,7 @@ void ClientApplication::run()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 
 	MSG msg = {0};
-	while(WM_QUIT != msg.message)
+	while(m_running)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
 		{
@@ -160,6 +161,9 @@ void ClientApplication::run()
 
 			m_world->setDelta((float)dt);
 			m_world->process();
+
+			if(m_world->shouldShutDown())
+				m_running = false;
 			
 		}
 	}
@@ -171,8 +175,13 @@ void ClientApplication::initSystems()
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
-	EntityFactory* factory = new EntityFactory( m_world );
+	EntityFactory* factory = new EntityFactory();
 	m_world->setSystem( factory, true);
+
+	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 	/************************************************************************/
 	/* Physics																*/
@@ -238,16 +247,16 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	/*ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
 	m_world->setSystem( msgProcSystem , true );
 
-	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client, inputBackend );
+	ClientConnectToServerSystem* connect =
+		new ClientConnectToServerSystem( m_client);
 	m_world->setSystem( connect, true );
 
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );*/
+	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/
 	/* Audio															*/
@@ -336,36 +345,7 @@ void ClientApplication::initEntities()
 	//entity->addComponent( ComponentType::Transform, component );
 	//m_world->addEntity(entity);
 
-
-
-	// Create a "spaceship"
-	entity = m_world->createEntity();
-	int shipId = entity->getIndex();
-	component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(0, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(0, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));
-
-
-	component = new ShipFlyController(5.0f, 50.0f);
-	entity->addComponent( ComponentType::ShipFlyController, component );
-
-	component = new ShipEditController();
-	entity->addComponent( ComponentType::ShipEditController, component);
-
-	// default tag is fly
-	entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+	
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
@@ -379,29 +359,7 @@ void ClientApplication::initEntities()
 
 	InitModulesTestByAnton();
 
-	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
-	{
-		for( int y=0; y<8; y++ )
-		{
-			for( int z=0; z<8; z++ )
-			{
-				entity = m_world->createEntity();
-				component = new RenderInfo( sphereMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform( AglVector3(.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z),
-											AglQuaternion::identity(), 
-										   AglVector3(1.0f,1.0f,5.0f)
-										   );
-				entity->addComponent( ComponentType::Transform, component );
-				component = new LookAtEntity(shipId);
-				entity->addComponent( ComponentType::LookAtEntity, component );
-				m_world->addEntity(entity);
-			}
-		}
-
-	}
-
+	/*
 	//Create a camera
 	float aspectRatio = 
 		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
@@ -430,6 +388,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::AudioListener, component);
 	
 	m_world->addEntity(entity);
+	*/
 }
 
 void ClientApplication::initSounds()

@@ -74,7 +74,7 @@ void AntTweakBarWrapper::setKeyPressed( int p_keyASCII, int p_modifier )
 
 void AntTweakBarWrapper::setMouseBtn( int p_action, int p_buttonID )
 {
-	// TwMouseButton((TwMouseAction)p_action, (TwMouseAction)p_button)
+	TwMouseButton((TwMouseAction)p_action, (TwMouseButtonID)p_buttonID);
 }
 
 void AntTweakBarWrapper::addReadOnlyVariable(BarType p_barType, const char* p_name, 
@@ -182,4 +182,9 @@ void AntTweakBarWrapper::modifyTheRefreshRate(BarType p_barType, float p_value)
 		defineParametersForABar(overall.c_str(),tmp.c_str());
 		break;
 	}
+}
+
+void AntTweakBarWrapper::setWindowSize( int p_width, int p_height )
+{
+	TwWindowSize(p_width, p_height);
 }

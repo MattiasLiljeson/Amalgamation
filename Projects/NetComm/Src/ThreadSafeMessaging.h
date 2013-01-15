@@ -30,21 +30,16 @@ public:
 	///-----------------------------------------------------------------------------------
 	void putMessage( ProcessMessage* p_message );
 
+	///-----------------------------------------------------------------------------------
+	/// Put a queue of messages on the process' message queue.
+	/// \param p_messages
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void putMessages( queue<ProcessMessage*> p_messages );
+
 	virtual void processMessages() = 0;
 
 protected:
-	///-----------------------------------------------------------------------------------
-	/// Pop oldest message from the message queue. Take over ownership of the message.
-	/// \return ProcessMessage*
-	///-----------------------------------------------------------------------------------
-	ProcessMessage* popMessage();
-
-	///-----------------------------------------------------------------------------------
-	/// Get the amount of messages currently stored in the message queue.
-	/// \return unsigned int
-	///-----------------------------------------------------------------------------------
-	unsigned int getMessageCount();
-
 	///-----------------------------------------------------------------------------------
 	/// Checking out the message queue means you take ownership over it.
 	/// \return queue< ProcessMessage* >

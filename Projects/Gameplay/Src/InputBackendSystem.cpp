@@ -100,6 +100,7 @@ void InputBackendSystem::initialize()
 	}
 
 	// All chars on keyboard
+	// letters
 	vector<pair<string, Control*> > keysAtoZ = factory.createKeysAToZ();
 	for( int i=0, size = (int)keysAtoZ.size(); i<size; i++ )
 	{
@@ -107,11 +108,48 @@ void InputBackendSystem::initialize()
 			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_A + i),
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
+	// numbers
+	vector<pair<string, Control*> > keysZeroToNine = factory.createKeysZeroToNine();
+	for( int i=0, size = (int)keysZeroToNine.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_0 + i),
+			keysZeroToNine[i].second, keysZeroToNine[i].first );
+	}
+	// numpad numbers
+	vector<pair<string, Control*> > keysNumZeroToNumNine = factory.createKeysNumZeroToNumNine();
+	for( int i=0, size = (int)keysNumZeroToNumNine.size(); i<size; i++ )
+	{
+		saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+			(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_NUM0 + i),
+			keysNumZeroToNumNine[i].second, keysNumZeroToNumNine[i].first );
+	}
+	// special keys
+	// space
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_SPACE),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_SPACE), "KEY_SPACE" );
+	// backspace
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_BACKSPACE),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_BACKSPACE), "KEY_BACKSPACE" );
+	// return
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD,
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_RETURN),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_RETURN), "KEY_RETURN" );
+	// esc
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD, 
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_ESC),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_ESC), "KEY_ESCAPE" );
+	// f4
+	saveControl( InputHelper::INPUT_DEVICE_TYPE::IT_KEYBOARD, 
+		(InputHelper::KEYBOARD_KEY)(InputHelper::KEYBOARD_KEY::KEY_F4),
+		factory.createKeyboardKey(InputHelper::KEYBOARD_KEY::KEY_F4), "KEY_F4" );
 
 	m_cursor = new Cursor();
-	// HACK: hard coded window size!
+
 	m_cursor->addControlSet(
-		25000.0/1280, 25000.0/800,
+		2500000.0, 2500000.0,
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
@@ -119,7 +157,7 @@ void InputBackendSystem::initialize()
 		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
 		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
 	m_cursor->addControlSet(
-		10.0/1280, 10.0/800, 
+		1000.0, 1000.0, 
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
@@ -127,13 +165,32 @@ void InputBackendSystem::initialize()
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
 
+	m_cursor->setScreenSize((double)m_graphicsBackend->getGfxWrapper()->getWindowWidth(),
+							(double)m_graphicsBackend->getGfxWrapper()->getWindowHeight());
 }
 
 
 void InputBackendSystem::process()
 {
+	float dt = m_world->getDelta();
+
 	m_inputManager->update();
-	m_cursor->update();
+
+	int currentWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
+	int currentHeight = m_graphicsBackend->getGfxWrapper()->getWindowHeight();
+
+	if (currentHeight!=m_cursor->getCurrentScreenHeight() || 
+		currentWidth!=m_cursor->getCurrentScreenWidth())
+	{
+		m_cursor->reset();
+		m_cursor->setScreenSize(currentWidth,currentHeight);
+	}
+	Control* kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_ESC);
+	if( kb_control && kb_control->getDelta()>0.5f )
+		m_world->requestToShutDown();
+
+	m_cursor->update(dt);
+
 	updateAntTweakBar();
 }
 
@@ -229,23 +286,77 @@ void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_i
 void InputBackendSystem::updateAntTweakBar()
 {
 	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+	AntTweakBarWrapper* atb = AntTweakBarWrapper::getInstance();
+
+	// mouse pos
 	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
-		m_cursor->getY());
+														   m_cursor->getY());
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
-
-	// mouse
-	AntTweakBarWrapper* atb = AntTweakBarWrapper::getInstance();
-	Control* t_control=NULL;
 	atb->setMousePos(mouseX,mouseY);
-	// keyboard
+
+	// mouse key
+	double l_btn = m_cursor->getPrimaryDelta();
+	double r_btn = m_cursor->getSecondaryDelta();
+	if (l_btn<-0.5f || l_btn>0.5f) atb->setMouseBtn((int)(l_btn+1.0)/2,1);
+	if (r_btn<-0.5f || r_btn>0.5f) atb->setMouseBtn((int)(r_btn+1.0)/2,3);
+
+	// keyboard	A-Z
+	Control* kb_control=NULL;
 	for (int i=InputHelper::KEY_A;i<=InputHelper::KEY_Z;i++)
 	{
-		t_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
-		if (t_control && t_control->getStatus()>0.0)
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getDelta()>0.5f)
 		{
-			atb->setKeyPressed(i+65,0);// A = 65 in ASCII
+			atb->setKeyPressed(i+'A',0);
 		}
+	}
+
+	// keyboard	0-9
+	kb_control=NULL;
+	for (int i=InputHelper::KEY_0;i<=InputHelper::KEY_9;i++)
+	{
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getDelta()>0.5f)
+		{
+			atb->setKeyPressed(i-(int)InputHelper::KEY_0+'0',0);
+		}
+	}
+
+	// keyboard	numpad 0-9
+	kb_control=NULL;
+	for (int i=InputHelper::KEY_NUM0;i<=InputHelper::KEY_NUM9;i++)
+	{
+		kb_control = getControlByEnum( (InputHelper::KEYBOARD_KEY)i );
+		if (kb_control && kb_control->getDelta()>0.5f)
+		{
+			atb->setKeyPressed(i-(int)InputHelper::KEY_NUM0+'0',0);
+		}
+	}
+
+	// space
+	kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_SPACE );
+	if (kb_control && kb_control->getDelta()>0.5f)
+	{
+		atb->setKeyPressed(32,0); // Space in ASCII = 32
+	}
+	// backspace
+	kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_BACKSPACE );
+	if (kb_control && kb_control->getDelta()>0.5f)
+	{
+		atb->setKeyPressed(8,0); // Backspace in ASCII = 8
+	}
+	// return
+	kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_RETURN );
+	if (kb_control && kb_control->getDelta()>0.5f)
+	{
+		atb->setKeyPressed(13,0); // Return in ASCII = 13
+	}
+	// F4
+	kb_control = getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_F4);
+	if (kb_control && kb_control->getDelta()>0.5f)
+	{
+		atb->setKeyPressed(TW_KEY_F4,0);
 	}
 
 }
