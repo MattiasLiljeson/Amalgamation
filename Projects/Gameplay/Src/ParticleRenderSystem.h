@@ -1,8 +1,10 @@
 #pragma once
 #include <EntitySystem.h>
 
-class GraphicsBackendSystem;
+using namespace std;
 
+class GraphicsBackendSystem;
+class AglParticleSystem;
 // =======================================================================================
 //                                      ParticleRenderSystem
 // =======================================================================================
@@ -20,5 +22,13 @@ class ParticleRenderSystem : public EntitySystem
 public:
 	ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend );
 	~ParticleRenderSystem();
+
+	void processEntities( const vector<Entity*>& p_entities );
+
+private:
+	void renderParticles(AglParticleSystem* particleSystem);
+	void rebuildVertexBuffer(AglParticleSystem* particleSystem);
+private:
+	GraphicsBackendSystem* m_gfxBackend;
 };
 

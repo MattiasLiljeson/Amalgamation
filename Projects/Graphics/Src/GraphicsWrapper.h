@@ -30,6 +30,7 @@ class DeferredRenderer;
 class BufferFactory;
 class Mesh;
 struct Texture;
+struct AglStandardParticle;
 
 class GraphicsWrapper
 {
@@ -178,6 +179,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
+
+	void renderParticles(vector<AglStandardParticle>* p_data);
 private:
 	void initSwapChain(HWND p_hWnd);
 

@@ -14,6 +14,7 @@
 #include <FileCheck.h>
 #include "D3DException.h"
 #include "D3DUtil.h"
+#include <AglStandardParticle.h>
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {

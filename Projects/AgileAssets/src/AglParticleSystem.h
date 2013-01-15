@@ -4,6 +4,7 @@
 #include "AglVector3.h"
 #include "Agl.h"
 #include <vector>
+#include "AglStandardParticle.h"
 
 using namespace std;
 
@@ -54,18 +55,6 @@ struct AglParticleSystemHeader
 	float				spawnRotationOffset;
 };
 
-struct AglStandardParticle
-{
-	AglVector3	position;
-	AglVector3	velocity;
-	AglVector2	size;
-	float		age;
-	float		angularVelocity;
-	float		rotation;
-
-	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
-						float p_angularVelocity, float p_rotation);
-};
 
 
 // =======================================================================================
