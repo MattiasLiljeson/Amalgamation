@@ -49,6 +49,8 @@ private:
 
 	void updateCounters();
 
+	void updatePacketLossDebugData();
+
 private:
 	TcpClient* m_tcpClient;
 	float m_currentPing;
