@@ -140,7 +140,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.scale = transform->getScale();
 				
 //				packets.push( packet );
-				m_server->unicastPacket( packet, id );
+				m_server->unicastPacket( data.pack(), id );
 			}
 //			m_server->unicastPacketQueue( packets, id );
 			
