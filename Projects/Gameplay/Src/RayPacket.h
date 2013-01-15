@@ -1,30 +1,31 @@
+#pragma once
+
+#include "Packetizer.h"
+#include <AglVector3.h>
+
 // =======================================================================================
-//	EntityType
+//	RayPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # NetworkType
+/// # RayPacket
 /// Detailed description...
-/// Created on: 13-12-2012 
+/// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
-#pragma once
 
-class EntityType
+class RayPacket: Packetizer
 {
 public:
-	enum EntityEnums
-	{
-		NON_EXISTENT = -1,
-		Ship,
-		Prop,
-		StaticProp,
-		Identity,
-		ShipModule,
-		Other,
-	};
+	RayPacket();
+
+	Packet pack();
+
+	void unpack( Packet p_packet );
 
 public:
-	EntityEnums type;
+	AglVector3 o;
+	AglVector3 d;
+
 };

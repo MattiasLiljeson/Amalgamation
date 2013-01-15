@@ -61,14 +61,20 @@
     <Filter Include="Components\Gameplay">
       <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay\Modules">
-      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\Timer">
       <UniqueIdentifier>{72cfdd05-70c4-46af-b896-f310e2ad1fa5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Network\Packet Translation\Packetizer">
       <UniqueIdentifier>{c5530950-a1ec-448f-b7f3-e286ad528221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Client Only">
+      <UniqueIdentifier>{76ad3c20-f53a-48b9-abee-cdb92bd51253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only">
+      <UniqueIdentifier>{2078725b-b88b-46bc-a0c5-98d2a2907c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only\Modules">
+      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,19 +241,16 @@
       <Filter>Components\Modules</Filter>
     </ClInclude>
     <ClInclude Include="MineLayerModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
     <ClInclude Include="MinigunModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
     <ClInclude Include="RocketLauncherModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
     <ClInclude Include="ShieldModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipModulesControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Systems\GUI</Filter>
@@ -282,6 +285,12 @@
     <ClInclude Include="PongPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="PickComponent.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RayPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
     <ClInclude Include="EntityUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -292,6 +301,18 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="UpdateClientStatsPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModulesControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPickingSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPickingSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="HighlightSlotPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderSystem.h">
@@ -434,19 +455,16 @@
       <Filter>Components\Modules</Filter>
     </ClCompile>
     <ClCompile Include="MineLayerModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
     <ClCompile Include="MinigunModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Modules</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ShieldModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipModulesControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
     <ClCompile Include="MenuItem.cpp">
       <Filter>Systems\GUI</Filter>
@@ -478,6 +496,9 @@
     <ClCompile Include="PongPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="RayPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
     <ClCompile Include="EntityUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -488,6 +509,18 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="UpdateClientStatsPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientPickingSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPickingSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightSlotPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderSystem.cpp">

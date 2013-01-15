@@ -1,31 +1,32 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "MinigunModule.h"
-#include "TcpServer.h"
+#include "Transform.h"
+#include "PickComponent.h"
 
 // =======================================================================================
-//                                      PhysicsSystem
+//                                      ServerPickingSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	System for handling communication with the physics library
+/// \brief Creates rays and sends to server
 ///        
-/// # PhysicsSystem
+/// # ServerPickingSystem
 /// Detailed description.....
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
-class MinigunModuleControllerSystem: public EntitySystem
+class ServerPickingSystem: public EntitySystem
 {
 public:
-	MinigunModuleControllerSystem(TcpServer* p_server);
-	~MinigunModuleControllerSystem();
+	ServerPickingSystem();
+	~ServerPickingSystem();
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+
+	void setRay(int p_index, AglVector3 p_o, AglVector3 p_d);
 private:
-	void handleLaserSight(Entity* p_entity);
-	void spawnBullet(Entity* p_entity);
+	vector<PickComponent> m_pickComponents;
 private:
-	TcpServer* m_server;
+	void handleRay(PickComponent& p_pc);
 };

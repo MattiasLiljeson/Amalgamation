@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "ShipInputProcessingSystem.h"
+#include "TcpClient.h"
 
 class Control;
 class InputBackendSystem;
@@ -22,7 +23,7 @@ class InputBackendSystem;
 class ShipInputProcessingSystem : public EntitySystem
 {
 public:
-	ShipInputProcessingSystem(InputBackendSystem* p_inputBackend);
+	ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client);
 	virtual ~ShipInputProcessingSystem() {}
 
 	virtual void initialize();
@@ -96,6 +97,12 @@ public:
 	ResultingInputForces& getProcessedInput();
 
 private:
+	//Added by Anton 15/1 - 13
+	void sendModuleSlotHighlight(int p_slot);
+	void sendSlotActivation();
+	void sendSlotDeactivation();
+
+private:
 
 	float* getControllerEpsilonPointer();
 	void readAllTheInput(RawInputForces& p_outInput);
@@ -148,10 +155,15 @@ private:
 	double m_leftStickCorrection[2];
 	double m_rightStickCorrection[2];
 
+	//Added by Anton 15/1 - 13
+	Control* m_keyboardModuleSlots[4];
+	Control* m_mouseModuleActivation;
+
 	void initGamePad();
 	void initMouse();
 	void initKeyboard();
 
 	bool m_editSwitchTrigReleased;
 	InputBackendSystem* m_inputBackend;
+	TcpClient* m_client;
 };

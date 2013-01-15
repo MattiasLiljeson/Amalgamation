@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "ShieldModule.h"
+#include "TcpServer.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -17,11 +18,13 @@
 class ShieldModuleControllerSystem: public EntitySystem
 {
 public:
-	ShieldModuleControllerSystem();
+	ShieldModuleControllerSystem(TcpServer* p_server);
 	~ShieldModuleControllerSystem();
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
 private:
 	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity);
+private:
+	TcpServer* m_server;
 };

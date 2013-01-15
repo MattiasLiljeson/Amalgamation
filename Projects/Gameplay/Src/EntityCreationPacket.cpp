@@ -10,6 +10,7 @@ EntityCreationPacket::EntityCreationPacket()
 	translation		= AglVector3();
 	scale			= AglVector3();
 	rotation		= AglQuaternion();
+	meshInfo		= 0;
 }
 
 EntityCreationPacket::~EntityCreationPacket()
@@ -23,6 +24,7 @@ Packet EntityCreationPacket::pack()
 	packet << entityType
 		<< owner
 		<< networkIdentity
+		<< meshInfo
 		<< translation
 		<< rotation
 		<< scale;
@@ -35,6 +37,7 @@ void EntityCreationPacket::unpack( Packet p_packet )
 	p_packet >> entityType
 		>> owner
 		>> networkIdentity
+		>> meshInfo
 		>> translation
 		>> rotation
 		>> scale;
