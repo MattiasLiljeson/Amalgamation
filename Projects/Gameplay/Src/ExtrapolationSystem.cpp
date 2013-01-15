@@ -28,6 +28,15 @@ void ExtrapolationSystem::processEntities( const vector<Entity*>& p_entities )
 		transform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
 
-		
+		AglVector3 translation = transform->getTranslation();
+		AglVector3 velocity = extrapolate->lastVelocityVector;
+
+		float whatClientThinksTheServerTimeIs = m_world->getElapsedTime() +
+			m_client->getServerTimeAhead();
+		float lastUpdateTime = extrapolate->lastUpdateServerTimeStamp;
+
+		float dt = whatClientThinksTheServerTimeIs - lastUpdateTime;
+		translation += velocity * dt;
+		transform->setTranslation( translation );
 	}
 }
