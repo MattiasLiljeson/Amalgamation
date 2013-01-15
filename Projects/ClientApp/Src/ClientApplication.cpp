@@ -54,7 +54,7 @@
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <RenderPrepSystem.h>
+#include <MeshRenderSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -240,7 +240,7 @@ void ClientApplication::initSystems()
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend, rocketBackend );
 	m_world->setSystem( renderer , true );
 
 	/************************************************************************/

@@ -6,12 +6,12 @@
 class GraphicsBackendSystem;
 class LibRocketBackendSystem;
 
-class RenderPrepSystem : public EntitySystem
+class MeshRenderSystem : public EntitySystem
 {
 public:
-	RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend,
+	MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend,
 		LibRocketBackendSystem* p_rocketBackend );
-	virtual ~RenderPrepSystem();
+	virtual ~MeshRenderSystem();
 	virtual void initialize();
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
@@ -19,7 +19,7 @@ public:
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	GraphicsBackendSystem* m_gfxBackend;
-	LibRocketBackendSystem* m_rocketBackend;
+	LibRocketBackendSystem* m_libRocketBackend;
 
 };
 

@@ -1,6 +1,6 @@
 #include "GraphicsBackendSystem.h"
 #include "RenderInfo.h"
-#include "RenderPrepSystem.h"
+#include "MeshRenderSystem.h"
 #include "Transform.h"
 #include "LibRocketBackendSystem.h"
 #include <AglMatrix.h>
@@ -12,25 +12,25 @@
 #include <TextureParser.h>
 #include <Windows.h>
 
-RenderPrepSystem::RenderPrepSystem(  GraphicsBackendSystem* p_gfxBackend,
+MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend,
 								   LibRocketBackendSystem* p_rocketBackend  )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
 		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
-	m_rocketBackend = p_rocketBackend;
+	m_libRocketBackend = p_rocketBackend;
 }
 
-RenderPrepSystem::~RenderPrepSystem()
+MeshRenderSystem::~MeshRenderSystem()
 {
 
 }
 
-void RenderPrepSystem::initialize()
+void MeshRenderSystem::initialize()
 {
 }
 
-void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
+void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	MSG msg = {0};
 	if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
@@ -94,15 +94,6 @@ void RenderPrepSystem::processEntities( const vector<Entity*>& p_entities )
 		// Finalize deferred
 		// ===============================================================================
 		gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
-
-
-		// ===============================================================================
-		// Draw GUI
-		// ===============================================================================
-		gfxWrapper->beginGUIPass();
-		m_rocketBackend->render();
-		gfxWrapper->finalizeGUIPass();
-
 
 		// ===============================================================================
 		// Draw 2D debug 

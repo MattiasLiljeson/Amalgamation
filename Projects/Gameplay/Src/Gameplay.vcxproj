@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
@@ -33,6 +34,8 @@
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketRenderSystem.h" />
+    <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LookAtSystem.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
@@ -43,6 +46,7 @@
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="Packetizer.h" />
+    <ClInclude Include="ParticleRenderSystem.h" />
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
@@ -75,7 +79,7 @@
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
-    <ClInclude Include="RenderPrepSystem.h" />
+    <ClInclude Include="MeshRenderSystem.h" />
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
@@ -88,6 +92,7 @@
     <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
@@ -107,6 +112,8 @@
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LibRocketRenderSystem.cpp" />
+    <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
@@ -115,6 +122,7 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="ParticleRenderSystem.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
@@ -138,7 +146,7 @@
     <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="LibRocketRenderInterface.cpp" />
-    <ClCompile Include="RenderPrepSystem.cpp" />
+    <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />

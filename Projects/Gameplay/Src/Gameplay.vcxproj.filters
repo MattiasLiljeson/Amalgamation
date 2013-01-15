@@ -90,9 +90,6 @@
     <ClInclude Include="GraphicsBackendSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPrepSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="RenderInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -297,15 +294,27 @@
     <ClInclude Include="UpdateClientStatsPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="MeshRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LightRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPrepSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="RenderInfo.cpp">
@@ -478,6 +487,21 @@
     </ClCompile>
     <ClCompile Include="UpdateClientStatsPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AntTweakBarSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LightRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
