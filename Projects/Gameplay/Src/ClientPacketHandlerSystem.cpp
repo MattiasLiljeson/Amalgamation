@@ -41,6 +41,7 @@
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "Extrapolate.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -104,6 +105,12 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						transform->setTranslation( data.translation );
 						transform->setRotation( data.rotation );
 						transform->setScale( data.scale );
+
+						Extrapolate* extrapolate = NULL;
+						extrapolate = static_cast<Extrapolate*>(
+							p_entities[i]->getComponent(ComponentType::Extrapolate) );
+						extrapolate->lastUpdateServerTimeStamp = data.timestamp;
+						extrapolate->lastVelocityVector = data.velocity;
 					}
 				}
 			}
@@ -219,6 +226,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
+		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
