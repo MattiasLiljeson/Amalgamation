@@ -12,6 +12,7 @@
 #include <TimerSystem.h>
 #include <EntityFactory.h>
 #include <ServerPickingSystem.h>
+#include <MinigunModuleControllerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -146,6 +147,17 @@ namespace Srv
 		/* Picking																*/
 		/************************************************************************/
 		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(), true);
+
+		/************************************************************************/
+		/* Gameplay															*/
+		/************************************************************************/
+		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
+		/*m_world->setSystem(new ShieldModuleControllerSystem(), true);
+		m_world->setSystem(new MineLayerModuleControllerSystem(), true);
+		m_world->setSystem(new MineControllerSystem(), true);
+		m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
+		m_world->setSystem(new ShipModulesControllerSystem, true);
+		m_world->setSystem(new ClientPickingSystem(m_client), true);*/
 	}
 
 	void ServerApplication::initEntities()
