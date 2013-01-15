@@ -17,7 +17,7 @@ LibRocketRenderSystem::~LibRocketRenderSystem()
 {
 }
 
-void LibRocketRenderSystem::processEntities()
+void LibRocketRenderSystem::process()
 {
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 

@@ -22,5 +22,13 @@ public:
 	AntTweakBarSystem( GraphicsBackendSystem* p_gfxBackend,
 		InputBackendSystem* p_inputBackend );
 	~AntTweakBarSystem();
+
+	virtual void process();
+
+	void feedInput();
+
+private:
+	GraphicsBackendSystem* m_gfxBackend;
+	InputBackendSystem* m_inputBackend;
 };
 

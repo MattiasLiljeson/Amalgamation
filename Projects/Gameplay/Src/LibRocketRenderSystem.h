@@ -20,13 +20,13 @@ class LibRocketRenderSystem : public EntitySystem
 {
 public:
 	LibRocketRenderSystem( GraphicsBackendSystem* p_gfxBackend,
-		LibRocketBackendSystem* p_rocketBackend  );
+		LibRocketBackendSystem* p_rocketBackend );
 	~LibRocketRenderSystem();
 
-	virtual void processEntities();
+	virtual void process();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	LibRocketBackendSystem* m_libRocketBackend 
+	LibRocketBackendSystem* m_libRocketBackend;
 };
 
