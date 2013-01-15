@@ -4,6 +4,7 @@
 #include <ValueClamp.h>
 #include "AntTweakBarWrapper.h"
 #include "HighlightSlotPacket.h"
+#include "SimpleEventPacket.h"
 
 
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client) :
@@ -307,9 +308,15 @@ void ShipInputProcessingSystem::sendModuleSlotHighlight(int p_slot)
 }
 void ShipInputProcessingSystem::sendSlotActivation()
 {
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ACTIVATE_MODULE;
 
+	m_client->sendPacket( packet.pack() );
 }
 void ShipInputProcessingSystem::sendSlotDeactivation()
 {
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::DEACTIVATE_MODULE;
 
+	m_client->sendPacket( packet.pack() );
 }

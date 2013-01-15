@@ -37,5 +37,6 @@ public:
 	ConnectionPointSet();
 	~ConnectionPointSet();
 	vector<ConnectionPoint> m_connectionPoints;
+	int m_highlighted;
 
 };

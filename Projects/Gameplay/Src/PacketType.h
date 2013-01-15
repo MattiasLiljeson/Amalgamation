@@ -37,6 +37,7 @@ public:
 		ThrustPacket,
 		RayPacket,
 		ModuleHighlightPacket,
+		SimpleEvent,
 	};
 
 };

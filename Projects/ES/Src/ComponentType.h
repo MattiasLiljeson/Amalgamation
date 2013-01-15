@@ -45,6 +45,7 @@ public:	//Enums
 		TAG_ShipEditMode,
 		TAG_LookAtFollowMode,
 		TAG_LookAtOrbitMode,
+		TAG_Ship, 
 
 		Transform,
 		ShipModule,

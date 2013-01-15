@@ -1,5 +1,6 @@
 #include "ServerPacketHandlerSystem.h"
 #include "ServerPickingSystem.h"
+#include "ShipModulesControllerSystem.h"
 
 // Components
 #include "Transform.h"
@@ -18,6 +19,8 @@
 #include "PongPacket.h"
 #include "RayPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "HighlightSlotPacket.h"
+#include "SimpleEventPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -102,7 +105,27 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
-		
+		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		{
+			ShipModulesControllerSystem* modsystem = 
+				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+
+			HighlightSlotPacket hp;
+			hp.unpack( packet );
+			modsystem->addHighlightEvent(hp.id, packet.getSenderId());
+		}
+		else if (packetType == (char)PacketType::SimpleEvent)
+		{
+			ShipModulesControllerSystem* modsystem = 
+				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+
+			SimpleEventPacket sep;
+			sep.unpack( packet );
+			if (sep.type == SimpleEventType::ACTIVATE_MODULE)
+				modsystem->addActivateEvent(packet.getSenderId());
+			else if (sep.type == SimpleEventType::DEACTIVATE_MODULE)
+				modsystem->addDeactivateEvent(packet.getSenderId());
+		}
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
