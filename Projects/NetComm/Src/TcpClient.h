@@ -65,6 +65,12 @@ public:
 	void resetTotalDataSent();
 	void resetTotalDataReceived();
 
+	float getServerTimeAhead() const;
+	void setServerTimeAhead( float p_timeAhead );
+
+	float getPingToServer() const;
+	void setPingToServer( float p_ping );
+
 private:
 	boost::asio::io_service* m_ioService;
 
@@ -81,5 +87,8 @@ private:
 	unsigned int m_numberOfReceivedPackets;
 	unsigned int m_totalDataSent;
 	unsigned int m_totalDataReceived;
+
+	float m_serverTimeAhead;
+	float m_pingToServer;
 
 };

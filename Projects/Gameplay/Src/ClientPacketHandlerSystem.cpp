@@ -172,6 +172,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
 			m_currentPing = updateClientPacket.ping;
+			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+				m_world->getElapsedTime();
+			m_tcpClient->setServerTimeAhead( serverTimeAhead );
+			m_tcpClient->setPingToServer( m_currentPing );
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -339,6 +343,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::ShipModule));
+		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
 	}

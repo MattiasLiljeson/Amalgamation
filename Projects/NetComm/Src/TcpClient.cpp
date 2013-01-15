@@ -22,6 +22,8 @@ TcpClient::TcpClient()
 	m_numberOfReceivedPackets = 0;
 	m_totalDataSent = 0;
 	m_totalDataReceived = 0;
+	m_serverTimeAhead = 0;
+	m_pingToServer = 0;
 }
 
 TcpClient::~TcpClient()
@@ -265,4 +267,24 @@ void TcpClient::resetTotalDataSent()
 void TcpClient::resetTotalDataReceived()
 {
 	m_totalDataReceived = 0;
+}
+
+float TcpClient::getServerTimeAhead() const
+{
+	return m_serverTimeAhead;
+}
+
+void TcpClient::setServerTimeAhead( float p_timeAhead )
+{
+	m_serverTimeAhead = p_timeAhead;
+}
+
+float TcpClient::getPingToServer() const
+{
+	return m_pingToServer;
+}
+
+void TcpClient::setPingToServer( float p_ping )
+{
+	m_pingToServer = p_ping;
 }

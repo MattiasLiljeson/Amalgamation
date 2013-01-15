@@ -336,6 +336,9 @@
     <ClInclude Include="Extrapolate.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ExtrapolationSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="SimpleEventPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrapolationSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
