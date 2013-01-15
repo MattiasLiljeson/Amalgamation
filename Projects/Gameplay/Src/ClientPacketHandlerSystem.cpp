@@ -302,6 +302,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket( Packet p_packet )
 
 		m_world->addEntity(entity);
 	}
+	else if ( data.entityType == (char)EntityType::ShipModule)
+	{
+
+	}
 	else
 	{
 		DEBUGPRINT(("Network Warning: Received unkown entity type from server!\n"));

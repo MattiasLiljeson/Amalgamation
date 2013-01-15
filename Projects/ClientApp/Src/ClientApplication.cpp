@@ -328,7 +328,7 @@ void ClientApplication::initEntities()
 	m_world->addEntity(entity);
 
 
-	InitModulesTestByAnton();
+	//InitModulesTestByAnton();
 
 	/*
 	//Create a camera

@@ -21,6 +21,7 @@ public:
 		Prop,
 		StaticProp,
 		Identity,
+		ShipModule,
 		Other,
 	};
 
