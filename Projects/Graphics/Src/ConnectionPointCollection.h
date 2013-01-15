@@ -1,11 +1,10 @@
 #pragma once
 
-#include "RawTransformData.h"
 #include <vector>
 
 using namespace std;
 
-struct RawTransformData;
+struct AglMatrix;
 
 // =======================================================================================
 //                                ConnectionPointCollection
@@ -22,9 +21,6 @@ struct RawTransformData;
 struct ConnectionPointCollection
 {
 public:
-	ConnectionPointCollection(bool transformByParent=false) {m_localSpace=!transformByParent;}
-	vector<RawTransformData> m_collection;
-	bool isLocalSpace() {return m_localSpace;}
-private:
-	bool m_localSpace; // not used yet
+	vector<AglMatrix> m_collection;
+
 };

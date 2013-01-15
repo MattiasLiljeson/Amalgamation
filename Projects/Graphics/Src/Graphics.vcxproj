@@ -21,6 +21,7 @@
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="ModelBaseFactory.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
@@ -29,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
@@ -44,6 +46,9 @@
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="MeshLoadException.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelBaseFactory.h" />
+    <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

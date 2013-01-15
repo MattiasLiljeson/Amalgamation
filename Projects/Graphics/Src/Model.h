@@ -1,21 +1,35 @@
 #pragma once
 
+#include <AglMesh.h>
+#include "ConnectionPointCollection.h"
+#include "ParticleSystemCollection.h"
+
+struct AglMeshHeader;
+struct ConnectionPointCollection;
+struct ParticleSystemCollection;
+
 // =======================================================================================
-//                                      Model
+//                                        Model
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Model component
+/// \brief	A model object containing data for describing a collection of mesh related
+/// data to be used during loading and before they're put into ES
 ///        
 /// # Model
 /// Detailed description.....
-/// Created on: 7-12-2012 
+/// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class Model
+struct Model
 {
-	unsigned int meshId;
-	unsigned int textureId;
-	unsigned int* p_instanceEntityList;
-	unsigned int p_numberOfInstances;
+public:
+	Model() {meshId=-1; name="noname"; meshHeader=NULL; connectionPoints=NULL; particleSystems=NULL;}
+	virtual ~Model(){delete meshHeader; delete connectionPoints; delete particleSystems;}
+
+	int							meshId;
+	string						name;
+	AglMeshHeader*				meshHeader;
+	ConnectionPointCollection*	connectionPoints;
+	ParticleSystemCollection*	particleSystems;
 };
