@@ -127,6 +127,7 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData( AglScene* p_scene,
 			AglMeshHeader aglMeshHeader = aglMesh->getHeader();		
 			// set
 			model->meshHeader = &aglMeshHeader;
+			model->name = p_scene->getName(i);
 
 			readConnectionPoints(i,model,p_scene);
 			readParticleSystems(i,model,p_scene);
