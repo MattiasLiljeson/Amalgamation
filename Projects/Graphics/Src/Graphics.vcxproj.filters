@@ -137,6 +137,9 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

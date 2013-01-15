@@ -13,6 +13,7 @@
 #define PARTICLESYSTEM_H
 
 #include "AglParticleSystem.h"
+#include "AglParticleSystemHeader.h"
 #include "Utility.h"
 
 class ParticleSystem

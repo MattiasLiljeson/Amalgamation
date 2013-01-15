@@ -1,24 +1,23 @@
-// =======================================================================================
-//                                      RenderInfo
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief	Brief
-///        
-/// # RenderInfo
-/// Detailed description.....
-/// Created on: 7-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
-#include <Component.h>
+#include "ShaderBase.h"
 
-class RenderInfo : public Component
+struct ShaderInitStruct;
+// =======================================================================================
+//                                      ParticleShader
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	
+///        
+/// # ParticleShader
+/// Detailed description.....
+/// Created on: 15-1-2013 
+///---------------------------------------------------------------------------------------
+
+class ParticleShader : public ShaderBase
 {
 public:
-	RenderInfo(bool p_shouldBeRendered=true);
-	RenderInfo( int p_mesh_id, bool p_shouldBeRendered=true);
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-	bool m_shouldBeRendered;
+	ParticleShader(ShaderInitStruct p_initData);
+	~ParticleShader();
+	void apply();
 };

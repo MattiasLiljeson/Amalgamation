@@ -44,6 +44,7 @@
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="MeshLoadException.h" />
+    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

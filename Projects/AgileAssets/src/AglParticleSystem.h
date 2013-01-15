@@ -4,58 +4,12 @@
 #include "AglVector3.h"
 #include "Agl.h"
 #include <vector>
+#include "AglParticleSystemHeader.h"
 #include "AglStandardParticle.h"
 
 using namespace std;
 
 #define AGL_PARTICLE_FORMAT_STANDARD 0
-
-struct AglParticleSystemHeader
-{
-	enum AglSpawnType
-	{
-		ONCE, CONTINUOUSLY
-	};
-	enum AglSpawnOffsetType
-	{
-		ONSPHERE, INSPHERE, ONRING, INRING
-	};
-	enum AglSpreadType
-	{
-		INPLANE, INSPACE
-	};
-
-	enum AglAlignmentType
-	{
-		SCREEN, WORLD, VELOCITY, OBSERVER
-	};
-
-
-	AglVector3			spawnPoint;
-	AglSpawnType		spawnType;
-	float				spawnOffset;
-	AglSpawnOffsetType	spawnOffsetType;
-	AglVector3			spawnDirection;
-	float				spawnSpeed;
-	float				spawnAngularVelocity;
-	float				particleAge;
-	float				spread; ///< 0 -> 1
-	AglSpreadType		spreadType;
-	float				spawnFrequency;
-	AglParticleFormat	particleFormat;
-	float				maxOpacity; ///< 0 -> 1
-	unsigned int		particlesPerSpawn;
-	AglVector2			particleSize;
-	AglVector4			color;
-	float				fadeInStop;
-	float				fadeOutStart;
-	int					textureNameIndex;
-	AglAlignmentType	alignmentType;
-	float				spawnRotation;
-	float				spawnRotationOffset;
-};
-
-
 
 // =======================================================================================
 //                                      AglParticleSystem

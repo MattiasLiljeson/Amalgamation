@@ -616,4 +616,37 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
+void GraphicsWrapper::renderParticles( vector<AglStandardParticle>* p_data )
+{
+	ID3D11Buffer* buffer = NULL;
+
+	if (p_data->size()>0)
+	{
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.ByteWidth = sizeof(AglStandardParticle)*p_data->size();
+		bd.BindFlags = D3D11_CPU_ACCESS_WRITE;
+
+		D3D11_SUBRESOURCE_DATA vertexData;
+		vertexData.pSysMem = &p_data[0];
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		m_device->CreateBuffer(&bd, &vertexData, &buffer);
+	}
+	if(buffer)
+	{
+		ID3D11DepthStencilState* old;
+		UINT stencil;
+
+		m_deviceContext->OMGetDepthStencilState(&old, &stencil);
+		m_deviceContext->OMSetBlendState(blendState, NULL, 0xFFFFFF);
+		m_deviceContext->OMSetDepthStencilState(depthStencil, 1);
+
+
+	}
+}
+
+
 
