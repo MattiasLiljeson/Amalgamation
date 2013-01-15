@@ -15,7 +15,7 @@ LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 
 	int maxChildCount = m_localSpaceConnectionPoints->m_collection.size();
 	m_childSlotsOccupied.resize(maxChildCount);
-	m_children.resize(maxChildCount, nullptr);
+	m_children.resize(maxChildCount, NULL);
 	m_connectionPoints.resize(maxChildCount);
 
 	updateConnectionPoints();
@@ -24,7 +24,7 @@ LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 
 LevelPiece::~LevelPiece()
 {
-	delete m_transform;
+	// Don't delete the transform here, since it is active in ES.
 }
 
 vector<int> LevelPiece::findFreeConnectionPointSlots()
@@ -159,4 +159,10 @@ void LevelPiece::updateBoundingVolumes()
 const AglBoundingSphere& LevelPiece::getBoundingSphere() const
 {
 	return m_boundingSphere;
+}
+
+void LevelPiece::deleteMainTransform()
+{
+	delete m_transform;
+	m_transform = NULL;
 }

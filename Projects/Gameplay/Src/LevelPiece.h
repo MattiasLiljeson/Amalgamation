@@ -36,6 +36,7 @@ public:
 				Transform* p_transform);
 	~LevelPiece();
 
+	void		deleteMainTransform();
 	void		updateConnectionPoints();
 	AglMatrix	getLocalConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
 	AglMatrix	getConnectionPointMatrix(int p_vectorIndex);

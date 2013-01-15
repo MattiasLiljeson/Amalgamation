@@ -39,6 +39,7 @@ public:
 	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
 						vector<AglMeshHeader> p_aglMeshHeaders);
 
+	vector<LevelPiece*> getGeneratedLevelPieces() const;
 	void initialize();
 
 	void run();

@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <AglCollision.h>
+#include "StaticProp.h"
 
 LevelGenSystem::LevelGenSystem() 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -18,6 +19,11 @@ LevelGenSystem::LevelGenSystem()
 LevelGenSystem::~LevelGenSystem()
 {
 	// TODO: delete generated pieces in order to prevent memory leaks!
+	for (int i = 0; i < m_generatedPieces.size(); i++)
+	{
+		delete m_generatedPieces[i];
+	}
+	m_generatedPieces.clear();
 }
 
 void LevelGenSystem::initialize()
@@ -78,8 +84,10 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
 
 	entity->addComponent(ComponentType::Transform, p_transform);
 	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(p_type) );
+	entity->addComponent(ComponentType::StaticProp, new StaticProp());
 	// TODO: There needs to be added more components to the entity before it is added to
 	// the world
+	
 
 	m_world->addEntity(entity);
 }
@@ -93,13 +101,10 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 	if ( !freeConnectSlots.empty() )
 	{
 		// Prepare and connect newly created transform pieces to the target.
-		vector<LevelPiece*> generatedPieces(freeConnectSlots.size());
-
-		//generatedPieces.resize(2);
-
-		for (int i = 0; i < generatedPieces.size(); i++)
+		int maxPiecesCount = freeConnectSlots.size();
+		for (int i = 0; i < maxPiecesCount; i++)
 		{
-			// TODO: ? Currently, if the randomized piece type collides with other pieces
+			// TODO: ??? Currently, if the randomized piece type collides with other pieces
 			// on the desired position, it will set that corresponding slot on the target
 			// to be occupied. For better generating, a new piece type should be selected
 			// and collision tested until there's no valid piece type at all, before
@@ -138,23 +143,21 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			{
 				// Remove the connected component.
 				p_targetPiece->setChild(slot, NULL);
+				piece->deleteMainTransform();
 				delete piece;
 			}			
 			else
 			{
 				// DEBUG: Attach a cube between the connections!
+				//AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
+				//AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
 
-				AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
-				AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
-
-				//piece->getConnectionPointMatrix(0, Space_GLOBAL).toComponents(scale, rot, pos);
-				createAndAddEntity(0, new Transform(targetConnectorMatrix.GetTranslation(), 
-													targetConnectorMatrix.GetRotation(),
-													AglVector3::one() * 0.5f));
-				//p_targetPiece->getLocalConnectionPointMatrix(i, Space_GLOBAL).toComponents(scale, rot, pos);
-				createAndAddEntity(0, new Transform(thisConnectorMatrix.GetTranslation(), 
-													thisConnectorMatrix.GetRotation(),
-													AglVector3::one() * 0.5f));
+				//createAndAddEntity(0, new Transform(targetConnectorMatrix.GetTranslation(), 
+				//									targetConnectorMatrix.GetRotation(),
+				//									AglVector3::one() * 0.5f));
+				//createAndAddEntity(0, new Transform(thisConnectorMatrix.GetTranslation(), 
+				//									thisConnectorMatrix.GetRotation(),
+				//									AglVector3::one() * 0.5f));
 
 				out_pieces.push_back(piece);
 				m_generatedPieces.push_back(piece);
@@ -188,4 +191,9 @@ void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTyp
 {
 	m_pieceTypes	= p_pieceTypes;
 	m_meshHeaders	= p_aglMeshHeaders;
+}
+
+const vector<LevelPiece*>& LevelGenSystem::getGeneratedLevelPieces() const
+{
+	return m_generatedPieces;
 }
