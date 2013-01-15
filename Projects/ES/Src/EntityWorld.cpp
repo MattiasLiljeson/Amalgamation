@@ -4,6 +4,7 @@
 EntityWorld::EntityWorld()
 {
 	m_totalGameTime = 0;
+	m_shutdown = false;
 
 	m_componentManager = new ComponentManager();
 	setManager( Manager::ComponentManager, m_componentManager );
@@ -259,4 +260,14 @@ void EntityWorld::process()
 	check( m_deleted, new DeletedPerformer );
 
 	m_systemManager->updateSynchronous();
+}
+
+void EntityWorld::requestToShutDown()
+{
+	m_shutdown = true;
+}
+
+bool EntityWorld::shouldShutDown()
+{
+	return m_shutdown;
 }

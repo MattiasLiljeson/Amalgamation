@@ -62,8 +62,10 @@
     <ClCompile Include="ComponentData.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="Ingredient.cpp">
+      <Filter>Assemblages</Filter>
+    </ClCompile>
+    <ClCompile Include="Recipe.cpp">
       <Filter>Assemblages</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,7 +119,9 @@
     <ClInclude Include="ComponentData.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="Recipe.h" />
+    <ClInclude Include="Recipe.h">
+      <Filter>Assemblages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Ingredient.h">

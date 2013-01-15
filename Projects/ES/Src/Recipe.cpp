@@ -32,6 +32,9 @@ void Recipe::cook( Entity* p_entity )
 	for( unsigned int i=0; i<m_ingredients.size(); i++ )
 	{
 		Component* component = m_ingredients[i]->prepare();
-		p_entity->addComponent( component->getType(), component );
+		if( component != NULL)
+		{
+			p_entity->addComponent( component->getType(), component );
+		}
 	}
 }

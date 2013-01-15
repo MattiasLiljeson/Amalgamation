@@ -52,7 +52,7 @@ void ClientConnectToServerSystem::initialize()
 		"Connection address",myStruct,&m_connectionAddress,"");
 
 	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::NETWORK),
-		"Connect to address", callbackConnectToNetworkAddress, NULL, "key=CTRL+l");
+		"Connect to address", callbackConnectToNetworkAddress, NULL, "key=F4");
 }
 
 void TW_CALL ClientConnectToServerSystem::callbackConnectToNetworkAddress( void* p_clientData )

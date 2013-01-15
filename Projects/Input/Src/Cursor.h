@@ -65,12 +65,20 @@ public:
 	///-----------------------------------------------------------------------------------
 	void addControlSet( ControlSet p_controlSet );
 
+	///-----------------------------------------------------------------------------------
+	/// Update size of screen, cursor needs to now this in order to properly
+	/// handle sensitivity
+	/// \param p_width
+	/// \param p_height
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setScreenSize(int p_width, int p_height);
 
 	///-----------------------------------------------------------------------------------
 	/// Must be called each frame to update the cursor position and state
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void update();
+	void update(float p_dt);
 
 	///-----------------------------------------------------------------------------------
 	/// Getter for the x position
@@ -83,6 +91,12 @@ public:
 	/// \return double The y position of the cursor position in NDC
 	///-----------------------------------------------------------------------------------
 	double getY();
+
+
+	int getCurrentScreenWidth() {return m_screenWidth;}
+	int getCurrentScreenHeight() {return m_screenHeight;}
+
+	void reset();
 
 
 	///-----------------------------------------------------------------------------------
@@ -121,9 +135,12 @@ public:
 	///------------------------------------------------------------------------------------
 	double getSecondaryDelta();
 
+	int m_screenWidth;
+	int m_screenHeight;
 private:
 	double m_x; // double used internally in input
 	double m_y; // double used internally in input
+
 	vector<ControlSet> m_controlSets;
 };
 

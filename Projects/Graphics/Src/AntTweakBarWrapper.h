@@ -92,12 +92,46 @@ public:
 	///-----------------------------------------------------------------------------------
 	void handleMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of mouse movement change
+	/// \param p_mouseX
+	/// \param p_mouseY
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMousePos(int p_mouseX, int p_mouseY);
+
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of mouse input
+	/// \param p_action
+	/// \param p_buttonID
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMouseBtn(int p_action, int p_buttonID);
+
+	///-----------------------------------------------------------------------------------
+	/// Alerts AntTweakBar of a pressed key
+	/// \param p_keyASCII
+	/// \param p_modifier
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setKeyPressed(int p_keyASCII, int p_modifier);
+
 	///-----------------------------------------------------------------------------------
 	/// Returns the specified AntTweakBar
 	/// \param p_barType
 	/// \return TwBar*
 	///-----------------------------------------------------------------------------------
 	TwBar* getAntBar(BarType p_barType);
+
+	///-----------------------------------------------------------------------------------
+	/// Inform AntTweakBar of the window size
+	/// \param p_width
+	/// \param p_height
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setWindowSize(int p_width, int p_height);
 
 	///-----------------------------------------------------------------------------------
 	/// Allows for modification on the refresh-rate for any Bar, negative values are not

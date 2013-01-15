@@ -6,25 +6,7 @@
 #include <AglQuaternion.h>
 
 class TcpClient;
-
-struct NetworkEntityCreationPacket
-{
-	char			entityType;
-	int				owner;
-	int				networkId;
-	AglVector3		position;
-	AglQuaternion	rotation;
-	AglVector3		scale;
-};
-
-struct NetworkEntityUpdatePacket
-{
-	char			entityType;
-	int				networkId;
-	AglVector3		position;
-	AglQuaternion	rotation;
-	AglVector3		scale;
-};
+class EntityCreationPacket;
 
 struct NetworkScoreUpdatePacket
 {
@@ -56,12 +38,11 @@ public:
 	virtual void initialize();
 
 private:
-	NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
-	NetworkEntityUpdatePacket	readUpdatePacket(Packet& p_packet);
+	//NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
 
 	void handleWelcomePacket(Packet p_packet);
-	void handleEntityCreationPacket(Packet p_packet);
+	void handleEntityCreationPacket(EntityCreationPacket p_packet);
 
 	void updateCounters();
 
