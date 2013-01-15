@@ -155,9 +155,9 @@ namespace Srv
 		/************************************************************************/
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		/*m_world->setSystem(new MineLayerModuleControllerSystem(), true);
 		m_world->setSystem(new MineControllerSystem(), true);
-		m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
 		m_world->setSystem(new ShipModulesControllerSystem, true);
 		m_world->setSystem(new ClientPickingSystem(m_client), true);*/
 	}
