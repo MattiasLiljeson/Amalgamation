@@ -37,19 +37,22 @@ void ExtrapolationSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3 velocity = extrapolate->velocityVector;
 		AglVector3 angularVelocity = extrapolate->angularVelocity;
 
-		float packetUpdateTime = extrapolate->serverUpdateTimeStamp;
-		m_correctedDeltaTime = latestUpdateTimeStamp - packetUpdateTime;
+//		float packetUpdateTime = extrapolate->serverUpdateTimeStamp;
+//		m_correctedDeltaTime = latestUpdateTimeStamp - packetUpdateTime;
+
+		m_correctedDeltaTime = m_world->getDelta() + latestUpdateTimeStamp -
+			extrapolate->serverUpdateTimeStamp;
 
 		// Extrapolate translation
 		translation += (velocity * m_correctedDeltaTime);
 		transform->setTranslation( translation );
 
-		// Extrapolate orientation
-		AglQuaternion orientation = transform->getRotation();
-		AglQuaternion velocityQuaternion = AglQuaternion::constructFromAngularVelocity(
-			angularVelocity * m_correctedDeltaTime );
-		orientation = velocityQuaternion * orientation;
-		transform->setRotation( orientation );
+//		// Extrapolate orientation (Must be fixed because it rotates modules locally.)
+//		AglQuaternion orientation = transform->getRotation();
+//		AglQuaternion velocityQuaternion = AglQuaternion::constructFromAngularVelocity(
+//			angularVelocity * m_correctedDeltaTime );
+//		orientation = velocityQuaternion * orientation;
+//		transform->setRotation( orientation );
 
 	}
 }

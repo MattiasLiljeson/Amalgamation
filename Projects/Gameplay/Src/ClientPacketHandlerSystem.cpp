@@ -174,8 +174,9 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			updateClientPacket.unpack(packet);
 			m_currentPing = updateClientPacket.ping;
 			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
-				m_world->getElapsedTime();
+				m_world->getElapsedTime() + m_currentPing / 2.0f;
 			m_tcpClient->setServerTimeAhead( serverTimeAhead );
+//			m_tcpClient->setServerTimeAhead( m_currentPing / 2.0f );
 			m_tcpClient->setPingToServer( m_currentPing );
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
