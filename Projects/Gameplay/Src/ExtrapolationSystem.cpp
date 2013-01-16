@@ -40,7 +40,7 @@ void ExtrapolationSystem::processEntities( const vector<Entity*>& p_entities )
 //		float packetUpdateTime = extrapolate->serverUpdateTimeStamp;
 //		m_correctedDeltaTime = latestUpdateTimeStamp - packetUpdateTime;
 
-		m_correctedDeltaTime = m_world->getDelta() + latestUpdateTimeStamp -
+		m_correctedDeltaTime = latestUpdateTimeStamp -
 			extrapolate->serverUpdateTimeStamp;
 
 		// Extrapolate translation
