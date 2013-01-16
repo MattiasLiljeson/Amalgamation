@@ -2,6 +2,7 @@
 #include "PlayerScore.h"
 #include "NetworkSynced.h"
 #include "PacketType.h"
+#include "UpdateClientStatsPacket.h"
 
 #include <TcpServer.h>
 #include <Packet.h>
@@ -23,7 +24,6 @@ ServerScoreSystem::~ServerScoreSystem()
 
 void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	/*
 	m_updateTimer -= m_world->getDelta();
 
 	if( m_updateTimer <= 0 )
@@ -39,15 +39,13 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 				p_entities[i]->getComponent(ComponentType::PlayerScore));
 			score->incrementScore( 1 );
 
-			Packet packet;
-			packet << (char)PacketType::ScoresUpdate;
-			packet << netSync->getNetworkIdentity();
-			packet << score->getScore();
+			UpdateClientStatsPacket packet;
+			packet.scores[i]		= score->getScore();
+			packet.networkIds[i]	= netSync->getNetworkIdentity();
 
-			m_server->broadcastPacket( packet );
+			m_server->broadcastPacket( packet.pack() );
 		}
 	}
-	*/
 }
 
 void ServerScoreSystem::initialize()

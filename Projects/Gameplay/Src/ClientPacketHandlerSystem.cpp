@@ -112,34 +112,33 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		/************************************************************************/
 		/* Score is now included in player update client stats packets.			*/
 		/************************************************************************/
-		/*
-		else if(packetType == (char)PacketType::ScoresUpdate)
-		{
-			NetworkScoreUpdatePacket scoreUpdateData;
-			scoreUpdateData = readScorePacket( packet );
+		//else if(packetType == (char)PacketType::ScoresUpdate)
+		//{
+		//	NetworkScoreUpdatePacket scoreUpdateData;
+		//	scoreUpdateData = readScorePacket( packet );
 
-			// HACK: This is VERY inefficient for large amount of
-			// network-synchronized entities. (Solve later)
-			for( unsigned int i=0; i<p_entities.size(); i++ )
-			{
-				NetworkSynced* netSync = NULL;
-				netSync = static_cast<NetworkSynced*>(
-					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+		//	// HACK: This is VERY inefficient for large amount of
+		//	// network-synchronized entities. (Solve later)
+		//	for( unsigned int i=0; i<p_entities.size(); i++ )
+		//	{
+		//		NetworkSynced* netSync = NULL;
+		//		netSync = static_cast<NetworkSynced*>(
+		//			m_world->getComponentManager()->getComponent(
+		//			p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
-				{
-					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
-						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
-					if( scoreComponent )
-					{
-						scoreComponent->setScore( scoreUpdateData.score );
-					}
-				}
-			}
-		}
-		*/
+		//		if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
+		//		{
+		//			PlayerScore* scoreComponent = static_cast<PlayerScore*>(
+		//				m_world->getComponentManager()->getComponent(
+		//				p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
+		//			if( scoreComponent )
+		//			{
+		//				scoreComponent->setScore( scoreUpdateData.score );
+		//			}
+		//		}
+		//	}
+		//}
+
 		else if(packetType == (char)PacketType::Ping)
 		{
 			PingPacket pingPacket;
@@ -165,6 +164,31 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
 			m_currentPing = updateClientPacket.ping;
+
+			// HACK: This is VERY inefficient for large amount of
+			// network-synchronized entities. (Solve later)
+			for( unsigned int i=0; i<p_entities.size(); i++ )
+			{
+				// Check so that this entity has a playerscore component. We already know
+				// it has a netsync component!
+				PlayerScore* scoreComponent = static_cast<PlayerScore*>(
+					p_entities[i]->getComponent(ComponentType::PlayerScore));
+				
+				if (scoreComponent)
+				{
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(
+						p_entities[i]->getComponent(ComponentType::NetworkSynced ));
+
+					for (int playerIndex = 0; playerIndex < updateClientPacket.MAXPLAYERS; playerIndex++)
+					{
+						if( netSync->getNetworkIdentity() == updateClientPacket.networkIds[playerIndex] )
+						{
+							scoreComponent->setScore( updateClientPacket.scores[playerIndex] );
+							break;
+						}
+					}
+				}
+			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -247,8 +271,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/
 		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
+		component = new PlayerScore(0);
+		entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/

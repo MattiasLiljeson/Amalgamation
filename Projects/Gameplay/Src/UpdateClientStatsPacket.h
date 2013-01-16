@@ -26,4 +26,5 @@ public:
 	const static int MAXPLAYERS = 8;
 	float ping;
 	int scores[MAXPLAYERS];
+	int networkIds[MAXPLAYERS];
 };

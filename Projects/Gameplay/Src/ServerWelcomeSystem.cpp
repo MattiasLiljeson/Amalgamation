@@ -183,6 +183,8 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
+	
+	e->addComponent(ComponentType::PlayerScore, new PlayerScore(0));
 
 	e->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
