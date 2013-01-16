@@ -11,17 +11,16 @@ cbuffer cbFixed
 
 cbuffer cbPerFrame : register(b0)
 {
-	float4 gEyePosW;
-	matrix gView; 
-    matrix gProj;
-	float4 Color;
+	matrix gViewProj;
+	float4 color;
+	float4 cameraPos;
+	float4 cameraForward;
+	float4 cameraUp;
 	float fadeIn;
 	float fadeOut;
 	float particleMaxAge;
 	float maxOpacity;
-	float4 CameraZ;
-	float4 CameraY;
-	int Alignment;
+	float Alignment; //changed it from int to float
 };
 
 Texture2D Texture : register(t0);
@@ -56,7 +55,7 @@ void GS(point Particle gIn[1],
 	matrix W;
 	if (Alignment == 0) //Observer
 	{
-		float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
+		float3 look  = normalize(cameraPos.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
 		float3 up    = cross(look, right);
 		W[0] = float4(right,       0.0f);
@@ -66,8 +65,8 @@ void GS(point Particle gIn[1],
 	}
 	else if (Alignment == 1) //Screen
 	{
-		float3 look  = -CameraZ.xyz;
-		float3 up    = CameraY.xyz;
+		float3 look  = -cameraForward.xyz;
+		float3 up    = cameraUp.xyz;
 		float3 right = normalize(cross(up, look));
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -77,7 +76,7 @@ void GS(point Particle gIn[1],
 	else if (Alignment == 2) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
-		float3 right = normalize(cross(up, gEyePosW.xyz - gIn[0].Position));
+		float3 right = normalize(cross(up, cameraPos.xyz - gIn[0].Position));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -87,7 +86,7 @@ void GS(point Particle gIn[1],
 	else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
-		float3 up 	 = normalize(cross(gEyePosW.xyz - gIn[0].Position, right));
+		float3 up 	 = normalize(cross(cameraPos.xyz - gIn[0].Position, right));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -102,8 +101,7 @@ void GS(point Particle gIn[1],
 						0, 0, 0, 1);
 
 	W = mul(rot, W);
-	matrix vp = mul(gView, gProj);
-	matrix WVP = mul(W, vp);
+	matrix WVP = mul(W, gViewProj);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;
 	float halfHeight = 0.5f*gIn[0].Size.y;
@@ -134,7 +132,7 @@ void GS(point Particle gIn[1],
 	{
 		gOut.posH  = mul(v[i], WVP);
 		gOut.texC  = t[i];
-		gOut.color = float4(Color.x, Color.y, Color.z, opacity);
+		gOut.color = float4(color.x, color.y, color.z, opacity);
 		triStream.Append(gOut);
 	}	
 }

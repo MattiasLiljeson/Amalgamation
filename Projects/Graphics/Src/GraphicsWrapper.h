@@ -199,6 +199,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void endParticleRender();
+
+	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 private:
 	void initSwapChain(HWND p_hWnd);
 
@@ -242,6 +244,8 @@ private:
 	ResourceManager<Texture>*	m_textureManager;
 
 	ParticleRenderer*		m_particleRenderer;
+
+	RendererSceneInfo		m_renderSceneInfo;
 
 	int m_height;
 	int m_width;

@@ -255,13 +255,13 @@ void ClientApplication::initSystems()
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
-	//LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-	//	rocketBackend );
-	//m_world->setSystem( rocketRender, true );
-
-	//AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
-	//m_world->setSystem( antTweakBar, true );
-
+	/*LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+		rocketBackend );
+	m_world->setSystem( rocketRender, true );
+	*/
+	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	m_world->setSystem( antTweakBar, true );
+	
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
 

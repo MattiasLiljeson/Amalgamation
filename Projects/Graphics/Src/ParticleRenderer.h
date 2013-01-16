@@ -9,6 +9,7 @@ struct ID3D11DeviceContext;
 struct ID3D11BlendState;
 struct ID3D11DepthStencilState;
 struct Texture;
+struct RendererSceneInfo;
 
 // =======================================================================================
 //                                      ParticleRenderer
@@ -27,7 +28,7 @@ class ParticleRenderer
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticles(AglParticleSystem* p_system);
+	void renderParticles(AglParticleSystem* p_system, RendererSceneInfo p_info);
 private:
 	void initShaders();
 	void initBlendState();

@@ -7,6 +7,8 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 #include "CameraInfo.h"
+#include <RendererSceneInfo.h>
+#include "Transform.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -101,7 +103,6 @@ void GraphicsBackendSystem::initialize()
 
 void GraphicsBackendSystem::process()
 {
-
 }
 
 unsigned int GraphicsBackendSystem::createMesh( const string& p_meshName, 

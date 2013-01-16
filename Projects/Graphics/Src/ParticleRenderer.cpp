@@ -7,6 +7,9 @@
 #include <AglStandardParticle.h>
 #include "Texture.h"
 #include "TextureParser.h"
+#include "ParticleCBuffer.h"
+#include "RendererSceneInfo.h"
+#include <AglVector4.h>
 
 ParticleRenderer::ParticleRenderer( ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext ){
@@ -31,7 +34,8 @@ ParticleRenderer::~ParticleRenderer(){
 	delete m_texture;
 }
 
-void ParticleRenderer::renderParticles(AglParticleSystem* p_system){
+void ParticleRenderer::renderParticles(AglParticleSystem* p_system, 
+									   RendererSceneInfo p_info){
 
 	vector<AglStandardParticle> particles = p_system->getParticles();
 	if (particles.size() > 0){
@@ -50,6 +54,22 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system){
 
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 
+		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
+
+		data->accessBuffer.setViewProjection( p_info.viewProj );
+		data->accessBuffer.setColor( AglVector4(1,1,1,1));
+		data->accessBuffer.setCameraPos( p_info.cameraPos );
+		data->accessBuffer.setCameraForward( p_info.cameraForward );
+		data->accessBuffer.setCameraUp( p_info.cameraUp );
+		data->accessBuffer.setFadeIn(0.0f);
+		data->accessBuffer.setFadeOut(4.0f);
+		data->accessBuffer.setParticleMaxAge(4.0f);
+		data->accessBuffer.setMaxOpacity(1.0f);
+		data->accessBuffer.setAlignment(3.0f);
+
+		data->update();
+		
+
 		beginRendering(p_system, particles.size());
 	}
 }
@@ -61,7 +81,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	m_deviceContext->OMGetDepthStencilState(&old, &stencil);
 	m_deviceContext->OMSetBlendState(m_blendState, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(m_depthStencil, 1);
-	
+
 	m_shader->apply();
 
 	UINT stride = sizeof(AglStandardParticle);

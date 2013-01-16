@@ -11,7 +11,7 @@ ParticleShader::ParticleShader(ShaderInitStruct p_initData,
 
 ParticleShader::~ParticleShader()
 {
-
+	delete m_perSystemBuffer;
 }
 
 void ParticleShader::apply()

@@ -623,10 +623,12 @@ void GraphicsWrapper::beginParticleRender(){
 
 }
 void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
-	m_particleRenderer->renderParticles(p_system);
+	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
 }
 void GraphicsWrapper::endParticleRender(){
 
 }
 
-
+void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
+	m_renderSceneInfo = p_sceneInfo;
+}

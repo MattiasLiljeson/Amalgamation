@@ -16,23 +16,17 @@
 
 struct ParticleCBuffer
 {
-	float view[16];
-	float proj[16];
-	float eyePos[4];
+	float viewProj[16];
 	float color[4];
-	float forward[4];
-	float up[4];
+	float cameraPos[4];
+	float cameraForward[4];
+	float cameraUp[4];
 	float variousFloats[4];	//Containing fadeIn, fadeOut, particleMaxAge, maxOpacity
 	float alignment[4];
 
-	void setViewMatrix(const AglMatrix& p_view){
+	void setViewProjection(const AglMatrix& p_viewProj){
 		for (unsigned int i = 0; i < 16; i++){
-			view[i] = p_view[i];
-		}
-	}
-	void setProjMatrix(const AglMatrix& p_proj){
-		for (unsigned int i = 0; i < 16; i++){
-			proj[i] = p_proj[i];
+			viewProj[i] = p_viewProj[i];
 		}
 	}
 	void setColor(const AglVector4& p_color){
@@ -41,23 +35,23 @@ struct ParticleCBuffer
 		color[2] = p_color[2];
 		color[3] = p_color[3];
 	}
-	void setEyePos(const AglVector3& p_pos){
-		eyePos[0] = p_pos[0];
-		eyePos[1] = p_pos[1];
-		eyePos[2] = p_pos[2];
-		eyePos[3] = 1;
+	void setCameraPos(const AglVector3& p_pos){
+		cameraPos[0] = p_pos[0];
+		cameraPos[1] = p_pos[1];
+		cameraPos[2] = p_pos[2];
+		cameraPos[3] = 1;
 	}
 	void setCameraForward(const AglVector3& p_forward){
-		forward[0] = p_forward[0];
-		forward[1] = p_forward[1];
-		forward[2] = p_forward[2];
-		forward[3] = 0;
+		cameraForward[0] = p_forward[0];
+		cameraForward[1] = p_forward[1];
+		cameraForward[2] = p_forward[2];
+		cameraForward[3] = 0;
 	}
 	void setCameraUp(const AglVector3& p_up){
-		up[0] = p_up[0];
-		up[1] = p_up[1];
-		up[2] = p_up[2];
-		up[3] = 0;
+		cameraUp[0] = p_up[0];
+		cameraUp[1] = p_up[1];
+		cameraUp[2] = p_up[2];
+		cameraUp[3] = 0;
 	}
 	void setFadeIn(const float& p_fadeIn){
 		variousFloats[0] = p_fadeIn;
