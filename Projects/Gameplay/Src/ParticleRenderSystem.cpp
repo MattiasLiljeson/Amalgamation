@@ -38,12 +38,13 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
-void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem)
-{
-	//m_gfxBackend->
+void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem){
+	m_gfxBackend->renderAParticleSystem(particleSystem);
 }
 
-void ParticleRenderSystem::rebuildVertexBuffer( AglParticleSystem* particleSystem )
-{
+unsigned int ParticleRenderSystem::addParticleSystem( 
+	const AglParticleSystemHeader& p_header ){
+	m_particleSystems.push_back(new AglParticleSystem(p_header));
 
+	return m_particleSystems.size()-1;
 }

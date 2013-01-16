@@ -55,7 +55,7 @@ struct GS_OUT
 };
 
 
-VS_OUT VShader(Particle vIn)
+VS_OUT VS(Particle vIn)
 {
 	VS_OUT vOut;
 	vOut.Position = vIn.Position;
@@ -68,11 +68,11 @@ VS_OUT VShader(Particle vIn)
 }
 
 [maxvertexcount(4)]
-void GShader(point VS_OUT gIn[1], 
+void GS(point VS_OUT gIn[1], 
             inout TriangleStream<GS_OUT> triStream)
 {		
 	matrix W;
-	[branch] if (Alignment == 0) //Observer
+	if (Alignment == 0) //Observer
 	{
 		float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
@@ -82,7 +82,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else if (Alignment == 1) //Screen
+	else if (Alignment == 1) //Screen
 	{
 		float3 look  = -CameraZ.xyz;
 		float3 up    = CameraY.xyz;
@@ -92,7 +92,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else if (Alignment == 2) //World Up
+	else if (Alignment == 2) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
 		float3 right = normalize(cross(up, gEyePosW.xyz - gIn[0].Position));
@@ -102,7 +102,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else //Velocity
+	else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
 		float3 up 	 = normalize(cross(gEyePosW.xyz - gIn[0].Position, right));
@@ -157,7 +157,7 @@ void GShader(point VS_OUT gIn[1],
 	}	
 }
 
-float4 PShader(GS_OUT pIn) : SV_TARGET
+float4 PS(GS_OUT pIn) : SV_TARGET
 {
 	float4 color = Texture.Sample(SampleType, pIn.texC);
 	color *= pIn.color;

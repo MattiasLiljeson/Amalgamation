@@ -14,7 +14,8 @@
 #include <FileCheck.h>
 #include "D3DException.h"
 #include "D3DUtil.h"
-#include <AglStandardParticle.h>
+#include "ParticleRenderer.h"
+#include "AglParticleSystem.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -42,6 +43,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
+	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 
 	clearRenderTargets();
 }
@@ -54,6 +56,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	releaseBackBuffer();
 	
 	delete m_deferredRenderer;
+	delete m_particleRenderer;
 	delete m_deferredBaseShader;
 	delete m_bufferFactory;
 	delete m_meshManager;
@@ -616,39 +619,14 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::renderParticles( vector<AglStandardParticle>* p_data )
-{
-	/*
-	ID3D11Buffer* buffer = NULL;
+void GraphicsWrapper::beginParticleRender(){
 
-	if (p_data->size()>0)
-	{
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-		bd.Usage = D3D11_USAGE_DYNAMIC;
-		bd.ByteWidth = sizeof(AglStandardParticle)*p_data->size();
-		bd.BindFlags = D3D11_CPU_ACCESS_WRITE;
-
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = &p_data[0];
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
-
-		m_device->CreateBuffer(&bd, &vertexData, &buffer);
-	}
-	if(buffer)
-	{
-		ID3D11DepthStencilState* old;
-		UINT stencil;
-
-		//m_deviceContext->OMGetDepthStencilState(&old, &stencil);
-		//m_deviceContext->OMSetBlendState(blendState, NULL, 0xFFFFFF);
-		//m_deviceContext->OMSetDepthStencilState(depthStencil, 1);
-
-
-	}
-	*/
 }
+void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
+	m_particleRenderer->renderParticles(p_system);
+}
+void GraphicsWrapper::endParticleRender(){
 
+}
 
 

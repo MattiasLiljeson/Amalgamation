@@ -208,9 +208,7 @@ void DeferredRenderer::beginGUIPass()
 	setBlendMask(0xffffff);
 }
 
-void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
-{
-
+void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	p_mesh->getVertexBuffer()->apply();
 	p_mesh->getIndexBuffer()->apply();
 
@@ -227,8 +225,7 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-void DeferredRenderer::finalizeGUIPass()
-{
+void DeferredRenderer::finalizeGUIPass(){
 	//reset blend states
 	setBlendState(BlendState::DEFAULT);
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);

@@ -30,7 +30,8 @@ class DeferredRenderer;
 class BufferFactory;
 class Mesh;
 struct Texture;
-struct AglStandardParticle;
+class ParticleRenderer;
+class AglParticleSystem;
 
 class GraphicsWrapper
 {
@@ -180,7 +181,24 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
 
-	void renderParticles(vector<AglStandardParticle>* p_data);
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void beginParticleRender();
+
+	///-----------------------------------------------------------------------------------
+	/// Handles all the rendering of the particle systems.
+	/// \param p_system
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderParticleSystem(AglParticleSystem* p_system);
+
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void endParticleRender();
 private:
 	void initSwapChain(HWND p_hWnd);
 
@@ -222,6 +240,8 @@ private:
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
+
+	ParticleRenderer*		m_particleRenderer;
 
 	int m_height;
 	int m_width;

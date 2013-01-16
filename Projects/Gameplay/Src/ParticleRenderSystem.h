@@ -1,10 +1,12 @@
 #pragma once
 #include <EntitySystem.h>
+#include <vector>
 
 using namespace std;
 
 class GraphicsBackendSystem;
 class AglParticleSystem;
+class AglParticleSystemHeader;
 // =======================================================================================
 //                                      ParticleRenderSystem
 // =======================================================================================
@@ -24,11 +26,13 @@ public:
 	~ParticleRenderSystem();
 
 	void processEntities( const vector<Entity*>& p_entities );
+	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header);
 
 private:
 	void renderParticles(AglParticleSystem* particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* particleSystem);
 private:
 	GraphicsBackendSystem* m_gfxBackend;
+	vector<AglParticleSystem*> m_particleSystems;
 };
 

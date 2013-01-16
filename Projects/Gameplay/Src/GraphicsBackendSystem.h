@@ -7,6 +7,7 @@
 
 class Window;
 class GraphicsWrapper;
+class AglParticleSystem;
 struct ConnectionPointCollection;
 // =======================================================================================
 //                                      GraphicsBackendSystem
@@ -39,6 +40,8 @@ public:
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();
 	float getAspectRatio();
+
+	void renderAParticleSystem(AglParticleSystem* p_system);
 
 private:
 	GraphicsWrapper* m_graphicsWrapper;
