@@ -618,6 +618,7 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 
 void GraphicsWrapper::renderParticles( vector<AglStandardParticle>* p_data )
 {
+	/*
 	ID3D11Buffer* buffer = NULL;
 
 	if (p_data->size()>0)
@@ -640,12 +641,13 @@ void GraphicsWrapper::renderParticles( vector<AglStandardParticle>* p_data )
 		ID3D11DepthStencilState* old;
 		UINT stencil;
 
-		m_deviceContext->OMGetDepthStencilState(&old, &stencil);
-		m_deviceContext->OMSetBlendState(blendState, NULL, 0xFFFFFF);
-		m_deviceContext->OMSetDepthStencilState(depthStencil, 1);
+		//m_deviceContext->OMGetDepthStencilState(&old, &stencil);
+		//m_deviceContext->OMSetBlendState(blendState, NULL, 0xFFFFFF);
+		//m_deviceContext->OMSetDepthStencilState(depthStencil, 1);
 
 
 	}
+	*/
 }
 
 

@@ -1,3 +1,14 @@
+cbuffer cbFixed
+{
+	float2 gQuadTexC[4] = 
+	{
+		float2(0.0f, 1.0f),
+		float2(1.0f, 1.0f),
+		float2(0.0f, 0.0f),
+		float2(1.0f, 0.0f)
+	};
+};
+
 cbuffer cbPerFrame : register(b0)
 {
 	float4 gEyePosW;
@@ -13,21 +24,23 @@ cbuffer cbPerFrame : register(b0)
 	int Alignment;
 };
 
-cbuffer cbFixed
+Texture2D Texture : register(t0);
+SamplerState SampleType : register(s0);
+
+struct Particle
 {
-	float2 gQuadTexC[4] = 
-	{
-		float2(0.0f, 1.0f),
-		float2(1.0f, 1.0f),
-		float2(0.0f, 0.0f),
-		float2(1.0f, 0.0f)
-	};
+	float3 Position        : POSITION;
+	float3 Velocity        : VELOCITY;
+	float2 Size            : SIZE;
+	float Age			   : AGE;
+	float AngularVelocity  : ANGULARVELOCITY;
+	float Rotation		   : ROTATION;
 };
-  
+
 struct VS_OUT
 {
 	float3 Position  : POSITION;
-	float2 Size : SIZE;
+	float2  Size : SIZE;
 	float  Age	: AGE;
 	float3 Velocity : VELOCITY;
 	float AngularVelocity  : ANGULARVELOCITY;
@@ -40,6 +53,19 @@ struct GS_OUT
 	float2 texC  : TEXCOORD;
 	float4 color : COLOR;
 };
+
+
+VS_OUT VShader(Particle vIn)
+{
+	VS_OUT vOut;
+	vOut.Position = vIn.Position;
+	vOut.Size = vIn.Size;
+	vOut.Age = vIn.Age;
+	vOut.Velocity = vIn.Velocity;
+	vOut.AngularVelocity = vIn.AngularVelocity;
+	vOut.Rotation = vIn.Rotation;
+	return vOut;
+}
 
 [maxvertexcount(4)]
 void GShader(point VS_OUT gIn[1], 
@@ -115,7 +141,7 @@ void GShader(point VS_OUT gIn[1],
 	if (gIn[0].Age < fadeIn) //Fade in
 		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
 	else if (gIn[0].Age > fadeOut)//Fade out
-		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);              //1.0f - gIn[0].Age/(5.0f);
+		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);
 	else
 		opacity = 1.0f;
 	
@@ -129,4 +155,14 @@ void GShader(point VS_OUT gIn[1],
 		gOut.color = float4(Color.x, Color.y, Color.z, opacity);
 		triStream.Append(gOut);
 	}	
+}
+
+float4 PShader(GS_OUT pIn) : SV_TARGET
+{
+	float4 color = Texture.Sample(SampleType, pIn.texC);
+	color *= pIn.color;
+	return color;
+    float2 val = 2 * (pIn.texC - float2(0.5f, 0.5f));
+    float c = 1.0f - sqrt(dot(val, val));
+	return float4(1, 1, 1, max(c, 0)) * pIn.color;
 }

@@ -42,6 +42,12 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Renderer\ParticleRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -140,6 +146,9 @@
     <ClInclude Include="ParticleShader.h">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Renderer\ParticleRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -177,6 +186,9 @@
     </Filter>
     <Filter Include="Renderer\Materials">
       <UniqueIdentifier>{e1cf790f-831f-4fb7-9d60-94a94a88a36e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\ParticleRenderer">
+      <UniqueIdentifier>{7198b176-1701-4338-8319-7f94675398de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

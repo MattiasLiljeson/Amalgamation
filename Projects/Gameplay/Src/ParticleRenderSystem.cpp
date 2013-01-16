@@ -40,7 +40,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem)
 {
-	m_gfxBackend->
+	//m_gfxBackend->
 }
 
 void ParticleRenderSystem::rebuildVertexBuffer( AglParticleSystem* particleSystem )
