@@ -87,9 +87,10 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 	return models;
 }
 
-void ModelBaseUnmanagedFactory::readAndStoreConnectionPoints(unsigned int p_modelNumber,
-											ModelResource* p_model, AglScene* p_scene)
+void ModelBaseUnmanagedFactory::readAndStoreConnectionPoints( unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene )
 {
+	// Add syntax check here as well to differentiate between connection points and spawn points
+	// and maybe possibly detect instantiating here as well????
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
 	for (unsigned int n=0;n<connectionPoints;n++)
 	{

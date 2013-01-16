@@ -59,6 +59,11 @@ private:
 	virtual vector<ModelResource*>* createAllModelData(const string& p_name, AglScene* p_scene, 
 		unsigned int p_numberOfModels);
 
+	void createAndAddModel(ModelResourceCollection* p_modelCollection, 
+							unsigned int p_modelNumber, const string& p_name, 
+							AglScene* p_scene, AglMesh* p_aglMesh,
+							AglMeshHeader* p_meshHeader);
+
 	void readAndStoreTextures(unsigned int p_modelNumber, AglScene* p_scene, 
 							  Mesh* p_mesh);
 

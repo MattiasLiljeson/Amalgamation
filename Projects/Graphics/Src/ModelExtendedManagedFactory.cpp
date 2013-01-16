@@ -3,6 +3,7 @@
 #include <Globals.h>
 #include "MaterialInfo.h"
 #include "Mesh.h"
+#include "MeshNameScriptParser.h"
 
 const string& ModelExtendedManagedFactory::m_primitiveBoxName="P_box";
 const string& ModelExtendedManagedFactory::m_primitiveSphereName="P_sphere";
@@ -106,39 +107,69 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 	{
 		if (i<p_scene->getMeshes().size())
 		{		
-			ModelResource* model = new ModelResource();
-
 			AglMesh* aglMesh = p_scene->getMeshes()[i];
-			AglMeshHeader aglMeshHeader = aglMesh->getHeader();		
-			// set
-			model->meshHeader = &aglMeshHeader;
-			// Mesh data
-			// Raw data extraction
-			void* vertices = aglMesh->getVertices();
-			void* indices = static_cast<void*>(aglMesh->getIndices());
-			unsigned int numVertices = static_cast<unsigned int>(aglMeshHeader.vertexCount);
-			unsigned int numIndices =  static_cast<unsigned int>(aglMeshHeader.indexCount);
-			// Internal mesh format creation
-			Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
-															numVertices,
-															numIndices);
-			readAndStoreTextures(i,p_scene,mesh);
-			// put in manager			
-			unsigned int meshResultId = m_meshManager->addResource(p_name,mesh);	
-			// store in model
-			model->meshId = static_cast<int>(meshResultId);
+			AglMeshHeader aglMeshHeader = aglMesh->getHeader();	
+			// parse mesh name
+			pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
+			parsedAction = MeshNameScriptParser::parse(p_name);
+			// Actions based on parsed name
+			switch (parsedAction.second) 
+			{
+			case MeshNameScriptParser::INSTANTIATE: // instantiate
+				{
+					ModelResource* m = createModelResource( parsedAction.first.filename, 
+															&MODELPATH);
+					models->collection.push_back(m);
+					break;
+				}
 
-			// other model creation data
-			readAndStoreConnectionPoints(i,model,p_scene);
-			readAndStoreParticleSystems(i,model,p_scene);
+			case MeshNameScriptParser::MESH: // normal mesh
+			default:
+				{
+					createAndAddModel(models, i, p_name+parsedAction.first.name, 
+						p_scene, aglMesh, &aglMeshHeader);
+					break;
+				}
+			}
 
-			// Done
-			models->collection.push_back(model); // register in collection
 		}
 	}
 	m_modelResourceCache->addResource(p_name,models); // register collection in cache
 
 	return &models->collection;
+}
+
+void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_modelCollection, 
+													unsigned int p_modelNumber, 
+													const string& p_name, 
+													AglScene* p_scene, AglMesh* p_aglMesh,
+													AglMeshHeader* p_meshHeader )
+{
+		// set
+		ModelResource* model = new ModelResource();
+		model->meshHeader = p_meshHeader;
+		// Mesh data
+		// Raw data extraction
+		void* vertices = p_aglMesh->getVertices();
+		void* indices = static_cast<void*>(p_aglMesh->getIndices());
+		unsigned int numVertices = static_cast<unsigned int>(p_meshHeader->vertexCount);
+		unsigned int numIndices =  static_cast<unsigned int>(p_meshHeader->indexCount);
+		// Internal mesh format creation
+		Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
+														numVertices,
+														numIndices);
+		readAndStoreTextures(p_modelNumber,p_scene,mesh);
+		// put in manager			
+		unsigned int meshResultId = m_meshManager->addResource(p_name,mesh);	
+		// store in model
+		model->meshId = static_cast<int>(meshResultId);
+
+		// other model creation data
+		readAndStoreConnectionPoints(p_modelNumber,model,p_scene);
+		readAndStoreParticleSystems(p_modelNumber,model,p_scene);
+
+		// Done
+		p_modelCollection->collection.push_back(model); // register in collection
 }
 
 void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumber, 

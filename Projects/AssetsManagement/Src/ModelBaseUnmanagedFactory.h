@@ -49,14 +49,5 @@ protected:
 	virtual ModelResource* getFallback();
 
 
-	///-----------------------------------------------------------------------------------
-	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
-	/// \param p_name Filename
-	/// \param p_path Path, without filename
-	/// \param p_outHardPoints Optional container for storing connection points.
-	/// \return unsigned int Mesh id
-	///-----------------------------------------------------------------------------------
-// 	unsigned int createMesh(const string& p_name,
-// 		const string* p_path=NULL,
-// 		ConnectionPointCollection* p_outConnectionPoints=NULL);private:
+private:
 };
