@@ -37,4 +37,5 @@ public:
 	AglQuaternion	rotation;
 	float timestamp;
 	AglVector3 velocity;
+	AglVector3 angularVelocity;
 };

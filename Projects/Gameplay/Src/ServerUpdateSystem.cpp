@@ -48,11 +48,17 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				physicsBody = static_cast<PhysicsBody*>(
 					p_entities[i]->getComponent(ComponentType::PhysicsBody));
 				AglVector3 velocity = AglVector3();
-				if( physicsBody != NULL )
+				AglVector3 angularVelocity = AglVector3();
+				//if( physicsBody != NULL )
 				{
-					static_cast<PhysicsSystem*>(m_world->getSystem(
-						SystemType::PhysicsSystem))->getController()->getBody(
+					PhysicsSystem* physicsSystem = static_cast<PhysicsSystem*>(
+						m_world->getSystem(SystemType::PhysicsSystem));
+
+					velocity = physicsSystem->getController()->getBody(
 						physicsBody->m_id)->GetVelocity();
+
+					angularVelocity = physicsSystem->getController()->getBody(
+						physicsBody->m_id)->GetAngularVelocity();
 				}
 
 				EntityUpdatePacket updatePacket;
@@ -63,6 +69,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.scale			= transform->getScale();
 				updatePacket.timestamp		= m_world->getElapsedTime();
 				updatePacket.velocity		= velocity;
+				updatePacket.angularVelocity= angularVelocity;
 
 
 				m_server->broadcastPacket( updatePacket.pack() );

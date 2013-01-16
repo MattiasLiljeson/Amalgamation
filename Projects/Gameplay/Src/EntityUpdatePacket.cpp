@@ -24,7 +24,8 @@ Packet EntityUpdatePacket::pack()
 		<< rotation
 		<< scale
 		<< timestamp
-		<< velocity;
+		<< velocity
+		<< angularVelocity;
 
 	return packet;
 }
@@ -37,5 +38,6 @@ void EntityUpdatePacket::unpack( Packet p_packet )
 		>> rotation 
 		>> scale
 		>> timestamp
-		>> velocity;
+		>> velocity
+		>> angularVelocity;
 }

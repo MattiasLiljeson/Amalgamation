@@ -35,15 +35,22 @@ void ExtrapolationSystem::processEntities( const vector<Entity*>& p_entities )
 
 		AglVector3 translation = transform->getTranslation();
 		AglVector3 velocity = extrapolate->velocityVector;
+		AglVector3 angularVelocity = extrapolate->angularVelocity;
 
-		float whatClientThinksTheServerTimeIs = m_world->getElapsedTime() +
-			m_client->getServerTimeAhead();
 		float packetUpdateTime = extrapolate->serverUpdateTimeStamp;
-
-//		m_correctedDeltaTime = whatClientThinksTheServerTimeIs - packetUpdateTime;
 		m_correctedDeltaTime = latestUpdateTimeStamp - packetUpdateTime;
+
+		// Extrapolate translation
 		translation += velocity * m_correctedDeltaTime;
 		transform->setTranslation( translation );
+
+		// Extrapolate orientation
+		AglQuaternion orientation = transform->getRotation();
+		AglQuaternion velocityQuaternion = AglQuaternion::constructFromAngularVelocity(
+			angularVelocity * m_correctedDeltaTime );
+		orientation = velocityQuaternion * orientation;
+		transform->setRotation( orientation );
+
 	}
 }
 
@@ -57,7 +64,6 @@ void ExtrapolationSystem::initialize()
 float ExtrapolationSystem::searchForLatestUpdateTimeStamp( const vector<Entity*>& p_entities )
 {
 	float latestUpdateTimeStamp = 0;
-	int numberOfResets = 0;
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
 		Extrapolate* extrapolate = NULL;
@@ -67,7 +73,6 @@ float ExtrapolationSystem::searchForLatestUpdateTimeStamp( const vector<Entity*>
 		if( extrapolate->serverUpdateTimeStamp > latestUpdateTimeStamp )
 		{
 			latestUpdateTimeStamp = extrapolate->serverUpdateTimeStamp;
-			numberOfResets += 1;
 		}
 	}
 

@@ -280,6 +280,8 @@ void ClientApplication::initSystems()
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
 
+	m_world->setSystem( new ExtrapolationSystem(m_client), true );
+
 	/************************************************************************/
 	/* Audio															*/
 	/************************************************************************/
@@ -297,7 +299,6 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
-	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	m_world->initialize();
 }

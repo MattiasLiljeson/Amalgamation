@@ -111,6 +111,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 							p_entities[i]->getComponent(ComponentType::Extrapolate) );
 						extrapolate->serverUpdateTimeStamp = data.timestamp;
 						extrapolate->velocityVector = data.velocity;
+						extrapolate->angularVelocity = data.angularVelocity;
 					}
 				}
 			}

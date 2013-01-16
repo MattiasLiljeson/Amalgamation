@@ -24,10 +24,12 @@ public:
 	{
 		serverUpdateTimeStamp = 0;
 		velocityVector = AglVector3();
+		angularVelocity = AglVector3();
 	}
 
 public:
 	float serverUpdateTimeStamp;
 	AglVector3 velocityVector;
+	AglVector3 angularVelocity;
 
 };
