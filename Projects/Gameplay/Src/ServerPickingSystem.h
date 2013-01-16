@@ -25,8 +25,10 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_d);
+	void setEnabled(int p_index, bool p_value);
 private:
 	vector<PickComponent> m_pickComponents;
 private:
 	void handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities);
+	void project(Entity* toProject, PickComponent& p_ray);
 };

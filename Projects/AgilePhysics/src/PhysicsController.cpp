@@ -3,13 +3,6 @@
 PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5)
 {
 	mTimeAccum = 0;
-
-
-	RigidBodySphere* s = new RigidBodySphere(AglVector3(0, 4, 0), 2, false);
-	LineSegment ls;
-	ls.p1 = AglVector3(0, 0, 0);
-	ls.p2 = AglVector3(0, 2.1f, 0);
-	CheckCollision(ls, AglVector3(-1, 2.11f, -1), AglVector3(1, 5, 1));
 }
 PhysicsController::~PhysicsController()
 {
@@ -101,6 +94,12 @@ void PhysicsController::SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, fl
 {
 	mLineSegments[p_index].p1 = p_o;
 	mLineSegments[p_index].p2 = p_o + p_dir * maxLength;
+}
+void PhysicsController::GetRay(unsigned int p_index, AglVector3& p_o, AglVector3& p_d)
+{
+	p_o = mLineSegments[p_index].p1;
+	p_d = mLineSegments[p_index].p2 - mLineSegments[p_index].p1;
+	p_d.normalize();
 }
 
 void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
