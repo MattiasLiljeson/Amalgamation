@@ -37,8 +37,8 @@ public:
 	Body();
 	virtual ~Body();
 	virtual AglMatrix GetWorld() const = 0;
-	AglVector3 GetVelocity() { return mVelocity; }
-	AglVector3 GetAngularVelocity(){ return mAngularVelocity; }
+	virtual AglVector3 GetVelocity() const = 0;
+	virtual AglVector3 GetAngularVelocity() const = 0;
 	virtual void AddImpulse(AglVector3 pImpulse) = 0;
 	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
 	virtual void UpdateVelocity(float pElapsedTime);

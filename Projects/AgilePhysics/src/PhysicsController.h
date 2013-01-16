@@ -99,6 +99,7 @@ public:
 	void SetLineSegment(AglVector3 p_p1, AglVector3 p_p2, int p_index);
 	int AddRay(AglVector3 p_o, AglVector3 p_dir, float maxLength = 1000000000);
 	void SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength = 1000000000);
+	void GetRay(unsigned int p_index, AglVector3& p_o, AglVector3& p_d); 
 
 	void DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound = NULL);
 	
