@@ -70,7 +70,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
-
 	///-----------------------------------------------------------------------------------
 	/// Set the current rasterizer state. By default it will allow to be overriden by the 
 	/// wireframe mode setting.
@@ -92,8 +91,7 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginGUIPass();
-	void renderGUIMesh( unsigned int p_meshId,
-		vector<InstanceData>* p_instanceList );
+	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 	void finalizeGUIPass();
 
 	///-----------------------------------------------------------------------------------

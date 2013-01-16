@@ -249,16 +249,16 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Renderers															*/
 	/************************************************************************/
-	//MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
-	//m_world->setSystem( renderer , true );
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
+	m_world->setSystem( renderer , true );
 
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
-	/*LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
-	*/
+	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 	

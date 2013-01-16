@@ -53,7 +53,7 @@ void GS(point Particle gIn[1],
             inout TriangleStream<GS_OUT> triStream)
 {		
 	matrix W;
-	if (Alignment == 0) //Observer
+	if (Alignment < 0.5f) //Observer
 	{
 		float3 look  = normalize(cameraPos.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
@@ -63,7 +63,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment == 1) //Screen
+	else if (Alignment < 1.5f) //Screen
 	{
 		float3 look  = -cameraForward.xyz;
 		float3 up    = cameraUp.xyz;
@@ -73,7 +73,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment == 2) //World Up
+	else if (Alignment < 2.5) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
 		float3 right = normalize(cross(up, cameraPos.xyz - gIn[0].Position));
@@ -139,8 +139,9 @@ void GS(point Particle gIn[1],
 
 float4 PS(GS_OUT pIn) : SV_TARGET
 {
-	float4 color = Texture.Sample(SampleType, pIn.texC);
-	return color;
+	return float4(0,1,0,1);
+	//float4 color = Texture.Sample(SampleType, pIn.texC);
+	//return color;
 	
 	//color *= pIn.color;
 	//return float4(1,0,0,1);

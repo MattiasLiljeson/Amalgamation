@@ -46,4 +46,22 @@ void ShaderBase::applyStages()
 	if(m_inputLayout)
 		m_deviceContext->IASetInputLayout(m_inputLayout);
 }
+void ShaderBase::unApplyStages()
+{
+	if(m_vertexShader)
+		m_deviceContext->VSSetShader(NULL,0,0);
+	if (m_geometryShader)
+		m_deviceContext->GSSetShader(NULL,0,0);
+	if (m_domainShader)
+		m_deviceContext->DSSetShader(NULL,0,0);
+	if (m_hullShader)
+		m_deviceContext->HSSetShader(NULL,0,0);
+	if (m_pixelShader)
+		m_deviceContext->PSSetShader(NULL,0,0);
+
+	if (m_samplerState)
+		m_deviceContext->PSSetSamplers(0,0,NULL);
+	if(m_inputLayout)
+		m_deviceContext->IASetInputLayout(NULL);
+}
 

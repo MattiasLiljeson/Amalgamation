@@ -3,6 +3,7 @@
 #include <AglParticleSystem.h>
 #include <vector>
 #include <aglvector3.h>
+#include <AglVector2.h>
 
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
@@ -56,6 +57,8 @@ unsigned int ParticleRenderSystem::addParticleSystem(
 unsigned int ParticleRenderSystem::addParticleSystem()
 {
 	m_particleSystems.push_back(new AglParticleSystem());
+	m_particleSystems[0]->setParticleSize(AglVector2(100,100));
+	m_particleSystems[0]->setAlignmentType(AglParticleSystemHeader::OBSERVER);
 	return m_particleSystems.size()-1;
 }
 

@@ -20,7 +20,7 @@ AglParticleSystem::AglParticleSystem()
 	m_header.spawnSpeed = 0;
 	m_header.spawnAngularVelocity = 0;
 	m_header.spread = 0;
-	m_header.spawnFrequency = 100.0f;
+	m_header.spawnFrequency = 1.0f;
 	m_header.spawnOffset = 0.0f;
 	m_header.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
 	m_header.spawnType = AglParticleSystemHeader::CONTINUOUSLY;

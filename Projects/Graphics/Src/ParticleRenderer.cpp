@@ -55,7 +55,6 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-
 		data->accessBuffer.setViewProjection( p_info.viewProj );
 		data->accessBuffer.setColor( AglVector4(1,1,1,1));
 		data->accessBuffer.setCameraPos( p_info.cameraPos );
@@ -69,7 +68,6 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 
 		data->update();
 		
-
 		beginRendering(p_system, particles.size());
 	}
 }
@@ -91,6 +89,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
 	m_deviceContext->Draw(numOfParticles, 0);
 
+	m_shader->unApplyStages();
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(old, 1);
 }
