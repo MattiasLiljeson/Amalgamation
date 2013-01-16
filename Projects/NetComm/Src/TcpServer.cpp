@@ -18,6 +18,7 @@ TcpServer::TcpServer()
 	m_isListening = false;
 	m_ioService = new boost::asio::io_service();
 	m_listenerProcess = NULL;
+	m_uniqueBroadcastPacketIdentifier = 0;
 }
 
 TcpServer::~TcpServer()
@@ -201,6 +202,7 @@ void TcpServer::processMessages()
 
 void TcpServer::broadcastPacket( Packet p_packet )
 {
+	giveBroadcastPacketAUniqueIdentifier( &p_packet );
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
 		m_communicationProcesses[i]->putMessage(
@@ -240,8 +242,9 @@ void TcpServer::unicastPacketQueue( queue<Packet> p_packets, int p_clientId )
 			queue<ProcessMessage*> messages;
 			while( !p_packets.empty() )
 			{
-				messages.push( new ProcessMessageSendPacket( this, p_packets.front() ) );
+				Packet packet = p_packets.front();
 				p_packets.pop();
+				messages.push( new ProcessMessageSendPacket( this, packet ) );
 			}
 			m_communicationProcesses[i]->putMessages( messages );
 
@@ -272,4 +275,10 @@ vector< int > TcpServer::getActiveConnections()
 	}
 
 	return currentConnections;
+}
+
+void TcpServer::giveBroadcastPacketAUniqueIdentifier( Packet* p_packet )
+{
+	p_packet->setUniquePacketIdentifier( m_uniqueBroadcastPacketIdentifier );
+	m_uniqueBroadcastPacketIdentifier += 1;
 }

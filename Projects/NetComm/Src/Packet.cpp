@@ -11,6 +11,7 @@ Packet::Packet( int p_senderId,char* p_data, unsigned int p_size )
 	m_senderId = p_senderId;
 	setData(p_data,p_size);
 	*this >> m_packetType;
+	*this >> m_uniquePacketIdentifier;
 }
 
 Packet::Packet( char p_packetType )
@@ -18,6 +19,7 @@ Packet::Packet( char p_packetType )
 	clear();
 	m_packetType = p_packetType;
 	*this << m_packetType;
+	*this << m_uniquePacketIdentifier;
 }
 
 Packet::Packet()
@@ -33,6 +35,7 @@ Packet::~Packet()
 
 void Packet::clear()
 {
+	m_uniquePacketIdentifier = 0;
 	m_readPos = 1;
 	m_data.resize(1);
 	m_data[0] = 0;  
@@ -109,6 +112,13 @@ Packet& Packet::operator << (int p_data)
 	return *this;
 }
 
+Packet& Packet::operator << ( unsigned int p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator << ( float p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -180,6 +190,13 @@ Packet& Packet::operator >> (int& p_data)
 	return *this;
 }
 
+Packet& Packet::operator>>( unsigned int& p_data )
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator >> ( float& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -244,7 +261,7 @@ void Packet::ReadData(void* p_data, unsigned int p_dataSize)
 	}
 }
 
-int Packet::getSenderId()
+int Packet::getSenderId() const
 {
 	return m_senderId;
 }
@@ -254,7 +271,17 @@ void Packet::setSenderId( int p_senderId )
 	m_senderId = p_senderId;
 }
 
-char Packet::getPacketType()
+char Packet::getPacketType() const
 {
 	return m_packetType;
+}
+
+unsigned int Packet::getUniquePacketIdentifier() const
+{
+	return m_uniquePacketIdentifier;
+}
+
+void Packet::setUniquePacketIdentifier( unsigned int p_uniquePacketIdentifier )
+{
+	m_uniquePacketIdentifier = p_uniquePacketIdentifier;
 }

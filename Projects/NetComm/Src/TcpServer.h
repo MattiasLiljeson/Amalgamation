@@ -70,6 +70,9 @@ public:
 	void unicastPacketQueue( queue<Packet> p_packets, int p_clientId );
 
 private:
+	void giveBroadcastPacketAUniqueIdentifier( Packet* p_packet );
+
+private:
 	bool m_isListening;
 
 	queue< int > m_newConnectionProcesses;
@@ -81,4 +84,7 @@ private:
 	TcpListenerProcess* m_listenerProcess;
 	boost::asio::io_service* m_ioService;
 
+	// Will be increased by 1 for every sent packet.
+	unsigned int m_uniqueBroadcastPacketIdentifier;
+	
 };

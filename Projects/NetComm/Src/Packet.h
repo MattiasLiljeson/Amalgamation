@@ -38,7 +38,7 @@ public:
 	/// \param p_size
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Packet(int p_senderId,char* p_data, unsigned int p_size );
+	Packet( int p_senderId, char* p_data, unsigned int p_size );
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a packet with its sender id.
@@ -73,7 +73,7 @@ public:
 	/// Returns the id of the sender.
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int getSenderId();
+	int getSenderId() const;
 
 
 	///-----------------------------------------------------------------------------------
@@ -81,7 +81,10 @@ public:
 	/// EntityType
 	/// \return char
 	///-----------------------------------------------------------------------------------
-	char getPacketType();
+	char getPacketType() const;
+
+	unsigned int getUniquePacketIdentifier() const;
+	void setUniquePacketIdentifier( unsigned int p_uniquePacketIdentifier );
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the identity of the sender.
@@ -95,6 +98,7 @@ public:
 	Packet& operator << (short	p_data);
 	Packet& operator << (unsigned short p_data);
 	Packet& operator << (int	p_data);
+	Packet& operator << (unsigned int p_data);
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3 p_data);
@@ -106,6 +110,7 @@ public:
 	Packet& operator >> (short&	 p_data);
 	Packet& operator >> (unsigned short& p_data);
 	Packet& operator >> (int&	 p_data);
+	Packet& operator >> (unsigned int& p_data);
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglVector3& p_data);
@@ -124,6 +129,10 @@ private:
 private:
 	int m_readPos;
 	vector<char> m_data;
-	char m_packetType;
+
 	int m_senderId;
+
+	// Header data (stored in the byte buffer).
+	char m_packetType;
+	unsigned int m_uniquePacketIdentifier;
 };

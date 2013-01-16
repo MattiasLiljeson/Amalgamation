@@ -64,6 +64,8 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataReceivedCounter = 0;
 	m_totalNumberOfOverflowPackets = 0;
 	m_totalNumberOfStaticPropPacketsReceived = 0;
+	m_lastBroadcastPacketIdentifier = 0;
+	m_totalBroadcastPacketLost = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -73,13 +75,15 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	updatePacketLossDebugData();
+	updateInitialPacketLossDebugData();
 
 	updateCounters();
 
 	while (m_tcpClient->hasNewPackets())
 	{
 		Packet packet = m_tcpClient->popNewPacket();
+
+		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
 		char packetType;
 		
@@ -408,6 +412,10 @@ void ClientPacketHandlerSystem::initialize()
 		"Total static props", TwType::TW_TYPE_UINT32,
 		&m_totalNumberOfStaticPropPacketsReceived, "group='network bug'" );
 
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
+		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
+
 	/************************************************************************/
 	/* Per second data.														*/
 	/************************************************************************/
@@ -461,7 +469,7 @@ void ClientPacketHandlerSystem::updateCounters()
 	}
 }
 
-void ClientPacketHandlerSystem::updatePacketLossDebugData()
+void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
 	if( static_cast<InputBackendSystem*>(m_world->getSystem(
 		SystemType::InputBackendSystem))->getControlByEnum(
@@ -561,5 +569,16 @@ void ClientPacketHandlerSystem::updatePacketLossDebugData()
 				&m_staticPropIdentitiesForAntTweakBar[i].second,
 				"group='Missing packets range'" );
 		}
+	}
+}
+
+void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
+	unsigned int p_packetIdentifier )
+{
+	if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
+	{
+		m_totalBroadcastPacketLost += p_packetIdentifier -
+			(m_lastBroadcastPacketIdentifier + 1);
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
 }
