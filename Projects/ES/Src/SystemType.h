@@ -50,6 +50,10 @@ public:	//Enums
 		TimerSystem,
 		ServerDynamicObjectsSystem,
 		ServerStaticObjectsSystem,
+		LibRocketRenderSystem,
+		ParticleRenderSystem,
+		LightRenderSystem,
+		AntTweakBarSystem,
 		NUM_SYSTEM_TYPES
 	};
 

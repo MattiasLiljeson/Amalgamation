@@ -73,7 +73,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="InstanceData.h" />
     <ClInclude Include="RawTransformData.h" />
   </ItemGroup>

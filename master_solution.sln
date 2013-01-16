@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetsManagement", "Projects\AssetsManagement\Src\AssetsManagement.vcxproj", "{15020C27-0C35-4D82-9517-59D175B1DF49}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2} = {7BC84332-97E7-4A31-AA8A-77E4B91F24A2}
+		{91ED2C8E-E4F2-4326-9164-E34CC94B14E2} = {91ED2C8E-E4F2-4326-9164-E34CC94B14E2}
 		{06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3} = {06378EA5-B4BB-4F54-A0EF-CC90FCF3E0A3}
 	EndProjectSection
 EndProject

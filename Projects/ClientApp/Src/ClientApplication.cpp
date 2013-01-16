@@ -54,7 +54,7 @@
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <RenderPrepSystem.h>
+#include <MeshRenderSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -82,8 +82,11 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
+#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
+#include "..\..\Gameplay\Src\LightRenderSystem.h"
+#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
+#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
 #include <AglMesh.h>
-
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -210,6 +213,7 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
+
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
@@ -241,8 +245,24 @@ void ClientApplication::initSystems()
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
+	/************************************************************************/
+	/* Renderers															*/
+	/************************************************************************/
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
+
+	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
+	m_world->setSystem( particleRender, true );
+
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+		rocketBackend );
+	m_world->setSystem( rocketRender, true );
+
+	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	m_world->setSystem( antTweakBar, true );
+
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -357,37 +377,6 @@ void ClientApplication::initEntities()
 
 
 	InitModulesTestByAnton();
-
-	/*
-	//Create a camera
-	float aspectRatio = 
-		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-	entity = m_world->createEntity();
-	component = new CameraInfo( aspectRatio );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	component = new MainCamera();
-	entity->addComponent( ComponentType::MainCamera, component );
-	//component = new Input();
-	//entity->addComponent( ComponentType::Input, component );
-	component = new Transform( -5.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, 
-								 AglVector3(0,3,-10),
-								 AglQuaternion::identity(),
-								 10.0f,
-								 10.0f,
-								 4.0f);
-	entity->addComponent( ComponentType::LookAtEntity, component );
-	// default tag is follow
-	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-	entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-	component = new AudioListener();
-	entity->addComponent(ComponentType::AudioListener, component);
-	
-	m_world->addEntity(entity);
-	*/
 }
 
 void ClientApplication::initSounds()
