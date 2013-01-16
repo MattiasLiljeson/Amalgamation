@@ -140,12 +140,19 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			ShipModulesControllerSystem* modsystem = 
 				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
 
+			ServerPickingSystem* pickSystem = 
+				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+
 			SimpleEventPacket sep;
 			sep.unpack( packet );
 			if (sep.type == SimpleEventType::ACTIVATE_MODULE)
 				modsystem->addActivateEvent(packet.getSenderId());
 			else if (sep.type == SimpleEventType::DEACTIVATE_MODULE)
 				modsystem->addDeactivateEvent(packet.getSenderId());
+			else if (sep.type == SimpleEventType::ACTIVATE_PICK)
+				pickSystem->setEnabled(packet.getSenderId(), true);
+			else if (sep.type == SimpleEventType::DEACTIVATE_PICK)
+				pickSystem->setEnabled(packet.getSenderId(), false);
 		}
 	}
 	
