@@ -152,7 +152,7 @@ namespace Srv
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
-		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(), true);
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
 
 		/************************************************************************/
 		/* Gameplay															*/
