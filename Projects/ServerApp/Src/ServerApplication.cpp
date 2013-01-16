@@ -341,7 +341,7 @@ namespace Srv
 
 		ConnectionPointSet* cpset = NULL;
 
-		for(int i=0; i<20; i++)
+		for(int i=0; i<50; i++)
 		{
 			entity = m_world->createEntity();
 			component = new Transform(40, (float)i*10.0f, -10);

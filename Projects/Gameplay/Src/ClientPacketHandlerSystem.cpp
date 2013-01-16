@@ -350,7 +350,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	}
 	else
 	{
-		DEBUGPRINT(("Network Warning: Received unkown entity type from server!\n"));
+		DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
 	}
 }
 

@@ -8,6 +8,8 @@ EntityUpdatePacket::EntityUpdatePacket()
 	translation = AglVector3();
 	rotation	= AglQuaternion();
 	scale		= AglVector3();
+	velocity	= AglVector3();
+	angularVelocity = AglVector3();
 }
 
 EntityUpdatePacket::~EntityUpdatePacket()

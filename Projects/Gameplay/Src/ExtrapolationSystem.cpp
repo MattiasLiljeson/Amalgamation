@@ -41,7 +41,7 @@ void ExtrapolationSystem::processEntities( const vector<Entity*>& p_entities )
 		m_correctedDeltaTime = latestUpdateTimeStamp - packetUpdateTime;
 
 		// Extrapolate translation
-		translation += velocity * m_correctedDeltaTime;
+		translation += (velocity * m_correctedDeltaTime);
 		transform->setTranslation( translation );
 
 		// Extrapolate orientation

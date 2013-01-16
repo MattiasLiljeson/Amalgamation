@@ -28,7 +28,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 	PhysicsBody* physicsBody = NULL;
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::Every8Millisecond) )
+		checkTimeInterval(TimerIntervals::HalfSecond) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
@@ -49,7 +49,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 					p_entities[i]->getComponent(ComponentType::PhysicsBody));
 				AglVector3 velocity = AglVector3();
 				AglVector3 angularVelocity = AglVector3();
-				if( physicsBody != NULL )
+				if( physicsBody != NULL )	/* It is probably the ray entity that is
+											 * missing the PhysicsBody component. */
 				{
 					PhysicsSystem* physicsSystem = static_cast<PhysicsSystem*>(
 						m_world->getSystem(SystemType::PhysicsSystem));
