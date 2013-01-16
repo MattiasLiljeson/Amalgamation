@@ -6,6 +6,29 @@
 #include <PhysicsController.h>
 #include "RayPacket.h"
 #include "PhysicsBody.h"
+#include "ShipManagerSystem.h"
+
+float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
+{
+	//Sphere Info
+	AglVector3 C = p_c;
+	float radius = p_r;
+
+	//Sphere collision algorithm
+	float b = AglVector3::dotProduct(p_d, p_o - C);
+	float c = AglVector3::dotProduct(p_o - C, p_o - C) - radius*radius;
+	if (b*b - c >= 0)
+	{
+		float t1 = -b - sqrt(b*b-c);
+		float t2 = -b + sqrt(b*b-c);
+		return t1;
+		/*if (t2 > 0 && t1 * t1 < AglVector3::lengthSquared(p_lineSegment.p2-p_lineSegment.p1))
+		{
+			return true;
+		}*/
+	}
+	return -1;
+}
 
 ServerPickingSystem::ServerPickingSystem()
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
@@ -117,6 +140,29 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	float len = vec.length();
 	AglVector3 dest = origin + dir * p_ray.m_preferredDistance;
 
+
+	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+
+	//Handle the ship
+	Entity* ship = sms->findShip(p_ray.m_clientIndex);
+
+	PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(ComponentType::PhysicsBody));
+	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
+
+	AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
+
+	float radius = 4; //Hard coded radius for now
+
+	dir = dest - sphereCenter;
+	dir.normalize();
+	dest = sphereCenter + dir * radius;
+
 	AglVector3 vel = body->GetVelocity();
-	body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+
+	float t = getT(origin, dir, sphereCenter, radius);
+	if (t > 0)
+	{
+		dest = origin + dir*t;
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+	}
 }
