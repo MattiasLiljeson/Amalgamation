@@ -31,9 +31,6 @@
     <Filter Include="Utility %28Put this in utility project when that project is created.">
       <UniqueIdentifier>{27e1b6c3-05a9-4e54-bdd1-fde5ee97e2a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IProcessingMessages">
-      <UniqueIdentifier>{4d21f996-7e7c-4586-822d-4357817833b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TcpConnecterProcess">
       <UniqueIdentifier>{bc897d7f-0859-4dbe-9196-490f3542dfd6}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,9 @@
     <ClCompile Include="ProcessMessageConnectToServer.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessMessagePacketOverflow.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -141,6 +141,9 @@
       <Filter>TcpConnecterProcess</Filter>
     </ClInclude>
     <ClInclude Include="ProcessMessageConnectToServer.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessagePacketOverflow.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>

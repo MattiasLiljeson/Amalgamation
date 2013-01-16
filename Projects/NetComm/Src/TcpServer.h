@@ -65,7 +65,9 @@ public:
 	void multicastPacket( vector<int> p_connectionIdentities, Packet p_packet );
 
 	/// Unicast sends a packet to only one specified client
-	void unicastPacket( Packet p_packet, int clientId );
+	void unicastPacket( Packet p_packet, int p_clientId );
+
+	void unicastPacketQueue( queue<Packet> p_packets, int p_clientId );
 
 private:
 	bool m_isListening;

@@ -9,6 +9,7 @@
 #include "ProcessMessageReceivePacket.h"
 
 #include "ThreadSafeMessaging.h"
+#include "ProcessMessagePacketOverflow.h"
 
 TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent, 
 												 tcp::socket* p_socket,
@@ -26,14 +27,16 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	tcp::socket::non_blocking_io nonBlocking( true );
 	m_activeSocket->io_control( nonBlocking );
 
-	m_asyncDataLength = 0;
+	m_numberOfOverflowPackets = 0;
+
 	/************************************************************************/
 	/* We need to find the appropriate size for received data buffer.		*/
 	/************************************************************************/
-	m_asyncDataCapacity = 2048*4;
-	m_asyncData = new char[m_asyncDataCapacity];
+	m_asyncDataCapacity = 512;
+	m_asyncDataLength = 0;
 	m_packetRestSize = 0;
 
+	m_asyncData = new char[m_asyncDataCapacity];
 	for(unsigned int i = 0; i < m_asyncDataCapacity; i++)
 	{
 		m_asyncData[i] = 0;
@@ -99,7 +102,7 @@ void TcpCommunicationProcess::processMessages()
 
 void TcpCommunicationProcess::startPacketReceiveCallback()
 {
-	m_ioService->reset();
+//	m_ioService->reset();
 	m_activeSocket->async_receive(
 		boost::asio::buffer( m_asyncData, m_asyncDataCapacity ),
 		boost::bind( &TcpCommunicationProcess::onReceivePacket, this,
@@ -140,7 +143,6 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 		if( p_bytesTransferred > 0 )
 		{
 			queue< Packet > packets;
-			/// TODO: Fill packets queue with data using the messages queue.
 
 			unsigned int readPosition = 0;
 			char* readPtr = m_asyncData;
@@ -152,6 +154,10 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 
 			if( m_packetRestSize > 0 )
 			{
+				m_numberOfOverflowPackets += 1;
+				m_parent->putMessage( new ProcessMessagePacketOverflow(
+					m_numberOfOverflowPackets, this ) );
+
 				unsigned int oldReserveBufferSize = m_reserveBuffer.size();
 				m_reserveBuffer.resize( oldReserveBufferSize + m_packetRestSize );
 				

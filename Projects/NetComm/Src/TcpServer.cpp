@@ -216,15 +216,34 @@ void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_pa
 	}
 }
 
-void TcpServer::unicastPacket( Packet p_packet, int clientId )
+void TcpServer::unicastPacket( Packet p_packet, int p_clientId )
 {
 	// NOTE: this might be slow enough to do for individual packets
 	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )
 	{
-		if ( m_communicationProcesses[i]->getId() == clientId )
+		if ( m_communicationProcesses[i]->getId() == p_clientId )
 		{
 			m_communicationProcesses[i]->putMessage(
 				new ProcessMessageSendPacket( this, p_packet ) );
+
+			break;
+		}
+	}
+}
+
+void TcpServer::unicastPacketQueue( queue<Packet> p_packets, int p_clientId )
+{
+	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )
+	{
+		if ( m_communicationProcesses[i]->getId() == p_clientId )
+		{
+			queue<ProcessMessage*> messages;
+			while( !p_packets.empty() )
+			{
+				messages.push( new ProcessMessageSendPacket( this, p_packets.front() ) );
+				p_packets.pop();
+			}
+			m_communicationProcesses[i]->putMessages( messages );
 
 			break;
 		}
