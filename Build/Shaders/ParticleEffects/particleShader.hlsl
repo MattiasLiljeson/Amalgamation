@@ -11,7 +11,7 @@ cbuffer cbFixed
 
 cbuffer cbPerFrame : register(b0)
 {
-	matrix gViewProj;
+	float4x4 gViewProj;
 	float4 color;
 	float4 cameraPos;
 	float4 cameraForward;
@@ -20,7 +20,7 @@ cbuffer cbPerFrame : register(b0)
 	float fadeOut;
 	float particleMaxAge;
 	float maxOpacity;
-	float Alignment; //changed it from int to float
+	float4 Alignment; //changed it from int to float
 };
 
 Texture2D Texture : register(t0);
@@ -53,7 +53,7 @@ void GS(point Particle gIn[1],
             inout TriangleStream<GS_OUT> triStream)
 {		
 	matrix W;
-	if (Alignment < 0.5f) //Observer
+	if (Alignment.x < 0.5f) //Observer
 	{
 		float3 look  = normalize(cameraPos.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
@@ -63,7 +63,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment < 1.5f) //Screen
+	else if (Alignment.x < 1.5f) //Screen
 	{
 		float3 look  = -cameraForward.xyz;
 		float3 up    = cameraUp.xyz;
@@ -73,7 +73,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment < 2.5) //World Up
+	else if (Alignment.x < 2.5) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
 		float3 right = normalize(cross(up, cameraPos.xyz - gIn[0].Position));
