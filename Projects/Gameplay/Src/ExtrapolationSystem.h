@@ -24,7 +24,10 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 
+	void initialize();
+	float searchForLatestUpdateTimeStamp( const vector<Entity*>& p_entities );
 private:
 	TcpClient* m_client;
+	float m_correctedDeltaTime;
 
 };

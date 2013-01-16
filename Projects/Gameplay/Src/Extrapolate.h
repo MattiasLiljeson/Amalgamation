@@ -22,12 +22,12 @@ class Extrapolate: public Component
 public:
 	Extrapolate()
 	{
-		lastUpdateServerTimeStamp = 0;
-		lastVelocityVector = AglVector3();
+		serverUpdateTimeStamp = 0;
+		velocityVector = AglVector3();
 	}
 
 public:
-	float lastUpdateServerTimeStamp;
-	AglVector3 lastVelocityVector;
+	float serverUpdateTimeStamp;
+	AglVector3 velocityVector;
 
 };

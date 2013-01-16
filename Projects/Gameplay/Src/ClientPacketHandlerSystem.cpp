@@ -109,8 +109,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						Extrapolate* extrapolate = NULL;
 						extrapolate = static_cast<Extrapolate*>(
 							p_entities[i]->getComponent(ComponentType::Extrapolate) );
-						extrapolate->lastUpdateServerTimeStamp = data.timestamp;
-						extrapolate->lastVelocityVector = data.velocity;
+						extrapolate->serverUpdateTimeStamp = data.timestamp;
+						extrapolate->velocityVector = data.velocity;
 					}
 				}
 			}
