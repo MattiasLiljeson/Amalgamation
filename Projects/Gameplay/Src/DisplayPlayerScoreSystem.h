@@ -2,6 +2,9 @@
 
 #include <EntitySystem.h>
 
+class TcpClient;
+class HudElement;
+
 // =======================================================================================
 //	DisplayPlayerScoreSystem
 // =======================================================================================
@@ -17,7 +20,7 @@
 class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem();
+	DisplayPlayerScoreSystem(TcpClient* p_client);
 
 	~DisplayPlayerScoreSystem();
 
@@ -25,6 +28,12 @@ public:
 
 	void initialize();
 
-	void added( Entity* p_entity );
+	// Overrides EntitySystem::inserted
+	// This method is automatically called when a new entity has been added to the system.
+	void inserted( Entity* p_entity );
+
+private:
+	HudElement* m_playerScoreMenu;
+	TcpClient*	m_client;
 
 };

@@ -294,7 +294,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Gameplay																 */
 	/************************************************************************/
-	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
+	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
 	m_world->initialize();
@@ -309,8 +309,8 @@ void ClientApplication::initEntities()
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
-	m_world->addEntity( entity );
+	//entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	//m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 

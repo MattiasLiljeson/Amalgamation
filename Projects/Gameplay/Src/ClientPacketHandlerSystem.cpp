@@ -24,6 +24,7 @@
 #include "PlayerScore.h"
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
+#include "HudElement.h"
 
 #include "GraphicsBackendSystem.h"
 #include "EntityType.h"
@@ -273,6 +274,13 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		component = new PlayerScore(0);
 		entity->addComponent( ComponentType::PlayerScore, component );
+		m_world->addEntity(entity);
+
+		/************************************************************************/
+		/* HACK: HudElement should probably be located in another entity.		*/
+		/************************************************************************/
+		component = new HudElement("scoreText");
+		entity->addComponent( ComponentType::HudElement, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/
