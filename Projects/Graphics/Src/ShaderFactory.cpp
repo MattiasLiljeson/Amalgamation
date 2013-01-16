@@ -130,20 +130,20 @@ ParticleShader* ShaderFactory::createParticleShader( const LPCWSTR& p_filePath )
 	ID3D11InputLayout* inputLayout = NULL;
 	ShaderInitStruct shaderInitData;
 
-	VSData* vertexData		= new VSData();
-	GSData* geometryData	= new GSData();
-	PSData* pixelData		= new PSData();
+	VSData* vertexD		= new VSData();
+	GSData* geometryD	= new GSData();
+	PSData* pixelD		= new PSData();
 
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
-	geometryData->stageConfig = new ShaderStageConfig(p_filePath,"GS",m_shaderModelVersion);
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
+	vertexD->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	geometryD->stageConfig = new ShaderStageConfig(p_filePath,"GS",m_shaderModelVersion);
+	pixelD->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
 
-	createAllShaderStages(vertexData,pixelData,geometryData);
+	createAllShaderStages(vertexD,pixelD,geometryD);
 	createSamplerState(&samplerState);
-	createParticleInputLayout(vertexData,&inputLayout);
+	createParticleInputLayout(vertexD,&inputLayout);
 
-	createShaderInitData(&shaderInitData, inputLayout, vertexData, pixelData, 
-		samplerState, geometryData);
+	createShaderInitData(&shaderInitData, inputLayout, vertexD, pixelD, 
+		samplerState, geometryD);
 
 	return new ParticleShader(shaderInitData);
 }
@@ -164,7 +164,6 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile,
 #if defined(DEBUG) || defined(_DEBUG)
 	compileFlags |= D3DCOMPILE_DEBUG;
 #endif
-
 
 	// Compile the programs
 	// vertex

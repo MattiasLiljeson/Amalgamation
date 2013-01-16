@@ -6,7 +6,7 @@ using namespace std;
 
 class GraphicsBackendSystem;
 class AglParticleSystem;
-class AglParticleSystemHeader;
+struct AglParticleSystemHeader;
 // =======================================================================================
 //                                      ParticleRenderSystem
 // =======================================================================================
@@ -24,10 +24,11 @@ class ParticleRenderSystem : public EntitySystem
 public:
 	ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend );
 	~ParticleRenderSystem();
-
-	void processEntities( const vector<Entity*>& p_entities );
+	
+	void process();
+	//void processEntities( const vector<Entity*>& p_entities );
 	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header);
-
+	unsigned int addParticleSystem();
 private:
 	void renderParticles(AglParticleSystem* particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* particleSystem);

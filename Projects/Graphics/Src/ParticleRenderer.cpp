@@ -38,9 +38,10 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system){
 		SAFE_RELEASE(m_vertexBuffer);
 		D3D11_BUFFER_DESC bD;
 		ZeroMemory(&bD, sizeof(bD));
-		bD.Usage		= D3D11_USAGE_DYNAMIC;
-		bD.ByteWidth	= sizeof(AglStandardParticle)* particles.size();
-		bD.BindFlags	= D3D11_CPU_ACCESS_READ;
+		bD.Usage			= D3D11_USAGE_DYNAMIC;
+		bD.ByteWidth		= sizeof(AglStandardParticle)* particles.size();
+		bD.BindFlags		= D3D11_BIND_VERTEX_BUFFER;
+		bD.CPUAccessFlags	= D3D11_CPU_ACCESS_WRITE;
 
 		D3D11_SUBRESOURCE_DATA vD;
 		vD.pSysMem			= &particles[0];
@@ -67,7 +68,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-
+	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
 	m_deviceContext->Draw(numOfParticles, 0);
 
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);

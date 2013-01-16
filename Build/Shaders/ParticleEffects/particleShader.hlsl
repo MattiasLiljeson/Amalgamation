@@ -36,17 +36,6 @@ struct Particle
 	float AngularVelocity  : ANGULARVELOCITY;
 	float Rotation		   : ROTATION;
 };
-
-struct VS_OUT
-{
-	float3 Position  : POSITION;
-	float2  Size : SIZE;
-	float  Age	: AGE;
-	float3 Velocity : VELOCITY;
-	float AngularVelocity  : ANGULARVELOCITY;
-	float Rotation		   : ROTATION;
-};
-
 struct GS_OUT
 {
 	float4 posH  : SV_POSITION;
@@ -55,20 +44,13 @@ struct GS_OUT
 };
 
 
-VS_OUT VS(Particle vIn)
+Particle VS(Particle vIn)
 {
-	VS_OUT vOut;
-	vOut.Position = vIn.Position;
-	vOut.Size = vIn.Size;
-	vOut.Age = vIn.Age;
-	vOut.Velocity = vIn.Velocity;
-	vOut.AngularVelocity = vIn.AngularVelocity;
-	vOut.Rotation = vIn.Rotation;
-	return vOut;
+	return vIn;
 }
 
 [maxvertexcount(4)]
-void GS(point VS_OUT gIn[1], 
+void GS(point Particle gIn[1], 
             inout TriangleStream<GS_OUT> triStream)
 {		
 	matrix W;
@@ -160,9 +142,8 @@ void GS(point VS_OUT gIn[1],
 float4 PS(GS_OUT pIn) : SV_TARGET
 {
 	float4 color = Texture.Sample(SampleType, pIn.texC);
-	color *= pIn.color;
 	return color;
-    float2 val = 2 * (pIn.texC - float2(0.5f, 0.5f));
-    float c = 1.0f - sqrt(dot(val, val));
-	return float4(1, 1, 1, max(c, 0)) * pIn.color;
+	
+	//color *= pIn.color;
+	//return float4(1,0,0,1);
 }

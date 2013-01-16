@@ -82,10 +82,10 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
-#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
-#include "..\..\Gameplay\Src\LightRenderSystem.h"
-#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
-#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
+#include <LibRocketRenderSystem.h>
+#include <LightRenderSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
 
 
 
@@ -249,18 +249,18 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Renderers															*/
 	/************************************************************************/
-	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
-	m_world->setSystem( renderer , true );
+	//MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
+	//m_world->setSystem( renderer , true );
 
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-		rocketBackend );
-	m_world->setSystem( rocketRender, true );
+	//LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
+	//	rocketBackend );
+	//m_world->setSystem( rocketRender, true );
 
-	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
-	m_world->setSystem( antTweakBar, true );
+	//AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	//m_world->setSystem( antTweakBar, true );
 
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );

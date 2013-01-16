@@ -154,7 +154,7 @@ void GraphicsWrapper::clearRenderTargets()
 {
 	m_deferredRenderer->clearBuffers();
 	
-	static float ClearColor[4] = { 1, 0, 0, 1.0f };
+	static float ClearColor[4] = { 1, 0, 0.39f, 1.0f }; //PINK!
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
