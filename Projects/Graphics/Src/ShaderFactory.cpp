@@ -145,7 +145,7 @@ ParticleShader* ShaderFactory::createParticleShader( const LPCWSTR& p_filePath )
 	createShaderInitData(&shaderInitData, inputLayout, vertexD, pixelD, 
 		samplerState, geometryD);
 
-	return new ParticleShader(shaderInitData);
+	return new ParticleShader(shaderInitData, m_bufferFactory->createParticleCBuffer());
 }
 
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 

@@ -87,9 +87,6 @@
     <ClInclude Include="BufferFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="CBuffers.h">
-      <Filter>Renderer\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderStageConfig.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
@@ -149,6 +146,12 @@
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Renderer\ParticleRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="CBuffers.h">
+      <Filter>Renderer\Buffer\BufferTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleCBuffer.h">
+      <Filter>Renderer\Buffer\BufferTypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -189,6 +192,9 @@
     </Filter>
     <Filter Include="Renderer\ParticleRenderer">
       <UniqueIdentifier>{7198b176-1701-4338-8319-7f94675398de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Buffer\BufferTypes">
+      <UniqueIdentifier>{1bac6df7-f6c4-418d-82cb-057da20bc295}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

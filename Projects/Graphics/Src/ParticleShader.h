@@ -1,7 +1,9 @@
 #pragma once
 #include "ShaderBase.h"
+#include "Buffer.h"
 
 struct ShaderInitStruct;
+struct ParticleCBuffer;
 // =======================================================================================
 //                                      ParticleShader
 // =======================================================================================
@@ -17,7 +19,12 @@ struct ShaderInitStruct;
 class ParticleShader : public ShaderBase
 {
 public:
-	ParticleShader(ShaderInitStruct p_initData);
+	ParticleShader(ShaderInitStruct p_initData, 
+		Buffer<ParticleCBuffer>* p_perSystemBuffer);
 	~ParticleShader();
 	void apply();
+
+	Buffer<ParticleCBuffer>* getPerSystemBuffer();
+private:
+	Buffer<ParticleCBuffer>* m_perSystemBuffer;
 };
