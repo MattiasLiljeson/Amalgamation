@@ -200,34 +200,9 @@ void DeferredRenderer::beginLightPass()
 	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
 	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
 
-	// update per frame buffer
-	InstanceData instData;
-	instData.worldTransform[0] = 1.0f;
-	instData.worldTransform[1] = 0.0f;
-	instData.worldTransform[2] = 0.0f;
-	instData.worldTransform[3] = 0.0f;
-
-	instData.worldTransform[4] = 0.0f;
-	instData.worldTransform[5] = 1.0f;
-	instData.worldTransform[6] = 0.0f;
-	instData.worldTransform[7] = 0.0f;
-
-	instData.worldTransform[8] = 0.0f;
-	instData.worldTransform[9] = 0.0f;
-	instData.worldTransform[10] = 1.0f;
-	instData.worldTransform[11] = 0.0f;
-
-	instData.worldTransform[12] = 0.0f;
-	instData.worldTransform[13] = 0.0f;
-	instData.worldTransform[14] = 0.0f;
-	instData.worldTransform[15] = 1.0f;
-
-	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-	//	cb->accessBuffer.color[0] = 0.5f;
-	//	cb->accessBuffer.color[1] = 0.5f;
-
+	Buffer<SimpleCBuffer>* cb = m_composeShader->getPerFrameBufferPtr();
 	for (int i=0;i<16;i++) {
-		cb->accessBuffer.vp[i] = instData.worldTransform[i]; }
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i]; }
 
 	cb->update();
 }

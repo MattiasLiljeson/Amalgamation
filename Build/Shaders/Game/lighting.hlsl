@@ -2,7 +2,7 @@
 
 cbuffer VertexProgramCBuffer
 {
-    float4 color;
+	float4 color;
 	float4x4 vp;
 };
 
@@ -23,7 +23,7 @@ struct VertexIn
 };
 struct VertexOut
 {
-    float4 position	: SV_POSITION;
+	float4 position	: SV_POSITION;
 	float2 texCoord	: TEXCOORD0;
 	float4 screenPos : TEXCOORD1;
 };
@@ -39,15 +39,19 @@ VertexOut VS(VertexIn p_input)
 	//vout.normal = mul( float4(p_input.normal, 0.0f), p_input.instanceTransform).xyz;
 	
 	vout.texCoord = p_input.texCoord;
-    
+	
 	return vout;
 }
 
-float4 PS(VertexOut p_input) : SV_TARGET
+float4 PS(VertexOut p_input, float4 ndcPos : SV_POSITION) : SV_TARGET
 {
-	float4 diffuseColor = float4(gDiffuseMap.Sample(pointSampler, p_input.texCoord));
-	float4 normalColor = float4(gNormalMap.Sample(pointSampler, p_input.texCoord));	
-	float4 specular = float4(gSpecular.Sample(pointSampler, p_input.texCoord));
+	float2 samp = p_input.screenPos + float2( 0.5f, -0.5f);
+	samp = ndcPos.xy/1000;
+	//samp.y*-1.0f; // invert y to correct it. Caused by bad cube coords?
+
+	float4 diffuseColor = float4(gDiffuseMap.Sample(pointSampler, samp));
+	float4 normalColor = float4(gNormalMap.Sample(pointSampler, samp));	
+	float4 specular = float4(gSpecular.Sample(pointSampler, samp));
 	
 	//return specular;
 	// Normal in -1 to 1 range

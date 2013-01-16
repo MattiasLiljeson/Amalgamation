@@ -260,7 +260,8 @@ void GraphicsWrapper::finalizeGUIPass()
 
 void GraphicsWrapper::beginLightPass()
 {
-	setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
+	//setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
+	setRasterizerStateSettings( RasterizerState::FILLED_NOCULL, false );
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 	m_deferredRenderer->beginLightPass();
 }
