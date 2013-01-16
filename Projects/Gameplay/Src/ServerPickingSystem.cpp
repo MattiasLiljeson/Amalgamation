@@ -216,29 +216,56 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 	ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(p_entity->getComponent(ComponentType::ConnectionPointSet));
 	Transform* transform = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
 
+	vector<pair<int, Entity*>> free = getFreeConnectionPoints(conPoints, p_entity);
+
 	PhysicsBody* phyBody = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
 	Body* b = physX->getController()->getBody(phyBody->m_id);
 	AglVector3 parentPos = b->GetWorld().GetTranslation();
 
 	AglVector3 closest = AglVector3(0, 0, 0);
-	for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+	for (unsigned int i = 0; i < free.size(); i++)
 	{
-		if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
+		conPoints = static_cast<ConnectionPointSet*>(free[i].second->getComponent(ComponentType::ConnectionPointSet));
+		transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
+		AglVector3 pos = (conPoints->m_connectionPoints[free[i].first].cpTransform*transform->getMatrix()).GetTranslation();
+		if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
 		{
-			AglVector3 pos = (conPoints->m_connectionPoints[i].cpTransform*transform->getMatrix()).GetTranslation();
-			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
-			{
-				closest = pos;
-				p_pc.m_targetEntity = p_entity->getIndex();
-				p_pc.m_targetSlot = i;
-			}
+			closest = pos;
+			p_pc.m_targetEntity = free[i].second->getIndex();
+			p_pc.m_targetSlot = free[i].first;
 		}
 	}
 	return closest;
 }
 
 
+vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent)
+{
+	vector<pair<int, Entity*>> free;
+	for (unsigned int i = 0; i < p_set->m_connectionPoints.size(); i++)
+	{
+		if (p_set->m_connectionPoints[i].cpConnectedEntity < 0)
+			free.push_back(pair<int, Entity*>(
+			i, p_parent));
+		else
+		{
+			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
 
+			ConnectionPointSet* connector =
+				static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(module,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			if (connector)
+			{
+				vector<pair<int, Entity*>> moreFree 
+					= getFreeConnectionPoints(connector, module);
+				for (unsigned int j = 0; j < moreFree.size(); j++)
+					free.push_back(moreFree[j]);
+			}
+		}
+	}
+	return free;
+}
 
 AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base)
 {
@@ -279,12 +306,18 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
 
-		//Ship
-		Entity* ship = m_world->getEntity(p_ray.m_targetEntity);
+		//Target
+		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
+		Entity* ship = target;
+		while (ship->getComponent(ComponentType::ShipModule))
+		{
+			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(ComponentType::ShipModule));
+			ship = m_world->getEntity(intermediate->m_parentEntity);
+		}
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(ComponentType::PhysicsBody));
 
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-			m_world->getComponentManager()->getComponent(ship,
+			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
 
@@ -293,11 +326,11 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 
 
-		AglMatrix transform = offsetTemp(ship, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
 		physX->getController()->AttachBodyToCompound(comp, r, transform);
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
 
-		shipModule->m_parentEntity = ship->getIndex();
+		shipModule->m_parentEntity = target->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
 	}
