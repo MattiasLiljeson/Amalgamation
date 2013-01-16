@@ -42,10 +42,10 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
-    <ClCompile Include="ModelExtendedFactory.cpp">
+    <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="TextureFactory.cpp">
+    <ClCompile Include="ModelExtendedManagedFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,10 +143,10 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="ModelExtendedFactory.h">
+    <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="TextureFactory.h">
+    <ClInclude Include="ModelExtendedManagedFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>

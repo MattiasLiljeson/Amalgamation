@@ -11,23 +11,23 @@ class AglScene;
 using namespace std;
 
 // =======================================================================================
-//                                   ModelBaseFactory
+//                                   ModelBaseUnmanagedFactory
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	The ModelBaseFactory can read agl files but won't do anything DX-related, and
-/// can't handle storaging.
+/// \brief	The ModelBaseUnmanagedFactory can read agl files but won't do anything 
+//  DX-related, and can't handle storaging.
 ///        
-/// # ModelBaseFactory
+/// # ModelBaseUnmanagedFactory
 /// Detailed description.....
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ModelBaseFactory
+class ModelBaseUnmanagedFactory
 {
 public:
-	ModelBaseFactory();
-	virtual ~ModelBaseFactory();
+	ModelBaseUnmanagedFactory();
+	virtual ~ModelBaseUnmanagedFactory();
 
 	virtual ModelResource* createModelResource(const string& p_name,
 										  const string* p_path=NULL);
@@ -36,29 +36,18 @@ public:
 												    const string* p_path=NULL);
 
 
-	/*
-	// WIP, should not use texture pointer, but texture id
-	unsigned int createMesh(const string& p_name,
-		int p_numVertices, PNTTBVertex* p_vertices, 
-		int p_numIndices, DIndex* p_indices,
-		Texture* p_texture=NULL);
-
-	// This is the preferred method for creating meshes from raw data
-	unsigned int createMesh(const string& p_name,
-		int p_numVertices, PNTTBVertex* p_vertices, 
-		int p_numIndices, DIndex* p_indices,
-		int p_textureId);
-	*/
-
 protected:
 	AglScene* readScene(const string& p_name, const string* p_path);
 
 	virtual vector<ModelResource*>* createAllModelData(AglScene* p_scene, 
 											   unsigned int p_numberOfModels);
 
-	void readConnectionPoints(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
+	void readAndStoreConnectionPoints(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
 
-	void readParticleSystems(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
+	void readAndStoreParticleSystems(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
+
+	virtual ModelResource* getFallback();
+
 
 	///-----------------------------------------------------------------------------------
 	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.

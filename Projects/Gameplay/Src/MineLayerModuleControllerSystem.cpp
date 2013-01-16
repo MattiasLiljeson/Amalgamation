@@ -59,7 +59,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 {
 	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+	int sphereMeshId = graphicsBackend->buildEntityFromMeshFile( "P_sphere" );
 
 	Entity* entity = m_world->createEntity();
 	Component* component = new RenderInfo( sphereMeshId );
