@@ -2,7 +2,7 @@
 
 #include "HudElement.h"
 #include "LibRocketBackendSystem.h"
-
+#include <DebugUtil.h>
 
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
 	: EntitySystem( SystemType::HudSystem, 1, ComponentType::HudElement )
@@ -29,7 +29,10 @@ void HudSystem::processEntities( const vector<Entity*>& p_entities )
 		
 		if( hudElement->hasChanged() )
 		{
-			m_backend->updateElement( hudElement->getElement(), hudElement->getValue());
+			string print = hudElement->getValue() + "\n";
+			DEBUGPRINT((print.c_str()));
+
+			//m_backend->updateElement( hudElement->getElement(), hudElement->getValue());
 			
 			hudElement->setRead();
 		}

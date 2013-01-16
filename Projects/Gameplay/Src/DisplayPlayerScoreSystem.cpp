@@ -23,7 +23,8 @@ void DisplayPlayerScoreSystem::processEntities( const vector<Entity*>& p_entitie
 {
 	if (m_playerScoreMenu)
 	{
-		stringstream hudvalue("Client Id , Score , Ping");
+		stringstream hudvalue;
+		hudvalue << "Client Id , Score , Ping";
 
 		for (int i = 0; i < p_entities.size(); i++)
 		{
@@ -34,11 +35,12 @@ void DisplayPlayerScoreSystem::processEntities( const vector<Entity*>& p_entitie
 			NetworkSynced* netSync =
 				static_cast<NetworkSynced*>(entity->getComponent( ComponentType::NetworkSynced ));
 
-			//hudvalue << "<br/>" << netSync->getNetworkOwner() << " " << score->getScore()
-			//	<< " " << "NA";
+			hudvalue << "\n" << netSync->getNetworkOwner() << " " << score->getScore()
+				<< " " << "N/A";
 		}
 
-		m_playerScoreMenu->setValue("hej");
+
+		m_playerScoreMenu->setValue(hudvalue.str());
 	}
 }
 

@@ -60,7 +60,7 @@ bool HudElement::hasChanged()
 
 void HudElement::setRead()
 {
-	//m_changed = false;
+	m_changed = false;
 }
 
 string HudElement::getElement()
