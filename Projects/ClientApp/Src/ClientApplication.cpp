@@ -52,6 +52,7 @@
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
+#include <ClientPickingSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
@@ -222,7 +223,7 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship
@@ -299,12 +300,7 @@ void ClientApplication::initSystems()
 	/* Gameplay																 */
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
-	m_world->setSystem(new MinigunModuleControllerSystem(), true);
-	m_world->setSystem(new ShieldModuleControllerSystem(), true);
-	m_world->setSystem(new MineLayerModuleControllerSystem(), true);
-	m_world->setSystem(new MineControllerSystem(), true);
-	m_world->setSystem(new RocketLauncherModuleControllerSystem(), true);
-	m_world->setSystem(new ShipModulesControllerSystem, true);
+	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
 	m_world->initialize();
 }
@@ -354,8 +350,38 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+	//InitModulesTestByAnton();
 
-	InitModulesTestByAnton();
+	/*
+	//Create a camera
+	float aspectRatio = 
+		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+		SystemType::GraphicsBackendSystem ))->getAspectRatio();
+
+	entity = m_world->createEntity();
+	component = new CameraInfo( aspectRatio );
+	entity->addComponent( ComponentType::CameraInfo, component );
+	component = new MainCamera();
+	entity->addComponent( ComponentType::MainCamera, component );
+	//component = new Input();
+	//entity->addComponent( ComponentType::Input, component );
+	component = new Transform( -5.0f, 0.0f, -5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	component = new LookAtEntity(shipId, 
+								 AglVector3(0,3,-10),
+								 AglQuaternion::identity(),
+								 10.0f,
+								 10.0f,
+								 4.0f);
+	entity->addComponent( ComponentType::LookAtEntity, component );
+	// default tag is follow
+	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
+	component = new AudioListener();
+	entity->addComponent(ComponentType::AudioListener, component);
+	
+	m_world->addEntity(entity);
+	*/
 }
 
 void ClientApplication::initSounds()

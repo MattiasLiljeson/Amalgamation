@@ -4,9 +4,10 @@
 #include "Control.h"
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
+#include "NetworkSynced.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem()
-	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::ShipFlyController)
+	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::TAG_Ship)
 {
 }
 
@@ -21,7 +22,49 @@ void ShipModulesControllerSystem::initialize()
 
 void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
-	double keys[6];
+	for (unsigned int i = 0; i < p_entities.size(); i++)
+	{
+		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(ComponentType::NetworkSynced));
+		
+		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
+		{
+			if (m_toHighlight[j].first == netSync->getNetworkOwner())
+			{
+				//Do highlight
+				changeHighlight(p_entities[i], m_toHighlight[j].second);
+				m_toHighlight[j] = m_toHighlight.back();
+				m_toHighlight.pop_back();
+				j--;
+			}
+		}
+		for (unsigned int j = 0; j < m_toActivate.size(); j++)
+		{
+			if (m_toActivate[j] == netSync->getNetworkOwner())
+			{
+				//Do Activate
+				setActivation(p_entities[i], true);
+				m_toActivate[j] = m_toActivate.back();
+				m_toActivate.pop_back();
+				j--;
+			}
+		}
+		for (unsigned int j = 0; j < m_toDeactivate.size(); j++)
+		{
+			if (m_toDeactivate[j] == netSync->getNetworkOwner())
+			{
+				//Do Deactivate
+				setActivation(p_entities[i], false);
+				m_toDeactivate[j] = m_toDeactivate.back();
+				m_toDeactivate.pop_back();
+				j--;
+			}
+		}
+	}
+
+
+
+
+	/*double keys[6];
 	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
 	Control* ctrl = input->getControlByEnum(InputHelper::KEY_T);
 	keys[0] = ctrl->getDelta();
@@ -72,7 +115,7 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				}
 			}
 		}
-	}
+	}*/
 }
 void ShipModulesControllerSystem::dropModule(Entity* p_parent, unsigned int p_slot)
 {
@@ -102,4 +145,71 @@ void ShipModulesControllerSystem::dropModule(Entity* p_parent, unsigned int p_sl
 	ShipModule* module = static_cast<ShipModule*>(child->getComponent(ComponentType::ShipModule));
 
 	module->m_parentEntity = -1;
+}
+void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
+{
+	m_toHighlight.push_back(pair<int, int>(p_id, p_slot));
+}
+void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
+{
+	ConnectionPointSet* connected =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+
+	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
+	if (current >= 0)
+	{
+		Entity* currEn = m_world->getEntity(current);
+		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+		currModule->m_active = false;
+	}
+
+	connected->m_highlighted = p_new;
+}
+void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
+{
+	ConnectionPointSet* connected =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+
+	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
+	if (current >= 0)
+	{
+		Entity* currEn = m_world->getEntity(current);
+		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+		currModule->m_active = p_value;
+		setActivationChildren(currEn, p_value);
+	}
+}
+void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
+{
+	ConnectionPointSet* connected =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	if (connected)
+	{
+		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
+		{
+			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+			{
+				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				currModule->m_active = p_value;
+				setActivationChildren(currEn, p_value);
+			}
+		}
+	}
+}
+void ShipModulesControllerSystem::addActivateEvent(int p_index)
+{
+	m_toActivate.push_back(p_index);
+}
+void ShipModulesControllerSystem::addDeactivateEvent(int p_index)
+{
+	m_toDeactivate.push_back(p_index);
 }

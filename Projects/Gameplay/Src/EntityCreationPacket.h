@@ -27,6 +27,7 @@ public:
 	char			entityType;
 	int				owner;
 	int				networkIdentity;
+	int				meshInfo;
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;

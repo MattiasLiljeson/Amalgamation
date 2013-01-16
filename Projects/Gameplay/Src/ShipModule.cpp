@@ -3,7 +3,7 @@
 ShipModule::ShipModule()
 {
 	m_parentEntity = -1;
-	m_highlighted = false;
+	m_active = false;
 }
 
 ShipModule::~ShipModule()

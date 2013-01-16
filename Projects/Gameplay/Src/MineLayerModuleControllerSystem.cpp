@@ -11,10 +11,13 @@
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
 #include "StandardMine.h"
+#include "EntityCreationPacket.h"
+#include "NetworkSynced.h"
 
-MineLayerModuleControllerSystem::MineLayerModuleControllerSystem()
+MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 1, ComponentType::MineLayerModule)
 {
+	m_server = p_server;
 }
 
 
@@ -43,7 +46,7 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				ComponentType::getTypeFor(ComponentType::MineLayerModule)));
 
 			mineLayer->m_cooldown -= dt;
-			if (mineLayer->m_cooldown <= 0)
+			if (mineLayer->m_cooldown <= 0 && module->m_active)
 			{
 				mineLayer->m_cooldown = 2;
 				Transform* transform = static_cast<Transform*>(
@@ -57,19 +60,38 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 
 void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 {
-	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
-
 	Entity* entity = m_world->createEntity();
-	Component* component = new RenderInfo( sphereMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
 
-
-	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.5f, 0.5f, 0.5f));
+	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.8f, 0.8f, 0.8f));
 	entity->addComponent( ComponentType::Transform, t);
 
 	entity->addComponent(ComponentType::StandardMine, new StandardMine());
+
+	entity->addComponent( ComponentType::PhysicsBody, 
+		new PhysicsBody() );
+
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(p_transform->getTranslation(),
+		p_transform->getRotation(),
+		AglVector3(0.8f, 0.8f, 0.8f), AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false, true));
+
+
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::ShipModule);
+	data.owner			= -1;
+	data.networkIdentity = entity->getIndex();
+	data.translation	= t->getTranslation();
+	data.rotation		= t->getRotation();
+	data.scale			= t->getScale();
+	data.meshInfo		= 1;
+
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+
+	m_server->broadcastPacket(data.pack());
 
 	m_world->addEntity(entity);
 }

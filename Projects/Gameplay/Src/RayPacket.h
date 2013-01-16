@@ -1,24 +1,31 @@
 #pragma once
 
-#include <Component.h>
+#include "Packetizer.h"
+#include <AglVector3.h>
 
 // =======================================================================================
-//	Module
+//	RayPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that can be attached to a ship
+/// \brief Brief description...
 ///        
-/// # PlayerScore
+/// # RayPacket
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipModule: public Component
+class RayPacket: Packetizer
 {
 public:
-	int m_parentEntity;
-	bool m_active;
-	ShipModule();
-	~ShipModule();
+	RayPacket();
+
+	Packet pack();
+
+	void unpack( Packet p_packet );
+
+public:
+	AglVector3 o;
+	AglVector3 d;
+
 };

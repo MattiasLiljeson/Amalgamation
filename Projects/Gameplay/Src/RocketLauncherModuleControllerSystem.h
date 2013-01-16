@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "RocketLauncherModule.h"
 #include "Transform.h"
+#include "TcpServer.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -18,7 +19,7 @@
 class RocketLauncherModuleControllerSystem: public EntitySystem
 {
 public:
-	RocketLauncherModuleControllerSystem();
+	RocketLauncherModuleControllerSystem(TcpServer* p_server);
 	~RocketLauncherModuleControllerSystem();
 
 	virtual void initialize();
@@ -26,4 +27,6 @@ public:
 private:
 	void handleLaserSight(Entity* p_entity);
 	void spawnRocket(Entity* p_entity);
+private:
+	TcpServer* m_server;
 };

@@ -1,30 +1,30 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "ShieldModule.h"
-#include "TcpServer.h"
+#include "MainCamera.h"
+#include "Transform.h"
+#include "PickComponent.h"
+#include "TcpClient.h"
 
 // =======================================================================================
-//                                      PhysicsSystem
+//                                      ClientPickingSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	System for handling communication with the physics library
+/// \brief Creates rays and sends to server
 ///        
-/// # PhysicsSystem
+/// # ClientPickingSystem
 /// Detailed description.....
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
-class ShieldModuleControllerSystem: public EntitySystem
+class ClientPickingSystem: public EntitySystem
 {
 public:
-	ShieldModuleControllerSystem(TcpServer* p_server);
-	~ShieldModuleControllerSystem();
+	ClientPickingSystem(TcpClient* p_client);
+	~ClientPickingSystem();
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
 private:
-	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active);
-private:
-	TcpServer* m_server;
+	TcpClient* m_client;
 };

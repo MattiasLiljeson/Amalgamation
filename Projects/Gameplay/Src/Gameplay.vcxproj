@@ -32,6 +32,7 @@
     <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
+    <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
@@ -47,6 +48,8 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="PickComponent.h" />
+    <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
     <ClInclude Include="ParticleEmitters.h" />
     <ClInclude Include="ParticleRenderSystem.h" />
@@ -54,10 +57,12 @@
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PongPacket.h" />
+    <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
+    <ClInclude Include="ServerPickingSystem.h" />
     <ClInclude Include="ServerScoreSystem.h" />
     <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
@@ -86,6 +91,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
+    <ClInclude Include="SimpleEventPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="ThrustPacket.h" />
@@ -112,6 +118,7 @@
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
@@ -128,14 +135,17 @@
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="ParticleRenderSystem.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
+    <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
+    <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
@@ -155,6 +165,7 @@
     <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
+    <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />

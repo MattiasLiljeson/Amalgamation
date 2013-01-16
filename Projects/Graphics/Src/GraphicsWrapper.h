@@ -167,7 +167,10 @@ public:
 
 	int getWindowWidth();
 	int getWindowHeight();
-	pair<int,int> getScreenPixelPosFromNDC(float p_x,float p_y);
+
+	pair<int,int> getScreenPixelPosFromNDC(float p_x, float p_y);
+	pair<int,int> getScreenPixelPosFromNDC(float p_x, float p_y, int p_width, int p_height);
+	pair<float,float> getNDCPosFromScreenPixel(int p_x, int p_y);
 
 	void changeBackbufferRes( int p_width, int p_height );
 
