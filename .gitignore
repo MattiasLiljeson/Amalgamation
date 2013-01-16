@@ -132,6 +132,8 @@ External/*
 *.jpeg
 *.dll
 *.lib
+*.vsglog
+*.PIXExp
 
 [Ll]oc[Mm]etrics*.*
 

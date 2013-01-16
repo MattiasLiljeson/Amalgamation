@@ -258,12 +258,40 @@ void GraphicsWrapper::finalizeGUIPass()
 	m_deferredRenderer->finalizeGUIPass();
 }
 
-void GraphicsWrapper::finalizeFrame()
+void GraphicsWrapper::beginLightPass()
 {
-	setRasterizerStateSettings(RasterizerState::DEFAULT,false);
-	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
-	m_deferredRenderer->renderComposedImage();
+	setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
+	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
+	m_deferredRenderer->beginLightPass();
 }
+
+void GraphicsWrapper::renderLights( const unsigned int p_meshId,
+								   vector<InstanceData>* p_instanceList )
+{
+	if( p_instanceList != NULL )
+	{
+		Mesh* mesh = m_meshManager->getResource( p_meshId );
+
+		Buffer<InstanceData>* instanceBuffer;
+		instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
+			p_instanceList->size() );
+
+		m_deferredRenderer->renderLights( mesh, instanceBuffer );
+
+		delete instanceBuffer;
+		instanceBuffer = NULL;
+	}
+	else
+	{
+		m_deferredRenderer->renderLights( NULL, NULL );
+	}
+}
+
+void GraphicsWrapper::endLightPass()
+{
+	m_deferredRenderer->endLightPass();
+}
+
 
 void GraphicsWrapper::flipBackBuffer()
 {
@@ -614,5 +642,3 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 {
 	m_wireframeMode = p_wireframe;
 }
-
-

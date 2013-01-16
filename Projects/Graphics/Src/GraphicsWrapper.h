@@ -94,13 +94,16 @@ public:
 		vector<InstanceData>* p_instanceList );
 	void finalizeGUIPass();
 
+
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
 	/// render to backbuffer here.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void finalizeFrame();
-
+	void beginLightPass();
+	void renderLights( const unsigned int p_meshId,
+		vector<InstanceData>* p_instanceList );
+	void endLightPass();
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
 	/// \return void

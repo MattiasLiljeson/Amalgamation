@@ -47,7 +47,7 @@ public:
 	/// \param p_filePath
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
-	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+	DeferredBaseShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
 	/// This method returns the GUI shader used for menus and HUDs.

@@ -80,11 +80,12 @@
 using namespace std;
 
 // MISC
+#include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
-#include "..\..\Gameplay\Src\LightRenderSystem.h"
-#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
-#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
+#include <LibRocketRenderSystem.h>
+#include <LightRenderSystem.h>
+#include <ParticleRenderSystem.h>
+#include "..\..\Gameplay\Src\FrameFinalizerSystem.h"
 
 
 
@@ -254,6 +255,9 @@ void ClientApplication::initSystems()
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
+
 	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
@@ -261,8 +265,9 @@ void ClientApplication::initSystems()
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 
-	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
-	m_world->setSystem( lightRender, true );
+	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
+	m_world->setSystem( finalizer, true);
+
 
 	/************************************************************************/
 	/* Network																*/

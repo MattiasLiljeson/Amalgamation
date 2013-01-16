@@ -53,6 +53,7 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
+		FrameFinalizerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

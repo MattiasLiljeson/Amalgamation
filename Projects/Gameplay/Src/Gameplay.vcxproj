@@ -29,6 +29,7 @@
     <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HudSystem.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />

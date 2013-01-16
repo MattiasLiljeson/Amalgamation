@@ -311,6 +311,7 @@
     </ClInclude>
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="ParticleEmitters.h" />
+    <ClInclude Include="FrameFinalizerSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -507,5 +508,6 @@
     </ClCompile>
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="FrameFinalizerSystem.cpp" />
   </ItemGroup>
 </Project>

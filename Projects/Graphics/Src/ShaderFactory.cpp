@@ -71,32 +71,36 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	return newDeferredBaseShader;
 }
 
-DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR& p_filePath)
+DeferredBaseShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR& p_filePath)
 {
 	DeferredComposeShader* newDeferredComposeShader = NULL;
 	ID3D11SamplerState* samplerState = NULL;
-	ID3D11InputLayout* inputLayout = NULL;
 
 	BufferConfig* initConfig  = NULL;
 
 	VSData* vertexData = new VSData();
-	PSData* pixelData = new PSData();
-
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+
+	PSData* pixelData = new PSData();
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
 
 	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
-	createPTVertexInputLayout(vertexData,&inputLayout);
-
+	
+	ID3D11InputLayout* inputLayout = NULL;
+	//createPTVertexInputLayout(vertexData,&inputLayout);
+	createInstancedPNTTBVertexInputLayout( vertexData, &inputLayout );
 
 	ShaderInitStruct shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
+	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
+	//return newDeferredComposeShader;
 
-	newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
-
-	return newDeferredComposeShader;
+	DeferredBaseShader* newDeferredBaseShader = NULL;
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
+		m_bufferFactory->createSimpleCBuffer());
+	return newDeferredBaseShader;
 }
 
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
@@ -309,6 +313,7 @@ void ShaderFactory::createPTVertexInputLayout(VSData* p_vs,
 		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
+
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
 

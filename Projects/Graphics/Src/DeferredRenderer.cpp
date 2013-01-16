@@ -141,24 +141,6 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArra
 										   unsigned int p_textureArraySize, 
 										   Buffer<InstanceData>* p_instanceBuffer )
 {
-	// Specialized, external apply of these buffers
-	// since instanced drawing required a "combined"
-	// vertex/instance-buffer
-	//
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-						p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-								 p_instanceBuffer->getBufferPointer() };
-
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-									  DXGI_FORMAT_R32_UINT, 0);
-
 	/************************************************************************/
 	/* Unsure on what the values, startSlot and numVIews, represent.		*/
 	/* -Robin T																*/
@@ -175,28 +157,99 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArra
 			startSlot++;
 		}
 	}
+	renderInstanced( p_mesh, m_baseShader, p_instanceBuffer );
+}
 
-	m_baseShader->apply();
+void DeferredRenderer::renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
+									   Buffer<InstanceData>* p_instanceBuffer )
+{
+	// Specialized, external apply of these buffers
+	// since instanced drawing required a "combined"
+	// vertex/instance-buffer
+	//
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+		p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+		p_instanceBuffer->getBufferPointer() };
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	p_shader->apply();
 
 	// Draw instanced data
 	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-										  p_instanceBuffer->getElementCount(),
-										  0,0,0);
+		p_instanceBuffer->getElementCount(),
+		0,0,0);
 }
 
-void DeferredRenderer::renderComposedImage()
+
+void DeferredRenderer::beginLightPass()
 {
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+	m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[RT0]);
-	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[RT1]);
-	m_deviceContext->PSSetShaderResources(2,1,&m_gBuffersShaderResource[RT2]);
+	// Set g-buffers
+	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
+	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
 
-	m_fullscreenQuad->apply();
+	// update per frame buffer
+	InstanceData instData;
+	instData.worldTransform[0] = 1.0f;
+	instData.worldTransform[1] = 0.0f;
+	instData.worldTransform[2] = 0.0f;
+	instData.worldTransform[3] = 0.0f;
 
-	m_composeShader->apply();
+	instData.worldTransform[4] = 0.0f;
+	instData.worldTransform[5] = 1.0f;
+	instData.worldTransform[6] = 0.0f;
+	instData.worldTransform[7] = 0.0f;
 
-	m_deviceContext->Draw(6,0);
+	instData.worldTransform[8] = 0.0f;
+	instData.worldTransform[9] = 0.0f;
+	instData.worldTransform[10] = 1.0f;
+	instData.worldTransform[11] = 0.0f;
+
+	instData.worldTransform[12] = 0.0f;
+	instData.worldTransform[13] = 0.0f;
+	instData.worldTransform[14] = 0.0f;
+	instData.worldTransform[15] = 1.0f;
+
+	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
+	//	cb->accessBuffer.color[0] = 0.5f;
+	//	cb->accessBuffer.color[1] = 0.5f;
+
+	for (int i=0;i<16;i++) {
+		cb->accessBuffer.vp[i] = instData.worldTransform[i]; }
+
+	cb->update();
+}
+
+void DeferredRenderer::renderLights( Mesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer )
+{
+	if( p_mesh && p_instanceBuffer )
+	{
+		renderInstanced( p_mesh, m_composeShader, p_instanceBuffer );
+	}
+	else
+	{
+		// Fallback:
+		m_fullscreenQuad->apply();
+		m_composeShader->apply();
+		m_deviceContext->Draw( 6, 0 );
+	}
+}
+
+void DeferredRenderer::endLightPass()
+{
+
 }
 
 void DeferredRenderer::beginGUIPass()
@@ -366,8 +419,11 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
+	//m_composeShader = m_shaderFactory->createDeferredComposeShader(
+	//	L"Shaders/Game/deferredCompose.hlsl");
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/deferredCompose.hlsl");
+		L"Shaders/Game/lighting.hlsl");
+
 
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
@@ -453,4 +509,3 @@ void DeferredRenderer::buildRasterizerStates()
 {
 	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
 }
-

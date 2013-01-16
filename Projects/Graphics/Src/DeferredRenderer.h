@@ -10,6 +10,7 @@
 #include <d3d11.h>
 
 class BufferFactory;
+class ShaderBase;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class Mesh;
@@ -107,13 +108,16 @@ public:
 							 unsigned int p_textureArraySize,
 							 Buffer<InstanceData>* p_instanceBuffer );
 
+	void renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
+		Buffer<InstanceData>* p_instanceBuffer );
+
 	///-----------------------------------------------------------------------------------
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderComposedImage();
-	
-
+	void beginLightPass();
+	void renderLights( Mesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer );
+	void endLightPass();
 
 	// ===================================================================================
 	// GUI Render
@@ -177,6 +181,7 @@ public:
 
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
@@ -184,6 +189,7 @@ private:
 	void buildRasterizerStates();
 	void unMapGBuffers();
 	void initShaders();
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -198,7 +204,8 @@ private:
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
-	DeferredComposeShader*	m_composeShader;
+	DeferredBaseShader*		m_composeShader;
+	//DeferredComposeShader*	m_composeShader;
 	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

@@ -65,7 +65,7 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	return quadBuffer;
 }
 
-Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instanceList, 
+Buffer<InstanceData>* BufferFactory::createInstanceBuffer( InstanceData* p_instanceList, 
 														  unsigned int p_numberOfElements)
 {
 	Buffer<InstanceData>* instanceBuffer;
