@@ -49,7 +49,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 					p_entities[i]->getComponent(ComponentType::PhysicsBody));
 				AglVector3 velocity = AglVector3();
 				AglVector3 angularVelocity = AglVector3();
-				//if( physicsBody != NULL )
+				if( physicsBody != NULL )
 				{
 					PhysicsSystem* physicsSystem = static_cast<PhysicsSystem*>(
 						m_world->getSystem(SystemType::PhysicsSystem));
