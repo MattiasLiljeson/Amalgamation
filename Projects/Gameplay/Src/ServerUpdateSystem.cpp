@@ -47,10 +47,13 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 				physicsBody = static_cast<PhysicsBody*>(
 					p_entities[i]->getComponent(ComponentType::PhysicsBody));
-				AglVector3 velocity =													  // HACK: Not working as it should!!!
-					static_cast<PhysicsSystem*>(m_world->getSystem(						  // HACK: Not working as it should!!!
-					SystemType::PhysicsSystem))->getController()->getBody(				  // HACK: Not working as it should!!!
-					physicsBody->m_id)->GetVelocity();									  // HACK: Not working as it should!!!
+				AglVector3 velocity = AglVector3();
+				if( physicsBody != NULL )
+				{
+					static_cast<PhysicsSystem*>(m_world->getSystem(
+						SystemType::PhysicsSystem))->getController()->getBody(
+						physicsBody->m_id)->GetVelocity();
+				}
 
 				EntityUpdatePacket updatePacket;
 				updatePacket.networkIdentity = netSync->getNetworkIdentity();
