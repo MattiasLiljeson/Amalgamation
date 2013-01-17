@@ -16,7 +16,6 @@
 
 struct RendererSceneInfo
 {
-	float viewProjectionMatrix[16];
 	AglMatrix viewProj;
 	AglVector3 cameraPos;
 	AglVector3 cameraForward;

@@ -54,10 +54,6 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3::normalize(up);
 		
 		RendererSceneInfo sceneInfo;
-		for( int i=0; i<16; i++ )
-		{
-			sceneInfo.viewProjectionMatrix[i] = viewProj[i];
-		}
 		sceneInfo.viewProj = viewProj;
 		sceneInfo.cameraPos = position;
 		sceneInfo.cameraForward = lookTarget;

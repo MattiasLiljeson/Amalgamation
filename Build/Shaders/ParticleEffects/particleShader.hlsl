@@ -143,14 +143,7 @@ void GS(point Particle gIn[1],
 
 PixelOut PS(GS_OUT pIn)
 {
-	//float4 col = float4(gViewProj._11,gViewProj._12,gViewProj._13,1.0f);
 	PixelOut pix_out;
-	//pix_out.diffuse = color;
-	//return pix_out;
 	pix_out.diffuse = Texture.Sample(SampleType, pIn.texC);
 	return pix_out;
-	//return color;
-	
-	//color *= pIn.color;
-	//return float4(1,0,0,1);
 }

@@ -99,13 +99,7 @@ void DeferredRenderer::beginDeferredBasePass()
 	
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-	//	cb->accessBuffer.color[0] = 0.5f;
-	//	cb->accessBuffer.color[1] = 0.5f;
-
-	for (int i=0;i<16;i++)
-	{
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
-	}
+	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
 	cb->update();
 }
 
@@ -113,13 +107,7 @@ void DeferredRenderer::updatePerFrameConstantBuffer()
 {
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_guiShader->getPerFrameBufferPtr();
-	//	cb->accessBuffer.color[0] = 0.5f;
-	//	cb->accessBuffer.color[1] = 0.5f;
-
-	for (int i=0;i<16;i++)
-	{
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
-	}
+	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
 	cb->update();
 }
 
@@ -232,16 +220,7 @@ void DeferredRenderer::finalizeGUIPass(){
 
 	// Reset world matrix to identity matrix
 	RendererSceneInfo scene;
-	float identity[16] = 
-	{
-		1.0, 0.0f, 0.0f, 0.0f,
-		0.0, 1.0f, 0.0f, 0.0f, 
-		0.0, 0.0f, 1.0f, 0.0f, 
-		0.0, 0.0f, 0.0f, 1.0f 
-	};
-	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = identity[i];
-
+	scene.viewProj = AglMatrix::identityMatrix();
 	setSceneInfo( scene );
 }
 

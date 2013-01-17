@@ -72,8 +72,6 @@ const BufferConfig* BufferBase::getBufferConfigPointer()
 	return m_config;
 }
 
-
-
 UINT32 BufferBase::getElementSize()
 {
 	return m_config->elementSize;
@@ -87,19 +85,16 @@ UINT32 BufferBase::getElementCount()
 void BufferBase::init(void* p_initData )
 {
 	HRESULT hr = S_OK;
-	if(p_initData)
-	{
+	if(p_initData){
 		D3D11_SUBRESOURCE_DATA data;
 		data.pSysMem = p_initData;
 		hr = m_device->CreateBuffer(m_config->getBufferDesc(), &data, &m_buffer);
 	}
-	else
-	{
+	else{
 		hr = m_device->CreateBuffer(m_config->getBufferDesc(), NULL, &m_buffer);
 	}
 
-	if(FAILED(hr))
-	{
+	if(FAILED(hr)){
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 	}
 }
@@ -120,15 +115,20 @@ void BufferBase::sendBufferToGPU( bool p_shouldSend, UINT32 p_misc/*=0*/ )
 	{
 	case BufferConfig::VERTEX_BUFFER:
 		{
-			UINT32 vertexSize = m_config->elementSize;
-			UINT32 offset = 0;
-			m_deviceContext->IASetVertexBuffers(p_misc, numOfBuffers, &m_buffer, 
-				&vertexSize, &offset );
+			if(p_shouldSend){
+				UINT32 vertexSize = m_config->elementSize;
+				UINT32 offset = 0;
+				m_deviceContext->IASetVertexBuffers(p_misc, numOfBuffers, &m_buffer, 
+					&vertexSize, &offset );
+			}
+			else{
+				m_deviceContext->IASetVertexBuffers(p_misc,numOfBuffers,NULL,0,0);
+			}
 		}
 		break;
 	case BufferConfig::INDEX_BUFFER:
 		{
-			m_deviceContext->IASetIndexBuffer(m_buffer, DXGI_FORMAT_R32_UINT, 0);
+			m_deviceContext->IASetIndexBuffer(GPUBuffer, DXGI_FORMAT_R32_UINT, 0);
 		}
 		break;
 	case BufferConfig::CONSTANT_BUFFER_VS:

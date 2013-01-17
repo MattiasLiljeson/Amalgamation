@@ -53,21 +53,11 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 		vD.SysMemSlicePitch	= 0;
 
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
-
-		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-		data->accessBuffer.setViewProjection( p_info.viewProj );
-		data->accessBuffer.setColor( AglVector4(1,1,1,1));
-		data->accessBuffer.setCameraPos( p_info.cameraPos );
-		data->accessBuffer.setCameraForward( p_info.cameraForward );
-		data->accessBuffer.setCameraUp( p_info.cameraUp );
-		data->accessBuffer.setFadeIn(0.0f);
-		data->accessBuffer.setFadeOut(4.0f);
-		data->accessBuffer.setParticleMaxAge(4.0f);
-		data->accessBuffer.setMaxOpacity(1.0f);
-		data->accessBuffer.setAlignment(0);
-
-		data->update();
 		
+		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
+		data->accessBuffer.setSceneInfo(p_info);
+		data->accessBuffer.setParticleData(p_system->getHeader());
+
 		beginRendering(p_system, particles.size());
 	}
 }
@@ -91,6 +81,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	m_deviceContext->Draw(numOfParticles, 0);
 
 	m_shader->unApply();
+
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(old, 1);
 

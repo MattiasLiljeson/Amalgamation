@@ -2,6 +2,8 @@
 #include <AglVector3.h>
 #include <AglVector4.h>
 #include <AglMatrix.h>
+#include <AglParticleSystemHeader.h>
+#include "RendererSceneInfo.h"
 // =======================================================================================
 //                                      ParticleCBuffer
 // =======================================================================================
@@ -24,6 +26,20 @@ struct ParticleCBuffer
 	float variousFloats[4];	//Containing fadeIn, fadeOut, particleMaxAge, maxOpacity
 	float alignment[4];
 
+	void setSceneInfo(const RendererSceneInfo& p_sceneInfo){
+		setViewProjection(p_sceneInfo.viewProj);
+		setCameraPos(p_sceneInfo.cameraPos);
+		setCameraForward(p_sceneInfo.cameraForward);
+		setCameraUp(p_sceneInfo.cameraUp);
+	}
+	void setParticleData(const AglParticleSystemHeader& p_header){
+		setColor(p_header.color);
+		setFadeIn(p_header.fadeInStop);
+		setFadeOut(p_header.fadeOutStart);
+		setParticleMaxAge(p_header.particleAge);
+		setMaxOpacity(p_header.maxOpacity);
+		setAlignment(p_header.alignmentType);
+	}
 	void setViewProjection(const AglMatrix& p_viewProj){
 		for (unsigned int i = 0; i < 16; i++){
 			viewProj[i] = p_viewProj[i];
@@ -65,8 +81,8 @@ struct ParticleCBuffer
 	void setMaxOpacity(const float& p_maxOpacity){
 		variousFloats[3] = p_maxOpacity;
 	}
-	void setAlignment(const float& p_alignment){
-		alignment[0] = p_alignment;
+	void setAlignment(const int& p_alignment){
+		alignment[0] = static_cast<int>(p_alignment);
 		alignment[1] = 0;
 		alignment[2] = 0;
 		alignment[3] = 0;
