@@ -581,4 +581,8 @@ void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 			(m_lastBroadcastPacketIdentifier + 1);
 		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
+	else if( p_packetIdentifier == m_lastBroadcastPacketIdentifier + 1 )
+	{
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
+	}
 }
