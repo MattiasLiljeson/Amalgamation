@@ -335,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="ParticleEmitters.h" />
+    <ClInclude Include="ShipManagerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -546,5 +549,8 @@
     </ClCompile>
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ShipManagerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

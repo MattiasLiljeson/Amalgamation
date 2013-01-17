@@ -308,7 +308,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 				AglQuaternion::identity(),
 				10.0f,
 				10.0f,
-				4.0f);
+				10.0f);
 			entity->addComponent( ComponentType::LookAtEntity, component );
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );

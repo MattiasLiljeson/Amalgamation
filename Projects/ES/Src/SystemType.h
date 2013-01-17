@@ -55,6 +55,7 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
+		ShipManagerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

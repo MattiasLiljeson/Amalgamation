@@ -11,6 +11,7 @@
 #include <Cursor.h>
 #include "RayPacket.h"
 #include "Control.h"
+#include "SimpleEventPacket.h"
 
 ClientPickingSystem::ClientPickingSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::ClientPickingSystem, 2, ComponentType::CameraInfo, ComponentType::PickComponent)
@@ -68,6 +69,10 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		//Transform target location from screen space to world space
 		InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(
 			SystemType::InputBackendSystem ));
+
+		Control* ctrl = input->getControlByEnum(
+			InputHelper::M_RBTN); //HACK: This is really the middle button. Mattias is fixing
+
 		double x = input->getCursor()->getX();
 		double y = -input->getCursor()->getY();
 		AglVector4 targetNDC(x, y, 1, 1);
@@ -81,5 +86,18 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		rp.o = position;
 		rp.d = dir;
 		m_client->sendPacket(rp.pack());
+
+		if (ctrl->getDelta() > 0)
+		{
+			SimpleEventPacket packet;
+			packet.type = SimpleEventType::ACTIVATE_PICK;
+			m_client->sendPacket( packet.pack() );
+		}
+		else if (ctrl->getDelta() < 0)
+		{
+			SimpleEventPacket packet;
+			packet.type = SimpleEventType::DEACTIVATE_PICK;
+			m_client->sendPacket( packet.pack() );
+		}
 	}
 }
