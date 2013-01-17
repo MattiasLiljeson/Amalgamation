@@ -117,6 +117,14 @@ public:
 	Packet& operator >> (AglQuaternion& p_data);
 	Packet& operator >> (SYSTEMTIME& p_data);
 
+	///-----------------------------------------------------------------------------------
+	/// Provide a way to set the raw byte data from the outside. Needed for testing!
+	/// \param p_data
+	/// \param p_size
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setDataTest(char* p_data, unsigned int p_size);
+
 private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
 	void ReadData(void* p_data, unsigned int p_dataSize);
@@ -149,10 +157,13 @@ private:
 	// Variable that is set on a received packet and identifies its sender.
 	int m_senderId;
 
-	// HEADER_SIZE must be equal to the byte size of the header variables combined.
-	static const int HEADER_SIZE = 6;
 	// Header data (stored in the byte buffer).
 	char m_packetSize;
 	char m_packetType;
 	unsigned int m_uniquePacketIdentifier;
+
+public:
+	// HEADER_SIZE must be equal to the byte size of the header variables combined.
+	static const int HEADER_SIZE = 6;
+
 };

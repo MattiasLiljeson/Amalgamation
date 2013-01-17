@@ -70,7 +70,7 @@ void Packet::setData(char* p_data, unsigned int p_size)
 bool Packet::isEmpty() const
 {
 	bool empty;
-	empty = (m_data.size() <= 1);
+	empty = (m_data.size() <= HEADER_SIZE);
 
 	return empty;
 }
@@ -296,4 +296,9 @@ void Packet::readHeaderData( char* p_data )
 	memcpy(&m_packetSize, &p_data[0], 1);
 	memcpy(&m_packetType, &p_data[1], 1);
 	memcpy(&m_uniquePacketIdentifier, &p_data[2], 4);
+}
+
+void Packet::setDataTest( char* p_data, unsigned int p_size )
+{
+	setData( p_data, p_size );
 }
