@@ -147,7 +147,11 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 				if (pb && pb->m_id == cols[0])
 				{
+					//Found a pick
 					p_pc.m_latestPick = p_entities[i]->getIndex();
+
+					//Attempt a detach if the entity is already connected
+					attemptDetach(p_pc);
 
 					AglVector3 origin;
 					AglVector3 dir;
@@ -333,5 +337,45 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		shipModule->m_parentEntity = target->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
+	}
+}
+void ServerPickingSystem::attemptDetach(PickComponent& p_ray)
+{
+	if (p_ray.m_latestPick >= 0)
+	{
+		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+			SystemType::PhysicsSystem));
+
+		//Module
+		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
+		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
+
+		if (shipModule->m_parentEntity >= 0)
+		{
+			//Get the parent
+			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(parent,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			
+			int slot = 0;
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
+				{
+					slot = i;
+					break;
+				}
+			}
+
+			//Detach
+			cps->m_connectionPoints[slot].cpConnectedEntity = -1;
+			shipModule->m_parentEntity = -1;
+			moduleBody->setParentId(-1);
+
+			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
+			physX->getController()->DetachBodyFromCompound(body, false);
+		}
 	}
 }

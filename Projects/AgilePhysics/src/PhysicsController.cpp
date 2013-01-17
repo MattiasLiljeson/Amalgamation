@@ -112,7 +112,7 @@ void PhysicsController::GetRay(unsigned int p_index, AglVector3& p_o, AglVector3
 	p_d.normalize();
 }
 
-void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
+void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, bool p_impulseEnabled, CompoundBody* p_compound)
 {
 	if (p_compound)
 		p_compound->DetachChild(p_body);
@@ -121,6 +121,7 @@ void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* 
 		CompoundBody* parent = p_body->GetParent();
 		parent->DetachChild(p_body);
 	}
+	p_body->SetImpulseEnabled(p_impulseEnabled);
 }
 
 void PhysicsController::Update(float pElapsedTime)
