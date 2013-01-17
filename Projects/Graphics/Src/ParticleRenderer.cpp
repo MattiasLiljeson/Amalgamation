@@ -89,7 +89,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
 	m_deviceContext->Draw(numOfParticles, 0);
 
-	m_shader->unApplyStages();
+	m_shader->unApply();
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(old, 1);
 }

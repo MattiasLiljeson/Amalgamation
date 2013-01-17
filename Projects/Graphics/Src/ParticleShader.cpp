@@ -17,12 +17,14 @@ ParticleShader::~ParticleShader()
 void ParticleShader::apply()
 {
 	applyStages();
+	m_perSystemBuffer->update();
 	m_perSystemBuffer->apply();
 }
 
-void ParticleShader::unMap()
+void ParticleShader::unApply()
 {
 	unApplyStages();
+	m_perSystemBuffer->unApply();
 }
 
 Buffer<ParticleCBuffer>* ParticleShader::getPerSystemBuffer(){
