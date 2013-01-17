@@ -77,7 +77,7 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 			// set
 			model->meshHeader = &aglMeshHeader;
 
-			readAndStoreConnectionPoints(i,model,p_scene);
+			readAndStoreEmpties((int)i,model,p_scene);
 			readAndStoreParticleSystems(i,model,p_scene);
 
 			// Done
@@ -87,15 +87,13 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 	return models;
 }
 
-void ModelBaseUnmanagedFactory::readAndStoreConnectionPoints( unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene )
+void ModelBaseUnmanagedFactory::readAndStoreEmpties( int p_modelNumber, ModelResource* p_model, AglScene* p_scene )
 {
-	// Add syntax check here as well to differentiate between connection points and spawn points
-	// and maybe possibly detect instantiating here as well????
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
 	for (unsigned int n=0;n<connectionPoints;n++)
 	{
 		AglConnectionPoint* cp = &p_scene->getConnectionPoint(n);
-		if (cp->parentMesh == static_cast<int>(p_modelNumber))
+		if (cp->parentMesh == p_modelNumber)
 		{
 			p_model->connectionPoints->m_collection.push_back(cp->transform);
 		}

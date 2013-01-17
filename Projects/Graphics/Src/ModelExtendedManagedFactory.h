@@ -30,9 +30,22 @@ public:
 	virtual ~ModelExtendedManagedFactory();
 
 
+	///-----------------------------------------------------------------------------------
+	/// Returns a pointer to a stored ModelResource, thusly the pointer should 
+	/// not be deleted.
+	/// \param p_name
+	/// \param p_path
+	/// \return ModelResource*
+	///-----------------------------------------------------------------------------------
 	virtual ModelResource* createModelResource(const string& p_name,
 		const string* p_path=NULL);
 
+	///-----------------------------------------------------------------------------------
+	/// Creates a vector with model resource instructions. All managed, no deletion outside.
+	/// \param p_name
+	/// \param p_path
+	/// \return vector<ModelResource*>*
+	///-----------------------------------------------------------------------------------
 	virtual vector<ModelResource*>* createModelResources(const string& p_name,
 		const string* p_path=NULL);
 
@@ -52,20 +65,33 @@ private:
 				delete collection[i];
 			}
 		}
+
 		vector<ModelResource*> collection;
+	};
+
+	struct InstanceInstr
+	{
+		string filename;
+		AglMatrix transform;
 	};
 
 
 	virtual vector<ModelResource*>* createAllModelData(const string& p_name, AglScene* p_scene, 
-		unsigned int p_numberOfModels);
+		unsigned int p_numberOfModels, vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
 	void createAndAddModel(ModelResourceCollection* p_modelCollection, 
 							unsigned int p_modelNumber, const string& p_name, 
 							AglScene* p_scene, AglMesh* p_aglMesh,
-							AglMeshHeader* p_meshHeader);
+							AglMeshHeader* p_meshHeader,
+							vector<InstanceInstr>* p_outInstanceInstructions=NULL);
+
 
 	void readAndStoreTextures(unsigned int p_modelNumber, AglScene* p_scene, 
 							  Mesh* p_mesh);
+
+	virtual void readAndStoreEmpties(int p_modelNumber, 
+		ModelResource* p_model, AglScene* p_scene,
+		vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
 
 	virtual ModelResource* getFallback();

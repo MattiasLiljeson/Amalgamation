@@ -29,9 +29,22 @@ public:
 	ModelBaseUnmanagedFactory();
 	virtual ~ModelBaseUnmanagedFactory();
 
+	///-----------------------------------------------------------------------------------
+	/// Returns a pointer to a created ModelResource. It must be deleted manually outside.
+	/// \param p_name
+	/// \param p_path
+	/// \return ModelResource*
+	///-----------------------------------------------------------------------------------
 	virtual ModelResource* createModelResource(const string& p_name,
 										  const string* p_path=NULL);
 
+	///-----------------------------------------------------------------------------------
+	/// Returns a pointer to a vector of allocated ModelResources. Vector and all 
+	/// ModelResources must be deleted manually.
+	/// \param p_name
+	/// \param p_path
+	/// \return vector<ModelResource*>*
+	///-----------------------------------------------------------------------------------
 	virtual vector<ModelResource*>* createModelResources(const string& p_name,
 												    const string* p_path=NULL);
 
@@ -42,7 +55,8 @@ protected:
 	virtual vector<ModelResource*>* createAllModelData(AglScene* p_scene, 
 											   unsigned int p_numberOfModels);
 
-	void readAndStoreConnectionPoints(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
+	virtual void readAndStoreEmpties(int p_modelNumber, 
+											ModelResource* p_model, AglScene* p_scene);
 
 	void readAndStoreParticleSystems(unsigned int p_modelNumber, ModelResource* p_model, AglScene* p_scene);
 

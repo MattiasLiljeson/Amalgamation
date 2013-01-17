@@ -48,8 +48,12 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				vector<ModelResource*>* models = createAllModelData(p_name,scene,1);
-				if ((*models)[0]!=NULL) model = (*models)[0];
+				vector<ModelResource*>* models = createAllModelData(p_name,scene,1,NULL);
+				if ((*models)[0]!=NULL)
+				{
+					model = (*models)[0];
+					readAndStoreEmpties(-1,model,scene); // read leftover empties
+				}
 			}
 			else
 			{
@@ -80,6 +84,11 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 		if (scene)
 		{ 
 			models = createAllModelData(p_name,scene,scene->getMeshes().size());
+			if ((*models)[0]!=NULL)
+			{
+				ModelResource* model = (*models)[0];
+				readAndStoreEmpties(-1,model,scene); // read leftover empties
+			}
 		}
 		else
 		{
@@ -99,7 +108,8 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 
 vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const string& p_name,  
 																  AglScene* p_scene, 
-																  unsigned int p_numberOfModels )
+																  unsigned int p_numberOfModels,
+																  vector<InstanceInstr>* p_outInstanceInstructions)
 {
 	p_numberOfModels = max(p_numberOfModels,1);
 	ModelResourceCollection* models = new ModelResourceCollection();
@@ -110,21 +120,26 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 			AglMesh* aglMesh = p_scene->getMeshes()[i];
 			AglMeshHeader aglMeshHeader = aglMesh->getHeader();	
 			// parse mesh name
+			string meshName = p_scene->getName(aglMeshHeader.nameID);
 			pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
-			parsedAction = MeshNameScriptParser::parse(p_name);
+			parsedAction = MeshNameScriptParser::parse(meshName);
 			// Actions based on parsed name
 			switch (parsedAction.second) 
 			{
 			case MeshNameScriptParser::INSTANTIATE: // instantiate
 				{
-					ModelResource* m = createModelResource( parsedAction.first.filename, 
-															&MODELPATH);
-					models->collection.push_back(m);
+					if (p_outInstanceInstructions!=NULL)
+					{
+						InstanceInstr inst = {parsedAction.first.filename,
+		/* Retrieve transform here! ---> */	  AglMatrix::identityMatrix()};
+						p_outInstanceInstructions->push_back(inst);
+					}
+
 					break;
 				}
 
 			case MeshNameScriptParser::MESH: // normal mesh
-			default:
+			default:				
 				{
 					createAndAddModel(models, i, p_name+parsedAction.first.name, 
 						p_scene, aglMesh, &aglMeshHeader);
@@ -143,7 +158,8 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 													unsigned int p_modelNumber, 
 													const string& p_name, 
 													AglScene* p_scene, AglMesh* p_aglMesh,
-													AglMeshHeader* p_meshHeader )
+													AglMeshHeader* p_meshHeader,
+													vector<InstanceInstr>* p_outInstanceInstructions)
 {
 		// set
 		ModelResource* model = new ModelResource();
@@ -165,7 +181,7 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 		model->meshId = static_cast<int>(meshResultId);
 
 		// other model creation data
-		readAndStoreConnectionPoints(p_modelNumber,model,p_scene);
+		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);
 		readAndStoreParticleSystems(p_modelNumber,model,p_scene);
 
 		// Done
@@ -193,6 +209,58 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	// and then set the resulting data to the mesh
 	p_mesh->setMaterial(materialInfo);
+}
+
+void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber, 
+													   ModelResource* p_model, 
+													   AglScene* p_scene,
+													   vector<InstanceInstr>* p_outInstanceInstructions)
+{
+	unsigned int connectionPoints = p_scene->getConnectionPointCount();
+	for (unsigned int n=0;n<connectionPoints;n++)
+	{
+		AglConnectionPoint* cp = &p_scene->getConnectionPoint(n);
+		// parse name
+		string name = p_scene->getName(cp->nameID);
+		pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
+		parsedAction = MeshNameScriptParser::parse(name);
+		// Actions based on parsed name
+		switch (parsedAction.second) 
+		{
+		case MeshNameScriptParser::INSTANTIATE: // instantiate
+			{
+				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
+				{
+					InstanceInstr inst = {parsedAction.first.filename,
+						cp->transform};
+					p_outInstanceInstructions->push_back(inst);
+				}
+				break;
+			}
+
+		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
+		default:				
+			{
+				if (p_modelNumber!=-1) // call from parent
+				{
+					if (cp->parentMesh == p_modelNumber)
+					{
+						p_model->connectionPoints->m_collection.push_back(cp->transform);
+					}
+				}
+				else // call from global
+				{
+					// make pointed model to parent
+					if (cp->parentMesh == -1 && p_model!=NULL)
+						p_model->connectionPoints->m_collection.push_back(cp->transform);
+				}
+
+				break;
+			}
+
+		}
+
+	}
 }
 
 ModelResource* ModelExtendedManagedFactory::getFallback()

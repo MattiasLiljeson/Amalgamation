@@ -1,6 +1,6 @@
 #include "MeshNameScriptParser.h"
 
-string MeshNameScriptParser::separator = "_";
+string MeshNameScriptParser::separator = ".";
 string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";

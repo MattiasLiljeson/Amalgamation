@@ -32,4 +32,5 @@ public:
 	AglMeshHeader*				meshHeader;
 	ConnectionPointCollection*	connectionPoints;
 	ParticleSystemCollection*	particleSystems;
+	AglMatrix					transform;
 };
