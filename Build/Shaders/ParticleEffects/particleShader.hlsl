@@ -112,8 +112,8 @@ void GS(point Particle gIn[1],
 
 	float4 v[4];
 	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);
-	v[1] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
-	v[2] = float4(+halfWidth, -halfHeight, 0.0f, 1.0f);
+	v[1] = float4(+halfWidth, -halfHeight, 0.0f, 1.0f);
+	v[2] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
 	v[3] = float4(+halfWidth, +halfHeight, 0.0f, 1.0f);
 	float2 t[4];
 	t[0] = float2(0.0f, 1.0f);
@@ -143,10 +143,12 @@ void GS(point Particle gIn[1],
 
 PixelOut PS(GS_OUT pIn)
 {
+	//float4 col = float4(gViewProj._11,gViewProj._12,gViewProj._13,1.0f);
 	PixelOut pix_out;
-	pix_out.diffuse = float4(0,1,0,1);
+	//pix_out.diffuse = color;
+	//return pix_out;
+	pix_out.diffuse = Texture.Sample(SampleType, pIn.texC);
 	return pix_out;
-	//float4 color = Texture.Sample(SampleType, pIn.texC);
 	//return color;
 	
 	//color *= pIn.color;

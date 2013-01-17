@@ -64,7 +64,7 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 		data->accessBuffer.setFadeOut(4.0f);
 		data->accessBuffer.setParticleMaxAge(4.0f);
 		data->accessBuffer.setMaxOpacity(1.0f);
-		data->accessBuffer.setAlignment(3.0f);
+		data->accessBuffer.setAlignment(0);
 
 		data->update();
 		
@@ -87,11 +87,13 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
+
 	m_deviceContext->Draw(numOfParticles, 0);
 
 	m_shader->unApply();
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(old, 1);
+
 }
 
 void ParticleRenderer::initShaders(){
