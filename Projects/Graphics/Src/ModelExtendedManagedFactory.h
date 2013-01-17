@@ -52,7 +52,7 @@ public:
 private:
 	struct ModelResourceCollection
 	{
-		ModelResourceCollection() {}
+		ModelResourceCollection() {collection = vector<ModelResource*>();}
 		ModelResourceCollection(ModelResource* p_val)
 		{
 			collection.push_back(p_val);
@@ -60,7 +60,7 @@ private:
 
 		~ModelResourceCollection()
 		{
-			for (int i=0;i<collection.size();i++)
+			for (unsigned int i=0;i<collection.size();i++)
 			{
 				delete collection[i];
 			}
@@ -97,7 +97,7 @@ private:
 	virtual ModelResource* getFallback();
 
 
-	ModelResource* getBox();
+	ModelResource* getCube();
 
 	ModelResource* getSphere();
 
@@ -106,8 +106,10 @@ private:
 	TextureFactory* m_textureFactory;
 	ID3D11Device* m_device;
 
-	static const string& m_primitiveBoxName;
-	static const string& m_primitiveSphereName;
+	static const string& primitiveCubeName;
+	static const string& primitiveSphereName;
+	static const string& fallbackTextureName;
+	static const string& mesherrorTextureName;
 
 	/// 
 	/// Used for when a mesh has already been loaded and the creation instructions 

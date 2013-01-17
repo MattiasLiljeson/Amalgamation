@@ -71,7 +71,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		//Create Ray entity
 		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int cubeMeshId = graphicsBackend->buildEntityFromMeshFile( "P_cube" );
+		int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 
 		Entity* entity = m_world->createEntity();
 		Component* component = new RenderInfo( cubeMeshId );
@@ -126,7 +126,7 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 
 	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->buildEntityFromMeshFile( "P_cube" );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 
 	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
 	//physics->getController()

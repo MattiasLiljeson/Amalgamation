@@ -109,6 +109,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
+
 	ModelResource* createModelFromFile(const string& p_name,
 							   const string* p_path);
 

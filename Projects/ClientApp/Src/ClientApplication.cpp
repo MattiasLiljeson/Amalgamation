@@ -321,14 +321,13 @@ void ClientApplication::initEntities()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->buildEntityFromMeshFile( "P_cube" );
-	int shipMeshId = graphicsBackend->buildEntityFromMeshFile( "Ship.agl", &TESTMODELPATH );
-	int sphereMeshId = graphicsBackend->buildEntityFromMeshFile( "P_sphere" );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &TESTMODELPATH );
+	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
 	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->buildEntityFromMeshFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH,
-													 &connectionPoints);
+	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
+													 &TESTMODELPATH);
 
 	// Testchamber
 	entity = m_world->createEntity();
@@ -458,8 +457,8 @@ void ClientApplication::InitModulesTestByAnton()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->buildEntityFromMeshFile( "P_cube" );
-	int shipMeshId = graphicsBackend->buildEntityFromMeshFile( "Ship.agl", &TESTMODELPATH );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &TESTMODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

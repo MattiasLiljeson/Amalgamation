@@ -32,7 +32,9 @@ public:
 	virtual void initialize();
 	void process();
 
-	Entity* buildEntityFromMeshFile( const string& p_meshName, const string* p_path=NULL);
+	vector<Entity*> buildEntitiesFromMeshFile( const string& p_meshName, const string* p_path=NULL);
+	int				loadSingleMeshFromFile( const string& p_meshName, const string* p_path=NULL);
+
 	int getMeshId( const string& p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();

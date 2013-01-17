@@ -1,10 +1,11 @@
 #pragma once
 
 #include <vector>
+#include "AglParticleSystem.h"
 
 using namespace std;
 
-struct AglParticleSystem;
+
 
 // =======================================================================================
 //                              ParticleSystemCollection

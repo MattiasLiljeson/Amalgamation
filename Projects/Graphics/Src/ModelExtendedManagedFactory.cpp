@@ -5,8 +5,10 @@
 #include "Mesh.h"
 #include "MeshNameScriptParser.h"
 
-const string& ModelExtendedManagedFactory::m_primitiveBoxName="P_box";
-const string& ModelExtendedManagedFactory::m_primitiveSphereName="P_sphere";
+const string& ModelExtendedManagedFactory::primitiveCubeName="P_cube";
+const string& ModelExtendedManagedFactory::primitiveSphereName="P_sphere";
+const string& ModelExtendedManagedFactory::fallbackTextureName="testtexture.png";
+const string& ModelExtendedManagedFactory::mesherrorTextureName="mesherror.png";
 
 ModelExtendedManagedFactory::ModelExtendedManagedFactory(ID3D11Device* p_device,BufferFactory* p_bufferFactory, 
 	ResourceManager<Mesh>* p_resourceManager,
@@ -33,11 +35,11 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 	int meshFoundId = m_meshManager->getResourceId(p_name);
 	if (meshFoundId==-1)  // if it does not exist, create new
 	{
-		if (p_name == m_primitiveBoxName)
+		if (p_name == primitiveCubeName)
 		{
-			model = getBox();
+			model = getCube();
 		}
-		else if (p_name == m_primitiveSphereName)
+		else if (p_name == primitiveSphereName)
 		{
 			model = getSphere();
 		}
@@ -163,7 +165,7 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 {
 		// set
 		ModelResource* model = new ModelResource();
-		model->meshHeader = p_meshHeader;
+		model->meshHeader = *p_meshHeader;
 		// Mesh data
 		// Raw data extraction
 		void* vertices = p_aglMesh->getVertices();
@@ -196,9 +198,19 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	int matId = mmap[p_modelNumber].materialID;
 	AglMaterial* mat = p_scene->getMaterial(matId);
 	// get names
-	string diffuseName = p_scene->getName(mat->diffuseTextureNameIndex);
-	string specularName = p_scene->getName(mat->specularTextureNameIndex);
-	string normalName = p_scene->getName(mat->normalTextureNameIndex);
+	// diffuse
+	string diffuseName = fallbackTextureName;
+	if (mat->diffuseTextureNameIndex!=-1)
+		p_scene->getName(mat->diffuseTextureNameIndex);
+	// specular
+	string specularName = fallbackTextureName;
+	if (mat->specularTextureNameIndex!=-1)
+		p_scene->getName(mat->specularTextureNameIndex);
+	// normal
+	string normalName = fallbackTextureName;
+	if (mat->normalTextureNameIndex!=-1)
+		p_scene->getName(mat->normalTextureNameIndex);
+
 	// Create material
 	MaterialInfo materialInfo;
 	materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, 
@@ -245,14 +257,14 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					if (cp->parentMesh == p_modelNumber)
 					{
-						p_model->connectionPoints->m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform);
 					}
 				}
 				else // call from global
 				{
 					// make pointed model to parent
 					if (cp->parentMesh == -1 && p_model!=NULL)
-						p_model->connectionPoints->m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform);
 				}
 
 				break;
@@ -276,9 +288,9 @@ ModelResource* ModelExtendedManagedFactory::getFallback()
 		MaterialInfo materialInfo;
 		unsigned int meshResultId = m_meshManager->addResource(errname,mesh);
 		materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
-			m_textureFactory->createTexture("mesherror.png",TEXTUREPATH));
+			m_textureFactory->createTexture(mesherrorTextureName,TEXTUREPATH));
 		materialInfo.setTextureId(MaterialInfo::NORMALMAP,
-			m_textureFactory->createTexture("mesherror.png",TEXTUREPATH));
+			m_textureFactory->createTexture(mesherrorTextureName,TEXTUREPATH));
 		mesh->setMaterial(materialInfo);
 		model->meshId = meshResultId;
 		// add to manager
@@ -291,9 +303,9 @@ ModelResource* ModelExtendedManagedFactory::getFallback()
 	}
 }
 
-ModelResource* ModelExtendedManagedFactory::getBox()
+ModelResource* ModelExtendedManagedFactory::getCube()
 {
-	string errname = m_primitiveBoxName;
+	string errname = primitiveCubeName;
 	int meshFoundId = m_meshManager->getResourceId(errname);
 	if (meshFoundId==-1)  // if it does not exist, create new
 	{
@@ -304,9 +316,9 @@ ModelResource* ModelExtendedManagedFactory::getBox()
 		MaterialInfo materialInfo;
 		unsigned int meshResultId = m_meshManager->addResource(errname,mesh);
 		materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
-			m_textureFactory->createTexture("testtexture.png",TESTTEXTUREPATH));
+			m_textureFactory->createTexture(fallbackTextureName,TESTTEXTUREPATH));
 		materialInfo.setTextureId(MaterialInfo::NORMALMAP,
-			m_textureFactory->createTexture("testtexture.png",TESTTEXTUREPATH));
+			m_textureFactory->createTexture(fallbackTextureName,TESTTEXTUREPATH));
 		mesh->setMaterial(materialInfo);
 		model->meshId = meshResultId;
 		// add to manager
@@ -321,20 +333,20 @@ ModelResource* ModelExtendedManagedFactory::getBox()
 
 ModelResource* ModelExtendedManagedFactory::getSphere()
 {
-	string errname = m_primitiveSphereName;
+	string errname = primitiveSphereName;
 	int meshFoundId = m_meshManager->getResourceId(errname);
 	if (meshFoundId==-1)  // if it does not exist, create new
 	{
 		ModelResource* model = new ModelResource();
 		model->name = errname;
 		// fallback mesh and texture
-		Mesh* mesh = m_bufferFactory->createSphereMesh;
+		Mesh* mesh = m_bufferFactory->createSphereMesh();
 		MaterialInfo materialInfo;
 		unsigned int meshResultId = m_meshManager->addResource(errname,mesh);
 		materialInfo.setTextureId( MaterialInfo::DIFFUSEMAP, 
-			m_textureFactory->createTexture("testtexture.png",TESTTEXTUREPATH));
+			m_textureFactory->createTexture(fallbackTextureName,TESTTEXTUREPATH));
 		materialInfo.setTextureId(MaterialInfo::NORMALMAP,
-			m_textureFactory->createTexture("testtexture.png",TESTTEXTUREPATH));
+			m_textureFactory->createTexture(fallbackTextureName,TESTTEXTUREPATH));
 		mesh->setMaterial(materialInfo);
 		model->meshId = meshResultId;
 		// add to manager

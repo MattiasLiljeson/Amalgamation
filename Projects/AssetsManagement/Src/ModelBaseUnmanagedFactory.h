@@ -26,8 +26,8 @@ using namespace std;
 class ModelBaseUnmanagedFactory
 {
 public:
-	ModelBaseUnmanagedFactory();
-	virtual ~ModelBaseUnmanagedFactory();
+	ModelBaseUnmanagedFactory() {}
+	virtual ~ModelBaseUnmanagedFactory() {}
 
 	///-----------------------------------------------------------------------------------
 	/// Returns a pointer to a created ModelResource. It must be deleted manually outside.

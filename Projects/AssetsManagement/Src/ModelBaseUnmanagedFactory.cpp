@@ -13,7 +13,11 @@ ModelResource* ModelBaseUnmanagedFactory::createModelResource( const string& p_n
 	if (scene)
 	{ 
 		vector<ModelResource*>* models = createAllModelData(scene,1);
-		if ((*models)[0]!=NULL) model = (*models)[0];
+		if ((*models)[0]!=NULL)
+		{
+			model = (*models)[0];
+			readAndStoreEmpties(-1,model,scene); // read leftover empties
+		}
 	}
 	else
 	{
@@ -35,6 +39,11 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createModelResources( const s
 	if (scene)
 	{ 
 		models = createAllModelData(scene,scene->getMeshes().size());
+		if ((*models)[0]!=NULL)
+		{
+			ModelResource* model = (*models)[0];
+			readAndStoreEmpties(-1,model,scene); // read leftover empties
+		}
 	}
 	else
 	{
@@ -75,7 +84,7 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 			AglMesh* aglMesh = p_scene->getMeshes()[i];
 			AglMeshHeader aglMeshHeader = aglMesh->getHeader();		
 			// set
-			model->meshHeader = &aglMeshHeader;
+			model->meshHeader = aglMeshHeader;
 
 			readAndStoreEmpties((int)i,model,p_scene);
 			readAndStoreParticleSystems(i,model,p_scene);
@@ -95,7 +104,7 @@ void ModelBaseUnmanagedFactory::readAndStoreEmpties( int p_modelNumber, ModelRes
 		AglConnectionPoint* cp = &p_scene->getConnectionPoint(n);
 		if (cp->parentMesh == p_modelNumber)
 		{
-			p_model->connectionPoints->m_collection.push_back(cp->transform);
+			p_model->connectionPoints.m_collection.push_back(cp->transform);
 		}
 	}
 }
@@ -112,7 +121,7 @@ void ModelBaseUnmanagedFactory::readAndStoreParticleSystems( unsigned int p_mode
 		AglParticleSystem* ps = p_scene->getParticleSystem(n);
 		if (p_modelNumber==0) // add support for particle parent?
 		{
-			p_model->particleSystems->m_collection.push_back(*ps);
+			p_model->particleSystems.m_collection.push_back(*ps);
 		}
 	}
 }

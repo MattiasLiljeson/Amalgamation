@@ -27,6 +27,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		tokenVal = SPAWNPOINT;
 		data.name = getUniqueName(p_string,0);
 	}
+	return pair<Data,Token>(data,tokenVal);
 }
 
 std::string MeshNameScriptParser::getInstruction( const string& p_string )
