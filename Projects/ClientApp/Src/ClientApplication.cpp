@@ -322,7 +322,7 @@ void ClientApplication::initEntities()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &TESTMODELPATH );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
 	ConnectionPointCollection connectionPoints;
@@ -458,7 +458,7 @@ void ClientApplication::InitModulesTestByAnton()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &TESTMODELPATH );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

@@ -37,10 +37,12 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 	{
 		if (p_name == primitiveCubeName)
 		{
+			DEBUGWARNING(( string("Cube").c_str() ));
 			model = getCube();
 		}
 		else if (p_name == primitiveSphereName)
 		{
+			DEBUGWARNING(( string("Sphere").c_str() ));
 			model = getSphere();
 		}
 		else
@@ -50,7 +52,12 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				vector<ModelResource*>* models = createAllModelData(p_name,scene,1,NULL);
+				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+
+				DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
+
+				vector<ModelResource*>* models = createAllModelData(&currentInstance,
+												 scene,1,NULL);
 				if ((*models)[0]!=NULL)
 				{
 					model = (*models)[0];
@@ -76,39 +83,62 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const string& p_name, 
 															   const string* p_path/*=NULL*/)
 {
+	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+	//
 	vector<ModelResource*>* models = NULL;
+	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
+	int counter = 0;
 	// Check and read the file
-	int meshFoundId = m_meshManager->getResourceId(p_name);
-	if (meshFoundId==-1)  // if it does not exist, create new
-	{
-		AglScene* scene = readScene(p_name,p_path);
-		//
-		if (scene)
-		{ 
-			models = createAllModelData(p_name,scene,scene->getMeshes().size());
-			if ((*models)[0]!=NULL)
-			{
-				ModelResource* model = (*models)[0];
-				readAndStoreEmpties(-1,model,scene); // read leftover empties
-			}
-		}
-		else
+	do 
+	{	
+		int meshFoundId = m_meshManager->getResourceId(currentInstance.filename);
+		if (meshFoundId==-1)  // if it does not exist, create new
 		{
-			models->push_back(getFallback());
+			AglScene* scene = readScene(currentInstance.filename,p_path);
+			//
+			if (scene)
+			{ 
+				DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
+				models = createAllModelData(&currentInstance,
+											scene,
+											scene->getMeshes().size(),
+											instanceInstructions);
+				if ((*models)[0]!=NULL)
+				{
+					ModelResource* model = (*models)[0];
+					readAndStoreEmpties(-1,model,scene); // read leftover empties
+				}
+			}
+			else
+			{
+				models->push_back(getFallback());
+			}
+			// cleanup
+			delete scene;
 		}
-		// cleanup
-		delete scene;
-	}
-	else // the mesh already exists
-	{
-		models = &m_modelResourceCache->getResource(p_name)->collection;
-	}
+		else // the mesh already exists
+		{
+			models = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+		}
+
+		// read and prepare next instance if file had any instances specified
+		if (instanceInstructions->size()>0)
+		{
+			currentInstance = instanceInstructions->back();
+			instanceInstructions->pop_back();
+		}
+		counter++;
+
+	} while (instanceInstructions->size()>0);
+	
+
+	delete instanceInstructions;
 
 	return models;
 }
 
 
-vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const string& p_name,  
+vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const ModelExtendedManagedFactory::InstanceInstr* p_instanceData,  
 																  AglScene* p_scene, 
 																  unsigned int p_numberOfModels,
 																  vector<InstanceInstr>* p_outInstanceInstructions)
@@ -125,6 +155,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 			string meshName = p_scene->getName(aglMeshHeader.nameID);
 			pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
 			parsedAction = MeshNameScriptParser::parse(meshName);
+			DEBUGWARNING(( ("Creating mesh "+meshName).c_str() ));
 			// Actions based on parsed name
 			switch (parsedAction.second) 
 			{
@@ -134,6 +165,9 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 					{
 						InstanceInstr inst = {parsedAction.first.filename,
 		/* Retrieve transform here! ---> */	  AglMatrix::identityMatrix()};
+
+						DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+
 						p_outInstanceInstructions->push_back(inst);
 					}
 
@@ -143,7 +177,8 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 			case MeshNameScriptParser::MESH: // normal mesh
 			default:				
 				{
-					createAndAddModel(models, i, p_name+parsedAction.first.name, 
+					DEBUGWARNING(( string("Normal mesh").c_str() ));
+					createAndAddModel(models, i, p_instanceData, parsedAction.first.name, 
 						p_scene, aglMesh, &aglMeshHeader);
 					break;
 				}
@@ -151,15 +186,15 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const s
 
 		}
 	}
-	m_modelResourceCache->addResource(p_name,models); // register collection in cache
+	m_modelResourceCache->addResource(p_instanceData->filename,models); // register collection in cache
 
 	return &models->collection;
 }
 
 void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_modelCollection, 
 													unsigned int p_modelNumber, 
-													const string& p_name, 
-													AglScene* p_scene, AglMesh* p_aglMesh,
+													const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
+													const string& p_nameSuffix,AglScene* p_scene, AglMesh* p_aglMesh,
 													AglMeshHeader* p_meshHeader,
 													vector<InstanceInstr>* p_outInstanceInstructions)
 {
@@ -178,7 +213,8 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 														numIndices);
 		readAndStoreTextures(p_modelNumber,p_scene,mesh);
 		// put in manager			
-		unsigned int meshResultId = m_meshManager->addResource(p_name,mesh);	
+		unsigned int meshResultId = m_meshManager->addResource(p_instanceData->filename+p_nameSuffix,
+															   mesh);	
 		// store in model
 		model->meshId = static_cast<int>(meshResultId);
 
@@ -201,15 +237,15 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	// diffuse
 	string diffuseName = fallbackTextureName;
 	if (mat->diffuseTextureNameIndex!=-1)
-		p_scene->getName(mat->diffuseTextureNameIndex);
+		diffuseName = p_scene->getName(mat->diffuseTextureNameIndex);
 	// specular
 	string specularName = fallbackTextureName;
 	if (mat->specularTextureNameIndex!=-1)
-		p_scene->getName(mat->specularTextureNameIndex);
+		specularName = p_scene->getName(mat->specularTextureNameIndex);
 	// normal
 	string normalName = fallbackTextureName;
 	if (mat->normalTextureNameIndex!=-1)
-		p_scene->getName(mat->normalTextureNameIndex);
+		normalName = p_scene->getName(mat->normalTextureNameIndex);
 
 	// Create material
 	MaterialInfo materialInfo;
@@ -245,6 +281,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					InstanceInstr inst = {parsedAction.first.filename,
 						cp->transform};
+					DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;
@@ -257,6 +294,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					if (cp->parentMesh == p_modelNumber)
 					{
+						DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
 						p_model->connectionPoints.m_collection.push_back(cp->transform);
 					}
 				}
@@ -264,7 +302,10 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					// make pointed model to parent
 					if (cp->parentMesh == -1 && p_model!=NULL)
+					{
+						DEBUGWARNING(( string("Found global connection point!").c_str() ));
 						p_model->connectionPoints.m_collection.push_back(cp->transform);
+					}
 				}
 
 				break;

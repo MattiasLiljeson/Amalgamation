@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <ModelBaseUnmanagedFactory.h>
 #include "TextureFactory.h"
 #include "BufferFactory.h"
@@ -76,11 +77,12 @@ private:
 	};
 
 
-	virtual vector<ModelResource*>* createAllModelData(const string& p_name, AglScene* p_scene, 
+	virtual vector<ModelResource*>* createAllModelData(const InstanceInstr* p_instanceData, AglScene* p_scene, 
 		unsigned int p_numberOfModels, vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
 	void createAndAddModel(ModelResourceCollection* p_modelCollection, 
-							unsigned int p_modelNumber, const string& p_name, 
+							unsigned int p_modelNumber, const InstanceInstr* p_instanceData, 
+							const string& p_nameSuffix,
 							AglScene* p_scene, AglMesh* p_aglMesh,
 							AglMeshHeader* p_meshHeader,
 							vector<InstanceInstr>* p_outInstanceInstructions=NULL);

@@ -118,8 +118,8 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 	}
 
 
-	AglAnimation* anim = mAglScene->getAnimation(0);
-	anim->play();
+	// AglAnimation* anim = mAglScene->getAnimation(0);
+	// anim->play();
 	mFolder = pFolder;
 	CreateScenePlane();
 }
