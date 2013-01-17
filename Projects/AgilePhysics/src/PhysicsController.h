@@ -7,6 +7,7 @@
 #include <AglInteriorSphereGrid.h>
 #include <AglLooseBspTree.h>
 #include <typeindex>
+#include "Octree.h"
 
 
 typedef pair<unsigned int, unsigned int> UintPair;
@@ -36,6 +37,8 @@ private:
 	vector<UintPair> mCollisions;
 
 	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
+
+	Octree mStaticBodies;
 
 	float mTimeAccum;
 

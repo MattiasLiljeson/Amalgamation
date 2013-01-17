@@ -144,6 +144,7 @@ void FBXParser::ParseNode(FbxNode* pNode)
 		{
 			//Parse the mesh itself
 			FbxMesh* mesh = (FbxMesh*)attr;
+
 			MeshParser mp(this, mesh, pNode);
 			mp.Parse();
 
