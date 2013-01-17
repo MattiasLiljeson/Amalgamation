@@ -149,4 +149,24 @@ Describe(a_tcp_client)
 		}
 	}
 
+	It(can_verify_that_all_server_broadcasts_are_received)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet packet;
+		for(int i=0; i<5000; i++) {
+			server.broadcastPacket(packet);
+		}
+
+		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+		client.processMessages();
+
+		Assert::That(client.newPacketsCount(), Equals(5000));
+	}
+
 };
