@@ -18,8 +18,9 @@ enum SimpleEventType
 {
 	ACTIVATE_MODULE,
 	DEACTIVATE_MODULE,
-	ACTIVATE_PICK,
-	DEACTIVATE_PICK,
+	ACTIVATE_PICK, //Starts picking an object
+	DEACTIVATE_PICK, //Stops picking an object. Object snaps to closest location
+	RELEASE_PICK, //Stops picking an object. Objects is released back into space
 	EVENT_NONE,
 };
 

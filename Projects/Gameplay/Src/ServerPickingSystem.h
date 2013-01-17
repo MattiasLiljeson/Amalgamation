@@ -28,6 +28,7 @@ public:
 
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_d);
 	void setEnabled(int p_index, bool p_value);
+	void setReleased(int p_index);
 private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;

@@ -132,6 +132,19 @@ void ServerPickingSystem::setEnabled(int p_index, bool p_value)
 		}
 	}
 }
+void ServerPickingSystem::setReleased(int p_index)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (m_pickComponents[i].m_clientIndex == p_index)
+		{
+			//Release the picked module
+			m_pickComponents[i].m_latestPick = -1;
+			m_pickComponents[i].m_active = false;
+			return;
+		}
+	}
+}
 void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities)
 {
 	if (p_pc.m_active)

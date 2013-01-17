@@ -73,6 +73,9 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		Control* ctrl = input->getControlByEnum(
 			InputHelper::M_RBTN); //HACK: This is really the middle button. Mattias is fixing
 
+		Control* ctrl2 = input->getControlByEnum(
+			InputHelper::M_LBTN); //HACK: This is really the middle button. Mattias is fixing
+
 		double x = input->getCursor()->getX();
 		double y = -input->getCursor()->getY();
 		AglVector4 targetNDC(x, y, 1, 1);
@@ -87,16 +90,22 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		rp.d = dir;
 		m_client->sendPacket(rp.pack());
 
-		if (ctrl->getDelta() > 0)
+		if (ctrl->getDelta() > 0) //Start picking
 		{
 			SimpleEventPacket packet;
 			packet.type = SimpleEventType::ACTIVATE_PICK;
 			m_client->sendPacket( packet.pack() );
 		}
-		else if (ctrl->getDelta() < 0)
+		else if (ctrl->getDelta() < 0) //Stop picking
 		{
 			SimpleEventPacket packet;
 			packet.type = SimpleEventType::DEACTIVATE_PICK;
+			m_client->sendPacket( packet.pack() );
+		}
+		if (ctrl2->getDelta() > 0) //Release current module
+		{
+			SimpleEventPacket packet;
+			packet.type = SimpleEventType::RELEASE_PICK;
 			m_client->sendPacket( packet.pack() );
 		}
 	}
