@@ -22,7 +22,7 @@ AntTweakBarSystem::~AntTweakBarSystem()
 void AntTweakBarSystem::process()
 {
 	feedInput();
-	//AntTweakBarWrapper::getInstance()->render();
+	AntTweakBarWrapper::getInstance()->render();
 }
 
 void AntTweakBarSystem::feedInput()

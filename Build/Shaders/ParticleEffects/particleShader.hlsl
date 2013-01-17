@@ -42,6 +42,10 @@ struct GS_OUT
 	float4 color : COLOR;
 };
 
+struct PixelOut
+{
+	float4 diffuse : SV_TARGET0;
+};
 
 Particle VS(Particle vIn)
 {
@@ -107,10 +111,10 @@ void GS(point Particle gIn[1],
 	float halfHeight = 0.5f*gIn[0].Size.y;
 
 	float4 v[4];
-	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);
-	v[1] = float4(+halfWidth, -halfHeight, 0.0f, 1.0f);
-	v[2] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
-	v[3] = float4(+halfWidth, +halfHeight, 0.0f, 1.0f);
+	v[0] = float4(-halfWidth, -halfHeight, 0.1f, 1.0f);
+	v[1] = float4(-halfWidth, +halfHeight, 0.1f, 1.0f);
+	v[2] = float4(+halfWidth, -halfHeight, 0.1f, 1.0f);
+	v[3] = float4(+halfWidth, +halfHeight, 0.1f, 1.0f);
 	float2 t[4];
 	t[0] = float2(0.0f, 1.0f);
 	t[1] = float2(1.0f, 1.0f);
@@ -130,16 +134,18 @@ void GS(point Particle gIn[1],
 	[unroll]
 	for(int i = 0; i < 4; ++i)
 	{
-		gOut.posH  = mul(v[i], WVP);
+		gOut.posH  = v[i];
 		gOut.texC  = t[i];
 		gOut.color = float4(color.x, color.y, color.z, opacity);
 		triStream.Append(gOut);
 	}	
 }
 
-float4 PS(GS_OUT pIn) : SV_TARGET
+PixelOut PS(GS_OUT pIn)
 {
-	return float4(0,1,0,1);
+	PixelOut pix_out;
+	pix_out.diffuse = float4(0,1,0,1);
+	return pix_out;
 	//float4 color = Texture.Sample(SampleType, pIn.texC);
 	//return color;
 	

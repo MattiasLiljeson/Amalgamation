@@ -207,7 +207,8 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( graphicsBackend, true );
 
-	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
+		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
 
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
@@ -222,7 +223,8 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend,
+		m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship
@@ -247,7 +249,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( camera , true );
 
 	/************************************************************************/
-	/* Renderers															*/
+	/* Renderer																*/
 	/************************************************************************/
 	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
@@ -280,7 +282,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/
-	/* Audio															*/
+	/* Audio																*/
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
@@ -292,7 +294,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
 	/************************************************************************/
-	/* Gameplay																 */
+	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
@@ -326,7 +328,7 @@ void ClientApplication::initEntities()
 													 &TESTMODELPATH,
 													 &connectionPoints);
 
-	// Testchamber
+	// Test chamber
 	entity = m_world->createEntity();
 	component = new RenderInfo( testchamberId );
 	entity->addComponent( ComponentType::RenderInfo, component );
