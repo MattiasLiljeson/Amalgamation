@@ -11,6 +11,8 @@
 
 #include "TcpCommunicationProcess.h"
 #include "ProcessMessagePacketOverflow.h"
+#include "ProcessMessageCommProcessInfo.h"
+#include "ProcessMessageAskForCommProcessInfo.h"
 
 TcpClient::TcpClient()
 {
@@ -20,12 +22,15 @@ TcpClient::TcpClient()
 	m_connecterProcess = NULL;
 	m_id = -1;
 	m_numberOfSentPackets = 0;
-	m_numberOfReceivedPackets = 0;
+	m_totalPacketsPopped = 0;
 	m_totalDataSent = 0;
 	m_totalDataReceived = 0;
 	m_totalNumberOfOverflowPackets = 0;
 	m_serverTimeAhead = 0;
 	m_pingToServer = 0;
+	m_totalPacketsReceivedInCommProcess = 0;
+	m_totalPacketsSentInCommProcess = 0;
+
 }
 
 TcpClient::~TcpClient()
@@ -161,6 +166,13 @@ void TcpClient::processMessages()
 			m_totalNumberOfOverflowPackets =
 				packetOverflowMessage->numberOfOverflowPackets;
 		}
+		else if( message->type == MessageType::COMM_PROCESS_INFO )
+		{
+			ProcessMessageCommProcessInfo* commInfoMessage =
+				static_cast<ProcessMessageCommProcessInfo*>( message );
+			m_totalPacketsReceivedInCommProcess = commInfoMessage->totalPacketsReceived;
+			m_totalPacketsSentInCommProcess = commInfoMessage->totalPacketsSent;
+		}
 
 		delete message;
 	}
@@ -211,7 +223,7 @@ Packet TcpClient::popNewPacket()
 		Packet packet = m_newPackets.front();
 		m_newPackets.pop();
 
-		m_numberOfReceivedPackets += 1;
+		m_totalPacketsPopped += 1;
 		m_totalDataReceived += packet.getDataSize() + 1;
 
 		return packet;
@@ -250,7 +262,7 @@ void TcpClient::resetNumberOfSentPackets()
 
 unsigned int TcpClient::getNumberOfReceivedPackets()
 {
-	return m_numberOfReceivedPackets;
+	return m_totalPacketsPopped;
 }
 
 unsigned int TcpClient::getTotalNumberOfOverflowPackets()
@@ -260,7 +272,7 @@ unsigned int TcpClient::getTotalNumberOfOverflowPackets()
 
 void TcpClient::resetNumberOfReceivedPackets()
 {
-	m_numberOfReceivedPackets = 0;
+	m_totalPacketsPopped = 0;
 }
 
 unsigned int TcpClient::getTotalDataSent()
@@ -301,4 +313,21 @@ float TcpClient::getPingToServer() const
 void TcpClient::setPingToServer( float p_ping )
 {
 	m_pingToServer = p_ping;
+}
+
+unsigned int TcpClient::getTotalPacketsReceivedInCommProcess()
+{
+	return m_totalPacketsReceivedInCommProcess;
+}
+
+unsigned int TcpClient::getTotalPacketsSentInCommProcess()
+{
+	return m_totalPacketsSentInCommProcess;
+}
+
+void TcpClient::askForCommProcessInfo()
+{
+	ProcessMessageAskForCommProcessInfo* askForCommInfo =
+		new ProcessMessageAskForCommProcessInfo( this );
+	m_communicationProcess->putMessage( askForCommInfo );
 }

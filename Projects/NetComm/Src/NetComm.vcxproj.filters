@@ -90,6 +90,12 @@
     <ClCompile Include="ProcessMessagePacketOverflow.cpp">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClCompile>
+    <ClCompile Include="ProcessMessageAskForCommProcessInfo.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessageCommProcessInfo.cpp">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessThread.h">
@@ -144,6 +150,12 @@
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
     <ClInclude Include="ProcessMessagePacketOverflow.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageAskForCommProcessInfo.h">
+      <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessageCommProcessInfo.h">
       <Filter>ThreadSafeMessaging\ProcessMessage</Filter>
     </ClInclude>
   </ItemGroup>

@@ -66,5 +66,6 @@ private:
 
 	// Counts how many times the socket buffer is overflowed.
 	unsigned int m_numberOfOverflowPackets;
+	unsigned int m_totalPacketsReceived;
 
 };

@@ -165,8 +165,29 @@ Describe(a_tcp_client)
 
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
 		client.processMessages();
-		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
+//		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
 		Assert::That(client.newPacketsCount(), Equals(50000));
 	}
 
+	It(can_verify_that_the_total_packets_received_is_the_same_on_higher_level_as_it_is_on_lower_level)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet packet;
+		for(int i=0; i<50000; i++) {
+			server.broadcastPacket(packet);
+		}
+		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+		client.processMessages();
+		client.askForCommProcessInfo();
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		client.processMessages();
+		Assert::That(client.newPacketsCount(),
+			Equals(client.getTotalPacketsReceivedInCommProcess()));
+	}
 };

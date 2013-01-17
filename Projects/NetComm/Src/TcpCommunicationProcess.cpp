@@ -10,6 +10,9 @@
 
 #include "ThreadSafeMessaging.h"
 #include "ProcessMessagePacketOverflow.h"
+#include "../../Util/Src/DebugUtil.h"
+#include "ProcessMessageAskForCommProcessInfo.h"
+#include "ProcessMessageCommProcessInfo.h"
 
 TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent, 
 												 tcp::socket* p_socket,
@@ -28,6 +31,7 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_activeSocket->io_control( nonBlocking );
 
 	m_numberOfOverflowPackets = 0;
+	m_totalPacketsReceived = 0;
 
 	/************************************************************************/
 	/* We need to find the appropriate size for received data buffer.		*/
@@ -86,14 +90,23 @@ void TcpCommunicationProcess::processMessages()
 			ProcessMessageSendPacket* sendPacketMessage =
 				static_cast<ProcessMessageSendPacket*>(message);
 
-			// HACK: Don't forget to actually HANDLE the error if it occurs :)
 			boost::system::error_code ec;
 			m_activeSocket->send( boost::asio::buffer(
 				sendPacketMessage->packet.getDataPtr(),
 				sendPacketMessage->packet.getDataSize()),
-				boost::asio::detail::message_do_not_route,
-				ec );
-
+				boost::asio::detail::message_do_not_route, ec );
+			if( ec ) {
+				DEBUGPRINT(( ec.message().c_str() ));
+			}
+		}
+		else if( message->type == MessageType::ASK_FOR_COMM_PROCESS_INFO )
+		{
+			ProcessMessageAskForCommProcessInfo* askForInfoMessage =
+				static_cast<ProcessMessageAskForCommProcessInfo*>(message);
+			ThreadSafeMessaging* sender = askForInfoMessage->sender;
+			ProcessMessageCommProcessInfo* respondInfo =
+				new ProcessMessageCommProcessInfo( this, m_totalPacketsReceived, 0/* HACK: (Johan) Don't forget totalPacketsSent */ );
+			sender->putMessage( respondInfo );
 		}
 
 		delete message;
@@ -130,6 +143,10 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 
 		m_running = false;
 
+	}
+	else if( p_error == boost::asio::error::message_size )
+	{
+		DEBUGPRINT(( "Hey, you've got a message_size error dude!\n" ));
 	}
 	else if( p_error )
 	{
@@ -201,7 +218,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 					readPtr = m_asyncData + readPosition;
 				}
 			}
-
+			m_totalPacketsReceived += packets.size();
 			queue<ProcessMessage*> receivePacketMessages;
 			while( !packets.empty() )
 			{
