@@ -159,14 +159,14 @@ Describe(a_tcp_client)
 		server.processMessages();
 
 		Packet packet;
-		for(int i=0; i<5000; i++) {
+		for(int i=0; i<50000; i++) {
 			server.broadcastPacket(packet);
 		}
 
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
 		client.processMessages();
-
-		Assert::That(client.newPacketsCount(), Equals(5000));
+		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
+		Assert::That(client.newPacketsCount(), Equals(50000));
 	}
 
 };
