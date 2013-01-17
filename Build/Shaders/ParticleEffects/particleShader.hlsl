@@ -56,7 +56,7 @@ Particle VS(Particle vIn)
 void GS(point Particle gIn[1], 
             inout TriangleStream<GS_OUT> triStream)
 {		
-	matrix W;
+	float4x4 W;
 	if (Alignment.x < 0.5f) //Observer
 	{
 		float3 look  = normalize(cameraPos.xyz - gIn[0].Position);
@@ -99,22 +99,22 @@ void GS(point Particle gIn[1],
 	}
 	
 	
-	matrix rot = matrix(cos(gIn[0].Rotation), -sin(gIn[0].Rotation), 0, 0,
+	float4x4 rot = float4x4(cos(gIn[0].Rotation), -sin(gIn[0].Rotation), 0, 0,
 						sin(gIn[0].Rotation), cos(gIn[0].Rotation), 0, 0,
 						0, 0, 1, 0,
 						0, 0, 0, 1);
 
 	W = mul(rot, W);
-	matrix WVP = mul(W, gViewProj);
+	float4x4 WVP = mul(W, gViewProj);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;
 	float halfHeight = 0.5f*gIn[0].Size.y;
 
 	float4 v[4];
-	v[0] = float4(-halfWidth, -halfHeight, 0.1f, 1.0f);
-	v[1] = float4(-halfWidth, +halfHeight, 0.1f, 1.0f);
-	v[2] = float4(+halfWidth, -halfHeight, 0.1f, 1.0f);
-	v[3] = float4(+halfWidth, +halfHeight, 0.1f, 1.0f);
+	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);
+	v[1] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
+	v[2] = float4(+halfWidth, -halfHeight, 0.0f, 1.0f);
+	v[3] = float4(+halfWidth, +halfHeight, 0.0f, 1.0f);
 	float2 t[4];
 	t[0] = float2(0.0f, 1.0f);
 	t[1] = float2(1.0f, 1.0f);
@@ -134,7 +134,7 @@ void GS(point Particle gIn[1],
 	[unroll]
 	for(int i = 0; i < 4; ++i)
 	{
-		gOut.posH  = v[i];
+		gOut.posH  = mul(v[i], WVP);
 		gOut.texC  = t[i];
 		gOut.color = float4(color.x, color.y, color.z, opacity);
 		triStream.Append(gOut);

@@ -74,10 +74,10 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 
 void ParticleRenderer::beginRendering(AglParticleSystem* p_system, 
 									  const int numOfParticles){
-//	ID3D11DepthStencilState* old;
-//	UINT stencil;
-	//m_deviceContext->OMGetDepthStencilState(&old, &stencil);
-	//m_deviceContext->OMSetDepthStencilState(m_depthStencil, 1);
+	ID3D11DepthStencilState* old;
+	UINT stencil;
+	m_deviceContext->OMGetDepthStencilState(&old, &stencil);
+	m_deviceContext->OMSetDepthStencilState(NULL, 0);
 	m_deviceContext->OMSetBlendState(m_blendState, NULL, 0xFFFFFF);
 
 	m_shader->apply();
@@ -91,7 +91,7 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 
 	m_shader->unApplyStages();
 	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
-	//m_deviceContext->OMSetDepthStencilState(old, 1);
+	m_deviceContext->OMSetDepthStencilState(old, 1);
 }
 
 void ParticleRenderer::initShaders(){

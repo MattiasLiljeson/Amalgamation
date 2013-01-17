@@ -50,6 +50,8 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		AglMatrix viewProj = AglMatrix::identityMatrix();
 		viewProj = view * camInfo->m_projMat;
 		viewProj = AglMatrix::transpose( viewProj );
+		AglVector3::normalize(lookTarget);
+		AglVector3::normalize(up);
 		
 		RendererSceneInfo sceneInfo;
 		for( int i=0; i<16; i++ )

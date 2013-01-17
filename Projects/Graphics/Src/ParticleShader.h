@@ -23,6 +23,7 @@ public:
 		Buffer<ParticleCBuffer>* p_perSystemBuffer);
 	~ParticleShader();
 	void apply();
+	void unMap();
 
 	Buffer<ParticleCBuffer>* getPerSystemBuffer();
 private:

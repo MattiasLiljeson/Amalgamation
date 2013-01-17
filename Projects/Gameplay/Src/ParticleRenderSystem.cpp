@@ -45,7 +45,7 @@ unsigned int ParticleRenderSystem::addParticleSystem(
 unsigned int ParticleRenderSystem::addParticleSystem()
 {
 	m_particleSystems.push_back(new AglParticleSystem());
-	m_particleSystems[0]->setParticleSize(AglVector2(100,100));
+	m_particleSystems[0]->setParticleSize(AglVector2(100.0f,100.0f));
 	m_particleSystems[0]->setAlignmentType(AglParticleSystemHeader::OBSERVER);
 	return m_particleSystems.size()-1;
 }
