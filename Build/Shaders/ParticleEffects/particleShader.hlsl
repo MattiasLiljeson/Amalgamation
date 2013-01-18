@@ -145,5 +145,6 @@ PixelOut PS(GS_OUT pIn)
 {
 	PixelOut pix_out;
 	pix_out.diffuse = Texture.Sample(SampleType, pIn.texC);
+	pix_out.diffuse *= pIn.color;
 	return pix_out;
 }

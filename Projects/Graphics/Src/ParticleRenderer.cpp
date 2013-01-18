@@ -67,8 +67,8 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	ID3D11DepthStencilState* old;
 	UINT stencil;
 	m_deviceContext->OMGetDepthStencilState(&old, &stencil);
-	m_deviceContext->OMSetDepthStencilState(NULL, 0);
 	m_deviceContext->OMSetBlendState(m_blendState, NULL, 0xFFFFFF);
+	m_deviceContext->OMSetDepthStencilState(m_depthStencil, 1);
 
 	m_shader->apply();
 

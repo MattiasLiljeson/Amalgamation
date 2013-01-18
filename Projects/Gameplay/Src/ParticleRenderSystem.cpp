@@ -58,8 +58,12 @@ unsigned int ParticleRenderSystem::addParticleSystem()
 	m_particleSystems.push_back(new AglParticleSystem());
 	m_particleSystems[0]->setParticleSize(AglVector2(2,2));
 	m_particleSystems[0]->setAlignmentType(AglParticleSystemHeader::OBSERVER);
-	m_particleSystems[0]->setSpawnFrequency(5.0f);
+	m_particleSystems[0]->setSpawnFrequency(200.0f);
 	m_particleSystems[0]->setSpawnSpeed(5.0f);
+	m_particleSystems[0]->setSpread(0.2f);
+	m_particleSystems[0]->setFadeOutStart(1.0f);
+	m_particleSystems[0]->setFadeInStop(0.5f);
+	m_particleSystems[0]->setParticleAge(2.0f);
 
 	return m_particleSystems.size()-1;
 }
