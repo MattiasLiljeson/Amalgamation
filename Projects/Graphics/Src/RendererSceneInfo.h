@@ -1,4 +1,5 @@
 #pragma once
+#include <AglVector2.h>
 #include <AglVector3.h>
 #include <AglMatrix.h>
 
@@ -21,4 +22,7 @@ struct RendererSceneInfo
 	AglVector3 cameraForward;
 	AglVector3 cameraUp;
 	AglMatrix viewProjInv;
+	AglVector2 renderTargetDimensions;
+	float farPlane;
+	float nearPlane;
 };

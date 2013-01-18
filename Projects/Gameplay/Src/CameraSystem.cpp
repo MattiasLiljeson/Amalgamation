@@ -61,7 +61,9 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		sceneInfo.cameraForward = lookTarget;
 		sceneInfo.cameraUp = up;
 		sceneInfo.viewProjInv = viewProjInv;
-		
+		sceneInfo.renderTargetDimensions = m_gfxBackend->getWindowSize();
+		sceneInfo.farPlane = camInfo->m_farPlane;
+		sceneInfo.nearPlane = camInfo->m_nearPlane;
 
 		// sets up certain "global" scene data
 		GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();

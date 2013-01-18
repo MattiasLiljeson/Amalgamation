@@ -153,3 +153,7 @@ float GraphicsBackendSystem::getAspectRatio()
 void GraphicsBackendSystem::renderAParticleSystem(AglParticleSystem* p_system){
 	m_graphicsWrapper->renderParticleSystem(p_system);
 }
+
+AglVector2 GraphicsBackendSystem::getWindowSize(){
+	return AglVector2(m_scrWidth, m_scrHeight);
+}
