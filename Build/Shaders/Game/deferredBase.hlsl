@@ -69,7 +69,7 @@ PixelOut PS(VertexOut p_input)
 	pixelOut.diffuse = color * diffuseTexture.Sample(pointSampler, p_input.texCoord);
 	pixelOut.normal = float4(p_input.normal,0.0f);
 	float randomValue = random(p_input.texCoord);
-	pixelOut.specular = float4(randomValue,randomValue,randomValue,1.0f);
+	pixelOut.specular = diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
 	return pixelOut;
 }

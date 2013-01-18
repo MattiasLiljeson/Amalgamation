@@ -5,7 +5,7 @@
 #include <AglMatrix.h>
 #include <AglQuaternion.h>
 #include "InputBackendSystem.h"
-#include "..\..\Input\Src\Control.h"
+#include <Control.h>
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
@@ -60,6 +60,10 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 
 void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 {
+	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
+
 	Entity* entity = m_world->createEntity();
 
 	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.8f, 0.8f, 0.8f));

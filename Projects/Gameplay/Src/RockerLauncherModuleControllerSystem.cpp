@@ -5,7 +5,7 @@
 #include <AglMatrix.h>
 #include <AglQuaternion.h>
 #include "InputBackendSystem.h"
-#include "..\..\Input\Src\Control.h"
+#include <Control.h>
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
@@ -66,6 +66,11 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 	if (gun->laserSightEntity < 0)
 	{
+		//Create Ray entity
+		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+		int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" ); // CRASHES HERE
+
 		Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
@@ -125,6 +130,15 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	AglVector3 dir = gun->fireDirection;
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
+
+
+	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
+	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+
+	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	//physics->getController()
+
 
 	Entity* entity = m_world->createEntity();
 

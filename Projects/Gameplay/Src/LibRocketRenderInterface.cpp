@@ -130,7 +130,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 
 	stringstream ss;
 	ss<<"menus nr: "<<numCompiledGeometries;
-	geometry->meshId = m_wrapper->createMesh(ss.str(), 
+	geometry->meshId = m_wrapper->createMeshFromRaw(ss.str(), 
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
 											 (unsigned int)p_texture);

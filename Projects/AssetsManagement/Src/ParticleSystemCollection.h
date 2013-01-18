@@ -1,30 +1,25 @@
 #pragma once
 
-#include "RawTransformData.h"
 #include <vector>
+#include "AglParticleSystem.h"
 
 using namespace std;
 
-struct RawTransformData;
+
 
 // =======================================================================================
-//                                ConnectionPointCollection
+//                              ParticleSystemCollection
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of connection point data
+/// \brief	Collection of particle systems
 ///        
 /// # HardPointCollection
 /// Detailed description.....
-/// Created on: 8-1-2013 
+/// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ConnectionPointCollection
+struct ParticleSystemCollection
 {
-public:
-	ConnectionPointCollection(bool transformByParent=false) {m_localSpace=!transformByParent;}
-	vector<RawTransformData> m_collection;
-	bool isLocalSpace() {return m_localSpace;}
-private:
-	bool m_localSpace; // not used yet
+	vector<AglParticleSystem> m_collection;
 };

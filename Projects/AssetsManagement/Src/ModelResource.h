@@ -4,9 +4,6 @@
 #include "ConnectionPointCollection.h"
 #include "ParticleSystemCollection.h"
 
-struct AglMeshHeader;
-struct ConnectionPointCollection;
-struct ParticleSystemCollection;
 
 // =======================================================================================
 //                                        Model
@@ -24,12 +21,13 @@ struct ParticleSystemCollection;
 struct ModelResource
 {
 public:
-	ModelResource() {meshId=-1; name="noname"; meshHeader=NULL; connectionPoints=NULL; particleSystems=NULL;}
-	virtual ~ModelResource(){delete meshHeader; delete connectionPoints; delete particleSystems;}
+	ModelResource() {meshId=-1; name="noname";}
+	virtual ~ModelResource(){}
 
 	int							meshId;
 	string						name;
-	AglMeshHeader*				meshHeader;
-	ConnectionPointCollection*	connectionPoints;
-	ParticleSystemCollection*	particleSystems;
+	AglMeshHeader				meshHeader;
+	ConnectionPointCollection	connectionPoints;
+	ParticleSystemCollection	particleSystems;
+	AglMatrix					transform;
 };

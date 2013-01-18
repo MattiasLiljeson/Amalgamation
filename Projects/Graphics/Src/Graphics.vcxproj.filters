@@ -42,6 +42,15 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="TextureFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExtendedManagedFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNameScriptParser.cpp">
+      <Filter>Graphics Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -136,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelExtendedManagedFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNameScriptParser.h">
+      <Filter>Graphics Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
