@@ -61,6 +61,8 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			lookTarget,
 			up);
 
+
+		//view = View Matrix of Camera
 		AglMatrix proj = camInfo->m_projMat;
 
 		AglMatrix inv = view*proj;

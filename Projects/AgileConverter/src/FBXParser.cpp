@@ -2,15 +2,14 @@
 
 FBXParser::FBXParser(string pPath)
 {
-	mPath = pPath;
+	mData.OriginalPath = pPath;
 }
 FBXParser::~FBXParser()
 {
-	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mData.Meshes.size(); i++)
 	{
-		delete[] mMeshes[i]->Vertices;
-		delete[] mMeshes[i]->Indices;
-		delete mMeshes[i];
+		delete[] mData.Meshes[i]->ControlIndices;
+		delete mData.Meshes[i];
 	}
 }
 
@@ -19,36 +18,16 @@ void FBXParser::Parse()
 	FbxManager* manager = FBXManager::GetInstance()->GetManager();
 	FbxImporter* importer = FbxImporter::Create(manager,"");
     
-	if(!importer->Initialize(mPath.c_str(), -1, manager->GetIOSettings())) 
+	if(!importer->Initialize(mData.OriginalPath.c_str(), -1, manager->GetIOSettings())) 
 	{
 		cout << "Failed to initialize Importer";
         //cout << importer->GetLastErrorString() << "\n\n";
         return;
     }
-	
-	FbxAxisSystem dx(FbxAxisSystem::eDirectX);
-	FbxAxisSystem gl(FbxAxisSystem::eOpenGL);
-	FbxAxisSystem max(FbxAxisSystem::eMax);
-	FbxAxisSystem mayay(FbxAxisSystem::eMayaYUp);
-	FbxAxisSystem mayaz(FbxAxisSystem::eMayaZUp);
-	FbxAxisSystem light(FbxAxisSystem::eLightwave);
-	FbxAxisSystem motion(FbxAxisSystem::eMotionBuilder);
-
-	//dx = light
-	//gl = mayay = motion
-	//max = mayaz
 
     mScene = FbxScene::Create(manager, "");
 
 	importer->Import(mScene);
-
-	FbxAxisSystem SceneAxisSystem = mScene->GetGlobalSettings().GetAxisSystem();
-	FbxAxisSystem OurAxisSystem(FbxAxisSystem::eDirectX);
-
-	if (SceneAxisSystem != OurAxisSystem)
-	{
-		//OurAxisSystem.ConvertScene(scene);
-	}
 
 	for (int i = 0; i < mScene->GetNodeCount(); i++)
 	{
@@ -71,9 +50,9 @@ void FBXParser::Parse()
 				AglConnectionPoint cp;
 
 				cp.parentMesh = -1;
-				for (unsigned int i = 0; i < mMeshes.size(); i++)
+				for (unsigned int i = 0; i < mData.Meshes.size(); i++)
 				{
-					if (node->GetParent() == mMeshes[i]->SourceNode)
+					if (node->GetParent() == mData.Meshes[i]->SourceNode)
 					{
 						cp.parentMesh = i;
 						break;
@@ -86,46 +65,46 @@ void FBXParser::Parse()
 				for (int row = 0; row < 4; row++)
 					for (int column = 0; column < 4; column++)
 						cp.transform[row*4 + column] = (float)transform.Get(row, column);
-				mConnectionPoints.push_back(pair<AglConnectionPoint, string>(cp, name));
+				mData.CP.push_back(pair<AglConnectionPoint, string>(cp, name));
 			}
 		}
 	}
 
 	AnimationParser ap(this);
-	ap.Parse(mNodes);
+	ap.Parse(mData.Nodes);
 
 	//Create mappings between geometry and other data
-	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	for (unsigned int i = 0; i < mData.Meshes.size(); i++)
 	{
 		//Create mapping between mesh and skeleton
-		FbxGeometry* geometry = mMeshes[i]->Source;
+		FbxGeometry* geometry = mData.Meshes[i]->Source;
 		int skins = geometry->GetDeformerCount(FbxDeformer::eSkin);
 		for (int j = 0; j < skins; j++)
 		{
 			FbxSkin* s = (FbxSkin*)geometry->GetDeformer(j, FbxDeformer::eSkin);
-			for (unsigned int k = 0; k < mSkeletons.size(); k++)
+			for (unsigned int k = 0; k < mData.Skeletons.size(); k++)
 			{
-				if (s == mSkeletons[k]->Source)
+				if (s == mData.Skeletons[k]->Source)
 				{
-					CreateMapping(mMeshes[i], mSkeletons[k]);
+					CreateMapping(mData.Meshes[i], mData.Skeletons[k]);
 				}
 			}
 		}
 
 		//Create Mapping between mesh and material
-		FbxNode* node = mMeshes[i]->SourceNode;
+		FbxNode* node = mData.Meshes[i]->SourceNode;
 		int materials = node->GetMaterialCount();
 		for (int j = 0; j < materials; j++)
 		{
 			FbxSurfaceMaterial* mat = node->GetMaterial(j);
-			for (int k = 0; k < mMaterials.size(); k++)
+			for (unsigned int k = 0; k < mData.Materials.size(); k++)
 			{
-				if (mat == mMaterials[k]->Source)
+				if (mat == mData.Materials[k]->Source)
 				{
 					AglMaterialMapping* mapping = new AglMaterialMapping();
 					mapping->materialID = k;
 					mapping->meshID = i;
-					mMaterialMappings.push_back(mapping);
+					mData.MaterialMappings.push_back(mapping);
 				}
 			}
 		}
@@ -165,33 +144,33 @@ void FBXParser::ParseNode(FbxNode* pNode)
 
 void FBXParser::AddMesh(MeshData* pMesh)
 {
-	pMesh->ID = mMeshes.size();
-	mMeshes.push_back(pMesh);
+	pMesh->ID = mData.Meshes.size();
+	mData.Meshes.push_back(pMesh);
 }
 void FBXParser::AddSkeleton(SkeletonData* pSkeleton)
 {
-	pSkeleton->ID = mSkeletons.size();
-	mSkeletons.push_back(pSkeleton);
+	pSkeleton->ID = mData.Skeletons.size();
+	mData.Skeletons.push_back(pSkeleton);
 }
 void FBXParser::AddNodeAnimation(NodeAnimationData* pNodeAnimationData)
 {
-	pNodeAnimationData->ID = mNodeAnimations.size();
-	mNodeAnimations.push_back(pNodeAnimationData);
+	pNodeAnimationData->ID = mData.NodeAnimations.size();
+	mData.NodeAnimations.push_back(pNodeAnimationData);
 }
 void FBXParser::AddAnimationLayer(AnimationLayerData* pAnimationLayer)
 {
-	pAnimationLayer->ID = mAnimationLayers.size();
-	mAnimationLayers.push_back(pAnimationLayer);
+	pAnimationLayer->ID = mData.AnimationLayers.size();
+	mData.AnimationLayers.push_back(pAnimationLayer);
 }
 void FBXParser::AddAnimation(AnimationData* pAnimation)
 {
-	pAnimation->ID = mAnimations.size();
-	mAnimations.push_back(pAnimation);
+	pAnimation->ID = mData.Animations.size();
+	mData.Animations.push_back(pAnimation);
 }
 void FBXParser::AddMaterial(MaterialData* pMaterial)
 {
-	pMaterial->ID = mMaterials.size();
-	mMaterials.push_back(pMaterial);
+	pMaterial->ID = mData.Materials.size();
+	mData.Materials.push_back(pMaterial);
 }
 
 void FBXParser::CreateMapping(MeshData* pMesh, SkeletonData* pSkeleton)
@@ -216,9 +195,9 @@ void FBXParser::CreateMapping(MeshData* pMesh, SkeletonData* pSkeleton)
 	int clusters = pSkeleton->Joints.size();
 	for (int i = 0; i < clusters; i++)
 	{
-		if (mNodes[pSkeleton->Joints[i]->NodeID]->SourceCluster)
+		if (mData.Nodes[pSkeleton->Joints[i]->NodeID]->SourceCluster)
 		{
-			FbxCluster* c	= mNodes[pSkeleton->Joints[i]->NodeID]->SourceCluster;
+			FbxCluster* c	= mData.Nodes[pSkeleton->Joints[i]->NodeID]->SourceCluster;
 			int indexCount	= c->GetControlPointIndicesCount();
 			int* indices	= c->GetControlPointIndices();
 			double* weights = c->GetControlPointWeights();
@@ -244,44 +223,44 @@ void FBXParser::CreateMapping(MeshData* pMesh, SkeletonData* pSkeleton)
 	}
 
 	AglSkeletonMapping* m = new AglSkeletonMapping(smh, matchedVerts);
-	mMeshSkeletonMappings.push_back(m);
+	mData.MeshSkeletonMappings.push_back(m);
 }
 
 vector<MeshData*> FBXParser::GetMeshes()
 {
-	return mMeshes;
+	return mData.Meshes;
 }
 vector<NodeData*> FBXParser::GetNodes()
 {
-	return mNodes;
+	return mData.Nodes;
 }
 vector<SkeletonData*> FBXParser::GetSkeletons()
 {
-	return mSkeletons;
+	return mData.Skeletons;
 }
 vector<AglSkeletonMapping*> FBXParser::GetMeshSkeletonMappings()
 {
-	return mMeshSkeletonMappings;
+	return mData.MeshSkeletonMappings;
 }
 vector<NodeAnimationData*> FBXParser::GetNodeAnimations()
 {
-	return mNodeAnimations;
+	return mData.NodeAnimations;
 }
 vector<AnimationLayerData*> FBXParser::GetAnimationLayers()
 {
-	return mAnimationLayers;
+	return mData.AnimationLayers;
 }
 vector<AnimationData*> FBXParser::GetAnimations()
 {
-	return mAnimations;
+	return mData.Animations;
 }
 vector<MaterialData*> FBXParser::GetMaterials()
 {
-	return mMaterials;
+	return mData.Materials;
 }
 vector<AglMaterialMapping*> FBXParser::GetMaterialMappings()
 {
-	return mMaterialMappings;
+	return mData.MaterialMappings;
 }
 
 FbxScene* FBXParser::GetScene()
@@ -291,9 +270,9 @@ FbxScene* FBXParser::GetScene()
 
 unsigned int FBXParser::GetNodeID(FbxNode* pNode, FbxCluster* pCluster)
 {
-	for (unsigned int i = 0; i < mNodes.size(); i++)
+	for (unsigned int i = 0; i < mData.Nodes.size(); i++)
 	{
-		if (mNodes[i]->SourceNode == pNode && mNodes[i]->SourceCluster == pCluster)
+		if (mData.Nodes[i]->SourceNode == pNode && mData.Nodes[i]->SourceCluster == pCluster)
 			return i;
 	}
 
@@ -320,37 +299,37 @@ unsigned int FBXParser::GetNodeID(FbxNode* pNode, FbxCluster* pCluster)
 			LocalTransform[row*4 + column] = (float)transform.Get(row, column);
 
 	NodeData* nd = new NodeData;
-	nd->ID = mNodes.size();
+	nd->ID = mData.Nodes.size();
 	nd->SourceCluster = pCluster;
 	nd->SourceNode = pNode;
 	memcpy(nd->LocalTransform, LocalTransform, sizeof(float)*16);
 	memcpy(nd->InverseBindMatrix, InverseBindMatrix, sizeof(float)*16);
-	mNodes.push_back(nd);
+	mData.Nodes.push_back(nd);
 	return nd->ID;
 }
 NodeData* FBXParser::GetNode(int pIndex)
 {
-	return mNodes[pIndex];
+	return mData.Nodes[pIndex];
 }
 unsigned int FBXParser::FindIndex(FbxAnimLayer* pAnimLayer)
 {
-	for (unsigned int i = 0; i < mAnimationLayers.size(); i++)
+	for (unsigned int i = 0; i < mData.AnimationLayers.size(); i++)
 	{
-		if (mAnimationLayers[i]->Source == pAnimLayer)
+		if (mData.AnimationLayers[i]->Source == pAnimLayer)
 			return i;
 	}
 	return -1;
 }
 MaterialData* FBXParser::GetMaterial(FbxSurfaceMaterial* pMaterial)
 {
-	for (int i = 0; i < mMaterials.size(); i++)
+	for (int i = 0; i < mData.Materials.size(); i++)
 	{
-		if (mMaterials[i]->Source == pMaterial)
-			return mMaterials[i];
+		if (mData.Materials[i]->Source == pMaterial)
+			return mData.Materials[i];
 	}
 	return NULL;
 }
 vector<pair<AglConnectionPoint, string>> FBXParser::GetConnectionPoints()
 {
-	return mConnectionPoints;
+	return mData.CP;
 }

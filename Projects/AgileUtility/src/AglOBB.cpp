@@ -110,5 +110,11 @@ AglOBB AglOBB::constructMinimum(vector<AglVector3> p_vertices, vector<unsigned i
 	w.SetRight(e1);
 	w.SetUp(e2);
 	w.SetForward(e3);
+
+	delete[] covariance[0];
+	delete[] covariance[1];
+	delete[] covariance[2];
+	delete[] covariance;
+
 	return AglOBB(w, AglVector3(maxX-minX, maxY-minY, maxZ-minZ));
 }

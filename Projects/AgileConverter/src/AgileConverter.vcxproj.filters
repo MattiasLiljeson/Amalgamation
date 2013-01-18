@@ -10,6 +10,7 @@
     <ClCompile Include="MaterialParser.cpp" />
     <ClCompile Include="MeshParser.cpp" />
     <ClCompile Include="SkinParser.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLExporter.h" />
@@ -21,6 +22,7 @@
     <ClInclude Include="MeshParser.h" />
     <ClInclude Include="SkinParser.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="FileManagement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

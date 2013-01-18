@@ -17,6 +17,10 @@
 #include "Agl.h"
 #include <AglNodeAnimation.h>
 #include <AglMesh.h>
+#include <Windows.h>
+#include <WindowsX.h>
+#include <string>
+#include <vld.h>
 
 using namespace std;
 
