@@ -7,13 +7,6 @@ using namespace igloo;
 
 Describe(a_packet)
 {
-	It(can_have_a_sender_id_defined_in_constructor)
-	{
-		Packet packet(55);
-
-		Assert::That(packet.getSenderId(), Equals(55));
-	}
-
 	It(can_have_a_sender_id_defined_in_setSenderId_method)
 	{
 		Packet packet;
@@ -159,7 +152,7 @@ Describe(a_packet)
 		int i_src[] = { 1, 2, 3 };
 		packet << i_src[0] << i_src[1] << i_src[2];
 		
-		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + 1));
+		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + Packet::HEADER_SIZE));
 	}
 
 	It(can_be_empty)
@@ -178,16 +171,24 @@ Describe(a_packet)
 
 	It(can_set_byte_data)
 	{
-		char* byteData = new char[5];
-		// Big endian order?
+		char* byteData = new char[4 + Packet::HEADER_SIZE];
+
+		// Header
 		byteData[0] = 4;
-		byteData[1] = 42;
+		byteData[1] = 0;
 		byteData[2] = 0;
 		byteData[3] = 0;
 		byteData[4] = 0;
+		byteData[5] = 0;
+
+		// An int 
+		byteData[6] = 42;
+		byteData[7] = 0;
+		byteData[8] = 0;
+		byteData[9] = 0;
 
 		Packet packet;
-		packet.setData(byteData, 5);
+		packet.setDataTest(byteData, 4 + Packet::HEADER_SIZE);
 
 		int i_dst;
 		packet >> i_dst;
@@ -207,7 +208,7 @@ Describe(a_packet)
 		char* data_src = packet_src.getDataPtr();
 
 		Packet packet_dst;
-		packet_dst.setData(data_src, data_size);
+		packet_dst.setDataTest(data_src, data_size);
 
 		int i_dst;
 		float f_dst;

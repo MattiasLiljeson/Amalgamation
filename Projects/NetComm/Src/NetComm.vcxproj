@@ -13,8 +13,11 @@
   <ItemGroup>
     <ClInclude Include="Packet.h" />
     <ClInclude Include="ProcessMessage.h" />
+    <ClInclude Include="ProcessMessageAskForCommProcessInfo.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageCommProcessInfo.h" />
     <ClInclude Include="ProcessMessageConnectToServer.h" />
+    <ClInclude Include="ProcessMessagePacketOverflow.h" />
     <ClInclude Include="ProcessMessageSocketDisconnected.h" />
     <ClInclude Include="ProcessMessageReceivePacket.h" />
     <ClInclude Include="ProcessMessageSendPacket.h" />
@@ -32,8 +35,11 @@
   <ItemGroup>
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ProcessMessage.cpp" />
+    <ClCompile Include="ProcessMessageAskForCommProcessInfo.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageCommProcessInfo.cpp" />
     <ClCompile Include="ProcessMessageConnectToServer.cpp" />
+    <ClCompile Include="ProcessMessagePacketOverflow.cpp" />
     <ClCompile Include="ProcessMessageReceivePacket.cpp" />
     <ClCompile Include="ProcessMessageSendPacket.cpp" />
     <ClCompile Include="ProcessMessageSocketDisconnected.cpp" />

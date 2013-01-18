@@ -11,6 +11,8 @@
 
 #include "TcpCommunicationProcess.h"
 #include "TcpListenerProcess.h"
+#include "ProcessMessageAskForCommProcessInfo.h"
+#include "ProcessMessageCommProcessInfo.h"
 
 
 TcpServer::TcpServer()
@@ -18,6 +20,7 @@ TcpServer::TcpServer()
 	m_isListening = false;
 	m_ioService = new boost::asio::io_service();
 	m_listenerProcess = NULL;
+	m_uniqueBroadcastPacketIdentifier = 0;
 }
 
 TcpServer::~TcpServer()
@@ -149,11 +152,12 @@ void TcpServer::processMessages()
 		if( message->type == MessageType::CLIENT_CONNECTED )
 		{
 			ProcessMessageClientConnected* messageClientConnected
-				= static_cast< ProcessMessageClientConnected* >(message);
+				= static_cast<ProcessMessageClientConnected*>(message);
 
-			m_communicationProcesses.push_back( new TcpCommunicationProcess(
-				this, messageClientConnected->socket, m_ioService ) );
+			m_communicationProcesses.push_back(new TcpCommunicationProcess(
+				this, messageClientConnected->socket, m_ioService));
 			m_communicationProcesses.back()->start();
+			m_totalSentInCommProcesses.push_back(0);
 
 			m_newConnectionProcesses.push( m_communicationProcesses.back()->getId() );
 		}
@@ -185,14 +189,21 @@ void TcpServer::processMessages()
 			}
 			else
 				throw "Something is really knaaas";
-
 		}
 		else if( message->type == MessageType::RECEIVE_PACKET )
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
-
-		
+		}
+		else if( message->type == MessageType::COMM_PROCESS_INFO )
+		{
+			ProcessMessageCommProcessInfo* commInfoMessage =
+				static_cast<ProcessMessageCommProcessInfo*>( message );
+			for(unsigned int i=0; i<m_communicationProcesses.size(); i++) {
+				if(m_communicationProcesses[i] == commInfoMessage->sender ) {
+					m_totalSentInCommProcesses[i] = commInfoMessage->totalPacketsSent;
+				}
+			}
 		}
 
 		delete message;
@@ -201,6 +212,7 @@ void TcpServer::processMessages()
 
 void TcpServer::broadcastPacket( Packet p_packet )
 {
+	giveBroadcastPacketAUniqueIdentifier( &p_packet );
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
 		m_communicationProcesses[i]->putMessage(
@@ -216,15 +228,35 @@ void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_pa
 	}
 }
 
-void TcpServer::unicastPacket( Packet p_packet, int clientId )
+void TcpServer::unicastPacket( Packet p_packet, int p_clientId )
 {
 	// NOTE: this might be slow enough to do for individual packets
 	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )
 	{
-		if ( m_communicationProcesses[i]->getId() == clientId )
+		if ( m_communicationProcesses[i]->getId() == p_clientId )
 		{
 			m_communicationProcesses[i]->putMessage(
 				new ProcessMessageSendPacket( this, p_packet ) );
+
+			break;
+		}
+	}
+}
+
+void TcpServer::unicastPacketQueue( queue<Packet> p_packets, int p_clientId )
+{
+	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )
+	{
+		if ( m_communicationProcesses[i]->getId() == p_clientId )
+		{
+			queue<ProcessMessage*> messages;
+			while( !p_packets.empty() )
+			{
+				Packet packet = p_packets.front();
+				p_packets.pop();
+				messages.push( new ProcessMessageSendPacket( this, packet ) );
+			}
+			m_communicationProcesses[i]->putMessages( messages );
 
 			break;
 		}
@@ -253,4 +285,29 @@ vector< int > TcpServer::getActiveConnections()
 	}
 
 	return currentConnections;
+}
+
+void TcpServer::giveBroadcastPacketAUniqueIdentifier( Packet* p_packet )
+{
+	p_packet->setUniquePacketIdentifier( m_uniqueBroadcastPacketIdentifier );
+	m_uniqueBroadcastPacketIdentifier += 1;
+}
+
+const unsigned int& TcpServer::getTotalBroadcasts()
+{
+	return m_uniqueBroadcastPacketIdentifier;
+}
+
+void TcpServer::askForCommProcessInfo()
+{
+	for(unsigned int i=0; i<m_communicationProcesses.size(); i++) {
+		m_communicationProcesses[i]->putMessage(
+			new ProcessMessageAskForCommProcessInfo( this ) );
+	}
+}
+
+const unsigned int& TcpServer::totalSentInCommProcess(
+	const unsigned int& p_processIdentity )
+{
+	return m_totalSentInCommProcesses[p_processIdentity];
 }

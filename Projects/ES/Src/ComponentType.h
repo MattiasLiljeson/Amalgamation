@@ -22,6 +22,7 @@ public:	//Enums
 		RenderInfo,
 		Input,
 		NetworkSynced,
+		Extrapolate,
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,

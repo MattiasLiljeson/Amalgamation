@@ -19,6 +19,7 @@ public:	//Enums
 		ServerPacketHandlerSystem,
 		NetworkConnectoToServerSystem,
 		ClientPacketHandlerSystem,
+		ExtrapolationSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,

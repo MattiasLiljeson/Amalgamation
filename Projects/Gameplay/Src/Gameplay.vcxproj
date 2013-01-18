@@ -29,6 +29,8 @@
     <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="Extrapolate.h" />
+    <ClInclude Include="ExtrapolationSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />
@@ -116,6 +118,7 @@
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />

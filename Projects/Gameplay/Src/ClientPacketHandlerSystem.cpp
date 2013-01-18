@@ -26,6 +26,7 @@
 #include "PlayerCameraController.h"
 
 #include "GraphicsBackendSystem.h"
+#include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
 #include "PickComponent.h"
@@ -41,6 +42,9 @@
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "Extrapolate.h"
+#include "..\..\PhysicsTest\src\Utility.h"
+#include "InputBackendSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -58,6 +62,10 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_dataReceivedPerSecond = 0;
 	m_dataSentCounter = 0;
 	m_dataReceivedCounter = 0;
+	m_totalNumberOfOverflowPackets = 0;
+	m_totalNumberOfStaticPropPacketsReceived = 0;
+	m_lastBroadcastPacketIdentifier = 0;
+	m_totalBroadcastPacketLost = 0;
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
@@ -67,11 +75,15 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	updateInitialPacketLossDebugData();
+
 	updateCounters();
 
 	while (m_tcpClient->hasNewPackets())
 	{
 		Packet packet = m_tcpClient->popNewPacket();
+
+		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
 		char packetType;
 		
@@ -104,6 +116,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						transform->setTranslation( data.translation );
 						transform->setRotation( data.rotation );
 						transform->setScale( data.scale );
+
+						Extrapolate* extrapolate = NULL;
+						extrapolate = static_cast<Extrapolate*>(
+							p_entities[i]->getComponent(ComponentType::Extrapolate) );
+						extrapolate->serverUpdateTimeStamp = data.timestamp;
+						extrapolate->velocityVector = data.velocity;
+						extrapolate->angularVelocity = data.angularVelocity;
 					}
 				}
 			}
@@ -165,6 +184,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
 			m_currentPing = updateClientPacket.ping;
+			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+				m_world->getElapsedTime() + m_currentPing / 2.0f;
+			m_tcpClient->setServerTimeAhead( serverTimeAhead );
+//			m_tcpClient->setServerTimeAhead( m_currentPing / 2.0f );
+			m_tcpClient->setPingToServer( m_currentPing );
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -219,6 +243,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, transform );		
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
+		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
@@ -300,6 +325,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	}
 	else if ( p_packet.entityType == (char)EntityType::StaticProp )
 	{
+		m_totalNumberOfStaticPropPacketsReceived += 1;
+		m_staticPropIdentities.push( p_packet.networkIdentity );
+
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
@@ -328,12 +356,13 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::ShipModule));
+		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
 	}
 	else
 	{
-		DEBUGPRINT(("Network Warning: Received unkown entity type from server!\n"));
+		DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
 	}
 }
 
@@ -369,6 +398,20 @@ void ClientPacketHandlerSystem::initialize()
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Data sent/f", TwType::TW_TYPE_UINT32,
 		&m_totalDataSent, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Total overflow packets", TwType::TW_TYPE_UINT32,
+		&m_totalNumberOfOverflowPackets, "group='network bug'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Total static props", TwType::TW_TYPE_UINT32,
+		&m_totalNumberOfStaticPropPacketsReceived, "group='network bug'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
+		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
 
 	/************************************************************************/
 	/* Per second data.														*/
@@ -410,6 +453,8 @@ void ClientPacketHandlerSystem::updateCounters()
 	m_tcpClient->resetTotalDataSent();
 	m_dataSentCounter += m_totalDataSent;
 
+	m_totalNumberOfOverflowPackets = m_tcpClient->getTotalNumberOfOverflowPackets();
+
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 		checkTimeInterval(TimerIntervals::EverySecond))
 	{
@@ -418,5 +463,123 @@ void ClientPacketHandlerSystem::updateCounters()
 
 		m_dataSentCounter = 0;
 		m_dataReceivedCounter = 0;
+	}
+}
+
+void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
+{
+	if( static_cast<InputBackendSystem*>(m_world->getSystem(
+		SystemType::InputBackendSystem))->getControlByEnum(
+		InputHelper::KEY_0)->getDelta() > 0 )
+	{
+		if( m_staticPropIdentities.empty() )
+		{
+			DEBUGPRINT(( string(
+				/* 0 - 511 */
+				ToString(0) + " - " +
+				ToString(511) +
+				/* byte size */
+				" = " +
+				ToString(511 * 51) +
+				" bytes" +
+				/* end */
+				"\n").c_str() ));
+
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(0, 511));
+		}
+
+		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
+		{
+			DEBUGPRINT(( string(
+				/* 0 - x */
+				ToString(0) + " - " +
+				ToString(m_staticPropIdentities.front()) +
+				/* byte size */
+				" = " +
+				ToString((m_staticPropIdentities.front() + 1) * 51) +
+				" bytes" +
+				/* end */
+				"\n").c_str() ));
+			
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(0, m_staticPropIdentities.front()));
+		}
+
+		while( m_staticPropIdentities.size() >= 2 )
+		{
+			int firstValue = m_staticPropIdentities.front();
+			m_staticPropIdentities.pop();
+			int secondValue = m_staticPropIdentities.front();
+
+			if( secondValue - firstValue > 1 )
+			{
+				DEBUGPRINT(( string(
+					/* x - y */
+					ToString(firstValue) + " - " +
+					ToString(secondValue - 1) +
+					/* byte size */
+					" = " +
+					ToString((secondValue - firstValue) * 51) +
+					" bytes" +
+					/* end */
+					"\n").c_str() ));
+
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(firstValue, secondValue));
+			}
+		}
+
+		if( m_staticPropIdentities.size() == 1 )
+		{
+			if( m_staticPropIdentities.front() < 511 )
+			{
+				DEBUGPRINT(( string(
+					/* x - 511 */
+					ToString(m_staticPropIdentities.front()) + " - " +
+					ToString(511) +
+					/* byte size */
+					" = " +
+					ToString((511 - m_staticPropIdentities.front()) * 51) +
+					" bytes" +
+					/* end */
+					"\n").c_str() ));
+
+				m_staticPropIdentitiesForAntTweakBar.push_back(
+					pair<int, int>(m_staticPropIdentities.front(), 511));
+
+					m_staticPropIdentities.pop();
+			}
+		}
+
+		for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
+		{
+			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+				AntTweakBarWrapper::NETWORK,
+				("min" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				&m_staticPropIdentitiesForAntTweakBar[i].first,
+				"group='Missing packets range'" );
+
+			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+				AntTweakBarWrapper::NETWORK,
+				("max" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				&m_staticPropIdentitiesForAntTweakBar[i].second,
+				"group='Missing packets range'" );
+		}
+	}
+}
+
+void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
+	unsigned int p_packetIdentifier )
+{
+	if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
+	{
+		m_totalBroadcastPacketLost += p_packetIdentifier -
+			(m_lastBroadcastPacketIdentifier + 1);
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
+	}
+	else if( p_packetIdentifier == m_lastBroadcastPacketIdentifier + 1 )
+	{
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
 }
