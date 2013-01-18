@@ -241,6 +241,7 @@ void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 
 void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_others)
 {
+	return;
 	static int counter=0;
 
 	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
