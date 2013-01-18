@@ -409,7 +409,7 @@ void ClientApplication::initSounds()
 	component = new Transform( 3.0f, -10.0f, -30.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
+	entity->addComponent(ComponentType::AudioInfo, component);
 	m_world->addEntity(entity);
 	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
 
@@ -424,7 +424,7 @@ void ClientApplication::initSounds()
 	component = new Transform( 3.0f, 3.0f, 3.0f );
 	entity->addComponent( ComponentType::Transform, component );
 	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
+	entity->addComponent(ComponentType::AudioInfo, component);
 	m_world->addEntity(entity);
 	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
 
@@ -436,7 +436,7 @@ void ClientApplication::initSounds()
 	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
 	entity = m_world->createEntity();
 	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
+	entity->addComponent(ComponentType::AudioInfo,component);
 	m_world->addEntity(entity);
 	
 	/************************************************************************/
@@ -447,7 +447,7 @@ void ClientApplication::initSounds()
 	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
 	entity = m_world->createEntity();
 	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
+	entity->addComponent(ComponentType::AudioInfo,component);
 	m_world->addEntity(entity);
 
 	/************************************************************************/
@@ -458,7 +458,7 @@ void ClientApplication::initSounds()
 	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
 	entity = m_world->createEntity();
 	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent, component);
+	entity->addComponent(ComponentType::AudioInfo, component);
 	m_world->addEntity(entity);
 	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
 }
