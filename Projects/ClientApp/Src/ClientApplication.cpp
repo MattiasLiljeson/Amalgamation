@@ -215,7 +215,6 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
-
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
