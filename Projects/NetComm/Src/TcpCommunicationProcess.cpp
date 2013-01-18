@@ -32,6 +32,7 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 
 	m_numberOfOverflowPackets = 0;
 	m_totalPacketsReceived = 0;
+	m_totalPacketsSent = 0;
 
 	/************************************************************************/
 	/* We need to find the appropriate size for received data buffer.		*/
@@ -87,6 +88,7 @@ void TcpCommunicationProcess::processMessages()
 		}
 		else if( message->type == MessageType::SEND_PACKET )
 		{
+			m_totalPacketsSent += 1;
 			ProcessMessageSendPacket* sendPacketMessage =
 				static_cast<ProcessMessageSendPacket*>(message);
 
@@ -105,7 +107,7 @@ void TcpCommunicationProcess::processMessages()
 				static_cast<ProcessMessageAskForCommProcessInfo*>(message);
 			ThreadSafeMessaging* sender = askForInfoMessage->sender;
 			ProcessMessageCommProcessInfo* respondInfo =
-				new ProcessMessageCommProcessInfo( this, m_totalPacketsReceived, 0/* HACK: (Johan) Don't forget totalPacketsSent */ );
+				new ProcessMessageCommProcessInfo( this, m_totalPacketsReceived, m_totalPacketsSent );
 			sender->putMessage( respondInfo );
 		}
 

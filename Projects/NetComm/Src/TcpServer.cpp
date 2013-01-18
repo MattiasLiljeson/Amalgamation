@@ -11,6 +11,8 @@
 
 #include "TcpCommunicationProcess.h"
 #include "TcpListenerProcess.h"
+#include "ProcessMessageAskForCommProcessInfo.h"
+#include "ProcessMessageCommProcessInfo.h"
 
 
 TcpServer::TcpServer()
@@ -150,11 +152,12 @@ void TcpServer::processMessages()
 		if( message->type == MessageType::CLIENT_CONNECTED )
 		{
 			ProcessMessageClientConnected* messageClientConnected
-				= static_cast< ProcessMessageClientConnected* >(message);
+				= static_cast<ProcessMessageClientConnected*>(message);
 
-			m_communicationProcesses.push_back( new TcpCommunicationProcess(
-				this, messageClientConnected->socket, m_ioService ) );
+			m_communicationProcesses.push_back(new TcpCommunicationProcess(
+				this, messageClientConnected->socket, m_ioService));
 			m_communicationProcesses.back()->start();
+			m_totalSentInCommProcesses.push_back(0);
 
 			m_newConnectionProcesses.push( m_communicationProcesses.back()->getId() );
 		}
@@ -186,14 +189,21 @@ void TcpServer::processMessages()
 			}
 			else
 				throw "Something is really knaaas";
-
 		}
 		else if( message->type == MessageType::RECEIVE_PACKET )
 		{
 			m_newPackets.push(
 				static_cast< ProcessMessageReceivePacket* >(message)->packet );
-
-		
+		}
+		else if( message->type == MessageType::COMM_PROCESS_INFO )
+		{
+			ProcessMessageCommProcessInfo* commInfoMessage =
+				static_cast<ProcessMessageCommProcessInfo*>( message );
+			for(unsigned int i=0; i<m_communicationProcesses.size(); i++) {
+				if(m_communicationProcesses[i] == commInfoMessage->sender ) {
+					m_totalSentInCommProcesses[i] = commInfoMessage->totalPacketsSent;
+				}
+			}
 		}
 
 		delete message;
@@ -281,4 +291,23 @@ void TcpServer::giveBroadcastPacketAUniqueIdentifier( Packet* p_packet )
 {
 	p_packet->setUniquePacketIdentifier( m_uniqueBroadcastPacketIdentifier );
 	m_uniqueBroadcastPacketIdentifier += 1;
+}
+
+const unsigned int& TcpServer::getTotalBroadcasts()
+{
+	return m_uniqueBroadcastPacketIdentifier;
+}
+
+void TcpServer::askForCommProcessInfo()
+{
+	for(unsigned int i=0; i<m_communicationProcesses.size(); i++) {
+		m_communicationProcesses[i]->putMessage(
+			new ProcessMessageAskForCommProcessInfo( this ) );
+	}
+}
+
+const unsigned int& TcpServer::totalSentInCommProcess(
+	const unsigned int& p_processIdentity )
+{
+	return m_totalSentInCommProcesses[p_processIdentity];
 }
