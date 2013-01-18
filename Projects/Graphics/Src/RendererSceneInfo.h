@@ -20,4 +20,5 @@ struct RendererSceneInfo
 	AglVector3 cameraPos;
 	AglVector3 cameraForward;
 	AglVector3 cameraUp;
+	AglMatrix viewProjInv;
 };
