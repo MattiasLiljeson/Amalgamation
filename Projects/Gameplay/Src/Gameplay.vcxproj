@@ -59,6 +59,7 @@
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PongPacket.h" />
     <ClInclude Include="RayPacket.h" />
+    <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="SimpleEventPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
+    <ClInclude Include="StandardRocket.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
@@ -144,6 +146,7 @@
     <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
+    <ClCompile Include="RocketControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
@@ -171,6 +174,7 @@
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
+    <ClCompile Include="StandardRocket.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />

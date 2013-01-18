@@ -19,6 +19,7 @@
 #include <MineLayerModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <ShipManagerSystem.h>
+#include <RocketControllerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -164,6 +165,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(), true);
 	}
 
 	void ServerApplication::initEntities()

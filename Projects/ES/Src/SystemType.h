@@ -45,6 +45,7 @@ public:	//Enums
 		ShieldModuleControllerSystem,
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
+		RocketControllerSystem,
 		RocketLauncherModuleControllerSystem,
 		ShipModulesControllerSystem,
 		TimerSystem,

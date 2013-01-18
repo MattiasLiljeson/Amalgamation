@@ -56,6 +56,7 @@ public:	//Enums
 		ShieldModule,
 		MineLayerModule,
 		StandardMine,
+		StandardRocket,
 		RocketLauncherModule,
 		Connector1to2Module,
 		LightSources,

@@ -13,6 +13,7 @@
 #include "EntityCreationPacket.h"
 #include "EntityType.h"
 #include "NetworkSynced.h"
+#include <PhysicsController.h>
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -126,8 +127,10 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
 
-	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
-	//physics->getController()
+	PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
+
+	PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
 
 
 	Entity* entity = m_world->createEntity();
@@ -138,7 +141,7 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::identity(),
-		AglVector3(0.2f, 0.2f, 0.2f), dir * 20.0f, 
+		AglVector3(0.2f, 0.2f, 0.2f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, false));
