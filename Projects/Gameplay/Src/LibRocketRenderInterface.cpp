@@ -130,7 +130,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 
 	stringstream ss;
 	ss<<"menus nr: "<<numCompiledGeometries;
-	geometry->meshId = m_wrapper->createMesh(ss.str(), 
+	geometry->meshId = m_wrapper->createMeshFromRaw(ss.str(), 
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
 											 (unsigned int)p_texture);
@@ -157,10 +157,9 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	worldMat = worldMat.transpose();
 
 	RendererSceneInfo scene;
-	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = worldMat[i];
+	scene.viewProj = worldMat;
 
-	m_wrapper->setSceneInfo(scene);
+	m_wrapper->updateRenderSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();
 	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }

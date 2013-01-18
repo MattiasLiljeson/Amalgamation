@@ -32,7 +32,6 @@ struct BufferConfig
 		BUFFER_TYPE_COUNT
 	};
 
-
 	enum BUFFER_USAGE
 	{
 		BUFFER_DEFAULT,

@@ -4,6 +4,12 @@
     <Filter Include="ResourceManager">
       <UniqueIdentifier>{0ba42a01-2e29-4442-acac-29a7558d83cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mesh resource">
+      <UniqueIdentifier>{6d4bdfe4-7346-42c5-adfe-6b993e375d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh resource\Resource data">
+      <UniqueIdentifier>{cd341dad-7821-4ffd-9de5-c3a52496387d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
@@ -12,10 +18,28 @@
     <ClInclude Include="Globals.h">
       <Filter>ResourceManager</Filter>
     </ClInclude>
+    <ClInclude Include="MeshLoadException.h">
+      <Filter>Mesh resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionPointCollection.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemCollection.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelResource.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelBaseUnmanagedFactory.h">
+      <Filter>Mesh resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelBaseUnmanagedFactory.cpp">
+      <Filter>Mesh resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

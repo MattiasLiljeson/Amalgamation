@@ -152,23 +152,6 @@ void Transform::setMatrix(const AglMatrix& p_matrix)
 	calcComponents();
 }
 
-
-AglVector3 Transform::getForward() const
-{
-	return m_compositionMatrix.GetForward();
-}
-
-AglVector3 Transform::getRight() const
-{
-	return m_compositionMatrix.GetRight();
-}
-
-AglVector3 Transform::getUp() const
-{
-	return m_compositionMatrix.GetUp();
-}
-
-
 const AglMatrix& Transform::getMatrix() const
 {
 	return m_compositionMatrix;

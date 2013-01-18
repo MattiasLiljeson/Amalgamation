@@ -122,11 +122,17 @@ public:
 	const AglMatrix& getMatrix() const;
 
 
-	inline AglVector3 getForward() const;
+	inline AglVector3 getForward() const{
+		return m_compositionMatrix.GetForward();
+	}
 
-	inline AglVector3 getRight() const;
+	inline AglVector3 getRight() const{
+		return m_compositionMatrix.GetRight();
+	}
 
-	inline AglVector3 getUp() const;
+	inline AglVector3 getUp() const{
+		return m_compositionMatrix.GetUp();
+	}
 
 
 	///-----------------------------------------------------------------------------------

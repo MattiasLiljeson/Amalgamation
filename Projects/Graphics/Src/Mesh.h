@@ -43,7 +43,7 @@ public:
 
 
 	MaterialInfo	getMaterialInfo();					
-	void			setTextureId(const MaterialInfo& p_materialInfo);
+	void			setMaterial(const MaterialInfo& p_materialInfo);
 private:
 	Buffer<PNTTBVertex>* m_vertexBuffer;
 	Buffer<DIndex>* m_indexBuffer;

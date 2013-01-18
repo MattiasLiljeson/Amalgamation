@@ -266,17 +266,14 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			entity->addComponent( ComponentType::CameraInfo, component );
 			component = new MainCamera();
 			entity->addComponent( ComponentType::MainCamera, component );
-			//component = new Input();
-			//entity->addComponent( ComponentType::Input, component );
 			component = new Transform( -5.0f, 0.0f, -5.0f );
 			entity->addComponent( ComponentType::Transform, component );
-			entity->addComponent( ComponentType::LookAtEntity, component );
 			component = new LookAtEntity(shipId, 
 				AglVector3(0,3,-10),
 				AglQuaternion::identity(),
 				10.0f,
 				10.0f,
-				4.0f);
+				10.0f);
 			entity->addComponent( ComponentType::LookAtEntity, component );
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );

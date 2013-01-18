@@ -20,8 +20,9 @@
 #include "DeferredRenderer.h"
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
-#include "ConnectionPointCollection.h"
 #include "TextureParser.h"
+#include "ModelExtendedManagedFactory.h"
+#include "TextureFactory.h"
 
 
 class DeferredBaseShader;
@@ -29,7 +30,10 @@ class DeferredComposeShader;
 class DeferredRenderer;
 class BufferFactory;
 class Mesh;
+struct Model;
 struct Texture;
+class ParticleRenderer;
+class AglParticleSystem;
 
 class GraphicsWrapper
 {
@@ -41,14 +45,6 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clearRenderTargets();
-
-	///-----------------------------------------------------------------------------------
-	/// Passes the scene info(world-view-projection matrix for example) 
-	/// to the render subsystem.
-	/// \param p_sceneInfo
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Sets up the frame, prepares the renderer for draw calls.
@@ -67,7 +63,6 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
-
 
 	///-----------------------------------------------------------------------------------
 	/// Set the current rasterizer state. By default it will allow to be overriden by the 
@@ -90,8 +85,7 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginGUIPass();
-	void renderGUIMesh( unsigned int p_meshId,
-		vector<InstanceData>* p_instanceList );
+	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 	void finalizeGUIPass();
 
 
@@ -109,34 +103,19 @@ public:
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
-	///-----------------------------------------------------------------------------------
-	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
-	/// \param p_name
-	/// \param p_path
-	/// \return unsigned int
-	///-----------------------------------------------------------------------------------
-	///-----------------------------------------------------------------------------------
-	/// Create a mesh using name (and loads if path is specified). Returns a mesh id.
-	/// \param p_name Filename
-	/// \param p_path Path, without filename
-	/// \param p_outHardPoints Optional container for storing connection points.
-	/// \return unsigned int Mesh id
-	///-----------------------------------------------------------------------------------
-	unsigned int createMesh(const string& p_name,
-							const string* p_path=NULL,
-							ConnectionPointCollection* p_outConnectionPoints=NULL);
 
-	// WIP, should not use texture pointer, but texture id
-	unsigned int createMesh(const string& p_name,
-							int p_numVertices, PNTTBVertex* p_vertices, 
-							int p_numIndices, DIndex* p_indices,
-							Texture* p_texture=NULL);
+	ModelResource* createModelFromFile(const string& p_name,
+							   const string* p_path);
+
+	vector<ModelResource*>* createModelsFromFile(const string& p_name,
+		const string* p_path);
 
 	// This is the preferred method for creating meshes from raw data
-	unsigned int createMesh(const string& p_name,
-							int p_numVertices, PNTTBVertex* p_vertices, 
-							int p_numIndices, DIndex* p_indices,
-							int p_textureId);
+	unsigned int createMeshFromRaw(const string& p_name,
+		int p_numVertices, PNTTBVertex* p_vertices, 
+		int p_numIndices, DIndex* p_indices,
+		int p_textureId);
+
 
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
@@ -145,18 +124,6 @@ public:
 
 	int getMeshId( const string& p_name );
 
-
-	// HACK: Pointer to texture should not be used. A texture id should be used instead.
-	///-----------------------------------------------------------------------------------
-	/// WIP! Decide how to handle this when several textures/materials are present.
-	/// Should texture even be sent in here??
-	/// Register an externally created mesh in the graphics system
-	/// \param p_name
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return unsigned int
-	///-----------------------------------------------------------------------------------
-	unsigned int registerMesh( const string& p_name, Mesh* p_mesh, Texture* p_texture );
 
 
 	ID3D11Device* getDevice();
@@ -183,6 +150,27 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
+
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void beginParticleRender();
+
+	///-----------------------------------------------------------------------------------
+	/// Handles all the rendering of the particle systems.
+	/// \param p_system
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderParticleSystem(AglParticleSystem* p_system);
+
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void endParticleRender();
+
+	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 private:
 	void initSwapChain(HWND p_hWnd);
 
@@ -221,9 +209,15 @@ private:
 
 	// Creation & storage
 	BufferFactory*			m_bufferFactory;
+	TextureFactory*			m_textureFactory;
+	ModelExtendedManagedFactory*	m_modelFactory;
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
+
+	ParticleRenderer*		m_particleRenderer;
+
+	RendererSceneInfo		m_renderSceneInfo;
 
 	int m_height;
 	int m_width;

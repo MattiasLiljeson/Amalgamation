@@ -86,7 +86,9 @@ using namespace std;
 #include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
-#include "..\..\Gameplay\Src\FrameFinalizerSystem.h"
+#include <FrameFinalizerSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
 
 
 
@@ -208,13 +210,13 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( graphicsBackend, true );
 
-	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
+		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
 
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
-
 
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
@@ -223,7 +225,8 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend,
+		m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship
@@ -248,7 +251,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( camera , true );
 
 	/************************************************************************/
-	/* Renderers															*/
+	/* Renderer																*/
 	/************************************************************************/
 	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
@@ -262,13 +265,12 @@ void ClientApplication::initSystems()
 	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
-
+	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 
 	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
 	m_world->setSystem( finalizer, true);
-
 
 	/************************************************************************/
 	/* Network																*/
@@ -285,7 +287,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( communicatorSystem, false );
 
 	/************************************************************************/
-	/* Audio															*/
+	/* Audio																*/
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
@@ -297,7 +299,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
 	/************************************************************************/
-	/* Gameplay																 */
+	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
@@ -322,16 +324,15 @@ void ClientApplication::initEntities()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
-	int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
 	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->createMesh( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH,
-													 &connectionPoints);
+	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
+													 &TESTMODELPATH);
 
-	// Testchamber
+	// Test chamber
 	entity = m_world->createEntity();
 	component = new RenderInfo( testchamberId );
 	entity->addComponent( ComponentType::RenderInfo, component );
@@ -489,8 +490,8 @@ void ClientApplication::InitModulesTestByAnton()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup
