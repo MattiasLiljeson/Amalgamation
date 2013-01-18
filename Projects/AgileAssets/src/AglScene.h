@@ -356,6 +356,8 @@ public:
 	bool isRightHanded();
 
 	void transform(AglMatrix p_transform);
+
+	unsigned int getAnimationCount(){ return m_animations.size(); }
 };
 
 #endif

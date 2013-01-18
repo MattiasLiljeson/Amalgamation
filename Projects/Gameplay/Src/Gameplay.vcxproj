@@ -75,6 +75,7 @@
     <ClInclude Include="ShipInputProcessingSystem.h" />
     <ClInclude Include="ShieldModule.h" />
     <ClInclude Include="ShieldModuleControllerSystem.h" />
+    <ClInclude Include="ShipManagerSystem.h" />
     <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="ShipInputProcessingSystem.cpp" />
     <ClCompile Include="ShieldModule.cpp" />
     <ClCompile Include="ShieldModuleControllerSystem.cpp" />
+    <ClCompile Include="ShipManagerSystem.cpp" />
     <ClCompile Include="ShipModule.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
