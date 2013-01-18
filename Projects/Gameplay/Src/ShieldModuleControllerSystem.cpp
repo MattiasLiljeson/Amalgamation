@@ -10,10 +10,13 @@
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
+#include "EntityCreationPacket.h"
+#include "NetworkSynced.h"
 
-ShieldModuleControllerSystem::ShieldModuleControllerSystem()
+ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 1, ComponentType::ShieldModule)
 {
+	m_server = p_server;
 }
 
 
@@ -40,11 +43,11 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 				m_world->getComponentManager()->getComponent(p_entities[i],
 				ComponentType::getTypeFor(ComponentType::ShieldModule)));
 			
-			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity));
+			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->m_active);
 		}
 	}
 }
-void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity)
+void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active)
 {
 	Transform* parentTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_parentEntity,
@@ -54,41 +57,46 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 	{
 		//Update shield
 		Entity* shield = m_world->getEntity(p_module->m_shieldEntity);
+		
 		Transform* transform = static_cast<Transform*>(
 			m_world->getComponentManager()->getComponent(shield,
 			ComponentType::getTypeFor(ComponentType::Transform))); 
-		transform->setTranslation(parentTransform->getTranslation());
-		transform->setRotation(parentTransform->getRotation());
-
-		p_module->m_shieldAge += m_world->getDelta();
-		if (p_module->m_shieldAge > 2)
+		
+		if (p_active)
 		{
-			p_module->m_shieldEntity = -1;
-			p_module->m_shieldAge = 0;
-			m_world->deleteEntity(shield);
+			transform->setTranslation(parentTransform->getTranslation());
+			transform->setRotation(parentTransform->getRotation());
+			transform->setScale(AglVector3(2, 2, 2));
+		}
+		else
+		{
+			transform->setScale(AglVector3(0, 0, 0));
 		}
 	}
 	else
 	{
-		p_module->m_cooldown -= m_world->getDelta();
+		//Create Shield
+		Entity* entity = m_world->createEntity();
 
-		if (p_module->m_cooldown <= 0)
-		{
-			p_module->m_cooldown = 2;
-			//Create Shield
-			EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-			GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-			int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+		Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
+		entity->addComponent( ComponentType::Transform, t);
+		
+		EntityCreationPacket data;
+		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.meshInfo		= 1; //Sphere
+		data.owner			= -1;
+		data.networkIdentity = entity->getIndex();
+		data.translation	= t->getTranslation();
+		data.rotation		= t->getRotation();
+		data.scale			= t->getScale();
 
-			Entity* entity = m_world->createEntity();
-			Component* component = new RenderInfo( sphereMeshId );
-			entity->addComponent( ComponentType::RenderInfo, component );
+		entity->addComponent(ComponentType::NetworkSynced, 
+			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 
+		m_server->broadcastPacket(data.pack());
+		
+		m_world->addEntity(entity);
 
-			Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
-			entity->addComponent( ComponentType::Transform, t);
-			m_world->addEntity(entity);
-			p_module->m_shieldEntity = entity->getIndex();
-		}
+		p_module->m_shieldEntity = entity->getIndex();
 	}
 }

@@ -55,6 +55,18 @@ bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, RayCollisionData* p_co
 		return CheckCollision(p_ray, (RigidBodyConvexHull*)p_rigidBody, p_collisionData);
 	return false;
 }
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody)
+{
+	//Check types and do appropriate tests.
+	if (p_rigidBody->GetType() == BOX)
+		return CheckCollision(p_lineSegment, (RigidBodyBox*)p_rigidBody);
+	else if (p_rigidBody->GetType() == SPHERE)
+		return CheckCollision(p_lineSegment, (RigidBodySphere*)p_rigidBody);
+	else if (p_rigidBody->GetType() == CONVEXHULL)
+		return false;
+	return false;
+}
+
 bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody)
 {
 	if (p_rigidBody->GetType() == BOX)
@@ -218,6 +230,73 @@ bool CheckCollision(PhyRay p_ray, RigidBodyConvexHull* p_hull, RayCollisionData*
 		p_collisionData->t = last;
 
 	return true;
+}
+
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodySphere* p_sphere)
+{
+	AglVector3 d = p_lineSegment.p2 - p_lineSegment.p1;
+	AglVector3::normalize(d);
+	//Sphere Info
+	AglVector3 C = p_sphere->GetPosition();
+	float radius = p_sphere->GetRadius();
+
+	//Sphere collision algorithm
+	float b = AglVector3::dotProduct(d, p_lineSegment.p1 - C);
+	float c = AglVector3::dotProduct(p_lineSegment.p1 - C, p_lineSegment.p1 - C) - radius*radius;
+	if (b*b - c >= 0)
+	{
+		float t1 = -b - sqrt(b*b-c);
+		float t2 = -b + sqrt(b*b-c);
+		if (t2 > 0 && t1 * t1 < AglVector3::lengthSquared(p_lineSegment.p2-p_lineSegment.p1))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool CheckCollision(const LineSegment& p_lineSegment, AglVector3 p_min, AglVector3 p_max)
+{
+	AglVector3 d = p_lineSegment.p2 - p_lineSegment.p1;
+	d.normalize();
+
+	AglVector3 invD = AglVector3(1.0f / d.x, 1.0f / d.y, 1.0f / d.z);
+	float t1;
+	float t2;
+	AglVector3 diffMax = p_max - p_lineSegment.p1;	
+	//diffMax *= invD;
+	diffMax = AglVector3(diffMax.x*invD.x, diffMax.y*invD.y, diffMax.z*invD.z);
+	AglVector3 diffMin = p_min - p_lineSegment.p1;
+	//diffMin *= invD;
+	diffMin = AglVector3(diffMin.x*invD.x, diffMin.y*invD.y, diffMin.z*invD.z);
+
+	t1 = min(diffMin.x, diffMax.x);
+	t2 = max(diffMin.x, diffMax.x);
+
+	t1 = max(t1, min(diffMin.y, diffMax.y));
+	t2 = min(t2, max(diffMin.y, diffMax.y));
+
+	t1 = max(t1, min(diffMin.z, diffMax.z));
+	t2 = min(t2, max(diffMin.z, diffMax.z));
+
+	if (t1 > t2 || t2 < 0 || t1 * t1 > AglVector3::lengthSquared(p_lineSegment.p2 - p_lineSegment.p1))
+	{
+		return false;
+	}
+	return true;
+}
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box)
+{
+	AglMatrix wInv = p_box->GetWorld();
+	wInv = AglMatrix::inverse(wInv);
+
+	LineSegment l;
+	l.p1 = p_lineSegment.p1;
+	AglVec3Transform(l.p1, wInv);
+	l.p2 = p_lineSegment.p2;
+	AglVec3Transform(l.p2, wInv);
+
+	AglVector3 s = p_box->GetSizeAsVector3()*0.5f;
+	return CheckCollision(l, -s, s);
 }
 
 //---------------------------------BODY COLLISIONS----------------------------------------

@@ -69,6 +69,39 @@ int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundin
 	return mBodies.size()-1;
 }
 
+int PhysicsController::AddLineSegment(AglVector3 p_p1, AglVector3 p_p2)
+{
+	LineSegment ls;
+	ls.p1 = p_p1;
+	ls.p2 = p_p2;
+	mLineSegments.push_back(ls);
+	return mLineSegments.size()-1;
+}
+void PhysicsController::SetLineSegment(AglVector3 p_p1, AglVector3 p_p2, int p_index)
+{
+	mLineSegments[p_index].p1 = p_p1;
+	mLineSegments[p_index].p2 = p_p2;
+}
+int PhysicsController::AddRay(AglVector3 p_o, AglVector3 p_dir, float maxLength)
+{
+	LineSegment ls;
+	ls.p1 = p_o;
+	ls.p2 = p_o + p_dir * maxLength;
+	mLineSegments.push_back(ls);
+	return mLineSegments.size()-1;
+}
+void PhysicsController::SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength)
+{
+	mLineSegments[p_index].p1 = p_o;
+	mLineSegments[p_index].p2 = p_o + p_dir * maxLength;
+}
+void PhysicsController::GetRay(unsigned int p_index, AglVector3& p_o, AglVector3& p_d)
+{
+	p_o = mLineSegments[p_index].p1;
+	p_d = mLineSegments[p_index].p2 - mLineSegments[p_index].p1;
+	p_d.normalize();
+}
+
 void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
 {
 	if (p_compound)
@@ -91,6 +124,7 @@ void PhysicsController::Update(float pElapsedTime)
 
 
 	mCollisions.clear();
+	mLineSegmentCollisions.clear();
 	//New update method stepping
 	//1) Update Velocity and Position
 	//2) Perform collision detection
@@ -115,6 +149,7 @@ void PhysicsController::Update(float pElapsedTime)
 	{
 		if (mRigidBodies[i].first->IsActive() && mRigidBodies[i].first->IsCollisionEnabled())
 		{
+			//Check collisions against other rigid bodies
 			for (unsigned int j = i + 1; j < mRigidBodies.size(); j++)
 			{
 				if (mRigidBodies[j].first->IsActive() && mRigidBodies[j].first->IsCollisionEnabled())
@@ -154,6 +189,14 @@ void PhysicsController::Update(float pElapsedTime)
 							}
 						}
 					}
+				}
+			}
+			//Check for collision against line segments
+			for (unsigned int j = 0; j < mLineSegments.size(); j++)
+			{
+				if (CheckCollision(mLineSegments[j], mRigidBodies[i].first))
+				{
+					mLineSegmentCollisions.push_back(UintPair(j, mRigidBodies[i].second));
 				}
 			}
 		}
@@ -302,6 +345,26 @@ void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, Agl
 	mBodies[p_id]->AddImpulse(p_impulse);
 	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
 }
+void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_magnitude)
+{
+	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
+	{
+		if (!mRigidBodies[i].first->GetParent())
+		{
+			AglVector3 dir = mRigidBodies[i].first->GetCenterOfMass() - p_position;
+			float l = dir.length();
+			dir.normalize();
+			mRigidBodies[i].first->AddImpulse(dir*p_magnitude/l);
+		}
+	}
+	for (unsigned int i = 0; i < mCompoundBodies.size(); i++)
+	{
+		AglVector3 dir = mCompoundBodies[i]->GetCenterOfMass() - p_position;
+		float l = dir.length();
+		dir.normalize();
+		mCompoundBodies[i]->AddImpulse(dir*p_magnitude/l);
+	}
+}
 
 bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 {
@@ -357,6 +420,16 @@ vector<unsigned int> PhysicsController::CollidesWith(unsigned int p_b)
 		}
 		return list;
 	}
+}
+vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_b)
+{
+	vector<unsigned int> cols;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].first == p_b)
+			cols.push_back(mLineSegmentCollisions[i].second);
+	}
+	return cols;
 }
 
 void PhysicsController::ActivateBody(unsigned int pBody)

@@ -34,7 +34,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
 			if( netSync->getNetworkType() == EntityType::Ship ||
-				netSync->getNetworkType() == EntityType::Prop)
+				netSync->getNetworkType() == EntityType::Prop ||
+				netSync->getNetworkType() == EntityType::ShipModule)
 			{
 
 				

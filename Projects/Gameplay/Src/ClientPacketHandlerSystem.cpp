@@ -28,6 +28,7 @@
 #include "GraphicsBackendSystem.h"
 #include "EntityType.h"
 #include "PacketType.h"
+#include "PickComponent.h"
 
 // Debug
 #include <DebugUtil.h>
@@ -82,7 +83,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			data.unpack(packet);
 			if (data.entityType == (char)EntityType::Ship ||
-				data.entityType == (char)EntityType::Prop)
+				data.entityType == (char)EntityType::Prop ||
+				data.entityType == (char)EntityType::ShipModule)
 			{
 
 				// HACK: This is VERY inefficient for large amount of
@@ -274,7 +276,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 				AglQuaternion::identity(),
 				10.0f,
 				10.0f,
-				4.0f);
+				10.0f);
 			entity->addComponent( ComponentType::LookAtEntity, component );
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
@@ -282,6 +284,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			// listener
 			component = new AudioListener();
 			entity->addComponent(ComponentType::AudioListener, component);
+
+			//Add a picking ray to the camera so that edit mode can be performed
+			entity->addComponent(ComponentType::PickComponent, new PickComponent());
 
 			m_world->addEntity(entity);
 
@@ -306,6 +311,26 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, component );
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
+
+		m_world->addEntity(entity);
+	}
+	else if ( p_packet.entityType == (char)EntityType::ShipModule)
+	{
+		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+
+		if (p_packet.meshInfo == 1)
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+
+		entity = m_world->createEntity();
+		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		component = new RenderInfo(meshId);
+		entity->addComponent(ComponentType::RenderInfo, component);
+
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::ShipModule));
 
 		m_world->addEntity(entity);
 	}

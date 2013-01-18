@@ -35,6 +35,9 @@ public:
 		/************************************************************************/
 		ShipTransform,
 		ThrustPacket,
+		RayPacket,
+		ModuleHighlightPacket,
+		SimpleEvent,
 	};
 
 };

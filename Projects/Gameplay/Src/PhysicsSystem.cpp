@@ -8,6 +8,7 @@
 #include "ShipFlyController.h"
 #include "ShipModule.h"
 #include "Connector1to2Module.h"
+#include "NetworkSynced.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -74,11 +75,8 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 		}
 
 		//Check if the object is a ship
-		ShipFlyController* sc =
-			static_cast<ShipFlyController*>(
-			m_world->getComponentManager()->getComponent( p_entities[i],
-			ComponentType::getTypeFor(ComponentType::ShipFlyController)));
-		if (sc)
+		NetworkSynced* ns = static_cast<NetworkSynced*>(p_entities[i]->getComponent(ComponentType::NetworkSynced));
+		if (ns && ns->getNetworkType() == EntityType::Ship)
 		{
 			queryShipCollision(p_entities[i], p_entities);
 		}
@@ -240,6 +238,7 @@ void PhysicsSystem::addModulesToShip(PhysicsBody* p_body, AglVector3 p_position)
 
 void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_others)
 {
+	return;
 	static int counter=0;
 
 	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
@@ -276,7 +275,7 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 				m_world->getComponentManager()->getComponent(p_others[i],
 				ComponentType::getTypeFor(ComponentType::ShipModule)));
 
-			if (module)
+			if (module && module->m_parentEntity < 0)
 			{
 				for (unsigned int j = 0; j < collisions.size(); j++)
 				{

@@ -11,10 +11,13 @@
 #include "PhysicsSystem.h"
 #include "ShipModule.h"
 #include "RocketLauncherModule.h"
+#include "EntityCreationPacket.h"
+#include "NetworkSynced.h"
 
-RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem()
+RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
 {
+	m_server = p_server;
 }
 
 
@@ -47,15 +50,9 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
 
-			InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::InputBackendSystem));
-			Control* leftBtnControl = input->getControlByEnum(InputHelper::KEY_LCTRL);
-			double pressed = leftBtnControl->getStatus();
-			if(pressed == 1.0)
+			if (gun->coolDown == 0 && module->m_active)
 			{
-				if (gun->coolDown == 0)
-				{
-					spawnRocket(p_entities[i]);
-				}
+				spawnRocket(p_entities[i]);
 			}
 		}
 	}
@@ -69,20 +66,25 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 	if (gun->laserSightEntity < 0)
 	{
-		//Create Ray entity
-		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-
 		Entity* entity = m_world->createEntity();
-		Component* component = new RenderInfo( cubeMeshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
-
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
 		entity->addComponent( ComponentType::Transform, t);
 		m_world->addEntity(entity);
 		gun->laserSightEntity = entity->getIndex();
+
+		EntityCreationPacket data;
+		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.owner			= -1;
+		data.networkIdentity = entity->getIndex();
+		data.translation	= t->getTranslation();
+		data.rotation		= t->getRotation();
+		data.scale			= t->getScale();
+
+		entity->addComponent(ComponentType::NetworkSynced, 
+			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+
+		m_server->broadcastPacket(data.pack());
 	}
 	else
 	{
@@ -124,18 +126,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
 
-
-	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-
-	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
-	//physics->getController()
-
-
 	Entity* entity = m_world->createEntity();
-	Component* component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
 
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
@@ -150,4 +141,18 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 
 	entity->addComponent( ComponentType::Transform, t);
 	m_world->addEntity(entity);
+
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::ShipModule);
+	data.owner			= -1;
+	data.networkIdentity = entity->getIndex();
+	data.translation	= t->getTranslation();
+	data.rotation		= t->getRotation();
+	data.scale			= t->getScale();
+	data.meshInfo		= 1;
+
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+
+	m_server->broadcastPacket(data.pack());
 }

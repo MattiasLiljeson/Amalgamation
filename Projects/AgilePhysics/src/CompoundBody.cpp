@@ -98,11 +98,11 @@ AglMatrix CompoundBody::GetWorld() const
 {
 	return mLocalTransform;
 }
-AglVector3 CompoundBody::GetVelocity()
+AglVector3 CompoundBody::GetVelocity() const
 {
 	return mVelocity;
 }
-AglVector3 CompoundBody::GetAngularVelocity()
+AglVector3 CompoundBody::GetAngularVelocity() const
 {
 	return mAngularVelocity;
 }

@@ -12,6 +12,14 @@
 #include <TimerSystem.h>
 #include <EntityFactory.h>
 #include <LevelGenSystem.h>
+#include <ServerPickingSystem.h>
+#include <MinigunModuleControllerSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <MineControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <ShipModulesControllerSystem.h>
+#include <ShipManagerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -19,6 +27,15 @@
 #include "BodyInitData.h"
 #include "NetworkSynced.h"
 #include "StaticProp.h"
+
+
+//Modules
+#include <ShipModule.h>
+#include <MinigunModule.h>
+#include <SpeedBoosterModule.h>
+#include <RocketLauncherModule.h>
+#include <ShieldModule.h>
+#include <MineLayerModule.h>
 
 namespace Srv
 {
@@ -143,6 +160,21 @@ namespace Srv
 
 
 		m_world->initialize();
+		/************************************************************************/
+		/* Picking																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
+
+		/************************************************************************/
+		/* Gameplay															*/
+		/************************************************************************/
+		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineControllerSystem(), true);
+		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipManagerSystem(), true);
 	}
 
 	void ServerApplication::initEntities()
@@ -166,6 +198,7 @@ namespace Srv
 			}
 
 		}
+		InitModulesTestByAnton();
 	}
 
 	
@@ -191,5 +224,198 @@ namespace Srv
 	{
 		body();
 	}
+	void ServerApplication::InitModulesTestByAnton()
+	{
+		Entity* entity;
+		Component* component;
+
+		EntitySystem* tempSys = NULL;
+
+		// Create a box that the spaceship can pickup
+		entity = m_world->createEntity();
+		component = new Transform(10, 0, 0);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(10, 0, 0),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+		entity = m_world->createEntity();
+		component = new Transform(20, 0, 0);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(20, 0, 0),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+		entity = m_world->createEntity();
+		component = new Transform(30, 0, 0);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(30, 0, 0),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+		entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+		entity = m_world->createEntity();
+		component = new Transform(40, 0, 0);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(40, 0, 0),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+		entity = m_world->createEntity();
+		component = new Transform(50, 0, 0);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(50, 0, 0),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+		entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+
+
+
+		entity = m_world->createEntity();
+		component = new Transform(50, 0, -10);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(50, 0, -10),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, true, true));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+		entity = m_world->createEntity();
+		component = new Transform(40, 0, -10);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(40, 0, -10),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+		ConnectionPointSet* cpset = new ConnectionPointSet();
+		AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
+		AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
+		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity);
+
+
+		entity = m_world->createEntity();
+		component = new Transform(30, 0, -10);
+		entity->addComponent( ComponentType::Transform, component );
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		entity->addComponent( ComponentType::BodyInitData, 
+			new BodyInitData(AglVector3(30, 0, -10),
+			AglQuaternion::identity(),
+			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, false));
+
+		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+
+
+		cpset = new ConnectionPointSet();
+		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		m_world->addEntity(entity); 
+
+
+		//Ray entity
+		/*entity = m_world->createEntity();
+		component = new RenderInfo( cubeMeshId );
+		entity->addComponent( ComponentType::RenderInfo, component );
+
+
+		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), AglVector3(0, 1, 0)), AglVector3(0.1f, 0.1f, 10));
+		entity->addComponent( ComponentType::Transform, t);
+		m_world->addEntity(entity);*/
+	}
+
 
 };

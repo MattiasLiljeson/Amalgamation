@@ -1,9 +1,13 @@
 #include "ServerPacketHandlerSystem.h"
+#include "ServerPickingSystem.h"
+#include "ShipModulesControllerSystem.h"
 
 // Components
 #include "Transform.h"
 #include "NetworkSynced.h"
 #include "PhysicsBody.h"
+#include "ShipModule.h"
+#include "SpeedBoosterModule.h"
 
 // NetComm
 #include <TcpServer.h>
@@ -15,7 +19,10 @@
 #include "ThrustPacket.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
+#include "RayPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "HighlightSlotPacket.h"
+#include "SimpleEventPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -55,7 +62,25 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				(m_world->getEntity(thrustPacket.entityId)->getComponent(
 				ComponentType::PhysicsBody));
 
-			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector,
+			//Added by Anton
+			Entity* ship = m_world->getEntity(thrustPacket.entityId);
+
+			ConnectionPointSet* connected =
+				static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(ship,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			
+			AglVector3 boostVector = AglVector3(0, 0, 0);
+			if (connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity >= 0)
+			{
+				Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity);
+				ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
+				SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
+				if (module->m_active && boostmodule)
+					boostVector = thrustPacket.thrustVector*3;
+			}
+
+			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector+boostVector,
 				thrustPacket.angularVector );
 		}
 		if( packetType == (char)PacketType::Ping )
@@ -90,7 +115,44 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			UpdateClientStatsPacket updatedClientPacket;
 			updatedClientPacket.ping = info.ping;
 			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
-		}		
+		}	
+		else if (packetType == (char)PacketType::RayPacket)
+		{
+			ServerPickingSystem* picking = 
+				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+
+			RayPacket rayPacket;
+			rayPacket.unpack( packet );
+			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
+		}
+		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		{
+			ShipModulesControllerSystem* modsystem = 
+				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+
+			HighlightSlotPacket hp;
+			hp.unpack( packet );
+			modsystem->addHighlightEvent(hp.id, packet.getSenderId());
+		}
+		else if (packetType == (char)PacketType::SimpleEvent)
+		{
+			ShipModulesControllerSystem* modsystem = 
+				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+
+			ServerPickingSystem* pickSystem = 
+				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+
+			SimpleEventPacket sep;
+			sep.unpack( packet );
+			if (sep.type == SimpleEventType::ACTIVATE_MODULE)
+				modsystem->addActivateEvent(packet.getSenderId());
+			else if (sep.type == SimpleEventType::DEACTIVATE_MODULE)
+				modsystem->addDeactivateEvent(packet.getSenderId());
+			else if (sep.type == SimpleEventType::ACTIVATE_PICK)
+				pickSystem->setEnabled(packet.getSenderId(), true);
+			else if (sep.type == SimpleEventType::DEACTIVATE_PICK)
+				pickSystem->setEnabled(packet.getSenderId(), false);
+		}
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->

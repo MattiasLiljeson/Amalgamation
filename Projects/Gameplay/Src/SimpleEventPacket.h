@@ -1,24 +1,38 @@
 #pragma once
 
-#include <Component.h>
+#include "Packetizer.h"
 
 // =======================================================================================
-//	Module
+//	SimpleEventPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that can be attached to a ship
+/// \brief Brief description...
 ///        
-/// # PlayerScore
+/// # SimpleEventPacket
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipModule: public Component
+enum SimpleEventType
+{
+	ACTIVATE_MODULE,
+	DEACTIVATE_MODULE,
+	ACTIVATE_PICK,
+	DEACTIVATE_PICK,
+	EVENT_NONE,
+};
+
+class SimpleEventPacket: Packetizer
 {
 public:
-	int m_parentEntity;
-	bool m_active;
-	ShipModule();
-	~ShipModule();
+	SimpleEventPacket();
+
+	Packet pack();
+
+	void unpack( Packet p_packet );
+
+public:
+	int type;
+
 };

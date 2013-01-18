@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "MinigunModule.h"
+#include "TcpServer.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -17,7 +18,7 @@
 class MinigunModuleControllerSystem: public EntitySystem
 {
 public:
-	MinigunModuleControllerSystem();
+	MinigunModuleControllerSystem(TcpServer* p_server);
 	~MinigunModuleControllerSystem();
 
 	virtual void initialize();
@@ -25,4 +26,6 @@ public:
 private:
 	void handleLaserSight(Entity* p_entity);
 	void spawnBullet(Entity* p_entity);
+private:
+	TcpServer* m_server;
 };

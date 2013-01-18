@@ -40,7 +40,7 @@ void RasterManager::initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_de
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 	m_device->CreateRasterizerState(&rasterDesc, &m_wireframeState);
 
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
 	m_device->CreateRasterizerState(&rasterDesc, &m_standardState);
 

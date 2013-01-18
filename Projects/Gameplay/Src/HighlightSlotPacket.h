@@ -1,24 +1,31 @@
 #pragma once
 
-#include <Component.h>
+#include "Packetizer.h"
+#include "EntityType.h"
 
 // =======================================================================================
-//	Module
+//                                      HighlightSlotPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that can be attached to a ship
+/// \brief
 ///        
-/// # PlayerScore
-/// Detailed description...
-/// Created on: 4-1-2013 
+/// # EntityUpdatePacket
+/// Detailed description.....
+/// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipModule: public Component
+class HighlightSlotPacket : public Packetizer
 {
 public:
-	int m_parentEntity;
-	bool m_active;
-	ShipModule();
-	~ShipModule();
+	HighlightSlotPacket();
+	~HighlightSlotPacket();
+
+	Packet pack();
+
+	void unpack( Packet p_packet );
+
+public:
+	int id;
+
 };

@@ -34,8 +34,8 @@ public:
 	float GetMass();
 	float GetInvMass();
 	AglMatrix GetWorld() const;
-	AglVector3 GetVelocity();
-	AglVector3 GetAngularVelocity();
+	AglVector3 GetVelocity() const;
+	AglVector3 GetAngularVelocity() const;
 	AglVector3 GetCenterOfMass();
 
 	bool IsCompoundBody();

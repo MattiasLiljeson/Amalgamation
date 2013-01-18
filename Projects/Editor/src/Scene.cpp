@@ -117,9 +117,11 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 		}
 	}
 
-
-	AglAnimation* anim = mAglScene->getAnimation(0);
-	anim->play();
+	if (mAglScene->getAnimationCount() > 0)
+	{
+		AglAnimation* anim = mAglScene->getAnimation(0);
+		anim->play();
+	}
 	mFolder = pFolder;
 	CreateScenePlane();
 }

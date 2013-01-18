@@ -21,3 +21,8 @@ class LookAtFollowMode_TAG : public Tag {};
 /// LookatOrbitMode_TAG
 ///
 class LookAtOrbitMode_TAG : public Tag {};
+
+///
+/// Ship_TAG
+///
+class Ship_TAG : public Tag {};

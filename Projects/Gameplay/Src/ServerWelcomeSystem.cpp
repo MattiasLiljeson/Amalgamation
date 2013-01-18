@@ -23,6 +23,8 @@
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "PlayerScore.h"
+#include "ConnectionPointSet.h"
+#include "GameplayTags.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -192,6 +194,15 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::COMPOUND));
+
+	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+
+	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+
+	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
 
 	return e;
 }
