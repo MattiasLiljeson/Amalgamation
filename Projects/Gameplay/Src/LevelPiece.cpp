@@ -4,16 +4,32 @@
 #include "Transform.h"
 #include <cstdlib>
 #include <AglMesh.h>
+#include <ModelResource.h>
 
-LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
-					   AglMeshHeader* p_meshHeader, 
-					   Transform* p_transform )
+//LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
+//					   AglMeshHeader* p_meshHeader, 
+//					   Transform* p_transform )
+//{
+//	//m_localSpaceConnectionPoints	= p_connectionPoints;
+//	m_transform			= p_transform;
+//	//m_meshHeader		= p_meshHeader;
+//
+//	int maxChildCount = p_connectionPoints->m_collection.size();
+//	m_childSlotsOccupied.resize(maxChildCount);
+//	m_children.resize(maxChildCount, NULL);
+//	m_connectionPoints.resize(maxChildCount);
+//
+//	updateConnectionPoints();
+//	updateBoundingVolumes();
+//}
+
+LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform )
 {
-	m_localSpaceConnectionPoints	= p_connectionPoints;
-	m_transform			= p_transform;
-	m_meshHeader		= p_meshHeader;
+	m_modelResource = p_modelResource;
+	m_transform		= p_transform;
+	m_typeId		= p_typeId;
 
-	int maxChildCount = m_localSpaceConnectionPoints->m_collection.size();
+	int maxChildCount = p_modelResource->connectionPoints.m_collection.size();
 	m_childSlotsOccupied.resize(maxChildCount);
 	m_children.resize(maxChildCount, NULL);
 	m_connectionPoints.resize(maxChildCount);
@@ -21,6 +37,7 @@ LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
 	updateConnectionPoints();
 	updateBoundingVolumes();
 }
+
 
 LevelPiece::~LevelPiece()
 {
@@ -44,9 +61,9 @@ Transform* LevelPiece::getTransform() const
 	return m_transform;
 }
 
-int LevelPiece::getMeshId()
+int LevelPiece::getTypeId() const
 {
-	return m_localSpaceConnectionPoints->m_meshId;
+	return m_typeId;
 }
 
 const Transform* LevelPiece::getChild( int p_inSlot ) const
@@ -110,9 +127,9 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 AglMatrix LevelPiece::getLocalConnectionPointMatrix( int p_vectorIndex, E_Space p_inSpace/*=Space_LOCAL*/ )
 {
 	if (p_inSpace == Space_LOCAL)
-		return AglMatrix( m_localSpaceConnectionPoints->m_collection[p_vectorIndex].transform );
+		return m_modelResource->connectionPoints.m_collection[p_vectorIndex];
 	else
-		return AglMatrix( m_localSpaceConnectionPoints->m_collection[p_vectorIndex].transform ) *
+		return m_modelResource->connectionPoints.m_collection[p_vectorIndex] *
 				m_transform->getMatrix();
 }
 
@@ -121,7 +138,7 @@ void LevelPiece::updateConnectionPoints()
 	for (int i = 0; i < m_connectionPoints.size(); i++)
 	{
 		m_connectionPoints[i] = Transform(
-			AglMatrix( m_localSpaceConnectionPoints->m_collection[i].transform ) *
+			m_modelResource->connectionPoints.m_collection[i] *
 			m_transform->getMatrix());
 	}
 }
@@ -145,14 +162,16 @@ void LevelPiece::updateBoundingVolumes()
 {
 	// Update the bounding sphere!
 	m_boundingSphere.position	= m_transform->getTranslation() + 
-									m_meshHeader->boundingSphere.position;
-	m_boundingSphere.radius		= m_transform->getScale().x * m_meshHeader->boundingSphere.radius;
+									m_modelResource->meshHeader.boundingSphere.position;
+	m_boundingSphere.radius		= m_transform->getScale().x * 
+									m_modelResource->meshHeader.boundingSphere.radius;
 
 	// Updating bounding box.
-	m_boundingBox.size = m_transform->getScale() * m_meshHeader->minimumOBB.size;
+	m_boundingBox.size = m_transform->getScale() * 
+							m_modelResource->meshHeader.minimumOBB.size;
 
 	AglMatrix mat(AglVector3::one(), m_transform->getRotation(), m_transform->getTranslation());
-	m_boundingBox.world = m_meshHeader->minimumOBB.world * mat;
+	m_boundingBox.world = m_modelResource->meshHeader.minimumOBB.world * mat;
 }
 
 const AglBoundingSphere& LevelPiece::getBoundingSphere() const

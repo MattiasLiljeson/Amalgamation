@@ -36,6 +36,7 @@
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="LevelPiece.h" />
+    <ClInclude Include="LevelPieceModelMapping.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
     <ClInclude Include="LibRocketRenderSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
+    <ClCompile Include="LevelPieceModelMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="LibRocketRenderSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />

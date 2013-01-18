@@ -6,11 +6,14 @@
 #include <AglMesh.h>
 #include <vector>
 #include <map>
+#include "LevelPieceModelMapping.h"
+#include <ModelBaseUnmanagedFactory.h>
 
 class Transform;
 class GraphicsBackendSystem;
 class LevelPiece;
 class TcpServer;
+struct ModelResource;
 
 using namespace std;
 // =======================================================================================
@@ -31,10 +34,10 @@ public:
 	LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server);
 	virtual ~LevelGenSystem();
 
-	void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
-						vector<AglMeshHeader> p_aglMeshHeaders);
+	//void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
+	//					vector<AglMeshHeader> p_aglMeshHeaders);
 
-	const vector<LevelPiece*>& getGeneratedLevelPieces() const;
+	//const vector<LevelPiece*>& getGeneratedLevelPieces() const;
 	void initialize();
 
 	void run();
@@ -42,8 +45,10 @@ protected:
 
 private:
 	int popIntVector(vector<int>& p_vector);
+	
+	int getMeshFromPieceType(int p_typeId) const;
 
-	int	getRandomPieceType();
+	//int	getRandomPieceType();
 
 	void createAndAddEntity(int p_type, Transform* p_transform);
 
@@ -52,6 +57,11 @@ private:
 								vector<LevelPiece*>& out_pieces);
 
 	void addEndPlug(Transform* p_atConnector);
+
+	ModelBaseUnmanagedFactory m_unmanagedModelFactory;
+
+	vector<ModelResource*>	m_modelResources;
+	LevelPieceFileMapping	m_modelFileMapping;
 
 	vector<ConnectionPointCollection> m_pieceTypes;
 	vector<AglMeshHeader> m_meshHeaders;

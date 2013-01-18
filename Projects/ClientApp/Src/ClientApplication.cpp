@@ -25,8 +25,6 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
-#include <GameplayTags.h>
-#include <PlayerCameraController.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 #include <RocketLauncherModule.h>
@@ -60,20 +58,14 @@
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
-#include <LookAtSystem.h>
-#include <LevelGenSystem.h>
 #include <HudSystem.h>
-#include <CameraInfo.h>
-#include <LookAtEntity.h>
-#include <MainCamera.h>
-#include <MinigunModuleControllerSystem.h>
-#include <PlayerCameraControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
+#include <LevelGenSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -296,6 +288,10 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Level Gen															*/
 	/************************************************************************/
+	// TODO: GraphicsBackend is required for the level gen at the moment.
+	// This does not currently work for the server!
+	// Awaiting refactoring of model management.
+
 	LevelGenSystem* levelGenerator = new LevelGenSystem(graphicsBackend, NULL);
 	m_world->setSystem( levelGenerator, true);
 
@@ -332,6 +328,11 @@ void ClientApplication::initEntities()
 	ConnectionPointCollection connectionPoints;
 	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
 													 &TESTMODELPATH);
+
+	LevelGenSystem* levelGen = 
+		static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	levelGen->run();
+
 	// Testchamber
 	//entity = m_world->createEntity();
 	//component = new RenderInfo( testchamberId );
@@ -491,7 +492,7 @@ void ClientApplication::InitModulesTestByAnton()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+//	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

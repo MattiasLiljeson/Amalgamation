@@ -347,6 +347,9 @@
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="LevelPieceModelMapping.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -566,6 +569,9 @@
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceModelMapping.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

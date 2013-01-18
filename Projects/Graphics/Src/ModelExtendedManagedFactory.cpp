@@ -9,6 +9,7 @@ const string& ModelExtendedManagedFactory::primitiveCubeName="P_cube";
 const string& ModelExtendedManagedFactory::primitiveSphereName="P_sphere";
 const string& ModelExtendedManagedFactory::fallbackTextureName="testtexture.png";
 const string& ModelExtendedManagedFactory::mesherrorTextureName="mesherror.png";
+const string& ModelExtendedManagedFactory::defaultTextureName="defaulttexture.png";
 
 ModelExtendedManagedFactory::ModelExtendedManagedFactory(ID3D11Device* p_device,BufferFactory* p_bufferFactory, 
 	ResourceManager<Mesh>* p_resourceManager,
@@ -235,15 +236,15 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	AglMaterial* mat = p_scene->getMaterial(matId);
 	// get names
 	// diffuse
-	string diffuseName = fallbackTextureName;
+	string diffuseName = defaultTextureName;
 	if (mat->diffuseTextureNameIndex!=-1)
 		diffuseName = p_scene->getName(mat->diffuseTextureNameIndex);
 	// specular
-	string specularName = fallbackTextureName;
+	string specularName = defaultTextureName;
 	if (mat->specularTextureNameIndex!=-1)
 		specularName = p_scene->getName(mat->specularTextureNameIndex);
 	// normal
-	string normalName = fallbackTextureName;
+	string normalName = defaultTextureName;
 	if (mat->normalTextureNameIndex!=-1)
 		normalName = p_scene->getName(mat->normalTextureNameIndex);
 
@@ -254,7 +255,7 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	materialInfo.setTextureId(MaterialInfo::SPECULARMAP,
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::NORMALMAP,
-		m_textureFactory->createTexture(specularName,TEXTUREPATH));
+		m_textureFactory->createTexture(normalName,TEXTUREPATH));
 	// and then set the resulting data to the mesh
 	p_mesh->setMaterial(materialInfo);
 }

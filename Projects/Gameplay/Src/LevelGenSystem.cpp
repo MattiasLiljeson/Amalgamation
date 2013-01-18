@@ -13,6 +13,9 @@
 #include <TcpServer.h>
 #include "EntityCreationPacket.h"
 #include "EntityType.h"
+#include <Globals.h>
+#include <ModelResource.h>
+#include <string>
 
 LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -29,10 +32,25 @@ LevelGenSystem::~LevelGenSystem()
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
+
+	for (int i = 0; i < m_modelResources.size(); i++)
+		delete m_modelResources[i];
+
+	m_modelResources.clear();
 }
 
 void LevelGenSystem::initialize()
 {
+	for (int i = 0; i < m_modelFileMapping.getModelFileCount(); i++)
+	{
+		string modelName = m_modelFileMapping.getModelFileName(i);
+
+		m_graphicsBackend->loadSingleMeshFromFile( modelName,
+		&TESTMODELPATH);
+		
+		m_modelResources.push_back(
+			m_unmanagedModelFactory.createModelResource(modelName, &TESTMODELPATH));
+	}
 }
 
 void LevelGenSystem::run()
@@ -41,10 +59,10 @@ void LevelGenSystem::run()
 	generateLevelPieces(5);
 }
 
-int LevelGenSystem::getRandomPieceType()
-{
-	return rand() % m_pieceTypes.size();
-}
+//int LevelGenSystem::getRandomPieceType()
+//{
+//	return rand() % m_pieceTypes.size();
+//}
 
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
@@ -53,10 +71,18 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	Transform* transform = new Transform(AglVector3(15, 20, 15), 
 										AglQuaternion::identity(),
 										AglVector3::one() * 2.0f);
-	// Create the entity and specify a mesh for it
-	createAndAddEntity(m_pieceTypes[0].m_meshId, transform);
+	
 	// Create the level piece to use later
-	LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
+	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
+	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
+
+	// Create the entity and specify a mesh for it
+	// NOTE: Debug for client only!
+	if (!m_server)
+	{
+		int meshId = getMeshFromPieceType( 0 );
+		createAndAddEntity(meshId, transform);
+	}
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -73,9 +99,12 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 			generatePiecesOnPiece(pieces[i], temps);
 
 		// Creates a piece entity and adds it to the world
-		for (int i = 0; i < temps.size(); i++)
-			createAndAddEntity(temps[i]->getMeshId(), temps[i]->getTransform());
-		
+		if ( !m_server )
+		{
+			for (int i = 0; i < temps.size(); i++)
+				createAndAddEntity( getMeshFromPieceType( temps[i]->getTypeId() ), temps[i]->getTransform());
+		}
+
 		// For the next iteration round
 		pieces = vector<LevelPiece*>(temps);
 	}
@@ -125,17 +154,19 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			// setting the target connector to be occupied.
 
 			// Find a random piece type to use
-			int pieceType = getRandomPieceType();
+			int pieceType = m_modelFileMapping.getRandomPieceId();
 			
 			// Create a level piece
 			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
 			//									 &m_meshHeaders[pieceType], 
 			//									 new Transform() );
 			// Debug: Create all pieces in order using second piece type!
-			LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
-												&m_meshHeaders[pieceType],
+			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
+			//									&m_meshHeaders[pieceType],
+			//									new Transform() );
+			LevelPiece* piece = new LevelPiece( pieceType, m_modelResources[pieceType],
 												new Transform() );
-			
+
 			int slot = popIntVector(freeConnectSlots);
 			piece->connectTo(p_targetPiece, slot);
 			//piece->connectTo(p_targetPiece, i);
@@ -163,15 +194,17 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			else
 			{
 				// DEBUG: Attach a cube between the connections!
-				//AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
-				//AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
+				AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
+				AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
 
-				//createAndAddEntity(0, new Transform(targetConnectorMatrix.GetTranslation(), 
-				//									targetConnectorMatrix.GetRotation(),
-				//									AglVector3::one() * 0.5f));
-				//createAndAddEntity(0, new Transform(thisConnectorMatrix.GetTranslation(), 
-				//									thisConnectorMatrix.GetRotation(),
-				//									AglVector3::one() * 0.5f));
+				int cubeMeshId = m_graphicsBackend->getMeshId("P_cube");
+
+				createAndAddEntity(cubeMeshId, new Transform(targetConnectorMatrix.GetTranslation(), 
+					targetConnectorMatrix.GetRotation(),
+					AglVector3::one() * 0.5f));
+				createAndAddEntity(cubeMeshId, new Transform(thisConnectorMatrix.GetTranslation(), 
+					thisConnectorMatrix.GetRotation(),
+					AglVector3::one() * 0.5f));
 
 				out_pieces.push_back(piece);
 				m_generatedPieces.push_back(piece);
@@ -200,14 +233,19 @@ int LevelGenSystem::popIntVector( vector<int>& p_vector )
 	return i;
 }
 
-void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes,
-									vector<AglMeshHeader> p_aglMeshHeaders)
-{
-	m_pieceTypes	= p_pieceTypes;
-	m_meshHeaders	= p_aglMeshHeaders;
-}
+//void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes,
+//									vector<AglMeshHeader> p_aglMeshHeaders)
+//{
+//	m_pieceTypes	= p_pieceTypes;
+//	m_meshHeaders	= p_aglMeshHeaders;
+//}
+//
+//const vector<LevelPiece*>& LevelGenSystem::getGeneratedLevelPieces() const
+//{
+//	return m_generatedPieces;
+//}
 
-const vector<LevelPiece*>& LevelGenSystem::getGeneratedLevelPieces() const
+int LevelGenSystem::getMeshFromPieceType( int p_typeId ) const
 {
-	return m_generatedPieces;
+	return m_graphicsBackend->getMeshId( m_modelFileMapping.getModelFileName( p_typeId ) );
 }

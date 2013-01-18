@@ -4,11 +4,13 @@
 #include <AglMatrix.h>
 #include <AglOBB.h>
 #include <AglBoundingSphere.h>
+
 using namespace std;
 
 class Transform;
 struct ConnectionPointCollection;
 struct AglMeshHeader;
+struct ModelResource;
 
 enum E_Space
 {
@@ -31,10 +33,12 @@ enum E_Space
 class LevelPiece
 {
 public:
-	LevelPiece(ConnectionPointCollection* p_connectionPoints,
-				AglMeshHeader* p_meshHeader, 
-				Transform* p_transform);
+	//LevelPiece(ConnectionPointCollection* p_connectionPoints,
+	//			AglMeshHeader* p_meshHeader, 
+	//			Transform* p_transform);
 	~LevelPiece();
+
+	LevelPiece( int p_typeId, ModelResource* p_modelResource, Transform* p_transform);
 
 	void		deleteMainTransform();
 	void		updateConnectionPoints();
@@ -43,7 +47,7 @@ public:
 	Transform	getConnectionPoint(int p_vectorIndex);
 	vector<int> findFreeConnectionPointSlots();
 	Transform*  getTransform() const;
-	int			getMeshId();
+	int			getTypeId() const;
 	const Transform* getChild(int p_inSlot) const;
 	void		setChild(int p_inSlot, Transform* p_transform);
 	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
@@ -53,8 +57,11 @@ protected:
 private:
 	void updateBoundingVolumes();
 
-	ConnectionPointCollection*	m_localSpaceConnectionPoints;
-	AglMeshHeader*				m_meshHeader;
+	ModelResource*				m_modelResource;
+	int							m_typeId;
+
+	//ConnectionPointCollection*	m_localSpaceConnectionPoints;
+	//AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
 	vector<Transform*>			m_children;
