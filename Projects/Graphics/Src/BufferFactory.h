@@ -13,6 +13,7 @@
 // etc?
 
 class Mesh;
+struct ParticleCBuffer;
 
 // =======================================================================================
 //                                      BufferFactory
@@ -68,6 +69,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	Buffer<DIndex>* createIndexBuffer(DIndex* p_indices,
 									  unsigned int p_numberOfElements);
+
+	Buffer<ParticleCBuffer>* createParticleCBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.

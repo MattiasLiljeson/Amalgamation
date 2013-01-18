@@ -104,10 +104,12 @@
     <ClInclude Include="AglNode.h" />
     <ClInclude Include="AglNodeAnimation.h" />
     <ClInclude Include="AglParticleSystem.h" />
+    <ClInclude Include="AglParticleSystemHeader.h" />
     <ClInclude Include="AglReader.h" />
     <ClInclude Include="AglScene.h" />
     <ClInclude Include="AglSkeleton.h" />
     <ClInclude Include="AglSkeletonMapping.h" />
+    <ClInclude Include="AglStandardParticle.h" />
     <ClInclude Include="AglWriter.h" />
   </ItemGroup>
   <ItemGroup>

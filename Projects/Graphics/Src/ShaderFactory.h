@@ -14,6 +14,7 @@ class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class GUIShader;
+class ParticleShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -55,6 +56,8 @@ public:
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
 	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
+
+	ParticleShader* createParticleShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------
@@ -136,6 +139,8 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createPNTTBVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
+
+	void createParticleInputLayout(VSData* p_vs, ID3D11InputLayout** p_inpuyLayout);
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a inputlayout for Instanced PNTVertex

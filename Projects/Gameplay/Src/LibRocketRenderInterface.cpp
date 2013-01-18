@@ -157,8 +157,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	worldMat = worldMat.transpose();
 
 	RendererSceneInfo scene;
-	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = worldMat[i];
+	scene.viewProj = worldMat;
 
 	m_wrapper->setSceneInfo(scene);
 	m_wrapper->updatePerFrameConstantBuffer();

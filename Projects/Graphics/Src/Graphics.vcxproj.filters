@@ -51,6 +51,12 @@
     <ClCompile Include="MeshNameScriptParser.cpp">
       <Filter>Graphics Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Renderer\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -155,6 +161,15 @@
     <ClInclude Include="MeshNameScriptParser.h">
       <Filter>Graphics Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Renderer\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -192,6 +207,9 @@
     </Filter>
     <Filter Include="Renderer\Materials">
       <UniqueIdentifier>{e1cf790f-831f-4fb7-9d60-94a94a88a36e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Particle">
+      <UniqueIdentifier>{19500243-937a-4e79-aafe-747a03f31f01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

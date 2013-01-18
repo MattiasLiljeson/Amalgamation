@@ -78,7 +78,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	// ===============================================================================
 	// Finalize deferred & Cleanup
 	// ===============================================================================
-	gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
+	//gfxWrapper->finalizeFrame();			  // finalize, draw to back buffer
 
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ )
 	{

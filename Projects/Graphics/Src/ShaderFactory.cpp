@@ -4,6 +4,7 @@
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
 #include "GUIShader.h"
+#include "ParticleShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -123,6 +124,30 @@ GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 	return guiShader;
 }
 
+ParticleShader* ShaderFactory::createParticleShader( const LPCWSTR& p_filePath )
+{
+	ID3D11SamplerState* samplerState = NULL;
+	ID3D11InputLayout* inputLayout = NULL;
+	ShaderInitStruct shaderInitData;
+
+	VSData* vertexD		= new VSData();
+	GSData* geometryD	= new GSData();
+	PSData* pixelD		= new PSData();
+
+	vertexD->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	geometryD->stageConfig = new ShaderStageConfig(p_filePath,"GS",m_shaderModelVersion);
+	pixelD->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
+
+	createAllShaderStages(vertexD,pixelD,geometryD);
+	createSamplerState(&samplerState);
+	createParticleInputLayout(vertexD,&inputLayout);
+
+	createShaderInitData(&shaderInitData, inputLayout, vertexD, pixelD, 
+		samplerState, geometryD);
+
+	return new ParticleShader(shaderInitData, m_bufferFactory->createParticleCBuffer());
+}
+
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
 									    const string &p_entryPoint, 
 										const string &p_profile, ID3DBlob** p_blob )
@@ -139,7 +164,6 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile,
 #if defined(DEBUG) || defined(_DEBUG)
 	compileFlags |= D3DCOMPILE_DEBUG;
 #endif
-
 
 	// Compile the programs
 	// vertex
@@ -398,7 +422,25 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 }
 
 
-
+void ShaderFactory::createParticleInputLayout( VSData* p_vs, 
+											  ID3D11InputLayout** p_inpuyLayout )
+{
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"AGE", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ANGULARVELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inpuyLayout);
+}
 
 void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc, 
 										 UINT p_numberOfElements,
@@ -411,4 +453,7 @@ void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_input
 	if ( FAILED(hr) )
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }
+
+
+
 

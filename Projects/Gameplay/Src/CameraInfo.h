@@ -2,8 +2,7 @@
 
 #include "Component.h"
 #include <AglMatrix.h>
-#include <GraphicsWrapper.h>
-#include <RendererSceneInfo.h>
+struct AglMatrix;
 
 class CameraInfo : public Component
 {
@@ -15,5 +14,7 @@ public:
 		float p_farClip = 100.0f);
 
 	AglMatrix m_projMat;
+	float m_farPlane;
+	float m_nearPlane;
 };
 

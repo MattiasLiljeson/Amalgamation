@@ -23,6 +23,8 @@
     <ClCompile Include="GUIShader.cpp" />
     <ClCompile Include="MeshNameScriptParser.cpp" />
     <ClCompile Include="ModelExtendedManagedFactory.cpp" />
+    <ClCompile Include="ParticleRenderer.cpp" />
+    <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
@@ -49,6 +51,9 @@
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelExtendedManagedFactory.h" />
+    <ClInclude Include="ParticleCBuffer.h" />
+    <ClInclude Include="ParticleRenderer.h" />
+    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

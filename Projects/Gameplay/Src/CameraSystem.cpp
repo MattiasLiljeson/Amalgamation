@@ -50,15 +50,24 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 		AglMatrix viewProj = AglMatrix::identityMatrix();
 		viewProj = view * camInfo->m_projMat;
 		viewProj = AglMatrix::transpose( viewProj );
-		
-		RendererSceneInfo tempSceneInfo;
-		for( int i=0; i<16; i++ )
-		{
-			tempSceneInfo.viewProjectionMatrix[i] = viewProj[i];
-		}
+		AglVector3::normalize(lookTarget);
+		AglVector3::normalize(up);
+		AglMatrix viewProjInv = AglMatrix::inverse(viewProj);
+
+
+		RendererSceneInfo sceneInfo;
+		sceneInfo.viewProj = viewProj;
+		sceneInfo.cameraPos = position;
+		sceneInfo.cameraForward = lookTarget;
+		sceneInfo.cameraUp = up;
+		sceneInfo.viewProjInv = viewProjInv;
+		sceneInfo.renderTargetDimensions = m_gfxBackend->getWindowSize();
+		sceneInfo.farPlane = camInfo->m_farPlane;
+		sceneInfo.nearPlane = camInfo->m_nearPlane;
 
 		// sets up certain "global" scene data
 		GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
-		gfxWrapper->setSceneInfo(tempSceneInfo);
+		gfxWrapper->setSceneInfo(sceneInfo);
+		gfxWrapper->updateRenderSceneInfo(sceneInfo);
 	}
 }
