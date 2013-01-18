@@ -164,14 +164,19 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 					p_pc.m_latestPick = p_entities[i]->getIndex();
 
 					//Attempt a detach if the entity is already connected
-					attemptDetach(p_pc);
+					if (attemptDetach(p_pc))
+					{
+						AglVector3 origin;
+						AglVector3 dir;
+						physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
 
-					AglVector3 origin;
-					AglVector3 dir;
-					physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
-
-					AglVector3 d = physX->getController()->getBody(cols[0])->GetWorld().GetTranslation()-origin;
-					p_pc.m_preferredDistance = d.length();
+						AglVector3 d = physX->getController()->getBody(cols[0])->GetWorld().GetTranslation()-origin;
+						p_pc.m_preferredDistance = d.length();
+					}
+					else
+					{
+						p_pc.m_latestPick = -1;
+					}
 					break;
 				}
 			}
@@ -367,7 +372,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		moduleBody->setParentId(shipBody->m_id);
 	}
 }
-void ServerPickingSystem::attemptDetach(PickComponent& p_ray)
+bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 {
 	//Add Check so that modules with other modules connected to them
 	//cannot be removed
@@ -382,11 +387,24 @@ void ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
 
+		//Make sure the module is not connecting other modules
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(module,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+		if (cps)
+		{
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0)
+					return false;
+			}
+		}
+
 		if (shipModule->m_parentEntity >= 0)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
-			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			cps = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 			
@@ -409,4 +427,5 @@ void ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			physX->getController()->DetachBodyFromCompound(body, false);
 		}
 	}
+	return true;
 }

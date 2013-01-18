@@ -37,7 +37,7 @@ private:
 	void project(Entity* toProject, PickComponent& p_ray);
 	AglVector3 closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc);
 	void attemptConnect(PickComponent& p_ray);
-	void attemptDetach(PickComponent& p_ray);
+	bool attemptDetach(PickComponent& p_ray);
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
 };
