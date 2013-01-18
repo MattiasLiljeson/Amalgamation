@@ -21,9 +21,6 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Mesh resource</Filter>
     </ClInclude>
-    <ClInclude Include="ModelBaseFactory.h">
-      <Filter>Mesh resource</Filter>
-    </ClInclude>
     <ClInclude Include="ConnectionPointCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
@@ -33,12 +30,15 @@
     <ClInclude Include="ModelResource.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
+    <ClInclude Include="ModelBaseUnmanagedFactory.h">
+      <Filter>Mesh resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="ModelBaseFactory.cpp">
+    <ClCompile Include="ModelBaseUnmanagedFactory.cpp">
       <Filter>Mesh resource</Filter>
     </ClCompile>
   </ItemGroup>

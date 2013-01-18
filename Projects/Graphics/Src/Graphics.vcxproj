@@ -21,7 +21,8 @@
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="GUIShader.cpp" />
-    <ClCompile Include="ModelExtendedFactory.cpp" />
+    <ClCompile Include="MeshNameScriptParser.cpp" />
+    <ClCompile Include="ModelExtendedManagedFactory.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
@@ -46,7 +47,8 @@
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
     <ClInclude Include="MeshLoadException.h" />
-    <ClInclude Include="ModelExtendedFactory.h" />
+    <ClInclude Include="MeshNameScriptParser.h" />
+    <ClInclude Include="ModelExtendedManagedFactory.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

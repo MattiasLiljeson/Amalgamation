@@ -1,9 +1,9 @@
-#include "ModelBaseFactory.h"
+#include "ModelBaseUnmanagedFactory.h"
 #include "AglReader.h"
 
 
 
-ModelResource* ModelBaseFactory::createModelResource( const string& p_name, 
+ModelResource* ModelBaseUnmanagedFactory::createModelResource( const string& p_name, 
 												 const string* p_path/*=NULL*/)
 {
 	ModelResource* model = NULL;
@@ -13,7 +13,15 @@ ModelResource* ModelBaseFactory::createModelResource( const string& p_name,
 	if (scene)
 	{ 
 		vector<ModelResource*>* models = createAllModelData(scene,1);
-		if ((*models)[0]!=NULL) model = (*models)[0];
+		if ((*models)[0]!=NULL)
+		{
+			model = (*models)[0];
+			readAndStoreEmpties(-1,model,scene); // read leftover empties
+		}
+	}
+	else
+	{
+		model = getFallback();
 	}
 	// cleanup
 	delete scene;
@@ -21,7 +29,7 @@ ModelResource* ModelBaseFactory::createModelResource( const string& p_name,
 	return model;
 }
 
-vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_name, 
+vector<ModelResource*>* ModelBaseUnmanagedFactory::createModelResources( const string& p_name, 
 														const string* p_path/*=NULL*/)
 {
 	vector<ModelResource*>* models = NULL;
@@ -31,6 +39,15 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 	if (scene)
 	{ 
 		models = createAllModelData(scene,scene->getMeshes().size());
+		if ((*models)[0]!=NULL)
+		{
+			ModelResource* model = (*models)[0];
+			readAndStoreEmpties(-1,model,scene); // read leftover empties
+		}
+	}
+	else
+	{
+		models->push_back(getFallback());
 	}
 	// cleanup
 	delete scene;
@@ -38,7 +55,7 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 	return models;
 }
 
-AglScene* ModelBaseFactory::readScene(const string& p_name,
+AglScene* ModelBaseUnmanagedFactory::readScene(const string& p_name,
 							const string* p_path)
 {
 	string fullPath;
@@ -54,7 +71,7 @@ AglScene* ModelBaseFactory::readScene(const string& p_name,
 	return aglScene;
 }
 
-vector<ModelResource*>* ModelBaseFactory::createAllModelData( AglScene* p_scene, 
+vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene* p_scene, 
 													 unsigned int p_numberOfModels/*=1*/ )
 {
 	vector<ModelResource*>* models = new vector<ModelResource*>;
@@ -67,10 +84,10 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData( AglScene* p_scene,
 			AglMesh* aglMesh = p_scene->getMeshes()[i];
 			AglMeshHeader aglMeshHeader = aglMesh->getHeader();		
 			// set
-			model->meshHeader = &aglMeshHeader;
+			model->meshHeader = aglMeshHeader;
 
-			readConnectionPoints(i,model,p_scene);
-			readParticleSystems(i,model,p_scene);
+			readAndStoreEmpties((int)i,model,p_scene);
+			readAndStoreParticleSystems(i,model,p_scene);
 
 			// Done
 			models->push_back(model);
@@ -79,21 +96,20 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData( AglScene* p_scene,
 	return models;
 }
 
-void ModelBaseFactory::readConnectionPoints(unsigned int p_modelNumber,
-											ModelResource* p_model, AglScene* p_scene)
+void ModelBaseUnmanagedFactory::readAndStoreEmpties( int p_modelNumber, ModelResource* p_model, AglScene* p_scene )
 {
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
 	for (unsigned int n=0;n<connectionPoints;n++)
 	{
 		AglConnectionPoint* cp = &p_scene->getConnectionPoint(n);
-		if (cp->parentMesh == static_cast<int>(p_modelNumber))
+		if (cp->parentMesh == p_modelNumber)
 		{
-			p_model->connectionPoints->m_collection.push_back(cp->transform);
+			p_model->connectionPoints.m_collection.push_back(cp->transform);
 		}
 	}
 }
 
-void ModelBaseFactory::readParticleSystems( unsigned int p_modelNumber, 
+void ModelBaseUnmanagedFactory::readAndStoreParticleSystems( unsigned int p_modelNumber, 
 										    ModelResource* p_model, AglScene* p_scene )
 {
 	// ------------------
@@ -105,7 +121,16 @@ void ModelBaseFactory::readParticleSystems( unsigned int p_modelNumber,
 		AglParticleSystem* ps = p_scene->getParticleSystem(n);
 		if (p_modelNumber==0) // add support for particle parent?
 		{
-			p_model->particleSystems->m_collection.push_back(*ps);
+			p_model->particleSystems.m_collection.push_back(*ps);
 		}
 	}
+}
+
+ModelResource* ModelBaseUnmanagedFactory::getFallback()
+{
+	// fallback mesh and texture
+	ModelResource* model = new ModelResource();
+
+	// Done
+	return model;
 }

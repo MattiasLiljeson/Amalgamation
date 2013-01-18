@@ -26,20 +26,20 @@
 #ifdef _DEBUG
 static void debugWarn(const char* msg);
 #define DEBUGWARNING(x) debugWarn x
-#ifdef WINAPI
+// #ifdef WINAPI  // commented this out to force popup
 #include <Windows.h>
 void debugWarn(const char* msg)
 {
 	OutputDebugStringA(msg);
 	MessageBoxA(NULL, msg, "Warning!", MB_ICONWARNING);
 }
-#else
-#include <iostream>
-void debugWarn(const char* msg)
-{
-	std::cout<<msg;
-}
-#endif
+// #else
+// #include <iostream>
+// void debugWarn(const char* msg)
+// {
+// 	std::cout<<msg;
+// }
+// #endif
 #else
 #define DEBUGWARNING(x)
 #endif

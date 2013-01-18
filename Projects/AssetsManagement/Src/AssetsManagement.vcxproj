@@ -15,12 +15,12 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="ModelResource.h" />
-    <ClInclude Include="ModelBaseFactory.h" />
+    <ClInclude Include="ModelBaseUnmanagedFactory.h" />
     <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModelBaseFactory.cpp" />
+    <ClCompile Include="ModelBaseUnmanagedFactory.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

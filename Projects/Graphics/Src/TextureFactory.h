@@ -22,7 +22,7 @@ class TextureFactory
 {
 public:
 	TextureFactory(ID3D11Device* p_device,ResourceManager<Texture>* p_textureManager);
-	virtual ~TextureFactory();
+	virtual ~TextureFactory() {}
 
 	unsigned int createTexture(const string& p_name,
 		const string& p_path);
@@ -33,5 +33,5 @@ public:
 protected:
 private:
 	ResourceManager<Texture>* m_textureManager;
-	ID3D11Device* m_device
+	ID3D11Device* m_device;
 };

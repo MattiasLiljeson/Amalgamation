@@ -83,10 +83,10 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
-#include "..\..\Gameplay\Src\LibRocketRenderSystem.h"
-#include "..\..\Gameplay\Src\LightRenderSystem.h"
-#include "..\..\Gameplay\Src\AntTweakBarSystem.h"
-#include "..\..\Gameplay\Src\ParticleRenderSystem.h"
+#include "LibRocketRenderSystem.h"
+#include "LightRenderSystem.h"
+#include "AntTweakBarSystem.h"
+#include "ParticleRenderSystem.h"
 #include <AglMesh.h>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -325,33 +325,13 @@ void ClientApplication::initEntities()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
-	int sphereMeshId = graphicsBackend->createMesh( "P_sphere" );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-	vector<ConnectionPointCollection>	levelPiecesInfo;
-	vector<AglMeshHeader>				meshHeaders;
-	ConnectionPointCollection			connectionPoints;
-	AglMeshHeader						aglMeshHeader;
-	int testchamberId = graphicsBackend->createMesh( "test_parts_3sphere.agl", 
-		&TESTMODELPATH,
-		&connectionPoints,
-		&aglMeshHeader);
-	levelPiecesInfo.push_back(connectionPoints);
-	meshHeaders.push_back(aglMeshHeader);
-	connectionPoints.clear();
-
-	int tunnelId = graphicsBackend->createMesh( "test_parts_4tunnel.agl",
-		&TESTMODELPATH,
-		&connectionPoints,
-		&aglMeshHeader);
-	levelPiecesInfo.push_back(connectionPoints);
-	meshHeaders.push_back(aglMeshHeader);
-	tempSys = m_world->getSystem(SystemType::LevelGenSystem);
-	LevelGenSystem* levelGen = static_cast<LevelGenSystem*>(tempSys);
-	levelGen->setPieceTypes(levelPiecesInfo, meshHeaders);
-	levelGen->run();
-
+	ConnectionPointCollection connectionPoints;
+	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
+													 &TESTMODELPATH);
 	// Testchamber
 	//entity = m_world->createEntity();
 	//component = new RenderInfo( testchamberId );
@@ -510,8 +490,8 @@ void ClientApplication::InitModulesTestByAnton()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
+	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup
