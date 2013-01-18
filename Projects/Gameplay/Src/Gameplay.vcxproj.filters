@@ -344,6 +344,9 @@
     <ClInclude Include="Extrapolate.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="PositionalSound.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

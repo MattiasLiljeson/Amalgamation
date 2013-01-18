@@ -58,6 +58,7 @@
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PongPacket.h" />
+    <ClInclude Include="PositionalSound.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
