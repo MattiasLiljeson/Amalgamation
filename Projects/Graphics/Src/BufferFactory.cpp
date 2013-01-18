@@ -1,6 +1,7 @@
 #include "BufferFactory.h"
 #include "Mesh.h"
 #include <AglSphereMesh.h>
+#include "ParticleCBuffer.h"
 
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
@@ -100,6 +101,20 @@ Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices,
 									 indexBufferDesc);
 
 	return indexBuffer;
+}
+
+Buffer<ParticleCBuffer>* BufferFactory::createParticleCBuffer(){
+	ParticleCBuffer data;
+
+	UINT32 elemSz = sizeof(float)*4;
+
+	BufferConfig::BUFFER_INIT_DESC bD;
+	bD.ElementSize = elemSz;
+	bD.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bD.NumElements = sizeof(data)/elemSz;
+	bD.Type = BufferConfig::CONSTANT_BUFFER_VS_GS_PS;
+
+	return new Buffer<ParticleCBuffer>(m_device,m_deviceContext,&data,bD);
 }
 
 Mesh* BufferFactory::createBoxMesh()

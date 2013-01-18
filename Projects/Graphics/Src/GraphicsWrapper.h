@@ -32,6 +32,8 @@ class BufferFactory;
 class Mesh;
 struct Model;
 struct Texture;
+class ParticleRenderer;
+class AglParticleSystem;
 
 class GraphicsWrapper
 {
@@ -70,7 +72,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
-
 	///-----------------------------------------------------------------------------------
 	/// Set the current rasterizer state. By default it will allow to be overriden by the 
 	/// wireframe mode setting.
@@ -92,8 +93,7 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginGUIPass();
-	void renderGUIMesh( unsigned int p_meshId,
-		vector<InstanceData>* p_instanceList );
+	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 	void finalizeGUIPass();
 
 	///-----------------------------------------------------------------------------------
@@ -156,6 +156,27 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
+
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void beginParticleRender();
+
+	///-----------------------------------------------------------------------------------
+	/// Handles all the rendering of the particle systems.
+	/// \param p_system
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void renderParticleSystem(AglParticleSystem* p_system);
+
+	///-----------------------------------------------------------------------------------
+	/// NOT IMPLEMENTED
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void endParticleRender();
+
+	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 private:
 	void initSwapChain(HWND p_hWnd);
 
@@ -199,6 +220,10 @@ private:
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
+
+	ParticleRenderer*		m_particleRenderer;
+
+	RendererSceneInfo		m_renderSceneInfo;
 
 	int m_height;
 	int m_width;

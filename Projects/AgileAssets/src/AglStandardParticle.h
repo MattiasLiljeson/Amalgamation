@@ -1,28 +1,28 @@
 #pragma once
-#include <AglVector2.h>
-#include <AglVector3.h>
-#include <AglMatrix.h>
+#include "AglVector3.h"
+#include "AglVector2.h"
 
 // =======================================================================================
-//                                      RendererSceneInfo
+//                                      AglStandardParticle
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # RendererSceneInfo
+/// # AglStandardParticle
 /// Detailed description.....
-/// Created on: 4-12-2012 
+/// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct RendererSceneInfo
+struct AglStandardParticle
 {
-	AglMatrix viewProj;
-	AglVector3 cameraPos;
-	AglVector3 cameraForward;
-	AglVector3 cameraUp;
-	AglMatrix viewProjInv;
-	AglVector2 renderTargetDimensions;
-	float farPlane;
-	float nearPlane;
+	AglVector3	position;
+	AglVector3	velocity;
+	AglVector2	size;
+	float		age;
+	float		angularVelocity;
+	float		rotation;
+
+	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
+		float p_angularVelocity, float p_rotation);
 };

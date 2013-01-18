@@ -7,6 +7,8 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 #include "CameraInfo.h"
+#include <RendererSceneInfo.h>
+#include "Transform.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -101,7 +103,6 @@ void GraphicsBackendSystem::initialize()
 
 void GraphicsBackendSystem::process()
 {
-
 }
 
 vector<Entity*> GraphicsBackendSystem::buildEntitiesFromMeshFile( const string& p_meshName, 
@@ -153,4 +154,12 @@ void TW_CALL GraphicsBackendSystem::applyNewResolution( void* p_clientData )
 float GraphicsBackendSystem::getAspectRatio()
 {
 	return (float)m_scrWidth / m_scrHeight;
+}
+
+void GraphicsBackendSystem::renderAParticleSystem(AglParticleSystem* p_system){
+	m_graphicsWrapper->renderParticleSystem(p_system);
+}
+
+AglVector2 GraphicsBackendSystem::getWindowSize(){
+	return AglVector2(m_scrWidth, m_scrHeight);
 }
