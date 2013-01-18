@@ -14,7 +14,7 @@ ExtrapolationSystem::ExtrapolationSystem( TcpClient* p_client )
 {
 	m_client = p_client;
 	m_correctedDeltaTime = 0;
-	m_usePositionalExtrapolation = 0;
+	m_usePositionalExtrapolation = false;
 	m_selfPointer = this;
 }
 
