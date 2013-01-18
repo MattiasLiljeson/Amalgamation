@@ -261,23 +261,21 @@ void GraphicsWrapper::finalizeGUIPass()
 void GraphicsWrapper::beginLightPass()
 {
 	//setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
-	setRasterizerStateSettings( RasterizerState::FILLED_NOCULL, false );
+	setRasterizerStateSettings( RasterizerState::FILLED_CW_FRONTCULL, false );
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 	m_deferredRenderer->beginLightPass();
 }
 
-void GraphicsWrapper::renderLights( const unsigned int p_meshId,
+void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 								   vector<InstanceData>* p_instanceList )
 {
-	if( p_instanceList != NULL )
+	if( p_mesh != NULL && p_instanceList != NULL )
 	{
-		Mesh* mesh = m_meshManager->getResource( p_meshId );
-
 		Buffer<InstanceData>* instanceBuffer;
 		instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 			p_instanceList->size() );
 
-		m_deferredRenderer->renderLights( mesh, instanceBuffer );
+		m_deferredRenderer->renderLights( p_mesh, instanceBuffer );
 
 		delete instanceBuffer;
 		instanceBuffer = NULL;

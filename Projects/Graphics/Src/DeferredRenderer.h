@@ -111,12 +111,16 @@ public:
 	void renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
 		Buffer<InstanceData>* p_instanceBuffer );
 
+	// HACK: DUPLICATE of above but with LightMesh instead of Mesh
+	void renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
+		Buffer<InstanceData>* p_instanceBuffer );
+
 	///-----------------------------------------------------------------------------------
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginLightPass();
-	void renderLights( Mesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer );
+	void renderLights( LightMesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer );
 	void endLightPass();
 
 	// ===================================================================================
@@ -204,8 +208,8 @@ private:
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
-	DeferredBaseShader*		m_composeShader;
-	//DeferredComposeShader*	m_composeShader;
+	DeferredBaseShader*		m_lightShader;
+	//DeferredComposeShader*	m_lightShader;
 	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

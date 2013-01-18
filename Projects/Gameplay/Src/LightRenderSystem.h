@@ -6,6 +6,7 @@
 #include "..\..\Graphics\Src\Buffer.h"
 
 class GraphicsBackendSystem;
+class LightMesh;
 
 class LightRenderSystem : public EntitySystem
 {
@@ -21,6 +22,6 @@ public:
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	int m_boxId;
+	LightMesh* m_box;
 };
 

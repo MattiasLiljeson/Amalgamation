@@ -71,29 +71,29 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	return newDeferredBaseShader;
 }
 
-DeferredBaseShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR& p_filePath)
+DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
 {
-	DeferredComposeShader* newDeferredComposeShader = NULL;
-	ID3D11SamplerState* samplerState = NULL;
 
-	BufferConfig* initConfig  = NULL;
+	//BufferConfig* initConfig  = NULL;
 
 	VSData* vertexData = new VSData();
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
 
 	PSData* pixelData = new PSData();
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
-
 	createAllShaderStages(vertexData,pixelData);
-	createSamplerState(&samplerState);
 	
 	ID3D11InputLayout* inputLayout = NULL;
 	//createPTVertexInputLayout(vertexData,&inputLayout);
-	createInstancedPNTTBVertexInputLayout( vertexData, &inputLayout );
+	createInstancedLightInputLayout( vertexData, &inputLayout );
+
+	ID3D11SamplerState* samplerState = NULL;
+	createSamplerState( &samplerState );
 
 	ShaderInitStruct shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
+	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
 
+	//DeferredComposeShader* newDeferredComposeShader = NULL;
 	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
 	//return newDeferredComposeShader;
 
@@ -403,16 +403,38 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 }
 
 
+void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
+													ID3D11InputLayout** p_inputLayout)
+{
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
 
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA?
+	constructInputLayout(input, elementCnt, p_vertexShader, p_inputLayout);
+}
 
 void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc, 
 										 UINT p_numberOfElements,
 										 VSData* p_vs, ID3D11InputLayout** p_inputLayout )
 {
-	HRESULT hr = m_device->CreateInputLayout(p_inputDesc, 
+	HRESULT hr = m_device->CreateInputLayout(
+		p_inputDesc, 
 		p_numberOfElements, 
 		p_vs->compiledData->GetBufferPointer(),
-		p_vs->compiledData->GetBufferSize(), p_inputLayout);
+		p_vs->compiledData->GetBufferSize(),
+		p_inputLayout);
+
 	if ( FAILED(hr) )
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="LightMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="LightMesh.h" />
     <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
@@ -48,6 +50,7 @@
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
+    <ClInclude Include="PVertex.h" />
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="GUIShader.h" />
     <ClInclude Include="RenderStateEnums.h" />

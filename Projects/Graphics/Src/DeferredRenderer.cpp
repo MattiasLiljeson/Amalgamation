@@ -1,6 +1,7 @@
 #include "AntTweakBarWrapper.h"
 #include "BufferFactory.h"
 #include "DeferredRenderer.h"
+#include "LightMesh.h"
 #include "Mesh.h"
 #include "ShaderFactory.h"
 #include "Texture.h"
@@ -69,7 +70,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_shaderFactory;
 	delete m_bufferFactory;
 	delete m_baseShader;
-	delete m_composeShader;
+	delete m_lightShader;
 	delete m_fullscreenQuad;
 	delete m_guiShader;
 }
@@ -189,6 +190,36 @@ void DeferredRenderer::renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
 		0,0,0);
 }
 
+// HACK: DUPLICATE of above but with LightMesh instead of Mesh
+void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
+									   Buffer<InstanceData>* p_instanceBuffer )
+{
+	// Specialized, external apply of these buffers
+	// since instanced drawing required a "combined"
+	// vertex/instance-buffer
+	//
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+		p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+		p_instanceBuffer->getBufferPointer() };
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	p_shader->apply();
+
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
+		p_instanceBuffer->getElementCount(),
+		0,0,0);
+}
+
 
 void DeferredRenderer::beginLightPass()
 {
@@ -200,24 +231,24 @@ void DeferredRenderer::beginLightPass()
 	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
 	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
 
-	Buffer<SimpleCBuffer>* cb = m_composeShader->getPerFrameBufferPtr();
+	Buffer<SimpleCBuffer>* cb = m_lightShader->getPerFrameBufferPtr();
 	for (int i=0;i<16;i++) {
 		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i]; }
 
 	cb->update();
 }
 
-void DeferredRenderer::renderLights( Mesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer )
+void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer )
 {
 	if( p_mesh && p_instanceBuffer )
 	{
-		renderInstanced( p_mesh, m_composeShader, p_instanceBuffer );
+		renderInstanced( p_mesh, m_lightShader, p_instanceBuffer );
 	}
 	else
 	{
 		// Fallback:
 		m_fullscreenQuad->apply();
-		m_composeShader->apply();
+		m_lightShader->apply();
 		m_deviceContext->Draw( 6, 0 );
 	}
 }
@@ -284,7 +315,7 @@ void DeferredRenderer::unMapGBuffers()
 	for (int i=0; i<NUMBUFFERS; i++)
 		nulz[i]=NULL;
 	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
-	m_composeShader->apply();
+	m_lightShader->apply();
 }
 
 void DeferredRenderer::initDepthStencil()
@@ -394,9 +425,9 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
-	//m_composeShader = m_shaderFactory->createDeferredComposeShader(
+	//m_lightShader = m_shaderFactory->createLightShader(
 	//	L"Shaders/Game/deferredCompose.hlsl");
-	m_composeShader = m_shaderFactory->createDeferredComposeShader(
+	m_lightShader = m_shaderFactory->createLightShader(
 		L"Shaders/Game/lighting.hlsl");
 
 

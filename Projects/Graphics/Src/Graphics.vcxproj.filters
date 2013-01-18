@@ -42,6 +42,9 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="LightMesh.cpp">
+      <Filter>Renderer\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -136,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="PVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMesh.h">
+      <Filter>Renderer\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

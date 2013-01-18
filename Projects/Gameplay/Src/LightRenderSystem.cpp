@@ -1,11 +1,10 @@
 #include "LightRenderSystem.h"
-#include "GraphicsBackendSystem.h"
-#include <GraphicsWrapper.h>
 
-//tmp
-#include "..\..\Graphics\Src\BufferFactory.h"
-#include "..\..\Graphics\Src\Mesh.h"
-#include "..\..\Common\Src\InstanceData.h"
+#include "GraphicsBackendSystem.h"
+#include <BufferFactory.h>
+#include <GraphicsWrapper.h>
+#include <InstanceData.h>
+#include <Mesh.h>
 
 
 LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
@@ -13,7 +12,7 @@ LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 {
 	m_gfxBackend = p_gfxBackend;
 
-	m_boxId = -1;
+	m_box = NULL;
 }
 
 
@@ -28,8 +27,7 @@ void LightRenderSystem::initialize()
 	BufferFactory* bufferFactory = new BufferFactory( gfxWrapper->getDevice(),
 		gfxWrapper->getDeviceContext() );
 
-	Mesh* box = bufferFactory->createBoxMesh();
-	m_boxId = gfxWrapper->registerMesh( "light box", box, NULL );
+	m_box = bufferFactory->createLightBoxMesh();
 	delete bufferFactory;
 }
 
@@ -59,11 +57,11 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	instData.worldTransform[12] = 0.0f;
 	instData.worldTransform[13] = 0.0f;
 	instData.worldTransform[14] = 0.0f;
-	instData.worldTransform[15] = 1/50.0f;
+	instData.worldTransform[15] = 1/10.0f;
 
 	vector<InstanceData> instDatas;
 	instDatas.push_back( instData );
-	gfxWrapper->renderLights( m_boxId, &instDatas );
+	gfxWrapper->renderLights( m_box, &instDatas );
 	 
 	gfxWrapper->endLightPass();
 }

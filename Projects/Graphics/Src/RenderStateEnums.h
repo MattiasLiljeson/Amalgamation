@@ -16,10 +16,12 @@ struct RasterizerState
 		DEFAULT=0,
 		FILLED_CW,				// Filled, backface-cull, clockwise
 		FILLED_CCW,				// Filled, backface-cull, counter-clockwise
+		FILLED_CW_FRONTCULL,	// Filled, frontface-cull, counter-clockwise
 		FILLED_CW_SCISSOR,		// Filled, backface-cull, clockwise, scissor culling
 		FILLED_CCW_SCISSOR,		// Filled, backface-cull, counter-clockwise, scissor culling
 		FILLED_NOCULL,			// Filled, no cull
 		WIREFRAME,				// Wireframe, backface-cull
+		WIREFRAME_FRONTCULL,// Wireframe, frontface-cull
 		WIREFRAME_NOCULL,		// Wireframe, no cull
 		NUMBER_OF_MODES
 	};

@@ -12,6 +12,7 @@
 // #include "VertexBuffers.h"
 // etc?
 
+class LightMesh;
 class Mesh;
 
 // =======================================================================================
@@ -74,6 +75,8 @@ public:
 	/// \return Box*
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
+
+	LightMesh* createLightBoxMesh();
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a sphere mesh only.
