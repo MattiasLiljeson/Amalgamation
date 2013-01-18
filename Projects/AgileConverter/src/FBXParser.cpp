@@ -32,7 +32,23 @@ void FBXParser::Parse()
 	for (int i = 0; i < mScene->GetNodeCount(); i++)
 	{
 		const char* n = mScene->GetNode(i)->GetName();
-		ParseNode(mScene->GetNode(i));
+		if (n[0] == 'I' && (n[1] == '_' || n[1] == '.'))
+		{
+			AglConnectionPoint cp;
+
+			cp.parentMesh = -1;
+
+			string name = mScene->GetNode(i)->GetName();
+			FbxMatrix transform = mScene->GetNode(i)->EvaluateLocalTransform();
+			for (int row = 0; row < 4; row++)
+				for (int column = 0; column < 4; column++)
+					cp.transform[row*4 + column] = (float)transform.Get(row, column);
+			mData.CP.push_back(pair<AglConnectionPoint, string>(cp, name));
+		}
+		else
+		{
+			ParseNode(mScene->GetNode(i));
+		}
 	}
 
 	//Find NUll nodes
@@ -123,6 +139,8 @@ void FBXParser::ParseNode(FbxNode* pNode)
 		{
 			//Parse the mesh itself
 			FbxMesh* mesh = (FbxMesh*)attr;
+
+			const char* n = mesh->GetName();
 
 			MeshParser mp(this, mesh, pNode);
 			mp.Parse();

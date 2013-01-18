@@ -36,6 +36,7 @@ struct MeshData
 	int*			ControlIndices;
 	FbxMesh*		Source;
 	FbxNode*		SourceNode;
+	AglMatrix		Transform;
 };
 
 struct NodeData
