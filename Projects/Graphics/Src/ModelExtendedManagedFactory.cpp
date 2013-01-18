@@ -37,12 +37,12 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 	{
 		if (p_name == primitiveCubeName)
 		{
-			DEBUGWARNING(( string("Cube").c_str() ));
+			// DEBUGWARNING(( string("Cube").c_str() ));
 			model = getCube();
 		}
 		else if (p_name == primitiveSphereName)
 		{
-			DEBUGWARNING(( string("Sphere").c_str() ));
+			// DEBUGWARNING(( string("Sphere").c_str() ));
 			model = getSphere();
 		}
 		else
@@ -54,7 +54,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			{ 
 				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
 
-				DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
+				// DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
 
 				vector<ModelResource*>* models = createAllModelData(&currentInstance,
 												 scene,1,NULL);
@@ -98,7 +98,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 			//
 			if (scene)
 			{ 
-				DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
+				// DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
 				models = createAllModelData(&currentInstance,
 											scene,
 											scene->getMeshes().size(),
@@ -155,7 +155,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 			string meshName = p_scene->getName(aglMeshHeader.nameID);
 			pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
 			parsedAction = MeshNameScriptParser::parse(meshName);
-			DEBUGWARNING(( ("Creating mesh "+meshName).c_str() ));
+			// DEBUGWARNING(( ("Creating mesh "+meshName).c_str() ));
 			// Actions based on parsed name
 			switch (parsedAction.second) 
 			{
@@ -166,7 +166,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 						InstanceInstr inst = {parsedAction.first.filename,
 		/* Retrieve transform here! ---> */	  AglMatrix::identityMatrix()};
 
-						DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
 						p_outInstanceInstructions->push_back(inst);
 					}
@@ -177,7 +177,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 			case MeshNameScriptParser::MESH: // normal mesh
 			default:				
 				{
-					DEBUGWARNING(( string("Normal mesh").c_str() ));
+					// DEBUGWARNING(( string("Normal mesh").c_str() ));
 					createAndAddModel(models, i, p_instanceData, parsedAction.first.name, 
 						p_scene, aglMesh, &aglMeshHeader);
 					break;
@@ -281,7 +281,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					InstanceInstr inst = {parsedAction.first.filename,
 						cp->transform};
-					DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;
@@ -294,7 +294,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					if (cp->parentMesh == p_modelNumber)
 					{
-						DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
+						// DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
 						p_model->connectionPoints.m_collection.push_back(cp->transform);
 					}
 				}
@@ -303,7 +303,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 					// make pointed model to parent
 					if (cp->parentMesh == -1 && p_model!=NULL)
 					{
-						DEBUGWARNING(( string("Found global connection point!").c_str() ));
+						// DEBUGWARNING(( string("Found global connection point!").c_str() ));
 						p_model->connectionPoints.m_collection.push_back(cp->transform);
 					}
 				}
