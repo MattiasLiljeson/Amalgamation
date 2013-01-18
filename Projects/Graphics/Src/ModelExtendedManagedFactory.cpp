@@ -37,12 +37,12 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 	{
 		if (p_name == primitiveCubeName)
 		{
-			// DEBUGWARNING(( string("Cube").c_str() ));
+			DEBUGWARNING(( string("Cube").c_str() ));
 			model = getCube();
 		}
 		else if (p_name == primitiveSphereName)
 		{
-			// DEBUGWARNING(( string("Sphere").c_str() ));
+			DEBUGWARNING(( string("Sphere").c_str() ));
 			model = getSphere();
 		}
 		else
@@ -91,6 +91,8 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 	// Check and read the file
 	do 
 	{	
+		if (!instanceInstructions->empty()) instanceInstructions->pop_back();
+
 		int meshFoundId = m_meshManager->getResourceId(currentInstance.filename);
 		if (meshFoundId==-1)  // if it does not exist, create new
 		{
@@ -98,7 +100,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 			//
 			if (scene)
 			{ 
-				// DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
+				DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
 				models = createAllModelData(&currentInstance,
 											scene,
 											scene->getMeshes().size(),
@@ -118,18 +120,22 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 		}
 		else // the mesh already exists
 		{
-			models = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+			vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+			int size = prefetched->size(); // if same as current
+			for (int n=0;n<size;n++)
+			{
+				models->push_back((*prefetched)[n]);
+			}
 		}
 
 		// read and prepare next instance if file had any instances specified
-		if (instanceInstructions->size()>0)
+		if (!instanceInstructions->empty())
 		{
 			currentInstance = instanceInstructions->back();
-			instanceInstructions->pop_back();
 		}
 		counter++;
 
-	} while (instanceInstructions->size()>0);
+	} while (!instanceInstructions->empty());
 	
 
 	delete instanceInstructions;
@@ -166,7 +172,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 						InstanceInstr inst = {parsedAction.first.filename,
 		/* Retrieve transform here! ---> */	  AglMatrix::identityMatrix()};
 
-						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+						DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
 						p_outInstanceInstructions->push_back(inst);
 					}
@@ -213,10 +219,12 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 														numIndices);
 		readAndStoreTextures(p_modelNumber,p_scene,mesh);
 		// put in manager			
-		unsigned int meshResultId = m_meshManager->addResource(p_instanceData->filename+p_nameSuffix,
+		unsigned int meshResultId = m_meshManager->addResource(p_instanceData->filename/*+p_nameSuffix*/,
 															   mesh);	
 		// store in model
+		model->name = p_instanceData->filename+p_nameSuffix;
 		model->meshId = static_cast<int>(meshResultId);
+		model->transform = p_instanceData->transform;
 
 		// other model creation data
 		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);
@@ -281,7 +289,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					InstanceInstr inst = {parsedAction.first.filename,
 						cp->transform};
-					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+					DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;

@@ -323,16 +323,23 @@ void ClientApplication::initEntities()
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
 	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH);
+	vector<ModelResource*>* models= graphicsBackend->getGfxWrapper()->createModelsFromFile( "InstanceApes.agl", 
+													 &MODELPATH);
 
-	// Test chamber
-	entity = m_world->createEntity();
-	component = new RenderInfo( testchamberId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 5.0f, 10.0f, 19.0f);
-	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
+
+	// Test instances
+	for (int i=0;i<models->size();i++)
+	{
+		ModelResource* md = (*models)[i];
+		entity = m_world->createEntity();
+		int mid = md->meshId;
+		component = new RenderInfo( mid );
+		entity->addComponent( ComponentType::RenderInfo, component );
+		component = new Transform( md->transform );
+		entity->addComponent( ComponentType::Transform, component );
+		m_world->addEntity(entity);
+	}
+
 
 	
 

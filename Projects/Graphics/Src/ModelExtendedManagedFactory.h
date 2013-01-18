@@ -63,7 +63,7 @@ private:
 		{
 			for (unsigned int i=0;i<collection.size();i++)
 			{
-				delete collection[i];
+				delete collection[i]; // use double pointers instead to allow for nulling of the modelresource to avoid double deletion
 			}
 		}
 
