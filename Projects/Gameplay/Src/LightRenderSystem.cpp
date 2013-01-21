@@ -57,7 +57,7 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	instData.worldTransform[12] = 0.0f;
 	instData.worldTransform[13] = 0.0f;
 	instData.worldTransform[14] = 0.0f;
-	instData.worldTransform[15] = 1/10.0f;
+	instData.worldTransform[15] = 1/25.0f;
 
 	vector<InstanceData> instDatas;
 	instDatas.push_back( instData );
