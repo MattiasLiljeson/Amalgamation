@@ -1,6 +1,6 @@
 #include "PhysicsController.h"
 
-PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5), mStaticBodies(4, AglVector3(-75, -75, -75), AglVector3(2, 2, 100))
+PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5), mStaticBodies(4, AglVector3(-75, -75, -75), AglVector3(200, 200, 100))
 {
 	mTimeAccum = 0;
 }

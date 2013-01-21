@@ -113,6 +113,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Level Generation														*/
+		/************************************************************************/
+		LevelGenSystem* levelGen = new LevelGenSystem(NULL, m_server);
+		m_world->setSystem( levelGen, true);
+		levelGen->run();
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
@@ -149,12 +156,6 @@ namespace Srv
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new ServerScoreSystem( m_server ), true );
 
-		/************************************************************************/
-		/* Network																*/
-		/************************************************************************/
-		m_world->setSystem( new LevelGenSystem(NULL, m_server), true);
-
-
 		m_world->initialize();
 		/************************************************************************/
 		/* Picking																*/
@@ -174,7 +175,7 @@ namespace Srv
 		m_world->setSystem(new RocketControllerSystem(), true);
 
 		// Temp-run of level system
-		static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem))->run();
+		//static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem))->run();
 	}
 
 	void ServerApplication::initEntities()

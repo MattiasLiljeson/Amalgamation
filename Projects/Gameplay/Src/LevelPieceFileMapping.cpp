@@ -6,7 +6,8 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	// NOTE: This would better be moved to a parser that knows the exact number of model
 	// files, or even move it to assemblages!?!
 	//m_fileNames.push_back("test_parts_3sphere.agl");
-	//m_fileNames.push_back("test_parts_3sphere.agl");
+	m_fileNames.push_back("test_parts_3sphere.agl");
+	m_fileNames.push_back("test_parts_4tunnel.agl");
 	m_fileNames.push_back("test_parts_4tunnel.agl");
 	// End plug
 	m_fileNames.push_back("P_cube");

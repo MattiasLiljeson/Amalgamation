@@ -5,7 +5,7 @@
 #include <ConnectionPointCollection.h>
 #include <AglMesh.h>
 #include <vector>
-#include <map>
+#include <utility>
 #include "LevelPieceFileMapping.h"
 #include <ModelBaseUnmanagedFactory.h>
 
@@ -37,7 +37,9 @@ public:
 	void initialize();
 
 	void run();
-
+	void createLevelEntities();
+	const AglVector3& getWorldMin() const;
+	const AglVector3& getWorldMax() const;
 
 protected:
 
@@ -54,6 +56,8 @@ private:
 
 	void addEndPlug(Transform* p_atConnector);
 
+	void updateWorldMinMax(AglOBB& boundingVolume);
+
 	ModelBaseUnmanagedFactory m_unmanagedModelFactory;
 
 	vector<ModelResource*>	m_modelResources;
@@ -65,4 +69,7 @@ private:
 
 	GraphicsBackendSystem*	m_graphicsBackend;
 	TcpServer*				m_server;
+
+	AglVector3 m_worldMin;
+	AglVector3 m_worldMax;
 };
