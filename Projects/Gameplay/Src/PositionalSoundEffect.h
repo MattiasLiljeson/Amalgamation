@@ -5,27 +5,28 @@
 using namespace std;
 
 // =======================================================================================
-//	PositionalSound
+//	PositionalSoundEffect
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief description...
 ///        
-/// # PositionalSound
+/// # PositionalSoundEffect
 /// Detailed description...
 /// Created on: 18-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class PositionalSound: public Component
+class PositionalSoundEffect: public Component
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Create a positional sound by providing a file path 
+	/// Create a positional sound component by providing a file path 
 	/// \param p_fileName
 	/// \param p_soundVolume
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	PositionalSound(const string p_filePath, const bool p_loop, const float p_soundVolume=1.0f );
+	PositionalSoundEffect(string p_filePath, bool p_loop = false,
+		float p_soundVolume=1.0f );
 
 	const string& getFileName();
 	void setFileName(const string p_filePath);
@@ -33,12 +34,14 @@ public:
 	const float& getSoundVolume();
 	void setSoundVolume(const float p_soundVolume);
 
-	const int& getFileId();
-	void setFileId(const int p_fileId);
+	const int& getSoundIndex();
+	void setSoundIndex(const int p_soundIndex);
 
 	const float& getLifeTime();
 	void setLifeTime(const float p_lifeTime);
 	void decreaseLifeTime(const float& p_delta);
+
+	const bool& loops() const;
 
 private:
 	string m_filePath;
@@ -46,7 +49,7 @@ private:
 	bool m_loop;
 
 	// Controlled by the Audio system(s) itself/themselves.
-	int m_fileId;
+	int m_soundIndex;
 	float m_lifeTime;
 
 };

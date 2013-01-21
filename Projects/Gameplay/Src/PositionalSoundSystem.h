@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+class AudioBackendSystem;
 
 // =======================================================================================
 //	PositionalSoundSystem
@@ -22,8 +23,11 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 	void initialize();
-	void added( Entity* p_entity );
-	void deleted( Entity* p_entity );
+
+	void inserted( Entity* p_entity );
+	void removed( Entity* p_entity );
+private:
+	void updateSoundPositions( const vector<Entity*>& p_entities );
 
 private:
 	AudioBackendSystem* m_audioBackendSystem;

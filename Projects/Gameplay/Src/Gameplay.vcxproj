@@ -58,7 +58,7 @@
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PongPacket.h" />
-    <ClInclude Include="PositionalSound.h" />
+    <ClInclude Include="PositionalSoundEffect.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RocketControllerSystem.h" />
@@ -146,7 +146,7 @@
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
-    <ClCompile Include="PositionalSound.cpp" />
+    <ClCompile Include="PositionalSoundEffect.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />

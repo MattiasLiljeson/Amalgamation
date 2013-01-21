@@ -272,7 +272,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
-			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
+			// HACK: MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
 			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
 				TESTSOUNDEFFECTPATH.c_str(), true);
 			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(

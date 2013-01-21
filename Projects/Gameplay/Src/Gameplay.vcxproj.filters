@@ -350,6 +350,12 @@
     <ClInclude Include="RocketControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundEffect.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -572,6 +578,12 @@
     </ClCompile>
     <ClCompile Include="RocketControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundEffect.cpp">
+      <Filter>Components\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
 #include <Transform.h>
+#include <PositionalSoundEffect.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -671,14 +672,17 @@ void ClientApplication::InitModulesTestByAnton()
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
-
 	cpset = new ConnectionPointSet();
 	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
 	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
 	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-
 	m_world->addEntity(entity); 
 
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
+	entity->addComponent(ComponentType::PositionalSound, new PositionalSoundEffect(
+		"engine-noice.wav", false));
+	m_world->addEntity(entity);
 
 	//Ray entity
 	/*entity = m_world->createEntity();
