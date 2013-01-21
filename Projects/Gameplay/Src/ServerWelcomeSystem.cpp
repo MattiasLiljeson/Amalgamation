@@ -113,6 +113,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.rotation		= transform->getRotation();
 				data.scale			= transform->getScale();
 
+				///MESH INFO MUST BE MADE INTO A COMPONENT
+				//data.meshInfo		= 
+
 				m_server->unicastPacket( data.pack(), id );
 			}
 

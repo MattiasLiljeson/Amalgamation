@@ -27,13 +27,13 @@ public:
 	
 	void process();
 	//void processEntities( const vector<Entity*>& p_entities );
-	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header);
+	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header, int p_index);
 	unsigned int addParticleSystem();
 private:
 	void renderParticles(AglParticleSystem* particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* particleSystem);
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	vector<AglParticleSystem*> m_particleSystems;
+	vector<pair<AglParticleSystem*, int>> m_particleSystems;
 };
 

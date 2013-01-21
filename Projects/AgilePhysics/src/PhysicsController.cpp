@@ -50,6 +50,33 @@ int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocit
 		pParent->AddChild(b);
 	return mBodies.size()-1;
 }
+
+int PhysicsController::AddBox(AglMatrix p_world, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent, bool pImpulseEnabled,
+		   bool pCollisionEnabled)
+{
+	BoxInitData init;
+	init.World = p_world;
+	init.Mass = p_mass;
+	init.Velocity = p_velocity;
+	init.AngularVelocity = p_angularVelocity;
+	init.Static = p_static;
+	init.ImpulseEnabled = pImpulseEnabled;
+	init.Parent = pParent;
+	init.CollisionEnabled = pCollisionEnabled;
+	init.Size = p_size;
+	RigidBodyBox* b = new RigidBodyBox(init);
+	b->SetCollisionEnabled(pCollisionEnabled);
+	if (!p_static)
+		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	else
+	{
+		mStaticBodies.Insert(b);
+	}
+	mBodies.push_back(b);
+	if (pParent)
+		pParent->AddChild(b);
+	return mBodies.size()-1;
+}
 int PhysicsController::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent)
 {
 	//Create a new convex hull shape.

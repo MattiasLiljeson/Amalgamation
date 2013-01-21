@@ -30,6 +30,7 @@
 #include "EntityType.h"
 #include "PacketType.h"
 #include "PickComponent.h"
+#include "ParticleSystemEmitter.h"
 
 // Debug
 #include <DebugUtil.h>
@@ -45,6 +46,7 @@
 #include "Extrapolate.h"
 #include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
+#include "ParticleRenderSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -359,6 +361,23 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
+	}
+	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
+	{
+		AglParticleSystemHeader h;
+		h.particleSize = AglVector2(2, 2);
+		h.alignmentType = AglParticleSystemHeader::OBSERVER;
+		h.spawnFrequency = 200;
+		h.spawnSpeed = 5.0f;
+		h.spread = 0.2f;
+		h.fadeOutStart = 1.0f;
+		h.fadeInStop = 0.5f;
+		h.particleAge = 2;
+
+		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+			SystemType::ParticleRenderSystem ));
+		gfx->addParticleSystem();
+		//gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{
