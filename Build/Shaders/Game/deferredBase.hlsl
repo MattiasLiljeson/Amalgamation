@@ -57,7 +57,7 @@ VertexOut VS(VertexIn p_input)
 	float4x4 wvp = mul(p_input.instanceTransform,vp);
 	
 	vout.position = mul(float4(p_input.position,1.0f), wvp);
-	vout.normal = mul(float4(p_input.normal,0.0f), p_input.instanceTransform).xyz;
+	vout.normal = mul(float4(p_input.normal,0.0f), wvp).xyz;
 
 	vout.texCoord = p_input.texCoord;
     

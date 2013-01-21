@@ -64,10 +64,9 @@ float4 PS(VertexOut p_input, float4 screenSpacePos : SV_POSITION) : SV_TARGET
 	float4 normalColor	= float4( gNormalMap.Load( index ) );	
 	float4 specular		= float4( gSpecular.Load( index ) );
 
-	return diffuseColor;
-	//return specular;
 	// Normal in -1 to 1 range
 	float4 normal = normalColor*2.0f-1.0f;
+	//return normalColor;
 	
 	// temporary hard coded lighting test
 	//Light temp;
@@ -83,7 +82,7 @@ float4 PS(VertexOut p_input, float4 screenSpacePos : SV_POSITION) : SV_TARGET
 	float4 pos = mul( VPpos, vpInv );
 	pos.xyz /= pos.w;
 
-	//return normal;
+	pos = float4( -2, -2, -2, -1 );
 	//return VPpos;
 
 	LightInfo light;

@@ -80,6 +80,7 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 	[branch]
 	if( diffuseFactor > 0.0f )
 	{
+		//return float3(0, 0, 0.5);
 		float specPower = max(surface.spec.a, 1.0f);
 		float3 toEye = normalize(eyePos - pos);
 		float3 R = reflect(-lightVec, normal);
