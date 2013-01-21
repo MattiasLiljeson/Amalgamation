@@ -350,6 +350,12 @@
     <ClInclude Include="RocketControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemEmitter.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -572,6 +578,9 @@
     </ClCompile>
     <ClCompile Include="RocketControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

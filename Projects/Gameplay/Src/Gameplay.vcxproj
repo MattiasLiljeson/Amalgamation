@@ -49,6 +49,8 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="ParticleSystemEmitter.h" />
+    <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="PickComponent.h" />
     <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
@@ -141,6 +143,7 @@
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="ParticleRenderSystem.cpp" />
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />

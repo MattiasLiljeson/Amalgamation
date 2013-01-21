@@ -49,5 +49,6 @@ public:
 
 	//Maybe temporary
 	int		   laserSightEntity;
+	int		   particleSystemEntity;
 
 };

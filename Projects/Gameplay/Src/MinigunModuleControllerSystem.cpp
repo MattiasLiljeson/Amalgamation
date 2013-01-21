@@ -46,6 +46,8 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 
 		if (gun && module && module->m_parentEntity >= 0)
 		{
+			if (gun->particleSystemEntity < 0)
+				spawnParticleSystem(gun);
 			//handleLaserSight(p_entities[i]);
 
 			//Update all rays
@@ -211,4 +213,28 @@ void MinigunModuleControllerSystem::updateRays(Entity* p_entity)
 
 		}
 	}
+}
+void MinigunModuleControllerSystem::spawnParticleSystem(MinigunModule* p_module)
+{
+	Entity* entity = m_world->createEntity();
+
+	Transform* t = new Transform();
+	entity->addComponent( ComponentType::Transform, t);
+
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::ParticleSystem);
+	data.owner			= -1;
+	data.networkIdentity = entity->getIndex();
+	data.translation	= t->getTranslation();
+	data.rotation		= t->getRotation();
+	data.scale			= t->getScale();
+	data.meshInfo		= 1;
+
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ParticleSystem));
+
+	m_server->broadcastPacket(data.pack());
+
+	m_world->addEntity(entity);
+	p_module->particleSystemEntity = entity->getIndex();
 }

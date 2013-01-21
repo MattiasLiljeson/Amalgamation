@@ -8,6 +8,7 @@ MinigunModule::MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirecti
 	coolDown = 0;
 	currentRay = 0;
 	range = 300;
+	particleSystemEntity = -1;
 }
 MinigunModule::~MinigunModule()
 {

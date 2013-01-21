@@ -62,6 +62,7 @@ public:	//Enums
 		LightSources,
 		ParticleEmitters,
 		PickComponent,
+		ParticleSystemEmitter,
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/
