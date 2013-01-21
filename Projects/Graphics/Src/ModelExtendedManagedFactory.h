@@ -63,7 +63,7 @@ private:
 		{
 			for (unsigned int i=0;i<collection.size();i++)
 			{
-				delete collection[i]; // use double pointers instead to allow for nulling of the modelresource to avoid double deletion
+				delete collection[i];
 			}
 		}
 
@@ -112,6 +112,8 @@ private:
 	static const string& primitiveSphereName;
 	static const string& fallbackTextureName;
 	static const string& mesherrorTextureName;
+
+	static const unsigned int firstMeshPos=1; // always root on zero
 
 	/// 
 	/// Used for when a mesh has already been loaded and the creation instructions 

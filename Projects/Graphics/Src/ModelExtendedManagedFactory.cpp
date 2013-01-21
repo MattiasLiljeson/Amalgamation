@@ -32,8 +32,8 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 	ModelResource* model = NULL;
 	// check if resource already exists
 	// unsigned int meshResultId = 0;
-	int meshFoundId = m_meshManager->getResourceId(p_name);
-	if (meshFoundId==-1)  // if it does not exist, create new
+	int modelFoundId = m_modelResourceCache->getResourceId(p_name);
+	if (modelFoundId==-1)  // if it does not exist, create new
 	{
 		if (p_name == primitiveCubeName)
 		{
@@ -87,29 +87,54 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 	//
 	vector<ModelResource*>* models = NULL;
 	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
-	int counter = 0;
+	int instanceCount = 0;
 	// Check and read the file
 	do 
 	{	
 		if (!instanceInstructions->empty()) instanceInstructions->pop_back();
 
-		int meshFoundId = m_meshManager->getResourceId(currentInstance.filename);
-		if (meshFoundId==-1)  // if it does not exist, create new
+		int modelFoundId = m_modelResourceCache->getResourceId(currentInstance.filename);
+		if (modelFoundId==-1)  // if it does not exist, create new
 		{
 			AglScene* scene = readScene(currentInstance.filename,p_path);
 			//
 			if (scene)
 			{ 
-				DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(counter)).c_str() ));
-				models = createAllModelData(&currentInstance,
+				DEBUGWARNING(( ("Loading meshes from "+currentInstance.filename+" instance="+toString(instanceCount)).c_str() ));
+				if (instanceCount==0) 
+				{
+					// just a normal mesh, just copy resource instructions
+					models = createAllModelData(&currentInstance,
 											scene,
 											scene->getMeshes().size(),
-											instanceInstructions);
-				if ((*models)[0]!=NULL)
-				{
-					ModelResource* model = (*models)[0];
-					readAndStoreEmpties(-1,model,scene); // read leftover empties
+											instanceInstructions);		
+					// read leftover empties
+					if ((*models)[0]!=NULL)
+					{
+						ModelResource* model = (*models)[0];
+						readAndStoreEmpties(-1,model,scene);
+					}
 				}
+				else
+				{
+					// an instance needs to add(instead of copy) to original collection from 
+					// the instance's read collection.
+					// it also needs to copy the model resource data
+					vector<ModelResource*>* prefetched = createAllModelData(&currentInstance,
+																			scene,
+																			scene->getMeshes().size(),
+																			instanceInstructions);	
+					int size = prefetched->size();
+					for (int n=firstMeshPos;n<size;n++)
+					{
+						ModelResource* model = new ModelResource( *(*prefetched)[n] );
+						 // mesh transform always relative its root which is identity
+						model->transform *= currentInstance.transform;
+						// 
+						models->push_back(model);
+					}
+				}
+
 			}
 			else
 			{
@@ -120,11 +145,25 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 		}
 		else // the mesh already exists
 		{
-			vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
-			int size = prefetched->size(); // if same as current
-			for (int n=0;n<size;n++)
+			if (instanceCount==0) 
 			{
-				models->push_back((*prefetched)[n]);
+				// just a normal mesh, just copy resource instructions
+				models = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+			}
+			else					
+			{
+				// an instance needs to add to original collection from  the instance's collection
+				// it also needs to copy the model resource data
+				vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+				int size = prefetched->size();
+				for (int n=firstMeshPos;n<size;n++)
+				{
+					ModelResource* model = new ModelResource( *(*prefetched)[n] );
+					 // mesh transform always relative its root which is identity
+					model->transform *= currentInstance.transform;
+					// 
+					models->push_back(model);
+				}
 			}
 		}
 
@@ -133,7 +172,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 		{
 			currentInstance = instanceInstructions->back();
 		}
-		counter++;
+		instanceCount++;
 
 	} while (!instanceInstructions->empty());
 	
@@ -151,6 +190,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 {
 	p_numberOfModels = max(p_numberOfModels,1);
 	ModelResourceCollection* models = new ModelResourceCollection();
+	models->collection.push_back(new ModelResource(p_instanceData->filename+"-ROOT"));
 	for (unsigned int i=0; i<p_numberOfModels; i++)
 	{
 		if (i<p_scene->getMeshes().size())
@@ -219,10 +259,12 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 														numIndices);
 		readAndStoreTextures(p_modelNumber,p_scene,mesh);
 		// put in manager			
-		unsigned int meshResultId = m_meshManager->addResource(p_instanceData->filename/*+p_nameSuffix*/,
+		string suffix = "_"+p_nameSuffix;
+		if (p_modelNumber==0) suffix="";
+		unsigned int meshResultId = m_meshManager->addResource(p_instanceData->filename+suffix,
 															   mesh);	
 		// store in model
-		model->name = p_instanceData->filename+p_nameSuffix;
+		model->name = p_instanceData->filename+suffix;
 		model->meshId = static_cast<int>(meshResultId);
 		model->transform = p_instanceData->transform;
 
@@ -262,7 +304,7 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	materialInfo.setTextureId(MaterialInfo::SPECULARMAP,
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::NORMALMAP,
-		m_textureFactory->createTexture(specularName,TEXTUREPATH));
+		m_textureFactory->createTexture(normalName,TEXTUREPATH));
 	// and then set the resulting data to the mesh
 	p_mesh->setMaterial(materialInfo);
 }

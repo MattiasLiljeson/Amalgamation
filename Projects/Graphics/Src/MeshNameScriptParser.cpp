@@ -11,7 +11,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 	MeshNameScriptParser::parse(const string& p_string)
 {
 	Token tokenVal = MESH;
-	Data data = {"",""};
+	Data data = {p_string,""};
 	string instr = getInstruction(p_string);
 	if (instr==instantiate)
 	{
