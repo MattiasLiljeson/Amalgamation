@@ -34,20 +34,24 @@ void PositionalSoundSystem::initialize()
 
 void PositionalSoundSystem::inserted( Entity* p_entity )
 {
-	PositionalSoundEffect* positionalSoundEffect = NULL;
-	Transform* transform = NULL;
-	positionalSoundEffect = static_cast<PositionalSoundEffect*>(p_entity->getComponent(
-		ComponentType::AudioInfo));
-	transform = static_cast<Transform*>(p_entity->getComponent(
-		ComponentType::Transform));
+	PositionalSoundEffect* positionalSoundEffect = static_cast<PositionalSoundEffect*>(
+		p_entity->getComponent(ComponentType::PositionalSoundEffect));
+	Transform* transform = static_cast<Transform*>(
+		p_entity->getComponent(ComponentType::Transform));
 
 	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
-		"engine-noise.wav", TESTSOUNDEFFECTPATH.c_str(), positionalSoundEffect->loops());
+		positionalSoundEffect->getFileName().c_str(),
+		TESTSOUNDEFFECTPATH.c_str(),
+		positionalSoundEffect->loops());
 	PositionalSoundCreationInfo positionCreationalSoundInfo = PositionalSoundCreationInfo(
 		transform->getTranslation());
-	int soundIndex = m_audioBackendSystem->createPositionalSound(
+	int soundIndex = m_audioBackendSystem->getSoundWrapper()->createNewPositionalSound(
 		&creationalSoundInfo, &positionCreationalSoundInfo);
 	positionalSoundEffect->setSoundIndex(soundIndex);
+	// NOTE: (Johan) There is a bug where STOP must be called before PLAY when playing
+	// sound only once. If only PLAY is called the sound will play exactly two times.
+	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
+	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
 }
 
 void PositionalSoundSystem::removed( Entity* p_entity )
@@ -57,21 +61,18 @@ void PositionalSoundSystem::removed( Entity* p_entity )
 
 void PositionalSoundSystem::updateSoundPositions( const vector<Entity*>& p_entities )
 {
-	AudioInfo* audioInfo = NULL;
+	PositionalSoundEffect* positionalSoundEffect = NULL;
 	Transform* transform = NULL;
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
-		audioInfo = static_cast<AudioInfo*>(p_entities[i]->getComponent(
-			ComponentType::AudioInfo));
+		positionalSoundEffect = static_cast<PositionalSoundEffect*>(p_entities[i]->getComponent(
+			ComponentType::PositionalSoundEffect));
 		transform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
 
-		if(audioInfo->isPositionalSound())
-		{
-			PositionalSound* positionalSound = static_cast<PositionalSound*>(
-				m_audioBackendSystem->getSoundWrapper()->getSound(
-				audioInfo->getSoundId()));
-			positionalSound->setPosition(transform->getTranslation());
-		}
+		PositionalSound* positionalSound = static_cast<PositionalSound*>(
+			m_audioBackendSystem->getSoundWrapper()->getSound(
+			positionalSoundEffect->getSoundIndex()));
+		positionalSound->setPosition(transform->getTranslation());
 	}
 }

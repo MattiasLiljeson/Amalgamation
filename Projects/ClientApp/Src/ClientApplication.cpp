@@ -75,6 +75,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <ExtrapolationSystem.h>
+#include <PositionalSoundSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -295,6 +296,9 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+
+	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
+		true );
 
 	/************************************************************************/
 	/* Gameplay																*/
@@ -680,7 +684,7 @@ void ClientApplication::InitModulesTestByAnton()
 
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
-	entity->addComponent(ComponentType::PositionalSound, new PositionalSoundEffect(
+	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
 		"engine-noice.wav", false));
 	m_world->addEntity(entity);
 

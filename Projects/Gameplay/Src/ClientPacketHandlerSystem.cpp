@@ -49,6 +49,7 @@
 #include "..\..\Audio\Src\BasicSoundCreationInfo.h"
 #include "..\..\Audio\Src\PositionalSoundCreationInfo.h"
 #include "AudioBackendSystem.h"
+#include "PositionalSoundEffect.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -273,14 +274,17 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 			// HACK: MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
-			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
-				TESTSOUNDEFFECTPATH.c_str(), true);
-			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-				p_packet.translation );
-			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-				m_world->getSystem(SystemType::AudioBackendSystem));
-			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
+//			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
+//				TESTSOUNDEFFECTPATH.c_str(), true);
+//			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
+//				p_packet.translation );
+//			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+//				m_world->getSystem(SystemType::AudioBackendSystem));
+//			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+//			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
+
+			entity->addComponent(ComponentType::PositionalSoundEffect,
+				new PositionalSoundEffect("Sound Design_Vintage Sci Fi_Spaceship_Alien_Warps_Upwards_Short_HutchSFX.wav", false));
 			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE <-
 
 		}

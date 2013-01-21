@@ -5,7 +5,7 @@ SoundWrapper::SoundWrapper()
 {
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
-	m_masterVolume	= 1.0f;
+	m_masterVolume	= 1.0f;	// NOTE: (Johan) Makes no difference if this is changed.
 	
 	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
 
