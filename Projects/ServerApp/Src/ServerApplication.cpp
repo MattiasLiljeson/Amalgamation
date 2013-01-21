@@ -19,6 +19,7 @@
 #include <MineLayerModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <ShipManagerSystem.h>
+#include <RocketControllerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -164,29 +165,50 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(), true);
 	}
 
 	void ServerApplication::initEntities()
 	{
+		//-75 -> 2
 		Entity* entity;
 		Component* component;
 		// Add a grid of cubes to test instancing.
-		for( int x=0; x<8; x++ )
+
+		float maxVal = 2;
+		float minVal = -75;
+		/*int size = 8;
+		for( int x=0; x<size; x++ )
 		{
-			for( int y=0; y<8; y++ )
+			for( int y=0; y<size; y++ )
 			{
-				for( int z=0; z<8; z++ )
+				for( int z=0; z<size; z++ )
 				{
+					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
+						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
+
 					entity = m_world->createEntity();
-					component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+					component = new Transform( pos.x, pos.y, pos.z);
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
+
+					//Added by Anton
+					entity->addComponent( ComponentType::PhysicsBody, 
+						new PhysicsBody() );
+
+					entity->addComponent( ComponentType::BodyInitData, 
+						new BodyInitData(AglVector3( pos.x, pos.y, pos.z ),
+						AglQuaternion::identity(),
+						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+						AglVector3(0, 0, 0), 0, 
+						BodyInitData::STATIC, 
+						BodyInitData::SINGLE, true, true));
 
 					m_world->addEntity(entity);
 				}
 			}
-
-		}
+		}*/
 		InitModulesTestByAnton();
 	}
 
@@ -341,58 +363,63 @@ namespace Srv
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
 		m_world->addEntity(entity);
 
-		entity = m_world->createEntity();
-		component = new Transform(40, 0, -10);
-		entity->addComponent( ComponentType::Transform, component );
+		ConnectionPointSet* cpset = NULL;
 
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
+		for(int i=0; i<1; i++)
+		{
+			entity = m_world->createEntity();
+			component = new Transform(40, (float)i*10.0f, -10);
+			entity->addComponent( ComponentType::Transform, component );
 
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(40, 0, -10),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
 
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+			entity->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData(AglVector3(40, (float)i*10.0f, -10),
+				AglQuaternion::identity(),
+				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0, 
+				BodyInitData::DYNAMIC, 
+				BodyInitData::SINGLE, false));
 
-
-		ConnectionPointSet* cpset = new ConnectionPointSet();
-		AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
-		AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
-		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
-		m_world->addEntity(entity);
+			entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
 
-		entity = m_world->createEntity();
-		component = new Transform(30, 0, -10);
-		entity->addComponent( ComponentType::Transform, component );
-
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
-
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(30, 0, -10),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
-
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+			cpset = new ConnectionPointSet();
+			AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
+			AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
+			cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+			cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+			entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+			m_world->addEntity(entity);
+		}
 
 
-		cpset = new ConnectionPointSet();
-		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
-		m_world->addEntity(entity); 
+//		entity = m_world->createEntity();
+//		component = new Transform(30, 0, -10);
+//		entity->addComponent( ComponentType::Transform, component );
+//
+//		entity->addComponent( ComponentType::PhysicsBody, 
+//			new PhysicsBody() );
+//
+//		entity->addComponent( ComponentType::BodyInitData, 
+//			new BodyInitData(AglVector3(30, 0, -10),
+//			AglQuaternion::identity(),
+//			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+//			AglVector3(0, 0, 0), 0, 
+//			BodyInitData::DYNAMIC, 
+//			BodyInitData::SINGLE, false));
+//
+//		entity->addComponent(ComponentType::ShipModule, new ShipModule());
+//
+//
+//		cpset = new ConnectionPointSet();
+//		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
+//		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
+//		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
+//		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+//		m_world->addEntity(entity); 
 
 
 		//Ray entity

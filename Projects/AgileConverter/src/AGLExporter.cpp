@@ -21,6 +21,7 @@ void AGLExporter::AddMesh(MeshData* pData)
 	h.indexCount = pData->IndicesCount;
 	h.vertexCount = pData->VertexCount;
 	h.vertexFormat = pData->VertexFormat;
+	h.transform = pData->Transform;
 
 	//Write a loose bsp tree for the mesh
 	vector<AglVector3> verts;

@@ -132,6 +132,19 @@ void ServerPickingSystem::setEnabled(int p_index, bool p_value)
 		}
 	}
 }
+void ServerPickingSystem::setReleased(int p_index)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (m_pickComponents[i].m_clientIndex == p_index)
+		{
+			//Release the picked module
+			m_pickComponents[i].m_latestPick = -1;
+			m_pickComponents[i].m_active = false;
+			return;
+		}
+	}
+}
 void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities)
 {
 	if (p_pc.m_active)
@@ -147,14 +160,23 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 				if (pb && pb->m_id == cols[0])
 				{
+					//Found a pick
 					p_pc.m_latestPick = p_entities[i]->getIndex();
 
-					AglVector3 origin;
-					AglVector3 dir;
-					physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
+					//Attempt a detach if the entity is already connected
+					if (attemptDetach(p_pc))
+					{
+						AglVector3 origin;
+						AglVector3 dir;
+						physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
 
-					AglVector3 d = physX->getController()->getBody(cols[0])->GetWorld().GetTranslation()-origin;
-					p_pc.m_preferredDistance = d.length();
+						AglVector3 d = physX->getController()->getBody(cols[0])->GetWorld().GetTranslation()-origin;
+						p_pc.m_preferredDistance = d.length();
+					}
+					else
+					{
+						p_pc.m_latestPick = -1;
+					}
 					break;
 				}
 			}
@@ -206,7 +228,10 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	Entity* SelectionSphere = m_world->getEntity(p_ray.m_selection);
 	Transform* SelectionSphereTransform = static_cast<Transform*>(SelectionSphere->getComponent(ComponentType::Transform));
 	SelectionSphereTransform->setTranslation(closestConnectionPoint(dest, ship, p_ray));
-	SelectionSphereTransform->setScale(AglVector3(1, 1, 1));
+	if (p_ray.m_targetEntity >= 0)
+		SelectionSphereTransform->setScale(AglVector3(1, 1, 1));
+	else
+		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 }
 AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc)
 {
@@ -223,17 +248,29 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 	AglVector3 parentPos = b->GetWorld().GetTranslation();
 
 	AglVector3 closest = AglVector3(0, 0, 0);
-	for (unsigned int i = 0; i < free.size(); i++)
+	if (free.size() > 0)
 	{
-		conPoints = static_cast<ConnectionPointSet*>(free[i].second->getComponent(ComponentType::ConnectionPointSet));
-		transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
-		AglVector3 pos = (conPoints->m_connectionPoints[free[i].first].cpTransform*transform->getMatrix()).GetTranslation();
-		if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
+		AglVector3 pos = (conPoints->m_connectionPoints[free[0].first].cpTransform*transform->getMatrix()).GetTranslation();
+		closest = pos;
+		p_pc.m_targetEntity = free[0].second->getIndex();
+		p_pc.m_targetSlot = free[0].first;
+		for (unsigned int i = 0; i < free.size(); i++)
 		{
-			closest = pos;
-			p_pc.m_targetEntity = free[i].second->getIndex();
-			p_pc.m_targetSlot = free[i].first;
+			conPoints = static_cast<ConnectionPointSet*>(free[i].second->getComponent(ComponentType::ConnectionPointSet));
+			transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
+			AglVector3 pos = (conPoints->m_connectionPoints[free[i].first].cpTransform*transform->getMatrix()).GetTranslation();
+			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
+			{
+				closest = pos;
+				p_pc.m_targetEntity = free[i].second->getIndex();
+				p_pc.m_targetSlot = free[i].first;
+			}
 		}
+	}
+	else
+	{
+		p_pc.m_targetEntity = -1;
+		p_pc.m_targetSlot = -1;
 	}
 	return closest;
 }
@@ -334,4 +371,61 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		moduleBody->setParentId(shipBody->m_id);
 	}
+}
+bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
+{
+	//Add Check so that modules with other modules connected to them
+	//cannot be removed
+
+	if (p_ray.m_latestPick >= 0)
+	{
+		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+			SystemType::PhysicsSystem));
+
+		//Module
+		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
+		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
+
+		//Make sure the module is not connecting other modules
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(module,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+		if (cps)
+		{
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0)
+					return false;
+			}
+		}
+
+		if (shipModule->m_parentEntity >= 0)
+		{
+			//Get the parent
+			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+			cps = static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(parent,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			
+			int slot = 0;
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
+				{
+					slot = i;
+					break;
+				}
+			}
+
+			//Detach
+			cps->m_connectionPoints[slot].cpConnectedEntity = -1;
+			shipModule->m_parentEntity = -1;
+			moduleBody->setParentId(-1);
+
+			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
+			physX->getController()->DetachBodyFromCompound(body, false);
+		}
+	}
+	return true;
 }

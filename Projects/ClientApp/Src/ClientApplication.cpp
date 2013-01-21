@@ -73,6 +73,7 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
+#include <ExtrapolationSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -279,6 +280,8 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
+
+	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
 	/* Audio																*/

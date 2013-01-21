@@ -10,6 +10,7 @@
 #include <TcpServer.h>
 #include <DebugUtil.h>
 #include <ToString.h>
+#include <boost/thread/thread.hpp>
 
 #include "PacketType.h"
 #include "EntityType.h"
@@ -121,8 +122,14 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
 				getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
 
+//			queue< Packet > packets;
+
 			for (unsigned int i= 0; i < entities.size(); i++)
 			{
+//				if( i%20 == 0 )
+//				{
+//					boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+//				}
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 
@@ -134,8 +141,10 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
 				
+//				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}
+//			m_server->unicastPacketQueue( packets, id );
 			
 		}
 	}

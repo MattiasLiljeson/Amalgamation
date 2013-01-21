@@ -13,6 +13,7 @@
 #include "EntityCreationPacket.h"
 #include "EntityType.h"
 #include "NetworkSynced.h"
+#include <PhysicsController.h>
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -66,10 +67,6 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	if (gun->laserSightEntity < 0)
 	{
 		//Create Ray entity
-		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-
 		Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
@@ -130,13 +127,10 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
 
+	PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
 
-	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-
-	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
-	//physics->getController()
+	PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
 
 
 	Entity* entity = m_world->createEntity();
@@ -147,7 +141,7 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::identity(),
-		AglVector3(0.2f, 0.2f, 0.2f), dir * 20.0f, 
+		AglVector3(0.2f, 0.2f, 0.2f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, false));

@@ -6,13 +6,28 @@
 #include "AnimationParser.h"
 #include "MaterialParser.h"
 
+struct AGLData
+{
+	string OriginalPath;
+	vector<MeshData*> Meshes; 
+	vector<NodeData*> Nodes;
+	vector<SkeletonData*> Skeletons;
+	vector<AglSkeletonMapping*> MeshSkeletonMappings;
+	vector<NodeAnimationData*> NodeAnimations;
+	vector<AnimationLayerData*> AnimationLayers;
+	vector<AnimationData*> Animations;
+	vector<MaterialData*> Materials;
+	vector<AglMaterialMapping*> MaterialMappings;
+	vector<pair<AglConnectionPoint, string>> CP;
+};
+
 class FBXParser
 {
 private:
-	string mPath;
 	FbxScene* mScene;
-	vector<MeshData*> mMeshes;
-	vector<NodeData*> mNodes;
+	
+	AGLData mData;
+	/*vector<NodeData*> mNodes;
 	vector<SkeletonData*> mSkeletons;
 	vector<AglSkeletonMapping*> mMeshSkeletonMappings;
 	vector<NodeAnimationData*> mNodeAnimations;
@@ -20,7 +35,7 @@ private:
 	vector<AnimationData*> mAnimations;
 	vector<MaterialData*> mMaterials;
 	vector<AglMaterialMapping*> mMaterialMappings;
-	vector<pair<AglConnectionPoint, string>> mConnectionPoints;
+	vector<pair<AglConnectionPoint, string>> mConnectionPoints;*/
 
 
 private:
@@ -57,6 +72,8 @@ public:
 	MaterialData* GetMaterial(FbxSurfaceMaterial* pMaterial);
 
 	unsigned int FindIndex(FbxAnimLayer* pAnimLayer);
+
+	AGLData GetData(){ return mData; }
 };
 
 #endif

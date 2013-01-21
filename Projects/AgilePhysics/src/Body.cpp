@@ -85,3 +85,7 @@ bool Body::IsActive()
 {
 	return mActive;
 }
+bool Body::IsStatic() const
+{
+	return mStatic || mTempStatic;
+}
