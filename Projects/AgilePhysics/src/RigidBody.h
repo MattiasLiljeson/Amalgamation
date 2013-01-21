@@ -19,6 +19,8 @@ private:
 		bool mImpulseEnabled;
 		bool mCollisionEnabled;
 
+		bool mCollisionFlag;
+
 protected:
 		AglBoundingSphere mBoundingSphere;
 		bool mUserControlled;
@@ -61,7 +63,6 @@ public:
 
 	AglMatrix					GetLocalInertia() const;
 	AglMatrix					GetInvInertiaWorld() const; //Wait with this for now. Simply return Matrix zero
-	bool					IsStatic() const; //NOT
 	void					SetTempStatic(bool pValue){ mTempStatic = pValue;} //NOT
 
 	void AddImpulse(AglVector3 pImpulse);
@@ -83,6 +84,9 @@ public:
 
 	void SetCollisionEnabled(bool pEnabled){ mCollisionEnabled = pEnabled; }
 	void SetImpulseEnabled(bool pEnabled){ mImpulseEnabled = pEnabled;}
+
+	void SetCollisionFlag(bool pValue){ mCollisionFlag = pValue; }
+	bool IsCollisionFlagged(){ return mCollisionFlag; }
 };
 
 #endif

@@ -13,6 +13,8 @@
 #include "RocketLauncherModule.h"
 #include "EntityCreationPacket.h"
 #include "NetworkSynced.h"
+#include <PhysicsController.h>
+#include "StandardRocket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -66,11 +68,6 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 	if (gun->laserSightEntity < 0)
 	{
-		//Create Ray entity
-		EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-		GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-		int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" ); // CRASHES HERE
-
 		Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
@@ -120,7 +117,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 
 	gun->coolDown = 1.0f;
 
-	//Create Bullet
+	//Create Rocket
 	Transform* gunTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
@@ -131,13 +128,10 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
 
+	PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
 
-	EntitySystem* tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-
-	//PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
-	//physics->getController()
+	PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
 
 
 	Entity* entity = m_world->createEntity();
@@ -148,12 +142,14 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::identity(),
-		AglVector3(0.8f, 0.8f, 0.8f), dir * 20.0f, 
+		AglVector3(0.8f, 0.8f, 0.8f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, false));
 
 	entity->addComponent( ComponentType::Transform, t);
+
+	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
 	m_world->addEntity(entity);
 
 	EntityCreationPacket data;

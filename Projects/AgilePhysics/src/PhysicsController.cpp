@@ -1,8 +1,6 @@
 #include "PhysicsController.h"
 
-#include "PhyUtility.h"
-
-PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5)
+PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5), mStaticBodies(4, AglVector3(-75, -75, -75), AglVector3(2, 2, 100))
 {
 	mTimeAccum = 0;
 
@@ -32,7 +30,12 @@ int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMas
 {
 	RigidBodyBox* b = new RigidBodyBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, pImpulseEnabled);
 	b->SetCollisionEnabled(pCollisionEnabled);
-	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	if (!pStatic)
+		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	else
+	{
+		mStaticBodies.Insert(b);
+	}
 	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
@@ -43,7 +46,12 @@ int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocit
 {
 	RigidBodyBox* b = new RigidBodyBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static, pImpulseEnabled);
 	b->SetCollisionEnabled(pCollisionEnabled);
-	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	if (!p_static)
+		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
+	else
+	{
+		mStaticBodies.Insert(b);
+	}
 	mBodies.push_back(b);
 	if (pParent)
 		pParent->AddChild(b);
@@ -111,7 +119,7 @@ void PhysicsController::GetRay(unsigned int p_index, AglVector3& p_o, AglVector3
 	p_d.normalize();
 }
 
-void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound)
+void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, bool p_impulseEnabled, CompoundBody* p_compound)
 {
 	if (p_compound)
 		p_compound->DetachChild(p_body);
@@ -120,6 +128,7 @@ void PhysicsController::DetachBodyFromCompound(RigidBody* p_body, CompoundBody* 
 		CompoundBody* parent = p_body->GetParent();
 		parent->DetachChild(p_body);
 	}
+	p_body->SetImpulseEnabled(p_impulseEnabled);
 }
 
 void PhysicsController::Update(float pElapsedTime)
@@ -148,8 +157,11 @@ void PhysicsController::Update(float pElapsedTime)
 	//1) Update Velocities and Positions
 	for (unsigned int i = 0; i < mBodies.size(); i++)
 	{
-		mBodies[i]->UpdateVelocity(pElapsedTime);
-		mBodies[i]->UpdatePosition(pElapsedTime);
+		if (!mBodies[i]->IsStatic())
+		{
+			mBodies[i]->UpdateVelocity(pElapsedTime);
+			mBodies[i]->UpdatePosition(pElapsedTime);
+		}
 	}
 
 	//2) Check for collisions
@@ -208,14 +220,23 @@ void PhysicsController::Update(float pElapsedTime)
 					mLineSegmentCollisions.push_back(UintPair(j, mRigidBodies[i].second));
 				}
 			}
+			//Check for collision against static geometry
+			vector<PhyCollisionData> staticCol = mStaticBodies.Query(mRigidBodies[i].first);
+			for (unsigned int j = 0; j < staticCol.size(); j++)
+			{
+				collisions.push_back(staticCol[j]);
+			}
 		}
 	}
 
 	//3) Revert positions and velocities
 	for (unsigned int i = 0; i < mBodies.size(); i++)
 	{
-		mBodies[i]->RevertVelocity();
-		mBodies[i]->RevertPosition();
+		if (!mBodies[i]->IsStatic())
+		{
+			mBodies[i]->RevertVelocity();
+			mBodies[i]->RevertPosition();
+		}
 	}
 	
 	//4) Solve collisions
@@ -232,7 +253,8 @@ void PhysicsController::Update(float pElapsedTime)
 	//5) Update Velocities
 	for (unsigned int i = 0; i < mBodies.size(); i++)
 	{
-		mBodies[i]->UpdateVelocity(pElapsedTime);
+		if (!mBodies[i]->IsStatic())
+			mBodies[i]->UpdateVelocity(pElapsedTime);
 	}
 
 	//6) Solve contacts
@@ -298,7 +320,9 @@ void PhysicsController::Update(float pElapsedTime)
 	{
 		if (typeid(*mBodies[i]) == typeid(RigidBody))
 			((RigidBody*)mBodies[i])->SetTempStatic(false);
-		mBodies[i]->UpdatePosition(pElapsedTime);
+
+		if (!mBodies[i]->IsStatic())
+			mBodies[i]->UpdatePosition(pElapsedTime);
 	}
 
 	//9) Scramble the bodies
@@ -313,10 +337,19 @@ void PhysicsController::Update(float pElapsedTime)
 }
 void PhysicsController::Clear()
 {
-	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
-		delete mRigidBodies[i].first;
-	for (unsigned int i = 0; i < mCompoundBodies.size(); i++)
-		delete mCompoundBodies[i];
+	for (unsigned int i = 0; i < mBodies.size(); i++)
+	{
+		if (mBodies[i]->IsCompoundBody())
+		{
+			CompoundBody* cp = (CompoundBody*)mBodies[i];
+			delete cp;
+		}
+		else
+		{
+			RigidBody* rb = (RigidBody*)mBodies[i];
+			delete rb;
+		}
+	}
 	for (unsigned int i = 0; i < mConvexHullShapes.size(); i++)
 		delete mConvexHullShapes[i];
 

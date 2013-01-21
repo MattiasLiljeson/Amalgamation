@@ -7,6 +7,7 @@
 #include <AglInteriorSphereGrid.h>
 #include <AglLooseBspTree.h>
 #include <typeindex>
+#include "Octree.h"
 
 
 typedef pair<unsigned int, unsigned int> UintPair;
@@ -36,6 +37,8 @@ private:
 	vector<UintPair> mCollisions;
 
 	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
+
+	Octree mStaticBodies;
 
 	float mTimeAccum;
 
@@ -101,7 +104,7 @@ public:
 	void SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength = 1000000000);
 	void GetRay(unsigned int p_index, AglVector3& p_o, AglVector3& p_d); 
 
-	void DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound = NULL);
+	void DetachBodyFromCompound(RigidBody* p_body, bool p_impulseEnabled = true, CompoundBody* p_compound = NULL);
 	
 	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
 

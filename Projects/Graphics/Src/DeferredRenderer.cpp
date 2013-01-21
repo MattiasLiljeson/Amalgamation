@@ -227,6 +227,7 @@ void DeferredRenderer::beginLightPass()
 
 
 	cb->update();
+
 }
 
 void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer )

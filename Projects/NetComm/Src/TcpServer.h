@@ -61,22 +61,32 @@ public:
 
 	/// Broadcasts a packet to all connected clients
 	void broadcastPacket( Packet p_packet );
-
 	void multicastPacket( vector<int> p_connectionIdentities, Packet p_packet );
-
 	/// Unicast sends a packet to only one specified client
-	void unicastPacket( Packet p_packet, int clientId );
+	void unicastPacket( Packet p_packet, int p_clientId );
+	void unicastPacketQueue( queue<Packet> p_packets, int p_clientId );
+	const unsigned int& getTotalBroadcasts();
+	void askForCommProcessInfo();
+	const unsigned int& totalSentInCommProcess(const unsigned int& p_processIdentity);
+
+private:
+	void giveBroadcastPacketAUniqueIdentifier( Packet* p_packet );
 
 private:
 	bool m_isListening;
 
-	queue< int > m_newConnectionProcesses;
-	queue< int > m_newDisconnectionProcesses;
-	vector< TcpCommunicationProcess* > m_communicationProcesses;
+	queue<int> m_newConnectionProcesses;
+	queue<int> m_newDisconnectionProcesses;
+	vector<TcpCommunicationProcess*> m_communicationProcesses;
+	// Store total number of sent packets in comm processes.
+	vector<unsigned int> m_totalSentInCommProcesses;
 
-	queue< Packet > m_newPackets;
+	queue<Packet> m_newPackets;
 
 	TcpListenerProcess* m_listenerProcess;
 	boost::asio::io_service* m_ioService;
 
+	// Will be increased by 1 for every sent packet.
+	unsigned int m_uniqueBroadcastPacketIdentifier;
+	
 };

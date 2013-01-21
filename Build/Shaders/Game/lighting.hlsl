@@ -1,5 +1,5 @@
 #include "lightLib.hlsl"
-#include "perFrameCBuffer.hlsl"
+//#include "perFrameCBuffer.hlsl"
 
 cbuffer VertexProgramCBuffer
 {
@@ -64,6 +64,7 @@ float4 PS(VertexOut p_input, float4 screenSpacePos : SV_POSITION) : SV_TARGET
 	float4 normalColor	= float4( gNormalMap.Load( index ) );	
 	float4 specular		= float4( gSpecular.Load( index ) );
 
+	return diffuseColor;
 	//return specular;
 	// Normal in -1 to 1 range
 	float4 normal = normalColor*2.0f-1.0f;
