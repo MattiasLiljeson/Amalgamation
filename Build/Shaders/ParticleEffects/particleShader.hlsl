@@ -24,7 +24,7 @@ cbuffer cbPerFrame : register(b0)
 };
 
 Texture2D Texture : register(t0);
-SamplerState SampleType : register(s0);
+sampler defaultSampler : register(s0);
 
 struct Particle
 {
@@ -144,7 +144,7 @@ void GS(point Particle gIn[1],
 PixelOut PS(GS_OUT pIn)
 {
 	PixelOut pix_out;
-	pix_out.diffuse = Texture.Sample(SampleType, pIn.texC);
+	pix_out.diffuse = Texture.Sample(defaultSampler, pIn.texC);
 	pix_out.diffuse *= pIn.color;
 	return pix_out;
 }
