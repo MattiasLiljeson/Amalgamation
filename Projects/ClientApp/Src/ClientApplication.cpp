@@ -80,6 +80,7 @@ using namespace std;
 #include "AntTweakBarSystem.h"
 #include "ParticleRenderSystem.h"
 #include <AglMesh.h>
+#include <LevelPieceFileMapping.h>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -325,9 +326,16 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH);
+	//ConnectionPointCollection connectionPoints;
+	//int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
+	//												 &TESTMODELPATH);
+	LevelPieceFileMapping modelLevelFileMapping;
+	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = modelLevelFileMapping.getModelFileName(i);
+		graphicsBackend->loadSingleMeshFromFile( modelName,
+				&TESTMODELPATH);
+	}
 
 	//LevelGenSystem* levelGen = 
 	//	static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
