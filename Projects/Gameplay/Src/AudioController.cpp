@@ -3,7 +3,7 @@
 #include "AudioInfo.h"
 
 AudioController::AudioController(AudioBackendSystem* p_audioBackend) : 
-	EntitySystem(SystemType::AudioControllerSystem, 1, ComponentType::AudioComponent)
+	EntitySystem(SystemType::AudioControllerSystem, 1, ComponentType::AudioInfo)
 {
 	m_audioBackend = p_audioBackend;
 }
@@ -26,7 +26,7 @@ void AudioController::processEntities( const vector<Entity*>& p_entities )
 		{
 			AudioInfo* comp; 
 			comp = static_cast<AudioInfo*>(p_entities[i]->getComponent(
-				ComponentType::AudioComponent));
+				ComponentType::AudioInfo));
 			if(comp->isPositionalSound())
 				m_audioBackend->updateOutputMatrix( comp->getSoundId() );
 		}

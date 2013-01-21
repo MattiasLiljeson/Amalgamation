@@ -45,6 +45,10 @@
 #include "Extrapolate.h"
 #include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
+#include "AudioInfo.h"
+#include "..\..\Audio\Src\BasicSoundCreationInfo.h"
+#include "..\..\Audio\Src\PositionalSoundCreationInfo.h"
+#include "AudioBackendSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -241,7 +245,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 
 		component = new RenderInfo( shipMeshId );
 		entity->addComponent( ComponentType::RenderInfo, component );
-		entity->addComponent( ComponentType::Transform, transform );		
+		entity->addComponent( ComponentType::Transform, transform );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -266,8 +270,19 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 				AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+
+			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
+			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
+				TESTSOUNDEFFECTPATH.c_str(), true);
+			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
+				p_packet.translation );
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
+			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
+			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE <-
+
 		}
 
 		/************************************************************************/

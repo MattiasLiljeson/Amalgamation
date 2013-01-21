@@ -35,6 +35,7 @@ public:	//Enums
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,
+		PositionalSoundSystem,
 		LibRocketBackendSystem,
 		MenuSystem,
 		HudSystem,
