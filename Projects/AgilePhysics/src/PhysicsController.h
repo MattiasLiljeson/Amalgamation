@@ -127,7 +127,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	float RaysVsObjects(vector<PhyRay> p_rays, RigidBody* p_ignore, AglBoundingSphere p_sphere);
 
-	int FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2);
+	int FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2, int p_avoid = -1);
 
 	vector<RigidBody*> getBodies()
 	{ 

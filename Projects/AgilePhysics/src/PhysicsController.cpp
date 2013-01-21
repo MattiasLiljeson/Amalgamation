@@ -376,7 +376,7 @@ float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore,
 	return minT;
 }
 
-int PhysicsController::FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2)
+int PhysicsController::FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2, int p_avoid)
 {
 	LineSegment ls;
 	ls.p1 = p_p1;
@@ -385,7 +385,7 @@ int PhysicsController::FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2)
 	int col = -1;
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (CheckCollision(ls, mRigidBodies[i].first))
+		if (mRigidBodies[i].second != p_avoid && CheckCollision(ls, mRigidBodies[i].first))
 			col = mRigidBodies[i].second;
 	}
 	return col;
