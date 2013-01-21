@@ -17,6 +17,8 @@
 #include <ModelResource.h>
 #include <string>
 #include "GameplayTags.h"
+#include "BodyInitData.h"
+#include "PhysicsBody.h"
 
 LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -63,7 +65,7 @@ void LevelGenSystem::initialize()
 void LevelGenSystem::run()
 {
 	srand(time(NULL));
-	generateLevelPieces(5);
+	generateLevelPieces(0);
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
@@ -71,14 +73,14 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	// Create a initial piece.
 	Transform* transform = new Transform(AglVector3(15, 20, 15), 
 										AglQuaternion::identity(),
-										AglVector3::one() * 5.0f);
+										AglVector3::one() * 1.0f);
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
 	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
 
 	// Create the entity and specify a mesh for it
-	createAndAddEntity(0, transform);
+	createAndAddEntity(0, transform, piece->getBoundingBox());
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -97,7 +99,8 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 		// Creates a piece entity and adds it to the world
 		for (int i = 0; i < temps.size(); i++)
 		{
-			createAndAddEntity( temps[i]->getTypeId(), temps[i]->getTransform());
+			createAndAddEntity( temps[i]->getTypeId(), temps[i]->getTransform(),
+								temps[i]->getBoundingBox());
 		}
 
 		// For the next iteration round
@@ -105,12 +108,21 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	}
 }
 
-void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
+void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform, const AglOBB& p_obb)
 {
 	Entity* entity = m_world->createEntity();
 
 	entity->addComponent(ComponentType::Transform, p_transform);
 	entity->addComponent(ComponentType::StaticProp, new StaticProp(p_type, true));
+	
+	//if ( !(p_obbScale == AglVector3::zero()) )
+	{
+		//entity->addComponent(ComponentType::BodyInitData, 
+		//	new BodyInitData(p_transform->getTranslation(), p_transform->getRotation(),
+		//					p_obbScale, AglVector3::zero(), AglVector3::zero(),
+		//					0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true)); 
+		//entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
+	}
 
 	if ( !m_server )
 	{
@@ -120,6 +132,23 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
 
 	// TODO: There needs to be added more components to the entity before it is added to
 	// the world
+	m_world->addEntity(entity);
+
+	p_transform = new Transform(p_obb.world);
+	p_transform->setScale(AglVector3(1, 2, 1));
+	p_transform->setRotation(AglQuaternion::identity());
+
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, p_transform);
+	entity->addComponent(ComponentType::StaticProp, new StaticProp());
+
+
+	entity->addComponent(ComponentType::BodyInitData, 
+		new BodyInitData(p_transform->getTranslation(), p_transform->getRotation(),
+		p_transform->getScale(), AglVector3::zero(), AglVector3::zero(),
+		0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true)); 
+	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
+
 	m_world->addEntity(entity);
 }
 
@@ -182,17 +211,17 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			else
 			{
 				// DEBUG: Attach a cube between the connections!
-				AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
-				AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
+				//AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
+				//AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
 
-				int endPlugId = m_modelFileMapping.getEndPlugId();
+				//int endPlugId = m_modelFileMapping.getEndPlugId();
 
-				createAndAddEntity(endPlugId, new Transform(targetConnectorMatrix.GetTranslation(), 
-					targetConnectorMatrix.GetRotation(),
-					AglVector3::one() * 0.5f));
-				createAndAddEntity(endPlugId, new Transform(thisConnectorMatrix.GetTranslation(), 
-					thisConnectorMatrix.GetRotation(),
-					AglVector3::one() * 0.5f));
+				//createAndAddEntity(endPlugId, new Transform(targetConnectorMatrix.GetTranslation(), 
+				//	targetConnectorMatrix.GetRotation(),
+				//	AglVector3::one() * 0.5f), AglVector::zero());
+				//createAndAddEntity(endPlugId, new Transform(thisConnectorMatrix.GetTranslation(), 
+				//	thisConnectorMatrix.GetRotation(),
+				//	AglVector3::one() * 0.5f), AglVector::zero());
 
 				out_pieces.push_back(piece);
 				m_generatedPieces.push_back(piece);
@@ -207,7 +236,8 @@ void LevelGenSystem::addEndPlug( Transform* p_atConnector )
 	// Connector is assumed to be in world space!
 	//int cubeId = m_graphicsBackend->getMeshId("P_cube");
 
-	createAndAddEntity( m_modelFileMapping.getEndPlugId(), p_atConnector);
+	//createAndAddEntity( m_modelFileMapping.getEndPlugId(), p_atConnector, 
+	//	p_atConnector->getScale() * AglVector3::one());
 }
 
 int LevelGenSystem::popIntVector( vector<int>& p_vector )

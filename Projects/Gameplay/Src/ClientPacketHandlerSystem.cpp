@@ -303,13 +303,16 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	}
 	else if ( p_packet.entityType == (char)EntityType::StaticProp )
 	{
-		//int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		//	SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		int meshId = -1;
 
 		GraphicsBackendSystem* gfxBackend = static_cast<GraphicsBackendSystem*>(
 			m_world->getSystem( SystemType::GraphicsBackendSystem ));
-
-		int meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		
+		if (p_packet.isLevelProp)
+			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		else
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);

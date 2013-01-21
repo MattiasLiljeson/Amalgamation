@@ -186,12 +186,12 @@ namespace Srv
 			{
 				for( int z=0; z<8; z++ )
 				{
-					entity = m_world->createEntity();
-					component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					entity->addComponent( ComponentType::Transform, component );
-					entity->addComponent( ComponentType::StaticProp, new StaticProp());
+					//entity = m_world->createEntity();
+					//component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
+					//entity->addComponent( ComponentType::Transform, component );
+					//entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
-					m_world->addEntity(entity);
+					//m_world->addEntity(entity);
 				}
 			}
 
