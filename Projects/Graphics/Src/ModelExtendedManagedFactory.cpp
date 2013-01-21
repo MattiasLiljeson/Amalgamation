@@ -112,7 +112,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						readAndStoreEmpties(-1,model,scene);
+						readAndStoreEmpties(-1,model,scene,instanceInstructions);
 					}
 				}
 				else
@@ -129,7 +129,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						 // mesh transform always relative its root which is identity
-						model->transform *= currentInstance.transform;
+						model->transform = currentInstance.transform/*model->transform(not working yet)*/;
 						// 
 						models->push_back(model);
 					}
@@ -160,7 +160,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					 // mesh transform always relative its root which is identity
-					model->transform *= currentInstance.transform;
+					model->transform = currentInstance.transform/**model->transform(not working yet)*/;
 					// 
 					models->push_back(model);
 				}
@@ -210,7 +210,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 					if (p_outInstanceInstructions!=NULL)
 					{
 						InstanceInstr inst = {parsedAction.first.filename,
-		/* Retrieve transform here! ---> */	  AglMatrix::identityMatrix()};
+			                                  aglMeshHeader.transform};
 
 						DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
@@ -266,7 +266,7 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 		// store in model
 		model->name = p_instanceData->filename+suffix;
 		model->meshId = static_cast<int>(meshResultId);
-		model->transform = p_instanceData->transform;
+		model->transform = p_instanceData->transform*p_meshHeader->transform;
 
 		// other model creation data
 		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);

@@ -47,6 +47,5 @@ std::string MeshNameScriptParser::extractPart( const string& p_string,int offset
 	int s = clamp(start+1, 0, (int)p_string.size()-1);
 	int l = max(0, (int)p_string.size()-(p_string.find(separators,s)-1)-s );
 	string sub = p_string.substr(s,l);
-	DEBUGWARNING((sub.c_str()));
 	return sub;
 }
