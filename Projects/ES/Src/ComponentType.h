@@ -38,6 +38,7 @@ public:	//Enums
 		PlayerScore,
 		MenuItem,
 		HudElement,
+		EntityParent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

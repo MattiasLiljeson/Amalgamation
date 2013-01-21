@@ -350,6 +350,12 @@
     <ClInclude Include="RocketControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="TransformParentHandlerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityParent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -571,6 +577,9 @@
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="RocketControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformParentHandlerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>

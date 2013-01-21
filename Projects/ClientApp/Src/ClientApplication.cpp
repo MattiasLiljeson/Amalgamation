@@ -32,6 +32,7 @@
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
 #include <Transform.h>
+#include <EntityParent.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -74,6 +75,11 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <ExtrapolationSystem.h>
+#include <LibRocketRenderSystem.h>
+#include <LightRenderSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
+#include <TransformParentHandlerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -83,10 +89,6 @@ using namespace std;
 
 // MISC
 #include <AntTweakBarWrapper.h>
-#include <LibRocketRenderSystem.h>
-#include <LightRenderSystem.h>
-#include <AntTweakBarSystem.h>
-#include <ParticleRenderSystem.h>
 
 
 
@@ -236,7 +238,6 @@ void ClientApplication::initSystems()
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
 
-
 	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
@@ -266,6 +267,12 @@ void ClientApplication::initSystems()
 	
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
+
+	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
+	m_world->setSystem( entityParentHandler, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -331,6 +338,7 @@ void ClientApplication::initEntities()
 
 
 	// Test instances
+	int firstId = 0;
 	for (int i=0;i<models->size();i++)
 	{
 		ModelResource* md = (*models)[i];
@@ -338,9 +346,25 @@ void ClientApplication::initEntities()
 		int mid = md->meshId;
 		component = new RenderInfo( mid );
 		entity->addComponent( ComponentType::RenderInfo, component );
-		component = new Transform( md->transform );
-		entity->addComponent( ComponentType::Transform, component );
-		m_world->addEntity(entity);
+
+
+		if (i==0) 
+		{
+			firstId = entity->getIndex();
+			AglVector3 g = AglVector3(0.0f,-10.0f,0.0f);
+			md->transform.SetTranslation(g);
+			component = new Transform( md->transform );
+			entity->addComponent( ComponentType::Transform, component );
+		}
+		else
+		{
+			component = new Transform( md->transform );
+			entity->addComponent( ComponentType::Transform, component );
+			component = new EntityParent( firstId, md->transform );
+			entity->addComponent( ComponentType::EntityParent, component );
+		}
+
+		m_world->addEntity(entity);		
 	}
 
 

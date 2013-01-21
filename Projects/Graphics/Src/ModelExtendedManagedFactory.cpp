@@ -129,7 +129,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						 // mesh transform always relative its root which is identity
-						model->transform = currentInstance.transform/*model->transform(not working yet)*/;
+						model->transform *= currentInstance.transform;
 						// 
 						models->push_back(model);
 					}
@@ -160,7 +160,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					 // mesh transform always relative its root which is identity
-					model->transform = currentInstance.transform/**model->transform(not working yet)*/;
+					model->transform *= currentInstance.transform;
 					// 
 					models->push_back(model);
 				}

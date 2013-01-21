@@ -27,6 +27,7 @@ public:	//Enums
 		CameraSystem,
 		PlayerCameraControllerSystem,
 		LookAtSystem,
+		TransformParentHandlerSystem,
 		InputBackendSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,

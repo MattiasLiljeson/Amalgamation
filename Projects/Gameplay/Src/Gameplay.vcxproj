@@ -101,6 +101,8 @@
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="EntityParent.h" />
+    <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
@@ -178,6 +180,7 @@
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>
