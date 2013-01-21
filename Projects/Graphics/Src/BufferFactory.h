@@ -7,6 +7,7 @@
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
 #include "DIndex.h"
+#include "RenderSceneInfoCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
@@ -72,6 +73,9 @@ public:
 									  unsigned int p_numberOfElements);
 
 	Buffer<ParticleCBuffer>* createParticleCBuffer();
+
+	Buffer<RenderSceneInfoCBuffer>*  createRenderSceneInfoCBuffer();
+
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.

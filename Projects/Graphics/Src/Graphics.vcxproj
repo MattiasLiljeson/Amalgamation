@@ -63,6 +63,7 @@
     <ClInclude Include="PVertex.h" />
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="RenderSceneInfoCBuffer.h" />
     <ClInclude Include="RenderStateEnums.h" />
     <ClInclude Include="RenderStateHelper.h" />
     <ClInclude Include="ShaderBase.h" />

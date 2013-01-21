@@ -2,6 +2,7 @@ cbuffer VertexProgramCBuffer
 {
     float4 color;
 	float4x4 vp;
+	float4x4 vpInv;
 };
 
 Texture2D diffuseTexture : register(t0);

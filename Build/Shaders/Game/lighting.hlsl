@@ -1,14 +1,17 @@
 #include "lightLib.hlsl"
+#include "perFrameCBuffer.hlsl"
 
 cbuffer VertexProgramCBuffer
 {
 	float4 color;
 	float4x4 vp;
+	float4x4 vpInv;
 };
 
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
 Texture2D gSpecular : register(t2);
+Texture2D gDepth : register(t3);
 
 SamplerState pointSampler : register(s0);
 
@@ -43,18 +46,23 @@ VertexOut VS(VertexIn p_input)
 	return vout;
 }
 
-float4 PS(VertexOut p_input, float4 ndcPos : SV_POSITION) : SV_TARGET
+float4 PS(VertexOut p_input, float4 screenSpacePos : SV_POSITION) : SV_TARGET
 {
+	 int3 index;
+	 index.xy = screenSpacePos.xy;
+	 index.z = 0;
+
 	// from screen-space to NDC
-	float2 samp = p_input.screenPos + float2( 0.5f, -0.5f);
+	float2 ndcPos;
+	ndcPos = screenSpacePos.xy / float2( 1280.0f, 720.0f );
+	ndcPos += float2( 0.5f, -0.5f );
+	ndcPos *= 2.0f;
 	//HACK: resolution should be set by cbuffer
-	samp = ndcPos.xy / float2( 1280.0f, 720.0f );
 	//samp.y*-1.0f; // invert y to correct it. Caused by bad cube coords?
 
-	float4 diffuseColor = float4(gDiffuseMap.Sample(pointSampler, samp));
-	float4 normalColor = float4(gNormalMap.Sample(pointSampler, samp));	
-	float4 specular = float4(gSpecular.Sample(pointSampler, samp));
-
+	float4 diffuseColor = float4( gDiffuseMap.Load( index ) );
+	float4 normalColor	= float4( gNormalMap.Load( index ) );	
+	float4 specular		= float4( gSpecular.Load( index ) );
 
 	//return specular;
 	// Normal in -1 to 1 range
@@ -69,25 +77,33 @@ float4 PS(VertexOut p_input, float4 ndcPos : SV_POSITION) : SV_TARGET
 	//temp.specularColor = float4(0.0f,0.0f,0.0f,0.0f);
 	//SurfaceLightingData lightManip = Lambert(temp, normal);
 
+	float depth = gDepth.Load( index ); 
+	float4 VPpos = float4( ndcPos, depth, 1.0f );
+	float4 pos = mul( VPpos, vpInv );
+	pos.xyz /= pos.w;
+
+	//return normal;
+	//return VPpos;
+
 	LightInfo light;
 	light.pos = float3( 0.0f, 0.0f, 0.0f );
 	light.type = 1; // Should be set by instance/mesh
 	light.dir = float3( 1.0f, 0.0f, 0.0f ); // Only used by point lights
-	light.range = 10.0f;
-	light.att = 0.0f;
+	light.range = 1000.0f;
+	light.att = 0.01f;
 	light.spotPower = 10.0f; //Not used;
-	light.ambient = float4( 1.0f, 1.0f, 1.0f, 1.0f );
-	light.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
-	light.spec = float4( 1.0f, 1.0f, 1.0f, 1.0f );
+	light.ambient = float4( 0.0f, 0.0f, 0.1f, 0.1f );
+	light.diffuse = float4( .0f, .5f, .0f, 0.1f );
+	light.spec = float4( .5f, .0f, .0f, .1f );
 	light.enabled = true;
 
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;
 	surface.spec = specular;
 
-	float3 eyePos = float3( 10.0f, 10.0f, 10.0f );
+	float3 eyePos = float3( 1.0f, 1.0f, 1.0f );
 
-	float3	lightCol = pointLight( surface, light, eyePos, normalColor, light.pos );
+	float3	lightCol = pointLight( surface, light, eyePos, normalColor, pos );
 
 	return float4( lightCol, 1.0f );
 

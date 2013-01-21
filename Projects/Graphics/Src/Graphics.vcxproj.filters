@@ -44,7 +44,7 @@
     </ClCompile>
     <ClCompile Include="LightMesh.cpp">
       <Filter>Renderer\Mesh</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
@@ -160,7 +160,7 @@
     </ClInclude>
     <ClInclude Include="LightMesh.h">
       <Filter>Renderer\Mesh</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
@@ -178,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="ParticleShader.h">
       <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSceneInfoCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

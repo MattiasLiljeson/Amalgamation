@@ -23,6 +23,7 @@
 #include "TextureParser.h"
 #include "ModelExtendedManagedFactory.h"
 #include "TextureFactory.h"
+#include "RenderSceneInfoCBuffer.h"
 
 
 class DeferredBaseShader;
@@ -218,6 +219,7 @@ private:
 	ParticleRenderer*		m_particleRenderer;
 
 	RendererSceneInfo		m_renderSceneInfo;
+	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
 
 	int m_height;
 	int m_width;

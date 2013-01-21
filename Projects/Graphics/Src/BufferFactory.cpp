@@ -119,6 +119,20 @@ Buffer<ParticleCBuffer>* BufferFactory::createParticleCBuffer(){
 	return new Buffer<ParticleCBuffer>(m_device,m_deviceContext,&data,bD);
 }
 
+Buffer<RenderSceneInfoCBuffer>* BufferFactory::createRenderSceneInfoCBuffer(){
+	RenderSceneInfoCBuffer data;
+
+	UINT32 elementSize = sizeof(float)*4; // 16 byte alignment
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_ALL;
+
+	return new Buffer<RenderSceneInfoCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
+}
+
 Mesh* BufferFactory::createBoxMesh()
 {
 #pragma region static data

@@ -217,10 +217,14 @@ void DeferredRenderer::beginLightPass()
 	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
 	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
 	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[DEPTH] );
 
 	Buffer<SimpleCBuffer>* cb = m_lightShader->getPerFrameBufferPtr();
 	for (int i=0;i<16;i++) {
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProj[i]; }
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProj[i]; 
+		cb->accessBuffer.vpInv[i] = m_sceneInfo.viewProjInv[i];
+	}
+
 
 	cb->update();
 }

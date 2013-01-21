@@ -37,6 +37,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	initViewport();
 
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
+	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
@@ -68,6 +69,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_textureManager;
 	delete m_textureFactory;
 	delete m_modelFactory;
+	delete m_renderSceneInfoBuffer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -174,6 +176,10 @@ void GraphicsWrapper::beginFrame()
 {
 	setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_deferredRenderer->beginDeferredBasePass();
+
+	m_renderSceneInfoBuffer->accessBuffer.setSceneInfo( m_renderSceneInfo );
+	m_renderSceneInfoBuffer->apply();
+
 }
 
 void GraphicsWrapper::updatePerFrameConstantBuffer()

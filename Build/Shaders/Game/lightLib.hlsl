@@ -64,7 +64,7 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 	float d = length(lightVec);
 	
 	if( d > light.range )
-	return float3(0.0f, 0.0f, 0.0f);
+	return float3(0.0f, 1.0f, 0.0f);
 	
 	// Normalize the light vector.
 	lightVec /= d;
@@ -89,7 +89,10 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 		litColor += diffuseFactor * surface.diffuse * light.diffuse;
 		litColor += specFactor * surface.spec * light.spec;
 	}
-	
+	else
+	{
+		return float3(1,0,0);
+	}
 	// attenuate
 	return litColor / dot(light.att, float3(1.0f, d, d*d));
 }
