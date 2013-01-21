@@ -1,4 +1,4 @@
-#include "LevelPieceModelMapping.h"
+#include "LevelPieceFileMapping.h"
 #include <cstdlib>
 
 LevelPieceFileMapping::LevelPieceFileMapping()
@@ -6,7 +6,10 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	// NOTE: This would better be moved to a parser that knows the exact number of model
 	// files, or even move it to assemblages!?!
 	m_fileNames.push_back("test_parts_3sphere.agl");
+	m_fileNames.push_back("test_parts_3sphere.agl");
 	m_fileNames.push_back("test_parts_4tunnel.agl");
+	// End plug
+	m_fileNames.push_back("P_cube");
 }
 
 LevelPieceFileMapping::~LevelPieceFileMapping()
@@ -29,5 +32,10 @@ int LevelPieceFileMapping::getModelFileCount() const
 
 int LevelPieceFileMapping::getRandomPieceId() const
 {
-	return rand() % m_fileNames.size();
+	return rand() % (m_fileNames.size() - 1);
+}
+
+int LevelPieceFileMapping::getEndPlugId() const
+{
+	return m_fileNames.size() - 1;
 }

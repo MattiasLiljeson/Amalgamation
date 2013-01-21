@@ -148,7 +148,10 @@ namespace Srv
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new ServerScoreSystem( m_server ), true );
 
-
+		/************************************************************************/
+		/* Network																*/
+		/************************************************************************/
+		m_world->setSystem( new LevelGenSystem(NULL, m_server), true);
 
 
 		m_world->initialize();
@@ -167,6 +170,9 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
+
+		// Temp-run of level system
+		static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem))->run();
 	}
 
 	void ServerApplication::initEntities()

@@ -24,6 +24,7 @@ public:
 	const string&	getModelFileName(int p_id) const;
 	int				getModelFileCount() const;
 	int				getRandomPieceId() const;
+	int				getEndPlugId() const;
 protected:
 private:
 	vector<string> m_fileNames;

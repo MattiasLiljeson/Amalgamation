@@ -16,6 +16,7 @@
 #include <Globals.h>
 #include <ModelResource.h>
 #include <string>
+#include "GameplayTags.h"
 
 LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -41,21 +42,21 @@ LevelGenSystem::~LevelGenSystem()
 
 void LevelGenSystem::initialize()
 {
-	for (int i = 0; i < m_modelFileMapping.getModelFileCount(); i++)
+	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
 	{
 		string modelName = m_modelFileMapping.getModelFileName(i);
 
-		m_graphicsBackend->loadSingleMeshFromFile( modelName,
+		if ( !m_server)
+		{
+			m_graphicsBackend->loadSingleMeshFromFile( modelName,
 			&TESTMODELPATH);
+		}
 
 		auto resourcesFromModel = m_unmanagedModelFactory.createModelResources(modelName,
 																		&TESTMODELPATH);
 		m_modelResources.push_back( resourcesFromModel->at(0) );
 
 		delete resourcesFromModel;
-
-		//m_modelResources.push_back(
-		//	m_unmanagedModelFactory.createModelResource(modelName, &TESTMODELPATH));
 	}
 }
 
@@ -64,12 +65,6 @@ void LevelGenSystem::run()
 	srand(time(NULL));
 	generateLevelPieces(5);
 }
-
-//int LevelGenSystem::getRandomPieceType()
-//{
-//	return rand() % m_pieceTypes.size();
-//}
-
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
@@ -83,12 +78,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
 
 	// Create the entity and specify a mesh for it
-	// NOTE: Debug for client only!
-	if (!m_server)
-	{
-		int meshId = getMeshFromPieceType( 0 );
-		createAndAddEntity(meshId, transform);
-	}
+	createAndAddEntity(0, transform);
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -105,10 +95,9 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 			generatePiecesOnPiece(pieces[i], temps);
 
 		// Creates a piece entity and adds it to the world
-		if ( !m_server )
+		for (int i = 0; i < temps.size(); i++)
 		{
-			for (int i = 0; i < temps.size(); i++)
-				createAndAddEntity( getMeshFromPieceType( temps[i]->getTypeId() ), temps[i]->getTransform());
+			createAndAddEntity( temps[i]->getTypeId(), temps[i]->getTransform());
 		}
 
 		// For the next iteration round
@@ -121,24 +110,17 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform )
 	Entity* entity = m_world->createEntity();
 
 	entity->addComponent(ComponentType::Transform, p_transform);
-	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(p_type) );
-	entity->addComponent(ComponentType::StaticProp, new StaticProp());
+	entity->addComponent(ComponentType::StaticProp, new StaticProp(p_type, true));
+
+	if ( !m_server )
+	{
+		entity->addComponent(ComponentType::RenderInfo, 
+			new RenderInfo( getMeshFromPieceType( p_type ) ));
+	}
+
 	// TODO: There needs to be added more components to the entity before it is added to
 	// the world
 	m_world->addEntity(entity);
-
-	if (m_server)
-	{
-		EntityCreationPacket packet;
-		packet.entityType		= static_cast<char>(EntityType::StaticProp);
-		packet.networkIdentity	= -1;
-		packet.owner			= -1;
-		packet.translation		= p_transform->getTranslation();
-		packet.rotation			= p_transform->getRotation();
-		packet.scale			= p_transform->getScale();
-
-		m_server->broadcastPacket(packet.pack());
-	}
 }
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
@@ -203,12 +185,12 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				AglMatrix targetConnectorMatrix = p_targetPiece->getConnectionPointMatrix(slot);
 				AglMatrix thisConnectorMatrix	= piece->getConnectionPointMatrix(0);
 
-				int cubeMeshId = m_graphicsBackend->getMeshId("P_cube");
+				int endPlugId = m_modelFileMapping.getEndPlugId();
 
-				createAndAddEntity(cubeMeshId, new Transform(targetConnectorMatrix.GetTranslation(), 
+				createAndAddEntity(endPlugId, new Transform(targetConnectorMatrix.GetTranslation(), 
 					targetConnectorMatrix.GetRotation(),
 					AglVector3::one() * 0.5f));
-				createAndAddEntity(cubeMeshId, new Transform(thisConnectorMatrix.GetTranslation(), 
+				createAndAddEntity(endPlugId, new Transform(thisConnectorMatrix.GetTranslation(), 
 					thisConnectorMatrix.GetRotation(),
 					AglVector3::one() * 0.5f));
 
@@ -223,9 +205,9 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 void LevelGenSystem::addEndPlug( Transform* p_atConnector )
 {
 	// Connector is assumed to be in world space!
-	int cubeId = m_graphicsBackend->getMeshId("P_cube");
+	//int cubeId = m_graphicsBackend->getMeshId("P_cube");
 
-	createAndAddEntity(cubeId, p_atConnector);
+	createAndAddEntity( m_modelFileMapping.getEndPlugId(), p_atConnector);
 }
 
 int LevelGenSystem::popIntVector( vector<int>& p_vector )
@@ -238,18 +220,6 @@ int LevelGenSystem::popIntVector( vector<int>& p_vector )
 	}
 	return i;
 }
-
-//void LevelGenSystem::setPieceTypes( vector<ConnectionPointCollection> p_pieceTypes,
-//									vector<AglMeshHeader> p_aglMeshHeaders)
-//{
-//	m_pieceTypes	= p_pieceTypes;
-//	m_meshHeaders	= p_aglMeshHeaders;
-//}
-//
-//const vector<LevelPiece*>& LevelGenSystem::getGeneratedLevelPieces() const
-//{
-//	return m_generatedPieces;
-//}
 
 int LevelGenSystem::getMeshFromPieceType( int p_typeId ) const
 {

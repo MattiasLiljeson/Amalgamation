@@ -4,6 +4,7 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include "LevelPieceFileMapping.h"
 
 class TcpClient;
 class EntityCreationPacket;
@@ -48,6 +49,7 @@ private:
 
 private:
 	TcpClient* m_tcpClient;
+	LevelPieceFileMapping m_levelPieceMapping;
 	float m_currentPing;
 
 	unsigned int m_numberOfSentPackets;

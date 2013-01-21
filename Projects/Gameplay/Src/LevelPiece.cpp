@@ -6,23 +6,6 @@
 #include <AglMesh.h>
 #include <ModelResource.h>
 
-//LevelPiece::LevelPiece( ConnectionPointCollection* p_connectionPoints,
-//					   AglMeshHeader* p_meshHeader, 
-//					   Transform* p_transform )
-//{
-//	//m_localSpaceConnectionPoints	= p_connectionPoints;
-//	m_transform			= p_transform;
-//	//m_meshHeader		= p_meshHeader;
-//
-//	int maxChildCount = p_connectionPoints->m_collection.size();
-//	m_childSlotsOccupied.resize(maxChildCount);
-//	m_children.resize(maxChildCount, NULL);
-//	m_connectionPoints.resize(maxChildCount);
-//
-//	updateConnectionPoints();
-//	updateBoundingVolumes();
-//}
-
 LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform )
 {
 	m_modelResource = p_modelResource;

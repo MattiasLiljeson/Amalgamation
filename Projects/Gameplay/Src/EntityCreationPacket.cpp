@@ -10,7 +10,8 @@ EntityCreationPacket::EntityCreationPacket()
 	translation		= AglVector3();
 	scale			= AglVector3();
 	rotation		= AglQuaternion();
-	meshInfo		= 0;
+	meshInfo		= -1;
+	isLevelProp		= false;
 }
 
 EntityCreationPacket::~EntityCreationPacket()
@@ -22,6 +23,7 @@ Packet EntityCreationPacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::EntityCreation));
 	packet << entityType
+		<< isLevelProp
 		<< owner
 		<< networkIdentity
 		<< meshInfo
@@ -35,6 +37,7 @@ Packet EntityCreationPacket::pack()
 void EntityCreationPacket::unpack( Packet p_packet )
 {
 	p_packet >> entityType
+		>> isLevelProp
 		>> owner
 		>> networkIdentity
 		>> meshInfo

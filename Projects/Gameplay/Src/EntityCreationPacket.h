@@ -25,6 +25,7 @@ public:
 
 public:
 	char			entityType;
+	bool			isLevelProp;
 	int				owner;
 	int				networkIdentity;
 	int				meshInfo;

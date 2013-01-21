@@ -6,7 +6,7 @@
 #include <AglMesh.h>
 #include <vector>
 #include <map>
-#include "LevelPieceModelMapping.h"
+#include "LevelPieceFileMapping.h"
 #include <ModelBaseUnmanagedFactory.h>
 
 class Transform;
@@ -34,21 +34,17 @@ public:
 	LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server);
 	virtual ~LevelGenSystem();
 
-	//void setPieceTypes(vector<ConnectionPointCollection> p_pieceTypes,
-	//					vector<AglMeshHeader> p_aglMeshHeaders);
-
-	//const vector<LevelPiece*>& getGeneratedLevelPieces() const;
 	void initialize();
 
 	void run();
+
+
 protected:
 
 private:
 	int popIntVector(vector<int>& p_vector);
 	
 	int getMeshFromPieceType(int p_typeId) const;
-
-	//int	getRandomPieceType();
 
 	void createAndAddEntity(int p_type, Transform* p_transform);
 

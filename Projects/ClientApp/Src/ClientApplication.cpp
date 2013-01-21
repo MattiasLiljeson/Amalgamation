@@ -292,8 +292,8 @@ void ClientApplication::initSystems()
 	// This does not currently work for the server!
 	// Awaiting refactoring of model management.
 
-	LevelGenSystem* levelGenerator = new LevelGenSystem(graphicsBackend, NULL);
-	m_world->setSystem( levelGenerator, true);
+	//LevelGenSystem* levelGenerator = new LevelGenSystem(graphicsBackend, NULL);
+	//m_world->setSystem( levelGenerator, true);
 
 	/************************************************************************/
 	/* Gameplay																 */
@@ -329,9 +329,9 @@ void ClientApplication::initEntities()
 	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
 													 &TESTMODELPATH);
 
-	LevelGenSystem* levelGen = 
-		static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
-	levelGen->run();
+	//LevelGenSystem* levelGen = 
+	//	static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	//levelGen->run();
 
 	// Testchamber
 	//entity = m_world->createEntity();
