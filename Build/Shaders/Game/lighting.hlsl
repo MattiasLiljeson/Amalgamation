@@ -1,13 +1,6 @@
+#include "perFrameCBuffer.hlsl"
 #include "lightLib.hlsl"
 #include "utility.hlsl"
-//#include "perFrameCBuffer.hlsl"
-
-cbuffer VertexProgramCBuffer
-{
-	float4 color;
-	float4x4 vp;
-	float4x4 vpInv;
-};
 
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
@@ -30,7 +23,7 @@ struct VertexOut
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
-	float4x4 wvp = mul(p_input.instanceTransform,vp);
+	float4x4 wvp = mul(p_input.instanceTransform, gViewProj);
 	vout.position = mul( float4(p_input.position, 1.0f), wvp );
 	return vout;
 }
@@ -43,11 +36,13 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float4 diffuseColor = float4( gDiffuseMap.Load( index ) );
 	float4 normalColor	= float4( gNormalMap.Load( index ) );	
 	float4 specular		= float4( gSpecular.Load( index ) );
-	float depth = gDepth.Load( index ); 
+	float depth = gDepth.Load( index ).r; 
+	
+	//return float4(diffuseColor.xyz,1.0f);
 
 	float3 normalVec = convertSampledNormal( normalColor.xyz );
 	float2 ndcPos = getNdcPos( p_input.position, float2( 1280.0f ,720.0f ) );
-	float3 worldPos = getWorldPos( ndcPos, depth, vpInv );
+	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
 
 	LightInfo light;
 	light.pos = float3( 0.0f, 0.0f, 0.0f );
@@ -65,9 +60,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	surface.diffuse = diffuseColor;
 	surface.spec = specular;
 
-	float3 eyePos = float3( 1.0f, 1.0f, 1.0f );
-
-	float3	lightCol = pointLight( surface, light, eyePos, normalVec, worldPos );
+	float3	lightCol = pointLight( surface, light, gCameraPos, normalVec, worldPos );
 
 	return float4( lightCol, 1.0f );
 }

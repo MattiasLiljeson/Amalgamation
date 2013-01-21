@@ -1,21 +1,8 @@
-cbuffer cbFixed
-{
-	float2 gQuadTexC[4] = 
-	{
-		float2(0.0f, 1.0f),
-		float2(1.0f, 1.0f),
-		float2(0.0f, 0.0f),
-		float2(1.0f, 0.0f)
-	};
-};
+#include "../Game/perFrameCBuffer.hlsl"
 
-cbuffer cbPerFrame : register(b0)
+cbuffer cbPerObject: register(b1)
 {
-	float4x4 gViewProj;
 	float4 color;
-	float4 cameraPos;
-	float4 cameraForward;
-	float4 cameraUp;
 	float fadeIn;
 	float fadeOut;
 	float particleMaxAge;
@@ -59,7 +46,7 @@ void GS(point Particle gIn[1],
 	float4x4 W;
 	if (Alignment.x < 0.5f) //Observer
 	{
-		float3 look  = normalize(cameraPos.xyz - gIn[0].Position);
+		float3 look  = normalize(gCameraPos.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
 		float3 up    = cross(look, right);
 		W[0] = float4(right,       0.0f);
@@ -69,8 +56,8 @@ void GS(point Particle gIn[1],
 	}
 	else if (Alignment.x < 1.5f) //Screen
 	{
-		float3 look  = -cameraForward.xyz;
-		float3 up    = cameraUp.xyz;
+		float3 look  = -gCameraForward.xyz;
+		float3 up    = gCameraUp.xyz;
 		float3 right = normalize(cross(up, look));
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -80,7 +67,7 @@ void GS(point Particle gIn[1],
 	else if (Alignment.x < 2.5) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
-		float3 right = normalize(cross(up, cameraPos.xyz - gIn[0].Position));
+		float3 right = normalize(cross(up, gCameraPos.xyz - gIn[0].Position));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -90,7 +77,7 @@ void GS(point Particle gIn[1],
 	else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
-		float3 up 	 = normalize(cross(cameraPos.xyz - gIn[0].Position, right));
+		float3 up 	 = normalize(cross(gCameraPos.xyz - gIn[0].Position, right));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);

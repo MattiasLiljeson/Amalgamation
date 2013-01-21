@@ -1,9 +1,4 @@
-cbuffer VertexProgramCBuffer
-{
-    float4 color;
-	float4x4 vp;
-	float4x4 vpInv;
-};
+#include "perFrameCBuffer.hlsl"
 
 Texture2D diffuseTexture : register(t0);
 Texture2D normalTexture : register(t1);
@@ -35,26 +30,11 @@ struct PixelOut
 	float4 specular : SV_TARGET2;		//specular
 };
 
-// Input: It uses texture coords as the random number seed.
-// Output: Random number: [0,1), that is between 0.0 and 0.999999... inclusive.
-// Author: Michael Pohoreski
-// Copyright: Copyleft 2012 :-)
-
-float random( float2 p )
-{
-  // We need irrationals for pseudo randomness.
-  // Most (all?) known transcendental numbers will (generally) work.
-  const float2 r = float2(
-    23.1406926327792690,  // e^pi (Gelfond's constant)
-     2.6651441426902251); // 2^sqrt(2) (Gelfond–Schneider constant)
-  return frac( cos( 1e-7 + 256. * dot(p,r) ) );  
-}
-
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
 
-	float4x4 wvp = mul(p_input.instanceTransform,vp);
+	float4x4 wvp = mul(p_input.instanceTransform,gViewProj);
 	
 	vout.position = mul(float4(p_input.position,1.0f), wvp);
 	vout.normal = mul(float4(p_input.normal,0.0f), p_input.instanceTransform).xyz;
@@ -67,9 +47,8 @@ VertexOut VS(VertexIn p_input)
 PixelOut PS(VertexOut p_input)
 {
 	PixelOut pixelOut;
-	pixelOut.diffuse = color * diffuseTexture.Sample(pointSampler, p_input.texCoord);
+	pixelOut.diffuse = diffuseTexture.Sample(pointSampler, p_input.texCoord);
 	pixelOut.normal = float4(p_input.normal,0.0f);
-	float randomValue = random(p_input.texCoord);
 	pixelOut.specular = diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
 	return pixelOut;
