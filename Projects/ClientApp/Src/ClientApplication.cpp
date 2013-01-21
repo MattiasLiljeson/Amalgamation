@@ -66,6 +66,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <LevelGenSystem.h>
+#include <ExtrapolationSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -200,13 +201,13 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( graphicsBackend, true );
 
-	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
+		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
 
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
-
 
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
@@ -215,7 +216,8 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend, m_client);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend,
+		m_client);
 	m_world->setSystem( shipInputProc, true);
 
 	// Controller systems for the ship
@@ -240,7 +242,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( camera , true );
 
 	/************************************************************************/
-	/* Renderers															*/
+	/* Renderer																*/
 	/************************************************************************/
 	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
 	m_world->setSystem( renderer , true );
@@ -251,10 +253,10 @@ void ClientApplication::initSystems()
 	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
-
+	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-
+	
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
 
@@ -272,8 +274,10 @@ void ClientApplication::initSystems()
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
 
+	m_world->setSystem( new ExtrapolationSystem(m_client), true );
+
 	/************************************************************************/
-	/* Audio															*/
+	/* Audio																*/
 	/************************************************************************/
 #ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();

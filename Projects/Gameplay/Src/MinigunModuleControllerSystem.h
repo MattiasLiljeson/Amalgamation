@@ -25,7 +25,9 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 private:
 	void handleLaserSight(Entity* p_entity);
-	void spawnBullet(Entity* p_entity);
+	void spawnRay(Entity* p_entity);
+	void updateRays(Entity* p_entity);
+	void spawnParticleSystem(MinigunModule* p_module);
 private:
 	TcpServer* m_server;
 };

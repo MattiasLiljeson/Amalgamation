@@ -7,8 +7,11 @@
 
 class Window;
 class GraphicsWrapper;
+class AglParticleSystem;
 struct ConnectionPointCollection;
 struct AglMeshHeader;
+struct RendererSceneInfo;
+struct AglVector2;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================
@@ -40,7 +43,9 @@ public:
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();
 	float getAspectRatio();
+	AglVector2 getWindowSize();
 
+	void renderAParticleSystem(AglParticleSystem* p_system);
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 

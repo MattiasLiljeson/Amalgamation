@@ -126,7 +126,9 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		// Add shape
 		if (init->m_type == 0)
 		{
-			*bodyId = m_physicsController->AddBox(init->m_position-offset,
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			*bodyId = m_physicsController->AddBox(world,
 				init->m_scale*2, 1, 
 				init->m_velocity, 
 				init->m_angularVelocity, 

@@ -40,6 +40,7 @@ RigidBody::RigidBody()
 	mParent = NULL;
 	mImpulseEnabled = true;
 	mCollisionEnabled = true;
+	mCollisionFlag = false;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition, bool pImpulseEnabled)
@@ -55,6 +56,7 @@ RigidBody::RigidBody(AglVector3 pPosition, bool pImpulseEnabled)
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
 	mCollisionEnabled = true;
+	mCollisionFlag = false;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
@@ -72,6 +74,7 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
 	mCollisionEnabled = true;
+	mCollisionFlag = false;
 	ComputeInertia();
 }
 RigidBody::RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
@@ -89,6 +92,7 @@ RigidBody::RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVec
 	mParent = NULL;
 	mImpulseEnabled = pImpulseEnabled;
 	mCollisionEnabled = true;
+	mCollisionFlag = false;
 	ComputeInertia();
 }
 RigidBody::~RigidBody()
@@ -197,10 +201,6 @@ AglMatrix RigidBody::GetInvInertiaWorld() const
 		return mParent->GetInverseInertiaWorld();
 
 	return mInvInertiaWorld;
-}
-bool RigidBody::IsStatic() const
-{
-	return mStatic || mTempStatic;
 }
 
 void RigidBody::AddImpulse(AglVector3 pImpulse)

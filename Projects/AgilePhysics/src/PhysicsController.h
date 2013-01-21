@@ -7,6 +7,7 @@
 #include <AglInteriorSphereGrid.h>
 #include <AglLooseBspTree.h>
 #include <typeindex>
+#include "Octree.h"
 
 
 typedef pair<unsigned int, unsigned int> UintPair;
@@ -36,6 +37,8 @@ private:
 	vector<UintPair> mCollisions;
 
 	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
+
+	Octree mStaticBodies;
 
 	float mTimeAccum;
 
@@ -78,6 +81,9 @@ public:
 	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
 				bool pCollisionEnabled = true);
 
+	int AddBox(AglMatrix p_world, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+		bool pCollisionEnabled = true);
+
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 
 	/// \param p_position Position of the hull
@@ -101,7 +107,7 @@ public:
 	void SetRay(AglVector3 p_o, AglVector3 p_dir, int p_index, float maxLength = 1000000000);
 	void GetRay(unsigned int p_index, AglVector3& p_o, AglVector3& p_d); 
 
-	void DetachBodyFromCompound(RigidBody* p_body, CompoundBody* p_compound = NULL);
+	void DetachBodyFromCompound(RigidBody* p_body, bool p_impulseEnabled = true, CompoundBody* p_compound = NULL);
 	
 	void AttachBodyToCompound(CompoundBody* p_compound, RigidBody* p_body, AglMatrix p_localTransform);
 
@@ -123,6 +129,8 @@ public:
 	/// \return Time of the closest collision
 	///-----------------------------------------------------------------------------------
 	float RaysVsObjects(vector<PhyRay> p_rays, RigidBody* p_ignore, AglBoundingSphere p_sphere);
+
+	int FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2, int p_avoid = -1);
 
 	vector<RigidBody*> getBodies()
 	{ 

@@ -64,4 +64,9 @@ private:
 
 	ThreadSafeMessaging* m_parent;
 
+	// Counts how many times the socket buffer is overflowed.
+	unsigned int m_numberOfOverflowPackets;
+	unsigned int m_totalPacketsReceived;
+	unsigned int m_totalPacketsSent;
+
 };

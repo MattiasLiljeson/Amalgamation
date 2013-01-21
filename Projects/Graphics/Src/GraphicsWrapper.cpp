@@ -14,6 +14,8 @@
 #include <FileCheck.h>
 #include "D3DException.h"
 #include "D3DUtil.h"
+#include "ParticleRenderer.h"
+#include "AglParticleSystem.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -46,6 +48,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
+	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 
 	clearRenderTargets();
 }
@@ -58,6 +61,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	releaseBackBuffer();
 	
 	delete m_deferredRenderer;
+	delete m_particleRenderer;
 	delete m_deferredBaseShader;
 	delete m_bufferFactory;
 	delete m_meshManager;
@@ -157,13 +161,16 @@ void GraphicsWrapper::clearRenderTargets()
 {
 	m_deferredRenderer->clearBuffers();
 	
-	static float ClearColor[4] = { 1, 0, 0, 1.0f };
+	static float ClearColor[4] = { 1, 0, 0.39f, 1.0f }; //PINK!
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
 void GraphicsWrapper::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
 {
 	m_deferredRenderer->setSceneInfo(p_sceneInfo);
+}
+void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
+	m_renderSceneInfo = p_sceneInfo;
 }
 
 void GraphicsWrapper::beginFrame()
@@ -223,7 +230,7 @@ void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state,
 	else if (state != RasterizerState::WIREFRAME) 
 	{   
 		// otherwise, force wireframe(if not already set)
-		m_deferredRenderer->setRasterizerStateSettings(RasterizerState::WIREFRAME);
+		m_deferredRenderer->setRasterizerStateSettings(RasterizerState::WIREFRAME_NOCULL);
 	}
 }
 
@@ -436,3 +443,11 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
+void GraphicsWrapper::beginParticleRender(){
+	beginGUIPass();
+}
+void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
+	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
+}
+void GraphicsWrapper::endParticleRender(){
+}

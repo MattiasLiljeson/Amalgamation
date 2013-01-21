@@ -45,6 +45,7 @@ public:
 	virtual void UpdatePosition(float pElapsedTime);
 	virtual void RevertVelocity() = 0;
 	virtual void RevertPosition() = 0;
+	bool IsStatic() const; //NOT
 
 	virtual bool IsCompoundBody();
 

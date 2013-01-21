@@ -70,6 +70,7 @@ void AglWriter::write(AglScene* p_scene)
 		buf[ind++] = '\0';
 	}
 	file.write(buf, sizeof(char) * NameArrayLength);
+	delete[] buf;
 
 	//Write all the mesh data to the file
 	for (unsigned int i = 0; i < d.meshes.size(); i++)

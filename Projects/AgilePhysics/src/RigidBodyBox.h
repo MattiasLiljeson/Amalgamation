@@ -13,6 +13,8 @@ struct BoxInitData
 	AglVector3	AngularVelocity;
 	bool		Static;
 	bool		ImpulseEnabled;
+	bool		CollisionEnabled;
+	CompoundBody* Parent;
 };
 
 class RigidBodyBox: public RigidBody

@@ -14,6 +14,7 @@
 #include <XInputFetcher.h>
 #include <map>
 #include <string>
+#include <GraphicsWrapper.h>
 
 InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 									   GraphicsBackendSystem* p_graphicsBackend )

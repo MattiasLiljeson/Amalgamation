@@ -22,6 +22,7 @@ public:	//Enums
 		RenderInfo,
 		Input,
 		NetworkSynced,
+		Extrapolate,
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
@@ -55,11 +56,13 @@ public:	//Enums
 		ShieldModule,
 		MineLayerModule,
 		StandardMine,
+		StandardRocket,
 		RocketLauncherModule,
 		Connector1to2Module,
 		LightSources,
 		ParticleEmitters,
 		PickComponent,
+		ParticleSystemEmitter,
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/

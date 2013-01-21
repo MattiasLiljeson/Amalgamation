@@ -406,6 +406,35 @@ Describe(a_tcp_server)
 		}
 	}
 
+	It(can_verify_that_packets_broadcast_on_high_level_is_sent_in_comm_proc_as_well)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient clients[3];
+		for(int i=0; i<3; i++) {
+			clients[i].connectToServer( "127.0.0.1", "1337" );
+		}
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		Packet packet;
+		for(int i=0; i<50000; i++) {
+			server.broadcastPacket( packet );
+		}
+		// NOTE (Johan): No need for clients to actually process the messages.
+		unsigned int totalBroadcasts = server.getTotalBroadcasts();
+		server.askForCommProcessInfo();
+		boost::this_thread::sleep(boost::posix_time::millisec(1000));
+		for(int i=0; i<3; i++) {
+			clients[i].processMessages();
+		}
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		for(int i=0; i<3; i++) {
+			unsigned int totalSentInCommProcess = server.totalSentInCommProcess(i);
+			Assert::That(totalSentInCommProcess, Equals(totalBroadcasts));
+		}
+	}
+
 //	It(can_see_a_client_disconnecting)
 //	{
 //		TcpServer server;

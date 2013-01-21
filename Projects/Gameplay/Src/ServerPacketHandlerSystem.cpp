@@ -114,6 +114,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			UpdateClientStatsPacket updatedClientPacket;
 			updatedClientPacket.ping = info.ping;
+			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
 			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
@@ -152,6 +153,8 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				pickSystem->setEnabled(packet.getSenderId(), true);
 			else if (sep.type == SimpleEventType::DEACTIVATE_PICK)
 				pickSystem->setEnabled(packet.getSenderId(), false);
+			else if (sep.type == SimpleEventType::RELEASE_PICK)
+				pickSystem->setReleased(packet.getSenderId());
 		}
 	}
 	

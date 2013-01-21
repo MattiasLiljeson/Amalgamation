@@ -17,6 +17,10 @@
 #include "Agl.h"
 #include <AglNodeAnimation.h>
 #include <AglMesh.h>
+#include <Windows.h>
+#include <WindowsX.h>
+#include <string>
+#include <vld.h>
 
 using namespace std;
 
@@ -32,6 +36,7 @@ struct MeshData
 	int*			ControlIndices;
 	FbxMesh*		Source;
 	FbxNode*		SourceNode;
+	AglMatrix		Transform;
 };
 
 struct NodeData

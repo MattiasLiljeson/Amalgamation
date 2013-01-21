@@ -38,7 +38,7 @@ public:
 	/// \param p_size
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Packet(int p_senderId,char* p_data, unsigned int p_size );
+	Packet( int p_senderId, char* p_data, unsigned int p_size );
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a packet with its sender id.
@@ -73,7 +73,7 @@ public:
 	/// Returns the id of the sender.
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int getSenderId();
+	int getSenderId() const;
 
 
 	///-----------------------------------------------------------------------------------
@@ -81,7 +81,10 @@ public:
 	/// EntityType
 	/// \return char
 	///-----------------------------------------------------------------------------------
-	char getPacketType();
+	char getPacketType() const;
+
+	unsigned int getUniquePacketIdentifier() const;
+	void setUniquePacketIdentifier( unsigned int p_uniquePacketIdentifier );
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the identity of the sender.
@@ -95,6 +98,7 @@ public:
 	Packet& operator << (short	p_data);
 	Packet& operator << (unsigned short p_data);
 	Packet& operator << (int	p_data);
+	Packet& operator << (unsigned int p_data);
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3 p_data);
@@ -106,11 +110,20 @@ public:
 	Packet& operator >> (short&	 p_data);
 	Packet& operator >> (unsigned short& p_data);
 	Packet& operator >> (int&	 p_data);
+	Packet& operator >> (unsigned int& p_data);
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglVector3& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
 	Packet& operator >> (SYSTEMTIME& p_data);
+
+	///-----------------------------------------------------------------------------------
+	/// Provide a way to set the raw byte data from the outside. Needed for testing!
+	/// \param p_data
+	/// \param p_size
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setDataTest(char* p_data, unsigned int p_size);
 
 private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
@@ -121,9 +134,36 @@ private:
 	/// the packet size itself.
 	void setData(char* p_data, unsigned int p_size);
 
+	///-----------------------------------------------------------------------------------
+	/// Writes the header variables to the beginning of the data array.
+	/// \param p_data
+	/// \param p_headerSize
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void writeHeaderData(char* p_data);
+
+	///-----------------------------------------------------------------------------------
+	/// Reads from the beginning of the data array to the header variables.
+	/// \param p_data
+	/// \param p_headerSize
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void readHeaderData(char* p_data);
+
 private:
 	int m_readPos;
 	vector<char> m_data;
-	char m_packetType;
+
+	// Variable that is set on a received packet and identifies its sender.
 	int m_senderId;
+
+	// Header data (stored in the byte buffer).
+	char m_packetSize;
+	char m_packetType;
+	unsigned int m_uniquePacketIdentifier;
+
+public:
+	// HEADER_SIZE must be equal to the byte size of the header variables combined.
+	static const int HEADER_SIZE = 6;
+
 };

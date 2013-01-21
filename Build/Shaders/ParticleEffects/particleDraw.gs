@@ -46,7 +46,7 @@ void GShader(point VS_OUT gIn[1],
             inout TriangleStream<GS_OUT> triStream)
 {		
 	matrix W;
-	if (Alignment == 0) //Observer
+	[branch] if (Alignment == 0) //Observer
 	{
 		float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
 		float3 right = normalize(cross(float3(0,1,0), look));
@@ -56,7 +56,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment == 1) //Screen
+	[branch] else if (Alignment == 1) //Screen
 	{
 		float3 look  = -CameraZ.xyz;
 		float3 up    = CameraY.xyz;
@@ -66,7 +66,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else if (Alignment == 2) //World Up
+	[branch] else if (Alignment == 2) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
 		float3 right = normalize(cross(up, gEyePosW.xyz - gIn[0].Position));
@@ -76,7 +76,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	else //Velocity
+	[branch] else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
 		float3 up 	 = normalize(cross(gEyePosW.xyz - gIn[0].Position, right));

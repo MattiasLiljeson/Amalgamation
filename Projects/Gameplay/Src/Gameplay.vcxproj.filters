@@ -350,6 +350,24 @@
     <ClInclude Include="LevelPieceFileMapping.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
+    <ClInclude Include="ExtrapolationSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardRocket.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitter.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -572,6 +590,18 @@
     </ClCompile>
     <ClCompile Include="LevelPieceFileMapping.cpp">
       <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrapolationSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardRocket.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

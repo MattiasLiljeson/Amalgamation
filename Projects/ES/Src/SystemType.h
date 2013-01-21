@@ -19,6 +19,7 @@ public:	//Enums
 		ServerPacketHandlerSystem,
 		NetworkConnectoToServerSystem,
 		ClientPacketHandlerSystem,
+		ExtrapolationSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
@@ -45,6 +46,7 @@ public:	//Enums
 		ShieldModuleControllerSystem,
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
+		RocketControllerSystem,
 		RocketLauncherModuleControllerSystem,
 		ShipModulesControllerSystem,
 		TimerSystem,
@@ -57,6 +59,7 @@ public:	//Enums
 		LightRenderSystem,
 		AntTweakBarSystem,
 		ShipManagerSystem,
+		ParticleSystemEmitterSystem,
 		NUM_SYSTEM_TYPES
 	};
 
