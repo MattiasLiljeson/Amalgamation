@@ -46,10 +46,16 @@ void LevelGenSystem::initialize()
 		string modelName = m_modelFileMapping.getModelFileName(i);
 
 		m_graphicsBackend->loadSingleMeshFromFile( modelName,
-		&TESTMODELPATH);
-		
-		m_modelResources.push_back(
-			m_unmanagedModelFactory.createModelResource(modelName, &TESTMODELPATH));
+			&TESTMODELPATH);
+
+		auto resourcesFromModel = m_unmanagedModelFactory.createModelResources(modelName,
+																		&TESTMODELPATH);
+		m_modelResources.push_back( resourcesFromModel->at(0) );
+
+		delete resourcesFromModel;
+
+		//m_modelResources.push_back(
+		//	m_unmanagedModelFactory.createModelResource(modelName, &TESTMODELPATH));
 	}
 }
 
