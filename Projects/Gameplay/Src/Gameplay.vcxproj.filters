@@ -347,6 +347,9 @@
     <ClInclude Include="PositionalSound.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -563,6 +566,12 @@
     </ClCompile>
     <ClCompile Include="ExtrapolationSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSound.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

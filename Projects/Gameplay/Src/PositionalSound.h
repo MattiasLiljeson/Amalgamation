@@ -25,43 +25,20 @@ public:
 	/// \param p_soundVolume
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	PositionalSound( string p_filePath, bool p_loop, float p_soundVolume=1.0f )
-	{
-		m_filePath = p_filePath;
-		m_loop = p_loop;
-		m_soundVolume = p_soundVolume;
-	}
+	PositionalSound(const string p_filePath, const bool p_loop, const float p_soundVolume=1.0f );
 
-	const string& getFileName() {
-		return m_filePath;
-	}
-	void setFileName(string p_filePath) {
-		m_filePath = p_filePath;
-	}
+	const string& getFileName();
+	void setFileName(const string p_filePath);
 
-	const float& getSoundVolume() {
-		return m_soundVolume;
-	}
-	void setSoundVolume(float p_soundVolume) {
-		m_soundVolume = p_soundVolume;
-	}
+	const float& getSoundVolume();
+	void setSoundVolume(const float p_soundVolume);
 
-	const int& getFileId() {
-		return m_fileId;
-	}
-	void setFileId(int p_fileId) {
-		m_fileId = p_fileId;
-	}
+	const int& getFileId();
+	void setFileId(const int p_fileId);
 
-	const float& getLifeTime() {
-		return m_lifeTime;
-	}
-	void setLifeTime(float p_lifeTime) {
-		m_lifeTime = p_lifeTime;
-	}
-	void decreaseLifeTime(const float& p_delta) {
-		m_lifeTime -= p_delta;
-	}
+	const float& getLifeTime();
+	void setLifeTime(const float p_lifeTime);
+	void decreaseLifeTime(const float& p_delta);
 
 private:
 	string m_filePath;
