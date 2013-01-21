@@ -9,7 +9,7 @@
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 										   : EntitySystem( SystemType::ParticleRenderSystem){
 	m_gfxBackend = p_gfxBackend;
-	addParticleSystem();
+	//addParticleSystem();
 }
 
 

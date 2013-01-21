@@ -48,12 +48,33 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 		{
 			handleLaserSight(p_entities[i]);
 
+			//Update all rays
+			for (unsigned int j = 0; j < 10; j++)
+			{
+				if (gun->rays[j].energy > 0)
+				{
+					AglVector3 dir = gun->rays[j].p2 - gun->rays[j].p1;
+					dir.normalize();
+					gun->rays[j].p1 += dir * 50 * dt;
+					gun->rays[j].p2 += dir * 50 * dt;
+
+					PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+					int col = physics->getController()->FindClosestCollision(gun->rays[j].p1, gun->rays[j].p2);
+					if (col >= 0)
+					{
+						gun->rays[j].energy -= 0.25f;
+						physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
+					}
+				}
+			}
+
+
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
-
 			if (gun->coolDown == 0 && module->m_active)
 			{
-				spawnBullet(p_entities[i]);
+				if (module->m_active)
+					spawnRay(p_entities[i]);
 			}
 		}
 	}
@@ -108,15 +129,14 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		//laserTransform->setTranslation(scale);
 	}
 }
-void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
+void MinigunModuleControllerSystem::spawnRay(Entity* p_entity)
 {
 	MinigunModule* gun = static_cast<MinigunModule*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
-	gun->coolDown = 0.25f;
 
-	//Create Bullet
+	//Create Ray
 	Transform* gunTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
@@ -127,7 +147,13 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	const AglQuaternion& rot = gunTransform->getRotation();
 	rot.transformVector(dir);
 
-	PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
+	gun->coolDown = 0.1f;
+	gun->rays[gun->currentRay].p1 = gunTransform->getTranslation() + dir * 1.5f;
+	gun->rays[gun->currentRay].p2 = gunTransform->getTranslation() + dir * (1.5f + 50 * 0.1f);
+	gun->rays[gun->currentRay].energy = 1.0f;
+	gun->currentRay = (gun->currentRay+1) % 10;
+
+	/*PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
 
 	PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
 	AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
@@ -161,5 +187,5 @@ void MinigunModuleControllerSystem::spawnBullet(Entity* p_entity)
 	entity->addComponent(ComponentType::NetworkSynced, 
 		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 
-	m_server->broadcastPacket(data.pack());
+	m_server->broadcastPacket(data.pack());*/
 }
