@@ -1,10 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
 
-//tmp
-#include "..\..\Graphics\Src\PTVertex.h"
-#include "..\..\Graphics\Src\Buffer.h"
-
 class GraphicsBackendSystem;
 class LightMesh;
 

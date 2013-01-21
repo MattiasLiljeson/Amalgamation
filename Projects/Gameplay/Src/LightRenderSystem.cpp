@@ -4,7 +4,7 @@
 #include <BufferFactory.h>
 #include <GraphicsWrapper.h>
 #include <InstanceData.h>
-#include <Mesh.h>
+#include <LightMesh.h>
 
 
 LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
@@ -18,6 +18,7 @@ LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 
 LightRenderSystem::~LightRenderSystem()
 {
+	delete m_box;
 }
 
 void LightRenderSystem::initialize()
