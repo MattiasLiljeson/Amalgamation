@@ -356,6 +356,12 @@
     <ClInclude Include="ParticleSystemEmitterSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleUpdateData.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -581,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="ParticleSystemEmitterSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

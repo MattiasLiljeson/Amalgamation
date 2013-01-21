@@ -27,7 +27,7 @@ private:
 	void handleLaserSight(Entity* p_entity);
 	void spawnRay(Entity* p_entity);
 	void updateRays(Entity* p_entity);
-	void spawnParticleSystem(MinigunModule* p_module);
+	void handleParticleSystem(Entity* p_entity);
 private:
 	TcpServer* m_server;
 };

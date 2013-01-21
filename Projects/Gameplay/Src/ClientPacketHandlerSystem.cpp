@@ -40,6 +40,7 @@
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "EntityUpdatePacket.h"
+#include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
@@ -128,6 +129,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					}
 				}
 			}
+		}
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{			
+			ParticleUpdatePacket data;
+			data.unpack(packet);
+			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+				SystemType::ParticleRenderSystem ));
+			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+
+			ps->setSpawnPoint(data.position);
+			ps->setSpawnDirection(data.direction);
+			ps->setSpawnSpeed(data.speed);
+			ps->setSpawnFrequency(data.spawnFrequency);
 		}
 #pragma endregion 
 		/************************************************************************/
@@ -369,15 +383,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		h.alignmentType = AglParticleSystemHeader::OBSERVER;
 		h.spawnFrequency = 200;
 		h.spawnSpeed = 5.0f;
-		h.spread = 0.2f;
-		h.fadeOutStart = 1.0f;
-		h.fadeInStop = 0.5f;
+		h.spread = 0.0f;
+		h.fadeOutStart = 2.0f;
+		h.fadeInStop = 0.0f;
 		h.particleAge = 2;
 
 		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 			SystemType::ParticleRenderSystem ));
-		gfx->addParticleSystem();
-		//gfx->addParticleSystem(h, p_packet.networkIdentity);
+		//gfx->addParticleSystem();
+		gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{
