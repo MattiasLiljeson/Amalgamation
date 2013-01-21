@@ -283,8 +283,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 //			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
 //			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
 
-			entity->addComponent(ComponentType::PositionalSoundEffect,
-				new PositionalSoundEffect("Sound Design_Vintage Sci Fi_Spaceship_Alien_Warps_Upwards_Short_HutchSFX.wav", false));
+//			entity->addComponent(ComponentType::PositionalSoundEffect,
+//				new PositionalSoundEffect("Sound Design_Vintage Sci Fi_Spaceship_Alien_Warps_Upwards_Short_HutchSFX.wav", true));
 			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE <-
 
 		}
@@ -356,6 +356,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, component );
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
+		// HACK: (Johan) Remove obviously!
+//		entity->addComponent(ComponentType::PositionalSoundEffect,
+//			new PositionalSoundEffect("spaceship_laser.wav", true));
 
 		m_world->addEntity(entity);
 	}

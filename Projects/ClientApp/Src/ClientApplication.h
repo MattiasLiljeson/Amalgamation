@@ -69,7 +69,6 @@ private:
 	void initSystems();
 	void initEntities();
 	void initSounds();
-	void initSoundSystem();
 
 	void InitModulesTestByAnton();
 

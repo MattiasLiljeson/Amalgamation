@@ -103,14 +103,12 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 #ifdef COMBINE_CLIENT_AND_SERVER
 		m_serverApp = new Srv::ServerApplication();
 #endif
-
+		// Systems first!
 		initSystems();
-		initEntities();
 
-#ifdef ENABLE_SOUND
-		initSoundSystem();
+		// Test entities later!
+		initEntities();
 		initSounds();
-#endif
 
 	}
 	catch(exception& e)
@@ -288,6 +286,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Audio																*/
 	/************************************************************************/
+#ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
@@ -299,6 +298,7 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
 		true );
+#endif
 
 	/************************************************************************/
 	/* Gameplay																*/
@@ -353,6 +353,13 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
+	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
+	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
+		"spaceship_laser.wav", true));
+	m_world->addEntity(entity);
 	//InitModulesTestByAnton();
 
 	/*
@@ -400,86 +407,75 @@ void ClientApplication::initSounds()
 	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
 	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
 
+	/************************************************************************/
+	/* Load positional sound												*/
+	/************************************************************************/
+//	file = "spaceship_laser.wav";
+//	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
+//		TESTSOUNDEFFECTPATH.c_str(),true);
+//	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
+//		AglVector3( 0, 0, 0 ));
+//	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+//	entity = m_world->createEntity();
+//	component = new Transform( 0, 0, 0 );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new AudioInfo(soundIdx,true);
+//	entity->addComponent(ComponentType::AudioInfo, component);
+//	m_world->addEntity(entity);
+//	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
 
 	/************************************************************************/
 	/* Load positional sound												*/
 	/************************************************************************/
-	file = "Techno_1.wav";
-	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
-		TESTMUSICPATH.c_str(),true);
-	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-		AglVector3( 3.0f, -10.0f, -30.0f ));
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, -10.0f, -30.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioInfo, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load positional sound												*/
-	/************************************************************************/
-	file = "MusicMono.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(), TESTMUSICPATH.c_str(),true);
-	positionalSoundInfo = PositionalSoundCreationInfo( AglVector3(3,3,3) );
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, 3.0f, 3.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioInfo, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Techno_1.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTMUSICPATH.c_str(), true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioInfo,component);
-	m_world->addEntity(entity);
+//	for(int i=0; i<1; i++)
+//	{
+//		file = "MusicMono.wav";
+//		BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(), TESTMUSICPATH.c_str(),true);
+//		PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo( AglVector3(3.0f,3.0f,(float)i*2.0f) );
+//		soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+//		entity = m_world->createEntity();
+//		component = new Transform( 3.0f, 3.0f, (float)i*2.0f );
+//		entity->addComponent( ComponentType::Transform, component );
+//		component = new AudioInfo(soundIdx,true);
+//		entity->addComponent(ComponentType::AudioInfo, component);
+//		m_world->addEntity(entity);
+//		audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
+//	}
 	
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioInfo,component);
-	m_world->addEntity(entity);
 
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioInfo, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
-}
-
-void ClientApplication::initSoundSystem()
-{
-	//Audio Systems
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Techno_1.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTMUSICPATH.c_str(), true);
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo,component);
+//	m_world->addEntity(entity);
+//	
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo,component);
+//	m_world->addEntity(entity);
+//
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo, component);
+//	m_world->addEntity(entity);
+//	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
 }
 
 void ClientApplication::InitModulesTestByAnton()
@@ -681,12 +677,6 @@ void ClientApplication::InitModulesTestByAnton()
 	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
 	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
 	m_world->addEntity(entity); 
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
-	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
-		"engine-noice.wav", false));
-	m_world->addEntity(entity);
 
 	//Ray entity
 	/*entity = m_world->createEntity();

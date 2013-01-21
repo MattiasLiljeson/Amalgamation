@@ -45,18 +45,21 @@ void PositionalSoundSystem::inserted( Entity* p_entity )
 		positionalSoundEffect->loops());
 	PositionalSoundCreationInfo positionCreationalSoundInfo = PositionalSoundCreationInfo(
 		transform->getTranslation());
-	int soundIndex = m_audioBackendSystem->getSoundWrapper()->createNewPositionalSound(
+	int soundIndex = m_audioBackendSystem->createPositionalSound(
 		&creationalSoundInfo, &positionCreationalSoundInfo);
 	positionalSoundEffect->setSoundIndex(soundIndex);
 	// NOTE: (Johan) There is a bug where STOP must be called before PLAY when playing
 	// sound only once. If only PLAY is called the sound will play exactly two times.
-	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
+//	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
 }
 
 void PositionalSoundSystem::removed( Entity* p_entity )
 {
-	throw std::exception("The method or operation is not implemented.");
+	PositionalSoundEffect* positionalSoundEffect = static_cast<PositionalSoundEffect*>(
+		p_entity->getComponent(ComponentType::PositionalSoundEffect));
+	int soundIndex = positionalSoundEffect->getSoundIndex();
+	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
 }
 
 void PositionalSoundSystem::updateSoundPositions( const vector<Entity*>& p_entities )
@@ -74,5 +77,7 @@ void PositionalSoundSystem::updateSoundPositions( const vector<Entity*>& p_entit
 			m_audioBackendSystem->getSoundWrapper()->getSound(
 			positionalSoundEffect->getSoundIndex()));
 		positionalSound->setPosition(transform->getTranslation());
+
+		m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
 	}
 }
