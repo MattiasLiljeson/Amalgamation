@@ -54,6 +54,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 
 	m_currentPing = 0;
 
+	m_totalNetworkSynced = 0;
 	m_numberOfSentPackets = 0;
 	m_numberOfReceivedPackets = 0;
 	m_totalDataSent = 0;
@@ -76,8 +77,8 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	updateInitialPacketLossDebugData();
-
 	updateCounters();
+	m_totalNetworkSynced = p_entities.size();
 
 	while (m_tcpClient->hasNewPackets())
 	{
@@ -400,6 +401,10 @@ void ClientPacketHandlerSystem::initialize()
 		&m_totalDataSent, "group='Per frame'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
+		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Total overflow packets", TwType::TW_TYPE_UINT32,
 		&m_totalNumberOfOverflowPackets, "group='network bug'" );
@@ -410,8 +415,10 @@ void ClientPacketHandlerSystem::initialize()
 		&m_totalNumberOfStaticPropPacketsReceived, "group='network bug'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
-		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Total network synced", TwType::TW_TYPE_UINT32,
+		&m_totalNetworkSynced, "group='network bug'" );
+	
 
 	/************************************************************************/
 	/* Per second data.														*/

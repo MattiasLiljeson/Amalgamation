@@ -56,6 +56,7 @@ private:
 	TcpClient* m_tcpClient;
 	float m_currentPing;
 
+	unsigned int m_totalNetworkSynced;
 	unsigned int m_numberOfSentPackets;
 	unsigned int m_numberOfReceivedPackets;
 	unsigned int m_totalDataSent;

@@ -423,7 +423,7 @@ Describe(a_tcp_server)
 		// NOTE (Johan): No need for clients to actually process the messages.
 		unsigned int totalBroadcasts = server.getTotalBroadcasts();
 		server.askForCommProcessInfo();
-		boost::this_thread::sleep(boost::posix_time::millisec(1000));
+		boost::this_thread::sleep(boost::posix_time::millisec(2000));
 		for(int i=0; i<3; i++) {
 			clients[i].processMessages();
 		}
