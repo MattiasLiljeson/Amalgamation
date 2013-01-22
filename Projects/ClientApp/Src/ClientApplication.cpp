@@ -90,6 +90,8 @@ using namespace std;
 #include <FrameFinalizerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <ParticleRenderSystem.h>
+#include <LightsComponent.h>
+#include <LightInstanceData.h>
 
 
 
@@ -345,9 +347,24 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform( 5.0f, 10.0f, 19.0f);
 	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
 
+	float scale = 25.0f;
+
+	LightInstanceData lightInstanceData;
+	lightInstanceData.range = scale;
+	lightInstanceData.attenuation[0] = 1.0f;
+	lightInstanceData.ambient[0] = lightInstanceData.ambient[1] = lightInstanceData.ambient[2] = 0.2f;
+	lightInstanceData.diffuse[0] = 0.2f;
 	
+	Light light;
+	light.scale = AglVector3( scale, scale, scale );
+	light.instanceData = lightInstanceData;
+
+	LightsComponent* lights = new LightsComponent();
+	lights->addLight( light );
+
+	component = static_cast<Component*>(lights);
+	entity->addComponent( ComponentType::LightsComponent, component );
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
