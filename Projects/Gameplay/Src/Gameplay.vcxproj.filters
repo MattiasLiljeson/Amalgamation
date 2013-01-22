@@ -368,7 +368,7 @@
     <ClInclude Include="ParticleSystemEmitterSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
-    <ClInclude Include="MeshInitData.h">
+    <ClInclude Include="BoundingVolumeInitData.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
   </ItemGroup>

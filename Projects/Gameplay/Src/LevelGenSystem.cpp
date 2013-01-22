@@ -19,7 +19,7 @@
 #include "GameplayTags.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
-#include "MeshInitData.h"
+#include "BoundingVolumeInitData.h"
 
 LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -131,8 +131,8 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
 			obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
 			0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true));
-	entity->addComponent(ComponentType::MeshInitData,
-		new MeshInitData(p_piece->getBoundingSphere(), p_piece->getBoundingBox(),
+	entity->addComponent(ComponentType::BoundingVolumeInitData,
+		new BoundingVolumeInitData(p_piece->getBoundingSphere(), p_piece->getBoundingBox(),
 			AglMatrix(AglVector3::one(), p_piece->getTransform()->getRotation(),
 				p_piece->getTransform()->getTranslation() ) ) );
 

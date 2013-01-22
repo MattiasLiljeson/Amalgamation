@@ -12,15 +12,15 @@
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # MeshInitData
+/// # BoundingVolumeInitData
 /// Detailed description.....
 /// Created on: 22-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class MeshInitData : public Component
+class BoundingVolumeInitData : public Component
 {
 public:
-	MeshInitData(const AglBoundingSphere& p_boundingSphere, const AglOBB& p_obb,
+	BoundingVolumeInitData(const AglBoundingSphere& p_boundingSphere, const AglOBB& p_obb,
 				AglMatrix p_worldTransform)
 	{
 		m_boundingSphere	= p_boundingSphere;

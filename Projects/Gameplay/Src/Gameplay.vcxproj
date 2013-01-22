@@ -47,7 +47,7 @@
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
-    <ClInclude Include="MeshInitData.h" />
+    <ClInclude Include="BoundingVolumeInitData.h" />
     <ClInclude Include="MineControllerSystem.h" />
     <ClInclude Include="MineLayerModuleControllerSystem.h" />
     <ClInclude Include="MineLayerModule.h" />
