@@ -1,7 +1,7 @@
 #include <vld.h>
 #include "ClientApplication.h"
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 {
 	ClientApplication* application;
 	application = new ClientApplication( hInstance );

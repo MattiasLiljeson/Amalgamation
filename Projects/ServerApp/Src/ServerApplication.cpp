@@ -236,8 +236,7 @@ namespace Srv
 			ProcessMessage* message = messages.front();
 			messages.pop();
 
-			if( message->type == MessageType::TERMINATE )
-			{
+			if(message && message->type == MessageType::TERMINATE ){
 				m_running = false;
 			}
 			delete message;
