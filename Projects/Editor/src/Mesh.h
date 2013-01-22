@@ -92,6 +92,7 @@ public:
 	bool*				getDrawTree(){ return &m_drawTree; }
 	bool*				getDrawGrid(){ return &m_drawSphereGrid; }
 	unsigned int*		getTreeLevel(){ return &m_treeLevel; }
+	AglMatrix			getTransform(){ return mMesh->getHeader().transform; }
 };
 
 template <typename T>

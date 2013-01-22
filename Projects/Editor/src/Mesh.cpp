@@ -90,6 +90,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 	AglMatrix trans = mMesh->getHeader().transform;
 	trans.SetTranslation(trans.GetTranslation()*pScale);
 	pWorld = trans * pWorld;
+	AglVector3 t = pWorld.GetTranslation();
 	if (m_grid && m_drawSphereGrid)
 	{
 		AglInteriorSphereGridHeader gh = m_grid->getHeader();

@@ -61,6 +61,8 @@ private:
 
 	Mesh* mPlaneMesh;
 
+	vector<string> mPaths;
+
 private:
 	Scene();
 	~Scene();
@@ -104,6 +106,16 @@ public:
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);
+	void  AddPath(string pPath, int pIndex)
+	{
+		while (pIndex >= mPaths.size())
+			mPaths.push_back("");
+		mPaths[pIndex] = pPath;
+	}
+	string GetPath(int pIndex)
+	{
+		return mPaths[pIndex];
+	}
 
 	string GetFolder(){ return mFolder; }
 	void Save(string pPath);

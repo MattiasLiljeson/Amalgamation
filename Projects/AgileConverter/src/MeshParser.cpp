@@ -110,7 +110,7 @@ void MeshParser::Parse()
 	m->Source = mMesh;
 	m->SourceNode = mNode;
 
-	FbxMatrix transform = m->SourceNode->EvaluateLocalTransform();
+	FbxMatrix transform = m->SourceNode->EvaluateGlobalTransform();
 	for (int row = 0; row < 4; row++)
 		for (int column = 0; column < 4; column++)
 			m->Transform[row*4 + column] = (float)transform.Get(row, column);

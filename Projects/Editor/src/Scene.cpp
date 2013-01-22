@@ -165,6 +165,9 @@ void Scene::Draw()
 	{
 		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
+
+		AglMatrix meshTransform = mMeshes[i]->getTransform();
+
 		if (SPHEREMESH && DRAWDEBUGSPHERE)
 		{
 			AglBoundingSphere bs = mMeshes[i]->getBoundingSphere();
@@ -172,6 +175,7 @@ void Scene::Draw()
 			AglMatrix::componentsToMatrix(sw, AglVector3(bs.radius, bs.radius, bs.radius), AglQuaternion::identity(), bs.position);
 			sw = sw * m_avoidJump;
 			sw = sw * invMax;
+			sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			SPHEREMESH->Draw(sw, mSphereColors[i]);
@@ -185,6 +189,7 @@ void Scene::Draw()
 			sw = size * sw;
 			sw = sw * m_avoidJump;
 			sw = sw * invMax;
+			sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
