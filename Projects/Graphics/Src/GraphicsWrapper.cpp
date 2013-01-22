@@ -180,7 +180,7 @@ void GraphicsWrapper::beginFrame()
 
 	m_renderSceneInfoBuffer->accessBuffer.setSceneInfo( m_renderSceneInfo );
 	m_renderSceneInfoBuffer->update();
-	m_renderSceneInfoBuffer->apply(1);
+	m_renderSceneInfoBuffer->apply();
 
 }
 

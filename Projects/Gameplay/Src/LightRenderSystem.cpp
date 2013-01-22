@@ -4,9 +4,8 @@
 #include <BufferFactory.h>
 #include <GraphicsWrapper.h>
 #include <InstanceData.h>
-#include <Mesh.h>
 #include <LightInstanceData.h>
-
+#include <LightMesh.h>
 
 LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::LightRenderSystem )
@@ -19,6 +18,7 @@ LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 
 LightRenderSystem::~LightRenderSystem()
 {
+	delete m_box;
 }
 
 void LightRenderSystem::initialize()
@@ -57,13 +57,13 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 	instData.attenuation[0] = 1.1f;
 	instData.attenuation[1] = 0.01f;
-	instData.attenuation[2] = 0.0f;
+	instData.attenuation[2] = 0.1f;
 	instData.spotPower = 100.0f;
 
-	instData.ambient[0] = 0.0f;
-	instData.ambient[1] = 0.0f;
-	instData.ambient[2] = 0.0f;
-	instData.ambient[3] = 1.0f;
+	instData.ambient[0] = 0.01f;
+	instData.ambient[1] = 0.01f;
+	instData.ambient[2] = 0.01f;
+	instData.ambient[3] = 1.01f;
 
 	instData.diffuse[0] = 0.0f;
 	instData.diffuse[1] = 0.5f;

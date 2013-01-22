@@ -1,4 +1,4 @@
-//#include <vld.h>
+#include <vld.h>
 
 #include "ClientApplication.h"
 

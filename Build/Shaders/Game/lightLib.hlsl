@@ -48,7 +48,7 @@ struct LightInfo
 struct SurfaceInfo
 {
 	float4	diffuse;
-	float4	spec;
+	float4	specular;
 	//float3	normal;
 	//float	pad1;
 	//float3	pos;
@@ -85,14 +85,14 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 	if( diffuseFactor > 0.0f )
 	{
 		//return float3(0, 0, 0.5);
-		float specPower = max(surface.spec.a, 1.0f);
+		float specPower = max(surface.specular.a, 1.0f);
 		float3 toEye = normalize(eyePos - pixelPos);
 		float3 R = reflect(-lightVec, normal);
 		float specFactor = pow(max(dot(R, toEye), 0.0f), specPower);
 		
 		// diffuse and specular terms
-		litColor += diffuseFactor * surface.diffuse.xyz * light.diffuse.xyz;
-		litColor += specFactor * surface.spec.xyz * light.specular.xyz;
+		litColor += diffuseFactor.r * (surface.diffuse.rgb * light.diffuse.rgb);
+		litColor += specFactor.r * (surface.specular.rgba * light.specular.rgba);
 	}
 	// attenuate
 	return litColor / dot(light.attenuation, float3(1.0f, d, d*d));

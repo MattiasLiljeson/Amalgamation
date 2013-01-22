@@ -28,9 +28,15 @@ void* BufferBase::map()
 		D3D11_MAPPED_SUBRESOURCE MappedResource;
 		UINT32 mapType = 0;
 
-		if(usage == BufferConfig::BUFFER_CPU_READ)	mapType = D3D11_MAP_READ;
-		else if(usage == BufferConfig::BUFFER_CPU_WRITE) mapType = D3D11_MAP_WRITE;
-		else if(usage == BufferConfig::BUFFER_CPU_WRITE_DISCARD)	mapType = D3D11_MAP_WRITE_DISCARD;
+		if(usage == BufferConfig::BUFFER_CPU_READ){
+			mapType = D3D11_MAP_READ;
+		}
+		else if(usage == BufferConfig::BUFFER_CPU_WRITE){
+			mapType = D3D11_MAP_WRITE;
+		}
+		else if(usage == BufferConfig::BUFFER_CPU_WRITE_DISCARD){ 
+			mapType = D3D11_MAP_WRITE_DISCARD;
+		}
 
 		HRESULT hr = S_OK;
 		if(FAILED(hr = m_deviceContext->Map( m_buffer, 0, (D3D11_MAP)mapType, 0,
@@ -51,9 +57,9 @@ void BufferBase::unmap()
 	m_deviceContext->Unmap( m_buffer, 0 );
 }
 
-void BufferBase::apply( UINT32 misc /*= 0*/ )
+void BufferBase::apply()
 {
-	sendBufferToGPU(true,misc);
+	sendBufferToGPU(true);
 }
 
 void BufferBase::unApply()
@@ -99,7 +105,7 @@ void BufferBase::init(void* p_initData )
 	}
 }
 
-void BufferBase::sendBufferToGPU( bool p_shouldSend, UINT32 p_misc/*=0*/ )
+void BufferBase::sendBufferToGPU( bool p_shouldSend)
 {	
 	/************************************************************************/
 	/* Something strange? Ask Robin T										*/
@@ -118,11 +124,11 @@ void BufferBase::sendBufferToGPU( bool p_shouldSend, UINT32 p_misc/*=0*/ )
 			if(p_shouldSend){
 				UINT32 vertexSize = m_config->elementSize;
 				UINT32 offset = 0;
-				m_deviceContext->IASetVertexBuffers(p_misc, numOfBuffers, &m_buffer, 
+				m_deviceContext->IASetVertexBuffers(m_config->slot, numOfBuffers, &m_buffer, 
 					&vertexSize, &offset );
 			}
 			else{
-				m_deviceContext->IASetVertexBuffers(p_misc,numOfBuffers,NULL,0,0);
+				m_deviceContext->IASetVertexBuffers(m_config->slot,numOfBuffers,NULL,0,0);
 			}
 		}
 		break;
@@ -133,51 +139,51 @@ void BufferBase::sendBufferToGPU( bool p_shouldSend, UINT32 p_misc/*=0*/ )
 		break;
 	case BufferConfig::CONSTANT_BUFFER_VS:
 		{
-			m_deviceContext->VSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->VSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;
 	case BufferConfig::CONSTANT_BUFFER_GS:
 		{
-			m_deviceContext->GSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->GSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;
 	case BufferConfig::CONSTANT_BUFFER_PS:
 		{
-			m_deviceContext->PSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->PSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;
 	case BufferConfig::CONSTANT_BUFFER_VS_PS:
 		{
-			m_deviceContext->VSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->PSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->VSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->PSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;	
 	case BufferConfig::CONSTANT_BUFFER_VS_GS_PS:
 		{
-			m_deviceContext->VSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->GSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->PSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->VSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->GSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->PSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;	
 	case BufferConfig::CONSTANT_BUFFER_GS_PS:
 		{
-			m_deviceContext->GSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->PSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->GSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->PSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;	
 	case BufferConfig::CONSTANT_BUFFER_VS_GS:
 		{
-			m_deviceContext->VSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->GSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->VSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->GSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;	
 	case BufferConfig::CONSTANT_BUFFER_ALL:
 		{
-			m_deviceContext->VSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->GSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->HSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->DSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
-			m_deviceContext->PSSetConstantBuffers(p_misc, numOfBuffers, &GPUBuffer);
+			m_deviceContext->VSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->GSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->HSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->DSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
+			m_deviceContext->PSSetConstantBuffers(m_config->slot, numOfBuffers, &GPUBuffer);
 		}
 		break;
 	default:

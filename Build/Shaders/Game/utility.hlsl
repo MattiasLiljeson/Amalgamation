@@ -1,5 +1,3 @@
-// p_depth should be in 
-
 float3 convertSampledNormal( float3 p_sampledNormal )
 {
 	// From 0.0 - 1.0 to -1.0 - 1.0
