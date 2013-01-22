@@ -48,7 +48,8 @@ private:
 	
 	int getMeshFromPieceType(int p_typeId) const;
 
-	void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
+	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
+	Entity* createEntity(LevelPiece* p_piece);
 
 	void generateLevelPieces(int p_maxDepth);
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 

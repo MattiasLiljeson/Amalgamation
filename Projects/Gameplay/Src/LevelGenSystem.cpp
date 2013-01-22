@@ -19,6 +19,7 @@
 #include "GameplayTags.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include "MeshInitData.h"
 
 LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -89,7 +90,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
 
 	// Create the entity and specify a mesh for it
-	createAndAddEntity(0, transform, piece->getBoundingBox());
+	//createAndAddEntity(0, transform, piece->getBoundingBox());
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
@@ -117,7 +118,30 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	}
 }
 
-void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform, const AglOBB& p_obb)
+Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
+{
+	Entity* entity = m_world->createEntity();
+	
+	AglOBB obb = p_piece->getBoundingBox();
+
+	entity->addComponent(ComponentType::Transform, p_piece->getTransform());
+	entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
+	
+	entity->addComponent(ComponentType::BodyInitData,
+		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
+			obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
+			0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true));
+	entity->addComponent(ComponentType::MeshInitData,
+		new MeshInitData(p_piece->getBoundingSphere(), p_piece->getBoundingBox(),
+			AglMatrix(AglVector3::one(), p_piece->getTransform()->getRotation(),
+				p_piece->getTransform()->getTranslation() ) ) );
+
+	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
+
+	return entity;
+}
+
+/*void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform, const AglOBB& p_obb)
 {
 	Entity* entity = m_world->createEntity();
 
@@ -159,7 +183,7 @@ void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform, con
 	//entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
 
 	m_world->addEntity(entity);
-}
+}*/
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
 										   vector<LevelPiece*>& out_pieces )
@@ -269,7 +293,18 @@ int LevelGenSystem::getMeshFromPieceType( int p_typeId ) const
 
 void LevelGenSystem::createLevelEntities()
 {
+	for (int i = 0; i < m_generatedPieces.size(); i++)
+	{
+		Entity* e = createEntity(m_generatedPieces[i]);
 
+		if ( !m_server )
+		{
+			e->addComponent(ComponentType::RenderInfo, 
+				new RenderInfo( getMeshFromPieceType( m_generatedPieces[i]->getTypeId() ) ));
+		}
+
+		m_world->addEntity(e);
+	}
 }
 
 const AglVector3&  LevelGenSystem::getWorldMin() const
@@ -292,3 +327,4 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);
 	}
 }
+

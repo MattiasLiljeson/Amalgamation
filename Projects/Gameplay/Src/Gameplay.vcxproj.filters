@@ -368,6 +368,9 @@
     <ClInclude Include="ParticleSystemEmitterSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="MeshInitData.h">
+      <Filter>Components\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
