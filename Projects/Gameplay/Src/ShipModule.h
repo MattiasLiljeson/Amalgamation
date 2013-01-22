@@ -20,6 +20,7 @@ public:
 	int m_parentEntity;
 	bool m_active;
 	float m_value; ///< Value of the module. Generates score.
+	float m_health; ///< Health of the module. A module that loses all health is removed
 
 	ShipModule();
 	~ShipModule();

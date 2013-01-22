@@ -288,8 +288,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/
 		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
+		component = new PlayerScore();
+		entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/

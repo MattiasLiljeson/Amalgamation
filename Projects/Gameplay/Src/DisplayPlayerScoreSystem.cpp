@@ -37,6 +37,6 @@ void DisplayPlayerScoreSystem::added( Entity* p_entity )
 		ss << "score(" << netSync->getNetworkOwner() << ")";
 
 		AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::NETWORK,
-			ss.str().c_str(), TwType::TW_TYPE_INT32, score->getScorePointer(), "" );
+			ss.str().c_str(), TwType::TW_TYPE_FLOAT, score->getTotalScorePointer(), "" );
 	}
 }

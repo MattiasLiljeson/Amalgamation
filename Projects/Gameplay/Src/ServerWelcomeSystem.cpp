@@ -215,6 +215,7 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
+	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
 
 	return e;
 }
