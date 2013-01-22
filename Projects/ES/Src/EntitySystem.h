@@ -117,13 +117,13 @@ public:
 	 * Called if the system has received a entity it is interested in, e.g. created or a component was added to it.
 	 * @param p_entity The entity that was added to this system.
 	 */
-	void inserted( Entity* p_entity ) {};
+	virtual void inserted( Entity* p_entity ) {};
 
 	/**
 	 * Called if a entity was removed from this system, e.g. deleted or had one of it's components removed.
 	 * @param p_entity The entity that was removed from this system.
 	 */
-	void removed( Entity* p_entity ) {};
+	virtual void removed( Entity* p_entity ) {};
 
 	void removeFromSystem( Entity* p_entity );
 	void insertToSystem( Entity* p_entity );

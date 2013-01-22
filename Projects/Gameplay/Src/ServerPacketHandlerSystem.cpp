@@ -1,6 +1,7 @@
 #include "ServerPacketHandlerSystem.h"
 #include "ServerPickingSystem.h"
 #include "ShipModulesControllerSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
 
 // Components
 #include "Transform.h"
@@ -116,13 +117,18 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			updatedClientPacket.ping = info.ping;
 			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
 			// Also add the players' score to the packet.
+			NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
+				static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+				SystemType::NetSyncedPlayerScoreTrackerSystem));
+			vector<Entity*>* netSyncedScoreEntities =
+				netSyncedScoreSystem->getNetScoreEntities();
 			int playerCount = 0;
-			for(unsigned int i=0; i<p_entities.size(); i++)
+			for(unsigned int i=0; i<netSyncedScoreEntities->size(); i++)
 			{
 				PlayerScore* playerScore = static_cast<PlayerScore*>(
-					p_entities[i]->getComponent(ComponentType::PlayerScore));
+					(*netSyncedScoreEntities)[i]->getComponent(ComponentType::PlayerScore));
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(
-					p_entities[i]->getComponent(ComponentType::NetworkSynced));
+					(*netSyncedScoreEntities)[i]->getComponent(ComponentType::NetworkSynced));
 				if(playerScore && netSync)
 				{
 					updatedClientPacket.playerIdentities[playerCount] =
@@ -130,7 +136,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					// TODO: (Johan) Change score into whatever Anton sees fit, but for
 					// now the score is an integer!
 					updatedClientPacket.scores[playerCount] = playerScore->getScore();
-					playerScore += 1;
+					playerCount += 1;
 				}
 			}
 

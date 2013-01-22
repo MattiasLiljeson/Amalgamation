@@ -20,6 +20,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <ShipManagerSystem.h>
 #include <RocketControllerSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -147,8 +148,8 @@ namespace Srv
 
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new ServerScoreSystem( m_server ), true );
-
-		m_world->initialize();
+		m_world->setSystem( SystemType::NetSyncedPlayerScoreTrackerSystem,
+			new NetSyncedPlayerScoreTrackerSystem(), true );
 
 		/************************************************************************/
 		/* Picking																*/
@@ -166,6 +167,10 @@ namespace Srv
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(), true);
+
+		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
+		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
+		m_world->initialize();
 	}
 
 	void ServerApplication::initEntities()

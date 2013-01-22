@@ -198,7 +198,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
 			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
-			for(int playerId=0; playerId<8; playerId++)
+			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
 			{
 				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
 				{
