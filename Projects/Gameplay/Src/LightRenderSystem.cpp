@@ -34,11 +34,7 @@ void LightRenderSystem::initialize()
 
 void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
-	
-	gfxWrapper->beginLightPass();			  // finalize, draw to back buffer
-	//gfxWrapper->renderLights( NULL, NULL );
-
+	m_data.clear();
 	static float range = 100.0f;
 
 	AglMatrix mat = AglMatrix::identityMatrix();
@@ -77,7 +73,6 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	instData.enabled = true;
 	instData.type = LightTypes::E_LightTypes_POINT;
 
-	vector<LightInstanceData> instDatas;
 	for( int x=0; x<5; x++ )
 	{
 		instData.worldTransform[3] = x * (range+1.0f) - 25.0f;
@@ -90,12 +85,13 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				instData.worldTransform[11] = z * (range+1.0f) - 25.0f;
 				instData.diffuse[3] += 0.1f;
-				instDatas.push_back( instData );
+				m_data.push_back( instData );
 			}
 		}
 	}
+}
 
-	gfxWrapper->renderLights( m_box, &instDatas );
-	 
-	gfxWrapper->endLightPass();
+void LightRenderSystem::render()
+{
+	m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_data );
 }

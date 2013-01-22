@@ -344,7 +344,6 @@
     </ClInclude>
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="ParticleEmitters.h" />
-    <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
@@ -380,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="ParticleUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsRendererSystem.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,7 +600,6 @@
     </ClCompile>
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
-    <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
@@ -622,6 +623,9 @@
     </ClCompile>
     <ClCompile Include="ParticleUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsRendererSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,7 +8,6 @@
 #include "Texture.h"
 #include "TextureParser.h"
 #include "ParticleCBuffer.h"
-#include "RendererSceneInfo.h"
 #include <AglVector4.h>
 
 ParticleRenderer::ParticleRenderer( ID3D11Device* p_device, 
@@ -21,14 +20,12 @@ ParticleRenderer::ParticleRenderer( ID3D11Device* p_device,
 		m_device->GetFeatureLevel());
 
 	initShaders();
-	initBlendState();
 	initDepthStencil();
 	initTexture();
 }
 
 ParticleRenderer::~ParticleRenderer(){
 	SAFE_RELEASE(m_depthStencil);
-	SAFE_RELEASE(m_blendState);
 	delete m_shaderFactory;
 	delete m_shader;
 	delete m_texture;
@@ -66,7 +63,6 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	ID3D11DepthStencilState* old;
 	UINT stencil;
 	m_deviceContext->OMGetDepthStencilState(&old, &stencil);
-	m_deviceContext->OMSetBlendState(m_blendState, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(m_depthStencil, 1);
 
 	m_shader->apply();
@@ -74,14 +70,11 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	UINT stride = sizeof(AglStandardParticle);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
 
 	m_deviceContext->Draw(numOfParticles, 0);
 
 	m_shader->unApply();
-
-	m_deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFF);
 	m_deviceContext->OMSetDepthStencilState(old, 1);
 
 }
@@ -89,23 +82,6 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 void ParticleRenderer::initShaders(){
 	m_shader = m_shaderFactory->createParticleShader(
 		L"Shaders/ParticleEffects/particleShader.hlsl");
-}
-
-void ParticleRenderer::initBlendState(){
-	D3D11_BLEND_DESC blendStateDesc; 
-	ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
-	blendStateDesc.AlphaToCoverageEnable = FALSE;
-	blendStateDesc.IndependentBlendEnable = FALSE;        
-	blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	m_device->CreateBlendState(&blendStateDesc, &m_blendState);
 }
 
 void ParticleRenderer::initDepthStencil(){

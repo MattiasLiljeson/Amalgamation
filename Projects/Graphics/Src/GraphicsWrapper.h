@@ -52,13 +52,7 @@ public:
 	/// Sets up the frame, prepares the renderer for draw calls.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void beginFrame();
-
-	///-----------------------------------------------------------------------------------
-	/// HACK: Temporary function to update the per frame CB in the middle of the frame
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void updatePerFrameConstantBuffer();
+	void mapSceneInfo();
 
 	///-----------------------------------------------------------------------------------
 	/// Renders the whole scene
@@ -81,6 +75,11 @@ public:
 
 	void setScissorRegion(int x, int y, int width, int height);
 
+	void setPrimitiveTopology( PrimitiveTopology::Mode p_state);
+
+	void setBaseRenderTargets();
+
+	void setFinalBackbufferAsRenderTarget();
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
@@ -88,19 +87,15 @@ public:
 	/// \param p_texture
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void beginGUIPass();
 	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
-	void finalizeGUIPass();
-
 
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
 	/// render to backbuffer here.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void beginLightPass();
+	void mapGBuffersToShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
-	void endLightPass();
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
 	/// \return void
@@ -156,23 +151,11 @@ public:
 	void setWireframeMode(bool p_wireframe);
 
 	///-----------------------------------------------------------------------------------
-	/// NOT IMPLEMENTED
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void beginParticleRender();
-
-	///-----------------------------------------------------------------------------------
 	/// Handles all the rendering of the particle systems.
 	/// \param p_system
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderParticleSystem(AglParticleSystem* p_system);
-
-	///-----------------------------------------------------------------------------------
-	/// NOT IMPLEMENTED
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void endParticleRender();
 
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 private:

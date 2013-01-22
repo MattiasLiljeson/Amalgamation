@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include <RenderInterface.h>
 #include <vector>
 
 using namespace std;
@@ -19,7 +20,7 @@ struct AglParticleSystemHeader;
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ParticleRenderSystem : public EntitySystem
+class ParticleRenderSystem : public EntitySystem, public RenderInterface
 {
 public:
 	ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend );
@@ -32,6 +33,9 @@ public:
 private:
 	void renderParticles(AglParticleSystem* particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* particleSystem);
+
+	virtual void render();
+
 private:
 	GraphicsBackendSystem* m_gfxBackend;
 	vector<pair<AglParticleSystem*, int>> m_particleSystems;

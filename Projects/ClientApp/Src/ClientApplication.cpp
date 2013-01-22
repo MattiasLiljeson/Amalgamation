@@ -68,6 +68,7 @@
 #include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <GraphicsRendererSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -81,7 +82,6 @@ using namespace std;
 #include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
-#include <FrameFinalizerSystem.h>
 #include <ParticleRenderSystem.h>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -254,15 +254,11 @@ void ClientApplication::initSystems()
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
 
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-		rocketBackend );
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( rocketBackend );
 	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-
-	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
-	m_world->setSystem( finalizer, true);
 
 	/************************************************************************/
 	/* Network																*/
@@ -299,6 +295,13 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
+
+	/************************************************************************/
+	/* Graphics representer													*/
+	/************************************************************************/
+	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
+		renderer, rocketRender, particleRender, antTweakBar, lightRender);
+	m_world->setSystem( graphicsRender, true );
 
 	m_world->initialize();
 }

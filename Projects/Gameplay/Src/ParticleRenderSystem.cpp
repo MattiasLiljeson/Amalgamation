@@ -25,10 +25,7 @@ void ParticleRenderSystem::process()
 	for(unsigned int i = 0; i < m_particleSystems.size();i++)
 	{
 		m_particleSystems[i].first->update(m_world->getDelta(), AglVector3(0,0,0));
-		renderParticles(m_particleSystems[i].first);
 	}
-
-	//m_gfxBackend->getGfxWrapper()->finalizeFrame();
 }
 
 void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem){
@@ -49,4 +46,12 @@ AglParticleSystem* ParticleRenderSystem::getParticleSystem(int p_index)
 			return m_particleSystems[i].first;
 	}
 	return NULL;
+}
+
+void ParticleRenderSystem::render()
+{
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++){
+		renderParticles(m_particleSystems[i].first);
+	}
+	
 }

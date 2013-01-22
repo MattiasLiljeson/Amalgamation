@@ -28,11 +28,6 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
-
-	gfxWrapper->clearRenderTargets();	      // clear render targets used           
-	gfxWrapper->beginFrame();				  // prepare frame, set drawing to MRT
-
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -64,18 +59,21 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
 	}
 		
-	for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ )
-	{
+}
+
+void MeshRenderSystem::render()
+{
+	for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ ){
 		// Batch render all entities that share the same mesh
 		if (!m_instanceLists[meshIdx].empty())
 		{
-			gfxWrapper->renderMesh( meshIdx, &m_instanceLists[meshIdx] ); // process a mesh
+			m_gfxBackend->getGfxWrapper()->renderMesh( meshIdx, 
+				&m_instanceLists[meshIdx] ); // process a mesh
 		}
 	}
-	
+
 	// Cleanup
-	for(unsigned int i=0; i<m_instanceLists.size(); i++ )
-	{
+	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();
 	}
 }
