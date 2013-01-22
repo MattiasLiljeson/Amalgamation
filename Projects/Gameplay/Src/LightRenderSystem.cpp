@@ -40,7 +40,6 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	//gfxWrapper->renderLights( NULL, NULL );
 
 	static float range = 10.0f;
-	AntTweakBarWrapper::getInstance()->addWriteVariable(AntTweakBarWrapper::GRAPHICS, "lightCubeWidth", TwType::TW_TYPE_FLOAT, &range,"");
 
 	AglMatrix mat = AglMatrix::identityMatrix();
 	mat[0] = mat[5] = mat[10] =  range / 2.0f; // The cube is 2.0f wide, therefore 2 and not 1
