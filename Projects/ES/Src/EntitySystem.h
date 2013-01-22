@@ -78,7 +78,7 @@ public:
 	 * 
 	 * @return a reference to the active entities that are stored in a vector.
 	 */
-	vector<Entity*>* getActiveEntities();
+	const vector<Entity*>& getActiveEntities() const;
 	
 	/**
 	 * 

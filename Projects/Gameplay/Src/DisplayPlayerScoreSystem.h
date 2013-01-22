@@ -21,10 +21,8 @@ public:
 
 	~DisplayPlayerScoreSystem();
 
-	void processEntities( const vector<Entity*>& p_entities );
+	void inserted( Entity* p_entity );
 
-	void initialize();
-
-	void added( Entity* p_entity );
+	bool checkProcessing();
 
 };

@@ -285,7 +285,7 @@ int EntitySystem::findEntityInActive( Entity* p_entity )
 	return idx;
 }
 
-vector<Entity*>* EntitySystem::getActiveEntities()
+const vector<Entity*>& EntitySystem::getActiveEntities() const
 {
-	return &m_actives;
+	return m_actives;
 }

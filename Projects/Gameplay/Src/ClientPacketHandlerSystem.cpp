@@ -202,16 +202,16 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
-			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+			vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
 			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
 			{
-				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
+				for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
 				{
 					NetworkSynced* netSync = static_cast<NetworkSynced*>(
-						(*netSyncScoreEntities)[i]->getComponent(
+						netSyncScoreEntities[i]->getComponent(
 						ComponentType::NetworkSynced));
 					PlayerScore* playerScore = static_cast<PlayerScore*>(
-						(*netSyncScoreEntities)[i]->getComponent(
+						netSyncScoreEntities[i]->getComponent(
 						ComponentType::PlayerScore));
 					if(netSync->getNetworkOwner() ==
 						updateClientPacket.playerIdentities[playerId])

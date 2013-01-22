@@ -11,7 +11,7 @@ NetSyncedPlayerScoreTrackerSystem::~NetSyncedPlayerScoreTrackerSystem()
 {
 }
 
-vector<Entity*>* NetSyncedPlayerScoreTrackerSystem::getNetScoreEntities()
+const vector<Entity*>& NetSyncedPlayerScoreTrackerSystem::getNetScoreEntities() const
 {
 	return getActiveEntities();
 }
