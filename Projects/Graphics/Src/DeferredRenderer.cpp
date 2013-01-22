@@ -45,8 +45,6 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 	initShaders();
 
 	buildBlendStates();
-	setBlendFactors(0);
-	setBlendMask(0xffffffff);
 	m_currentBlendStateType = BlendState::DEFAULT;
 
 	buildRasterizerStates();
@@ -58,13 +56,11 @@ DeferredRenderer::~DeferredRenderer()
 {
 	releaseRenderTargetsAndDepthStencil();
 
-	for (unsigned int i = 0; i < m_blendStates.size(); i++)
-	{
+	for (unsigned int i = 0; i < m_blendStates.size(); i++){
 		SAFE_RELEASE(m_blendStates[i]);
 	}
 
-	for (unsigned int i = 0; i < m_blendStates.size(); i++)
-	{
+	for (unsigned int i = 0; i < m_blendStates.size(); i++){
 		SAFE_RELEASE(m_rasterizerStates[i]);
 	}
 
@@ -87,30 +83,6 @@ void DeferredRenderer::clearBuffers()
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void DeferredRenderer::beginDeferredBasePass()
-{
-	setBlendState(BlendState::DEFAULT);
-	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
-	setBlendMask(0xffffff);
-
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);	
-	
-	// update per frame buffer
-	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
-	cb->update();
-}
-
-void DeferredRenderer::updatePerFrameConstantBuffer()
-{
-	// update per frame buffer
-	Buffer<SimpleCBuffer>* cb = m_guiShader->getPerFrameBufferPtr();
-	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
-	cb->update();
 }
 
 void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
@@ -210,26 +182,12 @@ void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
 }
 
 
-void DeferredRenderer::beginLightPass()
+void DeferredRenderer::mapRTStoShaderVariables()
 {
-	//m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
-	m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
-	// Set g-buffers
 	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
 	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
 	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
 	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[DEPTH] );
-
-	Buffer<SimpleCBuffer>* cb = m_lightShader->getPerFrameBufferPtr();
-	for (int i=0;i<16;i++) {
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProj[i]; 
-		cb->accessBuffer.vpInv[i] = m_sceneInfo.viewProjInv[i];
-	}
-
-
-	cb->update();
-
 }
 
 void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
@@ -245,20 +203,6 @@ void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData
 		m_lightShader->apply();
 		m_deviceContext->Draw( 6, 0 );
 	}
-}
-
-void DeferredRenderer::endLightPass()
-{
-
-}
-
-void DeferredRenderer::beginGUIPass()
-{
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	setBlendState(BlendState::ALPHA);
-	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
-	setBlendMask(0xffffff);
 }
 
 void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
@@ -277,20 +221,6 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	// Draw instanced data
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
-
-void DeferredRenderer::finalizeGUIPass(){
-	//reset blend states
-	setBlendState(BlendState::DEFAULT);
-	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
-	setBlendMask(0xffffff);
-
-	// Reset world matrix to identity matrix
-	RendererSceneInfo scene;
-	scene.viewProj = AglMatrix::identityMatrix();
-	setSceneInfo( scene );
-}
-
-
 void DeferredRenderer::unMapGBuffers()
 {
 	ID3D11ShaderResourceView* nulz[NUMBUFFERS];
@@ -444,7 +374,6 @@ void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_heig
 
 	initDepthStencil();
 	initGeometryBuffers();
-	// initShaders();
 }
 
 void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
@@ -479,8 +408,6 @@ void DeferredRenderer::setBlendMask( UINT p_mask )
 	m_blendMask = p_mask;
 }
 
-
-
 void DeferredRenderer::setRasterizerStateSettings(RasterizerState::Mode p_state)
 {
 	unsigned int idx = static_cast<unsigned int>(p_state);
@@ -496,4 +423,8 @@ void DeferredRenderer::buildBlendStates()
 void DeferredRenderer::buildRasterizerStates()
 {
 	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
+}
+void DeferredRenderer::setBasePassRenderTargets()
+{
+	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
 }

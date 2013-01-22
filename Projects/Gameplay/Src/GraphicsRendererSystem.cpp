@@ -2,6 +2,7 @@
 #include <RenderInterface.h>
 #include "GraphicsBackendSystem.h"
 #include <GraphicsWrapper.h>
+#include <RenderStateEnums.h>
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend, 
 											   RenderInterface* p_mesh, 
@@ -46,34 +47,43 @@ void GraphicsRendererSystem::process(){
 }
 void GraphicsRendererSystem::initMeshPass(){
 	m_backend->getGfxWrapper()->clearRenderTargets();
-	m_backend->getGfxWrapper()->beginFrame();
+	m_backend->getGfxWrapper()->setBaseRenderTargets();
+	m_backend->getGfxWrapper()->setRasterizerStateSettings(RasterizerState::DEFAULT);
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::DEFAULT);
+	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	m_backend->getGfxWrapper()->mapSceneInfo();
 }
 void GraphicsRendererSystem::endMeshPass(){
 
 }
 
 void GraphicsRendererSystem::initParticlePass(){
-
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::PARTICLE);
+	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
 }
 
 void GraphicsRendererSystem::endParticlePass(){
-
 }
 
 void GraphicsRendererSystem::initLightPass(){
-	m_backend->getGfxWrapper()->beginLightPass();
+	m_backend->getGfxWrapper()->setRasterizerStateSettings(
+		RasterizerState::FILLED_CW_FRONTCULL, false);
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::ADDITIVE);
+	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	m_backend->getGfxWrapper()->setFinalBackbufferAsRenderTarget();
+	m_backend->getGfxWrapper()->mapGBuffersToShader();
 }
 
 void GraphicsRendererSystem::endLightPass(){
-	m_backend->getGfxWrapper()->endLightPass();
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::DEFAULT);
 }
 
 void GraphicsRendererSystem::initGUIPass(){
-	m_backend->getGfxWrapper()->beginGUIPass();
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::ALPHA);
 }
 
 void GraphicsRendererSystem::endGUIPass(){
-	m_backend->getGfxWrapper()->finalizeGUIPass();
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::DEFAULT);
 }
 
 void GraphicsRendererSystem::flipBackbuffer(){

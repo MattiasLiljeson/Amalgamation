@@ -160,7 +160,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	scene.viewProj = worldMat;
 
 	m_wrapper->updateRenderSceneInfo(scene);
-	m_wrapper->updatePerFrameConstantBuffer();
+	//m_wrapper->updatePerFrameConstantBuffer();
 	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
