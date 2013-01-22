@@ -5,6 +5,7 @@
 #include <GraphicsWrapper.h>
 #include <InstanceData.h>
 #include <Mesh.h>
+#include <LightInstanceData.h>
 
 
 LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
@@ -38,29 +39,63 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	gfxWrapper->beginLightPass();			  // finalize, draw to back buffer
 	//gfxWrapper->renderLights( NULL, NULL );
 
-	InstanceData instData;
-	instData.worldTransform[0] = 1.0f;
-	instData.worldTransform[1] = 0.0f;
-	instData.worldTransform[2] = 0.0f;
-	instData.worldTransform[3] = 0.0f;
+	static float range = 10.0f;
+	AntTweakBarWrapper::getInstance()->addWriteVariable(AntTweakBarWrapper::GRAPHICS, "lightCubeWidth", TwType::TW_TYPE_FLOAT, &range,"");
 
-	instData.worldTransform[4] = 0.0f;
-	instData.worldTransform[5] = 1.0f;
-	instData.worldTransform[6] = 0.0f;
-	instData.worldTransform[7] = 0.0f;
+	AglMatrix mat = AglMatrix::identityMatrix();
+	mat[0] = mat[5] = mat[10] =  range / 2.0f; // The cube is 2.0f wide, therefore 2 and not 1
+	
+	LightInstanceData instData;
+	instData.range = range; // Should be synced with wolrdTransform
+	for( int i=0; i<16; i++ ){
+		instData.worldTransform[i] = mat[i];
+	}
 
-	instData.worldTransform[8] = 0.0f;
-	instData.worldTransform[9] = 0.0f;
-	instData.worldTransform[10] = 1.0f;
-	instData.worldTransform[11] = 0.0f;
+	instData.lightDir[0] = 1.0f;
+	instData.lightDir[1] = 0.0f;
+	instData.lightDir[2] = 0.0f;
 
-	instData.worldTransform[12] = 0.0f;
-	instData.worldTransform[13] = 0.0f;
-	instData.worldTransform[14] = 0.0f;
-	instData.worldTransform[15] = 1/25.0f;
+	instData.attenuation[0] = 1.1f;
+	instData.attenuation[1] = 0.01f;
+	instData.attenuation[2] = 0.0f;
+	instData.spotPower = 100.0f;
 
-	vector<InstanceData> instDatas;
-	instDatas.push_back( instData );
+	instData.ambient[0] = 0.0f;
+	instData.ambient[1] = 0.0f;
+	instData.ambient[2] = 0.0f;
+	instData.ambient[3] = 1.0f;
+
+	instData.diffuse[0] = 0.0f;
+	instData.diffuse[1] = 0.5f;
+	instData.diffuse[2] = 0.0f;
+	instData.diffuse[3] = 1.0f;
+
+	instData.specular[0] = 0.5f;
+	instData.specular[1] = 0.1f;
+	instData.specular[2] = 0.0f;
+	instData.specular[3] = 1.0f;
+
+	instData.enabled = true;
+	instData.type = LightTypes::E_LightTypes_POINT;
+
+	vector<LightInstanceData> instDatas;
+	for( int x=0; x<5; x++ )
+	{
+		instData.worldTransform[3] = x * (range+1.0f) - 25.0f;
+		instData.diffuse[1] += 0.1f;
+		for( int y=0; y<5; y++ )
+		{
+			instData.worldTransform[7] = y * (range+1.0f) - 25.0f;
+			instData.diffuse[2] += 0.1f;
+			for( int z=0; z<5; z++ )
+			{
+				instData.worldTransform[11] = z * (range+1.0f) - 25.0f;
+				instData.diffuse[3] += 0.1f;
+				instDatas.push_back( instData );
+			}
+		}
+	}
+
 	gfxWrapper->renderLights( m_box, &instDatas );
 	 
 	gfxWrapper->endLightPass();

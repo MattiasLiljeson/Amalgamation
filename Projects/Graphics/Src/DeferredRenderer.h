@@ -22,6 +22,7 @@ struct RasterizerFillMode;
 struct RasterizerCullMode;
 struct RasterizerFaceVertexOrder;
 struct BlendState;
+struct LightInstanceData;
 
 /************************************************************************/
 /* See wiki for more details.											*/
@@ -113,14 +114,14 @@ public:
 
 	// HACK: DUPLICATE of above but with LightMesh instead of Mesh
 	void renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
-		Buffer<InstanceData>* p_instanceBuffer );
+		Buffer<LightInstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginLightPass();
-	void renderLights( LightMesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer );
+	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
 	void endLightPass();
 
 	// ===================================================================================

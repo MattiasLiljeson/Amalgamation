@@ -15,6 +15,8 @@
 
 class LightMesh;
 class Mesh;
+
+struct LightInstanceData;
 struct ParticleCBuffer;
 
 // =======================================================================================
@@ -52,6 +54,10 @@ public:
 	///-----------------------------------------------------------------------------------
 	Buffer<InstanceData>* createInstanceBuffer(InstanceData* p_instanceList,
 												 unsigned int p_numberOfElements);
+
+	// Duplicate of createInstanceBuffer() but for lights
+	Buffer<LightInstanceData>* createLightInstanceBuffer( LightInstanceData* p_instanceList,
+		unsigned int p_numberOfElements );
 
 	///-----------------------------------------------------------------------------------
 	/// Constructs a vertex buffer of a specified type T.

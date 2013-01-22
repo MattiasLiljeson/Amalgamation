@@ -35,6 +35,7 @@ struct Model;
 struct Texture;
 class ParticleRenderer;
 class AglParticleSystem;
+struct LightInstanceData;
 
 class GraphicsWrapper
 {
@@ -76,6 +77,8 @@ public:
 	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
 									bool p_allowWireframeModeOverride=true);
 
+	void setBlendStateSettings( BlendState::Mode p_state );
+
 	void setScissorRegion(int x, int y, int width, int height);
 
 	///-----------------------------------------------------------------------------------
@@ -96,7 +99,7 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void beginLightPass();
-	void renderLights( LightMesh* p_mesh, vector<InstanceData>* p_instanceList );
+	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
 	void endLightPass();
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented

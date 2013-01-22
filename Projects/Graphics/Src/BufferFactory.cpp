@@ -4,6 +4,7 @@
 #include <AglSphereMesh.h>
 #include "LightMesh.h"
 #include "ParticleCBuffer.h"
+#include <LightInstanceData.h>
 
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
@@ -86,6 +87,25 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer( InstanceData* p_insta
 
 	return instanceBuffer;
 }
+
+Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
+{
+	Buffer<LightInstanceData>* instanceBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof( LightInstanceData );
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = p_numberOfElements;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Create buffer from config and data
+	instanceBuffer = new Buffer<LightInstanceData>( m_device, m_deviceContext,
+		p_instanceList, bufferDesc );
+
+	return instanceBuffer;
+}
+
 
 Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
 												 unsigned int p_numberOfElements )

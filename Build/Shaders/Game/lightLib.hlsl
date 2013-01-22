@@ -33,16 +33,16 @@ struct LightInfo
 {
 	//float4x4 lightViewProj; // For shadowmapgeneration;
 	float3 	pos;
-	int 	type;
-	float3 	dir;
-	float 	range;
-	float3 	att;
-	float 	spotPower;
-	float4 	ambient;
-	float4 	diffuse;
-	float4 	spec;
-	int 	enabled;
-	float3 	padding;
+	float 	range		: RANGE;
+	float3 	lightDir	: LIGHTDIR;
+	float3 	attenuation	: ATTENUATION;
+	float 	spotPower	: SPOTPOWER;
+	float4 	ambient		: AMBIENT;
+	float4 	diffuse		: DIFFUSE;
+	float4 	specular	: SPECULAR;
+	int 	enabled 	: ENABLED;
+	int 	type 		: TYPE;
+	//float2 	padding;
 };
 
 struct SurfaceInfo
@@ -55,23 +55,27 @@ struct SurfaceInfo
 	//float	pad2;
 };
 
-float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pos)
+float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos, float3 lightPos)
 {	
 	// The vector from the surface to the light.
-	float3 lightVec = light.pos - pos;
+	float3 lightVec = lightPos - pixelPos;
 	
 	// The distance from surface to light.
 	float d = length(lightVec);
 	
 	if( d > light.range )
-	return float3(0.0f, 1.0f, 0.0f);
+	{
+		return light.ambient.xyz;
+		//float3 green = float3(0.0f, 1.0f, 0.0f);
+		//return green;
+	}
 	
 	// Normalize the light vector.
 	lightVec /= d;
 	
 	// Add the ambient light term.
 	float3 litColor = float3(0.0f, 0.0f, 0.0f);
-	litColor += surface.diffuse * light.ambient;
+	litColor += surface.diffuse.xyz * light.ambient.xyz;
 	
 	// Add diffuse and specular term, provided the surface is in
 	// the line of site of the light.
@@ -82,14 +86,14 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 	{
 		//return float3(0, 0, 0.5);
 		float specPower = max(surface.spec.a, 1.0f);
-		float3 toEye = normalize(eyePos - pos);
+		float3 toEye = normalize(eyePos - pixelPos);
 		float3 R = reflect(-lightVec, normal);
 		float specFactor = pow(max(dot(R, toEye), 0.0f), specPower);
 		
 		// diffuse and specular terms
-		litColor += diffuseFactor * surface.diffuse * light.diffuse;
-		litColor += specFactor * surface.spec * light.spec;
+		litColor += diffuseFactor * surface.diffuse.xyz * light.diffuse.xyz;
+		litColor += specFactor * surface.spec.xyz * light.specular.xyz;
 	}
 	// attenuate
-	return litColor / dot(light.att, float3(1.0f, d, d*d));
+	return litColor / dot(light.attenuation, float3(1.0f, d, d*d));
 }

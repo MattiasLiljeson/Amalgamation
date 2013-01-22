@@ -177,7 +177,7 @@ namespace Srv
 
 		float maxVal = 2;
 		float minVal = -75;
-		/*int size = 8;
+		int size = 8;
 		for( int x=0; x<size; x++ )
 		{
 			for( int y=0; y<size; y++ )
@@ -185,8 +185,8 @@ namespace Srv
 				for( int z=0; z<size; z++ )
 				{
 					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
+					//pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
+					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
 					component = new Transform( pos.x, pos.y, pos.z);
@@ -208,7 +208,7 @@ namespace Srv
 					m_world->addEntity(entity);
 				}
 			}
-		}*/
+		}
 		InitModulesTestByAnton();
 	}
 

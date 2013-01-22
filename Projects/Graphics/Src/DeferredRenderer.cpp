@@ -12,6 +12,7 @@
 
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
+#include <LightInstanceData.h>
 
 DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext, 
@@ -177,9 +178,10 @@ void DeferredRenderer::renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
 		0,0,0);
 }
 
-// HACK: DUPLICATE of above but with LightMesh instead of Mesh
+// HACK: DUPLICATE of above but with LightMesh instead of Mesh and LightInstanceData
+// instead of InstanceData
 void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
-									   Buffer<InstanceData>* p_instanceBuffer )
+									   Buffer<LightInstanceData>* p_instanceBuffer )
 {
 	// Specialized, external apply of these buffers
 	// since instanced drawing required a "combined"
@@ -230,7 +232,7 @@ void DeferredRenderer::beginLightPass()
 
 }
 
-void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<InstanceData>* p_instanceBuffer )
+void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
 {
 	if( p_mesh && p_instanceBuffer )
 	{
