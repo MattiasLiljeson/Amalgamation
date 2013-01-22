@@ -123,7 +123,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			bodyId = &(body->m_id); 
 		
 		// Add shape
-		if (init->m_type == 0)
+		if (init->m_type == BodyInitData::BOX)
 		{
 			AglMatrix world;
 			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
@@ -133,6 +133,23 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_angularVelocity, 
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+		}
+		else if (init->m_type == BodyInitData::SPHERE)
+		{
+			float radius = max(max(init->m_scale.x, init->m_scale.y), init->m_scale.z);
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			*bodyId = m_physicsController->AddSphere(world,
+				radius, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+		}
+		else if (init->m_type == BodyInitData::MESH)
+		{
+			//Not supported
+			//m_physicsController->AddMeshBody()
 		}
 		else
 		{

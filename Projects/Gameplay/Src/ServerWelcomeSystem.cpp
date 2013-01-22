@@ -114,7 +114,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.scale			= transform->getScale();
 
 				///MESH INFO MUST BE MADE INTO A COMPONENT
-				//data.meshInfo		= 
+				//data.meshInfo		= 1;
 
 				m_server->unicastPacket( data.pack(), id );
 			}
@@ -143,7 +143,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				
+				data.meshInfo		= 1;
 //				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}
