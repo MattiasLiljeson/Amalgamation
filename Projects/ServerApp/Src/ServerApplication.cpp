@@ -178,7 +178,7 @@ namespace Srv
 		float maxVal = 2;
 		float minVal = -75;
 		int size = 8;
-		for( int x=0; x<size; x++ )
+		/*for( int x=0; x<size; x++ )
 		{
 			for( int y=0; y<size; y++ )
 			{
@@ -201,15 +201,15 @@ namespace Srv
 						new BodyInitData(pos,
 						AglQuaternion::identity(),
 						AglVector3(3, 3, 3), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), BodyInitData::SPHERE, 
+						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
 
 					m_world->addEntity(entity);
 				}
 			}
-		}
-		//InitModulesTestByAnton();
+		}*/
+		InitModulesTestByAnton();
 	}
 
 	

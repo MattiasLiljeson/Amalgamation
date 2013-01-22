@@ -46,9 +46,9 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::ShipModule)));
 
+		handleParticleSystem(p_entities[i]);
 		if (gun && module && module->m_parentEntity >= 0)
 		{
-			handleParticleSystem(p_entities[i]);
 			//handleLaserSight(p_entities[i]);
 
 			//Update all rays
@@ -226,7 +226,7 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		ComponentType::getTypeFor(ComponentType::ShipModule)));
 
 
-	if (gun->particleSystemEntity < 0)
+	if (gun && gun->particleSystemEntity < 0)
 	{
 		Entity* entity = m_world->createEntity();
 
@@ -248,7 +248,7 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		m_world->addEntity(entity);
 		gun->particleSystemEntity = entity->getIndex();
 	}
-	else
+	else if (gun)
 	{
 		Entity* entity = m_world->getEntity(gun->particleSystemEntity);
 

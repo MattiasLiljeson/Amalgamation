@@ -109,9 +109,12 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
 				data.networkIdentity = netSync->getNetworkIdentity();
-				data.translation	= transform->getTranslation();
-				data.rotation		= transform->getRotation();
-				data.scale			= transform->getScale();
+				if (transform)
+				{
+					data.translation	= transform->getTranslation();
+					data.rotation		= transform->getRotation();
+					data.scale			= transform->getScale();
+				}
 
 				///MESH INFO MUST BE MADE INTO A COMPONENT
 				//data.meshInfo		= 1;
@@ -143,7 +146,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				data.meshInfo		= 1;
+				data.meshInfo		= 0;
 //				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}

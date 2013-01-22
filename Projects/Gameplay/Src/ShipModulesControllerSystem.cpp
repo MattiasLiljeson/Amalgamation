@@ -139,6 +139,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	//Update module data
 	m->m_health = 100.0f;
 	m->m_value = m->m_value * 0.5f;
+	m->m_active = false;
 }
 void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
 {
