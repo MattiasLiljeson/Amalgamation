@@ -350,6 +350,9 @@
     <ClInclude Include="RocketControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -572,6 +575,9 @@
     </ClCompile>
     <ClCompile Include="RocketControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp">
+      <Filter>Systems\Network\Shared</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

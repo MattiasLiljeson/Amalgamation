@@ -74,6 +74,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <ExtrapolationSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -280,7 +281,7 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/

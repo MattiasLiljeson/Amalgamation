@@ -58,6 +58,7 @@ public:	//Enums
 		LightRenderSystem,
 		AntTweakBarSystem,
 		ShipManagerSystem,
+		NetSyncedPlayerScoreTrackerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

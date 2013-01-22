@@ -23,6 +23,7 @@
 #include "UpdateClientStatsPacket.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
+#include "PlayerScore.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -108,13 +109,31 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			info.ping = (totalElapsedTime - timeWhenSent)*1000.0f;
 			m_clients[packet.getSenderId()] = info;
-
 			/************************************************************************/
 			/* Send the "real" ping back to the client as a "your ping" message.    */
 			/************************************************************************/
 			UpdateClientStatsPacket updatedClientPacket;
 			updatedClientPacket.ping = info.ping;
 			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
+			// Also add the players' score to the packet.
+			int playerCount = 0;
+			for(unsigned int i=0; i<p_entities.size(); i++)
+			{
+				PlayerScore* playerScore = static_cast<PlayerScore*>(
+					p_entities[i]->getComponent(ComponentType::PlayerScore));
+				NetworkSynced* netSync = static_cast<NetworkSynced*>(
+					p_entities[i]->getComponent(ComponentType::NetworkSynced));
+				if(playerScore && netSync)
+				{
+					updatedClientPacket.playerIdentities[playerCount] =
+						netSync->getNetworkOwner();
+					// TODO: (Johan) Change score into whatever Anton sees fit, but for
+					// now the score is an integer!
+					updatedClientPacket.scores[playerCount] = playerScore->getScore();
+					playerScore += 1;
+				}
+			}
+
 			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}	
 		else if (packetType == (char)PacketType::RayPacket)

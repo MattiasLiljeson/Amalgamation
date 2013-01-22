@@ -1,4 +1,5 @@
 #include "ClientPacketHandlerSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -184,12 +185,36 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
+			// Client ping
 			m_currentPing = updateClientPacket.ping;
 			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
 				m_world->getElapsedTime() + m_currentPing / 2.0f;
 			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-//			m_tcpClient->setServerTimeAhead( m_currentPing / 2.0f );
 			m_tcpClient->setPingToServer( m_currentPing );
+
+			// Clients score
+			// TODO: (Johan) Handle score packet...
+			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
+				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+				SystemType::NetSyncedPlayerScoreTrackerSystem));
+			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+			for(int playerId=0; playerId<8; playerId++)
+			{
+				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
+				{
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::NetworkSynced));
+					PlayerScore* playerScore = static_cast<PlayerScore*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::PlayerScore));
+					if(netSync->getNetworkOwner() ==
+						updateClientPacket.playerIdentities[playerId])
+					{
+						playerScore->setScore(updateClientPacket.scores[playerId]);
+					}
+				}
+			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -273,8 +298,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/
 		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
+		component = new PlayerScore();
+		entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/
