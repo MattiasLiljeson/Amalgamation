@@ -194,7 +194,7 @@ namespace Srv
 					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
-					component = new Transform( pos.x, pos.y, pos.z);
+					component = new Transform(pos, AglQuaternion::identity(), AglVector3(3, 3, 3));
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
@@ -203,10 +203,10 @@ namespace Srv
 						new PhysicsBody() );
 
 					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(AglVector3( pos.x, pos.y, pos.z ),
+						new BodyInitData(pos,
 						AglQuaternion::identity(),
-						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), 0, 
+						AglVector3(3, 3, 3), AglVector3(0, 0, 0), 
+						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
 

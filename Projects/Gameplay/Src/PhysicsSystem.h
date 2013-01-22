@@ -33,6 +33,11 @@ public:
 
 	PhysicsController* getController(){ return m_physicsController; }
 
+	Entity* getEntity(int p_bodyID)
+	{
+		return m_world->getEntity(m_entityMap[p_bodyID]);
+	}
+
 private:
 	void initializeEntity(Entity* p_entity);
 	void handleCompoundBodyDependencies(Entity* p_entity);
@@ -46,5 +51,6 @@ private:
 	AglMatrix offset(Entity* p_entity, AglMatrix p_base);
 private:
 	PhysicsController* m_physicsController;
+	vector<int>	m_entityMap;
 
 };

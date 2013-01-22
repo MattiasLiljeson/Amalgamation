@@ -39,7 +39,7 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	gfxWrapper->beginLightPass();			  // finalize, draw to back buffer
 	//gfxWrapper->renderLights( NULL, NULL );
 
-	static float range = 10.0f;
+	static float range = 100.0f;
 
 	AglMatrix mat = AglMatrix::identityMatrix();
 	mat[0] = mat[5] = mat[10] =  range / 2.0f; // The cube is 2.0f wide, therefore 2 and not 1
@@ -56,7 +56,7 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 	instData.attenuation[0] = 1.1f;
 	instData.attenuation[1] = 0.01f;
-	instData.attenuation[2] = 0.1f;
+	instData.attenuation[2] = 0.0f;
 	instData.spotPower = 100.0f;
 
 	instData.ambient[0] = 0.01f;

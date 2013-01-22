@@ -65,6 +65,9 @@ public:
 	///-----------------------------------------------------------------------------------
 	int AddSphere(AglVector3 p_position, float p_radius, bool p_userControlled = false, CompoundBody* pParent = NULL);
 
+	int AddSphere(AglMatrix p_world, float p_radius, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+		bool pCollisionEnabled = true);
+
 	///-----------------------------------------------------------------------------------
 	/// Adds a box to the set of rigid bodies 
 	/// \param p_position Position of the box
@@ -80,6 +83,9 @@ public:
 
 	int AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
 				bool pCollisionEnabled = true);
+
+	int AddBox(AglMatrix p_world, AglVector3 p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+		bool pCollisionEnabled = true);
 
 	///-----------------------------------------------------------------------------------
 	/// Adds a convex hull to the set of rigid bodies 
@@ -126,6 +132,8 @@ public:
 	/// \return Time of the closest collision
 	///-----------------------------------------------------------------------------------
 	float RaysVsObjects(vector<PhyRay> p_rays, RigidBody* p_ignore, AglBoundingSphere p_sphere);
+
+	int FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2, int p_avoid = -1);
 
 	vector<RigidBody*> getBodies()
 	{ 

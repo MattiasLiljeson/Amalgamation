@@ -18,18 +18,17 @@ class PlayerScore: public Component
 {
 public:
 	PlayerScore();
-	PlayerScore( int p_score );
 
 	~PlayerScore();
 
-	int getScore() const;
-	void setScore( int p_score );
+	float getTotalScore();
+	float* getTotalScorePointer();
+	void setModuleScore(float p_score);
 
-	int* getScorePointer();
-
-	void incrementScore( int p_incrementValue );
 
 private:
-	int m_score;
+	float m_moduleScore; ///< Variable score based on modules
+	float m_baseScore; ///< Base Score. Cannot be lost. Only gained 
+	float m_totalScore; ///< Total Score
 
 };

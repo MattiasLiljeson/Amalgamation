@@ -135,7 +135,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						netSync->getNetworkOwner();
 					// TODO: (Johan) Change score into whatever Anton sees fit, but for
 					// now the score is an integer!
-					updatedClientPacket.scores[playerCount] = playerScore->getScore();
+					updatedClientPacket.scores[playerCount] = playerScore->getTotalScore();
 					playerCount += 1;
 				}
 			}

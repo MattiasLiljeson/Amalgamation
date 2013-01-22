@@ -31,6 +31,7 @@
 #include "EntityType.h"
 #include "PacketType.h"
 #include "PickComponent.h"
+#include "ParticleSystemEmitter.h"
 
 // Debug
 #include <DebugUtil.h>
@@ -40,12 +41,14 @@
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "EntityUpdatePacket.h"
+#include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
 #include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
+#include "ParticleRenderSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -129,6 +132,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{			
+			ParticleUpdatePacket data;
+			data.unpack(packet);
+			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+				SystemType::ParticleRenderSystem ));
+			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+
+			ps->setSpawnPoint(data.position);
+			ps->setSpawnDirection(data.direction);
+			ps->setSpawnSpeed(data.speed);
+			ps->setSpawnFrequency(data.spawnFrequency);
+		}
 #pragma endregion 
 		/************************************************************************/
 		/* Score is now included in player update client stats packets.			*/
@@ -211,7 +227,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					if(netSync->getNetworkOwner() ==
 						updateClientPacket.playerIdentities[playerId])
 					{
-						playerScore->setScore(updateClientPacket.scores[playerId]);
+						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
 					}
 				}
 			}
@@ -255,6 +271,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		
 
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
@@ -357,6 +377,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
+		if (p_packet.meshInfo == 1)
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
@@ -385,6 +409,23 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
+	}
+	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
+	{
+		AglParticleSystemHeader h;
+		h.particleSize = AglVector2(2, 2);
+		h.alignmentType = AglParticleSystemHeader::OBSERVER;
+		h.spawnFrequency = 200;
+		h.spawnSpeed = 5.0f;
+		h.spread = 0.0f;
+		h.fadeOutStart = 2.0f;
+		h.fadeInStop = 0.0f;
+		h.particleAge = 2;
+
+		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+			SystemType::ParticleRenderSystem ));
+		//gfx->addParticleSystem();
+		gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{

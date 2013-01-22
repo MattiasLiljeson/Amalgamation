@@ -60,6 +60,7 @@ public:	//Enums
 		FrameFinalizerSystem,
 		ShipManagerSystem,
 		NetSyncedPlayerScoreTrackerSystem,
+		ParticleSystemEmitterSystem,
 		NUM_SYSTEM_TYPES
 	};
 
