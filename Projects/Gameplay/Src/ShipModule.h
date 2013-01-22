@@ -19,6 +19,8 @@ class ShipModule: public Component
 public:
 	int m_parentEntity;
 	bool m_active;
+	float m_value; ///< Value of the module. Generates score.
+
 	ShipModule();
 	~ShipModule();
 };
