@@ -105,7 +105,7 @@ int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 										   PositionalSoundCreationInfo* p_positionalInfo)
 {
-	p_positionalInfo->destChannels = m_destChannels; // NOTE THE ASSIGNMENT 
+	p_positionalInfo->destChannels = m_destChannels;
 	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_basicSoundInfo, 
 		p_positionalInfo));
 	return m_createdSounds.size()-1; // returns the newly created sound index
