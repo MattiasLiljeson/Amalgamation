@@ -76,6 +76,7 @@
 #include <TimerSystem.h>
 #include <ExtrapolationSystem.h>
 #include <PositionalSoundSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -84,9 +85,12 @@
 using namespace std;
 
 // MISC
+#include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
 #include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
+#include <ParticleRenderSystem.h>
+#include <FrameFinalizerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <ParticleRenderSystem.h>
 
@@ -257,15 +261,18 @@ void ClientApplication::initSystems()
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
+
 	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-	
-	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
-	m_world->setSystem( lightRender, true );
+
+	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
+	m_world->setSystem( finalizer, true);
 
 	/************************************************************************/
 	/* Network																*/
@@ -280,7 +287,7 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
@@ -329,6 +336,10 @@ void ClientApplication::initEntities()
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
+
+
+
+
 
 	ConnectionPointCollection connectionPoints;
 	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 

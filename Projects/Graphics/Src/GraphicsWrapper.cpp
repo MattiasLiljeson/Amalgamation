@@ -16,6 +16,7 @@
 #include "D3DUtil.h"
 #include "ParticleRenderer.h"
 #include "AglParticleSystem.h"
+#include <LightInstanceData.h>
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -37,6 +38,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	initViewport();
 
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
+	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
@@ -68,6 +70,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_textureManager;
 	delete m_textureFactory;
 	delete m_modelFactory;
+	delete m_renderSceneInfoBuffer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -161,22 +164,24 @@ void GraphicsWrapper::clearRenderTargets()
 {
 	m_deferredRenderer->clearBuffers();
 	
-	static float ClearColor[4] = { 1, 0, 0.39f, 1.0f }; //PINK!
+	static float ClearColor[4] = { 0.0, 0.0, 0.0f, 1.0f };
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
 }
 
-void GraphicsWrapper::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
-{
-	m_deferredRenderer->setSceneInfo(p_sceneInfo);
-}
 void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
 	m_renderSceneInfo = p_sceneInfo;
+	m_deferredRenderer->setSceneInfo(p_sceneInfo);
 }
 
 void GraphicsWrapper::beginFrame()
 {
 	setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_deferredRenderer->beginDeferredBasePass();
+
+	m_renderSceneInfoBuffer->accessBuffer.setSceneInfo( m_renderSceneInfo );
+	m_renderSceneInfoBuffer->update();
+	m_renderSceneInfoBuffer->apply();
+
 }
 
 void GraphicsWrapper::updatePerFrameConstantBuffer()
@@ -234,6 +239,10 @@ void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state,
 	}
 }
 
+void GraphicsWrapper::setBlendStateSettings( BlendState::Mode p_state )
+{
+	m_deferredRenderer->setBlendState( p_state );
+}
 
 void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
 {
@@ -248,6 +257,7 @@ void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
 
 void GraphicsWrapper::beginGUIPass()
 {
+
 	m_deferredRenderer->beginGUIPass();
 }
 
@@ -272,12 +282,41 @@ void GraphicsWrapper::finalizeGUIPass()
 	m_deferredRenderer->finalizeGUIPass();
 }
 
-void GraphicsWrapper::finalizeFrame()
+void GraphicsWrapper::beginLightPass()
 {
-	setRasterizerStateSettings(RasterizerState::DEFAULT,false);
-	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL);
-	m_deferredRenderer->renderComposedImage();
+	//setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
+	setRasterizerStateSettings( RasterizerState::FILLED_CW_FRONTCULL, false );
+	setBlendStateSettings( BlendState::ADDITIVE );
+	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
+	m_deferredRenderer->beginLightPass();
 }
+
+void GraphicsWrapper::renderLights( LightMesh* p_mesh,
+								   vector<LightInstanceData>* p_instanceList )
+{
+	if( p_mesh != NULL && p_instanceList != NULL )
+	{
+		Buffer<LightInstanceData>* instanceBuffer;
+		instanceBuffer = m_bufferFactory->createLightInstanceBuffer( &(*p_instanceList)[0],
+			p_instanceList->size() );
+
+		m_deferredRenderer->renderLights( p_mesh, instanceBuffer );
+
+		delete instanceBuffer;
+		instanceBuffer = NULL;
+	}
+	else
+	{
+		m_deferredRenderer->renderLights( NULL, NULL );
+	}
+}
+
+void GraphicsWrapper::endLightPass()
+{
+	m_deferredRenderer->endLightPass();
+	setBlendStateSettings( BlendState::DEFAULT );
+}
+
 
 void GraphicsWrapper::flipBackBuffer()
 {

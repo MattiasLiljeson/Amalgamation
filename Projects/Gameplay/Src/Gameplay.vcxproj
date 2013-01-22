@@ -29,6 +29,7 @@
     <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
     <ClInclude Include="GameplayTags.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="PickComponent.h" />
     <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
@@ -122,6 +124,7 @@
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
@@ -140,6 +143,7 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="ParticleRenderSystem.cpp" />

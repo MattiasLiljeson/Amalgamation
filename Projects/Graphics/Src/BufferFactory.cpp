@@ -1,7 +1,10 @@
 #include "BufferFactory.h"
 #include "Mesh.h"
+#include "PVertex.h"
 #include <AglSphereMesh.h>
+#include "LightMesh.h"
 #include "ParticleCBuffer.h"
+#include <LightInstanceData.h>
 
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
@@ -34,6 +37,8 @@ Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
 	bufferDesc.NumElements = sizeof(data)/elemSz;
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS_PS;
+	bufferDesc.Slot = BufferConfig::PEROBJECT;
+	
 
 	// create and return the buffer
 	cBuffer = new Buffer<SimpleCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
@@ -59,6 +64,7 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = 6;
 	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
 
 	// Create buffer from config and data
 	quadBuffer = new Buffer<PTVertex>(m_device,m_deviceContext,&mesh[0],bufferDesc);
@@ -66,7 +72,7 @@ Buffer<PTVertex>* BufferFactory::createFullScreenQuadBuffer()
 	return quadBuffer;
 }
 
-Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instanceList, 
+Buffer<InstanceData>* BufferFactory::createInstanceBuffer( InstanceData* p_instanceList, 
 														  unsigned int p_numberOfElements)
 {
 	Buffer<InstanceData>* instanceBuffer;
@@ -77,6 +83,7 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instan
 	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = p_numberOfElements;
 	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
 
 	// Create buffer from config and data
 	instanceBuffer = new Buffer<InstanceData>(m_device,m_deviceContext,
@@ -84,6 +91,25 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer(InstanceData* p_instan
 
 	return instanceBuffer;
 }
+
+Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
+{
+	Buffer<LightInstanceData>* instanceBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof( LightInstanceData );
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = p_numberOfElements;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+
+	// Create buffer from config and data
+	instanceBuffer = new Buffer<LightInstanceData>( m_device, m_deviceContext,
+		p_instanceList, bufferDesc );
+
+	return instanceBuffer;
+}
+
 
 Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices, 
 												 unsigned int p_numberOfElements )
@@ -96,6 +122,7 @@ Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices,
 	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	indexBufferDesc.NumElements = p_numberOfElements;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
+	indexBufferDesc.Slot = BufferConfig::SLOT0;
 
 	indexBuffer = new Buffer<DIndex>(m_device,m_deviceContext, p_indices,
 									 indexBufferDesc);
@@ -113,8 +140,24 @@ Buffer<ParticleCBuffer>* BufferFactory::createParticleCBuffer(){
 	bD.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
 	bD.NumElements = sizeof(data)/elemSz;
 	bD.Type = BufferConfig::CONSTANT_BUFFER_VS_GS_PS;
+	bD.Slot = BufferConfig::PEROBJECT;
 
 	return new Buffer<ParticleCBuffer>(m_device,m_deviceContext,&data,bD);
+}
+
+Buffer<RenderSceneInfoCBuffer>* BufferFactory::createRenderSceneInfoCBuffer(){
+	RenderSceneInfoCBuffer data;
+
+	UINT32 elementSize = sizeof(float)*4; // 16 byte alignment
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_ALL;
+	bufferDesc.Slot = BufferConfig::PERFRAME;
+
+	return new Buffer<RenderSceneInfoCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
 }
 
 Mesh* BufferFactory::createBoxMesh()
@@ -183,6 +226,73 @@ Mesh* BufferFactory::createBoxMesh()
 	return newBox;
 }
 
+LightMesh* BufferFactory::createLightBoxMesh()
+{
+#pragma region static data
+	PVertex mesh[]= {
+		{ { -1, -1, -1 } },
+		{ { -1,  1, -1 } },
+		{ {  1,  1, -1 } } ,
+		{ {  1, -1, -1 } },
+
+		{ { -1, -1,  1 },},
+		{ {  1, -1,  1 },},
+		{ {  1,  1,  1 },},
+		{ { -1,  1,  1 },},
+
+		{ { -1,  1, -1 },},
+		{ { -1,  1,  1 },},
+		{ {  1,  1,  1 },},
+		{ {  1,  1, -1 },},
+
+		{ { -1, -1, -1 },},
+		{ {  1, -1, -1 },},
+		{ {  1, -1,  1 },},
+		{ { -1, -1,  1 },},
+
+		{ { -1, -1,  1 },},
+		{ { -1,  1,  1 },},
+		{ { -1,  1, -1 },},
+		{ { -1, -1, -1 },},
+
+		{ {  1, -1, -1 },},
+		{ {  1,  1, -1 },},
+		{ {  1,  1,  1 },},
+		{ {  1, -1,  1 },}
+	};
+
+	DIndex indices[] = {
+		0,1,2,
+		0,2,3,
+
+		4,5,6,
+		4,6,7,
+
+		8,9,10,
+		8,10,11,
+
+		12,13,14,
+		12,14,15,
+
+		16,17,18,
+		16,18,19,
+
+		20,21,22,
+		20,22,23
+	};
+
+#pragma endregion end of static data
+	int indicesCnt = sizeof(indices) / sizeof(DIndex);
+	Buffer<DIndex>* indexBuffer = createIndexBuffer( &indices[0], indicesCnt );
+
+	int vertexCnt = sizeof(mesh) / sizeof(PVertex);
+	Buffer<PVertex>* vertexBuffer = createVertexBuffer( &mesh[0], vertexCnt );
+
+	LightMesh* newBox = new LightMesh( vertexBuffer, indexBuffer );
+
+	return newBox;
+}
+
 Mesh* BufferFactory::createSphereMesh()
 {
 	AglSphereMesh sphereMesh;
@@ -233,6 +343,7 @@ Mesh* BufferFactory::createMeshFromPNTTBVerticesAndIndices(
 	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	vertexBufferDesc.NumElements = p_numVertices;
 	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	vertexBufferDesc.Slot = BufferConfig::SLOT0;
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
@@ -240,6 +351,7 @@ Mesh* BufferFactory::createMeshFromPNTTBVerticesAndIndices(
 	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	indexBufferDesc.NumElements = p_numIndices;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
+	indexBufferDesc.Slot = BufferConfig::SLOT0;
 
 	Buffer<PNTTBVertex>* vertexBuffer = new Buffer<PNTTBVertex>( m_device, m_deviceContext,
 		p_vertices, vertexBufferDesc );
@@ -260,6 +372,7 @@ Mesh* BufferFactory::createMeshFromPTVerticesAndIndices(
 	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	vertexBufferDesc.NumElements = p_numVertices;
 	vertexBufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	vertexBufferDesc.Slot = BufferConfig::SLOT0;
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
@@ -267,6 +380,7 @@ Mesh* BufferFactory::createMeshFromPTVerticesAndIndices(
 	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	indexBufferDesc.NumElements = p_numIndices;
 	indexBufferDesc.Type = BufferConfig::INDEX_BUFFER;
+	vertexBufferDesc.Slot = BufferConfig::SLOT0;
 
 	Buffer<PTVertex>* vertexBuffer = new Buffer<PTVertex>( m_device, m_deviceContext,
 		p_vertices, vertexBufferDesc );

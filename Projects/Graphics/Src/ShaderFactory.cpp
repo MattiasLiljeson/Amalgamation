@@ -72,32 +72,36 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	return newDeferredBaseShader;
 }
 
-DeferredComposeShader* ShaderFactory::createDeferredComposeShader(const LPCWSTR& p_filePath)
+DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
 {
-	DeferredComposeShader* newDeferredComposeShader = NULL;
-	ID3D11SamplerState* samplerState = NULL;
-	ID3D11InputLayout* inputLayout = NULL;
 
-	BufferConfig* initConfig  = NULL;
+	//BufferConfig* initConfig  = NULL;
 
 	VSData* vertexData = new VSData();
-	PSData* pixelData = new PSData();
-
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+
+	PSData* pixelData = new PSData();
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
-
 	createAllShaderStages(vertexData,pixelData);
-	createSamplerState(&samplerState);
-	createPTVertexInputLayout(vertexData,&inputLayout);
+	
+	ID3D11InputLayout* inputLayout = NULL;
+	//createPTVertexInputLayout(vertexData,&inputLayout);
+	createInstancedLightInputLayout( vertexData, &inputLayout );
 
+	ID3D11SamplerState* samplerState = NULL;
+	createSamplerState( &samplerState );
 
 	ShaderInitStruct shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
+	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
 
+	//DeferredComposeShader* newDeferredComposeShader = NULL;
+	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
+	//return newDeferredComposeShader;
 
-	newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
-
-	return newDeferredComposeShader;
+	DeferredBaseShader* newDeferredBaseShader = NULL;
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
+		m_bufferFactory->createSimpleCBuffer());
+	return newDeferredBaseShader;
 }
 
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
@@ -162,7 +166,11 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile,
 	DWORD compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if defined(DEBUG) || defined(_DEBUG)
-	compileFlags |= D3DCOMPILE_DEBUG;
+	compileFlags |= D3DCOMPILE_DEBUG; 
+	compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+	//compileFlags |= D3DCOMPILE_WARNINGS_ARE_ERRORS;
+#else
+	compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3; 
 #endif
 
 	// Compile the programs
@@ -333,6 +341,7 @@ void ShaderFactory::createPTVertexInputLayout(VSData* p_vs,
 		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
+
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
 
@@ -362,13 +371,17 @@ void ShaderFactory::createInstancedPNTVertexInputLayout( VSData* p_vs,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 
 
-		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 	};
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
@@ -409,18 +422,70 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 
 
-		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 	};
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
 
+void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
+													ID3D11InputLayout** p_inputLayout)
+{
+	D3D11_INPUT_ELEMENT_DESC input[] = {
+		// Per vertex
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+		// Per instance
+		{"RANGE", 0, DXGI_FORMAT_R32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"LIGHTDIR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"ATTENUATION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"SPOTPOWER", 0, DXGI_FORMAT_R32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+		{"AMBIENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"DIFFUSE", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"SPECULAR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+		{"ENABLED", 0, DXGI_FORMAT_R32_SINT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TYPE", 0, DXGI_FORMAT_R32_SINT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+	};
+
+	int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L
+	constructInputLayout(input, elementCnt, p_vertexShader, p_inputLayout);
+}
 
 void ShaderFactory::createParticleInputLayout( VSData* p_vs, 
 											  ID3D11InputLayout** p_inpuyLayout )
@@ -446,10 +511,13 @@ void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_input
 										 UINT p_numberOfElements,
 										 VSData* p_vs, ID3D11InputLayout** p_inputLayout )
 {
-	HRESULT hr = m_device->CreateInputLayout(p_inputDesc, 
+	HRESULT hr = m_device->CreateInputLayout(
+		p_inputDesc, 
 		p_numberOfElements, 
 		p_vs->compiledData->GetBufferPointer(),
-		p_vs->compiledData->GetBufferSize(), p_inputLayout);
+		p_vs->compiledData->GetBufferSize(),
+		p_inputLayout);
+
 	if ( FAILED(hr) )
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }

@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="InstanceData.h" />
+    <ClInclude Include="LightInstanceData.h" />
     <ClInclude Include="RawTransformData.h" />
   </ItemGroup>
   <ItemGroup>

@@ -50,6 +50,27 @@ void RenderStateHelper::fillBlendStateList(ID3D11Device* p_device,
 				p_device->CreateBlendState( &blendStateDesc, &blendstate ); 
 				break;
 			}
+
+			// NOT TESTED! /Mattias
+		case BlendState::ADDITIVE:
+			{
+				blendstate = NULL;
+				ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+				float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+				blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+				blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+				blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_SRC_ALPHA;
+				blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+				blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+				blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+				blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+				blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+				p_device->CreateBlendState( &blendStateDesc, &blendstate ); 
+				break;
+			}
+
 		case BlendState::NORMAL:
 		default:
 			{
@@ -99,6 +120,25 @@ void RenderStateHelper::fillRasterizerStateList(ID3D11Device* p_device,
 				rasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
 				rasterizerStateDesc.CullMode = D3D11_CULL_BACK;
 				rasterizerStateDesc.FrontCounterClockwise = TRUE;
+				rasterizerStateDesc.DepthClipEnable = TRUE;
+				rasterizerStateDesc.AntialiasedLineEnable = FALSE;
+				rasterizerStateDesc.MultisampleEnable = FALSE;
+				rasterizerStateDesc.DepthBias = 0;
+				rasterizerStateDesc.DepthBiasClamp = 0.0f;
+				rasterizerStateDesc.SlopeScaledDepthBias = 0.0f;
+				rasterizerStateDesc.ScissorEnable = false;
+
+				p_device->CreateRasterizerState( &rasterizerStateDesc, &rasterizerstate ); 
+				break;
+			}
+		case RasterizerState::FILLED_CW_FRONTCULL:
+			{
+				rasterizerstate = NULL;
+				ZeroMemory(&rasterizerStateDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+				rasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
+				rasterizerStateDesc.CullMode = D3D11_CULL_FRONT;
+				rasterizerStateDesc.FrontCounterClockwise = FALSE;
 				rasterizerStateDesc.DepthClipEnable = TRUE;
 				rasterizerStateDesc.AntialiasedLineEnable = FALSE;
 				rasterizerStateDesc.MultisampleEnable = FALSE;
@@ -174,6 +214,25 @@ void RenderStateHelper::fillRasterizerStateList(ID3D11Device* p_device,
 
 				rasterizerStateDesc.FillMode = D3D11_FILL_WIREFRAME;
 				rasterizerStateDesc.CullMode = D3D11_CULL_BACK;
+				rasterizerStateDesc.FrontCounterClockwise = FALSE;
+				rasterizerStateDesc.DepthClipEnable = TRUE;
+				rasterizerStateDesc.AntialiasedLineEnable = FALSE;
+				rasterizerStateDesc.MultisampleEnable = FALSE;
+				rasterizerStateDesc.DepthBias = 0;
+				rasterizerStateDesc.DepthBiasClamp = 0.0f;
+				rasterizerStateDesc.SlopeScaledDepthBias = 0.0f;
+				rasterizerStateDesc.ScissorEnable = false;
+
+				p_device->CreateRasterizerState( &rasterizerStateDesc, &rasterizerstate ); 
+				break;
+			}
+		case RasterizerState::WIREFRAME_FRONTCULL:
+			{
+				rasterizerstate = NULL;
+				ZeroMemory(&rasterizerStateDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+				rasterizerStateDesc.FillMode = D3D11_FILL_WIREFRAME;
+				rasterizerStateDesc.CullMode = D3D11_CULL_FRONT;
 				rasterizerStateDesc.FrontCounterClockwise = FALSE;
 				rasterizerStateDesc.DepthClipEnable = TRUE;
 				rasterizerStateDesc.AntialiasedLineEnable = FALSE;

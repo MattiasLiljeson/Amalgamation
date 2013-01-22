@@ -40,7 +40,7 @@ void ParticleRenderSystem::process(){
 		}
 	}
 
-	m_gfxBackend->getGfxWrapper()->finalizeFrame();
+	//m_gfxBackend->getGfxWrapper()->finalizeFrame();
 }
 
 void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem){
