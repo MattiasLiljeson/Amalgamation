@@ -3,6 +3,7 @@
 #include <AglVector3.h>
 #include <AglQuaternion.h>
 
+
 class BodyInitData : public Component
 {
 public:
@@ -39,6 +40,9 @@ public:
 		m_impulseEnabled = p_impulseEnabled;
 		m_collisionEnabled = p_collisionEnabled;
 	}
+
+	virtual void init( vector<ComponentData> p_initData );
+
 	AglVector3 m_position;
 	AglQuaternion m_orientation;
 	AglVector3 m_scale;
@@ -54,4 +58,6 @@ public:
 	bool m_impulseEnabled;
 
 	bool m_collisionEnabled;
+private:
+	static ComponentRegister<BodyInitData> s_reg;
 };

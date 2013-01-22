@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 
 class GraphicsBackendSystem;
+struct ModelResource;
 
 // =======================================================================================
 //                                      LoadMeshSystem
@@ -28,7 +29,7 @@ public:
 private:
 
 	///-----------------------------------------------------------------------------------
-	/// Setr data for root entity, ie. the one processed
+	/// Set data for root entity, ie. the one processed
 	/// \param p_entity
 	/// \return int
 	///-----------------------------------------------------------------------------------
@@ -41,8 +42,8 @@ private:
 	/// \param p_numEntities
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void createChildrenEntities(vector<ModelResource*>* p_modelResources, 
-								   int p_rootId, Transform* p_rootTransform);
+	void createChildrenEntities(vector<ModelResource*>* p_modelResources,
+								Entity* p_rootEntity);
 
 	GraphicsBackendSystem* m_gfxBackend;
 };

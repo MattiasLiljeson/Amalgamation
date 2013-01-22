@@ -591,5 +591,8 @@
     <ClCompile Include="LoadMeshSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,6 +8,8 @@
 #include "RenderInfo.h"
 #include "EntityParent.h"
 #include "ConnectionPointSet.h"
+#include "BodyInitData.h"
+#include "PhysicsBody.h"
 
 LoadMeshSystem::LoadMeshSystem( GraphicsBackendSystem* p_gfxBackend ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -45,7 +47,7 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* rootTransformData=NULL;
 		int rootId = setRootData(entity,(*models)[0],rootTransformData);
 		// Children
-		createChildrenEntities(models,rootId,rootTransformData);
+		createChildrenEntities(models,entity);
 
 		// remove init data and update
 		p_entities[i]->removeComponent(ComponentType::LoadMeshJobComponent);
@@ -75,6 +77,7 @@ int LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResourc
 	
 	// Handle particles here
 
+
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist
 	{
@@ -86,29 +89,46 @@ int LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResourc
 
 
 void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelResources, 
-												int p_rootId, Transform* p_rootTransform)
+											 Entity* p_rootEntity)
 {
+	Component* t = NULL;
+	Transform* rootTransform = NULL;
+	BodyInitData* rootRigidBody = NULL;
+	int rootId = p_rootEntity->getIndex();
+
+	// parent transform
+	t = p_rootEntity->getComponent( ComponentType::ComponentTypeIdx::Transform );
+	if (t!=NULL)
+		rootTransform = static_cast<Transform*>(t);
+
+	// parent rigidbody data
+	t = p_rootEntity->getComponent( ComponentType::ComponentTypeIdx::BodyInitData );
+	if (t!=NULL)
+		rootRigidBody = static_cast<BodyInitData*>(t);
+
+	//
 	ModelResource* modelResource = NULL;
 	Entity* entity = NULL;
 	Component* component;
 	for (int i=1;i<p_modelResources->size();i++)
 	{
 		modelResource = (*p_modelResources)[i];		// fetch instruction
-		entity = m_world->createEntity();	// create entity
+		entity = m_world->createEntity();			// create entity
 
-		// mesh
+		// Mesh
 		int meshId = modelResource->meshId;
 		component = new RenderInfo( meshId );
 		entity->addComponent( ComponentType::RenderInfo, component );
 
-		// transform
+		// Transform
 		AglMatrix baseTransform = AglMatrix::identityMatrix();
-		if (p_rootTransform) baseTransform = p_rootTransform->getMatrix();
+		if (rootTransform) baseTransform = rootTransform->getMatrix();
+		baseTransform = modelResource->transform * baseTransform;
 
-		component = new Transform( modelResource->transform * baseTransform );
+		component = new Transform( baseTransform );
 		entity->addComponent( ComponentType::Transform, component );
 
-		// connection points
+		// Connection points
 		if (!modelResource->connectionPoints.m_collection.empty())
 		{
 			component = new ConnectionPointSet( modelResource->connectionPoints.m_collection );
@@ -117,8 +137,33 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 
 		// Handle particles here
 
-		// hierarchy
-		component = new EntityParent( p_rootId, modelResource->transform );
+		// Collision
+		if (rootRigidBody)
+		{
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
+
+			BodyInitData* b = new BodyInitData(AglVector3(30, 0, 0),
+				AglQuaternion::identity(),
+				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0);
+			// Copy from parent
+			b->m_position		= baseTransform.GetTranslation();
+			b->m_orientation	= baseTransform.GetRotation();
+			b->m_scale			= baseTransform.GetScale();
+			b->m_velocity			= rootRigidBody->m_velocity;
+			b->m_angularVelocity	= rootRigidBody->m_angularVelocity;
+			b->m_collisionEnabled	= rootRigidBody->m_collisionEnabled;
+			b->m_compound			= rootRigidBody->m_compound;
+			b->m_impulseEnabled		= rootRigidBody->m_impulseEnabled;
+
+			b->m_type = rootRigidBody->m_type;
+
+			entity->addComponent( ComponentType::BodyInitData, b);
+		}
+
+		// Hierarchy
+		component = new EntityParent( rootId, modelResource->transform );
 		entity->addComponent( ComponentType::EntityParent, component );
 
 		// finished

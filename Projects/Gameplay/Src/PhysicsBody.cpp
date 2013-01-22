@@ -1,4 +1,12 @@
 #include "PhysicsBody.h"
+#include <ComponentFactory.h>
+
+ComponentRegister<PhysicsBody> PhysicsBody::s_reg("PhysicsBody");
+
+void PhysicsBody::init( vector<ComponentData> p_initData )
+{
+	// Nothing needed here right now
+}
 
 void PhysicsBody::setParentId( int p_parentId )
 {
