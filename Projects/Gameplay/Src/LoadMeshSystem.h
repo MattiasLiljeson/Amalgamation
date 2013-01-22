@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 
 class GraphicsBackendSystem;
+class Transform;
 struct ModelResource;
 
 // =======================================================================================
@@ -33,7 +34,7 @@ private:
 	/// \param p_entity
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int setRootData(Entity* p_entity, ModelResource* p_modelResource, 
+	void setRootData(Entity* p_entity, ModelResource* p_modelResource, 
 					Transform* p_outTransform);
 
 	///-----------------------------------------------------------------------------------

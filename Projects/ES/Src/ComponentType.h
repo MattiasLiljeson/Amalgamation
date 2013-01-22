@@ -39,7 +39,7 @@ public:	//Enums
 		MenuItem,
 		HudElement,
 		EntityParent,
-		LoadMeshJobComponent,
+		LoadMesh,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

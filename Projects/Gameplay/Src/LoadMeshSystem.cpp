@@ -1,7 +1,7 @@
 #include "LoadMeshSystem.h"
 
 #include "GraphicsBackendSystem.h"
-#include "LoadMeshJobComponent.h"
+#include "LoadMesh.h"
 #include <ModelResource.h>
 #include <GraphicsWrapper.h>
 #include "Transform.h"
@@ -13,7 +13,7 @@
 
 LoadMeshSystem::LoadMeshSystem( GraphicsBackendSystem* p_gfxBackend ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
-	ComponentType::ComponentTypeIdx::LoadMeshJobComponent)
+	ComponentType::ComponentTypeIdx::LoadMesh)
 {
 	m_gfxBackend = p_gfxBackend;
 }
@@ -37,27 +37,27 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		Entity* entity = p_entities[i];
 		//
-		LoadMeshJobComponent* jobInfo = static_cast<LoadMeshJobComponent*>(
-			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMeshJobComponent ) );
+		LoadMesh* jobInfo = static_cast<LoadMesh*>(
+			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
 
 		// Load creation instructions
 		vector<ModelResource*>* models= gfxWrapper->createModelsFromFile( jobInfo->getFileName(), 
 																		  &MODELPATH);
 		// Root
 		Transform* rootTransformData=NULL;
-		int rootId = setRootData(entity,(*models)[0],rootTransformData);
+		setRootData(entity,(*models)[0],rootTransformData);
 		// Children
 		createChildrenEntities(models,entity);
 
 		// remove init data and update
-		p_entities[i]->removeComponent(ComponentType::LoadMeshJobComponent);
+		p_entities[i]->removeComponent(ComponentType::LoadMesh);
 		p_entities[i]->applyComponentChanges();
 	}
 }
 
 
 
-int LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
+void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
 								 Transform* p_outTransform )
 {
 	Component* t = p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform );
@@ -115,7 +115,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		modelResource = (*p_modelResources)[i];		// fetch instruction
 		entity = m_world->createEntity();			// create entity
 
-		// Mesh
+		// Mesh, renderinfo
 		int meshId = modelResource->meshId;
 		component = new RenderInfo( meshId );
 		entity->addComponent( ComponentType::RenderInfo, component );
@@ -157,7 +157,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 			b->m_compound			= rootRigidBody->m_compound;
 			b->m_impulseEnabled		= rootRigidBody->m_impulseEnabled;
 
-			b->m_type = rootRigidBody->m_type;
+			b->m_btype = rootRigidBody->m_btype;
 
 			entity->addComponent( ComponentType::BodyInitData, b);
 		}

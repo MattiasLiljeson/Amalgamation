@@ -401,14 +401,14 @@ void ClientApplication::initEntities()
 
 	
 
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
-	m_world->addEntity(entity);
+// 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+// 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+// 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+// 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+// 
+// 	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+// 
+// 	m_world->addEntity(entity);
 
 	//InitModulesTestByAnton();
 

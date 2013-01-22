@@ -40,7 +40,7 @@
     <ClInclude Include="LibRocketRenderSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightSources.h" />
-    <ClInclude Include="LoadMeshJobComponent.h" />
+    <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LookAtSystem.h" />
     <ClInclude Include="MainCamera.h" />
@@ -135,6 +135,7 @@
     <ClCompile Include="LibRocketRenderSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightSources.cpp" />
+    <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />

@@ -2,7 +2,7 @@
 #include <Component.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
-
+#include <ComponentFactory.h>
 
 class BodyInitData : public Component
 {
@@ -21,6 +21,8 @@ public:
 		STATIC
 	};
 
+	BodyInitData();
+
 	BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
 					AglVector3 p_scale, AglVector3 p_velocity,
 					AglVector3 p_angularVelocity, int p_type,
@@ -28,12 +30,14 @@ public:
 					CompoundMode p_compoundMode = CompoundMode::SINGLE, bool p_impulseEnabled = true,
 					bool p_collisionEnabled = true)
 	{
+		m_type = ComponentType::ComponentTypeIdx::BodyInitData;
+
 		m_position = p_position;
 		m_orientation = p_orientation;
 		m_scale = p_scale;
 		m_velocity = p_velocity;
 		m_angularVelocity = p_angularVelocity;
-		m_type = p_type;
+		m_btype = p_type;
 
 		m_static = p_responseMode==ResponseMode::STATIC; // change these?
 		m_compound = p_compoundMode==CompoundMode::COMPOUND;
@@ -49,7 +53,7 @@ public:
 	AglVector3 m_velocity;
 	AglVector3 m_angularVelocity;
 
-	int m_type;
+	int m_btype;
 
 	bool m_static;
 

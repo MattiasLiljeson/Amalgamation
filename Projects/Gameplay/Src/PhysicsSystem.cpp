@@ -123,7 +123,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			bodyId = &(body->m_id); 
 		
 		// Add shape
-		if (init->m_type == 0)
+		if (init->m_btype == 0)
 		{
 			*bodyId = m_physicsController->AddBox(init->m_position-offset,
 				init->m_scale*2, 1, 

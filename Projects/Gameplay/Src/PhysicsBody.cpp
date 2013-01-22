@@ -1,7 +1,15 @@
 #include "PhysicsBody.h"
-#include <ComponentFactory.h>
 
 ComponentRegister<PhysicsBody> PhysicsBody::s_reg("PhysicsBody");
+
+PhysicsBody::PhysicsBody()
+{
+	m_type = ComponentType::ComponentTypeIdx::PhysicsBody;
+
+	m_id = -1;
+	m_parentId = -1;
+	m_parentChanged = false;
+}
 
 void PhysicsBody::init( vector<ComponentData> p_initData )
 {

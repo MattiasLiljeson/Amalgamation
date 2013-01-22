@@ -13,18 +13,14 @@
 #include <Component.h>
 #include <AglVector3.h>
 #include <vector>
+#include <ComponentFactory.h>
 using namespace std;
 
 class PhysicsBody : public Component
 {
 public:
 
-	PhysicsBody()
-	{
-		m_id = -1;
-		m_parentId = -1;
-		m_parentChanged = false;
-	}
+	PhysicsBody();
 
 	int m_id;
 

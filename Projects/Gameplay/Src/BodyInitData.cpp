@@ -1,17 +1,33 @@
 #include "BodyInitData.h"
-#include <ComponentFactory.h>
 
 ComponentRegister<BodyInitData> BodyInitData::s_reg("BodyInitData");
+
+BodyInitData::BodyInitData()
+{
+	m_type = ComponentType::ComponentTypeIdx::BodyInitData;
+
+	m_position = AglVector3::zero();
+	m_orientation = AglQuaternion::identity();
+	m_scale = AglVector3::one();
+	m_velocity = AglVector3::zero();
+	m_angularVelocity = AglVector3::zero();
+
+	m_btype=0;
+	m_static=false;
+	m_compound=false;
+	m_impulseEnabled=true;
+	m_collisionEnabled=true;
+}
 
 void BodyInitData::init( vector<ComponentData> p_initData )
 {
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
-		if( p_initData[i].dataName == "m_posX" )
+		if( p_initData[i].dataName == "m_positionX" )
 			p_initData[i].getData<float>(&m_position.x);
-		else if( p_initData[i].dataName == "m_posY" )
+		else if( p_initData[i].dataName == "m_positionY" )
 			p_initData[i].getData<float>(&m_position.y);
-		else if( p_initData[i].dataName == "m_posZ" )
+		else if( p_initData[i].dataName == "m_positionZ" )
 			p_initData[i].getData<float>(&m_position.z);
 
 		else if( p_initData[i].dataName == "m_scaleX" )
@@ -53,8 +69,8 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		else if( p_initData[i].dataName == "m_angularVelocityZ" )
 			p_initData[i].getData<float>(&m_angularVelocity.z);
 
-		else if( p_initData[i].dataName == "m_type" )
-			p_initData[i].getData<int>(&m_type);
+		else if( p_initData[i].dataName == "m_btype" )
+			p_initData[i].getData<int>(&m_btype);
 		else if( p_initData[i].dataName == "m_static" )
 			p_initData[i].getData<bool>(&m_static);
 		else if( p_initData[i].dataName == "m_compound" )

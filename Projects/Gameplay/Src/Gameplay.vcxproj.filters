@@ -356,11 +356,11 @@
     <ClInclude Include="EntityParent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="LoadMeshJobComponent.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMesh.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,6 +593,9 @@
     </ClCompile>
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMesh.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
