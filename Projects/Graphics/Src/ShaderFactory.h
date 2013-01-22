@@ -14,6 +14,7 @@ class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class GUIShader;
+class ParticleShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -47,7 +48,7 @@ public:
 	/// \param p_filePath
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
-	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+	DeferredBaseShader* createLightShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
 	/// This method returns the GUI shader used for menus and HUDs.
@@ -55,6 +56,8 @@ public:
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
 	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
+
+	ParticleShader* createParticleShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------
@@ -137,6 +140,8 @@ private:
 	///-----------------------------------------------------------------------------------
 	void createPNTTBVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
+	void createParticleInputLayout(VSData* p_vs, ID3D11InputLayout** p_inpuyLayout);
+
 	///-----------------------------------------------------------------------------------
 	/// Creates a inputlayout for Instanced PNTVertex
 	/// \param p_vs
@@ -144,6 +149,9 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createInstancedPNTTBVertexInputLayout(VSData* p_vs, 
+		ID3D11InputLayout** p_inputLayout);
+
+	void createInstancedLightInputLayout( VSData* p_vertexShader,
 		ID3D11InputLayout** p_inputLayout);
 
 private:

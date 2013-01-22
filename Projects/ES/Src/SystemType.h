@@ -19,6 +19,7 @@ public:	//Enums
 		ServerPacketHandlerSystem,
 		NetworkConnectoToServerSystem,
 		ClientPacketHandlerSystem,
+		ExtrapolationSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
@@ -34,6 +35,7 @@ public:	//Enums
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,
+		PositionalSoundSystem,
 		LibRocketBackendSystem,
 		MenuSystem,
 		HudSystem,
@@ -44,6 +46,7 @@ public:	//Enums
 		ShieldModuleControllerSystem,
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
+		RocketControllerSystem,
 		RocketLauncherModuleControllerSystem,
 		ShipModulesControllerSystem,
 		TimerSystem,
@@ -55,7 +58,9 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
+		FrameFinalizerSystem,
 		ShipManagerSystem,
+		NetSyncedPlayerScoreTrackerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

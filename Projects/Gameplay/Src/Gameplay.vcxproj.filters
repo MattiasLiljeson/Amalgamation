@@ -335,8 +335,30 @@
     </ClInclude>
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="ParticleEmitters.h" />
+    <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtrapolationSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardRocket.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundEffect.h">
+      <Filter>Components\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -549,8 +571,27 @@
     </ClCompile>
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrapolationSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardRocket.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundEffect.cpp">
+      <Filter>Components\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,6 +4,9 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <queue>
+
+using namespace std;
 
 class TcpClient;
 class EntityCreationPacket;
@@ -46,10 +49,14 @@ private:
 
 	void updateCounters();
 
+	void updateInitialPacketLossDebugData();
+	void updateBroadcastPacketLossDebugData( unsigned int p_packetIdentifier );
+
 private:
 	TcpClient* m_tcpClient;
 	float m_currentPing;
 
+	unsigned int m_totalNetworkSynced;
 	unsigned int m_numberOfSentPackets;
 	unsigned int m_numberOfReceivedPackets;
 	unsigned int m_totalDataSent;
@@ -58,4 +65,11 @@ private:
 	unsigned int m_dataReceivedPerSecond;
 	unsigned int m_dataSentCounter;
 	unsigned int m_dataReceivedCounter;
+	unsigned int m_totalNumberOfOverflowPackets;
+	unsigned int m_totalNumberOfStaticPropPacketsReceived;
+	vector< pair<int,int> > m_staticPropIdentitiesForAntTweakBar;
+	unsigned int m_lastBroadcastPacketIdentifier;
+	unsigned int m_totalBroadcastPacketLost;
+
+	queue<int> m_staticPropIdentities;
 };

@@ -30,7 +30,7 @@ MaterialInfo Mesh::getMaterialInfo()
 	return m_materialInfo;
 }
 
-void Mesh::setTextureId( const MaterialInfo& p_materialInfo )
+void Mesh::setMaterial( const MaterialInfo& p_materialInfo )
 {
 	m_materialInfo = p_materialInfo;
 }

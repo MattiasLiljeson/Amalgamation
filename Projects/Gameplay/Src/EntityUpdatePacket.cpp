@@ -8,6 +8,8 @@ EntityUpdatePacket::EntityUpdatePacket()
 	translation = AglVector3();
 	rotation	= AglQuaternion();
 	scale		= AglVector3();
+	velocity	= AglVector3();
+	angularVelocity = AglVector3();
 }
 
 EntityUpdatePacket::~EntityUpdatePacket()
@@ -22,7 +24,10 @@ Packet EntityUpdatePacket::pack()
 		<< networkIdentity
 		<< translation
 		<< rotation
-		<< scale;
+		<< scale
+		<< timestamp
+		<< velocity
+		<< angularVelocity;
 
 	return packet;
 }
@@ -33,5 +38,8 @@ void EntityUpdatePacket::unpack( Packet p_packet )
 		>> networkIdentity 
 		>> translation 
 		>> rotation 
-		>> scale;
+		>> scale
+		>> timestamp
+		>> velocity
+		>> angularVelocity;
 }

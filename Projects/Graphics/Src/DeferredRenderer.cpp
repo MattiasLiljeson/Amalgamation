@@ -1,6 +1,7 @@
 #include "AntTweakBarWrapper.h"
 #include "BufferFactory.h"
 #include "DeferredRenderer.h"
+#include "LightMesh.h"
 #include "Mesh.h"
 #include "ShaderFactory.h"
 #include "Texture.h"
@@ -11,6 +12,7 @@
 
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
+#include <LightInstanceData.h>
 
 DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext, 
@@ -69,7 +71,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_shaderFactory;
 	delete m_bufferFactory;
 	delete m_baseShader;
-	delete m_composeShader;
+	delete m_lightShader;
 	delete m_fullscreenQuad;
 	delete m_guiShader;
 }
@@ -80,8 +82,7 @@ void DeferredRenderer::clearBuffers()
 	float clearColor[] = {
 		0.0f,0.5f,0.5f,1.0f
 	};
-	for (unsigned int i = 0; i < NUMBUFFERS; i++)
-	{
+	for (unsigned int i = 0; i < NUMBUFFERS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
@@ -100,13 +101,7 @@ void DeferredRenderer::beginDeferredBasePass()
 	
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_baseShader->getPerFrameBufferPtr();
-	//	cb->accessBuffer.color[0] = 0.5f;
-	//	cb->accessBuffer.color[1] = 0.5f;
-
-	for (int i=0;i<16;i++)
-	{
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
-	}
+	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
 	cb->update();
 }
 
@@ -114,13 +109,7 @@ void DeferredRenderer::updatePerFrameConstantBuffer()
 {
 	// update per frame buffer
 	Buffer<SimpleCBuffer>* cb = m_guiShader->getPerFrameBufferPtr();
-	//	cb->accessBuffer.color[0] = 0.5f;
-	//	cb->accessBuffer.color[1] = 0.5f;
-
-	for (int i=0;i<16;i++)
-	{
-		cb->accessBuffer.vp[i] = m_sceneInfo.viewProjectionMatrix[i];
-	}
+	cb->accessBuffer.setViewProjection(m_sceneInfo.viewProj);
 	cb->update();
 }
 
@@ -141,24 +130,6 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArra
 										   unsigned int p_textureArraySize, 
 										   Buffer<InstanceData>* p_instanceBuffer )
 {
-	// Specialized, external apply of these buffers
-	// since instanced drawing required a "combined"
-	// vertex/instance-buffer
-	//
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-						p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-								 p_instanceBuffer->getBufferPointer() };
-
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-									  DXGI_FORMAT_R32_UINT, 0);
-
 	/************************************************************************/
 	/* Unsure on what the values, startSlot and numVIews, represent.		*/
 	/* -Robin T																*/
@@ -175,28 +146,110 @@ void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArra
 			startSlot++;
 		}
 	}
+	renderInstanced( p_mesh, m_baseShader, p_instanceBuffer );
+}
 
-	m_baseShader->apply();
+void DeferredRenderer::renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
+									   Buffer<InstanceData>* p_instanceBuffer )
+{
+	// Specialized, external apply of these buffers
+	// since instanced drawing required a "combined"
+	// vertex/instance-buffer
+	//
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+		p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+		p_instanceBuffer->getBufferPointer() };
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	p_shader->apply();
 
 	// Draw instanced data
 	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-										  p_instanceBuffer->getElementCount(),
-										  0,0,0);
+		p_instanceBuffer->getElementCount(),
+		0,0,0);
 }
 
-void DeferredRenderer::renderComposedImage()
+// HACK: DUPLICATE of above but with LightMesh instead of Mesh and LightInstanceData
+// instead of InstanceData
+void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
+									   Buffer<LightInstanceData>* p_instanceBuffer )
 {
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	// Specialized, external apply of these buffers
+	// since instanced drawing required a "combined"
+	// vertex/instance-buffer
+	//
+	// step sizes and offsets
+	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
+		p_instanceBuffer->getElementSize() };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
+		p_instanceBuffer->getBufferPointer() };
 
-	m_deviceContext->PSSetShaderResources(0,1,&m_gBuffersShaderResource[RT0]);
-	m_deviceContext->PSSetShaderResources(1,1,&m_gBuffersShaderResource[RT1]);
-	m_deviceContext->PSSetShaderResources(2,1,&m_gBuffersShaderResource[RT2]);
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
+		DXGI_FORMAT_R32_UINT, 0);
 
-	m_fullscreenQuad->apply();
+	p_shader->apply();
 
-	m_composeShader->apply();
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
+		p_instanceBuffer->getElementCount(),
+		0,0,0);
+}
 
-	m_deviceContext->Draw(6,0);
+
+void DeferredRenderer::beginLightPass()
+{
+	//m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+	m_deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+	// Set g-buffers
+	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
+	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[DEPTH] );
+
+	Buffer<SimpleCBuffer>* cb = m_lightShader->getPerFrameBufferPtr();
+	for (int i=0;i<16;i++) {
+		cb->accessBuffer.vp[i] = m_sceneInfo.viewProj[i]; 
+		cb->accessBuffer.vpInv[i] = m_sceneInfo.viewProjInv[i];
+	}
+
+
+	cb->update();
+
+}
+
+void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
+{
+	if( p_mesh && p_instanceBuffer )
+	{
+		renderInstanced( p_mesh, m_lightShader, p_instanceBuffer );
+	}
+	else
+	{
+		// Fallback:
+		m_fullscreenQuad->apply();
+		m_lightShader->apply();
+		m_deviceContext->Draw( 6, 0 );
+	}
+}
+
+void DeferredRenderer::endLightPass()
+{
+
 }
 
 void DeferredRenderer::beginGUIPass()
@@ -208,9 +261,7 @@ void DeferredRenderer::beginGUIPass()
 	setBlendMask(0xffffff);
 }
 
-void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
-{
-
+void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	p_mesh->getVertexBuffer()->apply();
 	p_mesh->getIndexBuffer()->apply();
 
@@ -227,8 +278,7 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture )
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-void DeferredRenderer::finalizeGUIPass()
-{
+void DeferredRenderer::finalizeGUIPass(){
 	//reset blend states
 	setBlendState(BlendState::DEFAULT);
 	setBlendFactors(0.0f, 0.0f, 0.0f, 0.0f);
@@ -236,16 +286,7 @@ void DeferredRenderer::finalizeGUIPass()
 
 	// Reset world matrix to identity matrix
 	RendererSceneInfo scene;
-	float identity[16] = 
-	{
-		1.0, 0.0f, 0.0f, 0.0f,
-		0.0, 1.0f, 0.0f, 0.0f, 
-		0.0, 0.0f, 1.0f, 0.0f, 
-		0.0, 0.0f, 0.0f, 1.0f 
-	};
-	for( int i=0; i<16; i++ )
-		scene.viewProjectionMatrix[i] = identity[i];
-
+	scene.viewProj = AglMatrix::identityMatrix();
 	setSceneInfo( scene );
 }
 
@@ -256,7 +297,7 @@ void DeferredRenderer::unMapGBuffers()
 	for (int i=0; i<NUMBUFFERS; i++)
 		nulz[i]=NULL;
 	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
-	m_composeShader->apply();
+	m_lightShader->apply();
 }
 
 void DeferredRenderer::initDepthStencil()
@@ -366,8 +407,11 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
-	m_composeShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/deferredCompose.hlsl");
+	//m_lightShader = m_shaderFactory->createLightShader(
+	//	L"Shaders/Game/deferredCompose.hlsl");
+	m_lightShader = m_shaderFactory->createLightShader(
+		L"Shaders/Game/lighting.hlsl");
+
 
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
@@ -453,4 +497,3 @@ void DeferredRenderer::buildRasterizerStates()
 {
 	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
 }
-

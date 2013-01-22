@@ -4,10 +4,10 @@ UpdateClientStatsPacket::UpdateClientStatsPacket()
 {
 	ping = -1;
 
-	for (int i=0;i<MAXPLAYERS;i++)
+	for (int i=0; i<MAXPLAYERS; i++)
 	{
-		scores[i]		= -1;
-		networkIds[i]	= -1;
+		playerIdentities[i] = -1;
+		scores[i] = 0;
 	}
 }
 
@@ -20,10 +20,11 @@ Packet UpdateClientStatsPacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::UpdateClientStats));
 	packet << ping;
-	for (int i = 0; i < MAXPLAYERS ; i++)
+	packet << currentServerTimestamp;
+	for (int i=0; i<MAXPLAYERS; i++)
 	{
+		packet << playerIdentities[i];
 		packet << scores[i];
-		packet << networkIds[i];
 	}
 
 	return packet;
@@ -32,9 +33,10 @@ Packet UpdateClientStatsPacket::pack()
 void UpdateClientStatsPacket::unpack( Packet p_packet )
 {
 	p_packet >> ping;
-	for (int i = 0; i < MAXPLAYERS ; i++)
+	p_packet >> currentServerTimestamp;
+	for (int i=0; i<MAXPLAYERS; i++)
 	{
+		p_packet >> playerIdentities[i];
 		p_packet >> scores[i];
-		p_packet >> networkIds[i];
 	}
 }

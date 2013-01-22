@@ -40,8 +40,8 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 			score->incrementScore( 1 );
 
 			UpdateClientStatsPacket packet;
-			packet.scores[i]		= score->getScore();
-			packet.networkIds[i]	= netSync->getNetworkIdentity();
+			packet.scores[i]			= score->getScore();
+			packet.playerIdentities[i]	= netSync->getNetworkIdentity();
 
 			m_server->broadcastPacket( packet.pack() );
 		}

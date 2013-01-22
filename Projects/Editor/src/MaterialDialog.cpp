@@ -13,9 +13,9 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	if (file != "")
 	{
 		removePath(file);
+		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
 		file = Scene::GetInstance()->GetFolder() + file;
 		TextureManager::GetInstance()->LoadTexture(file);
-		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
 	}
 }
 void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
@@ -27,9 +27,9 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	if (file != "")
 	{
 		removePath(file);
+		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
 		file = Scene::GetInstance()->GetFolder() + file;
 		TextureManager::GetInstance()->LoadTexture(file);
-		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
 	}
 }
 void TW_CALL MaterialDialog::LoadGlow(void *clientData)
@@ -41,9 +41,9 @@ void TW_CALL MaterialDialog::LoadGlow(void *clientData)
 	if (file != "")
 	{
 		removePath(file);
+		mat->glowTextureNameIndex = Scene::GetInstance()->AddName(file);
 		file = Scene::GetInstance()->GetFolder() + file;
 		TextureManager::GetInstance()->LoadTexture(file);
-		mat->glowTextureNameIndex = Scene::GetInstance()->AddName(file);
 	}
 }
 void TW_CALL MaterialDialog::LoadNormal(void *clientData)
@@ -55,9 +55,9 @@ void TW_CALL MaterialDialog::LoadNormal(void *clientData)
 	if (file != "")
 	{
 		removePath(file);
+		mat->normalTextureNameIndex = Scene::GetInstance()->AddName(file);
 		file = Scene::GetInstance()->GetFolder() + file;
 		TextureManager::GetInstance()->LoadTexture(file);
-		mat->normalTextureNameIndex = Scene::GetInstance()->AddName(file);
 	}
 }
 void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
@@ -69,9 +69,9 @@ void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
 	if (file != "")
 	{
 		removePath(file);
+		mat->displacementTextureNameIndex = Scene::GetInstance()->AddName(file);
 		file = Scene::GetInstance()->GetFolder() + file;
 		TextureManager::GetInstance()->LoadTexture(file);
-		mat->displacementTextureNameIndex = Scene::GetInstance()->AddName(file);
 	}
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)

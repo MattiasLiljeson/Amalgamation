@@ -59,11 +59,21 @@ public:
 	unsigned int getNumberOfReceivedPackets();
 	unsigned int getTotalDataSent();
 	unsigned int getTotalDataReceived();
+	unsigned int getTotalNumberOfOverflowPackets();
+	unsigned int getTotalPacketsReceivedInCommProcess();
+	unsigned int getTotalPacketsSentInCommProcess();
+	void askForCommProcessInfo();
 
 	void resetNumberOfSentPackets();
 	void resetNumberOfReceivedPackets();
 	void resetTotalDataSent();
 	void resetTotalDataReceived();
+
+	float getServerTimeAhead() const;
+	void setServerTimeAhead( float p_timeAhead );
+
+	float getPingToServer() const;
+	void setPingToServer( float p_ping );
 
 private:
 	boost::asio::io_service* m_ioService;
@@ -78,8 +88,14 @@ private:
 	int m_id;
 
 	unsigned int m_numberOfSentPackets;
-	unsigned int m_numberOfReceivedPackets;
+	unsigned int m_totalPacketsPopped;
 	unsigned int m_totalDataSent;
 	unsigned int m_totalDataReceived;
+	unsigned int m_totalNumberOfOverflowPackets;
+	unsigned int m_totalPacketsReceivedInCommProcess;
+	unsigned int m_totalPacketsSentInCommProcess;
+
+	float m_serverTimeAhead;
+	float m_pingToServer;
 
 };

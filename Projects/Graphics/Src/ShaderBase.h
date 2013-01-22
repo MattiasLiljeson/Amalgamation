@@ -23,6 +23,7 @@ public:
 	virtual ~ShaderBase();
 	virtual void apply()=0;
 	void applyStages();
+	void unApplyStages();
 protected:
 	// D3D
 	ID3D11Device*			m_device;

@@ -108,6 +108,8 @@ Build/Assets/Maps/
 Build/Assets/Misc/
 Build/Assets/Models/
 Build/Assets/*
+Build/ToConvert/
+Build/Converted/
 External/LibRocket/
 External/GTest/
 External/Visual Leak Detector/
@@ -132,6 +134,8 @@ External/*
 *.jpeg
 *.dll
 *.lib
+*.vsglog
+*.PIXExp
 
 [Ll]oc[Mm]etrics*.*
 

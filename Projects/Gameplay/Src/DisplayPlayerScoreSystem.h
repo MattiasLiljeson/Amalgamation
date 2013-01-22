@@ -26,7 +26,7 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 
-	void initialize();
+
 
 	// Overrides EntitySystem::inserted
 	// This method is automatically called when a new entity has been added to the system.

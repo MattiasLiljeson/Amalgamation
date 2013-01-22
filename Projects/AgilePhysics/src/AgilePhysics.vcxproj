@@ -99,6 +99,7 @@
     <ClCompile Include="ConvexHullShape.cpp" />
     <ClCompile Include="GJKSolver.cpp" />
     <ClCompile Include="ImpulseSolver.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="PhysicsController.cpp" />
     <ClCompile Include="PhyUtility.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="ConvexHullShape.h" />
     <ClInclude Include="GJKSolver.h" />
     <ClInclude Include="ImpulseSolver.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="PhysicsController.h" />
     <ClInclude Include="PhyUtility.h" />
     <ClInclude Include="RigidBody.h" />

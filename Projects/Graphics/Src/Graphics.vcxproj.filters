@@ -42,6 +42,24 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="LightMesh.cpp">
+      <Filter>Renderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExtendedManagedFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNameScriptParser.cpp">
+      <Filter>Graphics Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Renderer\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -137,6 +155,33 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="PVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMesh.h">
+      <Filter>Renderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelExtendedManagedFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNameScriptParser.h">
+      <Filter>Graphics Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Renderer\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSceneInfoCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -174,6 +219,9 @@
     </Filter>
     <Filter Include="Renderer\Materials">
       <UniqueIdentifier>{e1cf790f-831f-4fb7-9d60-94a94a88a36e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Particle">
+      <UniqueIdentifier>{19500243-937a-4e79-aafe-747a03f31f01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

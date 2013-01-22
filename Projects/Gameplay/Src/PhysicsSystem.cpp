@@ -52,23 +52,26 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			handleCompoundBodyDependencies(p_entities[i]);
 
 			// Update the rigidbody
-			AglMatrix world = b->GetWorld();
-			Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
-				ComponentType::Transform));
-			AglVector3 pos;
-			AglVector3 scale;
-			AglQuaternion rot;
-			AglMatrix::matrixToComponents(world, scale, rot, pos);
-			t->setTranslation(pos);
-			t->setRotation(rot);
-			t->setScale(scale);
-
-			if (!b->IsCompoundBody())
+			if (!b->IsStatic())
 			{
-				if (((RigidBody*)b)->GetType() == BOX)
+				AglMatrix world = b->GetWorld();
+				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
+					ComponentType::Transform));
+				AglVector3 pos;
+				AglVector3 scale;
+				AglQuaternion rot;
+				AglMatrix::matrixToComponents(world, scale, rot, pos);
+				t->setTranslation(pos);
+				t->setRotation(rot);
+				t->setScale(scale);
+
+				if (!b->IsCompoundBody())
 				{
-					RigidBodyBox* box = (RigidBodyBox*)b;
-					t->setScale(box->GetSizeAsVector3()*0.5f);
+					if (((RigidBody*)b)->GetType() == BOX)
+					{
+						RigidBodyBox* box = (RigidBodyBox*)b;
+						t->setScale(box->GetSizeAsVector3()*0.5f);
+					}
 				}
 			}
 

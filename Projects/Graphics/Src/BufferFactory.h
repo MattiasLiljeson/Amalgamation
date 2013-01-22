@@ -7,12 +7,17 @@
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
 #include "DIndex.h"
+#include "RenderSceneInfoCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
 // etc?
 
+class LightMesh;
 class Mesh;
+
+struct LightInstanceData;
+struct ParticleCBuffer;
 
 // =======================================================================================
 //                                      BufferFactory
@@ -50,6 +55,10 @@ public:
 	Buffer<InstanceData>* createInstanceBuffer(InstanceData* p_instanceList,
 												 unsigned int p_numberOfElements);
 
+	// Duplicate of createInstanceBuffer() but for lights
+	Buffer<LightInstanceData>* createLightInstanceBuffer( LightInstanceData* p_instanceList,
+		unsigned int p_numberOfElements );
+
 	///-----------------------------------------------------------------------------------
 	/// Constructs a vertex buffer of a specified type T.
 	/// \param p_vertices
@@ -69,11 +78,18 @@ public:
 	Buffer<DIndex>* createIndexBuffer(DIndex* p_indices,
 									  unsigned int p_numberOfElements);
 
+	Buffer<ParticleCBuffer>* createParticleCBuffer();
+
+	Buffer<RenderSceneInfoCBuffer>*  createRenderSceneInfoCBuffer();
+
+
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.
 	/// \return Box*
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
+
+	LightMesh* createLightBoxMesh();
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a sphere mesh only.

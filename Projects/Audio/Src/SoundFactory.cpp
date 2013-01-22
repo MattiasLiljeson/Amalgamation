@@ -14,9 +14,10 @@ Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 {
 	XAUDIO2_BUFFER buffer = {0};
 	initBuffer(&buffer, p_info);
+	WAVEFORMATEX waveFormatEx;
 
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(
-		p_info->getFullFilePathString().c_str(), buffer );
+	createSoundBuffer(p_info->getFullFilePathString().c_str(), &buffer, &waveFormatEx);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
 	return new Sound(soundVoice,buffer,p_info->volume);
 }
 
@@ -24,20 +25,20 @@ PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_b
 													 PositionalSoundCreationInfo* p_positionalInfo)
 {
 	XAUDIO2_BUFFER buffer				= {0};
-	X3DAUDIO_EMITTER emitter			= {0};
-	X3DAUDIO_DSP_SETTINGS dspSettings	= {0};
-
+	WAVEFORMATEX waveFormatEx;
 	initBuffer(&buffer, p_basicSoundInfo);
+	createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(), &buffer,
+		&waveFormatEx);
+	X3DAUDIO_EMITTER emitter			= {0};
 	initEmitter(&emitter, p_positionalInfo->soundOrientation);
+	X3DAUDIO_DSP_SETTINGS dspSettings	= {0};
 	initDSPSettings(&dspSettings,p_positionalInfo->destChannels);
 
 	PositionalSoundInfo info;
 	info.emitter	= emitter;
 	info.settings	= dspSettings; 
 	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
-
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(
-		p_basicSoundInfo->getFullFilePathString().c_str(), buffer );
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
 	return new PositionalSound( soundVoice, buffer, info, p_basicSoundInfo->volume);
 }
 
@@ -58,19 +59,16 @@ void SoundFactory::initDSPSettings( X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_
 	p_dspSettings->pMatrixCoefficients = new FLOAT32[1*p_destChannels];
 }
 
-IXAudio2SourceVoice* SoundFactory::createSourceVoice(const char* p_fullFilePath, 
-													 XAUDIO2_BUFFER& p_buffer, 
-													 float maxFreqOffset/* =1.0f */)
+void SoundFactory::createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
+									 WAVEFORMATEX* p_waveFormatEx)
 {
-	HRESULT hr = S_OK;
-	WAVEFORMATEX waveFormatEx;
 	DWORD chunkSize, chunkPosition, fileType;
 
 	ZeroMemory(&m_file, sizeof(HANDLE));
 	initFile(p_fullFilePath);
 
 	findChunk( m_file, fourccRIFF, chunkSize, chunkPosition);
-	readChunkData(m_file,&fileType,sizeof(DWORD), chunkPosition);
+	readChunkData(m_file, &fileType, sizeof(DWORD), chunkPosition);
 
 	if (fileType != fourccWAVE)
 		throw XAudio2Exception("Unsupported sound format",__FILE__,__FUNCTION__,__LINE__);
@@ -78,26 +76,31 @@ IXAudio2SourceVoice* SoundFactory::createSourceVoice(const char* p_fullFilePath,
 	/*************************************************************************/
 	/* Locate the fmt chunk and copy its contents into a WAVEFORMATEXTENSIBLE*/
 	/*************************************************************************/
-	findChunk(m_file,fourccFMT,chunkSize,chunkPosition);
-	readChunkData(m_file,&waveFormatEx,chunkSize,chunkPosition);
+	findChunk(m_file, fourccFMT, chunkSize, chunkPosition);
+	readChunkData(m_file, p_waveFormatEx, chunkSize, chunkPosition);
 
 	/************************************************************************/
 	/* Locate the data chunk and read its contents into a buffer            */
 	/************************************************************************/
-	findChunk(m_file, fourccDATA,chunkSize,chunkPosition);
+	findChunk(m_file, fourccDATA, chunkSize, chunkPosition);
 	BYTE* dataBuffer = new BYTE[chunkSize];
-	readChunkData(m_file,dataBuffer,chunkSize, chunkPosition);
+	readChunkData(m_file, dataBuffer, chunkSize, chunkPosition);
 
 	/************************************************************************/
 	/* HACK: Most options of the buffer should be sent into the function	*/
 	/* rather than the hard coded way below									*/
 	/************************************************************************/
-	p_buffer.AudioBytes = chunkSize;
-	p_buffer.pAudioData = dataBuffer;
-	p_buffer.Flags = XAUDIO2_END_OF_STREAM;
-	p_buffer.LoopBegin = 0;
+	p_buffer->AudioBytes = chunkSize;
+	p_buffer->pAudioData = dataBuffer;
+	p_buffer->Flags = XAUDIO2_END_OF_STREAM;
+	p_buffer->LoopBegin = 0;
 	//p_buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+}
 
+IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer,
+													 WAVEFORMATEX& p_waveFormatEx,
+													 float maxFreqOffset/* =1.0f */)
+{
 	/************************************************************************/
 	/* Create the source voice after the buffers has been formated.			*/
 	/************************************************************************/
@@ -107,8 +110,9 @@ IXAudio2SourceVoice* SoundFactory::createSourceVoice(const char* p_fullFilePath,
 	XAUDIO2_VOICE_SENDS* sendList = NULL;
 	XAUDIO2_EFFECT_CHAIN* effectChain = NULL;
 
+	HRESULT hr;
 	if (FAILED(hr = m_soundDevice->CreateSourceVoice( &soundVoice, 
-		&waveFormatEx, flags , maxFreqOffset, callback, sendList, effectChain)))
+		&p_waveFormatEx, flags , maxFreqOffset, callback, sendList, effectChain)))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 	return soundVoice;
 }

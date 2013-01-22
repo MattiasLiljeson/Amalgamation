@@ -35,4 +35,7 @@ public:
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;
+	float timestamp;
+	AglVector3 velocity;
+	AglVector3 angularVelocity;
 };

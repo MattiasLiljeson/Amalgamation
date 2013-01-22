@@ -1,4 +1,4 @@
-cbuffer VertexProgramCBuffer
+cbuffer VertexProgramCBuffer: register(b1)
 {
     float4 color;
 	float4x4 vp;
@@ -11,9 +11,9 @@ SamplerState pointSampler : register(s0);
 struct VertexIn
 {
 	float3 position : POSITION;	
-	float3 normal : NORMAL;
+	float3 normal 	: NORMAL;
 	float2 texCoord : TEXCOORD; 
-	float3 tangent : TANGENT;	
+	float3 tangent 	: TANGENT;	
 	float3 binormal : BINORMAL;
 };
 
@@ -21,7 +21,7 @@ struct VertexOut
 {
     float4 position	: SV_POSITION;
 	float2 texCoord	: TEXCOORD;
-	float3 normal : NORMAL;
+	float3 normal 	: NORMAL;
 };
 
 VertexOut VS(VertexIn p_input)

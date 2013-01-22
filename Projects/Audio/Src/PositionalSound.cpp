@@ -32,3 +32,9 @@ X3DAUDIO_DSP_SETTINGS PositionalSound::getDSPSettings()
 	return m_dataInfo.settings;
 }
 
+X3DAUDIO_DSP_SETTINGS* PositionalSound::getDSPSettingsPtr()
+{
+	return &m_dataInfo.settings;
+}
+
+
