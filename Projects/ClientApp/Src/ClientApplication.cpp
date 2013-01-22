@@ -33,6 +33,7 @@
 #include <Connector1to2Module.h>
 #include <Transform.h>
 #include <EntityParent.h>
+#include <LoadMesh.h>
 
 // Systems
 #include <AudioBackendSystem.h>

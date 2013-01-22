@@ -16,6 +16,9 @@
     <Filter Include="Assemblages">
       <UniqueIdentifier>{2c8bf551-870d-4bba-be33-84fcd2479c04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{1e891fba-8f87-4e59-b7ea-f7bb9e765d90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="Recipe.h">
       <Filter>Assemblages</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblageException.h">
+      <Filter>Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

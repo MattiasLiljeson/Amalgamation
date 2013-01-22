@@ -48,7 +48,6 @@
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
-    <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelExtendedManagedFactory.h" />
     <ClInclude Include="ParticleCBuffer.h" />
