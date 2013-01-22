@@ -356,6 +356,12 @@
     <ClInclude Include="EntityParent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="LoadMeshJobComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -581,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="TransformParentHandlerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -332,40 +332,42 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-	ConnectionPointCollection connectionPoints;
-	vector<ModelResource*>* models= graphicsBackend->getGfxWrapper()->createModelsFromFile( "InstanceApes.agl", 
-													 &MODELPATH);
-
-
-	// Test instances
-	int firstId = 0;
-	for (int i=0;i<models->size();i++)
-	{
-		ModelResource* md = (*models)[i];
-		entity = m_world->createEntity();
-		int mid = md->meshId;
-		component = new RenderInfo( mid );
-		entity->addComponent( ComponentType::RenderInfo, component );
-
-
-		if (i==0) 
-		{
-			firstId = entity->getIndex();
-			AglVector3 g = AglVector3(0.0f,-10.0f,0.0f);
-			md->transform.SetTranslation(g);
-			component = new Transform( md->transform );
-			entity->addComponent( ComponentType::Transform, component );
-		}
-		else
-		{
-			component = new Transform( md->transform );
-			entity->addComponent( ComponentType::Transform, component );
-			component = new EntityParent( firstId, md->transform );
-			entity->addComponent( ComponentType::EntityParent, component );
-		}
-
-		m_world->addEntity(entity);		
-	}
+// 	vector<ModelResource*>* models= graphicsBackend->getGfxWrapper()->createModelsFromFile( "InstanceApes.agl", 
+// 													 &MODELPATH);
+// 
+// 
+// 	// Test instances
+// 	int firstId = 0;
+// 	for (int x=0;x<2;x++)
+// 	{
+// 		for (int i=0;i<models->size();i++)
+// 		{
+// 			ModelResource* md = (*models)[i];
+// 			entity = m_world->createEntity();
+// 			int mid = md->meshId;
+// 			component = new RenderInfo( mid );
+// 			entity->addComponent( ComponentType::RenderInfo, component );
+// 
+// 
+// 			if (i==0) 
+// 			{
+// 				firstId = entity->getIndex();
+// 				AglVector3 g = AglVector3(0.0f,x*-10.0f,0.0f);
+// 				md->transform.SetTranslation(g);
+// 				component = new Transform( md->transform );
+// 				entity->addComponent( ComponentType::Transform, component );
+// 			}
+// 			else
+// 			{
+// 				component = new Transform( md->transform );
+// 				entity->addComponent( ComponentType::Transform, component );
+// 				component = new EntityParent( firstId, md->transform );
+// 				entity->addComponent( ComponentType::EntityParent, component );
+// 			}
+// 
+// 			m_world->addEntity(entity);		
+// 		}
+// 	}
 
 
 	
