@@ -138,6 +138,12 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		{
 			//Not Supported
 		}
+
+		//Add the physics body to the entity map
+		while (body->m_id >= m_entityMap.size())
+			m_entityMap.push_back(-1);
+
+		m_entityMap[body->m_id] = p_entity->getIndex();
 		
 		// remove settings component
 		p_entity->removeComponent(ComponentType::BodyInitData);
