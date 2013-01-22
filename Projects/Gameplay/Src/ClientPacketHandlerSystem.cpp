@@ -626,7 +626,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 	unsigned int p_packetIdentifier )
 {
-	if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
+	if( m_lastBroadcastPacketIdentifier == 0)
+	{
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
+	}
+	else if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
 	{
 		m_totalBroadcastPacketLost += p_packetIdentifier -
 			(m_lastBroadcastPacketIdentifier + 1);

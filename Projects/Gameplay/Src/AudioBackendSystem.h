@@ -37,11 +37,11 @@ public:
 	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
+	string m_label;
+	static AudioBackendSystem* m_selfPointer;
+private:
 	/************************************************************************/
 	/* DEBUG FUNCTIONS ONLY! */
 	/************************************************************************/
-	static AudioBackendSystem* m_selfPointer;
-private:
 	static void TW_CALL stopOrPlaySound(void* p_clientData);
-	string m_label;
 };

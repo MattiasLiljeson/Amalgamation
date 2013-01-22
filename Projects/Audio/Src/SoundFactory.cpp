@@ -24,14 +24,14 @@ Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 													 PositionalSoundCreationInfo* p_positionalInfo)
 {
-	XAUDIO2_BUFFER buffer				= {0};
+	XAUDIO2_BUFFER buffer = {0};
 	WAVEFORMATEX waveFormatEx;
 	initBuffer(&buffer, p_basicSoundInfo);
 	createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(), &buffer,
 		&waveFormatEx);
-	X3DAUDIO_EMITTER emitter			= {0};
+	X3DAUDIO_EMITTER emitter = {0};
 	initEmitter(&emitter, p_positionalInfo->soundOrientation);
-	X3DAUDIO_DSP_SETTINGS dspSettings	= {0};
+	X3DAUDIO_DSP_SETTINGS dspSettings = {0};
 	initDSPSettings(&dspSettings,p_positionalInfo->destChannels);
 
 	PositionalSoundInfo info;

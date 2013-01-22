@@ -15,7 +15,8 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles the creation of sound files
+/// \brief Creates sound buffers from sound files, and can instantiate Source Voices out
+/// of the sound buffers.
 ///        
 /// # SoundFactory
 /// Please note that it currently only supports wav-files.
