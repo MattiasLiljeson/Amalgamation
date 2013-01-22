@@ -27,7 +27,7 @@ public:
 	/// \param misc
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void			apply(UINT32 misc = 0);
+	void			apply();
 	void			unApply();
 
 	ID3D11Buffer*	getBufferPointer();
@@ -39,7 +39,7 @@ protected:
 	void			init(void* p_initData);
 	void*			map();
 	void			unmap();
-	void			sendBufferToGPU(bool p_shouldSend, UINT32 p_misc=0);
+	void			sendBufferToGPU(bool p_shouldSend);
 	
 	BufferConfig*	m_config;
 private:

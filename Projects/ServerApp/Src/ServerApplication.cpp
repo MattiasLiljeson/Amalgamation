@@ -21,6 +21,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <ShipManagerSystem.h>
 #include <RocketControllerSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -155,8 +156,9 @@ namespace Srv
 
 		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
 			new ServerScoreSystem( m_server ), true );
+		m_world->setSystem( SystemType::NetSyncedPlayerScoreTrackerSystem,
+			new NetSyncedPlayerScoreTrackerSystem(), true );
 
-		m_world->initialize();
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
@@ -174,8 +176,9 @@ namespace Srv
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(), true);
 
-		// Temp-run of level system
-		//static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem))->run();
+		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
+		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
+		m_world->initialize();
 	}
 
 	void ServerApplication::initEntities()
@@ -188,18 +191,18 @@ namespace Srv
 		float maxVal = 2;
 		float minVal = -75;
 		int size = 8;
-		/*for( int x=0; x<size; x++ )
+		for( int x=0; x<size; x++ )
 		{
 			for( int y=0; y<size; y++ )
 			{
 				for( int z=0; z<size; z++ )
 				{
 					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
+					//pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
+					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
-					component = new Transform( pos.x, pos.y, pos.z);
+					component = new Transform(pos, AglQuaternion::identity(), AglVector3(3, 3, 3));
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
@@ -208,17 +211,17 @@ namespace Srv
 						new PhysicsBody() );
 
 					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(AglVector3( pos.x, pos.y, pos.z ),
+						new BodyInitData(pos,
 						AglQuaternion::identity(),
-						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), 0, 
+						AglVector3(3, 3, 3), AglVector3(0, 0, 0), 
+						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
 
 					m_world->addEntity(entity);
 				}
 			}
-		}*/
+		}
 		InitModulesTestByAnton();
 	}
 

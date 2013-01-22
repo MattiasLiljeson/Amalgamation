@@ -1,4 +1,5 @@
 #include "ClientPacketHandlerSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -40,6 +41,7 @@
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "EntityUpdatePacket.h"
+#include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
@@ -56,6 +58,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 
 	m_currentPing = 0;
 
+	m_totalNetworkSynced = 0;
 	m_numberOfSentPackets = 0;
 	m_numberOfReceivedPackets = 0;
 	m_totalDataSent = 0;
@@ -78,8 +81,8 @@ ClientPacketHandlerSystem::~ClientPacketHandlerSystem()
 void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	updateInitialPacketLossDebugData();
-
 	updateCounters();
+	m_totalNetworkSynced = p_entities.size();
 
 	while (m_tcpClient->hasNewPackets())
 	{
@@ -128,6 +131,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					}
 				}
 			}
+		}
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{			
+			ParticleUpdatePacket data;
+			data.unpack(packet);
+			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+				SystemType::ParticleRenderSystem ));
+			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+
+			ps->setSpawnPoint(data.position);
+			ps->setSpawnDirection(data.direction);
+			ps->setSpawnSpeed(data.speed);
+			ps->setSpawnFrequency(data.spawnFrequency);
 		}
 #pragma endregion 
 		/************************************************************************/
@@ -185,12 +201,36 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
+			// Client ping
 			m_currentPing = updateClientPacket.ping;
 			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
 				m_world->getElapsedTime() + m_currentPing / 2.0f;
 			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-//			m_tcpClient->setServerTimeAhead( m_currentPing / 2.0f );
 			m_tcpClient->setPingToServer( m_currentPing );
+
+			// Clients score
+			// TODO: (Johan) Handle score packet...
+			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
+				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+				SystemType::NetSyncedPlayerScoreTrackerSystem));
+			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
+			{
+				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
+				{
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::NetworkSynced));
+					PlayerScore* playerScore = static_cast<PlayerScore*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::PlayerScore));
+					if(netSync->getNetworkOwner() ==
+						updateClientPacket.playerIdentities[playerId])
+					{
+						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
+					}
+				}
+			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -231,6 +271,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		
 
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
@@ -274,8 +318,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/
 		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
+		component = new PlayerScore();
+		entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/
@@ -340,6 +384,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
+		if (p_packet.meshInfo == 1)
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
@@ -376,15 +424,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		h.alignmentType = AglParticleSystemHeader::OBSERVER;
 		h.spawnFrequency = 200;
 		h.spawnSpeed = 5.0f;
-		h.spread = 0.2f;
-		h.fadeOutStart = 1.0f;
-		h.fadeInStop = 0.5f;
+		h.spread = 0.0f;
+		h.fadeOutStart = 2.0f;
+		h.fadeInStop = 0.0f;
 		h.particleAge = 2;
 
 		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 			SystemType::ParticleRenderSystem ));
-		gfx->addParticleSystem();
-		//gfx->addParticleSystem(h, p_packet.networkIdentity);
+		//gfx->addParticleSystem();
+		gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{
@@ -426,6 +474,10 @@ void ClientPacketHandlerSystem::initialize()
 		&m_totalDataSent, "group='Per frame'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
+		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Total overflow packets", TwType::TW_TYPE_UINT32,
 		&m_totalNumberOfOverflowPackets, "group='network bug'" );
@@ -436,8 +488,10 @@ void ClientPacketHandlerSystem::initialize()
 		&m_totalNumberOfStaticPropPacketsReceived, "group='network bug'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::NETWORK, "Total lost broadcasts",
-		TwType::TW_TYPE_UINT32, &m_totalBroadcastPacketLost, "group='Per frame'" );
+		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
+		"Total network synced", TwType::TW_TYPE_UINT32,
+		&m_totalNetworkSynced, "group='network bug'" );
+	
 
 	/************************************************************************/
 	/* Per second data.														*/

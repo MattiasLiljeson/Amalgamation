@@ -27,7 +27,8 @@ TcpCommunicationProcess::TcpCommunicationProcess( ThreadSafeMessaging* p_parent,
 	m_activeSocket = p_socket;
 	tcp::no_delay option( true );
 	m_activeSocket->set_option( option );
-	tcp::socket::non_blocking_io nonBlocking( true );
+	tcp::socket::non_blocking_io nonBlocking( false );	// If this setting is true it will
+														// result in packet loss.
 	m_activeSocket->io_control( nonBlocking );
 
 	m_numberOfOverflowPackets = 0;

@@ -28,7 +28,7 @@ public:
 	void process();
 	//void processEntities( const vector<Entity*>& p_entities );
 	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header, int p_index);
-	unsigned int addParticleSystem();
+	AglParticleSystem* getParticleSystem(int p_index);
 private:
 	void renderParticles(AglParticleSystem* particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* particleSystem);

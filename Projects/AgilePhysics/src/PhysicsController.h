@@ -65,6 +65,9 @@ public:
 	///-----------------------------------------------------------------------------------
 	int AddSphere(AglVector3 p_position, float p_radius, bool p_userControlled = false, CompoundBody* pParent = NULL);
 
+	int AddSphere(AglMatrix p_world, float p_radius, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL, bool pImpulseEnabled = NULL,
+		bool pCollisionEnabled = true);
+
 	///-----------------------------------------------------------------------------------
 	/// Adds a box to the set of rigid bodies 
 	/// \param p_position Position of the box

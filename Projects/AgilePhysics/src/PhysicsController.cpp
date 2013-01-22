@@ -3,6 +3,13 @@
 PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5), mStaticBodies(4, AglVector3(-75, -75, -75), AglVector3(200, 200, 100))
 {
 	mTimeAccum = 0;
+
+	// MEMORY LEAK!
+	RigidBodySphere* s = new RigidBodySphere(AglVector3(0, 4, 0), 2, false);
+	LineSegment ls;
+	ls.p1 = AglVector3(0, 0, 0);
+	ls.p2 = AglVector3(0, 2.1f, 0);
+	CheckCollision(ls, AglVector3(-1, 2.11f, -1), AglVector3(1, 5, 1));
 }
 PhysicsController::~PhysicsController()
 {
@@ -18,6 +25,24 @@ int PhysicsController::AddSphere(AglVector3 pPosition, float pRadius, bool pUser
 		pParent->AddChild(s);
 	return mBodies.size()-1;
 }
+
+int PhysicsController::AddSphere(AglMatrix p_world, float p_radius, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent, bool pImpulseEnabled,
+			  bool pCollisionEnabled)
+{
+	RigidBodySphere* s = new RigidBodySphere(p_world, p_radius, p_mass, p_velocity, p_angularVelocity, p_static, pParent, pImpulseEnabled);
+	s->SetCollisionEnabled(pCollisionEnabled);
+	if (!p_static)
+		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(s, mBodies.size()));
+	else
+	{
+		mStaticBodies.Insert(s);
+	}
+	mBodies.push_back(s);
+	if (pParent)
+		pParent->AddChild(s);
+	return mBodies.size()-1;
+}
+
 int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, 
 								AglVector3 pAngularVelocity, bool pStatic, CompoundBody* pParent, bool pImpulseEnabled, bool pCollisionEnabled)
 {

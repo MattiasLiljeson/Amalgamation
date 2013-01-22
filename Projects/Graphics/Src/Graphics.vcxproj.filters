@@ -42,6 +42,9 @@
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
     </ClCompile>
+    <ClCompile Include="LightMesh.cpp">
+      <Filter>Renderer\Mesh</Filter>
+    </ClCompile>
     <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
@@ -152,6 +155,12 @@
     <ClInclude Include="MeshLoadException.h">
       <Filter>Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="PVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMesh.h">
+      <Filter>Renderer\Mesh</Filter>
+    </ClInclude>
     <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
@@ -169,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="ParticleShader.h">
       <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSceneInfoCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

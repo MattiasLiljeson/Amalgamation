@@ -48,7 +48,7 @@ public:
 	/// \param p_filePath
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
-	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+	DeferredBaseShader* createLightShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
 	/// This method returns the GUI shader used for menus and HUDs.
@@ -149,6 +149,9 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createInstancedPNTTBVertexInputLayout(VSData* p_vs, 
+		ID3D11InputLayout** p_inputLayout);
+
+	void createInstancedLightInputLayout( VSData* p_vertexShader,
 		ID3D11InputLayout** p_inputLayout);
 
 private:

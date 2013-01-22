@@ -110,12 +110,15 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
 				data.networkIdentity = netSync->getNetworkIdentity();
-				data.translation	= transform->getTranslation();
-				data.rotation		= transform->getRotation();
-				data.scale			= transform->getScale();
+				if (transform)
+				{
+					data.translation	= transform->getTranslation();
+					data.rotation		= transform->getRotation();
+					data.scale			= transform->getScale();
+				}
 
 				///MESH INFO MUST BE MADE INTO A COMPONENT
-				//data.meshInfo		= 
+				//data.meshInfo		= 1;
 
 				m_server->unicastPacket( data.pack(), id );
 			}
@@ -221,6 +224,9 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
+
+	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
+
 
 	return e;
 }

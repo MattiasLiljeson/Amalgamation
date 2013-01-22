@@ -55,7 +55,6 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 		
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-		data->accessBuffer.setSceneInfo(p_info);
 		data->accessBuffer.setParticleData(p_system->getHeader());
 
 		beginRendering(p_system, particles.size());

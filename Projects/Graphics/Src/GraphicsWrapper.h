@@ -23,6 +23,7 @@
 #include "TextureParser.h"
 #include "ModelExtendedManagedFactory.h"
 #include "TextureFactory.h"
+#include "RenderSceneInfoCBuffer.h"
 
 
 class DeferredBaseShader;
@@ -34,6 +35,7 @@ struct Model;
 struct Texture;
 class ParticleRenderer;
 class AglParticleSystem;
+struct LightInstanceData;
 
 class GraphicsWrapper
 {
@@ -45,14 +47,6 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void clearRenderTargets();
-
-	///-----------------------------------------------------------------------------------
-	/// Passes the scene info(world-view-projection matrix for example) 
-	/// to the render subsystem.
-	/// \param p_sceneInfo
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Sets up the frame, prepares the renderer for draw calls.
@@ -83,6 +77,8 @@ public:
 	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
 									bool p_allowWireframeModeOverride=true);
 
+	void setBlendStateSettings( BlendState::Mode p_state );
+
 	void setScissorRegion(int x, int y, int width, int height);
 
 	///-----------------------------------------------------------------------------------
@@ -96,13 +92,15 @@ public:
 	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 	void finalizeGUIPass();
 
+
 	///-----------------------------------------------------------------------------------
 	/// Finalizes the frame. For example; a deferred subsystem will
 	/// render to backbuffer here.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void finalizeFrame();
-
+	void beginLightPass();
+	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
+	void endLightPass();
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
 	/// \return void
@@ -224,6 +222,7 @@ private:
 	ParticleRenderer*		m_particleRenderer;
 
 	RendererSceneInfo		m_renderSceneInfo;
+	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
 
 	int m_height;
 	int m_width;

@@ -58,7 +58,9 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
+		FrameFinalizerSystem,
 		ShipManagerSystem,
+		NetSyncedPlayerScoreTrackerSystem,
 		ParticleSystemEmitterSystem,
 		NUM_SYSTEM_TYPES
 	};

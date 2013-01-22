@@ -67,6 +67,7 @@
 #include <TimerSystem.h>
 #include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -75,13 +76,13 @@
 using namespace std;
 
 // MISC
+#include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include "LibRocketRenderSystem.h"
-#include "LightRenderSystem.h"
-#include "AntTweakBarSystem.h"
-#include "ParticleRenderSystem.h"
-#include <AglMesh.h>
-#include <LevelPieceFileMapping.h>
+#include <LibRocketRenderSystem.h>
+#include <LightRenderSystem.h>
+#include <ParticleRenderSystem.h>
+#include <FrameFinalizerSystem.h>
+#include <ParticleRenderSystem.h>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -250,15 +251,18 @@ void ClientApplication::initSystems()
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender, true );
 
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender, true );
+
 	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
 		rocketBackend );
 	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-	
-	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
-	m_world->setSystem( lightRender, true );
+
+	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
+	m_world->setSystem( finalizer, true);
 
 	/************************************************************************/
 	/* Network																*/
@@ -273,7 +277,7 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
@@ -291,17 +295,7 @@ void ClientApplication::initSystems()
 #endif // ENABLE_SOUND
 
 	/************************************************************************/
-	/* Level Gen															*/
-	/************************************************************************/
-	// TODO: GraphicsBackend is required for the level gen at the moment.
-	// This does not currently work for the server!
-	// Awaiting refactoring of model management.
-
-	//LevelGenSystem* levelGenerator = new LevelGenSystem(graphicsBackend, NULL);
-	//m_world->setSystem( levelGenerator, true);
-
-	/************************************************************************/
-	/* Gameplay																 */
+	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
@@ -330,10 +324,7 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-	//ConnectionPointCollection connectionPoints;
-	//int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-	//												 &TESTMODELPATH);
-	LevelPieceFileMapping modelLevelFileMapping;
+	LevelPieceFileMapping modelLevelFileMapping;	
 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
 	{
 		string modelName = modelLevelFileMapping.getModelFileName(i);
@@ -341,28 +332,14 @@ void ClientApplication::initEntities()
 				&TESTMODELPATH);
 	}
 
-	//LevelGenSystem* levelGen = 
-	//	static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
-	//levelGen->run();
+	//ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 
-	// Testchamber
-	//entity = m_world->createEntity();
-	//component = new RenderInfo( testchamberId );
-	//entity->addComponent( ComponentType::RenderInfo, component );
-	//component = new Transform( 5.0f, 10.0f, 19.0f);
-	//entity->addComponent( ComponentType::Transform, component );
+	//entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+
 	//m_world->addEntity(entity);
-
-	
-
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
-	m_world->addEntity(entity);
 
 	//InitModulesTestByAnton();
 

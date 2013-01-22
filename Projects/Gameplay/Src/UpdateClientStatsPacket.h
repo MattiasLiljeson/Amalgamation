@@ -26,5 +26,6 @@ public:
 	float ping;
 	float currentServerTimestamp;
 	const static int MAXPLAYERS = 8;
-	int scores[MAXPLAYERS];
+	int playerIdentities[MAXPLAYERS];
+	float scores[MAXPLAYERS];
 };

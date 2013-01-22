@@ -163,7 +163,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			graphicsWrapper->renderMesh(cubeId,instances);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
-			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
+			graphicsWrapper->beginLightPass();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
 			graphicsWrapper->flipBackBuffer();           // flip buffers						 
 		}
