@@ -1,14 +1,11 @@
 #include "LibRocketRenderSystem.h"
 #include "GraphicsBackendSystem.h"
 #include "libRocketBackendSystem.h"
-#include <GraphicsWrapper.h>
 
 
-LibRocketRenderSystem::LibRocketRenderSystem( GraphicsBackendSystem* p_gfxBackend,
-											   LibRocketBackendSystem* p_libRocketBackend  )
+LibRocketRenderSystem::LibRocketRenderSystem(  LibRocketBackendSystem* p_libRocketBackend  )
 											   : EntitySystem( SystemType::LibRocketRenderSystem )
 {
-	m_gfxBackend = p_gfxBackend;
 	m_libRocketBackend = p_libRocketBackend;
 }
 
@@ -19,9 +16,9 @@ LibRocketRenderSystem::~LibRocketRenderSystem()
 
 void LibRocketRenderSystem::process()
 {
-	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
+}
 
-	gfxWrapper->beginGUIPass();
+void LibRocketRenderSystem::render()
+{
 	m_libRocketBackend->render();
-	gfxWrapper->finalizeGUIPass();
 }

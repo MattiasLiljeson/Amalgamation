@@ -28,7 +28,6 @@ void ParticleRenderSystem::process(){
 
 	for(unsigned int i = 0; i < m_particleSystems.size();i++){
 		m_particleSystems[i]->update(m_world->getDelta(), AglVector3(0,0,0));
-		renderParticles(m_particleSystems[i]);
 
 		if(ship){
 			Transform* trans = static_cast<Transform*>(ship->getComponent(
@@ -39,8 +38,6 @@ void ParticleRenderSystem::process(){
 			m_particleSystems[i]->setSpawnDirection(backward);
 		}
 	}
-
-	//m_gfxBackend->getGfxWrapper()->finalizeFrame();
 }
 
 void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem){
@@ -66,4 +63,12 @@ unsigned int ParticleRenderSystem::addParticleSystem()
 	m_particleSystems[0]->setParticleAge(2.0f);
 
 	return m_particleSystems.size()-1;
+}
+
+void ParticleRenderSystem::render()
+{
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++){
+		renderParticles(m_particleSystems[i]);
+	}
+	
 }

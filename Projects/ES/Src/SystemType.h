@@ -57,8 +57,8 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
-		FrameFinalizerSystem,
 		ShipManagerSystem,
+		GraphicsRendererSystem,
 		NUM_SYSTEM_TYPES
 	};
 
