@@ -1,5 +1,7 @@
 #include "ServerApplication.h"
 
+#include <ComponentAssemblageAllocator.h>
+
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -11,6 +13,7 @@
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 #include <EntityFactory.h>
+#include <LevelGenSystem.h>
 #include <ServerPickingSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
@@ -113,6 +116,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Level Generation														*/
+		/************************************************************************/
+		LevelGenSystem* levelGen = new LevelGenSystem(NULL, m_server);
+		m_world->setSystem( levelGen, true);
+		levelGen->run();
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
@@ -171,6 +181,9 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
+
+		// Run component assemblage allocator
+		ComponentAssemblageAllocator allocator();
 	}
 
 	void ServerApplication::initEntities()
@@ -190,11 +203,11 @@ namespace Srv
 				for( int z=0; z<size; z++ )
 				{
 					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					//pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
+					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
+						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
-					component = new Transform( pos.x, pos.y, pos.z);
+					component = new Transform(pos, AglQuaternion::identity(), AglVector3(1, 1, 1));
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
@@ -203,10 +216,10 @@ namespace Srv
 						new PhysicsBody() );
 
 					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(AglVector3( pos.x, pos.y, pos.z ),
+						new BodyInitData(pos,
 						AglQuaternion::identity(),
 						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), 0, 
+						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
 
@@ -228,8 +241,7 @@ namespace Srv
 			ProcessMessage* message = messages.front();
 			messages.pop();
 
-			if( message->type == MessageType::TERMINATE )
-			{
+			if(message && message->type == MessageType::TERMINATE ){
 				m_running = false;
 			}
 			delete message;

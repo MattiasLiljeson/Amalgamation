@@ -131,6 +131,13 @@ void removePath(string& s)
 	if (ind != -1)
 		s = s.substr(ind+1, s.size() - ind);
 }
+string getPath(string s)
+{
+	int ind = s.find_last_of('\\');
+	if (ind == -1)
+		ind = s.find_last_of('/');
+	return s.substr(0, ind+1);
+}
 
 ShaderData::~ShaderData()
 {

@@ -2,34 +2,27 @@
 
 PlayerScore::PlayerScore()
 {
-	m_score = 0;
-}
-
-PlayerScore::PlayerScore( int p_score )
-{
-	m_score = p_score;
+	m_baseScore = 0;
+	m_moduleScore = 0;
+	m_totalScore = 0;
 }
 
 PlayerScore::~PlayerScore()
 {
 }
 
-int PlayerScore::getScore() const
+float PlayerScore::getTotalScore()
 {
-	return m_score;
+	m_totalScore = m_moduleScore+m_baseScore;
+	return m_totalScore;
 }
-
-void PlayerScore::setScore( int p_score )
+float* PlayerScore::getTotalScorePointer()
 {
-	m_score = p_score;
+	m_totalScore = m_moduleScore+m_baseScore;
+	return &m_totalScore;
 }
-
-int* PlayerScore::getScorePointer()
+void PlayerScore::setModuleScore(float p_score)
 {
-	return &m_score;
-}
-
-void PlayerScore::incrementScore( int p_incrementValue )
-{
-	m_score += p_incrementValue;
+	m_moduleScore = p_score;
+	m_totalScore = m_moduleScore + m_baseScore;
 }

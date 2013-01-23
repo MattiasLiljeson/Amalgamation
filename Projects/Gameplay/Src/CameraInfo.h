@@ -11,7 +11,7 @@ public:
 	~CameraInfo(){};
 
 	void createPerspectiveMatrix( float p_aspectRatio , float p_nearClip = 0.1f, 
-		float p_farClip = 100.0f);
+		float p_farClip = 10000.0f);
 
 	AglMatrix m_projMat;
 	float m_farPlane;

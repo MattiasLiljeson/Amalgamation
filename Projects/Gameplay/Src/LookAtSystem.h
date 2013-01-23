@@ -10,7 +10,7 @@
 /// \brief	Changes transforms to look at a target, further behaviour can be enabled
 /// using tags for now.
 ///        
-/// # CameraSystem
+/// # LookAtSystem
 /// Detailed description.....
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------

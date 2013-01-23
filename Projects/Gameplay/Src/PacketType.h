@@ -38,6 +38,7 @@ public:
 		RayPacket,
 		ModuleHighlightPacket,
 		SimpleEvent,
+		ParticleUpdate,
 	};
 
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <RenderInterface.h>
 #include <string>
 #include <vector>
 #include <Rocket/Core.h>
@@ -14,7 +15,7 @@ class InputBackendSystem;
 class LibRocketRenderInterface;
 class LibRocketSystemInterface;
 
-class LibRocketBackendSystem : public EntitySystem
+class LibRocketBackendSystem : public EntitySystem, public RenderInterface
 {
 public:
 	LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend,
@@ -23,9 +24,9 @@ public:
 
 	void initialize();
 
-	bool loadFontFace( const char* p_fontPath );
-	int loadDocument( const char* p_filePath );
-
+	void loadFontFace( const char* p_fontPath );
+	void loadDocument( const char* p_filePath );
+	void loadCursor( const char* p_cursorPath );
 	void updateElement( string p_element, string p_value );
 
 	void process();

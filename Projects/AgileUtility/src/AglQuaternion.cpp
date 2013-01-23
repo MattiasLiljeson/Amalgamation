@@ -59,6 +59,13 @@ AglQuaternion AglQuaternion::constructFromAngularVelocity(const AglVector3& p_an
 	AglQuaternion quat(axis * sinV, cosV);
 	return quat;
 }
+
+///-----------------------------------------------------------------------------------
+/// Desc
+/// \param p_axis MUST BE NORMALIZED or the transformation will be skewed!
+/// \param p_angle
+/// \return AglQuaternion
+///-----------------------------------------------------------------------------------
 AglQuaternion AglQuaternion::constructFromAxisAndAngle(const AglVector3& p_axis, const float& p_angle)
 {
 	float cosV = cos(p_angle * 0.5f);

@@ -50,7 +50,6 @@
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
-    <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelExtendedManagedFactory.h" />
     <ClInclude Include="ParticleCBuffer.h" />
@@ -63,6 +62,7 @@
     <ClInclude Include="PVertex.h" />
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="RenderSceneInfoCBuffer.h" />
     <ClInclude Include="RenderStateEnums.h" />
     <ClInclude Include="RenderStateHelper.h" />

@@ -127,10 +127,6 @@ AglParticleSystem* AglScene::getParticleSystem(int p_index)
 {
 	return m_particleSystems[p_index];
 }
-void AglScene::addGradient(AglGradient* p_gradient)
-{
-	m_gradients.push_back(p_gradient);
-}
 string AglScene::getName(int p_index)
 {
 	return m_names[p_index];
@@ -236,6 +232,11 @@ void AglScene::addConnectionPoint(AglConnectionPoint p_connectionPoint)
 {
 	m_connectionPoints.push_back(p_connectionPoint);
 }
+int AglScene::addGradient(AglGradient* p_gradient)
+{
+	m_gradients.push_back(p_gradient);
+	return m_gradients.size()-1;
+}
 AglSceneDesc AglScene::getSceneData()
 {
 	AglSceneDesc desc;
@@ -304,5 +305,9 @@ void AglScene::transform(AglMatrix p_transform)
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
 		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
+	}
+	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
+	{
+		m_connectionPoints[i].transform *= p_transform;
 	}
 }

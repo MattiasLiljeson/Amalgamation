@@ -34,7 +34,7 @@ void Recipe::cook( Entity* p_entity )
 		Component* component = m_ingredients[i]->prepare();
 		if( component != NULL)
 		{
-			p_entity->addComponent( component->getType(), component );
+			p_entity->addComponent( component->getComponentType(), component );
 		}
 	}
 }

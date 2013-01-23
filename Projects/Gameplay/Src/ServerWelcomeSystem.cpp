@@ -26,6 +26,7 @@
 #include "PlayerScore.h"
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
+#include "StaticProp.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -109,9 +110,15 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
 				data.networkIdentity = netSync->getNetworkIdentity();
-				data.translation	= transform->getTranslation();
-				data.rotation		= transform->getRotation();
-				data.scale			= transform->getScale();
+				if (transform)
+				{
+					data.translation	= transform->getTranslation();
+					data.rotation		= transform->getRotation();
+					data.scale			= transform->getScale();
+				}
+
+				///MESH INFO MUST BE MADE INTO A COMPONENT
+				//data.meshInfo		= 1;
 
 				m_server->unicastPacket( data.pack(), id );
 			}
@@ -133,6 +140,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 
+				StaticProp* prop = static_cast<StaticProp*>(entities[i]->
+					getComponent(ComponentType::StaticProp));
+
 				EntityCreationPacket data;
 				data.entityType = static_cast<char>(EntityType::StaticProp);
 				data.owner = -1; //NO OWNER
@@ -140,7 +150,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				
+				data.isLevelProp = prop->isLevelPiece;
+				data.meshInfo = prop->meshInfo;  
+
 //				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}
@@ -214,7 +226,9 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
-	e->addComponent(ComponentType::PlayerScore, new PlayerScore(p_newlyConnectedClientId));
+
+	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
+
 
 	return e;
 }

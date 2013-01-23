@@ -178,7 +178,16 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	matbuffer->SpecularShininess = AglVector4(pMaterial.specular, pMaterial.shininess);
 	matbuffer->EmissiveDiffuseMapped = AglVector4(pMaterial.emissive, float(pMaterial.diffuseTextureNameIndex >= 0 && DIFFUSEON));
 	matbuffer->EyePositionSpecularMapped = AglVector4(Camera::GetInstance()->Position().x, Camera::GetInstance()->Position().y, Camera::GetInstance()->Position().z, float(pMaterial.specularTextureNameIndex >= 0  && SPECULARON));
-	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0 && NORMALON), 0, 0);
+	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0 && NORMALON), (float)(pMaterial.gradientTextureNameIndex >= 0), 0);
+	if (pMaterial.gradientDataIndex >= 0)
+	{
+		AglGradient* g = Scene::GetInstance()->GetGradient(pMaterial.gradientDataIndex);
+		vector<AglGradientMaterial*> layers = g->getLayers();
+		for (unsigned int i = 0; i < layers.size(); i++)
+			matbuffer->gradientColors[i] = layers[i]->color;
+		matbuffer->Flags.w = layers.size();
+	}
+	
 	mDeviceContext->Unmap(mMaterialBuffer, 0);
 
 	mDeviceContext->PSSetConstantBuffers(bufferNumber, 1, &mMaterialBuffer);
@@ -187,7 +196,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.diffuseTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.diffuseTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(0, 1, &data->SRV);
@@ -196,7 +205,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.specularTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.specularTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(1, 1, &data->SRV);
@@ -205,7 +214,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.glowTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.glowTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(2, 1, &data->SRV);
@@ -214,7 +223,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.normalTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.normalTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 		{
@@ -225,10 +234,19 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.displacementTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.displacementTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->DSSetShaderResources(0, 1, &data->SRV);
+	}
+	if (pMaterial.gradientTextureNameIndex >= 0)
+	{
+		string s = Scene::GetInstance()->GetName(pMaterial.gradientTextureNameIndex);
+		removePath(s);
+		s = Scene::GetInstance()->GetPath(pMaterial.gradientTextureNameIndex) + s;
+		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
+		if (data)
+			mDeviceContext->PSSetShaderResources(4, 1, &data->SRV);
 	}
 
 	mDeviceContext->PSSetSamplers(0, 1, &mSampler);

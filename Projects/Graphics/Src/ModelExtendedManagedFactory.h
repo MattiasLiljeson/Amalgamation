@@ -112,6 +112,9 @@ private:
 	static const string& primitiveSphereName;
 	static const string& fallbackTextureName;
 	static const string& mesherrorTextureName;
+	static const string& defaultTextureName;
+
+	static const unsigned int firstMeshPos=1; // always root on zero
 
 	/// 
 	/// Used for when a mesh has already been loaded and the creation instructions 

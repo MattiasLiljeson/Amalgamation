@@ -43,18 +43,19 @@
 #include <Texture.h>
 #include <TextureParser.h>
 #include <sstream>
+#include <Rocket/Core/Vertex.h>
 
 LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 {
 	m_factory = new BufferFactory(p_wrapper->getDevice(), p_wrapper->getDeviceContext());
 	m_wrapper = p_wrapper;
 
-	UpdateOnWindowResize();
-
+	updateOnWindowResize();
 	numCompiledGeometries = 0;
 
-	byte pix[4] = { 32, 64, 128, 64 };
-	m_stdTextureId = m_wrapper->createTexture( pix, 1, 1, 4, TextureParser::RGBA);
+	byte fallbackTexture[4] = { 255, 255, 255, 255 };
+	m_stdTextureId = m_wrapper->createTexture( fallbackTexture, 1, 1, 4,
+		TextureParser::RGBA);
 }
 
 LibRocketRenderInterface::~LibRocketRenderInterface()
@@ -82,7 +83,8 @@ void LibRocketRenderInterface :: RenderGeometry(
 	// dynamic vertex buffer which is flushed when either the p_texture changes or compiled geometry is drawn.
 }
 
-// Called by Rocket when it wants to compile geometry it believes will be static for the foreseeable future.
+// Called by Rocket when it wants to compile geometry it believes will be static for 
+// the foreseeable future.
 Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry(
 	Rocket::Core::Vertex* p_vertices, int p_numVertices, int* p_indices, int p_numIndices,
 	Rocket::Core::TextureHandle p_texture)
@@ -101,15 +103,15 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	{
 		vertex.pos[x] = p_vertices[i].position.x;
 		vertex.pos[y] = p_vertices[i].position.y;
-		vertex.pos[z] = 0;
+
+		vertex.normal[x] = p_vertices[i].colour.red;
+		vertex.normal[y] = p_vertices[i].colour.green;
+		vertex.normal[z] = p_vertices[i].colour.blue;
+		vertex.pos[z]	 = p_vertices[i].colour.alpha;
 
 		vertex.texCoord[x] = p_vertices[i].tex_coord[x];
 		vertex.texCoord[y] = p_vertices[i].tex_coord[y];
 		
-		// No support for vertex colouring
-		//vertex.color = D3DXCOLOR(p_vertices[i].colour.red, p_vertices[i].colour.green,
-		//p_vertices[i].colour.blue, p_vertices[i].colour.alpha);
-
 		vertices[i] = vertex;
 	}
 
@@ -123,8 +125,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 
 	
 	// Make sure to use the std tex if no texture is defined
-	if( p_texture == 0)
-	{
+	if( p_texture == 0){
 		p_texture = 1;
 	}
 
@@ -133,9 +134,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	geometry->meshId = m_wrapper->createMeshFromRaw(ss.str(), 
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
-											 (unsigned int)p_texture);
-
-	// geometry->meshId = m_wrapper->registerMesh( ss.str(), mesh, (Texture*)p_texture );
+											 static_cast<int>(p_texture));
 
 	m_compiledGeometries.push_back( geometry );
 
@@ -160,7 +159,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 	scene.viewProj = worldMat;
 
 	m_wrapper->updateRenderSceneInfo(scene);
-	m_wrapper->updatePerFrameConstantBuffer();
+	m_wrapper->mapSceneInfo();
 	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
@@ -178,9 +177,7 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 			break;
 		}
 	}
-
 	delete geometry;
-	numCompiledGeometries--;
 }
 
 // Called by Rocket when it wants to enable or disable scissoring to clip content.
@@ -325,7 +322,7 @@ vector<InstanceData> LibRocketRenderInterface::instanceDataVectorFromMatrix( con
 	return instances;
 }
 
-void LibRocketRenderInterface::UpdateOnWindowResize()
+void LibRocketRenderInterface::updateOnWindowResize()
 {
 	m_NDCFrom2dMatrix = createWorldMatrix();
 }

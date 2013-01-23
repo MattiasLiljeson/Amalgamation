@@ -7,6 +7,7 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <ComponentAssemblageAllocator.h>
 
 // Components
 #include <AudioInfo.h>
@@ -17,7 +18,6 @@
 #include <HudElement.h>
 #include <MinigunModule.h>
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
 #include <PlayerCameraController.h>
 #include <RenderInfo.h>
 #include <ShipEditController.h>
@@ -25,14 +25,14 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
-#include <GameplayTags.h>
-#include <PlayerCameraController.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
 #include <Transform.h>
 #include <PositionalSoundEffect.h>
+#include <EntityParent.h>
+#include <LoadMesh.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -57,26 +57,28 @@
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
+#include <PhysicsSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
-#include <LookAtSystem.h>
 #include <HudSystem.h>
-#include <CameraInfo.h>
-#include <LookAtEntity.h>
-#include <MainCamera.h>
-#include <MinigunModuleControllerSystem.h>
-#include <PlayerCameraControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
+#include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
 #include <PositionalSoundSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <GraphicsRendererSystem.h>
+#include <LightRenderSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
+#include <TransformParentHandlerSystem.h>
+#include <LoadMeshSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -87,13 +89,9 @@ using namespace std;
 // MISC
 #include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include <LibRocketRenderSystem.h>
-#include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
-#include <FrameFinalizerSystem.h>
-#include <AntTweakBarSystem.h>
-#include <ParticleRenderSystem.h>
-
+#include <LightsComponent.h>
+#include <LightInstanceData.h>
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -183,7 +181,11 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
-	//----------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------	
+	
+	/************************************************************************/
+	/* Entity creation														*/
+	/************************************************************************/
 	EntityFactory* factory = new EntityFactory();
 	m_world->setSystem( factory, true);
 
@@ -191,6 +193,21 @@ void ClientApplication::initSystems()
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
 	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
+	/* Graphics																*/
+	/************************************************************************/
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
+		1280,720,true);
+
+	m_world->setSystem( graphicsBackend, true );
+
+	/************************************************************************/
+	/* Mesh loading															*/
+	/************************************************************************/
+	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
+	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystem(graphicsBackend), 
+						true); 
 
 	/************************************************************************/
 	/* Physics																*/
@@ -205,17 +222,15 @@ void ClientApplication::initSystems()
 	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 	
 	/************************************************************************/
-	/* Graphics																*/
+	/* Input																*/
 	/************************************************************************/
-	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
-		1280,720,true);
-
-	m_world->setSystem( graphicsBackend, true );
-
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
-
+	
+	/************************************************************************/
+	/* GUI																	*/
+	/************************************************************************/
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
@@ -240,7 +255,6 @@ void ClientApplication::initSystems()
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
 
-
 	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
@@ -263,16 +277,15 @@ void ClientApplication::initSystems()
 
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
-
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-		rocketBackend );
-	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 
-	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
-	m_world->setSystem( finalizer, true);
+	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
+	m_world->setSystem( entityParentHandler, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -303,6 +316,7 @@ void ClientApplication::initSystems()
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
+
 	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
 		true );
 #endif
@@ -313,7 +327,18 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
+	/************************************************************************/
+	/* Graphics representer													*/
+	/************************************************************************/
+	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
+		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
+	m_world->setSystem( graphicsRender, true );
+
 	m_world->initialize();
+
+	// Run component assemblage allocator
+	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+	delete allocator;
 }
 
 void ClientApplication::initEntities()
@@ -321,12 +346,22 @@ void ClientApplication::initEntities()
 	Entity* entity = NULL;
 	Component* component = NULL;
 
+	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
+
+	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	//entity = factory->entityFromRecipe( "ScoreHudElement" );									 
-	//m_world->addEntity( entity );
+	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	m_world->addEntity( entity );
+
+	// Read monkey!
+	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
+	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
+	m_world->addEntity( entity );
+
+
 
 	EntitySystem* tempSys = NULL;
 
@@ -337,40 +372,86 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
+	LevelPieceFileMapping modelLevelFileMapping;	
+	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = modelLevelFileMapping.getModelFileName(i);
+		graphicsBackend->loadSingleMeshFromFile( modelName,
+				&TESTMODELPATH);
+	}
 
+	// Ambient light
+	float scale = 1000.0f;
+	Light ambientLight;
+	AglMatrix::componentsToMatrix(
+		ambientLight.offset,
+		AglVector3( scale, scale, scale ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
+		AglVector3(3,3,3)
+		);
+	ambientLight.instanceData.range = scale;
+	ambientLight.instanceData.attenuation[0] = 1.0f;
+	ambientLight.instanceData.ambient[0] = 0.2;
+	ambientLight.instanceData.ambient[1] = 0.2;
+	ambientLight.instanceData.ambient[2] = 0.2f;
 
-
-
-	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH);
-
-	// Test chamber
+	LightsComponent* ambientLightComp = new LightsComponent();
+	ambientLightComp->addLight( ambientLight );
+	
 	entity = m_world->createEntity();
-	component = new RenderInfo( testchamberId );
-	entity->addComponent( ComponentType::RenderInfo, component );
 	component = new Transform( 5.0f, 10.0f, 19.0f);
 	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
-
-	
-
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+	entity->addComponent( ComponentType::LightsComponent, ambientLightComp );
 
 	m_world->addEntity(entity);
 
+	/************************************************************************/
+	/* HARD CODED LIGHTS													*/
+	/************************************************************************/
 
+	LightsComponent* lightGridComp = new LightsComponent();
+	LightInstanceData lightGridInstData;
+	float range = 10.0f;
+	lightGridInstData.range = range;
+	lightGridInstData.worldTransform[0] = range;
+	lightGridInstData.worldTransform[5] = range;
+	lightGridInstData.worldTransform[10] = range;
+	lightGridInstData.attenuation[0] = 0.0f;
+	lightGridInstData.attenuation[1] = 0.0f;
+	lightGridInstData.attenuation[2] = 0.7f;
+	lightGridInstData.spotPower = 25.0f;
+	lightGridInstData.specular[3] = 1.0f;
+	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
+	lightGridInstData.ambient[2] = 0.0f;
+
+	float intensitity = 0.2f;
+	for( int x=0; x<5; x++ )
+	{
+		for( int y=0; y<5; y++ )
+		{
+			for( int z=0; z<5; z++ )
+			{
+				lightGridInstData.diffuse[0] = intensitity * x;
+				lightGridInstData.diffuse[1] = intensitity * y;
+				lightGridInstData.diffuse[2] = intensitity * z;
+
+				Light light;
+				light.instanceData = lightGridInstData;
+				AglMatrix::componentsToMatrix( 
+					light.offset,
+					AglVector3( range, range, range ),
+					AglQuaternion::identity(),
+					AglVector3( -x*(range+1.0f), -y*(range+1.0f), -z*(range+1.0f) )
+					);
+
+				lightGridComp->addLight( light );
+			}
+		}
+	}
 	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
-	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
-	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
-		"spaceship_laser.wav", true));
-	m_world->addEntity(entity);
+	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
+	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
+	m_world->addEntity( entity );
 	//InitModulesTestByAnton();
 
 	/*
@@ -500,7 +581,7 @@ void ClientApplication::InitModulesTestByAnton()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+//	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

@@ -33,22 +33,15 @@ public:	//Enums
 		ShipEditController,
 		Impulse,
 		BodyInitData,
+		BoundingVolumeInitData,
 		LookAtEntity,
 		MainCamera,
 		PlayerCameraController,
 		PlayerScore,
 		MenuItem,
 		HudElement,
-
-		// -------------------
-		// Tags									(Replace with dedicated ES-tag management?)
-		// -------------------
-		TAG_ShipFlyMode,		
-		TAG_ShipEditMode,
-		TAG_LookAtFollowMode,
-		TAG_LookAtOrbitMode,
-		TAG_Ship, 
-
+		EntityParent,
+		LoadMesh,
 		Transform,
 		ShipModule,
 		ConnectionPointSet,
@@ -63,11 +56,25 @@ public:	//Enums
 		LightSources,
 		ParticleEmitters,
 		PickComponent,
+		ParticleSystemEmitter,
+		ParticleUpdateData,
+
+		// -------------------
+		// Tags									(Replace with dedicated ES-tag management?)
+		// -------------------
+		TAG_ShipFlyMode,		
+		TAG_ShipEditMode,
+		TAG_LookAtFollowMode,
+		TAG_LookAtOrbitMode,
+		TAG_Ship, 
+		// -------------------
+	
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		LightsComponent,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -32,26 +32,29 @@
 #include "EntityType.h"
 #include "PacketType.h"
 #include "PickComponent.h"
+#include "ParticleSystemEmitter.h"
 
 // Debug
 #include <DebugUtil.h>
+#include <ToString.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "EntityUpdatePacket.h"
+#include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
-#include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
 #include "AudioInfo.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
 #include "AudioBackendSystem.h"
 #include "PositionalSoundEffect.h"
+#include "ParticleRenderSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -135,6 +138,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{			
+			ParticleUpdatePacket data;
+			data.unpack(packet);
+			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+				SystemType::ParticleRenderSystem ));
+			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+
+			ps->setSpawnPoint(data.position);
+			ps->setSpawnDirection(data.direction);
+			ps->setSpawnSpeed(data.speed);
+			ps->setSpawnFrequency(data.spawnFrequency);
+		}
 #pragma endregion 
 		/************************************************************************/
 		/* Score is now included in player update client stats packets.			*/
@@ -216,7 +232,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					if(netSync->getNetworkOwner() ==
 						updateClientPacket.playerIdentities[playerId])
 					{
-						playerScore->setScore(updateClientPacket.scores[playerId]);
+						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
 					}
 				}
 			}
@@ -260,6 +276,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		
 
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
@@ -379,10 +399,22 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		m_totalNumberOfStaticPropPacketsReceived += 1;
 		m_staticPropIdentities.push( p_packet.networkIdentity );
+		int meshId = -1;
 
-		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		GraphicsBackendSystem* gfxBackend = static_cast<GraphicsBackendSystem*>(
+			m_world->getSystem( SystemType::GraphicsBackendSystem ));
+		
+		if (p_packet.isLevelProp)
+			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		else	
+		{
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
+			if (p_packet.meshInfo == 1)
+				meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		}
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
@@ -414,6 +446,23 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
+	}
+	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
+	{
+		AglParticleSystemHeader h;
+		h.particleSize = AglVector2(2, 2);
+		h.alignmentType = AglParticleSystemHeader::OBSERVER;
+		h.spawnFrequency = 200;
+		h.spawnSpeed = 5.0f;
+		h.spread = 0.0f;
+		h.fadeOutStart = 2.0f;
+		h.fadeInStop = 0.0f;
+		h.particleAge = 2;
+
+		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+			SystemType::ParticleRenderSystem ));
+		//gfx->addParticleSystem();
+		gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{
@@ -537,11 +586,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			DEBUGPRINT(( string(
 				/* 0 - 511 */
-				ToString(0) + " - " +
-				ToString(511) +
+				toString(0) + " - " +
+				toString(511) +
 				/* byte size */
 				" = " +
-				ToString(511 * 51) +
+				toString(511 * 51) +
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
@@ -554,11 +603,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			DEBUGPRINT(( string(
 				/* 0 - x */
-				ToString(0) + " - " +
-				ToString(m_staticPropIdentities.front()) +
+				toString(0) + " - " +
+				toString(m_staticPropIdentities.front()) +
 				/* byte size */
 				" = " +
-				ToString((m_staticPropIdentities.front() + 1) * 51) +
+				toString((m_staticPropIdentities.front() + 1) * 51) +
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
@@ -577,11 +626,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 			{
 				DEBUGPRINT(( string(
 					/* x - y */
-					ToString(firstValue) + " - " +
-					ToString(secondValue - 1) +
+					toString(firstValue) + " - " +
+					toString(secondValue - 1) +
 					/* byte size */
 					" = " +
-					ToString((secondValue - firstValue) * 51) +
+					toString((secondValue - firstValue) * 51) +
 					" bytes" +
 					/* end */
 					"\n").c_str() ));
@@ -597,11 +646,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 			{
 				DEBUGPRINT(( string(
 					/* x - 511 */
-					ToString(m_staticPropIdentities.front()) + " - " +
-					ToString(511) +
+					toString(m_staticPropIdentities.front()) + " - " +
+					toString(511) +
 					/* byte size */
 					" = " +
-					ToString((511 - m_staticPropIdentities.front()) * 51) +
+					toString((511 - m_staticPropIdentities.front()) * 51) +
 					" bytes" +
 					/* end */
 					"\n").c_str() ));
@@ -617,13 +666,13 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 				AntTweakBarWrapper::NETWORK,
-				("min" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
 				&m_staticPropIdentitiesForAntTweakBar[i].first,
 				"group='Missing packets range'" );
 
 			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 				AntTweakBarWrapper::NETWORK,
-				("max" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
 				&m_staticPropIdentitiesForAntTweakBar[i].second,
 				"group='Missing packets range'" );
 		}

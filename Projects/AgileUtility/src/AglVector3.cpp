@@ -183,6 +183,30 @@ AglVector3 AglVector3::createDirection(const AglVector3& p_from, const AglVector
 	return dir;
 }
 
+AglVector3 AglVector3::minOf( const AglVector3& p_v1, const AglVector3& p_v2 )
+{
+	AglVector3 minV;
+	if (p_v1.x < p_v2.x) minV.x = p_v1.x;
+	else				 minV.x = p_v2.x;
+	if (p_v1.y < p_v2.y) minV.y = p_v1.y;
+	else				 minV.y = p_v2.y;
+	if (p_v1.z < p_v2.z) minV.z = p_v1.z;
+	else				 minV.z = p_v2.z;
+	return minV;
+}
+
+AglVector3 AglVector3::maxOf( const AglVector3& p_v1, const AglVector3& p_v2 )
+{
+	AglVector3 maxV;
+	if (p_v1.x > p_v2.x) maxV.x = p_v1.x;
+	else				 maxV.x = p_v2.x;
+	if (p_v1.y > p_v2.y) maxV.y = p_v1.y;
+	else				 maxV.y = p_v2.y;
+	if (p_v1.z > p_v2.z) maxV.z = p_v1.z;
+	else				 maxV.z = p_v2.z;
+	return maxV;
+}
+
 AglVector3 AglVector3::right()
 {
 	return AglVector3(1, 0, 0);

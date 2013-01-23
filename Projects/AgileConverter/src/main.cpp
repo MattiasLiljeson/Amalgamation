@@ -56,7 +56,6 @@ void Save(AGLData& pData)
 	{
 		writer.AddConnectionPoint(pData.CP[j]);
 	}
-
 	writer.Write();
 }
 

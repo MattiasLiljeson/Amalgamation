@@ -22,5 +22,4 @@ struct ConnectionPointCollection
 {
 public:
 	vector<AglMatrix> m_collection;
-
 };

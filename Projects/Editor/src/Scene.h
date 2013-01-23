@@ -61,6 +61,8 @@ private:
 
 	Mesh* mPlaneMesh;
 
+	vector<string> mPaths;
+
 private:
 	Scene();
 	~Scene();
@@ -97,13 +99,27 @@ public:
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);
 	AglAnimationLayer* GetAnimationLayer(int pIndex);
+	AglGradient* GetGradient(int pIndex)
+	{
+		return mAglScene->getGradient(pIndex);
+	}
 
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
-	void AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCurrent);
+	int AddGradient(AglGradient* pGradient);
 	void AddParticleSystem(AglParticleSystem* pSystem);
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);
+	void  AddPath(string pPath, int pIndex)
+	{
+		while (pIndex >= mPaths.size())
+			mPaths.push_back("");
+		mPaths[pIndex] = pPath;
+	}
+	string GetPath(int pIndex)
+	{
+		return mPaths[pIndex];
+	}
 
 	string GetFolder(){ return mFolder; }
 	void Save(string pPath);
