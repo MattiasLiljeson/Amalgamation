@@ -39,11 +39,11 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 				p_entities[i]->getComponent(ComponentType::PlayerScore));
 			score->incrementScore( 1 );
 
-			UpdateClientStatsPacket packet;
+			/*UpdateClientStatsPacket packet;
 			packet.scores[i]			= score->getScore();
 			packet.playerIdentities[i]	= netSync->getNetworkIdentity();
 
-			m_server->broadcastPacket( packet.pack() );
+			m_server->broadcastPacket( packet.pack() );*/
 		}
 	}
 }
