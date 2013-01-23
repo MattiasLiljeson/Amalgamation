@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include <RenderInterface.h>
 
 class GraphicsBackendSystem;
 class InputBackendSystem;
@@ -16,7 +17,7 @@ class InputBackendSystem;
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class AntTweakBarSystem : public EntitySystem
+class AntTweakBarSystem : public EntitySystem, public RenderInterface
 {
 public:
 	AntTweakBarSystem( GraphicsBackendSystem* p_gfxBackend,
@@ -26,6 +27,9 @@ public:
 	virtual void process();
 
 	void feedInput();
+
+	virtual void render();
+
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;

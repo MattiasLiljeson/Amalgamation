@@ -27,7 +27,6 @@
 /************************************************************************/
 #include <Globals.h>
 #include <TcpClient.h> 
-#include <windows.h>
 
 #ifndef _WINDEF_
 	class HINSTANCE__; // Forward or never

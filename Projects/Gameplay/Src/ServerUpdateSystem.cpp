@@ -10,6 +10,8 @@
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "PhysicsController.h"
+#include "ParticleUpdateData.h"
+#include "ParticleUpdatePacket.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -73,6 +75,20 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.angularVelocity= angularVelocity;
 
 
+				m_server->broadcastPacket( updatePacket.pack() );
+			}
+			else if (netSync->getNetworkType() == EntityType::ParticleSystem)
+			{
+				ParticleUpdateData* data = static_cast<ParticleUpdateData*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::ParticleUpdateData ) );
+
+				ParticleUpdatePacket updatePacket;
+				updatePacket.networkIdentity = netSync->getNetworkIdentity();
+				updatePacket.position		= data->spawnPoint;
+				updatePacket.direction		= data->direction;
+				updatePacket.speed			= data->speed;
+				updatePacket.spawnFrequency	= data->spawnFrequency;
 				m_server->broadcastPacket( updatePacket.pack() );
 			}
 		}

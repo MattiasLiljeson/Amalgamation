@@ -38,6 +38,8 @@ RigidBodyBox::RigidBodyBox(BoxInitData pInitData)
 	//Initialize bounding sphere
 	mBoundingSphere.position = pInitData.World.GetTranslation();
 	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
+	SetCollisionEnabled(pInitData.CollisionEnabled);
+	SetParent(pInitData.Parent);
 }
 
 RigidBodyBox::~RigidBodyBox()

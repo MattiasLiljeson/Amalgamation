@@ -305,4 +305,8 @@ void AglScene::transform(AglMatrix p_transform)
 	{
 		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
 	}
+	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
+	{
+		m_connectionPoints[i].transform *= p_transform;
+	}
 }

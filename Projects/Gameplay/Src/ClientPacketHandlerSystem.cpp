@@ -1,4 +1,5 @@
 #include "ClientPacketHandlerSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -30,6 +31,7 @@
 #include "EntityType.h"
 #include "PacketType.h"
 #include "PickComponent.h"
+#include "ParticleSystemEmitter.h"
 
 // Debug
 #include <DebugUtil.h>
@@ -39,12 +41,14 @@
 #include "PingPacket.h"
 #include "PongPacket.h"
 #include "EntityUpdatePacket.h"
+#include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
 #include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
+#include "ParticleRenderSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -128,6 +132,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{			
+			ParticleUpdatePacket data;
+			data.unpack(packet);
+			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+				SystemType::ParticleRenderSystem ));
+			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+
+			ps->setSpawnPoint(data.position);
+			ps->setSpawnDirection(data.direction);
+			ps->setSpawnSpeed(data.speed);
+			ps->setSpawnFrequency(data.spawnFrequency);
+		}
 #pragma endregion 
 		/************************************************************************/
 		/* Score is now included in player update client stats packets.			*/
@@ -184,12 +201,36 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
+			// Client ping
 			m_currentPing = updateClientPacket.ping;
 			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
 				m_world->getElapsedTime() + m_currentPing / 2.0f;
 			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-//			m_tcpClient->setServerTimeAhead( m_currentPing / 2.0f );
 			m_tcpClient->setPingToServer( m_currentPing );
+
+			// Clients score
+			// TODO: (Johan) Handle score packet...
+			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
+				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+				SystemType::NetSyncedPlayerScoreTrackerSystem));
+			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
+			{
+				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
+				{
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::NetworkSynced));
+					PlayerScore* playerScore = static_cast<PlayerScore*>(
+						(*netSyncScoreEntities)[i]->getComponent(
+						ComponentType::PlayerScore));
+					if(netSync->getNetworkOwner() ==
+						updateClientPacket.playerIdentities[playerId])
+					{
+						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
+					}
+				}
+			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
@@ -230,6 +271,10 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
+
+		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		
 
 		/************************************************************************/
 		/* This ship creation code have to be located somewhere else.			*/
@@ -273,8 +318,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		/* HACK: Score should probably be located in another entity.			*/
 		/************************************************************************/
-		//component = new PlayerScore();
-		//entity->addComponent( ComponentType::PlayerScore, component );
+		component = new PlayerScore();
+		entity->addComponent( ComponentType::PlayerScore, component );
 		m_world->addEntity(entity);
 
 		/************************************************************************/
@@ -328,9 +373,20 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		m_totalNumberOfStaticPropPacketsReceived += 1;
 		m_staticPropIdentities.push( p_packet.networkIdentity );
+		int meshId = -1;
 
-		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		GraphicsBackendSystem* gfxBackend = static_cast<GraphicsBackendSystem*>(
+			m_world->getSystem( SystemType::GraphicsBackendSystem ));
+		
+		if (p_packet.isLevelProp)
+			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		else
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+
+		if (p_packet.meshInfo == 1)
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
 
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
@@ -360,6 +416,23 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 		m_world->addEntity(entity);
+	}
+	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
+	{
+		AglParticleSystemHeader h;
+		h.particleSize = AglVector2(2, 2);
+		h.alignmentType = AglParticleSystemHeader::OBSERVER;
+		h.spawnFrequency = 200;
+		h.spawnSpeed = 5.0f;
+		h.spread = 0.0f;
+		h.fadeOutStart = 2.0f;
+		h.fadeInStop = 0.0f;
+		h.particleAge = 2;
+
+		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+			SystemType::ParticleRenderSystem ));
+		//gfx->addParticleSystem();
+		gfx->addParticleSystem(h, p_packet.networkIdentity);
 	}
 	else
 	{

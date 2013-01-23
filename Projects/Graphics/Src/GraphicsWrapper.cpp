@@ -164,8 +164,8 @@ void GraphicsWrapper::clearRenderTargets()
 {
 	m_deferredRenderer->clearBuffers();
 	
-	static float ClearColor[4] = { 0.0, 0.0, 0.0f, 1.0f };
-	m_deviceContext->ClearRenderTargetView( m_backBuffer,ClearColor);
+	static float clearColor[4] = { 0.0, 0.0, 0.0f, 1.0f };
+	m_deviceContext->ClearRenderTargetView( m_backBuffer,clearColor);
 }
 
 void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
@@ -173,20 +173,10 @@ void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo
 	m_deferredRenderer->setSceneInfo(p_sceneInfo);
 }
 
-void GraphicsWrapper::beginFrame()
-{
-	setRasterizerStateSettings(RasterizerState::DEFAULT);
-	m_deferredRenderer->beginDeferredBasePass();
-
+void GraphicsWrapper::mapSceneInfo(){
 	m_renderSceneInfoBuffer->accessBuffer.setSceneInfo( m_renderSceneInfo );
 	m_renderSceneInfoBuffer->update();
 	m_renderSceneInfoBuffer->apply();
-
-}
-
-void GraphicsWrapper::updatePerFrameConstantBuffer()
-{
-	m_deferredRenderer->updatePerFrameConstantBuffer();
 }
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
@@ -239,8 +229,7 @@ void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state,
 	}
 }
 
-void GraphicsWrapper::setBlendStateSettings( BlendState::Mode p_state )
-{
+void GraphicsWrapper::setBlendStateSettings( BlendState::Mode p_state ){
 	m_deferredRenderer->setBlendState( p_state );
 }
 
@@ -255,10 +244,17 @@ void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
 	m_deviceContext->RSSetScissorRects(1, &scissor_rect);
 }
 
-void GraphicsWrapper::beginGUIPass()
-{
-
-	m_deferredRenderer->beginGUIPass();
+void GraphicsWrapper::setPrimitiveTopology( PrimitiveTopology::Mode p_state ){
+	m_deviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(p_state));
+}
+void GraphicsWrapper::setBaseRenderTargets(){
+	m_deferredRenderer->setBasePassRenderTargets();
+}
+void GraphicsWrapper::setFinalBackbufferAsRenderTarget(){
+	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
+}
+void GraphicsWrapper::mapGBuffersToShader(){
+	m_deferredRenderer->mapRTStoShaderVariables();
 }
 
 void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
@@ -275,20 +271,6 @@ void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId,
 	m_deferredRenderer->renderGUIMesh( mesh, tex );
 
 	delete instanceBuffer;
-}
-
-void GraphicsWrapper::finalizeGUIPass()
-{
-	m_deferredRenderer->finalizeGUIPass();
-}
-
-void GraphicsWrapper::beginLightPass()
-{
-	//setRasterizerStateSettings( RasterizerState::FILLED_CCW, false );
-	setRasterizerStateSettings( RasterizerState::FILLED_CW_FRONTCULL, false );
-	setBlendStateSettings( BlendState::ADDITIVE );
-	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
-	m_deferredRenderer->beginLightPass();
 }
 
 void GraphicsWrapper::renderLights( LightMesh* p_mesh,
@@ -310,13 +292,6 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		m_deferredRenderer->renderLights( NULL, NULL );
 	}
 }
-
-void GraphicsWrapper::endLightPass()
-{
-	m_deferredRenderer->endLightPass();
-	setBlendStateSettings( BlendState::DEFAULT );
-}
-
 
 void GraphicsWrapper::flipBackBuffer()
 {
@@ -482,11 +457,6 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::beginParticleRender(){
-	beginGUIPass();
-}
 void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
 	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
-}
-void GraphicsWrapper::endParticleRender(){
 }

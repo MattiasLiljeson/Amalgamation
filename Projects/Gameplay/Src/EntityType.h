@@ -22,6 +22,7 @@ public:
 		StaticProp,
 		Identity,
 		ShipModule,
+		ParticleSystem,
 		Other,
 	};
 

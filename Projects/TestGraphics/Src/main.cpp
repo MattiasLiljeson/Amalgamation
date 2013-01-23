@@ -157,13 +157,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			// * Deferred base system *            1
 			graphicsWrapper->clearRenderTargets();	      // clear render targets used           
-			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
+			graphicsWrapper->mapSceneInfo();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
 			graphicsWrapper->renderMesh(cubeId,instances);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
-			graphicsWrapper->beginLightPass();			  // finalize, draw to backbuffer        
+			graphicsWrapper->mapGBuffersToShader();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
 			graphicsWrapper->flipBackBuffer();           // flip buffers						 
 		}

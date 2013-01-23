@@ -68,5 +68,6 @@ string openfilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 string savefilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 
 void removePath(string& s);
+string getPath(string s);
 
 #endif

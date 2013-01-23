@@ -55,15 +55,16 @@ void AglMesh::transform(AglMatrix p_transform)
 
 	AglVertexSTBN* v = (AglVertexSTBN*)m_vertices;
 
-	for (int i = 0; i < m_header.vertexCount; i++)
+	/*for (int i = 0; i < m_header.vertexCount; i++)
 	{
 		v[i].position.transform(p_transform);
 		v[i].normal.transformNormal(p_transform);
 		v[i].binormal.transformNormal(p_transform);
 		v[i].tangent.transformNormal(p_transform);
-	}
+	}*/
 
 	m_header.minimumOBB.world *= p_transform;
 	m_header.boundingSphere.position.transform(p_transform);
+	m_header.transform *= p_transform;
 
 }

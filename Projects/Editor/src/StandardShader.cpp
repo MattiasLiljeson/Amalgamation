@@ -187,7 +187,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.diffuseTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.diffuseTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(0, 1, &data->SRV);
@@ -196,7 +196,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.specularTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.specularTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(1, 1, &data->SRV);
@@ -205,7 +205,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.glowTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.glowTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(2, 1, &data->SRV);
@@ -214,7 +214,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.normalTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.normalTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 		{
@@ -225,7 +225,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.displacementTextureNameIndex);
 		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
+		s = Scene::GetInstance()->GetPath(pMaterial.displacementTextureNameIndex) + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->DSSetShaderResources(0, 1, &data->SRV);

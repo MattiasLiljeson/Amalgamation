@@ -25,8 +25,6 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
-#include <GameplayTags.h>
-#include <PlayerCameraController.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 #include <RocketLauncherModule.h>
@@ -60,20 +58,17 @@
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
-#include <LookAtSystem.h>
 #include <HudSystem.h>
-#include <CameraInfo.h>
-#include <LookAtEntity.h>
-#include <MainCamera.h>
-#include <MinigunModuleControllerSystem.h>
-#include <PlayerCameraControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
+#include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <GraphicsRendererSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -87,13 +82,9 @@ using namespace std;
 #include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
-#include <FrameFinalizerSystem.h>
-#include <AntTweakBarSystem.h>
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
-
-
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -265,15 +256,11 @@ void ClientApplication::initSystems()
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
 
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-		rocketBackend );
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( rocketBackend );
 	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-
-	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
-	m_world->setSystem( finalizer, true);
 
 	/************************************************************************/
 	/* Network																*/
@@ -288,12 +275,13 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
 	/* Audio																*/
 	/************************************************************************/
+#ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
@@ -302,12 +290,20 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+#endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
+
+	/************************************************************************/
+	/* Graphics representer													*/
+	/************************************************************************/
+	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
+		renderer, rocketRender, particleRender, antTweakBar, lightRender);
+	m_world->setSystem( graphicsRender, true );
 
 	m_world->initialize();
 }
@@ -333,17 +329,15 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH);
+	LevelPieceFileMapping modelLevelFileMapping;	
+	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = modelLevelFileMapping.getModelFileName(i);
+		graphicsBackend->loadSingleMeshFromFile( modelName,
+				&TESTMODELPATH);
+	}
 
-	// Test chamber
-	entity = m_world->createEntity();
-	component = new RenderInfo( testchamberId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 5.0f, 10.0f, 19.0f);
-	entity->addComponent( ComponentType::Transform, component );
-
+	// Ambient light
 	float scale = 1000.0f;
 	Light ambientLight;
 	AglMatrix::componentsToMatrix(
@@ -360,14 +354,11 @@ void ClientApplication::initEntities()
 
 	LightsComponent* ambientLightComp = new LightsComponent();
 	ambientLightComp->addLight( ambientLight );
+	
+	entity = m_world->createEntity();
+	component = new Transform( 5.0f, 10.0f, 19.0f);
+	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent( ComponentType::LightsComponent, ambientLightComp );
-
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	m_world->addEntity(entity);
 
@@ -377,20 +368,20 @@ void ClientApplication::initEntities()
 
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
-	float range = 10.0f;
+	float range = 33.0f;
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;
 	lightGridInstData.worldTransform[5] = range;
 	lightGridInstData.worldTransform[10] = range;
-	lightGridInstData.attenuation[0] = 0.0f;
+	lightGridInstData.attenuation[0] = 20.0f;
 	lightGridInstData.attenuation[1] = 0.0f;
-	lightGridInstData.attenuation[2] = 12.1f;
+	lightGridInstData.attenuation[2] = 0.0f;
 	lightGridInstData.spotPower = 25.0f;
 	lightGridInstData.specular[3] = 1.0f;
 	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
 	lightGridInstData.ambient[2] = 0.0f;
 
-	float intensitity = 10.0f;
+	float intensitity = 10.1f;
 	for( int x=0; x<5; x++ )
 	{
 		for( int y=0; y<5; y++ )
@@ -416,7 +407,7 @@ void ClientApplication::initEntities()
 	}
 	entity = m_world->createEntity();
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
-	entity->addComponent( ComponentType::Transform, new Transform( 0.0f, 0.0f, 0.0f ) );
+	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
 	m_world->addEntity( entity );
 	//InitModulesTestByAnton();
 
@@ -558,7 +549,7 @@ void ClientApplication::InitModulesTestByAnton()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+//	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

@@ -15,12 +15,16 @@
 #include "AglOBB.h"
 #include "AglBoundingSphere.h"
 
-bool isColliding(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2);
-bool isColliding(AglBoundingSphere p_sphere, AglOBB p_obb);
-bool isColliding(AglOBB p_obb1, AglOBB p_obb2);
+class AglCollision
+{
+public:
+	static bool isColliding(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2);
+	static bool isColliding(AglBoundingSphere p_sphere, AglOBB p_obb);
+	static bool isColliding(AglOBB p_obb1, AglOBB p_obb2);
 
-float overlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
-void  calculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
-								  float& p_min, float& p_max);
+	static float overlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
+	static void  calculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+									  float& p_min, float& p_max);
+};
 
 #endif // AGLCOLLISION_H

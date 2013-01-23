@@ -111,7 +111,9 @@ AglBoundingSphere::AglBoundingSphere(AglVector3 p_p1, AglVector3 p_p2, AglVector
 		radius = 0;
 	if (abs(radius4 - radius) > 0.001f)
 		radius = 0;
-}														
+}												
+
+
 
 bool AglBoundingSphere::pointInSphere(AglVector3 p_point)
 {

@@ -12,9 +12,11 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -26,9 +28,11 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -40,9 +44,11 @@ void TW_CALL MaterialDialog::LoadGlow(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->glowTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->glowTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -54,9 +60,11 @@ void TW_CALL MaterialDialog::LoadNormal(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->normalTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->normalTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -68,11 +76,17 @@ void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->displacementTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->displacementTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
+}
+void TW_CALL MaterialDialog::LoadGradient(void *clientData)
+{
+
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)
 {
@@ -146,6 +160,7 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddButton(m_dialog, "Load Glow Texture", LoadGlow, this, " label='Glow Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 	TwAddButton(m_dialog, "Load Normal Texture", LoadNormal, this, " label='Normal Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 	TwAddButton(m_dialog, "Load Displacement Texture", LoadDisplacement, this, " label='Displacement Texture' key=c help='Load an Agile file into the editor.' group='Load'");
+	TwAddButton(m_dialog, "Load Gradient Texture", LoadGradient, this, " label='Gradient Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 
 	TwStructMember tessMembers[] = { 
 		{ "Edge1", TW_TYPE_FLOAT, offsetof(AglVector4, x), " Step=0.1 min=1.0 max=64.0" },

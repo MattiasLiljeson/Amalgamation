@@ -39,10 +39,9 @@ void LightRenderSystem::initialize()
 
 void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	m_data.clear();
+
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
-	
-	gfxWrapper->beginLightPass();			  // finalize, draw to back buffer
-	vector<LightInstanceData> instDatas;
 	
 	for( unsigned int i=0; i< p_entities.size(); i++ ) 
 	{
@@ -56,19 +55,16 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			AglMatrix final;
 			AglMatrix base = trans->getMatrix();
-			//AglMatrix scale = AglMatrix::createScaleMatrix( lights->at(j).scale );
-			//AglMatrix rotation = AglMatrix::createRotationMatrix( lights->at(j).rotation );
-			//AglMatrix translation = AglMatrix::createTranslationMatrix( lights->at(j).translation );
-			//final =  scale * rotation * translation * base;
 			final = lights->at(j).offset * base;
 
 			LightInstanceData inst = lights->at(j).instanceData;
 			inst.setWorldTransform( final );
-			instDatas.push_back( inst );
+			m_data.push_back( inst );
 		}
 	}
+}
 
-	gfxWrapper->renderLights( m_box, &instDatas );
-	 
-	gfxWrapper->endLightPass();
+void LightRenderSystem::render()
+{
+	m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_data );
 }
