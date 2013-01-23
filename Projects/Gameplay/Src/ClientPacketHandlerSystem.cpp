@@ -380,14 +380,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		
 		if (p_packet.isLevelProp)
 			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
-		else
+		else	
+		{
 			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
-		if (p_packet.meshInfo == 1)
-			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
-
+			if (p_packet.meshInfo == 1)
+				meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		}
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
