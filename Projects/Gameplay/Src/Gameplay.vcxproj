@@ -20,6 +20,8 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="DebugMove.h" />
+    <ClInclude Include="DebugMovementSystem.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
@@ -180,6 +182,7 @@
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
+    <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />

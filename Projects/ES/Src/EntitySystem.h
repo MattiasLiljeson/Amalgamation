@@ -71,7 +71,7 @@ public:
 	 * 
 	 * @param entities the entities this system contains.
 	 */
-	virtual void processEntities(const vector<Entity*>& p_entities );
+	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	/**
 	 * 

@@ -76,6 +76,12 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Debug">
+      <UniqueIdentifier>{1615f4dc-d8e0-49df-91d5-3af441d90c0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Debug">
+      <UniqueIdentifier>{bc658635-b999-4b80-9bbf-fe24f2a09bd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -152,9 +158,6 @@
     </ClInclude>
     <ClInclude Include="HudElement.h">
       <Filter>Components\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScore.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -360,6 +363,15 @@
     <ClInclude Include="PositionalSoundEffect.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMove.h">
+      <Filter>Components\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMovementSystem.h">
+      <Filter>Systems\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -418,9 +430,6 @@
     </ClCompile>
     <ClCompile Include="HudElement.cpp">
       <Filter>Components\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScore.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="DisplayPlayerScoreSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
@@ -592,6 +601,12 @@
     </ClCompile>
     <ClCompile Include="PositionalSoundEffect.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMovementSystem.cpp">
+      <Filter>Systems\Debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

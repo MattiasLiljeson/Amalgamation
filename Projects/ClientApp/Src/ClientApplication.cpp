@@ -33,6 +33,7 @@
 #include <Connector1to2Module.h>
 #include <Transform.h>
 #include <PositionalSoundEffect.h>
+#include <DebugMove.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -77,6 +78,7 @@
 #include <ExtrapolationSystem.h>
 #include <PositionalSoundSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <DebugMovementSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -311,7 +313,12 @@ void ClientApplication::initSystems()
 	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
-	m_world->setSystem(new ClientPickingSystem(m_client), true);
+	m_world->setSystem( new ClientPickingSystem(m_client), true );
+
+	/************************************************************************/
+	/* Debugging															*/
+	/************************************************************************/
+	m_world->setSystem( new DebugMovementSystem(), true );
 
 	m_world->initialize();
 }
@@ -365,12 +372,16 @@ void ClientApplication::initEntities()
 	m_world->addEntity(entity);
 
 
+	// Test sound source
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
 	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
 	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
 		"spaceship_laser.wav", true));
+	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
+		0, 1.0f, 0)));
 	m_world->addEntity(entity);
+
 	//InitModulesTestByAnton();
 
 	/*
