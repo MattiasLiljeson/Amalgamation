@@ -362,6 +362,7 @@
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentAssemblageAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -597,5 +598,6 @@
     <ClCompile Include="LoadMesh.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
   </ItemGroup>
 </Project>

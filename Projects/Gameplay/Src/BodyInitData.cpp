@@ -21,6 +21,7 @@ BodyInitData::BodyInitData()
 
 void BodyInitData::init( vector<ComponentData> p_initData )
 {
+	int temp=0;
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
 		if( p_initData[i].dataName == "m_positionX" )
@@ -70,15 +71,30 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 			p_initData[i].getData<float>(&m_angularVelocity.z);
 
 		else if( p_initData[i].dataName == "m_btype" )
-			p_initData[i].getData<int>(&m_btype);
+		{
+			p_initData[i].getData<int>(&temp);
+			m_btype = temp==1?true:false;
+		}
 		else if( p_initData[i].dataName == "m_static" )
-			p_initData[i].getData<bool>(&m_static);
+		{
+			p_initData[i].getData<int>(&temp);
+			m_static = temp==1?true:false;
+		}
 		else if( p_initData[i].dataName == "m_compound" )
-			p_initData[i].getData<bool>(&m_compound);
+		{
+			p_initData[i].getData<int>(&temp);
+			m_compound = temp==1?true:false;
+		}
 		else if( p_initData[i].dataName == "m_impulseEnabled" )
-			p_initData[i].getData<bool>(&m_impulseEnabled);
+		{
+			p_initData[i].getData<int>(&temp);
+			m_impulseEnabled = temp==1?true:false;
+		}
 		else if( p_initData[i].dataName == "m_collisionEnabled" )
-			p_initData[i].getData<bool>(&m_collisionEnabled);
+		{
+			p_initData[i].getData<int>(&temp);
+			m_collisionEnabled = temp==1?true:false;
+		}
 
 	}
 }

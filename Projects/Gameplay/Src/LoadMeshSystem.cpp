@@ -94,6 +94,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 	Component* t = NULL;
 	Transform* rootTransform = NULL;
 	BodyInitData* rootRigidBody = NULL;
+	PhysicsBody* rootPhysicsBody = NULL;
 	int rootId = p_rootEntity->getIndex();
 
 	// parent transform
@@ -105,6 +106,11 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 	t = p_rootEntity->getComponent( ComponentType::ComponentTypeIdx::BodyInitData );
 	if (t!=NULL)
 		rootRigidBody = static_cast<BodyInitData*>(t);
+
+	// parent rigidbody
+	t = p_rootEntity->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody );
+	if (t!=NULL)
+		rootPhysicsBody = static_cast<PhysicsBody*>(t);
 
 	//
 	ModelResource* modelResource = NULL;
@@ -140,8 +146,12 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Collision
 		if (rootRigidBody)
 		{
+			PhysicsBody* pb = new PhysicsBody();
+			if (rootRigidBody->m_compound)
+				pb->setParentId(rootPhysicsBody->m_id);
 			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
+				pb );
+
 
 			BodyInitData* b = new BodyInitData(AglVector3(30, 0, 0),
 				AglQuaternion::identity(),

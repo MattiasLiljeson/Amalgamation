@@ -17,6 +17,7 @@
 class EntityParent : public Component
 {
 public:
+	EntityParent(){m_entityId=-1;}
 	EntityParent(int p_entityId, const AglMatrix& p_localTransform) 
 		: m_entityId(p_entityId), m_localTransform(p_localTransform) {}
 

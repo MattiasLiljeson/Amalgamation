@@ -1,5 +1,7 @@
 #include "ServerApplication.h"
 
+#include <ComponentAssemblageAllocator.h>
+
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -166,6 +168,9 @@ namespace Srv
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(), true);
+
+		// Run component assemblage allocator
+		ComponentAssemblageAllocator allocator();
 	}
 
 	void ServerApplication::initEntities()

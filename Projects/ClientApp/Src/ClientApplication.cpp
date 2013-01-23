@@ -7,6 +7,7 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <ComponentAssemblageAllocator.h>
 
 // Components
 #include <AudioInfo.h>
@@ -17,7 +18,6 @@
 #include <HudElement.h>
 #include <MinigunModule.h>
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
 #include <PlayerCameraController.h>
 #include <RenderInfo.h>
 #include <ShipEditController.h>
@@ -25,7 +25,6 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
-#include <GameplayTags.h>
 #include <PlayerCameraController.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
@@ -58,6 +57,7 @@
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
+#include <PhysicsSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -329,6 +329,10 @@ void ClientApplication::initSystems()
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
 	m_world->initialize();
+
+	// Run component assemblage allocator
+	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+	delete allocator;
 }
 
 void ClientApplication::initEntities()

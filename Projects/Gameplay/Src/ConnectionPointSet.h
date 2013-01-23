@@ -24,6 +24,8 @@ struct ConnectionPoint
 	AglMatrix cpTransform;
 	int		  cpConnectedEntity;
 
+	ConnectionPoint() {cpConnectedEntity=-1;}
+
 	ConnectionPoint(AglMatrix p_transform)
 	{
 		cpTransform = p_transform;
