@@ -14,7 +14,7 @@ Light::Light()
 
 LightsComponent::LightsComponent()
 {
-	m_type = ComponentType::LightsComponent;
+	m_componentType = ComponentType::LightsComponent;
 }
 
 LightsComponent::~LightsComponent()

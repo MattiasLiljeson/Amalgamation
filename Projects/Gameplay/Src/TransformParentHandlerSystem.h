@@ -3,25 +3,25 @@
 #include <EntitySystem.h>
 
 // =======================================================================================
-//                                   LookAtSystem
+//                               TransformParentHandlerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Changes transforms to look at a target, further behaviour can be enabled
-/// using tags for now.
+/// \brief	Brief
 ///        
-/// # LookAtSystem
+/// # TransformParentHandlerSystem
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 21-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class LookAtSystem : public EntitySystem
+class EntityParentHandlerSystem : public EntitySystem
 {
 public:
-	LookAtSystem();
-	~LookAtSystem();
+	EntityParentHandlerSystem();
+	~EntityParentHandlerSystem();
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
-
+protected:
+private:
 };

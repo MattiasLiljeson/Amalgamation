@@ -13,20 +13,18 @@
 #include <Component.h>
 #include <AglVector3.h>
 #include <vector>
+#include <ComponentFactory.h>
 using namespace std;
 
 class PhysicsBody : public Component
 {
 public:
 
-	PhysicsBody()
-	{
-		m_id = -1;
-		m_parentId = -1;
-		m_parentChanged = false;
-	}
+	PhysicsBody();
 
 	int m_id;
+
+	virtual void init( vector<ComponentData> p_initData );
 
 	int		getParentId() {return m_parentId;}
 	int		getOldParentId() {return m_oldParentId;}
@@ -48,6 +46,8 @@ public:
 	void	resetParentChangedStatus() {m_parentChanged=false;}
 
 private:
+	static ComponentRegister<PhysicsBody> s_reg;
+
 	int m_parentId;
 	int m_oldParentId;
 	bool m_parentChanged;

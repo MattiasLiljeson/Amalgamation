@@ -18,6 +18,7 @@
 class RocketLauncherModule: public Component
 {
 public:
+	RocketLauncherModule(){coolDown=0.0f; laserSightEntity=-1;}
 	RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~RocketLauncherModule();
 

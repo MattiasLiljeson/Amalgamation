@@ -37,9 +37,8 @@ public:
 protected:
 private:
 	static string getInstruction(const string& p_string);
-	static string getFileName(const string& p_string);
-	static string getUniqueName(const string& p_string,int offset=0);
-	static string separator;
+	static string extractPart(const string& p_string,int offset=0);
+	static string separators;
 	static string instantiate;
 	static string connectionpoint;
 	static string spawnpoint;

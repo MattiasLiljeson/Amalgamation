@@ -1,5 +1,7 @@
 #include "ServerApplication.h"
 
+#include <ComponentAssemblageAllocator.h>
+
 // Systems
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -179,6 +181,9 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
+
+		// Run component assemblage allocator
+		ComponentAssemblageAllocator allocator();
 	}
 
 	void ServerApplication::initEntities()
