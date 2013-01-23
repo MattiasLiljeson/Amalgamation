@@ -18,6 +18,7 @@ private:
 	static void TW_CALL LoadGlow(void *clientData);
 	static void TW_CALL LoadNormal(void *clientData);
 	static void TW_CALL LoadDisplacement(void *clientData);
+	static void TW_CALL LoadGradient(void *clientData);
 	static void TW_CALL SetName(const void *value, void *clientData);
 	static void TW_CALL GetName(void *value, void *clientData);
 public:
