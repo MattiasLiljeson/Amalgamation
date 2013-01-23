@@ -369,9 +369,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, component );
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
-		// HACK: (Johan) Remove obviously!
-//		entity->addComponent(ComponentType::PositionalSoundEffect,
-//			new PositionalSoundEffect("spaceship_laser.wav", true));
 
 		m_world->addEntity(entity);
 	}
