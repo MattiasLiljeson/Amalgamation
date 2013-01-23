@@ -35,7 +35,7 @@ void DisplayPlayerScoreSystem::processEntities( const vector<Entity*>& p_entitie
 			NetworkSynced* netSync =
 				static_cast<NetworkSynced*>(entity->getComponent( ComponentType::NetworkSynced ));
 
-			hudvalue << "\n" << netSync->getNetworkOwner() << " " << score->getScore()
+			hudvalue << "\n" << netSync->getNetworkOwner() << " " << score->getTotalScore()
 				<< " " << "N/A";
 		}
 
@@ -55,7 +55,7 @@ void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 	stringstream ss;
 	ss << "score(" << netSync->getNetworkOwner() << ")";
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::OVERALL,
-		ss.str().c_str(), TwType::TW_TYPE_INT32, score->getScorePointer(), "" );
+		ss.str().c_str(), TwType::TW_TYPE_INT32, score->getTotalScorePointer(), "" );
 
 	// If the entity belongs to the current owner, the stored hud element component can	// be fetched here.
 	if (netSync->getNetworkOwner() == m_client->getId())

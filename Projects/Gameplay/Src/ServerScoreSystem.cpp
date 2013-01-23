@@ -37,7 +37,7 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 
 			PlayerScore* score = static_cast<PlayerScore*>(
 				p_entities[i]->getComponent(ComponentType::PlayerScore));
-			score->incrementScore( 1 );
+			score->addBaseScore( 1 );
 
 			/*UpdateClientStatsPacket packet;
 			packet.scores[i]			= score->getScore();
