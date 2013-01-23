@@ -74,6 +74,7 @@ private:
 	{
 		string filename;
 		AglMatrix transform;
+		int level;
 	};
 
 
@@ -93,10 +94,12 @@ private:
 
 	virtual void readAndStoreEmpties(int p_modelNumber, 
 		ModelResource* p_model, AglScene* p_scene,
+		const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
 		vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
 
 	virtual ModelResource* getFallback();
+
 
 
 	ModelResource* getCube();

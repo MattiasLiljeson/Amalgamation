@@ -53,7 +53,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),0};
 
 				// DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
 
@@ -62,7 +62,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 				if ((*models)[0]!=NULL)
 				{
 					model = (*models)[0];
-					readAndStoreEmpties(-1,model,scene); // read leftover empties
+					readAndStoreEmpties(-1,model,scene,&currentInstance); // read leftover empties
 				}
 			}
 			else
@@ -84,7 +84,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const string& p_name, 
 															   const string* p_path/*=NULL*/)
 {
-	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),0};
 	//
 	vector<ModelResource*>* models = NULL;
 	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
@@ -113,7 +113,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						readAndStoreEmpties(-1,model,scene,instanceInstructions);
+						readAndStoreEmpties(-1,model,scene,&currentInstance,instanceInstructions);
 					}
 				}
 				else
@@ -129,8 +129,12 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					for (int n=firstMeshPos;n<size;n++)
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
-						 // mesh transform always relative its root which is identity
-						// model->transform *= currentInstance.transform;
+						// Get flip based on instantiation level
+						AglMatrix unevenXMirror = AglMatrix::identityMatrix();
+						if (currentInstance.level%2==1)
+							unevenXMirror.data[0]*=-1;
+						// mesh transform
+						model->transform = unevenXMirror*model->transform*currentInstance.transform;
 						// 
 						models->push_back(model);
 					}
@@ -160,8 +164,12 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				for (int n=firstMeshPos;n<size;n++)
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
-					 // mesh transform always relative its root which is identity
-					// model->transform *= currentInstance.transform;
+					// Get flip based on instantiation level
+					AglMatrix unevenXMirror = AglMatrix::identityMatrix();
+					if (currentInstance.level%2==1)
+						unevenXMirror.data[0]*=-1;
+					// mesh transform
+					model->transform = unevenXMirror*model->transform*currentInstance.transform;
 					// 
 					models->push_back(model);
 				}
@@ -211,7 +219,8 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 					if (p_outInstanceInstructions!=NULL)
 					{
 						InstanceInstr inst = {parsedAction.first.filename,
-			                                  aglMeshHeader.transform};
+			                                  aglMeshHeader.transform,
+											  p_instanceData->level+1};
 
 						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
@@ -270,7 +279,7 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 		model->transform = p_meshHeader->transform;
 
 		// other model creation data
-		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);
+		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_instanceData,p_outInstanceInstructions);
 		readAndStoreParticleSystems(p_modelNumber,model,p_scene);
 
 		// Done
@@ -313,6 +322,7 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber, 
 													   ModelResource* p_model, 
 													   AglScene* p_scene,
+													   const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
 													   vector<InstanceInstr>* p_outInstanceInstructions)
 {
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
@@ -331,7 +341,8 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
 				{
 					InstanceInstr inst = {parsedAction.first.filename,
-						cp->transform};
+						cp->transform*p_model->transform,
+						p_instanceData->level+1};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
@@ -346,7 +357,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 					if (cp->parentMesh == p_modelNumber)
 					{
 						// DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform*p_model->transform);
 					}
 				}
 				else // call from global
@@ -355,7 +366,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 					if (cp->parentMesh == -1 && p_model!=NULL)
 					{
 						// DEBUGWARNING(( string("Found global connection point!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform*p_model->transform);
 					}
 				}
 
