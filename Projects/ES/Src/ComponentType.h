@@ -33,6 +33,7 @@ public:	//Enums
 		ShipEditController,
 		Impulse,
 		BodyInitData,
+		BoundingVolumeInitData,
 		LookAtEntity,
 		MainCamera,
 		PlayerCameraController,
@@ -63,12 +64,15 @@ public:	//Enums
 		LightSources,
 		ParticleEmitters,
 		PickComponent,
+		ParticleSystemEmitter,
+		ParticleUpdateData,
 		DebugMove,
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		LightsComponent,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -48,12 +48,12 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			// Get rigidbody from id
 			Body* b = m_physicsController->getBody(body->m_id);
 
-			// Handle parenting
-			handleCompoundBodyDependencies(p_entities[i]);
-
-			// Update the rigidbody
-			if (!b->IsStatic())
+			if (b->IsCompoundBody() || !((RigidBody*)b)->IsStatic())
 			{
+				// Handle parenting
+				handleCompoundBodyDependencies(p_entities[i]);
+
+				// Update the rigidbody
 				AglMatrix world = b->GetWorld();
 				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
 					ComponentType::Transform));
@@ -63,17 +63,18 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 				AglMatrix::matrixToComponents(world, scale, rot, pos);
 				t->setTranslation(pos);
 				t->setRotation(rot);
-				t->setScale(scale);
+				//t->setScale(scale);
 
 				if (!b->IsCompoundBody())
 				{
 					if (((RigidBody*)b)->GetType() == BOX)
 					{
 						RigidBodyBox* box = (RigidBodyBox*)b;
-						t->setScale(box->GetSizeAsVector3()*0.5f);
+						//t->setScale(box->GetSizeAsVector3()*0.5f);
 					}
 				}
 			}
+
 
 		}
 
@@ -123,19 +124,44 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			bodyId = &(body->m_id); 
 		
 		// Add shape
-		if (init->m_type == 0)
+		if (init->m_type == BodyInitData::BOX)
 		{
-			*bodyId = m_physicsController->AddBox(init->m_position-offset,
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			*bodyId = m_physicsController->AddBox(world,
 				init->m_scale*2, 1, 
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
+		else if (init->m_type == BodyInitData::SPHERE)
+		{
+			float radius = max(max(init->m_scale.x, init->m_scale.y), init->m_scale.z);
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			*bodyId = m_physicsController->AddSphere(world,
+				radius, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+		}
+		else if (init->m_type == BodyInitData::MESH)
+		{
+			//Not supported
+			//m_physicsController->AddMeshBody()
+		}
 		else
 		{
 			//Not Supported
 		}
+
+		//Add the physics body to the entity map
+		while (body->m_id >= m_entityMap.size())
+			m_entityMap.push_back(-1);
+
+		m_entityMap[body->m_id] = p_entity->getIndex();
 		
 		// remove settings component
 		p_entity->removeComponent(ComponentType::BodyInitData);

@@ -14,6 +14,8 @@
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
+#define AGL_PARTICLE_FORMAT_STANDARD 0
+
 struct AglParticleSystemHeader{
 	enum AglSpawnType{
 		ONCE, CONTINUOUSLY
@@ -50,4 +52,30 @@ struct AglParticleSystemHeader{
 	AglAlignmentType	alignmentType;
 	float				spawnRotation;
 	float				spawnRotationOffset;
+
+	AglParticleSystemHeader()
+	{
+		particleAge = 4.0f;
+		spawnPoint = AglVector3(0, 0, 0);
+		particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
+		spawnDirection = AglVector3::left();
+		spawnSpeed = 0;
+		spawnAngularVelocity = 0;
+		spread = 0;
+		spawnFrequency = 1.0f;
+		spawnOffset = 0.0f;
+		spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+		spawnType = AglParticleSystemHeader::CONTINUOUSLY;
+		maxOpacity = 1.0f;
+		particlesPerSpawn = 1;
+		spreadType = AglParticleSystemHeader::INSPACE;
+		particleSize = AglVector2(1.0f, 1.0f);
+		color = AglVector4(1.0f, 1.0f, 1.0f, 1.0f);
+		fadeInStop = 0;
+		fadeOutStart = particleAge;
+		textureNameIndex = -1;
+		alignmentType = AglParticleSystemHeader::OBSERVER;
+		spawnRotation = 0;
+		spawnRotationOffset = 0;
+	}
 };

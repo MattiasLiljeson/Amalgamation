@@ -102,6 +102,7 @@ Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( LightInstan
 	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = p_numberOfElements;
 	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
 
 	// Create buffer from config and data
 	instanceBuffer = new Buffer<LightInstanceData>( m_device, m_deviceContext,

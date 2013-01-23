@@ -11,6 +11,7 @@ struct MaterialBuffer
 	AglVector4 EmissiveDiffuseMapped;
 	AglVector4 EyePositionSpecularMapped;
 	AglVector4 Flags;
+	AglVector4 gradientColors[10];
 };
 struct GradientBuffer
 {

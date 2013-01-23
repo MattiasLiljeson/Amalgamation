@@ -7,6 +7,7 @@
 #include <SystemType.h>
 #include <ComponentType.h>
 #include "CameraInfo.h"
+#include <AglMesh.h>
 #include <RendererSceneInfo.h>
 #include "Transform.h"
 

@@ -1,6 +1,10 @@
 #include "LightRenderSystem.h"
 
 #include "GraphicsBackendSystem.h"
+#include "LightsComponent.h"
+#include "Transform.h"
+#include <AglVector3.h>
+#include <AglQuaternion.h>
 #include <BufferFactory.h>
 #include <GraphicsWrapper.h>
 #include <InstanceData.h>
@@ -8,7 +12,8 @@
 #include <LightMesh.h>
 
 LightRenderSystem::LightRenderSystem( GraphicsBackendSystem* p_gfxBackend )
-	: EntitySystem( SystemType::LightRenderSystem )
+	: EntitySystem( SystemType::LightRenderSystem, 2,
+	ComponentType::LightsComponent, ComponentType::Transform )
 {
 	m_gfxBackend = p_gfxBackend;
 
@@ -34,68 +39,32 @@ void LightRenderSystem::initialize()
 
 void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	m_data.clear();
+
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 	
-	gfxWrapper->beginLightPass();			  // finalize, draw to back buffer
-	//gfxWrapper->renderLights( NULL, NULL );
-
-	static float range = 10.0f;
-
-	AglMatrix mat = AglMatrix::identityMatrix();
-	mat[0] = mat[5] = mat[10] =  range / 2.0f; // The cube is 2.0f wide, therefore 2 and not 1
-	
-	LightInstanceData instData;
-	instData.range = range; // Should be synced with wolrdTransform
-	for( int i=0; i<16; i++ ){
-		instData.worldTransform[i] = mat[i];
-	}
-
-	instData.lightDir[0] = 1.0f;
-	instData.lightDir[1] = 0.0f;
-	instData.lightDir[2] = 0.0f;
-
-	instData.attenuation[0] = 1.1f;
-	instData.attenuation[1] = 0.01f;
-	instData.attenuation[2] = 0.1f;
-	instData.spotPower = 100.0f;
-
-	instData.ambient[0] = 0.01f;
-	instData.ambient[1] = 0.01f;
-	instData.ambient[2] = 0.01f;
-	instData.ambient[3] = 1.01f;
-
-	instData.diffuse[0] = 0.0f;
-	instData.diffuse[1] = 0.5f;
-	instData.diffuse[2] = 0.0f;
-	instData.diffuse[3] = 1.0f;
-
-	instData.specular[0] = 0.5f;
-	instData.specular[1] = 0.1f;
-	instData.specular[2] = 0.0f;
-	instData.specular[3] = 1.0f;
-
-	instData.enabled = true;
-	instData.type = LightTypes::E_LightTypes_POINT;
-
-	vector<LightInstanceData> instDatas;
-	for( int x=0; x<5; x++ )
+	for( unsigned int i=0; i< p_entities.size(); i++ ) 
 	{
-		instData.worldTransform[3] = x * (range+1.0f) - 25.0f;
-		instData.diffuse[1] += 0.1f;
-		for( int y=0; y<5; y++ )
+		LightsComponent* lightsComp = static_cast<LightsComponent*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LightsComponent ) );
+		Transform* trans = static_cast<Transform*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+		
+		vector<Light>* lights = lightsComp->getLightsPtr();
+		for( unsigned int j=0; j<lights->size(); j++ )
 		{
-			instData.worldTransform[7] = y * (range+1.0f) - 25.0f;
-			instData.diffuse[2] += 0.1f;
-			for( int z=0; z<5; z++ )
-			{
-				instData.worldTransform[11] = z * (range+1.0f) - 25.0f;
-				instData.diffuse[3] += 0.1f;
-				instDatas.push_back( instData );
-			}
+			AglMatrix final;
+			AglMatrix base = trans->getMatrix();
+			final = lights->at(j).offset * base;
+
+			LightInstanceData inst = lights->at(j).instanceData;
+			inst.setWorldTransform( final );
+			m_data.push_back( inst );
 		}
 	}
+}
 
-	gfxWrapper->renderLights( m_box, &instDatas );
-	 
-	gfxWrapper->endLightPass();
+void LightRenderSystem::render()
+{
+	m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_data );
 }

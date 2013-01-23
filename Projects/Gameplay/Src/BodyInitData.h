@@ -19,6 +19,12 @@ public:
 		DYNAMIC,
 		STATIC
 	};
+	enum BodyType
+	{
+		BOX,
+		SPHERE,
+		MESH
+	};
 
 	BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
 					AglVector3 p_scale, AglVector3 p_velocity,

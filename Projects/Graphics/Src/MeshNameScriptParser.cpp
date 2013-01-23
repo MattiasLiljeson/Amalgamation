@@ -1,6 +1,6 @@
 #include "MeshNameScriptParser.h"
 
-string MeshNameScriptParser::separator = ".";
+string MeshNameScriptParser::separator = "_"; // TODO: Change to '.' later!
 string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";
@@ -44,10 +44,11 @@ std::string MeshNameScriptParser::getFileName( const string& p_string )
 std::string MeshNameScriptParser::getUniqueName( const string& p_string,int offset )
 {
 	int start=-1;
-	for (int i=0;i<offset;i++)
+	for (int i=-1;i<offset;i++)
 	{
 		start=p_string.find(separator,start+1);
 	}
 	
-	return p_string.substr(start,max(0,(int)p_string.find(separator,start+1)));
+	return p_string.substr(min(start+1,(int)p_string.size()-1),
+							max(0,(int)p_string.find(separator,start+1)));
 }

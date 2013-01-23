@@ -11,6 +11,7 @@
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 #include <EntityFactory.h>
+#include <LevelGenSystem.h>
 #include <ServerPickingSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
@@ -113,6 +114,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Level Generation														*/
+		/************************************************************************/
+		LevelGenSystem* levelGen = new LevelGenSystem(NULL, m_server);
+		m_world->setSystem( levelGen, true);
+		levelGen->run();
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
@@ -194,7 +202,7 @@ namespace Srv
 					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
-					component = new Transform( pos.x, pos.y, pos.z);
+					component = new Transform(pos, AglQuaternion::identity(), AglVector3(3, 3, 3));
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
@@ -203,10 +211,10 @@ namespace Srv
 						new PhysicsBody() );
 
 					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(AglVector3( pos.x, pos.y, pos.z ),
+						new BodyInitData(pos,
 						AglQuaternion::identity(),
-						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), 0, 
+						AglVector3(3, 3, 3), AglVector3(0, 0, 0), 
+						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
 
@@ -228,8 +236,7 @@ namespace Srv
 			ProcessMessage* message = messages.front();
 			messages.pop();
 
-			if( message->type == MessageType::TERMINATE )
-			{
+			if(message && message->type == MessageType::TERMINATE ){
 				m_running = false;
 			}
 			delete message;

@@ -28,9 +28,6 @@
     <Filter Include="Systems\Network\Packet Translation">
       <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay">
-      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Audio">
       <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,9 @@
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Level Gen">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Systems\GUI">
       <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
     </Filter>
@@ -54,6 +54,9 @@
     </Filter>
     <Filter Include="Components\Modules">
       <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay">
+      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\Tags">
       <UniqueIdentifier>{3b95b3e8-1f89-4116-8a09-3aa212603498}</UniqueIdentifier>
@@ -77,10 +80,7 @@
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Debug">
-      <UniqueIdentifier>{1615f4dc-d8e0-49df-91d5-3af441d90c0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\Debug">
-      <UniqueIdentifier>{bc658635-b999-4b80-9bbf-fe24f2a09bd3}</UniqueIdentifier>
+      <UniqueIdentifier>{bf013765-8af0-4d45-a07a-7d6de6498ebe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,8 +147,8 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Systems\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="MainCamera.h">
-      <Filter>Components\GFX</Filter>
+    <ClInclude Include="LevelGenSystem.h">
+      <Filter>Systems\Level Gen</Filter>
     </ClInclude>
     <ClInclude Include="MenuSystem.h">
       <Filter>Systems\GUI</Filter>
@@ -159,6 +159,9 @@
     <ClInclude Include="HudElement.h">
       <Filter>Components\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -167,6 +170,12 @@
     </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPiece.h">
+      <Filter>Systems\Level Gen</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoosterModule.h">
       <Filter>Components\Modules</Filter>
@@ -324,9 +333,6 @@
     <ClInclude Include="AntTweakBarSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketRenderSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LightRenderSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -338,9 +344,11 @@
     </ClInclude>
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="ParticleEmitters.h" />
-    <ClInclude Include="FrameFinalizerSystem.h" />
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceFileMapping.h">
+      <Filter>Systems\Level Gen</Filter>
     </ClInclude>
     <ClInclude Include="ExtrapolationSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -354,23 +362,41 @@
     <ClInclude Include="RocketControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="LightsComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h">
       <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitter.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumeInitData.h">
+      <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleUpdateData.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsRendererSystem.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerScore.h">
-      <Filter>Components\Gameplay</Filter>
+    <ClInclude Include="PositionalSoundSource.h">
+      <Filter>Components\Audio</Filter>
     </ClInclude>
     <ClInclude Include="DebugMove.h">
-      <Filter>Components\Debug</Filter>
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="PositionalSoundSource.h">
-      <Filter>Components\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,11 +457,20 @@
     <ClCompile Include="HudElement.cpp">
       <Filter>Components\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="DisplayPlayerScoreSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsBody.cpp">
       <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelGenSystem.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPiece.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
     <ClCompile Include="ShipModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -566,9 +601,6 @@
     <ClCompile Include="AntTweakBarSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="LibRocketRenderSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LightRenderSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
@@ -580,9 +612,11 @@
     </ClCompile>
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
-    <ClCompile Include="FrameFinalizerSystem.cpp" />
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceFileMapping.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
     <ClCompile Include="ExtrapolationSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
@@ -593,20 +627,29 @@
     <ClCompile Include="RocketControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="LightsComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsRendererSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerScore.cpp">
-      <Filter>Components\Gameplay</Filter>
+    <ClCompile Include="PositionalSoundSource.cpp">
+      <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="PositionalSoundSource.cpp">
-      <Filter>Components\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

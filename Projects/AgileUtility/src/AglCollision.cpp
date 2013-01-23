@@ -1,6 +1,6 @@
 #include "AglCollision.h"
 
-bool isColliding(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2)
+bool AglCollision::isColliding(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2)
 {
 	AglVector3 StoS = p_sphere2.position-p_sphere1.position;
 	float twoRadius = p_sphere1.radius + p_sphere2.radius;
@@ -8,7 +8,7 @@ bool isColliding(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2)
 		return true;
 	return false;
 }
-bool isColliding(AglBoundingSphere p_sphere, AglOBB p_obb)
+bool AglCollision::isColliding(AglBoundingSphere p_sphere, AglOBB p_obb)
 {
 	//Find the closest point on the box to the sphere
 	AglVector3 point = p_obb.world.GetTranslation();
@@ -39,7 +39,7 @@ bool isColliding(AglBoundingSphere p_sphere, AglOBB p_obb)
 	}
 	return false;
 }
-bool isColliding(AglOBB p_obb1, AglOBB p_obb2)
+bool AglCollision::isColliding(AglOBB p_obb1, AglOBB p_obb2)
 {
 	AglVector3 aaxes[3];
 	aaxes[0] = p_obb1.world.GetRight();
@@ -87,7 +87,7 @@ bool isColliding(AglOBB p_obb1, AglOBB p_obb2)
 	return true;
 }
 
-float overlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis)
+float AglCollision::overlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis)
 {
 	//Assumed to be normalized
 	//AglVector3::normalize(pAxis);
@@ -109,7 +109,7 @@ float overlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3
 	return lengthA + lengthB - (maxTotal - minTotal);
 }
 
-void  calculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+void AglCollision::calculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
 								  float& p_min, float& p_max)
 {
 	p_min = p_max = AglVector3::dotProduct(p_axis, p_points[0]);

@@ -17,4 +17,6 @@ AglMaterial::AglMaterial()
 	displacement = 0;
 	tesselationFactor = AglVector4(1, 1, 1, 1);
 	textureScale = 1;
+	gradientDataIndex = -1;
+	gradientTextureNameIndex = -1;
 }

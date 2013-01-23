@@ -9,6 +9,7 @@ class Window;
 class GraphicsWrapper;
 class AglParticleSystem;
 struct ConnectionPointCollection;
+struct AglMeshHeader;
 struct RendererSceneInfo;
 struct AglVector2;
 // =======================================================================================

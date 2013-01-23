@@ -24,7 +24,7 @@ void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 	stringstream ss;
 	ss << "score(" << netSync->getNetworkOwner() << ")";
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::OVERALL,
-		ss.str().c_str(), TwType::TW_TYPE_INT32, score->getScorePointer(), "" );
+		ss.str().c_str(), TwType::TW_TYPE_INT32, score->getTotalScorePointer(), "" );
 }
 
 bool DisplayPlayerScoreSystem::checkProcessing()

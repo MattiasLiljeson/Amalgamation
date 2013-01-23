@@ -35,7 +35,8 @@ void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 	}
 	else if (index == 2)
 	{
-		AglMatrix mat(0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+		//AglMatrix mat(0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+		AglMatrix mat(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		Scene::GetInstance()->Transform(mat);
 		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
 	}
@@ -83,9 +84,9 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		TwAddButton(sceneDialog->m_dialog, "AddParticleEffect", AddPE, sceneDialog, " label='Particle Effect' key=c help='Load an Agile file into the editor.' group='Add'");
 
 
-		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		//TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		//TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender To Dx' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 
 
 		//TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");

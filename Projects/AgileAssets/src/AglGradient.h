@@ -25,16 +25,13 @@ using namespace std;
 class AglGradient
 {
 private:
-	string m_name; ///< Name of the gradient. Should be moved
-	int m_gradientTextureNameIndex; ///< Index to the gradient texture name
-	int m_normalTextureNameIndex; ///< Index to the normal texture name
 	vector<AglGradientMaterial*> m_layers; //< List of layers of GradientMaterial
 public:
 	///
 	/// Constructor
 	/// \param p_name Name of the Gradient.
 	///
-	AglGradient(string p_name);
+	AglGradient();
 
 	///
 	/// Destructor
@@ -48,34 +45,15 @@ public:
 	vector<AglGradientMaterial*> getLayers();
 
 	///
-	/// Gets the name index of the gradient texture
-	/// \return The index
-	///
-	int getGradientTextureNameIndex();
-	
-	///
-	/// Set the name index of the gradient texture
-	/// \param The new index
-	///
-	void setGradientTextureNameIndex(int pIndex);
-
-	///
-	/// Gets the name index of the normal texture
-	/// \return The index
-	///
-	int getNormalTextureNameIndex();
-
-	///
-	/// Sets the name index of the normal texture
-	/// \param The new index
-	///
-	void setNormalTextureNameIndex(int pIndex);
-
-	///
 	/// Adds a layer to the list of layers
 	/// \param The new layer.
 	///
 	void addLayer(AglGradientMaterial* pLayer);
+
+	AglVector4* getLayerColorPointer(int p_index)
+	{
+		return &m_layers[p_index]->color;
+	}
 
 };
 

@@ -37,6 +37,21 @@ struct BlendState
 		ALPHA,
 		MULTIPLY,
 		ADDITIVE,
+		PARTICLE,
 		NUMBER_OF_MODES
+	};
+};
+
+struct PrimitiveTopology
+{
+	enum  Mode
+	{
+		UNDEFINED,
+		POINTLIST,
+		LINELIST,
+		LINESTRIP,
+		TRIANGLELIST,
+		TRIANGLESTRIP,
+		NUMBER_OF_TOPOLGIES,
 	};
 };

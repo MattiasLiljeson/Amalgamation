@@ -12,9 +12,11 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -26,9 +28,11 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -40,9 +44,11 @@ void TW_CALL MaterialDialog::LoadGlow(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->glowTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->glowTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -54,9 +60,11 @@ void TW_CALL MaterialDialog::LoadNormal(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->normalTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->normalTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -68,11 +76,60 @@ void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
+		string path = getPath(file);
 		removePath(file);
 		mat->displacementTextureNameIndex = Scene::GetInstance()->AddName(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		Scene::GetInstance()->AddPath(path, mat->displacementTextureNameIndex);
+		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
+}
+void TW_CALL MaterialDialog::LoadGradient(void *clientData)
+{
+	MaterialDialog* dialog = (MaterialDialog*)clientData;
+	AglMaterial* mat = dialog->m_material;
+
+	string file = openfilename();
+	if (file != "")
+	{
+		string path = getPath(file);
+		removePath(file);
+		mat->gradientTextureNameIndex = Scene::GetInstance()->AddName(file);
+		Scene::GetInstance()->AddPath(path, mat->gradientTextureNameIndex);
+		file = path + file;
+		TextureManager::GetInstance()->LoadTexture(file);
+	}
+	if (mat->gradientDataIndex < 0)
+	{
+		AddLayer(dialog);
+	}
+}
+void TW_CALL MaterialDialog::AddLayer(void *clientData)
+{
+	MaterialDialog* dialog = (MaterialDialog*)clientData;
+	AglMaterial* mat = dialog->m_material;
+	AglGradient* g;
+	if (mat->gradientDataIndex < 0)
+	{
+		g = new AglGradient();
+		mat->gradientDataIndex = Scene::GetInstance()->AddGradient(g);
+	}
+	else
+	{
+		g = Scene::GetInstance()->GetGradient(mat->gradientDataIndex);
+		g->addLayer(new AglGradientMaterial());
+	}
+	string name = "Layer" + toString(g->getLayers().size());
+
+	TwStructMember rgbaMembers[] = { 
+		{ "Red", TW_TYPE_FLOAT, offsetof(AglVector4, x), "min=0.1 max=1 step=0.01" },
+		{ "Green", TW_TYPE_FLOAT, offsetof(AglVector4, y), "min=0.1 max=1 step=0.01" },
+		{ "Blue", TW_TYPE_FLOAT, offsetof(AglVector4, z), "min=0.1 max=1 step=0.01" },
+		{ "Alpha", TW_TYPE_FLOAT, offsetof(AglVector4, w), "min=0.1 max=1 step=0.01" }};
+	TwType rgbatype = TwDefineStruct("COLOR4", rgbaMembers, 4, sizeof(AglVector4), NULL, NULL);
+
+	AglVector4* c = g->getLayerColorPointer(g->getLayers().size()-1);
+	TwAddVarRW(dialog->m_dialog, name.c_str(), TW_TYPE_COLOR4F, (void*)c, " group='Gradient Mapping'");
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)
 {
@@ -136,7 +193,7 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddVarRW(m_dialog, "Specular", TW_TYPE_COLOR3F, (void*)&m_material->specular, " help='Light color.' group='Properties'");
 	TwAddVarRW(m_dialog, "Emissive", TW_TYPE_COLOR3F, (void*)&m_material->emissive, " help='Light color.' group='Properties'");
 
-	TwAddVarRW(m_dialog, "Opacity", TW_TYPE_FLOAT, (void*)&m_material->opacity, " help='Light color.' group='Properties' min=0.0 max=1.0wwwwwwwwwwwwwwwwwwwwwwwwwwwwww step=0.01");
+	TwAddVarRW(m_dialog, "Opacity", TW_TYPE_FLOAT, (void*)&m_material->opacity, " help='Light color.' group='Properties' min=0.0 max=1.0 step=0.01");
 	TwAddVarRW(m_dialog, "Reflectivity", TW_TYPE_FLOAT, (void*)&m_material->reflectivity, " help='Light color.' group='Properties' min=0.0 max=1.0 step=0.01");
 	TwAddVarRW(m_dialog, "Shininess", TW_TYPE_FLOAT, (void*)&m_material->shininess, " help='Light color.' group='Properties' min=0.0 max=100.0 step=1.0");
 	TwAddVarRW(m_dialog, "Texture Scale", TW_TYPE_FLOAT, (void*)&m_material->textureScale, " help='Light color.' group='Properties' min=0.0 max=10.0 step=0.01");
@@ -146,6 +203,7 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddButton(m_dialog, "Load Glow Texture", LoadGlow, this, " label='Glow Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 	TwAddButton(m_dialog, "Load Normal Texture", LoadNormal, this, " label='Normal Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 	TwAddButton(m_dialog, "Load Displacement Texture", LoadDisplacement, this, " label='Displacement Texture' key=c help='Load an Agile file into the editor.' group='Load'");
+	TwAddButton(m_dialog, "Load Gradient Texture", LoadGradient, this, " label='Gradient Texture' key=c help='Load an Agile file into the editor.' group='Load'");
 
 	TwStructMember tessMembers[] = { 
 		{ "Edge1", TW_TYPE_FLOAT, offsetof(AglVector4, x), " Step=0.1 min=1.0 max=64.0" },
@@ -156,6 +214,9 @@ void MaterialDialog::setMaterial(int pIndex)
 
 	TwAddVarRW(m_dialog, "Tess", tessType, &m_material->tesselationFactor, " group='Properties' ");
 	TwAddVarRW(m_dialog, "Displacement", TW_TYPE_FLOAT, (void*)&m_material->displacement, " group='Properties' min=0.0 max=10.0 step=0.01");
+
+	TwAddButton(m_dialog, "Add Layer", AddLayer, this, " label='Add Layer' key=c help='Load an Agile file into the editor.' group='Gradient Mapping'");
+
 
 	show();
 }

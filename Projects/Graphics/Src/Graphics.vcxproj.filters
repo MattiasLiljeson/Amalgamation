@@ -182,6 +182,7 @@
     <ClInclude Include="RenderSceneInfoCBuffer.h">
       <Filter>Renderer\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="RenderInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
