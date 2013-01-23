@@ -330,9 +330,6 @@
     <ClInclude Include="AntTweakBarSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketRenderSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LightRenderSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -588,9 +585,6 @@
     </ClCompile>
     <ClCompile Include="AntTweakBarSystem.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketRenderSystem.cpp">
-      <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="LightRenderSystem.cpp">
       <Filter>Systems\GFX</Filter>

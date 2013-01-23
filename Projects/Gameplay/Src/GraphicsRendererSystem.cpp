@@ -39,8 +39,8 @@ void GraphicsRendererSystem::process(){
 	endLightPass();
 
 	initGUIPass();
-	m_libRocketRenderSystem->render();
 	m_antTweakBarSystem->render();
+	m_libRocketRenderSystem->render();
 	endGUIPass();
 
 	flipBackbuffer();

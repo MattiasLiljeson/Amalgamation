@@ -69,7 +69,7 @@ public:
 	/// Returns the native vertical texel offset for the renderer.
 	float GetVerticalTexelOffset();
 
-	void UpdateOnWindowResize();
+	void updateOnWindowResize();
 
 private:
 	AglMatrix createWorldMatrix();

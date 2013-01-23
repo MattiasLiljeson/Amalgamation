@@ -9,6 +9,7 @@
 #include <Cursor.h>
 #include <Globals.h>
 #include <GraphicsWrapper.h>
+#include <DebugUtil.h>
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -84,32 +85,47 @@ void LibRocketBackendSystem::initialize()
 	//loadDocument( tmp.c_str() );
 
 	string cursorPath = GUI_CURSOR_PATH + "cursor.rml";
-	if( m_rocketContext->LoadMouseCursor(cursorPath.c_str()) == NULL )
-	{
-		int breakHere = 0;
-	}
+	loadCursor(cursorPath.c_str());
 }
 
-bool LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
+void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 {
-	return Rocket::Core::FontDatabase::LoadFontFace( Rocket::Core::String(p_fontPath) );
+	if(!Rocket::Core::FontDatabase::LoadFontFace( Rocket::Core::String(p_fontPath) ))
+		DEBUGWARNING(( 
+				(std::string("Failed to load font face! Path: ") +
+				toString(p_fontPath)).c_str()
+			));
 }
 
-int LibRocketBackendSystem::loadDocument( const char* p_filePath )
+void LibRocketBackendSystem::loadDocument( const char* p_filePath )
 {
-	int id = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;
 	tmpDoc = m_rocketContext->LoadDocument( Rocket::Core::String(p_filePath) );
 	
 	if( tmpDoc != NULL )
 	{
-		id = m_documents.size();
 		m_documents.push_back( tmpDoc );
 		tmpDoc->Show(); //HACK! Remove this when doing this from the outside
 		tmpDoc->RemoveReference();
 	}
+	else{
+		DEBUGWARNING(( 
+			(std::string("Failed to load LibRocket document! Path: ") +
+			toString(p_filePath)).c_str() ));
+	}
+}
 
-	return id;
+void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
+{
+	if( m_rocketContext->LoadMouseCursor(p_cursorPath) == NULL ){
+		DEBUGWARNING((
+			(std::string("Failed to load LibRocket Cursor! Path: ") + 
+			toString(p_cursorPath)).c_str()));
+	}
+	else{
+		DEBUGPRINT(( (std::string("Loaded LibRocket Cursor document (from ")+
+			toString(p_cursorPath) + ")").c_str() ));
+	}
 }
 
 void LibRocketBackendSystem::updateElement( string p_element, string p_value )
@@ -123,13 +139,11 @@ void LibRocketBackendSystem::process()
 {
 	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
 
-
-
 	if (m_wndWidth!=gfx->getWindowWidth() || m_wndHeight!=gfx->getWindowHeight())
 	{
 		m_wndWidth = gfx->getWindowWidth();
 		m_wndHeight = gfx->getWindowHeight();
-		m_renderInterface->UpdateOnWindowResize();
+		m_renderInterface->updateOnWindowResize();
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 	
@@ -148,10 +162,6 @@ void LibRocketBackendSystem::process()
 	{
 		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
 	}
-
-	//Rocket::Core::Element* test = m_documents[0]->GetElementById("btn");
-	//if (test != NULL)
-	//	test->SetProperty("width", "800px");
 
 	m_rocketContext->Update();
 }
