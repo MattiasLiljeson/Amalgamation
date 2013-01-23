@@ -125,13 +125,13 @@ void LibRocketBackendSystem::process()
 
 
 
- 	if (m_wndWidth!=gfx->getWindowWidth() || m_wndHeight!=gfx->getWindowHeight())
- 	{
+	if (m_wndWidth!=gfx->getWindowWidth() || m_wndHeight!=gfx->getWindowHeight())
+	{
 		m_wndWidth = gfx->getWindowWidth();
- 		m_wndHeight = gfx->getWindowHeight();
+		m_wndHeight = gfx->getWindowHeight();
 		m_renderInterface->UpdateOnWindowResize();
- 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
- 	}
+		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
+	}
 	
 
 	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),

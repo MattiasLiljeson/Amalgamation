@@ -17,6 +17,13 @@
 class StaticProp : public Component
 {
 public:
-	StaticProp(){};
+	StaticProp(int p_meshInfo = -1, bool p_isLevelPiece = false)
+	{ 
+		meshInfo		= p_meshInfo;
+		isLevelPiece	= p_isLevelPiece;
+	};
 	~StaticProp(){};
+
+	int		meshInfo;
+	bool	isLevelPiece;
 };

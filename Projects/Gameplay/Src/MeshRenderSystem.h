@@ -1,11 +1,23 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <RenderInterface.h>
 
 class GraphicsBackendSystem;
 struct InstanceData;
+// =======================================================================================
+//                                      MeshRenderSystem
+// =======================================================================================
 
-class MeshRenderSystem : public EntitySystem
+///---------------------------------------------------------------------------------------
+/// \brief	Brief
+///        
+/// # MeshRenderSystem
+/// Detailed description.....
+/// Created on: 22-1-2013 
+///---------------------------------------------------------------------------------------
+
+class MeshRenderSystem : public EntitySystem, public RenderInterface
 {
 public:
 	MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend );
@@ -14,6 +26,7 @@ public:
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
+	virtual void render();
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	GraphicsBackendSystem* m_gfxBackend;

@@ -11,6 +11,7 @@
 #include <ServerStaticObjectsSystem.h>
 #include <TimerSystem.h>
 #include <EntityFactory.h>
+#include <LevelGenSystem.h>
 #include <ServerPickingSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
@@ -111,6 +112,13 @@ namespace Srv
 		/* Timer																*/
 		/************************************************************************/
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+		/************************************************************************/
+		/* Level Generation														*/
+		/************************************************************************/
+		LevelGenSystem* levelGen = new LevelGenSystem(NULL, m_server);
+		m_world->setSystem( levelGen, true);
+		levelGen->run();
 
 		/************************************************************************/
 		/* Physics																*/
@@ -228,8 +236,7 @@ namespace Srv
 			ProcessMessage* message = messages.front();
 			messages.pop();
 
-			if( message->type == MessageType::TERMINATE )
-			{
+			if(message && message->type == MessageType::TERMINATE ){
 				m_running = false;
 			}
 			delete message;

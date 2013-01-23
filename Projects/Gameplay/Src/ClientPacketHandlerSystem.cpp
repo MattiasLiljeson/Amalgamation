@@ -373,9 +373,16 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		m_totalNumberOfStaticPropPacketsReceived += 1;
 		m_staticPropIdentities.push( p_packet.networkIdentity );
+		int meshId = -1;
 
-		int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+		GraphicsBackendSystem* gfxBackend = static_cast<GraphicsBackendSystem*>(
+			m_world->getSystem( SystemType::GraphicsBackendSystem ));
+		
+		if (p_packet.isLevelProp)
+			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		else
+			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
 		if (p_packet.meshInfo == 1)
 			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(

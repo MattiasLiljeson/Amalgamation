@@ -25,8 +25,6 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <MinigunModule.h>
-#include <GameplayTags.h>
-#include <PlayerCameraController.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 #include <RocketLauncherModule.h>
@@ -60,21 +58,17 @@
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
-#include <LookAtSystem.h>
 #include <HudSystem.h>
-#include <CameraInfo.h>
-#include <LookAtEntity.h>
-#include <MainCamera.h>
-#include <MinigunModuleControllerSystem.h>
-#include <PlayerCameraControllerSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
+#include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <GraphicsRendererSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -88,11 +82,7 @@ using namespace std;
 #include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
-#include <FrameFinalizerSystem.h>
-#include <AntTweakBarSystem.h>
 #include <ParticleRenderSystem.h>
-
-
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -264,15 +254,11 @@ void ClientApplication::initSystems()
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
 
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( graphicsBackend,
-		rocketBackend );
+	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( rocketBackend );
 	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
-
-	FrameFinalizerSystem* finalizer = new  FrameFinalizerSystem( graphicsBackend );
-	m_world->setSystem( finalizer, true);
 
 	/************************************************************************/
 	/* Network																*/
@@ -293,6 +279,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Audio																*/
 	/************************************************************************/
+#ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
 
@@ -301,12 +288,20 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+#endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
+
+	/************************************************************************/
+	/* Graphics representer													*/
+	/************************************************************************/
+	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
+		renderer, rocketRender, particleRender, antTweakBar, lightRender);
+	m_world->setSystem( graphicsRender, true );
 
 	m_world->initialize();
 }
@@ -332,32 +327,22 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
+	LevelPieceFileMapping modelLevelFileMapping;	
+	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = modelLevelFileMapping.getModelFileName(i);
+		graphicsBackend->loadSingleMeshFromFile( modelName,
+				&TESTMODELPATH);
+	}
 
+	//ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
+	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 
+	//entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
-
-	ConnectionPointCollection connectionPoints;
-	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
-													 &TESTMODELPATH);
-
-	// Test chamber
-	entity = m_world->createEntity();
-	component = new RenderInfo( testchamberId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform( 5.0f, 10.0f, 19.0f);
-	entity->addComponent( ComponentType::Transform, component );
-	m_world->addEntity(entity);
-
-	
-
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
-	entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
-	m_world->addEntity(entity);
+	//m_world->addEntity(entity);
 
 	//InitModulesTestByAnton();
 
@@ -499,7 +484,7 @@ void ClientApplication::InitModulesTestByAnton()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
+//	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 //	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
 
 	// Create a box that the spaceship can pickup

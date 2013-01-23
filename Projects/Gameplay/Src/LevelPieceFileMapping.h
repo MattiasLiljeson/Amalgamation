@@ -1,25 +1,31 @@
 #pragma once
 
 #include <vector>
-
+#include <string>
 using namespace std;
-
-struct AglMatrix;
-
 // =======================================================================================
-//                                ConnectionPointCollection
+//                                      LevelPieceModelMapping
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of connection point data
+/// \brief	Brief
 ///        
-/// # HardPointCollection
+/// # LevelPieceModelMapping
 /// Detailed description.....
-/// Created on: 8-1-2013 
+/// Created on: 18-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ConnectionPointCollection
+class LevelPieceFileMapping
 {
 public:
-	vector<AglMatrix> m_collection;
+	LevelPieceFileMapping();
+	virtual ~LevelPieceFileMapping();
+
+	const string&	getModelFileName(int p_id) const;
+	int				getModelFileCount() const;
+	int				getRandomPieceId() const;
+	int				getEndPlugId() const;
+protected:
+private:
+	vector<string> m_fileNames;
 };

@@ -48,12 +48,12 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 			// Get rigidbody from id
 			Body* b = m_physicsController->getBody(body->m_id);
 
-			// Handle parenting
-			handleCompoundBodyDependencies(p_entities[i]);
-
-			// Update the rigidbody
-			if (!b->IsStatic())
+			if (b->IsCompoundBody() || !((RigidBody*)b)->IsStatic())
 			{
+				// Handle parenting
+				handleCompoundBodyDependencies(p_entities[i]);
+
+				// Update the rigidbody
 				AglMatrix world = b->GetWorld();
 				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
 					ComponentType::Transform));
@@ -63,17 +63,18 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 				AglMatrix::matrixToComponents(world, scale, rot, pos);
 				t->setTranslation(pos);
 				t->setRotation(rot);
-				t->setScale(scale);
+				//t->setScale(scale);
 
 				if (!b->IsCompoundBody())
 				{
 					if (((RigidBody*)b)->GetType() == BOX)
 					{
 						RigidBodyBox* box = (RigidBodyBox*)b;
-						t->setScale(box->GetSizeAsVector3()*0.5f);
+						//t->setScale(box->GetSizeAsVector3()*0.5f);
 					}
 				}
 			}
+
 
 		}
 

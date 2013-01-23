@@ -1,25 +1,21 @@
 #pragma once
 
-#include <vector>
-
-using namespace std;
-
-struct AglMatrix;
-
 // =======================================================================================
-//                                ConnectionPointCollection
+//                                      RenderInterface
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of connection point data
+/// \brief	A simple interface that allows for system to be rendered.
 ///        
-/// # HardPointCollection
+/// # RenderInterface
 /// Detailed description.....
-/// Created on: 8-1-2013 
+/// Created on: 22-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ConnectionPointCollection
+class RenderInterface
 {
 public:
-	vector<AglMatrix> m_collection;
+	RenderInterface(){}
+	virtual ~RenderInterface(){}
+	virtual void render()=0;
 };

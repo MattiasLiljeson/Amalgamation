@@ -26,6 +26,7 @@
 #include "PlayerScore.h"
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
+#include "StaticProp.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -139,6 +140,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 
+				StaticProp* prop = static_cast<StaticProp*>(entities[i]->
+					getComponent(ComponentType::StaticProp));
+
 				EntityCreationPacket data;
 				data.entityType = static_cast<char>(EntityType::StaticProp);
 				data.owner = -1; //NO OWNER
@@ -146,7 +150,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				data.meshInfo		= 0;
+				data.isLevelProp = prop->isLevelPiece;
+				data.meshInfo = prop->meshInfo;  
+
 //				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}

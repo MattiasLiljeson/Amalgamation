@@ -22,7 +22,6 @@ AntTweakBarSystem::~AntTweakBarSystem()
 void AntTweakBarSystem::process()
 {
 	feedInput();
-	AntTweakBarWrapper::getInstance()->render();
 }
 
 void AntTweakBarSystem::feedInput()
@@ -104,4 +103,9 @@ void AntTweakBarSystem::feedInput()
 		antTweakBar->setKeyPressed( TW_KEY_F4, 0 );
 	}
 
+}
+
+void AntTweakBarSystem::render()
+{
+	AntTweakBarWrapper::getInstance()->render();
 }

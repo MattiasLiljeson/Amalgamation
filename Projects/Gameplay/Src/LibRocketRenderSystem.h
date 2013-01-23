@@ -1,8 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
+#include <RenderInterface.h>
 
-
-class GraphicsBackendSystem;
 class LibRocketBackendSystem;
 
 // =======================================================================================
@@ -16,17 +15,15 @@ class LibRocketBackendSystem;
 /// Detailed description.....
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
-class LibRocketRenderSystem : public EntitySystem
+class LibRocketRenderSystem : public EntitySystem, public RenderInterface
 {
 public:
-	LibRocketRenderSystem( GraphicsBackendSystem* p_gfxBackend,
-		LibRocketBackendSystem* p_rocketBackend );
+	LibRocketRenderSystem( LibRocketBackendSystem* p_rocketBackend );
 	~LibRocketRenderSystem();
 
 	virtual void process();
-
+	virtual void render();
 private:
-	GraphicsBackendSystem* m_gfxBackend;
 	LibRocketBackendSystem* m_libRocketBackend;
 };
 
