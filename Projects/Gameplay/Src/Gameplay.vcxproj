@@ -41,7 +41,6 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="libRocketBackendSystem.h" />
-    <ClInclude Include="LibRocketRenderSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="LookAtSystem.h" />
@@ -141,7 +140,6 @@
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
-    <ClCompile Include="LibRocketRenderSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />

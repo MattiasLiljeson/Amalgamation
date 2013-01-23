@@ -27,20 +27,20 @@ void GraphicsRendererSystem::initialize(){
 }
 void GraphicsRendererSystem::process(){
 	initMeshPass();
-	//m_meshRenderer->render();
+	m_meshRenderer->render();
 	endMeshPass();
 
 	initParticlePass();
-	//m_particleRenderSystem->render();
+	m_particleRenderSystem->render();
 	endParticlePass();
 
 	initLightPass();
-	//m_lightRenderSystem->render();
+	m_lightRenderSystem->render();
 	endLightPass();
 
 	initGUIPass();
+	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
-	//m_antTweakBarSystem->render();
 	endGUIPass();
 
 	flipBackbuffer();

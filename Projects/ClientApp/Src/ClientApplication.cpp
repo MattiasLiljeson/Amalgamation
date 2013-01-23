@@ -79,7 +79,6 @@ using namespace std;
 // MISC
 #include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include <LibRocketRenderSystem.h>
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
@@ -253,9 +252,6 @@ void ClientApplication::initSystems()
 
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender, true );
-
-	LibRocketRenderSystem* rocketRender = new LibRocketRenderSystem( rocketBackend );
-	m_world->setSystem( rocketRender, true );
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
@@ -300,7 +296,7 @@ void ClientApplication::initSystems()
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
-		renderer, rocketRender, particleRender, antTweakBar, lightRender);
+		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
 
 	m_world->initialize();
