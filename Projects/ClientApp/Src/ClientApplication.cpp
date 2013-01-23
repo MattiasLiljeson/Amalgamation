@@ -324,7 +324,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Gameplay																*/
 	/************************************************************************/
-	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
+	m_world->setSystem( new DisplayPlayerScoreSystem(rocketBackend, m_client), true );
 	m_world->setSystem(new ClientPickingSystem(m_client), true);
 
 	/************************************************************************/

@@ -29,10 +29,10 @@ void HudSystem::processEntities( const vector<Entity*>& p_entities )
 		
 		if( hudElement->hasChanged() )
 		{
-			string print = hudElement->getValue() + "\n";
-			DEBUGPRINT((print.c_str()));
+			//string print = hudElement->getValue() + "\n";
+			//DEBUGPRINT((print.c_str()));
 
-			//m_backend->updateElement( hudElement->getElement(), hudElement->getValue());
+			m_backend->updateElement(0, hudElement->getElement(), hudElement->getValue());
 			
 			hudElement->setRead();
 		}

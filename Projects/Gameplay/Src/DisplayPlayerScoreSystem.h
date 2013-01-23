@@ -4,6 +4,7 @@
 
 class TcpClient;
 class HudElement;
+class LibRocketBackendSystem;
 
 // =======================================================================================
 //	DisplayPlayerScoreSystem
@@ -20,9 +21,11 @@ class HudElement;
 class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem(TcpClient* p_client);
+	DisplayPlayerScoreSystem(LibRocketBackendSystem* p_librocketBackend, TcpClient* p_client);
 
 	~DisplayPlayerScoreSystem();
+
+	void initialize();
 
 	void processEntities( const vector<Entity*>& p_entities );
 
@@ -35,5 +38,6 @@ public:
 private:
 	HudElement* m_playerScoreMenu;
 	TcpClient*	m_client;
-
+	int			m_scoreTableDocId;
+	LibRocketBackendSystem* m_librocketBackend;
 };

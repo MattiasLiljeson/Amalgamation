@@ -41,7 +41,7 @@
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
-    <ClInclude Include="libRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketBackendSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
     <ClInclude Include="LightSources.h" />
@@ -77,6 +77,7 @@
     <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
+    <ClInclude Include="ScoreDataTableSystem.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerPickingSystem.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
+    <ClCompile Include="ScoreDataTableSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />

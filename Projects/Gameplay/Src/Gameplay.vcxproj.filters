@@ -114,9 +114,6 @@
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="libRocketBackendSystem.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="LibRocketRenderInterface.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
@@ -406,6 +403,12 @@
     <ClInclude Include="PositionalSoundEffect.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="LibRocketBackendSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreDataTableSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -672,6 +675,9 @@
     </ClCompile>
     <ClCompile Include="PositionalSoundEffect.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreDataTableSystem.cpp">
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
