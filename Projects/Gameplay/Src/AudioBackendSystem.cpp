@@ -122,12 +122,24 @@ void AudioBackendSystem::playPositionalSoundEffect( string p_path, string p_file
 												   AglVector3 p_position )
 {
 	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
-		p_path.c_str(),
 		p_filename.c_str(),
+		p_path.c_str(),
 		false);
 	PositionalSoundCreationInfo positionCreationalSoundInfo = PositionalSoundCreationInfo(
 		p_position);
 	int soundIndex = m_soundWrapper->createNewPositionalSound( &creationalSoundInfo,
 		&positionCreationalSoundInfo );
+	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
+	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
+}
+
+void AudioBackendSystem::playSoundEffect(string p_path, string p_filename)
+{
+	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
+		p_filename.c_str(),
+		p_path.c_str(),
+		false);
+	int soundIndex = m_soundWrapper->createAmbientSound(&creationalSoundInfo);
+	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
 	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
 }

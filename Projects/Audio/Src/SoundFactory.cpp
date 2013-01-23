@@ -13,12 +13,12 @@ SoundFactory::~SoundFactory()
 Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 {
 	XAUDIO2_BUFFER buffer = {0};
-	initBuffer(&buffer, p_info);
 	WAVEFORMATEX waveFormatEx;
-
+	initBuffer(&buffer, p_info);
 	createSoundBuffer(p_info->getFullFilePathString().c_str(), &buffer, &waveFormatEx);
+
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
-	return new Sound(soundVoice,buffer,p_info->volume);
+	return new Sound(soundVoice, buffer, p_info->volume);
 }
 
 PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 

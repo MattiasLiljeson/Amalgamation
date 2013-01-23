@@ -29,12 +29,21 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Play a simple sound effect at a position in the world. The effect cannot be
-	/// changed after it has been started.
+	/// altered after it has been started.
 	/// \param p_position
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void playPositionalSoundEffect(string p_path, string p_filename,
 		AglVector3 p_position);
+
+	///-----------------------------------------------------------------------------------
+	/// Play a simple sound effect without position. The effect cannot be altered after
+	/// it has been started.
+	/// \param p_path
+	/// \param p_filename
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void playSoundEffect(string p_path, string p_filename);
 
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
