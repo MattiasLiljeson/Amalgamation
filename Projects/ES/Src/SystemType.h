@@ -54,7 +54,6 @@ public:	//Enums
 		ServerStaticObjectsSystem,
 		ClientPickingSystem,
 		ServerPickingSystem,
-		LibRocketRenderSystem,
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
