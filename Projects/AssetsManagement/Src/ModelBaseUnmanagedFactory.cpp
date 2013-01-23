@@ -134,3 +134,42 @@ ModelResource* ModelBaseUnmanagedFactory::getFallback()
 	// Done
 	return model;
 }
+
+void ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
+{
+	//ANTON
+	/*AglMeshHeader h;
+	h.id = pData->ID;
+	h.nameID = mScene->addName(pData->Name);
+	h.indexCount = pData->IndicesCount;
+	h.vertexCount = pData->VertexCount;
+	h.vertexFormat = pData->VertexFormat;
+	h.transform = pData->Transform;
+
+	//Write a loose bsp tree for the mesh
+	vector<AglVector3> verts;
+	AglVertexSTBN* oldV = (AglVertexSTBN*)pData->Vertices;
+	for (int j = 0; j < h.vertexCount; j++)
+	{
+		verts.push_back(oldV[j].position);
+	}
+	vector<unsigned int> ind;
+	for (int j = 0; j < h.indexCount; j++)
+	{
+		ind.push_back(pData->Indices[j]);
+	}
+
+	cout << "Creating bounding volumes for mesh " << h.id << endl;
+	//Would be optimal with hulls rather than a generic mesh
+	h.minimumOBB = AglOBB::constructMinimum(verts, ind);
+	h.boundingSphere = AglBoundingSphere::minimumBoundingSphere(h.minimumOBB.getCorners());
+	cout << "Bounding volumes created for mesh " << h.id << endl << endl;
+
+	//AglInteriorSphereGrid* spheregrid = new AglInteriorSphereGrid(3, verts, ind, h.id);
+
+	//mScene->addSphereGrid(spheregrid);
+
+	//AglLooseBspTreeConstructor treeConst(h.id, verts, ind);
+	//mScene->addBspTree(treeConst.createTree());*/
+	//END ANTON
+}

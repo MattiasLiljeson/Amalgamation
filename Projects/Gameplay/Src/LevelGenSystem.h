@@ -39,7 +39,7 @@ public:
 	void createLevelEntities();
 	const AglVector3& getWorldMin() const;
 	const AglVector3& getWorldMax() const;
-
+	vector<LevelPiece*> getGeneratedPieces() const;
 protected:
 
 private:

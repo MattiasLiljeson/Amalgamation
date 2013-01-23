@@ -127,7 +127,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 	entity->addComponent(ComponentType::Transform, p_piece->getTransform());
 	entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
 	
-	entity->addComponent(ComponentType::BodyInitData,
+	/*entity->addComponent(ComponentType::BodyInitData,
 		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
 			obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
 			0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true));
@@ -136,7 +136,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 			AglMatrix(AglVector3::one(), p_piece->getTransform()->getRotation(),
 				p_piece->getTransform()->getTranslation() ) ) );
 
-	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
+	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());*/
 
 	return entity;
 }
@@ -315,6 +315,10 @@ const AglVector3&  LevelGenSystem::getWorldMin() const
 const AglVector3&  LevelGenSystem::getWorldMax() const
 {
 	return m_worldMax;
+}
+vector<LevelPiece*> LevelGenSystem::getGeneratedPieces() const
+{
+	return m_generatedPieces;
 }
 
 void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )

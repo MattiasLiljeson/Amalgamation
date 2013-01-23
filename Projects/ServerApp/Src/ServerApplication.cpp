@@ -188,7 +188,7 @@ namespace Srv
 		Component* component;
 		// Add a grid of cubes to test instancing.
 
-		float maxVal = 2;
+		/*float maxVal = 2;
 		float minVal = -75;
 		int size = 8;
 		for( int x=0; x<size; x++ )
@@ -221,7 +221,7 @@ namespace Srv
 					m_world->addEntity(entity);
 				}
 			}
-		}
+		}*/
 		InitModulesTestByAnton();
 	}
 

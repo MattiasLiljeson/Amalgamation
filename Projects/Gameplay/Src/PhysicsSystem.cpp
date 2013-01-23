@@ -9,6 +9,8 @@
 #include "ShipModule.h"
 #include "Connector1to2Module.h"
 #include "NetworkSynced.h"
+#include "LevelGenSystem.h"
+#include "LevelPiece.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -24,6 +26,51 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::initialize()
 {
+	LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	if (levelSystem)
+	{
+		AglVector3 minP = levelSystem->getWorldMin();
+		AglVector3 maxP = levelSystem->getWorldMax();
+		vector<LevelPiece*> pieces = levelSystem->getGeneratedPieces();
+		m_physicsController->InitStaticBodiesOctree(minP, maxP);
+		for (unsigned int i = 0; i < pieces.size(); i++)
+		{
+			const ModelResource* mr = pieces[i]->getModelResource();
+			Transform transform = pieces[i]->getTransform()->getMatrix();
+
+			AglMatrix rt;
+			AglMatrix::componentsToMatrix(rt, AglVector3(1, 1, 1), transform.getRotation(), transform.getTranslation());
+			if (pieces[i]->getTypeId() == 0)
+			{
+				float s = transform.getScale().x;
+				AglBoundingSphere bs = mr->meshHeader.boundingSphere;
+				AglVector3 pos;
+				pos.transform(rt);
+				m_physicsController->AddSphere(AglMatrix::createTranslationMatrix(pos),
+					bs.radius*s, 1, 
+					AglVector3::zero(), 
+					AglVector3::zero(), 
+					true,
+					NULL, true, true);
+			}
+			else
+			{
+				AglMatrix s = AglMatrix::createScaleMatrix(transform.getScale());
+				AglOBB obb = mr->meshHeader.minimumOBB;
+				AglMatrix w = obb.world;
+				w *= rt;
+
+				AglVector3 size = obb.size;
+				size.transform(s);
+				m_physicsController->AddBox(w,
+					size, 1, 
+					AglVector3::zero(), 
+					AglVector3::zero(), 
+					true,
+					NULL, true, true);
+			}
+		}
+	}
 }
 
 void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)

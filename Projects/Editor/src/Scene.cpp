@@ -231,7 +231,13 @@ void Scene::Draw()
 	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
 	for (unsigned int i = 0; i < cp.size(); i++)
 	{
-		SPHEREMESH->Draw(cp[i].transform*invMax, AglVector3(1, 0, 1));
+		int parent = cp[i].parentMesh;
+		AglMatrix t = AglMatrix::identityMatrix();
+		if (parent >= 0)
+		{
+			t = mMeshes[parent]->getTransform();
+		}
+		SPHEREMESH->Draw(cp[i].transform*t*invMax, AglVector3(1, 0, 1));
 	}
 
 	AglVector3 minP = mMin;

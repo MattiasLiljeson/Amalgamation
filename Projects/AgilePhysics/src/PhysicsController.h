@@ -38,7 +38,7 @@ private:
 
 	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
 
-	Octree mStaticBodies;
+	Octree* mStaticBodies;
 
 	float mTimeAccum;
 
@@ -156,6 +156,8 @@ public:
 	void ActivateBody(unsigned int pBody);
 	void InactivateBody(unsigned int pBody);
 	bool IsActive(unsigned int pBody);
+
+	void InitStaticBodiesOctree(AglVector3 pMin, AglVector3 pMax);
 };
 
 #endif
