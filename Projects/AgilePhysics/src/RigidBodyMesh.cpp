@@ -47,6 +47,7 @@ RigidBodyMesh::RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pB
 	mSphereGrid = NULL;
 	ind = 0;
 	mSize = pSize;
+	SetImpulseEnabled(true);
 	CalculateInertiaTensor();
 }
 
@@ -87,6 +88,8 @@ bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
 	b *= aInv;
 	vector<AglVector3> corn;
 	AglVector3 HalfSize = pBox->GetSizeAsVector3() / 2;
+	//HalfSize = AglVector3(1000000, 1000000, 1000000);
+
 	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]));
 	corn.push_back(AglVector3( HalfSize[0], -HalfSize[1], -HalfSize[2]));
 	corn.push_back(AglVector3(-HalfSize[0],  HalfSize[1], -HalfSize[2]));
@@ -219,6 +222,9 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 	while (toEvaluate.size() > 0)
 	{
 		AglBspNode curr = toEvaluate.back();
+		curr.maxPoint.x += 0.00001f;
+		curr.maxPoint.y += 0.00001f;
+		curr.maxPoint.z += 0.00001f;
 		toEvaluate.pop_back();
 
 		points2[0] = curr.minPoint;
@@ -234,6 +240,7 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 		for (int i = 0; i < 6; i++)
 		{
 			float overlap = OverlapAmount(p_points, points2, axes[i]);
+
 			if (overlap <= 0)
 			{
 				col = false;

@@ -141,23 +141,20 @@ AglLooseBspTree* ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
 {
 	//ANTON
 	AglMeshHeader h = p_mesh->getHeader();
+	AglVertexSTBN* v = (AglVertexSTBN*)p_mesh->getVertices();
+	unsigned int* ind = p_mesh->getIndices();
 
-	//Write a loose bsp tree for the mesh
-	vector<AglVector3> verts;
-	AglVertexSTBN* oldV = (AglVertexSTBN*)p_mesh->getVertices();
-	for (int j = 0; j < h.vertexCount; j++)
+	vector<AglVector3> vertices;
+	vector<unsigned int> indices;
+	for (unsigned int i = 0; i < h.vertexCount; i++)
 	{
-		verts.push_back(oldV[j].position);
+		vertices.push_back(v[i].position);
 	}
-	vector<unsigned int> ind;
-	unsigned int* oldInd = p_mesh->getIndices();
-	for (int j = 0; j < h.indexCount; j++)
+	for (unsigned int i = 0; i < h.indexCount; i++)
 	{
-		ind.push_back(oldInd[j]);
+		indices.push_back(ind[i]);
 	}
-
-	AglLooseBspTreeConstructor treeConst(h.id, verts, ind);
-	AglLooseBspTree* tree = treeConst.createTree();
-	return tree;
+	AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
+	return constructor.createTree();
 	//END ANTON
 }

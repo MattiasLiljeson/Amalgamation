@@ -222,7 +222,7 @@ namespace Srv
 				}
 			}
 		}*/
-		InitModulesTestByAnton();
+		//InitModulesTestByAnton();
 	}
 
 	

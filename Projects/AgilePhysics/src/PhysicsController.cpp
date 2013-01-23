@@ -128,7 +128,7 @@ int PhysicsController::AddMeshBody(AglMatrix pWorld, AglOBB pOBB, AglBoundingSph
 {
 	RigidBodyMesh* m = new RigidBodyMesh(pWorld, pOBB, pBoundingSphere, pSize, pBSPTree);
 	m->SetCollisionEnabled(true);
-	
+	m->Activate();
 	//Meshes are always static
 	mStaticBodies->Insert(m);
 	mBodies.push_back(m);
