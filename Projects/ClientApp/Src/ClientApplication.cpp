@@ -83,6 +83,8 @@ using namespace std;
 #include <LightRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
+#include <LightsComponent.h>
+#include <LightInstanceData.h>
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -335,15 +337,78 @@ void ClientApplication::initEntities()
 				&TESTMODELPATH);
 	}
 
-	//ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	//connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+	// Ambient light
+	float scale = 1000.0f;
+	Light ambientLight;
+	AglMatrix::componentsToMatrix(
+		ambientLight.offset,
+		AglVector3( scale, scale, scale ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
+		AglVector3(3,3,3)
+		);
+	ambientLight.instanceData.range = scale;
+	ambientLight.instanceData.attenuation[0] = 1.0f;
+	ambientLight.instanceData.ambient[0] = 0.2;
+	ambientLight.instanceData.ambient[1] = 0.2;
+	ambientLight.instanceData.ambient[2] = 0.2f;
 
-	//entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+	LightsComponent* ambientLightComp = new LightsComponent();
+	ambientLightComp->addLight( ambientLight );
+	
+	entity = m_world->createEntity();
+	component = new Transform( 5.0f, 10.0f, 19.0f);
+	entity->addComponent( ComponentType::Transform, component );
+	entity->addComponent( ComponentType::LightsComponent, ambientLightComp );
 
-	//m_world->addEntity(entity);
+	m_world->addEntity(entity);
 
+	/************************************************************************/
+	/* HARD CODED LIGHTS													*/
+	/************************************************************************/
+
+	LightsComponent* lightGridComp = new LightsComponent();
+	LightInstanceData lightGridInstData;
+	float range = 10.0f;
+	lightGridInstData.range = range;
+	lightGridInstData.worldTransform[0] = range;
+	lightGridInstData.worldTransform[5] = range;
+	lightGridInstData.worldTransform[10] = range;
+	lightGridInstData.attenuation[0] = 0.0f;
+	lightGridInstData.attenuation[1] = 0.0f;
+	lightGridInstData.attenuation[2] = 0.7f;
+	lightGridInstData.spotPower = 25.0f;
+	lightGridInstData.specular[3] = 1.0f;
+	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
+	lightGridInstData.ambient[2] = 0.0f;
+
+	float intensitity = 0.2f;
+	for( int x=0; x<5; x++ )
+	{
+		for( int y=0; y<5; y++ )
+		{
+			for( int z=0; z<5; z++ )
+			{
+				lightGridInstData.diffuse[0] = intensitity * x;
+				lightGridInstData.diffuse[1] = intensitity * y;
+				lightGridInstData.diffuse[2] = intensitity * z;
+
+				Light light;
+				light.instanceData = lightGridInstData;
+				AglMatrix::componentsToMatrix( 
+					light.offset,
+					AglVector3( range, range, range ),
+					AglQuaternion::identity(),
+					AglVector3( -x*(range+1.0f), -y*(range+1.0f), -z*(range+1.0f) )
+					);
+
+				lightGridComp->addLight( light );
+			}
+		}
+	}
+	entity = m_world->createEntity();
+	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
+	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
+	m_world->addEntity( entity );
 	//InitModulesTestByAnton();
 
 	/*

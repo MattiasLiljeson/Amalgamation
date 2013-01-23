@@ -70,6 +70,7 @@ public:	//Enums
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		LightsComponent,
 		NUM_COMPONENT_TYPES
 	};
 
