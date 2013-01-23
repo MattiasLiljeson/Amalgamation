@@ -222,7 +222,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			m_tcpClient->setPingToServer( m_currentPing );
 
 			// Clients score
-			// TODO: (Johan) Handle score packet...
 			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));

@@ -151,6 +151,8 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::Transform, t);
 
 	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 	m_world->addEntity(entity);
 
 	EntityCreationPacket data;
@@ -162,8 +164,6 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
 
-	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 
 	m_server->broadcastPacket(data.pack());
 
