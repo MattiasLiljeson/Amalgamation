@@ -1,3 +1,5 @@
+#include "../Game/perFrameCBuffer.hlsl"
+
 cbuffer VertexProgramCBuffer: register(b1)
 {
     float4 color;
@@ -29,7 +31,7 @@ VertexOut VS(VertexIn p_input)
 	VertexOut vout;
 
 	p_input.position.z = 0.99f - p_input.position.z;
-	vout.position = mul(float4(p_input.position,1.0f), vp);
+	vout.position = mul(float4(p_input.position,1.0f), gViewProj);
 	vout.texCoord = p_input.texCoord;
     
 	return vout;
