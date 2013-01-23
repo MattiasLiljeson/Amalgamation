@@ -38,6 +38,17 @@ RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSpher
 	ind = 0;
 	CalculateInertiaTensor();
 }
+RigidBodyMesh::RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree)
+	: RigidBody(pWorld, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), true, false, true)
+{
+	mOBB = pOBB;
+	mBoundingSphere = pBoundingSphere; 
+	mBSPTree = pBSPTree;
+	mSphereGrid = NULL;
+	ind = 0;
+	mSize = pSize;
+	CalculateInertiaTensor();
+}
 
 RigidBodyMesh::~RigidBodyMesh()
 {
@@ -74,7 +85,6 @@ bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
 	AglMatrix aInv = a.inverse();
 	AglMatrix b = pBox->GetWorld();
 	b *= aInv;
-
 	vector<AglVector3> corn;
 	AglVector3 HalfSize = pBox->GetSizeAsVector3() / 2;
 	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]));

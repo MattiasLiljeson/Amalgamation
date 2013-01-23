@@ -55,19 +55,27 @@ void PhysicsSystem::initialize()
 			}
 			else
 			{
-				AglMatrix s = AglMatrix::createScaleMatrix(transform.getScale());
+				AglVector3 s = transform.getScale();
 				AglOBB obb = mr->meshHeader.minimumOBB;
 				AglMatrix w = obb.world;
 				w *= rt;
 
-				AglVector3 size = obb.size;
-				size.transform(s);
-				m_physicsController->AddBox(w,
+				if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
+				{
+					//NOT FIXED YET! WILL CRASH. No support for non identity scaling
+					int k = 0;
+					k = 1 / k;
+				}
+
+				//AglVector3 size = obb.size;
+				//size.transform(s);
+				/*m_physicsController->AddBox(w,
 					size, 1, 
 					AglVector3::zero(), 
 					AglVector3::zero(), 
 					true,
-					NULL, true, true);
+					NULL, true, true);*/
+				m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, AglVector3(1, 1, 1), mr->looseBspTree);
 			}
 		}
 	}

@@ -29,6 +29,7 @@ private:
 	AglInteriorSphereGrid* mSphereGrid;
 	vector<pair<float, AglVector3>> normalList;
 	int ind;
+	AglVector3 mSize;
 private:
 	void CalculateInertiaTensor();
 	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
@@ -38,6 +39,8 @@ private:
 public:
 	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 					AglInteriorSphereGrid* pSphereGrid = NULL, bool pImpulseEnabled = true);
+	RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree = NULL);
+
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();
 	AglVector3 GetLocalCenterOfMass(){ return GetOBB().world.GetTranslation(); }

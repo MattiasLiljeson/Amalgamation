@@ -3,6 +3,7 @@
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
 #include "ParticleSystemCollection.h"
+#include <AglLooseBspTree.h>
 
 
 // =======================================================================================
@@ -21,7 +22,7 @@
 struct ModelResource
 {
 public:
-	ModelResource() {meshId=-1; name="noname";}
+	ModelResource() {meshId=-1; name="noname"; looseBspTree = NULL;}
 	virtual ~ModelResource(){}
 
 	int							meshId;
@@ -30,4 +31,5 @@ public:
 	ConnectionPointCollection	connectionPoints;
 	ParticleSystemCollection	particleSystems;
 	AglMatrix					transform;
+	AglLooseBspTree*			looseBspTree;
 };
