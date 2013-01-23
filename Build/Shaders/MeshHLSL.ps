@@ -11,6 +11,7 @@ Texture2D DiffuseTexture;
 Texture2D SpecularTexture;
 Texture2D GlowTexture;
 Texture2D NormalTexture;
+Texture2D GradientTexture;
 SamplerState SampleType : register(s0);
 
 struct VOut
@@ -47,7 +48,23 @@ float4 PShader(VOut pIn) : SV_TARGET
         float3 diffuse;
         float3 specular;
         float3 glow;
-        if (Emissive.w != 0)
+		if (Flags.z != 0)
+		{
+			float gradient = GradientTexture.Sample(SampleType, pIn.texCoord).x;
+			int level = gradient * 3;
+			level = min(level, 2);
+			
+			if (level == 0)
+				diffuse = float3(1, 1, 1);
+			else if (level == 1)
+				diffuse = float3(1, 1, 0);
+			else
+				diffuse = float3(0, 0, 1);
+				
+			if (Emissive.w != 0)
+            diffuse = diffuse * DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
+		}
+        else if (Emissive.w != 0)
             diffuse = DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
         else
             diffuse = Diffuse.xyz;

@@ -127,10 +127,6 @@ AglParticleSystem* AglScene::getParticleSystem(int p_index)
 {
 	return m_particleSystems[p_index];
 }
-void AglScene::addGradient(AglGradient* p_gradient)
-{
-	m_gradients.push_back(p_gradient);
-}
 string AglScene::getName(int p_index)
 {
 	return m_names[p_index];
@@ -235,6 +231,11 @@ void AglScene::addSphereGrid(AglInteriorSphereGrid* p_sphereGrid)
 void AglScene::addConnectionPoint(AglConnectionPoint p_connectionPoint)
 {
 	m_connectionPoints.push_back(p_connectionPoint);
+}
+int AglScene::addGradient(AglGradient* p_gradient)
+{
+	m_gradients.push_back(p_gradient);
+	return m_gradients.size()-1;
 }
 AglSceneDesc AglScene::getSceneData()
 {

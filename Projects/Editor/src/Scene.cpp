@@ -298,16 +298,9 @@ void Scene::AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCu
 		}
 	}
 }
-void Scene::AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCurrent)
+int Scene::AddGradient(AglGradient* pGradient)
 {
-	mAglScene->addGradient(pGradient);
-	if (pAddToMeshes)
-	{
-		for (unsigned int i = 0; i < mMeshes.size(); i++)
-		{
-			mMeshes[i]->AddGradient(pGradient, pSetAsCurrent);
-		}
-	}
+	return mAglScene->addGradient(pGradient);
 }
 void Scene::AddParticleSystem(AglParticleSystem* pSystem)
 {

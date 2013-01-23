@@ -228,12 +228,6 @@ public:
 	unsigned int getSkeletonCount();
 
 	///
-	/// Adds a gradient to the scene
-	/// \param p_gradient The gradient
-	///
-	void addGradient(AglGradient* p_gradient);
-
-	///
 	/// Appends a transform to a dynamic node. SHOULD BE MOVED!
 	/// \param p_index Index to the dynamic node
 	/// \param p_transform The transform to append
@@ -330,6 +324,12 @@ public:
 	/// \param The connection point to add
 	///-----------------------------------------------------------------------------------
 	void addConnectionPoint(AglConnectionPoint p_connectionPoint);
+
+	///-----------------------------------------------------------------------------------
+	/// Adds a gradient data set to the scene
+	/// \param The gradient to add
+	///-----------------------------------------------------------------------------------
+	int addGradient(AglGradient* p_gradient);
 
 	///-----------------------------------------------------------------------------------
 	/// Gets a matrix corresponding to the axes in the coordinate system
