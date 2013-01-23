@@ -198,11 +198,11 @@ namespace Srv
 				for( int z=0; z<size; z++ )
 				{
 					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					//pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-					//	(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
+					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
+						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
 
 					entity = m_world->createEntity();
-					component = new Transform(pos, AglQuaternion::identity(), AglVector3(3, 3, 3));
+					component = new Transform(pos, AglQuaternion::identity(), AglVector3(1, 1, 1));
 					entity->addComponent( ComponentType::Transform, component );
 					entity->addComponent( ComponentType::StaticProp, new StaticProp());
 
@@ -213,7 +213,7 @@ namespace Srv
 					entity->addComponent( ComponentType::BodyInitData, 
 						new BodyInitData(pos,
 						AglQuaternion::identity(),
-						AglVector3(3, 3, 3), AglVector3(0, 0, 0), 
+						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 						AglVector3(0, 0, 0), BodyInitData::BOX, 
 						BodyInitData::STATIC, 
 						BodyInitData::SINGLE, true, true));
