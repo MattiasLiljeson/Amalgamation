@@ -74,7 +74,7 @@ private:
 	{
 		string filename;
 		AglMatrix transform;
-		int level;
+		bool uneven; // whether this is an uneven instance in creation hierarchy 
 	};
 
 
@@ -100,6 +100,7 @@ private:
 
 	virtual ModelResource* getFallback();
 
+	bool isMirrorMatrix(const AglMatrix& p_matrix);
 
 
 	ModelResource* getCube();

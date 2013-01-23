@@ -53,7 +53,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),0};
+				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),false};
 
 				// DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
 
@@ -84,7 +84,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const string& p_name, 
 															   const string* p_path/*=NULL*/)
 {
-	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),0};
+	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix(),false};
 	//
 	vector<ModelResource*>* models = NULL;
 	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
@@ -125,14 +125,17 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 																			scene,
 																			scene->getMeshes().size(),
 																			instanceInstructions);	
+					// if (!isMirror) currentInstance.uneven=!currentInstance.uneven;
 					int size = prefetched->size();
 					for (int n=firstMeshPos;n<size;n++)
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						// Get flip based on instantiation level
 						AglMatrix unevenXMirror = AglMatrix::identityMatrix();
-						if (currentInstance.level%2==1)
-							unevenXMirror.data[0]*=-1;
+						if (currentInstance.uneven==true) // if uneven instance, flip
+						{	
+							unevenXMirror.data[0]*=-1;						
+						}
 						// mesh transform
 						model->transform = unevenXMirror*model->transform*currentInstance.transform;
 						// 
@@ -166,8 +169,10 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					// Get flip based on instantiation level
 					AglMatrix unevenXMirror = AglMatrix::identityMatrix();
-					if (currentInstance.level%2==1)
-						unevenXMirror.data[0]*=-1;
+					if (currentInstance.uneven==true) // if uneven instance, flip
+					{	
+						unevenXMirror.data[0]*=-1;						
+					}
 					// mesh transform
 					model->transform = unevenXMirror*model->transform*currentInstance.transform;
 					// 
@@ -220,7 +225,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 					{
 						InstanceInstr inst = {parsedAction.first.filename,
 			                                  aglMeshHeader.transform,
-											  p_instanceData->level+1};
+											  !p_instanceData->uneven};
 
 						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
@@ -342,7 +347,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 				{
 					InstanceInstr inst = {parsedAction.first.filename,
 						cp->transform*p_model->transform,
-						p_instanceData->level+1};
+						!p_instanceData->uneven};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
@@ -460,4 +465,12 @@ ModelResource* ModelExtendedManagedFactory::getSphere()
 	{
 		return m_modelResourceCache->getResource(errname)->collection[0];
 	}
+}
+
+bool ModelExtendedManagedFactory::isMirrorMatrix(const AglMatrix& p_matrix )
+{
+	AglVector3 row1 = AglVector3(p_matrix.data[0],p_matrix.data[1],p_matrix.data[2]);
+	AglVector3 row2 = AglVector3(p_matrix.data[3],p_matrix.data[4],p_matrix.data[5]);
+	AglVector3 row3 = AglVector3(p_matrix.data[6],p_matrix.data[7],p_matrix.data[8]);
+	return AglVector3::dotProduct(AglVector3::crossProduct(row1,row2),row3)>0.0f?false:true;
 }
