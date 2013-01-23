@@ -74,7 +74,6 @@ private:
 	{
 		string filename;
 		AglMatrix transform;
-		bool uneven; // whether this is an uneven instance in creation hierarchy 
 	};
 
 
@@ -93,7 +92,7 @@ private:
 							  Mesh* p_mesh);
 
 	virtual void readAndStoreEmpties(int p_modelNumber, 
-		ModelResource* p_model, AglScene* p_scene,
+		ModelResource* p_model,AglMatrix& p_offset, AglScene* p_scene,
 		const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
 		vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
