@@ -21,6 +21,7 @@ private:
 	static void TW_CALL LoadGradient(void *clientData);
 	static void TW_CALL SetName(const void *value, void *clientData);
 	static void TW_CALL GetName(void *value, void *clientData);
+	static void TW_CALL AddLayer(void *clientData);
 public:
 	MaterialDialog();
 	~MaterialDialog();

@@ -2,7 +2,7 @@
 
 AglGradientMaterial::AglGradientMaterial()
 {
-	color = AglVector4(0.5f, 0.5f, 0.5f, 1.0f);
+	color = AglVector4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 AglGradientMaterial::~AglGradientMaterial()
 {

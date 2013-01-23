@@ -2,16 +2,16 @@
 
 AglGradient::AglGradient()
 {
-	m_layers.push_back(AglGradientMaterial());
+	m_layers.push_back(new AglGradientMaterial());
 }
 AglGradient::~AglGradient()
 {
 }
-vector<AglGradientMaterial> AglGradient::getLayers()
+vector<AglGradientMaterial*> AglGradient::getLayers()
 {
 	return m_layers;
 }
-void AglGradient::addLayer(AglGradientMaterial p_layer)
+void AglGradient::addLayer(AglGradientMaterial* p_layer)
 {
 	m_layers.push_back(p_layer);
 }

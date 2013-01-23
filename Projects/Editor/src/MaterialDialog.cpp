@@ -101,10 +101,35 @@ void TW_CALL MaterialDialog::LoadGradient(void *clientData)
 	}
 	if (mat->gradientDataIndex < 0)
 	{
-		AglGradient* g = new AglGradient();
-		mat->gradientDataIndex = Scene::GetInstance()->AddGradient(g);
-
+		AddLayer(dialog);
 	}
+}
+void TW_CALL MaterialDialog::AddLayer(void *clientData)
+{
+	MaterialDialog* dialog = (MaterialDialog*)clientData;
+	AglMaterial* mat = dialog->m_material;
+	AglGradient* g;
+	if (mat->gradientDataIndex < 0)
+	{
+		g = new AglGradient();
+		mat->gradientDataIndex = Scene::GetInstance()->AddGradient(g);
+	}
+	else
+	{
+		g = Scene::GetInstance()->GetGradient(mat->gradientDataIndex);
+		g->addLayer(new AglGradientMaterial());
+	}
+	string name = "Layer" + toString(g->getLayers().size());
+
+	TwStructMember rgbaMembers[] = { 
+		{ "Red", TW_TYPE_FLOAT, offsetof(AglVector4, x), "min=0.1 max=1 step=0.01" },
+		{ "Green", TW_TYPE_FLOAT, offsetof(AglVector4, y), "min=0.1 max=1 step=0.01" },
+		{ "Blue", TW_TYPE_FLOAT, offsetof(AglVector4, z), "min=0.1 max=1 step=0.01" },
+		{ "Alpha", TW_TYPE_FLOAT, offsetof(AglVector4, w), "min=0.1 max=1 step=0.01" }};
+	TwType rgbatype = TwDefineStruct("COLOR4", rgbaMembers, 4, sizeof(AglVector4), NULL, NULL);
+
+	AglVector4* c = g->getLayerColorPointer(g->getLayers().size()-1);
+	TwAddVarRW(dialog->m_dialog, name.c_str(), TW_TYPE_COLOR4F, (void*)c, " group='Gradient Mapping'");
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)
 {
@@ -189,6 +214,9 @@ void MaterialDialog::setMaterial(int pIndex)
 
 	TwAddVarRW(m_dialog, "Tess", tessType, &m_material->tesselationFactor, " group='Properties' ");
 	TwAddVarRW(m_dialog, "Displacement", TW_TYPE_FLOAT, (void*)&m_material->displacement, " group='Properties' min=0.0 max=10.0 step=0.01");
+
+	TwAddButton(m_dialog, "Add Layer", AddLayer, this, " label='Add Layer' key=c help='Load an Agile file into the editor.' group='Gradient Mapping'");
+
 
 	show();
 }

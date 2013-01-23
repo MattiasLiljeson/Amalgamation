@@ -179,6 +179,15 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	matbuffer->EmissiveDiffuseMapped = AglVector4(pMaterial.emissive, float(pMaterial.diffuseTextureNameIndex >= 0 && DIFFUSEON));
 	matbuffer->EyePositionSpecularMapped = AglVector4(Camera::GetInstance()->Position().x, Camera::GetInstance()->Position().y, Camera::GetInstance()->Position().z, float(pMaterial.specularTextureNameIndex >= 0  && SPECULARON));
 	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0 && NORMALON), (float)(pMaterial.gradientTextureNameIndex >= 0), 0);
+	if (pMaterial.gradientDataIndex >= 0)
+	{
+		AglGradient* g = Scene::GetInstance()->GetGradient(pMaterial.gradientDataIndex);
+		vector<AglGradientMaterial*> layers = g->getLayers();
+		for (unsigned int i = 0; i < layers.size(); i++)
+			matbuffer->gradientColors[i] = layers[i]->color;
+		matbuffer->Flags.w = layers.size();
+	}
+	
 	mDeviceContext->Unmap(mMaterialBuffer, 0);
 
 	mDeviceContext->PSSetConstantBuffers(bufferNumber, 1, &mMaterialBuffer);

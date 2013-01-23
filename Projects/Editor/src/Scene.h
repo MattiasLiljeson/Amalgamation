@@ -99,6 +99,10 @@ public:
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);
 	AglAnimationLayer* GetAnimationLayer(int pIndex);
+	AglGradient* GetGradient(int pIndex)
+	{
+		return mAglScene->getGradient(pIndex);
+	}
 
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
 	int AddGradient(AglGradient* pGradient);

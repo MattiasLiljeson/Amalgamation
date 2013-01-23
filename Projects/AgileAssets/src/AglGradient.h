@@ -25,7 +25,7 @@ using namespace std;
 class AglGradient
 {
 private:
-	vector<AglGradientMaterial> m_layers; //< List of layers of GradientMaterial
+	vector<AglGradientMaterial*> m_layers; //< List of layers of GradientMaterial
 public:
 	///
 	/// Constructor
@@ -42,13 +42,18 @@ public:
 	/// Return the layers of the Gradient.
 	/// \return The layers.
 	///
-	vector<AglGradientMaterial> getLayers();
+	vector<AglGradientMaterial*> getLayers();
 
 	///
 	/// Adds a layer to the list of layers
 	/// \param The new layer.
 	///
-	void addLayer(AglGradientMaterial pLayer);
+	void addLayer(AglGradientMaterial* pLayer);
+
+	AglVector4* getLayerColorPointer(int p_index)
+	{
+		return &m_layers[p_index]->color;
+	}
 
 };
 

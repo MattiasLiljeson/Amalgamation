@@ -6,6 +6,7 @@ cbuffer Material
 	float4 Emissive;
     float4 EyePosition;
     float4 Flags;
+	float4 gradientColors[10];
 };
 Texture2D DiffuseTexture;
 Texture2D SpecularTexture;
@@ -51,15 +52,10 @@ float4 PShader(VOut pIn) : SV_TARGET
 		if (Flags.z != 0)
 		{
 			float gradient = GradientTexture.Sample(SampleType, pIn.texCoord).x;
-			int level = gradient * 3;
-			level = min(level, 2);
+			int level = gradient * Flags.w;
+			level = min(level, Flags.w-1);
 			
-			if (level == 0)
-				diffuse = float3(1, 1, 1);
-			else if (level == 1)
-				diffuse = float3(1, 1, 0);
-			else
-				diffuse = float3(0, 0, 1);
+			diffuse = gradientColors[level];
 				
 			if (Emissive.w != 0)
             diffuse = diffuse * DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
