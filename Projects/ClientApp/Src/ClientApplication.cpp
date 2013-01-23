@@ -378,8 +378,7 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
 	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH,
-		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav",
-		true));
+		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);

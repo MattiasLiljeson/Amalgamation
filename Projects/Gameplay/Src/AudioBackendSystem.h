@@ -26,6 +26,16 @@ class AudioBackendSystem : public EntitySystem
 public:
 	AudioBackendSystem();
 	virtual ~AudioBackendSystem();
+
+	///-----------------------------------------------------------------------------------
+	/// Play a simple sound effect at a position in the world. The effect cannot be
+	/// changed after it has been started.
+	/// \param p_position
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void playPositionalSoundEffect(string p_path, string p_filename,
+		AglVector3 p_position);
+
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
 	int createAmbientSound(BasicSoundCreationInfo* p_info);

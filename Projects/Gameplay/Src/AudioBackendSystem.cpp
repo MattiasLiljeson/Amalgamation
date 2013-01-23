@@ -117,3 +117,17 @@ void AudioBackendSystem::updateOutputMatrix( int p_index )
 {
 	m_soundWrapper->updateOutputMatrix(p_index);
 }
+
+void AudioBackendSystem::playPositionalSoundEffect( string p_path, string p_filename,
+												   AglVector3 p_position )
+{
+	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
+		p_path.c_str(),
+		p_filename.c_str(),
+		false);
+	PositionalSoundCreationInfo positionCreationalSoundInfo = PositionalSoundCreationInfo(
+		p_position);
+	int soundIndex = m_soundWrapper->createNewPositionalSound( &creationalSoundInfo,
+		&positionCreationalSoundInfo );
+	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
+}
