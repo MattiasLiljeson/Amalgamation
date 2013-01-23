@@ -1,11 +1,9 @@
 #pragma once
-#define WINAPI
 
 #include <EntitySystem.h>
 #include <ConnectionPointCollection.h>
 #include <AglMesh.h>
 #include <vector>
-#include <utility>
 #include "LevelPieceFileMapping.h"
 #include <ModelBaseUnmanagedFactory.h>
 
@@ -14,6 +12,7 @@ class GraphicsBackendSystem;
 class LevelPiece;
 class TcpServer;
 struct ModelResource;
+struct AglVector3;
 
 using namespace std;
 // =======================================================================================
