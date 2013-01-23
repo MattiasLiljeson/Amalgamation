@@ -3,7 +3,7 @@
 
 ParticleEmitters::ParticleEmitters()
 {
-	m_type = ComponentType::ParticleEmitters;
+	m_componentType = ComponentType::ParticleEmitters;
 }
 
 

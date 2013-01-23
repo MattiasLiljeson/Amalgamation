@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
+    <ClInclude Include="AssemblageException.h" />
     <ClInclude Include="AssemblageHelper.h" />
     <ClInclude Include="AssemblageReader.h" />
     <ClInclude Include="ComponentData.h" />
@@ -90,11 +91,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

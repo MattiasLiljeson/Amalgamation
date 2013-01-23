@@ -23,6 +23,7 @@
     <ClInclude Include="ClientConnectToServerSystem.h" />
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
+    <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
@@ -44,6 +45,8 @@
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
     <ClInclude Include="LightSources.h" />
+    <ClInclude Include="LoadMesh.h" />
+    <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LookAtSystem.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
@@ -111,6 +114,8 @@
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="EntityParent.h" />
+    <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
   </ItemGroup>
@@ -121,10 +126,12 @@
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
+    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
@@ -144,6 +151,8 @@
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
     <ClCompile Include="LightSources.cpp" />
+    <ClCompile Include="LoadMesh.cpp" />
+    <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
@@ -195,6 +204,7 @@
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
   </ItemGroup>

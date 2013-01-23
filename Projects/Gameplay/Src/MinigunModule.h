@@ -34,6 +34,7 @@ struct MinigunRay
 class MinigunModule: public Component
 {
 public:
+	MinigunModule(){coolDown=0.0f; laserSightEntity=-1;}
 	MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~MinigunModule();
 

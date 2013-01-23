@@ -15,10 +15,10 @@ public:
 	virtual ~Component() = 0;
 
 	virtual void init( vector<ComponentData> p_initData );
-	virtual void setType( ComponentType::ComponentTypeIdx p_type );
-	virtual ComponentType::ComponentTypeIdx getType();
+	virtual void setComponentType( ComponentType::ComponentTypeIdx p_type );
+	virtual ComponentType::ComponentTypeIdx getComponentType();
 protected:
-	ComponentType::ComponentTypeIdx m_type;
+	ComponentType::ComponentTypeIdx m_componentType;
 	static int m_counter;
 	int m_id;
 };

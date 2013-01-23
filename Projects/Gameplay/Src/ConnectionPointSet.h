@@ -24,6 +24,8 @@ struct ConnectionPoint
 	AglMatrix cpTransform;
 	int		  cpConnectedEntity;
 
+	ConnectionPoint() {cpConnectedEntity=-1;}
+
 	ConnectionPoint(AglMatrix p_transform)
 	{
 		cpTransform = p_transform;
@@ -35,6 +37,8 @@ class ConnectionPointSet: public Component
 {
 public:
 	ConnectionPointSet();
+	ConnectionPointSet(const vector<ConnectionPoint>& p_connectionPoints);
+	ConnectionPointSet(const vector<AglMatrix>& p_connectionPoints);
 	~ConnectionPointSet();
 	vector<ConnectionPoint> m_connectionPoints;
 	int m_highlighted;
