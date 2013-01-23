@@ -56,49 +56,15 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			AglMatrix final;
 			AglMatrix base = trans->getMatrix();
-			AglMatrix scale = AglMatrix::createScaleMatrix( lights->at(j).scale );
-			AglMatrix rotation = AglMatrix::createRotationMatrix( lights->at(j).rotation );
-			AglMatrix translation = AglMatrix::createTranslationMatrix( lights->at(j).translation );
-			final =  scale * base * rotation * translation;
+			//AglMatrix scale = AglMatrix::createScaleMatrix( lights->at(j).scale );
+			//AglMatrix rotation = AglMatrix::createRotationMatrix( lights->at(j).rotation );
+			//AglMatrix translation = AglMatrix::createTranslationMatrix( lights->at(j).translation );
+			//final =  scale * rotation * translation * base;
+			final = lights->at(j).offset * base;
 
 			LightInstanceData inst = lights->at(j).instanceData;
 			inst.setWorldTransform( final );
 			instDatas.push_back( inst );
-		}
-	}
-
-	// hard coded lights
-	LightInstanceData instData;
-	float range = 10.0f;
-	instData.range = range;
-	instData.worldTransform[0] = range;
-	instData.worldTransform[5] = range;
-	instData.worldTransform[10] = range;
-	//instData.setScale( AglVector3( 10.0, 10.0, 10.0 ) );
-	instData.attenuation[0] = 1.1f;
-	instData.attenuation[1] = 0.01f;
-	instData.attenuation[2] = 0.1f;
-	instData.spotPower = 100.0f;
-	instData.specular[3] = 1.0f;
-	instData.type = LightTypes::E_LightTypes_POINT;
-
-	instData.ambient[2] = 0.005f;
-
-	float intensitity = 1.0f;
-	for( int x=0; x<5; x++ )
-	{
-		instData.worldTransform[3] = x * (range+1.0f) - 25.0f;
-		instData.diffuse[0] += intensitity;
-		for( int y=0; y<5; y++ )
-		{
-			instData.worldTransform[7] = y * (range+1.0f) - 25.0f;
-			instData.diffuse[1] += intensitity / 5.0f;
-			for( int z=0; z<5; z++ )
-			{
-				instData.worldTransform[11] = z * (range+1.0f) - 25.0f;
-				instData.diffuse[2] += intensitity / 25.0f;
-				//instDatas.push_back( instData );
-			}
 		}
 	}
 

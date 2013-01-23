@@ -10,14 +10,13 @@ using namespace std;
 struct AglMatrix;
 struct AglVector3;
 struct AglQuaternion;
-//struct LightInstanceData;
-
 
 struct Light
 {
-	AglVector3 scale;
-	AglQuaternion rotation;
-	AglVector3 translation;
+	//AglVector3 scale;
+	//AglQuaternion rotation;
+	//AglVector3 translation;
+	AglMatrix offset;
 	LightInstanceData instanceData;
 	Light();
 };

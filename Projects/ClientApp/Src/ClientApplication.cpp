@@ -333,10 +333,6 @@ void ClientApplication::initEntities()
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 
-
-
-
-
 	ConnectionPointCollection connectionPoints;
 	int testchamberId = graphicsBackend->loadSingleMeshFromFile( "test_parts_3sphere.agl", 
 													 &TESTMODELPATH);
@@ -348,23 +344,23 @@ void ClientApplication::initEntities()
 	component = new Transform( 5.0f, 10.0f, 19.0f);
 	entity->addComponent( ComponentType::Transform, component );
 
-	float scale = 25.0f;
+	float scale = 1000.0f;
+	Light ambientLight;
+	AglMatrix::componentsToMatrix(
+		ambientLight.offset,
+		AglVector3( scale, scale, scale ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
+		AglVector3(3,3,3)
+		);
+	ambientLight.instanceData.range = scale;
+	ambientLight.instanceData.attenuation[0] = 1.0f;
+	ambientLight.instanceData.ambient[0] = 0.2;
+	ambientLight.instanceData.ambient[1] = 0.2;
+	ambientLight.instanceData.ambient[2] = 0.2f;
 
-	LightInstanceData lightInstanceData;
-	lightInstanceData.range = scale;
-	lightInstanceData.attenuation[0] = 1.0f;
-	lightInstanceData.ambient[0] = lightInstanceData.ambient[1] = lightInstanceData.ambient[2] = 0.2f;
-	lightInstanceData.diffuse[0] = 0.2f;
-	
-	Light light;
-	light.scale = AglVector3( scale, scale, scale );
-	light.instanceData = lightInstanceData;
-
-	LightsComponent* lights = new LightsComponent();
-	lights->addLight( light );
-
-	component = static_cast<Component*>(lights);
-	entity->addComponent( ComponentType::LightsComponent, component );
+	LightsComponent* ambientLightComp = new LightsComponent();
+	ambientLightComp->addLight( ambientLight );
+	entity->addComponent( ComponentType::LightsComponent, ambientLightComp );
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
@@ -375,6 +371,53 @@ void ClientApplication::initEntities()
 
 	m_world->addEntity(entity);
 
+	/************************************************************************/
+	/* HARD CODED LIGHTS													*/
+	/************************************************************************/
+
+	LightsComponent* lightGridComp = new LightsComponent();
+	LightInstanceData lightGridInstData;
+	float range = 10.0f;
+	lightGridInstData.range = range;
+	lightGridInstData.worldTransform[0] = range;
+	lightGridInstData.worldTransform[5] = range;
+	lightGridInstData.worldTransform[10] = range;
+	lightGridInstData.attenuation[0] = 0.0f;
+	lightGridInstData.attenuation[1] = 0.0f;
+	lightGridInstData.attenuation[2] = 12.1f;
+	lightGridInstData.spotPower = 25.0f;
+	lightGridInstData.specular[3] = 1.0f;
+	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
+	lightGridInstData.ambient[2] = 0.0f;
+
+	float intensitity = 10.0f;
+	for( int x=0; x<5; x++ )
+	{
+		for( int y=0; y<5; y++ )
+		{
+			for( int z=0; z<5; z++ )
+			{
+				lightGridInstData.diffuse[0] = intensitity * x;
+				lightGridInstData.diffuse[1] = intensitity * y;
+				lightGridInstData.diffuse[2] = intensitity * z;
+
+				Light light;
+				light.instanceData = lightGridInstData;
+				AglMatrix::componentsToMatrix( 
+					light.offset,
+					AglVector3( range, range, range ),
+					AglQuaternion::identity(),
+					AglVector3( -x*(range+1.0f), -y*(range+1.0f), -z*(range+1.0f) )
+					);
+
+				lightGridComp->addLight( light );
+			}
+		}
+	}
+	entity = m_world->createEntity();
+	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
+	entity->addComponent( ComponentType::Transform, new Transform( 0.0f, 0.0f, 0.0f ) );
+	m_world->addEntity( entity );
 	//InitModulesTestByAnton();
 
 	/*

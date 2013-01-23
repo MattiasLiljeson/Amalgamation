@@ -69,23 +69,24 @@ struct LightInstanceData
 
 	}
 
-	void setTranslation( AglVector3 p_translation )
-	{
-		// worldTransform is col-major
-		worldTransform[3] = p_translation.x;
-		worldTransform[7] = p_translation.y;
-		worldTransform[11] = p_translation.z;
-	}
+	// Use setWorldTransform instead! Set range manually!
+	//void setTranslation( AglVector3 p_translation )
+	//{
+	//	// worldTransform is col-major
+	//	worldTransform[3] = p_translation.x;
+	//	worldTransform[7] = p_translation.y;
+	//	worldTransform[11] = p_translation.z;
+	//}
 
-	void setScale( AglVector3 p_scale )
-	{
-		worldTransform[0] = p_scale.x;
-		worldTransform[5] = p_scale.y;
-		worldTransform[10] = p_scale.z;
-		worldTransform[15] = 1.0f;
+	//void setScale( AglVector3 p_scale )
+	//{
+	//	worldTransform[0] = p_scale.x;
+	//	worldTransform[5] = p_scale.y;
+	//	worldTransform[10] = p_scale.z;
+	//	worldTransform[15] = 1.0f;
 
-		range = p_scale.length();
-	}
+	//	range = p_scale.length();
+	//}
 
 	void setWorldTransform( AglMatrix p_transform )
 	{
