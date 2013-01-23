@@ -47,8 +47,8 @@
 #include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
 #include "AudioInfo.h"
-#include "..\..\Audio\Src\BasicSoundCreationInfo.h"
-#include "..\..\Audio\Src\PositionalSoundCreationInfo.h"
+#include <BasicSoundCreationInfo.h>
+#include <PositionalSoundCreationInfo.h>
 #include "AudioBackendSystem.h"
 #include "PositionalSoundSource.h"
 
@@ -297,21 +297,12 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
-			// HACK: MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
-//			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
-//				TESTSOUNDEFFECTPATH.c_str(), true);
-//			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-//				p_packet.translation );
-//			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-//				m_world->getSystem(SystemType::AudioBackendSystem));
-//			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-//			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
-
-//			entity->addComponent(ComponentType::PositionalSoundEffect,
-//				new PositionalSoundEffect("Sound Design_Vintage Sci Fi_Spaceship_Alien_Warps_Upwards_Short_HutchSFX.wav", true));
-			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE <-
-
+			// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
+			// because it was really weird to hear from the camera. This can of course
+			// be changed back if game play fails in this way, but it's at least more
+			// convenient for debugging!
+			component = new AudioListener();
+			entity->addComponent(ComponentType::AudioListener, component);
 		}
 
 		/************************************************************************/
@@ -348,9 +339,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 			entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-			// listener
-			component = new AudioListener();
-			entity->addComponent(ComponentType::AudioListener, component);
 
 			//Add a picking ray to the camera so that edit mode can be performed
 			entity->addComponent(ComponentType::PickComponent, new PickComponent());
