@@ -360,9 +360,6 @@
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="PositionalSoundEffect.h">
-      <Filter>Components\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerScore.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
@@ -371,6 +368,9 @@
     </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSource.h">
+      <Filter>Components\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,14 +599,14 @@
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="PositionalSoundEffect.cpp">
-      <Filter>Components\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerScore.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSource.cpp">
+      <Filter>Components\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

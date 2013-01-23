@@ -32,7 +32,7 @@
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
 #include <Transform.h>
-#include <PositionalSoundEffect.h>
+#include <PositionalSoundSource.h>
 #include <DebugMove.h>
 
 // Systems
@@ -376,8 +376,10 @@ void ClientApplication::initEntities()
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
 	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
-	entity->addComponent(ComponentType::PositionalSoundEffect, new PositionalSoundEffect(
-		"spaceship_laser.wav", true));
+	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH,
+		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav",
+		true));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);

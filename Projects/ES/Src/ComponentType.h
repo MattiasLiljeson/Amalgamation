@@ -28,7 +28,7 @@ public:	//Enums
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
-		PositionalSoundEffect,
+		PositionalSoundSource,
 		ShipFlyController,
 		ShipEditController,
 		Impulse,

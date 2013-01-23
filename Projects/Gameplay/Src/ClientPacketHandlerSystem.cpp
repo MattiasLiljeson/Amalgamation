@@ -50,7 +50,7 @@
 #include "..\..\Audio\Src\BasicSoundCreationInfo.h"
 #include "..\..\Audio\Src\PositionalSoundCreationInfo.h"
 #include "AudioBackendSystem.h"
-#include "PositionalSoundEffect.h"
+#include "PositionalSoundSource.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
