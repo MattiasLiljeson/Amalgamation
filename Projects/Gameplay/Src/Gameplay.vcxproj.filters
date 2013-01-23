@@ -398,6 +398,9 @@
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -650,6 +653,9 @@
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

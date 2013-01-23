@@ -54,6 +54,7 @@
 #include <PositionalSoundCreationInfo.h>
 #include "AudioBackendSystem.h"
 #include "PositionalSoundSource.h"
+#include "SpawnSoundEffectPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -151,37 +152,44 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			ps->setSpawnFrequency(data.spawnFrequency);
 		}
 #pragma endregion 
-		/************************************************************************/
-		/* Score is now included in player update client stats packets.			*/
-		/************************************************************************/
-		/*
-		else if(packetType == (char)PacketType::ScoresUpdate)
+		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
-			NetworkScoreUpdatePacket scoreUpdateData;
-			scoreUpdateData = readScorePacket( packet );
-
-			// HACK: This is VERY inefficient for large amount of
-			// network-synchronized entities. (Solve later)
-			for( unsigned int i=0; i<p_entities.size(); i++ )
+			SpawnSoundEffectPacket spawnSoundPacket;
+			spawnSoundPacket.unpack( packet );
+			if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				NetworkSynced* netSync = NULL;
-				netSync = static_cast<NetworkSynced*>(
-					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-
-				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
+				// Short positional sound effect.
+				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+					m_world->getSystem(SystemType::AudioBackendSystem));
+				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+					spawnSoundPacket.position);
+			}
+			else if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity != -1 )
+			{
+				// Attached to an entity.
+				// HACK: (Johan) Again with this linear search, solve quickly now, or soon!
+				for(unsigned int i=0; i<p_entities.size(); i++)
 				{
-					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
-						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
-					if( scoreComponent )
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(
+						p_entities[i]->getComponent(ComponentType::NetworkSynced));
+					if(netSync->getNetworkIdentity() == 
+						spawnSoundPacket.attachedToNetsyncEntity)
 					{
-						scoreComponent->setScore( scoreUpdateData.score );
+						p_entities[i]->addComponent(ComponentType::PositionalSoundSource,
+							new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+							true, 1.0f));
 					}
 				}
 			}
+			else
+			{
+				// Ambient sound effect.
+			}
 		}
-		*/
 		else if(packetType == (char)PacketType::Ping)
 		{
 			PingPacket pingPacket;

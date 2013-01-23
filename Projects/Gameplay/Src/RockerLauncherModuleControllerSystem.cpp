@@ -15,6 +15,7 @@
 #include "NetworkSynced.h"
 #include <PhysicsController.h>
 #include "StandardRocket.h"
+#include "SpawnSoundEffectPacket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -165,4 +166,12 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 
 	m_server->broadcastPacket(data.pack());
+
+	// Also send a positional sound effect.
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = t->getTranslation();
+	soundEffectPacket.attachedToNetsyncEntity = entity->getIndex();
+	m_server->broadcastPacket(soundEffectPacket.pack());
 }
