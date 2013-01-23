@@ -130,7 +130,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						 // mesh transform always relative its root which is identity
-						model->transform *= currentInstance.transform;
+						// model->transform *= currentInstance.transform;
 						// 
 						models->push_back(model);
 					}
@@ -161,7 +161,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					 // mesh transform always relative its root which is identity
-					model->transform *= currentInstance.transform;
+					// model->transform *= currentInstance.transform;
 					// 
 					models->push_back(model);
 				}
@@ -267,7 +267,7 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 		// store in model
 		model->name = p_instanceData->filename+suffix;
 		model->meshId = static_cast<int>(meshResultId);
-		model->transform = p_meshHeader->transform*p_instanceData->transform;
+		model->transform = p_meshHeader->transform;
 
 		// other model creation data
 		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);

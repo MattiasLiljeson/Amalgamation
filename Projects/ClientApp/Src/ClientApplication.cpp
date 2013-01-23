@@ -387,9 +387,9 @@ void ClientApplication::initEntities()
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.2;
-	ambientLight.instanceData.ambient[1] = 0.2;
-	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.ambient[0] = 0.8f;
+	ambientLight.instanceData.ambient[1] = 0.8f;
+	ambientLight.instanceData.ambient[2] = 0.8f;
 
 	LightsComponent* ambientLightComp = new LightsComponent();
 	ambientLightComp->addLight( ambientLight );
