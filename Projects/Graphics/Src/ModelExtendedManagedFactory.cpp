@@ -131,7 +131,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*prefetched)[0]!=NULL)
 					{
 						ModelResource* model = (*prefetched)[0];
-						readAndStoreEmpties(-1,model,model->transform*currentInstance.transform,
+						readAndStoreEmpties(-1,model,currentInstance.transform,
 							scene,&currentInstance,instanceInstructions); 
 					}
 					//
@@ -231,7 +231,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const I
 						InstanceInstruction inst = {parsedAction.first.filename,
 			                                  aglMeshHeader.transform};
 
-						DEBUGWARNING(( ("Mesh with instancing instruction, empties are recommended instead. Unexpected behaviour may occur.").c_str() ));
+						DEBUGWARNING(("Mesh with instancing instruction, empties are recommended instead. Unexpected behaviour may occur."));
 						// Not possible yet-> p_model->instances.push_back(inst);
 						p_outInstanceInstructions->push_back(inst);
 					}
