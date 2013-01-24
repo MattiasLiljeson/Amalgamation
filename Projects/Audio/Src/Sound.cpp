@@ -18,6 +18,9 @@ Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer,
 
 	m_sourceVoice->SetVolume(m_volume);
 	m_sourceState = new XAUDIO2_VOICE_STATE();
+
+	// NOTE: (Johan) Careful!
+//	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 }
 
 Sound::~Sound()
@@ -59,8 +62,8 @@ HRESULT Sound::restart()
 HRESULT Sound::resumeOrPlay()
 {
 	HRESULT hr = S_OK;
-	if(m_sourceState->BuffersQueued == 0)
-		hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
+//	if(m_sourceState->BuffersQueued == 0)
+//		hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	hr = m_sourceVoice->Start(0);
 	return hr;
 }

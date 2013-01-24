@@ -19,6 +19,7 @@
     <ClInclude Include="PositionalSoundCreationInfo.h" />
     <ClInclude Include="SoundBufferAndHeader.h" />
     <ClInclude Include="SoundDefines.h" />
+    <ClInclude Include="SoundDeleteAfterPlayback.h" />
     <ClInclude Include="SoundFactory.h" />
     <ClInclude Include="SoundEnums.h" />
     <ClInclude Include="SoundOrientation.h" />
