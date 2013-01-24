@@ -73,6 +73,7 @@
 #include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
 #include <PositionalSoundSystem.h>
+#include <NetsyncDirectMapperSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <GraphicsRendererSystem.h>
 #include <DebugMovementSystem.h>
@@ -298,11 +299,11 @@ void ClientApplication::initSystems()
 	ClientConnectToServerSystem* connect =
 		new ClientConnectToServerSystem( m_client);
 	m_world->setSystem( connect, true );
-
+	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/

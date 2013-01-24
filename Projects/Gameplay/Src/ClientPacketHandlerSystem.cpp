@@ -32,10 +32,6 @@
 #include "PacketType.h"
 #include "PickComponent.h"
 #include "ParticleSystemEmitter.h"
-
-// Debug
-#include <DebugUtil.h>
-#include <ToString.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
@@ -55,6 +51,11 @@
 #include "AudioBackendSystem.h"
 #include "PositionalSoundSource.h"
 #include "SpawnSoundEffectPacket.h"
+#include "NetsyncDirectMapperSystem.h"
+
+// Debug
+#include <DebugUtil.h>
+#include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -109,33 +110,28 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				data.entityType == (char)EntityType::Prop ||
 				data.entityType == (char)EntityType::ShipModule)
 			{
-
-				// HACK: This is VERY inefficient for large amount of
-				// network-synchronized entities. (Solve later)
-				for( unsigned int i=0; i<p_entities.size(); i++ )
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity( data.networkIdentity );
+				if(entity != NULL)
 				{
-					NetworkSynced* netSync = NULL;
-					netSync = static_cast<NetworkSynced*>(
+					Transform* transform = NULL;
+					transform = static_cast<Transform*>(
 						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-					if( netSync->getNetworkIdentity() == data.networkIdentity )
-					{
-						Transform* transform = NULL;
-						transform = static_cast<Transform*>(
-							m_world->getComponentManager()->getComponent(
-							p_entities[i]->getIndex(), ComponentType::Transform ) );
-						transform->setTranslation( data.translation );
-						transform->setRotation( data.rotation );
-						transform->setScale( data.scale );
+						entity->getIndex(), ComponentType::Transform ) );
+					transform->setTranslation( data.translation );
+					transform->setRotation( data.rotation );
+					transform->setScale( data.scale );
 
-						Extrapolate* extrapolate = NULL;
-						extrapolate = static_cast<Extrapolate*>(
-							p_entities[i]->getComponent(ComponentType::Extrapolate) );
-						extrapolate->serverUpdateTimeStamp = data.timestamp;
-						extrapolate->velocityVector = data.velocity;
-						extrapolate->angularVelocity = data.angularVelocity;
-					}
+					Extrapolate* extrapolate = NULL;
+					extrapolate = static_cast<Extrapolate*>(
+						entity->getComponent(ComponentType::Extrapolate) );
+					extrapolate->serverUpdateTimeStamp = data.timestamp;
+					extrapolate->velocityVector = data.velocity;
+					extrapolate->angularVelocity = data.angularVelocity;
 				}
+
 			}
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
@@ -169,20 +165,17 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
 			{
-				// Attached to an entity.
-				// HACK: (Johan) Again with this linear search, solve quickly now, or soon!
-				for(unsigned int i=0; i<p_entities.size(); i++)
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity(
+					spawnSoundPacket.attachedToNetsyncEntity );
+				if( entity != NULL )
 				{
-					NetworkSynced* netSync = static_cast<NetworkSynced*>(
-						p_entities[i]->getComponent(ComponentType::NetworkSynced));
-					if(netSync->getNetworkIdentity() == 
-						spawnSoundPacket.attachedToNetsyncEntity)
-					{
-						p_entities[i]->addComponent(ComponentType::PositionalSoundSource,
-							new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-							true, 1.0f));
-					}
+					entity->addComponent(ComponentType::PositionalSoundSource,
+						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+						true, 1.0f));
 				}
 			}
 			else
