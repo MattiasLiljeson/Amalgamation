@@ -49,10 +49,10 @@ void PhysicsSystem::initialize()
 			if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
 			{
 				//NOT FIXED YET! WILL CRASH. No support for non identity scaling
-				int k = 0;
-				k = 1 / k;
+				//int k = 0;
+				//k = 1 / k;
 			}
-			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, AglVector3(1, 1, 1), mr->looseBspTree);
+			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, s, mr->looseBspTree);
 		}
 	}
 }

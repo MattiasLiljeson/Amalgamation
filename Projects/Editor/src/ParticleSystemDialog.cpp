@@ -136,10 +136,9 @@ void TW_CALL ParticleSystemDialog::LoadTexture(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		removePath(file);
-		file = Scene::GetInstance()->GetFolder() + file;
+		int index = Scene::GetInstance()->AddName(file);
 		TextureManager::GetInstance()->LoadTexture(file);
-		ps->setTextureIndex(Scene::GetInstance()->AddName(file));
+		ps->setTextureIndex(index);
 	}
 }
 

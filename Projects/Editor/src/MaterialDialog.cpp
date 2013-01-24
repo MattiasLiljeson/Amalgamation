@@ -12,11 +12,11 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
+		//string path = getPath(file);
+		//removePath(file);
 		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
-		file = path + file;
+		//Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
+		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -28,11 +28,11 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
+		//string path = getPath(file);
+		//removePath(file);
 		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
-		file = path + file;
+		//Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
+		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -44,11 +44,7 @@ void TW_CALL MaterialDialog::LoadGlow(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
 		mat->glowTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->glowTextureNameIndex);
-		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -60,11 +56,7 @@ void TW_CALL MaterialDialog::LoadNormal(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
 		mat->normalTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->normalTextureNameIndex);
-		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -76,11 +68,7 @@ void TW_CALL MaterialDialog::LoadDisplacement(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
 		mat->displacementTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->displacementTextureNameIndex);
-		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -92,11 +80,7 @@ void TW_CALL MaterialDialog::LoadGradient(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		string path = getPath(file);
-		removePath(file);
 		mat->gradientTextureNameIndex = Scene::GetInstance()->AddName(file);
-		Scene::GetInstance()->AddPath(path, mat->gradientTextureNameIndex);
-		file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 	if (mat->gradientDataIndex < 0)

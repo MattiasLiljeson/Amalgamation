@@ -54,11 +54,34 @@ int TextureManager::LoadTexture(string pPath)
 	std::copy(pPath.begin(), pPath.end(), path2.begin());
 	ID3D11ShaderResourceView* srv = loadTexture(mDevice, pPath.c_str());
 
-	TextureData* d = new TextureData();
-	d->SRV = srv;
-	d->Path = pPath;
-	mTextureData.push_back(d);
-	return mTextureData.size()-1;
+	if (!srv)
+	{
+		string msg = "The file: '" + pPath + "' has been moved or deleted. Press OK to locate it. CANCEL to ignore.";
+		int proceed = MessageBox(NULL, msg.c_str(), "Texture Warning", MB_OKCANCEL);
+		if (proceed == IDOK)
+		{
+			pPath = openfilename();
+			if (pPath != "")
+			{
+				return LoadTexture(pPath);
+			}
+			else
+				return -1;
+		}
+		else
+		{
+			return -1;
+		}
+		
+	}
+	else
+	{
+		TextureData* d = new TextureData();
+		d->SRV = srv;
+		d->Path = pPath;
+		mTextureData.push_back(d);
+		return mTextureData.size()-1;
+	}
 }
 TextureData* TextureManager::GetTexture(int pIndex)
 {

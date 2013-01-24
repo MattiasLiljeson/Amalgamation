@@ -127,8 +127,18 @@ AglParticleSystem* AglScene::getParticleSystem(int p_index)
 {
 	return m_particleSystems[p_index];
 }
-string AglScene::getName(int p_index)
+string AglScene::getName(int p_index, bool p_removePath)
 {
+	if (p_removePath)
+	{
+		string s = m_names[p_index];
+		int ind = s.find_last_of('\\');
+		if (ind == -1)
+			ind = s.find_last_of('/');
+		if (ind != -1)
+			s = s.substr(ind+1, s.size() - ind);
+		return s;
+	}
 	return m_names[p_index];
 }
 vector<AglMesh*> AglScene::getMeshes()
@@ -178,6 +188,11 @@ int AglScene::addName(string p_name)
 	}
 	m_names.push_back(p_name);
 	return m_names.size() - 1;
+}
+
+void AglScene::setName(int p_index, string p_name)
+{
+	m_names[p_index] = p_name;
 }
 void AglScene::addParticleSystem(AglParticleSystem* pParticleSystem)
 {

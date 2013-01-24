@@ -141,7 +141,7 @@ public:
 	/// \param p_index The index
 	/// \return The name at position p_index
 	///
-	string					getName(int p_index);
+	string					getName(int p_index, bool p_removePath = false);
 
 	///
 	/// Gets a gradient at a certain index
@@ -246,6 +246,8 @@ public:
 	/// \return The index to the name in the name array
 	///
 	int	 addName(string pName);
+
+	void setName(int p_index, string p_name);
 
 	///
 	/// Adds a mesh to the scene.

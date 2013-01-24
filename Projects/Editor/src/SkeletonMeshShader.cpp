@@ -131,8 +131,6 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	if (pMaterial.diffuseTextureNameIndex >= 0)
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.diffuseTextureNameIndex);
-		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(0, 1, &data->SRV);
@@ -140,8 +138,6 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	if (pMaterial.specularTextureNameIndex >= 0)
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.specularTextureNameIndex);
-		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(1, 1, &data->SRV);
@@ -149,8 +145,6 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	if (pMaterial.glowTextureNameIndex >= 0)
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.glowTextureNameIndex);
-		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(2, 1, &data->SRV);
@@ -158,8 +152,6 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	if (pMaterial.normalTextureNameIndex >= 0)
 	{
 		string s = Scene::GetInstance()->GetName(pMaterial.normalTextureNameIndex);
-		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(3, 1, &data->SRV);
