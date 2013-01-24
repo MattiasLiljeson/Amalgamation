@@ -29,6 +29,7 @@ public:
 
 	vector<Light>* getLightsPtr();
 	void addLight( Light p_light );
+	void init( vector<ComponentData> p_initData );
 
 private:
 	vector<Light> m_lights;

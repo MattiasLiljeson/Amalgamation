@@ -420,7 +420,7 @@ void ClientApplication::initEntities()
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
 
-	float range = 25.0f;
+	float range = 5.0f;
 
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;
@@ -429,7 +429,7 @@ void ClientApplication::initEntities()
 	lightGridInstData.lightDir[0] = -1.0f;
 	lightGridInstData.lightDir[1] = -1.0f;
 	lightGridInstData.lightDir[2] = -1.0f;
-	lightGridInstData.attenuation[0] = 0.9f;
+	lightGridInstData.attenuation[0] = 25.0f/range;
 	lightGridInstData.attenuation[1] = 0.00f;
 	lightGridInstData.attenuation[2] = 0.00f;
 	lightGridInstData.spotPower = 100.0f;
@@ -438,7 +438,7 @@ void ClientApplication::initEntities()
 	lightGridInstData.ambient[2] = 0.0f;
 
 	float intensitity = 0.3f;
-	int dim = 5;
+	int dim = 24;
 	for( int x=0; x<dim; x++ )
 	{
 		for( int y=0; y<dim; y++ )
@@ -464,7 +464,7 @@ void ClientApplication::initEntities()
 	}
 	entity = m_world->createEntity();
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
-	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
+	entity->addComponent( ComponentType::Transform, new Transform( 75, 75, 75 ) );
 	m_world->addEntity( entity );
 
 	// Test sound source
