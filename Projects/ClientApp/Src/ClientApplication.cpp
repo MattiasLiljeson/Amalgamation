@@ -397,9 +397,9 @@ void ClientApplication::initEntities()
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.2;
-	ambientLight.instanceData.ambient[1] = 0.2;
-	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.ambient[0] = 0.8f;
+	ambientLight.instanceData.ambient[1] = 0.8f;
+	ambientLight.instanceData.ambient[2] = 0.8f;
 
 	LightsComponent* ambientLightComp = new LightsComponent();
 	ambientLightComp->addLight( ambientLight );
@@ -417,20 +417,20 @@ void ClientApplication::initEntities()
 
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
-	float range = 10.0f;
+	float range = 50.0f;
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;
 	lightGridInstData.worldTransform[5] = range;
 	lightGridInstData.worldTransform[10] = range;
 	lightGridInstData.attenuation[0] = 0.0f;
 	lightGridInstData.attenuation[1] = 0.0f;
-	lightGridInstData.attenuation[2] = 0.7f;
+	lightGridInstData.attenuation[2] = 0.1f;
 	lightGridInstData.spotPower = 25.0f;
 	lightGridInstData.specular[3] = 1.0f;
 	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
 	lightGridInstData.ambient[2] = 0.0f;
 
-	float intensitity = 0.2f;
+	float intensitity = 10.0f;
 	for( int x=0; x<5; x++ )
 	{
 		for( int y=0; y<5; y++ )

@@ -1,7 +1,7 @@
 e SpecialMonkey
 
 c LoadMesh
-d s m_filename InstanceApes.agl
+d s m_filename PlanetOfTheApes.agl
 
 c Transform
 d f m_translationX 0.0

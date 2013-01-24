@@ -128,7 +128,7 @@ void GS(point Particle gIn[1],
 	}	
 }
 
-PixelOut PS(GS_OUT pIn)
+PixelOut PS(GS_OUT pIn) 
 {
 	PixelOut pix_out;
 	pix_out.diffuse = Texture.Sample(defaultSampler, pIn.texC);
