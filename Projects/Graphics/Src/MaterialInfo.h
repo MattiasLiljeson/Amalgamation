@@ -14,16 +14,19 @@
 
 struct MaterialInfo
 {
-	static const int SIZE = 4;
+	static const int SIZE = 6;
 	unsigned int indexArray[SIZE];
-
+	bool hasDisplacementMap;
+	bool hasNormalMap;
 	enum TextureTypes
 	{
-		DIFFUSEMAP, NORMALMAP, SPECULARMAP, GLOWMAP
+		DIFFUSEMAP, NORMALMAP, SPECULARMAP, GLOWMAP, DISPLACEMENTMAP, GRADIENTMAP
 	};
 
 	MaterialInfo()
 	{
+		hasDisplacementMap=false;
+		hasNormalMap=false;
 		for (unsigned int i = 0; i<SIZE;i++)
 		{
 			indexArray[i] = 0;

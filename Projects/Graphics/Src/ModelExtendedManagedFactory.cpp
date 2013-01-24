@@ -178,6 +178,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					// mesh transform
+
 					model->transform = model->transform*currentInstance.transform;
 					// 
 					models->push_back(model);
@@ -313,17 +314,39 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 		specularName = p_scene->getName(mat->specularTextureNameIndex);
 	// normal
 	string normalName = defaultTextureName;
+	bool hasNormalMap=false;
 	if (mat->normalTextureNameIndex!=-1)
+	{
+		hasNormalMap=true;
 		normalName = p_scene->getName(mat->normalTextureNameIndex);
+	}
+	// displacement
+	string dispName = defaultTextureName;
+	bool hasDisplacementMap=false;
+	if (mat->displacementTextureNameIndex!=-1)
+	{
+		hasDisplacementMap=true;
+		dispName = p_scene->getName(mat->displacementTextureNameIndex);
+	}
+	// glow
+	string glowName = defaultTextureName;
+	if (mat->glowTextureNameIndex!=-1)
+		glowName = p_scene->getName(mat->glowTextureNameIndex);
 
 	// Create material
 	MaterialInfo materialInfo;
+	materialInfo.hasNormalMap = hasNormalMap;
+	materialInfo.hasDisplacementMap = hasDisplacementMap;
 	materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, 
 		m_textureFactory->createTexture(diffuseName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::SPECULARMAP,
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::NORMALMAP,
 		m_textureFactory->createTexture(normalName,TEXTUREPATH));
+	materialInfo.setTextureId(MaterialInfo::DISPLACEMENTMAP,
+		m_textureFactory->createTexture(dispName,TEXTUREPATH));
+	materialInfo.setTextureId(MaterialInfo::GLOWMAP,
+		m_textureFactory->createTexture(glowName,TEXTUREPATH));
 	// and then set the resulting data to the mesh
 	p_mesh->setMaterial(materialInfo);
 }
@@ -350,8 +373,11 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 			{
 				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
 				{
+
+					AglMatrix mirror = AglMatrix::identityMatrix();
+					mirror.data[0] *= -1;
 					InstanceInstr inst = {parsedAction.first.filename,
-						cp->transform*p_offset};
+						mirror*cp->transform*p_offset};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
