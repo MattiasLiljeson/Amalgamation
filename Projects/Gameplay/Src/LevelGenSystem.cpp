@@ -83,7 +83,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	// Create a initial piece.
 	Transform* transform = new Transform(AglVector3(15, 20, 15), 
 										AglQuaternion::identity(),
-										AglVector3::one() * 1.0f);
+										AglVector3::one() * 10.0f);
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);

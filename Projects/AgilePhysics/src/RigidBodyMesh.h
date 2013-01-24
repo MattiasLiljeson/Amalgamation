@@ -48,6 +48,7 @@ public:
 	AglOBB GetOBB()
 	{
 		AglOBB obb = mOBB;
+		obb.size *= mSize;
 		obb.world *= GetWorld();
 		return obb; 
 	}
@@ -57,7 +58,7 @@ public:
 		newPos.transform(GetWorld());
 
 		AglBoundingSphere bs;
-		bs.radius = mBoundingSphere.radius;
+		bs.radius = mBoundingSphere.radius * max(mSize.x, max(mSize.y, mSize.z));
 		bs.position = newPos;
 		return bs; 
 	}
@@ -69,6 +70,10 @@ public:
 	{
 		RigidBody::UpdateVelocity(pElapsedTime);
 		ind++;
+	}
+	AglVector3 GetSize()
+	{
+		return mSize;
 	}
 };
 

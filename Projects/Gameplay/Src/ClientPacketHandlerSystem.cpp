@@ -428,14 +428,31 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
 	{
 		AglParticleSystemHeader h;
-		h.particleSize = AglVector2(2, 2);
-		h.alignmentType = AglParticleSystemHeader::OBSERVER;
-		h.spawnFrequency = 200;
-		h.spawnSpeed = 5.0f;
-		h.spread = 0.0f;
-		h.fadeOutStart = 2.0f;
-		h.fadeInStop = 0.0f;
-		h.particleAge = 2;
+		if (p_packet.meshInfo == 0)
+		{
+			h.particleSize = AglVector2(2, 2);
+			h.alignmentType = AglParticleSystemHeader::OBSERVER;
+			h.spawnFrequency = 200;
+			h.spawnSpeed = 5.0f;
+			h.spread = 0.0f;
+			h.fadeOutStart = 2.0f;
+			h.fadeInStop = 0.0f;
+			h.particleAge = 2;
+		}
+		else
+		{
+			h.particleAge = 1;
+			h.spawnSpeed = 0.02;
+			h.spread = 1.0f;
+			h.spawnFrequency = 200;
+			h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
+			h.fadeInStop = 0.5f;
+			h.fadeOutStart = 0.5f;
+			h.spawnOffset = 4.0f;
+			h.maxOpacity = 0.5f;
+			h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+			h.particleSize = AglVector2(1.0f, 1.0f);
+		}
 
 		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 			SystemType::ParticleRenderSystem ));

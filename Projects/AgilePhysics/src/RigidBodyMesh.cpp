@@ -36,6 +36,7 @@ RigidBodyMesh::RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSpher
 	mBSPTree = pBSPTree;
 	mSphereGrid = pSphereGrid;
 	ind = 0;
+	mSize = AglVector3(1, 1, 1);
 	CalculateInertiaTensor();
 }
 RigidBodyMesh::RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree)
@@ -62,6 +63,10 @@ RigidBodyType RigidBodyMesh::GetType()
 }
 bool RigidBodyMesh::EvaluateSphere(RigidBodySphere* pSphere, vector<EPACollisionData>& pData)
 {
+	//Will FAIL BECAUSE SIZE IS NOT SUPPORTED
+	int k = 0;
+	k = 1 / k;
+
 	AglVector3 pos = pSphere->GetPosition();
 	AglMatrix invW = GetWorld();
 	pos -= invW.GetTranslation();
@@ -106,6 +111,10 @@ bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
 }
 bool RigidBodyMesh::EvaluateMesh(RigidBodyMesh* pMesh, vector<AglVector3>& pData)
 {
+	//Will FAIL BECAUSE SIZE IS NOT SUPPORTED
+	int k = 0;
+	k = 1 / k;
+
 
 	//Skip nine of the axes as they usually prevent few collisions.
 	//This creates deeper traversal but evaluation of each node will
@@ -225,6 +234,8 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 		curr.maxPoint.x += 0.00001f;
 		curr.maxPoint.y += 0.00001f;
 		curr.maxPoint.z += 0.00001f;
+		curr.maxPoint *= mSize;
+		curr.minPoint *= mSize;
 		toEvaluate.pop_back();
 
 		points2[0] = curr.minPoint;
@@ -257,9 +268,9 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 			else if (curr.triangleID >= 0)
 			{
 				//Add the triangle to the list of collided triangles
-				pData.push_back(m_triangles2[curr.triangleID*3]);
-				pData.push_back(m_triangles2[curr.triangleID*3+1]);
-				pData.push_back(m_triangles2[curr.triangleID*3+2]);
+				pData.push_back(m_triangles2[curr.triangleID*3]*mSize);
+				pData.push_back(m_triangles2[curr.triangleID*3+1]*mSize);
+				pData.push_back(m_triangles2[curr.triangleID*3+2]*mSize);
 			}
 		}
 
