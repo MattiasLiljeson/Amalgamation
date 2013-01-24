@@ -3,7 +3,7 @@
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
 #include "ParticleSystemCollection.h"
-
+#include "InstanceInstruction.h"
 
 // =======================================================================================
 //                                        Model
@@ -40,4 +40,5 @@ public:
 	ConnectionPointCollection	connectionPoints;
 	ParticleSystemCollection	particleSystems;
 	AglMatrix					transform;
+	vector<InstanceInstruction> instances;
 };
