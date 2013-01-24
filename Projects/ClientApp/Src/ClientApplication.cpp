@@ -420,7 +420,7 @@ void ClientApplication::initEntities()
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
 
-	float range = 5.0f;
+	float range = 25.0f;
 
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;
@@ -429,22 +429,23 @@ void ClientApplication::initEntities()
 	lightGridInstData.lightDir[0] = -1.0f;
 	lightGridInstData.lightDir[1] = -1.0f;
 	lightGridInstData.lightDir[2] = -1.0f;
-	lightGridInstData.attenuation[0] = 0.09f;
-	lightGridInstData.attenuation[1] = 0.09f;
-	lightGridInstData.attenuation[2] = 0.5f;
+	lightGridInstData.attenuation[0] = 0.9f;
+	lightGridInstData.attenuation[1] = 0.00f;
+	lightGridInstData.attenuation[2] = 0.00f;
 	lightGridInstData.spotPower = 100.0f;
 	lightGridInstData.specular[3] = 0.001f;
 	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
 	lightGridInstData.ambient[2] = 0.0f;
 
-	float intensitity = 0.1f;
-	for( int x=0; x<24; x++ )
+	float intensitity = 0.3f;
+	int dim = 5;
+	for( int x=0; x<dim; x++ )
 	{
-		for( int y=0; y<24; y++ )
+		for( int y=0; y<dim; y++ )
 		{
-			for( int z=0; z<24; z++ )
+			for( int z=0; z<dim; z++ )
 			{
-				lightGridInstData.diffuse[0] = intensitity * x;
+				lightGridInstData.specular[0] = intensitity * x;
 				lightGridInstData.diffuse[1] = intensitity * y;
 				lightGridInstData.diffuse[2] = intensitity * z;
 
@@ -454,7 +455,7 @@ void ClientApplication::initEntities()
 					light.offset,
 					AglVector3( range, range, range ),
 					AglQuaternion::identity(),
-					AglVector3( -x*(range*2), -y*(range*2), -z*(range*2) )
+					AglVector3( -x*(range+1), -y*(range+1), -z*(range+1) )
 					);
 
 				lightGridComp->addLight( light );
