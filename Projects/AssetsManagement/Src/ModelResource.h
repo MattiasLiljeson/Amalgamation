@@ -21,7 +21,17 @@
 struct ModelResource
 {
 public:
-	ModelResource() {meshId=-1; name="noname";}
+	ModelResource(const ModelResource& p_copy)
+	{
+		meshId = p_copy.meshId;
+		name = p_copy.name;
+		meshHeader = p_copy.meshHeader;
+		connectionPoints = p_copy.connectionPoints;
+		particleSystems = p_copy.particleSystems;
+		transform = p_copy.transform;
+	}	
+	ModelResource() {transform=AglMatrix::identityMatrix(); meshId=-1; name="noname";}
+	ModelResource(const string& p_name) {transform=AglMatrix::identityMatrix(); meshId=-1; name=p_name;}
 	virtual ~ModelResource(){}
 
 	int							meshId;

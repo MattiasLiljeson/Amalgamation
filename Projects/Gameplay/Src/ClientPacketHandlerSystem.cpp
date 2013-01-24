@@ -35,6 +35,7 @@
 
 // Debug
 #include <DebugUtil.h>
+#include <ToString.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
@@ -46,7 +47,6 @@
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
-#include "..\..\PhysicsTest\src\Utility.h"
 #include "InputBackendSystem.h"
 #include "ParticleRenderSystem.h"
 #include "AudioInfo.h"
@@ -394,14 +394,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		
 		if (p_packet.isLevelProp)
 			meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
-		else
+		else	
+		{
 			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 				SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
-		if (p_packet.meshInfo == 1)
-			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
-
+			if (p_packet.meshInfo == 1)
+				meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+				SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		}
 		entity = m_world->createEntity();
 		component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 		entity->addComponent( ComponentType::Transform, component );
@@ -570,11 +571,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			DEBUGPRINT(( string(
 				/* 0 - 511 */
-				ToString(0) + " - " +
-				ToString(511) +
+				toString(0) + " - " +
+				toString(511) +
 				/* byte size */
 				" = " +
-				ToString(511 * 51) +
+				toString(511 * 51) +
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
@@ -587,11 +588,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			DEBUGPRINT(( string(
 				/* 0 - x */
-				ToString(0) + " - " +
-				ToString(m_staticPropIdentities.front()) +
+				toString(0) + " - " +
+				toString(m_staticPropIdentities.front()) +
 				/* byte size */
 				" = " +
-				ToString((m_staticPropIdentities.front() + 1) * 51) +
+				toString((m_staticPropIdentities.front() + 1) * 51) +
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
@@ -610,11 +611,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 			{
 				DEBUGPRINT(( string(
 					/* x - y */
-					ToString(firstValue) + " - " +
-					ToString(secondValue - 1) +
+					toString(firstValue) + " - " +
+					toString(secondValue - 1) +
 					/* byte size */
 					" = " +
-					ToString((secondValue - firstValue) * 51) +
+					toString((secondValue - firstValue) * 51) +
 					" bytes" +
 					/* end */
 					"\n").c_str() ));
@@ -630,11 +631,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 			{
 				DEBUGPRINT(( string(
 					/* x - 511 */
-					ToString(m_staticPropIdentities.front()) + " - " +
-					ToString(511) +
+					toString(m_staticPropIdentities.front()) + " - " +
+					toString(511) +
 					/* byte size */
 					" = " +
-					ToString((511 - m_staticPropIdentities.front()) * 51) +
+					toString((511 - m_staticPropIdentities.front()) * 51) +
 					" bytes" +
 					/* end */
 					"\n").c_str() ));
@@ -650,13 +651,13 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 		{
 			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 				AntTweakBarWrapper::NETWORK,
-				("min" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
 				&m_staticPropIdentitiesForAntTweakBar[i].first,
 				"group='Missing packets range'" );
 
 			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 				AntTweakBarWrapper::NETWORK,
-				("max" + ToString(i)).c_str(), TwType::TW_TYPE_INT32,
+				("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
 				&m_staticPropIdentitiesForAntTweakBar[i].second,
 				"group='Missing packets range'" );
 		}

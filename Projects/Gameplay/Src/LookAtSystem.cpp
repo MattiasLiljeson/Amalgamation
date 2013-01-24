@@ -10,7 +10,7 @@
 #include "ValueClamp.h"
 
 LookAtSystem::LookAtSystem() : 
-EntitySystem( SystemType::LookAtSystem, 1,
+EntitySystem( SystemType::LookAtSystem, 2,
 			 ComponentType::ComponentTypeIdx::LookAtEntity,
 			 ComponentType::ComponentTypeIdx::Transform)
 {

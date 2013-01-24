@@ -7,6 +7,7 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <ComponentAssemblageAllocator.h>
 
 // Components
 #include <AudioInfo.h>
@@ -17,7 +18,6 @@
 #include <HudElement.h>
 #include <MinigunModule.h>
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
 #include <PlayerCameraController.h>
 #include <RenderInfo.h>
 #include <ShipEditController.h>
@@ -32,6 +32,8 @@
 #include <Transform.h>
 #include <PositionalSoundSource.h>
 #include <DebugMove.h>
+#include <EntityParent.h>
+#include <LoadMesh.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -56,6 +58,7 @@
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
+#include <PhysicsSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -73,6 +76,11 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <GraphicsRendererSystem.h>
 #include <DebugMovementSystem.h>
+#include <LightRenderSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
+#include <TransformParentHandlerSystem.h>
+#include <LoadMeshSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -83,11 +91,10 @@ using namespace std;
 // MISC
 #include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include <LightRenderSystem.h>
-#include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
+
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -176,7 +183,11 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
-	//----------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------	
+	
+	/************************************************************************/
+	/* Entity creation														*/
+	/************************************************************************/
 	EntityFactory* factory = new EntityFactory();
 	m_world->setSystem( factory, true);
 
@@ -184,6 +195,21 @@ void ClientApplication::initSystems()
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
 	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
+	/* Graphics																*/
+	/************************************************************************/
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
+		1280,720,true);
+
+	m_world->setSystem( graphicsBackend, true );
+
+	/************************************************************************/
+	/* Mesh loading															*/
+	/************************************************************************/
+	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
+	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystem(graphicsBackend), 
+						true); 
 
 	/************************************************************************/
 	/* Physics																*/
@@ -198,17 +224,15 @@ void ClientApplication::initSystems()
 	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 	
 	/************************************************************************/
-	/* Graphics																*/
+	/* Input																*/
 	/************************************************************************/
-	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
-		1280,720,true);
-
-	m_world->setSystem( graphicsBackend, true );
-
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
-
+	
+	/************************************************************************/
+	/* GUI																	*/
+	/************************************************************************/
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
@@ -232,7 +256,6 @@ void ClientApplication::initSystems()
 	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
-
 
 	/************************************************************************/
 	/* Camera																*/
@@ -259,6 +282,12 @@ void ClientApplication::initSystems()
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
+
+	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
+	m_world->setSystem( entityParentHandler, true );
 
 	/************************************************************************/
 	/* Network																*/
@@ -312,6 +341,10 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DebugMovementSystem(), true );
 
 	m_world->initialize();
+
+	// Run component assemblage allocator
+	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+	delete allocator;
 }
 
 void ClientApplication::initEntities()
@@ -319,12 +352,22 @@ void ClientApplication::initEntities()
 	Entity* entity = NULL;
 	Component* component = NULL;
 
+	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
+
+	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
 	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
 	m_world->addEntity( entity );
+
+	// Read monkey!
+	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
+	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
+	m_world->addEntity( entity );
+
+
 
 	EntitySystem* tempSys = NULL;
 

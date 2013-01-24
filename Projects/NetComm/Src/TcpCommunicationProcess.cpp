@@ -10,7 +10,7 @@
 
 #include "ThreadSafeMessaging.h"
 #include "ProcessMessagePacketOverflow.h"
-#include "../../Util/Src/DebugUtil.h"
+#include <DebugUtil.h>
 #include "ProcessMessageAskForCommProcessInfo.h"
 #include "ProcessMessageCommProcessInfo.h"
 

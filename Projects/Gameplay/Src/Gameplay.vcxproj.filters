@@ -79,8 +79,8 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Debug">
-      <UniqueIdentifier>{bf013765-8af0-4d45-a07a-7d6de6498ebe}</UniqueIdentifier>
+    <Filter Include="Systems\Debugging">
+      <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -342,8 +342,6 @@
     <ClInclude Include="SimpleEventPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="LightSources.h" />
-    <ClInclude Include="ParticleEmitters.h" />
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
@@ -386,6 +384,28 @@
     <ClInclude Include="GraphicsRendererSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentAssemblageAllocator.h" />
+    <ClInclude Include="LoadMesh.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitters.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSources.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityParent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformParentHandlerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
@@ -396,10 +416,7 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
-      <Filter>Systems\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="SpawnSoundEffectPacket.h">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+      <Filter>Systems\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -613,8 +630,6 @@
     <ClCompile Include="SimpleEventPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="LightSources.cpp" />
-    <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
@@ -645,6 +660,28 @@
     <ClCompile Include="GraphicsRendererSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
+    <ClCompile Include="LoadMesh.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitters.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSources.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformParentHandlerSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
@@ -652,10 +689,7 @@
       <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
-      <Filter>Systems\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="SpawnSoundEffectPacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

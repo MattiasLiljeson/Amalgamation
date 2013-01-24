@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "ComponentData.h"
+#include "AssemblageException.h"
 
 ComponentReader::ComponentReader()
 {
@@ -34,11 +35,13 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 		if( !ComponentFactory::isComponentRegistrered( componentName ))
 		{
 			status = AssemblageHelper::FileStatus_COMPONENT_NOT_FOUND;
+			throw AssemblageException("Component "+componentName+" not found! ",
+										__FILE__,__FUNCTION__,__LINE__);
 		}
 		else
 		{
 			Component* comp = ComponentFactory::createInstance( componentName );
-			if( comp->getType() == ComponentType::NON_EXISTING)
+			if( comp->getComponentType() == ComponentType::NON_EXISTING)
 			{
 				status = AssemblageHelper::FileStatus_COMPONENT_TYPE_IDX_NOT_SET;
 			}

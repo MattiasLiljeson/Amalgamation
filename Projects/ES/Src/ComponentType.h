@@ -40,16 +40,8 @@ public:	//Enums
 		PlayerScore,
 		MenuItem,
 		HudElement,
-
-		// -------------------
-		// Tags									(Replace with dedicated ES-tag management?)
-		// -------------------
-		TAG_ShipFlyMode,		
-		TAG_ShipEditMode,
-		TAG_LookAtFollowMode,
-		TAG_LookAtOrbitMode,
-		TAG_Ship, 
-
+		EntityParent,
+		LoadMesh,
 		Transform,
 		ShipModule,
 		ConnectionPointSet,
@@ -67,6 +59,17 @@ public:	//Enums
 		ParticleSystemEmitter,
 		ParticleUpdateData,
 		DebugMove,
+
+		// -------------------
+		// Tags									(Replace with dedicated ES-tag management?)
+		// -------------------
+		TAG_ShipFlyMode,		
+		TAG_ShipEditMode,
+		TAG_LookAtFollowMode,
+		TAG_LookAtOrbitMode,
+		TAG_Ship, 
+		// -------------------
+	
 		/************************************************************************/
 		/* Things that should be sent to all clients but its not synced			*/
 		/* afterwards.															*/
