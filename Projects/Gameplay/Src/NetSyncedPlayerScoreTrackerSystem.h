@@ -23,10 +23,7 @@ public:
 	NetSyncedPlayerScoreTrackerSystem();
 	~NetSyncedPlayerScoreTrackerSystem();
 
-	void inserted( Entity* p_entity );
-	void removed( Entity* p_entity );
-	vector<Entity*>* getNetScoreEntities();
+	const vector<Entity*>& getNetScoreEntities() const;
+	bool checkProcessing();
 
-private:
-	vector<Entity*> m_netScoreEntities;
 };

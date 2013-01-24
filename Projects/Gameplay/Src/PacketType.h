@@ -27,6 +27,7 @@ public:
 		ClientDisconnect,
 		WelcomePacket,
 		UpdateClientStats,
+		SpawnSoundEffect,
 
 		// Client -> Server:
 		/************************************************************************/

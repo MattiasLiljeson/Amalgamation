@@ -120,15 +120,15 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
 				static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
-			vector<Entity*>* netSyncedScoreEntities =
+			vector<Entity*> netSyncedScoreEntities =
 				netSyncedScoreSystem->getNetScoreEntities();
 			int playerCount = 0;
-			for(unsigned int i=0; i<netSyncedScoreEntities->size(); i++)
+			for(unsigned int i=0; i<netSyncedScoreEntities.size(); i++)
 			{
 				PlayerScore* playerScore = static_cast<PlayerScore*>(
-					(*netSyncedScoreEntities)[i]->getComponent(ComponentType::PlayerScore));
+					netSyncedScoreEntities[i]->getComponent(ComponentType::PlayerScore));
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(
-					(*netSyncedScoreEntities)[i]->getComponent(ComponentType::NetworkSynced));
+					netSyncedScoreEntities[i]->getComponent(ComponentType::NetworkSynced));
 				if(playerScore && netSync)
 				{
 					updatedClientPacket.playerIdentities[playerCount] =

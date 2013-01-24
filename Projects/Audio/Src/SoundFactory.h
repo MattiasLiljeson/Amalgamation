@@ -15,7 +15,8 @@
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles the creation of sound files
+/// \brief Creates sound buffers from sound files, and can instantiate Source Voices out
+/// of the sound buffers.
 ///        
 /// # SoundFactory
 /// Please note that it currently only supports wav-files.
@@ -46,8 +47,10 @@ public:
 		PositionalSoundCreationInfo* p_positionalInfo);
 protected:
 private:
-	IXAudio2SourceVoice* createSourceVoice(const char* p_fullFilePath, 
-		XAUDIO2_BUFFER& p_buffer, float maxFreqOffset=1.0f);
+	void createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
+		WAVEFORMATEX* p_waveFormatEx);
+	IXAudio2SourceVoice* createSourceVoice(XAUDIO2_BUFFER& p_buffer,
+		WAVEFORMATEX& p_waveFormatEx, float maxFreqOffset=1.0f);
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
@@ -55,9 +58,8 @@ private:
 	void initFile(const char* p_filePath);
 	void initEmitter(X3DAUDIO_EMITTER* p_emitter, SoundOrientation p_soundOrientation);
 	void initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_destChannels);
-private:
-	IXAudio2*	m_soundDevice;
 
-	
+private:
+	IXAudio2* m_soundDevice;
 	HANDLE	m_file; ///< m_file is always used when loading sounds from file
 };

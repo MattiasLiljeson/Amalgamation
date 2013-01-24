@@ -17,7 +17,7 @@
 struct PositionalSoundCreationInfo
 {
 	X3DAUDIO_DSP_SETTINGS* settings;
-	int destChannels;
+	unsigned int destChannels;
 	SoundOrientation soundOrientation;
 	PositionalSoundCreationInfo(const AglVector3& p_pos)
 	{

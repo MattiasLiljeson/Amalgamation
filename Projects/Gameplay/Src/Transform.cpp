@@ -15,7 +15,7 @@ Transform::Transform()
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
-	m_type = ComponentType::ComponentTypeIdx::Transform;
+	m_componentType = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform( float p_posX, float p_posY, float p_posZ )
@@ -31,7 +31,7 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
-	m_type = ComponentType::ComponentTypeIdx::Transform;
+	m_componentType = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
@@ -42,7 +42,7 @@ Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rot
 	m_scale = p_scale;
 
 	calcCompMatrix();
-	m_type = ComponentType::ComponentTypeIdx::Transform;
+	m_componentType = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglMatrix& p_matrix)

@@ -7,6 +7,7 @@
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <ComponentAssemblageAllocator.h>
 
 // Components
 #include <AudioInfo.h>
@@ -17,7 +18,6 @@
 #include <HudElement.h>
 #include <MinigunModule.h>
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
 #include <PlayerCameraController.h>
 #include <RenderInfo.h>
 #include <ShipEditController.h>
@@ -30,6 +30,10 @@
 #include <RocketLauncherModule.h>
 #include <Connector1to2Module.h>
 #include <Transform.h>
+#include <PositionalSoundSource.h>
+#include <DebugMove.h>
+#include <EntityParent.h>
+#include <LoadMesh.h>
 
 // Systems
 #include <AudioBackendSystem.h>
@@ -54,6 +58,7 @@
 #include <PlayerCameraControllerSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
+#include <PhysicsSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -67,8 +72,16 @@
 #include <TimerSystem.h>
 #include <LevelGenSystem.h>
 #include <ExtrapolationSystem.h>
+#include <PositionalSoundSystem.h>
+#include <NetsyncDirectMapperSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <GraphicsRendererSystem.h>
+#include <DebugMovementSystem.h>
+#include <LightRenderSystem.h>
+#include <AntTweakBarSystem.h>
+#include <ParticleRenderSystem.h>
+#include <TransformParentHandlerSystem.h>
+#include <LoadMeshSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -79,11 +92,10 @@ using namespace std;
 // MISC
 #include <AntTweakBarSystem.h>
 #include <AntTweakBarWrapper.h>
-#include <LightRenderSystem.h>
-#include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
+
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
@@ -96,14 +108,12 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 #ifdef COMBINE_CLIENT_AND_SERVER
 		m_serverApp = new Srv::ServerApplication();
 #endif
-
+		// Systems first!
 		initSystems();
-		initEntities();
 
-#ifdef ENABLE_SOUND
-		initSoundSystem();
+		// Test entities later!
+		initEntities();
 		initSounds();
-#endif
 
 	}
 	catch(exception& e)
@@ -174,7 +184,11 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
-	//----------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------	
+	
+	/************************************************************************/
+	/* Entity creation														*/
+	/************************************************************************/
 	EntityFactory* factory = new EntityFactory();
 	m_world->setSystem( factory, true);
 
@@ -182,6 +196,21 @@ void ClientApplication::initSystems()
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
 	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
+	/* Graphics																*/
+	/************************************************************************/
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
+		1280,720,true);
+
+	m_world->setSystem( graphicsBackend, true );
+
+	/************************************************************************/
+	/* Mesh loading															*/
+	/************************************************************************/
+	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
+	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystem(graphicsBackend), 
+						true); 
 
 	/************************************************************************/
 	/* Physics																*/
@@ -196,17 +225,15 @@ void ClientApplication::initSystems()
 	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 	
 	/************************************************************************/
-	/* Graphics																*/
+	/* Input																*/
 	/************************************************************************/
-	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
-		1280,720,true);
-
-	m_world->setSystem( graphicsBackend, true );
-
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
-
+	
+	/************************************************************************/
+	/* GUI																	*/
+	/************************************************************************/
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
@@ -230,7 +257,6 @@ void ClientApplication::initSystems()
 	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
 		m_client*/ );
 	m_world->setSystem( shipEditController, true);
-
 
 	/************************************************************************/
 	/* Camera																*/
@@ -259,6 +285,12 @@ void ClientApplication::initSystems()
 	m_world->setSystem( antTweakBar, true );
 
 	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
+	m_world->setSystem( entityParentHandler, true );
+
+	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
@@ -267,11 +299,11 @@ void ClientApplication::initSystems()
 	ClientConnectToServerSystem* connect =
 		new ClientConnectToServerSystem( m_client);
 	m_world->setSystem( connect, true );
-
+	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
@@ -286,13 +318,16 @@ void ClientApplication::initSystems()
 
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+
+	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
+		true );
 #endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Gameplay																*/
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
-	m_world->setSystem(new ClientPickingSystem(m_client), true);
+	m_world->setSystem( new ClientPickingSystem(m_client), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -301,7 +336,16 @@ void ClientApplication::initSystems()
 		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
 
+	/************************************************************************/
+	/* Debugging															*/
+	/************************************************************************/
+	m_world->setSystem( new DebugMovementSystem(), true );
+
 	m_world->initialize();
+
+	// Run component assemblage allocator
+	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+	delete allocator;
 }
 
 void ClientApplication::initEntities()
@@ -309,12 +353,22 @@ void ClientApplication::initEntities()
 	Entity* entity = NULL;
 	Component* component = NULL;
 
+	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
+
+	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
 	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
 	m_world->addEntity( entity );
+
+	// Read monkey!
+	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
+	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
+	m_world->addEntity( entity );
+
+
 
 	EntitySystem* tempSys = NULL;
 
@@ -344,9 +398,9 @@ void ClientApplication::initEntities()
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.2;
-	ambientLight.instanceData.ambient[1] = 0.2;
-	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.ambient[0] = 0.8f;
+	ambientLight.instanceData.ambient[1] = 0.8f;
+	ambientLight.instanceData.ambient[2] = 0.8f;
 
 	LightsComponent* ambientLightComp = new LightsComponent();
 	ambientLightComp->addLight( ambientLight );
@@ -405,6 +459,18 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
 	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
 	m_world->addEntity( entity );
+
+	// Test sound source
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
+	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
+	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH,
+		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
+	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
+		0, 1.0f, 0)));
+	m_world->addEntity(entity);
+
 	//InitModulesTestByAnton();
 
 	/*
@@ -452,86 +518,75 @@ void ClientApplication::initSounds()
 	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
 	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
 
+	/************************************************************************/
+	/* Load positional sound												*/
+	/************************************************************************/
+//	file = "spaceship_laser.wav";
+//	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
+//		TESTSOUNDEFFECTPATH.c_str(),true);
+//	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
+//		AglVector3( 0, 0, 0 ));
+//	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+//	entity = m_world->createEntity();
+//	component = new Transform( 0, 0, 0 );
+//	entity->addComponent( ComponentType::Transform, component );
+//	component = new AudioInfo(soundIdx,true);
+//	entity->addComponent(ComponentType::AudioInfo, component);
+//	m_world->addEntity(entity);
+//	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
 
 	/************************************************************************/
 	/* Load positional sound												*/
 	/************************************************************************/
-	file = "Techno_1.wav";
-	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
-		TESTMUSICPATH.c_str(),true);
-	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-		AglVector3( 3.0f, -10.0f, -30.0f ));
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, -10.0f, -30.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load positional sound												*/
-	/************************************************************************/
-	file = "MusicMono.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(), TESTMUSICPATH.c_str(),true);
-	positionalSoundInfo = PositionalSoundCreationInfo( AglVector3(3,3,3) );
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, 3.0f, 3.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Techno_1.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTMUSICPATH.c_str(), true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
-	m_world->addEntity(entity);
+//	for(int i=0; i<1; i++)
+//	{
+//		file = "MusicMono.wav";
+//		BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(), TESTMUSICPATH.c_str(),true);
+//		PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo( AglVector3(3.0f,3.0f,(float)i*2.0f) );
+//		soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
+//		entity = m_world->createEntity();
+//		component = new Transform( 3.0f, 3.0f, (float)i*2.0f );
+//		entity->addComponent( ComponentType::Transform, component );
+//		component = new AudioInfo(soundIdx,true);
+//		entity->addComponent(ComponentType::AudioInfo, component);
+//		m_world->addEntity(entity);
+//		audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
+//	}
 	
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
-	m_world->addEntity(entity);
 
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
-}
-
-void ClientApplication::initSoundSystem()
-{
-	//Audio Systems
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Techno_1.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTMUSICPATH.c_str(), true);
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo,component);
+//	m_world->addEntity(entity);
+//	
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo,component);
+//	m_world->addEntity(entity);
+//
+//	/************************************************************************/
+//	/* Load ambient sound													*/
+//	/************************************************************************/
+//	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
+//	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
+//	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
+//	entity = m_world->createEntity();
+//	component = new AudioInfo(soundIdx,false);
+//	entity->addComponent(ComponentType::AudioInfo, component);
+//	m_world->addEntity(entity);
+//	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
 }
 
 void ClientApplication::InitModulesTestByAnton()
@@ -728,14 +783,11 @@ void ClientApplication::InitModulesTestByAnton()
 
 	entity->addComponent(ComponentType::ShipModule, new ShipModule());
 
-
 	cpset = new ConnectionPointSet();
 	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
 	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
 	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-
 	m_world->addEntity(entity); 
-
 
 	//Ray entity
 	/*entity = m_world->createEntity();

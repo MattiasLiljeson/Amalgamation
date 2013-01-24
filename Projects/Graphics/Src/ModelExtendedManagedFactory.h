@@ -92,11 +92,14 @@ private:
 							  Mesh* p_mesh);
 
 	virtual void readAndStoreEmpties(int p_modelNumber, 
-		ModelResource* p_model, AglScene* p_scene,
+		ModelResource* p_model,AglMatrix& p_offset, AglScene* p_scene,
+		const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
 		vector<InstanceInstr>* p_outInstanceInstructions=NULL);
 
 
 	virtual ModelResource* getFallback();
+
+	bool isMirrorMatrix(const AglMatrix& p_matrix);
 
 
 	ModelResource* getCube();
@@ -113,6 +116,8 @@ private:
 	static const string& fallbackTextureName;
 	static const string& mesherrorTextureName;
 	static const string& defaultTextureName;
+
+	static const unsigned int firstMeshPos=1; // always root on zero
 
 	/// 
 	/// Used for when a mesh has already been loaded and the creation instructions 

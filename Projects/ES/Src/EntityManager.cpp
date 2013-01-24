@@ -88,7 +88,9 @@ bool EntityManager::isEnabled( int p_entityId ) const
 
 Entity* EntityManager::getEntity( int p_entityId ) const
 {
-	return m_entities[p_entityId];
+	if(p_entityId < (int)m_entities.size())
+		return m_entities[p_entityId];
+	return NULL;
 }
 
 int EntityManager::getActiveEntityCount() const

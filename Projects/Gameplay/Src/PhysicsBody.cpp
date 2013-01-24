@@ -1,5 +1,21 @@
 #include "PhysicsBody.h"
 
+ComponentRegister<PhysicsBody> PhysicsBody::s_reg("PhysicsBody");
+
+PhysicsBody::PhysicsBody()
+{
+	m_componentType = ComponentType::ComponentTypeIdx::PhysicsBody;
+
+	m_id = -1;
+	m_parentId = -1;
+	m_parentChanged = false;
+}
+
+void PhysicsBody::init( vector<ComponentData> p_initData )
+{
+	// Nothing needed here right now
+}
+
 void PhysicsBody::setParentId( int p_parentId )
 {
 	// if parent is changed after system processing, we have to store the
