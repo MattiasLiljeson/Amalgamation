@@ -373,11 +373,8 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 			{
 				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
 				{
-
-					AglMatrix mirror = AglMatrix::identityMatrix();
-					mirror.data[0] *= -1;
 					InstanceInstr inst = {parsedAction.first.filename,
-						mirror*cp->transform*p_offset};
+						cp->transform*p_offset};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_outInstanceInstructions->push_back(inst);
 				}
