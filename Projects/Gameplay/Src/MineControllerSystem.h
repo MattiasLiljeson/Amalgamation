@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "StandardMine.h"
 #include "Transform.h"
+#include "TcpServer.h"
 
 // =======================================================================================
 //                                      PhysicsSystem
@@ -18,9 +19,11 @@
 class MineControllerSystem: public EntitySystem
 {
 public:
-	MineControllerSystem();
+	MineControllerSystem(TcpServer* p_server);
 	~MineControllerSystem();
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+private:
+	TcpServer* m_server;
 };

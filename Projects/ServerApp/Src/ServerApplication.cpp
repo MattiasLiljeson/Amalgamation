@@ -173,7 +173,7 @@ namespace Srv
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineControllerSystem(), true);
+		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(), true);
@@ -227,7 +227,7 @@ namespace Srv
 				}
 			}
 		}*/
-		//InitModulesTestByAnton();
+		InitModulesTestByAnton();
 	}
 
 	

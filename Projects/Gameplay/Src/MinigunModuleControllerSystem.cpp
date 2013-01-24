@@ -16,6 +16,7 @@
 #include <PhysicsController.h>
 #include "ParticleUpdatePacket.h"
 #include "ParticleUpdateData.h"
+#include "SpawnSoundEffectPacket.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -47,10 +48,9 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			ComponentType::getTypeFor(ComponentType::ShipModule)));
 
 		handleParticleSystem(p_entities[i]);
+		handleLaserSight(p_entities[i]);
 		if (gun && module && module->m_parentEntity >= 0)
 		{
-			//handleLaserSight(p_entities[i]);
-
 			//Update all rays
 			for (unsigned int j = 0; j < MinigunModule::rayCount; j++)
 			{
@@ -94,6 +94,10 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
+	ShipModule* module = static_cast<ShipModule*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ShipModule)));
+
 	if (gun->laserSightEntity < 0)
 	{
 		//Create Ray entity
@@ -129,13 +133,43 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			m_world->getComponentManager()->getComponent(entity,
 			ComponentType::getTypeFor(ComponentType::Transform)));
 
-		AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection);
+		if (module->m_parentEntity >= 0)
+		{
+			AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection);
 
-		AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
-		rot.transformVector(offset);
-		laserTransform->setTranslation(gunTransform->getTranslation()+offset);
-		laserTransform->setRotation(rot);
-		//laserTransform->setTranslation(scale);
+			AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
+			rot.transformVector(offset);
+			laserTransform->setTranslation(gunTransform->getTranslation()+offset);
+			laserTransform->setRotation(rot);
+
+
+			//Check if the module is highlighted
+			Entity* parent = NULL;
+			while (true)
+			{
+				parent = m_world->getEntity(module->m_parentEntity);
+				ShipModule* parentmodule = static_cast<ShipModule*>(
+					m_world->getComponentManager()->getComponent(parent,
+					ComponentType::getTypeFor(ComponentType::ShipModule)));
+				if (!parentmodule)
+					break;
+				else
+				{
+					module = parentmodule;
+					p_entity = parent;
+				}
+			}
+
+			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(parent->getComponent(ComponentType::ConnectionPointSet));
+			if (cps->m_connectionPoints[cps->m_highlighted].cpConnectedEntity == p_entity->getIndex())
+				laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
+			else
+				laserTransform->setScale(AglVector3(0, 0, 0));
+		}
+		else
+		{
+			laserTransform->setScale(AglVector3(0, 0, 0));
+		}
 	}
 }
 void MinigunModuleControllerSystem::spawnRay(Entity* p_entity)
@@ -159,6 +193,15 @@ void MinigunModuleControllerSystem::spawnRay(Entity* p_entity)
 	gun->rays[gun->currentRay].p2 = gunTransform->getTranslation() + dir * gun->range / MinigunModule::rayCount;
 	gun->rays[gun->currentRay].energy = 1.0f;
 	gun->currentRay = (gun->currentRay+1) % MinigunModule::rayCount;
+
+
+	//Send a sound
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::LaserGun;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = gunTransform->getTranslation();
+	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
+	m_server->broadcastPacket(soundEffectPacket.pack());
 }
 void MinigunModuleControllerSystem::updateRays(Entity* p_entity)
 {
@@ -277,7 +320,7 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 
 		data->spawnPoint = parentTrans->getTranslation();
 		data->direction = vel;
-		data->spawnFrequency = module->m_active * 200;
+		data->spawnFrequency = module->m_active * 10;//200;
 	}
 
 }
