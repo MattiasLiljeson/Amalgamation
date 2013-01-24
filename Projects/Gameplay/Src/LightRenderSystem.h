@@ -35,6 +35,9 @@ public:
 private:
 	GraphicsBackendSystem* m_gfxBackend;
 	LightMesh* m_box;
-	vector<LightInstanceData> m_data;
+	vector<LightInstanceData> m_directionalLightInstances;	
+	vector<LightInstanceData> m_pointLightInstances;
+	vector<LightInstanceData> m_spotLightInstances;
+
 };
 

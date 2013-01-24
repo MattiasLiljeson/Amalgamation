@@ -39,7 +39,9 @@ void LightRenderSystem::initialize()
 
 void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	m_data.clear();
+	m_directionalLightInstances.clear();
+	m_pointLightInstances.clear();
+	m_spotLightInstances.clear();
 
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 	
@@ -59,12 +61,29 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 			LightInstanceData inst = lights->at(j).instanceData;
 			inst.setWorldTransform( final );
-			m_data.push_back( inst );
+
+			if( inst.type == LightTypes::E_LightTypes_DIRECTIONAL) {
+				m_directionalLightInstances.push_back( inst );
+			} else if( inst.type == LightTypes::E_LightTypes_POINT) {
+				m_pointLightInstances.push_back( inst );
+			} else if( inst.type == LightTypes::E_LightTypes_SPOT) {
+				m_spotLightInstances.push_back( inst );
+			}
 		}
 	}
 }
 
 void LightRenderSystem::render()
 {
-	m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_data );
+	// TODO: render different light types with different meshes
+
+	if( m_directionalLightInstances.size() > 0 ) {
+		m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_directionalLightInstances );
+	}
+	if( m_pointLightInstances.size() > 0 ) {
+		m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_pointLightInstances );
+	}
+	if( m_spotLightInstances.size() > 0 ) {
+		m_gfxBackend->getGfxWrapper()->renderLights( m_box, &m_spotLightInstances );
+	}
 }
