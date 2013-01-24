@@ -27,7 +27,8 @@ public:
 	void processEntities( const vector<Entity*>& p_entities );
 
 	///-----------------------------------------------------------------------------------
-	/// Returns the local entity of a given networkIdentity with O(1) complexity.
+	/// Returns the local entity of a given networkIdentity with O(1) complexity. Can
+	/// return NULL if the client's entity doesn't exist yet.
 	/// \param p_networkIdentity
 	/// \return Entity*
 	///-----------------------------------------------------------------------------------
