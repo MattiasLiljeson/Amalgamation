@@ -42,7 +42,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		/* Send the client info to clients									    */
 		/************************************************************************/
 		UpdateClientStatsPacket updatedClientPacket;
-		
+
+		// Add all players' ping to the packet
 		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
 			m_world->getSystem(SystemType::ServerClientInfoSystem));
 		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
@@ -53,9 +54,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 			updatedClientPacket.ping[i] = clientInfo->ping;
 		}
-
-		// Add all players' ping to the packet
-
+		// Set currently active players
+		updatedClientPacket.activePlayers = clientInfoEntities.size();
 
 		updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
 		// Also add the players' score to the packet.

@@ -29,7 +29,6 @@ public:
 	void updateStats(const UpdateClientStatsPacket* p_packet);
 
 	virtual void process();
-
 protected:
 private:
 	int						m_infoPanelDoc;

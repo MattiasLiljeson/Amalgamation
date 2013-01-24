@@ -406,9 +406,6 @@
     <ClInclude Include="LibRocketBackendSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayGameStats.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GameStatsSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
@@ -420,6 +417,9 @@
     </ClInclude>
     <ClInclude Include="ServerClientInfoSystem.h">
       <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayGameStats.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -688,9 +688,6 @@
     <ClCompile Include="PositionalSoundEffect.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="DisplayGameStats.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="GameStatsSystem.cpp">
       <Filter>Systems\GUI</Filter>
     </ClCompile>
@@ -699,6 +696,9 @@
     </ClCompile>
     <ClCompile Include="ServerClientInfoSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayGameStats.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

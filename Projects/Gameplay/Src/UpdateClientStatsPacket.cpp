@@ -3,6 +3,7 @@
 UpdateClientStatsPacket::UpdateClientStatsPacket()
 {
 	//ping = -1;
+	activePlayers = 0;
 
 	for (int i=0; i<MAXPLAYERS; i++)
 	{
@@ -20,7 +21,7 @@ UpdateClientStatsPacket::~UpdateClientStatsPacket()
 Packet UpdateClientStatsPacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::UpdateClientStats));
-	//packet << ping;
+	packet << activePlayers;
 	packet << currentServerTimestamp;
 	for (int i=0; i<MAXPLAYERS; i++)
 	{
@@ -34,7 +35,7 @@ Packet UpdateClientStatsPacket::pack()
 
 void UpdateClientStatsPacket::unpack( Packet p_packet )
 {
-	//p_packet >> ping;
+	p_packet >> activePlayers;
 	p_packet >> currentServerTimestamp;
 	for (int i=0; i<MAXPLAYERS; i++)
 	{

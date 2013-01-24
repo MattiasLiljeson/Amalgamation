@@ -24,6 +24,7 @@ public:
 
 	void unpack( Packet p_packet );
 public:
+	int	activePlayers;
 	float ping[MAXPLAYERS];
 	float currentServerTimestamp;
 	int playerIdentities[MAXPLAYERS];

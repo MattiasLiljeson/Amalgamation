@@ -129,7 +129,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					clientInfo->ping = ping;
 				}
 			}
-
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{

@@ -1,15 +1,17 @@
 #include "DisplayGameStats.h"
 #include <ToString.h>
 
-DisplayGameStats::DisplayGameStats(const char* p_name) : DataSource(p_name)
+DisplayGameStats::DisplayGameStats(const char* p_name, const char* p_tableName)
+	: DataSource(p_name)
 {
+	m_tableName = p_tableName;
 	for (int i = 0; i < MAXPLAYERS; i++)
 	{
 		m_players[i].name	= "Vadarettkulnamn?";
 		m_players[i].score	= 0;
 		m_players[i].ping	= -1;
 	}
-
+	m_activePlayers = 0;
 	//NotifyRowAdd("infopanel", 0, MAXPLAYERS);
 }
 
@@ -23,14 +25,14 @@ void DisplayGameStats::GetRow( Rocket::Core::StringList& row,
 							  int row_index, 
 							  const Rocket::Core::StringList& columns )
 {
-	if (table == "infopanel")
+	if (table == m_tableName)
 	{
 		for (int col_index = 0; col_index < columns.size(); col_index++)
 		{
 			if (columns[col_index] == "playerName")
 			{
 				//row.push_back(Rocket::Core::String("playerName"));
-				row.push_back(m_players[row_index].name);
+				row.push_back(m_players[row_index].name.c_str());
 			}
 			else if (columns[col_index] == "score")
 			{
@@ -48,9 +50,9 @@ void DisplayGameStats::GetRow( Rocket::Core::StringList& row,
 
 int DisplayGameStats::GetNumRows( const Rocket::Core::String& table )
 {
-	if (table == "infopanel")
+	if (table == m_tableName)
 	{
-		return MAXPLAYERS;
+		return m_activePlayers;
 	}
 	return 0;
 }
@@ -64,6 +66,26 @@ void DisplayGameStats::updateRow( int p_row, const PlayerStats& p_stats )
 
 void DisplayGameStats::updateTheVisualInfoPanel()
 {
-	NotifyRowChange("infopanel", 0, MAXPLAYERS);
+	NotifyRowChange(m_tableName, 0, m_activePlayers);
+}
+
+void DisplayGameStats::setActivePlayers( int p_players )
+{
+	m_activePlayers = p_players;
+}
+
+int DisplayGameStats::getActivePlayers() const
+{
+	return m_activePlayers;
+}
+
+void DisplayGameStats::addRows( int p_nrOfNewRows )
+{
+	NotifyRowAdd(m_tableName, m_activePlayers, p_nrOfNewRows);
+}
+
+void DisplayGameStats::removeRows( int p_nrOfNewRows )
+{
+	NotifyRowRemove(m_tableName, m_activePlayers, p_nrOfNewRows);
 }
 
