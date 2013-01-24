@@ -163,8 +163,6 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.rotation		= t->getRotation();
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
-
-
 	m_server->broadcastPacket(data.pack());
 
 	// Also send a positional sound effect.
@@ -172,6 +170,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
 	soundEffectPacket.positional = true;
 	soundEffectPacket.position = t->getTranslation();
-	soundEffectPacket.attachedToNetsyncEntity = entity->getIndex();
+	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
+	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
 	m_server->broadcastPacket(soundEffectPacket.pack());
 }
