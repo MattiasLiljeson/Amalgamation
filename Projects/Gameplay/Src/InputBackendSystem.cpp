@@ -150,7 +150,7 @@ void InputBackendSystem::initialize()
 	m_cursor = new Cursor();
 
 	m_cursor->addControlSet(
-		2500000.0, 2500000.0,
+		2500000.0, 2500000.0, false,
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
@@ -158,7 +158,7 @@ void InputBackendSystem::initialize()
 		getControlByEnum(InputHelper::MOUSE_BTN::M_LBTN),
 		getControlByEnum(InputHelper::MOUSE_BTN::M_RBTN) );
 	m_cursor->addControlSet(
-		1000.0, 1000.0, 
+		1000.0, 1000.0, true,
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
 		getControlByEnum(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
