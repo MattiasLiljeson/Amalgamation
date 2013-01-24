@@ -29,8 +29,14 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 	Transform* transform = NULL;
 	PhysicsBody* physicsBody = NULL;
 	
-	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::Every8Millisecond) )
+	auto timerSys = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
+
+	if( timerSys->checkTimeInterval(TimerIntervals::EverySecond) )
+	{
+
+	}
+
+	else if( timerSys->checkTimeInterval(TimerIntervals::Every8Millisecond) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{

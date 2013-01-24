@@ -43,7 +43,7 @@ public:	//Enums
 		HudSystem,
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
-		ScoreDataTableSystem,
+		GameStatsSystem,
 		LevelGenSystem,
 		EntityFactory,
 		MinigunModuleControllerSystem,

@@ -36,3 +36,7 @@ static const string& TESTMUSICPATH = "Assets/Sound/Music/Test/";
 static const string& TESTMODELPATH = "Assets/Models/Test/";
 static const string& TESTTEXTUREPATH = "Assets/Textures/Test/";
 
+/************************************************************************/
+/* MISC														*/
+/************************************************************************/
+static const int MAXPLAYERS = 8;

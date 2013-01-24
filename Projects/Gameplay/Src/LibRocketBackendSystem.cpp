@@ -10,6 +10,7 @@
 #include <Globals.h>
 #include <GraphicsWrapper.h>
 #include <DebugUtil.h>
+#include <Rocket/Controls.h>
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -41,7 +42,7 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::SetSystemInterface(m_systemInterface);
 	Rocket::Core::SetRenderInterface(m_renderInterface);
 	Rocket::Core::Initialise();
-
+	Rocket::Controls::Initialise();
 
 	m_wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	m_wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowHeight();
@@ -73,6 +74,7 @@ void LibRocketBackendSystem::initialize()
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
+	//tmp = GUI_HUD_PATH + "infoPanel.rml";
 	loadDocument( tmp.c_str() );
 
 	//tmp = GUI_HUD_PATH + "main.rml";
@@ -128,7 +130,7 @@ void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
 	}
 	else{
 		DEBUGPRINT(( (std::string("Loaded LibRocket Cursor document (from ")+
-			toString(p_cursorPath) + ")").c_str() ));
+			toString(p_cursorPath) + ").\n").c_str() ));
 	}
 }
 
@@ -136,7 +138,8 @@ void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string
 {
 	Rocket::Core::Element* element;
 	element = m_documents[p_docId]->GetElementById( p_element.c_str() );
-	element->SetInnerRML( p_value.c_str() );
+	if (element)
+		element->SetInnerRML( p_value.c_str() );
 }
 
 

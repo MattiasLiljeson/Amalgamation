@@ -26,6 +26,7 @@
     <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
+    <ClInclude Include="DisplayGameStats.h" />
     <ClInclude Include="DisplayPlayerScoreSystem.h" />
     <ClInclude Include="EntityCreationPacket.h" />
     <ClInclude Include="EntityType.h" />
@@ -70,6 +71,7 @@
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
+    <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="PongPacket.h" />
     <ClInclude Include="PositionalSoundEffect.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
@@ -77,7 +79,7 @@
     <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
-    <ClInclude Include="ScoreDataTableSystem.h" />
+    <ClInclude Include="GameStatsSystem.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerPickingSystem.h" />
@@ -137,6 +139,7 @@
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
+    <ClCompile Include="DisplayGameStats.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
@@ -179,7 +182,7 @@
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
     <ClCompile Include="RocketControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
-    <ClCompile Include="ScoreDataTableSystem.cpp" />
+    <ClCompile Include="GameStatsSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />

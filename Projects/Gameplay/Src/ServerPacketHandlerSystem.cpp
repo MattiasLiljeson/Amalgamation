@@ -114,14 +114,20 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/* Send the "real" ping back to the client as a "your ping" message.    */
 			/************************************************************************/
 			UpdateClientStatsPacket updatedClientPacket;
-			updatedClientPacket.ping = info.ping;
+			updatedClientPacket.ping[0] = info.ping;
+
+			// Add all players' ping to the packet
+
+
 			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
 			// Also add the players' score to the packet.
 			NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
 				static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
+			
 			vector<Entity*> netSyncedScoreEntities =
 				netSyncedScoreSystem->getNetScoreEntities();
+			
 			int playerCount = 0;
 			for(unsigned int i=0; i<netSyncedScoreEntities.size(); i++)
 			{

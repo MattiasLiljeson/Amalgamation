@@ -1,7 +1,9 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <Rocket/Controls/DataSource.h>
+
+class UpdateClientStatsPacket;
+class DisplayGameStats;
 
 // =======================================================================================
 //                                      ScoreDataTableSystem
@@ -15,14 +17,20 @@
 /// Created on: 23-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ScoreDataTableSystem : public EntitySystem, public Rocket::Controls::DataSource
+class GameStatsSystem : public EntitySystem
 {
 public:
-	ScoreDataTableSystem();
+	GameStatsSystem();
 
 	void initialize();
 
-	virtual ~ScoreDataTableSystem();
+	virtual ~GameStatsSystem();
+
+	void updateStats(const UpdateClientStatsPacket* p_packet);
+
+	virtual void process();
+
 protected:
 private:
+	DisplayGameStats*		m_infoPanel;
 };

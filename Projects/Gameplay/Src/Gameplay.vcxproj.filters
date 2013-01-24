@@ -79,6 +79,9 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{a00554af-c0bc-4968-87f2-f05f087071ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -406,8 +409,14 @@
     <ClInclude Include="LibRocketBackendSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreDataTableSystem.h">
+    <ClInclude Include="DisplayGameStats.h">
       <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStatsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStats.h">
+      <Filter>Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -676,7 +685,10 @@
     <ClCompile Include="PositionalSoundEffect.cpp">
       <Filter>Components\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreDataTableSystem.cpp">
+    <ClCompile Include="DisplayGameStats.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStatsSystem.cpp">
       <Filter>Systems\GUI</Filter>
     </ClCompile>
   </ItemGroup>

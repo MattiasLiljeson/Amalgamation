@@ -1,5 +1,6 @@
 #pragma once
 #include "Packetizer.h"
+#include <Globals.h>
 
 // =======================================================================================
 //                                      UpdateClientStatsPacket
@@ -23,9 +24,8 @@ public:
 
 	void unpack( Packet p_packet );
 public:
-	float ping;
+	float ping[MAXPLAYERS];
 	float currentServerTimestamp;
-	const static int MAXPLAYERS = 8;
 	int playerIdentities[MAXPLAYERS];
 	float scores[MAXPLAYERS];
 };
