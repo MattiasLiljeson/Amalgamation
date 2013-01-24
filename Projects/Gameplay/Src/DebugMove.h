@@ -1,28 +1,30 @@
 #pragma once
 
-#include <EntitySystem.h>
+#include <Component.h>
+#include <AglVector3.h>
 
 // =======================================================================================
-//	DisplayPlayerScoreSystem
+//	DebugMove
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Prints players' score using anttweakbar.
+/// \brief Brief description...
 ///        
-/// # DisplayPlayerScoreSystem
+/// # DebugMove
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 23-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class DisplayPlayerScoreSystem: public EntitySystem
+class DebugMove: public Component
 {
 public:
-	DisplayPlayerScoreSystem();
-
-	~DisplayPlayerScoreSystem();
-
-	void inserted( Entity* p_entity );
-
-	bool checkProcessing();
+	DebugMove(AglVector3 p_direction)
+	{
+		direction = p_direction;
+	}
+	
+public:
+	// Direction and length of the debug movement
+	AglVector3 direction;
 
 };

@@ -1,28 +1,20 @@
 #pragma once
-
-#include <EntitySystem.h>
+#include <xaudio2.h>
 
 // =======================================================================================
-//	DisplayPlayerScoreSystem
+//	SoundBufferAndHeader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Prints players' score using anttweakbar.
+/// \brief Brief description...
 ///        
-/// # DisplayPlayerScoreSystem
+/// # SoundBufferAndHeader
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 22-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class DisplayPlayerScoreSystem: public EntitySystem
+struct SoundBufferAndHeader
 {
-public:
-	DisplayPlayerScoreSystem();
-
-	~DisplayPlayerScoreSystem();
-
-	void inserted( Entity* p_entity );
-
-	bool checkProcessing();
-
+	XAUDIO2_BUFFER buffer;
+	WAVEFORMATEX waveFormatEx;
 };

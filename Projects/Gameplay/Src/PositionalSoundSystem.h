@@ -1,28 +1,35 @@
 #pragma once
 
 #include <EntitySystem.h>
+class AudioBackendSystem;
 
 // =======================================================================================
-//	DisplayPlayerScoreSystem
+//	PositionalSoundSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Prints players' score using anttweakbar.
+/// \brief Brief description...
 ///        
-/// # DisplayPlayerScoreSystem
+/// # PositionalSoundSystem
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 18-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class DisplayPlayerScoreSystem: public EntitySystem
+class PositionalSoundSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem();
+	PositionalSoundSystem();
+	~PositionalSoundSystem();
 
-	~DisplayPlayerScoreSystem();
+	void processEntities( const vector<Entity*>& p_entities );
+	void initialize();
 
 	void inserted( Entity* p_entity );
+	void removed( Entity* p_entity );
+private:
+	void updateSoundPositions( const vector<Entity*>& p_entities );
 
-	bool checkProcessing();
+private:
+	AudioBackendSystem* m_audioBackendSystem;
 
 };

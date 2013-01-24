@@ -32,10 +32,6 @@
 #include "PacketType.h"
 #include "PickComponent.h"
 #include "ParticleSystemEmitter.h"
-
-// Debug
-#include <DebugUtil.h>
-#include <ToString.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
@@ -49,6 +45,17 @@
 #include "Extrapolate.h"
 #include "InputBackendSystem.h"
 #include "ParticleRenderSystem.h"
+#include "AudioInfo.h"
+#include <BasicSoundCreationInfo.h>
+#include <PositionalSoundCreationInfo.h>
+#include "AudioBackendSystem.h"
+#include "PositionalSoundSource.h"
+#include "SpawnSoundEffectPacket.h"
+#include "NetsyncDirectMapperSystem.h"
+
+// Debug
+#include <DebugUtil.h>
+#include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -103,33 +110,28 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				data.entityType == (char)EntityType::Prop ||
 				data.entityType == (char)EntityType::ShipModule)
 			{
-
-				// HACK: This is VERY inefficient for large amount of
-				// network-synchronized entities. (Solve later)
-				for( unsigned int i=0; i<p_entities.size(); i++ )
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity( data.networkIdentity );
+				if(entity != NULL)
 				{
-					NetworkSynced* netSync = NULL;
-					netSync = static_cast<NetworkSynced*>(
+					Transform* transform = NULL;
+					transform = static_cast<Transform*>(
 						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-					if( netSync->getNetworkIdentity() == data.networkIdentity )
-					{
-						Transform* transform = NULL;
-						transform = static_cast<Transform*>(
-							m_world->getComponentManager()->getComponent(
-							p_entities[i]->getIndex(), ComponentType::Transform ) );
-						transform->setTranslation( data.translation );
-						transform->setRotation( data.rotation );
-						transform->setScale( data.scale );
+						entity->getIndex(), ComponentType::Transform ) );
+					transform->setTranslation( data.translation );
+					transform->setRotation( data.rotation );
+					transform->setScale( data.scale );
 
-						Extrapolate* extrapolate = NULL;
-						extrapolate = static_cast<Extrapolate*>(
-							p_entities[i]->getComponent(ComponentType::Extrapolate) );
-						extrapolate->serverUpdateTimeStamp = data.timestamp;
-						extrapolate->velocityVector = data.velocity;
-						extrapolate->angularVelocity = data.angularVelocity;
-					}
+					Extrapolate* extrapolate = NULL;
+					extrapolate = static_cast<Extrapolate*>(
+						entity->getComponent(ComponentType::Extrapolate) );
+					extrapolate->serverUpdateTimeStamp = data.timestamp;
+					extrapolate->velocityVector = data.velocity;
+					extrapolate->angularVelocity = data.angularVelocity;
 				}
+
 			}
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
@@ -146,37 +148,41 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			ps->setSpawnFrequency(data.spawnFrequency);
 		}
 #pragma endregion 
-		/************************************************************************/
-		/* Score is now included in player update client stats packets.			*/
-		/************************************************************************/
-		/*
-		else if(packetType == (char)PacketType::ScoresUpdate)
+		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
-			NetworkScoreUpdatePacket scoreUpdateData;
-			scoreUpdateData = readScorePacket( packet );
-
-			// HACK: This is VERY inefficient for large amount of
-			// network-synchronized entities. (Solve later)
-			for( unsigned int i=0; i<p_entities.size(); i++ )
+			SpawnSoundEffectPacket spawnSoundPacket;
+			spawnSoundPacket.unpack( packet );
+			if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				NetworkSynced* netSync = NULL;
-				netSync = static_cast<NetworkSynced*>(
-					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-
-				if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
+				// Short positional sound effect.
+				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+					m_world->getSystem(SystemType::AudioBackendSystem));
+				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+					spawnSoundPacket.position);
+			}
+			else if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity != -1 )
+			{
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity(
+					spawnSoundPacket.attachedToNetsyncEntity );
+				if( entity != NULL )
 				{
-					PlayerScore* scoreComponent = static_cast<PlayerScore*>(
-						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
-					if( scoreComponent )
-					{
-						scoreComponent->setScore( scoreUpdateData.score );
-					}
+					entity->addComponent(ComponentType::PositionalSoundSource,
+						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+						true, 1.0f));
 				}
 			}
+			else
+			{
+				// Ambient sound effect.
+			}
 		}
-		*/
 		else if(packetType == (char)PacketType::Ping)
 		{
 			PingPacket pingPacket;
@@ -209,20 +215,19 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			m_tcpClient->setPingToServer( m_currentPing );
 
 			// Clients score
-			// TODO: (Johan) Handle score packet...
 			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
-			vector<Entity*>* netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+			vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
 			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
 			{
-				for(unsigned int i=0; i<netSyncScoreEntities->size(); i++)
+				for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
 				{
 					NetworkSynced* netSync = static_cast<NetworkSynced*>(
-						(*netSyncScoreEntities)[i]->getComponent(
+						netSyncScoreEntities[i]->getComponent(
 						ComponentType::NetworkSynced));
 					PlayerScore* playerScore = static_cast<PlayerScore*>(
-						(*netSyncScoreEntities)[i]->getComponent(
+						netSyncScoreEntities[i]->getComponent(
 						ComponentType::PlayerScore));
 					if(netSync->getNetworkOwner() ==
 						updateClientPacket.playerIdentities[playerId])
@@ -286,7 +291,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 
 		component = new RenderInfo( shipMeshId );
 		entity->addComponent( ComponentType::RenderInfo, component );
-		entity->addComponent( ComponentType::Transform, transform );		
+		entity->addComponent( ComponentType::Transform, transform );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -311,8 +316,13 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 				AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+			// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
+			// because it was really weird to hear from the camera. This can of course
+			// be changed back if game play fails in this way, but it's at least more
+			// convenient for debugging!
+			component = new AudioListener();
+			entity->addComponent(ComponentType::AudioListener, component);
 		}
 
 		/************************************************************************/
@@ -349,9 +359,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 			entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-			// listener
-			component = new AudioListener();
-			entity->addComponent(ComponentType::AudioListener, component);
 
 			//Add a picking ray to the camera so that edit mode can be performed
 			entity->addComponent(ComponentType::PickComponent, new PickComponent());
@@ -653,7 +660,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 	unsigned int p_packetIdentifier )
 {
-	if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
+	if( m_lastBroadcastPacketIdentifier == 0)
+	{
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
+	}
+	else if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
 	{
 		m_totalBroadcastPacketLost += p_packetIdentifier -
 			(m_lastBroadcastPacketIdentifier + 1);

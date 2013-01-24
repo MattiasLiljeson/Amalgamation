@@ -5,7 +5,7 @@ SoundWrapper::SoundWrapper()
 {
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
-	m_masterVolume	= 1.0f;
+	m_masterVolume	= 1.0f;	// NOTE: (Johan) Makes no difference if this is changed.
 	
 	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
 
@@ -105,7 +105,7 @@ int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 										   PositionalSoundCreationInfo* p_positionalInfo)
 {
-	p_positionalInfo->destChannels = m_destChannels; // NOTE THE ASSIGNMENT 
+	p_positionalInfo->destChannels = m_destChannels;
 	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_basicSoundInfo, 
 		p_positionalInfo));
 	return m_createdSounds.size()-1; // returns the newly created sound index
@@ -137,6 +137,11 @@ void SoundWrapper::updateOutputMatrix(int p_index)
 	PositionalSound* sound = static_cast<PositionalSound*>(m_createdSounds[p_index]);
 	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
 		X3DAUDIO_CALCULATE_MATRIX, &sound->getDSPSettings());
+
+//	// Write to the DSP settings.
+//	PositionalSound* sound = static_cast<PositionalSound*>(m_createdSounds[p_index]);
+//	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
+//		X3DAUDIO_CALCULATE_MATRIX, sound->getDSPSettingsPtr());
 
 	sound->m_left = sound->getDSPSettings().pMatrixCoefficients[0];
 	sound->m_right = sound->getDSPSettings().pMatrixCoefficients[1];

@@ -26,8 +26,9 @@ public:	//Enums
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
-		AudioComponent,
+		AudioInfo,
 		AudioListener,
+		PositionalSoundSource,
 		ShipFlyController,
 		ShipEditController,
 		Impulse,
@@ -57,6 +58,7 @@ public:	//Enums
 		PickComponent,
 		ParticleSystemEmitter,
 		ParticleUpdateData,
+		DebugMove,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

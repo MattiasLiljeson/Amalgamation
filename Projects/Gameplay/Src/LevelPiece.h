@@ -53,6 +53,7 @@ public:
 	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
 	const AglOBB& getBoundingBox() const;
 	const AglBoundingSphere& getBoundingSphere() const;
+	const ModelResource* getModelResource() const;
 protected:
 private:
 	void updateBoundingVolumes();

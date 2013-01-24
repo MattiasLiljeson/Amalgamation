@@ -11,23 +11,13 @@ NetSyncedPlayerScoreTrackerSystem::~NetSyncedPlayerScoreTrackerSystem()
 {
 }
 
-void NetSyncedPlayerScoreTrackerSystem::inserted( Entity* p_entity )
+const vector<Entity*>& NetSyncedPlayerScoreTrackerSystem::getNetScoreEntities() const
 {
-	m_netScoreEntities.push_back(p_entity);
+	return getActiveEntities();
 }
 
-void NetSyncedPlayerScoreTrackerSystem::removed( Entity* p_entity )
+bool NetSyncedPlayerScoreTrackerSystem::checkProcessing()
 {
-	for(unsigned int i=0; i<m_netScoreEntities.size(); i++)
-	{
-		if(m_netScoreEntities[i] == p_entity)
-		{
-			m_netScoreEntities.erase(m_netScoreEntities.begin() + i);
-		}
-	}
-}
-
-vector<Entity*>* NetSyncedPlayerScoreTrackerSystem::getNetScoreEntities()
-{
-	return &m_netScoreEntities;
+	// Tells the ES framework to not even bother processing this system.
+	return false;
 }

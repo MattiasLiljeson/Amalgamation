@@ -15,6 +15,7 @@
 #include "NetworkSynced.h"
 #include <PhysicsController.h>
 #include "StandardRocket.h"
+#include "SpawnSoundEffectPacket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -150,6 +151,8 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::Transform, t);
 
 	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 	m_world->addEntity(entity);
 
 	EntityCreationPacket data;
@@ -160,9 +163,14 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.rotation		= t->getRotation();
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
-
-	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
-
 	m_server->broadcastPacket(data.pack());
+
+	// Also send a positional sound effect.
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = t->getTranslation();
+	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
+	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
+	m_server->broadcastPacket(soundEffectPacket.pack());
 }

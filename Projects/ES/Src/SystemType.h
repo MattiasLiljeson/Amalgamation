@@ -20,6 +20,7 @@ public:	//Enums
 		NetworkConnectoToServerSystem,
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,
+		DebugMovementSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
@@ -37,6 +38,7 @@ public:	//Enums
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,
+		PositionalSoundSystem,
 		LibRocketBackendSystem,
 		MenuSystem,
 		HudSystem,
@@ -61,6 +63,7 @@ public:	//Enums
 		AntTweakBarSystem,
 		ShipManagerSystem,
 		NetSyncedPlayerScoreTrackerSystem,
+		NetsyncDirectMapperSystem,
 		GraphicsRendererSystem,
 		ParticleSystemEmitterSystem,
 		NUM_SYSTEM_TYPES

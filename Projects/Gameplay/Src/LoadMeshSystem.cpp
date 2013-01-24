@@ -129,7 +129,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Transform
 		AglMatrix baseTransform = AglMatrix::identityMatrix();
 		if (rootTransform) baseTransform = rootTransform->getMatrix();
-		baseTransform = modelResource->transform/* baseTransform*/;
+		baseTransform = modelResource->transform * baseTransform;
 
 		component = new Transform( baseTransform );
 		entity->addComponent( ComponentType::Transform, component );

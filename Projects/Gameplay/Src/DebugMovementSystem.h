@@ -3,26 +3,21 @@
 #include <EntitySystem.h>
 
 // =======================================================================================
-//	DisplayPlayerScoreSystem
+//	DebugMovementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Prints players' score using anttweakbar.
+/// \brief Moves an entity in a circle.
 ///        
-/// # DisplayPlayerScoreSystem
-/// Detailed description...
-/// Created on: 4-1-2013 
+/// # DebugMovementSystem
+/// Components in use: Transform, CircularMovement.
+/// Created on: 23-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class DisplayPlayerScoreSystem: public EntitySystem
+class DebugMovementSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem();
-
-	~DisplayPlayerScoreSystem();
-
-	void inserted( Entity* p_entity );
-
-	bool checkProcessing();
-
+	DebugMovementSystem();
+	~DebugMovementSystem();
+	void processEntities( const vector<Entity*>& p_entities );
 };
