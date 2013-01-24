@@ -114,7 +114,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						readAndStoreEmpties(-1,model,model->transform,
+						readAndStoreEmpties(-1,model,currentInstance.transform,
 							scene,&currentInstance,instanceInstructions);
 					}
 				}
