@@ -84,6 +84,7 @@ void Transform::init( vector<ComponentData> p_initData )
 		if( p_initData[i].dataName == "m_rotationW" )
 			p_initData[i].getData<float>(&m_rotation.v);
 	}
+	calcCompMatrix();
 }
 
 const AglVector3& Transform::getTranslation() const

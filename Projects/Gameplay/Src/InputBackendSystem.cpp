@@ -150,7 +150,7 @@ void InputBackendSystem::initialize()
 	m_cursor = new Cursor();
 
 	m_cursor->addControlSet(
-		2500000.0, 2500000.0, false,
+		10000.0, 10000.0, false,
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_NEGATIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::X_POSITIVE),
 		getControlByEnum(InputHelper::MOUSE_AXIS::Y_NEGATIVE),

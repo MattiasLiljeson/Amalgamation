@@ -368,6 +368,10 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
 	m_world->addEntity( entity );
 
+	// Create a rock
+	status = factory->readAssemblageFile( "Assemblages/rocks.asd" );
+	entity = factory->entityFromRecipe( "rocks" );									 
+	m_world->addEntity( entity );
 
 
 	EntitySystem* tempSys = NULL;
