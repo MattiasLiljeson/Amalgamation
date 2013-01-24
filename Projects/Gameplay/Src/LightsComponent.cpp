@@ -9,7 +9,7 @@ Light::Light()
 	//scale = AglVector3::one();
 	//rotation = AglQuaternion( 0.0f, 0.0f, 0.0f, 0.0f );
 	//translation = AglVector3::zero();
-	offset = AglMatrix::identityMatrix();
+	offsetMat = AglMatrix::identityMatrix();
 }
 
 

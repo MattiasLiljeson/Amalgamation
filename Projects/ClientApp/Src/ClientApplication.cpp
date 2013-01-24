@@ -391,7 +391,7 @@ void ClientApplication::initEntities()
 	float scale = 1000.0f;
 	Light ambientLight;
 	AglMatrix::componentsToMatrix(
-		ambientLight.offset,
+		ambientLight.offsetMat,
 		AglVector3( scale, scale, scale ),
 		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
 		AglVector3(3,3,3)
@@ -438,7 +438,7 @@ void ClientApplication::initEntities()
 	lightGridInstData.ambient[2] = 0.0f;
 
 	float intensitity = 0.3f;
-	int dim = 24;
+	int dim = 4;
 	for( int x=0; x<dim; x++ )
 	{
 		for( int y=0; y<dim; y++ )
@@ -452,7 +452,7 @@ void ClientApplication::initEntities()
 				Light light;
 				light.instanceData = lightGridInstData;
 				AglMatrix::componentsToMatrix( 
-					light.offset,
+					light.offsetMat,
 					AglVector3( range, range, range ),
 					AglQuaternion::identity(),
 					AglVector3( -x*(range+1), -y*(range+1), -z*(range+1) )

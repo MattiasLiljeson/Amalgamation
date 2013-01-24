@@ -16,7 +16,7 @@ struct Light
 	//AglVector3 scale;
 	//AglQuaternion rotation;
 	//AglVector3 translation;
-	AglMatrix offset;
+	AglMatrix offsetMat;
 	LightInstanceData instanceData;
 	Light();
 };

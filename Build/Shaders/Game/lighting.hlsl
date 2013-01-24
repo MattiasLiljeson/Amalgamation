@@ -72,6 +72,9 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;
 	surface.specular = specular;
+	
+	// lulz tonemapping
+	//surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
 
 	float3	lightCol;
 	
