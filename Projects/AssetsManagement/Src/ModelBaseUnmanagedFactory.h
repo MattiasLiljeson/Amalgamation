@@ -62,7 +62,7 @@ protected:
 
 	virtual ModelResource* getFallback();
 
-	void createBspTree(AglMesh* p_mesh);
+	AglLooseBspTree* createBspTree(AglMesh* p_mesh);
 
 
 private:

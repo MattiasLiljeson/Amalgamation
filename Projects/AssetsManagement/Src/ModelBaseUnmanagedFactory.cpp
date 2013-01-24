@@ -86,6 +86,8 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 			// set
 			model->meshHeader = aglMeshHeader;
 
+			model->looseBspTree = createBspTree(aglMesh);
+
 			readAndStoreEmpties((int)i,model,p_scene);
 			readAndStoreParticleSystems(i,model,p_scene);
 
@@ -135,41 +137,24 @@ ModelResource* ModelBaseUnmanagedFactory::getFallback()
 	return model;
 }
 
-void ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
+AglLooseBspTree* ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
 {
 	//ANTON
-	/*AglMeshHeader h;
-	h.id = pData->ID;
-	h.nameID = mScene->addName(pData->Name);
-	h.indexCount = pData->IndicesCount;
-	h.vertexCount = pData->VertexCount;
-	h.vertexFormat = pData->VertexFormat;
-	h.transform = pData->Transform;
+	AglMeshHeader h = p_mesh->getHeader();
+	AglVertexSTBN* v = (AglVertexSTBN*)p_mesh->getVertices();
+	unsigned int* ind = p_mesh->getIndices();
 
-	//Write a loose bsp tree for the mesh
-	vector<AglVector3> verts;
-	AglVertexSTBN* oldV = (AglVertexSTBN*)pData->Vertices;
-	for (int j = 0; j < h.vertexCount; j++)
+	vector<AglVector3> vertices;
+	vector<unsigned int> indices;
+	for (unsigned int i = 0; i < h.vertexCount; i++)
 	{
-		verts.push_back(oldV[j].position);
+		vertices.push_back(v[i].position);
 	}
-	vector<unsigned int> ind;
-	for (int j = 0; j < h.indexCount; j++)
+	for (unsigned int i = 0; i < h.indexCount; i++)
 	{
-		ind.push_back(pData->Indices[j]);
+		indices.push_back(ind[i]);
 	}
-
-	cout << "Creating bounding volumes for mesh " << h.id << endl;
-	//Would be optimal with hulls rather than a generic mesh
-	h.minimumOBB = AglOBB::constructMinimum(verts, ind);
-	h.boundingSphere = AglBoundingSphere::minimumBoundingSphere(h.minimumOBB.getCorners());
-	cout << "Bounding volumes created for mesh " << h.id << endl << endl;
-
-	//AglInteriorSphereGrid* spheregrid = new AglInteriorSphereGrid(3, verts, ind, h.id);
-
-	//mScene->addSphereGrid(spheregrid);
-
-	//AglLooseBspTreeConstructor treeConst(h.id, verts, ind);
-	//mScene->addBspTree(treeConst.createTree());*/
+	AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
+	return constructor.createTree();
 	//END ANTON
 }

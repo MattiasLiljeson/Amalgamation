@@ -193,8 +193,8 @@ namespace Srv
 		Component* component;
 		// Add a grid of cubes to test instancing.
 
-		float maxVal = 2*100;
-		float minVal = -75*2;
+		float maxVal = 2*15;
+		float minVal = -75*4;
 		int size = 16;
 		for( int x=0; x<size; x++ )
 		{
@@ -227,7 +227,7 @@ namespace Srv
 				}
 			}
 		}
-		InitModulesTestByAnton();
+		//InitModulesTestByAnton();
 	}
 
 	

@@ -464,7 +464,7 @@ void ClientApplication::initEntities()
 	}
 	entity = m_world->createEntity();
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
-	entity->addComponent( ComponentType::Transform, new Transform( 75, 75, 75 ) );
+	entity->addComponent( ComponentType::Transform, new Transform( range/2, range/2, range/2 ) );
 	m_world->addEntity( entity );
 
 	// Test sound source
