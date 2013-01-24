@@ -65,6 +65,7 @@ public:	//Enums
 		NetSyncedPlayerScoreTrackerSystem,
 		GraphicsRendererSystem,
 		ParticleSystemEmitterSystem,
+		ServerClientInfoSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -198,9 +198,6 @@
     <ClInclude Include="ClientPacketHandlerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="ClientInfo.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="GameplayTags.h">
       <Filter>Components\Tags</Filter>
     </ClInclude>
@@ -417,6 +414,12 @@
     </ClInclude>
     <ClInclude Include="PlayerStats.h">
       <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerClientInfoSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -690,6 +693,12 @@
     </ClCompile>
     <ClCompile Include="GameStatsSystem.cpp">
       <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerClientInfoSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

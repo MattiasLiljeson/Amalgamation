@@ -80,6 +80,7 @@
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="GameStatsSystem.h" />
+    <ClInclude Include="ServerClientInfoSystem.h" />
     <ClInclude Include="ServerDynamicObjectsSystem.h" />
     <ClInclude Include="ServerPacketHandlerSystem.h" />
     <ClInclude Include="ServerPickingSystem.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
+    <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
@@ -183,6 +185,7 @@
     <ClCompile Include="RocketControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="GameStatsSystem.cpp" />
+    <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />

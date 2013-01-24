@@ -22,6 +22,7 @@ public:	//Enums
 		RenderInfo,
 		Input,
 		NetworkSynced,
+		ClientInfo,
 		Extrapolate,
 		PhysicsBody,
 		PhysUnknown,

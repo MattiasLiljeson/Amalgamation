@@ -32,5 +32,7 @@ public:
 
 protected:
 private:
+	int						m_infoPanelDoc;
+	bool					m_displayInfoPanel;
 	DisplayGameStats*		m_infoPanel;
 };

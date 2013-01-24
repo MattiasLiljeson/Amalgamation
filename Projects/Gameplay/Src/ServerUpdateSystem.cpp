@@ -12,6 +12,11 @@
 #include "PhysicsController.h"
 #include "ParticleUpdateData.h"
 #include "ParticleUpdatePacket.h"
+#include "UpdateClientStatsPacket.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "PlayerScore.h"
+#include "ServerClientInfoSystem.h"
+#include "ClientInfo.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -33,7 +38,54 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 	if( timerSys->checkTimeInterval(TimerIntervals::EverySecond) )
 	{
+		/************************************************************************/
+		/* Send the client info to clients									    */
+		/************************************************************************/
+		UpdateClientStatsPacket updatedClientPacket;
+		
+		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+			m_world->getSystem(SystemType::ServerClientInfoSystem));
+		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+		for (int i = 0; i < clientInfoEntities.size(); i++)
+		{
+			auto clientInfo = static_cast<ClientInfo*>(
+				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
 
+			updatedClientPacket.ping[i] = clientInfo->ping;
+		}
+
+		// Add all players' ping to the packet
+
+
+		updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
+		// Also add the players' score to the packet.
+		NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
+			static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+			SystemType::NetSyncedPlayerScoreTrackerSystem));
+
+		vector<Entity*> netSyncedScoreEntities =
+			netSyncedScoreSystem->getNetScoreEntities();
+
+		int playerCount = 0;
+		for(unsigned int i=0; i<netSyncedScoreEntities.size(); i++)
+		{
+			PlayerScore* playerScore = static_cast<PlayerScore*>(
+				netSyncedScoreEntities[i]->getComponent(ComponentType::PlayerScore));
+			NetworkSynced* netSync = static_cast<NetworkSynced*>(
+				netSyncedScoreEntities[i]->getComponent(ComponentType::NetworkSynced));
+			if(playerScore && netSync)
+			{
+				updatedClientPacket.playerIdentities[playerCount] =
+					netSync->getNetworkOwner();
+				// TODO: (Johan) Change score into whatever Anton sees fit, but for
+				// now the score is an integer!
+				updatedClientPacket.scores[playerCount] = playerScore->getTotalScore();
+				playerCount += 1;
+			}
+		}
+
+		m_server->broadcastPacket(updatedClientPacket.pack());
+		//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 	}
 
 	else if( timerSys->checkTimeInterval(TimerIntervals::Every8Millisecond) )

@@ -351,13 +351,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		m_world->addEntity(entity);
 
 		/************************************************************************/
-		/* HACK: HudElement should probably be located in another entity.		*/
-		/************************************************************************/
-		component = new HudElement("scoreText");
-		entity->addComponent( ComponentType::HudElement, component );
-		m_world->addEntity(entity);
-
-		/************************************************************************/
 		/* Attach a camera if it's the clients ship!							*/
 		/************************************************************************/
 		if(p_packet.owner == m_tcpClient->getId())

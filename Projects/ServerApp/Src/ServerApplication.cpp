@@ -24,6 +24,7 @@
 #include <ShipManagerSystem.h>
 #include <RocketControllerSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <ServerClientInfoSystem.h>
 
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -160,6 +161,8 @@ namespace Srv
 			new ServerScoreSystem( m_server ), true );
 		m_world->setSystem( SystemType::NetSyncedPlayerScoreTrackerSystem,
 			new NetSyncedPlayerScoreTrackerSystem(), true );
+
+		m_world->setSystem( new ServerClientInfoSystem(), true);
 
 		/************************************************************************/
 		/* Picking																*/

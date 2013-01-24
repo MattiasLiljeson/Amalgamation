@@ -27,6 +27,7 @@
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
 #include "StaticProp.h"
+#include "ClientInfo.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -85,6 +86,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 		while( m_server->hasNewConnections() )
 		{
 			int id = m_server->popNewConnection();
+
+			// Creates a new client info entity for the newly connected client
+			createClientInfoEntity(id);
 
 			/************************************************************************/
 			/* Send the newly connected client a welcome packet with all inclusive. */
@@ -227,6 +231,12 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 
 	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
 
-
 	return e;
+}
+
+void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
+{
+	Entity* e = m_world->createEntity();
+	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
+	m_world->addEntity(e);
 }

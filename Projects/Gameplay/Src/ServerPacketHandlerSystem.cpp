@@ -26,6 +26,8 @@
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
 
+#include "ServerClientInfoSystem.h"
+
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
 	ComponentType::NetworkSynced, ComponentType::ShipFlyController,
@@ -97,7 +99,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if( packetType == (char)PacketType::Pong)
 		{
-			ClientInfo info;
+			//auto clientInfo = static_cast<ClientInfo*>(m_world->getEntityManager()->get)
+			
+
 			float totalElapsedTime = m_world->getElapsedTime();
 			float timeWhenSent;
 
@@ -108,45 +112,24 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/************************************************************************/
 			/* Convert from seconds to milliseconds.								*/
 			/************************************************************************/
-			info.ping = (totalElapsedTime - timeWhenSent)*1000.0f;
-			m_clients[packet.getSenderId()] = info;
-			/************************************************************************/
-			/* Send the "real" ping back to the client as a "your ping" message.    */
-			/************************************************************************/
-			UpdateClientStatsPacket updatedClientPacket;
-			updatedClientPacket.ping[0] = info.ping;
+			float ping = (totalElapsedTime - timeWhenSent)*1000.0f;
+			//m_clients[packet.getSenderId()] = info;
 
-			// Add all players' ping to the packet
+			auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+				m_world->getSystem(SystemType::ServerClientInfoSystem));
 
-
-			updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
-			// Also add the players' score to the packet.
-			NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
-				static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
-				SystemType::NetSyncedPlayerScoreTrackerSystem));
-			
-			vector<Entity*> netSyncedScoreEntities =
-				netSyncedScoreSystem->getNetScoreEntities();
-			
-			int playerCount = 0;
-			for(unsigned int i=0; i<netSyncedScoreEntities.size(); i++)
+			vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+			for (int i = 0; i < clientInfoEntities.size(); i++)
 			{
-				PlayerScore* playerScore = static_cast<PlayerScore*>(
-					netSyncedScoreEntities[i]->getComponent(ComponentType::PlayerScore));
-				NetworkSynced* netSync = static_cast<NetworkSynced*>(
-					netSyncedScoreEntities[i]->getComponent(ComponentType::NetworkSynced));
-				if(playerScore && netSync)
+				auto clientInfo = static_cast<ClientInfo*>(
+					clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+
+				if (clientInfo->id == packet.getSenderId())
 				{
-					updatedClientPacket.playerIdentities[playerCount] =
-						netSync->getNetworkOwner();
-					// TODO: (Johan) Change score into whatever Anton sees fit, but for
-					// now the score is an integer!
-					updatedClientPacket.scores[playerCount] = playerScore->getTotalScore();
-					playerCount += 1;
+					clientInfo->ping = ping;
 				}
 			}
 
-			m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{
