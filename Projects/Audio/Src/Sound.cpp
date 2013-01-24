@@ -1,7 +1,7 @@
 #include "Sound.h"
 
 
-Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer, 
+Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer, 
 			 float p_volume/* =1.0f */)
 {
 	m_sourceVoice = p_sourceVoice;
@@ -12,7 +12,7 @@ Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer,
 	m_right = 0;
 
 	HRESULT hr = S_OK;
-	hr = m_sourceVoice->SubmitSourceBuffer(&m_buffer);
+	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	if(FAILED (hr))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
@@ -24,7 +24,6 @@ Sound::~Sound()
 {
 	m_sourceVoice->Stop(0);
 	m_sourceVoice->DestroyVoice();
-	delete m_buffer.pAudioData;
 	delete m_sourceState;
 }
 
@@ -51,7 +50,7 @@ HRESULT Sound::restart()
 {
 	HRESULT hr = S_OK;
 
-	hr = m_sourceVoice->SubmitSourceBuffer(&m_buffer);
+	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	hr = m_sourceVoice->Start(0);
 
 	return hr;
@@ -61,7 +60,7 @@ HRESULT Sound::resumeOrPlay()
 {
 	HRESULT hr = S_OK;
 	if(m_sourceState->BuffersQueued == 0)
-		hr = m_sourceVoice->SubmitSourceBuffer(&m_buffer);
+		hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	hr = m_sourceVoice->Start(0);
 	return hr;
 }

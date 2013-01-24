@@ -99,16 +99,17 @@ void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
 	m_createdSounds.push_back(m_soundFactory->createAmbientSound(p_info));
-	return m_createdSounds.size()-1; // returns the newly created sound index
+	return (int)m_createdSounds.size()-1; // returns the newly created sound index
 }
 
 int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 										   PositionalSoundCreationInfo* p_positionalInfo)
 {
 	p_positionalInfo->destChannels = m_destChannels;
-	m_createdSounds.push_back(m_soundFactory->createPositionalSound(p_basicSoundInfo, 
-		p_positionalInfo));
-	return m_createdSounds.size()-1; // returns the newly created sound index
+	PositionalSound* positionalSound = m_soundFactory->createPositionalSound(
+		p_basicSoundInfo, p_positionalInfo);
+	m_createdSounds.push_back(positionalSound);
+	return (int)m_createdSounds.size()-1; // returns the newly created sound index
 }
 
 void SoundWrapper::init3DSoundSettings()

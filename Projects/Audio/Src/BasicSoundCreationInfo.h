@@ -18,7 +18,7 @@ struct BasicSoundCreationInfo
 {
 	float volume;
 	IXAudio2Voice* destinationVoice;
-	const char* file; //ONLY USED FOR DEBUG!
+	const char* fileName;
 	const char* filePath;
 	bool loopPlayback;
 
@@ -27,7 +27,7 @@ struct BasicSoundCreationInfo
 	{
 		destinationVoice = NULL;
 		volume = p_volume;
-		file = p_file;
+		fileName = p_file;
 		filePath = p_filePath;
 		loopPlayback = p_loopPlayback;
 	}
@@ -35,7 +35,7 @@ struct BasicSoundCreationInfo
 	std::string getFullFilePathString()
 	{
 		std::string fullFilePath = filePath;
-		fullFilePath += file;
+		fullFilePath += fileName;
 		return fullFilePath;
 	}
 };

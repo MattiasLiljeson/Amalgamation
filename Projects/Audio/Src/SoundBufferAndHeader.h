@@ -15,6 +15,19 @@
 
 struct SoundBufferAndHeader
 {
-	XAUDIO2_BUFFER buffer;
-	WAVEFORMATEX waveFormatEx;
+	SoundBufferAndHeader()
+	{
+		buffer = new XAUDIO2_BUFFER();
+		waveFormatEx = new WAVEFORMATEX();
+	}
+	~SoundBufferAndHeader()
+	{
+		delete []buffer->pAudioData;
+		delete buffer;
+		delete waveFormatEx;
+	}
+
+	XAUDIO2_BUFFER* buffer;
+	// Header information
+	WAVEFORMATEX* waveFormatEx;
 };

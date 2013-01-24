@@ -12,34 +12,48 @@ SoundFactory::~SoundFactory()
 
 Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 {
-	XAUDIO2_BUFFER buffer = {0};
-	WAVEFORMATEX waveFormatEx;
-	initBuffer(&buffer, p_info);
-	createSoundBuffer(p_info->getFullFilePathString().c_str(), &buffer, &waveFormatEx);
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_info->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_info);
+		createSoundBuffer(p_info->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+	}
 
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
-	return new Sound(soundVoice, buffer, p_info->volume);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx);
+	return new Sound(soundVoice, bufferAndHeader->buffer, p_info->volume);
 }
 
 PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 													 PositionalSoundCreationInfo* p_positionalInfo)
 {
-	XAUDIO2_BUFFER buffer = {0};
-	WAVEFORMATEX waveFormatEx;
-	initBuffer(&buffer, p_basicSoundInfo);
-	createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(), &buffer,
-		&waveFormatEx);
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_basicSoundInfo->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
+		createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+	}
+	
 	X3DAUDIO_EMITTER emitter = {0};
 	initEmitter(&emitter, p_positionalInfo->soundOrientation);
 	X3DAUDIO_DSP_SETTINGS dspSettings = {0};
-	initDSPSettings(&dspSettings,p_positionalInfo->destChannels);
-
+	initDSPSettings(&dspSettings, p_positionalInfo->destChannels);
 	PositionalSoundInfo info;
-	info.emitter	= emitter;
-	info.settings	= dspSettings; 
+	info.emitter = emitter;
+	info.settings = dspSettings; 
 	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
-	return new PositionalSound( soundVoice, buffer, info, p_basicSoundInfo->volume);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx);
+	return new PositionalSound(soundVoice, bufferAndHeader->buffer, info,
+		p_basicSoundInfo->volume);
 }
 
 

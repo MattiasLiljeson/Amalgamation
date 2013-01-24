@@ -11,8 +11,6 @@
 #include "SoundFactory.h"
 #include "BasicSoundCreationInfo.h"
 #include "PositionalSoundCreationInfo.h"
-#include <ResourceManager.h>
-#include "SoundBufferAndHeader.h"
 
 using namespace std;
 
@@ -166,7 +164,6 @@ private:
 	X3DAUDIO_HANDLE			m_x3DAudioInstance;
 
 	SoundFactory*			m_soundFactory;
-	ResourceManager<SoundBufferAndHeader*> m_soundBuffers;
 
 	vector<Sound*>			m_createdSounds;
 };

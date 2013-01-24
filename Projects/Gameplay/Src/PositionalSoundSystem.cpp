@@ -50,7 +50,7 @@ void PositionalSoundSystem::inserted( Entity* p_entity )
 	positionalSoundSource->setSoundIndex(soundIndex);
 	// NOTE: (Johan) There is a bug where STOP must be called before PLAY when playing
 	// sound only once. If only PLAY is called the sound will play exactly two times.
-//	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
+	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
 }
 

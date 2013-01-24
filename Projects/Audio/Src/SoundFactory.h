@@ -9,6 +9,8 @@
 #include "AudioCurves.h"
 #include "BasicSoundCreationInfo.h"
 #include "PositionalSoundCreationInfo.h"
+#include <ResourceManager.h>
+#include "SoundBufferAndHeader.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -62,4 +64,5 @@ private:
 private:
 	IXAudio2* m_soundDevice;
 	HANDLE	m_file; ///< m_file is always used when loading sounds from file
+	ResourceManager<SoundBufferAndHeader> m_soundBufferManager;
 };

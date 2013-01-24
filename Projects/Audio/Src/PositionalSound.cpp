@@ -1,10 +1,10 @@
 #include "PositionalSound.h"
 
 PositionalSound::PositionalSound( IXAudio2SourceVoice* p_sourceVoice, 
-								 const XAUDIO2_BUFFER& p_buffer, 
+								 XAUDIO2_BUFFER* p_buffer, 
 								 const PositionalSoundInfo& p_info,
 								 float p_volume /* =1.0f */)
-								 : Sound(p_sourceVoice,p_buffer,p_volume)
+								 : Sound(p_sourceVoice, p_buffer, p_volume)
 {
 	m_dataInfo = p_info;
 }
