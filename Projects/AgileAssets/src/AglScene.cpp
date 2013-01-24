@@ -298,20 +298,21 @@ void AglScene::transform(AglMatrix p_transform)
 	{
 		m_meshes[i]->transform(p_transform);
 	}
-	for (unsigned int i = 0; i < m_skeletons.size(); i++)
-	{
-		m_skeletons[i]->transform(p_transform);
-	}
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
+		m_nodes[i].localTransform = p_transform * m_nodes[i].localTransform * p_transform.transpose();
+		m_nodes[i].inverseBindMatrix =  p_transform.transpose() * m_nodes[i].inverseBindMatrix * p_transform.transpose();
+	}
+	for (unsigned int i = 0; i < m_nodeAnimations.size(); i++)
+	{
+		AglKeyFrame* frames = m_nodeAnimations[i]->getKeyFrames();
+		for (unsigned int j = 0; j < m_nodeAnimations[i]->getHeader().keyFrameCount; j++)
+		{
+			frames[j].transform = p_transform * frames[j].transform * p_transform.transpose();
+		}
 	}
 	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
 	{
-		/*Old
-		if (m_connectionPoints[i].parentMesh < 0)
-			m_connectionPoints[i].transform *= p_transform;*/
-		
 		m_connectionPoints[i].transform = p_transform * m_connectionPoints[i].transform * p_transform.transpose();
 	}
 }

@@ -69,7 +69,7 @@ void AglMesh::transform(AglMatrix p_transform)
 	m_header.transform = p_transform * m_header.transform * p_transform.transpose();
 
 }
-void AglMesh::transformOld(AglMatrix p_transform)
+void AglMesh::transformOld(AglMatrix p_transform) //DEPRECHATED!!!
 {
 	AglVector3 r = p_transform.GetRight();
 	AglVector3 u = p_transform.GetUp();
