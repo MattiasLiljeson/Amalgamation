@@ -126,6 +126,7 @@ public:
 	void setNameIndex(int p_index);
 
 	void transform(AglMatrix p_transform);
+	void transformOld(AglMatrix p_transform);
 
 };
 

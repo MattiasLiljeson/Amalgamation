@@ -308,7 +308,10 @@ void AglScene::transform(AglMatrix p_transform)
 	}
 	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
 	{
+		/*Old
 		if (m_connectionPoints[i].parentMesh < 0)
-			m_connectionPoints[i].transform *= p_transform;
+			m_connectionPoints[i].transform *= p_transform;*/
+		
+		m_connectionPoints[i].transform = p_transform * m_connectionPoints[i].transform * p_transform.transpose();
 	}
 }
