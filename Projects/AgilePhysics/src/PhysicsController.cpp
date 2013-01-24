@@ -124,6 +124,16 @@ int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundin
 	mBodies.push_back(rbm);
 	return mBodies.size()-1;
 }
+int PhysicsController::AddMeshBody(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree)
+{
+	RigidBodyMesh* m = new RigidBodyMesh(pWorld, pOBB, pBoundingSphere, pSize, pBSPTree);
+	m->SetCollisionEnabled(true);
+	m->Activate();
+	//Meshes are always static
+	mStaticBodies->Insert(m);
+	mBodies.push_back(m);
+	return mBodies.size()-1;
+}
 
 int PhysicsController::AddLineSegment(AglVector3 p_p1, AglVector3 p_p2)
 {

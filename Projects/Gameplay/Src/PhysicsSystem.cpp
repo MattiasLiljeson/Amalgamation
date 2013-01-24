@@ -40,35 +40,19 @@ void PhysicsSystem::initialize()
 
 			AglMatrix rt;
 			AglMatrix::componentsToMatrix(rt, AglVector3(1, 1, 1), transform.getRotation(), transform.getTranslation());
-			if (pieces[i]->getTypeId() == 0)
-			{
-				float s = transform.getScale().x;
-				AglBoundingSphere bs = mr->meshHeader.boundingSphere;
-				AglVector3 pos;
-				pos.transform(rt);
-				m_physicsController->AddSphere(AglMatrix::createTranslationMatrix(pos),
-					bs.radius*s, 1, 
-					AglVector3::zero(), 
-					AglVector3::zero(), 
-					true,
-					NULL, true, true);
-			}
-			else
-			{
-				AglMatrix s = AglMatrix::createScaleMatrix(transform.getScale());
-				AglOBB obb = mr->meshHeader.minimumOBB;
-				AglMatrix w = obb.world;
-				w *= rt;
 
-				AglVector3 size = obb.size;
-				size.transform(s);
-				m_physicsController->AddBox(w,
-					size, 1, 
-					AglVector3::zero(), 
-					AglVector3::zero(), 
-					true,
-					NULL, true, true);
+			AglVector3 s = transform.getScale();
+			AglOBB obb = mr->meshHeader.minimumOBB;
+			AglMatrix w = obb.world;
+			w *= rt;
+
+			if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
+			{
+				//NOT FIXED YET! WILL CRASH. No support for non identity scaling
+				int k = 0;
+				k = 1 / k;
 			}
+			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, AglVector3(1, 1, 1), mr->looseBspTree);
 		}
 	}
 }

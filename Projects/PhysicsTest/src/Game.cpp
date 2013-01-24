@@ -186,7 +186,7 @@ bool Game::Update(float pElapsedTime)
 			av->AddAngularImpulse(-world.GetForward()*pElapsedTime*4);
 		}
 
-		float distance = 10;
+		float distance = 30;
 		AglVector3 newPos = world.GetTranslation() + world.GetBackward() * distance;
 		//AglVector3 diff = newPos - Camera::GetInstance()->GetPosition();
 		//Camera::GetInstance()->Init(Camera::GetInstance()->GetPosition() + diff * pElapsedTime * 20.0f, world.GetTranslation(), world.GetUp(), mScreenWidth, mScreenHeight);
@@ -374,11 +374,17 @@ void Game::Restart()
 			indices.push_back(ind[i]);
 		}
 
+		AglLooseBspTreeConstructor con(h.id, vertices, indices);
+
+		AglLooseBspTree* tree = con.createTree();
+
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
 
 		bound = m[0]->getHeader().minimumOBB;
 		
+		//mPhysics->AddMeshBody(AglVector3(0, -20, -40), bound, h.boundingSphere, tree);
 		Avatar = mPhysics->AddBox(AglVector3(0, 0, -40), bound.size, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, NULL);
+		//Avatar = mPhysics->AddMeshBody(AglVector3(0, 0, -40), bound, h.boundingSphere, tree);
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
 	}
 	else if (val == 2)

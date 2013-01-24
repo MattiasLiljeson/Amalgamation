@@ -10,6 +10,7 @@ PhysicsController2::PhysicsController2(ID3D11Device* pDevice, ID3D11DeviceContex
 	mDebugSphere = new DebugSphere(20, pDevice, pDeviceContext);
 	mTimeAccum = 0;
 	mController = new PhysicsController();
+	mController->InitStaticBodiesOctree(AglVector3(-100, -100, -100), AglVector3(100, 100, 100));
 }
 PhysicsController2::~PhysicsController2()
 {
@@ -125,6 +126,7 @@ void PhysicsController2::Clear()
 	for (unsigned int i = 0; i < mDebugHullData.size(); i++)
 		delete mDebugHullData[i];
 	mDebugHullData.clear();
+	mController->InitStaticBodiesOctree(AglVector3(-100, -100, -100), AglVector3(100, 100, 100));
 }
 float PhysicsController2::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore, AglBoundingSphere p_sphere)
 {
@@ -133,5 +135,5 @@ float PhysicsController2::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore
 
 void PhysicsController2::DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body)
 {
-	mController->DetachBodyFromCompound(p_compound, p_body);
+	//mController->DetachBodyFromCompound(p_compound, p_body);
 }

@@ -24,8 +24,6 @@ public:
 	~NetSyncedPlayerScoreTrackerSystem();
 
 	const vector<Entity*>& getNetScoreEntities() const;
-
 	bool checkProcessing();
-
 
 };

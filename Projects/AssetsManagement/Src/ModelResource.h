@@ -4,6 +4,7 @@
 #include "ConnectionPointCollection.h"
 #include "ParticleSystemCollection.h"
 #include "InstanceInstruction.h"
+#include <AglLooseBspTree.h>
 
 // =======================================================================================
 //                                        Model
@@ -21,6 +22,7 @@
 struct ModelResource
 {
 public:
+	ModelResource() {meshId=-1; name="noname"; looseBspTree = NULL; transform=AglMatrix::identityMatrix();}
 	ModelResource(const ModelResource& p_copy)
 	{
 		meshId = p_copy.meshId;
@@ -30,7 +32,6 @@ public:
 		particleSystems = p_copy.particleSystems;
 		transform = p_copy.transform;
 	}	
-	ModelResource() {transform=AglMatrix::identityMatrix(); meshId=-1; name="noname";}
 	ModelResource(const string& p_name) {transform=AglMatrix::identityMatrix(); meshId=-1; name=p_name;}
 	virtual ~ModelResource(){}
 
@@ -41,4 +42,5 @@ public:
 	ParticleSystemCollection	particleSystems;
 	AglMatrix					transform;
 	vector<InstanceInstruction> instances;
+	AglLooseBspTree*			looseBspTree;
 };

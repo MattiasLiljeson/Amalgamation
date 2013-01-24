@@ -418,6 +418,9 @@
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="NetsyncDirectMapperSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -690,6 +693,9 @@
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="NetsyncDirectMapperSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
