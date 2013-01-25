@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Component.h>
+#include <ComponentFactory.h>
 
 // =======================================================================================
 //	Module
@@ -24,4 +25,7 @@ public:
 
 	ShipModule();
 	~ShipModule();
+	void init( vector<ComponentData> p_initData );
+private:
+	static ComponentRegister<ShipModule> s_reg;
 };
