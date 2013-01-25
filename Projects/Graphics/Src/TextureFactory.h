@@ -21,7 +21,8 @@ using namespace std;
 class TextureFactory
 {
 public:
-	TextureFactory(ID3D11Device* p_device,ResourceManager<Texture>* p_textureManager);
+	TextureFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
+		ResourceManager<Texture>* p_textureManager);
 	virtual ~TextureFactory() {}
 
 	unsigned int createTexture(const string& p_name,
@@ -34,4 +35,5 @@ protected:
 private:
 	ResourceManager<Texture>* m_textureManager;
 	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_deviceContext;
 };

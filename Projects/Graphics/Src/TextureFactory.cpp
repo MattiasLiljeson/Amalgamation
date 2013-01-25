@@ -1,11 +1,12 @@
 #include "TextureFactory.h"
 
 
-TextureFactory::TextureFactory(ID3D11Device* p_device, 
+TextureFactory::TextureFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 							   ResourceManager<Texture>* p_textureManager )
 {
 	m_textureManager = p_textureManager;
 	m_device = p_device;
+	m_deviceContext = p_deviceContext;
 }
 
 unsigned int TextureFactory::createTexture( const string& p_name, 
@@ -17,7 +18,7 @@ unsigned int TextureFactory::createTexture( const string& p_name,
 	if (texFoundId==-1)  // if it does not exist, create new
 	{
 		Texture* tex;
-		tex = new Texture(TextureParser::loadTexture(m_device,
+		tex = new Texture(TextureParser::loadTexture(m_device, m_deviceContext,
 			(p_path+p_name).c_str()) );
 		texResultId = m_textureManager->addResource(p_name,tex);
 	}
@@ -41,7 +42,8 @@ unsigned int TextureFactory::createTexture( const byte* p_source, int p_width,
 
 	// Create texture
 	Texture* tex = new Texture(
-		TextureParser::createTexture( m_device, p_source, p_width, p_height, p_pitch, p_bitLevel, p_type ) );
+		TextureParser::createTexture( m_device, m_deviceContext, p_source, p_width, 
+		p_height, p_pitch, p_bitLevel, p_type ) );
 	int textureId = m_textureManager->addResource( textureName, tex );
 	return textureId;
 }

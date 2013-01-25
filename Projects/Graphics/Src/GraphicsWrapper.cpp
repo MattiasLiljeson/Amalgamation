@@ -42,7 +42,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
-	m_textureFactory	= new TextureFactory(m_device,m_textureManager);
+	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
 	m_modelFactory		= new ModelExtendedManagedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
 

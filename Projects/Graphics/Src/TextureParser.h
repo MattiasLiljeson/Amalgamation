@@ -38,9 +38,10 @@ public:
 	/// \return ID3D11ShaderResourceView*
 	///-----------------------------------------------------------------------------------
 	static ID3D11ShaderResourceView* loadTexture(ID3D11Device* p_device, 
-		const char* p_filePath);
-	static ID3D11ShaderResourceView* createTexture( ID3D11Device* p_device,
-		const byte* p_source, int p_width, int p_height, int p_pitch, int p_bitLevel,
+		ID3D11DeviceContext* p_context, const char* p_filePath);
+	static ID3D11ShaderResourceView* createTexture( ID3D11Device* p_device, 
+		ID3D11DeviceContext* p_context, const byte* p_source, int p_width, int p_height, 
+		int p_pitch, int p_bitLevel,
 		TEXTURE_TYPE p_type );
 
 	///-----------------------------------------------------------------------------------
