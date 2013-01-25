@@ -70,8 +70,16 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 					int col = physics->getController()->FindClosestCollision(gun->rays[j].p1, gun->rays[j].p2, body->m_id);
 					if (col >= 0)
 					{
-						gun->rays[j].energy -= 0.25f;
-						physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
+						gun->rays[j].energy -= 0.25f * dt;
+						Entity* hitE = physics->getEntity(col);
+
+						ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
+						if (hitModule && hitModule != module)
+						{
+							hitModule->m_health -= 0.25f * dt;
+						}
+
+						//physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
 					}
 				}
 			}
