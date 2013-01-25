@@ -4,6 +4,8 @@
 #include <AglMatrix.h>
 #include <algorithm>
 
+ComponentRegister<LightsComponent> LightsComponent::s_reg("LightsComponent");
+
 Light::Light()
 {
 	//scale = AglVector3::one();

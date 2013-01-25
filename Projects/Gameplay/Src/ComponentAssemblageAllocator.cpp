@@ -25,6 +25,7 @@
 #include "Transform.h"
 #include "EntityParent.h"
 #include "LoadMesh.h"
+#include "LightsComponent.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -50,4 +51,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<Transform>();
 	handle<EntityParent>();
 	handle<LoadMesh>();
+	handle<LightsComponent>();
 }

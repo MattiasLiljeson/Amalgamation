@@ -4,6 +4,7 @@
 #include <LightInstanceData.h>
 #include <vector>
 #include <utility>
+#include <ComponentFactory.h>
 
 using namespace std;
 
@@ -33,5 +34,7 @@ public:
 
 private:
 	vector<Light> m_lights;
+
+	static ComponentRegister<LightsComponent> s_reg;
 };
 
