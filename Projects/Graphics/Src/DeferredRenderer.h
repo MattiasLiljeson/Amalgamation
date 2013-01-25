@@ -111,6 +111,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void mapRTStoShaderVariables();
+
+	void unmapDepthFromShaderVariables();
 	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
 
 	// ===================================================================================

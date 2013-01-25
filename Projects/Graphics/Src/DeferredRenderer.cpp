@@ -433,3 +433,9 @@ ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
 {
 	return m_depthStencilView;
 }
+
+void DeferredRenderer::unmapDepthFromShaderVariables()
+{
+	ID3D11ShaderResourceView* nulz = NULL;
+	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
+}

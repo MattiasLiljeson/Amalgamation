@@ -113,8 +113,8 @@ void GS(point Particle gIn[1],
 		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
 	else if (gIn[0].Age > fadeOut)//Fade out
 		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);
-	//else
-	//	opacity = 1.0f;
+	else
+		opacity = 1.0f;
 	
 	opacity *= maxOpacity;
 	GS_OUT gOut;
@@ -128,10 +128,10 @@ void GS(point Particle gIn[1],
 	}	
 }
 
-PixelOut PS(GS_OUT pIn) 
+float4 PS(GS_OUT pIn) : SV_TARGET
 {
 	PixelOut pix_out;
 	pix_out.diffuse = Texture.Sample(defaultSampler, pIn.texC);
 	pix_out.diffuse *= pIn.color;
-	return pix_out;
+	return pix_out.diffuse;
 }
