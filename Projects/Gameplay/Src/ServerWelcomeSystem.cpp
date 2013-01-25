@@ -110,6 +110,8 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
 				data.networkIdentity = netSync->getNetworkIdentity();
+				
+				data.meshInfo		 = 0; //Temp
 				if (transform)
 				{
 					data.translation	= transform->getTranslation();

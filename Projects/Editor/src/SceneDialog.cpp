@@ -23,35 +23,42 @@ void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 	int index = (int)clientData;
 	if (index == 0)
 	{
-		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		//FLIP X
+		AglMatrix mat(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		Scene::GetInstance()->Transform(mat);
-		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
 	}
 	else if (index == 1)
 	{
-		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+		//FLIP Y
+		AglMatrix mat(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		Scene::GetInstance()->Transform(mat);
-		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
 	}
 	else if (index == 2)
 	{
-		//AglMatrix mat(0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1);
-		AglMatrix mat(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		//FLIP Z
+		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
 		Scene::GetInstance()->Transform(mat);
-		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
 	}
 	else if (index == 3)
 	{
-		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		//ROTATE X
+		AglMatrix mat(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
 		Scene::GetInstance()->Transform(mat);
-		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 1, 0), AglVector3(0, 0, 1), AglCoordinateSystem::LEFT));
 	}
 	else if (index == 4)
 	{
-		AglMatrix mat(0, 0, 1, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1);
+		//ROTATE Y
+		AglMatrix mat(0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
 		mat = AglMatrix::inverse(mat);
 		Scene::GetInstance()->Transform(mat);
-		//Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 0, 1), AglVector3(-1, 0, 0), AglCoordinateSystem::LEFT));
+	}
+	else if (index == 5)
+	{
+		//ROTATE Z
+		AglMatrix mat(0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
+		Scene::GetInstance()->Transform(mat);
 	}
 }
 
@@ -84,9 +91,13 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		TwAddButton(sceneDialog->m_dialog, "AddParticleEffect", AddPE, sceneDialog, " label='Particle Effect' key=c help='Load an Agile file into the editor.' group='Add'");
 
 
-		//TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		//TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender To Dx' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPX", SetCOSystem, (void*)0, " label='Flip X' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPY", SetCOSystem, (void*)1, " label='Flip Y' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPZ", SetCOSystem, (void*)2, " label='Flip Z' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
+		TwAddButton(sceneDialog->m_dialog, "Rot90X", SetCOSystem, (void*)3, " label='Rotate 90 X' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "Rot90Y", SetCOSystem, (void*)4, " label='Rotate 90 Y' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "Rot90Z", SetCOSystem, (void*)5, " label='Rotate 90 Z' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 
 
 		//TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");

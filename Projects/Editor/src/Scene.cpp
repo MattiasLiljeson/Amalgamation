@@ -237,7 +237,20 @@ void Scene::Draw()
 		{
 			t = mMeshes[parent]->getTransform();
 		}
-		SPHEREMESH->Draw(cp[i].transform*t*invMax, AglVector3(1, 0, 1));
+		t = cp[i].transform*t;
+		t.SetTranslation(t.GetTranslation()*invMax);
+		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(0.1f, 0.001f, 0.001f));
+		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * 0.05f);
+		BOXMESH->Draw(scale * t*trans, AglVector3(1, 0, 0));
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.1f, 0.001f));
+		trans = AglMatrix::createTranslationMatrix(t.GetDown() * 0.05f);
+		BOXMESH->Draw(scale * t*trans, AglVector3(0, 1, 0));
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, 0.1f));
+		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * 0.05f);
+		BOXMESH->Draw(scale * t*trans, AglVector3(0, 0, 1));
+
+
+		//SPHEREMESH->Draw(t, AglVector3(1, 0, 1));
 	}
 
 	AglVector3 minP = mMin;

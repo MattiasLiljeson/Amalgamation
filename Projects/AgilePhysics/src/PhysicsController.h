@@ -104,6 +104,8 @@ public:
 	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
 
+	int AddMeshBody(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree = NULL);
+
 	int AddLineSegment(AglVector3 p_p1, AglVector3 p_p2);
 	void SetLineSegment(AglVector3 p_p1, AglVector3 p_p2, int p_index);
 	int AddRay(AglVector3 p_o, AglVector3 p_dir, float maxLength = 1000000000);

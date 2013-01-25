@@ -74,7 +74,3 @@ AglMatrix AglSkeleton::getInverseBindMatrix(int p_joint)
 	AglNode n = m_scene->getNode(j.nodeID);
 	return n.inverseBindMatrix;
 }
-void AglSkeleton::transform(AglMatrix p_transform)
-{
-	m_header.baseTransform *= p_transform;
-}

@@ -368,6 +368,10 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
 	m_world->addEntity( entity );
 
+	// Create a rock
+	status = factory->readAssemblageFile( "Assemblages/rocks.asd" );
+	entity = factory->entityFromRecipe( "rocks" );									 
+	m_world->addEntity( entity );
 
 
 	EntitySystem* tempSys = NULL;
@@ -391,16 +395,17 @@ void ClientApplication::initEntities()
 	float scale = 1000.0f;
 	Light ambientLight;
 	AglMatrix::componentsToMatrix(
-		ambientLight.offset,
+		ambientLight.offsetMat,
 		AglVector3( scale, scale, scale ),
 		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
 		AglVector3(3,3,3)
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.8f;
-	ambientLight.instanceData.ambient[1] = 0.8f;
-	ambientLight.instanceData.ambient[2] = 0.8f;
+	ambientLight.instanceData.ambient[0] = 0.2;
+	ambientLight.instanceData.ambient[1] = 0.2;
+	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
 
 	LightsComponent* ambientLightComp = new LightsComponent();
 	ambientLightComp->addLight( ambientLight );
@@ -418,37 +423,43 @@ void ClientApplication::initEntities()
 
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
-	float range = 50.0f;
+
+	float range = 5.0f;
+
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;
 	lightGridInstData.worldTransform[5] = range;
 	lightGridInstData.worldTransform[10] = range;
-	lightGridInstData.attenuation[0] = 0.0f;
-	lightGridInstData.attenuation[1] = 0.0f;
-	lightGridInstData.attenuation[2] = 0.1f;
-	lightGridInstData.spotPower = 25.0f;
-	lightGridInstData.specular[3] = 1.0f;
+	lightGridInstData.lightDir[0] = -1.0f;
+	lightGridInstData.lightDir[1] = -1.0f;
+	lightGridInstData.lightDir[2] = -1.0f;
+	lightGridInstData.attenuation[0] = 25.0f/range;
+	lightGridInstData.attenuation[1] = 0.00f;
+	lightGridInstData.attenuation[2] = 0.00f;
+	lightGridInstData.spotPower = 100.0f;
+	lightGridInstData.specular[3] = 0.001f;
 	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
 	lightGridInstData.ambient[2] = 0.0f;
 
-	float intensitity = 10.0f;
-	for( int x=0; x<5; x++ )
+	float intensitity = 0.3f;
+	int dim = 4;
+	for( int x=0; x<dim; x++ )
 	{
-		for( int y=0; y<5; y++ )
+		for( int y=0; y<dim; y++ )
 		{
-			for( int z=0; z<5; z++ )
+			for( int z=0; z<dim; z++ )
 			{
-				lightGridInstData.diffuse[0] = intensitity * x;
+				lightGridInstData.specular[0] = intensitity * x;
 				lightGridInstData.diffuse[1] = intensitity * y;
 				lightGridInstData.diffuse[2] = intensitity * z;
 
 				Light light;
 				light.instanceData = lightGridInstData;
 				AglMatrix::componentsToMatrix( 
-					light.offset,
+					light.offsetMat,
 					AglVector3( range, range, range ),
 					AglQuaternion::identity(),
-					AglVector3( -x*(range+1.0f), -y*(range+1.0f), -z*(range+1.0f) )
+					AglVector3( -x*(range+1), -y*(range+1), -z*(range+1) )
 					);
 
 				lightGridComp->addLight( light );
@@ -457,7 +468,7 @@ void ClientApplication::initEntities()
 	}
 	entity = m_world->createEntity();
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
-	entity->addComponent( ComponentType::Transform, new Transform( range/2.0f, range/2.0f, range/2.0f ) );
+	entity->addComponent( ComponentType::Transform, new Transform( range/2, range/2, range/2 ) );
 	m_world->addEntity( entity );
 
 	// Test sound source

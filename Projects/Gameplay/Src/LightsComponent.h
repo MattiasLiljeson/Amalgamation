@@ -16,7 +16,7 @@ struct Light
 	//AglVector3 scale;
 	//AglQuaternion rotation;
 	//AglVector3 translation;
-	AglMatrix offset;
+	AglMatrix offsetMat;
 	LightInstanceData instanceData;
 	Light();
 };
@@ -29,6 +29,7 @@ public:
 
 	vector<Light>* getLightsPtr();
 	void addLight( Light p_light );
+	void init( vector<ComponentData> p_initData );
 
 private:
 	vector<Light> m_lights;

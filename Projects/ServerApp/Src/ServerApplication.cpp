@@ -173,7 +173,7 @@ namespace Srv
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineControllerSystem(), true);
+		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(), true);
@@ -193,10 +193,10 @@ namespace Srv
 		Component* component;
 		// Add a grid of cubes to test instancing.
 
-		/*float maxVal = 2;
+		float maxVal = 2;
 		float minVal = -75;
 		int size = 8;
-		for( int x=0; x<size; x++ )
+		/*for( int x=0; x<size; x++ )
 		{
 			for( int y=0; y<size; y++ )
 			{

@@ -72,9 +72,22 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;
 	surface.specular = specular;
+	
+	// lulz tonemapping
+	//surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
 
-	float3	lightCol = pointLight( surface, p_input.light, gCameraPos, normalVec, worldPos, p_input.light.pos );
-
+	float3	lightCol;
+	
+	if( p_input.light.type == 0 ) { // Directional light
+		lightCol = parallelLight( surface, p_input.light, gCameraPos.xyz, normalVec,
+		worldPos );
+	} else if ( p_input.light.type == 1 ) { // Point light
+		lightCol = pointLight( surface, p_input.light, gCameraPos.xyz, normalVec,
+		worldPos );
+	} else if ( p_input.light.type == 2 ) { // Spot light
+		lightCol = spotLight( surface, p_input.light, gCameraPos.xyz, normalVec,
+		worldPos );
+	}
 	return float4( lightCol, 1.0f );
 }
 

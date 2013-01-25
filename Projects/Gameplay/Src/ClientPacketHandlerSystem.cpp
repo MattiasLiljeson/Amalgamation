@@ -56,6 +56,8 @@
 // Debug
 #include <DebugUtil.h>
 #include <ToString.h>
+#include "LightSources.h"
+#include "LightsComponent.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -282,9 +284,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 		
 
 		/************************************************************************/
@@ -301,6 +300,44 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+		
+		LightsComponent* lightComp = new LightsComponent();
+		Light floodLight;
+		float range = 100.0f;
+		AglMatrix::componentsToMatrix(
+			floodLight.offsetMat,
+			AglVector3( range, range, range*20 ),
+			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+			AglVector3( 2.0f, 0.0f, 0.0f )
+			);
+		floodLight.instanceData.range = range*20;
+		floodLight.instanceData.attenuation[1] = 0.1f;
+		floodLight.instanceData.spotPower = 8.0f;
+		floodLight.instanceData.lightDir[0] = 0.0f;
+		floodLight.instanceData.lightDir[1] = 0.0f;
+		floodLight.instanceData.lightDir[2] = 1.0f;
+		floodLight.instanceData.diffuse[0] = 0.0f;
+		floodLight.instanceData.diffuse[1] = 1.0f;
+		floodLight.instanceData.diffuse[2] = 0.0f;
+		//floodLight.instanceData.specular[0] = 2.0f;
+		//floodLight.instanceData.specular[1] = 2.0f;
+		//floodLight.instanceData.specular[2] = 2.0f;
+		floodLight.instanceData.enabled = true;
+		floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
+
+		lightComp->addLight( floodLight );
+		AglMatrix::componentsToMatrix(
+			floodLight.offsetMat,
+			AglVector3( range, range, range*20 ),
+			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+			AglVector3( -2.0f, 0.0f, 0.0f )
+			);
+		floodLight.instanceData.diffuse[0] = 1.0f;
+		floodLight.instanceData.diffuse[1] = 0.0f;
+		floodLight.instanceData.diffuse[2] = 0.0f;
+		lightComp->addLight( floodLight );
+
+		entity->addComponent( ComponentType::LightsComponent, lightComp);
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
@@ -434,14 +471,33 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
 	{
 		AglParticleSystemHeader h;
-		h.particleSize = AglVector2(2, 2);
-		h.alignmentType = AglParticleSystemHeader::OBSERVER;
-		h.spawnFrequency = 200;
-		h.spawnSpeed = 5.0f;
-		h.spread = 0.0f;
-		h.fadeOutStart = 2.0f;
-		h.fadeInStop = 0.0f;
-		h.particleAge = 2;
+		if (p_packet.meshInfo == 0)
+		{
+			h.particleSize = AglVector2(2, 2);
+			h.alignmentType = AglParticleSystemHeader::OBSERVER;
+			h.spawnFrequency = 200;
+			h.spawnSpeed = 5.0f;
+			h.spread = 0.0f;
+			h.fadeOutStart = 2.0f;
+			h.fadeInStop = 0.0f;
+			h.particleAge = 2;
+			h.maxOpacity = 1.0f;
+			h.color = AglVector4(0, 1, 0, 1.0f);
+		}
+		else
+		{
+			h.particleAge = 1;
+			h.spawnSpeed = 0.02;
+			h.spread = 1.0f;
+			h.spawnFrequency = 200;
+			h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
+			h.fadeInStop = 0.5f;
+			h.fadeOutStart = 0.5f;
+			h.spawnOffset = 4.0f;
+			h.maxOpacity = 0.5f;
+			h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+			h.particleSize = AglVector2(1.0f, 1.0f);
+		}
 
 		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 			SystemType::ParticleRenderSystem ));

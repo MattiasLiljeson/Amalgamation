@@ -53,7 +53,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+				InstanceInstruction currentInstance={p_name,AglMatrix::identityMatrix()};
 
 				// DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
 
@@ -85,10 +85,10 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const string& p_name, 
 															   const string* p_path/*=NULL*/)
 {
-	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+	InstanceInstruction currentInstance={p_name,AglMatrix::identityMatrix()};
 	//
 	vector<ModelResource*>* models = NULL;
-	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
+	vector<InstanceInstruction>* instanceInstructions = new vector<InstanceInstruction>();
 	int instanceCount = 0;
 	// Check and read the file
 	do 
@@ -114,7 +114,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						readAndStoreEmpties(-1,model,model->transform,
+						readAndStoreEmpties(-1,model,currentInstance.transform,
 							scene,&currentInstance,instanceInstructions);
 					}
 				}
@@ -127,13 +127,14 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 																			scene,
 																			scene->getMeshes().size(),
 																			instanceInstructions);
+					// read leftover empties
 					if ((*prefetched)[0]!=NULL)
 					{
 						ModelResource* model = (*prefetched)[0];
-						readAndStoreEmpties(-1,model,model->transform*currentInstance.transform,
-							scene,&currentInstance,instanceInstructions); // read leftover empties
+						readAndStoreEmpties(-1,model,currentInstance.transform,
+							scene,&currentInstance,instanceInstructions); 
 					}
-					// if (!isMirror) currentInstance.uneven=!currentInstance.uneven;
+					//
 					int size = prefetched->size();
 					for (int n=firstMeshPos;n<size;n++)
 					{
@@ -166,20 +167,19 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				// it also needs to copy the model resource data
 				vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
 
-// ===========================================================================================
-// 				Need to read leftover empties here as well
-// 				How to do this??????????????
-//				Need to store empties instructions in modelresource as well...
-//				Maybe implement storage of whole scene now?
-// ===========================================================================================
-
 				int size = prefetched->size();
 				for (int n=firstMeshPos;n<size;n++)
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					// mesh transform
-
-					model->transform = model->transform*currentInstance.transform;
+					model->transform *= currentInstance.transform;
+					// instances
+					for (int n=0;n<model->instances.size();n++)
+					{
+						InstanceInstruction instruction = model->instances[n];
+						instruction.transform *= currentInstance.transform;
+						instanceInstructions->push_back(instruction);
+					}
 					// 
 					models->push_back(model);
 				}
@@ -202,10 +202,10 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 }
 
 
-vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const ModelExtendedManagedFactory::InstanceInstr* p_instanceData,  
+vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const InstanceInstruction* p_instanceData,  
 																  AglScene* p_scene, 
 																  unsigned int p_numberOfModels,
-																  vector<InstanceInstr>* p_outInstanceInstructions)
+																  vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 	p_numberOfModels = max(p_numberOfModels,1);
 	ModelResourceCollection* models = new ModelResourceCollection();
@@ -228,11 +228,11 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 				{
 					if (p_outInstanceInstructions!=NULL)
 					{
-						InstanceInstr inst = {parsedAction.first.filename,
+						InstanceInstruction inst = {parsedAction.first.filename,
 			                                  aglMeshHeader.transform};
 
-						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
-
+						DEBUGWARNING(("Mesh with instancing instruction, empties are recommended instead. Unexpected behaviour may occur."));
+						// Not possible yet-> p_model->instances.push_back(inst);
 						p_outInstanceInstructions->push_back(inst);
 					}
 
@@ -258,10 +258,10 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 
 void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_modelCollection, 
 													unsigned int p_modelNumber, 
-													const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
+													const InstanceInstruction* p_instanceData, 
 													const string& p_nameSuffix,AglScene* p_scene, AglMesh* p_aglMesh,
 													AglMeshHeader* p_meshHeader,
-													vector<InstanceInstr>* p_outInstanceInstructions)
+													vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 		// set
 		ModelResource* model = new ModelResource();
@@ -355,8 +355,8 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 													   ModelResource* p_model, 
 													   AglMatrix& p_offset,
 													   AglScene* p_scene,
-													   const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
-													   vector<InstanceInstr>* p_outInstanceInstructions)
+													   const InstanceInstruction* p_instanceData, 
+													   vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
 	for (unsigned int n=0;n<connectionPoints;n++)
@@ -373,9 +373,10 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 			{
 				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
 				{
-					InstanceInstr inst = {parsedAction.first.filename,
+					InstanceInstruction inst = {parsedAction.first.filename,
 						cp->transform*p_offset};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+					p_model->instances.push_back(inst);
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;

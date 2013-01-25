@@ -127,8 +127,18 @@ AglParticleSystem* AglScene::getParticleSystem(int p_index)
 {
 	return m_particleSystems[p_index];
 }
-string AglScene::getName(int p_index)
+string AglScene::getName(int p_index, bool p_removePath)
 {
+	if (p_removePath)
+	{
+		string s = m_names[p_index];
+		int ind = s.find_last_of('\\');
+		if (ind == -1)
+			ind = s.find_last_of('/');
+		if (ind != -1)
+			s = s.substr(ind+1, s.size() - ind);
+		return s;
+	}
 	return m_names[p_index];
 }
 vector<AglMesh*> AglScene::getMeshes()
@@ -178,6 +188,11 @@ int AglScene::addName(string p_name)
 	}
 	m_names.push_back(p_name);
 	return m_names.size() - 1;
+}
+
+void AglScene::setName(int p_index, string p_name)
+{
+	m_names[p_index] = p_name;
 }
 void AglScene::addParticleSystem(AglParticleSystem* pParticleSystem)
 {
@@ -298,17 +313,21 @@ void AglScene::transform(AglMatrix p_transform)
 	{
 		m_meshes[i]->transform(p_transform);
 	}
-	for (unsigned int i = 0; i < m_skeletons.size(); i++)
-	{
-		m_skeletons[i]->transform(p_transform);
-	}
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		m_nodes[i].inverseBindMatrix = p_transform.inverse() * m_nodes[i].inverseBindMatrix;
+		m_nodes[i].localTransform = p_transform * m_nodes[i].localTransform * p_transform.transpose();
+		m_nodes[i].inverseBindMatrix =  p_transform.transpose() * m_nodes[i].inverseBindMatrix * p_transform.transpose();
+	}
+	for (unsigned int i = 0; i < m_nodeAnimations.size(); i++)
+	{
+		AglKeyFrame* frames = m_nodeAnimations[i]->getKeyFrames();
+		for (unsigned int j = 0; j < m_nodeAnimations[i]->getHeader().keyFrameCount; j++)
+		{
+			frames[j].transform = p_transform * frames[j].transform * p_transform.transpose();
+		}
 	}
 	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
 	{
-		if (m_connectionPoints[i].parentMesh < 0)
-			m_connectionPoints[i].transform *= p_transform;
+		m_connectionPoints[i].transform = p_transform * m_connectionPoints[i].transform * p_transform.transpose();
 	}
 }
