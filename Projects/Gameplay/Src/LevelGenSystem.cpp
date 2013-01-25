@@ -21,10 +21,9 @@
 #include "PhysicsBody.h"
 #include "BoundingVolumeInitData.h"
 
-LevelGenSystem::LevelGenSystem(GraphicsBackendSystem* p_graphicsBackend, TcpServer* p_server) 
+LevelGenSystem::LevelGenSystem( TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
 {
-	m_graphicsBackend = p_graphicsBackend;
 	m_server = p_server;
 
 	m_worldMin = AglVector3(INT_MAX, INT_MAX, INT_MAX);
@@ -59,16 +58,6 @@ LevelGenSystem::~LevelGenSystem()
 
 void LevelGenSystem::initialize()
 {
-	if (!m_server)
-	{
-		for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
-		{
-			string modelName = m_modelFileMapping.getModelFileName(i);
-
-			m_graphicsBackend->loadSingleMeshFromFile( modelName,
-				&TESTMODELPATH);
-		}
-	}
 }
 
 void LevelGenSystem::run()
@@ -286,23 +275,11 @@ int LevelGenSystem::popIntVector( vector<int>& p_vector )
 	return i;
 }
 
-int LevelGenSystem::getMeshFromPieceType( int p_typeId ) const
-{
-	return m_graphicsBackend->getMeshId( m_modelFileMapping.getModelFileName( p_typeId ) );
-}
-
 void LevelGenSystem::createLevelEntities()
 {
 	for (int i = 0; i < m_generatedPieces.size(); i++)
 	{
 		Entity* e = createEntity(m_generatedPieces[i]);
-
-		if ( !m_server )
-		{
-			e->addComponent(ComponentType::RenderInfo, 
-				new RenderInfo( getMeshFromPieceType( m_generatedPieces[i]->getTypeId() ) ));
-		}
-
 		m_world->addEntity(e);
 	}
 }

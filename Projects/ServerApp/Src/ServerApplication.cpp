@@ -118,7 +118,7 @@ namespace Srv
 		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
-		LevelGenSystem* levelGen = new LevelGenSystem(NULL, m_server);
+		LevelGenSystem* levelGen = new LevelGenSystem(m_server);
 		m_world->setSystem( levelGen, true);
 		levelGen->run();
 
