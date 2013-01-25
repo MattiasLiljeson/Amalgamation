@@ -48,9 +48,12 @@ void DisplayPlayerScoreSystem::process()
 
 			auto hudEntity = hudElementSys->getActiveEntities()[0];
 
-			auto hud = static_cast<HudElement*>
-				(hudEntity->getComponent( ComponentType::HudElement ));
-			hud->setValue("Score:&nbsp;" + toString(score->getTotalScore()));
+			if (hudEntity)
+			{
+				auto hud = static_cast<HudElement*>
+					(hudEntity->getComponent( ComponentType::HudElement ));
+				hud->setValue("Score:&nbsp;" + toString(score->getTotalScore()));
+			}
 		}
 	}
 }
