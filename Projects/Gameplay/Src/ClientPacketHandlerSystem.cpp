@@ -384,6 +384,8 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		/************************************************************************/
 		component = new PlayerScore();
 		entity->addComponent( ComponentType::PlayerScore, component );
+
+		// Also add the entity
 		m_world->addEntity(entity);
 
 		/************************************************************************/

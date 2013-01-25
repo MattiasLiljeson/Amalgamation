@@ -21,14 +21,13 @@ class LibRocketBackendSystem;
 class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem(LibRocketBackendSystem* p_librocketBackend, TcpClient* p_client);
+	DisplayPlayerScoreSystem(TcpClient* p_client);
 
 	~DisplayPlayerScoreSystem();
 
 	void initialize();
 
-	void processEntities( const vector<Entity*>& p_entities );
-
+	void process();
 
 
 	// Overrides EntitySystem::inserted
@@ -36,8 +35,6 @@ public:
 	void inserted( Entity* p_entity );
 
 private:
-	HudElement* m_playerScoreMenu;
+	Entity* m_playerEntity;
 	TcpClient*	m_client;
-	int			m_scoreTableDocId;
-	LibRocketBackendSystem* m_librocketBackend;
 };

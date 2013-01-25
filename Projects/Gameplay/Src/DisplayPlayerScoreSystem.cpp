@@ -10,15 +10,15 @@
 #include "TimerSystem.h"
 #include <Globals.h>
 #include <string>
+#include <ToString.h>
+#include "HudSystem.h"
 
-DisplayPlayerScoreSystem::DisplayPlayerScoreSystem(LibRocketBackendSystem* p_librocketBackend,
-												   TcpClient* p_client)
+DisplayPlayerScoreSystem::DisplayPlayerScoreSystem(TcpClient* p_client)
 	: EntitySystem( SystemType::DisplayPlayerScoreSystem,
 	2, ComponentType::PlayerScore, ComponentType::NetworkSynced )
 {
-	m_client			= p_client;
-	m_playerScoreMenu	= NULL;
-	m_librocketBackend	= p_librocketBackend;
+	m_client		= p_client;
+	m_playerEntity	= NULL;
 }
 
 DisplayPlayerScoreSystem::~DisplayPlayerScoreSystem()
@@ -31,40 +31,33 @@ void DisplayPlayerScoreSystem::initialize()
 	//m_scoreTableDocId = m_librocketBackend->loadDocument(tmp.c_str());
 }
 
-void DisplayPlayerScoreSystem::processEntities( const vector<Entity*>& p_entities )
+void DisplayPlayerScoreSystem::process()
 {
 	auto timerSys = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
 
 	if (timerSys->checkTimeInterval(TimerIntervals::EverySecond))
 	{
-		//if (m_playerScoreMenu)
-		//{
-		//	stringstream hudvalue;
-		//	hudvalue << "Client Id , Score , Ping";
+		if (m_playerEntity)
+		{
+			// TODO: refactoring... This is maybe some weird shit I write here // Alex
+			auto score	= static_cast<PlayerScore*>
+				(m_playerEntity->getComponent( ComponentType::PlayerScore ));
 
-		//	for (int i = 0; i < p_entities.size(); i++)
-		//	{
-		//		Entity* entity = p_entities[i];
+			auto hudElementSys = static_cast<HudSystem*>(
+				m_world->getSystem(SystemType::HudSystem));
 
-		//		PlayerScore* score =
-		//			static_cast<PlayerScore*>(entity->getComponent( ComponentType::PlayerScore ));
-		//		NetworkSynced* netSync =
-		//			static_cast<NetworkSynced*>(entity->getComponent( ComponentType::NetworkSynced ));
+			auto hudEntity = hudElementSys->getActiveEntities()[0];
 
-		//		hudvalue << "\n" << netSync->getNetworkOwner() << " " << score->getTotalScore()
-		//			<< " " << "N/A";
-		//	}
-
-
-		//	m_playerScoreMenu->setValue(hudvalue.str());
-		//}
+			auto hud = static_cast<HudElement*>
+				(hudEntity->getComponent( ComponentType::HudElement ));
+			hud->setValue("Score:&nbsp;" + toString(score->getTotalScore()));
+		}
 	}
 }
 
+
 void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 {
-
-
 	PlayerScore* score =
 		static_cast<PlayerScore*>(p_entity->getComponent( ComponentType::PlayerScore ));
 	NetworkSynced* netSync =
@@ -73,4 +66,9 @@ void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 	ss << "score(" << netSync->getNetworkOwner() << ")";
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::OVERALL,
 		ss.str().c_str(), TwType::TW_TYPE_FLOAT, score->getTotalScorePointer(), "" );
+
+	if (netSync->getNetworkOwner() == m_client->getId())
+	{
+		m_playerEntity = p_entity;
+	}
 }
