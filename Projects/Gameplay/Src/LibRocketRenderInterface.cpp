@@ -54,7 +54,7 @@ LibRocketRenderInterface::LibRocketRenderInterface( GraphicsWrapper* p_wrapper )
 	numCompiledGeometries = 0;
 
 	byte fallbackTexture[4] = { 255, 255, 255, 255 };
-	m_stdTextureId = m_wrapper->createTexture( fallbackTexture, 1, 1, 4,
+	m_stdTextureId = m_wrapper->createTexture( fallbackTexture, 1, 1, 4, 32,
 		TextureParser::RGBA);
 }
 
@@ -251,7 +251,7 @@ bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& te
 	int pitch = source_dimensions.x * 4;
 
 	unsigned int texId = m_wrapper->createTexture(
-		source, source_dimensions.x, source_dimensions.y, pitch, TextureParser::RGBA );
+		source, source_dimensions.x, source_dimensions.y, pitch, 32, TextureParser::RGBA );
 
 	// Set the handle on the Rocket p_texture structure.
 	texture_handle = (Rocket::Core::TextureHandle)texId;

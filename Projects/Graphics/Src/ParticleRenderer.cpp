@@ -115,5 +115,5 @@ void ParticleRenderer::initDepthStencil(){
 void ParticleRenderer::initTexture()
 {
 	m_texture = new Texture(TextureParser::loadTexture(
-		m_device,"Assets/Textures/Test/smoke.png"));
+		m_device,m_deviceContext,"Assets/Textures/Test/smoke.png"));
 }

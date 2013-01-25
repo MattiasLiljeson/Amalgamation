@@ -21,17 +21,19 @@ using namespace std;
 class TextureFactory
 {
 public:
-	TextureFactory(ID3D11Device* p_device,ResourceManager<Texture>* p_textureManager);
+	TextureFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
+		ResourceManager<Texture>* p_textureManager);
 	virtual ~TextureFactory() {}
 
 	unsigned int createTexture(const string& p_name,
 		const string& p_path);
 
 	unsigned int createTexture( const byte* p_source, int p_width, int p_height,
-		int p_pitch, TextureParser::TEXTURE_TYPE p_type );
+		int p_pitch, int p_bitLevel, TextureParser::TEXTURE_TYPE p_type );
 
 protected:
 private:
 	ResourceManager<Texture>* m_textureManager;
 	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_deviceContext;
 };

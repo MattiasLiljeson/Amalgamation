@@ -1,5 +1,6 @@
 #include "TextureParser.h"
 #include <DebugUtil.h>
+#include <vector>
 
 void TextureParser::init()
 {
@@ -7,7 +8,8 @@ void TextureParser::init()
 }
 
 ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device, 
-											 const char* p_filePath)
+													 ID3D11DeviceContext* p_context,
+													 const char* p_filePath)
 {
 	FREE_IMAGE_FORMAT imageFormat;
 	FIBITMAP* image;
@@ -42,8 +44,8 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 		FreeImage_FlipVertical(image);
 
 		newShaderResurceView = createTexture(
-			p_device, FreeImage_GetBits(image), FreeImage_GetWidth(image),
-			FreeImage_GetHeight(image), FreeImage_GetPitch(image),
+			p_device, p_context, FreeImage_GetBits(image), FreeImage_GetWidth(image),
+			FreeImage_GetHeight(image), FreeImage_GetPitch(image), FreeImage_GetBPP(image),
 			TextureParser::TEXTURE_TYPE::BGRA);
 
 		/************************************************************************/
@@ -54,7 +56,7 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 	else
 	{
 		BYTE* data = generateFallbackTexture();
-		newShaderResurceView = createTexture(p_device,data,10,10,32,
+		newShaderResurceView = createTexture(p_device, p_context, data,10,10,128,32,
 			TextureParser::TEXTURE_TYPE::RGBA);
 
 		delete data;
@@ -62,26 +64,77 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 	return newShaderResurceView;
 }
 
-ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
-	const byte* p_source, int p_width, int p_height, int p_pitch, TEXTURE_TYPE p_type )
+ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device, 
+													   ID3D11DeviceContext* p_context, 
+													   const byte* p_source, int p_width, 
+													   int p_height, int p_pitch, 
+													   int p_bitLevel, TEXTURE_TYPE p_type )
 {
-	D3D11_SUBRESOURCE_DATA data;
-	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-	data.pSysMem = (void*)p_source;
-	data.SysMemPitch = p_pitch;
+	int width = p_width;
+	int height = p_height;
+	int numOfMipLevels = 1;
+	while ((width > 1) || (height > 1))
+	{
+		width = max(width / 2, 1);
+		height = max(height / 2, 1);
+		numOfMipLevels++;
+	}
+
+	byte* newData = NULL;
+
+	if(p_bitLevel == 24){
+		newData = new byte[p_width*p_height*4];
+		unsigned int ind = 0;
+		unsigned int counter = 0;
+		for (unsigned int i = 0; i < p_width * p_height*4;i++){
+			if(counter < 3){
+				newData[i] = p_source[ind++];
+				counter++;
+			}
+			else{
+				newData[i] = 255;
+				counter = 0;
+			}
+		}
+	}
+
+	D3D11_SUBRESOURCE_DATA* data = new D3D11_SUBRESOURCE_DATA[numOfMipLevels];
+	ZeroMemory(&data[0], sizeof(D3D11_SUBRESOURCE_DATA));
+	if(newData){
+		data[0].pSysMem = (void*)newData;
+	}
+	else{
+		data[0].pSysMem = (void*)p_source;
+	}
+	data[0].SysMemPitch = p_pitch;
+	data[0].SysMemSlicePitch = 0;
+
+	width = p_width;
+	height = p_height;
+	std::vector<unsigned char*> levelData;
+	for(int i = 1; i< numOfMipLevels; i++)
+	{
+		ZeroMemory(&data[i], sizeof(D3D11_SUBRESOURCE_DATA));
+		width = static_cast<int>(max(1.0f, width*0.5f));
+		height = static_cast<int>(max(1.0f, height*0.5f));
+		levelData.push_back(new unsigned char[4*width*height]);
+		data[i].pSysMem = levelData.back();
+		data[i].SysMemPitch = 4 * width;
+		data[i].SysMemSlicePitch = 0;
+	} 
 
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc,sizeof(D3D11_TEXTURE2D_DESC));
 	texDesc.Width				= p_width;
 	texDesc.Height				= p_height;
-	texDesc.MipLevels			= 1;
+	texDesc.MipLevels			= numOfMipLevels;
 	texDesc.ArraySize			= 1;
 	texDesc.SampleDesc.Count	= 1;
 	texDesc.SampleDesc.Quality	= 0;
 	texDesc.Usage				= D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags			= D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	texDesc.CPUAccessFlags		= 0;
-	texDesc.MiscFlags			= 0;
-	texDesc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
+	texDesc.MiscFlags			= D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 	switch( p_type )
 	{
@@ -99,7 +152,10 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	}
 
 	ID3D11Texture2D* texture = NULL;
-	HRESULT hr = p_device->CreateTexture2D( &texDesc, &data, &texture);
+	HRESULT hr = p_device->CreateTexture2D( &texDesc, data, &texture);
+
+	for (unsigned int i = 0; i < levelData.size(); i++)
+		delete[] levelData[i];
 
 	if (FAILED(hr))
 		throw D3DException(hr, __FILE__,__FUNCTION__,__LINE__);
@@ -108,7 +164,7 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	ZeroMemory(&shaderDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	shaderDesc.Format = texDesc.Format;
 	shaderDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderDesc.Texture2D.MipLevels = 1;
+	shaderDesc.Texture2D.MipLevels = numOfMipLevels;
 	shaderDesc.Texture2D.MostDetailedMip = 0;
 
 	ID3D11ShaderResourceView* newShaderResurceView;
@@ -118,7 +174,11 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	if (FAILED(hr))
 		throw D3DException(hr, __FILE__,__FUNCTION__,__LINE__);
 
+	p_context->GenerateMips(newShaderResurceView);
+
 	texture->Release();
+	delete newData;
+	delete[] data;
 
 	return newShaderResurceView;
 }
