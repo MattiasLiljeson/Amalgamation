@@ -52,10 +52,13 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 				//Do some damage
 				for (unsigned int j = 0; j < col.size(); j++)
 				{
-					/*Entity* hitEntity = ps->getEntity(col[j]);
-					ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(ComponentType::ShipModule));
-					if (hitModule)
-						hitModule->m_health = 0;*/
+					Entity* hitEntity = ps->getEntity(col[j]);
+					if (hitEntity)
+					{
+						ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(ComponentType::ShipModule));
+						if (hitModule)
+							hitModule->m_health = 0;
+					}
 				}
 
 

@@ -82,7 +82,7 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		entity->addComponent( ComponentType::Transform, t);
 		
 		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.entityType		= static_cast<char>(EntityType::Shield);
 		data.meshInfo		= 1; //Sphere
 		data.owner			= -1;
 		data.networkIdentity = entity->getIndex();
@@ -91,7 +91,7 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		data.scale			= t->getScale();
 
 		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+			new NetworkSynced( entity->getIndex(), -1, EntityType::Shield));
 
 		m_server->broadcastPacket(data.pack());
 		

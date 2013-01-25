@@ -17,7 +17,6 @@
     <ClCompile Include="ComponentData.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentReader.cpp" />
-    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentType.cpp" />
@@ -38,7 +37,6 @@
     <ClInclude Include="ComponentData.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentReader.h" />
-    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentType.h" />
