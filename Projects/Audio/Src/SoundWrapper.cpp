@@ -98,12 +98,13 @@ void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 
 int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
+	int soundIndex = -1;
 	Sound* sound = NULL;
 	if(p_info->loopPlayback)
 	{
 		sound = m_soundFactory->createAmbientSound(p_info);
 		m_activeSounds.push_back(sound);
-		return (int)m_activeSounds.size()-1;
+		soundIndex = (int)m_activeSounds.size()-1;
 	}
 	else
 	{
@@ -112,7 +113,7 @@ int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 		m_soundEffects.push_back(sound);
 		sound->resumeOrPlay();
 	}
-	return -1;
+	return soundIndex;
 }
 
 int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
@@ -134,7 +135,7 @@ int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundI
 			p_basicSoundInfo, p_positionalInfo, (int)m_soundEffects.size(),
 			&m_soundEffects);
 		m_soundEffects.push_back(positionalSound);
-		// Don't set soundIndex here, because it should not be altered anyway.
+		positionalSound->resumeOrPlay();
 	}
 	return soundIndex;
 }

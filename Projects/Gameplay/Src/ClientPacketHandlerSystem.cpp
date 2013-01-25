@@ -339,6 +339,9 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 
 		entity->addComponent( ComponentType::LightsComponent, lightComp);
 
+		entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
+			TESTSOUNDEFFECTPATH, "Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
+
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
 		/************************************************************************/

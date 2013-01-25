@@ -129,8 +129,6 @@ void AudioBackendSystem::playPositionalSoundEffect( string p_path, string p_file
 		p_position);
 	int soundIndex = m_soundWrapper->createNewPositionalSound( &creationalSoundInfo,
 		&positionCreationalSoundInfo );
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
 }
 
 void AudioBackendSystem::playSoundEffect(string p_path, string p_filename)
