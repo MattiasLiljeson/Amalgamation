@@ -81,7 +81,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		gun->laserSightEntity = entity->getIndex();
 
 		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.entityType		= static_cast<char>(EntityType::LaserSight);
 		data.owner			= -1;
 		data.networkIdentity = entity->getIndex();
 		data.translation	= t->getTranslation();
@@ -89,7 +89,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		data.scale			= t->getScale();
 
 		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+			new NetworkSynced( entity->getIndex(), -1, EntityType::LaserSight));
 
 		m_server->broadcastPacket(data.pack());
 	}
@@ -186,11 +186,11 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 
 	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
 	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+		new NetworkSynced( entity->getIndex(), -1, EntityType::Rocket));
 	m_world->addEntity(entity);
 
 	EntityCreationPacket data;
-	data.entityType		= static_cast<char>(EntityType::ShipModule);
+	data.entityType		= static_cast<char>(EntityType::Rocket);
 	data.owner			= -1;
 	data.networkIdentity = entity->getIndex();
 	data.translation	= t->getTranslation();

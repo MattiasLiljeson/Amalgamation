@@ -1,9 +1,10 @@
 #pragma once
 
-#include "EntityFactory.h"
-
 class ComponentReader;
 class Entity;
+class Recipe;
+
+#include "AssemblageHelper.h"
 
 class AssemblageReader
 {

@@ -80,7 +80,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 
 
 	EntityCreationPacket data;
-	data.entityType		= static_cast<char>(EntityType::ShipModule);
+	data.entityType		= static_cast<char>(EntityType::Mine);
 	data.owner			= -1;
 	data.networkIdentity = entity->getIndex();
 	data.translation	= t->getTranslation();
@@ -89,7 +89,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 	data.meshInfo		= 1;
 
 	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+		new NetworkSynced( entity->getIndex(), -1, EntityType::Mine));
 
 	m_server->broadcastPacket(data.pack());
 

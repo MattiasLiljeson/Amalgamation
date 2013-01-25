@@ -190,7 +190,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Entity creation														*/
 	/************************************************************************/
-	EntityFactory* factory = new EntityFactory();
+	EntityFactory* factory = new EntityFactory(m_client, NULL);
 	m_world->setSystem( factory, true);
 
 	/************************************************************************/
@@ -385,6 +385,11 @@ void ClientApplication::initEntities()
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
+	
+	graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
 
 	LevelPieceFileMapping modelLevelFileMapping;	
 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
@@ -405,9 +410,9 @@ void ClientApplication::initEntities()
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.2;
-	ambientLight.instanceData.ambient[1] = 0.2;
-	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.ambient[0] = 0.5f;
+	ambientLight.instanceData.ambient[1] = 0.5f;
+	ambientLight.instanceData.ambient[2] = 0.5f;
 	ambientLight.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
 
 	LightsComponent* ambientLightComp = new LightsComponent();

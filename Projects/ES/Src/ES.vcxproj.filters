@@ -47,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="Aspect.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
-    <ClCompile Include="EntityFactory.cpp">
-      <Filter>Assemblages</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblageReader.cpp">
       <Filter>Assemblages</Filter>
     </ClCompile>
@@ -104,9 +101,6 @@
     <ClInclude Include="EntityWorld.h" />
     <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="IPerformer.h" />
-    <ClInclude Include="EntityFactory.h">
-      <Filter>Assemblages</Filter>
-    </ClInclude>
     <ClInclude Include="AssemblageReader.h">
       <Filter>Assemblages</Filter>
     </ClInclude>

@@ -2,9 +2,13 @@
 #include <string>
 #include <fstream>
 #include <map>
-#include "AssemblageHelper.h"
-#include "Recipe.h"
-#include "EntitySystem.h"
+#include <AssemblageHelper.h>
+#include <Recipe.h>
+#include <EntitySystem.h>
+#include "EntityCreationPacket.h"
+#include <TcpClient.h>
+#include <TcpServer.h>
+#include "LevelPieceFileMapping.h"
 
 class Entity;
 class EntityWorld;
@@ -28,7 +32,7 @@ using namespace std;
 class EntityFactory : public EntitySystem
 {
 public:
-	EntityFactory();
+	EntityFactory(TcpClient* p_client, TcpServer* p_server);
 	~EntityFactory();
 
 	///-----------------------------------------------------------------------------------
@@ -50,7 +54,55 @@ public:
 	///-----------------------------------------------------------------------------------
 	Entity* entityFromRecipe( const string& p_entityName );
 
+	Entity* entityFromPacket(EntityCreationPacket p_packet);
+private:
+	//Ship
+	Entity* createShipEntityClient(EntityCreationPacket p_packet);
+	Entity* createShipEntityServer(EntityCreationPacket p_packet);
+
+	//Modules
+	Entity* createMineLayerClient(EntityCreationPacket p_packet);
+	Entity* createMineLayerServer(EntityCreationPacket p_packet);
+	Entity* createRocketLauncherClient(EntityCreationPacket p_packet);
+	Entity* createRocketLauncherServer(EntityCreationPacket p_packet);
+
+	Entity* createModuleClient(EntityCreationPacket p_packet);
+	Entity* createModuleServer(EntityCreationPacket p_packet);
+
+	//Laser Sight
+	Entity* createLaserSightClient(EntityCreationPacket p_packet);
+	Entity* createLaserSightServer(EntityCreationPacket p_packet);
+
+	//Particle System
+	Entity* createParticleSystemClient(EntityCreationPacket p_packet);
+	Entity* createParticleSystemServer(EntityCreationPacket p_packet);
+
+	//Selection Sphere
+	Entity* createSelectionSphereClient(EntityCreationPacket p_packet);
+	Entity* createSelectionSphereServer(EntityCreationPacket p_packet);
+
+	//Rocket
+	Entity* createRocketClient(EntityCreationPacket p_packet);
+	Entity* createRocketServer(EntityCreationPacket p_packet);
+
+	//Mine
+	Entity* createMineClient(EntityCreationPacket p_packet);
+	Entity* createMineServer(EntityCreationPacket p_packet);
+
+	//Shield
+	Entity* createShieldClient(EntityCreationPacket p_packet);
+	Entity* createShieldServer(EntityCreationPacket p_packet);
+
+	//Other
+	Entity* createOtherClient(EntityCreationPacket p_packet);
+	Entity* createOtherServer(EntityCreationPacket p_packet);
+
 private:
 	map<string, Recipe*> m_entityRecipes;
+
+	TcpClient* m_client;
+	TcpServer* m_server;
+
+	LevelPieceFileMapping m_levelPieceMapping;
 };
 
