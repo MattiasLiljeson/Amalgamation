@@ -126,11 +126,11 @@ void Transform::setForwardDirection( const AglVector3& p_forward )
 	t_up = t_up - p_forward * AglVector3::dotProduct(t_up,p_forward) / AglVector3::dotProduct(t_up,t_up);
 	t_up.normalize();
 	AglVector3 t_right = AglVector3::crossProduct(t_up,p_forward);
-    t_right.normalize();
+	t_right.normalize();
 
 	m_compositionMatrix.SetForward(p_forward);
- 	m_compositionMatrix.SetRight(t_right);
- 	m_compositionMatrix.SetUp(t_up);
+	m_compositionMatrix.SetRight(t_right);
+	m_compositionMatrix.SetUp(t_up);
 
 	calcComponents(false,true,true);
 

@@ -19,8 +19,8 @@ body.content
 
 div#logo
 {
-	background-decorator: image;
-	background-image-src: ../../Assets/gui/texture/logo.tga;
+	/*background-decorator: image;*/
+	/*background-image-src: ../../Assets/gui/texture/logo.tga;*/
 	
 	min-width: 400px;
 	max-width: 400px;
