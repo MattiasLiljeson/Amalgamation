@@ -152,13 +152,13 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
 
-		vector<unsigned int> cols = physX->getPhysicsController()->LineCollidesWith(p_pc.m_rayIndex);
-		if (cols.size() > 0)
+		int col = physX->getPhysicsController()->LineClosestCollision(p_pc.m_rayIndex);
+		if (col >= 0)
 		{
 			for (unsigned int i = 0; i < p_entities.size(); i++)
 			{
 				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
-				if (pb && pb->m_id == cols[0])
+				if (pb && pb->m_id == col)
 				{
 					//Found a pick
 					p_pc.m_latestPick = p_entities[i]->getIndex();
@@ -170,7 +170,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 						AglVector3 dir;
 						physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
 
-						AglVector3 d = physX->getController()->getBody(cols[0])->GetWorld().GetTranslation()-origin;
+						AglVector3 d = physX->getController()->getBody(col)->GetWorld().GetTranslation()-origin;
 						p_pc.m_preferredDistance = d.length();
 					}
 					else

@@ -556,6 +556,23 @@ vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_line)
 	}
 	return cols;
 }
+int	PhysicsController::LineClosestCollision(unsigned int p_line)
+{
+	int col = -1;
+	float closestT = FLT_MAX;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].lineID == p_line)
+		{
+			if (mLineSegmentCollisions[i].t < closestT)
+			{
+				col = mLineSegmentCollisions[i].bodyID;
+				closestT = mLineSegmentCollisions[i].t;
+			}
+		}
+	}
+	return col;
+}
 
 void PhysicsController::ActivateBody(unsigned int pBody)
 {
