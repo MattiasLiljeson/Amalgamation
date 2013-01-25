@@ -1,4 +1,5 @@
 #include "SoundFactory.h"
+#include "SoundDeleteAfterPlayback.h"
 
 SoundFactory::SoundFactory(IXAudio2* p_soundDevice)
 {
@@ -7,41 +8,111 @@ SoundFactory::SoundFactory(IXAudio2* p_soundDevice)
 
 SoundFactory::~SoundFactory()
 {
-
+	for(unsigned int i=0; i<m_finishedCallbacks.size(); i++)
+	{
+		delete m_finishedCallbacks[i];
+	}
 }
 
 Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 {
-	XAUDIO2_BUFFER buffer = {0};
-	WAVEFORMATEX waveFormatEx;
-	initBuffer(&buffer, p_info);
-	createSoundBuffer(p_info->getFullFilePathString().c_str(), &buffer, &waveFormatEx);
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_info->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_info);
+		createSoundBuffer(p_info->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+	}
 
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
-	return new Sound(soundVoice, buffer, p_info->volume);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx);
+	return new Sound(soundVoice, bufferAndHeader->buffer, p_info->volume);
 }
 
-PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo,
 													 PositionalSoundCreationInfo* p_positionalInfo)
 {
-	XAUDIO2_BUFFER buffer = {0};
-	WAVEFORMATEX waveFormatEx;
-	initBuffer(&buffer, p_basicSoundInfo);
-	createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(), &buffer,
-		&waveFormatEx);
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_basicSoundInfo->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
+		createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+	}
+	
 	X3DAUDIO_EMITTER emitter = {0};
 	initEmitter(&emitter, p_positionalInfo->soundOrientation);
 	X3DAUDIO_DSP_SETTINGS dspSettings = {0};
-	initDSPSettings(&dspSettings,p_positionalInfo->destChannels);
-
+	initDSPSettings(&dspSettings, p_positionalInfo->destChannels);
 	PositionalSoundInfo info;
-	info.emitter	= emitter;
-	info.settings	= dspSettings; 
+	info.emitter = emitter;
+	info.settings = dspSettings; 
 	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(buffer, waveFormatEx);
-	return new PositionalSound( soundVoice, buffer, info, p_basicSoundInfo->volume);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx);
+	return new PositionalSound(soundVoice, bufferAndHeader->buffer, info,
+		p_basicSoundInfo->volume);
 }
 
+Sound* SoundFactory::createAmbientSoundEffect( BasicSoundCreationInfo* p_info,
+											  int p_soundIndex,
+											  vector<Sound*>* p_sounds )
+{
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_info->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_info);
+		createSoundBuffer(p_info->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+	}
+	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
+		p_soundIndex, p_sounds, &m_finishedCallbacks);
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx,
+		callback);
+	return new Sound(soundVoice, bufferAndHeader->buffer, p_info->volume);
+}
+
+PositionalSound* SoundFactory::createPositionalSoundEffect(
+	BasicSoundCreationInfo* p_basicSoundInfo, 
+	PositionalSoundCreationInfo* p_positionalInfo, int p_soundIndex,
+	vector<Sound*>* p_positionalSounds)
+{
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_basicSoundInfo->fileName);
+	if(bufferAndHeader == NULL)
+	{
+		bufferAndHeader = new SoundBufferAndHeader();
+		initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
+		createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
+			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+		m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+	}
+	
+	X3DAUDIO_EMITTER emitter = {0};
+	initEmitter(&emitter, p_positionalInfo->soundOrientation);
+	X3DAUDIO_DSP_SETTINGS dspSettings = {0};
+	initDSPSettings(&dspSettings, p_positionalInfo->destChannels);
+	PositionalSoundInfo info;
+	info.emitter = emitter;
+	info.settings = dspSettings; 
+	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
+	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+		*bufferAndHeader->waveFormatEx,
+		new SoundDeleteAfterPlayback(p_soundIndex, p_positionalSounds,
+		&m_finishedCallbacks));
+	return new PositionalSound(soundVoice, bufferAndHeader->buffer, info,
+		p_basicSoundInfo->volume);
+}
 
 void SoundFactory::initBuffer( XAUDIO2_BUFFER* p_audioBuffer, 
 							  BasicSoundCreationInfo* p_basicSoundInfo )
@@ -99,6 +170,7 @@ void SoundFactory::createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER*
 
 IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer,
 													 WAVEFORMATEX& p_waveFormatEx,
+													 IXAudio2VoiceCallback* p_callback,
 													 float maxFreqOffset/* =1.0f */)
 {
 	/************************************************************************/
@@ -106,14 +178,15 @@ IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer,
 	/************************************************************************/
 	IXAudio2SourceVoice* soundVoice;
 	UINT32 flags = 0;
-	IXAudio2VoiceCallback* callback = NULL;
 	XAUDIO2_VOICE_SENDS* sendList = NULL;
 	XAUDIO2_EFFECT_CHAIN* effectChain = NULL;
 
-	HRESULT hr;
-	if (FAILED(hr = m_soundDevice->CreateSourceVoice( &soundVoice, 
-		&p_waveFormatEx, flags , maxFreqOffset, callback, sendList, effectChain)))
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+	HRESULT hr = m_soundDevice->CreateSourceVoice(&soundVoice, &p_waveFormatEx, flags,
+		maxFreqOffset, p_callback, sendList, effectChain);
+	if (FAILED(hr))
+	{
+		throw XAudio2Exception(hr, __FILE__, __FUNCTION__, __LINE__);
+	}
 	return soundVoice;
 }
 

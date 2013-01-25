@@ -177,7 +177,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
 	Transform* transformComp = new Transform( 
-		0, 0, 10*static_cast<float>(p_newlyConnectedClientId));
+		0, 0, -10*static_cast<float>(p_newlyConnectedClientId));
 	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
 	m_world->addEntity(newShip);
 

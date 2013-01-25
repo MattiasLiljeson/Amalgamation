@@ -36,7 +36,7 @@ int AudioBackendSystem::createAmbientSound(BasicSoundCreationInfo* p_info)
 	/************************************************************************/
 	if( AntTweakBarWrapper::getInstance() != NULL )
 	{
-		string temp = m_label + toString(index) +" "+ p_info->file;
+		string temp = m_label + toString(index) +" "+ p_info->fileName;
 		TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::SOUND),
 			temp.c_str(), stopOrPlaySound, (void*)index,"group=Ambient_Sound");
 			//-END-
@@ -57,7 +57,7 @@ int AudioBackendSystem::createPositionalSound(BasicSoundCreationInfo* p_info,
 	/************************************************************************/
 	/* DEBUG INFO!															*/
 	/************************************************************************/
-	string temp = m_label + toString(index) + " " + p_info->file;
+	string temp = m_label + toString(index) + " " + p_info->fileName;
 
 	if( AntTweakBarWrapper::getInstance() != NULL )
 	{
@@ -129,8 +129,6 @@ void AudioBackendSystem::playPositionalSoundEffect( string p_path, string p_file
 		p_position);
 	int soundIndex = m_soundWrapper->createNewPositionalSound( &creationalSoundInfo,
 		&positionCreationalSoundInfo );
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
 }
 
 void AudioBackendSystem::playSoundEffect(string p_path, string p_filename)
@@ -140,6 +138,6 @@ void AudioBackendSystem::playSoundEffect(string p_path, string p_filename)
 		p_path.c_str(),
 		false);
 	int soundIndex = m_soundWrapper->createAmbientSound(&creationalSoundInfo);
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
-	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
+//	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
+//	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
 }

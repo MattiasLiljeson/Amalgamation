@@ -18,7 +18,7 @@
 class Sound
 {
 public:
-	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer, 
+	Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer, 
 		float p_volume=1.0f);
 	virtual ~Sound();
 
@@ -75,7 +75,7 @@ public:
 	float					m_right;
 	//-END-
 protected:
-	XAUDIO2_BUFFER			m_buffer;
+	XAUDIO2_BUFFER*			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
 	XAUDIO2_VOICE_STATE*	m_sourceState;
 	float					m_volume;
