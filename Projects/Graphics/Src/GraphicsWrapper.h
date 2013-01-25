@@ -119,7 +119,7 @@ public:
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
 	unsigned int createTexture( const byte* p_source, int p_width, int p_height,
-		int p_pitch, TextureParser::TEXTURE_TYPE p_type );
+		int p_pitch, int p_bitLevel, TextureParser::TEXTURE_TYPE p_type );
 
 	int getMeshId( const string& p_name );
 

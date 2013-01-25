@@ -43,7 +43,7 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 
 		newShaderResurceView = createTexture(
 			p_device, FreeImage_GetBits(image), FreeImage_GetWidth(image),
-			FreeImage_GetHeight(image), FreeImage_GetPitch(image),
+			FreeImage_GetHeight(image), FreeImage_GetPitch(image), FreeImage_GetBPP(image),
 			TextureParser::TEXTURE_TYPE::BGRA);
 
 		/************************************************************************/
@@ -54,7 +54,7 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 	else
 	{
 		BYTE* data = generateFallbackTexture();
-		newShaderResurceView = createTexture(p_device,data,10,10,32,
+		newShaderResurceView = createTexture(p_device,data,10,10,128,32,
 			TextureParser::TEXTURE_TYPE::RGBA);
 
 		delete data;
@@ -63,12 +63,37 @@ ID3D11ShaderResourceView* TextureParser::loadTexture(ID3D11Device* p_device,
 }
 
 ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
-	const byte* p_source, int p_width, int p_height, int p_pitch, TEXTURE_TYPE p_type )
+	const byte* p_source, int p_width, int p_height, int p_pitch, int p_bitLevel, 
+	TEXTURE_TYPE p_type )
 {
+	byte* newData = NULL;
+
+	if(p_bitLevel == 24){
+		newData = new byte[p_width*p_height*4];
+		unsigned int ind = 0;
+		unsigned int counter = 0;
+		for (unsigned int i = 0; i < p_width * p_height*4;i++){
+			if(counter < 3){
+				newData[i] = p_source[ind++];
+				counter++;
+			}
+			else{
+				newData[i] = 255;
+				counter = 0;
+			}
+		}
+	}
+
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-	data.pSysMem = (void*)p_source;
+	if(newData){
+		data.pSysMem = (void*)newData;
+	}
+	else{
+		data.pSysMem = (void*)p_source;
+	}
 	data.SysMemPitch = p_pitch;
+	data.SysMemSlicePitch = 0;
 
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc,sizeof(D3D11_TEXTURE2D_DESC));
@@ -79,9 +104,9 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	texDesc.SampleDesc.Count	= 1;
 	texDesc.SampleDesc.Quality	= 0;
 	texDesc.Usage				= D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MiscFlags			= 0;
-	texDesc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
 
 	switch( p_type )
 	{
@@ -119,6 +144,7 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 		throw D3DException(hr, __FILE__,__FUNCTION__,__LINE__);
 
 	texture->Release();
+	delete newData;
 
 	return newShaderResurceView;
 }

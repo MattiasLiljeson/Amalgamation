@@ -347,9 +347,10 @@ unsigned int GraphicsWrapper::createTexture( const string& p_name,
 }
 
 unsigned int GraphicsWrapper::createTexture( const byte* p_source, int p_width,
-	int p_height, int p_pitch, TextureParser::TEXTURE_TYPE p_type )
+	int p_height, int p_pitch, int p_bitLevel, TextureParser::TEXTURE_TYPE p_type )
 {
-	return m_textureFactory->createTexture(p_source,p_width,p_height,p_pitch,p_type);
+	return m_textureFactory->createTexture(p_source,p_width,p_height,p_pitch, p_bitLevel,
+		p_type);
 }
 
 int GraphicsWrapper::getMeshId( const string& p_name )
