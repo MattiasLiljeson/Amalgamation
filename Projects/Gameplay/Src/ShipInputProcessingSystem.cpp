@@ -5,6 +5,8 @@
 #include "AntTweakBarWrapper.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
+#include "AudioBackendSystem.h"
+#include <Globals.h>
 
 
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client) :
@@ -251,6 +253,11 @@ void ShipInputProcessingSystem::readAllTheInput(RawInputForces& p_outInput)
 		{
 			//Highlight slot
 			sendModuleSlotHighlight(i);
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
+			audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+				"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
+
 		}
 	}
 	

@@ -13,9 +13,6 @@ struct Light
 	float4 specularColor;
 };
 
-
-
-
 SurfaceLightingData Lambert(Light p_light, float4 p_surfaceNormal)
 {
 	SurfaceLightingData result;
@@ -55,13 +52,44 @@ struct SurfaceInfo
 	//float	pad2;
 };
 
-float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos, float3 lightPos)
+float3 parallelLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
+{
+	
+	// The light vector aims opposite the direction the light rays travel.
+	float3 lightVec = -light.lightDir;
+	
+	// Add the ambient term.
+	float3 litColor = float3( 0.0f, 0.0f, 0.0f );
+	litColor += surface.diffuse.xyz * light.ambient.xyz;
+	
+	// Add diffuse and specular term, provided the surface is in
+	// the line of site of the light.
+	float diffuseFactor = dot( lightVec, normal );
+	[branch]
+	if( diffuseFactor > 0.0f ) {
+		float specPower = max( surface.specular.a, 1.0f );
+		float3 toEye = normalize( eyePos - pixelPos );
+		float3 R = reflect(-lightVec, normal);
+		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
+		
+		// diffuse and specular terms
+		litColor += diffuseFactor * surface.diffuse.xyz * light.diffuse.xyz;
+		litColor += specFactor * surface.specular.xyz * light.specular.xyz;
+	}
+
+	return litColor;
+}
+
+float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
 {	
+	// lulz tonemapping
+	surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
+	
 	// The vector from the surface to the light.
-	float3 lightVec = lightPos - pixelPos;
+	float3 lightVec = light.pos - pixelPos;
 	
 	// The distance from surface to light.
-	float d = length(lightVec);
+	float d = length( lightVec );
 	
 	if( d > light.range )
 	{
@@ -74,26 +102,42 @@ float3 pointLight(SurfaceInfo surface, LightInfo light, float3 eyePos, float3 no
 	lightVec /= d;
 	
 	// Add the ambient light term.
-	float3 litColor = float3(0.0f, 0.0f, 0.0f);
+	float3 litColor = float3( 0.0f, 0.0f, 0.0f );
 	litColor += surface.diffuse.xyz * light.ambient.xyz;
 	
 	// Add diffuse and specular term, provided the surface is in
 	// the line of site of the light.
 	
-	float diffuseFactor = dot(lightVec, normal);
+	float diffuseFactor = dot( lightVec, normal );
 	[branch]
 	if( diffuseFactor > 0.0f )
 	{
 		//return float3(0, 0, 0.5);
-		float specPower = max(surface.specular.a, 1.0f);
-		float3 toEye = normalize(eyePos - pixelPos);
-		float3 R = reflect(-lightVec, normal);
-		float specFactor = pow(max(dot(R, toEye), 0.0f), specPower);
+		float specPower = max( surface.specular.a, 1.0f );
+		float3 toEye = normalize( eyePos - pixelPos );
+		float3 R = reflect( -lightVec, normal );
+		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
 		
 		// diffuse and specular terms
-		litColor += diffuseFactor.r * (surface.diffuse.rgb * light.diffuse.rgb);
-		litColor += specFactor.r * (surface.specular.rgba * light.specular.rgba);
+		litColor += diffuseFactor * (surface.diffuse.rgb * light.diffuse.rgb);
+		litColor += specFactor * (surface.specular.rgb * light.specular.rgb);
 	}
 	// attenuate
-	return litColor / dot(light.attenuation, float3(1.0f, d, d*d));
+	return litColor / dot( light.attenuation, float3(1.0f, d, d*d) );
+}
+
+float3 spotLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
+{
+	//return surface.diffuse.xyz * 0.5f;
+	float3 litColor = pointLight(surface, light, eyePos, normal, pixelPos);
+
+	//litColor = surface.diffuse.xyz;
+	
+	// The vector from the surface to the light.
+	float3 lightVec = normalize(light.pos - pixelPos);
+
+	float s = pow( max( dot(-lightVec, light.lightDir), 0.0f ), light.spotPower );
+
+	// Scale color by spotlight factor.
+	return litColor*s;
 }

@@ -1,8 +1,9 @@
 #include "PhysicsController.h"
 
-PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5), mStaticBodies(4, AglVector3(-75, -75, -75), AglVector3(200, 200, 100))
+PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5)
 {
 	mTimeAccum = 0;
+	mStaticBodies = NULL;
 }
 PhysicsController::~PhysicsController()
 {
@@ -28,7 +29,7 @@ int PhysicsController::AddSphere(AglMatrix p_world, float p_radius, float p_mass
 		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(s, mBodies.size()));
 	else
 	{
-		mStaticBodies.Insert(s);
+		mStaticBodies->Insert(s);
 	}
 	mBodies.push_back(s);
 	if (pParent)
@@ -45,7 +46,7 @@ int PhysicsController::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMas
 		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	else
 	{
-		mStaticBodies.Insert(b);
+		mStaticBodies->Insert(b);
 	}
 	mBodies.push_back(b);
 	if (pParent)
@@ -61,7 +62,7 @@ int PhysicsController::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocit
 		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	else
 	{
-		mStaticBodies.Insert(b);
+		mStaticBodies->Insert(b);
 	}
 	mBodies.push_back(b);
 	if (pParent)
@@ -88,7 +89,7 @@ int PhysicsController::AddBox(AglMatrix p_world, AglVector3 p_size, float p_mass
 		mRigidBodies.push_back(pair<RigidBody*, unsigned int>(b, mBodies.size()));
 	else
 	{
-		mStaticBodies.Insert(b);
+		mStaticBodies->Insert(b);
 	}
 	mBodies.push_back(b);
 	if (pParent)
@@ -121,6 +122,16 @@ int PhysicsController::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundin
 	RigidBodyMesh* rbm = new RigidBodyMesh(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
 	mRigidBodies.push_back(pair<RigidBody*, unsigned int>(rbm, mBodies.size()));
 	mBodies.push_back(rbm);
+	return mBodies.size()-1;
+}
+int PhysicsController::AddMeshBody(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree)
+{
+	RigidBodyMesh* m = new RigidBodyMesh(pWorld, pOBB, pBoundingSphere, pSize, pBSPTree);
+	m->SetCollisionEnabled(true);
+	m->Activate();
+	//Meshes are always static
+	mStaticBodies->Insert(m);
+	mBodies.push_back(m);
 	return mBodies.size()-1;
 }
 
@@ -259,10 +270,13 @@ void PhysicsController::Update(float pElapsedTime)
 				}
 			}
 			//Check for collision against static geometry
-			vector<PhyCollisionData> staticCol = mStaticBodies.Query(mRigidBodies[i].first);
-			for (unsigned int j = 0; j < staticCol.size(); j++)
+			if (mStaticBodies)
 			{
-				collisions.push_back(staticCol[j]);
+				vector<PhyCollisionData> staticCol = mStaticBodies->Query(mRigidBodies[i].first);
+				for (unsigned int j = 0; j < staticCol.size(); j++)
+				{
+					collisions.push_back(staticCol[j]);
+				}
 			}
 		}
 	}
@@ -394,6 +408,8 @@ void PhysicsController::Clear()
 	mRigidBodies.clear();
 	mCompoundBodies.clear();
 	mConvexHullShapes.clear();
+	delete mStaticBodies;
+	mStaticBodies = NULL;
 }
 float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore, AglBoundingSphere p_sphere)
 {
@@ -567,4 +583,8 @@ void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody
 			i--;
 		}
 	}
+}
+void PhysicsController::InitStaticBodiesOctree(AglVector3 pMin, AglVector3 pMax)
+{
+	mStaticBodies = new Octree(4, pMin, pMax);
 }

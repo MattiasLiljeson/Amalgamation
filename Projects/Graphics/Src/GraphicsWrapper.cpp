@@ -42,7 +42,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
-	m_textureFactory	= new TextureFactory(m_device,m_textureManager);
+	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
 	m_modelFactory		= new ModelExtendedManagedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
 
@@ -347,9 +347,10 @@ unsigned int GraphicsWrapper::createTexture( const string& p_name,
 }
 
 unsigned int GraphicsWrapper::createTexture( const byte* p_source, int p_width,
-	int p_height, int p_pitch, TextureParser::TEXTURE_TYPE p_type )
+	int p_height, int p_pitch, int p_bitLevel, TextureParser::TEXTURE_TYPE p_type )
 {
-	return m_textureFactory->createTexture(p_source,p_width,p_height,p_pitch,p_type);
+	return m_textureFactory->createTexture(p_source,p_width,p_height,p_pitch, p_bitLevel,
+		p_type);
 }
 
 int GraphicsWrapper::getMeshId( const string& p_name )

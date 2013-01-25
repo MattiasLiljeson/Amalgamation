@@ -15,6 +15,7 @@
 #include "NetworkSynced.h"
 #include <PhysicsController.h>
 #include "StandardRocket.h"
+#include "SpawnSoundEffectPacket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -45,10 +46,9 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::ShipModule)));
 
+		handleLaserSight(p_entities[i]);
 		if (gun && module && module->m_parentEntity >= 0)
 		{
-			handleLaserSight(p_entities[i]);
-
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
 
@@ -66,8 +66,13 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::RocketLauncherModule)));
 
+	ShipModule* module = static_cast<ShipModule*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ShipModule)));
+
 	if (gun->laserSightEntity < 0)
 	{
+		//Create Ray entity
 		Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
@@ -100,13 +105,43 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			m_world->getComponentManager()->getComponent(entity,
 			ComponentType::getTypeFor(ComponentType::Transform)));
 
-		AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection);
+		if (module->m_parentEntity >= 0)
+		{
+			AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection);
 
-		AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
-		rot.transformVector(offset);
-		laserTransform->setTranslation(gunTransform->getTranslation()+offset);
-		laserTransform->setRotation(rot);
-		//laserTransform->setTranslation(scale);
+			AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
+			rot.transformVector(offset);
+			laserTransform->setTranslation(gunTransform->getTranslation()+offset);
+			laserTransform->setRotation(rot);
+
+
+			//Check if the module is highlighted
+			Entity* parent = NULL;
+			while (true)
+			{
+				parent = m_world->getEntity(module->m_parentEntity);
+				ShipModule* parentmodule = static_cast<ShipModule*>(
+					m_world->getComponentManager()->getComponent(parent,
+					ComponentType::getTypeFor(ComponentType::ShipModule)));
+				if (!parentmodule)
+					break;
+				else
+				{
+					module = parentmodule;
+					p_entity = parent;
+				}
+			}
+
+			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(parent->getComponent(ComponentType::ConnectionPointSet));
+			if (cps->m_connectionPoints[cps->m_highlighted].cpConnectedEntity == p_entity->getIndex())
+				laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
+			else
+				laserTransform->setScale(AglVector3(0, 0, 0));
+		}
+		else
+		{
+			laserTransform->setScale(AglVector3(0, 0, 0));
+		}
 	}
 }
 void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
@@ -150,6 +185,8 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::Transform, t);
 
 	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
 	m_world->addEntity(entity);
 
 	EntityCreationPacket data;
@@ -160,9 +197,14 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.rotation		= t->getRotation();
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
-
-	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
-
 	m_server->broadcastPacket(data.pack());
+
+	// Also send a positional sound effect.
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = t->getTranslation();
+	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
+	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
+	m_server->broadcastPacket(soundEffectPacket.pack());
 }

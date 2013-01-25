@@ -73,11 +73,4 @@ void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 	ss << "score(" << netSync->getNetworkOwner() << ")";
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::OVERALL,
 		ss.str().c_str(), TwType::TW_TYPE_FLOAT, score->getTotalScorePointer(), "" );
-
-	// If the entity belongs to the current owner, the stored hud element component can	// be fetched here.
-	//if (netSync->getNetworkOwner() == m_client->getId())
-	//{
-	//	m_playerScoreMenu = 
-	//		static_cast<HudElement*>(p_entity->getComponent( ComponentType::HudElement ));
-	//}
 }

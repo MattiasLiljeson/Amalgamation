@@ -128,6 +128,8 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
 				data.networkIdentity = netSync->getNetworkIdentity();
+				
+				data.meshInfo		 = 0; //Temp
 				if (transform)
 				{
 					data.translation	= transform->getTranslation();
@@ -193,7 +195,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
 	Transform* transformComp = new Transform( 
-		0, 0, 10*static_cast<float>(p_newlyConnectedClientId));
+		0, 0, -10*static_cast<float>(p_newlyConnectedClientId));
 	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
 	m_world->addEntity(newShip);
 

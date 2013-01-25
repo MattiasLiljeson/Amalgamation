@@ -29,7 +29,7 @@ public:	//Enums
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
-		PositionalSoundEffect,
+		PositionalSoundSource,
 		ShipFlyController,
 		ShipEditController,
 		Impulse,
@@ -59,6 +59,7 @@ public:	//Enums
 		PickComponent,
 		ParticleSystemEmitter,
 		ParticleUpdateData,
+		DebugMove,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

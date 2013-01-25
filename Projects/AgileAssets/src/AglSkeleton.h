@@ -108,8 +108,6 @@ public:
 	/// \return A 4x4 matrix
 	///
 	AglMatrix	  getInverseBindMatrix(int p_joint);
-
-	void transform(AglMatrix p_transform);
 };
 
 #endif

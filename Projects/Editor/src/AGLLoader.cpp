@@ -66,30 +66,58 @@ void AGLLoader::Load(string pPath)
 		if (materials[i]->diffuseTextureNameIndex >= 0)
 		{
 			string difpath = mReader->getScene()->getName(materials[i]->diffuseTextureNameIndex);
-			removePath(difpath);
-			difpath = path + difpath;
-			TextureManager::GetInstance()->LoadTexture(difpath);
+			int ind = TextureManager::GetInstance()->LoadTexture(difpath);
+			if (ind < 0)
+			{
+				materials[i]->diffuseTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mReader->getScene()->setName(materials[i]->diffuseTextureNameIndex, data->Path);
+			}
 		}
 		if (materials[i]->specularTextureNameIndex >= 0)
 		{
 			string specpath = mReader->getScene()->getName(materials[i]->specularTextureNameIndex);
-			removePath(specpath);
-			specpath = path + specpath;
-			TextureManager::GetInstance()->LoadTexture(specpath);
+			int ind = TextureManager::GetInstance()->LoadTexture(specpath);
+			if (ind < 0)
+			{
+				materials[i]->specularTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mReader->getScene()->setName(materials[i]->specularTextureNameIndex, data->Path);
+			}
 		}
 		if (materials[i]->normalTextureNameIndex >= 0)
 		{
 			string normpath = mReader->getScene()->getName(materials[i]->normalTextureNameIndex);
-			removePath(normpath);
-			normpath = path + normpath;
-			TextureManager::GetInstance()->LoadTexture(normpath);
+			int ind = TextureManager::GetInstance()->LoadTexture(normpath);
+			if (ind < 0)
+			{
+				materials[i]->normalTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mReader->getScene()->setName(materials[i]->normalTextureNameIndex, data->Path);
+			}
 		}
 		if (materials[i]->glowTextureNameIndex >= 0)
 		{
 			string glowpath = mReader->getScene()->getName(materials[i]->glowTextureNameIndex);
-			removePath(glowpath);
-			glowpath = path + glowpath;
-			TextureManager::GetInstance()->LoadTexture(glowpath);
+			int ind = TextureManager::GetInstance()->LoadTexture(glowpath);
+			if (ind < 0)
+			{
+				materials[i]->glowTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mReader->getScene()->setName(materials[i]->glowTextureNameIndex, data->Path);
+			}
 		}
 	}
 

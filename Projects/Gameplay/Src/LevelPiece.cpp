@@ -161,6 +161,10 @@ const AglBoundingSphere& LevelPiece::getBoundingSphere() const
 {
 	return m_boundingSphere;
 }
+const ModelResource* LevelPiece::getModelResource() const
+{
+	return m_modelResource;
+}
 
 void LevelPiece::deleteMainTransform()
 {

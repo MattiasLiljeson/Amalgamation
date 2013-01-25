@@ -9,6 +9,8 @@
 #include "ShipModule.h"
 #include "Connector1to2Module.h"
 #include "NetworkSynced.h"
+#include "LevelGenSystem.h"
+#include "LevelPiece.h"
 
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
@@ -24,6 +26,35 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::initialize()
 {
+	LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	if (levelSystem)
+	{
+		AglVector3 minP = levelSystem->getWorldMin();
+		AglVector3 maxP = levelSystem->getWorldMax();
+		vector<LevelPiece*> pieces = levelSystem->getGeneratedPieces();
+		m_physicsController->InitStaticBodiesOctree(minP, maxP);
+		for (unsigned int i = 0; i < pieces.size(); i++)
+		{
+			const ModelResource* mr = pieces[i]->getModelResource();
+			Transform transform = pieces[i]->getTransform()->getMatrix();
+
+			AglMatrix rt;
+			AglMatrix::componentsToMatrix(rt, AglVector3(1, 1, 1), transform.getRotation(), transform.getTranslation());
+
+			AglVector3 s = transform.getScale();
+			AglOBB obb = mr->meshHeader.minimumOBB;
+			AglMatrix w = obb.world;
+			w *= rt;
+
+			if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
+			{
+				//NOT FIXED YET! WILL CRASH. No support for non identity scaling
+				//int k = 0;
+				//k = 1 / k;
+			}
+			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, s, mr->looseBspTree);
+		}
+	}
 }
 
 void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)

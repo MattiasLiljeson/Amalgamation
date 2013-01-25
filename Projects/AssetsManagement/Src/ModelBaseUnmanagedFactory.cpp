@@ -86,6 +86,8 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createAllModelData( AglScene*
 			// set
 			model->meshHeader = aglMeshHeader;
 
+			model->looseBspTree = createBspTree(aglMesh);
+
 			readAndStoreEmpties((int)i,model,p_scene);
 			readAndStoreParticleSystems(i,model,p_scene);
 
@@ -133,4 +135,26 @@ ModelResource* ModelBaseUnmanagedFactory::getFallback()
 
 	// Done
 	return model;
+}
+
+AglLooseBspTree* ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
+{
+	//ANTON
+	AglMeshHeader h = p_mesh->getHeader();
+	AglVertexSTBN* v = (AglVertexSTBN*)p_mesh->getVertices();
+	unsigned int* ind = p_mesh->getIndices();
+
+	vector<AglVector3> vertices;
+	vector<unsigned int> indices;
+	for (unsigned int i = 0; i < h.vertexCount; i++)
+	{
+		vertices.push_back(v[i].position);
+	}
+	for (unsigned int i = 0; i < h.indexCount; i++)
+	{
+		indices.push_back(ind[i]);
+	}
+	AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
+	return constructor.createTree();
+	//END ANTON
 }

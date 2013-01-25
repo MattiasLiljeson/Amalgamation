@@ -53,7 +53,7 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 			//
 			if (scene)
 			{ 
-				InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+				InstanceInstruction currentInstance={p_name,AglMatrix::identityMatrix()};
 
 				// DEBUGWARNING(( ("Loading mesh from "+currentInstance.filename+" single instance").c_str() ));
 
@@ -62,7 +62,8 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 				if ((*models)[0]!=NULL)
 				{
 					model = (*models)[0];
-					readAndStoreEmpties(-1,model,scene); // read leftover empties
+					readAndStoreEmpties(-1,model,model->transform,
+						scene,&currentInstance); // read leftover empties
 				}
 			}
 			else
@@ -84,10 +85,10 @@ ModelResource* ModelExtendedManagedFactory::createModelResource( const string& p
 vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const string& p_name, 
 															   const string* p_path/*=NULL*/)
 {
-	InstanceInstr currentInstance={p_name,AglMatrix::identityMatrix()};
+	InstanceInstruction currentInstance={p_name,AglMatrix::identityMatrix()};
 	//
 	vector<ModelResource*>* models = NULL;
-	vector<InstanceInstr>* instanceInstructions = new vector<InstanceInstr>();
+	vector<InstanceInstruction>* instanceInstructions = new vector<InstanceInstruction>();
 	int instanceCount = 0;
 	// Check and read the file
 	do 
@@ -113,7 +114,8 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						readAndStoreEmpties(-1,model,scene,instanceInstructions);
+						readAndStoreEmpties(-1,model,currentInstance.transform,
+							scene,&currentInstance,instanceInstructions);
 					}
 				}
 				else
@@ -124,13 +126,21 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					vector<ModelResource*>* prefetched = createAllModelData(&currentInstance,
 																			scene,
 																			scene->getMeshes().size(),
-																			instanceInstructions);	
+																			instanceInstructions);
+					// read leftover empties
+					if ((*prefetched)[0]!=NULL)
+					{
+						ModelResource* model = (*prefetched)[0];
+						readAndStoreEmpties(-1,model,currentInstance.transform,
+							scene,&currentInstance,instanceInstructions); 
+					}
+					//
 					int size = prefetched->size();
 					for (int n=firstMeshPos;n<size;n++)
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
-						 // mesh transform always relative its root which is identity
-						model->transform *= currentInstance.transform;
+						// mesh transform
+						model->transform = model->transform*currentInstance.transform;
 						// 
 						models->push_back(model);
 					}
@@ -156,12 +166,20 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 				// an instance needs to add to original collection from  the instance's collection
 				// it also needs to copy the model resource data
 				vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+
 				int size = prefetched->size();
 				for (int n=firstMeshPos;n<size;n++)
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
-					 // mesh transform always relative its root which is identity
+					// mesh transform
 					model->transform *= currentInstance.transform;
+					// instances
+					for (int n=0;n<model->instances.size();n++)
+					{
+						InstanceInstruction instruction = model->instances[n];
+						instruction.transform *= currentInstance.transform;
+						instanceInstructions->push_back(instruction);
+					}
 					// 
 					models->push_back(model);
 				}
@@ -184,10 +202,10 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 }
 
 
-vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const ModelExtendedManagedFactory::InstanceInstr* p_instanceData,  
+vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const InstanceInstruction* p_instanceData,  
 																  AglScene* p_scene, 
 																  unsigned int p_numberOfModels,
-																  vector<InstanceInstr>* p_outInstanceInstructions)
+																  vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 	p_numberOfModels = max(p_numberOfModels,1);
 	ModelResourceCollection* models = new ModelResourceCollection();
@@ -210,11 +228,11 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 				{
 					if (p_outInstanceInstructions!=NULL)
 					{
-						InstanceInstr inst = {parsedAction.first.filename,
+						InstanceInstruction inst = {parsedAction.first.filename,
 			                                  aglMeshHeader.transform};
 
-						// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
-
+						DEBUGWARNING(("Mesh with instancing instruction, empties are recommended instead. Unexpected behaviour may occur."));
+						// Not possible yet-> p_model->instances.push_back(inst);
 						p_outInstanceInstructions->push_back(inst);
 					}
 
@@ -226,7 +244,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 				{
 					// DEBUGWARNING(( string("Normal mesh").c_str() ));
 					createAndAddModel(models, i, p_instanceData, parsedAction.first.name, 
-						p_scene, aglMesh, &aglMeshHeader);
+						p_scene, aglMesh, &aglMeshHeader, p_outInstanceInstructions);
 					break;
 				}
 			}
@@ -240,10 +258,10 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createAllModelData( const M
 
 void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_modelCollection, 
 													unsigned int p_modelNumber, 
-													const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
+													const InstanceInstruction* p_instanceData, 
 													const string& p_nameSuffix,AglScene* p_scene, AglMesh* p_aglMesh,
 													AglMeshHeader* p_meshHeader,
-													vector<InstanceInstr>* p_outInstanceInstructions)
+													vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 		// set
 		ModelResource* model = new ModelResource();
@@ -267,10 +285,11 @@ void ModelExtendedManagedFactory::createAndAddModel( ModelResourceCollection* p_
 		// store in model
 		model->name = p_instanceData->filename+suffix;
 		model->meshId = static_cast<int>(meshResultId);
-		model->transform = p_meshHeader->transform*p_instanceData->transform;
+		model->transform = p_meshHeader->transform;
 
 		// other model creation data
-		readAndStoreEmpties((int)p_modelNumber,model,p_scene,p_outInstanceInstructions);
+		readAndStoreEmpties((int)p_modelNumber,model,model->transform,
+			p_scene,p_instanceData,p_outInstanceInstructions);
 		readAndStoreParticleSystems(p_modelNumber,model,p_scene);
 
 		// Done
@@ -295,25 +314,49 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 		specularName = p_scene->getName(mat->specularTextureNameIndex);
 	// normal
 	string normalName = defaultTextureName;
+	bool hasNormalMap=false;
 	if (mat->normalTextureNameIndex!=-1)
+	{
+		hasNormalMap=true;
 		normalName = p_scene->getName(mat->normalTextureNameIndex);
+	}
+	// displacement
+	string dispName = defaultTextureName;
+	bool hasDisplacementMap=false;
+	if (mat->displacementTextureNameIndex!=-1)
+	{
+		hasDisplacementMap=true;
+		dispName = p_scene->getName(mat->displacementTextureNameIndex);
+	}
+	// glow
+	string glowName = defaultTextureName;
+	if (mat->glowTextureNameIndex!=-1)
+		glowName = p_scene->getName(mat->glowTextureNameIndex);
 
 	// Create material
 	MaterialInfo materialInfo;
+	materialInfo.hasNormalMap = hasNormalMap;
+	materialInfo.hasDisplacementMap = hasDisplacementMap;
 	materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, 
 		m_textureFactory->createTexture(diffuseName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::SPECULARMAP,
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::NORMALMAP,
 		m_textureFactory->createTexture(normalName,TEXTUREPATH));
+	materialInfo.setTextureId(MaterialInfo::DISPLACEMENTMAP,
+		m_textureFactory->createTexture(dispName,TEXTUREPATH));
+	materialInfo.setTextureId(MaterialInfo::GLOWMAP,
+		m_textureFactory->createTexture(glowName,TEXTUREPATH));
 	// and then set the resulting data to the mesh
 	p_mesh->setMaterial(materialInfo);
 }
 
 void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber, 
 													   ModelResource* p_model, 
+													   AglMatrix& p_offset,
 													   AglScene* p_scene,
-													   vector<InstanceInstr>* p_outInstanceInstructions)
+													   const InstanceInstruction* p_instanceData, 
+													   vector<InstanceInstruction>* p_outInstanceInstructions)
 {
 	unsigned int connectionPoints = p_scene->getConnectionPointCount();
 	for (unsigned int n=0;n<connectionPoints;n++)
@@ -330,9 +373,10 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 			{
 				if (cp->parentMesh == p_modelNumber) // handle global and local call the same
 				{
-					InstanceInstr inst = {parsedAction.first.filename,
-						cp->transform};
+					InstanceInstruction inst = {parsedAction.first.filename,
+						cp->transform*p_offset};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+					p_model->instances.push_back(inst);
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;
@@ -346,7 +390,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 					if (cp->parentMesh == p_modelNumber)
 					{
 						// DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
 					}
 				}
 				else // call from global
@@ -355,7 +399,7 @@ void ModelExtendedManagedFactory::readAndStoreEmpties( int p_modelNumber,
 					if (cp->parentMesh == -1 && p_model!=NULL)
 					{
 						// DEBUGWARNING(( string("Found global connection point!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform);
+						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
 					}
 				}
 
@@ -449,4 +493,12 @@ ModelResource* ModelExtendedManagedFactory::getSphere()
 	{
 		return m_modelResourceCache->getResource(errname)->collection[0];
 	}
+}
+
+bool ModelExtendedManagedFactory::isMirrorMatrix(const AglMatrix& p_matrix )
+{
+	AglVector3 row1 = AglVector3(p_matrix.data[0],p_matrix.data[1],p_matrix.data[2]);
+	AglVector3 row2 = AglVector3(p_matrix.data[3],p_matrix.data[4],p_matrix.data[5]);
+	AglVector3 row3 = AglVector3(p_matrix.data[6],p_matrix.data[7],p_matrix.data[8]);
+	return AglVector3::dotProduct(AglVector3::crossProduct(row1,row2),row3)>0.0f?false:true;
 }

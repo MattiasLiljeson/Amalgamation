@@ -1,5 +1,6 @@
 #include "ClientPacketHandlerSystem.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "GameStatsSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -33,11 +34,6 @@
 #include "PacketType.h"
 #include "PickComponent.h"
 #include "ParticleSystemEmitter.h"
-#include "GameStatsSystem.h"
-
-// Debug
-#include <DebugUtil.h>
-#include <ToString.h>
 #include "ShipEditController.h"
 #include "ConnectionPointSet.h"
 #include "TimerSystem.h"
@@ -50,14 +46,20 @@
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
 #include "InputBackendSystem.h"
+#include "ParticleRenderSystem.h"
 #include "AudioInfo.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
 #include "AudioBackendSystem.h"
-#include "PositionalSoundEffect.h"
-#include "ParticleRenderSystem.h"
+#include "PositionalSoundSource.h"
+#include "SpawnSoundEffectPacket.h"
+#include "NetsyncDirectMapperSystem.h"
 
-#include <Globals.h>
+// Debug
+#include <DebugUtil.h>
+#include <ToString.h>
+#include "LightSources.h"
+#include "LightsComponent.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -112,33 +114,34 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				data.entityType == (char)EntityType::Prop ||
 				data.entityType == (char)EntityType::ShipModule)
 			{
-
-				// HACK: This is VERY inefficient for large amount of
-				// network-synchronized entities. (Solve later)
-				for( unsigned int i=0; i<p_entities.size(); i++ )
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity( data.networkIdentity );
+				if(entity != NULL)
 				{
-					NetworkSynced* netSync = NULL;
-					netSync = static_cast<NetworkSynced*>(
+					Transform* transform = NULL;
+					transform = static_cast<Transform*>(
 						m_world->getComponentManager()->getComponent(
-						p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-					if( netSync->getNetworkIdentity() == data.networkIdentity )
+						entity->getIndex(), ComponentType::Transform ) );
+					if(transform)
 					{
-						Transform* transform = NULL;
-						transform = static_cast<Transform*>(
-							m_world->getComponentManager()->getComponent(
-							p_entities[i]->getIndex(), ComponentType::Transform ) );
 						transform->setTranslation( data.translation );
 						transform->setRotation( data.rotation );
 						transform->setScale( data.scale );
+					}
 
-						Extrapolate* extrapolate = NULL;
-						extrapolate = static_cast<Extrapolate*>(
-							p_entities[i]->getComponent(ComponentType::Extrapolate) );
+					Extrapolate* extrapolate = NULL;
+					extrapolate = static_cast<Extrapolate*>(
+						entity->getComponent(ComponentType::Extrapolate) );
+					if(extrapolate)
+					{
 						extrapolate->serverUpdateTimeStamp = data.timestamp;
 						extrapolate->velocityVector = data.velocity;
 						extrapolate->angularVelocity = data.angularVelocity;
 					}
 				}
+
 			}
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
@@ -155,36 +158,41 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			ps->setSpawnFrequency(data.spawnFrequency);
 		}
 #pragma endregion 
-		/************************************************************************/
-		/* Score is now included in player update client stats packets.			*/
-		/************************************************************************/
-		//else if(packetType == (char)PacketType::ScoresUpdate)
-		//{
-		//	NetworkScoreUpdatePacket scoreUpdateData;
-		//	scoreUpdateData = readScorePacket( packet );
-
-		//	// HACK: This is VERY inefficient for large amount of
-		//	// network-synchronized entities. (Solve later)
-		//	for( unsigned int i=0; i<p_entities.size(); i++ )
-		//	{
-		//		NetworkSynced* netSync = NULL;
-		//		netSync = static_cast<NetworkSynced*>(
-		//			m_world->getComponentManager()->getComponent(
-		//			p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
-
-		//		if( netSync->getNetworkIdentity() == scoreUpdateData.networkId )
-		//		{
-		//			PlayerScore* scoreComponent = static_cast<PlayerScore*>(
-		//				m_world->getComponentManager()->getComponent(
-		//				p_entities[i]->getIndex(), ComponentType::PlayerScore ) );
-		//			if( scoreComponent )
-		//			{
-		//				scoreComponent->setScore( scoreUpdateData.score );
-		//			}
-		//		}
-		//	}
-		//}
-
+		else if(packetType == (char)PacketType::SpawnSoundEffect)
+		{
+			SpawnSoundEffectPacket spawnSoundPacket;
+			spawnSoundPacket.unpack( packet );
+			if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
+			{
+				// Short positional sound effect.
+				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+					m_world->getSystem(SystemType::AudioBackendSystem));
+				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+					spawnSoundPacket.position);
+			}
+			else if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity != -1 )
+			{
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity(
+					spawnSoundPacket.attachedToNetsyncEntity );
+				if( entity != NULL )
+				{
+					entity->addComponent(ComponentType::PositionalSoundSource,
+						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+						true, 1.0f));
+				}
+			}
+			else
+			{
+				// Ambient sound effect.
+			}
+		}
 		else if(packetType == (char)PacketType::Ping)
 		{
 			PingPacket pingPacket;
@@ -223,7 +231,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			m_tcpClient->setPingToServer( m_currentPing );
 
 			// Clients score
-			// TODO: (Johan) Handle score packet...
 			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
@@ -285,9 +292,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	{
 		int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 			SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-		shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 		
 
 		/************************************************************************/
@@ -304,6 +308,47 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 		entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+		
+		LightsComponent* lightComp = new LightsComponent();
+		Light floodLight;
+		float range = 100.0f;
+		AglMatrix::componentsToMatrix(
+			floodLight.offsetMat,
+			AglVector3( range, range, range*20 ),
+			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+			AglVector3( 2.0f, 0.0f, 0.0f )
+			);
+		floodLight.instanceData.range = range*20;
+		floodLight.instanceData.attenuation[1] = 0.1f;
+		floodLight.instanceData.spotPower = 8.0f;
+		floodLight.instanceData.lightDir[0] = 0.0f;
+		floodLight.instanceData.lightDir[1] = 0.0f;
+		floodLight.instanceData.lightDir[2] = 1.0f;
+		floodLight.instanceData.diffuse[0] = 0.0f;
+		floodLight.instanceData.diffuse[1] = 1.0f;
+		floodLight.instanceData.diffuse[2] = 0.0f;
+		//floodLight.instanceData.specular[0] = 2.0f;
+		//floodLight.instanceData.specular[1] = 2.0f;
+		//floodLight.instanceData.specular[2] = 2.0f;
+		floodLight.instanceData.enabled = true;
+		floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
+
+		lightComp->addLight( floodLight );
+		AglMatrix::componentsToMatrix(
+			floodLight.offsetMat,
+			AglVector3( range, range, range*20 ),
+			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+			AglVector3( -2.0f, 0.0f, 0.0f )
+			);
+		floodLight.instanceData.diffuse[0] = 1.0f;
+		floodLight.instanceData.diffuse[1] = 0.0f;
+		floodLight.instanceData.diffuse[2] = 0.0f;
+		lightComp->addLight( floodLight );
+
+		entity->addComponent( ComponentType::LightsComponent, lightComp);
+
+		entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
+			TESTSOUNDEFFECTPATH, "Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 
 		/************************************************************************/
 		/* Check if the owner is the same as this client.						*/
@@ -326,21 +371,12 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 				AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
 			entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
-			// HACK: MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE ->
-//			BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo("engine-noise.wav",
-//				TESTSOUNDEFFECTPATH.c_str(), true);
-//			PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-//				p_packet.translation );
-//			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-//				m_world->getSystem(SystemType::AudioBackendSystem));
-//			int soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-//			entity->addComponent(ComponentType::AudioInfo, new AudioInfo(soundIdx, true));
-
-//			entity->addComponent(ComponentType::PositionalSoundEffect,
-//				new PositionalSoundEffect("Sound Design_Vintage Sci Fi_Spaceship_Alien_Warps_Upwards_Short_HutchSFX.wav", true));
-			// MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE <-
-
+			// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
+			// because it was really weird to hear from the camera. This can of course
+			// be changed back if game play fails in this way, but it's at least more
+			// convenient for debugging!
+			component = new AudioListener();
+			entity->addComponent(ComponentType::AudioListener, component);
 		}
 
 		/************************************************************************/
@@ -377,9 +413,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			// default tag is follow
 			entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 			entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-			// listener
-			component = new AudioListener();
-			entity->addComponent(ComponentType::AudioListener, component);
 
 			//Add a picking ray to the camera so that edit mode can be performed
 			entity->addComponent(ComponentType::PickComponent, new PickComponent());
@@ -422,9 +455,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		entity->addComponent( ComponentType::Transform, component );
 		component = new RenderInfo(meshId);
 		entity->addComponent(ComponentType::RenderInfo, component);
-		// HACK: (Johan) Remove obviously!
-//		entity->addComponent(ComponentType::PositionalSoundEffect,
-//			new PositionalSoundEffect("spaceship_laser.wav", true));
 
 		m_world->addEntity(entity);
 	}
@@ -452,14 +482,33 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	else if ( p_packet.entityType == (char)EntityType::ParticleSystem)
 	{
 		AglParticleSystemHeader h;
-		h.particleSize = AglVector2(2, 2);
-		h.alignmentType = AglParticleSystemHeader::OBSERVER;
-		h.spawnFrequency = 200;
-		h.spawnSpeed = 5.0f;
-		h.spread = 0.0f;
-		h.fadeOutStart = 2.0f;
-		h.fadeInStop = 0.0f;
-		h.particleAge = 2;
+		if (p_packet.meshInfo == 0)
+		{
+			h.particleSize = AglVector2(2, 2);
+			h.alignmentType = AglParticleSystemHeader::OBSERVER;
+			h.spawnFrequency = 200;
+			h.spawnSpeed = 5.0f;
+			h.spread = 0.0f;
+			h.fadeOutStart = 2.0f;
+			h.fadeInStop = 0.0f;
+			h.particleAge = 2;
+			h.maxOpacity = 1.0f;
+			h.color = AglVector4(0, 1, 0, 1.0f);
+		}
+		else
+		{
+			h.particleAge = 1;
+			h.spawnSpeed = 0.02;
+			h.spread = 1.0f;
+			h.spawnFrequency = 200;
+			h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
+			h.fadeInStop = 0.5f;
+			h.fadeOutStart = 0.5f;
+			h.spawnOffset = 4.0f;
+			h.maxOpacity = 0.5f;
+			h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+			h.particleSize = AglVector2(1.0f, 1.0f);
+		}
 
 		ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 			SystemType::ParticleRenderSystem ));
@@ -684,7 +733,11 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 	unsigned int p_packetIdentifier )
 {
-	if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
+	if( m_lastBroadcastPacketIdentifier == 0)
+	{
+		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
+	}
+	else if( p_packetIdentifier > m_lastBroadcastPacketIdentifier + 1 )
 	{
 		m_totalBroadcastPacketLost += p_packetIdentifier -
 			(m_lastBroadcastPacketIdentifier + 1);

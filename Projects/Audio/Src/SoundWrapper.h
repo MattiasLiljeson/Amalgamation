@@ -165,5 +165,7 @@ private:
 
 	SoundFactory*			m_soundFactory;
 
-	vector<Sound*>			m_createdSounds;
+	vector<Sound*> m_activeSounds;
+	// Will be deleted by an end-of-sound-effect-callback.
+	vector<Sound*> m_soundEffects;
 };

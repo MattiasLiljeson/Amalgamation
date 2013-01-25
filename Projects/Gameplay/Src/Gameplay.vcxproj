@@ -20,6 +20,8 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="DebugMove.h" />
+    <ClInclude Include="DebugMovementSystem.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
@@ -58,6 +60,7 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
@@ -73,7 +76,7 @@
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="PongPacket.h" />
-    <ClInclude Include="PositionalSoundEffect.h" />
+    <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RocketControllerSystem.h" />
@@ -114,6 +117,7 @@
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="SimpleEventPacket.h" />
+    <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
@@ -169,6 +173,7 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />
@@ -178,7 +183,7 @@
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
-    <ClCompile Include="PositionalSoundEffect.cpp" />
+    <ClCompile Include="PositionalSoundSource.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
@@ -210,6 +215,8 @@
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
+    <ClCompile Include="DebugMovementSystem.cpp" />
+    <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />

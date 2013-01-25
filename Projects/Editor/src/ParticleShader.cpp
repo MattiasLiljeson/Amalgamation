@@ -105,8 +105,6 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	if (textureIndex >= 0)
 	{
 		string s = Scene::GetInstance()->GetName(textureIndex);
-		removePath(s);
-		s = Scene::GetInstance()->GetFolder() + s;
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(0, 1, &data->SRV);

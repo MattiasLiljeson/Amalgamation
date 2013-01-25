@@ -29,6 +29,7 @@ private:
 	AglInteriorSphereGrid* mSphereGrid;
 	vector<pair<float, AglVector3>> normalList;
 	int ind;
+	AglVector3 mSize;
 private:
 	void CalculateInertiaTensor();
 	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
@@ -38,6 +39,8 @@ private:
 public:
 	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 					AglInteriorSphereGrid* pSphereGrid = NULL, bool pImpulseEnabled = true);
+	RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree = NULL);
+
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();
 	AglVector3 GetLocalCenterOfMass(){ return GetOBB().world.GetTranslation(); }
@@ -45,6 +48,7 @@ public:
 	AglOBB GetOBB()
 	{
 		AglOBB obb = mOBB;
+		obb.size *= mSize;
 		obb.world *= GetWorld();
 		return obb; 
 	}
@@ -54,7 +58,7 @@ public:
 		newPos.transform(GetWorld());
 
 		AglBoundingSphere bs;
-		bs.radius = mBoundingSphere.radius;
+		bs.radius = mBoundingSphere.radius * max(mSize.x, max(mSize.y, mSize.z));
 		bs.position = newPos;
 		return bs; 
 	}
@@ -66,6 +70,10 @@ public:
 	{
 		RigidBody::UpdateVelocity(pElapsedTime);
 		ind++;
+	}
+	AglVector3 GetSize()
+	{
+		return mSize;
 	}
 };
 

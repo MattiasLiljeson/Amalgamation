@@ -87,7 +87,7 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 				Entity* entity = m_world->getEntity(e);
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
 				
-				m->m_health -= 50 * m_world->getDelta();
+				//m->m_health -= 50 * m_world->getDelta();
 				if (m->m_health <= 0)
 				{
 					drop(p_parent, i);

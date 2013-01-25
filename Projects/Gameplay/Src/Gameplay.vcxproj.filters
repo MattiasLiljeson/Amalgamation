@@ -82,6 +82,9 @@
     <Filter Include="Structs">
       <UniqueIdentifier>{a00554af-c0bc-4968-87f2-f05f087071ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Debugging">
+      <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -400,9 +403,6 @@
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="PositionalSoundEffect.h">
-      <Filter>Components\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="LibRocketBackendSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
@@ -420,6 +420,24 @@
     </ClInclude>
     <ClInclude Include="DisplayGameStats.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSource.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMove.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="NetsyncDirectMapperSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -685,9 +703,6 @@
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="PositionalSoundEffect.cpp">
-      <Filter>Components\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="GameStatsSystem.cpp">
       <Filter>Systems\GUI</Filter>
     </ClCompile>
@@ -699,6 +714,18 @@
     </ClCompile>
     <ClCompile Include="DisplayGameStats.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSource.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMovementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="NetsyncDirectMapperSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

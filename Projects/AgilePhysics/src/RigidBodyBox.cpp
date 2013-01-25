@@ -30,7 +30,7 @@ RigidBodyBox::RigidBodyBox(AglOBB pShape, float pMass, AglVector3 pVelocity, Agl
 	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
 }
 RigidBodyBox::RigidBodyBox(BoxInitData pInitData)
-	: RigidBody(pInitData.World, pInitData.Mass, pInitData.Velocity, pInitData.AngularVelocity, pInitData.Static, pInitData.ImpulseEnabled)
+	: RigidBody(pInitData.World, pInitData.Mass, pInitData.Velocity, pInitData.AngularVelocity, pInitData.Static, false, pInitData.ImpulseEnabled)
 {
 	mSize = pInitData.Size;
 	CalculateInertiaTensor();
