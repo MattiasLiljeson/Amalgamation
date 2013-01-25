@@ -428,3 +428,8 @@ void DeferredRenderer::setBasePassRenderTargets()
 {
 	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
 }
+
+ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
+{
+	return m_depthStencilView;
+}

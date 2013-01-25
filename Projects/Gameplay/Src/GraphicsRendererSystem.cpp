@@ -70,7 +70,7 @@ void GraphicsRendererSystem::initLightPass(){
 		RasterizerState::FILLED_CW_FRONTCULL, false);
 	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::ADDITIVE);
 	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_backend->getGfxWrapper()->setFinalBackbufferAsRenderTarget();
+	m_backend->getGfxWrapper()->setComposedRenderTargetWithNoDepthStencil();
 	m_backend->getGfxWrapper()->mapGBuffersToShader();
 }
 

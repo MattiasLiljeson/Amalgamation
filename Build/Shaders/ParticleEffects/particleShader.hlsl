@@ -113,8 +113,8 @@ void GS(point Particle gIn[1],
 		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
 	else if (gIn[0].Age > fadeOut)//Fade out
 		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);
-	else
-		opacity = 1.0f;
+	//else
+	//	opacity = 1.0f;
 	
 	opacity *= maxOpacity;
 	GS_OUT gOut;

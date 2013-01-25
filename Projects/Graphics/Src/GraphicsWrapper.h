@@ -79,7 +79,8 @@ public:
 
 	void setBaseRenderTargets();
 
-	void setFinalBackbufferAsRenderTarget();
+	void setComposedRenderTargetWithNoDepthStencil();
+
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.

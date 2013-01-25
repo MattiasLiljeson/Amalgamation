@@ -162,6 +162,8 @@ public:
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 
+	ID3D11DepthStencilView* getDepthStencil();
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();

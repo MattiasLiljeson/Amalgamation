@@ -250,13 +250,12 @@ void GraphicsWrapper::setPrimitiveTopology( PrimitiveTopology::Mode p_state ){
 void GraphicsWrapper::setBaseRenderTargets(){
 	m_deferredRenderer->setBasePassRenderTargets();
 }
-void GraphicsWrapper::setFinalBackbufferAsRenderTarget(){
+void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 }
 void GraphicsWrapper::mapGBuffersToShader(){
 	m_deferredRenderer->mapRTStoShaderVariables();
 }
-
 void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
 {
