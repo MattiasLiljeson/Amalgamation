@@ -405,9 +405,9 @@ void ClientApplication::initEntities()
 		);
 	ambientLight.instanceData.range = scale;
 	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.2;
-	ambientLight.instanceData.ambient[1] = 0.2;
-	ambientLight.instanceData.ambient[2] = 0.2f;
+	ambientLight.instanceData.ambient[0] = 0.5f;
+	ambientLight.instanceData.ambient[1] = 0.5f;
+	ambientLight.instanceData.ambient[2] = 0.5f;
 	ambientLight.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
 
 	LightsComponent* ambientLightComp = new LightsComponent();

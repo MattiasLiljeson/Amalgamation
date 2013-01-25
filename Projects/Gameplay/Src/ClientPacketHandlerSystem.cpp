@@ -316,7 +316,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			floodLight.offsetMat,
 			AglVector3( range, range, range*20 ),
 			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-			AglVector3( 2.0f, 0.0f, 0.0f )
+			AglVector3( 2.0f, 0.0f, 3.0f )
 			);
 		floodLight.instanceData.range = range*20;
 		floodLight.instanceData.attenuation[1] = 0.1f;
@@ -338,7 +338,7 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 			floodLight.offsetMat,
 			AglVector3( range, range, range*20 ),
 			AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-			AglVector3( -2.0f, 0.0f, 0.0f )
+			AglVector3( -2.0f, 0.0f, 3.0f )
 			);
 		floodLight.instanceData.diffuse[0] = 1.0f;
 		floodLight.instanceData.diffuse[1] = 0.0f;

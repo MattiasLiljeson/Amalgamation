@@ -9,7 +9,12 @@
 #include <typeindex>
 #include "Octree.h"
 
-
+struct LineCollisionData
+{
+	int lineID;
+	int bodyID;
+	float t;
+};
 typedef pair<unsigned int, unsigned int> UintPair;
 
 // =================================================================================================
@@ -36,7 +41,7 @@ private:
 
 	vector<UintPair> mCollisions;
 
-	vector<UintPair> mLineSegmentCollisions; ///< Index to line segment first then body
+	vector<LineCollisionData> mLineSegmentCollisions; ///< Index to line segment first then body
 
 	Octree* mStaticBodies;
 
@@ -153,7 +158,8 @@ public:
 	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
 	vector<unsigned int> CollidesWith(unsigned int p_b);
 
-	vector<unsigned int> LineCollidesWith(unsigned int p_b);
+	vector<unsigned int> LineCollidesWith(unsigned int p_line);
+	int					 LineClosestCollision(unsigned int p_line);
 
 	void ActivateBody(unsigned int pBody);
 	void InactivateBody(unsigned int pBody);

@@ -49,11 +49,21 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			Body* b = ps->getController()->getBody(pb->m_id);
 			if (mine->m_age > 2 && col.size() > 0)
 			{
+				//Do some damage
+				for (unsigned int j = 0; j < col.size(); j++)
+				{
+					/*Entity* hitEntity = ps->getEntity(col[j]);
+					ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(ComponentType::ShipModule));
+					if (hitModule)
+						hitModule->m_health = 0;*/
+				}
+
+
+				//Send a shockwave
 				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
 				mine->m_age = 0;
 
 				//Send an explosion sound effect
-
 				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 
 				SpawnSoundEffectPacket soundEffectPacket;

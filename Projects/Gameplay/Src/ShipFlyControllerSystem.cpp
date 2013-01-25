@@ -87,12 +87,23 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			m_thrustVec += thrustVec;
 			m_angularVec += angularVec;
 
+
+			if (input.stateSwitchInput != 0)
+			{
+				m_thrustVec = AglVector3::zero();
+				m_angularVec = AglVector3::zero();
+				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
+				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
+				ship->applyComponentChanges();
+			}
+
 			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 				checkTimeInterval(TimerIntervals::Every16Millisecond))
 			{
 				/************************************************************************/
 				/* Send the thrust packet to the server!								*/
 				/************************************************************************/
+
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
 				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
@@ -101,12 +112,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				m_angularVec = AglVector3();
 			}
 
-			if (input.stateSwitchInput != 0)
-			{
-				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
-				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
-				ship->applyComponentChanges();
-			}
+
 		}
 	}
 }
