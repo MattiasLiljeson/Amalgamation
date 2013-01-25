@@ -1,7 +1,6 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <ConnectionPointCollection.h>
 #include <AglMesh.h>
 #include <vector>
 #include "LevelPieceFileMapping.h"
@@ -63,7 +62,6 @@ private:
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;
 
-	vector<ConnectionPointCollection> m_pieceTypes;
 	vector<AglMeshHeader> m_meshHeaders;
 	vector<LevelPiece*> m_generatedPieces;
 

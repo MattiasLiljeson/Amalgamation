@@ -35,6 +35,7 @@ public:
 	void removeComponent( Entity* p_entity, ComponentType p_type );
 	void removeComponent( Entity* p_entity, ComponentType::ComponentTypeIdx p_typeIdx );
 
+	void postPerform();
 private:
 	vector<Component*> getComponentsByType( ComponentType p_type );
 	void removeComponentsOfEntity( Entity* p_entity );
@@ -42,5 +43,7 @@ private:
 private:
 	vector< vector<Component*> > m_componentsByType;
 	vector<Entity*> m_deleted;
+
+	vector<Component*> m_deleteOnPost;
 };
 

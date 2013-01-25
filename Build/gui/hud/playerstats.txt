@@ -1,0 +1,3 @@
+Ubba	10	40
+Dubba	5	999
+Knapris	30	5

@@ -82,6 +82,7 @@
 #include <ParticleRenderSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <LoadMeshSystem.h>
+#include <GameStatsSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -319,6 +320,7 @@ void ClientApplication::initSystems()
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
+
 	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
 		true );
 #endif // ENABLE_SOUND
@@ -326,8 +328,9 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Gameplay																*/
 	/************************************************************************/
-	m_world->setSystem( new DisplayPlayerScoreSystem(), true );
+	//m_world->setSystem( new DisplayPlayerScoreSystem(rocketBackend, m_client), true );
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
+	m_world->setSystem(new GameStatsSystem(), true);
 
 	/************************************************************************/
 	/* Graphics representer													*/

@@ -79,6 +79,9 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules">
       <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{a00554af-c0bc-4968-87f2-f05f087071ee}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Systems\Debugging">
       <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
     </Filter>
@@ -116,9 +119,6 @@
     </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="libRocketBackendSystem.h">
-      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="LibRocketRenderInterface.h">
       <Filter>Systems\GUI</Filter>
@@ -200,9 +200,6 @@
     </ClInclude>
     <ClInclude Include="ClientPacketHandlerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientInfo.h">
-      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
     <ClInclude Include="GameplayTags.h">
       <Filter>Components\Tags</Filter>
@@ -401,6 +398,27 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="TransformParentHandlerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketBackendSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStatsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStats.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerClientInfoSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayGameStats.h">
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpawnSoundEffectPacket.h">
@@ -682,11 +700,23 @@
     <ClCompile Include="TransformParentHandlerSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="SpawnSoundEffectPacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStatsSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerClientInfoSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayGameStats.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="PositionalSoundSource.cpp">
       <Filter>Components\Audio</Filter>

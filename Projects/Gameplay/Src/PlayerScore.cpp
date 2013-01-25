@@ -26,3 +26,9 @@ void PlayerScore::setModuleScore(float p_score)
 	m_moduleScore = p_score;
 	m_totalScore = m_moduleScore + m_baseScore;
 }
+
+void PlayerScore::addBaseScore( float p_score )
+{
+	m_baseScore += p_score;
+	m_totalScore = m_moduleScore + m_baseScore;
+}

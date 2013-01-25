@@ -10,6 +10,7 @@
 #include <Globals.h>
 #include <GraphicsWrapper.h>
 #include <DebugUtil.h>
+#include <Rocket/Controls.h>
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -41,7 +42,7 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::SetSystemInterface(m_systemInterface);
 	Rocket::Core::SetRenderInterface(m_renderInterface);
 	Rocket::Core::Initialise();
-
+	Rocket::Controls::Initialise();
 
 	m_wndWidth = m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	m_wndHeight = m_graphicsBackend->getGfxWrapper()->getWindowHeight();
@@ -73,6 +74,7 @@ void LibRocketBackendSystem::initialize()
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
+	//tmp = GUI_HUD_PATH + "infoPanel.rml";
 	loadDocument( tmp.c_str() );
 
 	//tmp = GUI_HUD_PATH + "main.rml";
@@ -97,15 +99,18 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 			));
 }
 
-void LibRocketBackendSystem::loadDocument( const char* p_filePath )
+int LibRocketBackendSystem::loadDocument( const char* p_filePath, bool p_initiallyShown/*=true*/)
 {
+	int docId = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;
 	tmpDoc = m_rocketContext->LoadDocument( Rocket::Core::String(p_filePath) );
 	
 	if( tmpDoc != NULL )
 	{
+		docId = m_documents.size();
 		m_documents.push_back( tmpDoc );
-		tmpDoc->Show(); //HACK! Remove this when doing this from the outside
+		if (p_initiallyShown)
+			tmpDoc->Show();
 		tmpDoc->RemoveReference();
 	}
 	else{
@@ -113,6 +118,7 @@ void LibRocketBackendSystem::loadDocument( const char* p_filePath )
 			(std::string("Failed to load LibRocket document! Path: ") +
 			toString(p_filePath)).c_str() ));
 	}
+	return docId;
 }
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
@@ -124,16 +130,29 @@ void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
 	}
 	else{
 		DEBUGPRINT(( (std::string("Loaded LibRocket Cursor document (from ")+
-			toString(p_cursorPath) + ")").c_str() ));
+			toString(p_cursorPath) + ").\n").c_str() ));
 	}
 }
 
-void LibRocketBackendSystem::updateElement( string p_element, string p_value )
+void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string p_value )
 {
 	Rocket::Core::Element* element;
-	element = m_documents[0]->GetElementById( p_element.c_str() );
-	element->SetInnerRML( p_value.c_str() );
+	element = m_documents[p_docId]->GetElementById( p_element.c_str() );
+	if (element)
+		element->SetInnerRML( p_value.c_str() );
 }
+
+
+void LibRocketBackendSystem::showDocument( int p_docId )
+{
+	m_documents[p_docId]->Show();
+}
+
+void LibRocketBackendSystem::hideDocument( int p_docId )
+{
+	m_documents[p_docId]->Hide();
+}
+
 
 void LibRocketBackendSystem::process()
 {

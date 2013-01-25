@@ -231,7 +231,8 @@ public:
 	bool shouldShutDown();
 
 private:
-	//void deleteSystemFromBag(EntitySystem* system);
+	void prePerformManagers();
+	void postPerformManagers();
 
 private:
 	float m_delta;

@@ -25,12 +25,11 @@ void AntTweakBarWrapper::initBars()
 {
 	TwDefine(" GLOBAL contained=true ");
 	TwDefine(" GLOBAL fontresizable=false ");
-	defineParametersForABar(overall.c_str()," color='109 158 235'");
+	defineParametersForABar(overall.c_str()," color='109 158 235' position= '20 50'");
 	defineParametersForABar(sound.c_str()," color='142 124 195' iconified=true");
 	defineParametersForABar(graphics.c_str()," color='255 217 102' iconified=true");
 	defineParametersForABar(input.c_str()," color='224 102 102' iconified=true");
 	defineParametersForABar(network.c_str()," color='147 196 125' iconified=true");
-
 	modifyTheRefreshRate(INPUT,0.1f);
 }
 
