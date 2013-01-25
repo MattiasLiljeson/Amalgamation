@@ -264,9 +264,14 @@ void PhysicsController::Update(float pElapsedTime)
 			//Check for collision against line segments
 			for (unsigned int j = 0; j < mLineSegments.size(); j++)
 			{
-				if (CheckCollision(mLineSegments[j], mRigidBodies[i].first))
+				float t;
+				if (CheckCollision(mLineSegments[j], mRigidBodies[i].first, t))
 				{
-					mLineSegmentCollisions.push_back(UintPair(j, mRigidBodies[i].second));
+					LineCollisionData lcd;
+					lcd.bodyID = mRigidBodies[i].second;
+					lcd.lineID = j;
+					lcd.t = t;
+					mLineSegmentCollisions.push_back(lcd);
 				}
 			}
 			//Check for collision against static geometry
@@ -444,10 +449,18 @@ int PhysicsController::FindClosestCollision(AglVector3 p_p1, AglVector3 p_p2, in
 	ls.p2 = p_p2;
 
 	int col = -1;
+	float closestT = FLT_MAX;
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (mRigidBodies[i].second != p_avoid && CheckCollision(ls, mRigidBodies[i].first))
-			col = mRigidBodies[i].second;
+		float t;
+		if (mRigidBodies[i].second != p_avoid && CheckCollision(ls, mRigidBodies[i].first, t))
+		{
+			if (t < closestT)
+			{
+				col = mRigidBodies[i].second;
+				closestT = t;
+			}
+		}
 	}
 	return col;
 }
@@ -533,13 +546,13 @@ vector<unsigned int> PhysicsController::CollidesWith(unsigned int p_b)
 		return list;
 	}
 }
-vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_b)
+vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_line)
 {
 	vector<unsigned int> cols;
 	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
 	{
-		if (mLineSegmentCollisions[i].first == p_b)
-			cols.push_back(mLineSegmentCollisions[i].second);
+		if (mLineSegmentCollisions[i].lineID == p_line)
+			cols.push_back(mLineSegmentCollisions[i].bodyID);
 	}
 	return cols;
 }
