@@ -30,15 +30,16 @@ public:
 
 	void __stdcall OnBufferEnd(void* pBufferContext)
 	{
-		m_finishedCallbacks->push_back(this);
+//		m_finishedCallbacks->push_back(this);
 		delete (*m_sounds)[m_soundIndex];
+		(*m_sounds)[m_soundIndex] = NULL;
+//		m_sounds->erase(m_sounds->begin() + m_soundIndex);
 		int a = 0;
 	}
 	void __stdcall OnBufferStart(void* pBufferContext) { }
 	void __stdcall OnLoopEnd(void* pBufferContext) { }
 	void __stdcall OnStreamEnd()
 	{
-//		m_sounds->erase(m_sounds->begin() + m_soundIndex);
 		int a = 0;
 	}
 	void __stdcall OnVoiceError(void* pBufferContext, HRESULT Error) { }

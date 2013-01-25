@@ -27,6 +27,13 @@ SoundWrapper::~SoundWrapper()
 		delete m_activeSounds[i];
 	}
 	m_activeSounds.clear();
+	for(unsigned int i=0; i<m_soundEffects.size(); i++)
+	{
+		if( m_soundEffects[i] )
+		{
+			delete m_soundEffects[i];
+		}
+	}
 
 	m_masterVoice->DestroyVoice();
 	m_soundDevice->StopEngine();

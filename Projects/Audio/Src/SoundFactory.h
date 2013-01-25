@@ -89,5 +89,5 @@ private:
 	IXAudio2* m_soundDevice;
 	HANDLE	m_file; ///< m_file is always used when loading sounds from file
 	ResourceManager<SoundBufferAndHeader> m_soundBufferManager;
-	vector<IXAudio2VoiceCallback*> m_finishedCallbacks;
+	vector<IXAudio2VoiceCallback*> m_addedCallbacks;
 };

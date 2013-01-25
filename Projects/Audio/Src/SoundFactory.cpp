@@ -8,9 +8,9 @@ SoundFactory::SoundFactory(IXAudio2* p_soundDevice)
 
 SoundFactory::~SoundFactory()
 {
-	for(unsigned int i=0; i<m_finishedCallbacks.size(); i++)
+	for(unsigned int i=0; i<m_addedCallbacks.size(); i++)
 	{
-		delete m_finishedCallbacks[i];
+		delete m_addedCallbacks[i];
 	}
 }
 
@@ -75,7 +75,8 @@ Sound* SoundFactory::createAmbientSoundEffect( BasicSoundCreationInfo* p_info,
 		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
 	}
 	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
-		p_soundIndex, p_sounds, &m_finishedCallbacks);
+		p_soundIndex, p_sounds, &m_addedCallbacks);
+	m_addedCallbacks.push_back(callback);
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
 		*bufferAndHeader->waveFormatEx,
 		callback);
@@ -106,10 +107,11 @@ PositionalSound* SoundFactory::createPositionalSoundEffect(
 	info.emitter = emitter;
 	info.settings = dspSettings; 
 	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
+	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
+		p_soundIndex, p_positionalSounds, &m_addedCallbacks);
+	m_addedCallbacks.push_back(callback);
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
-		*bufferAndHeader->waveFormatEx,
-		new SoundDeleteAfterPlayback(p_soundIndex, p_positionalSounds,
-		&m_finishedCallbacks));
+		*bufferAndHeader->waveFormatEx, callback);
 	return new PositionalSound(soundVoice, bufferAndHeader->buffer, info,
 		p_basicSoundInfo->volume);
 }
