@@ -110,7 +110,10 @@ private:
 	static const string& primitiveSphereName;
 	static const string& fallbackTextureName;
 	static const string& mesherrorTextureName;
-	static const string& defaultTextureName;
+	static const string& defaultDiffuseTextureName;
+	static const string& defaultSpecularTextureName;
+	static const string& defaultNormalTextureName;
+	static const string& defaultDisplacementTextureName;
 
 	static const unsigned int firstMeshPos=1; // always root on zero
 
