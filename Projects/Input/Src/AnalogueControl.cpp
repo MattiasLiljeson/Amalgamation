@@ -40,7 +40,7 @@ AnalogueControl::~AnalogueControl()
 void AnalogueControl::update( InputManager* p_manager )
 {
 	XInputFetcher* fetcher = p_manager->getXInputFetcher();
-	double travel = fetcher->getAnalogAsDouble( m_axis );
+	double travel = fetcher->getCalibratedAnalog( m_axis );
 
 	double newStatus = 0.0;
 	if( (m_subAxis == InputHelper:: AXIS_POSITIVE && travel > 0.0) ||
@@ -49,7 +49,7 @@ void AnalogueControl::update( InputManager* p_manager )
 		newStatus = fabs( travel );
 	}
 
-	m_rawData = fetcher->getAnalog( m_axis );
+	m_rawData = fetcher->getRawAnalog( m_axis );
 	m_statusDelta = newStatus - m_status;
 	m_status = newStatus;
 }

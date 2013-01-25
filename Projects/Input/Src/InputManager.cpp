@@ -10,6 +10,8 @@ InputManager::InputManager( IMouseKeyboardFetcher* p_mlFetcher, XInputFetcher* p
 {
 	m_mouseKeyboardFetcher = p_mlFetcher;
 	m_xInputFetcher = p_xiFetcher;
+
+	m_xInputFetcher->calibrate( 0.1 );
 }
 
 InputManager::~InputManager()

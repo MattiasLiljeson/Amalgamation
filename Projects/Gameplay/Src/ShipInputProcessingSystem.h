@@ -105,7 +105,7 @@ private:
 private:
 
 	float* getControllerEpsilonPointer();
-	void readAllTheInput(RawInputForces& p_outInput);
+	RawInputForces readAllInput();
 	void updateAntTweakBar(const ResultingInputForces& p_input);
 
 	ResultingInputForces m_processedInput;
@@ -141,10 +141,6 @@ private:
 	Control* m_keyboardEditModeTrig;
 
 	// The values of analogue sticks as a vector3 (used in anttweakbar).
-	double m_leftStickDir[3];
-	double m_rightStickDir[3];
-	double m_leftStickDirWithCorrection[3];
-	double m_rightStickDirWithCorrection[3];
 
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
@@ -152,8 +148,8 @@ private:
 	float m_angleInputMultiplier;
 
 	// Correction vectors for the left and right thumb sticks.
-	double m_leftStickCorrection[2];
-	double m_rightStickCorrection[2];
+	//double m_leftStickCorrection[2];
+	//double m_rightStickCorrection[2];
 
 	//Added by Anton 15/1 - 13
 	Control* m_keyboardModuleSlots[4];
