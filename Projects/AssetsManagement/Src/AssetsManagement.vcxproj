@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="InstanceInstruction.h" />
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelBaseUnmanagedFactory.h" />

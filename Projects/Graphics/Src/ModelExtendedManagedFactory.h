@@ -6,6 +6,7 @@
 #include "BufferFactory.h"
 #include <d3d11.h>
 #include <ResourceManager.h>
+#include <InstanceInstruction.h>
 
 class Mesh;
 
@@ -70,22 +71,16 @@ private:
 		vector<ModelResource*> collection;
 	};
 
-	struct InstanceInstr
-	{
-		string filename;
-		AglMatrix transform;
-	};
 
-
-	virtual vector<ModelResource*>* createAllModelData(const InstanceInstr* p_instanceData, AglScene* p_scene, 
-		unsigned int p_numberOfModels, vector<InstanceInstr>* p_outInstanceInstructions=NULL);
+	virtual vector<ModelResource*>* createAllModelData(const InstanceInstruction* p_instanceData, AglScene* p_scene, 
+		unsigned int p_numberOfModels, vector<InstanceInstruction>* p_outInstanceInstructions=NULL);
 
 	void createAndAddModel(ModelResourceCollection* p_modelCollection, 
-							unsigned int p_modelNumber, const InstanceInstr* p_instanceData, 
+							unsigned int p_modelNumber, const InstanceInstruction* p_instanceData, 
 							const string& p_nameSuffix,
 							AglScene* p_scene, AglMesh* p_aglMesh,
 							AglMeshHeader* p_meshHeader,
-							vector<InstanceInstr>* p_outInstanceInstructions=NULL);
+							vector<InstanceInstruction>* p_outInstanceInstructions=NULL);
 
 
 	void readAndStoreTextures(unsigned int p_modelNumber, AglScene* p_scene, 
@@ -93,8 +88,8 @@ private:
 
 	virtual void readAndStoreEmpties(int p_modelNumber, 
 		ModelResource* p_model,AglMatrix& p_offset, AglScene* p_scene,
-		const ModelExtendedManagedFactory::InstanceInstr* p_instanceData, 
-		vector<InstanceInstr>* p_outInstanceInstructions=NULL);
+		const InstanceInstruction* p_instanceData, 
+		vector<InstanceInstruction>* p_outInstanceInstructions=NULL);
 
 
 	virtual ModelResource* getFallback();

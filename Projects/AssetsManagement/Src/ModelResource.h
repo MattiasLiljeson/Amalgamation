@@ -3,8 +3,8 @@
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
 #include "ParticleSystemCollection.h"
+#include "InstanceInstruction.h"
 #include <AglLooseBspTree.h>
-
 
 // =======================================================================================
 //                                        Model
@@ -41,5 +41,6 @@ public:
 	ConnectionPointCollection	connectionPoints;
 	ParticleSystemCollection	particleSystems;
 	AglMatrix					transform;
+	vector<InstanceInstruction> instances;
 	AglLooseBspTree*			looseBspTree;
 };

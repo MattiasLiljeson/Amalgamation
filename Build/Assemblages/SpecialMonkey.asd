@@ -1,12 +1,15 @@
 e SpecialMonkey
 
 c LoadMesh
-d s m_filename PlanetOfTheApes.agl
+d s m_filename InstanceApes.agl
 
 c Transform
 d f m_translationX 0.0
 d f m_translationY 0.0
 d f m_translationZ 0.0
+d f m_scaleX 20.0
+d f m_scaleY 20.0
+d f m_scaleZ 20.0
 
 // c PhysicsBody
 // 
