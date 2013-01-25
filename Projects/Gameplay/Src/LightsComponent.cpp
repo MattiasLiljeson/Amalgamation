@@ -51,25 +51,25 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 		AglQuaternion rotation = AglQuaternion::identity();
 		AglVector3 translation = AglVector3::zero();
 
-		if( lightInfoStr == "m_scaleX"){
+		if( lightInfoStr == "scaleX"){
 			p_initData[i].getData<float>( &scale.x );
-		} else if( lightInfoStr == "m_scaleY"){
+		} else if( lightInfoStr == "scaleY"){
 			p_initData[i].getData<float>( &scale.y );
-		} else if( lightInfoStr == "m_scaleZ"){
+		} else if( lightInfoStr == "scaleZ"){
 			p_initData[i].getData<float>( &scale.z );
-		} else if( lightInfoStr == "m_rotationUX"){
+		} else if( lightInfoStr == "rotationUX"){
 			p_initData[i].getData<float>( &rotation.u.x );
-		} else if( lightInfoStr == "m_rotationUY"){
+		} else if( lightInfoStr == "rotationUY"){
 			p_initData[i].getData<float>( &rotation.u.y );
-		} else if( lightInfoStr == "m_rotationUZ"){ 
+		} else if( lightInfoStr == "rotationUZ"){ 
 			p_initData[i].getData<float>( &rotation.u.z );
-		} else if( lightInfoStr == "m_rotationV"){
+		} else if( lightInfoStr == "rotationV"){
 			p_initData[i].getData<float>( &rotation.v );
-		} else if( lightInfoStr == "m_translationX"){
+		} else if( lightInfoStr == "translationX"){
 			p_initData[i].getData<float>( &translation.x );
-		} else if( lightInfoStr == "m_translationY"){
+		} else if( lightInfoStr == "translationY"){
 			p_initData[i].getData<float>( &translation.y );
-		} else if( lightInfoStr == "m_translationZ"){ 
+		} else if( lightInfoStr == "translationZ"){ 
 			p_initData[i].getData<float>( &translation.z );
 		} else if( lightInfoStr == "range"){ 
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.range );
