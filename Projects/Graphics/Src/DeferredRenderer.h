@@ -111,6 +111,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void mapRTStoShaderVariables();
+
+	void unmapDepthFromShaderVariables();
 	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
 
 	// ===================================================================================
@@ -161,6 +163,8 @@ public:
 
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
+
+	ID3D11DepthStencilView* getDepthStencil();
 
 private:
 	void initDepthStencil();

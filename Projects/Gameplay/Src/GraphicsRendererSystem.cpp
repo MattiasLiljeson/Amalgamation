@@ -30,13 +30,13 @@ void GraphicsRendererSystem::process(){
 	m_meshRenderer->render();
 	endMeshPass();
 
-	initParticlePass();
-	m_particleRenderSystem->render();
-	endParticlePass();
-
 	initLightPass();
 	m_lightRenderSystem->render();
 	endLightPass();
+
+	initParticlePass();
+	m_particleRenderSystem->render();
+	endParticlePass();
 
 	initGUIPass();
 	m_antTweakBarSystem->render();
@@ -53,29 +53,34 @@ void GraphicsRendererSystem::initMeshPass(){
 	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_backend->getGfxWrapper()->mapSceneInfo();
 }
+
 void GraphicsRendererSystem::endMeshPass(){
-
-}
-
-void GraphicsRendererSystem::initParticlePass(){
-	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::PARTICLE);
-	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
-}
-
-void GraphicsRendererSystem::endParticlePass(){
 }
 
 void GraphicsRendererSystem::initLightPass(){
 	m_backend->getGfxWrapper()->setRasterizerStateSettings(
 		RasterizerState::FILLED_CW_FRONTCULL, false);
 	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::ADDITIVE);
-	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_backend->getGfxWrapper()->setFinalBackbufferAsRenderTarget();
+	m_backend->getGfxWrapper()->setComposedRenderTargetWithNoDepthStencil();
 	m_backend->getGfxWrapper()->mapGBuffersToShader();
 }
 
 void GraphicsRendererSystem::endLightPass(){
+	m_backend->getGfxWrapper()->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::DEFAULT);
+}
+
+void GraphicsRendererSystem::initParticlePass(){
+	m_backend->getGfxWrapper()->unmapDepthFromShader();
+	m_backend->getGfxWrapper()->setParticleRenderState();
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::PARTICLE);
+	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
+}
+
+void GraphicsRendererSystem::endParticlePass(){
+	m_backend->getGfxWrapper()->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::DEFAULT);
+	m_backend->getGfxWrapper()->setComposedRenderTargetWithNoDepthStencil();
 }
 
 void GraphicsRendererSystem::initGUIPass(){
