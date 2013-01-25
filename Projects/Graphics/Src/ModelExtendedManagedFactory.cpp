@@ -9,7 +9,10 @@ const string& ModelExtendedManagedFactory::primitiveCubeName="P_cube";
 const string& ModelExtendedManagedFactory::primitiveSphereName="P_sphere";
 const string& ModelExtendedManagedFactory::fallbackTextureName="testtexture.png";
 const string& ModelExtendedManagedFactory::mesherrorTextureName="mesherror.png";
-const string& ModelExtendedManagedFactory::defaultTextureName="defaulttexture.png";
+const string& ModelExtendedManagedFactory::defaultDiffuseTextureName="defaultdiffuse.png";
+const string& ModelExtendedManagedFactory::defaultSpecularTextureName="defaultspecular.png";
+const string& ModelExtendedManagedFactory::defaultNormalTextureName="defaultnormal.png";
+const string& ModelExtendedManagedFactory::defaultDisplacementTextureName="defaultdisplacement.png";
 
 ModelExtendedManagedFactory::ModelExtendedManagedFactory(ID3D11Device* p_device,BufferFactory* p_bufferFactory, 
 	ResourceManager<Mesh>* p_resourceManager,
@@ -305,33 +308,33 @@ void ModelExtendedManagedFactory::readAndStoreTextures( unsigned int p_modelNumb
 	AglMaterial* mat = p_scene->getMaterial(matId);
 	// get names
 	// diffuse
-	string diffuseName = defaultTextureName;
+	string diffuseName = defaultDiffuseTextureName;
 	if (mat->diffuseTextureNameIndex!=-1)
-		diffuseName = p_scene->getName(mat->diffuseTextureNameIndex);
+		diffuseName = p_scene->getName(mat->diffuseTextureNameIndex,true);
 	// specular
-	string specularName = defaultTextureName;
+	string specularName = defaultSpecularTextureName;
 	if (mat->specularTextureNameIndex!=-1)
-		specularName = p_scene->getName(mat->specularTextureNameIndex);
+		specularName = p_scene->getName(mat->specularTextureNameIndex,true);
 	// normal
-	string normalName = defaultTextureName;
+	string normalName = defaultNormalTextureName;
 	bool hasNormalMap=false;
 	if (mat->normalTextureNameIndex!=-1)
 	{
 		hasNormalMap=true;
-		normalName = p_scene->getName(mat->normalTextureNameIndex);
+		normalName = p_scene->getName(mat->normalTextureNameIndex,true);
 	}
 	// displacement
-	string dispName = defaultTextureName;
+	string dispName = defaultDisplacementTextureName;
 	bool hasDisplacementMap=false;
 	if (mat->displacementTextureNameIndex!=-1)
 	{
 		hasDisplacementMap=true;
-		dispName = p_scene->getName(mat->displacementTextureNameIndex);
+		dispName = p_scene->getName(mat->displacementTextureNameIndex,true);
 	}
 	// glow
-	string glowName = defaultTextureName;
+	string glowName = defaultSpecularTextureName;
 	if (mat->glowTextureNameIndex!=-1)
-		glowName = p_scene->getName(mat->glowTextureNameIndex);
+		glowName = p_scene->getName(mat->glowTextureNameIndex,true);
 
 	// Create material
 	MaterialInfo materialInfo;

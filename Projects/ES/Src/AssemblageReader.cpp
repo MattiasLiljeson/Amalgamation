@@ -4,6 +4,7 @@
 #include "ComponentReader.h"
 #include "Entity.h"
 #include "ComponentType.h"
+#include "Recipe.h"
 
 
 AssemblageReader::AssemblageReader()

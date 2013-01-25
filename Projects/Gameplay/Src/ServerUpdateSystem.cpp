@@ -97,9 +97,21 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				m_world->getComponentManager()->getComponent(
 				p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
 
-			if( netSync->getNetworkType() == EntityType::Ship ||
-				netSync->getNetworkType() == EntityType::Prop ||
-				netSync->getNetworkType() == EntityType::ShipModule)
+			if (netSync->getNetworkType() == EntityType::ParticleSystem)
+			{
+				ParticleUpdateData* data = static_cast<ParticleUpdateData*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[i]->getIndex(), ComponentType::ParticleUpdateData ) );
+
+				ParticleUpdatePacket updatePacket;
+				updatePacket.networkIdentity = netSync->getNetworkIdentity();
+				updatePacket.position		= data->spawnPoint;
+				updatePacket.direction		= data->direction;
+				updatePacket.speed			= data->speed;
+				updatePacket.spawnFrequency	= data->spawnFrequency;
+				m_server->broadcastPacket( updatePacket.pack() );
+			}
+			else
 			{
 				transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(
@@ -133,20 +145,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.angularVelocity= angularVelocity;
 
 
-				m_server->broadcastPacket( updatePacket.pack() );
-			}
-			else if (netSync->getNetworkType() == EntityType::ParticleSystem)
-			{
-				ParticleUpdateData* data = static_cast<ParticleUpdateData*>(
-					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::ParticleUpdateData ) );
-
-				ParticleUpdatePacket updatePacket;
-				updatePacket.networkIdentity = netSync->getNetworkIdentity();
-				updatePacket.position		= data->spawnPoint;
-				updatePacket.direction		= data->direction;
-				updatePacket.speed			= data->speed;
-				updatePacket.spawnFrequency	= data->spawnFrequency;
 				m_server->broadcastPacket( updatePacket.pack() );
 			}
 		}

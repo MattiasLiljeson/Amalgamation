@@ -70,8 +70,16 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 					int col = physics->getController()->FindClosestCollision(gun->rays[j].p1, gun->rays[j].p2, body->m_id);
 					if (col >= 0)
 					{
-						gun->rays[j].energy -= 0.25f;
-						physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
+						gun->rays[j].energy -= 0.25f * dt;
+						Entity* hitE = physics->getEntity(col);
+
+						ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
+						if (hitModule && hitModule != module)
+						{
+							hitModule->m_health -= 0.25f * dt;
+						}
+
+						//physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
 					}
 				}
 			}
@@ -109,7 +117,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		gun->laserSightEntity = entity->getIndex();
 
 		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.entityType		= static_cast<char>(EntityType::LaserSight);
 		data.owner			= -1;
 		data.networkIdentity = entity->getIndex();
 		data.translation	= t->getTranslation();
@@ -117,7 +125,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		data.scale			= t->getScale();
 
 		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+			new NetworkSynced( entity->getIndex(), -1, EntityType::LaserSight));
 
 		m_server->broadcastPacket(data.pack());
 	}
