@@ -79,7 +79,10 @@ public:
 
 	void setBaseRenderTargets();
 
-	void setFinalBackbufferAsRenderTarget();
+	void setComposedRenderTargetWithNoDepthStencil();
+
+	void setParticleRenderState();
+
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
@@ -95,6 +98,8 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void mapGBuffersToShader();
+
+	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
