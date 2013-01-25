@@ -16,6 +16,7 @@
 #include "EntityType.h"
 
 #include "ServerStaticObjectsSystem.h"
+#include "ServerClientInfoSystem.h"
 
 // Components:
 #include "Transform.h"
@@ -74,6 +75,19 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			// This should be solved as soon as possible.
 			//if (netSync->getNetworkIdentity() == id)
 			//	m_world->deleteEntity(p_entities[index]);
+		}
+
+		// If a client has disconnected, then the clientinfo should be removed?
+		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+			m_world->getSystem(SystemType::ServerClientInfoSystem));
+		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+		for (int i = 0; i < clientInfoEntities.size(); i++)
+		{
+			auto clientInfo = static_cast<ClientInfo*>(
+				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+
+			if (clientInfo->id == id)
+				m_world->deleteEntity(clientInfoEntities[i]);
 		}
 	}
 

@@ -30,7 +30,7 @@ public:
 	int GetNumRows( const Rocket::Core::String& table );
 
 	void addRows(int p_nrOfNewRows);
-	void removeRows(int p_nrOfNewRows);
+	void removeRows(int p_nrOfRows);
 
 	void updateRow(int p_row, const PlayerStats& p_stats);
 	void updateTheVisualInfoPanel();

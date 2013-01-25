@@ -131,11 +131,23 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 	{
 		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{
-			// Should these be deleted?
+			// Should these be deleted? Alex says NOOOOOOOOOO!!!
+			// Add the components to the deleteOnPost vector!
 			//delete m_componentsByType[i][p_entity->getIndex()];
+			m_deleteOnPost.push_back(m_componentsByType[i][p_entity->getIndex()]);
 			m_componentsByType[i][p_entity->getIndex()] = NULL;
 		}
 	}
 	componentBits.reset();
 	p_entity->setComponentBits(componentBits);
+}
+
+void ComponentManager::postPerform()
+{
+	// Delete components here!
+	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
+	{
+		delete m_deleteOnPost[i];
+	}
+	m_deleteOnPost.clear();
 }

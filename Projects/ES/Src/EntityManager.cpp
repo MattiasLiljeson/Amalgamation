@@ -66,15 +66,29 @@ void EntityManager::deleted( Entity* p_entity )
 	m_disabled[p_entity->getIndex()] = false;
 	m_availableIds.push(p_entity->getIndex());
 	
-	// can we delete here? are there still references? 
+	// can we delete here? Alex says: NO!!!! are there still references? 
 	//delete m_entities[p_entity->getIndex()];
+	// Deletion needs to be done in postPerform! Add the entity to that list instead.
 	m_entities[p_entity->getIndex()] = NULL;
-	
-	delete p_entity;
+	m_deleteOnPost.push_back(p_entity);
+
+	// NO!!!
+	//delete p_entity;
 
 	m_active--;
 	m_deleted++;
 }
+
+void EntityManager::postPerform()
+{
+	// Delete entities here!
+	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
+	{
+		delete m_deleteOnPost[i];
+	}
+	m_deleteOnPost.clear();
+}
+
 
 bool EntityManager::isActive( int p_entityId ) const
 {
@@ -123,3 +137,4 @@ Entity* EntityManager::getFirstEntityByComponentType( ComponentType::ComponentTy
 
 	return NULL;
 }
+

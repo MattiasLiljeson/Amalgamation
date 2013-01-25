@@ -27,6 +27,8 @@ public:
 	virtual void deleted( Entity* p_entity ) {}
 	virtual void disabled( Entity* p_entity ) {}
 	virtual void enabled( Entity* p_entity ) {}
+	virtual void prePerform() {}
+	virtual void postPerform() {}
 
 	virtual void setWorld( EntityWorld* p_world ) { m_world = p_world; }
 	virtual EntityWorld* getWorld() { return m_world; } 

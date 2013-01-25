@@ -359,9 +359,9 @@ void ClientApplication::initEntities()
 	m_world->addEntity( entity );
 
 	// Read monkey!
-	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
-	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
-	m_world->addEntity( entity );
+	//status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
+	//entity = factory->entityFromRecipe( "SpecialMonkey" );									 
+	//m_world->addEntity( entity );
 
 
 

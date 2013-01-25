@@ -84,8 +84,8 @@ void DisplayGameStats::addRows( int p_nrOfNewRows )
 	NotifyRowAdd(m_tableName, m_activePlayers, p_nrOfNewRows);
 }
 
-void DisplayGameStats::removeRows( int p_nrOfNewRows )
+void DisplayGameStats::removeRows( int p_nrOfRows )
 {
-	NotifyRowRemove(m_tableName, m_activePlayers, p_nrOfNewRows);
+	NotifyRowRemove(m_tableName, m_activePlayers - p_nrOfRows, p_nrOfRows);
 }
 
