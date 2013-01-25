@@ -81,7 +81,7 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			m_pickComponents[i].m_selection = entity->getIndex();
 
 			EntityCreationPacket data;
-			data.entityType		= static_cast<char>(EntityType::ShipModule);
+			data.entityType		= static_cast<char>(EntityType::SelectionSphere);
 			data.owner			= -1;
 			data.networkIdentity = entity->getIndex();
 			data.translation	= t->getTranslation();
@@ -90,7 +90,7 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			data.meshInfo		= 1;
 
 			entity->addComponent(ComponentType::NetworkSynced, 
-				new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+				new NetworkSynced( entity->getIndex(), -1, EntityType::SelectionSphere));
 
 			m_server->broadcastPacket(data.pack());
 		}

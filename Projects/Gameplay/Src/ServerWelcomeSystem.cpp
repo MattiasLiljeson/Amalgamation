@@ -146,7 +146,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 					getComponent(ComponentType::StaticProp));
 
 				EntityCreationPacket data;
-				data.entityType = static_cast<char>(EntityType::StaticProp);
+				data.entityType = static_cast<char>(EntityType::Other);
 				data.owner = -1; //NO OWNER
 				data.networkIdentity = entities[i]->getIndex();
 				data.translation = transform->getTranslation();

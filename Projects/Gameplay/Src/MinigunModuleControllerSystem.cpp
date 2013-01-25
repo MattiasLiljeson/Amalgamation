@@ -117,7 +117,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		gun->laserSightEntity = entity->getIndex();
 
 		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::ShipModule);
+		data.entityType		= static_cast<char>(EntityType::LaserSight);
 		data.owner			= -1;
 		data.networkIdentity = entity->getIndex();
 		data.translation	= t->getTranslation();
@@ -125,7 +125,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		data.scale			= t->getScale();
 
 		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::ShipModule));
+			new NetworkSynced( entity->getIndex(), -1, EntityType::LaserSight));
 
 		m_server->broadcastPacket(data.pack());
 	}

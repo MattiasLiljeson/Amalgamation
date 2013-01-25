@@ -421,6 +421,7 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
+    <ClInclude Include="EntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -697,5 +698,6 @@
     <ClCompile Include="NetsyncDirectMapperSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
+    <ClCompile Include="EntityFactory.cpp" />
   </ItemGroup>
 </Project>

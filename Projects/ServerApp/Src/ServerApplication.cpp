@@ -113,7 +113,7 @@ namespace Srv
 		/************************************************************************/
 		/* Entity creation														*/
 		/************************************************************************/
-		EntityFactory* factory = new EntityFactory();
+		EntityFactory* factory = new EntityFactory(NULL, m_server);
 		m_world->setSystem( factory, true);
 
 		/************************************************************************/
@@ -288,9 +288,8 @@ namespace Srv
 			BodyInitData::DYNAMIC, 
 			BodyInitData::SINGLE, false));
 
-		//entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 		m_world->addEntity(entity);
 
 		//Shield
@@ -311,7 +310,7 @@ namespace Srv
 
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
 		m_world->addEntity(entity);
 
 		entity = m_world->createEntity();
@@ -331,7 +330,7 @@ namespace Srv
 
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
 		m_world->addEntity(entity);
 
 		entity = m_world->createEntity();
@@ -351,7 +350,7 @@ namespace Srv
 
 		entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
 		m_world->addEntity(entity);
 
 		entity = m_world->createEntity();
@@ -371,13 +370,13 @@ namespace Srv
 
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
 		m_world->addEntity(entity);
 
 
 
 
-		entity = m_world->createEntity();
+		/*entity = m_world->createEntity();
 		component = new Transform(50, 0, -10);
 		entity->addComponent( ComponentType::Transform, component );
 
@@ -424,7 +423,7 @@ namespace Srv
 			entity->addComponent(ComponentType::ConnectionPointSet, cpset);
 			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
 			m_world->addEntity(entity);
-		}
+		}*/
 
 
 //		entity = m_world->createEntity();
