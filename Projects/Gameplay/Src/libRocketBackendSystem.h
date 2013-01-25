@@ -25,9 +25,12 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	void loadDocument( const char* p_filePath );
+	int loadDocument( const char* p_filePath, bool p_initiallyShown=true );
 	void loadCursor( const char* p_cursorPath );
-	void updateElement( string p_element, string p_value );
+	void updateElement(int p_docId, string p_element, string p_value );
+
+	void showDocument(int p_docId);
+	void hideDocument(int p_docId);
 
 	void process();
 	void render();

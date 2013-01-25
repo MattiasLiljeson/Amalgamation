@@ -1,24 +1,21 @@
 #pragma once
-
-#include <Component.h>
+#include <EntitySystem.h>
 // =======================================================================================
-//                                      ClientInfo
+//                                      ServerClientInfoSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Contains client specific information
+/// \brief	Brief
 ///        
-/// # ClientInfo
+/// # ServerClientInfoSystem
 /// Detailed description.....
-/// Created on: 9-1-2013 
+/// Created on: 24-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ClientInfo : public Component
+class ServerClientInfoSystem : public EntitySystem
 {
 public:
-	ClientInfo(int p_id);
-public:
-	int		id;
-	float	ping;
-	int		score;
+	ServerClientInfoSystem();
+	virtual ~ServerClientInfoSystem();
+private:
 };

@@ -1,24 +1,21 @@
 #pragma once
 
-#include <Component.h>
+#include <string>
 // =======================================================================================
-//                                      ClientInfo
+//                                      PlayerStats
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Contains client specific information
+/// \brief	Brief
 ///        
-/// # ClientInfo
+/// # PlayerStats
 /// Detailed description.....
-/// Created on: 9-1-2013 
+/// Created on: 24-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ClientInfo : public Component
+struct PlayerStats
 {
-public:
-	ClientInfo(int p_id);
-public:
-	int		id;
-	float	ping;
-	int		score;
+	std::string	name;
+	float	score;
+	int		ping;
 };

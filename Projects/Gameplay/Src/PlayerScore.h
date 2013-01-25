@@ -24,7 +24,7 @@ public:
 	float getTotalScore();
 	float* getTotalScorePointer();
 	void setModuleScore(float p_score);
-
+	void addBaseScore(float p_score);
 
 private:
 	float m_moduleScore; ///< Variable score based on modules

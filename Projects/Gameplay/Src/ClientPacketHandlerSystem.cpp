@@ -1,5 +1,6 @@
 #include "ClientPacketHandlerSystem.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "GameStatsSystem.h"
 #include "AudioListener.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -25,6 +26,7 @@
 #include "PlayerScore.h"
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
+#include "HudElement.h"
 
 #include "GraphicsBackendSystem.h"
 #include "Control.h"
@@ -215,8 +217,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			UpdateClientStatsPacket updateClientPacket;
 			updateClientPacket.unpack(packet);
+
+			// Update the game stats panel with name, ping, score.
+			auto gameStats = static_cast<GameStatsSystem*>
+								(m_world->getSystem(SystemType::GameStatsSystem));
+			gameStats->updateStats(&updateClientPacket);
+
 			// Client ping
-			m_currentPing = updateClientPacket.ping;
+			m_currentPing = updateClientPacket.ping[0];
 			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
 				m_world->getElapsedTime() + m_currentPing / 2.0f;
 			m_tcpClient->setServerTimeAhead( serverTimeAhead );
@@ -227,7 +235,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
 				SystemType::NetSyncedPlayerScoreTrackerSystem));
 			vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
-			for(int playerId=0; playerId<updateClientPacket.MAXPLAYERS; playerId++)
+			for(int playerId=0; playerId<MAXPLAYERS; playerId++)
 			{
 				for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
 				{

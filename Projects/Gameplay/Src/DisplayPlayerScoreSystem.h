@@ -2,6 +2,10 @@
 
 #include <EntitySystem.h>
 
+class TcpClient;
+class HudElement;
+class LibRocketBackendSystem;
+
 // =======================================================================================
 //	DisplayPlayerScoreSystem
 // =======================================================================================
@@ -17,12 +21,23 @@
 class DisplayPlayerScoreSystem: public EntitySystem
 {
 public:
-	DisplayPlayerScoreSystem();
+	DisplayPlayerScoreSystem(LibRocketBackendSystem* p_librocketBackend, TcpClient* p_client);
 
 	~DisplayPlayerScoreSystem();
 
+	void initialize();
+
+	void processEntities( const vector<Entity*>& p_entities );
+
+
+
+	// Overrides EntitySystem::inserted
+	// This method is automatically called when a new entity has been added to the system.
 	void inserted( Entity* p_entity );
 
-	bool checkProcessing();
-
+private:
+	HudElement* m_playerScoreMenu;
+	TcpClient*	m_client;
+	int			m_scoreTableDocId;
+	LibRocketBackendSystem* m_librocketBackend;
 };

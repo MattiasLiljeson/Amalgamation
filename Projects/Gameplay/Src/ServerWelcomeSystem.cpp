@@ -16,6 +16,7 @@
 #include "EntityType.h"
 
 #include "ServerStaticObjectsSystem.h"
+#include "ServerClientInfoSystem.h"
 
 // Components:
 #include "Transform.h"
@@ -27,6 +28,7 @@
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
 #include "StaticProp.h"
+#include "ClientInfo.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -74,6 +76,19 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			//if (netSync->getNetworkIdentity() == id)
 			//	m_world->deleteEntity(p_entities[index]);
 		}
+
+		// If a client has disconnected, then the clientinfo should be removed?
+		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+			m_world->getSystem(SystemType::ServerClientInfoSystem));
+		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+		for (int i = 0; i < clientInfoEntities.size(); i++)
+		{
+			auto clientInfo = static_cast<ClientInfo*>(
+				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+
+			if (clientInfo->id == id)
+				m_world->deleteEntity(clientInfoEntities[i]);
+		}
 	}
 
 	/************************************************************************/
@@ -85,6 +100,9 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 		while( m_server->hasNewConnections() )
 		{
 			int id = m_server->popNewConnection();
+
+			// Creates a new client info entity for the newly connected client
+			createClientInfoEntity(id);
 
 			/************************************************************************/
 			/* Send the newly connected client a welcome packet with all inclusive. */
@@ -206,7 +224,7 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
-
+	
 	e->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
 
@@ -229,6 +247,12 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 
 	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
 
-
 	return e;
+}
+
+void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
+{
+	Entity* e = m_world->createEntity();
+	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
+	m_world->addEntity(e);
 }

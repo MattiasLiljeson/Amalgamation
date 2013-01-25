@@ -253,11 +253,13 @@ void EntityWorld::process()
 {
 	m_totalGameTime += m_delta;
 
+	prePerformManagers();
 	check( m_added,   new AddedPerformer );
 	check( m_changed, new ChangedPerformer );
 	check( m_disable, new DisabledPerformer );
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
+	postPerformManagers();
 
 	m_systemManager->updateSynchronous();
 }
@@ -270,4 +272,16 @@ void EntityWorld::requestToShutDown()
 bool EntityWorld::shouldShutDown()
 {
 	return m_shutdown;
+}
+
+void EntityWorld::prePerformManagers()
+{
+	for( unsigned int i=0; i<m_managersBag.size(); i++ )
+		m_managersBag[i]->prePerform();
+}
+
+void EntityWorld::postPerformManagers()
+{
+	for( unsigned int i=0; i<m_managersBag.size(); i++ )
+		m_managersBag[i]->postPerform();
 }

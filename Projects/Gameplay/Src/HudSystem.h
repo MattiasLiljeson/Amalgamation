@@ -1,6 +1,8 @@
 #pragma once
 #include <EntitySystem.h>
 
+#define WINAPI
+
 class LibRocketBackendSystem;
 
 class HudSystem :	public EntitySystem

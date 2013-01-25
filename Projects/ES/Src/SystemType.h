@@ -44,6 +44,7 @@ public:	//Enums
 		HudSystem,
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,
+		GameStatsSystem,
 		LevelGenSystem,
 		EntityFactory,
 		MinigunModuleControllerSystem,
@@ -66,6 +67,7 @@ public:	//Enums
 		NetsyncDirectMapperSystem,
 		GraphicsRendererSystem,
 		ParticleSystemEmitterSystem,
+		ServerClientInfoSystem,
 		NUM_SYSTEM_TYPES
 	};
 

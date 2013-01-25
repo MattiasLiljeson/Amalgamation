@@ -34,6 +34,7 @@ public:
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
 	Entity* createTheShipEntity(int p_newlyConnectedClientId, Transform* p_shipTransform);
+	void createClientInfoEntity(int p_newlyConnectedClientId);
 private:
 	TcpServer* m_server;
 	int		m_activePort;
