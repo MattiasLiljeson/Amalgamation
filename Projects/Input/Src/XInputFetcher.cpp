@@ -83,18 +83,27 @@ double XInputFetcher::getCalibratedAnalog( int p_analog )
 	if( 0 <= p_analog && p_analog < InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS )
 	{
 		// Offset the input by the offset calculated by calibrate()
-		short tmp = getRawAnalog( p_analog ) - m_analogOffsets[p_analog] ;
+		int calibratedInput = getRawAnalog( p_analog ) - m_analogOffsets[p_analog] ;
+		short clampedInput = calibratedInput;
+
+		if( calibratedInput > SHRT_MAX ) {
+			clampedInput = SHRT_MAX;
+		} else if( calibratedInput < SHRT_MIN ) {
+			clampedInput = SHRT_MIN; 
+		}
 
 		// Triggers have a precision of 0-255 instead of 0-65k as the thumb sticks.
 		// Take that into account when calculating 0.0 - 1.0 
 		if(p_analog == InputHelper::TRIGGER_L || p_analog == InputHelper::TRIGGER_R)
-			val =  (double)tmp / 255; //BYTE_MAX
+			val =  (double)clampedInput / 255; //BYTE_MAX
 		else
-			val = (double)tmp / SHRT_MAX;
+			val = (double)clampedInput / SHRT_MAX;
 
 		// Dead zone adjustment
 		if( abs(val) < m_epsilon )
 			val = 0.0;
+
+
 	}
 
 	return val;
