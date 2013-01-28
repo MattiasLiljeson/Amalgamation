@@ -1,9 +1,17 @@
 #include "SoundFactory.h"
 #include "SoundDeleteAfterPlayback.h"
+#include <Globals.h>
+#include <DebugUtil.h>
 
 SoundFactory::SoundFactory(IXAudio2* p_soundDevice)
 {
 	m_soundDevice = p_soundDevice;
+	SoundBufferAndHeader* bufferAndHeader = new SoundBufferAndHeader();
+	BasicSoundCreationInfo basicInfo("default_what.wav", SOUNDROOTPATH.c_str());
+	initBuffer(bufferAndHeader->buffer, &basicInfo);
+	createSoundBuffer(basicInfo.getFullFilePathString().c_str(),
+		bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+	m_soundBufferManager.addResource(basicInfo.fileName, bufferAndHeader);
 }
 
 SoundFactory::~SoundFactory()
@@ -20,11 +28,20 @@ Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
 		m_soundBufferManager.getResource(p_info->fileName);
 	if(bufferAndHeader == NULL)
 	{
-		bufferAndHeader = new SoundBufferAndHeader();
-		initBuffer(bufferAndHeader->buffer, p_info);
-		createSoundBuffer(p_info->getFullFilePathString().c_str(),
-			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
-		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+		try
+		{
+			bufferAndHeader = new SoundBufferAndHeader();
+			initBuffer(bufferAndHeader->buffer, p_info);
+			createSoundBuffer(p_info->getFullFilePathString().c_str(),
+				bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+			m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+		}
+		catch (XAudio2Exception& e)
+		{
+			DEBUGWARNING((e.what()));
+			delete bufferAndHeader;
+			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
+		}
 	}
 
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
@@ -39,11 +56,20 @@ PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_b
 		m_soundBufferManager.getResource(p_basicSoundInfo->fileName);
 	if(bufferAndHeader == NULL)
 	{
-		bufferAndHeader = new SoundBufferAndHeader();
-		initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
-		createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
-			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
-		m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+		try
+		{
+			bufferAndHeader = new SoundBufferAndHeader();
+			initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
+			createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
+				bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+			m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+		}
+		catch (XAudio2Exception& e)
+		{
+			DEBUGWARNING((e.what()));
+			delete bufferAndHeader;
+			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
+		}
 	}
 	
 	X3DAUDIO_EMITTER emitter = {0};
@@ -68,11 +94,20 @@ Sound* SoundFactory::createAmbientSoundEffect( BasicSoundCreationInfo* p_info,
 		m_soundBufferManager.getResource(p_info->fileName);
 	if(bufferAndHeader == NULL)
 	{
-		bufferAndHeader = new SoundBufferAndHeader();
-		initBuffer(bufferAndHeader->buffer, p_info);
-		createSoundBuffer(p_info->getFullFilePathString().c_str(),
-			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
-		m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+		try
+		{
+			bufferAndHeader = new SoundBufferAndHeader();
+			initBuffer(bufferAndHeader->buffer, p_info);
+			createSoundBuffer(p_info->getFullFilePathString().c_str(),
+				bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+			m_soundBufferManager.addResource(p_info->fileName, bufferAndHeader);
+		}
+		catch (XAudio2Exception& e)
+		{
+			DEBUGWARNING((e.what()));
+			delete bufferAndHeader;
+			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
+		}
 	}
 	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
 		p_soundIndex, p_sounds, &m_addedCallbacks);
@@ -92,11 +127,20 @@ PositionalSound* SoundFactory::createPositionalSoundEffect(
 		m_soundBufferManager.getResource(p_basicSoundInfo->fileName);
 	if(bufferAndHeader == NULL)
 	{
-		bufferAndHeader = new SoundBufferAndHeader();
-		initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
-		createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
-			bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
-		m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+		try
+		{
+			bufferAndHeader = new SoundBufferAndHeader();
+			initBuffer(bufferAndHeader->buffer, p_basicSoundInfo);
+			createSoundBuffer(p_basicSoundInfo->getFullFilePathString().c_str(),
+				bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+			m_soundBufferManager.addResource(p_basicSoundInfo->fileName, bufferAndHeader);
+		}
+		catch (XAudio2Exception& e)
+		{
+			DEBUGWARNING((e.what()));
+			delete bufferAndHeader;
+			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
+		}
 	}
 	
 	X3DAUDIO_EMITTER emitter = {0};
@@ -279,19 +323,19 @@ void SoundFactory::readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize,
 void SoundFactory::initFile(const char* p_filePath)
 {
 	HRESULT hr = S_OK;
-	m_file = CreateFile(p_filePath,GENERIC_READ,FILE_SHARE_READ,NULL,
-		OPEN_EXISTING,0,NULL);
+	m_file = CreateFile(p_filePath, GENERIC_READ, FILE_SHARE_READ, NULL,
+		OPEN_EXISTING, 0, NULL);
 
 	if (INVALID_HANDLE_VALUE == m_file)
 	{
 		hr = HRESULT_FROM_WIN32( GetLastError() );
-		throw XAudio2Exception(hr,p_filePath, __FILE__,__FUNCTION__,__LINE__);
+		throw XAudio2Exception(hr, p_filePath, __FILE__, __FUNCTION__, __LINE__);
 	}
 
-	if ( INVALID_SET_FILE_POINTER == SetFilePointer(m_file,0,NULL,FILE_BEGIN) )
+	if ( INVALID_SET_FILE_POINTER == SetFilePointer(m_file, 0, NULL, FILE_BEGIN) )
 	{
 		hr = HRESULT_FROM_WIN32( GetLastError() );
-		throw XAudio2Exception(hr, __FILE__,__FUNCTION__,__LINE__);
+		throw XAudio2Exception(hr, __FILE__, __FUNCTION__, __LINE__);
 	}
 }
 
