@@ -66,6 +66,11 @@ private:
 	Entity* createRocketLauncherClient(EntityCreationPacket p_packet);
 	Entity* createRocketLauncherServer(EntityCreationPacket p_packet);
 
+	Entity* createMinigunClient(EntityCreationPacket p_packet);
+	Entity* createMinigunServer(EntityCreationPacket p_packet);
+	Entity* createSpeedBoosterClient(EntityCreationPacket p_packet);
+	Entity* createSpeedBoosterServer(EntityCreationPacket p_packet);
+
 	Entity* createModuleClient(EntityCreationPacket p_packet);
 	Entity* createModuleServer(EntityCreationPacket p_packet);
 

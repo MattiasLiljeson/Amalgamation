@@ -390,6 +390,8 @@ void ClientApplication::initEntities()
 	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
 	LevelPieceFileMapping modelLevelFileMapping;	
 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
