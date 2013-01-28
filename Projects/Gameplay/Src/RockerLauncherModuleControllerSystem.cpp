@@ -171,9 +171,11 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
 
+	AglVector3 actualdir = dir * 100.0f + vel;
+	actualdir.normalize();
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
-		AglQuaternion::identity(),
+		AglQuaternion::rotateToFrom(AglVector3(0, 0, -1), actualdir),
 		AglVector3(0.8f, 0.8f, 0.8f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
