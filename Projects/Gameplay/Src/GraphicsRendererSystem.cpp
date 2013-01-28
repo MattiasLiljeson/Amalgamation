@@ -39,7 +39,7 @@ void GraphicsRendererSystem::process(){
 	endParticlePass();
 
 	initGUIPass();
-	//m_antTweakBarSystem->render();
+	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
 
