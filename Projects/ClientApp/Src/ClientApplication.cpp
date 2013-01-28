@@ -100,7 +100,6 @@ using namespace std;
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
-	try{
 		m_running = false;
 		m_hInstance = p_hInstance;
 		m_client = new TcpClient();
@@ -115,12 +114,6 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		// Test entities later!
 		initEntities();
 		initSounds();
-
-	}
-	catch(exception& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
 }
 
 ClientApplication::~ClientApplication()
