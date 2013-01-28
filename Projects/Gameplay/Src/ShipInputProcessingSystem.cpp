@@ -217,6 +217,8 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	}
 
 	//Added by Anton 15/1 - 13
+	// Please remove this!
+	// Not input... Make separate system for slot highlight
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		if (m_keyboardModuleSlots[i]->getDelta() > 0)
@@ -230,6 +232,7 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 
 		}
 	}
+	// =============================
 	
 	if (m_mouseModuleActivation->getDelta() > 0)
 	{
