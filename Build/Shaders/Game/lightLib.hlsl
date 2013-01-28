@@ -82,8 +82,10 @@ float3 parallelLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float
 
 float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
 {	
+	//return surface.diffuse.xyz;
+
 	// lulz tonemapping
-	surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
+	//surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
 	
 	// The vector from the surface to the light.
 	float3 lightVec = light.pos - pixelPos;
