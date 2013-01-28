@@ -30,6 +30,8 @@ void LookAtSystem::initialize()
 void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
+	static float blargu=0.0f;
+	blargu-=2.0f*dt;
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
 
@@ -55,15 +57,19 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 
 
 		// Retrieve initial info
-		AglVector3 position = transform->getTranslation();
+		AglVector3 position;
+		if (transform) position = transform->getTranslation();
 		AglQuaternion rotation = transform->getRotation();
 		
 		// Extract look-at entity and its transform
 		Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
 		Transform* targetTransform = static_cast<Transform*>(
 			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
-
-		AglVector3 lookTargetPos = targetTransform->getTranslation();
+		AglVector3 lookTargetPos;
+		if (targetTransform)
+		{
+			lookTargetPos = targetTransform->getTranslation();
+		}
 
 
 		// Follow behaviour
@@ -75,24 +81,21 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			offset.transformNormal(targetTransform->getMatrix());
 			// update transform
 
-			// position = AglVector3::lerp(position,lookTarget+offset,
-			//							/*abs(lookAt->getMoveSpd())*/saturate(10.0f*dt));
 
 			position = lookTargetPos+offset;			
 			
 			
- //			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
- //				/*lookAt->getRotationSpeed()*/saturate(10.0f*dt));
-			 rotation = targetTransform->getRotation();
-			rotation.normalize();
+			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+			// 	lookAt->getRotationSpeed()*saturate(10.0f*dt));
+			rotation = targetTransform->getRotation();
+			// rotation.normalize();
 
 			// update
 			transform->setTranslation( position );
 			transform->setRotation( rotation );
 		}
-
 		// orbit behaviour
-		if (lookAtOrbit)
+		else if (lookAtOrbit)
 		{
 			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), 0); ///CHANGED BY ANTON!!!
 			rotation.normalize();
@@ -105,9 +108,8 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			transform->setTranslation( position );
 			transform->setRotation( rotation );
 		}
-
 		// just lookat behaviour
-		if (!lookAtOrbit && !lookAtFollow)
+		else if (!lookAtOrbit && !lookAtFollow)
 		{
  			AglVector3 dir = position-lookTargetPos;
  			AglVector3::normalize(dir);
