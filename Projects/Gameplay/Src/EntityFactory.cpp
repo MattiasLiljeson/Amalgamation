@@ -180,11 +180,11 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	//shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
 		//SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
 
+	Entity* entity = NULL;
+	//entity = m_world->createEntity();
 
-	/************************************************************************/
-	/* This ship creation code have to be located somewhere else.			*/
-	/************************************************************************/
-	Entity* entity = m_world->createEntity();
+	readAssemblageFile( "Assemblages/ClientShip.asd" );
+	entity = entityFromRecipe( "ClientShip" );
 
 	Transform* transform = new Transform( p_packet.translation, p_packet.rotation, 
 		p_packet.scale);
@@ -196,46 +196,46 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	LightsComponent* lightComp = new LightsComponent();
-	Light floodLight;
-	float range = 100.0f;
-	AglMatrix::componentsToMatrix(
-		floodLight.offsetMat,
-		AglVector3( range, range, range*20 ),
-		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-		AglVector3( 2.0f, 0.0f, 0.0f )
-		);
-	floodLight.instanceData.range = range*20;
-	floodLight.instanceData.attenuation[1] = 0.1f;
-	floodLight.instanceData.spotPower = 8.0f;
-	floodLight.instanceData.lightDir[0] = 0.0f;
-	floodLight.instanceData.lightDir[1] = 0.0f;
-	floodLight.instanceData.lightDir[2] = 1.0f;
-	floodLight.instanceData.diffuse[0] = 0.0f;
-	floodLight.instanceData.diffuse[1] = 1.0f;
-	floodLight.instanceData.diffuse[2] = 0.0f;
-	//floodLight.instanceData.ambient[0] = 0.0f;
-	//floodLight.instanceData.ambient[1] = 0.0f;
-	//floodLight.instanceData.ambient[2] = 1.0f;
-	//floodLight.instanceData.specular[0] = 2.0f;
-	//floodLight.instanceData.specular[1] = 2.0f;
-	//floodLight.instanceData.specular[2] = 2.0f;
-	floodLight.instanceData.enabled = true;
-	floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
+	//LightsComponent* lightComp = new LightsComponent();
+	//Light floodLight;
+	//float range = 100.0f;
+	//AglMatrix::componentsToMatrix(
+	//	floodLight.offsetMat,
+	//	AglVector3( range, range, range*20 ),
+	//	AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+	//	AglVector3( 2.0f, 0.0f, 0.0f )
+	//	);
+	//floodLight.instanceData.range = range*20;
+	//floodLight.instanceData.attenuation[1] = 0.1f;
+	//floodLight.instanceData.spotPower = 8.0f;
+	//floodLight.instanceData.lightDir[0] = 0.0f;
+	//floodLight.instanceData.lightDir[1] = 0.0f;
+	//floodLight.instanceData.lightDir[2] = 1.0f;
+	//floodLight.instanceData.diffuse[0] = 0.0f;
+	//floodLight.instanceData.diffuse[1] = 1.0f;
+	//floodLight.instanceData.diffuse[2] = 0.0f;
+	////floodLight.instanceData.ambient[0] = 0.0f;
+	////floodLight.instanceData.ambient[1] = 0.0f;
+	////floodLight.instanceData.ambient[2] = 1.0f;
+	////floodLight.instanceData.specular[0] = 2.0f;
+	////floodLight.instanceData.specular[1] = 2.0f;
+	////floodLight.instanceData.specular[2] = 2.0f;
+	//floodLight.instanceData.enabled = true;
+	//floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
 
-	lightComp->addLight( floodLight );
-	AglMatrix::componentsToMatrix(
-		floodLight.offsetMat,
-		AglVector3( range, range, range*20 ),
-		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-		AglVector3( -2.0f, 0.0f, 0.0f )
-		);
-	floodLight.instanceData.diffuse[0] = 1.0f;
-	floodLight.instanceData.diffuse[1] = 0.0f;
-	floodLight.instanceData.diffuse[2] = 0.0f;
-	lightComp->addLight( floodLight );
+	//lightComp->addLight( floodLight );
+	//AglMatrix::componentsToMatrix(
+	//	floodLight.offsetMat,
+	//	AglVector3( range, range, range*20 ),
+	//	AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+	//	AglVector3( -2.0f, 0.0f, 0.0f )
+	//	);
+	//floodLight.instanceData.diffuse[0] = 1.0f;
+	//floodLight.instanceData.diffuse[1] = 0.0f;
+	//floodLight.instanceData.diffuse[2] = 0.0f;
+	//lightComp->addLight( floodLight );
 
-	entity->addComponent( ComponentType::LightsComponent, lightComp);
+	//entity->addComponent( ComponentType::LightsComponent, lightComp);
 
 	/************************************************************************/
 	/* Check if the owner is the same as this client.						*/
