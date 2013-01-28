@@ -100,7 +100,6 @@ using namespace std;
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
-	try{
 		m_running = false;
 		m_hInstance = p_hInstance;
 		m_client = new TcpClient();
@@ -115,12 +114,6 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		// Test entities later!
 		initEntities();
 		initSounds();
-
-	}
-	catch(exception& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
 }
 
 ClientApplication::~ClientApplication()
@@ -390,6 +383,8 @@ void ClientApplication::initEntities()
 	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
 	LevelPieceFileMapping modelLevelFileMapping;	
 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)

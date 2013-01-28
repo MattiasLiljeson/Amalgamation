@@ -1,10 +1,17 @@
 #include <vld.h>
 #include "ClientApplication.h"
+#include <DebugUtil.h>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 {
 	ClientApplication* application;
-	application = new ClientApplication( hInstance );
+	try{
+		application = new ClientApplication( hInstance );
+	}
+	catch(exception& e){
+		DEBUGWARNING((e.what()));
+		return -1;
+	}
 
 	SetThreadAffinityMask(GetCurrentThread(), 1);
 
