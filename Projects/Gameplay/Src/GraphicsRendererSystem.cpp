@@ -59,7 +59,7 @@ void GraphicsRendererSystem::endMeshPass(){
 
 void GraphicsRendererSystem::initLightPass(){
 	m_backend->getGfxWrapper()->setRasterizerStateSettings(
-		RasterizerState::FILLED_CW_FRONTCULL, false);
+		RasterizerState::FILLED_NOCULL, false);
 	m_backend->getGfxWrapper()->setBlendStateSettings(BlendState::ADDITIVE);
 	m_backend->getGfxWrapper()->setComposedRenderTargetWithNoDepthStencil();
 	m_backend->getGfxWrapper()->mapGBuffersToShader();
