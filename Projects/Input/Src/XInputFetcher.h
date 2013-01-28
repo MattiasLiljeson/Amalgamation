@@ -27,14 +27,24 @@ public:
 
 	virtual void update();
 	virtual InputHelper::KEY_STATE getBtnState( int p_btn );
-	virtual short getAnalog( int p_analog );
-	virtual double getAnalogAsDouble( int p_analog );
+	virtual short getRawAnalog( int p_analog );
+
+	///-----------------------------------------------------------------------------------
+	/// Calibrated output. Use calibrate() to set calibration
+	/// \param p_analog which analog stick/trigger to fetch input for
+	/// \return double Between 0.0 and 1.0
+	///-----------------------------------------------------------------------------------
+	virtual double getCalibratedAnalog( int p_analog );
+	virtual void calibrate( double p_epsilon );
 
 private:
 	static int s_btnMaskMap[InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS];
 
-	short m_analogs[InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS];
+	int m_rawAnalogs[InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS];
+	int m_analogOffsets[InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS];
 	InputHelper::KEY_STATE m_btns[InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS];
 	XINPUT_STATE m_currentState;
+
+	 double m_epsilon;
 };
 

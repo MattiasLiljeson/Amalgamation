@@ -100,7 +100,6 @@ using namespace std;
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
-	try{
 		m_running = false;
 		m_hInstance = p_hInstance;
 		m_client = new TcpClient();
@@ -115,12 +114,6 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		// Test entities later!
 		initEntities();
 		initSounds();
-
-	}
-	catch(exception& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
 }
 
 ClientApplication::~ClientApplication()
@@ -390,6 +383,8 @@ void ClientApplication::initEntities()
 	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
 	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
 	LevelPieceFileMapping modelLevelFileMapping;	
 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
@@ -399,31 +394,9 @@ void ClientApplication::initEntities()
 				&TESTMODELPATH);
 	}
 
-	// Ambient light
-	float scale = 1000.0f;
-	Light ambientLight;
-	AglMatrix::componentsToMatrix(
-		ambientLight.offsetMat,
-		AglVector3( scale, scale, scale ),
-		AglQuaternion::constructFromAxisAndAngle( AglVector3(-1,0,0), 3.14/2.0 ),
-		AglVector3(3,3,3)
-		);
-	ambientLight.instanceData.range = scale;
-	ambientLight.instanceData.attenuation[0] = 1.0f;
-	ambientLight.instanceData.ambient[0] = 0.5f;
-	ambientLight.instanceData.ambient[1] = 0.5f;
-	ambientLight.instanceData.ambient[2] = 0.5f;
-	ambientLight.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
-
-	LightsComponent* ambientLightComp = new LightsComponent();
-	ambientLightComp->addLight( ambientLight );
-	
-	entity = m_world->createEntity();
-	component = new Transform( 5.0f, 10.0f, 19.0f);
-	entity->addComponent( ComponentType::Transform, component );
-	entity->addComponent( ComponentType::LightsComponent, ambientLightComp );
-
-	m_world->addEntity(entity);
+	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
+	entity = factory->entityFromRecipe( "GlobalLight" );									 
+	m_world->addEntity( entity );
 
 	/************************************************************************/
 	/* HARD CODED LIGHTS													*/

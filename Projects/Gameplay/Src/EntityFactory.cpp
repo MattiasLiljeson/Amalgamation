@@ -98,6 +98,20 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
 		else
 			return createRocketLauncherServer(p_packet);
 	}
+	else if (type == EntityType::BoosterModule)
+	{
+		if (m_client)
+			return createSpeedBoosterClient(p_packet);
+		else
+			return createSpeedBoosterServer(p_packet);
+	}
+	else if (type == EntityType::MinigunModule)
+	{
+		if (m_client)
+			return createMinigunClient(p_packet);
+		else
+			return createMinigunServer(p_packet);
+	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
@@ -154,6 +168,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
 		else
 			return createOtherServer(p_packet);
 	}
+	DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
 	return NULL;
 }
 
@@ -199,6 +214,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	floodLight.instanceData.diffuse[0] = 0.0f;
 	floodLight.instanceData.diffuse[1] = 1.0f;
 	floodLight.instanceData.diffuse[2] = 0.0f;
+	//floodLight.instanceData.ambient[0] = 0.0f;
+	//floodLight.instanceData.ambient[1] = 0.0f;
+	//floodLight.instanceData.ambient[2] = 1.0f;
 	//floodLight.instanceData.specular[0] = 2.0f;
 	//floodLight.instanceData.specular[1] = 2.0f;
 	//floodLight.instanceData.specular[2] = 2.0f;
@@ -347,6 +365,48 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 Entity* EntityFactory::createRocketLauncherServer(EntityCreationPacket p_packet)
 {
 	//Not moved here yet!
+	return NULL;
+}
+Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
+{
+	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+		SystemType::GraphicsBackendSystem ))->getMeshId("minigun.agl");
+
+	Entity* entity = m_world->createEntity();
+	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	entity->addComponent( ComponentType::Transform, component );
+	component = new RenderInfo(meshId);
+	entity->addComponent(ComponentType::RenderInfo, component);
+	entity->addComponent(ComponentType::NetworkSynced,
+		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+
+	m_world->addEntity(entity);
+	return entity;
+}
+Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
+{
+	return NULL;
+}
+Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
+{
+	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+		SystemType::GraphicsBackendSystem ))->getMeshId("SpeedBooster.agl");
+
+	Entity* entity = m_world->createEntity();
+	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	entity->addComponent( ComponentType::Transform, component );
+	component = new RenderInfo(meshId);
+	entity->addComponent(ComponentType::RenderInfo, component);
+	entity->addComponent(ComponentType::NetworkSynced,
+		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+
+	m_world->addEntity(entity);
+	return entity;
+}
+Entity* EntityFactory::createSpeedBoosterServer(EntityCreationPacket p_packet)
+{
 	return NULL;
 }
 Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)

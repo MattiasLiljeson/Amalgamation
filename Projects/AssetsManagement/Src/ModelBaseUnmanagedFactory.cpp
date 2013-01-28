@@ -47,6 +47,7 @@ vector<ModelResource*>* ModelBaseUnmanagedFactory::createModelResources( const s
 	}
 	else
 	{
+		models = new vector<ModelResource*>();
 		models->push_back(getFallback());
 	}
 	// cleanup
