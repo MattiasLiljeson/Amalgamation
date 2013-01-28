@@ -12,7 +12,7 @@
 /* removing code, ENABLE_SOUND = enables sound							*/
 /* _ENABLE_SOUND = disable sound										*/
 /************************************************************************/
-#define ENABLE_SOUND
+#define _ENABLE_SOUND
 
 /************************************************************************/
 /* ????	-Robin & Alex													*/
@@ -67,7 +67,6 @@ public:
 private:
 	void initSystems();
 	void initEntities();
-	void initSounds();
 
 	void InitModulesTestByAnton();
 

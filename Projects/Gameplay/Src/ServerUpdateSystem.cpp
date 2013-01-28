@@ -47,7 +47,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
 			m_world->getSystem(SystemType::ServerClientInfoSystem));
 		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-		for (int i = 0; i < clientInfoEntities.size(); i++)
+		for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
 		{
 			auto clientInfo = static_cast<ClientInfo*>(
 				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));

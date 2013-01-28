@@ -1,5 +1,6 @@
 #include "LevelPieceFileMapping.h"
 #include <cstdlib>
+#include <DebugUtil.h>
 
 LevelPieceFileMapping::LevelPieceFileMapping()
 {
@@ -18,12 +19,14 @@ LevelPieceFileMapping::~LevelPieceFileMapping()
 
 }
 
-const string& LevelPieceFileMapping::getModelFileName( int p_id ) const
+const string& LevelPieceFileMapping::getModelFileName(unsigned int p_id ) const
 {
 	if (p_id >= 0 && p_id < m_fileNames.size())
 		return m_fileNames[p_id];
-	else
+	else{
+		DEBUGPRINT(("LevelPiece Error, could find the specified modelfile \n"));
 		return "";
+	}
 }
 
 int LevelPieceFileMapping::getModelFileCount() const

@@ -53,6 +53,9 @@ namespace Srv
 
 		m_world = new EntityWorld();
 		initSystems();
+
+		ComponentAssemblageAllocator allocator();
+
 		initEntities();
 	}
 
@@ -191,52 +194,10 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
-
-		// Run component assemblage allocator
-		ComponentAssemblageAllocator allocator();
 	}
 
 	void ServerApplication::initEntities()
 	{
-		//-75 -> 2
-		Entity* entity;
-		Component* component;
-		// Add a grid of cubes to test instancing.
-
-		float maxVal = 2;
-		float minVal = -75;
-		int size = 8;
-		/*for( int x=0; x<size; x++ )
-		{
-			for( int y=0; y<size; y++ )
-			{
-				for( int z=0; z<size; z++ )
-				{
-					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
-
-					entity = m_world->createEntity();
-					component = new Transform(pos, AglQuaternion::identity(), AglVector3(1, 1, 1));
-					entity->addComponent( ComponentType::Transform, component );
-					entity->addComponent( ComponentType::StaticProp, new StaticProp());
-
-					//Added by Anton
-					entity->addComponent( ComponentType::PhysicsBody, 
-						new PhysicsBody() );
-
-					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(pos,
-						AglQuaternion::identity(),
-						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), BodyInitData::BOX, 
-						BodyInitData::STATIC, 
-						BodyInitData::SINGLE, true, true));
-
-					m_world->addEntity(entity);
-				}
-			}
-		}*/
 		InitModulesTestByAnton();
 	}
 
