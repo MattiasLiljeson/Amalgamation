@@ -238,6 +238,8 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 				}
 				m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
 			}
+			else if (m_header.spawnFrequency > 0)
+				m_timeSinceSpawn += p_dt;
 		}
 		else if (m_header.spawnType == AglParticleSystemHeader::ONCE && m_age == 0)
 		{
@@ -250,7 +252,6 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
 		}
 		m_age += p_dt;
-		m_timeSinceSpawn += p_dt;
 
 	}
 	else
