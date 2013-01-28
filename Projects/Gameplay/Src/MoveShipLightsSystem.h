@@ -1,36 +1,27 @@
 #pragma once
-
 #include <EntitySystem.h>
 
-class TcpServer;
-
 // =======================================================================================
-//                                      ServerUpdateSystem
+//	MoveShipLightsSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief description...
 ///        
-/// # NetworkUpdateSystem
-/// Detailed description.....
-/// Created on: 20-12-2012 
+/// # MoveShipLightsSystem
+/// Detailed description...
+/// Created on: 25-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ServerUpdateSystem : public EntitySystem
+class MoveShipLightsSystem: public EntitySystem
 {
 public:
-	ServerUpdateSystem( TcpServer* p_server );
-
-	~ServerUpdateSystem();
-	
+	MoveShipLightsSystem();
+	~MoveShipLightsSystem();
+	void initialize();
 	void processEntities( const vector<Entity*>& p_entities );
 
-	void initialize();
-
-	virtual void removed( Entity* p_entity );
-
-
 private:
-	TcpServer* m_server;
+	float m_lightPosition[3];
 
 };

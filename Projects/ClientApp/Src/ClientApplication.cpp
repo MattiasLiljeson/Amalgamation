@@ -83,6 +83,7 @@
 #include <TransformParentHandlerSystem.h>
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
+#include <MoveShipLightsSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -96,6 +97,7 @@ using namespace std;
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
+#include <LightBlinkerSystem.h>
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -323,6 +325,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
+	m_world->setSystem( new LightBlinkerSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -335,6 +338,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), true );
+	m_world->setSystem( new MoveShipLightsSystem(), true );
 
 	m_world->initialize();
 

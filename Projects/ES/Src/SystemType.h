@@ -21,6 +21,7 @@ public:	//Enums
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,
 		DebugMovementSystem,
+		MoveShipLightsSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
@@ -68,6 +69,7 @@ public:	//Enums
 		GraphicsRendererSystem,
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
+		LightBlinkerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

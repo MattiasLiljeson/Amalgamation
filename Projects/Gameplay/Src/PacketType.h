@@ -24,6 +24,7 @@ public:
 		// Server -> Client:
 		EntityCreation,
 		EntityUpdate,
+		EntityDeletion,
 		ClientDisconnect,
 		WelcomePacket,
 		UpdateClientStats,
