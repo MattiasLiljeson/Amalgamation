@@ -29,7 +29,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 		rocket->m_age += dt;
 
 		//Check collision
-		if (rocket->m_age > 0.5f)
+		if (rocket->m_age > 0.2f)
 		{
 			//Start targeting ships
 			ShipManagerSystem* shipManager = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
@@ -40,15 +40,20 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			Transform* from = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 			Transform* to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
 
-			AglVector3 imp = to->getTranslation() - from->getTranslation();
-
-			imp.normalize();
-			imp = imp * 60;
-
 			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
 
-			ps->getController()->ApplyExternalImpulse(pb->m_id, imp * dt, AglVector3(0, 0, 0));
+			AglVector3 imp = to->getTranslation() - from->getTranslation();
+			imp.normalize();
+			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
+			AglVector3 rotAxis = AglVector3::crossProduct(imp, body->GetWorld().GetForward());
+			rotAxis.normalize();
+			float rotFraction = (1.0f-max(AglVector3::dotProduct(imp, -body->GetWorld().GetForward()), 0.0f));
+			rotAxis *= 10.0f * rotFraction * dt;
+
+			AglVector3 impulse = -body->GetWorld().GetForward()*dt*50 * (1.0f - rotFraction);
+
+			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 		}	
 	}
 }

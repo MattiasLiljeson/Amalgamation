@@ -6,11 +6,13 @@
 #include <AglQuaternion.h>
 #include "LevelPieceFileMapping.h"
 #include <queue>
+#include "EntityUpdatePacket.h"
 
 using namespace std;
 
 class TcpClient;
 class EntityCreationPacket;
+class EntityDeletionPacket;
 
 struct NetworkScoreUpdatePacket
 {
@@ -47,11 +49,15 @@ private:
 
 	void handleWelcomePacket(Packet p_packet);
 	void handleEntityCreationPacket(EntityCreationPacket p_packet);
+	void handleEntityDeletionPacket(EntityDeletionPacket p_packet);
 
 	void updateCounters();
 
 	void updateInitialPacketLossDebugData();
 	void updateBroadcastPacketLossDebugData( unsigned int p_packetIdentifier );
+
+	//Added by Anton
+	void handleBatch();
 
 private:
 	TcpClient* m_tcpClient;
@@ -74,4 +80,7 @@ private:
 	unsigned int m_totalBroadcastPacketLost;
 
 	queue<int> m_staticPropIdentities;
+
+	//Added by Anton
+	vector<EntityUpdatePacket> m_batch;
 };

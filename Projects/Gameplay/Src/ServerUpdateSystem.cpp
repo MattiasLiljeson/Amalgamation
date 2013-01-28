@@ -7,6 +7,7 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "EntityUpdatePacket.h"
+#include "EntityDeletionPacket.h"
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "PhysicsController.h"
@@ -175,9 +176,23 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				m_server->broadcastPacket( updatePacket.pack() );
 			}
 		}
+		//Broadcast an end of the batch
+		EntityUpdatePacket updatePacket;
+		updatePacket.entityType		= static_cast<char>(EntityType::EndBatch);
+		m_server->broadcastPacket( updatePacket.pack() );
 	}
 }
 
 void ServerUpdateSystem::initialize()
 {
+}
+
+void ServerUpdateSystem::removed( Entity* p_entity )
+{
+	EntityDeletionPacket packet;
+	auto netSync = static_cast<NetworkSynced*>(
+		p_entity->getComponent(ComponentType::NetworkSynced));
+	
+	packet.networkIdentity = netSync->getNetworkIdentity();
+	m_server->broadcastPacket(packet.pack());
 }

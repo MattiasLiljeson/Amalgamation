@@ -42,6 +42,7 @@
 #include "EntityUpdatePacket.h"
 #include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
+#include "EntityDeletionPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
@@ -112,7 +113,16 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			data.unpack(packet);
 
-			NetsyncDirectMapperSystem* directMapper =
+			if (data.entityType == (char)EntityType::EndBatch)
+			{
+				handleBatch();
+			}
+			else
+			{
+				m_batch.push_back(data);
+			}
+
+			/*NetsyncDirectMapperSystem* directMapper =
 				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 				SystemType::NetsyncDirectMapperSystem));
 			Entity* entity = directMapper->getEntity( data.networkIdentity );
@@ -142,7 +152,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					extrapolate->velocityVector = data.velocity;
 					extrapolate->angularVelocity = data.angularVelocity;
 				}
-			}
+			}*/
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
 		{			
@@ -259,6 +269,12 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			data.unpack(packet);
 			handleEntityCreationPacket(data);
 		}
+		else if (packetType == (char)PacketType::EntityDeletion)
+		{
+			EntityDeletionPacket data;
+			data.unpack(packet);
+			handleEntityDeletionPacket(data);
+		}
 		else if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
@@ -285,6 +301,14 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
 	factory->entityFromPacket(p_packet);
+}
+
+void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket p_packet)
+{
+	auto directMapper = static_cast<NetsyncDirectMapperSystem*>(
+		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
+	Entity* entity = directMapper->getEntity(p_packet.networkIdentity);
+	m_world->deleteEntity(entity);
 }
 
 void ClientPacketHandlerSystem::initialize()
@@ -513,4 +537,43 @@ void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 	{
 		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
+}
+void ClientPacketHandlerSystem::handleBatch()
+{
+	for (unsigned int i = 0; i < m_batch.size(); i++)
+	{
+		EntityUpdatePacket data = m_batch[i];
+		NetsyncDirectMapperSystem* directMapper =
+			static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+			SystemType::NetsyncDirectMapperSystem));
+		Entity* entity = directMapper->getEntity( data.networkIdentity );
+		if(entity != NULL)
+		{
+			Transform* transform = NULL;
+			transform = static_cast<Transform*>(
+				m_world->getComponentManager()->getComponent(
+				entity->getIndex(), ComponentType::Transform ) );
+			// HACK! below check should not have to be done. Is the packet of the 
+			// wrong type? Throw exception? /ML
+			if( transform != NULL ) // Throw exception? /ML
+			{
+				transform->setTranslation( data.translation );
+				transform->setRotation( data.rotation );
+				transform->setScale( data.scale );
+			}
+
+			Extrapolate* extrapolate = NULL;
+			extrapolate = static_cast<Extrapolate*>(
+				entity->getComponent(ComponentType::Extrapolate) );
+			// HACK! below check should not have to be done. Is the packet of the 
+			// wrong type? Throw exception? /ML
+			/*if( extrapolate != NULL )
+			{
+				extrapolate->serverUpdateTimeStamp = data.timestamp;
+				extrapolate->velocityVector = data.velocity;
+				extrapolate->angularVelocity = data.angularVelocity;
+			}*/
+		}
+	}
+	m_batch.clear();
 }
