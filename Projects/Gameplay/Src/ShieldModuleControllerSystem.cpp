@@ -66,7 +66,7 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		{
 			transform->setTranslation(parentTransform->getTranslation());
 			transform->setRotation(parentTransform->getRotation());
-			transform->setScale(AglVector3(2, 2, 2));
+			transform->setScale(AglVector3(6, 6, 6));
 		}
 		else
 		{

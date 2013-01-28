@@ -237,9 +237,9 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		BodyInitData::COMPOUND));
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(4.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-4.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 4.5f, 0))));
 
 	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
