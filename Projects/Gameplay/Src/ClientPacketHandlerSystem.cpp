@@ -275,15 +275,6 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
 	factory->entityFromPacket(p_packet);
-	if ( p_packet.entityType == (char)EntityType::Other ) //Other is old StaticProp
-	{
-		m_totalNumberOfStaticPropPacketsReceived += 1;
-		m_staticPropIdentities.push( p_packet.networkIdentity );
-	}
-	else
-	{
-		DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
-	}
 }
 
 void ClientPacketHandlerSystem::initialize()

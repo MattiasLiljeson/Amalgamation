@@ -168,6 +168,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
 		else
 			return createOtherServer(p_packet);
 	}
+	DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
 	return NULL;
 }
 
