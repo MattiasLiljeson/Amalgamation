@@ -61,6 +61,7 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />

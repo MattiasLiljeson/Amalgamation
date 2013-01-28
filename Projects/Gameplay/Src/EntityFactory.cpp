@@ -183,37 +183,61 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 	LightsComponent* lightComp = new LightsComponent();
 	Light floodLight;
-	float range = 100.0f;
-	AglMatrix::componentsToMatrix(
-		floodLight.offsetMat,
-		AglVector3( range, range, range*20 ),
-		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-		AglVector3( 2.0f, 0.0f, 0.0f )
-		);
-	floodLight.instanceData.range = range*20;
+	float range = 200.0f;
+	floodLight.instanceData.range = range;
 	floodLight.instanceData.attenuation[1] = 0.1f;
 	floodLight.instanceData.spotPower = 8.0f;
 	floodLight.instanceData.lightDir[0] = 0.0f;
 	floodLight.instanceData.lightDir[1] = 0.0f;
 	floodLight.instanceData.lightDir[2] = 1.0f;
-	floodLight.instanceData.diffuse[0] = 0.0f;
+	floodLight.instanceData.diffuse[0] = 1.0f;
 	floodLight.instanceData.diffuse[1] = 1.0f;
-	floodLight.instanceData.diffuse[2] = 0.0f;
-	//floodLight.instanceData.specular[0] = 2.0f;
-	//floodLight.instanceData.specular[1] = 2.0f;
-	//floodLight.instanceData.specular[2] = 2.0f;
+	floodLight.instanceData.diffuse[2] = 1.0f;
+//	floodLight.instanceData.specular[0] = 2.0f;
+//	floodLight.instanceData.specular[1] = 2.0f;
+//	floodLight.instanceData.specular[2] = 2.0f;
 	floodLight.instanceData.enabled = true;
 	floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
-
-	lightComp->addLight( floodLight );
+	// Left spotlight
 	AglMatrix::componentsToMatrix(
 		floodLight.offsetMat,
-		AglVector3( range, range, range*20 ),
+		AglVector3( range, range, range ),
 		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-		AglVector3( -2.0f, 0.0f, 0.0f )
+		AglVector3( -2.0f, 0.0f, 5.0f )
+		);
+	lightComp->addLight( floodLight );
+	// Right spotlight
+	AglMatrix::componentsToMatrix(
+		floodLight.offsetMat,
+		AglVector3( range, range, range ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+		AglVector3( 2.0f, 0.0f, 5.0f )
+		);
+	lightComp->addLight( floodLight );
+
+	floodLight.instanceData.type = LightTypes::E_LightTypes_POINT;
+	range = 2.0f;
+	floodLight.instanceData.range = range;
+	// Left pointlight
+	AglMatrix::componentsToMatrix(
+		floodLight.offsetMat,
+		AglVector3( range, range, range ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+		AglVector3( -3.0f, 0.0f, -2.0f )
 		);
 	floodLight.instanceData.diffuse[0] = 1.0f;
 	floodLight.instanceData.diffuse[1] = 0.0f;
+	floodLight.instanceData.diffuse[2] = 0.0f;
+	lightComp->addLight( floodLight );
+	// Right pointlight
+	AglMatrix::componentsToMatrix(
+		floodLight.offsetMat,
+		AglVector3( range, range, range ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+		AglVector3( 3.0f, 0.0f, -2.0f )
+		);
+	floodLight.instanceData.diffuse[0] = 0.0f;
+	floodLight.instanceData.diffuse[1] = 1.0f;
 	floodLight.instanceData.diffuse[2] = 0.0f;
 	lightComp->addLight( floodLight );
 

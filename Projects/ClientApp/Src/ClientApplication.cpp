@@ -83,6 +83,7 @@
 #include <TransformParentHandlerSystem.h>
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
+#include <MoveShipLightsSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -343,6 +344,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), true );
+	m_world->setSystem( new MoveShipLightsSystem(), true );
 
 	m_world->initialize();
 
