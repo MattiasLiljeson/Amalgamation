@@ -6,6 +6,7 @@
 #include <AglQuaternion.h>
 #include "LevelPieceFileMapping.h"
 #include <queue>
+#include "EntityUpdatePacket.h"
 
 using namespace std;
 
@@ -55,6 +56,9 @@ private:
 	void updateInitialPacketLossDebugData();
 	void updateBroadcastPacketLossDebugData( unsigned int p_packetIdentifier );
 
+	//Added by Anton
+	void handleBatch();
+
 private:
 	TcpClient* m_tcpClient;
 	LevelPieceFileMapping m_levelPieceMapping;
@@ -76,4 +80,7 @@ private:
 	unsigned int m_totalBroadcastPacketLost;
 
 	queue<int> m_staticPropIdentities;
+
+	//Added by Anton
+	vector<EntityUpdatePacket> m_batch;
 };

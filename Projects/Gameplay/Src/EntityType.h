@@ -33,6 +33,7 @@ public:
 		Rocket,
 		Shield,
 		SelectionSphere, //For edit mode
+		EndBatch, //Marks the end of a batch of entity updates
 		Other,
 	};
 
