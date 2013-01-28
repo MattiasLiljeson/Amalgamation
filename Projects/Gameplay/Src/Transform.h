@@ -157,7 +157,6 @@ public:
 	///----------------------------------------------------------------------------------
 	InstanceData* getInstanceDataPtr() ;
 
-private:
 	///-----------------------------------------------------------------------------------
 	/// Calculates the composited matrix for all translation members
 	/// \return void
@@ -170,6 +169,8 @@ private:
 	///-----------------------------------------------------------------------------------
 	void calcComponents(bool p_calcScale=true, bool p_calcRotation=true, 
 						bool p_calcTranslation=true);
+private:
+
 
 private:
 	static ComponentRegister<Transform> s_reg;
