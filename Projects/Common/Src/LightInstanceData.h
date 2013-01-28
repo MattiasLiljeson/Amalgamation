@@ -47,11 +47,6 @@ struct LightTypes
 
 struct LightInstanceData
 {
-	// Used when reading light from file to store different 
-	AglVector3 scale;
-	AglQuaternion rot;
-	AglVector3 translation;
-
 	float worldTransform[16];
 
 	float range;

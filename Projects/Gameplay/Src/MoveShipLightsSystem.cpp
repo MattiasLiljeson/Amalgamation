@@ -8,9 +8,9 @@ MoveShipLightsSystem::MoveShipLightsSystem()
 	: EntitySystem(SystemType::MoveShipLightsSystem, 2, ComponentType::ShipFlyController,
 	ComponentType::LightsComponent)
 {
-	m_lightPosition[0] = 3.0f;
-	m_lightPosition[1] = 0;
-	m_lightPosition[2] = -2.0f;
+	//m_lightPosition[0] = 3.0f;
+	//m_lightPosition[1] = 0;
+	//m_lightPosition[2] = -2.0f;
 }
 
 MoveShipLightsSystem::~MoveShipLightsSystem()

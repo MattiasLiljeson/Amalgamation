@@ -407,7 +407,7 @@ void ClientApplication::initEntities()
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
 
-	float range = 50.0f;
+	float range = 5.0f;
 
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;

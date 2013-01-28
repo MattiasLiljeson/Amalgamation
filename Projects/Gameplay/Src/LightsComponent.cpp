@@ -139,9 +139,9 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 		} else if( lightInfoStr == "specular"){
 			float specular = 0.0f;
 			p_initData[i].getData<float>( &specular );
-			m_lights[lightIdx].instanceData.diffuse[0] = specular;
-			m_lights[lightIdx].instanceData.diffuse[1] = specular;
-			m_lights[lightIdx].instanceData.diffuse[2] = specular;
+			m_lights[lightIdx].instanceData.specular[0] = specular;
+			m_lights[lightIdx].instanceData.specular[1] = specular;
+			m_lights[lightIdx].instanceData.specular[2] = specular;
 		} else if( lightInfoStr == "specularR"){ 
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[0] );
 		} else if( lightInfoStr == "specularG"){ 
@@ -183,6 +183,6 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 
 	for( unsigned int i=0; i<m_lights.size(); i++ )
 	{
-		//m_lights[i].instanceData.setWorldTransform( transforms[i].toMatrix() );
+		m_lights[i].offsetMat = transforms[i].toMatrix();
 	}
 }
