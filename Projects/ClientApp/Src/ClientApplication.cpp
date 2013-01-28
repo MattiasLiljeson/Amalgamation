@@ -83,6 +83,7 @@
 #include <TransformParentHandlerSystem.h>
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
+#include <MoveShipLightsSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -336,6 +337,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), true );
+	m_world->setSystem( new MoveShipLightsSystem(), true );
 
 	m_world->initialize();
 
@@ -405,7 +407,7 @@ void ClientApplication::initEntities()
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
 
-	float range = 5.0f;
+	float range = 50.0f;
 
 	lightGridInstData.range = range;
 	lightGridInstData.worldTransform[0] = range;

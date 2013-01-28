@@ -36,6 +36,8 @@ void LightsComponent::addLight( Light p_light  )
 
 void LightsComponent::init( vector<ComponentData> p_initData )
 {
+	vector<TransformComponents> transforms; 
+
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
 		// Find the light index and make sure there's room for it
@@ -46,12 +48,12 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 			m_lights.resize( lightIdx+1 );
 		}
 
+		if( lightIdx >= transforms.size() ) {
+			transforms.resize( lightIdx+1 );		
+		}
+
 		// Read data about the particular light
 		string lightInfoStr = p_initData[i].dataName.substr( 2 );
-		
-		AglVector3 scale = AglVector3::one();
-		AglQuaternion rotation = AglQuaternion::identity();
-		AglVector3 translation = AglVector3::zero();
 
 		// Basic settings
 		if( lightInfoStr == "range"){ 
@@ -73,25 +75,25 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 
 		// Transformation of the light volumes
 		else if( lightInfoStr == "scaleX"){
-			p_initData[i].getData<float>( &scale.x );
+			p_initData[i].getData<float>( &transforms[lightIdx].scale.x );
 		} else if( lightInfoStr == "scaleY"){
-			p_initData[i].getData<float>( &scale.y );
+			p_initData[i].getData<float>( &transforms[lightIdx].scale.y );
 		} else if( lightInfoStr == "scaleZ"){
-			p_initData[i].getData<float>( &scale.z );
+			p_initData[i].getData<float>( &transforms[lightIdx].scale.z );
 		} else if( lightInfoStr == "rotationUX"){
-			p_initData[i].getData<float>( &rotation.u.x );
+			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.x );
 		} else if( lightInfoStr == "rotationUY"){
-			p_initData[i].getData<float>( &rotation.u.y );
+			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.y );
 		} else if( lightInfoStr == "rotationUZ"){ 
-			p_initData[i].getData<float>( &rotation.u.z );
+			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.z );
 		} else if( lightInfoStr == "rotationV"){
-			p_initData[i].getData<float>( &rotation.v );
+			p_initData[i].getData<float>( &transforms[lightIdx].rotation.v );
 		} else if( lightInfoStr == "translationX"){
-			p_initData[i].getData<float>( &translation.x );
+			p_initData[i].getData<float>( &transforms[lightIdx].translation.x );
 		} else if( lightInfoStr == "translationY"){
-			p_initData[i].getData<float>( &translation.y );
+			p_initData[i].getData<float>( &transforms[lightIdx].translation.y );
 		} else if( lightInfoStr == "translationZ"){ 
-			p_initData[i].getData<float>( &translation.z );
+			p_initData[i].getData<float>( &transforms[lightIdx].translation.z );
 		} 
 		
 		// Attenuation
@@ -177,5 +179,10 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 				m_lights[lightIdx].instanceData.type = LightTypes::E_LightTypes_SPOT;
 			}
 		}
+	}
+
+	for( unsigned int i=0; i<m_lights.size(); i++ )
+	{
+		//m_lights[i].instanceData.setWorldTransform( transforms[i].toMatrix() );
 	}
 }

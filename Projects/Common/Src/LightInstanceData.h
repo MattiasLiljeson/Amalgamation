@@ -13,6 +13,28 @@
 /// Created on: 7-12-2012 
 ///---------------------------------------------------------------------------------------
 
+struct TransformComponents
+{
+	AglVector3 scale;
+	AglQuaternion rotation;
+	AglVector3 translation;
+
+	TransformComponents()
+	{
+		scale = AglVector3::one();
+		rotation = AglQuaternion::identity();
+		translation = AglVector3::zero();
+	}
+
+	AglMatrix toMatrix()
+	{
+		AglMatrix mat; 
+		AglMatrix::componentsToMatrix( mat, scale, rotation, translation );
+		return mat;
+	}
+};
+
+
 struct LightTypes
 {
 	enum E_LightTypes
@@ -25,6 +47,11 @@ struct LightTypes
 
 struct LightInstanceData
 {
+	// Used when reading light from file to store different 
+	AglVector3 scale;
+	AglQuaternion rot;
+	AglVector3 translation;
+
 	float worldTransform[16];
 
 	float range;

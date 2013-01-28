@@ -21,6 +21,7 @@ public:	//Enums
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,
 		DebugMovementSystem,
+		MoveShipLightsSystem,
 		NetworkUpdateSystem,
 		InputSystem,
 		PhysicsSystem,
