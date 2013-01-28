@@ -96,6 +96,7 @@ using namespace std;
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
+#include <LightBlinkerSystem.h>
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -323,6 +324,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
+	m_world->setSystem( new LightBlinkerSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -397,10 +399,26 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
 	m_world->addEntity( entity );
 
+	factory->readAssemblageFile("Assemblages/GreenLight.asd");
+	entity = factory->entityFromRecipe( "GreenLight" );									 
+	m_world->addEntity( entity );
+
+	factory->readAssemblageFile("Assemblages/PinkLight.asd");
+	entity = factory->entityFromRecipe( "PinkLight" );									 
+	m_world->addEntity( entity );
+
+	factory->readAssemblageFile("Assemblages/OrangeLight.asd");
+	entity = factory->entityFromRecipe( "OrangeLight" );									 
+	m_world->addEntity( entity );
+
+	factory->readAssemblageFile("Assemblages/BlueLight.asd");
+	entity = factory->entityFromRecipe( "BlueLight" );									 
+	m_world->addEntity( entity );
+
 	/************************************************************************/
 	/* HARD CODED LIGHTS													*/
 	/************************************************************************/
-
+	/*
 	LightsComponent* lightGridComp = new LightsComponent();
 	LightInstanceData lightGridInstData;
 
@@ -450,6 +468,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
 	entity->addComponent( ComponentType::Transform, new Transform( range/2, range/2, range/2 ) );
 	m_world->addEntity( entity );
+	*/
 
 	// Test sound source
 	entity = m_world->createEntity();

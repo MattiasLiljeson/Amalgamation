@@ -443,6 +443,12 @@
     <ClInclude Include="EntityDeletionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="LightBlinkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBlinker.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -734,6 +740,9 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityDeletionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBlinkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

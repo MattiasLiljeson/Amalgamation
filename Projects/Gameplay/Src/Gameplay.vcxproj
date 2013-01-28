@@ -47,6 +47,8 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
+    <ClInclude Include="LightBlinker.h" />
+    <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
     <ClInclude Include="LightSources.h" />
@@ -164,6 +166,7 @@
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
     <ClCompile Include="LightSources.cpp" />

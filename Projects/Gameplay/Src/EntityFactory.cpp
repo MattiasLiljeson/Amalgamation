@@ -20,6 +20,7 @@
 #include "ShipFlyController.h"
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
+#include "LightBlinker.h"
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
@@ -290,8 +291,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::MainCamera, component );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
-		component = new LookAtEntity(shipId, 
-			AglVector3(0,6,-20),
+		component = new LookAtEntity(shipId,
+			AglVector3(0,6,-13),
 			AglQuaternion::identity(),
 			10.0f,
 			10.0f,
@@ -560,7 +561,27 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	
+	LightsComponent* lightComp = new LightsComponent();
+	Light floodLight;
+	float range = 2.0f;
+	AglMatrix::componentsToMatrix(
+		floodLight.offsetMat,
+		AglVector3( range, range, range ),
+		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
+		AglVector3( 0.0f, 0.0f, 0.0f )
+		);
+	floodLight.instanceData.range = range;
+	floodLight.instanceData.attenuation[1] = 0.1f;
+	floodLight.instanceData.diffuse[0] = 1.0f;
+	floodLight.instanceData.diffuse[1] = 0.3f;
+	floodLight.instanceData.diffuse[2] = 0.3f;
+	floodLight.instanceData.enabled = true;
+	floodLight.instanceData.type = LightTypes::E_LightTypes_POINT;
+	lightComp->addLight(floodLight);
+	entity->addComponent( ComponentType::LightsComponent, lightComp );
 
+	entity->addComponent( ComponentType::LightBlinker, new LightBlinker(5.0f) );
 	m_world->addEntity(entity);
 	return entity;
 }

@@ -88,6 +88,8 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 		lightCol = spotLight( surface, p_input.light, gCameraPos.xyz, normalVec,
 		worldPos );
 	}
+
+	
 	return float4( lightCol, 1.0f );
 }
 
