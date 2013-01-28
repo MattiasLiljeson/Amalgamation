@@ -189,7 +189,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 
 		//Add the physics body to the entity map
-		while (body->m_id >= m_entityMap.size())
+		while (static_cast<unsigned int>(body->m_id) >= m_entityMap.size())
 			m_entityMap.push_back(-1);
 
 		m_entityMap[body->m_id] = p_entity->getIndex();
@@ -313,7 +313,7 @@ void PhysicsSystem::queryShipCollision(Entity* ship, const vector<Entity*>& p_ot
 	if (connectionPoints.size() == 0)
 		return;
 
-	int curr = 0;
+	unsigned int curr = 0;
 
 
 	PhysicsBody* body =

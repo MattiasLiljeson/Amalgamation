@@ -322,8 +322,8 @@ void ParticleSystemDialog::setPS(int pIndex)
 		TwDeleteBar(m_dialog);
 	// Create a tweak bar
 	m_dialog = TwNewBar("ParticleSystem");
-	int barSize[2] = {200, 300};
-	TwDefine(" ParticleSystem position='1070 410' ");
+	int barSize[2] = {200, 1060};
+	TwDefine(" ParticleSystem position='1710 10'  ");
 	TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 

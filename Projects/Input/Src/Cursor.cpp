@@ -9,8 +9,6 @@
 Cursor::Cursor()
 {
 	reset();
-	m_screenWidth=1280.0f;
-	m_screenHeight=800.0f;
 }
 
 Cursor::~Cursor()

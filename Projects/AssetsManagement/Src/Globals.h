@@ -15,6 +15,7 @@ using namespace std;
 /// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
 
+static const string& SOUNDROOTPATH = "Assets/Sound/";
 static const string& SOUNDEFFECTPATH = "Assets/Sound/SoundEffect/";
 static const string& MUSICPATH = "Assets/Sound/Music/";
 static const string& MODELPATH = "Assets/Models/";

@@ -21,7 +21,7 @@ public:
 	LevelPieceFileMapping();
 	virtual ~LevelPieceFileMapping();
 
-	const string&	getModelFileName(int p_id) const;
+	const string&	getModelFileName(unsigned int p_id) const;
 	int				getModelFileCount() const;
 	int				getRandomPieceId() const;
 	int				getEndPlugId() const;

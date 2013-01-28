@@ -177,7 +177,7 @@ vector<ModelResource*>* ModelExtendedManagedFactory::createModelResources( const
 					// mesh transform
 					model->transform *= currentInstance.transform;
 					// instances
-					for (int n=0;n<model->instances.size();n++)
+					for (unsigned int n=0;n<model->instances.size();n++)
 					{
 						InstanceInstruction instruction = model->instances[n];
 						instruction.transform *= currentInstance.transform;

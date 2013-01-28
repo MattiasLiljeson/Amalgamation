@@ -24,6 +24,7 @@ ServerScoreSystem::~ServerScoreSystem()
 
 void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	// This system serves no function other than debugging, at the moment!!!
 	m_updateTimer -= m_world->getDelta();
 
 	if( m_updateTimer <= 0 )
@@ -37,13 +38,7 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 
 			PlayerScore* score = static_cast<PlayerScore*>(
 				p_entities[i]->getComponent(ComponentType::PlayerScore));
-			score->addBaseScore( 1 );
-
-			/*UpdateClientStatsPacket packet;
-			packet.scores[i]			= score->getScore();
-			packet.playerIdentities[i]	= netSync->getNetworkIdentity();
-
-			m_server->broadcastPacket( packet.pack() );*/
+			//score->addBaseScore( 1 );
 		}
 	}
 }

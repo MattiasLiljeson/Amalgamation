@@ -76,7 +76,10 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	}
 	
 	// Handle particles here
+	if (!p_modelResource->particleSystems.m_collection.empty())
+	{
 
+	}
 
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist
@@ -116,7 +119,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 	ModelResource* modelResource = NULL;
 	Entity* entity = NULL;
 	Component* component;
-	for (int i=1;i<p_modelResources->size();i++)
+	for (unsigned int i=1;i<p_modelResources->size();i++)
 	{
 		modelResource = (*p_modelResources)[i];		// fetch instruction
 		entity = m_world->createEntity();			// create entity

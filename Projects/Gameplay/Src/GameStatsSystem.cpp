@@ -31,8 +31,11 @@ void GameStatsSystem::initialize()
 
 	m_infoPanelDoc = rocketBackend->loadDocument(
 		(GUI_HUD_PATH + toString("infoPanel.rml")).c_str(), false);
-
-	m_infoPanel = new DisplayGameStats("playerstats", "infopanel");
+	if (m_infoPanelDoc)
+	{
+		rocketBackend->updateElement(m_infoPanelDoc, "title", "Client Table:");
+		m_infoPanel = new DisplayGameStats("playerstats", "infopanel");
+	}
 }
 
 
@@ -61,7 +64,7 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 		PlayerStats stats;
 		stats.name	= toString(p_packet->playerIdentities[i]);
 		stats.score = p_packet->scores[i];
-		stats.ping	= p_packet->ping[i];
+		stats.ping	= static_cast<int>(p_packet->ping[i]);
 
 		m_infoPanel->updateRow(i, stats);
 	}

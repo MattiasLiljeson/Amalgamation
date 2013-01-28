@@ -1,5 +1,7 @@
 #include "ServerApplication.h"
 
+#include "TcpServer.h"
+
 #include <ComponentAssemblageAllocator.h>
 
 // Systems
@@ -26,7 +28,6 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
 
-#include "RenderInfo.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -52,6 +53,9 @@ namespace Srv
 
 		m_world = new EntityWorld();
 		initSystems();
+
+		ComponentAssemblageAllocator allocator();
+
 		initEntities();
 	}
 
@@ -125,9 +129,9 @@ namespace Srv
 		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
-		LevelGenSystem* levelGen = new LevelGenSystem( m_server);
+		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
-		levelGen->run();
+		levelGen->run();*/
 
 		/************************************************************************/
 		/* Physics																*/
@@ -190,52 +194,10 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
-
-		// Run component assemblage allocator
-		ComponentAssemblageAllocator allocator();
 	}
 
 	void ServerApplication::initEntities()
 	{
-		//-75 -> 2
-		Entity* entity;
-		Component* component;
-		// Add a grid of cubes to test instancing.
-
-		float maxVal = 2;
-		float minVal = -75;
-		int size = 8;
-		/*for( int x=0; x<size; x++ )
-		{
-			for( int y=0; y<size; y++ )
-			{
-				for( int z=0; z<size; z++ )
-				{
-					AglVector3 pos( 1.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-					pos = AglVector3((maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, 
-						(maxVal-minVal) * (rand() / (float)RAND_MAX) + minVal, (100-minVal) * (rand() / (float)RAND_MAX) + minVal);
-
-					entity = m_world->createEntity();
-					component = new Transform(pos, AglQuaternion::identity(), AglVector3(1, 1, 1));
-					entity->addComponent( ComponentType::Transform, component );
-					entity->addComponent( ComponentType::StaticProp, new StaticProp());
-
-					//Added by Anton
-					entity->addComponent( ComponentType::PhysicsBody, 
-						new PhysicsBody() );
-
-					entity->addComponent( ComponentType::BodyInitData, 
-						new BodyInitData(pos,
-						AglQuaternion::identity(),
-						AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-						AglVector3(0, 0, 0), BodyInitData::BOX, 
-						BodyInitData::STATIC, 
-						BodyInitData::SINGLE, true, true));
-
-					m_world->addEntity(entity);
-				}
-			}
-		}*/
 		InitModulesTestByAnton();
 	}
 
@@ -275,25 +237,29 @@ namespace Srv
 
 
 		//Minigun
-		status = factory->readAssemblageFile( "Assemblages/minigunModule.asd" );
-		entity = factory->entityFromRecipe( "MinigunModule" );
-		//component = new Transform(10, 0, 0);
-		//entity->addComponent( ComponentType::Transform, component );
+		for (int x=0;x<4;x++)
+		{
+			status = factory->readAssemblageFile( "Assemblages/minigunModule.asd" );
+			entity = factory->entityFromRecipe( "MinigunModule" );
+			//component = new Transform(10, 0, 0);
+			//entity->addComponent( ComponentType::Transform, component );
 
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
 
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(10, 0, 0),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
+			entity->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData(AglVector3(10, 0, x*10),
+				AglQuaternion::identity(),
+				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0, 
+				BodyInitData::DYNAMIC, 
+				BodyInitData::SINGLE, false));
 
-		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
-		m_world->addEntity(entity);
+			entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
+			m_world->addEntity(entity);
+		}
+
 
 		//Shield
 		entity = m_world->createEntity();
@@ -336,46 +302,51 @@ namespace Srv
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
 		m_world->addEntity(entity);
 
-		entity = m_world->createEntity();
-		component = new Transform(40, 0, 0);
-		entity->addComponent( ComponentType::Transform, component );
+		for (int x=0;x<4;x++)
+		{
+			entity = m_world->createEntity();
+			component = new Transform(40, 0, 0);
+			entity->addComponent( ComponentType::Transform, component );
 
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
 
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(40, 0, 0),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
+			entity->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData(AglVector3(40, 0, x*10),
+				AglQuaternion::identity(),
+				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0, 
+				BodyInitData::DYNAMIC, 
+				BodyInitData::SINGLE, false));
 
-		entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
-		m_world->addEntity(entity);
+			entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
+			entity->addComponent(ComponentType::ShipModule, new ShipModule());
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
+			m_world->addEntity(entity);
+		}
 
-		entity = m_world->createEntity();
-		component = new Transform(50, 0, 0);
-		entity->addComponent( ComponentType::Transform, component );
+		for (int x=0;x<4;x++)
+		{
+			entity = m_world->createEntity();
+			component = new Transform(50, 0, 0);
+			entity->addComponent( ComponentType::Transform, component );
 
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
 
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(50, 0, 0),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
+			entity->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData(AglVector3(50, 0, x*10),
+				AglQuaternion::identity(),
+				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0, 
+				BodyInitData::DYNAMIC, 
+				BodyInitData::SINGLE, false));
 
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-		entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
-		m_world->addEntity(entity);
-
+			entity->addComponent(ComponentType::ShipModule, new ShipModule());
+			entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
+			m_world->addEntity(entity);
+		}
 
 
 

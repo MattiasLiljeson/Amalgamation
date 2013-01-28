@@ -42,6 +42,7 @@
 #include "EntityUpdatePacket.h"
 #include "ParticleUpdatePacket.h"
 #include "EntityCreationPacket.h"
+#include "EntityDeletionPacket.h"
 #include "WelcomePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "Extrapolate.h"
@@ -259,6 +260,12 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			data.unpack(packet);
 			handleEntityCreationPacket(data);
 		}
+		else if (packetType == (char)PacketType::EntityDeletion)
+		{
+			EntityDeletionPacket data;
+			data.unpack(packet);
+			handleEntityDeletionPacket(data);
+		}
 		else if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
@@ -285,6 +292,14 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
 	factory->entityFromPacket(p_packet);
+}
+
+void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket p_packet)
+{
+	auto directMapper = static_cast<NetsyncDirectMapperSystem*>(
+		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
+	Entity* entity = directMapper->getEntity(p_packet.networkIdentity);
+	m_world->deleteEntity(entity);
 }
 
 void ClientPacketHandlerSystem::initialize()

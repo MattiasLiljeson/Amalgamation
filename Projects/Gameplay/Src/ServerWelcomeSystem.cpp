@@ -7,7 +7,6 @@
 #include <ProcessMessageTerminate.h>
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
-#include <TcpServer.h>
 #include <DebugUtil.h>
 #include <ToString.h>
 #include <boost/thread/thread.hpp>
@@ -33,6 +32,8 @@
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
+
+#include <Globals.h>
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
@@ -81,7 +82,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
 			m_world->getSystem(SystemType::ServerClientInfoSystem));
 		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-		for (int i = 0; i < clientInfoEntities.size(); i++)
+		for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
 		{
 			auto clientInfo = static_cast<ClientInfo*>(
 				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
@@ -237,9 +238,9 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		BodyInitData::COMPOUND));
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(4.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-4.5f, 0, 0))));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 4.5f, 0))));
 
 	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 

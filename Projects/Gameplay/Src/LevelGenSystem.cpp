@@ -61,7 +61,7 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::run()
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 	generateLevelPieces(3);
 	createLevelEntities();
 }
@@ -71,7 +71,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	// Create a initial piece.
 	Transform* transform = new Transform(AglVector3(15, 20, 15), 
 										AglQuaternion::identity(),
-										AglVector3::one() * 1.0f);
+										AglVector3::one() * 10.0f);
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
@@ -91,7 +91,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	{
 		// Stores created pieces temporarily
 		vector<LevelPiece*> temps;
-		for (int i = 0; i < pieces.size(); i++)
+		for (unsigned int i = 0; i < pieces.size(); i++)
 			generatePiecesOnPiece(pieces[i], temps);
 
 		// Creates a piece entity and adds it to the world
@@ -211,7 +211,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 
 			// Verify that it isn't colliding with previous level pieces.
 			bool colliding = false;
-			for (int i = 0; i < m_generatedPieces.size(); i++)
+			for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 			{
 				if (AglCollision::isColliding( piece->getBoundingBox(),
 					m_generatedPieces[i]->getBoundingBox()) && 
@@ -276,7 +276,7 @@ int LevelGenSystem::popIntVector( vector<int>& p_vector )
 
 void LevelGenSystem::createLevelEntities()
 {
-	for (int i = 0; i < m_generatedPieces.size(); i++)
+	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
 		Entity* e = createEntity(m_generatedPieces[i]);
 		m_world->addEntity(e);
@@ -301,7 +301,7 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 {
 	auto corners = boundingVolume.getCorners();
 
-	for (int i = 0; i < corners.size(); i++)
+	for (unsigned int i = 0; i < corners.size(); i++)
 	{
 		m_worldMin = AglVector3::minOf(m_worldMin, corners[i]);
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);

@@ -55,6 +55,7 @@ public:	//Enums
 		RocketLauncherModule,
 		Connector1to2Module,
 		LightSources,
+		LightBlinker,
 		ParticleEmitters,
 		PickComponent,
 		ParticleSystemEmitter,

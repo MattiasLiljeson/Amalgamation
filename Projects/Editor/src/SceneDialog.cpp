@@ -168,7 +168,7 @@ SceneDialog::SceneDialog()
 	// Create a tweak bar
     m_dialog = TwNewBar("Scene");
     TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar into a DirectX11 application.' "); // Message added to the help bar.
-    int barSize[2] = {200, 400};
+	int barSize[2] = {200, 1060};
     TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 	TwDefine(" Scene position='10 10' ");
 
@@ -213,13 +213,22 @@ void SceneDialog::Release()
 }
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
+	m_materialDialog->hide();
+	m_particleSystemDialog->hide();
+
 	m_meshDialog->setMesh(pIndex);
 }
 void SceneDialog::SetCurrentParticleSystem(int pIndex)
 {
+	m_materialDialog->hide();
+	m_meshDialog->hide();
+
 	m_particleSystemDialog->setPS(pIndex);
 }
 void SceneDialog::SetCurrentMaterial(int pIndex)
 {
+	m_meshDialog->hide();
+	m_particleSystemDialog->hide();
+
 	m_materialDialog->setMaterial(pIndex);
 }

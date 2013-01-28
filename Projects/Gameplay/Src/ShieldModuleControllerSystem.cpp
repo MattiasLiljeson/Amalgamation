@@ -1,10 +1,7 @@
 #include "ShieldModuleControllerSystem.h"
 #include "Transform.h"
-#include "RenderInfo.h"
-#include "GraphicsBackendSystem.h"
 #include <AglMatrix.h>
 #include <AglQuaternion.h>
-#include "InputBackendSystem.h"
 #include <Control.h>
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
@@ -66,7 +63,7 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		{
 			transform->setTranslation(parentTransform->getTranslation());
 			transform->setRotation(parentTransform->getRotation());
-			transform->setScale(AglVector3(2, 2, 2));
+			transform->setScale(AglVector3(6, 6, 6));
 		}
 		else
 		{
