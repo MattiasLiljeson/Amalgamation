@@ -96,6 +96,7 @@ using namespace std;
 #include <ParticleRenderSystem.h>
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
+#include <LightBlinkerSystem.h>
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -323,6 +324,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
+	m_world->setSystem( new LightBlinkerSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
