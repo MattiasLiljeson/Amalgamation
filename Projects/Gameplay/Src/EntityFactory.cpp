@@ -290,8 +290,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::MainCamera, component );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
-		component = new LookAtEntity(shipId, 
-			AglVector3(0,6,-20),
+		component = new LookAtEntity(shipId,
+			AglVector3(0,6,-13),
 			AglQuaternion::identity(),
 			10.0f,
 			10.0f,

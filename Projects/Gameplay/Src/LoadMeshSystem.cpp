@@ -76,7 +76,10 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	}
 	
 	// Handle particles here
+	if (!p_modelResource->particleSystems.m_collection.empty())
+	{
 
+	}
 
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist
