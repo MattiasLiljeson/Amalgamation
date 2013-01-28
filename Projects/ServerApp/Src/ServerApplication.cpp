@@ -1,5 +1,7 @@
 #include "ServerApplication.h"
 
+#include "TcpServer.h"
+
 #include <ComponentAssemblageAllocator.h>
 
 // Systems
@@ -26,7 +28,6 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
 
-#include "RenderInfo.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"

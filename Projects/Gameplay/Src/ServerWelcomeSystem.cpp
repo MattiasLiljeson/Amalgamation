@@ -7,7 +7,6 @@
 #include <ProcessMessageTerminate.h>
 #include <ThreadSafeMessaging.h>
 #include <TcpListenerProcess.h>
-#include <TcpServer.h>
 #include <DebugUtil.h>
 #include <ToString.h>
 #include <boost/thread/thread.hpp>
@@ -33,6 +32,8 @@
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
+
+#include <Globals.h>
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
