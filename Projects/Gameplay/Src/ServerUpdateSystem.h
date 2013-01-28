@@ -27,6 +27,9 @@ public:
 
 	void initialize();
 
+	virtual void removed( Entity* p_entity );
+
+
 private:
 	TcpServer* m_server;
 

@@ -11,6 +11,7 @@ using namespace std;
 
 class TcpClient;
 class EntityCreationPacket;
+class EntityDeletionPacket;
 
 struct NetworkScoreUpdatePacket
 {
@@ -47,6 +48,7 @@ private:
 
 	void handleWelcomePacket(Packet p_packet);
 	void handleEntityCreationPacket(EntityCreationPacket p_packet);
+	void handleEntityDeletionPacket(EntityDeletionPacket p_packet);
 
 	void updateCounters();
 

@@ -440,6 +440,9 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="EntityDeletionPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -729,5 +732,8 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
     <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="EntityDeletionPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

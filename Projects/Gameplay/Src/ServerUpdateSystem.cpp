@@ -7,6 +7,7 @@
 #include "NetworkSynced.h"
 #include "Transform.h"
 #include "EntityUpdatePacket.h"
+#include "EntityDeletionPacket.h"
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "PhysicsController.h"
@@ -180,4 +181,14 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 void ServerUpdateSystem::initialize()
 {
+}
+
+void ServerUpdateSystem::removed( Entity* p_entity )
+{
+	EntityDeletionPacket packet;
+	auto netSync = static_cast<NetworkSynced*>(
+		p_entity->getComponent(ComponentType::NetworkSynced));
+	
+	packet.networkIdentity = netSync->getNetworkIdentity();
+	m_server->broadcastPacket(packet.pack());
 }
