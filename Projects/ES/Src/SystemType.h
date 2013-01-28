@@ -68,6 +68,7 @@ public:	//Enums
 		GraphicsRendererSystem,
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
+		LightBlinkerSystem,
 		NUM_SYSTEM_TYPES
 	};
 
