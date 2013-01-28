@@ -282,30 +282,35 @@ namespace Srv
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
 		m_world->addEntity(entity);
 
-		entity = m_world->createEntity();
-		component = new Transform(30, 0, 0);
-		entity->addComponent( ComponentType::Transform, component );
+		for (int x=0;x<4;x++)
+		{
+			entity = m_world->createEntity();
+			component = new Transform(30, 0, 0);
+			((Transform*)component)->setScale(AglVector3(2,2,2));
+			entity->addComponent( ComponentType::Transform, component );
 
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
+			entity->addComponent( ComponentType::PhysicsBody, 
+				new PhysicsBody() );
 
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(30, 0, 0),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
+			entity->addComponent( ComponentType::BodyInitData, 
+				new BodyInitData(AglVector3(30, 0, x*10),
+				AglQuaternion::identity(),
+				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
+				AglVector3(0, 0, 0), 0, 
+				BodyInitData::DYNAMIC, 
+				BodyInitData::SINGLE, false));
 
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-		entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
-		m_world->addEntity(entity);
+			entity->addComponent(ComponentType::ShipModule, new ShipModule());
+			entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
+			m_world->addEntity(entity);
+		}
 
 		for (int x=0;x<4;x++)
 		{
 			entity = m_world->createEntity();
 			component = new Transform(40, 0, 0);
+			((Transform*)component)->setScale(AglVector3(2,2,2));
 			entity->addComponent( ComponentType::Transform, component );
 
 			entity->addComponent( ComponentType::PhysicsBody, 
@@ -314,7 +319,7 @@ namespace Srv
 			entity->addComponent( ComponentType::BodyInitData, 
 				new BodyInitData(AglVector3(40, 0, x*10),
 				AglQuaternion::identity(),
-				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
+				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
 				AglVector3(0, 0, 0), 0, 
 				BodyInitData::DYNAMIC, 
 				BodyInitData::SINGLE, false));
@@ -329,6 +334,7 @@ namespace Srv
 		{
 			entity = m_world->createEntity();
 			component = new Transform(50, 0, 0);
+
 			entity->addComponent( ComponentType::Transform, component );
 
 			entity->addComponent( ComponentType::PhysicsBody, 

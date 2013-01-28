@@ -154,7 +154,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
 
-	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::identity(), AglVector3(0.8f, 0.8f, 0.8f));
+	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
 
 	AglVector3 dir = gun->fireDirection;
 	const AglQuaternion& rot = gunTransform->getRotation();
@@ -174,7 +174,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::identity(),
-		AglVector3(0.8f, 0.8f, 0.8f), dir * 100.0f + vel, 
+		AglVector3(5.0f, 5.0f, 5.0f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, false));

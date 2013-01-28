@@ -413,6 +413,10 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "BlueLight" );									 
 	m_world->addEntity( entity );
 
+	factory->readAssemblageFile("Assemblages/RedLight.asd");
+	entity = factory->entityFromRecipe( "RedLight" );									 
+	m_world->addEntity( entity );
+
 	/************************************************************************/
 	/* HARD CODED LIGHTS													*/
 	/************************************************************************/

@@ -19,9 +19,9 @@ d f 0:specularG 0.000001
 d f 0:specularB 0.000001
 
 c Transform
-d f m_scaleX 1000
-d f m_scaleY 1000
-d f m_scaleZ 1000
+d f m_scaleX 1
+d f m_scaleY 1
+d f m_scaleZ 1
 d f m_translationX 50.0
 d f m_translationY 200.0
 d f m_translationZ -80.0
