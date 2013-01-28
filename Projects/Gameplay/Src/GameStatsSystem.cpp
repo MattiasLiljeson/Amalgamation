@@ -31,8 +31,11 @@ void GameStatsSystem::initialize()
 
 	m_infoPanelDoc = rocketBackend->loadDocument(
 		(GUI_HUD_PATH + toString("infoPanel.rml")).c_str(), false);
-
-	m_infoPanel = new DisplayGameStats("playerstats", "infopanel");
+	if (m_infoPanelDoc)
+	{
+		rocketBackend->updateElement(m_infoPanelDoc, "title", "Client Table:");
+		m_infoPanel = new DisplayGameStats("playerstats", "infopanel");
+	}
 }
 
 
