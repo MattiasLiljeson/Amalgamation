@@ -464,7 +464,7 @@ Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 	{
 		h.particleSize = AglVector2(2, 2);
 		h.alignmentType = AglParticleSystemHeader::OBSERVER;
-		h.spawnFrequency = 200;
+		h.spawnFrequency = 10;
 		h.spawnSpeed = 5.0f;
 		h.spread = 0.0f;
 		h.fadeOutStart = 2.0f;
@@ -478,7 +478,7 @@ Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 		h.particleAge = 1;
 		h.spawnSpeed = 0.02;
 		h.spread = 1.0f;
-		h.spawnFrequency = 200;
+		h.spawnFrequency = 10;
 		h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
 		h.fadeInStop = 0.5f;
 		h.fadeOutStart = 0.5f;

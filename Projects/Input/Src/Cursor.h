@@ -4,7 +4,7 @@
 #include "InputHelper.h"
 
 class Control;
-class ControlSet;
+struct ControlSet;
 
 using namespace std;
 

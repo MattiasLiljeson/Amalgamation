@@ -49,7 +49,7 @@ struct ParticleCBuffer
 		variousFloats[3] = p_maxOpacity;
 	}
 	void setAlignment(const int& p_alignment){
-		alignment[0] = static_cast<int>(p_alignment);
+		alignment[0] = static_cast<float>(p_alignment);
 		alignment[1] = 0;
 		alignment[2] = 0;
 		alignment[3] = 0;

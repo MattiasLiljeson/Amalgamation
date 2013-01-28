@@ -119,7 +119,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				m_world->getSystem(SystemType::ServerClientInfoSystem));
 
 			vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-			for (int i = 0; i < clientInfoEntities.size(); i++)
+			for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
 			{
 				auto clientInfo = static_cast<ClientInfo*>(
 					clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));

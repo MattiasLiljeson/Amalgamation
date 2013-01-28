@@ -86,7 +86,7 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 		newData = new byte[p_width*p_height*4];
 		unsigned int ind = 0;
 		unsigned int counter = 0;
-		for (unsigned int i = 0; i < p_width * p_height*4;i++){
+		for (int i = 0; i < p_width * p_height*4;i++){
 			if(counter < 3){
 				newData[i] = p_source[ind++];
 				counter++;

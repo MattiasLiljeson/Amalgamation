@@ -92,11 +92,12 @@ void LibRocketBackendSystem::initialize()
 
 void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 {
-	if(!Rocket::Core::FontDatabase::LoadFontFace( Rocket::Core::String(p_fontPath) ))
+	if(!Rocket::Core::FontDatabase::LoadFontFace( Rocket::Core::String(p_fontPath) )){
 		DEBUGWARNING(( 
 				(std::string("Failed to load font face! Path: ") +
 				toString(p_fontPath)).c_str()
 			));
+	}
 }
 
 int LibRocketBackendSystem::loadDocument( const char* p_filePath, bool p_initiallyShown/*=true*/)

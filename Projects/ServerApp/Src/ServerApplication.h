@@ -1,10 +1,10 @@
 #pragma once
 
 #include <conio.h>
-
-#include <TcpServer.h>
 #include <EntityWorld.h>
 #include <ProcessThread.h>
+
+class TcpServer;
 
 using namespace std;
 // =======================================================================================

@@ -116,7 +116,7 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 	ModelResource* modelResource = NULL;
 	Entity* entity = NULL;
 	Component* component;
-	for (int i=1;i<p_modelResources->size();i++)
+	for (unsigned int i=1;i<p_modelResources->size();i++)
 	{
 		modelResource = (*p_modelResources)[i];		// fetch instruction
 		entity = m_world->createEntity();			// create entity
