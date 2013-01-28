@@ -147,11 +147,11 @@ AglLooseBspTree* ModelBaseUnmanagedFactory::createBspTree(AglMesh* p_mesh)
 
 	vector<AglVector3> vertices;
 	vector<unsigned int> indices;
-	for (unsigned int i = 0; i < h.vertexCount; i++)
+	for (int i = 0; i < h.vertexCount; i++)
 	{
 		vertices.push_back(v[i].position);
 	}
-	for (unsigned int i = 0; i < h.indexCount; i++)
+	for (int i = 0; i < h.indexCount; i++)
 	{
 		indices.push_back(ind[i]);
 	}

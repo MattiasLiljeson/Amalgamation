@@ -31,7 +31,7 @@ vector<int> LevelPiece::findFreeConnectionPointSlots()
 {
 	vector<int> freeSlots;
 	// Check for unoccupied slots
-	for (int i = 0; i < m_children.size(); i++)
+	for (unsigned int i = 0; i < m_children.size(); i++)
 	{
 		if ( !m_childSlotsOccupied[i] )
 			freeSlots.push_back(i);
@@ -118,7 +118,7 @@ AglMatrix LevelPiece::getLocalConnectionPointMatrix( int p_vectorIndex, E_Space 
 
 void LevelPiece::updateConnectionPoints()
 {
-	for (int i = 0; i < m_connectionPoints.size(); i++)
+	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
 	{
 		m_connectionPoints[i] = Transform(
 			m_modelResource->connectionPoints.m_collection[i] *

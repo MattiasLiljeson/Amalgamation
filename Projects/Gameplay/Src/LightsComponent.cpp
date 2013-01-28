@@ -40,7 +40,7 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 	{
 		// Find the light index and make sure there's room for it
 		string idxAsStr = p_initData[i].dataName.substr( 0, 1 );
-		int lightIdx = atoi( idxAsStr.c_str() );
+		unsigned int lightIdx = atoi( idxAsStr.c_str() );
 
 		if( lightIdx >= m_lights.size() ) {
 			m_lights.resize( lightIdx+1 );
