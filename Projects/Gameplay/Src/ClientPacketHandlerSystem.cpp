@@ -122,16 +122,26 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(
 					entity->getIndex(), ComponentType::Transform ) );
-				transform->setTranslation( data.translation );
-				transform->setRotation( data.rotation );
-				transform->setScale( data.scale );
+				// HACK! below check should not have to be done. Is the packet of the 
+				// wrong type? Throw exception? /ML
+				if( transform != NULL ) // Throw exception? /ML
+				{
+					transform->setTranslation( data.translation );
+					transform->setRotation( data.rotation );
+					transform->setScale( data.scale );
+				}
 
 				Extrapolate* extrapolate = NULL;
 				extrapolate = static_cast<Extrapolate*>(
 					entity->getComponent(ComponentType::Extrapolate) );
-				extrapolate->serverUpdateTimeStamp = data.timestamp;
-				extrapolate->velocityVector = data.velocity;
-				extrapolate->angularVelocity = data.angularVelocity;
+				// HACK! below check should not have to be done. Is the packet of the 
+				// wrong type? Throw exception? /ML
+				if( extrapolate != NULL )
+				{
+					extrapolate->serverUpdateTimeStamp = data.timestamp;
+					extrapolate->velocityVector = data.velocity;
+					extrapolate->angularVelocity = data.angularVelocity;
+				}
 			}
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)

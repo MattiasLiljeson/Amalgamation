@@ -214,6 +214,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	floodLight.instanceData.diffuse[0] = 0.0f;
 	floodLight.instanceData.diffuse[1] = 1.0f;
 	floodLight.instanceData.diffuse[2] = 0.0f;
+	//floodLight.instanceData.ambient[0] = 0.0f;
+	//floodLight.instanceData.ambient[1] = 0.0f;
+	//floodLight.instanceData.ambient[2] = 1.0f;
 	//floodLight.instanceData.specular[0] = 2.0f;
 	//floodLight.instanceData.specular[1] = 2.0f;
 	//floodLight.instanceData.specular[2] = 2.0f;
