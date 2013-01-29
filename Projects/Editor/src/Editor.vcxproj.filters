@@ -7,14 +7,11 @@
     <ClCompile Include="DX11Application.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MaterialDialog.cpp" />
     <ClCompile Include="MaterialMap.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshDialog.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RasterManager.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneDialog.cpp" />
     <ClCompile Include="SkeletonMapping.cpp" />
     <ClCompile Include="SkeletonMesh.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -23,7 +20,6 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="BoxMesh.cpp" />
-    <ClCompile Include="ParticleSystemDialog.cpp" />
     <ClCompile Include="DomainShader.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
@@ -67,6 +63,21 @@
       <Filter>ShaderPrograms</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="MaterialDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="MergeDialog.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
@@ -75,14 +86,10 @@
     <ClInclude Include="DX11Application.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="MaterialDialog.h" />
-    <ClInclude Include="MaterialMapDialog.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshDialog.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RasterManager.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneDialog.h" />
     <ClInclude Include="SkeletonMapping.h" />
     <ClInclude Include="SkeletonMesh.h" />
     <ClInclude Include="TextureManager.h" />
@@ -92,7 +99,6 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="BoxMesh.h" />
-    <ClInclude Include="ParticleSystemDialog.h" />
     <ClInclude Include="DomainShader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
@@ -136,6 +142,24 @@
       <Filter>ShaderPrograms</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="MaterialDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialMapDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="MergeDialog.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
@@ -143,6 +167,9 @@
     </Filter>
     <Filter Include="ShaderPrograms">
       <UniqueIdentifier>{1210999d-ecdc-4a80-9841-e686206a302a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialogs">
+      <UniqueIdentifier>{ddf67d7c-96bc-42e0-b2d1-07c236fa1a79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

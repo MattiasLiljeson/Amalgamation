@@ -104,6 +104,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaterialDialog.cpp" />
     <ClCompile Include="MaterialMap.cpp" />
+    <ClCompile Include="MergeDialog.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshDialog.cpp" />
     <ClCompile Include="ParticleShader.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MaterialDialog.h" />
     <ClInclude Include="MaterialMapDialog.h" />
+    <ClInclude Include="MergeDialog.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshDialog.h" />
     <ClInclude Include="ParticleShader.h" />

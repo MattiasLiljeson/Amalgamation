@@ -194,6 +194,7 @@ SceneDialog::SceneDialog()
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();
 	m_particleSystemDialog = new ParticleSystemDialog();
+	m_mergeDialog = new MergeDialog();
 }
 SceneDialog::~SceneDialog()
 {

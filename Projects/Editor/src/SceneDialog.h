@@ -8,6 +8,7 @@
 #include "MeshDialog.h"
 #include "MaterialDialog.h"
 #include "ParticleSystemDialog.h"
+#include "MergeDialog.h"
 
 class SceneDialog
 {
@@ -20,6 +21,7 @@ private:
 	MeshDialog* m_meshDialog;
 	MaterialDialog* m_materialDialog;
 	ParticleSystemDialog* m_particleSystemDialog;
+	MergeDialog*			m_mergeDialog;
 private:
 	//Private Functions
 	SceneDialog();
