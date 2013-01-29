@@ -128,7 +128,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 void TW_CALL SceneDialog::SaveAGL(void *clientData)
 {
 	string file = savefilename();
-	Scene::GetInstance()->Save(file);
+	if (file != "")
+		Scene::GetInstance()->Save(file);
 }
 void TW_CALL SceneDialog::AddMaterial(void *clientData)
 {
