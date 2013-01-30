@@ -125,9 +125,10 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setDataTest(char* p_data, unsigned int p_size);
 
-private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
 	void ReadData(void* p_data, unsigned int p_dataSize);
+
+private:
 
 	/// Sets the raw data of the packet. It is possible to stream out so much data
 	/// that equals to the byte size p_size - 1, since one byte is allocated to
