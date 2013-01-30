@@ -59,9 +59,10 @@ protected:
 	///-----------------------------------------------------------------------------------
 	struct ModelResourceCollection
 	{
-		ModelResourceCollection() {collection = vector<ModelResource*>();}
+		ModelResourceCollection() {rootIndex=-1;collection = vector<ModelResource*>();}
 		ModelResourceCollection(ModelResource* p_val)
 		{
+			rootIndex=-1;
 			collection.push_back(p_val);
 		}
 
@@ -72,17 +73,20 @@ protected:
 				delete collection[i];
 			}
 		}
-
+		int rootIndex;
 		vector<ModelResource*> collection;
 	};
-
+	///-----------------------------------------------------------------------------------
+	/// SourceData used during creation to decrease the amount of parameters needed to be
+	/// passed around.
+	///----------------------------------------------------------------------------------
 	struct SourceData
 	{
 		AglScene* scene;
 		AglMesh* aglMesh;
 		AglMeshHeader* meshHeader;
 		unsigned int modelNumber;
-		const string& nameSuffix;
+		string& nameSuffix;
 	};
 protected:
 
@@ -104,7 +108,6 @@ protected:
 	///-----------------------------------------------------------------------------------
 	virtual vector<ModelResource*>* createAllModelData(const InstanceInstruction* p_instanceData, 
 		AglScene* p_scene, 
-		unsigned int p_numberOfModels, 
 		vector<InstanceInstruction>* p_outInstanceInstructions=NULL);
 
 	///-----------------------------------------------------------------------------------
@@ -175,8 +178,5 @@ protected:
 	/// and the creation instructions are needed again without loading the file again.
 	///-----------------------------------------------------------------------------------
 	ResourceManager<ModelResourceCollection>* m_modelResourceCache; 
-protected:
-	static const unsigned int firstMeshPos=1; // always root on zero
-	
 private:
 };

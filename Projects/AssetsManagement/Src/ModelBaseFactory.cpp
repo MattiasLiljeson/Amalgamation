@@ -54,13 +54,12 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 					// just a normal mesh, just copy resource instructions
 					models = createAllModelData(&currentInstance,
 						scene,
-						scene->getMeshes().size(),
 						instanceInstructions);		
 					// read leftover empties
 					if ((*models)[0]!=NULL)
 					{
 						ModelResource* model = (*models)[0];
-						SourceData source={scene,NULL,NULL,-1,""};
+						SourceData source={scene,NULL,NULL,-1,string("")};
 						readAndStoreEmpties(source,model,currentInstance.transform,
 							&currentInstance,instanceInstructions); 
 					}
@@ -72,19 +71,20 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 					// it also needs to copy the model resource data
 					vector<ModelResource*>* prefetched = createAllModelData(&currentInstance,
 						scene,
-						scene->getMeshes().size(),
 						instanceInstructions);
 					// read leftover empties
 					if ((*prefetched)[0]!=NULL)
 					{
 						ModelResource* model = (*prefetched)[0];
-						SourceData source={scene,NULL,NULL,-1,""};
+						SourceData source={scene,NULL,NULL,-1,string("")};
 						readAndStoreEmpties(source,model,currentInstance.transform,
 											&currentInstance,instanceInstructions); 
 					}
 					//
-					int size = prefetched->size();
-					for (int n=firstMeshPos;n<size;n++)
+					ModelResourceCollection* modelresourceCollection = m_modelResourceCache->getResource(currentInstance.filename);
+					unsigned int start = modelresourceCollection->rootIndex+1;
+					unsigned int size = prefetched->size();
+					for (unsigned int n=start;n<size;n++)
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						// mesh transform
@@ -116,10 +116,12 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 			{
 				// an instance needs to add to original collection from  the instance's collection
 				// it also needs to copy the model resource data
-				vector<ModelResource*>* prefetched = &m_modelResourceCache->getResource(currentInstance.filename)->collection;
+				ModelResourceCollection* modelresourceCollection = m_modelResourceCache->getResource(currentInstance.filename);
+				vector<ModelResource*>* prefetched = &modelresourceCollection->collection;
 
-				int size = prefetched->size();
-				for (int n=firstMeshPos;n<size;n++)
+				unsigned int start = modelresourceCollection->rootIndex+1;
+				unsigned int size = prefetched->size();
+				for (unsigned int n=start;n<size;n++)
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					// mesh transform
@@ -170,63 +172,66 @@ AglScene* ModelBaseFactory::readScene(const string& p_name, const string* p_path
 vector<ModelResource*>* ModelBaseFactory::createAllModelData( 
 	const InstanceInstruction* p_instanceData, 
 	AglScene* p_scene, 
-	unsigned int p_numberOfModels,
 	vector<InstanceInstruction>* p_outInstanceInstructions)
 {
-	p_numberOfModels = max(p_numberOfModels,(unsigned int)1);
 	ModelResourceCollection* models = new ModelResourceCollection();
-	models->collection.push_back(new ModelResource(p_instanceData->filename+"-ROOT"));
-	for (unsigned int i=0; i<p_numberOfModels; i++)
+	// if several models were found, or none, add a root entity
+	unsigned int numberOfModels = p_scene->getMeshes().size();
+	if (numberOfModels>1 || numberOfModels==0)
 	{
-		if (i<p_scene->getMeshes().size())
-		{		
-			AglMesh* aglMesh = p_scene->getMeshes()[i];
-			AglMeshHeader aglMeshHeader = aglMesh->getHeader();	
-			// parse mesh name
-			string meshName = p_scene->getName(aglMeshHeader.nameID);
-			pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
-			parsedAction = MeshNameScriptParser::parse(meshName);
-			// DEBUGWARNING(( ("Creating mesh "+meshName).c_str() ));
-			// Actions based on parsed name
-			switch (parsedAction.second) 
+		models->collection.push_back(new ModelResource(p_instanceData->filename+"-ROOT"));
+		models->rootIndex=models->collection.size()-1;
+	}
+	// check all models
+	for (unsigned int i=0; i<numberOfModels; i++)
+	{	
+		AglMesh* aglMesh = p_scene->getMeshes()[i];
+		AglMeshHeader aglMeshHeader = aglMesh->getHeader();	
+		// parse mesh name
+		string meshName = p_scene->getName(aglMeshHeader.nameID);
+		pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> parsedAction;
+		parsedAction = MeshNameScriptParser::parse(meshName);
+		// DEBUGWARNING(( ("Creating mesh "+meshName).c_str() ));
+		// Actions based on parsed name
+		switch (parsedAction.second) 
+		{
+		case MeshNameScriptParser::INSTANTIATE: // instantiate
 			{
-			case MeshNameScriptParser::INSTANTIATE: // instantiate
+				if (p_outInstanceInstructions!=NULL)
 				{
-					if (p_outInstanceInstructions!=NULL)
-					{
-						InstanceInstruction inst = {parsedAction.first.filename,
-							aglMeshHeader.transform};
+					InstanceInstruction inst = {parsedAction.first.filename,
+						aglMeshHeader.transform};
 
-						DEBUGWARNING(((p_instanceData->filename+": Found mesh with instancing instruction. Conversion error?").c_str()));
-						// Not possible yet-> p_model->instances.push_back(inst);
-						p_outInstanceInstructions->push_back(inst);
-					}
-
-					break;
+					DEBUGWARNING(((p_instanceData->filename+": Found mesh with instancing instruction. Conversion error?").c_str()));
+					// Not possible yet-> p_model->instances.push_back(inst);
+					p_outInstanceInstructions->push_back(inst);
 				}
 
-			case MeshNameScriptParser::MESH: // normal mesh
-			default:				
-				{
-					// DEBUGWARNING(( string("Normal mesh").c_str() ));
-					SourceData source={p_scene,aglMesh,&aglMeshHeader,
-						i,
-						parsedAction.first.name};
-					//
-					createAndAddModel(models, 
-						p_instanceData, 
-						source, 
-						p_outInstanceInstructions);
-					break;
-				}
+				break;
 			}
 
+		case MeshNameScriptParser::MESH: // normal mesh
+		default:				
+			{
+				// DEBUGWARNING(( string("Normal mesh").c_str() ));
+				SourceData source={p_scene,aglMesh,&aglMeshHeader,
+					i,
+					parsedAction.first.name};
+				//
+				createAndAddModel(models, 
+					p_instanceData, 
+					source, 
+					p_outInstanceInstructions);
+				break;
+			}
 		}
+
 	}
 	m_modelResourceCache->addResource(p_instanceData->filename,models); // register collection in cache
 
 	return &models->collection;
 }
+
 
 void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollection, 
 										 const InstanceInstruction* p_instanceData, 
@@ -236,12 +241,15 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 	// set
 	ModelResource* model = new ModelResource();
 	model->meshHeader = *(p_source.meshHeader);
-	string suffix = "_"+p_source.nameSuffix;
-	if (p_source.modelNumber==0) suffix="";
+	p_source.nameSuffix = "_"+p_source.nameSuffix;
+	if (p_source.modelNumber==0)
+	{
+		p_source.nameSuffix="";
+	}
 	// Mesh data
 	unsigned int meshResultId = createMeshData( p_source,p_instanceData );
 	// store in model
-	model->name = p_instanceData->filename+suffix;
+	model->name = p_instanceData->filename+p_source.nameSuffix;
 	model->meshId = static_cast<int>(meshResultId);
 	model->transform = p_source.meshHeader->transform;
 
