@@ -24,16 +24,6 @@ struct RasterizerFaceVertexOrder;
 struct BlendState;
 struct LightInstanceData;
 
-/************************************************************************/
-/* See wiki for more details.											*/
-/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
-/************************************************************************/
-const static int NUMBUFFERS = 4;
-const static int RT0 = 0;
-const static int RT1 = 1;
-const static int RT2 = 2;
-const static int DEPTH = 3;
-
 // =======================================================================================
 //                                      DeferredRenderer
 // =======================================================================================
@@ -48,6 +38,20 @@ const static int DEPTH = 3;
 
 class DeferredRenderer
 {
+public:
+	/************************************************************************/
+	/* See wiki for more details.											*/
+	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
+	/************************************************************************/
+	const static int BASESHADERS = 3;
+	const static int RT0 = 0;
+	const static int RT1 = 1;
+	const static int RT2 = 2;
+	const static int RT3 = 3;
+	const static int RT4 = 4;
+	enum RenderTargets{
+		DIFFUSE, NORMAL, SPECULAR, LIGHT, DEPTH, NUMTARGETS,
+	};
 public:
 	// ===================================================================================
 	// Setup
@@ -78,15 +82,6 @@ public:
 	// ===================================================================================
 
 	///-----------------------------------------------------------------------------------
-	/// Render mesh data
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderMesh(Mesh* p_mesh,
-		Texture* p_texture);
-
-	///-----------------------------------------------------------------------------------
 	/// Render instanced mesh data
 	/// \param p_mesh
 	/// \param p_textureArray
@@ -110,7 +105,10 @@ public:
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void mapRTStoShaderVariables();
+	void mapDeferredBaseRTSToShader();
+
+	void mapVariousPassesToComposeStage();
+	void unmapVariousPassesFromComposeStage();
 
 	void unmapDepthFromShaderVariables();
 	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
@@ -118,14 +116,6 @@ public:
 	// ===================================================================================
 	// GUI Render
 	// ===================================================================================
-
-	///-----------------------------------------------------------------------------------
-	/// Render a mesh in the GUI
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderGUIMesh( Mesh* p_mesh, Texture* p_texture );
 
 	// ===================================================================================
 	// Blend states
@@ -142,6 +132,8 @@ public:
 
 	void setBlendMask(UINT p_mask);
 
+	void setLightRenderTarget();
+
 	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
 
 	// ===================================================================================
@@ -156,15 +148,17 @@ public:
 
 	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
 
-	// ===================================================================================
-	// Debug
-	// ===================================================================================
-	void hookUpAntTweakBar();
-
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 
 	ID3D11DepthStencilView* getDepthStencil();
+
+	void renderComposeStage();
+
+	// ===================================================================================
+	// Debug
+	// ===================================================================================
+	void hookUpAntTweakBar();
 
 private:
 	void initDepthStencil();
@@ -173,7 +167,7 @@ private:
 	void buildRasterizerStates();
 	void unMapGBuffers();
 	void initShaders();
-
+	void initFullScreenQuad();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -183,14 +177,13 @@ private:
 
 	RendererSceneInfo		m_sceneInfo;
 
-	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
+	ID3D11RenderTargetView*		m_gBuffers[NUMTARGETS];
+	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMTARGETS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredBaseShader*		m_lightShader;
-	//DeferredComposeShader*	m_lightShader;
-	GUIShader*				m_guiShader;
+	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 

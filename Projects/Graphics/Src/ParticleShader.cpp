@@ -1,8 +1,8 @@
 #include "ParticleShader.h"
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ParticleCBuffer.h"
 
-ParticleShader::ParticleShader(ShaderInitStruct p_initData, 
+ParticleShader::ParticleShader(ShaderVariableContainer p_initData, 
 							   Buffer<ParticleCBuffer>* p_perSystemBuffer)
 							   : ShaderBase(p_initData)
 {

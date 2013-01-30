@@ -1,7 +1,7 @@
 #include "DeferredBaseShader.h"
 
 
-DeferredBaseShader::DeferredBaseShader( ShaderInitStruct p_initData, 
+DeferredBaseShader::DeferredBaseShader( ShaderVariableContainer p_initData, 
 									   Buffer<SimpleCBuffer>* p_cBuffer ) 
 									   : ShaderBase(p_initData)
 {

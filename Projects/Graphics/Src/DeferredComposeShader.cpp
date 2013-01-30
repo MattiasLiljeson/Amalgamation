@@ -1,6 +1,6 @@
 #include "DeferredComposeShader.h"
 
-DeferredComposeShader::DeferredComposeShader( ShaderInitStruct p_initData) 
+DeferredComposeShader::DeferredComposeShader( ShaderVariableContainer p_initData) 
 											: ShaderBase(p_initData)
 {
 
