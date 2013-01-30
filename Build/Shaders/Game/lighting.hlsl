@@ -90,6 +90,6 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	}
 
 	
-	return float4( diffuseColor.rgb, 1.0f );
+	return float4( lightCol, 1.0f );
 }
 

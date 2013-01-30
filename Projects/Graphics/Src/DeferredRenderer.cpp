@@ -30,7 +30,7 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 
 	
 	m_depthStencilView = NULL;
-	for(int i = 0; i < RenderTargets::NUMBUFFERS; i++)
+	for(int i = 0; i < RenderTargets::NUMTARGETS; i++)
 	{
 		m_gBuffers[i] = NULL;
 		m_gBuffersShaderResource[i] = NULL;
@@ -78,9 +78,9 @@ void DeferredRenderer::clearBuffers()
 {
 	unMapGBuffers();
 	float clearColor[] = {
-		0.0f,0.5f,0.5f,1.0f
+		0.0f,0.0f,0.0f,1.0f
 	};
-	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
@@ -232,10 +232,10 @@ void DeferredRenderer::unmapVariousPassesFromComposeStage(){
 }
 void DeferredRenderer::unMapGBuffers()
 {
-	ID3D11ShaderResourceView* nulz[NUMBUFFERS];
-	for (int i=0; i<NUMBUFFERS; i++)
+	ID3D11ShaderResourceView* nulz[NUMTARGETS];
+	for (int i=0; i<NUMTARGETS; i++)
 		nulz[i]=NULL;
-	m_deviceContext->PSSetShaderResources(0,NUMBUFFERS,nulz);
+	m_deviceContext->PSSetShaderResources(0,NUMTARGETS,nulz);
 	m_lightShader->apply();
 }
 
@@ -288,7 +288,7 @@ void DeferredRenderer::initGeometryBuffers()
 {
 	HRESULT hr = S_OK;
 
-	ID3D11Texture2D* gBufferTextures[RenderTargets::NUMBUFFERS];
+	ID3D11Texture2D* gBufferTextures[RenderTargets::NUMTARGETS];
 	D3D11_TEXTURE2D_DESC gBufferDesc;
 	ZeroMemory( &gBufferDesc, sizeof(gBufferDesc) );
 
@@ -304,7 +304,7 @@ void DeferredRenderer::initGeometryBuffers()
 	gBufferDesc.CPUAccessFlags = 0;
 	gBufferDesc.MiscFlags = 0;
 
-	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		hr = m_device->CreateTexture2D(&gBufferDesc,NULL,&gBufferTextures[i]);		
 		if (hr != S_OK)
 			throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
@@ -315,7 +315,7 @@ void DeferredRenderer::initGeometryBuffers()
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		hr = m_device->CreateRenderTargetView(gBufferTextures[i], &renderTargetViewDesc,
 			&m_gBuffers[i]);
 		if (hr != S_OK )
@@ -332,7 +332,7 @@ void DeferredRenderer::initGeometryBuffers()
 	/* !!! Note that the for loop starts at index 1 since depthbuffer		*/
 	/* already in init !!!													*/
 	/************************************************************************/
-	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS-1; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS-1; i++){
 		hr = m_device->CreateShaderResourceView(gBufferTextures[i],&shaderResourceDesc,
 			&m_gBuffersShaderResource[i]);
 		gBufferTextures[i]->Release();
@@ -373,7 +373,7 @@ void DeferredRenderer::releaseRenderTargetsAndDepthStencil(){
 	// Release all buffers
 	SAFE_RELEASE(m_depthStencilView);
 
-	for (int i = 0; i < RenderTargets::NUMBUFFERS; i++)
+	for (int i = 0; i < RenderTargets::NUMTARGETS; i++)
 	{
 		SAFE_RELEASE(m_gBuffers[i]);
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
@@ -442,5 +442,5 @@ void DeferredRenderer::unmapDepthFromShaderVariables(){
 }
 
 void DeferredRenderer::setLightRenderTarget(){
-	m_deviceContext->OMSetRenderTargets(0,&m_gBuffers[RenderTargets::LIGHT],NULL);
+	m_deviceContext->OMSetRenderTargets(1,&m_gBuffers[RenderTargets::LIGHT],NULL);
 }

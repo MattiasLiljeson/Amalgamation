@@ -50,7 +50,7 @@ public:
 	const static int RT3 = 3;
 	const static int RT4 = 4;
 	enum RenderTargets{
-		DIFFUSE = 0, NORMAL = 1, SPECULAR = 2, LIGHT = 3, DEPTH = 4, NUMBUFFERS = 5,
+		DIFFUSE, NORMAL, SPECULAR, LIGHT, DEPTH, NUMTARGETS,
 	};
 public:
 	// ===================================================================================
@@ -185,8 +185,8 @@ private:
 
 	RendererSceneInfo		m_sceneInfo;
 
-	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
+	ID3D11RenderTargetView*		m_gBuffers[NUMTARGETS];
+	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMTARGETS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
