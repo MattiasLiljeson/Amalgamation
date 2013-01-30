@@ -69,7 +69,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Debug.lib;AgileAssets_x86_Debug.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;AgileAssets_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -90,7 +90,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Release.lib;AgileAssets_x86_Release.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;AgileAssets_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
