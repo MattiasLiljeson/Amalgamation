@@ -28,7 +28,8 @@ void WinningConditionSystem::process()
 		m_endTime = 0.0f;
 		m_elapsedGameSessionTime = 0.0f;
 		m_enabled = false; // Disable this system.
-		vector< pair<float, Entity*> > sorted = createSortedScoreEntityMapping();
+		vector< pair<float, Entity*> > sorted =
+			createSortedScoreEntityMapping();
 		signalEndSession(sorted);
 	}
 }
@@ -65,7 +66,9 @@ void WinningConditionSystem::signalEndSession(
 	winLosePacket.activePlayers = p_scoreComponentMapping.size();
 	for(unsigned int i=0; i<p_scoreComponentMapping.size(); i++)
 	{
-		winLosePacket.playerIdentities[i] = p_scoreComponentMapping[i].second->getIndex();
+		NetworkSynced* netSync = static_cast<NetworkSynced*>(
+			p_scoreComponentMapping[i].second->getComponent(ComponentType::NetworkSynced));
+		winLosePacket.playerIdentities[i] = netSync->getNetworkOwner();
 		winLosePacket.scores[i] = p_scoreComponentMapping[i].first;
 		winLosePacket.winner[i] = false;
 	}
