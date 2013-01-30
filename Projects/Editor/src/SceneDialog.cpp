@@ -213,7 +213,7 @@ void SceneDialog::Release()
 }
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
-	m_materialDialog->hide();
+	//m_materialDialog->hide();
 	m_particleSystemDialog->hide();
 
 	m_meshDialog->setMesh(pIndex);
