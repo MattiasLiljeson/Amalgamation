@@ -10,6 +10,9 @@
     <Filter Include="Mesh resource\Resource data">
       <UniqueIdentifier>{cd341dad-7821-4ffd-9de5-c3a52496387d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{bd6d32b9-3756-4262-9d4e-1984aaa8dd7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
@@ -30,19 +33,25 @@
     <ClInclude Include="ModelResource.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
-    <ClInclude Include="ModelBaseUnmanagedFactory.h">
-      <Filter>Mesh resource</Filter>
-    </ClInclude>
     <ClInclude Include="InstanceInstruction.h">
       <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelBaseFactory.h">
+      <Filter>Mesh resource</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNameScriptParser.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="ModelBaseUnmanagedFactory.cpp">
+    <ClCompile Include="ModelBaseFactory.cpp">
       <Filter>Mesh resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNameScriptParser.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

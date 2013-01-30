@@ -43,7 +43,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_textureManager	= new ResourceManager<Texture>();
 
 	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
-	m_modelFactory		= new ModelExtendedManagedFactory(m_device,m_bufferFactory,m_meshManager,
+	m_modelFactory		= new ModelExtendedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
 
 	createTexture("mesherror.png",TEXTUREPATH);
@@ -300,7 +300,7 @@ void GraphicsWrapper::flipBackBuffer()
 ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
 						   const string* p_path)
 {
-	return m_modelFactory->createModelResource(p_name,p_path);
+	return m_modelFactory->createModelResource_DEPRECATED(p_name,p_path);
 }
 
 vector<ModelResource*>* GraphicsWrapper::createModelsFromFile(const string& p_name,

@@ -21,7 +21,7 @@
 #include "RendererSceneInfo.h"
 #include "InstanceData.h"
 #include "TextureParser.h"
-#include "ModelExtendedManagedFactory.h"
+#include "ModelExtendedFactory.h"
 #include "TextureFactory.h"
 #include "RenderSceneInfoCBuffer.h"
 
@@ -202,7 +202,7 @@ private:
 	// Creation & storage
 	BufferFactory*			m_bufferFactory;
 	TextureFactory*			m_textureFactory;
-	ModelExtendedManagedFactory*	m_modelFactory;
+	ModelExtendedFactory*	m_modelFactory;
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
