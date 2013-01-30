@@ -369,7 +369,16 @@ void AglScene::RemoveMaterial(AglMaterial* p_material)
 		}
 	}
 }
-void AglScene::RemoveParticleEffect(AglMaterial* p_material)
+void AglScene::RemoveParticleEffect(AglParticleSystem* p_particleSystem)
 {
-
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+	{
+		if (m_particleSystems[i] == p_particleSystem)
+		{
+			delete m_particleSystems[i];
+			m_particleSystems[i] = m_particleSystems.back();
+			m_particleSystems.pop_back();
+			break;
+		}
+	}
 }

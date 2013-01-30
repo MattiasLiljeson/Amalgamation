@@ -516,6 +516,17 @@ void Scene::Transform(AglMatrix p_transform)
 		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
 	}
 }
+
+int  Scene::GetIndex(AglParticleSystem* pSystem)
+{
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		if (mParticleSystems[i]->getParticleSystem() == pSystem)
+			return i;
+	}
+	return -1;
+}
+
 void Scene::RemoveMaterial(AglMaterial* pMaterial)
 {
 	mAglScene->RemoveMaterial(pMaterial);
@@ -532,4 +543,18 @@ void Scene::RemoveMaterial(AglMaterial* pMaterial)
 	{
 		mMeshes[mm[i].meshID]->AddMaterial(mm[i].materialID, true);
 	}
+}
+void Scene::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		if (mParticleSystems[i]->getParticleSystem() == pParticleSystem)
+		{
+			delete mParticleSystems[i];
+			mParticleSystems[i] = mParticleSystems.back();
+			mParticleSystems.pop_back();
+			break;
+		}
+	}
+	mAglScene->RemoveParticleEffect(pParticleSystem);
 }

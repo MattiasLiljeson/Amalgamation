@@ -122,12 +122,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
 		for (unsigned int i = 0; i < ps.size(); i++)
 		{
-			string s = "NoName";
-			string info = " label='" + s + "' group='Particle Effects'";
-			int zero = i;
-
-			SceneDialog* sceneDialog = (SceneDialog*)clientData;
-			TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)i, info.c_str());
+			sceneDialog->AddPE(ps[i]->getParticleSystem());
 		}
 	}
 }
@@ -154,14 +149,17 @@ void SceneDialog::AddMaterial(AglMaterial* pMaterial)
 }
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
-	AglParticleSystem* ps = new AglParticleSystem();
-	Scene::GetInstance()->AddParticleSystem(ps);
-	string s = "NoName";
-	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
-	int zero = Scene::GetInstance()->GetParticleSystems().size()-1;
-
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)zero, info.c_str());
+	sceneDialog->AddPE(new AglParticleSystem());
+}
+void SceneDialog::AddPE(AglParticleSystem* pParticleSystem)
+{
+	if (Scene::GetInstance()->GetIndex(pParticleSystem) < 0)
+		Scene::GetInstance()->AddParticleSystem(pParticleSystem);
+	string s = "NoName";
+	string info = " label='" + s + "' group='Particle Effects'";
+	int index = Scene::GetInstance()->GetParticleSystems().size()-1;
+	TwAddButton(m_dialog, ("Particle Effect" + toString(index)).c_str(), OpenParticleSystemDialog, (void*)index, info.c_str());
 }
 void SceneDialog::ClonePE(AglParticleSystemHeader pHeader)
 {
@@ -211,6 +209,7 @@ SceneDialog::~SceneDialog()
 	delete m_meshDialog;
 	delete m_materialDialog;
 	delete m_particleSystemDialog;
+	delete m_mergeDialog;
 }
 
 SceneDialog* SceneDialog::GetInstance()
@@ -260,5 +259,20 @@ void SceneDialog::RemoveMaterial(AglMaterial* pMaterial)
 	for (unsigned int i = 0; i < materials.size(); i++)
 	{
 		AddMaterial(materials[i]);
+	}
+}
+void SceneDialog::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		string name = "Particle Effect" + toString(i);
+		TwRemoveVar(m_dialog, name.c_str());
+	}
+	Scene::GetInstance()->RemoveParticleSystem(pParticleSystem);
+	ps = Scene::GetInstance()->GetParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		AddPE(ps[i]->getParticleSystem());
 	}
 }

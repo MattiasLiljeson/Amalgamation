@@ -362,7 +362,7 @@ public:
 	unsigned int getAnimationCount(){ return m_animations.size(); }
 
 	void RemoveMaterial(AglMaterial* p_material);
-	void RemoveParticleEffect(AglMaterial* p_material);
+	void RemoveParticleEffect(AglParticleSystem* p_particleSystem);
 };
 
 #endif
