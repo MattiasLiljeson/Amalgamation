@@ -1,21 +1,20 @@
 #include "LoadMeshSystem.h"
 
-#include "GraphicsBackendSystem.h"
 #include "LoadMesh.h"
 #include <ModelResource.h>
-#include <GraphicsWrapper.h>
 #include "Transform.h"
-#include "RenderInfo.h"
 #include "EntityParent.h"
 #include "ConnectionPointSet.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include "RenderInfo.h"
+#include <Globals.h>
 
-LoadMeshSystem::LoadMeshSystem( GraphicsBackendSystem* p_gfxBackend ) : 
+LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
 	ComponentType::ComponentTypeIdx::LoadMesh)
 {
-	m_gfxBackend = p_gfxBackend;
+
 }
 
 
@@ -31,7 +30,6 @@ void LoadMeshSystem::initialize()
 void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
-	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -41,9 +39,9 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
 
 		// Load creation instructions
-		vector<ModelResource*>* models= gfxWrapper->createModelsFromFile( jobInfo->getFileName(), 
-																		  &MODELPATH,
-																		  jobInfo->isPrimitive());
+		vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
+													   MODELPATH,
+													   jobInfo->isPrimitive());
 		// Root
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);
@@ -60,7 +58,7 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 
 
 void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
-								 Transform* p_outTransform )
+									   Transform* p_outTransform )
 {
 	Component* t = p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform );
 	if (t!=NULL)
@@ -85,7 +83,7 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
 		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
 	}
-	
+
 	// Handle particles here
 	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
@@ -103,7 +101,7 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 
 
 void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelResources, 
-											 Entity* p_rootEntity)
+												  Entity* p_rootEntity)
 {
 	Component* t = NULL;
 	Transform* rootTransform = NULL;

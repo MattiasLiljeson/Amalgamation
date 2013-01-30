@@ -81,7 +81,7 @@
 #include <AntTweakBarSystem.h>
 #include <ParticleRenderSystem.h>
 #include <TransformParentHandlerSystem.h>
-#include <LoadMeshSystem.h>
+#include <LoadMeshSystemClient.h>
 #include <GameStatsSystem.h>
 #include <MoveShipLightsSystem.h>
 
@@ -204,7 +204,7 @@ void ClientApplication::initSystems()
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
-	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystem(graphicsBackend), 
+	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
 
 	/************************************************************************/

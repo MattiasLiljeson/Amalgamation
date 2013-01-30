@@ -2,7 +2,6 @@
 
 #include <EntitySystem.h>
 
-class GraphicsBackendSystem;
 class Transform;
 struct ModelResource;
 
@@ -23,7 +22,7 @@ struct ModelResource;
 class LoadMeshSystem : public EntitySystem
 {
 public:
-	LoadMeshSystem(GraphicsBackendSystem* p_gfxBackend);
+	LoadMeshSystem();
 	virtual ~LoadMeshSystem();
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
@@ -35,7 +34,7 @@ private:
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	void setRootData(Entity* p_entity, ModelResource* p_modelResource, 
-					Transform* p_outTransform);
+		Transform* p_outTransform);
 
 	///-----------------------------------------------------------------------------------
 	/// Create children entities, if any are specified
@@ -44,7 +43,13 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createChildrenEntities(vector<ModelResource*>* p_modelResources,
-								Entity* p_rootEntity);
+		Entity* p_rootEntity);
 
-	GraphicsBackendSystem* m_gfxBackend;
+	///-----------------------------------------------------------------------------------
+	/// A way to generate model resources
+	/// \return vector<ModelResource*>*
+	///-----------------------------------------------------------------------------------
+	virtual vector<ModelResource*>* createModels(const string& p_filename, 
+		const string& p_filePath,
+		bool p_isPrimitive)=0;
 };
