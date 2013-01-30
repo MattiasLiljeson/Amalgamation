@@ -71,7 +71,6 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_lightShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
-	delete m_guiShader;
 }
 
 void DeferredRenderer::clearBuffers()
@@ -172,37 +171,11 @@ void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
 
 void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
 {
-	if( p_mesh && p_instanceBuffer )
-	{
+	if( p_mesh && p_instanceBuffer ){
 		renderInstanced( p_mesh, m_lightShader, p_instanceBuffer );
 	}
-	else
-	{
-		// Fallback:
-		m_fullscreenQuad->apply();
-		m_lightShader->apply();
-		m_deviceContext->Draw( 6, 0 );
-	}
+	
 }
-
-void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
-	p_mesh->getVertexBuffer()->apply();
-	//p_mesh->getIndexBuffer()->apply();
-
-	// set texture
-	//HACK: fix so that a placeholder tex is used instead of the last working one
-	if( p_texture != NULL )
-	{
-		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
-	}
-
-	m_guiShader->apply();
-
-	// Draw instanced data
-	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
-}
-
-
 void DeferredRenderer::renderComposeStage()
 {
 	m_composeShader->apply();
@@ -212,12 +185,7 @@ void DeferredRenderer::renderComposeStage()
 }
 void DeferredRenderer::mapDeferredBaseRTSToShader()
 {	
-	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[
-		RenderTargets::DIFFUSE] );
-	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[
-		RenderTargets::NORMAL] );
-	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[
-		RenderTargets::SPECULAR] );
+	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
 	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
 }
@@ -351,9 +319,6 @@ void DeferredRenderer::initShaders()
 
 	m_lightShader = m_shaderFactory->createLightShader(
 		L"Shaders/Game/lighting.hlsl");
-
-	m_guiShader = m_shaderFactory->createGUIShader(
-		L"Shaders/GUI/rocket.hlsl");
 }
 
 void DeferredRenderer::initFullScreenQuad()

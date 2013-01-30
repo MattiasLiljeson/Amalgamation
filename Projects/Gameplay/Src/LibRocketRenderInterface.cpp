@@ -160,7 +160,7 @@ void LibRocketRenderInterface :: RenderCompiledGeometry(
 
 	m_wrapper->updateRenderSceneInfo(scene);
 	m_wrapper->mapSceneInfo();
-	m_wrapper->renderGUIMesh( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
+	m_wrapper->renderGUIMeshList( geometry->meshId, &instanceDataVectorFromMatrix(worldMat) );
 }
 
 // Called by Rocket when it wants to release application-compiled geometry.

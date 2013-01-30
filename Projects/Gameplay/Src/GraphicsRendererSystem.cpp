@@ -91,7 +91,7 @@ void GraphicsRendererSystem::endComposePass()
 }
 
 void GraphicsRendererSystem::initParticlePass(){
-	m_wrapper->unmapDepthFromShader();
+	//m_wrapper->unmapDepthFromShader();
 	m_wrapper->setParticleRenderState();
 	m_wrapper->setBlendStateSettings(BlendState::PARTICLE);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
@@ -100,7 +100,7 @@ void GraphicsRendererSystem::initParticlePass(){
 void GraphicsRendererSystem::endParticlePass(){
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
+	//m_wrapper->setComposedRenderTargetWithNoDepthStencil();
 }
 
 void GraphicsRendererSystem::initGUIPass(){

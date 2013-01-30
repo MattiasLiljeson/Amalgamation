@@ -1,22 +1,24 @@
-#include "GraphicsWrapper.h"
+#include "AglParticleSystem.h"
+#include "AntTweakBarWrapper.h"
+#include "BufferFactory.h"
+#include "D3DException.h"
+#include "D3DUtil.h"
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
 #include "DeferredRenderer.h"
+#include "GraphicsWrapper.h"
 #include "Mesh.h"
-#include "BufferFactory.h"
-#include "AntTweakBarWrapper.h"
-#include "TextureParser.h"
-#include "Texture.h"
 #include "Mesh.h"
 #include "MeshLoadException.h"
-
+#include "ParticleRenderer.h"
+#include "Texture.h"
+#include "TextureParser.h"
+#include "TextureFactory.h"
 #include <AglReader.h>
 #include <FileCheck.h>
-#include "D3DException.h"
-#include "D3DUtil.h"
-#include "ParticleRenderer.h"
-#include "AglParticleSystem.h"
 #include <LightInstanceData.h>
+#include "ShaderFactory.h"
+#include "GUIShader.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -35,8 +37,11 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	initHardware();
 
 	initBackBuffer();
+
 	initViewport();
 
+	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
+		m_device->GetFeatureLevel());
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
 	m_meshManager		= new ResourceManager<Mesh>();
@@ -45,6 +50,9 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
 	m_modelFactory		= new ModelExtendedManagedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
+
+	m_guiShader = m_shaderFactory->createGUIShader(
+		L"Shaders/GUI/rocket.hlsl");
 
 	createTexture("mesherror.png",TEXTUREPATH);
 
@@ -62,6 +70,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	SAFE_RELEASE(m_swapChain);
 	releaseBackBuffer();
 	
+	delete m_guiShader;
 	delete m_deferredRenderer;
 	delete m_particleRenderer;
 	delete m_deferredBaseShader;
@@ -259,7 +268,7 @@ void GraphicsWrapper::setLightPassRenderTarget(){
 void GraphicsWrapper::mapDeferredBaseToShader(){
 	m_deferredRenderer->mapDeferredBaseRTSToShader();
 }
-void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
+void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
 {
 	Mesh* mesh = m_meshManager->getResource( p_meshId );
@@ -270,7 +279,8 @@ void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId,
 	instanceBuffer = m_bufferFactory->createInstanceBuffer( &(*p_instanceList)[0],
 		p_instanceList->size() );
 
-	m_deferredRenderer->renderGUIMesh( mesh, tex );
+	m_guiShader->apply();
+	renderSingleGUIMesh(mesh,tex);
 
 	delete instanceBuffer;
 }
@@ -477,12 +487,24 @@ void GraphicsWrapper::renderComposeStage(){
 	m_deferredRenderer->renderComposeStage();
 }
 
-void GraphicsWrapper::mapVariousStagesForCompose()
-{
+void GraphicsWrapper::mapVariousStagesForCompose(){
 	m_deferredRenderer->mapVariousPassesToComposeStage();
 }
 
-void GraphicsWrapper::unmapVariousStagesForCompose()
-{
+void GraphicsWrapper::unmapVariousStagesForCompose(){
 	m_deferredRenderer->unmapVariousPassesFromComposeStage();
+}
+
+void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
+{
+	p_mesh->getVertexBuffer()->apply();
+	p_mesh->getIndexBuffer()->apply();
+
+	// set texture
+	//HACK: fix so that a placeholder tex is used instead of the last working one
+	if( p_texture != NULL ){
+		m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
+	}
+	// Draw instanced data
+	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }

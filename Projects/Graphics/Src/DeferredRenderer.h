@@ -117,14 +117,6 @@ public:
 	// GUI Render
 	// ===================================================================================
 
-	///-----------------------------------------------------------------------------------
-	/// Render a mesh in the GUI
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderGUIMesh( Mesh* p_mesh, Texture* p_texture );
-
 	// ===================================================================================
 	// Blend states
 	// ===================================================================================
@@ -192,7 +184,6 @@ private:
 	DeferredBaseShader*		m_baseShader;
 	DeferredBaseShader*		m_lightShader;
 	DeferredComposeShader*	m_composeShader;
-	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 
