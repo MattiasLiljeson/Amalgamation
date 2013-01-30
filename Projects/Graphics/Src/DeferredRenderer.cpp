@@ -68,6 +68,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
+	delete m_composeShader;
 	delete m_fullscreenQuad;
 	delete m_guiShader;
 }
@@ -83,19 +84,6 @@ void DeferredRenderer::clearBuffers()
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void DeferredRenderer::renderMesh(Mesh* p_mesh, Texture* p_texture)
-{
-	p_mesh->getVertexBuffer()->apply();
-	p_mesh->getIndexBuffer()->apply();
-
-	// set texture
-	m_deviceContext->PSSetShaderResources(0,1,&(p_texture->data));
-
-	m_baseShader->apply();
-
-	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
 void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArray, 
@@ -181,15 +169,6 @@ void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
 		0,0,0);
 }
 
-
-void DeferredRenderer::mapRTStoShaderVariables()
-{
-	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
-	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
-	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
-	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[DEPTH] );
-}
-
 void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
 {
 	if( p_mesh && p_instanceBuffer )
@@ -221,6 +200,16 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	// Draw instanced data
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
+
+void DeferredRenderer::mapRTStoShaderVariables()
+{
+	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
+	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[RT3] );
+	m_deviceContext->PSSetShaderResources( 4, 1, &m_gBuffersShaderResource[DEPTH] );
+}
+
 void DeferredRenderer::unMapGBuffers()
 {
 	ID3D11ShaderResourceView* nulz[NUMBUFFERS];
@@ -289,7 +278,7 @@ void DeferredRenderer::initGeometryBuffers()
 	gBufferDesc.ArraySize = 1;
 	gBufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	gBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	gBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	gBufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	gBufferDesc.SampleDesc.Count = 1;
 	gBufferDesc.SampleDesc.Quality = 0;
 	gBufferDesc.CPUAccessFlags = 0;
@@ -337,11 +326,11 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
-	//m_lightShader = m_shaderFactory->createLightShader(
-	//	L"Shaders/Game/deferredCompose.hlsl");
+	m_composeShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/deferredCompose.hlsl");
+
 	m_lightShader = m_shaderFactory->createLightShader(
 		L"Shaders/Game/lighting.hlsl");
-
 
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
@@ -426,7 +415,7 @@ void DeferredRenderer::buildRasterizerStates()
 }
 void DeferredRenderer::setBasePassRenderTargets()
 {
-	m_deviceContext->OMSetRenderTargets(NUMBUFFERS,m_gBuffers,m_depthStencilView);
+	m_deviceContext->OMSetRenderTargets(BASESHADERS,m_gBuffers,m_depthStencilView);
 }
 
 ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
@@ -437,5 +426,5 @@ ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
 void DeferredRenderer::unmapDepthFromShaderVariables()
 {
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( NUMBUFFERS-1, 1, &nulz );
 }

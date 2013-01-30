@@ -24,16 +24,6 @@ struct RasterizerFaceVertexOrder;
 struct BlendState;
 struct LightInstanceData;
 
-/************************************************************************/
-/* See wiki for more details.											*/
-/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
-/************************************************************************/
-const static int NUMBUFFERS = 4;
-const static int RT0 = 0;
-const static int RT1 = 1;
-const static int RT2 = 2;
-const static int DEPTH = 3;
-
 // =======================================================================================
 //                                      DeferredRenderer
 // =======================================================================================
@@ -48,6 +38,18 @@ const static int DEPTH = 3;
 
 class DeferredRenderer
 {
+public:
+	/************************************************************************/
+	/* See wiki for more details.											*/
+	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
+	/************************************************************************/
+	const static int NUMBUFFERS = 5;
+	const static int BASESHADERS = 3;
+	const static int RT0 = 0;
+	const static int RT1 = 1;
+	const static int RT2 = 2;
+	const static int RT3 = 3;
+	const static int DEPTH = 4;
 public:
 	// ===================================================================================
 	// Setup
@@ -76,15 +78,6 @@ public:
 	// ===================================================================================
 	// Mesh Render
 	// ===================================================================================
-
-	///-----------------------------------------------------------------------------------
-	/// Render mesh data
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderMesh(Mesh* p_mesh,
-		Texture* p_texture);
 
 	///-----------------------------------------------------------------------------------
 	/// Render instanced mesh data
@@ -189,7 +182,7 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	DeferredBaseShader*		m_lightShader;
-	//DeferredComposeShader*	m_lightShader;
+	DeferredComposeShader*	m_composeShader;
 	GUIShader*				m_guiShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
