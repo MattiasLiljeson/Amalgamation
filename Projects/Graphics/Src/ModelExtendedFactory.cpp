@@ -32,10 +32,24 @@ ModelExtendedFactory::~ModelExtendedFactory()
 	
 }
 
-ModelResource* ModelExtendedFactory::createModelResource_DEPRECATED( const string& p_name, 
-																	const string* p_path/*=NULL*/)
+vector<ModelResource*>* ModelExtendedFactory::createModelResources( const string& p_name,
+																   const string* p_path/*=NULL*/, 
+																   bool p_isPrimitive )
 {
-	ModelResource* model = NULL;
+	if (p_isPrimitive)
+	{
+		return createPrimitive(p_name);
+	}
+	else
+	{
+		return ModelBaseFactory::createModelResources(p_name,p_path);
+	}
+}
+
+
+vector<ModelResource*>* ModelExtendedFactory::createPrimitive( const string& p_name )
+{
+	vector<ModelResource*>* model = NULL;
 	// check if resource already exists
 	// unsigned int meshResultId = 0;
 	int modelFoundId = m_modelResourceCache->getResourceId(p_name);
@@ -51,13 +65,12 @@ ModelResource* ModelExtendedFactory::createModelResource_DEPRECATED( const strin
 		}
 		else
 		{
-			vector<ModelResource*>* models = createModelResources( p_name, p_path);
-			model = (*models)[0];
+			model = getCube(); // fallback
 		}
 	}
 	else // the mesh already exists
 	{
-		model = m_modelResourceCache->getResource(p_name)->collection[0];
+		model = &m_modelResourceCache->getResource(p_name)->collection;
 	}
 
 	return model;
@@ -168,7 +181,7 @@ ModelResource* ModelExtendedFactory::getFallback()
 	}
 }
 
-ModelResource* ModelExtendedFactory::getCube()
+vector<ModelResource*>* ModelExtendedFactory::getCube()
 {
 	string errname = primitiveCubeName;
 	int meshFoundId = m_meshManager->getResourceId(errname);
@@ -187,16 +200,17 @@ ModelResource* ModelExtendedFactory::getCube()
 		mesh->setMaterial(materialInfo);
 		model->meshId = meshResultId;
 		// add to manager
-		m_modelResourceCache->addResource(errname,new ModelResourceCollection(model));
-		return model;
+		ModelResourceCollection* res = new ModelResourceCollection(model);
+		m_modelResourceCache->addResource(errname,res);
+		return &res->collection;
 	}
 	else
 	{
-		return m_modelResourceCache->getResource(errname)->collection[0];
+		return &m_modelResourceCache->getResource(errname)->collection;
 	}
 }
 
-ModelResource* ModelExtendedFactory::getSphere()
+vector<ModelResource*>* ModelExtendedFactory::getSphere()
 {
 	string errname = primitiveSphereName;
 	int meshFoundId = m_meshManager->getResourceId(errname);
@@ -215,12 +229,13 @@ ModelResource* ModelExtendedFactory::getSphere()
 		mesh->setMaterial(materialInfo);
 		model->meshId = meshResultId;
 		// add to manager
-		m_modelResourceCache->addResource(errname,new ModelResourceCollection(model));
-		return model;
+		ModelResourceCollection* res = new ModelResourceCollection(model);
+		m_modelResourceCache->addResource(errname,res);
+		return &res->collection;
 	}
 	else
 	{
-		return m_modelResourceCache->getResource(errname)->collection[0];
+		return &m_modelResourceCache->getResource(errname)->collection;
 	}
 }
 

@@ -297,16 +297,16 @@ void GraphicsWrapper::flipBackBuffer()
 	m_swapChain->Present( 0, 0);
 }
 
-ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
-						   const string* p_path)
-{
-	return m_modelFactory->createModelResource_DEPRECATED(p_name,p_path);
-}
+// ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
+// 						   const string* p_path,bool p_isPrimitive)
+// {
+// 	return m_modelFactory->createModelResource(p_name,p_path,p_isPrimitive);
+// }
 
 vector<ModelResource*>* GraphicsWrapper::createModelsFromFile(const string& p_name,
-									 const string* p_path)
+									 const string* p_path,bool p_isPrimitive)
 {
-	return m_modelFactory->createModelResources(p_name,p_path);
+	return m_modelFactory->createModelResources(p_name,p_path,p_isPrimitive);
 }
 
 unsigned int GraphicsWrapper::createMeshFromRaw( const string& p_name, 

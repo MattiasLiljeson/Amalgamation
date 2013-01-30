@@ -42,7 +42,8 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// Load creation instructions
 		vector<ModelResource*>* models= gfxWrapper->createModelsFromFile( jobInfo->getFileName(), 
-																		  &MODELPATH);
+																		  &MODELPATH,
+																		  jobInfo->isPrimitive());
 		// Root
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);

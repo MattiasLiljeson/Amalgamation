@@ -26,6 +26,7 @@
 #include "EntityParent.h"
 #include "LoadMesh.h"
 #include "LightsComponent.h"
+#include "LightBlinker.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -52,4 +53,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<EntityParent>();
 	handle<LoadMesh>();
 	handle<LightsComponent>();
+	handle<LightBlinker>();
 }

@@ -15,18 +15,18 @@ ModelBaseFactory::~ModelBaseFactory()
 }
 
 
-ModelResource* ModelBaseFactory::createModelResource_DEPRECATED( const string& p_name, 
-												 const string* p_path/*=NULL*/)
-{
-	ModelResource* model = NULL;
-	// Check and read the file
-	vector<ModelResource*>* models = createModelResources( p_name, p_path);
-	model = (*models)[0];
-	return model;
-}
+// ModelResource* ModelBaseFactory::createModelResource_DEPRECATED( const string& p_name, 
+// 												 const string* p_path/*=NULL*/)
+// {
+// 	ModelResource* model = NULL;
+// 	// Check and read the file
+// 	vector<ModelResource*>* models = createModelResources( p_name, p_path);
+// 	model = (*models)[0];
+// 	return model;
+// }
 
 vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_name, 
-														const string* p_path/*=NULL*/)
+														const string* p_path)
 {
 	InstanceInstruction currentInstance={p_name,AglMatrix::identityMatrix()};
 	//

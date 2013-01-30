@@ -102,7 +102,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			sleep(1);
+			sleep(10);
 		}
 	}
 
@@ -194,6 +194,13 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
+
+
+
+
+		// Run component assemblage allocator (not a system, so don't delete)
+		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+		delete allocator;
 	}
 
 	void ServerApplication::initEntities()

@@ -32,18 +32,19 @@ public:
 	virtual ~ModelExtendedFactory();
 
 
-	///-----------------------------------------------------------------------------------
-	/// Returns a pointer to a stored ModelResource, thusly the pointer should 
-	/// not be deleted.
-	/// \param p_name
-	/// \param p_path
-	/// \return ModelResource*
-	/// Deprecated since 30-1-2013
-	///-----------------------------------------------------------------------------------
-	virtual ModelResource* createModelResource_DEPRECATED(const string& p_name,
-		const string* p_path=NULL);
+	virtual vector<ModelResource*>* createModelResources(const string& p_name,
+		const string* p_path,
+		bool p_isPrimitive);
 
 protected:
+
+	///-----------------------------------------------------------------------------------
+	/// Create a primitive
+	/// \param p_name
+	/// \return ModelResource*
+	///-----------------------------------------------------------------------------------
+	vector<ModelResource*>* ModelExtendedFactory::createPrimitive( const string& p_name);
+
 	///-----------------------------------------------------------------------------------
 	/// Handles a single mesh. The extended class will generate buffers and store.
 	/// \param p_source
@@ -71,13 +72,13 @@ protected:
 	/// Generates a pre-defined ModelResource containing a cube.
 	/// \return ModelResource*
 	///-----------------------------------------------------------------------------------
-	ModelResource* getCube();
+	vector<ModelResource*>* getCube();
 
 	///-----------------------------------------------------------------------------------
 	/// Generates a pre-defined ModelResource containing a sphere.
 	/// \return ModelResource*
 	///-----------------------------------------------------------------------------------
-	ModelResource* getSphere();
+	vector<ModelResource*>* getSphere();
 private:
 	BufferFactory* m_bufferFactory;			///< Reference to an outside buffer factory
 	ResourceManager<Mesh>* m_meshManager;	///< Reference to an outside mesh manager

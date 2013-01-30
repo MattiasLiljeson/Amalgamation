@@ -108,11 +108,11 @@ public:
 	void flipBackBuffer();
 
 
-	ModelResource* createModelFromFile(const string& p_name,
-							   const string* p_path);
+// 	ModelResource* createModelFromFile(const string& p_name,
+// 							   const string* p_path);
 
 	vector<ModelResource*>* createModelsFromFile(const string& p_name,
-		const string* p_path);
+		const string* p_path,bool p_isPrimitive);
 
 	// This is the preferred method for creating meshes from raw data
 	unsigned int createMeshFromRaw(const string& p_name,

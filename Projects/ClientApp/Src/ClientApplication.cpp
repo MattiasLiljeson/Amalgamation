@@ -342,7 +342,10 @@ void ClientApplication::initSystems()
 
 	m_world->initialize();
 
-	// Run component assemblage allocator
+
+
+
+	// Run component assemblage allocator (not a system, so don't delete)
 	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 	delete allocator;
 }
@@ -378,23 +381,23 @@ void ClientApplication::initEntities()
 	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
+	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
+	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
-	graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
-	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
-	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
-	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
-	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
-	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+// 	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
-	LevelPieceFileMapping modelLevelFileMapping;	
-	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
-	{
-		string modelName = modelLevelFileMapping.getModelFileName(i);
-		graphicsBackend->loadSingleMeshFromFile( modelName,
-				&TESTMODELPATH);
-	}
+// 	LevelPieceFileMapping modelLevelFileMapping;	
+// 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+// 	{
+// 		string modelName = modelLevelFileMapping.getModelFileName(i);
+// 		graphicsBackend->loadSingleMesh( modelName,
+// 				&TESTMODELPATH);
+// 	}
 
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
@@ -424,225 +427,11 @@ void ClientApplication::initEntities()
 	// Test sound source
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
-	entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId));
+	// entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId)); //deprecated way of loading
 	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH,
 		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
-
-	//InitModulesTestByAnton();
-
 }
-
-#pragma region deprecatedinit
-void ClientApplication::InitModulesTestByAnton()
-{
-	Entity* entity;
-	Component* component;
-
-	EntitySystem* tempSys = NULL;
-
-	// Load cube model used as graphic representation for all "graphical" entities.
-	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
-	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-
-	// Create a box that the spaceship can pickup
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(10, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(10, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(20, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(20, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(30, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(30, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(40, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(40, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(50, 0, 0);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(50, 0, 0),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
-
-	m_world->addEntity(entity);
-
-
-
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(50, 0, -10);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(50, 0, -10),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, true, true));
-
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(40, 0, -10);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(40, 0, -10),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
-
-	ConnectionPointSet* cpset = new ConnectionPointSet();
-	AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
-	AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
-	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-
-	m_world->addEntity(entity);
-
-
-	entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-	component = new Transform(30, 0, -10);
-	entity->addComponent( ComponentType::Transform, component );
-
-	entity->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
-
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(AglVector3(30, 0, -10),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
-	cpset = new ConnectionPointSet();
-	cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-	cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-	entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-	m_world->addEntity(entity); 
-
-	//Ray entity
-	/*entity = m_world->createEntity();
-	component = new RenderInfo( cubeMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
-
-
-	Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), AglVector3(0, 1, 0)), AglVector3(0.1f, 0.1f, 10));
-	entity->addComponent( ComponentType::Transform, t);
-	m_world->addEntity(entity);*/
-}
-#pragma endregion

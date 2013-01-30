@@ -38,9 +38,9 @@ public:
 	/// \param p_path
 	/// \return ModelResource*
 	/// Deprecated since 30-1-2013
-	///-----------------------------------------------------------------------------------
-	virtual ModelResource* createModelResource_DEPRECATED(const string& p_name,
-										  const string* p_path=NULL);
+// 	///-----------------------------------------------------------------------------------
+// 	virtual ModelResource* createModelResource_DEPRECATED(const string& p_name,
+//										  const string* p_path=NULL);
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a vector with model resource instructions. All managed, no deletion outside.
@@ -49,7 +49,7 @@ public:
 	/// \return vector<ModelResource*>*
 	///-----------------------------------------------------------------------------------
 	virtual vector<ModelResource*>* createModelResources(const string& p_name,
-												    const string* p_path=NULL);
+												    const string* p_path);
 
 
 protected:
