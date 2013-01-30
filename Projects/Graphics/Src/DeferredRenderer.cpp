@@ -28,21 +28,22 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
 		m_device->GetFeatureLevel());
 
-	m_fullscreenQuad =	 NULL;
+	
 	m_depthStencilView = NULL;
-	for(int i = 0; i < NUMBUFFERS; i++)
+	for(int i = 0; i < RenderTargets::NUMBUFFERS; i++)
 	{
 		m_gBuffers[i] = NULL;
 		m_gBuffersShaderResource[i] = NULL;
 	}
 
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
-	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 
 
 	initRendertargetsAndDepthStencil( m_width, m_height );
 
 	initShaders();
+
+	initFullScreenQuad();
 
 	buildBlendStates();
 	m_currentBlendStateType = BlendState::DEFAULT;
@@ -79,7 +80,7 @@ void DeferredRenderer::clearBuffers()
 	float clearColor[] = {
 		0.0f,0.5f,0.5f,1.0f
 	};
-	for (unsigned int i = 0; i < NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
@@ -186,7 +187,7 @@ void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData
 
 void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	p_mesh->getVertexBuffer()->apply();
-	p_mesh->getIndexBuffer()->apply();
+	//p_mesh->getIndexBuffer()->apply();
 
 	// set texture
 	//HACK: fix so that a placeholder tex is used instead of the last working one
@@ -201,15 +202,34 @@ void DeferredRenderer::renderGUIMesh( Mesh* p_mesh, Texture* p_texture ){
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
 }
 
-void DeferredRenderer::mapRTStoShaderVariables()
+
+void DeferredRenderer::renderComposeStage()
 {
-	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RT0] );
-	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RT1] );
-	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RT2] );
-	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[RT3] );
-	m_deviceContext->PSSetShaderResources( 4, 1, &m_gBuffersShaderResource[DEPTH] );
+	m_composeShader->apply();
+	m_fullscreenQuad->apply();
+
+	m_deviceContext->Draw(6,0);
+}
+void DeferredRenderer::mapDeferredBaseRTSToShader()
+{	
+	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[
+		RenderTargets::DIFFUSE] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[
+		RenderTargets::NORMAL] );
+	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[
+		RenderTargets::SPECULAR] );
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DEPTH] );
 }
 
+void DeferredRenderer::mapVariousPassesToComposeStage(){
+	m_deviceContext->PSSetShaderResources(0, 1, &m_gBuffersShaderResource[
+		RenderTargets::LIGHT] );
+}
+void DeferredRenderer::unmapVariousPassesFromComposeStage(){
+	ID3D11ShaderResourceView* nulz = NULL;
+	m_deviceContext->PSSetShaderResources(0, 1, &nulz);
+}
 void DeferredRenderer::unMapGBuffers()
 {
 	ID3D11ShaderResourceView* nulz[NUMBUFFERS];
@@ -258,7 +278,7 @@ void DeferredRenderer::initDepthStencil()
 	shaderResourceDesc.Texture2D.MipLevels = 1;
 
 	if ( FAILED ( m_device->CreateShaderResourceView(depthStencilTexture,
-		&shaderResourceDesc, &m_gBuffersShaderResource[DEPTH])))
+		&shaderResourceDesc, &m_gBuffersShaderResource[RenderTargets::DEPTH])))
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	depthStencilTexture->Release();
@@ -268,7 +288,7 @@ void DeferredRenderer::initGeometryBuffers()
 {
 	HRESULT hr = S_OK;
 
-	ID3D11Texture2D* gBufferTextures[NUMBUFFERS];
+	ID3D11Texture2D* gBufferTextures[RenderTargets::NUMBUFFERS];
 	D3D11_TEXTURE2D_DESC gBufferDesc;
 	ZeroMemory( &gBufferDesc, sizeof(gBufferDesc) );
 
@@ -278,13 +298,13 @@ void DeferredRenderer::initGeometryBuffers()
 	gBufferDesc.ArraySize = 1;
 	gBufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	gBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	gBufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	gBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	gBufferDesc.SampleDesc.Count = 1;
 	gBufferDesc.SampleDesc.Quality = 0;
 	gBufferDesc.CPUAccessFlags = 0;
 	gBufferDesc.MiscFlags = 0;
 
-	for (unsigned int i = 0; i < NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
 		hr = m_device->CreateTexture2D(&gBufferDesc,NULL,&gBufferTextures[i]);		
 		if (hr != S_OK)
 			throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
@@ -295,7 +315,7 @@ void DeferredRenderer::initGeometryBuffers()
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	for (unsigned int i = 0; i < NUMBUFFERS; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS; i++){
 		hr = m_device->CreateRenderTargetView(gBufferTextures[i], &renderTargetViewDesc,
 			&m_gBuffers[i]);
 		if (hr != S_OK )
@@ -312,7 +332,7 @@ void DeferredRenderer::initGeometryBuffers()
 	/* !!! Note that the for loop starts at index 1 since depthbuffer		*/
 	/* already in init !!!													*/
 	/************************************************************************/
-	for (unsigned int i = 0; i < NUMBUFFERS-1; i++){
+	for (unsigned int i = 0; i < RenderTargets::NUMBUFFERS-1; i++){
 		hr = m_device->CreateShaderResourceView(gBufferTextures[i],&shaderResourceDesc,
 			&m_gBuffersShaderResource[i]);
 		gBufferTextures[i]->Release();
@@ -336,6 +356,11 @@ void DeferredRenderer::initShaders()
 		L"Shaders/GUI/rocket.hlsl");
 }
 
+void DeferredRenderer::initFullScreenQuad()
+{
+	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
+}
+
 void DeferredRenderer::hookUpAntTweakBar()
 {
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::GRAPHICS,
@@ -344,20 +369,18 @@ void DeferredRenderer::hookUpAntTweakBar()
 }
 
 
-void DeferredRenderer::releaseRenderTargetsAndDepthStencil()
-{
+void DeferredRenderer::releaseRenderTargetsAndDepthStencil(){
 	// Release all buffers
 	SAFE_RELEASE(m_depthStencilView);
 
-	for (int i = 0; i < NUMBUFFERS; i++)
+	for (int i = 0; i < RenderTargets::NUMBUFFERS; i++)
 	{
 		SAFE_RELEASE(m_gBuffers[i]);
 		SAFE_RELEASE(m_gBuffersShaderResource[i]);
 	}
 }
 
-void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_height )
-{
+void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_height ){
 	m_width = p_width;
 	m_height = p_height;
 
@@ -365,66 +388,59 @@ void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_heig
 	initGeometryBuffers();
 }
 
-void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo)
-{
+void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo){
 	m_sceneInfo = p_sceneInfo;
 }
 
-void DeferredRenderer::setBlendState(BlendState::Mode p_state)
-{
+void DeferredRenderer::setBlendState(BlendState::Mode p_state){
 	unsigned int idx = static_cast<unsigned int>(p_state);
 	m_deviceContext->OMSetBlendState( m_blendStates[idx], m_blendFactors, m_blendMask );
 	m_currentBlendStateType = p_state;
 }
 
 void DeferredRenderer::setBlendFactors( float p_red, float p_green, float p_blue, 
-									    float p_alpha )
-{
+									    float p_alpha ){
 	m_blendFactors[0]=p_red;
 	m_blendFactors[1]=p_green;
 	m_blendFactors[2]=p_blue;
 	m_blendFactors[3]=p_alpha;
 }
 
-void DeferredRenderer::setBlendFactors( float p_oneValue )
-{
+void DeferredRenderer::setBlendFactors( float p_oneValue ){
 	for (int i=0;i<4;i++)
 		m_blendFactors[i]=p_oneValue;
 }
 
-void DeferredRenderer::setBlendMask( UINT p_mask )
-{
+void DeferredRenderer::setBlendMask( UINT p_mask ){
 	m_blendMask = p_mask;
 }
 
-void DeferredRenderer::setRasterizerStateSettings(RasterizerState::Mode p_state)
-{
+void DeferredRenderer::setRasterizerStateSettings(RasterizerState::Mode p_state){
 	unsigned int idx = static_cast<unsigned int>(p_state);
 	m_deviceContext->RSSetState( m_rasterizerStates[idx] );
 	m_currentRasterizerStateType = p_state;
 }
 
-void DeferredRenderer::buildBlendStates()
-{
+void DeferredRenderer::buildBlendStates(){
 	RenderStateHelper::fillBlendStateList(m_device,m_blendStates);
 }
 
-void DeferredRenderer::buildRasterizerStates()
-{
+void DeferredRenderer::buildRasterizerStates(){
 	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
 }
-void DeferredRenderer::setBasePassRenderTargets()
-{
+void DeferredRenderer::setBasePassRenderTargets(){
 	m_deviceContext->OMSetRenderTargets(BASESHADERS,m_gBuffers,m_depthStencilView);
 }
 
-ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
-{
+ID3D11DepthStencilView* DeferredRenderer::getDepthStencil(){
 	return m_depthStencilView;
 }
 
-void DeferredRenderer::unmapDepthFromShaderVariables()
-{
+void DeferredRenderer::unmapDepthFromShaderVariables(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deviceContext->PSSetShaderResources( NUMBUFFERS-1, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
+}
+
+void DeferredRenderer::setLightRenderTarget(){
+	m_deviceContext->OMSetRenderTargets(0,&m_gBuffers[RenderTargets::LIGHT],NULL);
 }

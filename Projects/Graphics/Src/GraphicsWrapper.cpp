@@ -253,8 +253,11 @@ void GraphicsWrapper::setBaseRenderTargets(){
 void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 }
-void GraphicsWrapper::mapGBuffersToShader(){
-	m_deferredRenderer->mapRTStoShaderVariables();
+void GraphicsWrapper::setLightPassRenderTarget(){
+	m_deferredRenderer->setLightRenderTarget();
+}
+void GraphicsWrapper::mapDeferredBaseToShader(){
+	m_deferredRenderer->mapDeferredBaseRTSToShader();
 }
 void GraphicsWrapper::renderGUIMesh( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
@@ -466,7 +469,20 @@ void GraphicsWrapper::setParticleRenderState()
 	m_deviceContext->OMSetRenderTargets(1,&m_backBuffer,m_deferredRenderer->getDepthStencil());
 }
 
-void GraphicsWrapper::unmapDepthFromShader()
-{
+void GraphicsWrapper::unmapDepthFromShader(){
 	m_deferredRenderer->unmapDepthFromShaderVariables();
+}
+
+void GraphicsWrapper::renderComposeStage(){
+	m_deferredRenderer->renderComposeStage();
+}
+
+void GraphicsWrapper::mapVariousStagesForCompose()
+{
+	m_deferredRenderer->mapVariousPassesToComposeStage();
+}
+
+void GraphicsWrapper::unmapVariousStagesForCompose()
+{
+	m_deferredRenderer->unmapVariousPassesFromComposeStage();
 }

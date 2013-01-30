@@ -81,6 +81,8 @@ public:
 
 	void setComposedRenderTargetWithNoDepthStencil();
 
+	void setLightPassRenderTarget();
+
 	void setParticleRenderState();
 
 	///-----------------------------------------------------------------------------------
@@ -92,12 +94,9 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
-	///-----------------------------------------------------------------------------------
-	/// Finalizes the frame. For example; a deferred subsystem will
-	/// render to backbuffer here.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void mapGBuffersToShader();
+
+	
+	void mapDeferredBaseToShader();
 
 	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
@@ -162,7 +161,13 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderParticleSystem(AglParticleSystem* p_system);
 
+	void renderComposeStage();
+
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
+
+	void mapVariousStagesForCompose();
+
+	void unmapVariousStagesForCompose();
 private:
 	void initSwapChain(HWND p_hWnd);
 

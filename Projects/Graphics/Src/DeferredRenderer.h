@@ -43,13 +43,15 @@ public:
 	/* See wiki for more details.											*/
 	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
 	/************************************************************************/
-	const static int NUMBUFFERS = 5;
 	const static int BASESHADERS = 3;
 	const static int RT0 = 0;
 	const static int RT1 = 1;
 	const static int RT2 = 2;
 	const static int RT3 = 3;
-	const static int DEPTH = 4;
+	const static int RT4 = 4;
+	enum RenderTargets{
+		DIFFUSE = 0, NORMAL = 1, SPECULAR = 2, LIGHT = 3, DEPTH = 4, NUMBUFFERS = 5,
+	};
 public:
 	// ===================================================================================
 	// Setup
@@ -103,7 +105,10 @@ public:
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void mapRTStoShaderVariables();
+	void mapDeferredBaseRTSToShader();
+
+	void mapVariousPassesToComposeStage();
+	void unmapVariousPassesFromComposeStage();
 
 	void unmapDepthFromShaderVariables();
 	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
@@ -135,6 +140,8 @@ public:
 
 	void setBlendMask(UINT p_mask);
 
+	void setLightRenderTarget();
+
 	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
 
 	// ===================================================================================
@@ -149,15 +156,17 @@ public:
 
 	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
 
-	// ===================================================================================
-	// Debug
-	// ===================================================================================
-	void hookUpAntTweakBar();
-
 	void releaseRenderTargetsAndDepthStencil();
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 
 	ID3D11DepthStencilView* getDepthStencil();
+
+	void renderComposeStage();
+
+	// ===================================================================================
+	// Debug
+	// ===================================================================================
+	void hookUpAntTweakBar();
 
 private:
 	void initDepthStencil();
@@ -166,7 +175,7 @@ private:
 	void buildRasterizerStates();
 	void unMapGBuffers();
 	void initShaders();
-
+	void initFullScreenQuad();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
