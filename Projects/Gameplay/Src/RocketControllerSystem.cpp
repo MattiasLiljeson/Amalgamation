@@ -83,7 +83,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			vector<unsigned int> cols = ps->getController()->CollidesWith(pb->m_id);
 			if (cols.size() > 0)
 			{
-				ps->getController()->ApplyExternalImpulse(body->GetWorld().GetTranslation(), 10, 10);
+				ps->getController()->ApplyExternalImpulse(body->GetWorld().GetTranslation(), 20, 20);
 				ps->getController()->InactivateBody(pb->m_id);
 
 				//Send an explosion sound effect
