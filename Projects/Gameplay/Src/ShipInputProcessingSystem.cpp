@@ -70,78 +70,78 @@ ShipInputProcessingSystem::ResultingInputForces& ShipInputProcessingSystem::getP
 void ShipInputProcessingSystem::initGamePad()
 {
 	m_gamepadHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_LX_POSITIVE);
+		InputHelper::Xbox360Analogs_THUMB_LX_POSITIVE);
 	m_gamepadHorizontalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_LX_NEGATIVE);
+		InputHelper::Xbox360Analogs_THUMB_LX_NEGATIVE);
 	m_gamepadVerticalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_LY_POSITIVE);
+		InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE);
 	m_gamepadVerticalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_LY_NEGATIVE);
+		InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE);
 
-	m_gamepadRollRight	= m_inputBackend->getControlByEnum( InputHelper::SHOULDER_PRESS_R);
-	m_gamepadRollLeft	= m_inputBackend->getControlByEnum( InputHelper::SHOULDER_PRESS_L);
+	m_gamepadRollRight	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_SHOULDER_PRESS_R);
+	m_gamepadRollLeft	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_SHOULDER_PRESS_L);
 
-	m_gamepadThrust	= m_inputBackend->getControlByEnum( InputHelper::TRIGGER_R);
+	m_gamepadThrust	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Analogs_TRIGGER_R);
 
 	m_gamepadStrafeHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_RX_POSITIVE);
+		InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
 	m_gamepadStrafeHorizontalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::THUMB_RX_NEGATIVE);
+		InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
 	m_gamepadStrafeVerticalPositive	= m_inputBackend->getControlByEnum(
-		InputHelper::THUMB_RY_POSITIVE);
+		InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE);
 	m_gamepadStrafeVerticalNegative	= m_inputBackend->getControlByEnum(
-		InputHelper::THUMB_RY_NEGATIVE);
+		InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE);
 
-	m_gamepadEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::BTN_BACK );
+	m_gamepadEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_BACK );
 }
 
 
 void ShipInputProcessingSystem::initMouse()
 {
 	m_mouseHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::MOUSE_AXIS::X_POSITIVE);
+		InputHelper::MouseAxes_X_POSITIVE);
 	m_mouseHorizontalNegative	= m_inputBackend->getControlByEnum(
-		InputHelper::MOUSE_AXIS::X_NEGATIVE);
+		InputHelper::MouseAxes_X_NEGATIVE);
 	m_mouseVerticalPositive		= m_inputBackend->getControlByEnum( 
-		InputHelper::MOUSE_AXIS::Y_POSITIVE);
+		InputHelper::MouseAxes_Y_POSITIVE);
 	m_mouseVerticalNegative		= m_inputBackend->getControlByEnum( 
-		InputHelper::MOUSE_AXIS::Y_NEGATIVE);
+		InputHelper::MouseAxes_Y_NEGATIVE);
 
 	//Added by Anton 15/1 - 13
 	m_mouseModuleActivation = m_inputBackend->getControlByEnum(
-		InputHelper::M_LBTN);
+		InputHelper::MouseButtons_0);
 }
 
 void ShipInputProcessingSystem::initKeyboard()
 {
 	m_keyboardRollRight = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_D);
+		InputHelper::KeyboardKeys_D);
 	m_keyboardRollLeft =m_inputBackend->getControlByEnum(
-		InputHelper::KEY_A);
+		InputHelper::KeyboardKeys_A);
 
 	m_keyboardThrust = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_W);
+		InputHelper::KeyboardKeys_W);
 
 	m_keyboardStrafeVerticalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_O);
+		InputHelper::KeyboardKeys_O);
 	m_keyboardStrafeVerticalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_L);
+		InputHelper::KeyboardKeys_L);
 	m_keyboarStrafeHorizontalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_E);
+		InputHelper::KeyboardKeys_E);
 	m_keyboarStrafeHorizontalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_Q);
+		InputHelper::KeyboardKeys_Q);
 
-	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KEY_C );
+	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C );
 
 	//Added by Anton 15/1 - 13
 	m_keyboardModuleSlots[0] = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_1);
+		InputHelper::KeyboardKeys_1);
 	m_keyboardModuleSlots[1] = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_2);
+		InputHelper::KeyboardKeys_2);
 	m_keyboardModuleSlots[2] = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_3);
+		InputHelper::KeyboardKeys_3);
 	m_keyboardModuleSlots[3] = m_inputBackend->getControlByEnum(
-		InputHelper::KEY_4);
+		InputHelper::KeyboardKeys_4);
 }
 
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
@@ -253,7 +253,7 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 void ShipInputProcessingSystem::updateAntTweakBar(const ResultingInputForces& p_input)
 {
 	// Calibrate the Gamepad's analogue sticks when pressing the C key.
-	if( m_inputBackend->getControlByEnum( InputHelper::KEY_C )->getDelta() >= 0.5 && false )
+	if( m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C )->getDelta() >= 0.5 && false )
 	{
 		
 	}

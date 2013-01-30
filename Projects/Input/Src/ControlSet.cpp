@@ -3,20 +3,20 @@
 #include "ControlSet.h"
 
 
-InputHelper::KEY_STATE ControlSet::getPrimaryState()
+InputHelper::KeyStates ControlSet::getPrimaryState()
 {
 	return getState( m_primaryBtn );
 }
 
-InputHelper::KEY_STATE ControlSet::getSecondaryState()
+InputHelper::KeyStates ControlSet::getSecondaryState()
 {
 	return getState( m_secondaryBtn );
 }
 
-InputHelper::KEY_STATE ControlSet::getState( Control* p_control )
+InputHelper::KeyStates ControlSet::getState( Control* p_control )
 {
 	int rawData = p_control->getRawData();
-	return static_cast<InputHelper::KEY_STATE>(rawData);
+	return static_cast<InputHelper::KeyStates>(rawData);
 }
 
 double ControlSet::dx(double p_screenWidth)

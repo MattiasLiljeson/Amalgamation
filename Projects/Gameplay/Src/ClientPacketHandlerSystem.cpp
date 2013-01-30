@@ -421,7 +421,7 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
 	if( static_cast<InputBackendSystem*>(m_world->getSystem(
 		SystemType::InputBackendSystem))->getControlByEnum(
-		InputHelper::KEY_0)->getDelta() > 0 )
+		InputHelper::KeyboardKeys_0)->getDelta() > 0 )
 	{
 		if( m_staticPropIdentities.empty() )
 		{
