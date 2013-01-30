@@ -287,17 +287,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -316,8 +320,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore.lib;RocketDebugger.lib;RocketControls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore.lib;RocketDebugger.lib;RocketControls.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

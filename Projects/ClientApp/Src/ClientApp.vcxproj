@@ -72,6 +72,7 @@
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <OpenMPSupport>
       </OpenMPSupport>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,6 +80,9 @@
       <AdditionalDependencies>Common_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;XINPUT9_1_0.lib;NetComm_x86_$(Configuration).lib;FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies>Gameplay_x86_$(Configuration).lib;AgileAssets_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

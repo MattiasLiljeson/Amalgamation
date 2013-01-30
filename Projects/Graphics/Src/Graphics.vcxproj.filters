@@ -152,9 +152,6 @@
     <ClInclude Include="MaterialInfo.h">
       <Filter>Renderer\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoadException.h">
-      <Filter>Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="PVertex.h">
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
