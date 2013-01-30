@@ -28,7 +28,6 @@
 #include "PlayerCameraController.h"
 #include "HudElement.h"
 
-#include "GraphicsBackendSystem.h"
 #include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
@@ -113,46 +112,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			data.unpack(packet);
 
-			if (data.entityType == (char)EntityType::EndBatch)
-			{
+			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch();
 			}
 			else
 			{
 				m_batch.push_back(data);
 			}
-
-			/*NetsyncDirectMapperSystem* directMapper =
-				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-				SystemType::NetsyncDirectMapperSystem));
-			Entity* entity = directMapper->getEntity( data.networkIdentity );
-			if(entity != NULL)
-			{
-				Transform* transform = NULL;
-				transform = static_cast<Transform*>(
-					m_world->getComponentManager()->getComponent(
-					entity->getIndex(), ComponentType::Transform ) );
-				// HACK! below check should not have to be done. Is the packet of the 
-				// wrong type? Throw exception? /ML
-				if( transform != NULL ) // Throw exception? /ML
-				{
-					transform->setTranslation( data.translation );
-					transform->setRotation( data.rotation );
-					transform->setScale( data.scale );
-				}
-
-				Extrapolate* extrapolate = NULL;
-				extrapolate = static_cast<Extrapolate*>(
-					entity->getComponent(ComponentType::Extrapolate) );
-				// HACK! below check should not have to be done. Is the packet of the 
-				// wrong type? Throw exception? /ML
-				if( extrapolate != NULL )
-				{
-					extrapolate->serverUpdateTimeStamp = data.timestamp;
-					extrapolate->velocityVector = data.velocity;
-					extrapolate->angularVelocity = data.angularVelocity;
-				}
-			}*/
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
 		{			
