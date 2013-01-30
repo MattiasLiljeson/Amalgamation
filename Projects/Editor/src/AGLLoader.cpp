@@ -32,6 +32,9 @@ void AGLLoader::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 }
 void AGLLoader::Load(string pPath)
 {
+	Scene::GetInstance()->Init(pPath, mDevice, mDeviceContext);
+	return;
+
 	mPath = new char[pPath.length()+1];
 	const char* src = pPath.c_str();
 	strcpy_s(mPath, pPath.length()+1, src);
@@ -151,7 +154,7 @@ void AGLLoader::Load(string pPath)
 	}
 
 
-	Scene::GetInstance()->Init(modmeshes, skeletons, modmappings, mReader->getScene(), folder, mDevice, mDeviceContext);
+	//Scene::GetInstance()->Init(modmeshes, skeletons, modmappings, mReader->getScene(), folder, mDevice, mDeviceContext);
 }
 AGLLoader::~AGLLoader()
 {

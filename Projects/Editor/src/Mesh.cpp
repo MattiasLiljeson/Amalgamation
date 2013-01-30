@@ -91,7 +91,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 	{
 		AglMatrix trans = mMesh->getHeader().transform;
 		trans.SetTranslation(trans.GetTranslation()*pScale);
-		//pWorld = trans * pWorld;
+		pWorld = trans * pWorld;
 	}
 	if (m_grid && m_drawSphereGrid)
 	{
