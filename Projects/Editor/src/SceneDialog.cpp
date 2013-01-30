@@ -18,6 +18,13 @@ void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMaterial(index);
 }
+void TW_CALL SceneDialog::OpenMergeDialog(void *clientData)
+{
+	SceneDialog::GetInstance()->m_materialDialog->hide();
+	SceneDialog::GetInstance()->m_particleSystemDialog->hide();
+	SceneDialog::GetInstance()->m_meshDialog->hide();
+	SceneDialog::GetInstance()->m_mergeDialog->show();
+}
 void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 {
 	int index = (int)clientData;
@@ -86,6 +93,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 
 			TwAddButton(sceneDialog->m_dialog, ("Material" + toString(materials[i]->id)).c_str(), OpenMaterialDialog, (void*)i, info.c_str());
 		}
+
+		TwAddButton(sceneDialog->m_dialog, "Merge", OpenMergeDialog, NULL, "");
 
 		TwAddButton(sceneDialog->m_dialog, "AddMaterial", AddMaterial, sceneDialog, " label='Material' key=c help='Load an Agile file into the editor.' group='Add'");
 		TwAddButton(sceneDialog->m_dialog, "AddParticleEffect", AddPE, sceneDialog, " label='Particle Effect' key=c help='Load an Agile file into the editor.' group='Add'");
@@ -215,15 +224,16 @@ void SceneDialog::Release()
 }
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
-	//m_materialDialog->hide();
+	m_materialDialog->hide();
 	m_particleSystemDialog->hide();
-
+	m_mergeDialog->hide();
 	m_meshDialog->setMesh(pIndex);
 }
 void SceneDialog::SetCurrentParticleSystem(int pIndex)
 {
 	m_materialDialog->hide();
 	m_meshDialog->hide();
+	m_mergeDialog->hide();
 
 	m_particleSystemDialog->setPS(pIndex);
 }
@@ -231,6 +241,7 @@ void SceneDialog::SetCurrentMaterial(int pIndex)
 {
 	m_meshDialog->hide();
 	m_particleSystemDialog->hide();
+	m_mergeDialog->hide();
 
 	m_materialDialog->setMaterial(pIndex);
 }

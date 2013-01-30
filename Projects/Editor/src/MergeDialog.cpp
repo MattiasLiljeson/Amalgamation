@@ -1,6 +1,7 @@
 #include "MergeDialog.h"
 #include "AglReader.h"
 #include "SceneDialog.h"
+#include "TextureManager.h"
 
 void TW_CALL MergeDialog::LoadAGL(void *clientData)
 {
@@ -15,6 +16,13 @@ void TW_CALL MergeDialog::LoadAGL(void *clientData)
 			vector<AglParticleSystem*> ps = scene->getParticleSystems();
 			for (unsigned int i = 0; i < ps.size(); i++)
 			{
+				AglParticleSystemHeader h = ps[i]->getHeader();
+				if (h.textureNameIndex >= 0)
+				{
+					string s = scene->getName(h.textureNameIndex);
+					TextureManager::GetInstance()->LoadTexture(s);
+					h.textureNameIndex = Scene::GetInstance()->AddName(s);
+				}
 				SceneDialog::GetInstance()->ClonePE(ps[i]->getHeader());
 			}
 		}
@@ -29,7 +37,7 @@ MergeDialog::MergeDialog()
     int barSize[2] = {200, 1060};
 	TwDefine(" Merge position='1710 10'  ");
 	TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
-	show();
+	hide();
 
 	m_importMeshes = true;
 	m_importParticleSystems = true;

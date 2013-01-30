@@ -31,6 +31,7 @@ private:
 	static void TW_CALL OpenMeshDialog(void *clientData);
 	static void TW_CALL OpenParticleSystemDialog(void *clientData);
 	static void TW_CALL OpenMaterialDialog(void *clientData);
+	static void TW_CALL OpenMergeDialog(void *clientData);
 	static void TW_CALL LoadAGL(void *clientData);
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
