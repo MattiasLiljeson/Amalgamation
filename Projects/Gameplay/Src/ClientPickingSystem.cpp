@@ -73,10 +73,10 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			SystemType::InputBackendSystem ));
 
 		Control* ctrl = input->getControlByEnum(
-			InputHelper::MouseButtons_2); //HACK: This is really the middle button. Mattias is fixing
+			InputHelper::MouseButtons_RIGHT);
 
 		Control* ctrl2 = input->getControlByEnum(
-			InputHelper::MouseButtons_0); //HACK: This is really the middle button. Mattias is fixing
+			InputHelper::MouseButtons_LEFT);
 
 		double x = input->getCursor()->getX();
 		double y = -input->getCursor()->getY();
