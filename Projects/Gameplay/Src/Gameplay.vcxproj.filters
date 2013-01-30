@@ -440,11 +440,9 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h" />
-
     <ClInclude Include="MoveShipLightsSystem.h">
       <Filter>Systems\Debugging</Filter>
-	 </ClInclude>
-
+    </ClInclude>
     <ClInclude Include="EntityDeletionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -453,7 +451,9 @@
     </ClInclude>
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
-
+    </ClInclude>
+    <ClInclude Include="WinningConditionSystem.h">
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -746,11 +746,14 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp">
       <Filter>Systems\Debugging</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="EntityDeletionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="LightBlinkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="WinningConditionSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>

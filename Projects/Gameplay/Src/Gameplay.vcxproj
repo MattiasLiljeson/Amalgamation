@@ -133,6 +133,7 @@
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
+    <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
+    <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>
