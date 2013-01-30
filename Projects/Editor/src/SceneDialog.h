@@ -53,6 +53,8 @@ public:
 
 	void RemoveMaterial(AglMaterial* pMaterial);
 	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
+
+	MaterialDialog* GetMaterialDialog(){ return m_materialDialog; }
 };
 
 #endif
