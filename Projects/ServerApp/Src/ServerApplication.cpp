@@ -300,6 +300,10 @@ namespace Srv
 				BodyInitData::DYNAMIC, 
 				BodyInitData::SINGLE, false));
 
+			ConnectionPointSet* cps = new ConnectionPointSet();
+			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::identityMatrix()));
+
+			entity->addComponent(ComponentType::ConnectionPointSet, cps);
 			entity->addComponent(ComponentType::ShipModule, new ShipModule());
 			entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));

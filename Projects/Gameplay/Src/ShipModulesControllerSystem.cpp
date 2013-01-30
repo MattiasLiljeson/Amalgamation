@@ -85,15 +85,17 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 			{
 				Entity* entity = m_world->getEntity(e);
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
-				
-				//m->m_health -= 50 * m_world->getDelta();
-				if (m->m_health <= 0)
+
+				if (m) //Could be a ship
 				{
-					drop(p_parent, i);
-				}
-				else
-				{
-					checkDrop(entity);
+					if (m->m_health <= 0)
+					{
+						drop(p_parent, i);
+					}
+					else
+					{
+						checkDrop(entity);
+					}
 				}
 			}
 		}
@@ -193,8 +195,11 @@ void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p
 			{
 				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-				currModule->m_active = p_value;
-				setActivationChildren(currEn, p_value);
+				if (currModule)
+				{
+					currModule->m_active = p_value;
+					setActivationChildren(currEn, p_value);
+				}
 			}
 		}
 	}
@@ -215,6 +220,12 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 		static_cast<ConnectionPointSet*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	ShipModule* module =
+		static_cast<ShipModule*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ShipModule)));
+
 	if (connected)
 	{
 		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
@@ -222,14 +233,15 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
 			{
 				Entity* e = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
-				score += calculateScore(e);
+				if (module && e->getIndex() == module->m_parentEntity)
+				{
+					//Do nothing
+				}
+				else
+					score += calculateScore(e);
 			}
 		}
 	}
-	ShipModule* module =
-		static_cast<ShipModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ShipModule)));
 	if (module)
 		score += module->m_value;
 	return score;

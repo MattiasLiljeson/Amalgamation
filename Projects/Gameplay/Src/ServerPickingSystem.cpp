@@ -343,6 +343,27 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
 
+		//Find module connection point
+		ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(module->getComponent(ComponentType::ConnectionPointSet));
+
+		//Don't allow connection if the module has no connection points
+		if (!conPoints)
+			return;
+
+		int sel = -1;
+		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+		{
+			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
+			{
+				sel = i;
+				break;
+			}
+		}
+
+		//Don't allow connection if the module doesn't have any free connection points
+		if (sel < 0)
+			return;
+
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
 		Entity* ship = target;
@@ -361,11 +382,16 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
-
+		//WARNING: DOES NOT HANDLE TRANSFORMATION RELATED TO CHILD CONNECTION POINT RIGHT NOW
 
 		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
 		physX->getController()->AttachBodyToCompound(comp, r, transform);
+		
+		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
+		
+		//Set the module connection point
+		conPoints->m_connectionPoints[sel].cpConnectedEntity = ship->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
 
