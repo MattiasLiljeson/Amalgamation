@@ -247,11 +247,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					// Use this later to print a nice text saying "Winner" or "Loser".
 					if(winLose.winner[i])
 					{
-						DEBUGWARNING(( "Winner!" ));
+						MessageBoxA(NULL, "Winner!", "Warning!", MB_ICONWARNING);
 					}
 					else
 					{
-						DEBUGWARNING(( "Loser!" ));
+						MessageBoxA(NULL, "Loser!", "Warning!", MB_ICONWARNING);
 					}
 				}
 			}
