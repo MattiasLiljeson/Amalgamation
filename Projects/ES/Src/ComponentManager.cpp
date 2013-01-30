@@ -76,7 +76,7 @@ void ComponentManager::removeComponent( Entity* p_entity, ComponentType::Compone
 	if ( bits[p_typeIdx] == true)
 	{
 		// delete her OK? Any references left?
-		delete m_componentsByType[p_typeIdx][entityIndex];
+		m_deleteOnPost.push_back(m_componentsByType[p_typeIdx][p_entity->getIndex()]);
 		m_componentsByType[p_typeIdx][entityIndex] = NULL;
 		p_entity->setComponentBit( p_typeIdx, false );
 	}

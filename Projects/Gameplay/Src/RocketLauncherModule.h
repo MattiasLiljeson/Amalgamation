@@ -18,13 +18,23 @@
 class RocketLauncherModule: public Component
 {
 public:
-	RocketLauncherModule(){coolDown=0.0f; laserSightEntity=-1;}
+	RocketLauncherModule()
+	{
+		coolDown=0.0f; 
+		laserSightEntity=-1;
+		burstCount = 2;
+		timeSinceRocket = FLT_MAX;
+		currentBurst = 0;
+	}
 	RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~RocketLauncherModule();
 
 	AglVector3 muzzleOffset;
 	AglVector3 fireDirection;
 	float	   coolDown;
+	int		   burstCount;
+	float	   timeSinceRocket;
+	int		   currentBurst;
 
 	//Maybe temporary
 	int		   laserSightEntity;

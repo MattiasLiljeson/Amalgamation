@@ -63,8 +63,8 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 
 				//Send a shockwave
-				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
-				mine->m_age = 0;
+				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 20, 20);
+				ps->getController()->InactivateBody(pb->m_id);
 
 				//Send an explosion sound effect
 				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
