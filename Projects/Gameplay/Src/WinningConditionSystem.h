@@ -27,7 +27,14 @@ public:
 	void startGameSession(float p_endTime);
 
 private:
-	void signalEndSession();
+	vector< pair<float, Entity*> > createSortedScoreEntityMapping();
+	///-----------------------------------------------------------------------------------
+	/// Sends a packet stating if a client won or lost. Currently only handles one winner.
+	/// \param pair<float
+	/// \param p_scoreComponentMapping
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void signalEndSession(vector< pair<float, Entity*> > p_scoreComponentMapping);
 
 private:
 	float m_endTime;
