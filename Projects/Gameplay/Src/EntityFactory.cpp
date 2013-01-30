@@ -21,6 +21,8 @@
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
+#include "PositionalSoundSource.h"
+#include "AudioBackendSystem.h"
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
@@ -603,8 +605,12 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
 	m_world->addEntity(entity);
+	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
+		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
+		p_packet.translation);
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)
