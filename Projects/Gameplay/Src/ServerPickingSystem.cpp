@@ -421,7 +421,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
 			{
-				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0)
+				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0 &&
+					cps->m_connectionPoints[i].cpConnectedEntity != shipModule->m_parentEntity)
 					return false;
 			}
 		}
@@ -430,22 +431,35 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
-			cps = static_cast<ConnectionPointSet*>(
+			ConnectionPointSet* cpsParent = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 			
+			//Find parent slot
 			int slot = 0;
-			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			for (unsigned int i = 0; i < cpsParent->m_connectionPoints.size(); i++)
 			{
-				if (cps->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
+				if (cpsParent->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
 				{
 					slot = i;
 					break;
 				}
 			}
 
+			//Find Child slot
+			int childslot = 0;
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
+				{
+					childslot = i;
+					break;
+				}
+			}
+
 			//Detach
-			cps->m_connectionPoints[slot].cpConnectedEntity = -1;
+			cpsParent->m_connectionPoints[slot].cpConnectedEntity = -1;
+			cps->m_connectionPoints[childslot].cpConnectedEntity = -1;
 			shipModule->m_parentEntity = -1;
 			moduleBody->setParentId(-1);
 
