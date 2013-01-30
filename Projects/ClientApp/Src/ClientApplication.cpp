@@ -50,7 +50,6 @@
 #include <LibRocketBackendSystem.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
-#include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -487,6 +486,12 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
+
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1.77f));
+	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10) );
+	entity->addComponent(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+	m_world->addEntity(entity);
 	//InitModulesTestByAnton();
 
 	/*

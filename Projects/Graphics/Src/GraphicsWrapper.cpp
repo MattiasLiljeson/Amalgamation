@@ -74,6 +74,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_deferredRenderer;
 	delete m_particleRenderer;
 	delete m_deferredBaseShader;
+	delete m_shaderFactory;
 	delete m_bufferFactory;
 	delete m_meshManager;
 	delete m_textureManager;

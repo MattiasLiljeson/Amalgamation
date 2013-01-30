@@ -56,7 +56,7 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
 	// recalc projection matrix
 	Entity* mainCamera =
 		m_world->getEntityManager()->getFirstEntityByComponentType(
-		ComponentType::MainCamera );
+		ComponentType::TAG_MainCamera );
 	if( mainCamera != NULL )
 	{
 		CameraInfo* cameraInfo = static_cast<CameraInfo*>( mainCamera->getComponent(

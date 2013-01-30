@@ -20,7 +20,6 @@
 #include "RenderInfo.h"
 #include "ShipFlyController.h"
 #include "CameraInfo.h"
-#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 #include "PlayerScore.h"

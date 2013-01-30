@@ -1,7 +1,6 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "MainCamera.h"
 #include "Transform.h"
 #include "PickComponent.h"
 #include "TcpClient.h"

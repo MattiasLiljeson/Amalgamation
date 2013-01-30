@@ -171,9 +171,6 @@
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="MainCamera.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelPiece.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
@@ -440,11 +437,9 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h" />
-
     <ClInclude Include="MoveShipLightsSystem.h">
       <Filter>Systems\Debugging</Filter>
-	 </ClInclude>
-
+    </ClInclude>
     <ClInclude Include="EntityDeletionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -453,7 +448,6 @@
     </ClInclude>
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
-
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -746,7 +740,7 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp">
       <Filter>Systems\Debugging</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="EntityDeletionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>

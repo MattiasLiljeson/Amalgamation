@@ -36,7 +36,6 @@ public:	//Enums
 		BodyInitData,
 		BoundingVolumeInitData,
 		LookAtEntity,
-		MainCamera,
 		PlayerCameraController,
 		PlayerScore,
 		MenuItem,
