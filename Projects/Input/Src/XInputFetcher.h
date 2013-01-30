@@ -26,7 +26,7 @@ public:
 	virtual ~XInputFetcher();
 
 	virtual void update();
-	virtual InputHelper::KEY_STATE getBtnState( int p_btn );
+	virtual InputHelper::KeyStates getBtnState( int p_btn );
 	virtual short getRawAnalog( int p_analog );
 
 	///-----------------------------------------------------------------------------------
@@ -38,11 +38,11 @@ public:
 	virtual void calibrate( double p_epsilon );
 
 private:
-	static int s_btnMaskMap[InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS];
+	static int s_btnMaskMap[InputHelper::Xbox360Digitals_CNT];
 
-	int m_rawAnalogs[InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS];
-	int m_analogOffsets[InputHelper::NUM_XBOX360_CONTROLLER_ANALOGS];
-	InputHelper::KEY_STATE m_btns[InputHelper::NUM_XBOX360_CONTROLLER_DIGITALS];
+	int m_rawAnalogs[InputHelper::Xbox360Analogs_CNT];
+	int m_analogOffsets[InputHelper::Xbox360Analogs_CNT];
+	InputHelper::KeyStates m_btns[InputHelper::Xbox360Digitals_CNT];
 	XINPUT_STATE m_currentState;
 
 	 double m_epsilon;

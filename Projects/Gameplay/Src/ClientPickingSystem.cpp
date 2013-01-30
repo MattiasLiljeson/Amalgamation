@@ -73,14 +73,14 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			SystemType::InputBackendSystem ));
 
 		Control* ctrl = input->getControlByEnum(
-			InputHelper::M_RBTN); //HACK: This is really the middle button. Mattias is fixing
+			InputHelper::MouseButtons_2); //HACK: This is really the middle button. Mattias is fixing
 
 		Control* ctrl2 = input->getControlByEnum(
-			InputHelper::M_LBTN); //HACK: This is really the middle button. Mattias is fixing
+			InputHelper::MouseButtons_0); //HACK: This is really the middle button. Mattias is fixing
 
 		double x = input->getCursor()->getX();
 		double y = -input->getCursor()->getY();
-		AglVector4 targetNDC(x, y, 1, 1);
+		AglVector4 targetNDC( x, y, 1.0f, 1.0f );
 		targetNDC.transform(inv);
 		targetNDC /= targetNDC.w;
 		AglVector3 target(targetNDC.x, targetNDC.y, targetNDC.z);

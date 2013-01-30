@@ -22,7 +22,7 @@ class InputManager;
 class KeyControl : public Control
 {
 public:
-	KeyControl( InputHelper::KEYBOARD_KEY p_key );
+	KeyControl( InputHelper::KeyboardKeys p_key );
 	virtual ~KeyControl(void);
 
 	virtual void update( InputManager* p_manager );

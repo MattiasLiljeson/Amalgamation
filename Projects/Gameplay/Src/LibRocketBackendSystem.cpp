@@ -168,17 +168,17 @@ void LibRocketBackendSystem::process()
 	}
 	
 
-	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC(m_cursor->getX(),
-														   m_cursor->getY());
+	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
+														   (float)m_cursor->getY());
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
 
 	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
-	if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_PRESSED )
+	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED )
 	{
 		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
 	}
-	else if( m_cursor->getPrimaryState() == InputHelper::KEY_STATE::KEY_RELEASED )
+	else if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_RELEASED )
 	{
 		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
 	}

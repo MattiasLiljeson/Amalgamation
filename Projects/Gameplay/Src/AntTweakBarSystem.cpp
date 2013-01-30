@@ -31,7 +31,8 @@ void AntTweakBarSystem::feedInput()
 
 	// mouse pos
 	Cursor* cursor = m_inputBackend->getCursor();
-	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( cursor->getX(), cursor->getY() );
+	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)cursor->getX(),
+		(float)cursor->getY() );
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
 	antTweakBar->setMousePos(mouseX,mouseY);
@@ -44,9 +45,9 @@ void AntTweakBarSystem::feedInput()
 
 	// keyboard	A-Z
 	Control* kb_control=NULL;
-	for ( int letterIdx=InputHelper::KEY_A; letterIdx<=InputHelper::KEY_Z; letterIdx++ )
+	for ( int letterIdx=InputHelper::KeyboardKeys_A; letterIdx<=InputHelper::KeyboardKeys_Z; letterIdx++ )
 	{
-		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KEYBOARD_KEY)letterIdx );
+		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KeyboardKeys)letterIdx );
 		if ( kb_control && kb_control->getDelta() > 0.5f )
 		{
 			antTweakBar->setKeyPressed(letterIdx+'A',0);
@@ -55,49 +56,49 @@ void AntTweakBarSystem::feedInput()
 
 	// keyboard	0-9
 	kb_control=NULL;
-	for ( int keyNumIdx=InputHelper::KEY_0; keyNumIdx<=InputHelper::KEY_9; keyNumIdx++ )
+	for ( int keyNumIdx=InputHelper::KeyboardKeys_0; keyNumIdx<=InputHelper::KeyboardKeys_9; keyNumIdx++ )
 	{
-		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KEYBOARD_KEY)keyNumIdx );
+		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KeyboardKeys)keyNumIdx );
 		if ( kb_control && kb_control->getDelta() > 0.5f )
 		{
-			antTweakBar->setKeyPressed( keyNumIdx-(int)InputHelper::KEY_0+'0', 0 );
+			antTweakBar->setKeyPressed( keyNumIdx-(int)InputHelper::KeyboardKeys_0+'0', 0 );
 		}
 	}
 
 	// keyboard	numpad 0-9
 	kb_control=NULL;
-	for (int numPadIdx=InputHelper::KEY_NUM0; numPadIdx<=InputHelper::KEY_NUM9; numPadIdx++)
+	for (int numPadIdx=InputHelper::KeyboardKeys_NUMPAD_0; numPadIdx<=InputHelper::KeyboardKeys_NUMPAD_9; numPadIdx++)
 	{
-		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KEYBOARD_KEY)numPadIdx );
+		kb_control = m_inputBackend->getControlByEnum( (InputHelper::KeyboardKeys)numPadIdx );
 		if ( kb_control && kb_control->getDelta() > 0.5f )
 		{
-			antTweakBar->setKeyPressed( numPadIdx-(int)InputHelper::KEY_NUM0+'0', 0 );
+			antTweakBar->setKeyPressed( numPadIdx-(int)InputHelper::KeyboardKeys_NUMPAD_0+'0', 0 );
 		}
 	}
 
 	// space
-	kb_control = m_inputBackend->getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_SPACE );
+	kb_control = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_SPACE );
 	if ( kb_control && kb_control->getDelta() > 0.5f )
 	{
 		antTweakBar->setKeyPressed( TW_KEY_SPACE, 0 ); // Space in ASCII = 32
 	}
 
 	// backspace
-	kb_control = m_inputBackend->getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_BACKSPACE );
+	kb_control = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_BACKSPACE );
 	if ( kb_control && kb_control->getDelta() > 0.5f )
 	{
 		antTweakBar->setKeyPressed( TW_KEY_BACKSPACE, 0 ); // Backspace in ASCII = 8
 	}
 
 	// return
-	kb_control = m_inputBackend->getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_RETURN );
+	kb_control = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_RETURN );
 	if ( kb_control && kb_control->getDelta() > 0.5f )
 	{
 		antTweakBar->setKeyPressed( TW_KEY_RETURN, 0 ); // Return in ASCII = 13
 	}
 
 	// F4
-	kb_control = m_inputBackend->getControlByEnum( InputHelper::KEYBOARD_KEY::KEY_F4);
+	kb_control = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_F4);
 	if ( kb_control && kb_control->getDelta() > 0.5f )
 	{
 		antTweakBar->setKeyPressed( TW_KEY_F4, 0 );

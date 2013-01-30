@@ -35,22 +35,22 @@ struct ControlSet
 
 	///-----------------------------------------------------------------------------------
 	/// Returns the secondary buttons state
-	/// \return InputHelper::KEY_STATE
+	/// \return InputHelper::KeyStates
 	///-----------------------------------------------------------------------------------
-	InputHelper::KEY_STATE getPrimaryState();
+	InputHelper::KeyStates getPrimaryState();
 
 	///-----------------------------------------------------------------------------------
 	/// Returns the secondary buttons state
-	/// \return InputHelper::KEY_STATE
+	/// \return InputHelper::KeyStates
 	///-----------------------------------------------------------------------------------
-	InputHelper::KEY_STATE getSecondaryState();
+	InputHelper::KeyStates getSecondaryState();
 	
 	///-----------------------------------------------------------------------------------
 	/// Help function. Converts status to State
 	/// \param p_control
-	/// \return InputHelper::KEY_STATE
+	/// \return InputHelper::KeyStates
 	///-----------------------------------------------------------------------------------
-	InputHelper::KEY_STATE getState( Control* p_control );
+	InputHelper::KeyStates getState( Control* p_control );
 
 	///-----------------------------------------------------------------------------------
 	/// returns the latest negative axis plus the positive axis times the sensitivity
