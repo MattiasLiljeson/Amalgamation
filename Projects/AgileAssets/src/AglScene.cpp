@@ -331,3 +331,45 @@ void AglScene::transform(AglMatrix p_transform)
 		m_connectionPoints[i].transform = p_transform * m_connectionPoints[i].transform * p_transform.transpose();
 	}
 }
+void AglScene::RemoveMaterial(AglMaterial* p_material)
+{
+	if (m_materials[p_material->id] == p_material)
+	{
+		//Remove degenerate material mappings
+		for (unsigned int i = 0; i < m_materialMappings.size(); i++)
+		{
+			if (m_materialMappings[i].materialID == p_material->id)
+			{
+				m_materialMappings[i] = m_materialMappings.back();
+				m_materialMappings.pop_back();
+				i--;
+			}
+		}
+		//Remove material
+		int id = p_material->id;
+		m_materials.back()->id = id;
+		m_materials[m_materials.back()->id] = m_materials.back();
+		delete p_material;
+		m_materials.pop_back();
+
+		if (m_materials.size() > 0)
+		{
+			//Reassign moved material
+			for (unsigned int i = 0; i < m_materialMappings.size(); i++)
+			{
+				if (m_materialMappings[i].materialID == m_materials.size())
+				{
+					m_materialMappings[i].materialID = id;
+				}
+			}
+		}
+		else
+		{
+			m_materialMappings.clear();
+		}
+	}
+}
+void AglScene::RemoveParticleEffect(AglMaterial* p_material)
+{
+
+}

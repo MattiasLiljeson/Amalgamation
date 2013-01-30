@@ -88,10 +88,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
 		for (unsigned int i = 0; i < materials.size(); i++)
 		{
-			string s = Scene::GetInstance()->GetName(materials[i]->nameID);
-			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";
-
-			TwAddButton(sceneDialog->m_dialog, ("Material" + toString(materials[i]->id)).c_str(), OpenMaterialDialog, (void*)i, info.c_str());
+			sceneDialog->AddMaterial(materials[i]);
 		}
 
 		TwAddButton(sceneDialog->m_dialog, "Merge", OpenMergeDialog, NULL, "");
@@ -142,14 +139,18 @@ void TW_CALL SceneDialog::SaveAGL(void *clientData)
 }
 void TW_CALL SceneDialog::AddMaterial(void *clientData)
 {
-	AglMaterial* mat = new AglMaterial();
-	mat->nameID = Scene::GetInstance()->AddName("");
-	Scene::GetInstance()->AddMaterial(mat, false, false);
-	string s = Scene::GetInstance()->GetName(mat->nameID);
-	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";
-
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Material" + toString(mat->id)).c_str(), OpenMaterialDialog, (void*)mat->id, info.c_str());
+	sceneDialog->AddMaterial(new AglMaterial());
+}
+void SceneDialog::AddMaterial(AglMaterial* pMaterial)
+{
+	if (pMaterial->id == -1)
+		Scene::GetInstance()->AddMaterial(pMaterial, false, false);
+	if (pMaterial->nameID == -1)
+		pMaterial->nameID = Scene::GetInstance()->AddName("Material" + toString(pMaterial->id));
+	string s = Scene::GetInstance()->GetName(pMaterial->nameID);
+	string info = " label='" + s + "' group='Materials'";
+	TwAddButton(m_dialog, ("Material" + toString(pMaterial->id)).c_str(), OpenMaterialDialog, (void*)pMaterial->id, info.c_str());
 }
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
@@ -244,4 +245,20 @@ void SceneDialog::SetCurrentMaterial(int pIndex)
 	m_mergeDialog->hide();
 
 	m_materialDialog->setMaterial(pIndex);
+}
+
+void SceneDialog::RemoveMaterial(AglMaterial* pMaterial)
+{
+	vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
+	for (unsigned int i = 0; i < materials.size(); i++)
+	{
+		string name = ("Material" + toString(materials[i]->id));
+		TwRemoveVar(m_dialog, name.c_str());
+	}
+	Scene::GetInstance()->RemoveMaterial(pMaterial);
+	materials = Scene::GetInstance()->GetMaterials();
+	for (unsigned int i = 0; i < materials.size(); i++)
+	{
+		AddMaterial(materials[i]);
+	}
 }

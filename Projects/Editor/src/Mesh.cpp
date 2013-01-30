@@ -26,6 +26,7 @@ Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pS
 	spos = AglVector3(0, 0, 0);
 	bsptree = NULL;
 	m_grid = NULL;
+	mCurrentMaterial = -1;
 }
 Mesh::~Mesh()
 {
@@ -40,24 +41,6 @@ void Mesh::Init(AglMesh* pMesh)
 	AglVertexSTBN* v = (AglVertexSTBN*)pMesh->getVertices();
 
 	unsigned int* ind = pMesh->getIndices();
-
-	/*AglMatrix mat = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
-
-	for (int i = 0; i < h.vertexCount; i++)
-	{
-		v[i].position.transform(mat);
-		v[i].normal.transformNormal(mat);
-		v[i].binormal.transformNormal(mat);
-		v[i].tangent.transformNormal(mat);
-	}
-
-	for (int i = 0; i < h.indexCount; i+=3)
-	{
-		unsigned int temp = ind[i];
-		ind[i] = ind[i+1];
-		ind[i+1] = temp;
-
-	}*/
 
 	Init<AglVertexSTBN>(v, h.vertexCount, pMesh->getIndices(), h.indexCount);
 
@@ -149,7 +132,7 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 	vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
 	AglMaterial mat;
 	AglMaterial matp;
-	if (materials.size() > 0)
+	if (materials.size() > 0 && mCurrentMaterial >= 0)
 	{
 		matp = *Scene::GetInstance()->GetMaterial(mCurrentMaterial);
 	}
@@ -347,11 +330,11 @@ void Mesh::createSphereGrid()
 	
 		vector<AglVector3> vertices;
 		vector<unsigned int> indices;
-		for (unsigned int i = 0; i < h.vertexCount; i++)
+		for (int i = 0; i < h.vertexCount; i++)
 		{
 			vertices.push_back(v[i].position);
 		}
-		for (unsigned int i = 0; i < h.indexCount; i++)
+		for (int i = 0; i < h.indexCount; i++)
 		{
 			indices.push_back(ind[i]);
 		}
@@ -368,11 +351,11 @@ void Mesh::createBspTree()
 
 		vector<AglVector3> vertices;
 		vector<unsigned int> indices;
-		for (unsigned int i = 0; i < h.vertexCount; i++)
+		for (int i = 0; i < h.vertexCount; i++)
 		{
 			vertices.push_back(v[i].position);
 		}
-		for (unsigned int i = 0; i < h.indexCount; i++)
+		for (int i = 0; i < h.indexCount; i++)
 		{
 			indices.push_back(ind[i]);
 		}

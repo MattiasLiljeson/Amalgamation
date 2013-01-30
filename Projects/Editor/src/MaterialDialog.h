@@ -22,6 +22,7 @@ private:
 	static void TW_CALL SetName(const void *value, void *clientData);
 	static void TW_CALL GetName(void *value, void *clientData);
 	static void TW_CALL AddLayer(void *clientData);
+	static void TW_CALL Delete(void *clientData);
 public:
 	MaterialDialog();
 	~MaterialDialog();

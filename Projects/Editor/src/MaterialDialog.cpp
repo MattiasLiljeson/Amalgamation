@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "TextureManager.h"
 #include <AglVector4.h>
+#include "SceneDialog.h"
 
 //Callbacks
 void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
@@ -12,11 +13,7 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		//string path = getPath(file);
-		//removePath(file);
 		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
-		//Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
-		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -28,11 +25,7 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		//string path = getPath(file);
-		//removePath(file);
 		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
-		//Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
-		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -141,6 +134,13 @@ void TW_CALL MaterialDialog::GetName(void *value, void *clientData)
 	char *src = (char*)materialName.c_str();
 	TwCopyCDStringToLibrary(destPtr, src);
 }
+void TW_CALL MaterialDialog::Delete(void *clientData)
+{
+	MaterialDialog* d = (MaterialDialog*)clientData;
+	AglMaterial* m = d->m_material;
+	d->hide();
+	SceneDialog::GetInstance()->RemoveMaterial(m);
+}
 
 MaterialDialog::MaterialDialog()
 {
@@ -200,6 +200,6 @@ void MaterialDialog::setMaterial(int pIndex)
 
 	TwAddButton(m_dialog, "Add Layer", AddLayer, this, " label='Add Layer' key=c help='Load an Agile file into the editor.' group='Gradient Mapping'");
 
-
+	TwAddButton(m_dialog, "Delete", Delete, this, "");
 	show();
 }

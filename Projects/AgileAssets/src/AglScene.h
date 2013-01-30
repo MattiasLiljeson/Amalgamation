@@ -360,6 +360,9 @@ public:
 	void transform(AglMatrix p_transform);
 
 	unsigned int getAnimationCount(){ return m_animations.size(); }
+
+	void RemoveMaterial(AglMaterial* p_material);
+	void RemoveParticleEffect(AglMaterial* p_material);
 };
 
 #endif
