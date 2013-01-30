@@ -34,8 +34,10 @@
 #include <DebugMove.h>
 #include <EntityParent.h>
 #include <LoadMesh.h>
+#include <LightsComponent.h>
 
 // Systems
+#include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
@@ -84,6 +86,8 @@
 #include <LoadMeshSystemClient.h>
 #include <GameStatsSystem.h>
 #include <MoveShipLightsSystem.h>
+#include <LightBlinkerSystem.h>
+#include <ParticleRenderSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -92,12 +96,10 @@
 using namespace std;
 
 // MISC
-#include <AntTweakBarSystem.h>
+
 #include <AntTweakBarWrapper.h>
-#include <ParticleRenderSystem.h>
-#include <LightsComponent.h>
 #include <LightInstanceData.h>
-#include <LightBlinkerSystem.h>
+
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -204,7 +206,7 @@ void ClientApplication::initSystems()
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
-	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystemClient(graphicsBackend), 
+	m_world->setSystem(SystemType::LoadMeshSystemClient, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
 
 	/************************************************************************/

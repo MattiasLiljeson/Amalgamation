@@ -127,6 +127,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Mesh loading															*/
+		/************************************************************************/
+		// Note! Must set *after* EntityFactory and *before* Physics
+		m_world->setSystem(SystemType::LoadMeshSystemServer, new LoadMeshSystemServer(), 
+			true); 
+
+		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
 		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);

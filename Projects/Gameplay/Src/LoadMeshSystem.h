@@ -13,7 +13,9 @@ struct ModelResource;
 /// \brief System that processes entities with LoadMeshJobComponents and loads the
 /// specified mesh from file, which can result in additional components on the entity as
 /// well as new entities.
-///        
+///
+/// Base class with pure virtual meshresource creation method.
+///
 /// # LoadMeshSystem
 /// Detailed description.....
 /// Created on: 22-1-2013 
