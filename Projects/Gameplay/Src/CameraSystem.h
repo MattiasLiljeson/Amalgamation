@@ -25,7 +25,8 @@ public:
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
-
+private:
+	void updateRenderSceneInfo(Entity* p_entity);
 private:
 	GraphicsBackendSystem* m_gfxBackend;
 };
