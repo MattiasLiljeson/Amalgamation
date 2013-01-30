@@ -379,7 +379,6 @@ void ClientApplication::initEntities()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 	int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	int shipMeshId = graphicsBackend->loadSingleMeshFromFile( "Ship.agl", &MODELPATH );
 	int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
 	graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
@@ -421,60 +420,6 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
 
-	/************************************************************************/
-	/* HARD CODED LIGHTS													*/
-	/************************************************************************/
-	/*
-	LightsComponent* lightGridComp = new LightsComponent();
-	LightInstanceData lightGridInstData;
-
-	float range = 5.0f;
-
-	lightGridInstData.range = range;
-	lightGridInstData.worldTransform[0] = range;
-	lightGridInstData.worldTransform[5] = range;
-	lightGridInstData.worldTransform[10] = range;
-	lightGridInstData.lightDir[0] = -1.0f;
-	lightGridInstData.lightDir[1] = -1.0f;
-	lightGridInstData.lightDir[2] = -1.0f;
-	lightGridInstData.attenuation[0] = 25.0f/range;
-	lightGridInstData.attenuation[1] = 0.00f;
-	lightGridInstData.attenuation[2] = 0.00f;
-	lightGridInstData.spotPower = 100.0f;
-	lightGridInstData.specular[3] = 0.001f;
-	lightGridInstData.type = LightTypes::E_LightTypes_POINT;
-	lightGridInstData.ambient[2] = 0.0f;
-
-	float intensitity = 0.3f;
-	int dim = 4;
-	for( int x=0; x<dim; x++ )
-	{
-		for( int y=0; y<dim; y++ )
-		{
-			for( int z=0; z<dim; z++ )
-			{
-				lightGridInstData.specular[0] = intensitity * x;
-				lightGridInstData.diffuse[1] = intensitity * y;
-				lightGridInstData.diffuse[2] = intensitity * z;
-
-				Light light;
-				light.instanceData = lightGridInstData;
-				AglMatrix::componentsToMatrix( 
-					light.offsetMat,
-					AglVector3( range, range, range ),
-					AglQuaternion::identity(),
-					AglVector3( -x*(range+1), -y*(range+1), -z*(range+1) )
-					);
-
-				lightGridComp->addLight( light );
-			}
-		}
-	}
-	entity = m_world->createEntity();
-	entity->addComponent( ComponentType::LightsComponent, lightGridComp );
-	entity->addComponent( ComponentType::Transform, new Transform( range/2, range/2, range/2 ) );
-	m_world->addEntity( entity );
-	*/
 
 	// Test sound source
 	entity = m_world->createEntity();
@@ -489,39 +434,9 @@ void ClientApplication::initEntities()
 
 	//InitModulesTestByAnton();
 
-	/*
-	//Create a camera
-	float aspectRatio = 
-		static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-	entity = m_world->createEntity();
-	component = new CameraInfo( aspectRatio );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	component = new MainCamera();
-	entity->addComponent( ComponentType::MainCamera, component );
-	//component = new Input();
-	//entity->addComponent( ComponentType::Input, component );
-	component = new Transform( -5.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new LookAtEntity(shipId, 
-								 AglVector3(0,3,-10),
-								 AglQuaternion::identity(),
-								 10.0f,
-								 10.0f,
-								 4.0f);
-	entity->addComponent( ComponentType::LookAtEntity, component );
-	// default tag is follow
-	entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-	entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-	component = new AudioListener();
-	entity->addComponent(ComponentType::AudioListener, component);
-	
-	m_world->addEntity(entity);
-	*/
 }
 
-
+#pragma region deprecatedinit
 void ClientApplication::InitModulesTestByAnton()
 {
 	Entity* entity;
@@ -730,3 +645,4 @@ void ClientApplication::InitModulesTestByAnton()
 	entity->addComponent( ComponentType::Transform, t);
 	m_world->addEntity(entity);*/
 }
+#pragma endregion

@@ -47,7 +47,8 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);
 		// Children
-		createChildrenEntities(models,entity);
+		if (models->size()>1)
+			createChildrenEntities(models,entity);
 
 		// remove init data and update
 		p_entities[i]->removeComponent(ComponentType::LoadMesh);
@@ -67,6 +68,15 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	int rootId = p_entity->getIndex(); // store the id
 
 	Component* component = NULL;
+
+	// Mesh, renderinfo
+	int meshId = p_modelResource->meshId;
+	if (meshId!=-1)
+	{
+		component = new RenderInfo( meshId );
+		p_entity->addComponent( ComponentType::RenderInfo, component );
+	}
+
 
 	// Connection points
 	if (!p_modelResource->connectionPoints.m_collection.empty())
@@ -126,8 +136,11 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 
 		// Mesh, renderinfo
 		int meshId = modelResource->meshId;
-		component = new RenderInfo( meshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
+		if (meshId!=-1)
+		{
+			component = new RenderInfo( meshId );
+			entity->addComponent( ComponentType::RenderInfo, component );
+		}
 
 		// Transform
 		AglMatrix baseTransform = AglMatrix::identityMatrix();
@@ -145,6 +158,10 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		}
 
 		// Handle particles here
+		if (!modelResource->particleSystems.m_collection.empty())
+		{
+
+		}
 
 		// Collision
 		if (rootRigidBody)

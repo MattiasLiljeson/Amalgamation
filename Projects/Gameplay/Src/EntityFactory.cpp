@@ -175,12 +175,6 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 {
-	int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-	//shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		//SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-
 	Entity* entity = NULL;
 	//entity = m_world->createEntity();
 
@@ -189,14 +183,13 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 	Transform* transform = new Transform( p_packet.translation, p_packet.rotation, 
 		p_packet.scale);
-
-	Component* component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
 	entity->addComponent( ComponentType::Transform, transform );
+
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
+	Component* component = NULL; // for temp usage
 
 	/************************************************************************/
 	/* Check if the owner is the same as this client.						*/
@@ -235,7 +228,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	m_world->addEntity(entity);
 
 	/************************************************************************/
-	/* Attach a camera if it's the clients ship!							*/
+	/* Attach a camera if it's the client's ship!							*/
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
