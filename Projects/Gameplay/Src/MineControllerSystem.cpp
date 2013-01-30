@@ -63,7 +63,7 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 
 				//Send a shockwave
-				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
+				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 20, 20);
 				ps->getController()->InactivateBody(pb->m_id);
 
 				//Send an explosion sound effect
