@@ -179,7 +179,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 		AglVector3(5.0f, 5.0f, 5.0f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false, false));
+		BodyInitData::SINGLE, false, true));
 
 	entity->addComponent( ComponentType::Transform, t);
 
