@@ -86,96 +86,6 @@ void DeferredRenderer::clearBuffers()
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void DeferredRenderer::renderMeshInstanced(Mesh* p_mesh, Texture** p_textureArray, 
-										   unsigned int p_textureArraySize, 
-										   Buffer<InstanceData>* p_instanceBuffer )
-{
-	/************************************************************************/
-	/* Unsure on what the values, startSlot and numVIews, represent.		*/
-	/* -Robin T																*/
-	/************************************************************************/
-	UINT startSlot = 0;
-	UINT numViews = 1;
-	for (unsigned int i = 0; i < p_textureArraySize; i++)
-	{
-		if(p_textureArray[i] != NULL)
-		{
-			// set textures
-			m_deviceContext->PSSetShaderResources(startSlot , numViews, 
-				&p_textureArray[i]->data );
-			startSlot++;
-		}
-	}
-	renderInstanced( p_mesh, m_baseShader, p_instanceBuffer );
-}
-
-void DeferredRenderer::renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
-									   Buffer<InstanceData>* p_instanceBuffer )
-{
-	// Specialized, external apply of these buffers
-	// since instanced drawing required a "combined"
-	// vertex/instance-buffer
-	//
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-		p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-		p_instanceBuffer->getBufferPointer() };
-
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-		DXGI_FORMAT_R32_UINT, 0);
-
-	p_shader->apply();
-
-	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-		p_instanceBuffer->getElementCount(),
-		0,0,0);
-}
-
-// HACK: DUPLICATE of above but with LightMesh instead of Mesh and LightInstanceData
-// instead of InstanceData
-void DeferredRenderer::renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
-									   Buffer<LightInstanceData>* p_instanceBuffer )
-{
-	// Specialized, external apply of these buffers
-	// since instanced drawing required a "combined"
-	// vertex/instance-buffer
-	//
-	// step sizes and offsets
-	UINT strides[2] = { p_mesh->getVertexBuffer()->getElementSize(), 
-		p_instanceBuffer->getElementSize() };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { p_mesh->getVertexBuffer()->getBufferPointer(), 
-		p_instanceBuffer->getBufferPointer() };
-
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-	// And the index buffer
-	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(), 
-		DXGI_FORMAT_R32_UINT, 0);
-
-	p_shader->apply();
-
-	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced(p_mesh->getIndexBuffer()->getElementCount(),
-		p_instanceBuffer->getElementCount(),
-		0,0,0);
-}
-
-void DeferredRenderer::renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer )
-{
-	if( p_mesh && p_instanceBuffer ){
-		renderInstanced( p_mesh, m_lightShader, p_instanceBuffer );
-	}
-	
-}
 void DeferredRenderer::renderComposeStage()
 {
 	m_composeShader->apply();
@@ -353,10 +263,6 @@ void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_heig
 	initGeometryBuffers();
 }
 
-void DeferredRenderer::setSceneInfo(const RendererSceneInfo& p_sceneInfo){
-	m_sceneInfo = p_sceneInfo;
-}
-
 void DeferredRenderer::setBlendState(BlendState::Mode p_state){
 	unsigned int idx = static_cast<unsigned int>(p_state);
 	m_deviceContext->OMSetBlendState( m_blendStates[idx], m_blendFactors, m_blendMask );
@@ -408,4 +314,12 @@ void DeferredRenderer::unmapDepthFromShaderVariables(){
 
 void DeferredRenderer::setLightRenderTarget(){
 	m_deviceContext->OMSetRenderTargets(1,&m_gBuffers[RenderTargets::LIGHT],NULL);
+}
+
+DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
+	return m_baseShader;
+}
+
+DeferredBaseShader* DeferredRenderer::getDeferredLightShader(){
+	return m_lightShader;
 }

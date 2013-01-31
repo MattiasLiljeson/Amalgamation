@@ -19,6 +19,8 @@
 #include <LightInstanceData.h>
 #include "ShaderFactory.h"
 #include "GUIShader.h"
+#include "LightMesh.h"
+#include "DeferredBaseShader.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -180,7 +182,6 @@ void GraphicsWrapper::clearRenderTargets()
 
 void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
 	m_renderSceneInfo = p_sceneInfo;
-	m_deferredRenderer->setSceneInfo(p_sceneInfo);
 }
 
 void GraphicsWrapper::mapSceneInfo(){
@@ -190,14 +191,9 @@ void GraphicsWrapper::mapSceneInfo(){
 }
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
-								 vector<InstanceData>* p_instanceList)
-{
+								 vector<InstanceData>* p_instanceList){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 	
-	/************************************************************************/
-	/* Get the size of the materials and use it to create a new texture		*/
-	/* array.																*/
-	/************************************************************************/
 	unsigned int arraySize = mesh->getMaterialInfo().SIZE;
 	Texture** textureArray = new Texture*[arraySize];
 	for (unsigned int i = 0; i < arraySize; i++)
@@ -218,10 +214,38 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
-	m_deferredRenderer->renderMeshInstanced(mesh, textureArray, arraySize, instanceBuffer);
+	renderMeshInstanced( 
+		mesh->getVertexBuffer()->getBufferPointer(),
+		mesh->getVertexBuffer()->getElementSize(),
+		mesh->getIndexBuffer()->getBufferPointer(),
+		mesh->getIndexBuffer()->getElementCount(),
+		textureArray, arraySize,
+		instanceBuffer->getElementSize(), 
+		instanceBuffer->getBufferPointer(),
+		m_deferredRenderer->getDeferredBaseShader());
 
 	delete textureArray;
 	delete instanceBuffer;
+}
+void GraphicsWrapper::renderLights( LightMesh* p_mesh,
+								   vector<LightInstanceData>* p_instanceList )
+{
+	Buffer<LightInstanceData>* instanceBuffer;
+	instanceBuffer = m_bufferFactory->createLightInstanceBuffer( &(*p_instanceList)[0],
+		p_instanceList->size() );
+
+	renderMeshInstanced( 
+		p_mesh->getVertexBuffer()->getBufferPointer(),
+		p_mesh->getVertexBuffer()->getElementSize(),
+		p_mesh->getIndexBuffer()->getBufferPointer(),
+		p_mesh->getIndexBuffer()->getElementCount(), 
+		NULL, 0,
+		instanceBuffer->getElementSize(),
+		instanceBuffer->getBufferPointer(),
+		m_deferredRenderer->getDeferredLightShader());
+
+	delete instanceBuffer;
+	instanceBuffer = NULL;
 }
 
 void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state, 
@@ -286,25 +310,6 @@ void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::renderLights( LightMesh* p_mesh,
-								   vector<LightInstanceData>* p_instanceList )
-{
-	if( p_mesh != NULL && p_instanceList != NULL )
-	{
-		Buffer<LightInstanceData>* instanceBuffer;
-		instanceBuffer = m_bufferFactory->createLightInstanceBuffer( &(*p_instanceList)[0],
-			p_instanceList->size() );
-
-		m_deferredRenderer->renderLights( p_mesh, instanceBuffer );
-
-		delete instanceBuffer;
-		instanceBuffer = NULL;
-	}
-	else
-	{
-		m_deferredRenderer->renderLights( NULL, NULL );
-	}
-}
 
 void GraphicsWrapper::flipBackBuffer()
 {
@@ -508,4 +513,47 @@ void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
 	}
 	// Draw instanced data
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
+}
+
+void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_vertexSize, 
+										  void* p_indexBufferRef, UINT32 p_elmentCount, 
+										  Texture** p_textureArray, 
+										  unsigned int p_textureArraySize, 
+										  UINT32 p_instanceDataSize, void* p_instanceRef,
+										  ShaderBase* p_shader)
+{
+
+	if(p_textureArray){
+		UINT startSlot = 0;
+		UINT numViews = 1;
+		for (unsigned int i = 0; i < p_textureArraySize; i++)
+		{
+			if(p_textureArray[i] != NULL)
+			{
+				// set textures
+				m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+					&p_textureArray[i]->data );
+				startSlot++;
+			}
+		}
+	}
+
+	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { 
+		static_cast<ID3D11Buffer*>(p_vertexBufferRef), 
+		static_cast<ID3D11Buffer*>(p_instanceRef) 
+	};
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(p_indexBufferRef), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	p_shader->apply();
+
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
 }

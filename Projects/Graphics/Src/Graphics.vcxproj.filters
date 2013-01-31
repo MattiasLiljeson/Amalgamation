@@ -221,5 +221,8 @@
     <Filter Include="Renderer\Particle">
       <UniqueIdentifier>{19500243-937a-4e79-aafe-747a03f31f01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\ShadowMap">
+      <UniqueIdentifier>{3d4b993c-9dc5-4f4f-afc6-f3151a0889c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

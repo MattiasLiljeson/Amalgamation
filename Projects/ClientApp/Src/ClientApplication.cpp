@@ -83,6 +83,7 @@
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
 #include <MoveShipLightsSystem.h>
+#include <ShadowSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -277,6 +278,9 @@ void ClientApplication::initSystems()
 	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
+
+	ShadowSystem* shadowSystem = new ShadowSystem ();
+	m_world->setSystem( shadowSystem, true );
 
 	/************************************************************************/
 	/* Hierarchy															*/

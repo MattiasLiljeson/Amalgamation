@@ -33,6 +33,7 @@ class ShaderFactory;
 class TextureParser;
 class TextureFactory;
 class GUIShader;
+class ShaderBase;
 
 struct LightInstanceData;
 struct Model;
@@ -193,6 +194,13 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initViewport();
+
+	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
+		void* p_indexBufferRef, UINT32 p_elmentCount,
+		Texture** p_textureArray,
+		unsigned int p_textureArraySize,
+		UINT32 p_instanceDataSize, void* p_instanceRef,
+		ShaderBase* p_shader);
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;

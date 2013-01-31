@@ -449,6 +449,9 @@
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -746,6 +749,9 @@
     </ClCompile>
     <ClCompile Include="LightBlinkerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -66,40 +66,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void clearBuffers();
 
-	///-----------------------------------------------------------------------------------
-	/// Sets the scene info, which can be regarded as "global" information to be used 
-	/// when rendering. For example a world-view-projection matrix.
-	/// \param p_sceneInfo
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
-
 	void setBasePassRenderTargets();
 
-
-	// ===================================================================================
-	// Mesh Render
-	// ===================================================================================
-
-	///-----------------------------------------------------------------------------------
-	/// Render instanced mesh data
-	/// \param p_mesh
-	/// \param p_textureArray
-	/// \param p_textureArraySize
-	/// \param p_instanceBuffer
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderMeshInstanced(Mesh* p_mesh,
-							 Texture** p_textureArray,
-							 unsigned int p_textureArraySize,
-							 Buffer<InstanceData>* p_instanceBuffer );
-
-	void renderInstanced( Mesh* p_mesh, ShaderBase* p_shader,
-		Buffer<InstanceData>* p_instanceBuffer );
-
-	// HACK: DUPLICATE of above but with LightMesh instead of Mesh
-	void renderInstanced( LightMesh* p_mesh, ShaderBase* p_shader,
-		Buffer<LightInstanceData>* p_instanceBuffer );
 
 	///-----------------------------------------------------------------------------------
 	/// Render a full screen quad textured with the gbuffer.
@@ -111,7 +79,9 @@ public:
 	void unmapVariousPassesFromComposeStage();
 
 	void unmapDepthFromShaderVariables();
-	void renderLights( LightMesh* p_mesh, Buffer<LightInstanceData>* p_instanceBuffer );
+	void renderLights(	void* p_vertexBufferRef, UINT32 p_vertexSize, 
+						void* p_indexBufferRef, UINT32 p_elmentCount,
+						UINT32 p_instanceDataSize, void* p_instanceRef );
 
 	// ===================================================================================
 	// GUI Render
@@ -153,12 +123,17 @@ public:
 
 	ID3D11DepthStencilView* getDepthStencil();
 
+	DeferredBaseShader* getDeferredBaseShader();
+
+	DeferredBaseShader* getDeferredLightShader();
+
 	void renderComposeStage();
 
 	// ===================================================================================
 	// Debug
 	// ===================================================================================
 	void hookUpAntTweakBar();
+
 
 private:
 	void initDepthStencil();
@@ -174,8 +149,6 @@ private:
 
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
-
-	RendererSceneInfo		m_sceneInfo;
 
 	ID3D11RenderTargetView*		m_gBuffers[NUMTARGETS];
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMTARGETS];
