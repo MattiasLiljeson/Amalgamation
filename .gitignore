@@ -137,6 +137,8 @@ External/*
 *.lib
 *.vsglog
 *.PIXExp
+*.dgml
+*.bsc
 
 [Ll]oc[Mm]etrics*.*
 

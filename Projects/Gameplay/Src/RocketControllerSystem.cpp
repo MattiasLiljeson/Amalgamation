@@ -96,7 +96,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 				soundEffectPacket.attachedToNetsyncEntity = -1;
 				m_server->broadcastPacket(soundEffectPacket.pack());
 
-				//m_world->deleteEntity(p_entities[i]);
+				m_world->deleteEntity(p_entities[i]);
 			}
 		}	
 	}

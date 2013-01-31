@@ -1,4 +1,5 @@
 #include "EntityDeletionPacket.h"
+#include "EntityType.h"
 
 EntityDeletionPacket::EntityDeletionPacket()
 {
@@ -12,7 +13,7 @@ EntityDeletionPacket::~EntityDeletionPacket()
 
 Packet EntityDeletionPacket::pack()
 {
-	Packet packet((char)PacketType::EntityDeletion);
+	Packet packet(static_cast<char>(PacketType::EntityDeletion));
 	packet << networkIdentity;
 	return packet;
 }
