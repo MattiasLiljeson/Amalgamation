@@ -96,10 +96,11 @@
 using namespace std;
 
 // MISC
-
+#include <time.h>
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
 
+#define FORCE_VS_DBG_OUTPUT
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -173,6 +174,7 @@ void ClientApplication::run()
 				m_running = false;
 			
 		}
+
 	}
 }
 

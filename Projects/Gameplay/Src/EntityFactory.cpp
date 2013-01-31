@@ -22,6 +22,9 @@
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
 
+#include <time.h>
+
+#define FORCE_VS_DBG_OUTPUT
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
@@ -582,11 +585,17 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )
 {
+	// performance test
+	clock_t init, final;
+	init=clock();
+	//
 	Entity* entity = entityFromRecipe(p_entityName);
 	if (entity==NULL)
 	{	
 		readAssemblageFile( p_filePath );
 		entity = entityFromRecipe( p_entityName );
 	}
+	final=clock()-init;
+	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
 	return entity;
 }

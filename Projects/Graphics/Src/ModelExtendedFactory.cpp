@@ -2,8 +2,11 @@
 #include <Globals.h>
 #include <AglScene.h>
 #include <AglReader.h>
+#include <time.h>
 #include "MaterialInfo.h"
 #include "Mesh.h"
+
+#define FORCE_VS_DBG_OUTPUT
 
 
 // Primitives
@@ -36,14 +39,25 @@ vector<ModelResource*>* ModelExtendedFactory::createModelResources( const string
 																   const string* p_path/*=NULL*/, 
 																   bool p_isPrimitive )
 {
+	// performance test by Jarl
+	clock_t init, final;
+	init=clock();
+
+	vector<ModelResource*>* models=NULL;
+
 	if (p_isPrimitive)
 	{
-		return createPrimitive(p_name);
+		models=createPrimitive(p_name);
 	}
 	else
 	{
-		return ModelBaseFactory::createModelResources(p_name,p_path);
+		models=ModelBaseFactory::createModelResources(p_name,p_path);
 	}
+
+	final=clock()-init;
+	DEBUGPRINT(( ("\n"+p_name+" loaded in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
+
+	return models;
 }
 
 
