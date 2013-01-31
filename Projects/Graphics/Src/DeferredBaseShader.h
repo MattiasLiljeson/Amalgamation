@@ -1,5 +1,5 @@
 #pragma once
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
 #include "Buffer.h"
 #include "CBuffers.h"
@@ -19,7 +19,7 @@
 class DeferredBaseShader : public ShaderBase
 {
 public:
-	DeferredBaseShader( ShaderInitStruct p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
+	DeferredBaseShader( ShaderVariableContainer p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
 	virtual ~DeferredBaseShader();
 
 	Buffer<SimpleCBuffer>* getPerFrameBufferPtr();

@@ -185,7 +185,7 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 		vector<AglGradientMaterial*> layers = g->getLayers();
 		for (unsigned int i = 0; i < layers.size(); i++)
 			matbuffer->gradientColors[i] = layers[i]->color;
-		matbuffer->Flags.w = layers.size();
+		matbuffer->Flags.w = (float)layers.size();
 	}
 	
 	mDeviceContext->Unmap(mMaterialBuffer, 0);

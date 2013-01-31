@@ -196,7 +196,6 @@ void EntitySystem::removeFromSystem( Entity* p_entity )
 		p_entity->setSystemBit( m_type.getIndex(), false );
 		m_actives.erase( m_actives.begin() + idx );
 		removed( p_entity );
-		//delete p_entity;
 	}
 }
 void EntitySystem::insertToSystem(Entity* p_entity)

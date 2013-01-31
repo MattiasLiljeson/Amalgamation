@@ -35,7 +35,9 @@ private:
 	static void TW_CALL LoadAGL(void *clientData);
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
+	void				AddMaterial(AglMaterial* pMaterial);
 	static void TW_CALL AddPE(void* clientData);
+	void				AddPE(AglParticleSystem* pParticleSystem);
 
 	static void TW_CALL SetCOSystem(void *clientData);
 public:
@@ -48,6 +50,11 @@ public:
 	void SetCurrentMesh(int pIndex);
 	void SetCurrentParticleSystem(int pIndex);
 	void SetCurrentMaterial(int pIndex);
+
+	void RemoveMaterial(AglMaterial* pMaterial);
+	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
+
+	MaterialDialog* GetMaterialDialog(){ return m_materialDialog; }
 };
 
 #endif

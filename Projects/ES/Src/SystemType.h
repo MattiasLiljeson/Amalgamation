@@ -70,6 +70,7 @@ public:	//Enums
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
 		LightBlinkerSystem,
+		WinningConditionSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -27,6 +27,7 @@
 #include <RocketControllerSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
+#include <WinningConditionSystem.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -102,7 +103,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			sleep(1);
+			sleep(2);
 		}
 	}
 
@@ -189,10 +190,14 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
-		m_world->setSystem(new RocketControllerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(m_server), true);
+		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
+		m_world->setSystem(winningCondition, false);
+		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
+//		winningCondition->startGameSession(20.0f);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
-		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
+		// GET INITIALIZED.
 		m_world->initialize();
 	}
 

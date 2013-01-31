@@ -40,7 +40,7 @@ void Cursor::addControlSet( ControlSet p_controlSet )
 
 void Cursor::update(float p_dt)
 {
-	// raw data for the mouse buttons are enums of type KEY_STATE
+	// raw data for the mouse buttons are enums of type KeyStates
 	//leftBtnState = m_primaryBtn->getRawData();
 
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
@@ -87,16 +87,16 @@ double Cursor::getY()
 	return m_y;
 }
 
-InputHelper::KEY_STATE Cursor::getPrimaryState() 
+InputHelper::KeyStates Cursor::getPrimaryState() 
 {
 	//HACK: Return the first set that where the primary btn isn't up
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		if( m_controlSets[setIdx].getPrimaryState() != InputHelper::KEY_STATE::KEY_UP )
+		if( m_controlSets[setIdx].getPrimaryState() != InputHelper::KeyStates_KEY_UP )
 			return m_controlSets[setIdx].getPrimaryState(); 
 	}
 
-	return InputHelper::KEY_STATE::KEY_UP;
+	return InputHelper::KeyStates_KEY_UP;
 }
 
 // HACK: A LOOOOOT of duplicated code below having some nice early returns. 
@@ -125,16 +125,16 @@ double Cursor::getPrimaryDelta()
 	return 0.0;
 }
 
-InputHelper::KEY_STATE Cursor::getSecondaryState()
+InputHelper::KeyStates Cursor::getSecondaryState()
 {
 	//HACK: Return the first set that where the primary btn isn't up
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		if( m_controlSets[setIdx].getSecondaryState() != InputHelper::KEY_STATE::KEY_UP )
+		if( m_controlSets[setIdx].getSecondaryState() != InputHelper::KeyStates_KEY_UP )
 			return m_controlSets[setIdx].getSecondaryState(); 
 	}
 
-	return InputHelper::KEY_STATE::KEY_UP;
+	return InputHelper::KeyStates_KEY_UP;
 }
 
 double Cursor::getSecondaryStatus()

@@ -143,7 +143,10 @@ public:
 	{
 		return mSystem->getCameraDistance(p_cameraPos, p_cameraDir);
 	}
-
+	AglParticleSystem* getParticleSystem()
+	{
+		return mSystem;
+	}
 	void Draw();
 };
 

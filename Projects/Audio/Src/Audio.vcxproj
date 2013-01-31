@@ -66,15 +66,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(SolutionDir)Projects\AgileUtility\src\;$(SolutionDir)Projects/AssetsManagement/src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(SolutionDir)Projects\AgileUtility\Lib\;$(SolutionDir)Projects/AssetsManagement/Lib</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/XAudio2/include;$(SolutionDir)Projects/AgileUtility/src;$(SolutionDir)Projects/AssetsManagement/src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/XAudio2/Lib/x86;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects\Util\Src;$(SolutionDir)External\XAudio2\include;$(SolutionDir)Projects\AgileUtility\src\;$(SolutionDir)Projects/AssetsManagement/src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\Util\Lib;$(SolutionDir)External/XAudio2/Lib/x86/;$(SolutionDir)Projects\AgileUtility\Lib\;$(SolutionDir)Projects/AssetsManagement/Lib</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/XAudio2/include;$(SolutionDir)Projects/AgileUtility/src;$(SolutionDir)Projects/AssetsManagement/src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/XAudio2/Lib/x86;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,14 +83,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_$(PlatformShortName)_$(Configuration).lib;X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>X3DAudio.lib</AdditionalDependencies>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -109,8 +116,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_$(PlatformShortName)_$(Configuration).lib;X3DAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>X3DAudio.lib</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

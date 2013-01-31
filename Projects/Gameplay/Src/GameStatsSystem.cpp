@@ -78,7 +78,7 @@ void GameStatsSystem::process()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>
 		(m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	if ((inputSystem->getControlByEnum(InputHelper::KEY_T))->getStatus() > 0.5f)
+	if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
 	{
 		if (!m_displayInfoPanel)
 		{

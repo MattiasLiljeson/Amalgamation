@@ -50,6 +50,8 @@ public:
 	///
 	void addLayer(AglGradientMaterial* pLayer);
 
+	void removeLayer(AglGradientMaterial* p_layer);
+
 	AglVector4* getLayerColorPointer(int p_index)
 	{
 		return &m_layers[p_index]->color;

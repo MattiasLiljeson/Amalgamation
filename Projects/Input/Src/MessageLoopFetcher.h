@@ -48,8 +48,8 @@ public:
 	~MessageLoopFetcher();
 
 	void update();
-	InputHelper::KEY_STATE getKeyState( int p_key );
-	InputHelper::KEY_STATE getMouseBtnState( int p_key );
+	InputHelper::KeyStates getKeyState( int p_key );
+	InputHelper::KeyStates getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
 
@@ -68,16 +68,16 @@ private:
 	HWND m_hWnd;
 	bool m_resetCursor;
 
-	int m_mouseCurrPos[InputHelper::NUM_MOUSE_AXIS];
-	int m_mousePrevPos[InputHelper::NUM_MOUSE_AXIS];
-	int m_mouseMoveDelta[InputHelper::NUM_MOUSE_AXIS];
-	InputHelper::KEY_STATE m_mouseBtnStates[InputHelper::NUM_MOUSE_BTNS];
-	InputHelper::KEY_STATE m_keyStates[InputHelper::NUM_KEYBOARD_KEYS];
+	int m_mouseCurrPos[InputHelper::MouseAxes_CNT];
+	int m_mousePrevPos[InputHelper::MouseAxes_CNT];
+	int m_mouseMoveDelta[InputHelper::MouseAxes_CNT];
+	InputHelper::KeyStates m_mouseBtnStates[InputHelper::MouseButtons_CNT];
+	InputHelper::KeyStates m_keyStates[InputHelper::KeyboardKeys_CNT];
 
-	bool m_mouseBtnsPressed[InputHelper::NUM_MOUSE_BTNS];
-	bool m_mouseBtnsReleased[InputHelper::NUM_MOUSE_BTNS];
-	bool m_keysPressed[InputHelper::NUM_KEYBOARD_KEYS];
-	bool m_keysReleased[InputHelper::NUM_KEYBOARD_KEYS];
+	bool m_mouseBtnsPressed[InputHelper::MouseButtons_CNT];
+	bool m_mouseBtnsReleased[InputHelper::MouseButtons_CNT];
+	bool m_keysPressed[InputHelper::KeyboardKeys_CNT];
+	bool m_keysReleased[InputHelper::KeyboardKeys_CNT];
 
 	int m_keyFromCharMap[VK_LCONTROL+1]; //VK_LCONTROL is the last char
 	static deque<MsgAndParams> msgQue;

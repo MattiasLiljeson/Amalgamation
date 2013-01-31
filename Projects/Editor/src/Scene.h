@@ -54,25 +54,16 @@ public:
 private:
 	int mCurrentAnimation;
 
-	string mFolder;
-
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;
-
-	Mesh* mPlaneMesh;
-
-	vector<string> mPaths;
 
 private:
 	Scene();
 	~Scene();
-
-	void CreateScenePlane(); 
 public:
 	static Scene* GetInstance();
 	static void Release();
-	void Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
-		ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	void Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	void Update(float pElapsedTime);
 	void Draw();
 	AglNode GetNode(int pIndex);
@@ -107,21 +98,11 @@ public:
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
 	int AddGradient(AglGradient* pGradient);
 	void AddParticleSystem(AglParticleSystem* pSystem);
+	int  GetIndex(AglParticleSystem* pSystem);
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);
-	void  AddPath(string pPath, int pIndex)
-	{
-		while (pIndex >= mPaths.size())
-			mPaths.push_back("");
-		mPaths[pIndex] = pPath;
-	}
-	string GetPath(int pIndex)
-	{
-		return mPaths[pIndex];
-	}
 
-	string GetFolder(){ return mFolder; }
 	void Save(string pPath);
 
 	AglQuaternion* GetQuaternionRotation(){ return &mQuaternionRotation; }
@@ -135,6 +116,9 @@ public:
 	void Transform(AglMatrix p_transform);
 
 	AglScene* getAglScene(){ return mAglScene; }
+
+	void RemoveMaterial(AglMaterial* pMaterial);
+	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
 };
 
 #endif
