@@ -1,8 +1,6 @@
 #include "AntTweakBarWrapper.h"
 #include "BufferFactory.h"
 #include "DeferredRenderer.h"
-#include "LightMesh.h"
-#include "Mesh.h"
 #include "ShaderFactory.h"
 #include "Texture.h"
 
@@ -10,9 +8,6 @@
 #include "DeferredComposeShader.h"
 #include "GUIShader.h"
 
-#include "PNTVertex.h"
-#include "PNTTBVertex.h"
-#include <LightInstanceData.h>
 
 DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext, 

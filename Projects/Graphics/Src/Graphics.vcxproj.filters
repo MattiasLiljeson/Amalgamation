@@ -60,6 +60,9 @@
     <ClCompile Include="ParticleShader.cpp">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowMapRenderer.cpp">
+      <Filter>Renderer\ShadowMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -179,6 +182,9 @@
     <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="ShaderVariableContainer.h">
       <Filter>Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapRenderer.h">
+      <Filter>Renderer\ShadowMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

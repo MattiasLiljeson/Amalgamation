@@ -3,27 +3,21 @@
 #include "Buffer.h"
 #include "D3DException.h"
 #include "PTVertex.h"
-#include "RendererSceneInfo.h"
-#include "ResourceManager.h"
 #include "RenderStateHelper.h"
-#include <InstanceData.h>
 #include <d3d11.h>
 
 class BufferFactory;
 class ShaderBase;
 class DeferredBaseShader;
 class DeferredComposeShader;
-class Mesh;
 class GUIShader;
 class ShaderFactory;
-struct Texture;
 class RenderStateHelper;
+
 struct RasterizerFillMode;
 struct RasterizerCullMode;
 struct RasterizerFaceVertexOrder;
 struct BlendState;
-struct LightInstanceData;
-
 // =======================================================================================
 //                                      DeferredRenderer
 // =======================================================================================
@@ -79,10 +73,6 @@ public:
 	void unmapVariousPassesFromComposeStage();
 
 	void unmapDepthFromShaderVariables();
-	void renderLights(	void* p_vertexBufferRef, UINT32 p_vertexSize, 
-						void* p_indexBufferRef, UINT32 p_elmentCount,
-						UINT32 p_instanceDataSize, void* p_instanceRef );
-
 	// ===================================================================================
 	// GUI Render
 	// ===================================================================================
