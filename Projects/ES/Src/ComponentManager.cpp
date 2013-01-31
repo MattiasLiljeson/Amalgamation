@@ -42,8 +42,10 @@ vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity,
 
 void ComponentManager::deleted( Entity* p_entity )
 {
-	removeComponentsOfEntity(p_entity);
-	//m_deleted.push_back(p_entity);
+	//removeComponentsOfEntity(p_entity);
+	// When an entity is deleted, all components needs to be deleted. The components may
+	// not be removed until after all systems have been notified on the "removed" method.
+	m_deleted.push_back(p_entity);
 }
 
 void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
@@ -131,10 +133,9 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 	{
 		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{
-			// Should these be deleted? Alex says NOOOOOOOOOO!!!
-			// Add the components to the deleteOnPost vector!
-			//delete m_componentsByType[i][p_entity->getIndex()];
-			m_deleteOnPost.push_back(m_componentsByType[i][p_entity->getIndex()]);
+			// Should these be deleted? Alex now says yes. It all depends on when it is
+			// called. When an entity is removed, this method is called by postPerform.
+			delete m_componentsByType[i][p_entity->getIndex()];
 			m_componentsByType[i][p_entity->getIndex()] = NULL;
 		}
 	}
@@ -144,6 +145,13 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 
 void ComponentManager::postPerform()
 {
+	// Remove all components here!
+	for (unsigned int i = 0; i < m_deleted.size(); i++)
+	{
+		removeComponentsOfEntity(m_deleted[i]);
+	}
+	m_deleted.clear();
+
 	// Delete components here!
 	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
 	{
