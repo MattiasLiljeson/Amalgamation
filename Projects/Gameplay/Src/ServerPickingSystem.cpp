@@ -286,18 +286,22 @@ vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(Connecti
 			i, p_parent));
 		else
 		{
-			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
-
-			ConnectionPointSet* connector =
-				static_cast<ConnectionPointSet*>(
-				m_world->getComponentManager()->getComponent(module,
-				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-			if (connector)
+			ShipModule* parentModule = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+			if (!parentModule || (parentModule->m_parentEntity != p_set->m_connectionPoints[i].cpConnectedEntity))
 			{
-				vector<pair<int, Entity*>> moreFree 
-					= getFreeConnectionPoints(connector, module);
-				for (unsigned int j = 0; j < moreFree.size(); j++)
-					free.push_back(moreFree[j]);
+				Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
+
+				ConnectionPointSet* connector =
+					static_cast<ConnectionPointSet*>(
+					m_world->getComponentManager()->getComponent(module,
+					ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+				if (connector)
+				{
+					vector<pair<int, Entity*>> moreFree 
+						= getFreeConnectionPoints(connector, module);
+					for (unsigned int j = 0; j < moreFree.size(); j++)
+						free.push_back(moreFree[j]);
+				}
 			}
 		}
 	}
@@ -403,7 +407,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
 		
 		//Set the module connection point
-		conPoints->m_connectionPoints[sel].cpConnectedEntity = ship->getIndex();
+		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
 

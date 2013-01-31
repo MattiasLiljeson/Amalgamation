@@ -85,8 +85,8 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 			{
 				Entity* entity = m_world->getEntity(e);
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
-
-				if (m) //Could be a ship
+				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
 					if (m->m_health <= 0)
 					{
