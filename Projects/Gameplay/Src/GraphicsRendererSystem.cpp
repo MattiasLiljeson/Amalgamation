@@ -100,7 +100,7 @@ void GraphicsRendererSystem::initParticlePass(){
 void GraphicsRendererSystem::endParticlePass(){
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	//m_wrapper->setComposedRenderTargetWithNoDepthStencil();
+	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
 }
 
 void GraphicsRendererSystem::initGUIPass(){
