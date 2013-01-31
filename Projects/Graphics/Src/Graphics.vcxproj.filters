@@ -81,9 +81,6 @@
     <ClInclude Include="ShaderBase.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderInitStruct.h">
-      <Filter>Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderStageData.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
@@ -180,6 +177,9 @@
       <Filter>Renderer\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="RenderInterface.h" />
+    <ClInclude Include="ShaderVariableContainer.h">
+      <Filter>Renderer\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

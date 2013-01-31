@@ -4,6 +4,9 @@
 #include <AntTweakBar.h>
 #include "Utility.h"
 
+class AglGradient;
+struct AglGradientMaterial;
+
 class MaterialDialog
 {
 private:
@@ -22,6 +25,9 @@ private:
 	static void TW_CALL SetName(const void *value, void *clientData);
 	static void TW_CALL GetName(void *value, void *clientData);
 	static void TW_CALL AddLayer(void *clientData);
+	void				AddLayer(AglGradient* pGradient, AglGradientMaterial* pLayer, int pIndex);
+	static void TW_CALL Delete(void *clientData);
+	static void TW_CALL RemoveGradientLayer(void *clientData);
 public:
 	MaterialDialog();
 	~MaterialDialog();

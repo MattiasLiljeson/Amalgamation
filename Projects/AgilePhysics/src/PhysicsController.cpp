@@ -419,9 +419,10 @@ void PhysicsController::Clear()
 float PhysicsController::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore, AglBoundingSphere p_sphere)
 {
 	vector<RigidBody*> toCheck;
+	AglVector3 nothing;
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (CheckCollision(p_sphere, mRigidBodies[i].first))
+		if (CheckCollision(p_sphere, mRigidBodies[i].first, nothing))
 		{
 			toCheck.push_back(mRigidBodies[i].first);
 		}
@@ -470,24 +471,53 @@ void PhysicsController::ApplyExternalImpulse(int p_id, AglVector3 p_impulse, Agl
 	mBodies[p_id]->AddImpulse(p_impulse);
 	mBodies[p_id]->AddAngularImpulse(p_angularImpulse);
 }
-void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_magnitude)
+void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_radius, float p_magnitude)
 {
+	AglBoundingSphere bs(p_position, p_radius);
 	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
 	{
-		if (!mRigidBodies[i].first->GetParent())
+		AglVector3 colPoint;
+		if (CheckCollision(bs, mRigidBodies[i].first, colPoint))
 		{
-			AglVector3 dir = mRigidBodies[i].first->GetCenterOfMass() - p_position;
+			AglVector3 n = colPoint - bs.position;
+			float dist = n.length();
+			n.normalize();
+
+			AglVector3 rA = colPoint - mRigidBodies[i].first->GetCenterOfMass();
+
+			//Add mass as a resistance factor
+			float kn = mRigidBodies[i].first->GetInvMass();
+
+			//Add inertia tensors as resistance factors 
+			float knAng = AglVector3::dotProduct(n, 
+				AglVector3::crossProduct(AglVec3Transform(AglVector3::crossProduct(rA, n), mRigidBodies[i].first->GetInvInertiaWorld()), rA));
+
+			kn += knAng;
+
+			//Power
+			float dVn = p_magnitude * p_radius / dist;
+
+			//Calculate final normal impulse
+			float pn = dVn / kn;
+
+			//Apply impulses in normal direction
+			mRigidBodies[i].first->AddImpulse(n * pn);
+			AglVector3 angImpulse = AglVec3TransformNormal(AglVector3::crossProduct(rA, n * pn), mRigidBodies[i].first->GetInvInertiaWorld());
+			mRigidBodies[i].first->AddAngularImpulse(angImpulse);
+
+
+
+			/*AglVector3 dir = mRigidBodies[i].first->GetCenterOfMass() - p_position;
 			float l = dir.length();
 			dir.normalize();
+			AglVector3 dir2 = colPoint - bs.position;
+
+			AglVector3 rotAxis = AglVector3::crossProduct(dir2, dir);
+			rotAxis.normalize();
+
 			mRigidBodies[i].first->AddImpulse(dir*p_magnitude/l);
+			mRigidBodies[i].first->AddAngularImpulse(rotAxis*p_magnitude/l);*/
 		}
-	}
-	for (unsigned int i = 0; i < mCompoundBodies.size(); i++)
-	{
-		AglVector3 dir = mCompoundBodies[i]->GetCenterOfMass() - p_position;
-		float l = dir.length();
-		dir.normalize();
-		mCompoundBodies[i]->AddImpulse(dir*p_magnitude/l);
 	}
 }
 

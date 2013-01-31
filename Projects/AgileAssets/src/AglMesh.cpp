@@ -63,7 +63,12 @@ void AglMesh::transform(AglMatrix p_transform)
 		v[i].tangent.transformNormal(p_transform);
 	}
 
-	m_header.minimumOBB.world = p_transform * m_header.minimumOBB.world * p_transform.transpose();
+	//Verkar inte fungera!
+	//m_header.minimumOBB.world = p_transform * m_header.minimumOBB.world * p_transform.transpose();
+
+	//Fungerar
+	m_header.minimumOBB.world = m_header.minimumOBB.world * p_transform;
+
 	m_header.boundingSphere.position.transform(p_transform);
 
 	m_header.transform = p_transform * m_header.transform * p_transform.transpose();

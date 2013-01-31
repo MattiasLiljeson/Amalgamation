@@ -3,6 +3,7 @@
 AglMaterial::AglMaterial()
 {
 	id = -1;
+	nameID = -1;
 	diffuse = AglVector3(0.5f, 0.5f, 0.5f);
 	specular = AglVector3(1, 1, 1);
 	ambient = emissive = AglVector3(0, 0, 0);

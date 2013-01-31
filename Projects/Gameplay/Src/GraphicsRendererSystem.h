@@ -3,6 +3,7 @@
 
 class RenderInterface;
 class GraphicsBackendSystem;
+class GraphicsWrapper;
 
 // =======================================================================================
 //                                      GraphicsRendererSystem
@@ -34,6 +35,9 @@ public:
 	void initParticlePass();
 	void endParticlePass();
 
+	void initComposePass();
+	void endComposePass();
+
 	void initLightPass();
 	void endLightPass();
 	
@@ -42,6 +46,7 @@ public:
 	
 	void flipBackbuffer();
 private:
+	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
 	RenderInterface* m_meshRenderer;
 	RenderInterface* m_libRocketRenderSystem;

@@ -102,7 +102,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			sleep(1);
+			sleep(2);
 		}
 	}
 
@@ -189,7 +189,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
-		m_world->setSystem(new RocketControllerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(m_server), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D

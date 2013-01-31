@@ -1,6 +1,6 @@
 #include "GUIShader.h"
 
-GUIShader::GUIShader( ShaderInitStruct p_initData, 
+GUIShader::GUIShader( ShaderVariableContainer p_initData, 
 									   Buffer<SimpleCBuffer>* p_cBuffer ) 
 									   : ShaderBase(p_initData)
 {

@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "TextureManager.h"
 #include <AglVector4.h>
+#include "SceneDialog.h"
 
 //Callbacks
 void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
@@ -12,11 +13,7 @@ void TW_CALL MaterialDialog::LoadDiffuse(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		//string path = getPath(file);
-		//removePath(file);
 		mat->diffuseTextureNameIndex = Scene::GetInstance()->AddName(file);
-		//Scene::GetInstance()->AddPath(path, mat->diffuseTextureNameIndex);
-		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -28,11 +25,7 @@ void TW_CALL MaterialDialog::LoadSpecular(void *clientData)
 	string file = openfilename();
 	if (file != "")
 	{
-		//string path = getPath(file);
-		//removePath(file);
 		mat->specularTextureNameIndex = Scene::GetInstance()->AddName(file);
-		//Scene::GetInstance()->AddPath(path, mat->specularTextureNameIndex);
-		//file = path + file;
 		TextureManager::GetInstance()->LoadTexture(file);
 	}
 }
@@ -93,27 +86,38 @@ void TW_CALL MaterialDialog::AddLayer(void *clientData)
 	MaterialDialog* dialog = (MaterialDialog*)clientData;
 	AglMaterial* mat = dialog->m_material;
 	AglGradient* g;
+	AglGradientMaterial* layer = NULL;
+	int index;
 	if (mat->gradientDataIndex < 0)
 	{
 		g = new AglGradient();
 		mat->gradientDataIndex = Scene::GetInstance()->AddGradient(g);
+		layer = g->getLayers()[0];
+		index = 0;
 	}
 	else
 	{
 		g = Scene::GetInstance()->GetGradient(mat->gradientDataIndex);
-		g->addLayer(new AglGradientMaterial());
+		layer = new AglGradientMaterial();
+		g->addLayer(layer);
+		index = g->getLayers().size()-1;
 	}
-	string name = "Layer" + toString(g->getLayers().size());
+	dialog->AddLayer(g, layer, index);
+}
+void MaterialDialog::AddLayer(AglGradient* pGradient, AglGradientMaterial* pLayer, int pIndex)
+{
+	string name = "Layer" + toString(pIndex);
 
-	TwStructMember rgbaMembers[] = { 
-		{ "Red", TW_TYPE_FLOAT, offsetof(AglVector4, x), "min=0.1 max=1 step=0.01" },
-		{ "Green", TW_TYPE_FLOAT, offsetof(AglVector4, y), "min=0.1 max=1 step=0.01" },
-		{ "Blue", TW_TYPE_FLOAT, offsetof(AglVector4, z), "min=0.1 max=1 step=0.01" },
-		{ "Alpha", TW_TYPE_FLOAT, offsetof(AglVector4, w), "min=0.1 max=1 step=0.01" }};
-	TwType rgbatype = TwDefineStruct("COLOR4", rgbaMembers, 4, sizeof(AglVector4), NULL, NULL);
+	string define = "group='"+name+"'";
+	string color = "Color" + toString(pIndex);
+	AglVector4* c = pGradient->getLayerColorPointer(pIndex);
+	TwAddVarRW(m_dialog, color.c_str(), TW_TYPE_COLOR4F, (void*)c, define.c_str());
 
-	AglVector4* c = g->getLayerColorPointer(g->getLayers().size()-1);
-	TwAddVarRW(dialog->m_dialog, name.c_str(), TW_TYPE_COLOR4F, (void*)c, " group='Gradient Mapping'");
+	string remove = "Remove" + toString(pIndex);
+	TwAddButton(m_dialog, remove.c_str(), RemoveGradientLayer, (void*)pLayer, define.c_str());
+
+	define = "Material/'" + name + "' group='Gradient Mapping'";
+	TwDefine(define.c_str());
 }
 void TW_CALL MaterialDialog::SetName(const void *value, void *clientData)
 {
@@ -140,6 +144,44 @@ void TW_CALL MaterialDialog::GetName(void *value, void *clientData)
 	string materialName = Scene::GetInstance()->GetName(m->nameID);
 	char *src = (char*)materialName.c_str();
 	TwCopyCDStringToLibrary(destPtr, src);
+}
+void TW_CALL MaterialDialog::Delete(void *clientData)
+{
+	MaterialDialog* d = (MaterialDialog*)clientData;
+	AglMaterial* m = d->m_material;
+	d->hide();
+	SceneDialog::GetInstance()->RemoveMaterial(m);
+}
+void TW_CALL MaterialDialog::RemoveGradientLayer(void *clientData)
+{
+	AglGradientMaterial* layer = (AglGradientMaterial*)clientData;
+	vector<AglGradient*> gradients = Scene::GetInstance()->GetGradients();
+	for (unsigned int i = 0; i < gradients.size(); i++)
+	{
+		vector<AglGradientMaterial*> layers = gradients[i]->getLayers();
+		for (unsigned int j = 0; j < layers.size(); j++)
+		{
+			if (layers[j] == layer)
+			{
+				MaterialDialog* dialog = SceneDialog::GetInstance()->GetMaterialDialog();
+				for (unsigned int l = 0; l < layers.size(); l++)
+				{
+					//Remove layers here				
+					string name = "Layer" + toString(l);
+					TwRemoveVar(dialog->m_dialog, name.c_str());
+				}
+				gradients[i]->removeLayer(layer);
+				layers = gradients[i]->getLayers();
+				for (unsigned int l = 0; l < layers.size(); l++)
+				{
+					//Add remaining layers
+					dialog->AddLayer(gradients[i], layers[l], l);
+				}
+
+				break;
+			}
+		}
+	}
 }
 
 MaterialDialog::MaterialDialog()
@@ -200,6 +242,6 @@ void MaterialDialog::setMaterial(int pIndex)
 
 	TwAddButton(m_dialog, "Add Layer", AddLayer, this, " label='Add Layer' key=c help='Load an Agile file into the editor.' group='Gradient Mapping'");
 
-
+	TwAddButton(m_dialog, "Delete", Delete, this, "");
 	show();
 }
