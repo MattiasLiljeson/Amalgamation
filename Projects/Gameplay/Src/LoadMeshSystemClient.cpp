@@ -29,5 +29,15 @@ void LoadMeshSystemClient::initialize()
 
 vector<ModelResource*>* LoadMeshSystemClient::createModels( const string& p_filename, const string& p_filePath, bool p_isPrimitive )
 {
-	return m_gfxBackend->getGfxWrapper->createModelsFromFile(p_filename,p_filePath,p_isPrimitive);
+	return m_gfxBackend->getGfxWrapper()->createModelsFromFile(p_filename,&p_filePath,p_isPrimitive);
+}
+
+void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity, 
+											   ModelResource* p_modelResource, 
+											   BodyInitData* p_rootRigidBodyData, 
+											   PhysicsBody* p_rootPhysicsBody, 
+											   AglMatrix& baseTransform )
+{
+	// Do nothing on client here, trolololo
+	// Check server version for how to set up collision data
 }

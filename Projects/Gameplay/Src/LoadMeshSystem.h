@@ -4,6 +4,10 @@
 
 class Transform;
 struct ModelResource;
+class BodyInitData;
+class PhysicsBody;
+struct AglMatrix;
+
 
 // =======================================================================================
 //                                      LoadMeshSystem
@@ -54,4 +58,12 @@ private:
 	virtual vector<ModelResource*>* createModels(const string& p_filename, 
 		const string& p_filePath,
 		bool p_isPrimitive)=0;
+
+	virtual void setUpRenderInfo(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpConnectionPoints(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 
+									 BodyInitData* p_rootRigidBodyData,
+									 PhysicsBody* p_rootPhysicsBody,
+									 AglMatrix& baseTransform)=0;
 };

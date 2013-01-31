@@ -2,30 +2,30 @@
 
 #include "LoadMeshSystem.h"
 
-class GraphicsBackendSystem;
+class ModelBaseFactory;
 class Transform;
 struct ModelResource;
 
 // =======================================================================================
-//                                      LoadMeshSystemClient
+//                                      LoadMeshSystemServer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief System that processes entities with LoadMeshJobComponents and loads the
 /// specified mesh from file, which can result in additional components on the entity as
 /// well as new entities.
-/// Version for client, creates modelresources with buffers.
+/// Version for server, creates modelresources with collision.
 ///        
 /// # LoadMeshSystemClient
 /// Detailed description.....
 /// Created on: 22-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class LoadMeshSystemClient : public LoadMeshSystem
+class LoadMeshSystemServer : public LoadMeshSystem
 {
 public:
-	LoadMeshSystemClient(GraphicsBackendSystem* p_gfxBackend);
-	virtual ~LoadMeshSystemClient();
+	LoadMeshSystemServer();
+	virtual ~LoadMeshSystemServer();
 	virtual void initialize();
 private:
 	///-----------------------------------------------------------------------------------
@@ -42,5 +42,5 @@ private:
 		PhysicsBody* p_rootPhysicsBody,
 		AglMatrix& baseTransform);
 
-	GraphicsBackendSystem* m_gfxBackend;
+	ModelBaseFactory* m_modelBaseFactory;
 };

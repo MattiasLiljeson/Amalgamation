@@ -458,6 +458,9 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\AssetLoading</Filter>
     </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -760,6 +763,9 @@
       <Filter>Systems\AssetLoading</Filter>
     </ClCompile>
     <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems\AssetLoading</Filter>
     </ClCompile>
   </ItemGroup>

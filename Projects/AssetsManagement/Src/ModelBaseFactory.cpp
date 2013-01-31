@@ -73,11 +73,11 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 						scene,
 						instanceInstructions);
 					// read leftover empties
-					if ((*prefetched)[0]!=NULL)
+					ModelResource* root = (*prefetched)[0];
+					if (root!=NULL)
 					{
-						ModelResource* model = (*prefetched)[0];
 						SourceData source={scene,NULL,NULL,-1,string("")};
-						readAndStoreEmpties(source,model,currentInstance.transform,
+						readAndStoreEmpties(source,root,currentInstance.transform,
 											&currentInstance,instanceInstructions); 
 					}
 					//
@@ -88,7 +88,7 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 					{
 						ModelResource* model = new ModelResource( *(*prefetched)[n] );
 						// mesh transform
-						model->transform = model->transform*currentInstance.transform;
+						model->transform *= currentInstance.transform;
 						// 
 						models->push_back(model);
 					}
@@ -119,22 +119,26 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 				ModelResourceCollection* modelresourceCollection = m_modelResourceCache->getResource(currentInstance.filename);
 				vector<ModelResource*>* prefetched = &modelresourceCollection->collection;
 
-				unsigned int start = modelresourceCollection->rootIndex+1;
+				unsigned int root = modelresourceCollection->rootIndex;
 				unsigned int size = prefetched->size();
-				for (unsigned int n=start;n<size;n++)
+				for (unsigned int n=0;n<size;n++)
 				{
 					ModelResource* model = new ModelResource( *(*prefetched)[n] );
 					// mesh transform
 					model->transform *= currentInstance.transform;
+					AglMatrix* base= &(model->transform);
 					// instances
-					for (unsigned int n=0;n<model->instances.size();n++)
+					for (unsigned int x=0;x<model->instances.size();x++)
 					{
-						InstanceInstruction instruction = model->instances[n];
+						InstanceInstruction instruction = model->instances[x];
 						instruction.transform *= currentInstance.transform;
 						instanceInstructions->push_back(instruction);
 					}
 					// 
-					models->push_back(model);
+					if (n!=root) 
+						models->push_back(model);
+					else
+						delete model;
 				}
 			}
 		}
@@ -297,9 +301,10 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				if (cp->parentMesh == p_source.modelNumber) // handle global and local call the same
 				{
 					InstanceInstruction inst = {parsedAction.first.filename,
-						cp->transform*p_offset};
+						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_model->instances.push_back(inst);
+					inst.transform *= p_offset;
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;

@@ -27,6 +27,7 @@
 #include <RocketControllerSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
+#include <LoadMeshSystemServer.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
