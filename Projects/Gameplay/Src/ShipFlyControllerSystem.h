@@ -38,6 +38,7 @@ private:
 	float	getSpeedBoost(Entity* p_entity, float p_baseThrust);
 	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3 p_thrust,
 		AglVector3 p_angularVec);
+	void	sendTransformPacketToServer(NetworkSynced* p_syncedInfo, Transform* p_transform);
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;

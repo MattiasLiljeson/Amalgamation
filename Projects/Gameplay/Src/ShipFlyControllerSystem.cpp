@@ -62,6 +62,13 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
+			Component* body = ship->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody);
+			PhysicsBody* rigidBody = NULL;
+			if (body)
+				rigidBody = static_cast<PhysicsBody*>(body);
+
+
+
 			// Calc rotation from player input
 			AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
 
@@ -87,6 +94,10 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			m_thrustVec += thrustVec;
 			m_angularVec += angularVec;
 
+			if (rigidBody)
+			{
+				m_physics->applyImpulse(rigidBody->m_id,thrustVec,angularVec);
+			}
 
 			if (input.stateSwitchInput != 0)
 			{
@@ -106,13 +117,11 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
-				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+				// sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
 
 				m_thrustVec = AglVector3();
 				m_angularVec = AglVector3();
 			}
-
-
 		}
 	}
 }
@@ -153,4 +162,9 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 	thrustPacket.angularVector = p_angularVec;
 
 	m_client->sendPacket( thrustPacket.pack() );
+}
+
+void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
+{
+	EntityUpdatePacket transformPacket;
 }

@@ -21,8 +21,11 @@
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
-
+#include "PhysicsBody.h"
+#include "BodyInitData.h"
 #include <time.h>
+
+
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -212,6 +215,18 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::ShipEditController, component);
 
 		entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		BodyInitData* bodyData = new BodyInitData(p_packet.translation,
+			p_packet.rotation,
+			p_packet.scale, AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, true, false);
+
+		entity->addComponent( ComponentType::BodyInitData, bodyData);
 
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(

@@ -557,9 +557,9 @@ void ClientPacketHandlerSystem::handleBatch()
 			// wrong type? Throw exception? /ML
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				transform->setTranslation( data.translation );
-				transform->setRotation( data.rotation );
 				transform->setScale( data.scale );
+				transform->setRotation( data.rotation );
+				transform->setTranslation( data.translation );
 			}
 
 			Extrapolate* extrapolate = NULL;
@@ -567,12 +567,12 @@ void ClientPacketHandlerSystem::handleBatch()
 				entity->getComponent(ComponentType::Extrapolate) );
 			// HACK! below check should not have to be done. Is the packet of the 
 			// wrong type? Throw exception? /ML
-			/*if( extrapolate != NULL )
-			{
-				extrapolate->serverUpdateTimeStamp = data.timestamp;
-				extrapolate->velocityVector = data.velocity;
-				extrapolate->angularVelocity = data.angularVelocity;
-			}*/
+// 			if( extrapolate != NULL )
+// 			{
+// 				extrapolate->serverUpdateTimeStamp = data.timestamp;
+// 				extrapolate->velocityVector = data.velocity;
+// 				extrapolate->angularVelocity = data.angularVelocity;
+// 			}
 		}
 	}
 	m_batch.clear();
