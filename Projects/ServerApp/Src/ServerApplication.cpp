@@ -193,8 +193,8 @@ namespace Srv
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
-		// NODE: (Johan) Should be called from some lobby-to-in-game state change:
-		winningCondition->startGameSession(10.0f);
+		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
+//		winningCondition->startGameSession(20.0f);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
