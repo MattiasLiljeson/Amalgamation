@@ -69,7 +69,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void mapDeferredBaseRTSToShader();
 
-	void mapVariousPassesToComposeStage();
+	void mapVariousPassesToComposeStage(ID3D11ShaderResourceView* p_shadowMap);
+	
 	void unmapVariousPassesFromComposeStage();
 
 	void unmapDepthFromShaderVariables();
@@ -88,6 +89,7 @@ public:
 	void setBlendState(BlendState::Mode p_state);
 	
 	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
+
 	void setBlendFactors(float p_oneValue);
 
 	void setBlendMask(UINT p_mask);
@@ -95,10 +97,6 @@ public:
 	void setLightRenderTarget();
 
 	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
-
-	// ===================================================================================
-	// Rasterizer States
-	// ===================================================================================
 
 	///-----------------------------------------------------------------------------------
 	/// Set settings for rasterizer states
@@ -109,6 +107,7 @@ public:
 	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
 
 	void releaseRenderTargetsAndDepthStencil();
+
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 
 	ID3D11DepthStencilView* getDepthStencil();
@@ -123,8 +122,6 @@ public:
 	// Debug
 	// ===================================================================================
 	void hookUpAntTweakBar();
-
-
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();

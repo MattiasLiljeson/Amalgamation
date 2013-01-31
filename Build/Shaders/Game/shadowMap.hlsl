@@ -1,10 +1,5 @@
 #include "perFrameCBuffer.hlsl"
 
-cbuffer shadowBuffer: register(b2)
-{
-	float4x4 shadowViewProj;
-}
-
 struct VertexIn
 {
 	float3 position : POSITION;	

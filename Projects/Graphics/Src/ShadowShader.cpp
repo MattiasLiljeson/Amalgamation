@@ -2,17 +2,19 @@
 #include <AglMatrix.h>
 
 ShadowShader::ShadowShader(ShaderVariableContainer p_initData, 
-						   Buffer<ShadowCBuffer>* m_bufferPointer)
+						   Buffer<ShadowCBuffer>* p_bufferPointer)
 	: ShaderBase(p_initData)
 {
-
+	m_bufferPointer = p_bufferPointer;
 }
 
 ShadowShader::~ShadowShader(){
-
+	delete m_bufferPointer;
 }
 
 void ShadowShader::apply(){
+	m_bufferPointer->update();
+	m_bufferPointer->apply();
 	applyStages();
 }
 

@@ -509,7 +509,7 @@ void GraphicsWrapper::renderComposeStage(){
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapVariousPassesToComposeStage();
+	m_deferredRenderer->mapVariousPassesToComposeStage(m_shadowMapRenderer->getShadowMap());
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){

@@ -107,8 +107,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
-
-	
 	void mapDeferredBaseToShader();
 
 	void unmapDepthFromShader();

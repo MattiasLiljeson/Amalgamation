@@ -95,13 +95,16 @@ void DeferredRenderer::mapDeferredBaseRTSToShader()
 		RenderTargets::DEPTH] );
 }
 
-void DeferredRenderer::mapVariousPassesToComposeStage(){
+void DeferredRenderer::mapVariousPassesToComposeStage(ID3D11ShaderResourceView* p_shadowMap){
 	m_deviceContext->PSSetShaderResources(0, 1, &m_gBuffersShaderResource[
 		RenderTargets::LIGHT] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &p_shadowMap );
 }
+
 void DeferredRenderer::unmapVariousPassesFromComposeStage(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deviceContext->PSSetShaderResources(0, 1, &nulz);
+	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
 }
 void DeferredRenderer::unMapGBuffers()
 {

@@ -20,7 +20,7 @@ class ShadowShader : public ShaderBase
 {
 public:
 	ShadowShader(ShaderVariableContainer p_initData,
-		Buffer<ShadowCBuffer>* m_bufferPointer);
+		Buffer<ShadowCBuffer>* p_bufferPointer);
 	~ShadowShader();
 
 	void apply();
