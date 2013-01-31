@@ -198,7 +198,7 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
-		InitModulesTestByAnton();
+		//InitModulesTestByAnton();
 	}
 
 	

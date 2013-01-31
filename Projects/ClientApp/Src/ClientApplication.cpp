@@ -492,7 +492,7 @@ void ClientApplication::initEntities()
 
 
 	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1.77f));
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1,45,1,100));
 	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10) );
 	entity->addComponent(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
 	m_world->addEntity(entity);

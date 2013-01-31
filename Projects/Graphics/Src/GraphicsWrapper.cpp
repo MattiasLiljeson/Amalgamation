@@ -577,8 +577,8 @@ void GraphicsWrapper::setViewportToShadowMapSize(){
 	D3D11_VIEWPORT vp;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	vp.Width	= ShadowMapRenderer::SHADOWMAPSIZE;
-	vp.Height	= ShadowMapRenderer::SHADOWMAPSIZE;
+	vp.Width	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
+	vp.Height	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1;
 
