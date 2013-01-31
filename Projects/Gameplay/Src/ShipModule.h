@@ -26,6 +26,10 @@ public:
 	ShipModule();
 	~ShipModule();
 	void init( vector<ComponentData> p_initData );
+	void addDamageThisTick(float p_amount);
+	void applyDamage();
+	void resetDamage();
 private:
+	float m_addedDamage;
 	static ComponentRegister<ShipModule> s_reg;
 };

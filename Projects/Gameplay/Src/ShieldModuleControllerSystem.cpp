@@ -9,6 +9,7 @@
 #include "ShipModule.h"
 #include "EntityCreationPacket.h"
 #include "NetworkSynced.h"
+#include "ShipModulesTrackerSystem.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 1, ComponentType::ShieldModule)
@@ -64,6 +65,18 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 			transform->setTranslation(parentTransform->getTranslation());
 			transform->setRotation(parentTransform->getRotation());
 			transform->setScale(AglVector3(6, 6, 6));
+			
+			// TODO: Get all "child" modules
+			vector<ShipModule*> childModules = static_cast<ShipModulesTrackerSystem*>(
+				m_world->getSystem(SystemType::ShipModulesTrackerSystem))->
+				getModulesFromParent(p_parentEntity->getIndex());
+			for(unsigned int moduleIndex=0; moduleIndex<childModules.size(); moduleIndex++)
+			{
+				if(childModules[moduleIndex])
+				{
+					childModules[moduleIndex]->resetDamage();
+				}
+			}
 		}
 		else
 		{

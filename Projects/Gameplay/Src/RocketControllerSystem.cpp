@@ -95,7 +95,8 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 						ComponentType::ShipModule));
 					if(hitModule)
 					{
-						hitModule->m_health = 0;
+//						hitModule->m_health = 0;
+						hitModule->addDamageThisTick(101.0f); // Above max hp.
 					}
 				}
 

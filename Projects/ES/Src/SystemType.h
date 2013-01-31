@@ -71,6 +71,7 @@ public:	//Enums
 		ServerClientInfoSystem,
 		LightBlinkerSystem,
 		WinningConditionSystem,
+		ShipModulesTrackerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

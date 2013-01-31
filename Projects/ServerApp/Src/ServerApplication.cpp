@@ -28,6 +28,7 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
 #include <WinningConditionSystem.h>
+#include <ShipModulesTrackerSystem.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -184,13 +185,15 @@ namespace Srv
 		/* Gameplay															*/
 		/************************************************************************/
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
-		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineControllerSystem(m_server), true);
-		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		// Important for any module-damaging logic to happen before this.
+		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
