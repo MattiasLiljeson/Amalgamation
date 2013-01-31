@@ -17,7 +17,8 @@ SpawnSoundEffectPacket::SpawnSoundEffectPacket()
 		"Missile_Start_and_Flight.wav";
 	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::Explosion] =
 		"bomb-03.wav";
-	
+	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::MineUnload] =
+		"Mine_Unload.wav";
 }
 
 Packet SpawnSoundEffectPacket::pack()

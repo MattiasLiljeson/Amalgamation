@@ -7,13 +7,16 @@
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "PhysicsSystem.h"
+#include <PhysicsController.h>
 #include "ShipModule.h"
 #include "StandardMine.h"
 #include "EntityCreationPacket.h"
 #include "NetworkSynced.h"
+#include "SpawnSoundEffectPacket.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 1, ComponentType::MineLayerModule)
+	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 2,
+	ComponentType::MineLayerModule, ComponentType::PhysicsBody)
 {
 	m_server = p_server;
 }
@@ -50,31 +53,41 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				Transform* transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(p_entities[i],
 					ComponentType::getTypeFor(ComponentType::Transform)));
-				spawnMine(transform);
+				PhysicsBody* physBody = static_cast<PhysicsBody*>(
+					p_entities[i]->getComponent(ComponentType::PhysicsBody));
+				PhysicsSystem* physics = static_cast<PhysicsSystem*>(
+					m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+				AglVector3 moduleVelocity = physics->getController()->getBody(
+					physBody->m_id)->GetVelocity();
+				spawnMine(transform, moduleVelocity);
 			}
 		}
 	}
 }
 
-void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
+void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
+												AglVector3 p_moduleVelocity)
 {
+
 	Entity* entity = m_world->createEntity();
-
-	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(), AglVector3(0.8f, 0.8f, 0.8f));
+	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(),
+		AglVector3(0.8f, 0.8f, 0.8f));
 	entity->addComponent( ComponentType::Transform, t);
-
 	entity->addComponent(ComponentType::StandardMine, new StandardMine());
-
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
-
+	AglVector3 fireDirection = AglVector3(0, -1.0f, 0);
+	const AglQuaternion& rot = p_transform->getRotation();
+	rot.transformVector(fireDirection);
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(p_transform->getTranslation(),
 		p_transform->getRotation(),
-		AglVector3(0.8f, 0.8f, 0.8f), AglVector3(0, 0, 0), 
+		AglVector3(0.8f, 0.8f, 0.8f), fireDirection * 10.0f + p_moduleVelocity,
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, true));
+	entity->addComponent(ComponentType::NetworkSynced, 
+		new NetworkSynced( entity->getIndex(), -1, EntityType::Mine));
 
 
 	EntityCreationPacket data;
@@ -85,11 +98,14 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform)
 	data.rotation		= t->getRotation();
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
-
-	entity->addComponent(ComponentType::NetworkSynced, 
-		new NetworkSynced( entity->getIndex(), -1, EntityType::Mine));
-
 	m_server->broadcastPacket(data.pack());
+
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MineUnload;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = t->getTranslation();
+	soundEffectPacket.attachedToNetsyncEntity = -1;
+	m_server->broadcastPacket(soundEffectPacket.pack());
 
 	m_world->addEntity(entity);
 }
