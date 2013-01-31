@@ -4,6 +4,15 @@
 #include <stdexcept>
 #include <climits>
 
+Packet::Packet( const Packet& p_other )
+	: m_data(p_other.m_data),
+	m_senderId(p_other.m_senderId),
+	m_readPos(p_other.m_readPos),
+	m_packetSize(p_other.m_packetSize),
+	m_packetType(p_other.m_packetType),
+	m_uniquePacketIdentifier(p_other.m_uniquePacketIdentifier)
+{
+}
 
 Packet::Packet( int p_senderId, char* p_data, unsigned int p_size )
 {

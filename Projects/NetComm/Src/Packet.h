@@ -22,6 +22,7 @@ using namespace std;
 class Packet
 {
 public:
+	Packet( const Packet& p_other );
 	///-----------------------------------------------------------------------------------
 	/// Creates a new packet from raw data.
 	/// Sets the raw data of the packet. It is possible to stream out so much data
