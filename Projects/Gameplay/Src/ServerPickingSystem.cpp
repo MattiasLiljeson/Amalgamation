@@ -229,7 +229,7 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	Transform* SelectionSphereTransform = static_cast<Transform*>(SelectionSphere->getComponent(ComponentType::Transform));
 	SelectionSphereTransform->setTranslation(closestConnectionPoint(dest, ship, p_ray));
 	if (p_ray.m_targetEntity >= 0)
-		SelectionSphereTransform->setScale(AglVector3(1, 1, 1));
+		SelectionSphereTransform->setScale(AglVector3(2, 2, 2));
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 }
@@ -250,7 +250,7 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 	AglVector3 closest = AglVector3(0, 0, 0);
 	if (free.size() > 0)
 	{
-		AglVector3 pos = (conPoints->m_connectionPoints[free[0].first].cpTransform*transform->getMatrix()).GetTranslation();
+		AglVector3 pos(FLT_MAX, FLT_MAX, FLT_MAX);// = (conPoints->m_connectionPoints[free[0].first].cpTransform*transform->getMatrix()).GetTranslation();
 		closest = pos;
 		p_pc.m_targetEntity = free[0].second->getIndex();
 		p_pc.m_targetSlot = free[0].first;
@@ -258,7 +258,8 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 		{
 			conPoints = static_cast<ConnectionPointSet*>(free[i].second->getComponent(ComponentType::ConnectionPointSet));
 			transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
-			AglVector3 pos = (conPoints->m_connectionPoints[free[i].first].cpTransform*transform->getMatrix()).GetTranslation();
+			AglVector3 pos = conPoints->m_connectionPoints[free[i].first].cpTransform.GetTranslation();
+			pos.transform(transform->getMatrix());
 			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
 			{
 				closest = pos;
@@ -308,30 +309,73 @@ vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(Connecti
 	return free;
 }
 
-AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base)
+AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset)
 {
 	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+	vector<AglMatrix> transforms;
+	transforms.push_back(p_offset);
+	transforms.push_back(p_base);
 	while (module)
 	{
 		Entity* parent = m_world->getEntity(module->m_parentEntity);
 
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-			m_world->getComponentManager()->getComponent(parent,
+			m_world->getComponentManager()->getComponent(p_entity,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
 		unsigned int ind = 0;
 		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
 		{
-			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+			if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
 				ind = i;
 		}
 
-		transform = transform * cps->m_connectionPoints[ind].cpTransform;
+		//Child
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform);
+
+		//Parent Connection points
+		cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(parent,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
+			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				ind = i;
+		}
+		//Parent
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform);
+		
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 		p_entity = parent;
 	}
-	return transform;
+
+	AglMatrix finalTransform = AglMatrix::identityMatrix();
+	AglMatrix final = AglMatrix::identityMatrix();
+
+	while (transforms.size() > 0)
+	{
+		//Parent transform
+		AglMatrix transform = transforms.back();
+
+		//Child Transform
+		AglMatrix childTransform = transforms[transforms.size()-2];
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation();
+		rot.transformVector(childTrans);
+
+		//Negate to get correct
+		finalTransform.SetTranslation(transform.GetTranslation() - childTrans);
+		transforms.pop_back();
+		transforms.pop_back();
+
+		final = finalTransform*final;
+	}
+	return final;
 }
 
 
@@ -390,18 +434,19 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 
 		//Parent transform
-		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
 
 		//Child Transform
-		AglMatrix childTransform = conPoints->m_connectionPoints[sel].cpTransform;
+		/*AglMatrix childTransform = conPoints->m_connectionPoints[sel].cpTransform;
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		AglQuaternion rot2 = AglQuaternion::rotateToFrom(childTransform.GetForward(), transform.GetForward());
 		AglMatrix finalTransform = AglMatrix::createRotationMatrix(rot);
 
 		AglVector3 childTrans = childTransform.GetTranslation();
 		rot.transformVector(childTrans);
-		finalTransform.SetTranslation(transform.GetTranslation() + childTrans);
+		finalTransform.SetTranslation(-transform.GetTranslation() + childTrans);*/
 
-		physX->getController()->AttachBodyToCompound(comp, r, finalTransform);
+		physX->getController()->AttachBodyToCompound(comp, r, transform);
 		
 		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
@@ -485,3 +530,37 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 	}
 	return true;
 }
+
+
+	/*AglMatrix finalTransform = AglMatrix::identityMatrix();
+	while (transforms.size() > 0)
+	{
+		//AFAGAgAG
+		AglVector3 trans = transforms.back().GetTranslation();
+		transforms.back().SetTranslation(AglVector3(0, 0, 0));
+		transforms.back() *= finalTransform;
+		trans.transform(finalTransform);
+		transforms.back().SetTranslation(trans + transforms.back().GetTranslation());
+		//SAGSAGSAG
+
+
+		//Parent transform
+		AglMatrix transform = transforms.back();
+
+		//Child Transform
+		AglMatrix childTransform = transforms[transforms.size()-2];
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation()-transform;
+		rot.transformVector(childTrans);
+		finalTransform.SetTranslation(transform.GetTranslation() + childTrans);
+		transforms.pop_back();
+		transforms.pop_back();
+	}
+	/*AglVector3 trans = p_base.GetTranslation();
+	p_base.SetTranslation(AglVector3(0, 0, 0));
+	p_base *= finalTransform;
+	trans.transform(finalTransform);
+	p_base.SetTranslation(trans + p_base.GetTranslation());*/
+	//return finalTransform;
