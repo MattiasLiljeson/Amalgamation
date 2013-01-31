@@ -93,6 +93,7 @@ public:
 	bool*				getDrawGrid(){ return &m_drawSphereGrid; }
 	unsigned int*		getTreeLevel(){ return &m_treeLevel; }
 	AglMatrix			getTransform(){ return mMesh->getHeader().transform; }
+	bool				hasSkeleton(){ return mSkeletonMappings.size() > 0;}
 };
 
 template <typename T>

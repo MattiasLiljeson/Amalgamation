@@ -18,7 +18,7 @@ InputControlFactory::~InputControlFactory()
 
 }
 
-vector<pair<string, Control*>> InputControlFactory::create360controllerAnalogAll()
+vector<pair<string, Control*>> InputControlFactory::createAll360Analogs()
 {
 	vector<pair<string, Control*>> controls;
 	pair<string, Control*> nameAndControl;
@@ -37,26 +37,24 @@ vector<pair<string, Control*>> InputControlFactory::create360controllerAnalogAll
 		"TRIGGER_R"
 	};
 
-	for( int i=0;
-		i<InputHelper::XBOX360_CONTROLLER_ANALOG::NUM_XBOX360_CONTROLLER_ANALOGS;
-		i++ )
+	for( int i=0; i<InputHelper::Xbox360Analogs_CNT; i++ )
 	{
 		nameAndControl.first = names[i];
-		nameAndControl.second = create360controllerAnalog(
-			(InputHelper::XBOX360_CONTROLLER_ANALOG)i );
+		nameAndControl.second = create360Analog(
+			(InputHelper::Xbox360Analogs)i );
 		controls.push_back( nameAndControl );
 	}
 	return controls;
 }
 
-Control* InputControlFactory::create360controllerAnalog( 
-	InputHelper::XBOX360_CONTROLLER_ANALOG p_axis )
+Control* InputControlFactory::create360Analog( 
+	InputHelper::Xbox360Analogs p_axis )
 {
 	Control* ctl = new AnalogueControl( p_axis );
 	return ctl;
 }
 
-vector<pair<string, Control*>> InputControlFactory::create360controllerDigitalAll()
+vector<pair<string, Control*>> InputControlFactory::createAll360Digitals()
 {
 	vector<pair<string, Control*>> controls;
 	pair<string, Control*> nameAndControl;
@@ -79,26 +77,24 @@ vector<pair<string, Control*>> InputControlFactory::create360controllerDigitalAl
 		"BTN_Y"
 	};
 
-	for( int i=0;
-		i<InputHelper::XBOX360_CONTROLLER_DIGITAL::NUM_XBOX360_CONTROLLER_DIGITALS;
-		i++ )
+	for( int i=0; i<InputHelper::Xbox360Digitals_CNT; i++ )
 	{
 		nameAndControl.first = names[i];
-		nameAndControl.second = create360controllerDigital(
-			(InputHelper::XBOX360_CONTROLLER_DIGITAL)i );
+		nameAndControl.second = create360Digital(
+			(InputHelper::Xbox360Digitals)i );
 		controls.push_back( nameAndControl );
 	}
 	return controls;
 }
 
-Control* InputControlFactory::create360controllerDigital(
-	InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn )
+Control* InputControlFactory::create360Digital(
+	InputHelper::Xbox360Digitals p_btn )
 {
 	Control* ctl = new DigitalControl( p_btn );
 	return ctl;
 }
 
-vector<pair<string, Control*>> InputControlFactory::createKeysAToZ()
+vector<pair<string, Control*>> InputControlFactory::createAToZ()
 {
 	// 26 characters in the alphabet
 	const int NUM_CHARS = 26;
@@ -118,15 +114,15 @@ vector<pair<string, Control*>> InputControlFactory::createKeysAToZ()
 	for( int i=0; i<NUM_CHARS; i++ )
 	{
 		nameAndControl.first = names[i];
-		nameAndControl.second = createKeyboardKey((InputHelper::KEYBOARD_KEY)
-			(InputHelper::KEY_A + i));
+		nameAndControl.second = createKeyboardKey((InputHelper::KeyboardKeys)
+			(InputHelper::KeyboardKeys_A + i));
 		controls.push_back( nameAndControl );
 	}
 	return controls;
 }
 
 
-vector<pair<string, Control*>> InputControlFactory::createKeysZeroToNine()
+vector<pair<string, Control*>> InputControlFactory::create0To9()
 {
 	// 10 numbers
 	const int NUM_NUMBERS = 10;
@@ -146,14 +142,14 @@ vector<pair<string, Control*>> InputControlFactory::createKeysZeroToNine()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		nameAndControl.first = names[i];
-		nameAndControl.second = createKeyboardKey((InputHelper::KEYBOARD_KEY)
-			(InputHelper::KEY_0 + i));
+		nameAndControl.second = createKeyboardKey((InputHelper::KeyboardKeys)
+			(InputHelper::KeyboardKeys_0 + i));
 		controls.push_back( nameAndControl );
 	}
 	return controls;
 }
 
-vector<pair<string, Control*>> InputControlFactory::createKeysNumZeroToNumNine()
+vector<pair<string, Control*>> InputControlFactory::createNumpad0ToNumpad9()
 {
 	// 10 numbers
 	const int NUM_NUMBERS = 10;
@@ -173,26 +169,78 @@ vector<pair<string, Control*>> InputControlFactory::createKeysNumZeroToNumNine()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		nameAndControl.first = names[i];
-		nameAndControl.second = createKeyboardKey((InputHelper::KEYBOARD_KEY)
-			(InputHelper::KEY_NUM0 + i));
+		nameAndControl.second = createKeyboardKey((InputHelper::KeyboardKeys)
+			(InputHelper::KeyboardKeys_NUMPAD_0 + i));
 		controls.push_back( nameAndControl );
 	}
 	return controls;
 }
 
-Control* InputControlFactory::createKeyboardKey( InputHelper::KEYBOARD_KEY p_key )
+Control* InputControlFactory::createKeyboardKey( InputHelper::KeyboardKeys p_key )
 {
 	Control* ctl = new KeyControl( p_key );
 	return ctl;
 }
 
-Control* InputControlFactory::createMouseButton( InputHelper::MOUSE_BTN p_btn )
+vector< pair<string, Control*> > InputControlFactory::createAllMouseAxes()
+{
+	string names[InputHelper::MouseAxes_CNT];
+	vector< pair< string, Control* > > controls;
+
+	// Axes
+	for( int i=0; i<InputHelper::MouseAxes_CNT; i++ )
+	{
+		stringstream ss;
+		ss << "MouseAxes_";
+		ss << (char)( '0' + i );
+		names[i] = ss.str();
+	}
+
+	for( int i=0; i<InputHelper::MouseAxes_CNT; i++ )
+	{
+		pair< string, Control* > nameAndControl;
+		nameAndControl.first = names[i];
+		InputHelper::MouseAxes axis = (InputHelper::MouseAxes)i;
+		nameAndControl.second = createMouseAxis( axis );
+		controls.push_back( nameAndControl );
+	}
+
+	return controls;
+}
+
+vector< pair<string, Control*> > InputControlFactory::createAllMouseButtons()
+{
+	string names[InputHelper::MouseButtons_CNT];
+	vector< pair< string, Control* > > controls;
+
+	// Buttons
+	for( int i=0; i<InputHelper::MouseButtons_CNT; i++ )
+	{
+		stringstream ss;
+		ss << "MouseButton_";
+		ss << (char)( '0' + i );
+		names[i] = ss.str();
+	}
+
+	for( int i=0; i<InputHelper::MouseButtons_CNT; i++ )
+	{
+		pair< string, Control* > nameAndControl;
+		nameAndControl.first = names[i];
+		InputHelper::MouseButtons btn = (InputHelper::MouseButtons) i;
+		nameAndControl.second = createMouseButton( btn );
+		controls.push_back( nameAndControl );
+	}
+
+	return controls;
+}
+
+Control* InputControlFactory::createMouseButton( InputHelper::MouseButtons p_btn )
 {
 	Control* ctl = new MouseBtnControl( p_btn );
 	return ctl;
 }
 
-Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axis )
+Control* InputControlFactory::createMouseAxis( InputHelper::MouseAxes p_axis )
 {
 	Control* ctl = new MouseMoveControl( p_axis );
 	return ctl;
@@ -203,12 +251,12 @@ Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axi
 //Cursor* InputControlFactory::createMouseCursor()
 //{
 //	Cursor* cursor = new Cursor();
-//	cursor->setControls( createMouseMovement(InputHelper::MOUSE_AXIS::X_NEGATIVE),
-//		createMouseMovement(InputHelper::MOUSE_AXIS::X_POSITIVE),
-//		createMouseMovement(InputHelper::MOUSE_AXIS::Y_NEGATIVE),
-//		createMouseMovement(InputHelper::MOUSE_AXIS::Y_POSITIVE),
-//		createMouseButton( InputHelper::MOUSE_BTN::M_LBTN ),
-//		createMouseButton( InputHelper::MOUSE_BTN::M_RBTN ) );
+//	cursor->setControls( createMouseAxis(InputHelper::MouseAxes::X_NEGATIVE),
+//		createMouseAxis(InputHelper::MouseAxes::X_POSITIVE),
+//		createMouseAxis(InputHelper::MouseAxes::Y_NEGATIVE),
+//		createMouseAxis(InputHelper::MouseAxes::Y_POSITIVE),
+//		createMouseButton( InputHelper::MouseButtons::M_LBTN ),
+//		createMouseButton( InputHelper::MouseButtons::M_RBTN ) );
 //	return cursor;
 //}
 //
@@ -216,12 +264,12 @@ Control* InputControlFactory::createMouseMovement( InputHelper::MOUSE_AXIS p_axi
 //{
 //	Cursor* cursor = new Cursor();
 //	cursor->setControls( 
-//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_NEGATIVE),
-//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LX_POSITIVE),
-//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_NEGATIVE),
-//		create360controllerAnalog(InputHelper::XBOX360_CONTROLLER_ANALOG::THUMB_LY_POSITIVE),
-//		create360controllerDigital(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_A),
-//		create360controllerDigital(InputHelper::XBOX360_CONTROLLER_DIGITAL::BTN_B) );
+//		create360Analog(InputHelper::Xbox360Analogs::THUMB_LX_NEGATIVE),
+//		create360Analog(InputHelper::Xbox360Analogs::THUMB_LX_POSITIVE),
+//		create360Analog(InputHelper::Xbox360Analogs::THUMB_LY_NEGATIVE),
+//		create360Analog(InputHelper::Xbox360Analogs::THUMB_LY_POSITIVE),
+//		create360Digital(InputHelper::Xbox360Digitals::BTN_A),
+//		create360Digital(InputHelper::Xbox360Digitals::BTN_B) );
 //	return cursor;
 //}
 //========================================================================================

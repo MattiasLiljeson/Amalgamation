@@ -12,30 +12,31 @@
 ///---------------------------------------------------------------------------------------
 #pragma once
 
-#include <d3d11.h>
-#include <ResourceManager.h>
-#include <Globals.h>
 #include "Buffer.h"
-#include "BufferFactory.h"
-#include "DeferredRenderer.h"
-#include "RendererSceneInfo.h"
 #include "InstanceData.h"
-#include "TextureParser.h"
 #include "ModelExtendedManagedFactory.h"
-#include "TextureFactory.h"
 #include "RenderSceneInfoCBuffer.h"
+#include "RenderStateEnums.h"
+#include "RendererSceneInfo.h"
+#include <Globals.h>
+#include <ResourceManager.h>
+#include <d3d11.h>
 
-
+class AglParticleSystem;
+class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
 class DeferredRenderer;
-class BufferFactory;
 class Mesh;
+class ParticleRenderer;
+class ShaderFactory;
+class TextureParser;
+class TextureFactory;
+class GUIShader;
+
+struct LightInstanceData;
 struct Model;
 struct Texture;
-class ParticleRenderer;
-class AglParticleSystem;
-struct LightInstanceData;
 
 class GraphicsWrapper
 {
@@ -81,6 +82,8 @@ public:
 
 	void setComposedRenderTargetWithNoDepthStencil();
 
+	void setLightPassRenderTarget();
+
 	void setParticleRenderState();
 
 	///-----------------------------------------------------------------------------------
@@ -90,14 +93,11 @@ public:
 	/// \param p_texture
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void renderGUIMesh( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
+	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
-	///-----------------------------------------------------------------------------------
-	/// Finalizes the frame. For example; a deferred subsystem will
-	/// render to backbuffer here.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void mapGBuffersToShader();
+
+	
+	void mapDeferredBaseToShader();
 
 	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
@@ -162,8 +162,15 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderParticleSystem(AglParticleSystem* p_system);
 
+	void renderComposeStage();
+
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
+
+	void mapVariousStagesForCompose();
+
+	void unmapVariousStagesForCompose();
 private:
+	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
 
 	///-----------------------------------------------------------------------------------
@@ -200,6 +207,7 @@ private:
 	DeferredBaseShader*		m_deferredBaseShader;
 
 	// Creation & storage
+	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 	TextureFactory*			m_textureFactory;
 	ModelExtendedManagedFactory*	m_modelFactory;
@@ -211,6 +219,9 @@ private:
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
+
+
+	GUIShader*				m_guiShader;
 
 	int m_height;
 	int m_width;

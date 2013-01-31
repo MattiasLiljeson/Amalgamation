@@ -70,6 +70,9 @@ private:
 
 	//Clone
 	static void TW_CALL Clone(void* clientData);
+	
+	//Remove
+	static void TW_CALL Remove(void* clientData);
 
 	static void TW_CALL Restart(void* clientData);
 	static void TW_CALL LoadTexture(void *clientData);

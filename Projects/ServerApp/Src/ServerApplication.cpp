@@ -103,7 +103,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			sleep(1);
+			sleep(2);
 		}
 	}
 
@@ -190,7 +190,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
-		m_world->setSystem(new RocketControllerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
 		// NODE: (Johan) Should be called from some lobby-to-in-game state change:

@@ -2,7 +2,7 @@
 #include "ShaderBase.h"
 #include "Buffer.h"
 
-struct ShaderInitStruct;
+struct ShaderVariableContainer;
 struct ParticleCBuffer;
 // =======================================================================================
 //                                      ParticleShader
@@ -19,7 +19,7 @@ struct ParticleCBuffer;
 class ParticleShader : public ShaderBase
 {
 public:
-	ParticleShader(ShaderInitStruct p_initData, 
+	ParticleShader(ShaderVariableContainer p_initData, 
 		Buffer<ParticleCBuffer>* p_perSystemBuffer);
 	~ParticleShader();
 	void apply();

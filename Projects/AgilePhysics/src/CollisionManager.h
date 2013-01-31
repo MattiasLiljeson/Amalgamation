@@ -36,7 +36,7 @@ bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody, fl
 /// \param p_rigidBody The rigid body
 /// \return Returns true on collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody);
+bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody, AglVector3& p_collisionPoint);
 
 ///-----------------------------------------------------------------------------------
 /// Checks collision between a sphere and a ray
@@ -104,7 +104,7 @@ bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box, float
 /// \param p_sphere2 Second Sphere
 /// \return Returns true if there is a collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2); 
+bool CheckCollision(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2, AglVector3& p_collisionPoint); 
 
 ///-----------------------------------------------------------------------------------
 /// Checks collision between two spheres
@@ -130,7 +130,7 @@ bool CheckCollision(RigidBodySphere* p_sphere1, RigidBodySphere* p_sphere2,
 /// \param p_box The OBB
 /// \return Returns true if there is a collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box); 
+bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box, AglVector3& p_collisionPoint); 
 
 bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box); 
 

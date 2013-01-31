@@ -57,11 +57,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>NetComm_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

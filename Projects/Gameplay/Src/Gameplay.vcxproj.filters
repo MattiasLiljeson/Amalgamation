@@ -85,6 +85,9 @@
     <Filter Include="Systems\Debugging">
       <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Network\Packet Translation\Packet Structs">
+      <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -300,9 +303,6 @@
     <ClInclude Include="RayPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="EntityUpdatePacket.h">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClInclude>
     <ClInclude Include="EntityCreationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -452,11 +452,14 @@
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="WinningConditionSystem.h">
-      <Filter>Systems\Gameplay</Filter>
+    <ClInclude Include="EntityUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
     </ClInclude>
     <ClInclude Include="PlayersWinLosePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="WinningConditionSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -631,9 +634,6 @@
     <ClCompile Include="RayPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="EntityUpdatePacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
     <ClCompile Include="WelcomePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -756,11 +756,14 @@
     <ClCompile Include="LightBlinkerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="WinningConditionSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
+    <ClCompile Include="EntityUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
     </ClCompile>
     <ClCompile Include="PlayersWinLosePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="WinningConditionSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

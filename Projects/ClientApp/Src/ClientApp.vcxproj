@@ -47,9 +47,9 @@
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/ServerApp/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(SolutionDir)Projects/ES/Src;$(SourcePath)</SourcePath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/ServerApp/Src;$(SolutionDir)External/LibRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -58,9 +58,9 @@
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Gameplay/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/ServerApp/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Ant/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Gameplay/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(SolutionDir)Projects/ES/Src;$(SourcePath)</SourcePath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/ServerApp/Src;$(SolutionDir)External/LibRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -72,13 +72,17 @@
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <OpenMPSupport>
       </OpenMPSupport>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Common_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;XINPUT9_1_0.lib;NetComm_x86_$(Configuration).lib;FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies>Gameplay_x86_$(Configuration).lib;AgileAssets_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -99,7 +103,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>Common_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;XINPUT9_1_0.lib;NetComm_x86_$(Configuration).lib;FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies>Gameplay_x86_$(Configuration).lib;AgileAssets_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

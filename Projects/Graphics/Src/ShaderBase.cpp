@@ -1,7 +1,7 @@
 #include "ShaderBase.h"
 #include "D3DUtil.h"
 
-ShaderBase::ShaderBase( ShaderInitStruct p_initData )
+ShaderBase::ShaderBase( ShaderVariableContainer p_initData )
 {
 	m_device		= p_initData.device;
 	m_deviceContext = p_initData.deviceContext;

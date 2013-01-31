@@ -112,7 +112,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			EntityUpdatePacket data;
-			data.unpack(packet);
+			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
 			if (data.entityType == (char)EntityType::EndBatch)
 			{
@@ -414,7 +414,7 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
 	if( static_cast<InputBackendSystem*>(m_world->getSystem(
 		SystemType::InputBackendSystem))->getControlByEnum(
-		InputHelper::KEY_0)->getDelta() > 0 )
+		InputHelper::KeyboardKeys_0)->getDelta() > 0 )
 	{
 		if( m_staticPropIdentities.empty() )
 		{

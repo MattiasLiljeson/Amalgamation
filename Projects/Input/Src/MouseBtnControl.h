@@ -24,12 +24,12 @@ class InputManager;
 class MouseBtnControl : public Control
 {
 public:
-	MouseBtnControl( InputHelper::MOUSE_BTN p_btn );
+	MouseBtnControl( InputHelper::MouseButtons p_btn );
 	virtual ~MouseBtnControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	 InputHelper::MOUSE_BTN m_btn;
+	 InputHelper::MouseButtons m_btn;
 };
 

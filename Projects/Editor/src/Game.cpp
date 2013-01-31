@@ -75,6 +75,7 @@ bool Game::Cleanup()
 	TwTerminate();
 	delete m_cameraController;
 	delete SPHEREMESH;
+	delete BOXMESH;
 	return true;
 }
 bool Game::Update(float pElapsedTime)

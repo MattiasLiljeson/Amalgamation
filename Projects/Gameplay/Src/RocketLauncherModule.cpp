@@ -6,6 +6,10 @@ RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3
 	fireDirection = p_fireDirection;
 	laserSightEntity = -1;
 	coolDown = 0;
+
+	burstCount = 1;
+	timeSinceRocket = 0;
+	currentBurst = 0;
 }
 RocketLauncherModule::~RocketLauncherModule()
 {

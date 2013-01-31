@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include "ShaderStageData.h"
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 
 // =======================================================================================
 //                                      ShaderBase
@@ -19,7 +19,7 @@
 class ShaderBase
 {
 public:
-	ShaderBase(ShaderInitStruct p_initData);
+	ShaderBase(ShaderVariableContainer p_initData);
 	virtual ~ShaderBase();
 	virtual void apply()=0;
 	void applyStages();
