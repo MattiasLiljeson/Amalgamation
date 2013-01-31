@@ -120,6 +120,7 @@ External/XAudio2/
 External/*
 
 # Files
+*.bsc
 *.exe
 *.lastcodeanalysissucceeded
 /Build/*.dll.txt
