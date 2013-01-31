@@ -18,12 +18,6 @@ Packet::Packet( char p_packetType )
 	m_packetType = p_packetType;
 }
 
-Packet::Packet()
-{
-	clear();
-	m_packetType = -1;
-}
-
 Packet::~Packet()
 {
 

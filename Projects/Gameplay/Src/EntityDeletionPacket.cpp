@@ -12,7 +12,7 @@ EntityDeletionPacket::~EntityDeletionPacket()
 
 Packet EntityDeletionPacket::pack()
 {
-	Packet packet;
+	Packet packet((char)PacketType::EntityDeletion);
 	packet << networkIdentity;
 	return packet;
 }

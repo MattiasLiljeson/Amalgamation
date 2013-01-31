@@ -23,12 +23,6 @@ class Packet
 {
 public:
 	///-----------------------------------------------------------------------------------
-	/// Deprecated! Use one of the other constructors instead!!!!
-	/// \return 
-	///-----------------------------------------------------------------------------------
-	Packet();
-
-	///-----------------------------------------------------------------------------------
 	/// Creates a new packet from raw data.
 	/// Sets the raw data of the packet. It is possible to stream out so much data
 	///	that equals to the byte size p_size - 1, since one byte is allocated to
