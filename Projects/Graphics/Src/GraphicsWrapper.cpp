@@ -21,6 +21,7 @@
 #include "GUIShader.h"
 #include "LightMesh.h"
 #include "DeferredBaseShader.h"
+#include "ShadowMapRenderer.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -62,6 +63,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 							   m_width, m_height);
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 
+	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
+
 	clearRenderTargets();
 }
 
@@ -75,6 +78,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_guiShader;
 	delete m_deferredRenderer;
 	delete m_particleRenderer;
+	delete m_shadowMapRenderer;
 	delete m_deferredBaseShader;
 	delete m_shaderFactory;
 	delete m_bufferFactory;
@@ -556,4 +560,33 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 
 	// Draw instanced data
 	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
+}
+
+void GraphicsWrapper::setViewportToShadowMapSize(){
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= ShadowMapRenderer::SHADOWMAPSIZE;
+	vp.Height	= ShadowMapRenderer::SHADOWMAPSIZE;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+void GraphicsWrapper::resetViewportToOriginalSize(){
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= m_width;
+	vp.Height	= m_height;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+void GraphicsWrapper::setShadowMapAsRenderTarget()
+{
+	m_shadowMapRenderer->beginShadowPass();
 }

@@ -34,6 +34,7 @@ class TextureParser;
 class TextureFactory;
 class GUIShader;
 class ShaderBase;
+class ShadowMapRenderer;
 
 struct LightInstanceData;
 struct Model;
@@ -86,6 +87,12 @@ public:
 	void setLightPassRenderTarget();
 
 	void setParticleRenderState();
+
+	void setViewportToShadowMapSize();
+
+	void resetViewportToOriginalSize();
+
+	void setShadowMapAsRenderTarget();
 
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
@@ -209,6 +216,8 @@ private:
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
 	DeferredRenderer*		m_deferredRenderer;
+	ParticleRenderer*		m_particleRenderer;
+	ShadowMapRenderer*		m_shadowMapRenderer;
 
 	ID3D11RenderTargetView* m_backBuffer;
 
@@ -223,7 +232,6 @@ private:
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
 
-	ParticleRenderer*		m_particleRenderer;
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;

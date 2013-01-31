@@ -1,12 +1,17 @@
 #include "ShadowMapRenderer.h"
 #include "D3DException.h"
 #include "D3DUtil.h"
+#include "ShaderFactory.h"
 
-ShadowMapRenderer::ShadowMapRenderer( ID3D11Device* p_device, 
-									 ID3D11DeviceContext* p_deviceContext )
+ShadowMapRenderer::ShadowMapRenderer(ID3D11Device* p_device, 
+									 ID3D11DeviceContext* p_deviceContext, 
+									 ShaderFactory* p_shaderFactory)
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
+	m_shaderFactory = p_shaderFactory;
+
+	initDepthStencil();
 }
 
 ShadowMapRenderer::~ShadowMapRenderer()

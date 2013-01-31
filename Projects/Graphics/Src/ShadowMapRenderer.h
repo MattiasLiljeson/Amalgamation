@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d11.h>
+class ShaderFactory;
+
 // =======================================================================================
 //                                      ShadowMapRender
 // =======================================================================================
@@ -15,7 +17,8 @@
 class ShadowMapRenderer
 {
 public:
-	ShadowMapRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
+	ShadowMapRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+		ShaderFactory* p_shaderFactory);
 	~ShadowMapRenderer();
 	void beginShadowPass();
 private:
@@ -27,4 +30,6 @@ private:
 	ID3D11DeviceContext*		m_deviceContext;
 	ID3D11ShaderResourceView*	m_resourceView;
 	ID3D11DepthStencilView*		m_depthStencilView;
+
+	ShaderFactory*		m_shaderFactory;
 };
