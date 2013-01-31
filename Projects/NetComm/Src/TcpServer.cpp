@@ -210,13 +210,16 @@ void TcpServer::processMessages()
 	}
 }
 
-void TcpServer::broadcastPacket( Packet p_packet )
+void TcpServer::broadcastPacket( Packet p_packet, int p_excludeClientId)
 {
 	giveBroadcastPacketAUniqueIdentifier( &p_packet );
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
 	{
-		m_communicationProcesses[i]->putMessage(
-			new ProcessMessageSendPacket( this, p_packet ) );
+		if (m_communicationProcesses[i]->getId()!=p_excludeClientId)
+		{
+			m_communicationProcesses[i]->putMessage(
+				new ProcessMessageSendPacket( this, p_packet ) );
+		}
 	}
 }
 

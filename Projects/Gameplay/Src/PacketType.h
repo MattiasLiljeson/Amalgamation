@@ -20,6 +20,7 @@ public:
 		// Server <--> Client:
 		Ping,
 		Pong,
+		ShipTransform,
 
 		// Server -> Client:
 		EntityCreation,
@@ -29,13 +30,13 @@ public:
 		WelcomePacket,
 		UpdateClientStats,
 		SpawnSoundEffect,
+		TransformPacket,
 
 		// Client -> Server:
 		/************************************************************************/
 		/* Client handles input and updates position, then sends it to the		*/
 		/* server for verification.												*/
 		/************************************************************************/
-		ShipTransform,
 		ThrustPacket,
 		RayPacket,
 		ModuleHighlightPacket,

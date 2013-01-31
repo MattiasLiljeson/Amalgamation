@@ -123,6 +123,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
+    <ClInclude Include="ShipTransformPacket.h" />
     <ClInclude Include="SimpleEventPacket.h" />
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
+    <ClCompile Include="ShipTransformPacket.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />

@@ -15,6 +15,7 @@
 
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <AglMatrix.h>
 #include <Windows.h>
 
 using namespace std;
@@ -101,8 +102,9 @@ public:
 	Packet& operator << (unsigned int p_data);
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
-	Packet& operator << (AglVector3 p_data);
-	Packet& operator << (AglQuaternion p_data);
+	Packet& operator << (AglVector3& p_data);
+	Packet& operator << (AglMatrix& p_data);
+	Packet& operator << (AglQuaternion& p_data);
 	Packet& operator << (SYSTEMTIME p_data);
 	
 	Packet& operator >> (bool&	p_data);
@@ -113,6 +115,7 @@ public:
 	Packet& operator >> (unsigned int& p_data);
 	Packet& operator >> (float&  p_data);
 	Packet& operator >> (double& p_data);
+	Packet& operator >> (AglMatrix& p_data);
 	Packet& operator >> (AglVector3& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
 	Packet& operator >> (SYSTEMTIME& p_data);

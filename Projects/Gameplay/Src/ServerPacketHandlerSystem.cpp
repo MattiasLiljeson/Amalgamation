@@ -2,6 +2,7 @@
 #include "ServerPickingSystem.h"
 #include "ShipModulesControllerSystem.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "ServerClientInfoSystem.h"
 
 // Components
 #include "Transform.h"
@@ -25,8 +26,9 @@
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
+#include "ShipTransformPacket.h"
 
-#include "ServerClientInfoSystem.h"
+
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -57,14 +59,50 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		packetType = packet.getPacketType();
 		
-		if(packetType == (char)PacketType::ThrustPacket)
+		if( packetType == (char)PacketType::ShipTransform )
+		{
+			ShipTransformPacket shipTransformPacket;
+			shipTransformPacket.unpack( packet );
+
+			bool okayTransform = false;
+
+
+			// check data
+			Transform* transform = NULL;
+			Component* t = m_world->getEntity(shipTransformPacket.entityId)->getComponent(
+				ComponentType::PhysicsBody);
+			if (t) transform = static_cast<Transform*>(t);
+			if (transform)
+			{
+				AglVector3 diff = shipTransformPacket.transform.GetTranslation()-transform->getTranslation();
+				if (AglVector3::lengthSquared(diff)<200.0f)
+				{
+					okayTransform = true;
+				}
+				else
+				{
+					okayTransform = false;
+					shipTransformPacket.transform.SetTranslation(transform->getTranslation());
+				}
+			}
+
+
+			int sender = packet.getSenderId();
+			Packet response((char)PacketType::ShipTransform);
+			response << shipTransformPacket.transform;
+			response << sender;
+
+			m_server->broadcastPacket(response,sender);
+
+		}
+		else if(packetType == (char)PacketType::ThrustPacket)
 		{
 			ThrustPacket thrustPacket;
 			thrustPacket.unpack( packet );
 
 			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
 				(m_world->getEntity(thrustPacket.entityId)->getComponent(
-				ComponentType::PhysicsBody));
+				ComponentType::PhysicsBody)); // not safe to assume entityId is the same everywhere?
 
 			//Added by Anton
 			Entity* ship = m_world->getEntity(thrustPacket.entityId);

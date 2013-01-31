@@ -19,6 +19,7 @@
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
 #include "ThrustPacket.h"
+#include "EntityUpdatePacket.h"
 
 
 
@@ -167,4 +168,5 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
 {
 	EntityUpdatePacket transformPacket;
+	transformPacket.
 }
