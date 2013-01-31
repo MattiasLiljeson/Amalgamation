@@ -272,6 +272,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			handleWelcomePacket(packet);
 		}
+		else
+		{
+			DEBUGWARNING(( "Unhandled packet type!" ));
+		}
 	}
 }
 
