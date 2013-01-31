@@ -62,6 +62,8 @@ private:
 	virtual void setUpRenderInfo(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpConnectionPoints(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource);
+
+	virtual void setUpRootCollision(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 
 									 BodyInitData* p_rootRigidBodyData,
 									 PhysicsBody* p_rootPhysicsBody,

@@ -43,7 +43,7 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 			pb );
 
 
-		BodyInitData* b = new BodyInitData(AglVector3(30, 0, 0),
+		BodyInitData* b = new BodyInitData(AglVector3(0, 0, 0),
 			AglQuaternion::identity(),
 			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 			AglVector3(0, 0, 0), 0);

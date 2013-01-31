@@ -251,6 +251,12 @@ namespace Srv
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
 
+		// First test by Jarl, instead of Anton
+		// Create rocks
+		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		entity = factory->entityFromRecipe( "rocksServer" );									 
+		m_world->addEntity( entity );
+
 		//Minigun
 		for (int x=0;x<4;x++)
 		{

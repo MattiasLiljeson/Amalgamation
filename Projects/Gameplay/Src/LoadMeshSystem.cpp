@@ -72,7 +72,6 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Mesh, renderinfo
 	setUpRenderInfo(entity,modelResource);
 
-
 	// Connection points
 	setUpConnectionPoints(entity,modelResource);
 
@@ -148,6 +147,12 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// finished
 		m_world->addEntity(entity);		
 	}
+}
+
+
+void LoadMeshSystem::setUpRootCollision( Entity* p_entity, ModelResource* p_modelResource )
+{
+
 }
 
 void LoadMeshSystem::setUpRenderInfo( Entity* p_entity, ModelResource* p_modelResource )

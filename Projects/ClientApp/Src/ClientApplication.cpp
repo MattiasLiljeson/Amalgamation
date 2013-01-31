@@ -374,9 +374,9 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
 	m_world->addEntity( entity );
 
-	// Create a rock
-	status = factory->readAssemblageFile( "Assemblages/rocks.asd" );
-	entity = factory->entityFromRecipe( "rocks" );									 
+	// Create rocks
+	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
+	entity = factory->entityFromRecipe( "rocksClient" );									 
 	m_world->addEntity( entity );
 
 
