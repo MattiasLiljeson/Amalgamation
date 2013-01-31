@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventHandler.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="LightMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
@@ -35,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventHandler.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="LightMesh.h" />
     <ClInclude Include="MaterialInfo.h" />
@@ -109,18 +115,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.lib</TargetExt>
-    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/LibRocket/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.lib</TargetExt>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/LibRocket/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>

@@ -51,6 +51,7 @@
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
 #include <MainCamera.h>
+#include <MenuSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -235,6 +236,8 @@ void ClientApplication::initSystems()
 
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
+
+	m_world->setSystem( new MenuSystem(), true );
 
 	/************************************************************************/
 	/* Player    															*/

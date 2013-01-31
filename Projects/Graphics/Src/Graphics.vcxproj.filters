@@ -60,6 +60,15 @@
     <ClCompile Include="ParticleShader.cpp">
       <Filter>Renderer\Shader\Shader types</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="EventHandler.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -180,6 +189,15 @@
     <ClInclude Include="ShaderVariableContainer.h">
       <Filter>Renderer\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -220,6 +238,9 @@
     </Filter>
     <Filter Include="Renderer\Particle">
       <UniqueIdentifier>{19500243-937a-4e79-aafe-747a03f31f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LibRocket">
+      <UniqueIdentifier>{bef9cad0-8125-4166-a98f-3c94a356fbf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
