@@ -18,10 +18,9 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	int docId = rocketBackend->loadDocument(
-		(GUI_MENU_PATH + toString("assets/main_menu.rml")).c_str(), true);
+	int docId = rocketBackend->loadDocumentByName("main_menu", false, true);
 
-	if (docId)
+	if (docId >= 0)
 	{
 	}
 }

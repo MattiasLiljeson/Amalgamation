@@ -11,6 +11,10 @@
 #include <GraphicsWrapper.h>
 #include <DebugUtil.h>
 #include <Rocket/Controls.h>
+#include <EventInstancer.h>
+#include <EventManager.h>
+#include "EventHandlerStartGame.h"
+#include "EventHandlerOptions.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -18,11 +22,14 @@ LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphic
 {
 	m_graphicsBackend = p_graphicsBackend;
 	m_inputBackend = p_inputBackend;
+
 }
 
 
 LibRocketBackendSystem::~LibRocketBackendSystem()
 {
+	EventManager::Shutdown();
+
 	for( unsigned int i=0; i<m_documents.size(); i++ )
 	{
 		m_documents[i]->GetContext()->UnloadDocument(m_documents[i]);
@@ -72,6 +79,16 @@ void LibRocketBackendSystem::initialize()
 		loadFontFace( tmp.c_str() );
 	}
 
+	// Initialise event instancer and handlers.
+	EventInstancer* eventInstancer = new EventInstancer();
+	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
+	eventInstancer->RemoveReference();
+
+	EventManager::Initialise(m_rocketContext);
+	// Register event handlers
+	EventManager::RegisterEventHandler("start_game", new EventHandlerStartGame());
+	EventManager::RegisterEventHandler("options", new EventHandlerOptions());
+
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
 	//tmp = GUI_HUD_PATH + "infoPanel.rml";
@@ -100,18 +117,36 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 	}
 }
 
-int LibRocketBackendSystem::loadDocument( const char* p_filePath, bool p_initiallyShown/*=true*/)
+int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName, 
+											   bool p_initiallyShown/*=true*/, 
+											   bool p_useEventManager/*=false */ )
+{
+	int docId = loadDocument((GUI_MENU_PATH + 
+								toString("temp/") + 
+								toString(p_windowName) +
+								toString(".rml")).c_str(), p_initiallyShown);
+
+	if (docId >= 0 && p_useEventManager)
+	{
+		EventManager::LoadWindow(p_windowName);
+	}
+	return docId;
+}
+
+int LibRocketBackendSystem::loadDocument( const char* p_filePath, 
+										bool p_initiallyShown/*=true*/)
 {
 	int docId = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;
 	tmpDoc = m_rocketContext->LoadDocument( Rocket::Core::String(p_filePath) );
-	
+
 	if( tmpDoc != NULL )
 	{
 		docId = m_documents.size();
 		m_documents.push_back( tmpDoc );
 		if (p_initiallyShown)
 			tmpDoc->Show();
+
 		tmpDoc->RemoveReference();
 	}
 	else{
@@ -190,3 +225,4 @@ void LibRocketBackendSystem::render()
 {
 	m_rocketContext->Render();
 }
+

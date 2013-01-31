@@ -14,6 +14,7 @@
     <ClCompile Include="AntTweakBarWrapper.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
+    <ClCompile Include="EventInstancer.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="LightMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventHandler.h" />
+    <ClInclude Include="EventInstancer.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="LightMesh.h" />

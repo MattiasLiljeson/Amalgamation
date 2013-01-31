@@ -25,7 +25,10 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	int loadDocument( const char* p_filePath, bool p_initiallyShown=true );
+	int loadDocumentByName(const char* p_windowName, bool p_initiallyShown=true, 
+		bool p_useEventManager=false );
+	int loadDocument( const char* p_filePath, bool p_initiallyShown=true);
+
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
 
@@ -44,10 +47,10 @@ private:
 
 	Cursor* m_cursor;
 
-	std::string m_rocketContextName;
-	Rocket::Core::Context* m_rocketContext;
-	LibRocketRenderInterface* m_renderInterface;
-	LibRocketSystemInterface* m_systemInterface;
+	std::string					m_rocketContextName;
+	Rocket::Core::Context*		m_rocketContext;
+	LibRocketRenderInterface*	m_renderInterface;
+	LibRocketSystemInterface*	m_systemInterface;
 
 	vector<Rocket::Core::ElementDocument*> m_documents;
 };

@@ -33,16 +33,17 @@
 #include "EventHandler.h"
 //#include "GameDetails.h"
 #include <map>
+#include <Globals.h>
+#include <ToString.h>
 
-// The game's element context (declared in main.cpp).
-extern Rocket::Core::Context* context;
+// The game's element context.
+Rocket::Core::Context* EventManager::context;
 
 // The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
-static EventHandler* event_handler = NULL;
-
+EventHandler* EventManager::event_handler = NULL;
 // The event handlers registered with the manager.
 typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
-EventHandlerMap event_handlers;
+EventHandlerMap EventManager::event_handlers;
 
 EventManager::EventManager()
 {
@@ -50,6 +51,11 @@ EventManager::EventManager()
 
 EventManager::~EventManager()
 {
+}
+
+void EventManager::Initialise( Rocket::Core::Context* p_context )
+{
+	context = p_context;
 }
 
 // Releases all event handlers registered with the manager.
@@ -142,7 +148,16 @@ bool EventManager::LoadWindow(const Rocket::Core::String& window_name)
 		event_handler = NULL;
 
 	// Attempt to load the referenced RML document.
-	Rocket::Core::String document_path = Rocket::Core::String("../menu/assets/") + window_name + Rocket::Core::String(".rml");
+	/*Rocket::Core::String document_path = 
+		Rocket::Core::String((GUI_MENU_PATH + toString("assets/")).c_str())+
+		window_name + Rocket::Core::String(".rml");
+	*/
+	Rocket::Core::String document_path = 
+		(GUI_MENU_PATH + 
+		toString("temp/") + 
+		toString((window_name).CString()) +
+		toString(".rml")).c_str();
+	
 	Rocket::Core::ElementDocument* document = context->LoadDocument(document_path.CString());
 	if (document == NULL)
 	{

@@ -35,6 +35,8 @@
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="EventHandlerOptions.h" />
+    <ClInclude Include="EventHandlerStartGame.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
     <ClInclude Include="GameplayTags.h" />
@@ -158,6 +160,8 @@
     <ClCompile Include="EntityDeletionPacket.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="EventHandlerOptions.cpp" />
+    <ClCompile Include="EventHandlerStartGame.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />

@@ -32,6 +32,14 @@
 
 class EventHandler;
 
+namespace Rocket
+{
+	namespace Core
+	{
+		class Context;
+	}
+}
+
 /**
 	@author Peter Curry
  */
@@ -39,6 +47,7 @@ class EventHandler;
 class EventManager
 {
 public:
+	static void Initialise(Rocket::Core::Context* p_context);
 	/// Releases all event handlers registered with the manager.
 	static void Shutdown();
 
@@ -54,8 +63,15 @@ public:
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] window_name The name of the window to load.
 	static bool LoadWindow(const Rocket::Core::String& window_name);
-
 private:
+	// The game's element context (declared in main.cpp).
+	static Rocket::Core::Context* context;
+	// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
+	static EventHandler* event_handler;
+	// The event handlers registered with the manager.
+	typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
+	static EventHandlerMap event_handlers;
+
 	EventManager();
 	~EventManager();
 };
