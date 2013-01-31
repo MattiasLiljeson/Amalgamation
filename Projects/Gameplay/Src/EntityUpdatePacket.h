@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Packetizer.h"
 #include "EntityType.h"
+#include <AglVector3.h>
+#include <AglQuaternion.h>
 
 // =======================================================================================
 //                                      EntityUpdatePacket
@@ -15,15 +16,10 @@
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class EntityUpdatePacket : public Packetizer
+struct EntityUpdatePacket
 {
 public:
 	EntityUpdatePacket();
-	~EntityUpdatePacket();
-
-	Packet pack();
-
-	void unpack( Packet p_packet );
 
 public:
 	/************************************************************************/

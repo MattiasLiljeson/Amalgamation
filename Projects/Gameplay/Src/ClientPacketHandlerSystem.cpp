@@ -111,7 +111,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			EntityUpdatePacket data;
-			data.unpack(packet);
+			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
 			if (data.entityType == (char)EntityType::EndBatch)
 			{
