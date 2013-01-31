@@ -171,15 +171,19 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.timestamp		= m_world->getElapsedTime();
 				updatePacket.velocity		= velocity;
 				updatePacket.angularVelocity= angularVelocity;
+				Packet packet((char)PacketType::EntityUpdate);
+				packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
 
-
-				m_server->broadcastPacket( updatePacket.pack() );
+				m_server->broadcastPacket( packet );
 			}
 		}
 		//Broadcast an end of the batch
 		EntityUpdatePacket updatePacket;
 		updatePacket.entityType		= static_cast<char>(EntityType::EndBatch);
-		m_server->broadcastPacket( updatePacket.pack() );
+		Packet packet((char)PacketType::EntityUpdate);
+		packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
+
+		m_server->broadcastPacket( packet );
 	}
 }
 

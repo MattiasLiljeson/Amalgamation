@@ -80,6 +80,7 @@ void TcpCommunicationProcess::processMessages()
 
 	while( messages.size() > 0 )
 	{
+//		sleep(1);
 		ProcessMessage* message = messages.front();
 		messages.pop();
 

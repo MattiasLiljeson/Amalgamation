@@ -80,6 +80,7 @@
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PlayerStats.h" />
+    <ClInclude Include="PlayersWinLosePacket.h" />
     <ClInclude Include="PongPacket.h" />
     <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
+    <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -191,6 +193,7 @@
     <ClCompile Include="ParticleUpdatePacket.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="PositionalSoundSource.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
@@ -235,6 +238,7 @@
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
+    <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>

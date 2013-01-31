@@ -28,6 +28,7 @@ public:
 		ClientDisconnect,
 		WelcomePacket,
 		UpdateClientStats,
+		PlayerWinLose,
 		SpawnSoundEffect,
 
 		// Client -> Server:
