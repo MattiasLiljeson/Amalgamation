@@ -22,6 +22,7 @@
 #include "LightMesh.h"
 #include "DeferredBaseShader.h"
 #include "ShadowMapRenderer.h"
+#include "ShadowShader.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -57,6 +58,9 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
 
+	m_shadowShader = m_shaderFactory->createShadowShader(
+		L"Shaders/Game/shadowMap.hlsl");
+
 	createTexture("mesherror.png",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
@@ -76,6 +80,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	releaseBackBuffer();
 	
 	delete m_guiShader;
+	delete m_shadowShader;
 	delete m_deferredRenderer;
 	delete m_particleRenderer;
 	delete m_shadowMapRenderer;
@@ -294,6 +299,12 @@ void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 void GraphicsWrapper::setLightPassRenderTarget(){
 	m_deferredRenderer->setLightRenderTarget();
 }
+
+void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
+	m_shadowShader->sendViewProjection(p_viewProj);
+	m_shadowShader->apply();
+}
+
 void GraphicsWrapper::mapDeferredBaseToShader(){
 	m_deferredRenderer->mapDeferredBaseRTSToShader();
 }

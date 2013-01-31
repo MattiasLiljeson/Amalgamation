@@ -1,4 +1,7 @@
 #include "ShadowSystem.h"
+#include <AglMatrix.h>
+#include "CameraInfo.h"
+#include "Transform.h"
 
 ShadowSystem::ShadowSystem() : EntitySystem( SystemType::ShadowSystem, 3, 
 											ComponentType::CameraInfo,
@@ -27,4 +30,19 @@ unsigned int ShadowSystem::getNumberOfShadowCameras() const{
 
 Entity* ShadowSystem::getShadowEntity( const unsigned int p_index){
 	return m_shadowCameras[p_index];
+}
+
+const AglMatrix& ShadowSystem::getViewProjection( const unsigned int p_index ){
+	CameraInfo* camerInfo = static_cast<CameraInfo*>(
+		m_shadowCameras[p_index]->getComponent(ComponentType::CameraInfo));
+
+	Transform* transform = static_cast<Transform*>(
+		m_shadowCameras[p_index]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	AglVector3 position = transform->getTranslation();
+	AglQuaternion rotation = transform->getRotation();
+	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+	AglVector3 up = transform->getMatrix().GetUp();
+
+	return AglMatrix::createViewMatrix(position,lookTarget,up)*camerInfo->m_projMat;
 }

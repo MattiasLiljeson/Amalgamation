@@ -58,6 +58,8 @@ public:
 	/// \return The translation vector.
 	///-----------------------------------------------------------------------------------
 	const AglVector3& getTranslation() const;
+
+	const AglVector3& getLookAt() const;
 	
 	///-----------------------------------------------------------------------------------
 	/// \param p_translation The new translation as a vector
@@ -120,7 +122,6 @@ public:
 	/// \return A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
 	const AglMatrix& getMatrix() const;
-
 
 	inline AglVector3 getForward() const{
 		return m_compositionMatrix.GetForward();

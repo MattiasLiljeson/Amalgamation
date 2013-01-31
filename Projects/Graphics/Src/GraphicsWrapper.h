@@ -35,10 +35,12 @@ class TextureFactory;
 class GUIShader;
 class ShaderBase;
 class ShadowMapRenderer;
+class ShadowShader;
 
 struct LightInstanceData;
 struct Model;
 struct Texture;
+struct AglMatrix;
 
 class GraphicsWrapper
 {
@@ -93,6 +95,8 @@ public:
 	void resetViewportToOriginalSize();
 
 	void setShadowMapAsRenderTarget();
+
+	void setShadowViewProjection(const AglMatrix& p_viewProj);
 
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
@@ -222,6 +226,7 @@ private:
 	ID3D11RenderTargetView* m_backBuffer;
 
 	DeferredBaseShader*		m_deferredBaseShader;
+	ShadowShader*			m_shadowShader;
 
 	// Creation & storage
 	ShaderFactory*			m_shaderFactory;

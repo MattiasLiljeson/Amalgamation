@@ -63,6 +63,9 @@
     <ClCompile Include="ShadowMapRenderer.cpp">
       <Filter>Renderer\ShadowMap</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowShader.cpp">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -185,6 +188,12 @@
     </ClInclude>
     <ClInclude Include="ShadowMapRenderer.h">
       <Filter>Renderer\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowShader.h">
+      <Filter>Renderer\Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowCBuffer.h">
+      <Filter>Renderer\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

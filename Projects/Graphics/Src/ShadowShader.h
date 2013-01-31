@@ -1,34 +1,32 @@
 #pragma once
-#include <EntitySystem.h>
-#include <vector>
+#include "ShaderBase.h"
+#include "ShadowCBuffer.h"
+#include "Buffer.h"
 
 struct AglMatrix;
-
 // =======================================================================================
-//                                      ShadowSystem
+//                                      ShadowShader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	
 ///        
-/// # ShadowSystem
+/// # ShadowShader
 /// Detailed description.....
 /// Created on: 31-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShadowSystem : public EntitySystem
+class ShadowShader : public ShaderBase
 {
 public:
-	ShadowSystem();
-	~ShadowSystem();
+	ShadowShader(ShaderVariableContainer p_initData,
+		Buffer<ShadowCBuffer>* m_bufferPointer);
+	~ShadowShader();
 
-	void processEntities( const vector<Entity*>& p_entities );
+	void apply();
 
-	void render();
-
-	unsigned int getNumberOfShadowCameras() const;
-	Entity*	getShadowEntity(const unsigned int p_index);
-	const AglMatrix& getViewProjection(const unsigned int p_index);
+	Buffer<ShadowCBuffer>* getBufferPointer();
+	void sendViewProjection(const AglMatrix& p_matrix);
 private:
-	vector<Entity*> m_shadowCameras;
+	Buffer<ShadowCBuffer>* m_bufferPointer;
 };

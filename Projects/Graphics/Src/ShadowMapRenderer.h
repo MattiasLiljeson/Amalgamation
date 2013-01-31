@@ -21,6 +21,7 @@ public:
 		ShaderFactory* p_shaderFactory);
 	~ShadowMapRenderer();
 	void beginShadowPass();
+	ID3D11ShaderResourceView* getShadowMap();
 private:
 	void initDepthStencil();
 public:

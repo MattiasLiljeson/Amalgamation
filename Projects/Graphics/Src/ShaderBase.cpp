@@ -3,7 +3,6 @@
 
 ShaderBase::ShaderBase( ShaderVariableContainer p_initData )
 {
-	m_device		= p_initData.device;
 	m_deviceContext = p_initData.deviceContext;
 	
 	m_vertexShader		= p_initData.vertexShader; 
@@ -43,6 +42,7 @@ void ShaderBase::applyStages()
 
 	if (m_samplerState)
 		m_deviceContext->PSSetSamplers(0,1,&m_samplerState);
+
 	if(m_inputLayout)
 		m_deviceContext->IASetInputLayout(m_inputLayout);
 }

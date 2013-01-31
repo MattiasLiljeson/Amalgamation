@@ -334,7 +334,7 @@ void ClientApplication::initSystems()
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
-		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
+		shadowSystem, renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
 
 	/************************************************************************/

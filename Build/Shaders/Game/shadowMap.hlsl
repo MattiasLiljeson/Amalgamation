@@ -1,5 +1,10 @@
 #include "perFrameCBuffer.hlsl"
 
+cbuffer shadowBuffer: register(b2)
+{
+	float4x4 shadowViewProj;
+}
+
 struct VertexIn
 {
 	float3 position : POSITION;	
@@ -12,6 +17,6 @@ struct VertexIn
 
 float4 VS(VertexIn p_input): SV_POSITION
 {
-	float4x4 wvp = p_input.instanceTransform * gViewProj;
+	float4x4 wvp = p_input.instanceTransform * shadowViewProj;
 	return mul( float4 (p_input.position,1.0f), wvp);
 }
