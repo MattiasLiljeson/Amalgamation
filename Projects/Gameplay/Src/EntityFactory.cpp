@@ -650,8 +650,9 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	floodLight.instanceData.type = LightTypes::E_LightTypes_POINT;
 	lightComp->addLight(floodLight);
 	entity->addComponent( ComponentType::LightsComponent, lightComp );
-
 	entity->addComponent( ComponentType::LightBlinker, new LightBlinker(5.0f) );
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 	m_world->addEntity(entity);
 	return entity;
 }
