@@ -301,7 +301,7 @@ namespace Srv
 				BodyInitData::SINGLE, false));
 
 			ConnectionPointSet* cps = new ConnectionPointSet();
-			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::identityMatrix()));
+			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1)));
 
 			entity->addComponent(ComponentType::ConnectionPointSet, cps);
 			entity->addComponent(ComponentType::ShipModule, new ShipModule());
@@ -327,6 +327,11 @@ namespace Srv
 				AglVector3(0, 0, 0), 0, 
 				BodyInitData::DYNAMIC, 
 				BodyInitData::SINGLE, false));
+
+			ConnectionPointSet* cps = new ConnectionPointSet();
+			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -2.5f, 0, 1)));
+
+			entity->addComponent(ComponentType::ConnectionPointSet, cps);
 
 			entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 			entity->addComponent(ComponentType::ShipModule, new ShipModule());

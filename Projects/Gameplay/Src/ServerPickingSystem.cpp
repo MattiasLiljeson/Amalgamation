@@ -384,8 +384,20 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		//WARNING: DOES NOT HANDLE TRANSFORMATION RELATED TO CHILD CONNECTION POINT RIGHT NOW
 
+
+		//Parent transform
 		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
-		physX->getController()->AttachBodyToCompound(comp, r, transform);
+
+		//Child Transform
+		AglMatrix childTransform = conPoints->m_connectionPoints[sel].cpTransform;
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		AglMatrix finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation();
+		rot.transformVector(childTrans);
+		finalTransform.SetTranslation(transform.GetTranslation() + childTrans);
+
+		physX->getController()->AttachBodyToCompound(comp, r, finalTransform);
 		
 		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
