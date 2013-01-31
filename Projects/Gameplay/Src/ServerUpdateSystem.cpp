@@ -115,7 +115,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		m_server->broadcastPacket(updatedClientPacket.pack());
 		//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 	}
-
+	// NOTE: (Johan) This interval check is currently set to be very high delay because
+	// packet handling is too slow when running Debug build otherwise.
 	else if( timerSys->checkTimeInterval(TimerIntervals::Every32Millisecond) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )

@@ -40,6 +40,7 @@ public:
 		LaserGun,
 		MissileStartAndFlight,
 		Explosion,
+		MineUnload,
 	};
 	// NOTE: (Johan) This could be made static and initialized only once, but I don't
 	// know how to do it. It works fine as it is though.
