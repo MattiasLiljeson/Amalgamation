@@ -27,6 +27,7 @@
 #include <RocketControllerSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
+#include <LoadMeshSystemServer.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -102,6 +103,7 @@ namespace Srv
 				}
 			}
 			processMessages();
+
 			sleep(2);
 		}
 	}
@@ -125,6 +127,13 @@ namespace Srv
 		/* Timer																*/
 		/************************************************************************/
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+		/************************************************************************/
+		/* Mesh loading															*/
+		/************************************************************************/
+		// Note! Must set *after* EntityFactory and *before* Physics
+		m_world->setSystem(SystemType::LoadMeshSystemServer, new LoadMeshSystemServer(), 
+			true); 
 
 		/************************************************************************/
 		/* Level Generation														*/
@@ -194,6 +203,13 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
 		m_world->initialize();
+
+
+
+
+		// Run component assemblage allocator (not a system, so don't delete)
+		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+		delete allocator;
 	}
 
 	void ServerApplication::initEntities()
@@ -235,6 +251,12 @@ namespace Srv
 		EntityFactory* factory = static_cast<EntityFactory*>
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
+
+		// First test by Jarl, instead of Anton
+		// Create rocks
+		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		entity = factory->entityFromRecipe( "rocksServer" );									 
+		m_world->addEntity( entity );
 
 		//Minigun
 		for (int x=0;x<4;x++)

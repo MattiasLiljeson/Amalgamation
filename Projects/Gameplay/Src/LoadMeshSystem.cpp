@@ -1,21 +1,20 @@
 #include "LoadMeshSystem.h"
 
-#include "GraphicsBackendSystem.h"
 #include "LoadMesh.h"
 #include <ModelResource.h>
-#include <GraphicsWrapper.h>
 #include "Transform.h"
-#include "RenderInfo.h"
 #include "EntityParent.h"
 #include "ConnectionPointSet.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include "RenderInfo.h"
+#include <Globals.h>
 
-LoadMeshSystem::LoadMeshSystem( GraphicsBackendSystem* p_gfxBackend ) : 
+LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
 	ComponentType::ComponentTypeIdx::LoadMesh)
 {
-	m_gfxBackend = p_gfxBackend;
+
 }
 
 
@@ -31,7 +30,6 @@ void LoadMeshSystem::initialize()
 void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
-	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -41,13 +39,15 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
 
 		// Load creation instructions
-		vector<ModelResource*>* models= gfxWrapper->createModelsFromFile( jobInfo->getFileName(), 
-																		  &MODELPATH);
+		vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
+													   MODELPATH,
+													   jobInfo->isPrimitive());
 		// Root
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);
 		// Children
-		createChildrenEntities(models,entity);
+		if (models->size()>1)
+			createChildrenEntities(models,entity);
 
 		// remove init data and update
 		p_entities[i]->removeComponent(ComponentType::LoadMesh);
@@ -58,7 +58,7 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 
 
 void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
-								 Transform* p_outTransform )
+									   Transform* p_outTransform )
 {
 	Component* t = p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform );
 	if (t!=NULL)
@@ -66,20 +66,17 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 
 	int rootId = p_entity->getIndex(); // store the id
 
-	Component* component = NULL;
+	ModelResource* modelResource = p_modelResource;
+	Entity* entity = p_entity;
+
+	// Mesh, renderinfo
+	setUpRenderInfo(entity,modelResource);
 
 	// Connection points
-	if (!p_modelResource->connectionPoints.m_collection.empty())
-	{
-		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
-		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
-	}
-	
-	// Handle particles here
-	if (!p_modelResource->particleSystems.m_collection.empty())
-	{
+	setUpConnectionPoints(entity,modelResource);
 
-	}
+	// Handle particles here
+	setUpParticles(entity,modelResource);
 
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist
@@ -92,7 +89,7 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 
 
 void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelResources, 
-											 Entity* p_rootEntity)
+												  Entity* p_rootEntity)
 {
 	Component* t = NULL;
 	Transform* rootTransform = NULL;
@@ -125,55 +122,23 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		entity = m_world->createEntity();			// create entity
 
 		// Mesh, renderinfo
-		int meshId = modelResource->meshId;
-		component = new RenderInfo( meshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
+		setUpRenderInfo(entity,modelResource);
 
 		// Transform
 		AglMatrix baseTransform = AglMatrix::identityMatrix();
-		// if (rootTransform) baseTransform = rootTransform->getMatrix();
 		baseTransform = modelResource->transform * baseTransform;
-
 		component = new Transform( baseTransform );
 		entity->addComponent( ComponentType::Transform, component );
 
 		// Connection points
-		if (!modelResource->connectionPoints.m_collection.empty())
-		{
-			component = new ConnectionPointSet( modelResource->connectionPoints.m_collection );
-			entity->addComponent( ComponentType::ConnectionPointSet, component );
-		}
+		setUpConnectionPoints(entity,modelResource);
 
-		// Handle particles here
+		// Particles
+		setUpParticles(entity,modelResource);
 
 		// Collision
-		if (rootRigidBody)
-		{
-			PhysicsBody* pb = new PhysicsBody();
-			if (rootRigidBody->m_compound)
-				pb->setParentId(rootPhysicsBody->m_id);
-			entity->addComponent( ComponentType::PhysicsBody, 
-				pb );
-
-
-			BodyInitData* b = new BodyInitData(AglVector3(30, 0, 0),
-				AglQuaternion::identity(),
-				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0);
-			// Copy from parent
-			b->m_position		= baseTransform.GetTranslation();
-			b->m_orientation	= baseTransform.GetRotation();
-			b->m_scale			= baseTransform.GetScale();
-			b->m_velocity			= rootRigidBody->m_velocity;
-			b->m_angularVelocity	= rootRigidBody->m_angularVelocity;
-			b->m_collisionEnabled	= rootRigidBody->m_collisionEnabled;
-			b->m_compound			= rootRigidBody->m_compound;
-			b->m_impulseEnabled		= rootRigidBody->m_impulseEnabled;
-
-			b->m_type = rootRigidBody->m_type;
-
-			entity->addComponent( ComponentType::BodyInitData, b);
-		}
+		setUpChildCollision(entity,modelResource,
+			rootRigidBody,rootPhysicsBody,baseTransform);
 
 		// Hierarchy
 		component = new EntityParent( rootId, modelResource->transform );
@@ -182,4 +147,35 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// finished
 		m_world->addEntity(entity);		
 	}
+}
+
+
+void LoadMeshSystem::setUpRootCollision( Entity* p_entity, ModelResource* p_modelResource )
+{
+
+}
+
+void LoadMeshSystem::setUpRenderInfo( Entity* p_entity, ModelResource* p_modelResource )
+{
+	int meshId = p_modelResource->meshId;
+	if (meshId!=-1)
+	{
+		Component* component = new RenderInfo( meshId );
+		p_entity->addComponent( ComponentType::RenderInfo, component );
+	}
+}
+
+void LoadMeshSystem::setUpConnectionPoints( Entity* p_entity, 
+										   ModelResource* p_modelResource )
+{
+	if (!p_modelResource->connectionPoints.m_collection.empty())
+	{
+		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
+	}
+}
+
+void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
+{
+	// NOT IMPLEMENTED
 }

@@ -1,7 +1,7 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <TcpServer.h>
-#include <ModelBaseUnmanagedFactory.h>
+#include <ModelBaseFactory.h>
 #include <AglVector3.h>
 #include <EntitySystem.h>
 
@@ -41,5 +41,5 @@ private:
 	TcpServer* m_server;
 	int		m_activePort;
 
-	ModelBaseUnmanagedFactory m_modelFactory;
+	ModelBaseFactory m_modelFactory;
 };

@@ -36,6 +36,8 @@ public:	//Enums
 		ShipInputProcessingSystem,
 		ImpulseSystem,
 		LoadMeshSystem,
+		LoadMeshSystemClient,
+		LoadMeshSystemServer,
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,

@@ -1,5 +1,6 @@
 #pragma once
 #include <Component.h>
+#include <ComponentFactory.h>
 // =======================================================================================
 //	LightBlinker
 // =======================================================================================
@@ -15,14 +16,17 @@
 class LightBlinker: public Component
 {
 public:
+	LightBlinker();
 	LightBlinker(float p_maxRange)
 	{
 		increase = true;
 		maxRange = p_maxRange;
 	}
 	~LightBlinker(){}
-
+	virtual void init( vector<ComponentData> p_initData );
 public:
 	bool increase;
 	float maxRange;
+private:
+	static ComponentRegister<LightBlinker> s_reg;
 };

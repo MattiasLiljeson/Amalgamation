@@ -34,22 +34,7 @@ public:
 					AglVector3 p_angularVelocity, int p_type,
 					ResponseMode p_responseMode = ResponseMode::DYNAMIC,
 					CompoundMode p_compoundMode = CompoundMode::SINGLE, bool p_impulseEnabled = true,
-					bool p_collisionEnabled = true)
-	{
-		m_type = ComponentType::ComponentTypeIdx::BodyInitData;
-
-		m_position = p_position;
-		m_orientation = p_orientation;
-		m_scale = p_scale;
-		m_velocity = p_velocity;
-		m_angularVelocity = p_angularVelocity;
-		m_type = p_type;
-
-		m_static = p_responseMode==ResponseMode::STATIC; // change these?
-		m_compound = p_compoundMode==CompoundMode::COMPOUND;
-		m_impulseEnabled = p_impulseEnabled;
-		m_collisionEnabled = p_collisionEnabled;
-	}
+					bool p_collisionEnabled = true);
 
 	virtual void init( vector<ComponentData> p_initData );
 

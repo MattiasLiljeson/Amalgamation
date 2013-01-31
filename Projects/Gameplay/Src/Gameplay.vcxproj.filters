@@ -85,6 +85,9 @@
     <Filter Include="Systems\Debugging">
       <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\AssetLoading">
+      <UniqueIdentifier>{f0dfd69f-877a-4bbc-afe1-999056142db6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -385,9 +388,6 @@
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="LoadMeshSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleEmitters.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -440,11 +440,9 @@
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h" />
-
     <ClInclude Include="MoveShipLightsSystem.h">
       <Filter>Systems\Debugging</Filter>
-	 </ClInclude>
-
+    </ClInclude>
     <ClInclude Include="EntityDeletionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -453,7 +451,15 @@
     </ClInclude>
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
-
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystem.h">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems\AssetLoading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -701,9 +707,6 @@
     <ClCompile Include="LoadMesh.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="LoadMeshSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
@@ -746,12 +749,24 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp">
       <Filter>Systems\Debugging</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="EntityDeletionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="LightBlinkerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBlinker.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\AssetLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems\AssetLoading</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

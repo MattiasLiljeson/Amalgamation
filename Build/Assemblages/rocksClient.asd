@@ -1,4 +1,4 @@
-e rocks
+e rocksClient
 
 c LoadMesh
 d s m_filename WorldPrison4.agl

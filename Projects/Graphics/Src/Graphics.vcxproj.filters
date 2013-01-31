@@ -48,17 +48,14 @@
     <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="ModelExtendedManagedFactory.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshNameScriptParser.cpp">
-      <Filter>Graphics Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Renderer\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleShader.cpp">
       <Filter>Renderer\Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExtendedFactory.cpp">
+      <Filter>Factory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,12 +155,6 @@
     <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="ModelExtendedManagedFactory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshNameScriptParser.h">
-      <Filter>Graphics Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Renderer\Particle</Filter>
     </ClInclude>
@@ -179,6 +170,9 @@
     <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="ShaderVariableContainer.h">
       <Filter>Renderer\Shader</Filter>
+	</ClInclude>
+    <ClInclude Include="ModelExtendedFactory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

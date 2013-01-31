@@ -106,18 +106,18 @@ void GraphicsBackendSystem::process()
 {
 }
 
-vector<Entity*> GraphicsBackendSystem::buildEntitiesFromMeshFile( const string& p_meshName, 
-																 const string* p_path/*=NULL*/ )
-{
-	return vector<Entity*>();
-	// return m_graphicsWrapper->createMeshFromRaw(p_meshName,p_path,p_outConnectionPoints);
-}
+// vector<Entity*> GraphicsBackendSystem::buildEntitiesFromMeshFile( const string& p_meshName, 
+// 																 const string* p_path/*=NULL*/ )
+// {
+// 	return vector<Entity*>();
+// 	// return m_graphicsWrapper->createMeshFromRaw(p_meshName,p_path,p_outConnectionPoints);
+// }
 
-int GraphicsBackendSystem::loadSingleMeshFromFile(const string& p_meshName, 
-						   const string* p_path/*=NULL*/ )
-{
-	return m_graphicsWrapper->createModelFromFile(p_meshName,p_path)->meshId;
-}
+// int GraphicsBackendSystem::loadSingleMesh(const string& p_meshName, 
+// 						   const string* p_path/*=NULL*/ )
+// {
+// 	return m_graphicsWrapper->createModelFromFile(p_meshName,p_path)->meshId;
+// }
 
 int GraphicsBackendSystem::getMeshId( const string& p_meshName )
 {

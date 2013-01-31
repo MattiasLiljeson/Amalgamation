@@ -54,6 +54,16 @@ public:
 	///-----------------------------------------------------------------------------------
 	Entity* entityFromRecipe( const string& p_entityName );
 
+
+	///-----------------------------------------------------------------------------------
+	/// Combination of readAssemblageFile and entityFromRecipe, will only read assemblage
+	/// file if not already read.
+	/// \param p_entityName
+	/// \param p_filePath
+	/// \return Entity*
+	///-----------------------------------------------------------------------------------
+	Entity* entityFromRecipeOrFile( const string& p_entityName, string p_filePath );
+
 	Entity* entityFromPacket(EntityCreationPacket p_packet);
 private:
 	//Ship
