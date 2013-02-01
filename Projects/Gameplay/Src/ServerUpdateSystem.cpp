@@ -116,7 +116,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 	}
 
-	else if( timerSys->checkTimeInterval(TimerIntervals::Every16Millisecond) )
+	else if( timerSys->checkTimeInterval(TimerIntervals::Every8Millisecond) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{

@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "GameplayTags.h"
 #include "ValueClamp.h"
+#include "PhysicsBody.h"
 
 LookAtSystem::LookAtSystem() : 
 EntitySystem( SystemType::LookAtSystem, 2,
@@ -64,11 +65,14 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
 		Transform* targetTransform = static_cast<Transform*>(
 			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
+
+
 		AglVector3 lookTargetPos;
 		if (targetTransform)
 		{
 			lookTargetPos = targetTransform->getTranslation();
 		}
+
 
 
 		// Follow behaviour
@@ -91,7 +95,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 				DEBUGPRINT(( ("\nDT: "+toString(dt)+"\n").c_str() ));
 			}
 
-			position = AglVector3::lerp(position,lookTargetPos+offset,10.0f*dt);
+			position = AglVector3::lerp(position,lookTargetPos+offset,13.0f*dt);
 // 			if (AglVector3::lengthSquared(dir)>0.3f)
 // 			{
 				// AglVector3::normalize(dir);

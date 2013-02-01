@@ -205,7 +205,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// also create a camera
 	Entity* playerCam = m_world->createEntity();
 	Component* component = new LookAtEntity(newShip->getIndex(),
-		transformComp->getTranslation()+AglVector3(0,6,-13),
+		AglVector3(0,7,-28),
 		AglQuaternion::identity(),
 		10.0f,
 		10.0f,

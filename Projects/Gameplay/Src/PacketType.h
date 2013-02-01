@@ -20,7 +20,6 @@ public:
 		// Server <--> Client:
 		Ping,
 		Pong,
-		ShipTransform,
 
 		// Server -> Client:
 		EntityCreation,

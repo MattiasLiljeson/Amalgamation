@@ -144,12 +144,6 @@ namespace Srv
 		levelGen->run();*/
 
 		/************************************************************************/
-		/* General controlling													*/
-		/************************************************************************/
-		LookAtSystem* lookAtSystem = new LookAtSystem();
-		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
-
-		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem();
@@ -172,6 +166,30 @@ namespace Srv
 			true );
 
 		/************************************************************************/
+		/* General controlling													*/
+		/************************************************************************/
+		LookAtSystem* lookAtSystem = new LookAtSystem();
+		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+
+		/************************************************************************/
+		/* Picking																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
+
+		/************************************************************************/
+		/* Gameplay															*/
+		/************************************************************************/
+		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineControllerSystem(m_server), true);
+		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipManagerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(), true);
+
+
+		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
 		m_world->setSystem( SystemType::NetworkListenerSystem,
@@ -190,22 +208,6 @@ namespace Srv
 
 		m_world->setSystem( new ServerClientInfoSystem(), true);
 
-		/************************************************************************/
-		/* Picking																*/
-		/************************************************************************/
-		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
-
-		/************************************************************************/
-		/* Gameplay															*/
-		/************************************************************************/
-		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
-		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
-		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineControllerSystem(m_server), true);
-		m_world->setSystem(new ShipModulesControllerSystem(), true);
-		m_world->setSystem(new ShipManagerSystem(), true);
-		m_world->setSystem(new RocketControllerSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D

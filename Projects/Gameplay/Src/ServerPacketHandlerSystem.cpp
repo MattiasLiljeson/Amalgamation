@@ -26,7 +26,6 @@
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
-#include "ShipTransformPacket.h"
 
 
 
@@ -59,50 +58,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		char packetType;
 		packetType = packet.getPacketType();
 		
-		if( packetType == (char)PacketType::ShipTransform )
-		{
-			/* Ursäkta röran, vi bygger om.
-			   Om detta ligger kvar, kom ihåg det där viktiga........
-
-			ShipTransformPacket shipTransformPacket;
-			shipTransformPacket.unpack( packet );
-
-			bool okayTransform = false;
-
-
-			// check data
-			Transform* transform = NULL;
-			Component* t = m_world->getEntity(shipTransformPacket.entityId)->getComponent(
-				ComponentType::PhysicsBody);
-			if (t) transform = static_cast<Transform*>(t);
-			if (transform)
-			{
-				AglVector3 diff = shipTransformPacket.transform.GetTranslation()-transform->getTranslation();
-				if (AglVector3::lengthSquared(diff)<200.0f)
-				{
-					okayTransform = true;
-				}
-				else
-				{
-					okayTransform = false;
-					shipTransformPacket.transform.SetTranslation(transform->getTranslation());
-				}
-			}
-
-
-			int sender = packet.getSenderId();
-			Packet response((char)PacketType::ShipTransform);
-			response << shipTransformPacket.transform;
-			response << sender;
-
-			m_server->broadcastPacket(response,sender);
-
-
-
-			......trololo, nä ta bort den här skiten isf(och PacketType::ShipTransform + ShipTransformPacket)
-			*/
-		}
-		else if(packetType == (char)PacketType::ThrustPacket)
+		if(packetType == (char)PacketType::ThrustPacket)
 		{
 			ThrustPacket thrustPacket;
 			thrustPacket.unpack( packet );

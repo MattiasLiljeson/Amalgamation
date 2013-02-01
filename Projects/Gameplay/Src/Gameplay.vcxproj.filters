@@ -461,9 +461,6 @@
     <ClInclude Include="LoadMeshSystemServer.h">
       <Filter>Systems\AssetLoading</Filter>
     </ClInclude>
-    <ClInclude Include="ShipTransformPacket.h">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -770,9 +767,6 @@
     </ClCompile>
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems\AssetLoading</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipTransformPacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
