@@ -63,11 +63,6 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-			Component* body = ship->getComponent( ComponentType::ComponentTypeIdx::PhysicsBody);
-			PhysicsBody* rigidBody = NULL;
-			if (body)
-				rigidBody = static_cast<PhysicsBody*>(body);
-
 
 
 			// Calc rotation from player input
@@ -92,18 +87,14 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			m_thrustVec += thrustVec;
-			m_angularVec += angularVec;
 
-			if (rigidBody)
-			{
-				m_physics->applyImpulse(rigidBody->m_id,thrustVec,angularVec);
-			}
+			controller->m_thrustPowerAccumulator += thrustVec;
+			controller->m_turnPowerAccumulator += angularVec;
 
 			if (input.stateSwitchInput != 0)
 			{
-				m_thrustVec = AglVector3::zero();
-				m_angularVec = AglVector3::zero();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
@@ -118,10 +109,12 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
-				// sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+				sendThrustPacketToServer(netSync,
+					controller->m_thrustPowerAccumulator, 
+					controller->m_turnPowerAccumulator);
 
-				m_thrustVec = AglVector3();
-				m_angularVec = AglVector3();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 			}
 		}
 	}
@@ -165,8 +158,8 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 	m_client->sendPacket( thrustPacket.pack() );
 }
 
-void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
-{
-	EntityUpdatePacket transformPacket;
-	transformPacket.
-}
+// void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
+// {
+// 	EntityUpdatePacket transformPacket;
+// 	transformPacket.
+// }

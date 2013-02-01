@@ -16,6 +16,10 @@
 #include <Component.h>
 #include <DebugUtil.h>
 #include <ToString.h>
+#include <AglVector3.h>
+
+#include <queue>
+using namespace std;
 
 class ShipFlyController : public Component
 {
@@ -42,4 +46,9 @@ public:
 
 	float m_turnSpeed;
 	float m_thrustPower;
+
+	AglVector3 m_turnPowerAccumulator;
+	AglVector3 m_thrustPowerAccumulator;
+
+	queue<AglVector3> m_transformBuffer;
 };

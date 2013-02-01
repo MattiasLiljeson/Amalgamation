@@ -215,7 +215,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::ShipEditController, component);
 
 		entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
-
+		/*
 		entity->addComponent( ComponentType::PhysicsBody, 
 			new PhysicsBody() );
 
@@ -225,8 +225,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			AglVector3(0, 0, 0), 0, 
 			BodyInitData::DYNAMIC, 
 			BodyInitData::SINGLE, true, false);
+			
 
-		entity->addComponent( ComponentType::BodyInitData, bodyData);
+		entity->addComponent( ComponentType::BodyInitData, bodyData);*/
 
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(

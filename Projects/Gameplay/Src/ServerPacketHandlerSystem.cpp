@@ -61,6 +61,12 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		
 		if( packetType == (char)PacketType::ShipTransform )
 		{
+			/* Ursäkta röran, vi bygger om.
+			   Om detta ligger kvar, kom ihåg det där viktiga........
+
+
+
+
 			ShipTransformPacket shipTransformPacket;
 			shipTransformPacket.unpack( packet );
 
@@ -94,6 +100,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			m_server->broadcastPacket(response,sender);
 
+
+
+			......trololo, nä ta bort den här skiten isf(och PacketType::ShipTransform + ShipTransformPacket)
+			*/
 		}
 		else if(packetType == (char)PacketType::ThrustPacket)
 		{
