@@ -314,7 +314,6 @@ void ClientApplication::initSystems()
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
 	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
 
-
 	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
 		true );
 #endif // ENABLE_SOUND

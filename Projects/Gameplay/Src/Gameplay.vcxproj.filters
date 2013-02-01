@@ -91,6 +91,9 @@
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Modules\ModuleEvent">
+      <UniqueIdentifier>{366d84bb-a3a9-46ce-9448-ab99ffa404b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -467,6 +470,18 @@
     <ClInclude Include="ShipModulesTrackerSystem.h">
       <Filter>Systems\Gameplay\Tracking</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleEvent.h">
+      <Filter>Components\Modules\ModuleEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="OnActivateShieldModule.h">
+      <Filter>Components\Modules\ModuleEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoveSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="OnDeActivateShieldModule.h">
+      <Filter>Components\Modules\ModuleEvent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -773,6 +788,9 @@
     </ClCompile>
     <ClCompile Include="ShipModulesTrackerSystem.cpp">
       <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

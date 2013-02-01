@@ -19,6 +19,8 @@ SpawnSoundEffectPacket::SpawnSoundEffectPacket()
 		"bomb-03.wav";
 	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::MineUnload] =
 		"Mine_Unload.wav";
+	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::MineBlip] =
+		"Mine_Blip.wav";
 	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::ShieldDeflect] =
 		"Shield_Deflect.wav";
 }

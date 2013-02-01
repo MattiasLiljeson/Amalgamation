@@ -41,6 +41,7 @@ public:
 		MissileStartAndFlight,
 		Explosion,
 		MineUnload,
+		MineBlip,
 		ShieldDeflect,
 	};
 	// NOTE: (Johan) This could be made static and initialized only once, but I don't

@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "ShieldModule.h"
+//#include "OnActivateShieldModule.h"
 #include "TcpServer.h"
 
 // =======================================================================================
@@ -21,7 +22,9 @@ public:
 	ShieldModuleControllerSystem(TcpServer* p_server);
 	~ShieldModuleControllerSystem();
 
-	virtual void initialize();
+	void initialize();
+	void inserted( Entity* p_entity );
+	void removed( Entity* p_entity );
 	void processEntities(const vector<Entity*>& p_entities );
 private:
 	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active);
