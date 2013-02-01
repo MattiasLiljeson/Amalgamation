@@ -71,6 +71,34 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	return new DeferredBaseShader(shaderInitData);
 }
 
+DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
+{
+	VSData* vertexData = new VSData();
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+
+	PSData* pixelData = new PSData();
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
+	createAllShaderStages(vertexData,pixelData);
+
+	ID3D11InputLayout* inputLayout = NULL;
+	//createPTVertexInputLayout(vertexData,&inputLayout);
+	createInstancedLightInputLayout( vertexData, &inputLayout );
+
+	ID3D11SamplerState* samplerState = NULL;
+	createSamplerState( &samplerState );
+
+	ShaderVariableContainer shaderInitData;
+	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
+
+	//DeferredComposeShader* newDeferredComposeShader = NULL;
+	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
+	//return newDeferredComposeShader;
+
+	DeferredBaseShader* newDeferredBaseShader = NULL;
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData);
+	return newDeferredBaseShader;
+}
+
 DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR& p_filePath )
 {
 	DeferredComposeShader*	newComposeShader = NULL;
@@ -92,34 +120,6 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 	return new DeferredComposeShader(shaderVariables);
 }
 
-DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
-{
-	VSData* vertexData = new VSData();
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
-
-	PSData* pixelData = new PSData();
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
-	createAllShaderStages(vertexData,pixelData);
-	
-	ID3D11InputLayout* inputLayout = NULL;
-	//createPTVertexInputLayout(vertexData,&inputLayout);
-	createInstancedLightInputLayout( vertexData, &inputLayout );
-
-	ID3D11SamplerState* samplerState = NULL;
-	createSamplerState( &samplerState );
-
-	ShaderVariableContainer shaderInitData;
-	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
-
-	//DeferredComposeShader* newDeferredComposeShader = NULL;
-	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
-	//return newDeferredComposeShader;
-
-	DeferredBaseShader* newDeferredBaseShader = NULL;
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData);
-	return newDeferredBaseShader;
-}
-
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 {
 	GUIShader* guiShader = NULL;
@@ -139,8 +139,7 @@ GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 	ShaderVariableContainer shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
-	guiShader = new GUIShader(shaderInitData,
-		m_bufferFactory->createSimpleCBuffer());
+	guiShader = new GUIShader(shaderInitData);
 	return guiShader;
 }
 
