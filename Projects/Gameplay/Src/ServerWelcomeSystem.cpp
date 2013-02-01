@@ -35,6 +35,7 @@
 #include "WelcomePacket.h"
 
 #include <Globals.h>
+#include "EntityFactory.h"
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
@@ -221,26 +222,29 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	/************************************************************************/
 	/* Creating the ship entity.											*/
 	/************************************************************************/
+
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+
 	Entity* e = m_world->createEntity();
 
-	p_shipTransform->setTranslation(AglVector3(0, 0, 0));
+	e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
 
-	e->addComponent(ComponentType::Transform, p_shipTransform);
+	//e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
 	
-	e->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
+	//e->addComponent( ComponentType::PhysicsBody, 
+		//new PhysicsBody() );
 
 	//e->addComponent(ComponentType::LoadMesh, new LoadMesh("Ship.agl"));
 
-	e->addComponent( ComponentType::BodyInitData, 
+	/*e->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData( p_shipTransform->getTranslation(),
 		AglQuaternion::identity(),
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));
+		BodyInitData::COMPOUND));*/
 
 	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3.0f, 0, 0, 1)));

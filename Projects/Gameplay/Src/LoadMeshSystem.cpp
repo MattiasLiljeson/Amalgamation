@@ -78,6 +78,17 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Handle particles here
 	setUpParticles(entity,modelResource);
 
+
+
+	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
+	if (initData)
+	{
+		if (initData->m_type == BodyInitData::BOXFROMMESHOBB)
+		{
+			initData->m_modelResource = p_modelResource; 
+		}
+	}
+
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist
 	{

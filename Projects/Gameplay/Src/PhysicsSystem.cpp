@@ -203,6 +203,21 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			AglBoundingSphere bs = init->m_modelResource->meshHeader.boundingSphere;
 			*bodyId = m_physicsController->AddMeshBody(rt, obb, bs, s, init->m_modelResource->looseBspTree);
 		}
+		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
+		{
+			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+
+			world *= obb.world;
+
+			*bodyId = m_physicsController->AddBox(world,
+				obb.size, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+		}
 		else
 		{
 			//Not Supported - Remove the body

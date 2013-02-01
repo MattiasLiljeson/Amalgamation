@@ -25,7 +25,8 @@ public:
 	{
 		BOX,
 		SPHERE,
-		MESH
+		MESH,
+		BOXFROMMESHOBB
 	};
 
 	BodyInitData();
