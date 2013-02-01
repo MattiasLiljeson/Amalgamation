@@ -101,8 +101,11 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
 		{
-			AglMatrix transpose = p_modelResource->meshHeader.transform.transpose();
-			AglMatrix m = p_modelResource->connectionPoints.m_collection[i] * transpose;
+			//This inverse is performed to bring the connection point from world space
+			//to local space of the mesh. This should not really be done if the mesh
+			//is already parent to the transform. Make check for this later.
+			AglMatrix inv = p_modelResource->meshHeader.transform.inverse();
+			AglMatrix m = p_modelResource->connectionPoints.m_collection[i] * inv;
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(m));
 		}
 		p_entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
