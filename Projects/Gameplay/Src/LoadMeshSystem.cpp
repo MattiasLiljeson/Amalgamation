@@ -101,7 +101,9 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
 		{
-			AglMatrix m = p_modelResource->connectionPoints.m_collection[i];
+			AglMatrix inv = p_modelResource->meshHeader.transform;
+			inv = inv.transpose();
+			AglMatrix m = p_modelResource->connectionPoints.m_collection[i] * inv;
 			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(m));
 		}
 		p_entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
