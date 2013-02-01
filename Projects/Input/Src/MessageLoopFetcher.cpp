@@ -44,6 +44,7 @@ MessageLoopFetcher::MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool
 	m_keyFromCharMap[VK_F4]			= InputHelper::KeyboardKeys_F4;
 	m_keyFromCharMap[VK_LCONTROL]	= InputHelper::KeyboardKeys_LCTRL;
 	m_keyFromCharMap[VK_ESCAPE]		= InputHelper::KeyboardKeys_ESC;
+	m_keyFromCharMap[VK_OEM_PERIOD]	= InputHelper::KeyboardKeys_PERIOD;
 }
 
 MessageLoopFetcher::~MessageLoopFetcher()

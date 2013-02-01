@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <EventHandler.h>
 #include <AntTweakBarWrapper.h>
 #include <string>
 #include <ToString.h>
@@ -52,7 +53,7 @@ struct NetworkAdress
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
 
-class ClientConnectToServerSystem: public EntitySystem
+class ClientConnectToServerSystem: public EntitySystem, public EventHandler
 {
 public:
 	ClientConnectToServerSystem( TcpClient* p_tcpClient );
@@ -65,6 +66,7 @@ public:
 
 	void connectToNetworkAddress();
 
+	virtual void ProcessEvent( Rocket::Core::Event& event, const Rocket::Core::String& value );
 private:
 	TcpClient* m_tcpClient;
 
@@ -77,4 +79,5 @@ private:
 	static ClientConnectToServerSystem* m_selfPointer;
 private:
 	static void TW_CALL callbackConnectToNetworkAddress(void* p_clientData);
+
 };

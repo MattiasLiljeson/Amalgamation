@@ -1,6 +1,7 @@
 #include "ClientConnectToServerSystem.h"
 #include "Control.h"
 #include <TcpClient.h>
+#include <Rocket/Core/Event.h>
 
 ClientConnectToServerSystem* ClientConnectToServerSystem::m_selfPointer = NULL;
 
@@ -57,7 +58,11 @@ void ClientConnectToServerSystem::initialize()
 
 void TW_CALL ClientConnectToServerSystem::callbackConnectToNetworkAddress( void* p_clientData )
 {
-	m_selfPointer->connectToNetworkAddress();
+	if( !m_selfPointer->m_tcpClient->hasActiveConnection() 
+		&& !m_selfPointer->m_isLookingForConnection)
+	{
+		m_selfPointer->connectToNetworkAddress();
+	}
 }
 
 void ClientConnectToServerSystem::connectToNetworkAddress()
@@ -68,4 +73,28 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 	m_tcpClient->connectToServerAsync( m_connectionAddress.getIpAddress(), 
 		m_connectionAddress.getPortAddress() );
 	m_isLookingForConnection = true;
+}
+
+void ClientConnectToServerSystem::ProcessEvent( Rocket::Core::Event& event, const Rocket::Core::String& value )
+{
+	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
+	// and enable the system.
+	if (value == "connect")
+	{
+		string str_address	= event.GetParameter<Rocket::Core::String>("server_ip", "127.0.0.1").CString();
+		string str_port		= event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
+
+		stringstream ss(str_address);
+		ss >> m_connectionAddress.octets1 
+			>> m_connectionAddress.octets2
+			>> m_connectionAddress.octets3
+			>> m_connectionAddress.octets4;
+
+		ss.flush();
+		ss << str_port;
+		ss >> m_connectionAddress.port;
+
+		if( !m_tcpClient->hasActiveConnection() &&  !m_isLookingForConnection)
+			connectToNetworkAddress();
+	}
 }

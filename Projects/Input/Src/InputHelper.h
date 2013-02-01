@@ -116,6 +116,7 @@ public:
 		KeyboardKeys_BACKSPACE,
 		KeyboardKeys_RETURN,
 		KeyboardKeys_LCTRL,
+		KeyboardKeys_PERIOD,
 		KeyboardKeys_ESC,
 		KeyboardKeys_F1,
 		KeyboardKeys_F2,

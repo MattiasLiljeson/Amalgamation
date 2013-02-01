@@ -15,6 +15,8 @@
 #include <EventManager.h>
 #include "EventHandlerStartGame.h"
 #include "EventHandlerOptions.h"
+#include "LibRocketInputHelper.h"
+#include "ClientConnectToServerSystem.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -44,6 +46,8 @@ LibRocketBackendSystem::~LibRocketBackendSystem()
 
 void LibRocketBackendSystem::initialize()
 {
+	LibRocketInputHelper::initialize();
+
 	m_renderInterface = new LibRocketRenderInterface( m_graphicsBackend->getGfxWrapper() );
 	m_systemInterface = new LibRocketSystemInterface( m_world );
 
@@ -89,6 +93,10 @@ void LibRocketBackendSystem::initialize()
 	// Register event handlers
 	EventManager::RegisterEventHandler("start_game", new EventHandlerStartGame());
 	EventManager::RegisterEventHandler("options", new EventHandlerOptions());
+
+	auto connectSystem = static_cast<ClientConnectToServerSystem*>(
+		m_world->getSystem(SystemType::NetworkConnectoToServerSystem));
+	EventManager::RegisterEventHandler("join", connectSystem);
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
@@ -247,13 +255,21 @@ void LibRocketBackendSystem::processMouseMove()
 
 void LibRocketBackendSystem::processKeyStates()
 {
-	for (int keyCode = 0; keyCode = InputHelper::KeyboardKeys_CNT; keyCode++)
+	for (int keyCode = 0; keyCode < InputHelper::KeyboardKeys_CNT; keyCode++)
 	{
 		Control* control = m_inputBackend->getControlByEnum((InputHelper::KeyboardKeys)keyCode);
-		if (control->getDelta() != 0)
+		if (LibRocketInputHelper::isKeyMapped(keyCode) && control->getDelta() != 0)
 		{
-			//if (control->getStatus() > 0.5f)
-			//	m_rocketContext->ProcessKeyDown(0, 0);
+			if (control->getStatus() > 0.5f)
+			{
+				m_rocketContext->ProcessKeyDown(
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+			}
+			else
+			{
+				m_rocketContext->ProcessKeyUp(
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+			}
 		}
 	}
 }

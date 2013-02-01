@@ -79,7 +79,7 @@ private:
 	bool m_keysPressed[InputHelper::KeyboardKeys_CNT];
 	bool m_keysReleased[InputHelper::KeyboardKeys_CNT];
 
-	int m_keyFromCharMap[VK_LCONTROL+1]; //VK_LCONTROL is the last char
+	int m_keyFromCharMap[VK_OEM_PERIOD+1]; //VK_OEM_PERIOD is the last char
 	static deque<MsgAndParams> msgQue;
 };
 

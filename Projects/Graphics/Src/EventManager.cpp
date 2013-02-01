@@ -63,8 +63,8 @@ void EventManager::Initialise( Rocket::Core::Context* p_context )
 // Releases all event handlers registered with the manager.
 void EventManager::Shutdown()
 {
-	for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
-		delete (*i).second;
+	//for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
+	//	delete (*i).second;
 
 	event_handlers.clear();
 	event_handler = NULL;

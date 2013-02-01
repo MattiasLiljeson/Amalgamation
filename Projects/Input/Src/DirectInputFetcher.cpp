@@ -217,6 +217,7 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_BACKSPACE]	= DIK_BACKSPACE;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_RETURN]	= DIK_RETURN;
 
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_PERIOD]	= DIK_PERIOD;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_LCTRL]	= DIK_LCONTROL;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_ESC]	= DIK_ESCAPE;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_F1]	= DIK_F1;

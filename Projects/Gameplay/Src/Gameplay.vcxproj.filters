@@ -786,5 +786,8 @@
     <ClCompile Include="LibRocketSystemInterface.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
+    <ClCompile Include="LibRocketInputHelper.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
