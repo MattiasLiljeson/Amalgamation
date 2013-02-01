@@ -43,3 +43,8 @@ void ShipModule::resetDamage()
 {
 	m_addedDamage = 0;
 }
+
+bool ShipModule::damageTaken() const
+{
+	return m_addedDamage > 0;
+}

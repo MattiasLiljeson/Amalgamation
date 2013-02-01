@@ -29,6 +29,7 @@ public:
 	void addDamageThisTick(float p_amount);
 	void applyDamage();
 	void resetDamage();
+	bool damageTaken() const;
 private:
 	float m_addedDamage;
 	static ComponentRegister<ShipModule> s_reg;

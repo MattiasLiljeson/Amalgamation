@@ -139,14 +139,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma endregion 
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
 			SpawnSoundEffectPacket spawnSoundPacket;
 			spawnSoundPacket.unpack( packet );
 			if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-					m_world->getSystem(SystemType::AudioBackendSystem));
 				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
 					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 					spawnSoundPacket.position);
@@ -154,6 +154,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
 			{
+				// Attached positional sound source.
 				NetsyncDirectMapperSystem* directMapper =
 					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 					SystemType::NetsyncDirectMapperSystem));
@@ -167,9 +168,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						true, 1.0f));
 				}
 			}
-			else
+			else if( !spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				// Ambient sound effect.
+				// Short ambient sound effect.
+				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)

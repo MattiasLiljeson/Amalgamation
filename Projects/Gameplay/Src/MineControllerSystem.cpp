@@ -78,6 +78,8 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 				soundEffectPacket.position = t->getTranslation();
 				soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
 				m_server->broadcastPacket(soundEffectPacket.pack());
+
+				m_world->deleteEntity(p_entities[i]);
 			}
 		}	
 	}

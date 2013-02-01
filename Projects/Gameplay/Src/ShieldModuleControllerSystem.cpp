@@ -10,6 +10,9 @@
 #include "EntityCreationPacket.h"
 #include "NetworkSynced.h"
 #include "ShipModulesTrackerSystem.h"
+#include "AudioBackendSystem.h"
+#include <Globals.h>
+#include "SpawnSoundEffectPacket.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 1, ComponentType::ShieldModule)
@@ -70,12 +73,25 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 			vector<ShipModule*> childModules = static_cast<ShipModulesTrackerSystem*>(
 				m_world->getSystem(SystemType::ShipModulesTrackerSystem))->
 				getModulesFromParent(p_parentEntity->getIndex());
+			bool damageTaken = false;
 			for(unsigned int moduleIndex=0; moduleIndex<childModules.size(); moduleIndex++)
 			{
 				if(childModules[moduleIndex])
 				{
+					if(childModules[moduleIndex]->damageTaken())
+					{
+						damageTaken = true;
+					}
 					childModules[moduleIndex]->resetDamage();
 				}
+			}
+			if(damageTaken)
+			{
+				SpawnSoundEffectPacket soundEffectPacket;
+				soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::ShieldDeflect;
+				soundEffectPacket.positional = false;
+				soundEffectPacket.attachedToNetsyncEntity = -1;
+				m_server->broadcastPacket(soundEffectPacket.pack());
 			}
 		}
 		else

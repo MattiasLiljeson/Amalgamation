@@ -138,6 +138,4 @@ void AudioBackendSystem::playSoundEffect(string p_path, string p_filename)
 		p_path.c_str(),
 		false);
 	int soundIndex = m_soundWrapper->createAmbientSound(&creationalSoundInfo);
-//	m_soundWrapper->updateSound(soundIndex, SoundEnums::STOP);
-//	m_soundWrapper->updateSound(soundIndex, SoundEnums::PLAY);
 }

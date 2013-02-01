@@ -112,7 +112,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 				m_world->deleteEntity(p_entities[i]);
 			}
-		}	
+		}
 	}
 }
 
