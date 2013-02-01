@@ -78,6 +78,7 @@ public:	//Enums
 		/************************************************************************/
 		StaticProp,
 		LightsComponent,
+		MeshOffsetTransform,
 		NUM_COMPONENT_TYPES
 	};
 

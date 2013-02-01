@@ -461,6 +461,9 @@
     <ClInclude Include="LoadMeshSystemServer.h">
       <Filter>Systems\AssetLoading</Filter>
     </ClInclude>
+    <ClInclude Include="MeshOffsetTransform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

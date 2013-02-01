@@ -209,6 +209,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			AglMatrix world;
 			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
 
+			AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
+
 			world *= obb.world;
 
 			*bodyId = m_physicsController->AddBox(world,

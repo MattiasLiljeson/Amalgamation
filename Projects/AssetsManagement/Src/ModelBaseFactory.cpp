@@ -323,7 +323,6 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 			}
 
 		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
-		default:				
 			{
 				if (p_source.modelNumber!=-1) // call from parent
 				{
@@ -343,6 +342,10 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					}
 				}
 
+				break;
+			}
+		default:				
+			{
 				break;
 			}
 

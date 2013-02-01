@@ -8,6 +8,7 @@
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
+#include "MeshOffsetTransform.h"
 #include <Globals.h>
 
 LoadMeshSystem::LoadMeshSystem( ) : 
@@ -86,8 +87,27 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		if (initData->m_type == BodyInitData::BOXFROMMESHOBB)
 		{
 			initData->m_modelResource = p_modelResource; 
+			p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
 		}
+
+		//Should not be here but is common with body init data right now
+
 	}
+	//Should not be here - ONLY RELEVANT FOR SHIP
+	p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
+
+	if (p_modelResource->connectionPoints.m_collection.size() > 0)
+	{
+		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
+		{
+			AglMatrix m = p_modelResource->connectionPoints.m_collection[i];
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(m));
+		}
+		p_entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+	}
+
+	//END should not be here
 
 	// Transform
 	if (p_outTransform==NULL) // only add transform for first, if none already exist

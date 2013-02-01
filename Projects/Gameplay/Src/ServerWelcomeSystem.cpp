@@ -246,12 +246,12 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 		BodyInitData::DYNAMIC, 
 		BodyInitData::COMPOUND));*/
 
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3.0f, 0, 0, 1)));
 	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, -3.0f, 0, 0, 1)));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.0f, 0, 1)));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.0f, 0, 1)));*/
 
-	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+	//e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
 
