@@ -47,7 +47,7 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	//shadowTex = pow(shadowTex,100);
 	//shadowTex = pow(depth,255);
 	//return float4(worldPos.rgb,1.0f);
-	return float4(shadowTex,shadowTex,shadowTex,1.0f);
+	//return float4(shadowTex,shadowTex,shadowTex,1.0f);
 	return lightColor;
 }
 

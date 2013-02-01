@@ -1,7 +1,9 @@
 #include "CameraInfo.h"
 
-CameraInfo::CameraInfo(float p_aspectRatio, float p_fieldOfViewAsRadians/* =0.785398163f */, 
-					   float p_nearPlane/* =0.1f */, float p_farPlane/* =1000.0f */)
+CameraInfo::CameraInfo(float p_aspectRatio, 
+					   float p_fieldOfViewAsRadians/* =0.785398163f */, 
+					   float p_nearPlane/* =0.1f */, 
+					   float p_farPlane/* =10000.0f */)
 {
 	m_projMat		= AglMatrix::identityMatrix();
 	m_aspectRatio	= p_aspectRatio;
@@ -19,7 +21,7 @@ void CameraInfo::createPerspectiveMatrix(){
 }
 
 void CameraInfo::createPerspectiveMatrix(float p_aspectRatio , 
-										 float p_fieldOfViewAsRadians/*=0.785398163f*/, 
+										 float p_fieldOfViewAsRadians/* =0.785398163f */, 
 										 float p_nearClip/* =0.1f */, 
 										 float p_farClip/* =10000.0f */)
 {

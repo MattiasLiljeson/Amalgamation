@@ -29,27 +29,35 @@ ShaderBase::~ShaderBase()
 
 void ShaderBase::applyStages()
 {
-	if(m_vertexShader)
+	if(m_vertexShader){
 		m_deviceContext->VSSetShader(m_vertexShader->data,0,0);
-	else
+	}
+	else{
 		m_deviceContext->VSSetShader(NULL,0,0);
-	if (m_geometryShader)
+	}
+	if (m_geometryShader){
 		m_deviceContext->GSSetShader(m_geometryShader->data,0,0);
-	else
+	}
+	else{
 		m_deviceContext->GSSetShader(NULL,0,0);
-	if (m_domainShader)
+	}
+	if (m_domainShader){
 		m_deviceContext->DSSetShader(m_domainShader->data,0,0);
-	else 
+	}
+	else{
 		m_deviceContext->DSSetShader(NULL,0,0);
-	if (m_hullShader)
+	}
+	if (m_hullShader){
 		m_deviceContext->HSSetShader(m_hullShader->data,0,0);
-	else 
+	}
+	else{
 		m_deviceContext->HSSetShader(NULL,0,0);
+	}
 	if (m_pixelShader)
 		m_deviceContext->PSSetShader(m_pixelShader->data,0,0);
-	else
+	else{
 		m_deviceContext->PSSetShader(NULL,0,0);
-
+	}
 	if (m_samplerState)
 		m_deviceContext->PSSetSamplers(0,1,&m_samplerState);
 

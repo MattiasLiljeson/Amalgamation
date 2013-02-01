@@ -92,7 +92,8 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer( InstanceData* p_insta
 	return instanceBuffer;
 }
 
-Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
+Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( 
+	LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
 {
 	Buffer<LightInstanceData>* instanceBuffer;
 
