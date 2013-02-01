@@ -32,7 +32,7 @@ Entity* ShadowSystem::getShadowEntity( const unsigned int p_index){
 	return m_shadowCameras[p_index];
 }
 
-const AglMatrix& ShadowSystem::getViewProjection( const unsigned int p_index ){
+AglMatrix ShadowSystem::getViewProjection( const unsigned int p_index ){
 	CameraInfo* cameraInfo = static_cast<CameraInfo*>(
 		m_shadowCameras[p_index]->getComponent(ComponentType::CameraInfo));
 

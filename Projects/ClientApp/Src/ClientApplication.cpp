@@ -490,6 +490,12 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10));
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
+	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+	m_world->addEntity(entity);
+
 	//InitModulesTestByAnton();
 
 	/*
