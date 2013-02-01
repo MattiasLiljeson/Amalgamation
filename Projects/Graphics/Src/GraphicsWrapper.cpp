@@ -36,13 +36,14 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_height= p_height;
 	m_windowed = p_windowed;
 	m_wireframeMode = false;
+	m_renderingShadows = false;
 
 	initSwapChain(p_hWnd);
 	initHardware();
 
 	initBackBuffer();
 
-	initViewport();
+	resetViewportToOriginalSize();
 
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -299,7 +300,6 @@ void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 void GraphicsWrapper::setLightPassRenderTarget(){
 	m_deferredRenderer->setLightRenderTarget();
 }
-
 void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 	m_shadowShader->sendViewProjection(p_viewProj);
 	m_shadowShader->apply();
@@ -391,19 +391,6 @@ int GraphicsWrapper::getMeshId( const string& p_name )
 	return m_meshManager->getResourceId(p_name);
 }
 
-void GraphicsWrapper::initViewport()
-{
-	D3D11_VIEWPORT vp;
-	vp.Width	= (float)m_width;
-	vp.Height	= (float)m_height;
-	vp.MaxDepth = 1.0f;
-	vp.MinDepth = 0.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-
-	m_deviceContext->RSSetViewports(1, &vp);
-}
-
 ID3D11Device* GraphicsWrapper::getDevice()
 {
 	return m_device;
@@ -468,7 +455,7 @@ void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height ){
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	initBackBuffer();
-	initViewport();
+	resetViewportToOriginalSize();
 
 	m_deferredRenderer->initRendertargetsAndDepthStencil( m_width, m_height );
 }
@@ -567,7 +554,8 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 	m_deviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(p_indexBufferRef), 
 		DXGI_FORMAT_R32_UINT, 0);
 
-	p_shader->apply();
+	if(m_renderingShadows == false)
+		p_shader->apply();
 
 	// Draw instanced data
 	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
@@ -579,8 +567,8 @@ void GraphicsWrapper::setViewportToShadowMapSize(){
 	vp.TopLeftY = 0;
 	vp.Width	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
 	vp.Height	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
 
 	m_deviceContext->RSSetViewports(1,&vp);
 }
@@ -589,15 +577,23 @@ void GraphicsWrapper::resetViewportToOriginalSize(){
 	D3D11_VIEWPORT vp;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	vp.Width	= m_width;
-	vp.Height	= m_height;
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1;
+	vp.Width	= static_cast<float>(m_width);
+	vp.Height	= static_cast<float>(m_height);
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
 
 	m_deviceContext->RSSetViewports(1,&vp);
 }
 
 void GraphicsWrapper::setShadowMapAsRenderTarget()
 {
-	m_shadowMapRenderer->beginShadowPass();
+	m_shadowMapRenderer->mapShadowMapToRenderTarget();
+}
+
+void GraphicsWrapper::setRenderingShadows(){
+	m_renderingShadows = true;
+}
+
+void GraphicsWrapper::stopedRenderingShadows(){
+	m_renderingShadows = false;
 }

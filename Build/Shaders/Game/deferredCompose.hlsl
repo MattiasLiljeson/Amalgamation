@@ -42,11 +42,12 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
 	float shadowCoeff = doShadowing(shadowWorldPos);
 	
-	lightColor = lightColor*shadowCoeff;
+	//lightColor = lightColor*shadowCoeff;
 	
-	shadowTex = pow(shadowTex,100);
+	//shadowTex = pow(shadowTex,100);
+	//shadowTex = pow(depth,255);
 	//return float4(worldPos.rgb,1.0f);
-	//return float4(shadowTex,shadowTex,shadowTex,1.0f);
+	return float4(shadowTex,shadowTex,shadowTex,1.0f);
 	return lightColor;
 }
 

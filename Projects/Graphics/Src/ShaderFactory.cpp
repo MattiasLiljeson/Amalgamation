@@ -68,9 +68,7 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	ShaderVariableContainer shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
-												m_bufferFactory->createSimpleCBuffer());
-	return newDeferredBaseShader;
+	return new DeferredBaseShader(shaderInitData);
 }
 
 DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR& p_filePath )
@@ -96,9 +94,6 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 
 DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
 {
-
-	//BufferConfig* initConfig  = NULL;
-
 	VSData* vertexData = new VSData();
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
 
@@ -121,8 +116,7 @@ DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath 
 	//return newDeferredComposeShader;
 
 	DeferredBaseShader* newDeferredBaseShader = NULL;
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
-		m_bufferFactory->createSimpleCBuffer());
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData);
 	return newDeferredBaseShader;
 }
 

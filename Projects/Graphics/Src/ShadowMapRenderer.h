@@ -20,7 +20,7 @@ public:
 	ShadowMapRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		ShaderFactory* p_shaderFactory);
 	~ShadowMapRenderer();
-	void beginShadowPass();
+	void mapShadowMapToRenderTarget();
 	ID3D11ShaderResourceView* getShadowMap();
 private:
 	void initDepthStencil();

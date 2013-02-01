@@ -46,7 +46,6 @@ void ShadowMapRenderer::initDepthStencil()
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-
 	if (FAILED(hr=m_device->CreateDepthStencilView(
 		shadowMapTexture,
 		&depthStencilViewDesc,
@@ -71,7 +70,7 @@ void ShadowMapRenderer::initDepthStencil()
 	shadowMapTexture->Release();
 }
 
-void ShadowMapRenderer::beginShadowPass()
+void ShadowMapRenderer::mapShadowMapToRenderTarget()
 {
 	ID3D11RenderTargetView* temp = NULL;
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);

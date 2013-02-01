@@ -98,6 +98,10 @@ public:
 
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
 
+	void setRenderingShadows();
+	
+	void stopedRenderingShadows();
+
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
@@ -198,12 +202,6 @@ private:
 	///-----------------------------------------------------------------------------------
 	void initBackBuffer();
 
-	///-----------------------------------------------------------------------------------
-	/// Desc
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void initViewport();
-
 	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
 		void* p_indexBufferRef, UINT32 p_elmentCount,
 		Texture** p_textureArray,
@@ -246,4 +244,5 @@ private:
 	int m_width;
 	bool m_windowed;
 	bool m_wireframeMode;
+	bool m_renderingShadows;
 };

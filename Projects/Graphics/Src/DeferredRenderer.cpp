@@ -234,11 +234,7 @@ void DeferredRenderer::initFullScreenQuad()
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 }
 
-void DeferredRenderer::hookUpAntTweakBar()
-{
-	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::GRAPHICS,
-		"Color",TW_TYPE_COLOR4F, 
-		&m_baseShader->getPerFrameBufferPtr()->accessBuffer.color[0], "");
+void DeferredRenderer::hookUpAntTweakBar(){
 }
 
 

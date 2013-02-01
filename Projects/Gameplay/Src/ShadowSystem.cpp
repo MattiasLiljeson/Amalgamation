@@ -33,7 +33,7 @@ Entity* ShadowSystem::getShadowEntity( const unsigned int p_index){
 }
 
 const AglMatrix& ShadowSystem::getViewProjection( const unsigned int p_index ){
-	CameraInfo* camerInfo = static_cast<CameraInfo*>(
+	CameraInfo* cameraInfo = static_cast<CameraInfo*>(
 		m_shadowCameras[p_index]->getComponent(ComponentType::CameraInfo));
 
 	Transform* transform = static_cast<Transform*>(
@@ -44,5 +44,16 @@ const AglMatrix& ShadowSystem::getViewProjection( const unsigned int p_index ){
 	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
 	AglVector3 up = transform->getMatrix().GetUp();
 
-	return AglMatrix::createViewMatrix(position,lookTarget,up)*camerInfo->m_projMat;
+	// Construct view matrix
+	AglMatrix view = AglMatrix::createViewMatrix(
+		position,
+		lookTarget,
+		up);
+
+	// Rendering preparations
+	AglMatrix viewProj = AglMatrix::identityMatrix();
+	viewProj = view * cameraInfo->m_projMat;
+	viewProj = AglMatrix::transpose( viewProj );
+
+	return viewProj;
 }

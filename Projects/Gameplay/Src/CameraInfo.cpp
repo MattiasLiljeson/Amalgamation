@@ -5,11 +5,11 @@ CameraInfo::CameraInfo(float p_aspectRatio, float p_fieldOfViewAsRadians/* =0.78
 {
 	m_projMat		= AglMatrix::identityMatrix();
 	m_aspectRatio	= p_aspectRatio;
+	m_fieldOfViewAsRadians	= p_fieldOfViewAsRadians;
 	m_nearPlane		= p_nearPlane;
 	m_farPlane		= p_farPlane;
-	m_fieldOfViewAsRadians	= p_fieldOfViewAsRadians;
 
-	createPerspectiveMatrix(p_aspectRatio);
+	createPerspectiveMatrix();
 }
 
 void CameraInfo::createPerspectiveMatrix(){

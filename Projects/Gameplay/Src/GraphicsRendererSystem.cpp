@@ -69,10 +69,12 @@ void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->setShadowMapAsRenderTarget();
 	m_wrapper->setViewportToShadowMapSize();
+	m_wrapper->setRenderingShadows();
 }
 
 void GraphicsRendererSystem::endShadowPass(){
 	m_wrapper->resetViewportToOriginalSize();
+	m_wrapper->stopedRenderingShadows();
 }
 void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->clearRenderTargets();
