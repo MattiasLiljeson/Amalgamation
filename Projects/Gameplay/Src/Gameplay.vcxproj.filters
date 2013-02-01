@@ -91,6 +91,9 @@
     <Filter Include="Systems\GUI\EventHandlers">
       <UniqueIdentifier>{142ebecc-25cc-446e-88ae-a43b05b78570}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\GUI\LibRocket">
+      <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -125,12 +128,6 @@
     </ClInclude>
     <ClInclude Include="ShipController.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketRenderInterface.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketSystemInterface.h">
-      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
@@ -406,9 +403,6 @@
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketBackendSystem.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GameStatsSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
@@ -470,6 +464,18 @@
     <ClInclude Include="EventHandlerStartGame.h">
       <Filter>Systems\GUI\EventHandlers</Filter>
     </ClInclude>
+    <ClInclude Include="LibRocketBackendSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketRenderInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketSystemInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketInputHelper.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -486,15 +492,6 @@
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketBackendSystem.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketRenderInterface.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketSystemInterface.cpp">
-      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
@@ -779,6 +776,15 @@
     </ClCompile>
     <ClCompile Include="EventHandlerStartGame.cpp">
       <Filter>Systems\GUI\EventHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketBackendSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketRenderInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketSystemInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

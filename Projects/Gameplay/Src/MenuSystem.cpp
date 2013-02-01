@@ -19,8 +19,10 @@ void MenuSystem::initialize()
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
 	int docId = rocketBackend->loadDocumentByName("main_menu", false, true);
+	//rocketBackend->showDocument(docId, Rocket::Core::ElementDocument::MODAL);
 
-	if (docId >= 0)
+
+	//if (docId >= 0)
 	{
 	}
 }

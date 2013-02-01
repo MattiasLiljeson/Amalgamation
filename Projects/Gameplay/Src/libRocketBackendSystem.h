@@ -32,11 +32,16 @@ public:
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
 
-	void showDocument(int p_docId);
+	void showDocument(int p_docId, int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 	void hideDocument(int p_docId);
+	void focusDocument(int p_docId);
 
 	void process();
 	void render();
+
+private:
+	void processMouseMove();
+	void processKeyStates();
 
 private:
 	int m_wndHeight;

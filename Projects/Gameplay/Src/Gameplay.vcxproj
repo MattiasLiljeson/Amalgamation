@@ -49,6 +49,7 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketInputHelper.h" />
     <ClInclude Include="LightBlinker.h" />
     <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />

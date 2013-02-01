@@ -39,6 +39,8 @@
 // The game's element context.
 Rocket::Core::Context* EventManager::context;
 
+bool EventManager::wantsToExit = false;
+
 // The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
 EventHandler* EventManager::event_handler = NULL;
 // The event handlers registered with the manager.
@@ -118,7 +120,7 @@ void EventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::
 		}
 		else if (values[0] == "exit")
 		{
-			//Shell::RequestExit();
+			wantsToExit = true;
 		}
 		else if (values[0] == "pause")
 		{

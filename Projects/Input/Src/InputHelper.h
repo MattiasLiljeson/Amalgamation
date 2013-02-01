@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "Rocket/Core/Input.h"
-
 // =======================================================================================
 //                                      InputHelper
 // =======================================================================================
@@ -263,9 +261,9 @@ public:
 	///\return The corresponding status of the supplied state
 	static double statusFromState( const KeyStates p_state );
 
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
 	
 private:
 	// libRocket map
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[NUM_KEYB_KEYS];
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[KeyboardKeys_CNT];
 };

@@ -63,6 +63,8 @@ public:
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] window_name The name of the window to load.
 	static bool LoadWindow(const Rocket::Core::String& window_name);
+
+	static bool wantsToExit;
 private:
 	// The game's element context (declared in main.cpp).
 	static Rocket::Core::Context* context;

@@ -141,7 +141,9 @@ double InputHelper::statusFromState( const InputHelper::KeyStates p_state )
 	return status;
 }
 
-//Rocket::Core::Input::KeyIdentifier Input::libRocketFromKeys( int m_key )
+//Rocket::Core::Input::KeyIdentifier InputHelper::libRocketFromKeys( int m_key )
 //{
 //	return libRocketFromKeysMap[m_key];
 //}
+
+//Rocket::Core::Input::KeyIdentifier InputHelper::libRocketFromKeysMap[KeyboardKeys_CNT];

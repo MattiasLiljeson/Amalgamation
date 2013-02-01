@@ -33,6 +33,7 @@ LibRocketBackendSystem::~LibRocketBackendSystem()
 	for( unsigned int i=0; i<m_documents.size(); i++ )
 	{
 		m_documents[i]->GetContext()->UnloadDocument(m_documents[i]);
+		m_documents[i]->RemoveReference();
 	}
 
 	m_rocketContext->RemoveReference(); //release context
@@ -60,8 +61,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
-//	Rocket::Debugger::Initialise( m_rocketContext );
-//	Rocket::Debugger::SetVisible( true );
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( true );
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -147,7 +148,7 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 		if (p_initiallyShown)
 			tmpDoc->Show();
 
-		tmpDoc->RemoveReference();
+		//tmpDoc->RemoveReference();
 	}
 	else{
 		DEBUGWARNING(( 
@@ -179,9 +180,10 @@ void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string
 }
 
 
-void LibRocketBackendSystem::showDocument( int p_docId )
+void LibRocketBackendSystem::showDocument( int p_docId, 
+								int p_focusFlags/*= Rocket::Core::ElementDocument::FOCUS*/)
 {
-	m_documents[p_docId]->Show();
+	m_documents[p_docId]->Show(p_focusFlags);
 }
 
 void LibRocketBackendSystem::hideDocument( int p_docId )
@@ -189,6 +191,11 @@ void LibRocketBackendSystem::hideDocument( int p_docId )
 	m_documents[p_docId]->Hide();
 }
 
+
+void LibRocketBackendSystem::focusDocument( int p_docId )
+{
+	m_documents[p_docId]->Focus();
+}
 
 void LibRocketBackendSystem::process()
 {
@@ -202,9 +209,28 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 	
+	processMouseMove();
+	processKeyStates();
+
+	if (EventManager::wantsToExit)
+	{
+		m_world->requestToShutDown();
+	}
+
+	m_rocketContext->Update();
+}
+
+void LibRocketBackendSystem::render()
+{
+	m_rocketContext->Render();
+}
+
+void LibRocketBackendSystem::processMouseMove()
+{
+	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
 
 	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
-														   (float)m_cursor->getY());
+		(float)m_cursor->getY());
 	int mouseX = mousePos.first;
 	int mouseY = mousePos.second;
 
@@ -217,12 +243,20 @@ void LibRocketBackendSystem::process()
 	{
 		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
 	}
-
-	m_rocketContext->Update();
 }
 
-void LibRocketBackendSystem::render()
+void LibRocketBackendSystem::processKeyStates()
 {
-	m_rocketContext->Render();
+	for (int keyCode = 0; keyCode = InputHelper::KeyboardKeys_CNT; keyCode++)
+	{
+		Control* control = m_inputBackend->getControlByEnum((InputHelper::KeyboardKeys)keyCode);
+		if (control->getDelta() != 0)
+		{
+			//if (control->getStatus() > 0.5f)
+			//	m_rocketContext->ProcessKeyDown(0, 0);
+		}
+	}
 }
+
+
 
