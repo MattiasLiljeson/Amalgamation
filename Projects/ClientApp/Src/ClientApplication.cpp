@@ -50,6 +50,7 @@
 #include <LibRocketBackendSystem.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
+//#include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -287,6 +288,23 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
 	m_world->setSystem( entityParentHandler, true );
+	
+	/************************************************************************/
+	/* Audio																*/
+	/************************************************************************/
+#ifdef ENABLE_SOUND
+	AudioBackendSystem* audioBackend = new AudioBackendSystem();
+	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
+
+	AudioController* audioController = new AudioController(audioBackend);
+	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
+
+	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
+	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
+
+	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
+		true );
+#endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Network																*/
@@ -302,25 +320,7 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-	//m_world->setSystem( new ExtrapolationSystem(m_client), true );
-
-	/************************************************************************/
-	/* Audio																*/
-	/************************************************************************/
-#ifdef ENABLE_SOUND
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
-
-	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
-		true );
-#endif // ENABLE_SOUND
+	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
 	/* Gameplay																*/
@@ -490,12 +490,6 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
-	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10) );
-	entity->addComponent(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
-	m_world->addEntity(entity);
 	//InitModulesTestByAnton();
 
 	/*

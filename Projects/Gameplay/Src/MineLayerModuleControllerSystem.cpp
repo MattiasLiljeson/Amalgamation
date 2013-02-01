@@ -47,7 +47,7 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				ComponentType::getTypeFor(ComponentType::MineLayerModule)));
 
 			mineLayer->m_cooldown -= dt;
-			if (mineLayer->m_cooldown <= 0 && module->m_active)
+			if (mineLayer->m_cooldown <= 0 && module->getActive())
 			{
 				mineLayer->m_cooldown = 2;
 				Transform* transform = static_cast<Transform*>(

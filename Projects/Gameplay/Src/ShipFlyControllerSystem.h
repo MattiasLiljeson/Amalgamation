@@ -34,8 +34,6 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 private:
-	//Anton - 9/1-13
-	float	getSpeedBoost(Entity* p_entity, float p_baseThrust);
 	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3 p_thrust,
 		AglVector3 p_angularVec);
 private:

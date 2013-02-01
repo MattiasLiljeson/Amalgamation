@@ -68,7 +68,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			// Turning multiplier
 			float  turnSpeed = controller->getTurningSpeed() * dt;
 			// Thrust multiplier
-			float  thrustPower = (controller->getThrustPower()+getSpeedBoost(ship, controller->getThrustPower())) * dt;
+			float  thrustPower = controller->getThrustPower() * dt;
 
 			// Calc translation from player input
 			AglVector3 thrustVec;
@@ -117,31 +117,8 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	}
 }
 
-//Anton - 9/1-13
-float ShipFlyControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrust)
-{
-	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::ConnectionPointSet ) );
-	if (!cps)
-		return 0;
-
-	float speedBoost = 0;
-	vector<ConnectionPoint> list = cps->m_connectionPoints;
-	for (unsigned int i = 0; i < list.size(); i++)
-	{
-		if (list[i].cpConnectedEntity >= 0)
-		{
-			Entity* module = m_world->getEntity(list[i].cpConnectedEntity);
-
-			SpeedBoosterModule* booster = static_cast<SpeedBoosterModule*>(
-				module->getComponent( ComponentType::ComponentTypeIdx::SpeedBoosterModule ) );
-
-			if (booster)
-				speedBoost += 5.0f*p_baseThrust;
-		}
-	}
-	return speedBoost;
-}
+// NOTE: (Johan) 1/2-13 Removed the whole getSpeedBoost method on client side, since
+// it wasn't used, and that was quite confusing.
 
 void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
 													   AglVector3 p_thrust, 

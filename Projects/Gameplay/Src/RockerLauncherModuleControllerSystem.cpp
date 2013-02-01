@@ -49,7 +49,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
 			gun->timeSinceRocket += dt;
-			if (gun->coolDown == 0 && (module->m_active || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
+			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
 				spawnRocket(p_entities[i]);
 				gun->timeSinceRocket = 0;

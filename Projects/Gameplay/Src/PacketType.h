@@ -30,6 +30,7 @@ public:
 		UpdateClientStats,
 		PlayerWinLose,
 		SpawnSoundEffect,
+		RemoveSoundEffect,
 
 		// Client -> Server:
 		/************************************************************************/

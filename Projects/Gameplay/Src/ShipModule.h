@@ -2,6 +2,9 @@
 
 #include <Component.h>
 #include <ComponentFactory.h>
+#include "ModuleEvent.h"
+#include <vector>
+using namespace std;
 
 // =======================================================================================
 //	Module
@@ -19,7 +22,6 @@ class ShipModule: public Component
 {
 public:
 	int m_parentEntity;
-	bool m_active;
 	float m_value; ///< Value of the module. Generates score.
 	float m_health; ///< Health of the module. A module that loses all health is removed
 
@@ -30,7 +32,15 @@ public:
 	void applyDamage();
 	void resetDamage();
 	bool damageTaken() const;
+	const bool& getActive() const;
+	void activate();
+	void deActivate();
+	void addOnActivate(ModuleEvent* p_event);
+	void addOnDeActivate(ModuleEvent* p_event);
 private:
+	bool m_active;
 	float m_addedDamage;
 	static ComponentRegister<ShipModule> s_reg;
+	vector<ModuleEvent*> m_deActivateEvents;
+	vector<ModuleEvent*> m_activateEvents;
 };

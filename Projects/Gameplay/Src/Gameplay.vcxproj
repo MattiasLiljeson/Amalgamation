@@ -63,9 +63,12 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="ModuleEvent.h" />
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="OnActivateShieldModule.h" />
+    <ClInclude Include="OnDeActivateShieldModule.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="ParticleUpdateData.h" />
@@ -84,6 +87,7 @@
     <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
+    <ClInclude Include="RemoveSoundEffectPacket.h" />
     <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
@@ -231,6 +235,7 @@
     <ClCompile Include="ShipModulesTrackerSystem.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
+    <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />

@@ -61,6 +61,7 @@
 #include "LightsComponent.h"
 #include "EntityFactory.h"
 #include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -163,6 +164,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
 						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 						true, 1.0f));
+					entity->applyComponentChanges();
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -172,6 +174,20 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
 				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
 					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+			}
+		}
+		else if(packetType == (char)PacketType::RemoveSoundEffect)
+		{
+			RemoveSoundEffectPacket data;
+			data.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+			if( entity != NULL )
+			{
+				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->applyComponentChanges();
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)
