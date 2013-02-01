@@ -121,7 +121,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			}
 
 			// Handle data sent to us from server
-			handleTransformInterpolation( controller, transform );
+			// handleTransformInterpolation( controller, transform );
 
 
 		}

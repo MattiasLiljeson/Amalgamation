@@ -64,9 +64,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			/* Ursäkta röran, vi bygger om.
 			   Om detta ligger kvar, kom ihåg det där viktiga........
 
-
-
-
 			ShipTransformPacket shipTransformPacket;
 			shipTransformPacket.unpack( packet );
 

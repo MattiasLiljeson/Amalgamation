@@ -28,12 +28,14 @@
 #include "GameplayTags.h"
 #include "StaticProp.h"
 #include "ClientInfo.h"
+#include "LookAtEntity.h"
 
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 
 #include <Globals.h>
+
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
@@ -200,6 +202,22 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
 	m_world->addEntity(newShip);
 
+	// also create a camera
+	Entity* playerCam = m_world->createEntity();
+	Component* component = new LookAtEntity(newShip->getIndex(),
+		transformComp->getTranslation()+AglVector3(0,6,-13),
+		AglQuaternion::identity(),
+		10.0f,
+		10.0f,
+		10.0f);
+	playerCam->addComponent( ComponentType::LookAtEntity, component );
+	playerCam->addComponent( ComponentType::Transform, new Transform( transformComp->getMatrix() ) );
+	// default tag is follow
+	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	playerCam->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
+	m_world->addEntity(playerCam);
+
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */
 	/************************************************************************/
@@ -210,6 +228,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	data.translation	= transformComp->getTranslation();
 	data.rotation		= transformComp->getRotation();
 	data.scale			= transformComp->getScale();
+	data.miscData		= playerCam->getIndex();
 
 	m_server->broadcastPacket(data.pack());
 }

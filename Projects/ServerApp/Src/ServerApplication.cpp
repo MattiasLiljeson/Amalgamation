@@ -28,6 +28,7 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
 #include <LoadMeshSystemServer.h>
+#include <LookAtSystem.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -43,6 +44,7 @@
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
+
 
 namespace Srv
 {
@@ -140,6 +142,12 @@ namespace Srv
 		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
 		levelGen->run();*/
+
+		/************************************************************************/
+		/* General controlling													*/
+		/************************************************************************/
+		LookAtSystem* lookAtSystem = new LookAtSystem();
+		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
 
 		/************************************************************************/
 		/* Physics																*/

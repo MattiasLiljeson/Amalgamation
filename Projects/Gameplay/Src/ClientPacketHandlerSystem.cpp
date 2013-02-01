@@ -556,7 +556,7 @@ void ClientPacketHandlerSystem::handleBatch()
 			
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				ShipFlyController* ship = NULL;
+				/*ShipFlyController* ship = NULL;
 				Component* shipcomp = m_world->getComponentManager()->getComponent(
 					entity->getIndex(), ComponentType::ShipFlyController );
 				if (shipcomp) ship = static_cast<ShipFlyController*>(shipcomp);
@@ -572,7 +572,7 @@ void ClientPacketHandlerSystem::handleBatch()
 					// enqueue data
 					ship->m_transformBuffer.push(transformGoal);
 				}
-				else
+				else*/
 				{
 					transform->setScale( data.scale );
 					transform->setRotation( data.rotation );

@@ -71,9 +71,6 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 
 
-
-
-
 		// Follow behaviour
 		if (lookAtFollow)
 		{		

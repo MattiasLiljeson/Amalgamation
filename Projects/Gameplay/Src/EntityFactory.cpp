@@ -199,7 +199,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 	Component* component = NULL; // for temp usage
 
@@ -257,7 +257,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
-		int shipId = entity->getIndex();
+		// int shipId = entity->getIndex();
 									 // HACK!
 		float aspectRatio = 800/600; // Note: retrieve the aspect ratio here somehow
 								     // without using dx-graphics stuff
@@ -272,17 +272,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::MainCamera, component );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
-		component = new LookAtEntity(shipId,
-			AglVector3(0,6,-13),
-			AglQuaternion::identity(),
-			10.0f,
-			10.0f,
-			10.0f);
-		entity->addComponent( ComponentType::LookAtEntity, component );
-		// default tag is follow
-		entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent(ComponentType::PickComponent, new PickComponent());
 

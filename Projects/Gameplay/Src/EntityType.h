@@ -25,6 +25,7 @@ public:
 		ShieldModule,
 		RocketLauncherModule,
 		BoosterModule,
+		PlayerCamera,
 		EndModule, //Should never be used. Marks the end of module subsection
 		//End Modules
 		ParticleSystem,
