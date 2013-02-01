@@ -603,6 +603,25 @@ int	PhysicsController::LineClosestCollision(unsigned int p_line)
 	}
 	return col;
 }
+vector<LineCollisionData> PhysicsController::LineSortedCollisions(unsigned int p_line) //Sorted with the closest first
+{
+	vector<LineCollisionData> cols;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].lineID == p_line)
+		{
+			int curr = cols.size();
+			cols.push_back(mLineSegmentCollisions[i]);
+			while (curr > 0 && cols[curr].t > cols[curr-1].t)
+			{
+				LineCollisionData temp = cols[curr];
+				cols[curr] = cols[curr-1];
+				cols[curr-1] = temp;
+			}
+		}
+	}
+	return cols;
+}
 
 void PhysicsController::ActivateBody(unsigned int pBody)
 {

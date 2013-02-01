@@ -152,9 +152,24 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
 
-		int col = physX->getPhysicsController()->LineClosestCollision(p_pc.m_rayIndex);
-		if (col >= 0)
+		vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
+		if (cols.size() > 0)
 		{
+			//Find closest module
+			int col = -1;
+			for (unsigned int i = 0; i < cols.size(); i++)
+			{
+				Entity* e = physX->getEntity(cols[i].bodyID);
+				if (e->getComponent(ComponentType::ShipModule))
+				{
+					col = cols[i].bodyID;
+					break;
+				}
+			}
+
+			if (col < 0)
+				return;
+
 			for (unsigned int i = 0; i < p_entities.size(); i++)
 			{
 				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
