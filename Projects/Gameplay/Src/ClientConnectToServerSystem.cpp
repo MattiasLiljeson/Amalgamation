@@ -57,7 +57,8 @@ void ClientConnectToServerSystem::initialize()
 
 void TW_CALL ClientConnectToServerSystem::callbackConnectToNetworkAddress( void* p_clientData )
 {
-	m_selfPointer->connectToNetworkAddress();
+	if( m_selfPointer->getEnabled())
+		m_selfPointer->connectToNetworkAddress();
 }
 
 void ClientConnectToServerSystem::connectToNetworkAddress()

@@ -25,12 +25,8 @@ using namespace std;
 class GUIShader : public ShaderBase
 {
 public:
-	GUIShader( ShaderVariableContainer p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
+	GUIShader( ShaderVariableContainer p_initData);
 	virtual ~GUIShader();
 
-	Buffer<SimpleCBuffer>* getPerFrameBufferPtr();
-
 	void apply();
-private:
-	Buffer<SimpleCBuffer>* m_perFrameBuffer;
 };

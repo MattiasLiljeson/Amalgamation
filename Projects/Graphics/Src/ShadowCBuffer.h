@@ -1,20 +1,25 @@
 #pragma once
+#include <AglMatrix.h>
 
-#include <Component.h>
 // =======================================================================================
-//	MainCamera
+//                                      ShadowCBuffer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief The main camera used for screen rendering. There can only be one main camera!
+/// \brief	Brief
 ///        
-/// # MainCamera
-/// Detailed description...
-/// Created on: 4-1-2013 
+/// # ShadowCBuffer
+/// Detailed description.....
+/// Created on: 31-1-2013 
 ///---------------------------------------------------------------------------------------
 
-
-class MainCamera: public Component
+struct ShadowCBuffer
 {
-public:
+	float viewProj[16];
+
+	void setViewProjection(const AglMatrix& p_viewProj){
+		for (unsigned int i = 0; i < 16; i++){
+			viewProj[i] = p_viewProj[i];
+		}
+	}
 };

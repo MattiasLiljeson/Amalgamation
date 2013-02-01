@@ -49,6 +49,7 @@ struct BufferConfig
 	{
 		PERFRAME,
 		PEROBJECT,
+		SHADOWBUFFER,
 		SLOT0,
 		SLOT1,
 	};

@@ -1,26 +1,32 @@
 #pragma once
-#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
+#include "ShadowCBuffer.h"
 #include "Buffer.h"
-#include "CBuffers.h"
 
+struct AglMatrix;
 // =======================================================================================
-//                                      Shader
+//                                      ShadowShader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	
 ///        
-/// # Shader
+/// # ShadowShader
 /// Detailed description.....
-/// Created on: 27-11-2012 
+/// Created on: 31-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class DeferredBaseShader : public ShaderBase
+class ShadowShader : public ShaderBase
 {
 public:
-	DeferredBaseShader( ShaderVariableContainer p_initData);
-	virtual ~DeferredBaseShader();
+	ShadowShader(ShaderVariableContainer p_initData,
+		Buffer<ShadowCBuffer>* p_bufferPointer);
+	~ShadowShader();
 
 	void apply();
+
+	Buffer<ShadowCBuffer>* getBufferPointer();
+	void sendViewProjection(const AglMatrix& p_matrix);
+private:
+	Buffer<ShadowCBuffer>* m_bufferPointer;
 };

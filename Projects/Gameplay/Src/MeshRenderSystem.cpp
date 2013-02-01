@@ -28,6 +28,10 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	// Cleanup
+	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
+		m_instanceLists[i].clear();
+	}
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -70,10 +74,5 @@ void MeshRenderSystem::render()
 			m_gfxBackend->getGfxWrapper()->renderMesh( meshIdx, 
 				&m_instanceLists[meshIdx] ); // process a mesh
 		}
-	}
-
-	// Cleanup
-	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
-		m_instanceLists[i].clear();
 	}
 }

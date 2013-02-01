@@ -20,7 +20,6 @@
 #include "RenderInfo.h"
 #include "ShipFlyController.h"
 #include "CameraInfo.h"
-#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 #include "PlayerScore.h"
@@ -28,7 +27,6 @@
 #include "PlayerCameraController.h"
 #include "HudElement.h"
 
-#include "GraphicsBackendSystem.h"
 #include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
@@ -114,8 +112,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
-			if (data.entityType == (char)EntityType::EndBatch)
-			{
+			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch();
 			}
 			else

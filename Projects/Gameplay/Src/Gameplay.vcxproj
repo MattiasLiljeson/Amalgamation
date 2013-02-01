@@ -55,7 +55,6 @@
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LookAtSystem.h" />
-    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="BoundingVolumeInitData.h" />
@@ -97,6 +96,7 @@
     <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
     <ClInclude Include="ServerWelcomeSystem.h" />
+    <ClInclude Include="ShadowSystem.h" />
     <ClInclude Include="ShipEditController.h" />
     <ClInclude Include="ShipEditControllerSystem.h" />
     <ClInclude Include="ShipFlyController.h" />
@@ -211,6 +211,7 @@
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
+    <ClCompile Include="ShadowSystem.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="ShipInputProcessingSystem.cpp" />

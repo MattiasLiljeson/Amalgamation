@@ -72,6 +72,7 @@ public:	//Enums
 		LightBlinkerSystem,
 		WinningConditionSystem,
 		ShipModulesTrackerSystem,
+		ShadowSystem,
 		NUM_SYSTEM_TYPES
 	};
 

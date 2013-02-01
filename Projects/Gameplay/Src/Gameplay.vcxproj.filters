@@ -177,9 +177,6 @@
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="MainCamera.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelPiece.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
@@ -466,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="ShipModulesTrackerSystem.h">
       <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowSystem.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -773,6 +773,9 @@
     </ClCompile>
     <ClCompile Include="ShipModulesTrackerSystem.cpp">
       <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

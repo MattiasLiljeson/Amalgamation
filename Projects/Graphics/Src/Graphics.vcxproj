@@ -29,6 +29,8 @@
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
+    <ClCompile Include="ShadowMapRenderer.cpp" />
+    <ClCompile Include="ShadowShader.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -71,6 +73,9 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderVariableContainer.h" />
     <ClInclude Include="ShaderStageData.h" />
+    <ClInclude Include="ShadowCBuffer.h" />
+    <ClInclude Include="ShadowMapRenderer.h" />
+    <ClInclude Include="ShadowShader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />

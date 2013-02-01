@@ -50,7 +50,6 @@
 #include <LibRocketBackendSystem.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
-#include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -84,6 +83,7 @@
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
 #include <MoveShipLightsSystem.h>
+#include <ShadowSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -279,6 +279,9 @@ void ClientApplication::initSystems()
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 
+	ShadowSystem* shadowSystem = new ShadowSystem ();
+	m_world->setSystem( shadowSystem, true );
+
 	/************************************************************************/
 	/* Hierarchy															*/
 	/************************************************************************/
@@ -299,7 +302,7 @@ void ClientApplication::initSystems()
 	ClientPacketHandlerSystem* communicatorSystem =
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
-	m_world->setSystem( new ExtrapolationSystem(m_client), true );
+	//m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
 	/* Audio																*/
@@ -331,7 +334,7 @@ void ClientApplication::initSystems()
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
-		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
+		shadowSystem, renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
 
 	/************************************************************************/
@@ -487,6 +490,12 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
+
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
+	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10) );
+	entity->addComponent(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+	m_world->addEntity(entity);
 	//InitModulesTestByAnton();
 
 	/*

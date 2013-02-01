@@ -33,10 +33,14 @@ class ShaderFactory;
 class TextureParser;
 class TextureFactory;
 class GUIShader;
+class ShaderBase;
+class ShadowMapRenderer;
+class ShadowShader;
 
 struct LightInstanceData;
 struct Model;
 struct Texture;
+struct AglMatrix;
 
 class GraphicsWrapper
 {
@@ -86,6 +90,18 @@ public:
 
 	void setParticleRenderState();
 
+	void setViewportToShadowMapSize();
+
+	void resetViewportToOriginalSize();
+
+	void setShadowMapAsRenderTarget();
+
+	void setShadowViewProjection(const AglMatrix& p_viewProj);
+
+	void setRenderingShadows();
+	
+	void stopedRenderingShadows();
+
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
@@ -95,8 +111,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
-
-	
 	void mapDeferredBaseToShader();
 
 	void unmapDepthFromShader();
@@ -188,11 +202,12 @@ private:
 	///-----------------------------------------------------------------------------------
 	void initBackBuffer();
 
-	///-----------------------------------------------------------------------------------
-	/// Desc
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void initViewport();
+	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
+		void* p_indexBufferRef, UINT32 p_elmentCount,
+		Texture** p_textureArray,
+		unsigned int p_textureArraySize,
+		UINT32 p_instanceDataSize, void* p_instanceRef,
+		ShaderBase* p_shader);
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -201,10 +216,13 @@ private:
 	D3D_FEATURE_LEVEL		m_featureLevel;
 
 	DeferredRenderer*		m_deferredRenderer;
+	ParticleRenderer*		m_particleRenderer;
+	ShadowMapRenderer*		m_shadowMapRenderer;
 
 	ID3D11RenderTargetView* m_backBuffer;
 
 	DeferredBaseShader*		m_deferredBaseShader;
+	ShadowShader*			m_shadowShader;
 
 	// Creation & storage
 	ShaderFactory*			m_shaderFactory;
@@ -215,7 +233,6 @@ private:
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;
 
-	ParticleRenderer*		m_particleRenderer;
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
@@ -227,4 +244,5 @@ private:
 	int m_width;
 	bool m_windowed;
 	bool m_wireframeMode;
+	bool m_renderingShadows;
 };

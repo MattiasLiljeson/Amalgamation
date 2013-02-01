@@ -92,7 +92,8 @@ Buffer<InstanceData>* BufferFactory::createInstanceBuffer( InstanceData* p_insta
 	return instanceBuffer;
 }
 
-Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
+Buffer<LightInstanceData>* BufferFactory::createLightInstanceBuffer( 
+	LightInstanceData* p_instanceList, unsigned int p_numberOfElements )
 {
 	Buffer<LightInstanceData>* instanceBuffer;
 
@@ -160,6 +161,22 @@ Buffer<RenderSceneInfoCBuffer>* BufferFactory::createRenderSceneInfoCBuffer(){
 
 	return new Buffer<RenderSceneInfoCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
 }
+
+Buffer<ShadowCBuffer>* BufferFactory::createShadowBuffer(){
+
+	ShadowCBuffer data;
+	UINT32 elementSize = sizeof(float)*4; // 16 byte alignment
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_ALL;
+	bufferDesc.Slot = BufferConfig::SHADOWBUFFER;
+
+	return new Buffer<ShadowCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
+}
+
 
 Mesh* BufferFactory::createBoxMesh()
 {

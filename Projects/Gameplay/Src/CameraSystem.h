@@ -25,8 +25,12 @@ public:
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
-
+	void updateRenderSceneInfo(Entity* p_entity);
+	void setRenderSceneInfoUsingPlayerCamera();
+	bool selectPlayerCamera( Entity* p_camera );
 private:
 	GraphicsBackendSystem* m_gfxBackend;
+	bool	m_renderFromShadowCamera;
+	Entity* m_playerCamera;
 };
 

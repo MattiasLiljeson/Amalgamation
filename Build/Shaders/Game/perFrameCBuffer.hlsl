@@ -10,3 +10,8 @@ cbuffer perFrame: register(b0)
 	float		gFarPlane;			//4 bytes	c11.z
 	float		gNearPlane;			//4 bytes	c11.w
 };
+
+cbuffer shadowBuffer: register(b2)
+{
+	float4x4 shadowViewProj;
+}

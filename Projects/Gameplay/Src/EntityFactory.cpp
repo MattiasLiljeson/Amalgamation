@@ -10,7 +10,6 @@
 #include "GraphicsBackendSystem.h"
 #include "LightsComponent.h"
 #include "LookAtEntity.h"
-#include "MainCamera.h"
 #include "NetworkSynced.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
@@ -353,8 +352,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity = m_world->createEntity();
 		component = new CameraInfo( aspectRatio );
 		entity->addComponent( ComponentType::CameraInfo, component );
-		component = new MainCamera();
-		entity->addComponent( ComponentType::MainCamera, component );
+		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
 		component = new LookAtEntity(shipId,
