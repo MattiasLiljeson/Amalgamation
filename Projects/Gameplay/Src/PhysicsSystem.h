@@ -38,7 +38,7 @@ public:
 
 	Entity* getEntity(int p_bodyID)
 	{
-		if (m_entityMap[p_bodyID] < 0)
+		if (m_entityMap.size() <= p_bodyID || m_entityMap[p_bodyID] < 0)
 			return NULL;
 		return m_world->getEntity(m_entityMap[p_bodyID]);
 	}

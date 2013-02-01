@@ -160,7 +160,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 			for (unsigned int i = 0; i < cols.size(); i++)
 			{
 				Entity* e = physX->getEntity(cols[i].bodyID);
-				if (e->getComponent(ComponentType::ShipModule))
+				if (e && e->getComponent(ComponentType::ShipModule))
 				{
 					col = cols[i].bodyID;
 					break;

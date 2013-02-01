@@ -353,8 +353,8 @@ namespace Srv
 
 			//Fungerar om detta är rätt. Men just nu vill jag inte ha det såhär
 			ConnectionPointSet* cps = new ConnectionPointSet();
-			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.5f, 0, 1)));
-			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, -2.5f, 0, 1)));
+			cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.3f, 0, 1)));
+			//cps->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, -2.5f, 0, 1)));
 
 			entity->addComponent(ComponentType::ConnectionPointSet, cps);
 
