@@ -14,6 +14,8 @@
 #include "ParticleUpdatePacket.h"
 #include "ParticleUpdateData.h"
 #include "SpawnSoundEffectPacket.h"
+#include "ParticleSystemCreationInfo.h"
+#include "ParticleEmitters.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -58,25 +60,29 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 					gun->rays[j].p1 += dir * gun->range * dt;
 					gun->rays[j].p2 += dir * gun->range * dt;
 
-					PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+					PhysicsSystem* physics = static_cast<PhysicsSystem*>
+						(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
 
 					PhysicsBody* body = static_cast<PhysicsBody*>(
 						m_world->getComponentManager()->getComponent(p_entities[i],
 						ComponentType::getTypeFor(ComponentType::PhysicsBody)));
 
-					int col = physics->getController()->FindClosestCollision(gun->rays[j].p1, gun->rays[j].p2, body->m_id);
+					int col = physics->getController()->FindClosestCollision(
+						gun->rays[j].p1, gun->rays[j].p2, body->m_id);
 					if (col >= 0)
 					{
 						gun->rays[j].energy -= 0.25f * dt;
 						Entity* hitE = physics->getEntity(col);
 
-						ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
+						ShipModule* hitModule = static_cast<ShipModule*>
+							(hitE->getComponent(ComponentType::ShipModule));
 						if (hitModule && hitModule != module)
 						{
 							hitModule->m_health -= 100 * dt;
 						}
 
-						//physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
+						//physics->getController()->ApplyExternalImpulse(
+						//	col, dir, AglVector3::zero());
 					}
 				}
 			}
@@ -108,7 +114,11 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		//Create Ray entity
 		Entity* entity = m_world->createEntity();
 
-		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
+		Transform* t = new Transform(
+			AglVector3(0, 0, 0),
+			AglQuaternion::rotateToFrom(AglVector3(0, 0, 1),
+			gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
+
 		entity->addComponent( ComponentType::Transform, t);
 		m_world->addEntity(entity);
 		gun->laserSightEntity = entity->getIndex();
@@ -140,7 +150,8 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 		if (module->m_parentEntity >= 0)
 		{
-			AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection);
+			AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(
+				AglVector3(0, 0, 1), gun->fireDirection);
 
 			AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
 			rot.transformVector(offset);
@@ -165,7 +176,8 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 				}
 			}
 
-			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(parent->getComponent(ComponentType::ConnectionPointSet));
+			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>
+				(parent->getComponent(ComponentType::ConnectionPointSet));
 			if (cps->m_connectionPoints[cps->m_highlighted].cpConnectedEntity == p_entity->getIndex())
 				laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
 			else
@@ -195,7 +207,8 @@ void MinigunModuleControllerSystem::spawnRay(Entity* p_entity)
 
 	gun->coolDown = 1.0f / MinigunModule::rayCount;
 	gun->rays[gun->currentRay].p1 = gunTransform->getTranslation();
-	gun->rays[gun->currentRay].p2 = gunTransform->getTranslation() + dir * gun->range / MinigunModule::rayCount;
+	gun->rays[gun->currentRay].p2 = gunTransform->getTranslation()
+		+ dir * gun->range / MinigunModule::rayCount;
 	gun->rays[gun->currentRay].energy = 1.0f;
 	gun->currentRay = (gun->currentRay+1) % MinigunModule::rayCount;
 
@@ -265,67 +278,98 @@ void MinigunModuleControllerSystem::updateRays(Entity* p_entity)
 }
 void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 {
-	MinigunModule* gun = static_cast<MinigunModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::MinigunModule)));
+	MinigunModule* gun = static_cast<MinigunModule*>
+		( p_entity->getComponent( ComponentType::MinigunModule) );
+	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
+		( p_entity->getComponent( ComponentType::ParticleEmitters) );
 
-	ShipModule* module = static_cast<ShipModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ShipModule)));
-
+	if( particleComp == NULL )
+	{
+		particleComp = new ParticleEmitters();
+		p_entity->addComponent( particleComp );
+	}
 
 	if (gun && gun->particleSystemEntity < 0)
 	{
-		Entity* entity = m_world->createEntity();
+		//Entity* entity = m_world->createEntity();
+		//
+		//entity->addComponent( ComponentType::ParticleUpdateData, new ParticleUpdateData());
+		//
+		//EntityCreationPacket data;
+		//data.entityType			= static_cast<char>(EntityType::ParticleSystem);
+		//data.owner				= -1;
+		//data.networkIdentity		= entity->getIndex();
+		//data.translation			= AglVector3(0, 0, 0);
+		//data.rotation				= AglQuaternion::identity();
+		//data.scale				= AglVector3(0, 0, 0);
+		//data.meshInfo				= 0;
+		//
+		//entity->addComponent( new NetworkSynced( entity->getIndex(), -1,
+		//	EntityType::ParticleSystem ) );
+		//
+		//m_server->broadcastPacket(data.pack());
+		//m_world->addEntity(entity);
 
-		entity->addComponent( ComponentType::ParticleUpdateData, new ParticleUpdateData());
+		AglParticleSystemHeader header;
+		header.particleSize = AglVector2(2, 2);
+		header.spawnFrequency = 10;
+		header.spawnSpeed = 5.0f;
+		header.spread = 0.0f;
+		header.fadeOutStart = 2.0f;
+		header.fadeInStop = 0.0f;
+		header.particleAge = 2;
+		header.maxOpacity = 1.0f;
+		header.color = AglVector4(0, 1, 0, 1.0f);
+		header.alignmentType = AglParticleSystemHeader::OBSERVER;
+		int particleSysIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
 
-		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::ParticleSystem);
-		data.owner			= -1;
-		data.networkIdentity = entity->getIndex();
-		data.translation	= AglVector3(0, 0, 0);
-		data.rotation		= AglQuaternion::identity();
-		data.scale			= AglVector3(0, 0, 0);
-		data.meshInfo		= 0;
+		ParticleSystemCreationInfo psInfo;
+		psInfo.entityNetId = p_entity->getIndex();
+		psInfo.particleSysIdx = particleSysIdx;
+		psInfo.particleSysHeader = header;
 
-		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::ParticleSystem));
+		Packet packet( PacketType::ParticleSystemCreationInfo );
+		packet.WriteData( (char*)&psInfo, sizeof(ParticleSystemCreationInfo) );
+		m_server->broadcastPacket( packet );
 
-		m_server->broadcastPacket(data.pack());
-		m_world->addEntity(entity);
-		gun->particleSystemEntity = entity->getIndex();
+		p_entity->addComponent( new ParticleUpdateData() );
+
+		gun->particleSystemEntity = p_entity->getIndex(); // Itself
+
+		p_entity->addComponent( new NetworkSynced( p_entity->getIndex(), -1,
+			EntityType::ParticleSystem ) );
 	}
 	else if (gun)
 	{
-		Entity* entity = m_world->getEntity(gun->particleSystemEntity);
+		//Entity* entity = m_world->getEntity(gun->particleSystemEntity);
+		
+		PhysicsSystem* physics = static_cast<PhysicsSystem*>
+			( m_world->getSystem( SystemType::SystemTypeIdx::PhysicsSystem ) );
 
-		Transform* parentTrans = static_cast<Transform*>(
-			m_world->getComponentManager()->getComponent(p_entity,
-			ComponentType::getTypeFor(ComponentType::Transform)));
+		PhysicsBody* body = static_cast<PhysicsBody*>
+			( p_entity->getComponent( ComponentType::PhysicsBody) );
 
-		ParticleUpdateData* data = static_cast<ParticleUpdateData*>(
-			m_world->getComponentManager()->getComponent(entity,
-			ComponentType::getTypeFor(ComponentType::ParticleUpdateData)));
+		Transform* parentTrans = static_cast<Transform*>
+			( p_entity->getComponent( ComponentType::Transform) );
 
 		AglVector3 dir = gun->fireDirection;
 		parentTrans->getRotation().transformVector(dir);
 
+		AglVector3 vel = physics->getController()->getBody( body->m_id )->GetVelocity();
+		vel += dir * 50; // Why 50? /ML
 
-		PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+		ParticleUpdateData* particleData = static_cast<ParticleUpdateData*>
+			( p_entity->getComponent( ComponentType::ParticleUpdateData) );
 
-		PhysicsBody* body = static_cast<PhysicsBody*>(
-			m_world->getComponentManager()->getComponent(p_entity,
-			ComponentType::getTypeFor(ComponentType::PhysicsBody)));
+		particleData->speed = vel.length();
 
-		AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
-		vel += dir * 50; 
-		data->speed = vel.length();
 		vel.normalize();
-
-		data->spawnPoint = parentTrans->getTranslation();
-		data->direction = vel;
-		data->spawnFrequency = module->m_active * 10;//200;
+		particleData->spawnPoint = parentTrans->getTranslation();
+		particleData->direction = vel;
+	
+		ShipModule* module = static_cast<ShipModule*>
+			( p_entity->getComponent( ComponentType::ShipModule) );
+		particleData->spawnFrequency = module->m_active * 10;//200; // Why 10? /ML
 	}
 
 }

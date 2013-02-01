@@ -8,6 +8,7 @@
       <Filter>Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="ValueClamp.h" />
+    <ClInclude Include="..\..\Gameplay\Src\ComponentAssemblageAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />

@@ -58,6 +58,7 @@ public:
 	 *
 	 * @param The new component you wish to add.
 	 */
+	void addComponent( Component* p_component );
 	void addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component );
 	void addComponent( ComponentType p_type, Component* p_component );
 

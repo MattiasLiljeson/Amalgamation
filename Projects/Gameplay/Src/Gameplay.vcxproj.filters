@@ -381,7 +381,6 @@
     <ClInclude Include="GraphicsRendererSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -460,6 +459,9 @@
     </ClInclude>
     <ClInclude Include="WinningConditionSystem.h">
       <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemCreationInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

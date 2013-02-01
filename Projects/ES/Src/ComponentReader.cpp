@@ -41,7 +41,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 		else
 		{
 			Component* comp = ComponentFactory::createInstance( componentName );
-			if( comp->getComponentType() == ComponentType::NON_EXISTING)
+			if( comp->getComponentTypeId() == ComponentType::NON_EXISTING)
 			{
 				status = AssemblageHelper::FileStatus_COMPONENT_TYPE_IDX_NOT_SET;
 			}

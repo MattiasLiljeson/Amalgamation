@@ -2,6 +2,7 @@
 #include <EntitySystem.h>
 #include <RenderInterface.h>
 #include <vector>
+#include <ParticleSystemCollection.h>
 
 using namespace std;
 
@@ -26,18 +27,21 @@ public:
 	ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend );
 	~ParticleRenderSystem();
 	
-	void process();
-	//void processEntities( const vector<Entity*>& p_entities );
-	unsigned int addParticleSystem(const AglParticleSystemHeader& p_header, int p_index);
-	AglParticleSystem* getParticleSystem(int p_index);
+	void processEntities( const vector<Entity*>& p_entities );
+
+	//unsigned int addParticleSystem(const AglParticleSystemHeader& p_header, int p_index);
+	//AglParticleSystem* getParticleSystem(int p_index);
 private:
-	void renderParticles(AglParticleSystem* particleSystem);
-	void rebuildVertexBuffer(AglParticleSystem* particleSystem);
+	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
+	void rebuildVertexBuffer(AglParticleSystem* p_particleSystem);
 
 	virtual void render();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	vector<pair<AglParticleSystem*, int>> m_particleSystems;
+	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
+
+	// pointer to save performance. No ownership
+	vector< ParticleSystemCollection* > m_particleSystems;
 };
 

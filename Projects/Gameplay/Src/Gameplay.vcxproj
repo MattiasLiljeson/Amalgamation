@@ -25,7 +25,6 @@
     <ClInclude Include="ClientConnectToServerSystem.h" />
     <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="ClientPacketHandlerSystem.h" />
-    <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="ConnectionPointSet.h" />
     <ClInclude Include="Connector1to2Module.h" />
     <ClInclude Include="DisplayGameStats.h" />
@@ -67,6 +66,7 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="ParticleUpdateData.h" />

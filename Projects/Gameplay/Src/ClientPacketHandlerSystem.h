@@ -7,6 +7,8 @@
 #include "LevelPieceFileMapping.h"
 #include <queue>
 #include "EntityUpdatePacket.h"
+#include "ParticleSystemCreationInfo.h"
+#include "ParticleUpdatePacket.h"
 
 using namespace std;
 
@@ -58,6 +60,9 @@ private:
 
 	//Added by Anton
 	void handleBatch();
+
+	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
+	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
 
 private:
 	TcpClient* m_tcpClient;

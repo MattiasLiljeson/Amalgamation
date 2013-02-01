@@ -528,7 +528,6 @@ Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 	if (p_packet.meshInfo == 0)
 	{
 		h.particleSize = AglVector2(2, 2);
-		h.alignmentType = AglParticleSystemHeader::OBSERVER;
 		h.spawnFrequency = 10;
 		h.spawnSpeed = 5.0f;
 		h.spread = 0.0f;
@@ -537,26 +536,27 @@ Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 		h.particleAge = 2;
 		h.maxOpacity = 1.0f;
 		h.color = AglVector4(0, 1, 0, 1.0f);
+		h.alignmentType = AglParticleSystemHeader::OBSERVER;
 	}
 	else
 	{
-		h.particleAge = 1;
+		h.particleSize = AglVector2(1.0f, 1.0f);
+		h.spawnFrequency = 10;
 		h.spawnSpeed = 0.02;
 		h.spread = 1.0f;
-		h.spawnFrequency = 10;
-		h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
-		h.fadeInStop = 0.5f;
 		h.fadeOutStart = 0.5f;
-		h.spawnOffset = 4.0f;
+		h.fadeInStop = 0.5f;
+		h.particleAge = 1;
 		h.maxOpacity = 0.5f;
+		h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
+		h.spawnOffset = 4.0f;
 		h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
-		h.particleSize = AglVector2(1.0f, 1.0f);
 	}
 
 	ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
 		SystemType::ParticleRenderSystem ));
 	//gfx->addParticleSystem();
-	gfx->addParticleSystem(h, p_packet.networkIdentity);
+	//gfx->addParticleSystem(h, p_packet.networkIdentity);
 	return NULL;
 }
 Entity* EntityFactory::createParticleSystemServer(EntityCreationPacket p_packet)

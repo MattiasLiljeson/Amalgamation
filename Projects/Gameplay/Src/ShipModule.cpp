@@ -8,7 +8,7 @@ ShipModule::ShipModule()
 	m_active = false;
 	m_value = 100;
 	m_health = 100.0f;
-	m_componentType = ComponentType::ShipModule;
+	m_componentTypeId = ComponentType::ShipModule;
 }
 
 ShipModule::~ShipModule()

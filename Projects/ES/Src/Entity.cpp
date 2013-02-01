@@ -54,6 +54,18 @@ void Entity::addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_compo
 	m_componentBits |= p_componentBits;
 }
 
+void Entity::addComponent( Component* p_component )
+{
+	if( p_component->getComponentTypeId() != ComponentType::NON_EXISTING )
+	{
+		addComponent( p_component->getComponentTypeId(), p_component );
+	}
+	else
+	{
+		throw "addComponent(): ComponentType not set for this component";
+	}
+}
+
 void Entity::addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component )
 {
 	addComponent( ComponentType::getTypeFor(p_typeIdx), p_component );

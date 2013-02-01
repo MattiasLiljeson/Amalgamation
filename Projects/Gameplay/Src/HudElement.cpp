@@ -7,7 +7,7 @@ HudElement::HudElement()
 	m_element = "";
 	m_changed = true;
 	m_value = "0";
-	m_componentType = ComponentType::ComponentTypeIdx::HudElement;
+	m_componentTypeId = ComponentType::ComponentTypeIdx::HudElement;
 }
 
 HudElement::HudElement( string p_element )
@@ -15,7 +15,7 @@ HudElement::HudElement( string p_element )
 	m_element = p_element;
 	m_changed = true;
 	m_value = "0";
-	m_componentType = ComponentType::ComponentTypeIdx::HudElement;
+	m_componentTypeId = ComponentType::ComponentTypeIdx::HudElement;
 }
 
 

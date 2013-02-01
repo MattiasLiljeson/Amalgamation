@@ -45,7 +45,7 @@ public:
 	float getAspectRatio();
 	AglVector2 getWindowSize();
 
-	void renderAParticleSystem(AglParticleSystem* p_system);
+	void renderParticleSystem(AglParticleSystem* p_system);
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 

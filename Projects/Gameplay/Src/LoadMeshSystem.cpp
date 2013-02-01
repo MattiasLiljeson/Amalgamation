@@ -10,6 +10,7 @@
 #include "ConnectionPointSet.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include "ParticleEmitters.h"
 
 LoadMeshSystem::LoadMeshSystem( GraphicsBackendSystem* p_gfxBackend ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -76,9 +77,11 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	}
 	
 	// Handle particles here
-	if (!p_modelResource->particleSystems.m_collection.empty())
+	if (!p_modelResource->particleSystems.m_particleSystems.empty())
 	{
-
+		ParticleEmitters* particleComp = new ParticleEmitters();
+		particleComp->addParticleSystems( p_modelResource->particleSystems );
+		p_entity->addComponent( particleComp );
 	}
 
 	// Transform

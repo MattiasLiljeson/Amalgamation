@@ -3,7 +3,7 @@
 
 LightSources::LightSources()
 {
-	m_componentType = ComponentType::LightSources;
+	m_componentTypeId = ComponentType::LightSources;
 }
 
 

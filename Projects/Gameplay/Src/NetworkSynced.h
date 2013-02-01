@@ -30,7 +30,7 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the private networkIdentity to argument's value.
-	/// Sets the private owner to argument's value.
+	/// Sets the private owner to argument's value. //Whats an "owner"? //ML
 	/// \param p_networkIdentity
 	/// \return 
 	///-----------------------------------------------------------------------------------

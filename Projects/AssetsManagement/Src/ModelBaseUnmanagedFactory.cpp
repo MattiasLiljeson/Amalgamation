@@ -124,7 +124,7 @@ void ModelBaseUnmanagedFactory::readAndStoreParticleSystems( unsigned int p_mode
 		AglParticleSystem* ps = p_scene->getParticleSystem(n);
 		if (p_modelNumber==0) // add support for particle parent?
 		{
-			p_model->particleSystems.m_collection.push_back(*ps);
+			p_model->particleSystems.m_particleSystems.push_back(*ps);
 		}
 	}
 }

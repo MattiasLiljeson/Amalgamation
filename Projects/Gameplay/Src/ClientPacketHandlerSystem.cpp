@@ -63,6 +63,8 @@
 #include "LightsComponent.h"
 #include "EntityFactory.h"
 #include "PlayersWinLosePacket.h"
+#include "ParticleEmitters.h"
+#include "ParticleSystemCreationInfo.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -123,20 +125,24 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				m_batch.push_back(data);
 			}
 		}
-		else if (packetType == (char)PacketType::ParticleUpdate)
-		{			
-			ParticleUpdatePacket data;
-			data.unpack(packet);
-			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
-				SystemType::ParticleRenderSystem ));
-			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+#pragma endregion
 
-			ps->setSpawnPoint(data.position);
-			ps->setSpawnDirection(data.direction);
-			ps->setSpawnSpeed(data.speed);
-			ps->setSpawnFrequency(data.spawnFrequency);
+		else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
+		{
+			ParticleSystemCreationInfo info;
+			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
+			handleParticleSystemCreation( info );
 		}
-#pragma endregion 
+
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{
+			ParticleUpdatePacket particleData;
+			particleData.unpack( packet );
+			handleParticleSystemUpdate( particleData );
+			
+		}
+
+#pragma region Shitsk
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
 			SpawnSoundEffectPacket spawnSoundPacket;
@@ -273,6 +279,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			handleWelcomePacket(packet);
 		}
 	}
+#pragma endregion
 }
 
 void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
@@ -292,7 +299,8 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+	EntityFactory* factory = static_cast<EntityFactory*>
+		( m_world->getSystem(SystemType::EntityFactory) );
 	factory->entityFromPacket(p_packet);
 }
 
@@ -544,8 +552,7 @@ void ClientPacketHandlerSystem::handleBatch()
 		{
 			Transform* transform = NULL;
 			transform = static_cast<Transform*>(
-				m_world->getComponentManager()->getComponent(
-				entity->getIndex(), ComponentType::Transform ) );
+				entity->getComponent( ComponentType::Transform ) );
 			// HACK! below check should not have to be done. Is the packet of the 
 			// wrong type? Throw exception? /ML
 			if( transform != NULL ) // Throw exception? /ML
@@ -569,4 +576,52 @@ void ClientPacketHandlerSystem::handleBatch()
 		}
 	}
 	m_batch.clear();
+}
+
+void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdatePacket& p_data )
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.networkIdentity );
+	if( entity != NULL )
+	{
+		//Transform* transform = NULL;
+
+		ParticleEmitters* particleComp = static_cast<ParticleEmitters*>(
+			entity->getComponent( ComponentType::ParticleEmitters ) );
+
+		ParticleSystemCollection* collection = particleComp->getCollectionPtr();
+		int idx = p_data.particleSystemIdx;
+
+		collection->m_particleSystems[idx].setSpawnPoint(		p_data.position);
+		collection->m_particleSystems[idx].setSpawnDirection(	p_data.direction);
+		collection->m_particleSystems[idx].setSpawnSpeed(		p_data.speed);
+		collection->m_particleSystems[idx].setSpawnFrequency(	p_data.spawnFrequency);
+	}
+}
+
+void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	int NetId = p_creationInfo.entityNetId;
+	Entity* entity = directMapper->getEntity(NetId);
+
+	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
+		( entity->getComponent( ComponentType::ParticleEmitters) );
+
+	if( particleComp == NULL )
+	{
+		particleComp = new ParticleEmitters();
+		entity->addComponent( particleComp );
+	}
+
+	AglParticleSystemHeader header = p_creationInfo.particleSysHeader;
+	int psIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
+	if( psIdx != p_creationInfo.particleSysIdx )
+	{
+		// PARTICLE SYSTEMS NOT IN SYNC!
+	}
 }

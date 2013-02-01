@@ -5,13 +5,13 @@ ComponentRegister<LoadMesh> LoadMesh::s_reg("LoadMesh");
 LoadMesh::LoadMesh()
 {
 	m_filename="";
-	m_componentType = ComponentType::ComponentTypeIdx::LoadMesh;
+	m_componentTypeId = ComponentType::ComponentTypeIdx::LoadMesh;
 }
 
 LoadMesh::LoadMesh( const string& p_filename )
 {
 	m_filename=p_filename;
-	m_componentType = ComponentType::ComponentTypeIdx::LoadMesh;
+	m_componentTypeId = ComponentType::ComponentTypeIdx::LoadMesh;
 }
 
 

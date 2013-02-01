@@ -21,5 +21,5 @@ using namespace std;
 
 struct ParticleSystemCollection
 {
-	vector<AglParticleSystem> m_collection;
+	vector<AglParticleSystem> m_particleSystems;
 };

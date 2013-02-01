@@ -6,7 +6,7 @@ Component::Component()
 {
 	m_counter++;
 	m_id = m_counter;
-	m_componentType = ComponentType::NON_EXISTING; 
+	m_componentTypeId = ComponentType::NON_EXISTING; 
 }
 
 
@@ -20,10 +20,10 @@ void Component::init( vector<ComponentData> p_initData )
 
 void Component::setComponentType( ComponentType::ComponentTypeIdx p_type )
 { 
-	m_componentType = p_type;
+	m_componentTypeId = p_type;
 }
 
-ComponentType::ComponentTypeIdx Component::getComponentType()
+ComponentType::ComponentTypeIdx Component::getComponentTypeId()
 { 
-	return m_componentType;
+	return m_componentTypeId;
 }

@@ -42,6 +42,7 @@ public:
 		ModuleHighlightPacket,
 		SimpleEvent,
 		ParticleUpdate,
+		ParticleSystemCreationInfo
 	};
 
 };
