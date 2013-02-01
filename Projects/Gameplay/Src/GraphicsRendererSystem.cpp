@@ -29,6 +29,7 @@ void GraphicsRendererSystem::process(){
 	m_wrapper = m_backend->getGfxWrapper();
 
 	initMeshPass();
+	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_NOCULL);
 	m_meshRenderer->render();
 	endMeshPass();
 

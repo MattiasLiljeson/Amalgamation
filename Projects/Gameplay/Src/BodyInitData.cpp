@@ -17,6 +17,7 @@ BodyInitData::BodyInitData()
 	m_compound=false;
 	m_impulseEnabled=true;
 	m_collisionEnabled=true;
+	m_modelResource = NULL;
 }
 
 BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
@@ -40,6 +41,7 @@ BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
 	m_compound = p_compoundMode==CompoundMode::COMPOUND;
 	m_impulseEnabled = p_impulseEnabled;
 	m_collisionEnabled = p_collisionEnabled;
+	m_modelResource = NULL;
 }
 
 void BodyInitData::init( vector<ComponentData> p_initData )
@@ -96,7 +98,7 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		else if( p_initData[i].dataName == "m_type" )
 		{
 			p_initData[i].getData<int>(&temp);
-			m_type = temp==1?true:false;
+			m_type = temp;
 		}
 		else if( p_initData[i].dataName == "m_static" )
 		{
@@ -120,4 +122,5 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		}
 
 	}
+	m_modelResource = NULL;
 }

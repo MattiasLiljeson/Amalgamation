@@ -28,6 +28,7 @@
 #include "GameplayTags.h"
 #include "StaticProp.h"
 #include "ClientInfo.h"
+#include "LoadMesh.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -222,12 +223,16 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	/************************************************************************/
 	Entity* e = m_world->createEntity();
 
+	p_shipTransform->setTranslation(AglVector3(0, 0, 0));
+
 	e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
 	
 	e->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
+
+	//e->addComponent(ComponentType::LoadMesh, new LoadMesh("Ship.agl"));
 
 	e->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData( p_shipTransform->getTranslation(),

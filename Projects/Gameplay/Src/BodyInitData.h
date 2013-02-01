@@ -3,6 +3,7 @@
 #include <AglVector3.h>
 #include <AglQuaternion.h>
 #include <ComponentFactory.h>
+#include "ModelResource.h"
 
 class BodyInitData : public Component
 {
@@ -43,6 +44,8 @@ public:
 	AglVector3 m_scale;
 	AglVector3 m_velocity;
 	AglVector3 m_angularVelocity;
+
+	ModelResource* m_modelResource;
 
 	int m_type;
 

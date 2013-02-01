@@ -119,6 +119,11 @@ public:
 
 	void RemoveMaterial(AglMaterial* pMaterial);
 	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
+
+	void AddBspTree(AglLooseBspTree* p_tree)
+	{
+		mAglScene->addBspTree(p_tree);
+	}
 };
 
 #endif

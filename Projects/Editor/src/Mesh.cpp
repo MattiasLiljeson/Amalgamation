@@ -361,5 +361,6 @@ void Mesh::createBspTree()
 		}
 		AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
 		bsptree = constructor.createTree();
+		mScene->getAglScene()->addBspTree(bsptree);
 	}
 }

@@ -646,5 +646,6 @@ void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody
 }
 void PhysicsController::InitStaticBodiesOctree(AglVector3 pMin, AglVector3 pMax)
 {
-	mStaticBodies = new Octree(4, pMin, pMax);
+	if (!mStaticBodies)
+		mStaticBodies = new Octree(4, pMin, pMax);
 }

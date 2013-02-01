@@ -4,6 +4,9 @@
 #include "AglVector3.h"
 #include "ConnectionPointSet.h"
 
+extern AglVector3 minPhys;//(FLT_MAX, FLT_MAX, FLT_MAX);
+extern AglVector3 maxPhys;//(FLT_MIN, FLT_MIN, FLT_MIN);
+
 class PhysicsController;
 class PhysicsBody;
 class Body;

@@ -259,7 +259,7 @@ namespace Srv
 		m_world->addEntity( entity );
 
 		//Minigun
-		for (int x=0;x<4;x++)
+		/*for (int x=0;x<4;x++)
 		{
 			status = factory->readAssemblageFile( "Assemblages/minigunModule.asd" );
 			entity = factory->entityFromRecipe( "MinigunModule" );

@@ -78,7 +78,7 @@ public:
 	void				  SetDrawNormals(float p_drawNormals){ m_normalLength = p_drawNormals; }
 	float				  GetDrawNormals(){ return m_normalLength; }
 
-	void				  SetBspTree(AglLooseBspTree* p_tree){ bsptree = p_tree;}
+	void				  SetBspTree(AglLooseBspTree* p_tree){ bsptree = p_tree; m_treeLevel = 0;}
 	void				  SetInteriorSpheres(AglInteriorSphereGrid* p_grid){ m_grid = p_grid;}	
 
 	void update(float p_elapsedTime);
