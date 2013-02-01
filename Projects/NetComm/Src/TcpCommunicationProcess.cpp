@@ -64,12 +64,11 @@ void TcpCommunicationProcess::body()
 
 	while( m_running )
 	{
-		boost::this_thread::sleep( boost::posix_time::millisec(1) );
-
 		m_ioService->poll();
 
 		processMessages();
 		
+		sleep(1);
 	}
 }
 
@@ -80,6 +79,7 @@ void TcpCommunicationProcess::processMessages()
 
 	while( messages.size() > 0 )
 	{
+//		sleep(1);
 		ProcessMessage* message = messages.front();
 		messages.pop();
 

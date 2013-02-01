@@ -10,7 +10,6 @@
 #include "GameplayTags.h"
 #include "LightsComponent.h"
 #include "LookAtEntity.h"
-#include "MainCamera.h"
 #include "NetworkSynced.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
@@ -23,6 +22,8 @@
 #include "LightBlinker.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "PositionalSoundSource.h"
+#include "AudioBackendSystem.h"
 #include "InterpolationComponent.h"
 #include <time.h>
 
@@ -246,6 +247,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// convenient for debugging!
 		component = new AudioListener();
 		entity->addComponent(ComponentType::AudioListener, component);
+
+		/************************************************************************/
+		/* This is where the audio listener is created and therefor the master  */
+		/* volume is added to Ant Tweak Bar here.								*/
+		/************************************************************************/
+		AntTweakBarWrapper::getInstance()->addWriteVariable( 
+			AntTweakBarWrapper::OVERALL,
+			"Master_volume", TwType::TW_TYPE_FLOAT, 
+			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 
 	/************************************************************************/
@@ -269,10 +280,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			SystemType::GraphicsBackendSystem ))->getAspectRatio();*/
 
 		entity = m_world->createEntity();
-		component = new CameraInfo( aspectRatio );
+		component = new CameraInfo( m_world->getAspectRatio() );
 		entity->addComponent( ComponentType::CameraInfo, component );
-		component = new MainCamera();
-		entity->addComponent( ComponentType::MainCamera, component );
+		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
 		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
@@ -283,16 +293,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 		m_world->addEntity(entity);
-
-		/************************************************************************/
-		/* This is where the audio listener is created and therefor the master  */
-		/* volume is added to Ant Tweak Bar here.								*/
-		/************************************************************************/
-// 		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-// 			AntTweakBarWrapper::OVERALL,
-// 			"Master_volume", TwType::TW_TYPE_FLOAT, 
-// 			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-// 			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 	return entity;
 }
@@ -518,8 +518,12 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
 	m_world->addEntity(entity);
+	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
+		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
+		p_packet.translation);
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)
@@ -541,7 +545,8 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 	m_world->addEntity(entity);
 	return entity;
 }

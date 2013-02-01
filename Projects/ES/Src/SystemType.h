@@ -73,6 +73,9 @@ public:	//Enums
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
 		LightBlinkerSystem,
+		WinningConditionSystem,
+		ShipModulesTrackerSystem,
+		ShadowSystem,
 		NUM_SYSTEM_TYPES
 	};
 

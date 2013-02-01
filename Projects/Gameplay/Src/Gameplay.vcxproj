@@ -59,7 +59,6 @@
     <ClInclude Include="LoadMeshSystemClient.h" />
     <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="LookAtSystem.h" />
-    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="BoundingVolumeInitData.h" />
@@ -68,9 +67,12 @@
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="ModuleEvent.h" />
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="OnActivateShieldModule.h" />
+    <ClInclude Include="OnDeActivateShieldModule.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="ParticleUpdateData.h" />
@@ -84,10 +86,12 @@
     <ClInclude Include="PlayerCameraController.h" />
     <ClInclude Include="PlayerCameraControllerSystem.h" />
     <ClInclude Include="PlayerStats.h" />
+    <ClInclude Include="PlayersWinLosePacket.h" />
     <ClInclude Include="PongPacket.h" />
     <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
+    <ClInclude Include="RemoveSoundEffectPacket.h" />
     <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
@@ -100,6 +104,7 @@
     <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
     <ClInclude Include="ServerWelcomeSystem.h" />
+    <ClInclude Include="ShadowSystem.h" />
     <ClInclude Include="ShipEditController.h" />
     <ClInclude Include="ShipEditControllerSystem.h" />
     <ClInclude Include="ShipFlyController.h" />
@@ -125,6 +130,7 @@
     <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
+    <ClInclude Include="ShipModulesTrackerSystem.h" />
     <ClInclude Include="SimpleEventPacket.h" />
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
@@ -137,6 +143,7 @@
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
     <ClInclude Include="WelcomePacket.h" />
+    <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -199,6 +206,7 @@
     <ClCompile Include="ParticleUpdatePacket.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="PositionalSoundSource.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
@@ -215,6 +223,7 @@
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
+    <ClCompile Include="ShadowSystem.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="ShipInputProcessingSystem.cpp" />
@@ -231,8 +240,10 @@
     <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
+    <ClCompile Include="ShipModulesTrackerSystem.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
+    <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
@@ -243,6 +254,7 @@
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
+    <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>
@@ -278,15 +290,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -295,17 +307,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -324,8 +340,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore.lib;RocketDebugger.lib;RocketControls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RocketCore.lib;RocketDebugger.lib;RocketControls.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

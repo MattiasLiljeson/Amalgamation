@@ -26,7 +26,7 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 
 private:
-	void spawnMine(Transform* p_transform);
+	void spawnMine(Transform* p_transform, AglVector3 p_moduleVelocity);
 private:
 	TcpServer* m_server;
 };

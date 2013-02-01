@@ -53,7 +53,7 @@
 #include <LibRocketBackendSystem.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
-#include <MainCamera.h>
+//#include <MainCamera.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -90,6 +90,7 @@
 #include <LightBlinkerSystem.h>
 #include <ParticleRenderSystem.h>
 #include <InterpolationSystem.h>
+#include <ShadowSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -185,13 +186,7 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 	// Systems must be added in the order they are meant to be executed. The order the
 	// systems are added here is the order the systems will be processed
-	//----------------------------------------------------------------------------------	
-	
-	/************************************************************************/
-	/* Entity creation														*/
-	/************************************************************************/
-	EntityFactory* factory = new EntityFactory(m_client, NULL);
-	m_world->setSystem( factory, true);
+	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
 	/* TimerSystem used by other systems should be first.					*/
@@ -205,6 +200,13 @@ void ClientApplication::initSystems()
 		1280,720,true);
 
 	m_world->setSystem( graphicsBackend, true );
+
+	/************************************************************************/
+	/* Entity creation														*/
+	/************************************************************************/
+	EntityFactory* factory = new EntityFactory(m_client, NULL);
+	m_world->setSystem( factory, true);
+
 
 	/************************************************************************/
 	/* Mesh loading															*/
@@ -293,6 +295,9 @@ void ClientApplication::initSystems()
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, true );
 
+	ShadowSystem* shadowSystem = new ShadowSystem ();
+	m_world->setSystem( shadowSystem, true );
+
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
@@ -346,7 +351,7 @@ void ClientApplication::initSystems()
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
-		renderer, rocketBackend, particleRender, antTweakBar, lightRender);
+		shadowSystem, renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
 
 	/************************************************************************/
@@ -449,4 +454,11 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
+
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10));
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
+	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+	m_world->addEntity(entity);
+
 }

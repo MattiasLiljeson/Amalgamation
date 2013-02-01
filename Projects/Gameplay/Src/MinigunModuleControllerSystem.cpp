@@ -73,7 +73,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 						ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
 						if (hitModule && hitModule != module)
 						{
-							hitModule->m_health -= 0.25f * dt;
+							hitModule->m_health -= 100 * dt;
 						}
 
 						//physics->getController()->ApplyExternalImpulse(col, dir, AglVector3::zero());
@@ -84,10 +84,9 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
-			if (gun->coolDown == 0 && module->m_active)
+			if (gun->coolDown == 0 && module->getActive())
 			{
-				if (module->m_active)
-					spawnRay(p_entities[i]);
+				spawnRay(p_entities[i]);
 			}
 			updateRays(p_entities[i]);
 		}
@@ -325,7 +324,7 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 
 		data->spawnPoint = parentTrans->getTranslation();
 		data->direction = vel;
-		data->spawnFrequency = module->m_active * 10;//200;
+		data->spawnFrequency = (module->getActive()? 1.0f: 0.0f) * 10;//200;
 	}
 
 }

@@ -194,7 +194,7 @@ bool TcpClient::hasActiveConnection()
 	return m_communicationProcess != NULL;
 }
 
-void TcpClient::sendPacket( Packet p_packet )
+void TcpClient::sendPacket( Packet& p_packet )
 {
 	if (m_communicationProcess)
 	{

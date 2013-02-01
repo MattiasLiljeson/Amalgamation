@@ -8,6 +8,7 @@
 #include "PNTTBVertex.h"
 #include "DIndex.h"
 #include "RenderSceneInfoCBuffer.h"
+#include "ShadowCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
@@ -81,6 +82,8 @@ public:
 	Buffer<ParticleCBuffer>* createParticleCBuffer();
 
 	Buffer<RenderSceneInfoCBuffer>*  createRenderSceneInfoCBuffer();
+
+	Buffer<ShadowCBuffer>* createShadowBuffer();
 
 
 	///-----------------------------------------------------------------------------------

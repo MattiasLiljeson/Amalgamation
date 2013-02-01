@@ -47,8 +47,8 @@ public:
 	~DirectInputFetcher();
 	
 	void update();
-	InputHelper::KEY_STATE getKeyState( int p_key );
-	InputHelper::KEY_STATE getMouseBtnState( int p_key );
+	InputHelper::KeyStates getKeyState( int p_key );
+	InputHelper::KeyStates getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
 
@@ -76,9 +76,9 @@ private:
 	BYTE m_keystate[NUM_KEYS];    // the storage for the key-information
 	DIMOUSESTATE m_mousestate;    // the storage for the mouse-information
 
-	int m_mousePos[InputHelper::NUM_MOUSE_AXIS];
-	int m_mouseTravel[InputHelper::NUM_MOUSE_AXIS];
-	InputHelper::KEY_STATE m_mouseBtns[InputHelper::NUM_MOUSE_BTNS];
-	InputHelper::KEY_STATE m_kbKeys[InputHelper::NUM_KEYBOARD_KEYS];
-	int m_dikFromKeyMap[InputHelper::NUM_KEYBOARD_KEYS];
+	int m_mousePos[InputHelper::MouseAxes_CNT];
+	int m_mouseTravel[InputHelper::MouseAxes_CNT];
+	InputHelper::KeyStates m_mouseBtns[InputHelper::MouseButtons_CNT];
+	InputHelper::KeyStates m_kbKeys[InputHelper::KeyboardKeys_CNT];
+	int m_dikFromKeyMap[InputHelper::KeyboardKeys_CNT];
 };

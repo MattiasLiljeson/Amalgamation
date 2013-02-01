@@ -23,12 +23,7 @@ using namespace std;
 class Packet
 {
 public:
-	///-----------------------------------------------------------------------------------
-	/// Deprecated! Use one of the other constructors instead!!!!
-	/// \return 
-	///-----------------------------------------------------------------------------------
-	Packet();
-
+	Packet( const Packet& p_other );
 	///-----------------------------------------------------------------------------------
 	/// Creates a new packet from raw data.
 	/// Sets the raw data of the packet. It is possible to stream out so much data
@@ -128,9 +123,10 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setDataTest(char* p_data, unsigned int p_size);
 
-private:
 	void WriteData(void* p_data, unsigned int p_dataSize);
 	void ReadData(void* p_data, unsigned int p_dataSize);
+
+private:
 
 	/// Sets the raw data of the packet. It is possible to stream out so much data
 	/// that equals to the byte size p_size - 1, since one byte is allocated to

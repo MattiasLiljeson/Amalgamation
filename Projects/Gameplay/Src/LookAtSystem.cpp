@@ -95,7 +95,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 				DEBUGPRINT(( ("\nDT: "+toString(dt)+"\n").c_str() ));
 			}
 
-			position = AglVector3::lerp(position,lookTargetPos+offset,13.0f*dt);
+
 // 			if (AglVector3::lengthSquared(dir)>0.3f)
 // 			{
 				// AglVector3::normalize(dir);
@@ -112,11 +112,27 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 // 				position = AglVector3::lerp(lookAt->m_oldPos,position,dt);
 // 			}
 
-			lookAt->m_oldPos = dir;
-			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-			 	lookAt->getRotationSpeed()*saturate(3.0f*dt),true);
-			//rotation = targetTransform->getRotation();
-			rotation.normalize();
+// 			lookAt->m_oldPos = dir;
+			if (lookAt->getMoveSpd()*dt<1.0f)
+			{
+				position = AglVector3::lerp(position,lookTargetPos+offset,lookAt->getMoveSpd()*dt);
+			}
+			else
+			{
+				position = lookTargetPos+offset;
+			}
+
+			if (lookAt->getRotationSpeed()*dt<1.0f)
+			{
+				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+					lookAt->getRotationSpeed()*dt,true);
+				rotation.normalize();
+			}
+			else
+			{
+				rotation = targetTransform->getRotation();
+			}
+			
 
 			// update			
 			transform->setRotation( rotation );

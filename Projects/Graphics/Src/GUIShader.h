@@ -13,7 +13,7 @@
 
 #include <string>
 #include <comdef.h>
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
 #include "D3DException.h"
 #include "ToString.h"
@@ -25,12 +25,8 @@ using namespace std;
 class GUIShader : public ShaderBase
 {
 public:
-	GUIShader( ShaderInitStruct p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
+	GUIShader( ShaderVariableContainer p_initData);
 	virtual ~GUIShader();
 
-	Buffer<SimpleCBuffer>* getPerFrameBufferPtr();
-
 	void apply();
-private:
-	Buffer<SimpleCBuffer>* m_perFrameBuffer;
 };

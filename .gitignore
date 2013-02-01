@@ -120,6 +120,7 @@ External/XAudio2/
 External/*
 
 # Files
+*.bsc
 *.exe
 *.lastcodeanalysissucceeded
 /Build/*.dll.txt
@@ -136,6 +137,8 @@ External/*
 *.lib
 *.vsglog
 *.PIXExp
+*.dgml
+*.bsc
 
 [Ll]oc[Mm]etrics*.*
 

@@ -42,8 +42,10 @@ vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity,
 
 void ComponentManager::deleted( Entity* p_entity )
 {
-	removeComponentsOfEntity(p_entity);
-	//m_deleted.push_back(p_entity);
+	//removeComponentsOfEntity(p_entity);
+	// When an entity is deleted, all components needs to be deleted. The components may
+	// not be removed until after all systems have been notified on the "removed" method.
+	m_deleted.push_back(p_entity);
 }
 
 void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
@@ -76,8 +78,13 @@ void ComponentManager::removeComponent( Entity* p_entity, ComponentType::Compone
 	if ( bits[p_typeIdx] == true)
 	{
 		// delete her OK? Any references left?
-		delete m_componentsByType[p_typeIdx][entityIndex];
-		m_componentsByType[p_typeIdx][entityIndex] = NULL;
+		m_deleteOnPost.push_back(m_componentsByType[p_typeIdx][p_entity->getIndex()]);
+
+		// HACK: (Johan) Omg, don't forget that you made a change in the matrix, fool!
+//		m_componentsByType[p_typeIdx][entityIndex] = NULL;
+		m_deleteComponentsByTypeOnPostPerform.push_back(
+			pair<int, int>( p_typeIdx, p_entity->getIndex() ));
+
 		p_entity->setComponentBit( p_typeIdx, false );
 	}
 }
@@ -131,10 +138,9 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 	{
 		if ((unsigned int)p_entity->getIndex() < m_componentsByType[i].size())
 		{
-			// Should these be deleted? Alex says NOOOOOOOOOO!!!
-			// Add the components to the deleteOnPost vector!
-			//delete m_componentsByType[i][p_entity->getIndex()];
-			m_deleteOnPost.push_back(m_componentsByType[i][p_entity->getIndex()]);
+			// Should these be deleted? Alex now says yes. It all depends on when it is
+			// called. When an entity is removed, this method is called by postPerform.
+			delete m_componentsByType[i][p_entity->getIndex()];
 			m_componentsByType[i][p_entity->getIndex()] = NULL;
 		}
 	}
@@ -144,10 +150,26 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 
 void ComponentManager::postPerform()
 {
+	for(unsigned int i=0; i<m_deleteComponentsByTypeOnPostPerform.size(); i++)
+	{
+		int typeIndex = m_deleteComponentsByTypeOnPostPerform[i].first;
+		int entityIndex = m_deleteComponentsByTypeOnPostPerform[i].second;
+		m_componentsByType[typeIndex][entityIndex] = NULL;
+	}
+	m_deleteComponentsByTypeOnPostPerform.clear();
+
+	// Remove all components here!
+	for (unsigned int i = 0; i < m_deleted.size(); i++)
+	{
+		removeComponentsOfEntity(m_deleted[i]);
+	}
+	m_deleted.clear();
+
 	// Delete components here!
 	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
 	{
 		delete m_deleteOnPost[i];
 	}
 	m_deleteOnPost.clear();
+
 }

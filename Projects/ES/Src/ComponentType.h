@@ -37,7 +37,6 @@ public:	//Enums
 		BodyInitData,
 		BoundingVolumeInitData,
 		LookAtEntity,
-		MainCamera,
 		PlayerCameraController,
 		PlayerScore,
 		MenuItem,
@@ -70,7 +69,9 @@ public:	//Enums
 		TAG_ShipEditMode,
 		TAG_LookAtFollowMode,
 		TAG_LookAtOrbitMode,
-		TAG_Ship, 
+		TAG_Ship,
+		TAG_MainCamera,
+		TAG_ShadowCamera,
 		// -------------------
 	
 		/************************************************************************/

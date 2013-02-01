@@ -26,13 +26,13 @@ class InputManager;
 class MouseMoveControl : public Control
 {
 public:
-	MouseMoveControl( InputHelper::MOUSE_AXIS p_axis );
+	MouseMoveControl( InputHelper::MouseAxes p_axis );
 	virtual ~MouseMoveControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	InputHelper::MOUSE_AXIS m_axis;
-	InputHelper::SUB_AXIS m_subAxis;
+	InputHelper::MouseAxes m_axis;
+	InputHelper::SubAxes m_subAxis;
 };
 

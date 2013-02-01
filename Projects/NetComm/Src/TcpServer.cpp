@@ -210,7 +210,7 @@ void TcpServer::processMessages()
 	}
 }
 
-void TcpServer::broadcastPacket( Packet p_packet, int p_excludeClientId)
+void TcpServer::broadcastPacket( Packet& p_packet, int p_excludeClientId)
 {
 	giveBroadcastPacketAUniqueIdentifier( &p_packet );
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
@@ -223,7 +223,7 @@ void TcpServer::broadcastPacket( Packet p_packet, int p_excludeClientId)
 	}
 }
 
-void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_packet )
+void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet& p_packet )
 {
 	for( unsigned int i=0; i<p_connectionIdentities.size(); i++ )
 	{
@@ -231,7 +231,7 @@ void TcpServer::multicastPacket( vector<int> p_connectionIdentities, Packet p_pa
 	}
 }
 
-void TcpServer::unicastPacket( Packet p_packet, int p_clientId )
+void TcpServer::unicastPacket( Packet& p_packet, int p_clientId )
 {
 	// NOTE: this might be slow enough to do for individual packets
 	for ( unsigned int i = 0; i < m_communicationProcesses.size(); i++ )

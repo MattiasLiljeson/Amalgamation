@@ -102,9 +102,9 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the primary buttons state
-	/// \return InputHelper::KEY_STATE
+	/// \return InputHelper::KeyStates
 	///-----------------------------------------------------------------------------------
-	InputHelper::KEY_STATE getPrimaryState();
+	InputHelper::KeyStates getPrimaryState();
 
 	///-----------------------------------------------------------------------------------
 	/// Get the primary buttons status
@@ -120,9 +120,9 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Get the secondary buttons state
-	/// \return InputHelper::KEY_STATE
+	/// \return InputHelper::KeyStates
 	///-----------------------------------------------------------------------------------
-	InputHelper::KEY_STATE getSecondaryState();
+	InputHelper::KeyStates getSecondaryState();
 
 	///-----------------------------------------------------------------------------------
 	/// Get the secondary buttons status

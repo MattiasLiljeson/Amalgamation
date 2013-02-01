@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "MessageLoopFetcher.h"
 
-DigitalControl::DigitalControl( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn )
+DigitalControl::DigitalControl( InputHelper::Xbox360Digitals p_btn )
 {
 	m_btn = p_btn;
 }
@@ -19,7 +19,7 @@ void DigitalControl::update( InputManager* p_manager )
 	XInputFetcher* fetcher = p_manager->getXInputFetcher();
 	if( fetcher != NULL )
 	{
-		InputHelper::KEY_STATE state = fetcher->getBtnState( m_btn );
+		InputHelper::KeyStates state = fetcher->getBtnState( m_btn );
 
 		m_status = InputHelper::statusFromState( state );
 		m_statusDelta = InputHelper::statusDeltaFromState( state );

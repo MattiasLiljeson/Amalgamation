@@ -85,8 +85,11 @@
     <Filter Include="Systems\Debugging">
       <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\AssetLoading">
-      <UniqueIdentifier>{f0dfd69f-877a-4bbc-afe1-999056142db6}</UniqueIdentifier>
+    <Filter Include="Systems\Network\Packet Translation\Packet Structs">
+      <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Tracking">
+      <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +176,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="MainCamera.h">
-      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="LevelPiece.h">
       <Filter>Systems\Level Gen</Filter>
@@ -303,9 +303,6 @@
     <ClInclude Include="RayPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="EntityUpdatePacket.h">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClInclude>
     <ClInclude Include="EntityCreationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -388,6 +385,9 @@
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="LoadMeshSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
     <ClInclude Include="ParticleEmitters.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -452,20 +452,36 @@
     <ClInclude Include="LightBlinker.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="LoadMeshSystemClient.h">
-      <Filter>Systems\AssetLoading</Filter>
+    <ClInclude Include="EntityUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
     </ClInclude>
-    <ClInclude Include="LoadMeshSystem.h">
-      <Filter>Systems\AssetLoading</Filter>
+    <ClInclude Include="PlayersWinLosePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="WinningConditionSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModulesTrackerSystem.h">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEvent.h" />
+    <ClInclude Include="OnActivateShieldModule.h" />
+    <ClInclude Include="OnDeActivateShieldModule.h" />
+    <ClInclude Include="RemoveSoundEffectPacket.h" />
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="LoadMeshSystemServer.h">
-      <Filter>Systems\AssetLoading</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpolationSystem.h">
-      <Filter>Systems\Network\Client only</Filter>
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="InterpolationComponent.h">
       <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -640,9 +656,6 @@
     <ClCompile Include="RayPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="EntityUpdatePacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
     <ClCompile Include="WelcomePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -713,6 +726,9 @@
     <ClCompile Include="LoadMesh.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
@@ -762,20 +778,33 @@
     <ClCompile Include="LightBlinkerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="EntityUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayersWinLosePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="WinningConditionSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesTrackerSystem.cpp">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveSoundEffectPacket.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
     <ClCompile Include="LightBlinker.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="LoadMeshSystemClient.cpp">
-      <Filter>Systems\AssetLoading</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadMeshSystem.cpp">
-      <Filter>Systems\AssetLoading</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadMeshSystemServer.cpp">
-      <Filter>Systems\AssetLoading</Filter>
-    </ClCompile>
     <ClCompile Include="InterpolationSystem.cpp">
-      <Filter>Systems\Network\Client only</Filter>
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

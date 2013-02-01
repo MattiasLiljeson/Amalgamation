@@ -58,11 +58,11 @@ public:
 	/// \param p_key The control registered to the key/btn/whatever you want to get.
 	/// \return Control* A ptr to a Control that is updated each frame with fresh input
 	///-----------------------------------------------------------------------------------
-	Control* getControlByEnum( InputHelper::KEYBOARD_KEY p_key );
-	Control* getControlByEnum( InputHelper::MOUSE_BTN p_btn );
-	Control* getControlByEnum( InputHelper::MOUSE_AXIS p_axis );
-	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital );
-	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog );
+	Control* getControlByEnum( InputHelper::KeyboardKeys p_key );
+	Control* getControlByEnum( InputHelper::MouseButtons p_btn );
+	Control* getControlByEnum( InputHelper::MouseAxes p_axis );
+	Control* getControlByEnum( InputHelper::Xbox360Digitals p_digital );
+	Control* getControlByEnum( InputHelper::Xbox360Analogs p_analog );
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ private:
 	/// often the same as items in the different enums
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void saveControl( InputHelper::INPUT_DEVICE_TYPE p_deviceType, int p_controlType,
+	void saveControl( InputHelper::InputDeviceTypes p_deviceType, int p_controlType,
 		Control* p_control, const string& p_name );
 
 	///-----------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ private:
 	/// \return vector<int>* a pointer to the vector of the type given above. This vector
 	/// is allocated on the stack
 	///-----------------------------------------------------------------------------------
-	vector<int>* vectorFromDeviceType( InputHelper::INPUT_DEVICE_TYPE p_deviceType );
+	vector<int>* vectorFromDeviceType( InputHelper::InputDeviceTypes p_deviceType );
 
 	///-----------------------------------------------------------------------------------
 	/// Helper function. Expand a vector if it's size is too small for the given index.

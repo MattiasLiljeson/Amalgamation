@@ -1,5 +1,5 @@
 // =======================================================================================
-//                                      ShaderInitStruct
+//                                      ShaderVariableContainer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -14,9 +14,8 @@
 #include <d3d11.h>
 #include "ShaderStageData.h"
 
-struct ShaderInitStruct
+struct ShaderVariableContainer
 {
-	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
 
 	VSData* vertexShader;

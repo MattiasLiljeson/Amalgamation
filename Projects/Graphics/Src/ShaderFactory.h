@@ -3,7 +3,7 @@
 #include "Buffer.h"
 #include "BufferConfig.h"
 #include "CBuffers.h"
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderStageConfig.h"
 #include "ShaderStageData.h"
 #include <D3DCompiler.h>
@@ -15,6 +15,7 @@ class DeferredBaseShader;
 class DeferredComposeShader;
 class GUIShader;
 class ParticleShader;
+class ShadowShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -42,12 +43,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
 
-	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitives to 
-	/// various render targets.
-	/// \param p_filePath
-	/// \return DeferredComposeShader*
-	///-----------------------------------------------------------------------------------
+	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+
 	DeferredBaseShader* createLightShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
@@ -58,6 +55,8 @@ public:
 	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
 
 	ParticleShader* createParticleShader(const LPCWSTR& p_filePath);
+
+	ShadowShader* createShadowShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------
@@ -101,9 +100,9 @@ private:
 	/// \param p_dsd
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void createShaderInitData(ShaderInitStruct* p_shaderInitData,
+	void createShaderInitData(ShaderVariableContainer* p_shaderInitData,
 		ID3D11InputLayout* p_inputLayout,
-		VSData* p_vsd, PSData* p_psd, 
+		VSData* p_vsd, PSData* p_psd=NULL, 
 		ID3D11SamplerState* p_samplerState=NULL,
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 

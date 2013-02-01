@@ -290,6 +290,14 @@ void TW_CALL ParticleSystemDialog::Clone(void* clientData)
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
 	SceneDialog::GetInstance()->ClonePE(ps->GetHeader());
+}	
+//Remove
+void TW_CALL ParticleSystemDialog::Remove(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	d->hide();
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	SceneDialog::GetInstance()->RemoveParticleSystem(ps->getParticleSystem());
 }
 
 
@@ -378,6 +386,8 @@ void ParticleSystemDialog::setPS(int pIndex)
 
 	//Clone
 	TwAddButton(m_dialog, "Clone", Clone, (void*)this, " label='Clone'");
+	//Remove
+	TwAddButton(m_dialog, "Remove", Remove, (void*)this, " label='Remove'");
 
 	show();
 }

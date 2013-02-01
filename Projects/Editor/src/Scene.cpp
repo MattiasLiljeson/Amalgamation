@@ -23,7 +23,6 @@ Scene::Scene()
 	mAglScene = NULL;
 	mQuaternionRotation = AglQuaternion(0, 0, 0, 1);
 	mPosition = AglVector3(0, 0, 0);
-	mPlaneMesh = NULL;
 }
 Scene::~Scene()
 {
@@ -59,13 +58,118 @@ void Scene::Release()
 		delete sInstance;
 	sInstance = NULL;
 }
-
-void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
-				 ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
+void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
+	AglReader r(pPath.c_str());
+	mAglScene = r.getScene();
 	mDevice = pDevice;
 	mDeviceContext = pDeviceContext;
-	mAglScene = pAglScene;
+
+	vector<AglMesh*> meshes = mAglScene->getMeshes();
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		Mesh* m = new Mesh(mDevice, mDeviceContext, Scene::GetInstance());
+		m->Init(meshes[i]);
+		mMeshes.push_back(m);
+	}
+
+	vector<AglSkeletonMapping*> mappings = mAglScene->getSkeletonMappings();
+	for (unsigned int i = 0; i < mappings.size(); i++)
+	{
+		SkeletonMapping* sm = new SkeletonMapping(mDevice, mappings[i]);
+		mSkeletonMappings.push_back(sm);
+	}
+
+	vector<AglMaterial*> materials = mAglScene->getMaterials();
+	for (unsigned int i = 0; i < materials.size(); i++)
+	{
+		string path = pPath;
+		int ind = path.find_last_of('\\');
+		if (ind == -1)
+			ind = path.find_last_of('/');
+		path = path.substr(0, ind+1);	
+
+		if (materials[i]->diffuseTextureNameIndex >= 0)
+		{
+			string difpath = mAglScene->getName(materials[i]->diffuseTextureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(difpath);
+			if (ind < 0)
+			{
+				materials[i]->diffuseTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(materials[i]->diffuseTextureNameIndex, data->Path);
+			}
+		}
+		if (materials[i]->specularTextureNameIndex >= 0)
+		{
+			string specpath = mAglScene->getName(materials[i]->specularTextureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(specpath);
+			if (ind < 0)
+			{
+				materials[i]->specularTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(materials[i]->specularTextureNameIndex, data->Path);
+			}
+		}
+		if (materials[i]->normalTextureNameIndex >= 0)
+		{
+			string normpath = mAglScene->getName(materials[i]->normalTextureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(normpath);
+			if (ind < 0)
+			{
+				materials[i]->normalTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(materials[i]->normalTextureNameIndex, data->Path);
+			}
+		}
+		if (materials[i]->glowTextureNameIndex >= 0)
+		{
+			string glowpath = mAglScene->getName(materials[i]->glowTextureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(glowpath);
+			if (ind < 0)
+			{
+				materials[i]->glowTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(materials[i]->glowTextureNameIndex, data->Path);
+			}
+		}
+	}
+
+	vector<AglMaterialMapping> mm = mAglScene->getMaterialMappings();
+	for (unsigned int i = 0; i < mm.size(); i++)
+	{
+		mMeshes[mm[i].meshID]->AddMaterial(mm[i].materialID, true);
+	}
+
+	vector<SkeletonMesh*> skeletons;
+	for (unsigned int i = 0; i < mAglScene->getSkeletonCount(); i++)
+	{
+		mSkeletonMeshes.push_back(new SkeletonMesh(mDevice, mDeviceContext, mAglScene->getSkeleton(i)));
+	}
+
+	vector<AglLooseBspTree*> bspTrees = mAglScene->getBspTrees();
+	for (unsigned int i = 0; i < bspTrees.size(); i++)
+	{
+		mMeshes[bspTrees[i]->getHeader().targetMesh]->SetBspTree(bspTrees[i]);
+	}
+	vector<AglInteriorSphereGrid*> grids = mAglScene->getSphereGrids();
+	for (unsigned int i = 0; i < grids.size(); i++)
+	{
+		mMeshes[grids[i]->getHeader().targetMesh]->SetInteriorSpheres(grids[i]);
+	}
+
 	if (mAglScene->getSkeletonCount() > 0)
 	{
 		AglSkeleton* s = mAglScene->getSkeleton(0);
@@ -83,9 +187,7 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 		m_world = AglMatrix::identityMatrix();
 	}
 
-	mMeshes = pMeshes;
-	mSkeletonMeshes = pSkeletons;
-	mSkeletonMappings = pSkeletonMappings;
+
 	mMax = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 	mMin = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
@@ -110,10 +212,17 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 
 		if (ps[i]->getHeader().textureNameIndex >= 0)
 		{
-			string textureFile = mAglScene->getName(ps[i]->getHeader().textureNameIndex);
-			removePath(textureFile);
-			textureFile = pFolder + textureFile;
-			TextureManager::GetInstance()->LoadTexture(textureFile);
+			string path = mAglScene->getName(ps[i]->getHeader().textureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(path);
+			if (ind < 0)
+			{
+				ps[i]->setTextureNameIndex(-1);
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(ps[i]->getHeader().textureNameIndex, data->Path);
+			}
 		}
 	}
 
@@ -122,8 +231,6 @@ void Scene::Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector
 		AglAnimation* anim = mAglScene->getAnimation(0);
 		anim->play();
 	}
-	mFolder = pFolder;
-	CreateScenePlane();
 }
 void Scene::Update(float pElapsedTime)
 {
@@ -175,7 +282,8 @@ void Scene::Draw()
 			AglMatrix::componentsToMatrix(sw, AglVector3(bs.radius, bs.radius, bs.radius), AglQuaternion::identity(), bs.position);
 			sw = sw * m_avoidJump;
 			sw = sw * invMax;
-			sw *= meshTransform;
+			if (!mMeshes[i]->hasSkeleton())
+				sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			SPHEREMESH->Draw(sw, mSphereColors[i]);
@@ -189,7 +297,8 @@ void Scene::Draw()
 			sw = size * sw;
 			sw = sw * m_avoidJump;
 			sw = sw * invMax;
-			sw *= meshTransform;
+			if (!mMeshes[i]->hasSkeleton())
+				sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
@@ -248,9 +357,6 @@ void Scene::Draw()
 		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, 0.1f));
 		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * 0.05f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(0, 0, 1));
-
-
-		//SPHEREMESH->Draw(t, AglVector3(1, 0, 1));
 	}
 
 	AglVector3 minP = mMin;
@@ -260,10 +366,6 @@ void Scene::Draw()
 	newW.SetTranslation(AglVector3(0, 0, 0));
 	minP.transform(newW*invMax);
 	maxP.transform(newW*invMax);
-	/*if (mPlaneMesh)
-	{
-		mPlaneMesh->Draw(AglMatrix::createTranslationMatrix(AglVector3(0, min(minP.y, maxP.y), 0)), 1.0f);
-	}*/
 }
 AglNode Scene::GetNode(int pIndex)
 {
@@ -369,36 +471,6 @@ AglVector3 Scene::GetCenter()
 	c.transform(m_world*invMax);
 	return c;
 }
-void Scene::CreateScenePlane()
-{
-	AglVertexSTBN* verts = new AglVertexSTBN[4];
-	float size = 2;
-	verts[0].position = AglVector3(size, 0, size);
-	verts[0].normal	  = AglVector3(0, 1.0f, 0);
-	verts[1].position = AglVector3(size, 0, -size);
-	verts[1].normal	  = AglVector3(0, 1.0f, 0);
-	verts[2].position = AglVector3(-size, 0, size);
-	verts[2].normal	  = AglVector3(0, 1.0f, 0);
-	verts[3].position = AglVector3(-size, 0, -size);
-	verts[3].normal	  = AglVector3(0, 1.0f, 0);
-
-	unsigned int* ind = new unsigned int[6];
-	ind[0] = 0;
-	ind[1] = 2;
-	ind[2] = 1;
-	ind[3] = 1;
-	ind[4] = 2;
-	ind[5] = 3;
-
-	AglMeshHeader h;
-	h.id = -1;
-	h.indexCount = 6;
-	h.vertexCount = 4;
-	h.nameID = -1;
-	AglMesh* m = new AglMesh(h, verts, ind);
-	mPlaneMesh = new Mesh(mDevice, mDeviceContext, this);
-	mPlaneMesh->Init(m);
-}
 bool Scene::IsLeftHanded()
 {
 	if (!mAglScene)
@@ -443,4 +515,46 @@ void Scene::Transform(AglMatrix p_transform)
 	{
 		mMeshes[mSkeletonMappings[i]->GetMesh()]->AddSkeletonMapping(mSkeletonMappings[i]);
 	}
+}
+
+int  Scene::GetIndex(AglParticleSystem* pSystem)
+{
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		if (mParticleSystems[i]->getParticleSystem() == pSystem)
+			return i;
+	}
+	return -1;
+}
+
+void Scene::RemoveMaterial(AglMaterial* pMaterial)
+{
+	mAglScene->RemoveMaterial(pMaterial);
+
+	//Remove degenerate materials from meshes
+	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
+		mMeshes[i]->AddMaterial(-1, true);
+	}
+
+	//Add updated materials
+	vector<AglMaterialMapping> mm = mAglScene->getMaterialMappings();
+	for (unsigned int i = 0; i < mm.size(); i++)
+	{
+		mMeshes[mm[i].meshID]->AddMaterial(mm[i].materialID, true);
+	}
+}
+void Scene::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		if (mParticleSystems[i]->getParticleSystem() == pParticleSystem)
+		{
+			delete mParticleSystems[i];
+			mParticleSystems[i] = mParticleSystems.back();
+			mParticleSystems.pop_back();
+			break;
+		}
+	}
+	mAglScene->RemoveParticleEffect(pParticleSystem);
 }

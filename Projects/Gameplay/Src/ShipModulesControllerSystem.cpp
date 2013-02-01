@@ -32,6 +32,8 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 			if (m_toHighlight[j].first == netSync->getNetworkOwner())
 			{
 				//Do highlight
+				if(m_toHighlight[j].second > 2)
+					continue;
 				changeHighlight(p_entities[i], m_toHighlight[j].second);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
@@ -87,6 +89,7 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
 				
 				//m->m_health -= 50 * m_world->getDelta();
+				m->applyDamage();
 				if (m->m_health <= 0)
 				{
 					drop(p_parent, i);
@@ -138,7 +141,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	//Update module data
 	m->m_health = 100.0f;
 	m->m_value = m->m_value * 0.5f;
-	m->m_active = false;
+	m->deActivate();
 }
 void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
 {
@@ -157,7 +160,7 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
 	{
 		Entity* currEn = m_world->getEntity(current);
 		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->m_active = false;
+		currModule->deActivate();
 	}
 
 	connected->m_highlighted = p_new;
@@ -175,7 +178,15 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 	{
 		Entity* currEn = m_world->getEntity(current);
 		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->m_active = p_value;
+		if(p_value == true)
+		{
+			currModule->activate();
+		}
+		else
+		{
+			currModule->deActivate();
+		}
+		//currModule->m_active = p_value;
 		setActivationChildren(currEn, p_value);
 	}
 }
@@ -193,7 +204,15 @@ void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p
 			{
 				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-				currModule->m_active = p_value;
+				if(p_value == true)
+				{
+					currModule->activate();
+				}
+				else
+				{
+					currModule->deActivate();
+				}
+				//currModule->m_active = p_value;
 				setActivationChildren(currEn, p_value);
 			}
 		}

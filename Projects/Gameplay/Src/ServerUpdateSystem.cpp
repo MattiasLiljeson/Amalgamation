@@ -115,8 +115,13 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		m_server->broadcastPacket(updatedClientPacket.pack());
 		//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
 	}
-
-	else if( timerSys->checkTimeInterval(TimerIntervals::Every8Millisecond) )
+	// NOTE: (Johan) This interval check is currently set to be very high delay because
+	// packet handling is too slow when running Debug build otherwise.
+	TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every8Millisecond;
+#ifdef _DEBUG
+	entityupdateInterval = TimerIntervals::Every32Millisecond;
+#endif
+	if( timerSys->checkTimeInterval(entityupdateInterval) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{
@@ -171,15 +176,19 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				updatePacket.timestamp		= m_world->getElapsedTime();
 				updatePacket.velocity		= velocity;
 				updatePacket.angularVelocity= angularVelocity;
+				Packet packet((char)PacketType::EntityUpdate);
+				packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
 
-
-				m_server->broadcastPacket( updatePacket.pack() );
+				m_server->broadcastPacket( packet );
 			}
 		}
 		//Broadcast an end of the batch
 		EntityUpdatePacket updatePacket;
 		updatePacket.entityType		= static_cast<char>(EntityType::EndBatch);
-		m_server->broadcastPacket( updatePacket.pack() );
+		Packet packet((char)PacketType::EntityUpdate);
+		packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
+
+		m_server->broadcastPacket( packet );
 	}
 }
 

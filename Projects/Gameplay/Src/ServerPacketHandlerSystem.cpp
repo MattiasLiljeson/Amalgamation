@@ -81,7 +81,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity);
 				ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
 				SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-				if (module->m_active && boostmodule)
+				if (module->getActive() && boostmodule)
 					boostVector = thrustPacket.thrustVector*3;
 			}
 

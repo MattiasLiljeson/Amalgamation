@@ -3,6 +3,8 @@
 
 class RenderInterface;
 class GraphicsBackendSystem;
+class GraphicsWrapper;
+class ShadowSystem;
 
 // =======================================================================================
 //                                      GraphicsRendererSystem
@@ -21,18 +23,25 @@ class GraphicsRendererSystem : public EntitySystem
 {
 public:
 	GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
-		RenderInterface* p_mesh, RenderInterface* p_libRocket, RenderInterface* p_particle,
+		ShadowSystem* p_shadowSystem, RenderInterface* p_mesh, 
+		RenderInterface* p_libRocket, RenderInterface* p_particle,
 		RenderInterface* p_antTweakBar, RenderInterface* p_light);
 	virtual ~GraphicsRendererSystem();
 
 	virtual void initialize();
 	virtual void process();
 	
+	void initShadowPass();
+	void endShadowPass();
+
 	void initMeshPass();
 	void endMeshPass();
 
 	void initParticlePass();
 	void endParticlePass();
+
+	void initComposePass();
+	void endComposePass();
 
 	void initLightPass();
 	void endLightPass();
@@ -42,7 +51,9 @@ public:
 	
 	void flipBackbuffer();
 private:
+	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
+	ShadowSystem*	 m_shadowSystem;
 	RenderInterface* m_meshRenderer;
 	RenderInterface* m_libRocketRenderSystem;
 	RenderInterface* m_particleRenderSystem;

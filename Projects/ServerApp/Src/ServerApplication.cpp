@@ -29,6 +29,8 @@
 #include <ServerClientInfoSystem.h>
 #include <LoadMeshSystemServer.h>
 #include <LookAtSystem.h>
+#include <WinningConditionSystem.h>
+#include <ShipModulesTrackerSystem.h>
 
 #include "Transform.h"
 #include "PhysicsBody.h"
@@ -103,7 +105,7 @@ namespace Srv
 				}
 			}
 			processMessages();
-			// sleep(10);
+			sleep(2);
 		}
 	}
 
@@ -174,18 +176,6 @@ namespace Srv
 		/************************************************************************/
 		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
 
-		/************************************************************************/
-		/* Gameplay															*/
-		/************************************************************************/
-		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
-		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
-		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
-		m_world->setSystem(new MineControllerSystem(m_server), true);
-		m_world->setSystem(new ShipModulesControllerSystem(), true);
-		m_world->setSystem(new ShipManagerSystem(), true);
-		m_world->setSystem(new RocketControllerSystem(), true);
-
 
 		/************************************************************************/
 		/* Network																*/
@@ -207,8 +197,26 @@ namespace Srv
 		m_world->setSystem( new ServerClientInfoSystem(), true);
 
 
+		/************************************************************************/
+		/* Gameplay															*/
+		/************************************************************************/
+		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
+		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
+		m_world->setSystem(new MineControllerSystem(m_server), true);
+		m_world->setSystem(new ShipManagerSystem(), true);
+		m_world->setSystem(new RocketControllerSystem(m_server), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		// Important for any module-damaging logic to happen before this.
+		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipModulesTrackerSystem(), true);
+		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
+		m_world->setSystem(winningCondition, false);
+		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
+//		winningCondition->startGameSession(20.0f);
+
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
-		// GET INITIALIZED. YES, I'M TALKING TO YOU ANTON :D
+		// GET INITIALIZED.
 		m_world->initialize();
 
 

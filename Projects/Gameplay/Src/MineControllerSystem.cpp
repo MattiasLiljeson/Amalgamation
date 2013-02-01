@@ -57,14 +57,17 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 					{
 						ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(ComponentType::ShipModule));
 						if (hitModule)
-							hitModule->m_health = 0;
+						{
+//							hitModule->m_health = 0;
+							hitModule->addDamageThisTick(101.0f); // Above max hp.
+						}
 					}
 				}
 
 
 				//Send a shockwave
-				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 300);
-				mine->m_age = 0;
+				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 20, 20);
+				ps->getController()->InactivateBody(pb->m_id);
 
 				//Send an explosion sound effect
 				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
@@ -75,6 +78,8 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 				soundEffectPacket.position = t->getTranslation();
 				soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
 				m_server->broadcastPacket(soundEffectPacket.pack());
+
+				m_world->deleteEntity(p_entities[i]);
 			}
 		}	
 	}

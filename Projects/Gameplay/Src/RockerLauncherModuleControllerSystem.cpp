@@ -48,10 +48,17 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 		{
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
-
-			if (gun->coolDown == 0 && module->m_active)
+			gun->timeSinceRocket += dt;
+			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
 				spawnRocket(p_entities[i]);
+				gun->timeSinceRocket = 0;
+				gun->currentBurst++;
+				if (gun->currentBurst >= gun->burstCount)
+				{
+					gun->coolDown = 1.0f;
+					gun->currentBurst = 0;
+				}
 			}
 		}
 	}
@@ -147,14 +154,12 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::RocketLauncherModule)));
 
-	gun->coolDown = 1.0f;
-
 	//Create Rocket
 	Transform* gunTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
 
-	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
+	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), -gun->fireDirection), AglVector3(2, 2, 2));
 
 	AglVector3 dir = gun->fireDirection;
 	const AglQuaternion& rot = gunTransform->getRotation();
@@ -175,11 +180,11 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	actualdir.normalize();
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
-		AglQuaternion::identity(),
+		AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), -dir),
 		AglVector3(5.0f, 5.0f, 5.0f), dir * 100.0f + vel, 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false, false));
+		BodyInitData::SINGLE, false, true));
 
 	entity->addComponent( ComponentType::Transform, t);
 
@@ -198,12 +203,12 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.meshInfo		= 1;
 	m_server->broadcastPacket(data.pack());
 
-	// Also send a positional sound effect.
-	SpawnSoundEffectPacket soundEffectPacket;
-	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
-	soundEffectPacket.positional = true;
-	soundEffectPacket.position = t->getTranslation();
-	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
-	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-	m_server->broadcastPacket(soundEffectPacket.pack());
+//	// Also send a positional sound effect.
+//	SpawnSoundEffectPacket soundEffectPacket;
+//	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
+//	soundEffectPacket.positional = true;
+//	soundEffectPacket.position = t->getTranslation();
+//	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
+//	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
+//	m_server->broadcastPacket(soundEffectPacket.pack());
 }

@@ -20,7 +20,6 @@
 #include "RenderInfo.h"
 #include "ShipFlyController.h"
 #include "CameraInfo.h"
-#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 #include "PlayerScore.h"
@@ -29,7 +28,6 @@
 #include "HudElement.h"
 #include "InterpolationComponent.h"
 
-#include "GraphicsBackendSystem.h"
 #include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
@@ -63,6 +61,8 @@
 #include "LightSources.h"
 #include "LightsComponent.h"
 #include "EntityFactory.h"
+#include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -112,48 +112,15 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			EntityUpdatePacket data;
-			data.unpack(packet);
+			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
-			if (data.entityType == (char)EntityType::EndBatch)
-			{
+			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch();
 			}
 			else
 			{
 				m_batch.push_back(data);
 			}
-
-			/*NetsyncDirectMapperSystem* directMapper =
-				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-				SystemType::NetsyncDirectMapperSystem));
-			Entity* entity = directMapper->getEntity( data.networkIdentity );
-			if(entity != NULL)
-			{
-				Transform* transform = NULL;
-				transform = static_cast<Transform*>(
-					m_world->getComponentManager()->getComponent(
-					entity->getIndex(), ComponentType::Transform ) );
-				// HACK! below check should not have to be done. Is the packet of the 
-				// wrong type? Throw exception? /ML
-				if( transform != NULL ) // Throw exception? /ML
-				{
-					transform->setTranslation( data.translation );
-					transform->setRotation( data.rotation );
-					transform->setScale( data.scale );
-				}
-
-				Extrapolate* extrapolate = NULL;
-				extrapolate = static_cast<Extrapolate*>(
-					entity->getComponent(ComponentType::Extrapolate) );
-				// HACK! below check should not have to be done. Is the packet of the 
-				// wrong type? Throw exception? /ML
-				if( extrapolate != NULL )
-				{
-					extrapolate->serverUpdateTimeStamp = data.timestamp;
-					extrapolate->velocityVector = data.velocity;
-					extrapolate->angularVelocity = data.angularVelocity;
-				}
-			}*/
 		}
 		else if (packetType == (char)PacketType::ParticleUpdate)
 		{			
@@ -171,14 +138,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma endregion 
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
 			SpawnSoundEffectPacket spawnSoundPacket;
 			spawnSoundPacket.unpack( packet );
 			if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-					m_world->getSystem(SystemType::AudioBackendSystem));
 				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
 					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 					spawnSoundPacket.position);
@@ -186,6 +153,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
 			{
+				// Attached positional sound source.
 				NetsyncDirectMapperSystem* directMapper =
 					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 					SystemType::NetsyncDirectMapperSystem));
@@ -197,11 +165,30 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
 						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 						true, 1.0f));
+					entity->applyComponentChanges();
 				}
 			}
-			else
+			else if( !spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				// Ambient sound effect.
+				// Short ambient sound effect.
+				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+			}
+		}
+		else if(packetType == (char)PacketType::RemoveSoundEffect)
+		{
+			RemoveSoundEffectPacket data;
+			data.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+			if( entity != NULL )
+			{
+				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->applyComponentChanges();
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)
@@ -264,6 +251,30 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::PlayerWinLose)
+		{
+			PlayersWinLosePacket winLose;
+			winLose.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			for(int i=0; i<winLose.activePlayers; i++)
+			{
+				if(m_tcpClient->getId() == winLose.playerIdentities[i])
+				{
+					// NOTE: (Johan) This is where the winning/losing condition is read.
+					// Use this later to print a nice text saying "Winner" or "Loser".
+					if(winLose.winner[i])
+					{
+						MessageBoxA(NULL, "Winner!", "Warning!", MB_ICONWARNING);
+					}
+					else
+					{
+						MessageBoxA(NULL, "Loser!", "Warning!", MB_ICONWARNING);
+					}
+				}
+			}
+		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
 			EntityCreationPacket data;
@@ -279,6 +290,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		else if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
+		}
+		else
+		{
+			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
 	}
 }
@@ -422,7 +437,7 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
 	if( static_cast<InputBackendSystem*>(m_world->getSystem(
 		SystemType::InputBackendSystem))->getControlByEnum(
-		InputHelper::KEY_0)->getDelta() > 0 )
+		InputHelper::KeyboardKeys_0)->getDelta() > 0 )
 	{
 		if( m_staticPropIdentities.empty() )
 		{

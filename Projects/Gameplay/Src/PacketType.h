@@ -28,8 +28,10 @@ public:
 		ClientDisconnect,
 		WelcomePacket,
 		UpdateClientStats,
+		PlayerWinLose,
 		SpawnSoundEffect,
 		TransformPacket,
+		RemoveSoundEffect,
 
 		// Client -> Server:
 		/************************************************************************/

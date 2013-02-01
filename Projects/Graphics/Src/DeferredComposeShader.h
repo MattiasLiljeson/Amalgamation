@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
 
 // =======================================================================================
@@ -19,7 +19,7 @@
 class DeferredComposeShader : public ShaderBase
 {
 public:
-	DeferredComposeShader( ShaderInitStruct p_initData);
+	DeferredComposeShader( ShaderVariableContainer p_initData);
 	virtual ~DeferredComposeShader();
 
 	void apply();

@@ -1,20 +1,21 @@
 #pragma once
-
-#include <Component.h>
+#include <EntitySystem.h>
+#include "ShipModule.h"
 // =======================================================================================
-//	MainCamera
+// ShipModulesTrackerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief The main camera used for screen rendering. There can only be one main camera!
+/// \brief Brief...
 ///        
-/// # MainCamera
+/// # ShipModulesTrackerSystem
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 31-1-2013 
 ///---------------------------------------------------------------------------------------
-
-
-class MainCamera: public Component
+class ShipModulesTrackerSystem: public EntitySystem
 {
 public:
+	ShipModulesTrackerSystem();
+	~ShipModulesTrackerSystem();
+	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
 };

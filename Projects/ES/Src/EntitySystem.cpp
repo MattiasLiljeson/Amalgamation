@@ -155,37 +155,37 @@ void EntitySystem::initialize()
 
 void EntitySystem::check(Entity* p_entity) 
 {
-		if(m_componentBits.none())
-		{
-			// If this system isn't interested in any components there is no reason to
-			// let it continue as it will do nothing.
-			return;
-		}
+	if(m_componentBits.none())
+	{
+		// If this system isn't interested in any components there is no reason to
+		// let it continue as it will do nothing.
+		return;
+	}
 		
-		bool contains = p_entity->getSystemBits()[m_type.getIndex()];
-		bool interested = true; // possibly interested, let's try to prove it wrong.
+	bool contains = p_entity->getSystemBits()[m_type.getIndex()];
+	bool interested = true; // possibly interested, let's try to prove it wrong.
 		
-		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = 
-			p_entity->getComponentBits();
+	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = 
+		p_entity->getComponentBits();
 
-		// Check if the entity possesses ALL of the components defined in the system component bits.
-		for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
+	// Check if the entity possesses ALL of the components defined in the system component bits.
+	for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
+	{
+		if ( m_componentBits[i] )
 		{
-			if ( m_componentBits[i] )
+			if ( !componentBits[i] )
 			{
-				if ( !componentBits[i] )
-				{
-					interested = false;
-					break;
-				}
+				interested = false;
+				break;
 			}
 		}
-
-		if ( interested && !contains )
-			insertToSystem( p_entity );
-		else if ( !interested && contains )
-			removeFromSystem( p_entity );
 	}
+
+	if ( interested && !contains )
+		insertToSystem( p_entity );
+	else if ( !interested && contains )
+		removeFromSystem( p_entity );
+}
 
 void EntitySystem::removeFromSystem( Entity* p_entity )
 {
@@ -196,7 +196,6 @@ void EntitySystem::removeFromSystem( Entity* p_entity )
 		p_entity->setSystemBit( m_type.getIndex(), false );
 		m_actives.erase( m_actives.begin() + idx );
 		removed( p_entity );
-		//delete p_entity;
 	}
 }
 void EntitySystem::insertToSystem(Entity* p_entity)

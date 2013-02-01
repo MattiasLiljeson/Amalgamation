@@ -3,25 +3,19 @@
   <ItemGroup>
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="BufferBase.cpp">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="BufferConfig.cpp">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ShaderBase.cpp">
-      <Filter>Renderer\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderFactory.cpp">
-      <Filter>Factory</Filter>
+      <Filter>Shader</Filter>
     </ClCompile>
     <ClCompile Include="DeferredBaseShader.cpp">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClCompile>
     <ClCompile Include="DeferredComposeShader.cpp">
-      <Filter>Renderer\Shader\Shader types</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferFactory.cpp">
-      <Filter>Factory</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClCompile>
     <ClCompile Include="DeferredRenderer.cpp">
       <Filter>Renderer\Deferred</Filter>
@@ -37,7 +31,7 @@
     </ClCompile>
     <ClCompile Include="GraphicsWrapper.cpp" />
     <ClCompile Include="GUIShader.cpp">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClCompile>
     <ClCompile Include="RenderStateHelper.cpp">
       <Filter>Renderer\Deferred</Filter>
@@ -48,14 +42,29 @@
     <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="ModelExtendedManagedFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNameScriptParser.cpp">
+      <Filter>Graphics Utilities</Filter>
+    </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Renderer\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleShader.cpp">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClCompile>
-    <ClCompile Include="ModelExtendedFactory.cpp">
-      <Filter>Factory</Filter>
+    <ClCompile Include="ShadowMapRenderer.cpp">
+      <Filter>Renderer\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFactory.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferFactory.cpp">
+      <Filter>Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,40 +76,31 @@
       <Filter>Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="BufferBase.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="BufferConfig.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ShaderBase.h">
-      <Filter>Renderer\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderInitStruct.h">
-      <Filter>Renderer\Shader</Filter>
+      <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="ShaderStageData.h">
-      <Filter>Renderer\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderFactory.h">
-      <Filter>Factory</Filter>
+      <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="DeferredBaseShader.h">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
     <ClInclude Include="DeferredComposeShader.h">
-      <Filter>Renderer\Shader\Shader types</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferFactory.h">
-      <Filter>Factory</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
     <ClInclude Include="CBuffers.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ShaderStageConfig.h">
-      <Filter>Renderer\Shader</Filter>
+      <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="D3DUtil.h">
       <Filter>Graphics Utilities</Filter>
@@ -116,7 +116,7 @@
     </ClInclude>
     <ClInclude Include="RendererSceneInfo.h" />
     <ClInclude Include="Texture.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="PTVertex.h">
       <Filter>Renderer\Vertices</Filter>
@@ -138,7 +138,7 @@
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="GUIShader.h">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
     <ClInclude Include="RenderStateEnums.h">
       <Filter>Renderer\Deferred</Filter>
@@ -158,21 +158,42 @@
     <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="ModelExtendedManagedFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNameScriptParser.h">
+      <Filter>Graphics Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Renderer\Particle</Filter>
     </ClInclude>
     <ClInclude Include="ParticleCBuffer.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ParticleShader.h">
-      <Filter>Renderer\Shader\Shader types</Filter>
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
     <ClInclude Include="RenderSceneInfoCBuffer.h">
-      <Filter>Renderer\Buffer</Filter>
+      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="RenderInterface.h" />
-    <ClInclude Include="ModelExtendedFactory.h">
-      <Filter>Factory</Filter>
+    <ClInclude Include="ShaderVariableContainer.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapRenderer.h">
+      <Filter>Renderer\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowShader.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowCBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFactory.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferFactory.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,20 +203,11 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{9e006dd4-5e85-4dc5-8bd0-a61348454352}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\Shader">
-      <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Buffer">
-      <UniqueIdentifier>{bd084ec0-9a62-4ac7-b5f4-2229da7a11f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer\Deferred">
       <UniqueIdentifier>{a0426606-0273-4997-a7c8-accf0ab8341f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{f522370d-24a2-4452-958f-a48920f9d6a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Shader\Shader types">
-      <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics Utilities">
       <UniqueIdentifier>{58889cfd-138e-45e1-8bc7-4c06780cda71}</UniqueIdentifier>
@@ -214,6 +226,18 @@
     </Filter>
     <Filter Include="Renderer\Particle">
       <UniqueIdentifier>{19500243-937a-4e79-aafe-747a03f31f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\ShadowMap">
+      <UniqueIdentifier>{3d4b993c-9dc5-4f4f-afc6-f3151a0889c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{264b775e-73fe-46aa-95e8-09fb8bb46e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Shader types">
+      <UniqueIdentifier>{b7fbfb4c-63a0-4046-bf65-be4147ca7867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{bd084ec0-9a62-4ac7-b5f4-2229da7a11f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
