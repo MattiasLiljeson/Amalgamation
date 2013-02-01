@@ -113,10 +113,10 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 // 			}
 
 			lookAt->m_oldPos = dir;
-			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-			// 	lookAt->getRotationSpeed()*saturate(10.0f*dt));
-			rotation = targetTransform->getRotation();
-			// rotation.normalize();
+			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+			 	lookAt->getRotationSpeed()*saturate(3.0f*dt),true);
+			//rotation = targetTransform->getRotation();
+			rotation.normalize();
 
 			// update			
 			transform->setRotation( rotation );

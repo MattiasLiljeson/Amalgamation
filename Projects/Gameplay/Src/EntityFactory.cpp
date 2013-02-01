@@ -208,7 +208,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(5.0f, 50.0f);
+		component = new ShipFlyController(5.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
 
 		component = new ShipEditController();
