@@ -1,0 +1,29 @@
+<rml>
+	<head>
+		<title>Host</title>
+		<link type="text/template" href="window.rml" />
+		<style>
+			/*div#title_bar div#icon
+			{
+				icon-image-s: 230px 281px;
+				icon-image-t: 152px 191px;
+			}
+			
+			form div
+			{
+				width: 200px;
+				margin: auto;
+			}*/
+		</style>
+	</head>
+	<body template="window">
+		<form onsubmit="host">
+			<div>
+				<Input name="server_name" type="text" size="15" maxlength="20" value="Untitled Server" disabled/>
+				<br/>
+			</div>
+			<input type="submit" value="accept">Create</input>
+			<button onclick="goto play">Back</button>
+		</form>
+	</body>
+</rml>

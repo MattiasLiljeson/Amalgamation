@@ -30,6 +30,10 @@ LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphic
 
 LibRocketBackendSystem::~LibRocketBackendSystem()
 {
+	// The connect handler is also an EntitySystem, and thus owned by the SystemManager.
+	// Therefor, it is unregistered manually.
+	EventManager::UnregisterEventHandler("join");
+
 	EventManager::Shutdown();
 
 	for( unsigned int i=0; i<m_documents.size(); i++ )

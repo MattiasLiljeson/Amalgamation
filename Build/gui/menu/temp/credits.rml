@@ -1,0 +1,36 @@
+<rml>
+	<head>
+		<title>Credits</title>
+		<link type="text/template" href="window.rml" />
+		<style>
+<!--			div#title_bar div#icon
+			{
+					display: none;
+			}
+			form div
+			{
+				width: 200px;
+				margin: auto;
+			}-->
+		</style> 
+	</head>
+	<body template="window">
+<!--		<form onsubmit="goto main_menu"> -->
+			<div>
+				<h1>The Creators!</h1>
+				Anton Andersson<br />
+				Alexander Broden<br />
+				Johan Carlberg<br />
+				Per Fornander<br />
+				Robin Karlsson<br />
+				Jarl Larsson<br />
+				Mattias Liljeson<br />
+				Robin Thunstrom<br /><br />
+				
+			</div>
+			<!-- <input type="submit" value="Back">Back</input>
+		</form> -->
+		<button onclick="goto main_menu">Back</button>
+	</body>
+</rml>
+					

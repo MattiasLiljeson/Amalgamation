@@ -56,6 +56,8 @@ public:
 	/// @param[in] handler The event handler.
 	static void RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
 
+	static EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
+
 	/// Processes an event coming through from Rocket.
 	/// @param[in] event The Rocket event that spawned the application event.
 	/// @param[in] value The application-specific event value.
