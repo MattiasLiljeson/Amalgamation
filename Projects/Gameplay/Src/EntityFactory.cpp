@@ -330,6 +330,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// convenient for debugging!
 		component = new AudioListener();
 		entity->addComponent(ComponentType::AudioListener, component);
+
+		/************************************************************************/
+		/* This is where the audio listener is created and therefor the master  */
+		/* volume is added to Ant Tweak Bar here.								*/
+		/************************************************************************/
+		AntTweakBarWrapper::getInstance()->addWriteVariable( 
+			AntTweakBarWrapper::OVERALL,
+			"Master_volume", TwType::TW_TYPE_FLOAT, 
+			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 
 	/************************************************************************/
@@ -370,16 +380,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent(ComponentType::PickComponent, new PickComponent());
 
 		m_world->addEntity(entity);
-
-		/************************************************************************/
-		/* This is where the audio listener is created and therefor the master  */
-		/* volume is added to Ant Tweak Bar here.								*/
-		/************************************************************************/
-		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-			AntTweakBarWrapper::OVERALL,
-			"Master_volume", TwType::TW_TYPE_FLOAT, 
-			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 	return entity;
 }

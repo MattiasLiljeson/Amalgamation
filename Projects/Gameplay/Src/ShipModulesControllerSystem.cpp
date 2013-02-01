@@ -32,6 +32,8 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 			if (m_toHighlight[j].first == netSync->getNetworkOwner())
 			{
 				//Do highlight
+				if(m_toHighlight[j].second > 2)
+					continue;
 				changeHighlight(p_entities[i], m_toHighlight[j].second);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
