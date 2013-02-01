@@ -284,23 +284,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
 	m_world->setSystem( entityParentHandler, true );
-
-	/************************************************************************/
-	/* Network																*/
-	/************************************************************************/
-	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
-	m_world->setSystem( msgProcSystem , true );
-
-	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client);
-	m_world->setSystem( connect, true );
-	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
-	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
-	ClientPacketHandlerSystem* communicatorSystem =
-		new ClientPacketHandlerSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );
-	m_world->setSystem( new ExtrapolationSystem(m_client), true );
-
+	
 	/************************************************************************/
 	/* Audio																*/
 	/************************************************************************/
@@ -317,6 +301,22 @@ void ClientApplication::initSystems()
 	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
 		true );
 #endif // ENABLE_SOUND
+
+	/************************************************************************/
+	/* Network																*/
+	/************************************************************************/
+	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
+	m_world->setSystem( msgProcSystem , true );
+
+	ClientConnectToServerSystem* connect =
+		new ClientConnectToServerSystem( m_client);
+	m_world->setSystem( connect, true );
+	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
+	ClientPacketHandlerSystem* communicatorSystem =
+		new ClientPacketHandlerSystem( m_client );
+	m_world->setSystem( communicatorSystem, false );
+	m_world->setSystem( new ExtrapolationSystem(m_client), true );
 
 	/************************************************************************/
 	/* Gameplay																*/

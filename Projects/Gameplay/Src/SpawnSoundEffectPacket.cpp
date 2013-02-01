@@ -23,6 +23,8 @@ SpawnSoundEffectPacket::SpawnSoundEffectPacket()
 		"Mine_Blip.wav";
 	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::ShieldDeflect] =
 		"Shield_Deflect.wav";
+	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::ShieldActive] =
+		"Shield_Active.wav";
 }
 
 Packet SpawnSoundEffectPacket::pack()

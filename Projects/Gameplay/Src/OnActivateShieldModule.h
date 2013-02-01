@@ -34,7 +34,7 @@ public:
 			data.attachedToNetsyncEntity = m_shipEntity->getIndex();
 			data.positional = true;
 			data.position = transform->getTranslation();
-			data.soundIdentifier = SpawnSoundEffectPacket::MineBlip;
+			data.soundIdentifier = SpawnSoundEffectPacket::ShieldActive;
 			m_server->broadcastPacket(data.pack());
 		}
 	}
