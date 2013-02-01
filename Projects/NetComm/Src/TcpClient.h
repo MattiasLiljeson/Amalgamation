@@ -47,7 +47,7 @@ public:
 	unsigned int newPacketsCount();
 	Packet popNewPacket();
 
-	void sendPacket( Packet p_packet );
+	void sendPacket( Packet& p_packet );
 
 	void processMessages();
 
