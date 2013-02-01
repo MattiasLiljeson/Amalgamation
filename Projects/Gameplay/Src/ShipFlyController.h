@@ -24,16 +24,27 @@ using namespace std;
 class ShipFlyController : public Component
 {
 public:
+	struct TransformGoal
+	{
+		AglVector3 translation;
+		AglQuaternion rotation;
+		AglVector3 scale;
+		float timestamp;
+	};
+
+
 	ShipFlyController()
 	{
 		m_turnSpeed = 10.0f;
 		m_thrustPower = 0.2f;
+		m_currentTransformTimestamp=-1.0f;
 	}
 
 	ShipFlyController(float p_turnSpeed, float p_thrustPower)
 	{
 		m_turnSpeed = p_turnSpeed;
 		m_thrustPower = p_thrustPower;
+		m_currentTransformTimestamp=-1.0f;
 	}
 
 	~ShipFlyController() {}
@@ -50,5 +61,18 @@ public:
 	AglVector3 m_turnPowerAccumulator;
 	AglVector3 m_thrustPowerAccumulator;
 
-	queue<AglVector3> m_transformBuffer;
+	float m_currentTransformTimestamp;
+	float m_startTransformTimestamp;
+	float m_goalTransformTimestamp;
+	AglVector3 m_currentTranslation;
+	AglVector3 m_startTranslation;
+	AglVector3 m_goalTranslation;
+	AglQuaternion m_currentRotation;
+	AglQuaternion m_startRotation;
+	AglQuaternion m_goalRotation;
+	AglVector3 m_currentScale;
+	AglVector3 m_startScale;
+	AglVector3 m_goalScale;
+
+	queue<TransformGoal> m_transformBuffer;
 };

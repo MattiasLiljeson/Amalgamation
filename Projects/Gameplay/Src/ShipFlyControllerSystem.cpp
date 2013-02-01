@@ -21,7 +21,7 @@
 #include "ThrustPacket.h"
 #include "EntityUpdatePacket.h"
 
-
+#define FORCE_VS_OUTPUT
 
 ShipFlyControllerSystem::ShipFlyControllerSystem( ShipInputProcessingSystem* p_shipInput,
 										    PhysicsSystem* p_physicsSystem,
@@ -56,13 +56,14 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+
+			// Calculate impulse data to send to server
 			Entity* ship = p_entities[i];
 			ShipFlyController* controller = static_cast<ShipFlyController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
 
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
 
 
 			// Calc rotation from player input
@@ -91,6 +92,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			controller->m_thrustPowerAccumulator += thrustVec;
 			controller->m_turnPowerAccumulator += angularVec;
 
+			// Handle switch to edit mode
 			if (input.stateSwitchInput != 0)
 			{
 				controller->m_thrustPowerAccumulator = AglVector3::zero();
@@ -100,6 +102,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				ship->applyComponentChanges();
 			}
 
+			// Send data to server
 			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 				checkTimeInterval(TimerIntervals::Every16Millisecond))
 			{
@@ -116,6 +119,11 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				controller->m_thrustPowerAccumulator = AglVector3::zero();
 				controller->m_turnPowerAccumulator = AglVector3::zero();
 			}
+
+			// Handle data sent to us from server
+			handleTransformInterpolation( controller, transform );
+
+
 		}
 	}
 }
@@ -157,6 +165,88 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 
 	m_client->sendPacket( thrustPacket.pack() );
 }
+
+void ShipFlyControllerSystem::handleTransformInterpolation( ShipFlyController* p_controller, 
+														   Transform* p_transform )
+{
+	// fetch data
+	// init
+	float dt = m_world->getDelta();
+	if (!p_controller->m_transformBuffer.empty() &&
+		p_controller->m_currentTransformTimestamp<0.0f) // if no data gotten yet, init
+	{
+		ShipFlyController::TransformGoal front = p_controller->m_transformBuffer.front();
+		p_controller->m_transformBuffer.pop();		
+		p_controller->m_currentTransformTimestamp = front.timestamp;
+		p_controller->m_startTransformTimestamp = front.timestamp;
+		p_controller->m_goalTransformTimestamp = front.timestamp;
+
+		p_controller->m_startTranslation = front.translation;
+		p_controller->m_currentTranslation = front.translation;
+
+		p_controller->m_startRotation = front.rotation;
+		p_controller->m_currentRotation = front.rotation;
+
+		p_controller->m_startScale = front.scale;
+		p_controller->m_currentScale = front.scale;
+
+	}
+	if (!p_controller->m_transformBuffer.empty() &&
+		p_controller->m_currentTransformTimestamp>0.0f) // get goal
+	{
+		// get new data if we have catched up
+		// while timestamp batched at same time and there is still data
+		while (p_controller->m_currentTransformTimestamp>p_controller->m_goalTransformTimestamp     
+				&& !p_controller->m_transformBuffer.empty())					
+		{
+			ShipFlyController::TransformGoal front = p_controller->m_transformBuffer.front(); // fetch new front
+			p_controller->m_startTranslation = p_controller->m_currentTranslation; // set our start value to current
+			p_controller->m_startRotation = p_controller->m_currentRotation;
+			p_controller->m_startScale = p_controller->m_currentScale;
+
+			p_controller->m_goalTranslation = front.translation; // set our goal to the new front
+			p_controller->m_goalRotation = front.rotation;
+			p_controller->m_goalScale = front.scale;
+
+			p_controller->m_startTransformTimestamp = p_controller->m_currentTransformTimestamp; // set set start time to current
+			p_controller->m_goalTransformTimestamp = front.timestamp; // set our goal timestamp to the new front
+			p_controller->m_transformBuffer.pop(); // pop old front
+		}
+	}
+
+	DEBUGPRINT(( ("\nQueue size: "+toString(p_controller->m_transformBuffer.size())+"\n").c_str() ));
+
+
+
+	// interpolate
+	if (p_controller->m_currentTransformTimestamp<=p_controller->m_goalTransformTimestamp)
+	{
+		p_controller->m_currentTransformTimestamp += dt;
+		float currentT = p_controller->m_currentTransformTimestamp;
+		float startT = p_controller->m_startTransformTimestamp;
+		float endT = p_controller->m_goalTransformTimestamp;
+		float t = (currentT-startT) / max(1.0f,(endT-startT));
+		DEBUGPRINT(( ("\nCurrent lerp: "+toString(t)+"\n").c_str() ));
+		AglVector3 lerpedTranslation = AglVector3::lerp(p_controller->m_startTranslation,
+			p_controller->m_goalTranslation,t);	
+		AglQuaternion slerpedRotation = AglQuaternion::slerp(p_controller->m_startRotation,
+			p_controller->m_goalRotation,t,true);	
+		slerpedRotation.normalize();
+		AglVector3 lerpedScale= AglVector3::lerp(p_controller->m_startScale,
+			p_controller->m_goalScale,t);
+		p_controller->m_currentTranslation = lerpedTranslation;
+		p_controller->m_currentRotation = slerpedRotation;
+		p_controller->m_currentScale = lerpedScale;
+	}
+
+
+	// update
+	p_transform->setTranslation(p_controller->m_currentTranslation);
+	p_transform->setRotation(p_controller->m_currentRotation);
+	p_transform->setScale(p_controller->m_currentScale);
+
+}
+
 
 // void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
 // {

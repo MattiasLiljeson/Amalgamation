@@ -86,13 +86,6 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		else if( p_initData[i].dataName == "m_angularVelocityZ" )
 			p_initData[i].getData<float>(&m_angularVelocity.z);
 
-		else if( p_initData[i].dataName == "m_angularVelocityX" )
-			p_initData[i].getData<float>(&m_angularVelocity.x);
-		else if( p_initData[i].dataName == "m_angularVelocityY" )
-			p_initData[i].getData<float>(&m_angularVelocity.y);
-		else if( p_initData[i].dataName == "m_angularVelocityZ" )
-			p_initData[i].getData<float>(&m_angularVelocity.z);
-
 		else if( p_initData[i].dataName == "m_type" )
 		{
 			p_initData[i].getData<int>(&temp);
