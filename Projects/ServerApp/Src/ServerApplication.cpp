@@ -57,8 +57,6 @@ namespace Srv
 		m_world = new EntityWorld();
 		initSystems();
 
-		ComponentAssemblageAllocator allocator();
-
 		initEntities();
 	}
 

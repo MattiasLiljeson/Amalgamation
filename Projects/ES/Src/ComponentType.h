@@ -24,6 +24,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		Extrapolate,
+		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,

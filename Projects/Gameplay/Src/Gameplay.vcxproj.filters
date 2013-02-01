@@ -461,6 +461,12 @@
     <ClInclude Include="LoadMeshSystemServer.h">
       <Filter>Systems\AssetLoading</Filter>
     </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -767,6 +773,9 @@
     </ClCompile>
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems\AssetLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

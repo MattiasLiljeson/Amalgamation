@@ -23,6 +23,7 @@
 #include "LightBlinker.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "InterpolationComponent.h"
 #include <time.h>
 
 
@@ -201,6 +202,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+
 	Component* component = NULL; // for temp usage
 
 	/************************************************************************/
@@ -277,6 +280,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent(ComponentType::PickComponent, new PickComponent());
+		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 		m_world->addEntity(entity);
 
@@ -309,7 +313,8 @@ Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent, new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -331,7 +336,8 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -353,7 +359,8 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -374,7 +381,8 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -394,7 +402,8 @@ Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -418,7 +427,8 @@ Entity* EntityFactory::createLaserSightClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -484,7 +494,7 @@ Entity* EntityFactory::createSelectionSphereClient(EntityCreationPacket p_packet
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 	m_world->addEntity(entity);
 	return entity;
@@ -506,7 +516,8 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -528,7 +539,9 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -551,7 +564,8 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;

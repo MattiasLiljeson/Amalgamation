@@ -27,6 +27,7 @@
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
 #include "HudElement.h"
+#include "InterpolationComponent.h"
 
 #include "GraphicsBackendSystem.h"
 #include "Control.h"
@@ -556,21 +557,21 @@ void ClientPacketHandlerSystem::handleBatch()
 			
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				/*ShipFlyController* ship = NULL;
-				Component* shipcomp = m_world->getComponentManager()->getComponent(
-					entity->getIndex(), ComponentType::ShipFlyController );
-				if (shipcomp) ship = static_cast<ShipFlyController*>(shipcomp);
-				if (ship)
+				/*InterpolationComponent* interpolation = NULL;
+				Component* intcomp = m_world->getComponentManager()->getComponent(
+					entity->getIndex(), ComponentType::InterpolationComponent );
+				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
+				if (interpolation )
 				{
 					// set up goal for queuing
-					float handledTime = m_world->getElapsedTime();
-					ShipFlyController::TransformGoal transformGoal;
+					float handledTime = data.timestamp;
+					InterpolationComponent::TransformGoal transformGoal;
 					transformGoal.timestamp = handledTime;
 					transformGoal.translation = data.translation;
 					transformGoal.rotation = data.rotation;
 					transformGoal.scale = data.scale;
 					// enqueue data
-					ship->m_transformBuffer.push(transformGoal);
+					interpolation ->m_transformBuffer.push(transformGoal);
 				}
 				else*/
 				{

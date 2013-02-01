@@ -35,6 +35,7 @@
 #include <EntityParent.h>
 #include <LoadMesh.h>
 #include <LightsComponent.h>
+#include <InterpolationComponent.h>
 
 // Systems
 #include <AntTweakBarSystem.h>
@@ -88,6 +89,7 @@
 #include <MoveShipLightsSystem.h>
 #include <LightBlinkerSystem.h>
 #include <ParticleRenderSystem.h>
+#include <InterpolationSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -258,6 +260,12 @@ void ClientApplication::initSystems()
 	m_world->setSystem( shipEditController, true);
 
 	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
+	m_world->setSystem( entityParentHandler, true );
+
+	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
 
@@ -267,6 +275,8 @@ void ClientApplication::initSystems()
 	// Camera system sets its viewport info to the graphics backend for render
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
 	m_world->setSystem( camera , true );
+
+
 
 	/************************************************************************/
 	/* Renderer																*/
@@ -284,12 +294,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( antTweakBar, true );
 
 	/************************************************************************/
-	/* Hierarchy															*/
-	/************************************************************************/
-	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
-	m_world->setSystem( entityParentHandler, true );
-
-	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
 	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
@@ -304,6 +308,13 @@ void ClientApplication::initSystems()
 		new ClientPacketHandlerSystem( m_client );
 	m_world->setSystem( communicatorSystem, false );
 	m_world->setSystem( new ExtrapolationSystem(m_client), true );
+
+	/************************************************************************/
+	/* Interpolation  														*/
+	/************************************************************************/
+	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
+	// m_world->setSystem( interpolationSystem, true);
+
 
 	/************************************************************************/
 	/* Audio																*/
