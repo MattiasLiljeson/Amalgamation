@@ -2,27 +2,33 @@
 #include <Component.h>
 #include <ComponentFactory.h>
 // =======================================================================================
-//	LightBlinker
+//	Vibration
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief Component that vibrates the controller
 ///        
-/// # LightBlinker
+/// # Vibration
 /// Detailed description...
 /// Created on: 28-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class LightBlinker: public Component
+class Vibration: public Component
 {
 public:
-	LightBlinker();
-	LightBlinker(float p_maxRange);
-	~LightBlinker(){}
+	Vibration();
+	Vibration(float p_power, float p_minRadius, float p_maxRadius);
+	~Vibration(){}
 	virtual void init( vector<ComponentData> p_initData );
 public:
-	bool increase;
-	float maxRange;
+	float leftPower;
+	float rightPower;
+	float maxRadius;
+	float minRadius;
+	float linearDeclineEffectMultiplier; ///< multiplier that will linearly decrease until triggering shutdown of vibration
+	bool enabled;
+	bool enableDeclineEffect;
+	bool distanceAttenuated;
 private:
-	static ComponentRegister<LightBlinker> s_reg;
+	static ComponentRegister<Vibration> s_reg;
 };

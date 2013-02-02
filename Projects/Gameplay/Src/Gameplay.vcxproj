@@ -37,6 +37,7 @@
     <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
+    <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="EntityParent.h" />
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="Vibration.h" />
     <ClInclude Include="WelcomePacket.h" />
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
@@ -168,6 +170,7 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
@@ -253,6 +256,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="Vibration.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
     <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>

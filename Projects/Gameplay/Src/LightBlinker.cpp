@@ -10,6 +10,12 @@ LightBlinker::LightBlinker()
 	m_componentType = ComponentType::ComponentTypeIdx::LightBlinker;
 }
 
+LightBlinker::LightBlinker(float p_maxRange)
+{
+	increase = true;
+	maxRange = p_maxRange;
+	m_componentType = ComponentType::ComponentTypeIdx::LightBlinker;
+}
 void LightBlinker::init( vector<ComponentData> p_initData )
 {
 	char* cStr;

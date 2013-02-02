@@ -73,6 +73,7 @@ public:	//Enums
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
 		LightBlinkerSystem,
+		GamepadRumbleSystem,
 		WinningConditionSystem,
 		ShipModulesTrackerSystem,
 		ShadowSystem,

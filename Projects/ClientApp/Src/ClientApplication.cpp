@@ -67,6 +67,7 @@
 #include <ShipInputProcessingSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <HudSystem.h>
+#include <GamepadRumbleSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MineControllerSystem.h>
@@ -233,6 +234,9 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
+
+	GamepadRumbleSystem* gamepadRumble = new GamepadRumbleSystem( inputBackend );
+	m_world->setSystem( gamepadRumble, true);
 	
 	/************************************************************************/
 	/* GUI																	*/

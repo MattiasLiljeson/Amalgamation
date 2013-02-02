@@ -29,6 +29,7 @@ XInputFetcher::XInputFetcher()
 
 XInputFetcher::~XInputFetcher()
 {
+	vibrate(0.0f, 0.0f);
 }
 
 void XInputFetcher::update()
@@ -120,4 +121,15 @@ void XInputFetcher::calibrate( double p_epsilon )
 	{
 		m_analogOffsets[i] = getRawAnalog(i);
 	}
+}
+
+void XInputFetcher::vibrate(float p_leftMotor, float p_rightMotor) const
+{
+	// Create state
+    XINPUT_VIBRATION vibration;
+    ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+    vibration.wLeftMotorSpeed = (WORD)(min(100.0f,p_leftMotor)*655.35f);
+    vibration.wRightMotorSpeed = (WORD)(min(100.0f,p_rightMotor)*655.35f);
+	// execute
+    XInputSetState(0, &vibration);
 }

@@ -142,10 +142,3 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 
 	m_client->sendPacket( thrustPacket.pack() );
 }
-
-
-// void ShipFlyControllerSystem::sendTransformPacketToServer( NetworkSynced* p_syncedInfo, Transform* p_transform )
-// {
-// 	EntityUpdatePacket transformPacket;
-// 	transformPacket.
-// }

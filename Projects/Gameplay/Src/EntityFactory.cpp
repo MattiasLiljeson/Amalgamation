@@ -22,6 +22,7 @@
 #include "LightBlinker.h"
 #include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "Vibration.h"
 #include "PositionalSoundSource.h"
 #include "AudioBackendSystem.h"
 #include "InterpolationComponent.h"
@@ -271,6 +272,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
+		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		// int shipId = entity->getIndex();
 									 // HACK!
 		float aspectRatio = 800/600; // Note: retrieve the aspect ratio here somehow
@@ -547,6 +549,11 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
+
+	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
+	v->enabled = true;
+	entity->addComponent( ComponentType::Vibration, v );
+
 	m_world->addEntity(entity);
 	return entity;
 }

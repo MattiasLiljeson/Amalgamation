@@ -232,6 +232,12 @@ Control* InputBackendSystem::getControlByEnum( InputHelper::Xbox360Analogs p_ana
 	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_analog]);
 }
 
+void InputBackendSystem::setControllerVibration(float p_leftMotor, float p_rightMotor)
+{
+	XInputFetcher* xinput = m_inputManager->getXInputFetcher();
+	if (xinput) xinput->vibrate(p_leftMotor,p_rightMotor);
+}
+
 void InputBackendSystem::saveControl( InputHelper::InputDeviceTypes p_deviceType, 
 							int p_controlType, Control* p_control, const string& p_name )
 {

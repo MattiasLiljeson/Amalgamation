@@ -23,9 +23,14 @@ class LookAtFollowMode_TAG : public Tag {};
 class LookAtOrbitMode_TAG : public Tag {};
 
 ///
-/// Ship_TAG
+/// Ship_TAG for server
 ///
 class Ship_TAG : public Tag {};
+
+///
+/// MyShip_TAG for client
+///
+class MyShip_TAG : public Tag {};
 
 class MainCamera_TAG : public Tag{};
 
