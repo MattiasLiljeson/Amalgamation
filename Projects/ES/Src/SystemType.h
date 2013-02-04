@@ -74,6 +74,7 @@ public:	//Enums
 		ShipModulesTrackerSystem,
 		ShadowSystem,
 		SlotInputController,
+		SpeedBoostModuleControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

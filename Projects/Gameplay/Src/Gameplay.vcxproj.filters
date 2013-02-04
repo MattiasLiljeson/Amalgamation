@@ -485,6 +485,15 @@
     <ClInclude Include="SlotInputControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="OnActivateSpeedBoostModule.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="OnDeactivateSpeedBoostModule.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -800,6 +809,9 @@
     </ClCompile>
     <ClCompile Include="SlotInputControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

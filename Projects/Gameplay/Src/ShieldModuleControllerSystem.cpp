@@ -18,7 +18,7 @@
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 2,
-	ComponentType::ShieldModule, ComponentType::ShipModule)
+	ComponentType::ShieldModule, ComponentType::ShipModule, ComponentType::Transform)
 {
 	m_server = p_server;
 }
@@ -142,4 +142,5 @@ void ShieldModuleControllerSystem::removed( Entity* p_entity )
 {
 	// HACK: NOTE: HACK: NOTE: REMOVE THE EVENTS!
 	// NOTE: Or does the module destroy its own events? Well, maybe it does!
+	// NOTE: Yeah, they do. Don't bother the guy writing the first line (A).
 }
