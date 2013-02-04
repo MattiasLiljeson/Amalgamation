@@ -19,9 +19,9 @@ void ShipModule::init( vector<ComponentData> p_initData )
 {
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
-		if( p_initData[i].dataName == "value" )
+		if( p_initData[i].dataName == "m_value" )
 			p_initData[i].getData<float>(&m_value);
-		else if( p_initData[i].dataName == "health" )
+		else if( p_initData[i].dataName == "m_health" )
 			p_initData[i].getData<float>(&m_health);
 	}
 }

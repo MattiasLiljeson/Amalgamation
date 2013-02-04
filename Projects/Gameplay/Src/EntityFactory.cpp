@@ -21,8 +21,11 @@
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
+#include "RocketLauncherModule.h"
+#include "MineLayerModule.h"
 
 #include <time.h>
+#include "BodyInitData.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -84,102 +87,129 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 
 	return meal;
 }
-Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
+Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint)
 {
 	EntityType::EntityEnums type = static_cast<EntityType::EntityEnums>(p_packet.entityType);
+
+	Entity* e = NULL;
+
 	if (type == EntityType::Ship)
 	{
 		if (m_client)
-			return createShipEntityClient(p_packet);
+			e = createShipEntityClient(p_packet);
 		else
-			return createShipEntityServer(p_packet);
+			e = createShipEntityServer(p_packet);
 	}
 	else if (type == EntityType::MineLayerModule)
 	{
 		if (m_client)
-			return createMineLayerClient(p_packet);
+			e = createMineLayerClient(p_packet);
 		else
-			return createMineLayerServer(p_packet);
+			e = createMineLayerServer(p_packet);
 	}
 	else if (type == EntityType::RocketLauncherModule)
 	{
 		if (m_client)
-			return createRocketLauncherClient(p_packet);
+			e = createRocketLauncherClient(p_packet);
 		else
-			return createRocketLauncherServer(p_packet);
+			e = createRocketLauncherServer(p_packet);
 	}
 	else if (type == EntityType::BoosterModule)
 	{
 		if (m_client)
-			return createSpeedBoosterClient(p_packet);
+			e = createSpeedBoosterClient(p_packet);
 		else
-			return createSpeedBoosterServer(p_packet);
+			e = createSpeedBoosterServer(p_packet);
 	}
 	else if (type == EntityType::MinigunModule)
 	{
 		if (m_client)
-			return createMinigunClient(p_packet);
+			e = createMinigunClient(p_packet);
 		else
-			return createMinigunServer(p_packet);
+			e = createMinigunServer(p_packet);
 	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
-			return createModuleClient(p_packet);
+			e = createModuleClient(p_packet);
 		else
-			return createModuleServer(p_packet);
+			e = createModuleServer(p_packet);
 	}
 	else if (type == EntityType::LaserSight)
 	{
 		if (m_client)
-			return createLaserSightClient(p_packet);
+			e = createLaserSightClient(p_packet);
 		else
-			return createLaserSightServer(p_packet);
+			e = createLaserSightServer(p_packet);
 	}
 	else if (type == EntityType::ParticleSystem)
 	{
 		if (m_client)
-			return createParticleSystemClient(p_packet);
+			e = createParticleSystemClient(p_packet);
 		else
-			return createParticleSystemServer(p_packet);
+			e = createParticleSystemServer(p_packet);
 	}
 	else if (type == EntityType::SelectionSphere)
 	{
 		if (m_client)
-			return createSelectionSphereClient(p_packet);
+			e = createSelectionSphereClient(p_packet);
 		else
-			return createSelectionSphereServer(p_packet);
+			e = createSelectionSphereServer(p_packet);
 	}
 	else if (type == EntityType::Mine)
 	{
 		if (m_client)
-			return createMineClient(p_packet);
+			e = createMineClient(p_packet);
 		else
-			return createMineServer(p_packet);
+			e = createMineServer(p_packet);
 	}
 	else if (type == EntityType::Rocket)
 	{
 		if (m_client)
-			return createRocketClient(p_packet);
+			e = createRocketClient(p_packet);
 		else
-			return createRocketServer(p_packet);
+			e = createRocketServer(p_packet);
 	}
 	else if (type == EntityType::Shield)
 	{
 		if (m_client)
-			return createShieldClient(p_packet);
+			e = createShieldClient(p_packet);
 		else
-			return createShieldServer(p_packet);
+			e = createShieldServer(p_packet);
 	}
 	else if (type == EntityType::Other)
 	{
 		if (m_client)
-			return createOtherClient(p_packet);
+			e = createOtherClient(p_packet);
 		else
-			return createOtherServer(p_packet);
+			e = createOtherServer(p_packet);
 	}
-	DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
-	return NULL;
+
+	if (e)
+	{
+		if (p_spawnPoint)
+		{
+			BodyInitData* init = static_cast<BodyInitData*>(e->getComponent(ComponentType::BodyInitData));
+			if (init)
+			{
+				AglMatrix::matrixToComponents(*p_spawnPoint, init->m_scale, init->m_orientation, init->m_position);
+			}
+			else
+			{
+				Transform* transform = static_cast<Transform*>(e->getComponent(ComponentType::Transform));
+				if (transform)
+				{
+					transform->setMatrix(*p_spawnPoint);
+				}
+			}
+		}
+		return e;
+	}
+	else
+	{
+		DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
+		return NULL;
+	}
 }
 
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
@@ -294,44 +324,47 @@ Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "MineWeapon","Assemblages/MineWeapon.asd" );
+	entity = entityFromRecipeOrFile( "MineLayer","Assemblages/Modules/MineLayer/ClientMineLayer.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 	m_world->addEntity(entity);
 	return entity;
 }
 Entity* EntityFactory::createMineLayerServer(EntityCreationPacket p_packet)
 {
-	//Not moved here yet!
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/MineLayer/ServerMineLayer.asd" );
+	Entity* entity = entityFromRecipe( "MineLayer" );	
+
+	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "RocketLauncher", "Assemblages/RocketLauncher.asd" );
+	entity = entityFromRecipeOrFile( "RocketLauncher", "Assemblages/Modules/RocketLauncher/ClientRocketLauncher.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 	m_world->addEntity(entity);
 	return entity;
 }
 Entity* EntityFactory::createRocketLauncherServer(EntityCreationPacket p_packet)
 {
-	//Not moved here yet!
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/RocketLauncher/ServerRocketLauncher.asd" );
+	Entity* entity = entityFromRecipe( "RocketLauncher" );									 
+	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 {
