@@ -224,17 +224,22 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(ComponentType::PhysicsBody));
 	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
 
-	AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
+	//Ship should always be a compound body
+	CompoundBody* physicalShipCompoundBody = static_cast<CompoundBody*>(physicalShipBody);
 
-	float radius = 4; //Hard coded radius for now
+	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	dir = dest - sphereCenter;
+	//AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
+
+	//float radius = 4; //Hard coded radius for now
+
+	dir = dest - bs.position;
 	dir.normalize();
-	dest = sphereCenter + dir * radius;
+	dest = bs.position + dir * bs.radius;
 
 	AglVector3 vel = body->GetVelocity();
 
-	float t = getT(origin, dir, sphereCenter, radius);
+	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
 		dest = origin + dir*t;
 	body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
