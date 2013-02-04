@@ -3,8 +3,8 @@
 ComponentRegister<MineLayerModule> MineLayerModule::s_reg("MineLayerModule");
 
 MineLayerModule::MineLayerModule()
+	: Component( ComponentType::MineLayerModule )
 {
-	m_componentType = ComponentType::MineLayerModule;
 	m_cooldown = 0;
 }
 

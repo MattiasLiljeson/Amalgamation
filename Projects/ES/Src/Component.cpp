@@ -9,6 +9,12 @@ Component::Component()
 	m_componentType = ComponentType::NON_EXISTING; 
 }
 
+Component::Component( ComponentType::ComponentTypeIdx p_componentType )
+{
+	m_counter++;
+	m_id = m_counter;
+	m_componentType = p_componentType;
+}
 
 Component::~Component()
 {

@@ -12,6 +12,7 @@ class Component
 {
 public:
 	Component();
+	Component( ComponentType::ComponentTypeIdx p_componentType );
 	virtual ~Component() = 0;
 
 	virtual void init( vector<ComponentData> p_initData );

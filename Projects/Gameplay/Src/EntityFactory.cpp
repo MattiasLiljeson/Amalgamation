@@ -290,9 +290,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 
-	/************************************************************************/
-	/* HACK: Score should probably be located in another entity.			*/
-	/************************************************************************/
 	component = new PlayerScore();
 	entity->addComponent( ComponentType::PlayerScore, component );
 	m_world->addEntity(entity);
@@ -353,8 +350,6 @@ Entity* EntityFactory::createMineLayerServer(EntityCreationPacket p_packet)
 {
 	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/MineLayer/ServerMineLayer.asd" );
 	Entity* entity = entityFromRecipe( "ServerMineLayer" );
-
-//	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
 	m_world->addEntity(entity);
 	return entity;
@@ -379,7 +374,7 @@ Entity* EntityFactory::createRocketLauncherServer(EntityCreationPacket p_packet)
 {
 	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/RocketLauncher/ServerRocketLauncher.asd" );
 	Entity* entity = entityFromRecipe( "RocketLauncher" );									 
-	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+//	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
 	m_world->addEntity(entity);
 	return entity;
