@@ -91,6 +91,9 @@
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
+      <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -467,6 +470,18 @@
     <ClInclude Include="ShadowSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleEvent.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="OnActivateShieldModule.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="OnDeActivateShieldModule.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoveSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -776,6 +791,9 @@
     </ClCompile>
     <ClCompile Include="ShadowSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
