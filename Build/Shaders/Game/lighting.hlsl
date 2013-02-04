@@ -3,11 +3,11 @@
 #include "shadowing.hlsl"
 #include "utility.hlsl"
 
-Texture2D gDiffuseMap : register(t0);
-Texture2D gNormalMap : register(t1);
-Texture2D gSpecular : register(t2);
-Texture2D gDepth : register(t3);
-Texture2D gShadow : register(t4);
+Texture2D gDiffuseMap 	: register(t0);
+Texture2D gNormalMap 	: register(t1);
+Texture2D gSpecular 	: register(t2);
+Texture2D gDepth 		: register(t3);
+Texture2D gShadow 		: register(t4);
 
 SamplerState pointSampler : register(s0);
 
@@ -99,15 +99,6 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	{
 		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
 		shadowCoeff = doShadowing(gShadow, pointSampler, shadowWorldPos);
-		
-		// No black shadows. Not needed when shadow is per light and not for all lights.
-		float4 shadowColor = float4(1,1,1,1);
-		if(shadowCoeff < 0.5f){
-			shadowCoeff = 0.5f;
-		}
-		if(shadowCoeff < 0.999f){
-			shadowColor = float4(shadowCoeff*0.0862f,shadowCoeff*0.172f,shadowCoeff*0.219f,1.0f);
-		}
 	}
 	lightCol *= shadowCoeff;
 	
