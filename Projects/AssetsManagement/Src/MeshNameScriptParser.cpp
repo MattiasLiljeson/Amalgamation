@@ -1,12 +1,17 @@
 #include "MeshNameScriptParser.h"
 #include <DebugUtil.h>
 #include <ValueClamp.h>
+#include <AglVector3.h>
 
 string MeshNameScriptParser::separators = "_";
+string MeshNameScriptParser::decimalSeparator = "d";
 string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";
 string MeshNameScriptParser::light = "L";
+string MeshNameScriptParser::pointlightType = "point";
+string MeshNameScriptParser::spotlightType = "spot";
+string MeshNameScriptParser::dirlightType = "dir";
 
 pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> 
 	MeshNameScriptParser::parse(const string& p_string)
@@ -32,6 +37,42 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		data.spawnSpecName = extractPart(p_string,0);
 		data.name = extractPart(p_string,1);
 	}
+	else if (instr==light)
+	{
+		data.name = extractPart(p_string,0);
+		if (data.name==pointlightType)
+		{
+			tokenVal = POINTLIGHT;
+		}
+		else if (data.name==spotlightType)
+		{
+			tokenVal = SPOTLIGHT;
+		}
+		else
+		{
+			tokenVal = DIRLIGHT;
+		}
+		// raw data
+		string diffuse = extractPart(p_string,1);
+		string specular = extractPart(p_string,2);
+		string ambient = extractPart(p_string,3);
+		string glossFloat = extractPart(p_string,4);
+		string distFloat = extractPart(p_string,5);
+		string pwrFloat = extractPart(p_string,6);
+		string constAttFloat = extractPart(p_string,7);
+		string linAttFloat = extractPart(p_string,8);
+		string quadAttFloat = extractPart(p_string,9);
+		// store converted in data
+		getRGB(data.lightSpecDiffuse,diffuse);
+		getRGB(data.lightSpecSpecular,specular);
+		getRGB(data.lightSpecAmbient,ambient);
+		data.lightSpecGloss = getFloatFromDecimalString(glossFloat);
+		data.lightSpecRange = getFloatFromDecimalString(distFloat);
+		data.lightSpecPwr = getFloatFromDecimalString(pwrFloat);
+		data.lightSpecAtt.x = getFloatFromDecimalString(constAttFloat);
+		data.lightSpecAtt.y = getFloatFromDecimalString(linAttFloat);
+		data.lightSpecAtt.z = getFloatFromDecimalString(quadAttFloat);
+	}
 	return pair<Data,Token>(data,tokenVal);
 }
 
@@ -52,4 +93,27 @@ std::string MeshNameScriptParser::extractPart( const string& p_string,int offset
 	int l = (int)p_string.size()-suffixLength-s;
 	string sub = p_string.substr(s,l);
 	return sub;
+}
+
+float MeshNameScriptParser::getFloatFromDecimalString( const string& p_string )
+{
+	// replace decimal separator with a dot
+	string withDot = p_string;
+	withDot.replace(p_string.find(decimalSeparator),1,".");
+	// convert to a float
+	float convVal = (float)::atof(withDot.c_str());
+	return convVal;
+}
+
+void MeshNameScriptParser::getRGB( AglVector3& p_outVec, const string& p_hex )
+{
+	// calculate components from hex in 0-255
+	int hex = ::atoi(p_hex.c_str());
+	int r = ( hex >> 16 ) & 0xFF;
+	int g = ( hex >> 8 ) & 0xFF;
+	int b = hex & 0xFF;
+	// return a vector in 0-1 space
+	p_outVec.x = r/255.0f;
+	p_outVec.y = g/255.0f;
+	p_outVec.z = b/255.0f;
 }

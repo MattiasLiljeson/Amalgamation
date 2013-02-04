@@ -3,6 +3,7 @@
 #include <utility>
 
 using namespace std;
+class AglVector3;
 
 // =======================================================================================
 //                                      MeshNameScriptParser
@@ -25,7 +26,9 @@ public:
 		CONNECTIONPOINT,
 		INSTANTIATE,
 		SPAWNPOINT,
-		LIGHT
+		POINTLIGHT,
+		DIRLIGHT,
+		SPOTLIGHT
 	};
 
 	///-----------------------------------------------------------------------------------
@@ -34,15 +37,17 @@ public:
 	///-----------------------------------------------------------------------------------
 	struct Data
 	{
-		Data() {name=""; instanceSpecFilename=""; spawnSpecName=""; lightSpecR=0.0f;
-				lightSpecG=0.0f;; lightSpecB=0.0f; lightSpecRange=0.0f;}
+		Data() {name=""; instanceSpecFilename=""; spawnSpecName=""; lightSpecRange=0.0f;
+		lightSpecPwr=0.0f; lightSpecGloss=0.0f;}
 		string name;
 		string instanceSpecFilename;				///< For instance points (file name)
 		string spawnSpecName;						///< For spawn points (action name)
 		// Light specifics
-		float lightSpecR, lightSpecG, lightSpecB;
-		float lightSpecRange;
-		// float lightSpecConst, lightSpecLin, lightSpec work in progress
+		// colours
+		AglVector3 lightSpecDiffuse, lightSpecSpecular, lightSpecAmbient;
+		float lightSpecGloss;
+		float lightSpecRange,lightSpecPwr; // range and power
+		AglVector3 lightSpecAtt; // attenuation
 	};
 
 	static pair<Data,Token> parse(const string& p_string);
@@ -50,9 +55,15 @@ protected:
 private:
 	static string getInstruction(const string& p_string);
 	static string extractPart(const string& p_string,int offset=0);
+	static float getFloatFromDecimalString(const string& p_string);
+	static void getRGB(AglVector3& p_outVec, const string& p_hex);
 	static string separators;
+	static string decimalSeparator;
 	static string instantiate;
 	static string connectionpoint;
 	static string spawnpoint;
 	static string light;
+	static string pointlightType;
+	static string spotlightType;
+	static string dirlightType;
 };
