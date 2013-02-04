@@ -31,6 +31,27 @@ void CompoundBody::ComputeInertia()
 	mInertiaWorld = inertia;
 	mInverseInertiaWorld = AglMatrix::inverse(mInertiaWorld);
 }
+AglBoundingSphere CompoundBody::MergeSpheres(AglBoundingSphere pS1, AglBoundingSphere pS2)
+{
+	AglVector3 dVec = pS2.position - pS1.position;
+	float dist2 = AglVector3::dotProduct(dVec, dVec);
+	if ((pS2.radius-pS1.radius)*(pS2.radius-pS1.radius) >= dist2)
+	{
+		if (pS1.radius > pS2.radius)
+			return pS1;
+		else
+			return pS2;
+	}
+	else
+	{
+		AglBoundingSphere s;
+		float dist = sqrt(dist2);
+		s.radius = (dist+pS1.radius+pS2.radius)*0.5f;
+		s.position = pS1.position;
+		s.position += dVec * ((s.radius-pS1.radius) / dist);
+		return s;
+	}
+}
 
 CompoundBody::CompoundBody(AglVector3 pPosition)
 {
@@ -152,4 +173,20 @@ void CompoundBody::RevertPosition()
 AglMatrix CompoundBody::GetInverseInertiaWorld()
 {
 	return mInverseInertiaWorld;
+}
+AglBoundingSphere CompoundBody::GetBoundingSphere()
+{
+	if (mChildren.size() > 0)
+	{
+		AglBoundingSphere bs = mChildren[0]->GetBoundingSphere();
+		for (unsigned int i = 1; i < mChildren.size(); i++)
+		{
+			bs = MergeSpheres(bs, mChildren[i]->GetBoundingSphere());
+		}
+		return bs;
+	}
+	else
+	{
+		return AglBoundingSphere(GetWorld().GetTranslation(), 0);
+	}
 }
