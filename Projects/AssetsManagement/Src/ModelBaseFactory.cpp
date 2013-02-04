@@ -203,7 +203,7 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData(
 			{
 				if (p_outInstanceInstructions!=NULL)
 				{
-					InstanceInstruction inst = {parsedAction.first.filename,
+					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						aglMeshHeader.transform};
 
 					DEBUGWARNING(((p_instanceData->filename+": Found mesh with instancing instruction. Conversion error?").c_str()));
@@ -300,7 +300,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 			{
 				if (cp->parentMesh == p_source.modelNumber) // handle global and local call the same
 				{
-					InstanceInstruction inst = {parsedAction.first.filename,
+					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_model->instances.push_back(inst);

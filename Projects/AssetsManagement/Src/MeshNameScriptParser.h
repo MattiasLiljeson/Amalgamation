@@ -24,13 +24,25 @@ public:
 		MESH,
 		CONNECTIONPOINT,
 		INSTANTIATE,
-		SPAWNPOINT
+		SPAWNPOINT,
+		LIGHT
 	};
 
+	///-----------------------------------------------------------------------------------
+	/// \brief	Super simple solution for data retrieval from empty, 
+	/// contains several specifics (for each empty type) as well as generics.
+	///-----------------------------------------------------------------------------------
 	struct Data
 	{
+		Data() {name=""; instanceSpecFilename=""; spawnSpecName=""; lightSpecR=0.0f;
+				lightSpecG=0.0f;; lightSpecB=0.0f; lightSpecRange=0.0f;}
 		string name;
-		string filename;
+		string instanceSpecFilename;				///< For instance points (file name)
+		string spawnSpecName;						///< For spawn points (action name)
+		// Light specifics
+		float lightSpecR, lightSpecG, lightSpecB;
+		float lightSpecRange;
+		// float lightSpecConst, lightSpecLin, lightSpec work in progress
 	};
 
 	static pair<Data,Token> parse(const string& p_string);
@@ -42,4 +54,5 @@ private:
 	static string instantiate;
 	static string connectionpoint;
 	static string spawnpoint;
+	static string light;
 };

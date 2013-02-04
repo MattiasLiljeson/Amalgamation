@@ -7,51 +7,49 @@
 using namespace std;
 
 
-
 // =======================================================================================
-//	ConnectionPoint
+//                                      SpawnPoint
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief A connection point that can have an entity attached.
+/// \brief	Struct containing a spawn transform and an action to take 
+/// by the system using the spawn point
 ///        
-/// # ConnectionPoint
-/// Detailed description...
-/// Created on: 4-1-2013 
+/// # SpawnPoint
+/// Detailed description.....
+/// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
-struct ConnectionPoint
+struct SpawnPoint
 {
-	AglMatrix cpTransform;
-	int		  cpConnectedEntity;
+	AglMatrix spTransform;
+	string	  spAction;
 
-	ConnectionPoint() {cpConnectedEntity=-1;}
+	SpawnPoint() {spAction="";}
 
-	ConnectionPoint(const AglMatrix& p_transform)
+	SpawnPoint(const AglMatrix& p_transform, 
+		const string& p_action)
 	{
-		cpTransform = p_transform;
-		cpConnectedEntity = -1;
+		spTransform = p_transform;
+		spAction = p_action;
 	}
 };
 
 // =======================================================================================
-//	ConnectionPointSet
+//                                      SpawnPointSet
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Set of connection points
+/// \brief	Brief
 ///        
-/// # ConnectionPointSet
-/// Detailed description...
-/// Created on: 4-1-2013 
+/// # SpawnPointSet
+/// Detailed description.....
+/// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
-class ConnectionPointSet: public Component
+class SpawnPointSet: public Component
 {
 public:
-	ConnectionPointSet();
-	ConnectionPointSet(const vector<ConnectionPoint>& p_connectionPoints);
-	ConnectionPointSet(const vector<AglMatrix>& p_connectionPoints);
-	~ConnectionPointSet();
-	vector<ConnectionPoint> m_connectionPoints;
-	int m_highlighted;
-
+	SpawnPointSet();
+	SpawnPointSet(const vector<SpawnPoint>& p_spawnPoints);
+	~SpawnPointSet();
+	vector<SpawnPoint> m_spawnPoints;
 };

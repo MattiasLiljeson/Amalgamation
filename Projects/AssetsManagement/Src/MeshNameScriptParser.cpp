@@ -6,17 +6,19 @@ string MeshNameScriptParser::separators = "_";
 string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";
+string MeshNameScriptParser::light = "L";
 
 pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> 
 	MeshNameScriptParser::parse(const string& p_string)
 {
 	Token tokenVal = MESH;
-	Data data = {p_string,""};
+	Data data;
+	data.name = p_string;
 	string instr = getInstruction(p_string);
 	if (instr==instantiate)
 	{
 		tokenVal = INSTANTIATE;
-		data.filename = extractPart(p_string,0)+".agl";
+		data.instanceSpecFilename = extractPart(p_string,0)+".agl";
 		data.name = extractPart(p_string,1);
 	}
 	else if (instr==connectionpoint)
@@ -27,7 +29,8 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 	else if (instr==spawnpoint)
 	{
 		tokenVal = SPAWNPOINT;
-		data.name = extractPart(p_string,0);
+		data.spawnSpecName = extractPart(p_string,0);
+		data.name = extractPart(p_string,1);
 	}
 	return pair<Data,Token>(data,tokenVal);
 }

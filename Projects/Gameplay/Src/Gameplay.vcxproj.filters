@@ -94,6 +94,9 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
       <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Point sets">
+      <UniqueIdentifier>{9dabad87-93ed-4ebc-8f53-dd747e35ab54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -188,9 +191,6 @@
     </ClInclude>
     <ClInclude Include="ShipModule.h">
       <Filter>Components\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ConnectionPointSet.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="MinigunModule.h">
       <Filter>Components\Modules</Filter>
@@ -482,6 +482,18 @@
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
+    <ClInclude Include="Vibration.h" />
+    <ClInclude Include="ConnectionPointSet.h">
+      <Filter>Components\Point sets</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components\Point sets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -561,9 +573,6 @@
     </ClCompile>
     <ClCompile Include="SpeedBoosterModule.cpp">
       <Filter>Components\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ConnectionPointSet.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="MinigunModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -794,6 +803,18 @@
     </ClCompile>
     <ClCompile Include="RemoveSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="LightBlinker.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="Vibration.cpp" />
+    <ClCompile Include="ConnectionPointSet.cpp">
+      <Filter>Components\Point sets</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components\Point sets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
