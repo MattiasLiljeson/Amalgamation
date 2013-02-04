@@ -26,6 +26,7 @@
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
 #include "HudElement.h"
+#include "InterpolationComponent.h"
 
 #include "Control.h"
 #include "EntityType.h"
@@ -568,26 +569,34 @@ void ClientPacketHandlerSystem::handleBatch()
 			transform = static_cast<Transform*>(
 				m_world->getComponentManager()->getComponent(
 				entity->getIndex(), ComponentType::Transform ) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
+			
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				transform->setTranslation( data.translation );
-				transform->setRotation( data.rotation );
-				transform->setScale( data.scale );
+				/*InterpolationComponent* interpolation = NULL;
+				Component* intcomp = m_world->getComponentManager()->getComponent(
+					entity->getIndex(), ComponentType::InterpolationComponent );
+				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
+				if (interpolation )
+				{
+					// set up goal for queuing
+					float handledTime = data.timestamp;
+					InterpolationComponent::TransformGoal transformGoal;
+					transformGoal.timestamp = handledTime;
+					transformGoal.translation = data.translation;
+					transformGoal.rotation = data.rotation;
+					transformGoal.scale = data.scale;
+					// enqueue data
+					interpolation ->m_transformBuffer.push(transformGoal);
+				}
+				else*/
+				{
+					transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );
+				}
 			}
 
-			Extrapolate* extrapolate = NULL;
-			extrapolate = static_cast<Extrapolate*>(
-				entity->getComponent(ComponentType::Extrapolate) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
-			/*if( extrapolate != NULL )
-			{
-				extrapolate->serverUpdateTimeStamp = data.timestamp;
-				extrapolate->velocityVector = data.velocity;
-				extrapolate->angularVelocity = data.angularVelocity;
-			}*/
+			// Add extrapolation here if deemed necessary
 		}
 	}
 	m_batch.clear();

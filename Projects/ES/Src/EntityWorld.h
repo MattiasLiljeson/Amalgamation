@@ -99,6 +99,19 @@ public:
 	void setDelta( float p_dt );
 
 	/**
+	 * The aspect ratio of the screen
+	 * 
+	 */
+	float getAspectRatio();
+
+	/**
+	 * Specify the aspect ratio of the screen
+	 * 
+	 * @param p_aspectRatio
+	 */
+	void setAspectRatio(float p_aspectRatio);
+
+	/**
 	 * Adds a entity to this world.
 	 * 
 	 * @param p_entity entity
@@ -237,6 +250,7 @@ private:
 private:
 	float m_delta;
 	float m_totalGameTime; ///< number of seconds elapsed since the start of the application
+	float m_aspectRatio; // aspect ratio of screen, added by Jarl 01-02-2013
 	EntityManager* m_entityManager;
 	ComponentManager* m_componentManager;
 	SystemManager* m_systemManager;

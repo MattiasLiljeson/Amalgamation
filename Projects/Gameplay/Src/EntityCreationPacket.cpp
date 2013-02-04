@@ -27,6 +27,7 @@ Packet EntityCreationPacket::pack()
 		<< owner
 		<< networkIdentity
 		<< meshInfo
+		<< miscData
 		<< translation
 		<< rotation
 		<< scale;
@@ -41,6 +42,7 @@ void EntityCreationPacket::unpack( Packet p_packet )
 		>> owner
 		>> networkIdentity
 		>> meshInfo
+		>> miscData
 		>> translation
 		>> rotation
 		>> scale;

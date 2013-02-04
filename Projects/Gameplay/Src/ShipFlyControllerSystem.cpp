@@ -19,8 +19,9 @@
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
 #include "ThrustPacket.h"
+#include "EntityUpdatePacket.h"
 
-
+#define FORCE_VS_OUTPUT
 
 ShipFlyControllerSystem::ShipFlyControllerSystem( ShipInputProcessingSystem* p_shipInput,
 										    PhysicsSystem* p_physicsSystem,
@@ -55,12 +56,15 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+
+			// Calculate impulse data to send to server
 			Entity* ship = p_entities[i];
 			ShipFlyController* controller = static_cast<ShipFlyController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
 
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
 
 			// Calc rotation from player input
 			AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
@@ -84,21 +88,23 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			m_thrustVec += thrustVec;
-			m_angularVec += angularVec;
 
+			controller->m_thrustPowerAccumulator += thrustVec;
+			controller->m_turnPowerAccumulator += angularVec;
 
+			// Handle switch to edit mode
 			if (input.stateSwitchInput != 0)
 			{
-				m_thrustVec = AglVector3::zero();
-				m_angularVec = AglVector3::zero();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
 			}
 
+			// Send data to server
 			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-				checkTimeInterval(TimerIntervals::Every16Millisecond))
+				checkTimeInterval(TimerIntervals::Every8Millisecond))
 			{
 				/************************************************************************/
 				/* Send the thrust packet to the server!								*/
@@ -106,11 +112,16 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
-				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+				sendThrustPacketToServer(netSync,
+					controller->m_thrustPowerAccumulator, 
+					controller->m_turnPowerAccumulator);
 
-				m_thrustVec = AglVector3();
-				m_angularVec = AglVector3();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 			}
+
+			// Handle data sent to us from server
+			// handleTransformInterpolation( controller, transform );
 
 
 		}

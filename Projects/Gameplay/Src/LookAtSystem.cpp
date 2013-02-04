@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "GameplayTags.h"
 #include "ValueClamp.h"
+#include "PhysicsBody.h"
 
 LookAtSystem::LookAtSystem() : 
 EntitySystem( SystemType::LookAtSystem, 2,
@@ -30,8 +31,7 @@ void LookAtSystem::initialize()
 void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	float dt = m_world->getDelta();
-	static float blargu=0.0f;
-	blargu-=2.0f*dt;
+
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
 
@@ -65,11 +65,14 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
 		Transform* targetTransform = static_cast<Transform*>(
 			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
+
+
 		AglVector3 lookTargetPos;
 		if (targetTransform)
 		{
 			lookTargetPos = targetTransform->getTranslation();
 		}
+
 
 
 		// Follow behaviour
@@ -82,17 +85,58 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			// update transform
 
 
-			position = lookTargetPos+offset;			
-			
-			
-			// rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-			// 	lookAt->getRotationSpeed()*saturate(10.0f*dt));
-			rotation = targetTransform->getRotation();
-			// rotation.normalize();
+			// position = AglVector3::lerp(position,lookTargetPos+offset,saturate(30.0f*dt));	
+			// position += ((lookTargetPos+offset)-position)*dt*3.0f;
+			AglVector3 dir = (lookTargetPos+offset)-position;			
 
-			// update
-			transform->setTranslation( position );
+			if ( targetEntity->getComponent(ComponentType::ComponentTypeIdx::ShipFlyController)!=NULL )
+			{
+				DEBUGPRINT(( ("\nX: "+toString(dir.x)+"  Y: "+toString(dir.y)+"  Z: "+toString(dir.z)+"\n").c_str() ));
+				DEBUGPRINT(( ("\nDT: "+toString(dt)+"\n").c_str() ));
+			}
+
+
+// 			if (AglVector3::lengthSquared(dir)>0.3f)
+// 			{
+				// AglVector3::normalize(dir);
+// 				dir.x *= dir.x;
+// 				dir.y *= dir.y;
+// 				dir.z *= dir.z;
+				// dir = AglVector3::lerp(lookAt->m_oldPos,dir,dt);
+ 				// position += (dir)*dt;
+// 			}
+// 			else
+// 			{
+				// AglVector3 zoom = dir*AglVector3::lengthSquared(lookAt->m_oldPos-(lookTargetPos+offset));
+ 				// position = lookTargetPos+offset;
+// 				position = AglVector3::lerp(lookAt->m_oldPos,position,dt);
+// 			}
+
+// 			lookAt->m_oldPos = dir;
+			if (lookAt->getMoveSpd()*dt<1.0f)
+			{
+				position = AglVector3::lerp(position,lookTargetPos+offset,lookAt->getMoveSpd()*dt);
+			}
+			else
+			{
+				position = lookTargetPos+offset;
+			}
+
+			if (lookAt->getRotationSpeed()*dt<1.0f)
+			{
+				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+					lookAt->getRotationSpeed()*dt,true);
+				rotation.normalize();
+			}
+			else
+			{
+				rotation = targetTransform->getRotation();
+			}
+			
+
+			// update			
 			transform->setRotation( rotation );
+			transform->setTranslation( position );
 		}
 		// orbit behaviour
 		else if (lookAtOrbit)

@@ -30,6 +30,7 @@ public:
 		UpdateClientStats,
 		PlayerWinLose,
 		SpawnSoundEffect,
+		TransformPacket,
 		RemoveSoundEffect,
 
 		// Client -> Server:
@@ -37,7 +38,6 @@ public:
 		/* Client handles input and updates position, then sends it to the		*/
 		/* server for verification.												*/
 		/************************************************************************/
-		ShipTransform,
 		ThrustPacket,
 		RayPacket,
 		ModuleHighlightPacket,

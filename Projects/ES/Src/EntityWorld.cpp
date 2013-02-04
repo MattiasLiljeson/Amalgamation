@@ -4,7 +4,9 @@
 EntityWorld::EntityWorld()
 {
 	m_totalGameTime = 0;
+	m_delta = 0.01f;
 	m_shutdown = false;
+	m_aspectRatio = 800.0f/600.0f;
 
 	m_componentManager = new ComponentManager();
 	setManager( Manager::ComponentManager, m_componentManager );
@@ -106,6 +108,16 @@ float EntityWorld::getDelta()
 void EntityWorld::setDelta( float p_dt )
 {
 	m_delta = p_dt;
+}
+
+float EntityWorld::getAspectRatio()
+{
+	return m_aspectRatio;
+}
+
+void EntityWorld::setAspectRatio(float p_aspectRatio)
+{
+	m_aspectRatio=p_aspectRatio;
 }
 
 void EntityWorld::addEntity( Entity* p_entity )

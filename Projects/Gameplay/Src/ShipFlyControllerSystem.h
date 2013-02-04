@@ -8,6 +8,7 @@ class TcpClient;
 class PhysicsSystem;
 class ShipInputProcessingSystem;
 class NetworkSynced;
+class ShipFlyController;
 class Transform;
 
 // =======================================================================================
@@ -32,7 +33,6 @@ public:
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
-
 private:
 	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3 p_thrust,
 		AglVector3 p_angularVec);
@@ -41,7 +41,4 @@ private:
 	TcpClient* m_client;
 
 	ShipInputProcessingSystem* m_shipInput;
-
-	AglVector3 m_thrustVec;
-	AglVector3 m_angularVec;
 };

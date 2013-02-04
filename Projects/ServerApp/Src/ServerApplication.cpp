@@ -27,6 +27,8 @@
 #include <RocketControllerSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <ServerClientInfoSystem.h>
+#include <LoadMeshSystemServer.h>
+#include <LookAtSystem.h>
 #include <WinningConditionSystem.h>
 #include <ShipModulesTrackerSystem.h>
 
@@ -45,6 +47,7 @@
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 
+
 namespace Srv
 {
 	ServerApplication::ServerApplication()
@@ -55,8 +58,6 @@ namespace Srv
 
 		m_world = new EntityWorld();
 		initSystems();
-
-		ComponentAssemblageAllocator allocator();
 
 		initEntities();
 	}
@@ -129,6 +130,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Mesh loading															*/
+		/************************************************************************/
+		// Note! Must set *after* EntityFactory and *before* Physics
+		m_world->setSystem(SystemType::LoadMeshSystemServer, new LoadMeshSystemServer(), 
+			true); 
+
+		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
 		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
@@ -158,6 +166,18 @@ namespace Srv
 			true );
 
 		/************************************************************************/
+		/* General controlling													*/
+		/************************************************************************/
+		LookAtSystem* lookAtSystem = new LookAtSystem();
+		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+
+		/************************************************************************/
+		/* Picking																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
+
+
+		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
 		m_world->setSystem( SystemType::NetworkListenerSystem,
@@ -176,10 +196,6 @@ namespace Srv
 
 		m_world->setSystem( new ServerClientInfoSystem(), true);
 
-		/************************************************************************/
-		/* Picking																*/
-		/************************************************************************/
-		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
 
 		/************************************************************************/
 		/* Gameplay															*/
@@ -202,6 +218,13 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
 		m_world->initialize();
+
+
+
+
+		// Run component assemblage allocator (not a system, so don't delete)
+		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+		delete allocator;
 	}
 
 	void ServerApplication::initEntities()
@@ -243,6 +266,12 @@ namespace Srv
 		EntityFactory* factory = static_cast<EntityFactory*>
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
+
+		// First test by Jarl, instead of Anton
+		// Create rocks
+		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		entity = factory->entityFromRecipe( "rocksServer" );									 
+		m_world->addEntity( entity );
 
 		//Minigun
 		for (int x=0;x<4;x++)

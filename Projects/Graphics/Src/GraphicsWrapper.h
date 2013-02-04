@@ -14,7 +14,7 @@
 
 #include "Buffer.h"
 #include "InstanceData.h"
-#include "ModelExtendedManagedFactory.h"
+#include "ModelExtendedFactory.h"
 #include "RenderSceneInfoCBuffer.h"
 #include "RenderStateEnums.h"
 #include "RendererSceneInfo.h"
@@ -122,11 +122,11 @@ public:
 	void flipBackBuffer();
 
 
-	ModelResource* createModelFromFile(const string& p_name,
-							   const string* p_path);
+// 	ModelResource* createModelFromFile(const string& p_name,
+// 							   const string* p_path);
 
 	vector<ModelResource*>* createModelsFromFile(const string& p_name,
-		const string* p_path);
+		const string* p_path,bool p_isPrimitive);
 
 	// This is the preferred method for creating meshes from raw data
 	unsigned int createMeshFromRaw(const string& p_name,
@@ -228,7 +228,7 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 	TextureFactory*			m_textureFactory;
-	ModelExtendedManagedFactory*	m_modelFactory;
+	ModelExtendedFactory*	m_modelFactory;
 
 	ResourceManager<Mesh>*		m_meshManager;
 	ResourceManager<Texture>*	m_textureManager;

@@ -117,7 +117,11 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 	// NOTE: (Johan) This interval check is currently set to be very high delay because
 	// packet handling is too slow when running Debug build otherwise.
-	else if( timerSys->checkTimeInterval(TimerIntervals::Every32Millisecond) )
+	TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every8Millisecond;
+#ifdef _DEBUG
+	entityupdateInterval = TimerIntervals::Every32Millisecond;
+#endif
+	if( timerSys->checkTimeInterval(entityupdateInterval) )
 	{
 		for( unsigned int i=0; i<p_entities.size(); i++ )
 		{

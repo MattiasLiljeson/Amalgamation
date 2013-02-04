@@ -37,9 +37,12 @@
     <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
+    <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
     <ClInclude Include="LevelGenSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
@@ -54,6 +57,8 @@
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="LookAtSystem.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
@@ -138,6 +143,7 @@
     <ClInclude Include="EntityParent.h" />
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="Vibration.h" />
     <ClInclude Include="WelcomePacket.h" />
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
@@ -164,22 +170,27 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LightBlinker.cpp" />
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
@@ -245,6 +256,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="Vibration.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
     <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>

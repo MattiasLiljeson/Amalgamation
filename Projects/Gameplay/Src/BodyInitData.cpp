@@ -4,7 +4,7 @@ ComponentRegister<BodyInitData> BodyInitData::s_reg("BodyInitData");
 
 BodyInitData::BodyInitData()
 {
-	m_type = ComponentType::ComponentTypeIdx::BodyInitData;
+	m_componentType = ComponentType::ComponentTypeIdx::BodyInitData;
 
 	m_position = AglVector3::zero();
 	m_orientation = AglQuaternion::identity();
@@ -17,6 +17,29 @@ BodyInitData::BodyInitData()
 	m_compound=false;
 	m_impulseEnabled=true;
 	m_collisionEnabled=true;
+}
+
+BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
+			 AglVector3 p_scale, AglVector3 p_velocity,
+			 AglVector3 p_angularVelocity, int p_type,
+			 BodyInitData::ResponseMode p_responseMode,
+			 BodyInitData::CompoundMode p_compoundMode, 
+			 bool p_impulseEnabled,
+			 bool p_collisionEnabled)
+{
+	m_componentType = ComponentType::ComponentTypeIdx::BodyInitData;
+
+	m_position = p_position;
+	m_orientation = p_orientation;
+	m_scale = p_scale;
+	m_velocity = p_velocity;
+	m_angularVelocity = p_angularVelocity;
+	m_type = p_type;
+
+	m_static = p_responseMode==ResponseMode::STATIC; // change these?
+	m_compound = p_compoundMode==CompoundMode::COMPOUND;
+	m_impulseEnabled = p_impulseEnabled;
+	m_collisionEnabled = p_collisionEnabled;
 }
 
 void BodyInitData::init( vector<ComponentData> p_initData )
@@ -55,13 +78,6 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 			p_initData[i].getData<float>(&m_velocity.y);
 		else if( p_initData[i].dataName == "m_velocityZ" )
 			p_initData[i].getData<float>(&m_velocity.z);
-
-		else if( p_initData[i].dataName == "m_angularVelocityX" )
-			p_initData[i].getData<float>(&m_angularVelocity.x);
-		else if( p_initData[i].dataName == "m_angularVelocityY" )
-			p_initData[i].getData<float>(&m_angularVelocity.y);
-		else if( p_initData[i].dataName == "m_angularVelocityZ" )
-			p_initData[i].getData<float>(&m_angularVelocity.z);
 
 		else if( p_initData[i].dataName == "m_angularVelocityX" )
 			p_initData[i].getData<float>(&m_angularVelocity.x);

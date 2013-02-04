@@ -3,7 +3,7 @@
 #include <EntitySystem.h>
 #include <vector>
 #include "LevelPieceFileMapping.h"
-#include <ModelBaseUnmanagedFactory.h>
+#include <ModelBaseFactory.h>
 
 class Transform;
 class LevelPiece;
@@ -53,7 +53,7 @@ private:
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
-	ModelBaseUnmanagedFactory m_unmanagedModelFactory;
+	ModelBaseFactory m_unmanagedModelFactory;
 
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;

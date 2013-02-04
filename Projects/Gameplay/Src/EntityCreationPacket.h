@@ -29,6 +29,7 @@ public:
 	int				owner;
 	int				networkIdentity;
 	int				meshInfo;
+	int				miscData; ///< extra data if needed
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;

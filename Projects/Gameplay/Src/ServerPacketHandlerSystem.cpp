@@ -2,6 +2,7 @@
 #include "ServerPickingSystem.h"
 #include "ShipModulesControllerSystem.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "ServerClientInfoSystem.h"
 
 // Components
 #include "Transform.h"
@@ -26,7 +27,7 @@
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
 
-#include "ServerClientInfoSystem.h"
+
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -64,7 +65,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
 				(m_world->getEntity(thrustPacket.entityId)->getComponent(
-				ComponentType::PhysicsBody));
+				ComponentType::PhysicsBody)); // not safe to assume entityId is the same everywhere?
 
 			//Added by Anton
 			Entity* ship = m_world->getEntity(thrustPacket.entityId);

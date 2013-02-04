@@ -23,9 +23,11 @@
 #include "RocketLauncherModule.h"
 #include "Connector1to2Module.h"
 #include "Transform.h"
+#include "Vibration.h"
 #include "EntityParent.h"
 #include "LoadMesh.h"
 #include "LightsComponent.h"
+#include "LightBlinker.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -45,6 +47,7 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<MinigunModule>();
 	handle<PlayerCameraController>();
 	handle<ShieldModule>();
+	handle<Vibration>();
 	handle<MineLayerModule>();
 	handle<RocketLauncherModule>();
 	handle<Connector1to2Module>();
@@ -52,4 +55,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<EntityParent>();
 	handle<LoadMesh>();
 	handle<LightsComponent>();
+	handle<LightBlinker>();
 }

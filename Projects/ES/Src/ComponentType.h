@@ -24,6 +24,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		Extrapolate,
+		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
@@ -55,6 +56,7 @@ public:	//Enums
 		Connector1to2Module,
 		LightSources,
 		LightBlinker,
+		Vibration,
 		ParticleEmitters,
 		PickComponent,
 		ParticleSystemEmitter,
@@ -69,6 +71,7 @@ public:	//Enums
 		TAG_LookAtFollowMode,
 		TAG_LookAtOrbitMode,
 		TAG_Ship,
+		TAG_MyShip,
 		TAG_MainCamera,
 		TAG_ShadowCamera,
 		// -------------------
