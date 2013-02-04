@@ -310,26 +310,35 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				break;
 			}
 
+		case MeshNameScriptParser::SPAWNPOINT: // spawn point		
+			{
+				bool isOk = false;
+				if (p_source.modelNumber!=-1) // call from parent
+					isOk = (cp->parentMesh == p_source.modelNumber);
+				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
+				{
+					pair<string,AglMatrix> sp(parsedAction.first.spawnSpecName,
+						cp->transform*p_offset);
+					p_model->spawnPoints.m_collection.push_back(sp);
+				}
+
+				break;
+			}
+
 		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
 		default:				
 			{
+				bool isOk = false;
 				if (p_source.modelNumber!=-1) // call from parent
-				{
-					if (cp->parentMesh == p_source.modelNumber)
-					{
-						// DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
-					}
-				}
+					isOk = (cp->parentMesh == p_source.modelNumber);
 				else // call from global
-				{
-					// make pointed model to parent
-					if (cp->parentMesh == -1 && p_model!=NULL)
-					{
-						// DEBUGWARNING(( string("Found global connection point!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
-					}
-				}
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
+					p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
 
 				break;
 			}

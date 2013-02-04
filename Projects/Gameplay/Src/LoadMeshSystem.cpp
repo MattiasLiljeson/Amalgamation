@@ -75,6 +75,9 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Connection points
 	setUpConnectionPoints(entity,modelResource);
 
+	// Spawn points
+	setUpSpawnPoints(entity,modelResource);
+
 	// Handle particles here
 	setUpParticles(entity,modelResource);
 
@@ -133,6 +136,9 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Connection points
 		setUpConnectionPoints(entity,modelResource);
 
+		// Spawn points
+		setUpSpawnPoints(entity,modelResource);
+
 		// Particles
 		setUpParticles(entity,modelResource);
 
@@ -172,6 +178,16 @@ void LoadMeshSystem::setUpConnectionPoints( Entity* p_entity,
 	{
 		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
 		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
+	}
+}
+
+
+void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelResource )
+{
+	if (!p_modelResource->spawnPoints.m_collection.empty())
+	{
+		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		p_entity->addComponent( ComponentType::SpawnPointSet, component );
 	}
 }
 

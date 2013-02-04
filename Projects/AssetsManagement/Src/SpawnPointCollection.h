@@ -1,25 +1,26 @@
 #pragma once
 
 #include <vector>
-
+#include <string>
+#include <utility>
 using namespace std;
 
 struct AglMatrix;
 
 // =======================================================================================
-//                                ConnectionPointCollection
+//                                SpawnPointCollection
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of connection point data
+/// \brief	Collection of spawn point data
 ///        
-/// # ConnectionPointCollection
+/// # SpawnPointCollection
 /// Detailed description.....
-/// Created on: 8-1-2013 
+/// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ConnectionPointCollection
+struct SpawnPointCollection
 {
 public:
-	vector<AglMatrix> m_collection;
+	vector<pair<string,AglMatrix>> m_collection;
 };
