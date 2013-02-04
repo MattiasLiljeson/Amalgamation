@@ -352,9 +352,9 @@ Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 Entity* EntityFactory::createMineLayerServer(EntityCreationPacket p_packet)
 {
 	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/MineLayer/ServerMineLayer.asd" );
-	Entity* entity = entityFromRecipe( "MineLayer" );	
+	Entity* entity = entityFromRecipe( "ServerMineLayer" );
 
-	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
+//	entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
 	m_world->addEntity(entity);
 	return entity;
