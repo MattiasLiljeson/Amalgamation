@@ -4,6 +4,7 @@
 #include "ConnectionPointCollection.h"
 #include "SpawnPointCollection.h"
 #include "ParticleSystemCollection.h"
+#include "LightDataCollection.h"
 #include "InstanceInstruction.h"
 #include <AglLooseBspTree.h>
 
@@ -32,6 +33,8 @@ public:
         name = p_copy.name;
         meshHeader = p_copy.meshHeader;
         connectionPoints = p_copy.connectionPoints;
+		spawnPoints = p_copy.spawnPoints;
+		lightCollection = p_copy.lightCollection;
         particleSystems = p_copy.particleSystems;
         transform = p_copy.transform;
 		instances = p_copy.instances;
@@ -47,6 +50,7 @@ public:
     AglMeshHeader				meshHeader;
     ConnectionPointCollection	connectionPoints;
 	SpawnPointCollection		spawnPoints;
+	LightDataCollection			lightCollection;
     ParticleSystemCollection	particleSystems;
     AglMatrix					transform;
     vector<InstanceInstruction> instances;

@@ -43,14 +43,17 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		if (data.name==pointlightType)
 		{
 			tokenVal = POINTLIGHT;
+			data.lightSpec.type = LightCreationData::POINT;
 		}
 		else if (data.name==spotlightType)
 		{
 			tokenVal = SPOTLIGHT;
+			data.lightSpec.type = LightCreationData::SPOT;
 		}
 		else
 		{
 			tokenVal = DIRLIGHT;
+			data.lightSpec.type = LightCreationData::DIR;
 		}
 		// raw data
 		string diffuse = extractPart(p_string,1);
@@ -63,15 +66,15 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		string linAttFloat = extractPart(p_string,8);
 		string quadAttFloat = extractPart(p_string,9);
 		// store converted in data
-		getRGB(data.lightSpecDiffuse,diffuse);
-		getRGB(data.lightSpecSpecular,specular);
-		getRGB(data.lightSpecAmbient,ambient);
-		data.lightSpecGloss = getFloatFromDecimalString(glossFloat);
-		data.lightSpecRange = getFloatFromDecimalString(distFloat);
-		data.lightSpecPwr = getFloatFromDecimalString(pwrFloat);
-		data.lightSpecAtt.x = getFloatFromDecimalString(constAttFloat);
-		data.lightSpecAtt.y = getFloatFromDecimalString(linAttFloat);
-		data.lightSpecAtt.z = getFloatFromDecimalString(quadAttFloat);
+		getRGB(data.lightSpec.diffuse,diffuse);
+		getRGB(data.lightSpec.specular,specular);
+		getRGB(data.lightSpec.ambient,ambient);
+		data.lightSpec.gloss = getFloatFromDecimalString(glossFloat);
+		data.lightSpec.range = getFloatFromDecimalString(distFloat);
+		data.lightSpec.power = getFloatFromDecimalString(pwrFloat);
+		data.lightSpec.attenuation.x = getFloatFromDecimalString(constAttFloat);
+		data.lightSpec.attenuation.y = getFloatFromDecimalString(linAttFloat);
+		data.lightSpec.attenuation.z = getFloatFromDecimalString(quadAttFloat);
 	}
 	return pair<Data,Token>(data,tokenVal);
 }

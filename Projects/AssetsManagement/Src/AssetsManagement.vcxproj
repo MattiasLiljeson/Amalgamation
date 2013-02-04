@@ -14,6 +14,7 @@
     <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="InstanceInstruction.h" />
+    <ClInclude Include="LightDataCollection.h" />
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelResource.h" />

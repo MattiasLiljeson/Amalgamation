@@ -328,6 +328,27 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				break;
 			}
 
+		case MeshNameScriptParser::POINTLIGHT: // lights
+		case MeshNameScriptParser::DIRLIGHT:
+		case MeshNameScriptParser::SPOTLIGHT:	
+			{
+				bool isOk = false;
+				if (p_source.modelNumber!=-1) // call from parent
+					isOk = (cp->parentMesh == p_source.modelNumber);
+				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
+				{
+					LightCreationData ld = parsedAction.first.lightSpec;
+					ld.transform = cp->transform*p_offset;
+					p_model->lightCollection.m_collection.push_back(ld);
+				}
+
+				break;
+			}
+
+
 		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
 		default:				
 			{
@@ -342,9 +363,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 
 				break;
 			}
-
 		}
-
 	}
 }
 

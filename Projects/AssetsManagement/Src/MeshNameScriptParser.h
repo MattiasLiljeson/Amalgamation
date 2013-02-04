@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <utility>
+#include "LightDataCollection.h"
 
 using namespace std;
 class AglVector3;
@@ -37,17 +38,11 @@ public:
 	///-----------------------------------------------------------------------------------
 	struct Data
 	{
-		Data() {name=""; instanceSpecFilename=""; spawnSpecName=""; lightSpecRange=0.0f;
-		lightSpecPwr=0.0f; lightSpecGloss=0.0f;}
+		Data() {name=""; instanceSpecFilename=""; spawnSpecName="";}
 		string name;
 		string instanceSpecFilename;				///< For instance points (file name)
 		string spawnSpecName;						///< For spawn points (action name)
-		// Light specifics
-		// colours
-		AglVector3 lightSpecDiffuse, lightSpecSpecular, lightSpecAmbient;
-		float lightSpecGloss;
-		float lightSpecRange,lightSpecPwr; // range and power
-		AglVector3 lightSpecAtt; // attenuation
+		LightCreationData lightSpec;				///< Light specific
 	};
 
 	static pair<Data,Token> parse(const string& p_string);

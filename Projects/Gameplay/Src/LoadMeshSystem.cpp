@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "EntityParent.h"
 #include "ConnectionPointSet.h"
+#include "LightsComponent.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
@@ -75,6 +76,9 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Connection points
 	setUpConnectionPoints(entity,modelResource);
 
+	// Lights
+	setUpLights(entity,modelResource);
+
 	// Spawn points
 	setUpSpawnPoints(entity,modelResource);
 
@@ -136,6 +140,9 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Connection points
 		setUpConnectionPoints(entity,modelResource);
 
+		// Lights
+		setUpLights(entity,modelResource);
+
 		// Spawn points
 		setUpSpawnPoints(entity,modelResource);
 
@@ -188,6 +195,46 @@ void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelR
 	{
 		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
 		p_entity->addComponent( ComponentType::SpawnPointSet, component );
+	}
+}
+
+
+void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
+{
+	vector<LightCreationData>* lights= &(p_modelResource->lightCollection.m_collection);
+	if (!lights->empty())
+	{
+		LightsComponent* component = new LightsComponent();
+		for (int i=0;i<lights->size();i++)
+		{
+			// This'll be fun		
+			LightCreationData* source = &(*lights)[i];
+			Light light;
+			light.offsetMat = source->transform;
+			light.instanceData.diffuse[0] = source->diffuse.x;
+			light.instanceData.diffuse[1] = source->diffuse.y;
+			light.instanceData.diffuse[2] = source->diffuse.z;
+			light.instanceData.specular[0] = source->specular.x;
+			light.instanceData.specular[1] = source->specular.y;
+			light.instanceData.specular[2] = source->specular.z;
+			light.instanceData.specular[3] = source->gloss;
+			light.instanceData.ambient[0] = source->ambient.x;
+			light.instanceData.ambient[1] = source->ambient.y;
+			light.instanceData.ambient[2] = source->ambient.z;
+			if (source->type==LightCreationData::POINT)
+				light.instanceData.type = LightTypes::E_LightTypes_POINT;
+			else if (source->type==LightCreationData::SPOT)
+				light.instanceData.type = LightTypes::E_LightTypes_SPOT;
+			else
+				light.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
+			light.instanceData.range = source->range;
+			light.instanceData.attenuation[0] = source->attenuation.x;
+			light.instanceData.attenuation[1] = source->attenuation.y;
+			light.instanceData.attenuation[2] = source->attenuation.z;
+			light.instanceData.spotPower = source->power;	
+			component->addLight(light);
+		}
+		p_entity->addComponent( ComponentType::LightsComponent, component );
 	}
 }
 
