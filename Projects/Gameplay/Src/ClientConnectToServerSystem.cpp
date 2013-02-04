@@ -75,26 +75,44 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 	m_isLookingForConnection = true;
 }
 
+void ClientConnectToServerSystem::connectToNetworkAddress(
+														const std::string& p_serverAddress, 
+														const std::string& p_serverPort)
+{
+	m_tcpClient->connectToServerAsync( p_serverAddress, p_serverPort);
+	m_isLookingForConnection = true;
+}
+
 void ClientConnectToServerSystem::ProcessEvent( Rocket::Core::Event& event, const Rocket::Core::String& value )
 {
 	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
 	// and enable the system.
 	if (value == "connect")
 	{
-		string str_address	= event.GetParameter<Rocket::Core::String>("server_ip", "127.0.0.1").CString();
-		string str_port		= event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
+		// NOTE: Issue!
+		// Boost seem to be unable to resolve servers specified by a name (localhost does
+		// work). This needs to be researched further. // Alex
+		string server_name		= event.GetParameter<Rocket::Core::String>("server_name", "").CString();
+		string server_ip		= event.GetParameter<Rocket::Core::String>("server_ip", "127.0.0.1").CString();
+		string server_port		= event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
 
-		stringstream ss(str_address);
-		ss >> m_connectionAddress.octets1 
-			>> m_connectionAddress.octets2
-			>> m_connectionAddress.octets3
-			>> m_connectionAddress.octets4;
+		string server_address;
+		if (server_name.empty())
+			server_address = server_ip;
+		else
+			server_address = server_name;
 
-		ss.flush();
-		ss << str_port;
-		ss >> m_connectionAddress.port;
+		//stringstream ss(server_address);
+		//ss >> m_connectionAddress.octets1 
+		//	>> m_connectionAddress.octets2
+		//	>> m_connectionAddress.octets3
+		//	>> m_connectionAddress.octets4;
+
+		//ss.flush();
+		//ss << server_port;
+		//ss >> m_connectionAddress.port;
 
 		if( !m_tcpClient->hasActiveConnection() &&  !m_isLookingForConnection)
-			connectToNetworkAddress();
+			connectToNetworkAddress(server_address, server_port);
 	}
 }

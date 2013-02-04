@@ -56,7 +56,11 @@ void LibRocketInputHelper::initialize()
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_8] = KI_NUMPAD8;
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_9] = KI_NUMPAD9;
 
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_PERIOD]		= KI_OEM_PERIOD;
+	// Disabled because it doesn't work at the moment. The reason seems to be that the
+	// input fetches doesn't find the specified code. Why? It could be due to
+	// international keyboard layouts being incompatible, and that it bases  this one on
+	// the US keyboard layout.
+	//rocketKeyCodeMapping[InputHelper::KeyboardKeys_PERIOD]		= KI_OEM_PERIOD;
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_BACKSPACE]	= KI_BACK;
 
 }

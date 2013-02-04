@@ -19,6 +19,8 @@
 	<body template="window">
 		<form onsubmit="connect">
 			<div>
+				<!--<Input id="computername" name="server_name" type="text" size="9" maxlength="15" value="localhost" hidden/>
+				<br/>or<br/>-->
 				<Input id="ip" name="server_ip" type="text" size="9" maxlength="15" value="127.0.0.1" />
 				<br/>
 				<Input id="port" name="server_port" type="text" size="4" maxlength="5" value="1337" />
