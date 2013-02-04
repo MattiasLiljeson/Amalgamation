@@ -39,6 +39,7 @@ struct LightInfo
 	float4 	specular	: SPECULAR;
 	int 	enabled 	: ENABLED;
 	int 	type 		: TYPE;
+	int		shadowIdx	: SHADOWIDX;
 	//float2 	padding;
 };
 

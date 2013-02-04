@@ -100,6 +100,7 @@ void GraphicsRendererSystem::initLightPass(){
 void GraphicsRendererSystem::endLightPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
+	m_wrapper->unmapDeferredBaseFromShader();
 }
 
 void GraphicsRendererSystem::initComposePass()

@@ -61,12 +61,14 @@ struct LightInstanceData
 
 	int enabled;
 	int type;				// Use E_LightTypes
+	int shadowIdx;
 
-	float pad[2];			// Padding
+	float pad[1];			// Padding
 
 	LightInstanceData()
 	{
 		enabled = true;
+		shadowIdx = -1;
 		type = LightTypes::E_LightTypes_DIRECTIONAL;
 		range = 0.0f;
 		spotPower = 0.0f;

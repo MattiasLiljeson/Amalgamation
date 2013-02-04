@@ -35,45 +35,8 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	float shadowTex 	= shadowPass.Sample(pointSampler, p_input.texCoord).r;
 	float depth 		= depthBuffer.Sample(pointSampler, p_input.texCoord).r;
 	
-	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
-	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
-	
-	float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
-	float shadowCoeff = doShadowing(shadowWorldPos);
-	float4 shadowColor = float4(1,1,1,1);
-	if(shadowCoeff < 0.5f){
-		shadowCoeff = 0.75f;
-	}
-	if(shadowCoeff < 0.999f){
-		shadowColor = float4(shadowCoeff*0.0862f,shadowCoeff*0.172f,shadowCoeff*0.219f,1.0f);
-	}
-	lightColor = lightColor*shadowColor;
+	//float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
+	//float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
 	
 	return lightColor;
-}
-
-float doShadowing(float4 positionHomo){
-	float SHADOW_EPSILON = 0.0001f;
-	float SMAP_SIZE = 512.0f;
-	
-	positionHomo.xyz /= positionHomo.w;
-	
-	float2 smTexCoord = float2(0.5f*positionHomo.x, -0.5f*positionHomo.y)+0.5f;
-	
-	if (smTexCoord.x < 0.0f || smTexCoord.x > 1.0f || smTexCoord.y < 0.0f || smTexCoord.y > 1.0f )
-		return 1.0f;
-	
-	float depth = positionHomo.z;
-	
-	float dx = 1.0f/SMAP_SIZE;
-	float s0 = (shadowPass.Sample(pointSampler, smTexCoord).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	float s1 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,0.0f)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	float s2 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (0.0f,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	float s3 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	
-	float2 texelPos = smTexCoord * SMAP_SIZE;
-	float2 lerps = frac(texelPos);
-	
-	return float (lerp(lerp(s0,s1,lerps.x),lerp(s2,s3,lerps.x),lerps.y));
-	//return s0;
 }

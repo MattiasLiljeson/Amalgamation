@@ -311,7 +311,11 @@ void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 }
 
 void GraphicsWrapper::mapDeferredBaseToShader(){
-	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
+}
+
+void GraphicsWrapper::unmapDeferredBaseFromShader(){
+	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
 void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
@@ -501,7 +505,7 @@ void GraphicsWrapper::renderComposeStage(){
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapVariousPassesToComposeStage(m_shadowMapRenderer->getShadowMap());
+	m_deferredRenderer->mapVariousPassesToComposeStage();
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){

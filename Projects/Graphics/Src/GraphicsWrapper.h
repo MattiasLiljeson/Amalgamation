@@ -113,6 +113,8 @@ public:
 
 	void mapDeferredBaseToShader();
 
+	void unmapDeferredBaseFromShader();
+
 	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
 	///-----------------------------------------------------------------------------------

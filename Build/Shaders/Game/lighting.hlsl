@@ -1,11 +1,13 @@
 #include "perFrameCBuffer.hlsl"
 #include "lightLib.hlsl"
+#include "shadowing.hlsl"
 #include "utility.hlsl"
 
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
 Texture2D gSpecular : register(t2);
 Texture2D gDepth : register(t3);
+Texture2D gShadow : register(t4);
 
 SamplerState pointSampler : register(s0);
 
@@ -24,6 +26,7 @@ struct VertexIn
 	float4 	specular	: SPECULAR;
 	int 	enabled 	: ENABLED;
 	int 	type 		: TYPE;
+	int		shadowIdx	: SHADOWIDX;
 };
 struct VertexOut
 {
@@ -51,6 +54,7 @@ VertexOut VS( VertexIn p_input )
 	vout.light.diffuse 		= p_input.diffuse; //float4( .0f, .5f, .0f, 0.1f );
 	vout.light.specular 	= p_input.specular; //float4( .5f, .0f, .0f, .1f );
 	vout.light.enabled 		= p_input.enabled; //true;
+	vout.light.shadowIdx	= p_input.shadowIdx;
 	
 	return vout;
 }
@@ -69,6 +73,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
 
+	
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;
 	surface.specular = specular;
@@ -89,6 +94,22 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 		worldPos );
 	}
 
+	float shadowCoeff = 1.0f;
+	if( p_input.light.shadowIdx != -1 )
+	{
+		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
+		shadowCoeff = doShadowing(gShadow, pointSampler, shadowWorldPos);
+		
+		// No black shadows. Not needed when shadow is per light and not for all lights.
+		float4 shadowColor = float4(1,1,1,1);
+		if(shadowCoeff < 0.5f){
+			shadowCoeff = 0.5f;
+		}
+		if(shadowCoeff < 0.999f){
+			shadowColor = float4(shadowCoeff*0.0862f,shadowCoeff*0.172f,shadowCoeff*0.219f,1.0f);
+		}
+	}
+	lightCol *= shadowCoeff;
 	
 	return float4( lightCol, 1.0f );
 }
