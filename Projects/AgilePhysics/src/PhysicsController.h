@@ -159,6 +159,7 @@ public:
 	vector<unsigned int> CollidesWith(unsigned int p_b);
 
 	vector<unsigned int> LineCollidesWith(unsigned int p_line);
+	vector<LineCollisionData> LineSortedCollisions(unsigned int p_line);
 	int					 LineClosestCollision(unsigned int p_line);
 
 	void ActivateBody(unsigned int pBody);

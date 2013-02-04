@@ -265,6 +265,18 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 		p_outInstanceInstructions);
 	readAndStoreParticleSystems(p_source,model);
 
+
+	//Store bsp tree
+	vector<AglLooseBspTree*> trees = p_source.scene->getBspTrees();
+	for (unsigned int i = 0; i < trees.size(); i++)
+	{
+		if (trees[i]->getHeader().targetMesh == p_source.aglMesh->getHeader().id)
+		{
+			model->looseBspTree = trees[i]->clone();
+		}
+	}
+
+
 	// Done
 	p_modelCollection->collection.push_back(model); // register in collection
 }
@@ -311,7 +323,6 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 			}
 
 		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
-		default:				
 			{
 				if (p_source.modelNumber!=-1) // call from parent
 				{
@@ -331,6 +342,10 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					}
 				}
 
+				break;
+			}
+		default:				
+			{
 				break;
 			}
 

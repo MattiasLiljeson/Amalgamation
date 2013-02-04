@@ -191,11 +191,12 @@ AglLooseBspTree::AglLooseBspTree(vector<AglBspNode> p_nodes, unsigned int p_root
 		m_triangles[i] = p_triangles[i].index;
 	}
 }
-AglLooseBspTree::AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles,
-	AglBspNode* p_nodes)
+AglLooseBspTree::AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles, 
+					AglVector3* p_triangles2, AglBspNode* p_nodes)
 {
 	m_header = p_header;
 	m_triangles = p_triangles;
+	m_triangles2 = p_triangles2;
 	m_nodes = p_nodes;
 }
 AglLooseBspTree::~AglLooseBspTree()
@@ -255,4 +256,28 @@ unsigned int* AglLooseBspTree::getTriangles()
 AglBspNode* AglLooseBspTree::getNodes()
 {
 	return m_nodes;
+}
+AglLooseBspTree* AglLooseBspTree::clone()
+{
+	//AglLooseBspTree::AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles,
+		//AglBspNode* p_nodes)
+
+	unsigned int* newT = new unsigned int[m_header.triangleCount];
+	for (unsigned int i = 0; i < m_header.triangleCount; i++)
+	{
+		newT[i] = m_triangles[i];
+	}
+
+	AglVector3* newT2 = new AglVector3[m_header.triangleCount*3];
+	for (unsigned int i = 0; i < m_header.triangleCount*3; i++)
+	{
+		newT2[i] = m_triangles2[i];
+	}
+
+	AglBspNode* newNodes = new AglBspNode[m_header.nodeCount];
+	for (unsigned int i = 0; i < m_header.nodeCount; i++)
+	{
+		newNodes[i] = m_nodes[i];
+	}
+	return new AglLooseBspTree(m_header, newT, newT2, newNodes);
 }

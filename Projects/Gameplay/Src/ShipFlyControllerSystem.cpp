@@ -20,6 +20,7 @@
 #include "SpeedBoosterModule.h"
 #include "ThrustPacket.h"
 #include "EntityUpdatePacket.h"
+#include "MeshOffsetTransform.h"
 
 #define FORCE_VS_OUTPUT
 
@@ -65,6 +66,18 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
+			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
+
+			if (meshOffset)
+			{
+				AglMatrix mat = meshOffset->offset;
+				transform = new Transform(mat.transpose() * transform->getMatrix());
+			}
+			else
+			{
+				transform = new Transform(transform->getMatrix());
+			}
 
 			// Calc rotation from player input
 			AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
@@ -123,7 +136,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			// Handle data sent to us from server
 			// handleTransformInterpolation( controller, transform );
 
-
+			delete transform;
 		}
 	}
 }

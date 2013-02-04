@@ -24,6 +24,7 @@ private:
 
 private:
 	void ComputeInertia();
+	AglBoundingSphere MergeSpheres(AglBoundingSphere pS1, AglBoundingSphere pS2);
 public:
 	CompoundBody(AglVector3 pPosition);
 	virtual ~CompoundBody();
@@ -49,6 +50,8 @@ public:
 	AglMatrix GetInverseInertiaWorld();
 
 	vector<RigidBody*> GetChildren(){ return mChildren; }
+
+	AglBoundingSphere GetBoundingSphere();
 };
 
 #endif // HEADER_H

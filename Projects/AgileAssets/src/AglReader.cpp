@@ -209,10 +209,13 @@ AglLooseBspTree* AglReader::readBspTree()
 	unsigned int* triangles = new unsigned int[header.triangleCount];
 	m_file.read((char*)&triangles[0], sizeof(unsigned int)*header.triangleCount);
 
+	AglVector3* triangles2 = new AglVector3[header.triangleCount*3];
+	m_file.read((char*)&triangles2[0], sizeof(AglVector3)*header.triangleCount*3);
+
 	AglBspNode* nodes = new AglBspNode[header.nodeCount];
 	m_file.read((char*)&nodes[0], sizeof(AglBspNode)*header.nodeCount);
 
-	return new AglLooseBspTree(header, triangles, nodes);
+	return new AglLooseBspTree(header, triangles, triangles2, nodes);
 }
 AglInteriorSphereGrid* AglReader::readSphereGrid()
 {

@@ -63,6 +63,7 @@
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="BoundingVolumeInitData.h" />
+    <ClInclude Include="MeshOffsetTransform.h" />
     <ClInclude Include="MineControllerSystem.h" />
     <ClInclude Include="MineLayerModuleControllerSystem.h" />
     <ClInclude Include="MineLayerModule.h" />

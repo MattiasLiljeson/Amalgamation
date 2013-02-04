@@ -105,6 +105,7 @@ namespace Srv
 				}
 			}
 			processMessages();
+			
 			sleep(2);
 		}
 	}
@@ -274,7 +275,7 @@ namespace Srv
 		m_world->addEntity( entity );
 
 		//Minigun
-		for (int x=0;x<4;x++)
+		/*for (int x=0;x<4;x++)
 		{
 			status = factory->readAssemblageFile( "Assemblages/minigunModule.asd" );
 			entity = factory->entityFromRecipe( "MinigunModule" );
@@ -295,11 +296,11 @@ namespace Srv
 			entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 			m_world->addEntity(entity);
-		}
+		}*/
 
 
 		//Shield
-		entity = m_world->createEntity();
+		/*entity = m_world->createEntity();
 		component = new Transform(20, 0, 0);
 		entity->addComponent( ComponentType::Transform, component );
 
@@ -317,57 +318,28 @@ namespace Srv
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
-		m_world->addEntity(entity);
+		m_world->addEntity(entity);*/
 
-		for (int x=0;x<4;x++)
+
+		EntityCreationPacket cp;
+
+		//Rocket Launcher
+		for (unsigned int i = 0; i < 4; i++)
 		{
-			entity = m_world->createEntity();
-			component = new Transform(30, 0, 0);
-			((Transform*)component)->setScale(AglVector3(2,2,2));
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(30, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-			entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
-			m_world->addEntity(entity);
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40, 0, i*10));
+			cp.entityType = EntityType::RocketLauncherModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Mine Layer
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30, 0, i*10));
+			cp.entityType = EntityType::MineLayerModule;
+			factory->entityFromPacket(cp, &pos);
 		}
 
-		for (int x=0;x<4;x++)
-		{
-			entity = m_world->createEntity();
-			component = new Transform(40, 0, 0);
-			((Transform*)component)->setScale(AglVector3(2,2,2));
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(40, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
-			m_world->addEntity(entity);
-		}
-
-		for (int x=0;x<4;x++)
+		//Speed Booster
+		/*for (int x=0;x<4;x++)
 		{
 			entity = m_world->createEntity();
 			component = new Transform(50, 0, 0);
@@ -389,7 +361,7 @@ namespace Srv
 			entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
 			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
 			m_world->addEntity(entity);
-		}
+		}*/
 
 
 

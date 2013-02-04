@@ -193,7 +193,10 @@
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="BufferFactory.h">
-      <Filter>Buffer</Filter>
+      <Filter>Factory</Filter>
+	</ClInclude>
+    <ClInclude Include="ModelExtendedFactory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

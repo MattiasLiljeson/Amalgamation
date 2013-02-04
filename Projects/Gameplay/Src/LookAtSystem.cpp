@@ -9,6 +9,7 @@
 #include "GameplayTags.h"
 #include "ValueClamp.h"
 #include "PhysicsBody.h"
+#include "MeshOffsetTransform.h"
 
 LookAtSystem::LookAtSystem() : 
 EntitySystem( SystemType::LookAtSystem, 2,
@@ -66,6 +67,18 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* targetTransform = static_cast<Transform*>(
 			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
 
+		MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>(
+			targetEntity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
+
+		if (meshOffset)
+		{
+			AglMatrix mat = meshOffset->offset;
+			targetTransform = new Transform(mat.transpose() * targetTransform->getMatrix());
+		}
+		else
+		{
+			targetTransform = new Transform(targetTransform->getMatrix());
+		}
 
 		AglVector3 lookTargetPos;
 		if (targetTransform)
@@ -167,6 +180,6 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 // 			transform->setTranslation( position );
 // 			transform->setRotation( rotation );
 		}
-		
+		delete targetTransform;
 	}
 }

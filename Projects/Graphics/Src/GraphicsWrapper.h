@@ -14,7 +14,9 @@
 
 #include "Buffer.h"
 #include "InstanceData.h"
+#include "TextureParser.h"
 #include "ModelExtendedFactory.h"
+#include "TextureFactory.h"
 #include "RenderSceneInfoCBuffer.h"
 #include "RenderStateEnums.h"
 #include "RendererSceneInfo.h"

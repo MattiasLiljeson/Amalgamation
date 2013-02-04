@@ -12,6 +12,9 @@
 #include "LevelGenSystem.h"
 #include "LevelPiece.h"
 
+AglVector3 minPhys = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+AglVector3 maxPhys = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+
 PhysicsSystem::PhysicsSystem()
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
 {
@@ -26,13 +29,14 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::initialize()
 {
-	LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	//HARDCODED BASED ON PRISON RIGHT NOW
+	//m_physicsController->InitStaticBodiesOctree(AglVector3(0, 0, 0), AglVector3(0, 0, 0));
+	/*LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
 	if (levelSystem)
 	{
 		AglVector3 minP = levelSystem->getWorldMin();
 		AglVector3 maxP = levelSystem->getWorldMax();
 		vector<LevelPiece*> pieces = levelSystem->getGeneratedPieces();
-		m_physicsController->InitStaticBodiesOctree(minP, maxP);
 		for (unsigned int i = 0; i < pieces.size(); i++)
 		{
 			const ModelResource* mr = pieces[i]->getModelResource();
@@ -43,8 +47,6 @@ void PhysicsSystem::initialize()
 
 			AglVector3 s = transform.getScale();
 			AglOBB obb = mr->meshHeader.minimumOBB;
-			AglMatrix w = obb.world;
-			w *= rt;
 
 			if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
 			{
@@ -54,11 +56,14 @@ void PhysicsSystem::initialize()
 			}
 			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, s, mr->looseBspTree);
 		}
-	}
+	}*/
 }
 
 void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 {
+	//HARDCODED BASED ON PRISON RIGHT NOW
+	m_physicsController->InitStaticBodiesOctree(minPhys, maxPhys);
+
 	float dt = m_world->getDelta();
 	m_physicsController->Update(dt);
 
@@ -178,14 +183,50 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
-		else if (init->m_type == BodyInitData::MESH)
+		else if (init->m_type == BodyInitData::MESH && init->m_modelResource)
 		{
-			//Not supported
-			//m_physicsController->AddMeshBody()
+			if (!init->m_static)
+			{
+				//Not supported
+				int k = 0;
+				k = 1.0f / k;
+			}
+			AglVector3 pos = init->m_position;
+			AglQuaternion orient = init->m_orientation;
+			AglVector3 scale = init->m_scale;
+
+			AglMatrix rt;
+			AglMatrix::componentsToMatrix(rt, AglVector3(1, 1, 1), orient, pos);
+
+			AglVector3 s = scale;
+			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
+			AglBoundingSphere bs = init->m_modelResource->meshHeader.boundingSphere;
+			*bodyId = m_physicsController->AddMeshBody(rt, obb, bs, s, init->m_modelResource->looseBspTree);
+		}
+		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
+		{
+			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+
+			AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
+
+			world *= obb.world;
+
+			*bodyId = m_physicsController->AddBox(world,
+				obb.size, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
 		else
 		{
-			//Not Supported
+			//Not Supported - Remove the body
+			p_entity->removeComponent(ComponentType::PhysicsBody);
+			p_entity->removeComponent(ComponentType::BodyInitData);
+			p_entity->applyComponentChanges();
+			return;
 		}
 
 		//Add the physics body to the entity map

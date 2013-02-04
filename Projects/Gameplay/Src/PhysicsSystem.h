@@ -4,6 +4,9 @@
 #include "AglVector3.h"
 #include "ConnectionPointSet.h"
 
+extern AglVector3 minPhys;//(FLT_MAX, FLT_MAX, FLT_MAX);
+extern AglVector3 maxPhys;//(FLT_MIN, FLT_MIN, FLT_MIN);
+
 class PhysicsController;
 class PhysicsBody;
 class Body;
@@ -35,7 +38,7 @@ public:
 
 	Entity* getEntity(int p_bodyID)
 	{
-		if (m_entityMap[p_bodyID] < 0)
+		if (m_entityMap.size() <= p_bodyID || m_entityMap[p_bodyID] < 0)
 			return NULL;
 		return m_world->getEntity(m_entityMap[p_bodyID]);
 	}
