@@ -37,7 +37,6 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
-	// worldPos = GetWorldPosition( p_input.texCoord, depth);
 	
 	float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
 	float shadowCoeff = doShadowing(shadowWorldPos);
