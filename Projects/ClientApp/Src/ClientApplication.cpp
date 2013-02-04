@@ -399,7 +399,12 @@ void ClientApplication::initEntities()
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
 	entity = factory->entityFromRecipe( "rocksClient" );									 
 	m_world->addEntity( entity );
-
+	
+	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
+	entity = factory->entityFromRecipe( "SpotLight" );	
+	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
+	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+	m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 
@@ -458,12 +463,6 @@ void ClientApplication::initEntities()
 		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
-	m_world->addEntity(entity);
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, new Transform(0,0,-10));
-	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
-	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
 	m_world->addEntity(entity);
 
 }

@@ -67,9 +67,11 @@ public:
 	/// Render a full screen quad textured with the gbuffer.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void mapDeferredBaseRTSToShader();
+	void mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_shadowMap);
 
-	void mapVariousPassesToComposeStage(ID3D11ShaderResourceView* p_shadowMap);
+	void unmapDeferredBaseFromShader();
+
+	void mapVariousPassesToComposeStage();
 	
 	void unmapVariousPassesFromComposeStage();
 
