@@ -1,8 +1,7 @@
 #include "SpeedBoostModuleControllerSystem.h"
 #include "ShipModule.h"
 #include <TcpServer.h>
-#include "OnActivateSpeedBoostModule.h"
-#include "OnDeActivateSpeedBoostModule.h"
+#include "SpeedBoostModuleActivation.h"
 
 SpeedBoostModuleControllerSystem::SpeedBoostModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem( SystemType::SpeedBoostModuleControllerSystem, 3,
@@ -20,6 +19,5 @@ void SpeedBoostModuleControllerSystem::inserted( Entity* p_entity )
 {
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(
 		ComponentType::ShipModule));
-	module->addOnActivate(new OnActivateSpeedBoostModule(p_entity, m_server));
-	module->addOnDeActivate(new OnDeActivateSpeedBoostModule(p_entity, m_server));
+	module->addActivationEvent(new SpeedBoostModuleActivation(p_entity, m_server));
 }

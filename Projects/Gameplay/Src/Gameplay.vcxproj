@@ -67,10 +67,8 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
-    <ClInclude Include="OnActivateShieldModule.h" />
-    <ClInclude Include="OnActivateSpeedBoostModule.h" />
-    <ClInclude Include="OnDeActivateShieldModule.h" />
-    <ClInclude Include="OnDeactivateSpeedBoostModule.h" />
+    <ClInclude Include="ShieldModuleActivation.h" />
+    <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="ParticleUpdateData.h" />

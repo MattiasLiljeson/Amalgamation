@@ -1,29 +1,31 @@
 #pragma once
-#include <TcpServer.h>
+#include "ModuleEvent.h"
 #include <Entity.h>
 #include "Transform.h"
+#include <TcpServer.h>
 #include "SpawnSoundEffectPacket.h"
+#include "RemoveSoundEffectPacket.h"
 // =======================================================================================
-// OnActivateSpeedBoostModule
+// SpeedBoostModuleActivation
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # OnActivateSpeedBoostModule
+/// # SpeedBoostModuleActivation
 /// Detailed description...
-/// Created on: 4-2-2013 
+/// Created on: 1-2-2013 
 ///---------------------------------------------------------------------------------------
-class OnActivateSpeedBoostModule: public ModuleEvent
+class ShieldModuleActivation: public ModuleEvent
 {
 public:
-	OnActivateSpeedBoostModule(Entity* p_shipEntity, TcpServer* p_server)
+	ShieldModuleActivation(Entity* p_shipEntity, TcpServer* p_server)
 	{
 		m_shipEntity = p_shipEntity;
 		m_server = p_server;
 	}
 	
-	void happen()
+	void activate() // NOTE: (Johan) try "virtual void happen() final" later. :)
 	{
 		Transform* transform = static_cast<Transform*>(m_shipEntity->getComponent(
 			ComponentType::Transform));
@@ -33,7 +35,19 @@ public:
 			data.attachedToNetsyncEntity = m_shipEntity->getIndex();
 			data.positional = true;
 			data.position = transform->getTranslation();
-			data.soundIdentifier = SpawnSoundEffectPacket::SpeedBoostActive;
+			data.soundIdentifier = SpawnSoundEffectPacket::ShieldActive;
+			m_server->broadcastPacket(data.pack());
+		}
+	}
+
+	void deactivate()
+	{
+		Transform* transform = static_cast<Transform*>(m_shipEntity->getComponent(
+			ComponentType::Transform));
+		if(transform)
+		{
+			RemoveSoundEffectPacket data;
+			data.attachedNetsyncIdentity = m_shipEntity->getIndex();
 			m_server->broadcastPacket(data.pack());
 		}
 	}

@@ -13,5 +13,6 @@
 class ModuleEvent
 {
 public:
-	virtual void happen() = 0;
+	virtual void activate() = 0;
+	virtual void deactivate() = 0;
 };

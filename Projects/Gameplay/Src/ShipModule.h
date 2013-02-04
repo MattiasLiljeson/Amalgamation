@@ -34,13 +34,11 @@ public:
 	bool damageTaken() const;
 	const bool& getActive() const;
 	void activate();
-	void deActivate();
-	void addOnActivate(ModuleEvent* p_event);
-	void addOnDeActivate(ModuleEvent* p_event);
+	void deactivate();
+	void addActivationEvent(ModuleEvent* p_event);
 private:
 	bool m_active;
 	float m_addedDamage;
 	static ComponentRegister<ShipModule> s_reg;
-	vector<ModuleEvent*> m_deActivateEvents;
-	vector<ModuleEvent*> m_activateEvents;
+	vector<ModuleEvent*> m_activationEvents;
 };

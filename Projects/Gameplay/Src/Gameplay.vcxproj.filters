@@ -473,12 +473,6 @@
     <ClInclude Include="ModuleEvent.h">
       <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
-    <ClInclude Include="OnActivateShieldModule.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="OnDeActivateShieldModule.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -488,10 +482,10 @@
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="OnActivateSpeedBoostModule.h">
+    <ClInclude Include="ShieldModuleActivation.h">
       <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
-    <ClInclude Include="OnDeactivateSpeedBoostModule.h">
+    <ClInclude Include="SpeedBoostModuleActivation.h">
       <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
   </ItemGroup>

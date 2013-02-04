@@ -13,8 +13,7 @@
 #include "AudioBackendSystem.h"
 #include <Globals.h>
 #include "SpawnSoundEffectPacket.h"
-#include "OnActivateShieldModule.h"
-#include "OnDeActivateShieldModule.h"
+#include "ShieldModuleActivation.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 2,
@@ -134,8 +133,7 @@ void ShieldModuleControllerSystem::inserted( Entity* p_entity )
 {
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(
 		ComponentType::ShipModule));
-	module->addOnActivate(new OnActivateShieldModule(p_entity, m_server));
-	module->addOnDeActivate(new OnDeActivateShieldModule(p_entity, m_server));
+	module->addActivationEvent(new ShieldModuleActivation(p_entity, m_server));
 }
 
 void ShieldModuleControllerSystem::removed( Entity* p_entity )
