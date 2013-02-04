@@ -41,19 +41,20 @@ float4 PS(VertexOut p_input) : SV_TARGET
 	
 	float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
 	float shadowCoeff = doShadowing(shadowWorldPos);
+	float4 shadowColor = float4(1,1,1,1);
+	if(shadowCoeff < 0.5f){
+		shadowCoeff = 0.75f;
+	}
+	if(shadowCoeff < 0.999f){
+		shadowColor = float4(shadowCoeff*0.0862f,shadowCoeff*0.172f,shadowCoeff*0.219f,1.0f);
+	}
+	lightColor = lightColor*shadowColor;
 	
-	lightColor = lightColor*shadowCoeff;
-	
-	depth = pow(depth,1000);
-	shadowTex = pow(shadowCoeff,100);
-	//return float4(worldPos.rgb,1.0f);
-	//return float4(depth,depth,depth,1.0f);
-	//return float4(shadowTex,shadowTex,shadowTex,1.0f);
 	return lightColor;
 }
 
 float doShadowing(float4 positionHomo){
-	float SHADOW_EPSILON = 0.01f;
+	float SHADOW_EPSILON = 0.0001f;
 	float SMAP_SIZE = 512.0f;
 	
 	positionHomo.xyz /= positionHomo.w;
@@ -64,27 +65,16 @@ float doShadowing(float4 positionHomo){
 		return 1.0f;
 	
 	float depth = positionHomo.z;
-	depth -= 0.00003f; 
 	
-	float s0 = shadowPass.Sample(pointSampler, smTexCoord).r;
+	float dx = 1.0f/SMAP_SIZE;
+	float s0 = (shadowPass.Sample(pointSampler, smTexCoord).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
+	float s1 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,0.0f)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
+	float s2 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (0.0f,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
+	float s3 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
 	
-	if( depth < 0.1f )
-		return 2.0f;
+	float2 texelPos = smTexCoord * SMAP_SIZE;
+	float2 lerps = frac(texelPos);
 	
-	if( depth<s0 )
-		return 1.0f;
-	else
-		return 0.0f;
-	
-	//float dx = 1.0f/SMAP_SIZE;
-	//float s0 = (shadowPass.Sample(pointSampler, smTexCoord).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	//float s1 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,0.0f)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	//float s2 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (0.0f,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	//float s3 = (shadowPass.Sample(pointSampler, smTexCoord + float2 (dx,dx)).r + SHADOW_EPSILON<depth)? 0.0f: 1.0f;
-	
-	//float2 texelPos = smTexCoord * SMAP_SIZE;
-	//float2 lerps = frac(texelPos);
-	
-	//return float (lerp(lerp(s0,s1,lerps.x),lerp(s2,s3,lerps.x),lerps.y));
+	return float (lerp(lerp(s0,s1,lerps.x),lerp(s2,s3,lerps.x),lerps.y));
 	//return s0;
 }

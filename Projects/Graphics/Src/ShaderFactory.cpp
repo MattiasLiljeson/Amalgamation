@@ -173,14 +173,12 @@ ShadowShader* ShaderFactory::createShadowShader( const LPCWSTR& p_filePath ){
 	ShaderVariableContainer shaderInitData;
 
 	VSData* vertexData = new VSData();
-	PSData* psData = new PSData();
 
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
-	psData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
 
-	createAllShaderStages(vertexData,psData);
+	createAllShaderStages(vertexData);
 	createInstancedPNTTBVertexInputLayout(vertexData, &inputLayout);
-	createShaderInitData(&shaderInitData, inputLayout, vertexData, psData);
+	createShaderInitData(&shaderInitData, inputLayout, vertexData);
 
 	return new ShadowShader(shaderInitData, m_bufferFactory->createShadowBuffer());
 }
