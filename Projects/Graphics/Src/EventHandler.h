@@ -25,18 +25,17 @@
  *
  */
 
-#ifndef ROCKETINVADERSEVENTHANDLER_H
-#define ROCKETINVADERSEVENTHANDLER_H
-
+#pragma once
 #include <Rocket/Core/String.h>
 
-namespace Rocket {
-namespace Core {
-
-class Event;
-
+namespace Rocket 
+{
+	namespace Core 
+	{
+		class Event;
+	}
 }
-}
+class LibRocketEventManager;
 
 /**
 	@author Peter Curry
@@ -45,9 +44,14 @@ class Event;
 class EventHandler
 {
 public:
+	EventHandler(const char* p_handlerName);
+	void ConnectToManager(LibRocketEventManager* p_eventManager);
+	const std::string& getName() const;
+
 	virtual ~EventHandler();
 	virtual void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value) = 0;
+protected:
+	LibRocketEventManager* m_eventManager;
+	std::string m_handlerName;
 };
 
-
-#endif

@@ -3,6 +3,9 @@
 
 MenuItem::MenuItem()
 {
+	documentName	= "";
+	modal			= false;
+	initiallyVisible= false;
 }
 
 

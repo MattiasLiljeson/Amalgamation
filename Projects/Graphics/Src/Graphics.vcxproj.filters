@@ -66,10 +66,10 @@
     <ClCompile Include="EventHandler.cpp">
       <Filter>LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="EventManager.cpp">
+    <ClCompile Include="EventInstancer.cpp">
       <Filter>LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="EventInstancer.cpp">
+    <ClCompile Include="LibRocketEventManager.cpp">
       <Filter>LibRocket</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,10 +198,10 @@
     <ClInclude Include="EventHandler.h">
       <Filter>LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
+    <ClInclude Include="EventInstancer.h">
       <Filter>LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="EventInstancer.h">
+    <ClInclude Include="LibRocketEventManager.h">
       <Filter>LibRocket</Filter>
     </ClInclude>
   </ItemGroup>

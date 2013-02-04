@@ -25,12 +25,8 @@
  *
  */
 
-#ifndef ROCKETINVADERSEVENTMANAGER_H
-#define ROCKETINVADERSEVENTMANAGER_H
-
+#pragma once
 #include <Rocket/Core/Event.h>
-
-class EventHandler;
 
 namespace Rocket
 {
@@ -39,46 +35,49 @@ namespace Rocket
 		class Context;
 	}
 }
+class EventHandler;
+
 
 /**
-	@author Peter Curry
+	@author		Peter Curry
+	@modifiers	Robin Thunström, Alexander Brodén
  */
 
-class EventManager
+class LibRocketEventManager
 {
 public:
-	static void Initialise(Rocket::Core::Context* p_context);
+	LibRocketEventManager();
+	~LibRocketEventManager();
+
+	void Initialise(Rocket::Core::Context* p_context);
 	/// Releases all event handlers registered with the manager.
-	static void Shutdown();
+	void Shutdown();
 
 	/// Registers a new event handler with the manager.
 	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
 	/// @param[in] handler The event handler.
-	static void RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+	void RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
 
-	static EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
+	EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
 
 	/// Processes an event coming through from Rocket.
 	/// @param[in] event The Rocket event that spawned the application event.
 	/// @param[in] value The application-specific event value.
-	static void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
+	void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] window_name The name of the window to load.
-	static bool LoadWindow(const Rocket::Core::String& window_name);
+	bool LoadWindow(const Rocket::Core::String& window_name, bool p_modal);
 
-	static bool wantsToExit;
+	bool wantsToExit;
 private:
 	// The game's element context (declared in main.cpp).
-	static Rocket::Core::Context* context;
+	Rocket::Core::Context* context;
 	// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
-	static EventHandler* event_handler;
+	EventHandler* event_handler;
 	// The event handlers registered with the manager.
 	typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
-	static EventHandlerMap event_handlers;
+	EventHandlerMap event_handlers;
 
-	EventManager();
-	~EventManager();
 };
 
 
-#endif

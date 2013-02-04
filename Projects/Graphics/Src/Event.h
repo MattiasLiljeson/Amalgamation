@@ -25,11 +25,11 @@
  *
  */
 
-#ifndef ROCKETINVADERSEVENT_H
-#define ROCKETINVADERSEVENT_H
+#pragma once
 
 #include <Rocket/Core/EventListener.h>
 
+class LibRocketEventManager;
 /**
 	@author Peter Curry
  */
@@ -37,7 +37,7 @@
 class Event : public Rocket::Core::EventListener
 {
 public:
-	Event(const Rocket::Core::String& value);
+	Event(LibRocketEventManager* p_eventManager, const Rocket::Core::String& value);
 	virtual ~Event();
 
 	/// Sends the event value through to Invader's event processing system.
@@ -48,6 +48,6 @@ public:
 
 private:
 	Rocket::Core::String value;
-};
+	LibRocketEventManager* m_eventManager;
 
-#endif
+};

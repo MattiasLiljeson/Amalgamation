@@ -25,10 +25,10 @@
  *
  */
 
-#ifndef ROCKETINVADERSEVENTINSTANCER_H
-#define ROCKETINVADERSEVENTINSTANCER_H
-
+#pragma once
 #include <Rocket/Core/EventListenerInstancer.h>
+
+class LibRocketEventManager;
 
 /**
 	@author Peter Curry
@@ -37,7 +37,7 @@
 class EventInstancer : public Rocket::Core::EventListenerInstancer
 {
 public:
-	EventInstancer();
+	EventInstancer(LibRocketEventManager* p_eventManager);
 	virtual ~EventInstancer();
 
 	/// Instances a new event handle for Invaders.
@@ -45,6 +45,8 @@ public:
 
 	/// Destroys the instancer.
 	virtual void Release();
+
+private:
+	LibRocketEventManager* m_eventManager;
 };
 
-#endif

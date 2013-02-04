@@ -12,11 +12,9 @@
 #include <DebugUtil.h>
 #include <Rocket/Controls.h>
 #include <EventInstancer.h>
-#include <EventManager.h>
-#include "EventHandlerStartGame.h"
-#include "EventHandlerOptions.h"
 #include "LibRocketInputHelper.h"
 #include "ClientConnectToServerSystem.h"
+#include <LibRocketEventManager.h>
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -32,13 +30,14 @@ LibRocketBackendSystem::~LibRocketBackendSystem()
 {
 	// The connect handler is also an EntitySystem, and thus owned by the SystemManager.
 	// Therefor, it is unregistered manually.
-	EventManager::UnregisterEventHandler("join");
+	//m_eventManager->UnregisterEventHandler("join");
 
-	EventManager::Shutdown();
+	m_eventManager->Shutdown();
+	delete m_eventManager;
 
 	for( unsigned int i=0; i<m_documents.size(); i++ )
 	{
-		m_documents[i]->GetContext()->UnloadDocument(m_documents[i]);
+		m_rocketContext->UnloadDocument(m_documents[i]);
 		m_documents[i]->RemoveReference();
 	}
 
@@ -88,19 +87,13 @@ void LibRocketBackendSystem::initialize()
 		loadFontFace( tmp.c_str() );
 	}
 
+	m_eventManager = new LibRocketEventManager();
 	// Initialise event instancer and handlers.
-	EventInstancer* eventInstancer = new EventInstancer();
+	EventInstancer* eventInstancer = new EventInstancer(m_eventManager);
 	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
 	eventInstancer->RemoveReference();
 
-	EventManager::Initialise(m_rocketContext);
-	// Register event handlers
-	EventManager::RegisterEventHandler("start_game", new EventHandlerStartGame());
-	EventManager::RegisterEventHandler("options", new EventHandlerOptions());
-
-	auto connectSystem = static_cast<ClientConnectToServerSystem*>(
-		m_world->getSystem(SystemType::NetworkConnectoToServerSystem));
-	EventManager::RegisterEventHandler("join", connectSystem);
+	m_eventManager->Initialise(m_rocketContext);
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
@@ -132,16 +125,16 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 
 int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName, 
 											   bool p_initiallyShown/*=true*/, 
-											   bool p_useEventManager/*=false */ )
+											   bool p_modal/*=true */ )
 {
 	int docId = loadDocument((GUI_MENU_PATH + 
 								toString("temp/") + 
 								toString(p_windowName) +
 								toString(".rml")).c_str(), p_initiallyShown);
 
-	if (docId >= 0 && p_useEventManager)
+	if (docId >= 0)
 	{
-		EventManager::LoadWindow(p_windowName);
+		/*m_eventManager->LoadWindow(p_windowName);*/
 	}
 	return docId;
 }
@@ -168,6 +161,11 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 			toString(p_filePath)).c_str() ));
 	}
 	return docId;
+}
+
+void LibRocketBackendSystem::registerEventHandler( EventHandler* p_eventHandler )
+{
+	m_eventManager->RegisterEventHandler(p_eventHandler->getName().c_str(), p_eventHandler);
 }
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
@@ -224,7 +222,7 @@ void LibRocketBackendSystem::process()
 	processMouseMove();
 	processKeyStates();
 
-	if (EventManager::wantsToExit)
+	if (m_eventManager->wantsToExit)
 	{
 		m_world->requestToShutDown();
 	}

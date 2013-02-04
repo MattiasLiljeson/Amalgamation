@@ -2,11 +2,12 @@
 #include "Control.h"
 #include <TcpClient.h>
 #include <Rocket/Core/Event.h>
+#include "LibRocketBackendSystem.h"
 
 ClientConnectToServerSystem* ClientConnectToServerSystem::m_selfPointer = NULL;
 
 ClientConnectToServerSystem::ClientConnectToServerSystem( TcpClient* p_tcpClient )
-	: EntitySystem( SystemType::NetworkConnectoToServerSystem )
+	: EntitySystem( SystemType::NetworkConnectoToServerSystem ), EventHandler("join")
 {
 	m_tcpClient = p_tcpClient;
 	
@@ -26,7 +27,6 @@ ClientConnectToServerSystem::~ClientConnectToServerSystem()
 
 void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-
 	if( m_tcpClient->hasActiveConnection() )
 	{
 		m_isLookingForConnection = false;
@@ -37,6 +37,9 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 
 void ClientConnectToServerSystem::initialize()
 {
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+	rocketBackend->registerEventHandler(this);
 
 	TwStructMember ipMembers[] = {
 		{ "Ip-part1", TW_TYPE_INT32, offsetof(NetworkAdress,octets1),"min=0 max=255"},

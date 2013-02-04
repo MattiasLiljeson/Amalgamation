@@ -26,10 +26,11 @@
  */
 
 #include "Event.h"
-#include "EventManager.h"
+#include "LibRocketEventManager.h"
 
-Event::Event(const Rocket::Core::String& value) : value(value)
+Event::Event(LibRocketEventManager* p_eventManager, const Rocket::Core::String& value) : value(value)
 {
+	m_eventManager = p_eventManager;
 }
 
 Event::~Event()
@@ -39,7 +40,7 @@ Event::~Event()
 // Sends the event value through to Invader's event processing system.
 void Event::ProcessEvent(Rocket::Core::Event& event)
 {
-	EventManager::ProcessEvent(event, value);
+	m_eventManager->ProcessEvent(event, value);
 }
 
 // Destroys the event.

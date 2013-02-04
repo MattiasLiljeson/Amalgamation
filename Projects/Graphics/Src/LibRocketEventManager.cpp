@@ -25,7 +25,7 @@
  *
  */
 
-#include "EventManager.h"
+#include "LibRocketEventManager.h"
 #include <Rocket/Core/Context.h>
 #include <Rocket/Core/ElementDocument.h>
 #include <Rocket/Core/ElementUtilities.h>
@@ -37,42 +37,46 @@
 #include <ToString.h>
 
 // The game's element context.
-Rocket::Core::Context* EventManager::context;
+//Rocket::Core::Context* EventManager::context;
+//
+//bool EventManager::wantsToExit = false;
+//
+//// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
+//EventHandler* EventManager::event_handler = NULL;
+//// The event handlers registered with the manager.
+//typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
+//EventHandlerMap EventManager::event_handlers;
 
-bool EventManager::wantsToExit = false;
+LibRocketEventManager::LibRocketEventManager()
+{
+	context = NULL;
+	wantsToExit = false;
 
-// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
-EventHandler* EventManager::event_handler = NULL;
-// The event handlers registered with the manager.
-typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
-EventHandlerMap EventManager::event_handlers;
+}
 
-EventManager::EventManager()
+LibRocketEventManager::~LibRocketEventManager()
 {
 }
 
-EventManager::~EventManager()
-{
-}
-
-void EventManager::Initialise( Rocket::Core::Context* p_context )
+void LibRocketEventManager::Initialise( Rocket::Core::Context* p_context )
 {
 	context = p_context;
 }
 
 // Releases all event handlers registered with the manager.
-void EventManager::Shutdown()
+void LibRocketEventManager::Shutdown()
 {
-	for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
-		delete (*i).second;
+	//for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
+	//	delete (*i).second;
 
 	event_handlers.clear();
 	event_handler = NULL;
 }
 
 // Registers a new event handler with the manager.
-void EventManager::RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
+void LibRocketEventManager::RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
 {
+	handler->ConnectToManager(this);
 	// Release any handler bound under the same name.
 	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
 	if (iterator != event_handlers.end())
@@ -81,20 +85,21 @@ void EventManager::RegisterEventHandler(const Rocket::Core::String& handler_name
 	event_handlers[handler_name] = handler;
 }
 
-EventHandler* EventManager::UnregisterEventHandler( const Rocket::Core::String& handler_name )
+EventHandler* LibRocketEventManager::UnregisterEventHandler( const Rocket::Core::String& handler_name )
 {
 	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
 	EventHandler* handler = NULL;
 	if (iterator != event_handlers.end())
 	{
 		handler = (*iterator).second;
+		handler->ConnectToManager(NULL);
 		event_handlers[handler_name] = NULL;
 	}
 	return handler;
 }
 
 // Processes an event coming through from Rocket.
-void EventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
+void LibRocketEventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
 {
 	Rocket::Core::StringList commands;
 	Rocket::Core::StringUtilities::ExpandString(commands, value, ';');
@@ -110,13 +115,13 @@ void EventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::
 		if (values[0] == "goto" && values.size() > 1)
 		{
 			// Load the window, and if successful close the old window.
-			if (LoadWindow(values[1]))
+			if (LoadWindow(values[1], false))
 				event.GetTargetElement()->GetOwnerDocument()->Close();
 		}
 		else if (values[0] == "load" &&	values.size() > 1)
 		{
 			// Load the window.
-			LoadWindow(values[1]);
+			LoadWindow(values[1], true);
 		}
 		else if (values[0] == "close")
 		{
@@ -151,7 +156,7 @@ void EventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::
 }
 
 // Loads a window and binds the event handler for it.
-bool EventManager::LoadWindow(const Rocket::Core::String& window_name)
+bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name, bool p_modal)
 {
 	// Set the event handler for the new screen, if one has been registered.
 	EventHandler* old_event_handler = event_handler;
@@ -184,8 +189,10 @@ bool EventManager::LoadWindow(const Rocket::Core::String& window_name)
 	if (title != NULL)
 		title->SetInnerRML(document->GetTitle());
 
-	document->Focus();
-	document->Show();
+	if (p_modal)
+		document->Show(Rocket::Core::ElementDocument::MODAL);
+	else
+		document->Show(Rocket::Core::ElementDocument::FOCUS);
 
 	// Remove the caller's reference.
 	document->RemoveReference();

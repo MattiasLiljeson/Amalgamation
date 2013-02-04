@@ -2,6 +2,7 @@
 #include "LibRocketBackendSystem.h"
 #include <Globals.h>
 #include <ToString.h>
+#include "MenuItem.h"
 
 MenuSystem::MenuSystem()
 	: EntitySystem( SystemType::MenuSystem, 1, ComponentType::MenuItem )
@@ -18,8 +19,7 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	int docId = rocketBackend->loadDocumentByName("main_menu", false, true);
-	//rocketBackend->showDocument(docId, Rocket::Core::ElementDocument::MODAL);
+	int docId = rocketBackend->loadDocumentByName("main_menu", true, true);
 
 
 	//if (docId >= 0)
@@ -30,4 +30,18 @@ void MenuSystem::initialize()
 void MenuSystem::processEntities( const vector<Entity*>& p_entities )
 {
 
+}
+
+void MenuSystem::inserted( Entity* p_entity )
+{
+	auto menuItem = static_cast<MenuItem*>(p_entity->getComponent(ComponentType::MenuItem));
+
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+	rocketBackend->loadDocumentByName(menuItem->documentName.c_str(), menuItem->initiallyVisible, menuItem->modal);
+	for (int i = 0; i < menuItem->handlerNames.size(); i++)
+	{
+		
+	}
 }

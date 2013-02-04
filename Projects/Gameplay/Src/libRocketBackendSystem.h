@@ -10,10 +10,12 @@
 class AntTweakBarWrapper;
 class Control;
 class Cursor;
+class EventHandler;
 class GraphicsBackendSystem;
 class InputBackendSystem;
 class LibRocketRenderInterface;
 class LibRocketSystemInterface;
+class LibRocketEventManager;
 
 class LibRocketBackendSystem : public EntitySystem, public RenderInterface
 {
@@ -25,9 +27,11 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	int loadDocumentByName(const char* p_windowName, bool p_initiallyShown=true, 
-		bool p_useEventManager=false );
+	int loadDocumentByName(const char* p_windowName, 
+							bool p_initiallyShown=true, 
+							bool p_modal=false);
 	int loadDocument( const char* p_filePath, bool p_initiallyShown=true);
+	void registerEventHandler(EventHandler* p_eventHandler);
 
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
@@ -49,6 +53,7 @@ private:
 
 	GraphicsBackendSystem* m_graphicsBackend;
 	InputBackendSystem* m_inputBackend;
+	LibRocketEventManager* m_eventManager;
 
 	Cursor* m_cursor;
 

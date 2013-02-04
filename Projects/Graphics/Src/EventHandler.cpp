@@ -26,7 +26,24 @@
  */
 
 #include "EventHandler.h"
+#include "LibRocketEventManager.h"
 
 EventHandler::~EventHandler()
 {
+}
+
+EventHandler::EventHandler(const char* p_handlerName)
+{
+	m_eventManager = NULL;
+	m_handlerName = p_handlerName;
+}
+
+void EventHandler::ConnectToManager( LibRocketEventManager* p_eventManager )
+{
+	m_eventManager = p_eventManager;
+}
+
+const std::string& EventHandler::getName() const
+{
+	return m_handlerName;
 }

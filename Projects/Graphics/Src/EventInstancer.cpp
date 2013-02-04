@@ -25,11 +25,15 @@
  *
  */
 
+
 #include "EventInstancer.h"
+#include "LibRocketEventManager.h"
 #include "Event.h"
 
-EventInstancer::EventInstancer()
+EventInstancer::EventInstancer(LibRocketEventManager* p_eventManager)
+	: EventListenerInstancer()
 {
+	m_eventManager = p_eventManager;
 }
 
 EventInstancer::~EventInstancer()
@@ -39,7 +43,7 @@ EventInstancer::~EventInstancer()
 // Instances a new event handle for Invaders.
 Rocket::Core::EventListener* EventInstancer::InstanceEventListener(const Rocket::Core::String& value, Rocket::Core::Element* element)
 {
-	return new Event(value);
+	return new Event(m_eventManager, value);
 }
 
 // Destroys the instancer.
