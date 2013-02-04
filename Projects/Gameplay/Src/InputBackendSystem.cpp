@@ -37,6 +37,7 @@ InputBackendSystem::~InputBackendSystem()
 
 void InputBackendSystem::initialize()
 {
+	InputHelper::initialize();
 
 	XInputFetcher* xInput = new XInputFetcher();
 	HWND hWnd = m_graphicsBackend->getWindowRef();

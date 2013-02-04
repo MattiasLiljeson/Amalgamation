@@ -261,19 +261,33 @@ void LibRocketBackendSystem::processKeyStates()
 {
 	for (int keyCode = 0; keyCode < InputHelper::KeyboardKeys_CNT; keyCode++)
 	{
-		Control* control = m_inputBackend->getControlByEnum((InputHelper::KeyboardKeys)keyCode);
+		InputHelper::KeyboardKeys kbk = (InputHelper::KeyboardKeys)keyCode;
+		Control* control = m_inputBackend->getControlByEnum(kbk);
 		if (LibRocketInputHelper::isKeyMapped(keyCode) && control->getDelta() != 0)
 		{
 			if (control->getStatus() > 0.5f)
 			{
+				DEBUGPRINT(((toString("Key ") +
+							toString(keyCode) + 
+							toString(" was pressed\n")).c_str()));
 				m_rocketContext->ProcessKeyDown(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+
+				char c = InputHelper::charFromKeyboardKey(kbk);
+				if (c != InputHelper::NONPRINTABLE_CHAR)
+				{	
+					m_rocketContext->ProcessTextInput(c);
+				}
 			}
 			else
 			{
+				DEBUGPRINT(((toString("Key ") +
+							toString(keyCode) + 
+							toString(" was released\n")).c_str()));
 				m_rocketContext->ProcessKeyUp(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
 			}
+
 		}
 	}
 }
