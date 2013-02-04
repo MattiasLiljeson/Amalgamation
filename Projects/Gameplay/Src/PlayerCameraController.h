@@ -20,13 +20,10 @@ class PlayerCameraController : public Component
 {
 public:
 	PlayerCameraController()
+	: Component( ComponentType::PlayerCameraController )
 	{
-
 	}
 
 	~PlayerCameraController() {}
-
-
-private:
 
 };

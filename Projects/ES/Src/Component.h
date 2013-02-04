@@ -11,7 +11,6 @@ using namespace std;
 class Component
 {
 public:
-	Component();
 	Component( ComponentType::ComponentTypeIdx p_componentType );
 	virtual ~Component() = 0;
 

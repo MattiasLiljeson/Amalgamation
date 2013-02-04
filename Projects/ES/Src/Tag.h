@@ -10,7 +10,9 @@
 class Tag : public Component
 {
 public:
-	Tag() : Component() {}
+	Tag() : Component( ComponentType::Tag )
+	{
+	}
 
 	virtual ~Tag() {}
 };

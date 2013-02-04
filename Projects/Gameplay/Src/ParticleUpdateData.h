@@ -9,10 +9,11 @@ class ParticleUpdateData: public Component
 {
 public:
 	ParticleUpdateData()
+		: Component( ComponentType::ParticleUpdateData )
 	{
-
 	}
 
+public:
 	AglVector3 spawnPoint;
 	AglVector3 direction;
 	float	   speed;

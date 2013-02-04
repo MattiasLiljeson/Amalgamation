@@ -23,8 +23,8 @@ class LookAtEntity : public Component
 {
 public:
 	LookAtEntity(int p_entityId,
-		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f
-		)
+		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = AglVector3::zero();
@@ -37,6 +37,7 @@ public:
 		const AglVector3& p_followPositionOffset,
 		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f
 		)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = p_followPositionOffset;
@@ -51,6 +52,7 @@ public:
 				float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f,
 				float p_orbitDistance=1.0f
 				)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = p_followPositionOffset;

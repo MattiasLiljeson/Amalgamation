@@ -2,6 +2,7 @@
 
 
 LightSources::LightSources()
+	: Component( ComponentType::LightSources )
 {
 	m_componentType = ComponentType::LightSources;
 }

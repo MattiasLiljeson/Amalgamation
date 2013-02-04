@@ -4,6 +4,7 @@ CameraInfo::CameraInfo(float p_aspectRatio,
 					   float p_fieldOfViewAsRadians/* =0.785398163f */, 
 					   float p_nearPlane/* =0.1f */, 
 					   float p_farPlane/* =10000.0f */)
+	: Component( ComponentType::CameraInfo )
 {
 	m_projMat		= AglMatrix::identityMatrix();
 	m_aspectRatio	= p_aspectRatio;

@@ -2,13 +2,6 @@
 
 int Component::m_counter = 0;
 
-Component::Component()
-{
-	m_counter++;
-	m_id = m_counter;
-	m_componentType = ComponentType::NON_EXISTING; 
-}
-
 Component::Component( ComponentType::ComponentTypeIdx p_componentType )
 {
 	m_counter++;

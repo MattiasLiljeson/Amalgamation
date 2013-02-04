@@ -25,12 +25,14 @@ class ShipFlyController : public Component
 {
 public:
 	ShipFlyController()
+	: Component( ComponentType::ShipFlyController )
 	{
 		m_turnSpeed = 10.0f;
 		m_thrustPower = 0.2f;
 	}
 
 	ShipFlyController(float p_turnSpeed, float p_thrustPower)
+	: Component( ComponentType::ShipFlyController )
 	{
 		m_turnSpeed = p_turnSpeed;
 		m_thrustPower = p_thrustPower;

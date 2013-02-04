@@ -1,10 +1,9 @@
 #include "Vibration.h"
 
-
 ComponentRegister<Vibration> Vibration::s_reg("Vibration");
 
-
 Vibration::Vibration()
+	: Component( ComponentType::Vibration )
 {
 	enabled = false;
 	leftPower=20.0f; // 20%
@@ -14,10 +13,10 @@ Vibration::Vibration()
 	distanceAttenuated=false;
 	linearDeclineEffectMultiplier=-1.0f;
 	enableDeclineEffect=false;
-	m_componentType = ComponentType::ComponentTypeIdx::Vibration;
 }
 
 Vibration::Vibration(float p_power, float p_minRadius, float p_maxRadius)
+	: Component( ComponentType::Vibration )
 {
 	enabled=false;
 	leftPower=p_power;
@@ -27,7 +26,6 @@ Vibration::Vibration(float p_power, float p_minRadius, float p_maxRadius)
 	distanceAttenuated=true;
 	linearDeclineEffectMultiplier=-1.0f;
 	enableDeclineEffect=false;
-	m_componentType = ComponentType::ComponentTypeIdx::Vibration;
 }
 void Vibration::init( vector<ComponentData> p_initData )
 {
