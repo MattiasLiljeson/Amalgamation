@@ -103,6 +103,7 @@ using namespace std;
 #include <time.h>
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
+#include <SlotInputControllerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -252,9 +253,9 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend,
-		m_client);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
 	m_world->setSystem( shipInputProc, true);
+	m_world->setSystem( new SlotInputControllerSystem(inputBackend, m_client), true );
 
 	// Controller systems for the ship
 	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,

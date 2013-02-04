@@ -14,13 +14,9 @@ ShipModule::ShipModule()
 
 ShipModule::~ShipModule()
 {
-	for(unsigned int i=0; i<m_activateEvents.size(); i++)
+	for(unsigned int i=0; i<m_activationEvents.size(); i++)
 	{
-		delete m_activateEvents[i];
-	}
-	for(unsigned int i=0; i<m_deActivateEvents.size(); i++)
-	{
-		delete m_deActivateEvents[i];
+		delete m_activationEvents[i];
 	}
 }
 
@@ -64,27 +60,22 @@ const bool& ShipModule::getActive() const
 void ShipModule::activate()
 {
 	m_active = true;
-	for(unsigned int i=0; i<m_activateEvents.size(); i++)
+	for(unsigned int i=0; i<m_activationEvents.size(); i++)
 	{
-		m_activateEvents[i]->happen();
+		m_activationEvents[i]->activate();
 	}
 }
 
-void ShipModule::deActivate()
+void ShipModule::deactivate()
 {
 	m_active = false;
-	for(unsigned int i=0; i<m_deActivateEvents.size(); i++)
+	for(unsigned int i=0; i<m_activationEvents.size(); i++)
 	{
-		m_deActivateEvents[i]->happen();
+		m_activationEvents[i]->deactivate();
 	}
 }
 
-void ShipModule::addOnActivate( ModuleEvent* p_event )
+void ShipModule::addActivationEvent( ModuleEvent* p_event )
 {
-	m_activateEvents.push_back( p_event );
-}
-
-void ShipModule::addOnDeActivate( ModuleEvent* p_event )
-{
-	m_deActivateEvents.push_back( p_event );
+	m_activationEvents.push_back( p_event );
 }

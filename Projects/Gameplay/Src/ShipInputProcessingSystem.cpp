@@ -3,13 +3,9 @@
 #include "Control.h"
 #include <ValueClamp.h>
 #include "AntTweakBarWrapper.h"
-#include "HighlightSlotPacket.h"
-#include "SimpleEventPacket.h"
-#include "AudioBackendSystem.h"
-#include <Globals.h>
 
 
-ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client) :
+ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
 	m_angleInputMultiplier = 1000;
@@ -17,7 +13,6 @@ ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_input
 	m_controllerEpsilon = 0.15f;
 	m_editSwitchTrigReleased = true;
 	m_inputBackend = p_inputBackend;
-	m_client = p_client;
 }
 
 void ShipInputProcessingSystem::initialize()
@@ -58,8 +53,6 @@ void ShipInputProcessingSystem::process()
 	if( abs(m_processedInput.strafeVerticalInput) < m_controllerEpsilon ) 
 		m_processedInput.strafeVerticalInput = 0;
 
-
-	updateAntTweakBar(m_processedInput);
 }
 
 ShipInputProcessingSystem::ResultingInputForces& ShipInputProcessingSystem::getProcessedInput()
@@ -106,10 +99,6 @@ void ShipInputProcessingSystem::initMouse()
 		InputHelper::MouseAxes_Y_POSITIVE);
 	m_mouseVerticalNegative		= m_inputBackend->getControlByEnum( 
 		InputHelper::MouseAxes_Y_NEGATIVE);
-
-	//Added by Anton 15/1 - 13
-	m_mouseModuleActivation = m_inputBackend->getControlByEnum(
-		InputHelper::MouseButtons_0);
 }
 
 void ShipInputProcessingSystem::initKeyboard()
@@ -132,16 +121,6 @@ void ShipInputProcessingSystem::initKeyboard()
 		InputHelper::KeyboardKeys_Q);
 
 	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C );
-
-	//Added by Anton 15/1 - 13
-	m_keyboardModuleSlots[0] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_1);
-	m_keyboardModuleSlots[1] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_2);
-	m_keyboardModuleSlots[2] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_3);
-	m_keyboardModuleSlots[3] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_4);
 }
 
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
@@ -215,86 +194,6 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 		}
 		input.stateSwitchTrig=false;
 	}
-
-	//Added by Anton 15/1 - 13
-	// Please remove this!
-	// Not input... Make separate system for slot highlight
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		if (m_keyboardModuleSlots[i]->getDelta() > 0)
-		{
-			//Highlight slot
-			sendModuleSlotHighlight(i);
-			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-				m_world->getSystem(SystemType::AudioBackendSystem));
-			audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-				"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
-
-		}
-	}
-	// =============================
 	
-	if (m_mouseModuleActivation->getDelta() > 0)
-	{
-		//Send activation
-		sendSlotActivation();
-	}
-	else if (m_mouseModuleActivation->getDelta() < 0)
-	{
-		//Send deactivation
-		sendSlotDeactivation();
-	}
-
 	return input;
-}
-
-
-
-void ShipInputProcessingSystem::updateAntTweakBar(const ResultingInputForces& p_input)
-{
-	// Calibrate the Gamepad's analogue sticks when pressing the C key.
-	if( m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C )->getDelta() >= 0.5 && false )
-	{
-		
-	}
-
-	//// Update the analogue sticks for anttweakbar.
-	//m_leftStickDir[0] = p_input.horizontalInput;
-	//m_leftStickDir[1] = p_input.verticalInput;
-	//m_leftStickDir[2] = 0.5f;
-
-	//m_rightStickDir[0] = p_input.strafeHorizontalInput;
-	//m_rightStickDir[1] = p_input.strafeVerticalInput;
-	//m_rightStickDir[2] = 0.5f;
-
-	// Update the corrected values for the sticks, in for anttweakbar.
-	//m_leftStickDirWithCorrection[0] = p_input.horizontalInput + m_leftStickCorrection[0];
-	//m_leftStickDirWithCorrection[1] = p_input.verticalInput + m_leftStickCorrection[1];
-	//m_leftStickDirWithCorrection[2] = 0.5f;
-
-	//m_rightStickDirWithCorrection[0] = p_input.strafeHorizontalInput + m_rightStickCorrection[0];
-	//m_rightStickDirWithCorrection[1] = p_input.strafeVerticalInput + m_rightStickCorrection[1];
-	//m_rightStickDirWithCorrection[2] = 0.5f;
-}
-
-void ShipInputProcessingSystem::sendModuleSlotHighlight(int p_slot)
-{
-	HighlightSlotPacket packet;
-	packet.id = p_slot;
-
-	m_client->sendPacket( packet.pack() );
-}
-void ShipInputProcessingSystem::sendSlotActivation()
-{
-	SimpleEventPacket packet;
-	packet.type = SimpleEventType::ACTIVATE_MODULE;
-
-	m_client->sendPacket( packet.pack() );
-}
-void ShipInputProcessingSystem::sendSlotDeactivation()
-{
-	SimpleEventPacket packet;
-	packet.type = SimpleEventType::DEACTIVATE_MODULE;
-
-	m_client->sendPacket( packet.pack() );
 }

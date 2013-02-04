@@ -46,6 +46,7 @@
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
+#include "..\..\Gameplay\Src\SpeedBoostModuleControllerSystem.h"
 
 
 namespace Srv
@@ -207,6 +208,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
+		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		// Important for any module-damaging logic to happen before this.
 		m_world->setSystem(new ShipModulesControllerSystem(), true);

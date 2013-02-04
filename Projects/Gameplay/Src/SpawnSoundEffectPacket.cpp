@@ -25,6 +25,8 @@ SpawnSoundEffectPacket::SpawnSoundEffectPacket()
 		"Shield_Deflect.wav";
 	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::ShieldActive] =
 		"Shield_Active.wav";
+	SpawnSoundEffectPacket::soundEffectMapper[(int)SoundIdentities::SpeedBoostActive] =
+		"SpeedBoost_Active.wav";
 }
 
 Packet SpawnSoundEffectPacket::pack()
