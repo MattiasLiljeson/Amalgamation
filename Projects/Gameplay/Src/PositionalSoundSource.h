@@ -2,6 +2,7 @@
 
 #include <Component.h>
 #include <string>
+#include <ComponentFactory.h>
 using namespace std;
 
 // =======================================================================================
@@ -19,6 +20,7 @@ using namespace std;
 class PositionalSoundSource: public Component
 {
 public:
+	PositionalSoundSource();
 	///-----------------------------------------------------------------------------------
 	/// Create a positional sound component by providing a file path 
 	/// \param p_fileName
@@ -44,6 +46,7 @@ public:
 	void decreaseLifeTime(const float& p_delta);
 
 	const bool& loops() const;
+	void init( vector<ComponentData> p_initData );
 
 private:
 	string m_path;
@@ -54,5 +57,6 @@ private:
 	// Controlled by the Audio system(s) itself/themselves.
 	int m_soundIndex;
 	float m_lifeTime;
-
+	
+	static ComponentRegister<PositionalSoundSource> s_reg;
 };

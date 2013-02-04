@@ -28,9 +28,11 @@
 #include "LoadMesh.h"
 #include "LightsComponent.h"
 #include "LightBlinker.h"
+#include "PositionalSoundSource.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
+	handle<PositionalSoundSource>();
 	handle<AudioInfo>();
 	handle<AudioListener>();
 	handle<BodyInitData>();

@@ -541,7 +541,7 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "Rocket","Assemblages/Rocket.asd"  );
+	entity = entityFromRecipeOrFile( "ClientRocket","Assemblages/Rocket.asd"  );
 
 	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
@@ -550,8 +550,8 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
-		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
+//	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+//		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
 	m_world->addEntity(entity);
 	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
 		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",

@@ -1,5 +1,17 @@
 #include "PositionalSoundSource.h"
 
+ComponentRegister<PositionalSoundSource> PositionalSoundSource::s_reg("PositionalSoundSource");
+
+PositionalSoundSource::PositionalSoundSource()
+	: Component( ComponentType::PositionalSoundSource )
+{
+	m_path = "";
+	m_filename = "";
+	m_loop = true;
+	m_soundVolume = 1.0f;
+	m_soundIndex = -1;
+}
+
 PositionalSoundSource::PositionalSoundSource(string p_path, string p_filename,
 											 bool p_loop, float p_soundVolume )
 	: Component( ComponentType::PositionalSoundSource )
@@ -54,4 +66,15 @@ void PositionalSoundSource::decreaseLifeTime(const float& p_delta) {
 const bool& PositionalSoundSource::loops() const
 {
 	return m_loop;
+}
+
+void PositionalSoundSource::init( vector<ComponentData> p_initData )
+{
+	for(unsigned int i=0; i<p_initData.size(); i++)
+	{
+		if( p_initData[i].dataName == "filepath" )
+			p_initData[i].getData<string>(&m_path);
+		else if( p_initData[i].dataName == "filename" )
+			p_initData[i].getData<string>(&m_filename);
+	}
 }
