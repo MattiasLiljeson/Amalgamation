@@ -91,6 +91,12 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 
 				// Update the rigidbody
 				AglMatrix world = b->GetWorld();
+				
+				
+				//Offset the transform in relation to the physics representation
+				world = body->getOffset().inverse() * world;
+				
+				
 				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
 					ComponentType::Transform));
 				AglVector3 pos;
@@ -211,7 +217,9 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 
 			AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
 
-			world *= obb.world;
+			world = obb.world*world;
+
+			body->setOffset(obb.world);
 
 			*bodyId = m_physicsController->AddBox(world,
 				obb.size, 1, 

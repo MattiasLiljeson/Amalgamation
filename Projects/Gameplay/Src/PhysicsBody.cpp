@@ -9,11 +9,13 @@ PhysicsBody::PhysicsBody()
 	m_id = -1;
 	m_parentId = -1;
 	m_parentChanged = false;
+	m_offset = AglMatrix::identityMatrix();
 }
 
 void PhysicsBody::init( vector<ComponentData> p_initData )
 {
 	// Nothing needed here right now
+	m_offset = AglMatrix::identityMatrix();
 }
 
 void PhysicsBody::setParentId( int p_parentId )

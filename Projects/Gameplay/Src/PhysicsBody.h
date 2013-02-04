@@ -14,6 +14,8 @@
 #include <AglVector3.h>
 #include <vector>
 #include <ComponentFactory.h>
+#include <AglMatrix.h>
+
 using namespace std;
 
 class PhysicsBody : public Component
@@ -45,10 +47,14 @@ public:
 	int		isParentChanged() {return m_parentChanged;}
 	void	resetParentChangedStatus() {m_parentChanged=false;}
 
+	void setOffset(AglMatrix p_offset){ m_offset = p_offset; }
+	AglMatrix getOffset(){ return m_offset; }
+
 private:
 	static ComponentRegister<PhysicsBody> s_reg;
 
 	int m_parentId;
 	int m_oldParentId;
 	bool m_parentChanged;
+	AglMatrix m_offset;
 };

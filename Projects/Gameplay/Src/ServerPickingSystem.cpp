@@ -466,21 +466,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
-		//WARNING: DOES NOT HANDLE TRANSFORMATION RELATED TO CHILD CONNECTION POINT RIGHT NOW
-
-
 		//Parent transform
 		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
-
-		//Child Transform
-		/*AglMatrix childTransform = conPoints->m_connectionPoints[sel].cpTransform;
-		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
-		AglQuaternion rot2 = AglQuaternion::rotateToFrom(childTransform.GetForward(), transform.GetForward());
-		AglMatrix finalTransform = AglMatrix::createRotationMatrix(rot);
-
-		AglVector3 childTrans = childTransform.GetTranslation();
-		rot.transformVector(childTrans);
-		finalTransform.SetTranslation(-transform.GetTranslation() + childTrans);*/
 
 		physX->getController()->AttachBodyToCompound(comp, r, transform);
 		
