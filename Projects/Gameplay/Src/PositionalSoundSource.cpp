@@ -2,6 +2,7 @@
 
 PositionalSoundSource::PositionalSoundSource(string p_path, string p_filename,
 											 bool p_loop, float p_soundVolume )
+	: Component( ComponentType::PositionalSoundSource )
 {
 	m_path = p_path;
 	m_filename = p_filename;

@@ -1,4 +1,4 @@
-e MineLayer
+e ServerMineLayer
 
 c LoadMesh
 d s m_filename MineWeaponFinal.agl
@@ -23,3 +23,5 @@ c PhysicsBody
 c ShipModule
 d f m_health 100.0f
 d f m_value 100.0f
+
+c MineLayerModule

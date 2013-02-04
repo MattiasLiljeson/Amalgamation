@@ -4,17 +4,17 @@ ComponentRegister<LightBlinker> LightBlinker::s_reg("LightBlinker");
 
 
 LightBlinker::LightBlinker()
+	: Component( ComponentType::LightBlinker )
 {
 	increase = true;
 	maxRange = 1.0f;
-	m_componentType = ComponentType::ComponentTypeIdx::LightBlinker;
 }
 
 LightBlinker::LightBlinker(float p_maxRange)
+	: Component( ComponentType::LightBlinker )
 {
 	increase = true;
 	maxRange = p_maxRange;
-	m_componentType = ComponentType::ComponentTypeIdx::LightBlinker;
 }
 void LightBlinker::init( vector<ComponentData> p_initData )
 {

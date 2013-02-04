@@ -1,6 +1,7 @@
 #include "RenderInfo.h"
 
 RenderInfo::RenderInfo(bool p_shouldBeRendered/* =true */)
+	: Component( ComponentType::RenderInfo )
 {
 	m_instanceId = -1;
 	m_meshId = -1;
@@ -8,6 +9,7 @@ RenderInfo::RenderInfo(bool p_shouldBeRendered/* =true */)
 }
 
 RenderInfo::RenderInfo(int p_mesh_id, bool p_shouldBeRendered/* =true */)
+	: Component( ComponentType::RenderInfo )
 {
 	m_meshId = p_mesh_id;
 	m_shouldBeRendered = p_shouldBeRendered;

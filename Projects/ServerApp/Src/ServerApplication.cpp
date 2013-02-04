@@ -46,7 +46,7 @@
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
-#include "..\..\Gameplay\Src\SpeedBoostModuleControllerSystem.h"
+#include <SpeedBoostModuleControllerSystem.h>
 
 
 namespace Srv
@@ -93,10 +93,8 @@ namespace Srv
 
 			m_prevTimeStamp = currTimeStamp;
 
-			// HACK: Static delta and really high for testing purposes.
 			step( static_cast<float>(dt) );
 
-			// HACK: Maybe place input in systems? :D
 			if( _kbhit() )
 			{
 				if( _getch() == 27 )

@@ -3,6 +3,7 @@
 ComponentRegister<ShipModule> ShipModule::s_reg("ShipModule");
 
 ShipModule::ShipModule()
+	: Component( ComponentType::ShipModule )
 {
 	m_parentEntity = -1;
 	m_active = false;

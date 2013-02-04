@@ -1,6 +1,7 @@
 #include "AudioListener.h"
 
 AudioListener::AudioListener(float p_listenerVolume/* =1.0f */)
+	: Component( ComponentType::AudioListener )
 {
 	m_listenerVolume = p_listenerVolume;
 }

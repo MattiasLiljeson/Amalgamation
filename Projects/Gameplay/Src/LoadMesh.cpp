@@ -3,6 +3,7 @@
 ComponentRegister<LoadMesh> LoadMesh::s_reg("LoadMesh");
 
 LoadMesh::LoadMesh()
+	: Component( ComponentType::LoadMesh )
 {
 	m_filename="";
 	m_isPrimitive=false;
@@ -10,6 +11,7 @@ LoadMesh::LoadMesh()
 }
 
 LoadMesh::LoadMesh( const string& p_filename,bool p_isPrimitive )
+	: Component( ComponentType::LoadMesh )
 {
 	m_filename=p_filename;
 	m_isPrimitive=p_isPrimitive;

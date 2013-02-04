@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Component.h>
+#include <ComponentFactory.h>
 
 // =======================================================================================
 //	MineLayerModule
@@ -17,9 +18,11 @@
 class MineLayerModule: public Component
 {
 public:
-	float m_cooldown;
 	MineLayerModule();
 	~MineLayerModule();
-private:
+	void init( vector<ComponentData> p_initData );
 
+public:
+	float m_cooldown;
+	static ComponentRegister<MineLayerModule> s_reg;
 };

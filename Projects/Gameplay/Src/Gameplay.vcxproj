@@ -122,14 +122,12 @@
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
-    <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputBackendSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="MeshRenderSystem.h" />
-    <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="ShipModulesTrackerSystem.h" />
@@ -140,6 +138,7 @@
     <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
+    <ClInclude Include="StaticProp.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
