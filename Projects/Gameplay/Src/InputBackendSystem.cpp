@@ -142,6 +142,11 @@ void InputBackendSystem::initialize()
 		InputHelper::KeyboardKeys_F4,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_F4),
 		"KEY_F4" );
+	// period
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
+		InputHelper::KeyboardKeys_PERIOD,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_PERIOD),
+		"KEY_PERIOD" );
 
 	// Intitiate cursor
 	m_cursor = new Cursor();

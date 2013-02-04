@@ -92,27 +92,11 @@ void ClientConnectToServerSystem::ProcessEvent( Rocket::Core::Event& event, cons
 		// NOTE: Issue!
 		// Boost seem to be unable to resolve servers specified by a name (localhost does
 		// work). This needs to be researched further. // Alex
-		string server_name		= event.GetParameter<Rocket::Core::String>("server_name", "").CString();
-		string server_ip		= event.GetParameter<Rocket::Core::String>("server_ip", "127.0.0.1").CString();
-		string server_port		= event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
-
-		string server_address;
-		if (server_name.empty())
-			server_address = server_ip;
-		else
-			server_address = server_name;
-
-		//stringstream ss(server_address);
-		//ss >> m_connectionAddress.octets1 
-		//	>> m_connectionAddress.octets2
-		//	>> m_connectionAddress.octets3
-		//	>> m_connectionAddress.octets4;
-
-		//ss.flush();
-		//ss << server_port;
-		//ss >> m_connectionAddress.port;
+		//string server_name		= event.GetParameter<Rocket::Core::String>("server_name", "").CString();
+		string server_host = event.GetParameter<Rocket::Core::String>("server_host", "localhost").CString();
+		string server_port = event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
 
 		if( !m_tcpClient->hasActiveConnection() &&  !m_isLookingForConnection)
-			connectToNetworkAddress(server_address, server_port);
+			connectToNetworkAddress(server_host, server_port);
 	}
 }
