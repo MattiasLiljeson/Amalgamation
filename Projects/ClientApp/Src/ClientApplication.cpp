@@ -99,6 +99,7 @@ using namespace std;
 #include <LightsComponent.h>
 #include <LightInstanceData.h>
 #include <LightBlinkerSystem.h>
+#include "..\..\Gameplay\Src\SlotInputControllerSystem.h"
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
@@ -241,9 +242,9 @@ void ClientApplication::initSystems()
 	/* Player    															*/
 	/************************************************************************/
 	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend,
-		m_client);
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
 	m_world->setSystem( shipInputProc, true);
+	m_world->setSystem( new SlotInputControllerSystem(inputBackend, m_client), true );
 
 	// Controller systems for the ship
 	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,

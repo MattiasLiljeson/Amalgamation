@@ -128,6 +128,7 @@
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="ShipModulesTrackerSystem.h" />
     <ClInclude Include="SimpleEventPacket.h" />
+    <ClInclude Include="SlotInputControllerSystem.h" />
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="StandardMine.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
+    <ClCompile Include="SlotInputControllerSystem.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />

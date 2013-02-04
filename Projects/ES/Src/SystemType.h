@@ -73,6 +73,7 @@ public:	//Enums
 		WinningConditionSystem,
 		ShipModulesTrackerSystem,
 		ShadowSystem,
+		SlotInputController,
 		NUM_SYSTEM_TYPES
 	};
 
