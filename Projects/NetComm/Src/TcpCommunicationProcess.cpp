@@ -99,7 +99,7 @@ void TcpCommunicationProcess::processMessages()
 				sendPacketMessage->packet.getDataSize()),
 				boost::asio::detail::message_do_not_route, ec );
 			if( ec ) {
-				DEBUGPRINT(( ec.message().c_str() ));
+				DEBUGPRINT(( ("Send error: " + ec.message() + "\n").c_str() ));
 			}
 		}
 		else if( message->type == MessageType::ASK_FOR_COMM_PROCESS_INFO )

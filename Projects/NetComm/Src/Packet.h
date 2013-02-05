@@ -152,6 +152,7 @@ private:
 private:
 	int m_readPos;
 	vector<char> m_data;
+	unsigned int m_dataSize;
 
 	// Variable that is set on a received packet and identifies its sender.
 	int m_senderId;
