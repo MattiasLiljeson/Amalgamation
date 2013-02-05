@@ -14,8 +14,8 @@
 			}
 		</style>
 	</head>
-	<body template="window" onload="restore">
-		<form onsubmit="store; goto main_menu">
+	<body template="window" onload="restore_settings">
+		<form onsubmit="apply_settings; goto main_menu">
 			<div>
 				<p>
 					Graphics:<br />

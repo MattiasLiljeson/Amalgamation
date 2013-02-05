@@ -46,13 +46,13 @@ class EventHandler
 {
 public:
 	EventHandler(const char* p_handlerName);
-	void ConnectToManager(EventManager* p_eventManager);
+	void connectToManager(EventManager* p_eventManager);
 	const std::string& getName() const;
 
-	virtual ~EventHandler();
-	virtual void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value) = 0;
+	virtual ~EventHandler() = 0;
+	virtual void processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value) = 0;
 protected:
-	EventManager* m_eventManager;
-	std::string m_handlerName;
+	EventManager*	m_eventManager;
+	std::string		m_handlerName;
 };
 

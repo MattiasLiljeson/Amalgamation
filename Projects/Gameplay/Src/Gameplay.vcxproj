@@ -37,6 +37,7 @@
     <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
+    <ClInclude Include="GameOptionsSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
+    <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />

@@ -36,6 +36,7 @@
 #include <map>
 #include <Globals.h>
 #include <ToString.h>
+#include <DebugUtil.h>
 
 LibRocketEventManager::LibRocketEventManager()
 {
@@ -64,14 +65,18 @@ void LibRocketEventManager::Shutdown()
 }
 
 // Registers a new event handler with the manager.
-void LibRocketEventManager::RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
+void LibRocketEventManager::registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
 {
 	//handler->ConnectToManager(this);
 	// Release any handler bound under the same name.
 	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
 	if (iterator != event_handlers.end())
-		delete (*iterator).second;
-
+	{	//delete (*iterator).second;
+		DEBUGWARNING(((
+			toString("LibRocketEventManager::registerEventHandler\nAttempting to register EventHandler[")
+			+ toString(handler_name.CString())
+			+ toString("] which has already been registred in the EventManager.")).c_str()));
+	}
 	event_handlers[handler_name] = handler;
 }
 
@@ -82,14 +87,14 @@ EventHandler* LibRocketEventManager::UnregisterEventHandler( const Rocket::Core:
 	if (iterator != event_handlers.end())
 	{
 		handler = (*iterator).second;
-		handler->ConnectToManager(NULL);
+		handler->connectToManager(NULL);
 		event_handlers[handler_name] = NULL;
 	}
 	return handler;
 }
 
 // Processes an event coming through from Rocket.
-void LibRocketEventManager::ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
+void LibRocketEventManager::processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
 {
 	Rocket::Core::StringList commands;
 	Rocket::Core::StringUtilities::ExpandString(commands, value, ';');
@@ -143,7 +148,7 @@ void LibRocketEventManager::ProcessEvent(Rocket::Core::Event& event, const Rocke
 		else
 		{
 			if (event_handler != NULL)
-				event_handler->ProcessEvent(event, commands[i]);
+				event_handler->processEvent(event, commands[i]);
 		}
 	}
 }
@@ -190,7 +195,7 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 	return true;
 }
 
-void LibRocketEventManager::RegisterEventHandler( EventHandler* handler )
+void LibRocketEventManager::registerEventHandler( EventHandler* handler )
 {
 
 }

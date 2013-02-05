@@ -37,9 +37,6 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 
 void ClientConnectToServerSystem::initialize()
 {
-	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
-		m_world->getSystem(SystemType::LibRocketBackendSystem));
-	rocketBackend->registerEventHandler(this);
 
 	TwStructMember ipMembers[] = {
 		{ "Ip-part1", TW_TYPE_INT32, offsetof(NetworkAdress,octets1),"min=0 max=255"},
@@ -86,15 +83,15 @@ void ClientConnectToServerSystem::connectToNetworkAddress(
 	m_isLookingForConnection = true;
 }
 
-void ClientConnectToServerSystem::ProcessEvent( Rocket::Core::Event& event, const Rocket::Core::String& value )
+void ClientConnectToServerSystem::processEvent( Rocket::Core::Event& event, const Rocket::Core::String& value )
 {
 	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
 	// and enable the system.
 	if (value == "join_server")
 	{
 		// NOTE: Issue!
-		// Boost seem to be unable to resolve servers specified by a name (localhost does
-		// work). This needs to be researched further. // Alex
+		// Boost seem to be unable to resolve servers specified by a pc-name (localhost does
+		// work). This needs to be researched further if we want this kind of support. // Alex
 		//string server_name		= event.GetParameter<Rocket::Core::String>("server_name", "").CString();
 		string server_host = event.GetParameter<Rocket::Core::String>("server_host", "localhost").CString();
 		string server_port = event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();

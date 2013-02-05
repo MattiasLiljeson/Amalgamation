@@ -58,15 +58,15 @@ public:
 	/// Registers a new event handler with the manager.
 	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
 	/// @param[in] handler The event handler.
-	void RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
-	void RegisterEventHandler(EventHandler* handler);
+	void registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+	void registerEventHandler(EventHandler* handler);
 
 	EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
 
 	/// Processes an event coming through from Rocket.
 	/// @param[in] event The Rocket event that spawned the application event.
 	/// @param[in] value The application-specific event value.
-	void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
+	void processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] window_name The name of the window to load.
 	bool LoadWindow(const Rocket::Core::String& window_name);

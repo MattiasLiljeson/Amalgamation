@@ -1,5 +1,7 @@
 #include "MenuSystem.h"
 #include "LibRocketBackendSystem.h"
+#include "ClientConnectToServerSystem.h"
+#include "GameOptionsSystem.h"
 #include <Globals.h>
 #include <ToString.h>
 #include "MenuItem.h"
@@ -19,10 +21,19 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
+	auto connectToServerSys = static_cast<ClientConnectToServerSystem*>(
+		m_world->getSystem(SystemType::NetworkConnectoToServerSystem));
+
+	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
+		m_world->getSystem(SystemType::GameOptionsSystem));
+
+	rocketBackend->registerEventHandler(connectToServerSys);
+	rocketBackend->registerEventHandler(gameOptionsSys);
+
 	rocketBackend->loadDocumentByName("main_menu", true, true);
 	rocketBackend->loadDocumentByName("play");
-		rocketBackend->loadDocumentByName("join");
-		rocketBackend->loadDocumentByName("host");
+	rocketBackend->loadDocumentByName("join");
+	rocketBackend->loadDocumentByName("host");
 	rocketBackend->loadDocumentByName("options");
 	rocketBackend->loadDocumentByName("credits");
 
@@ -38,14 +49,14 @@ void MenuSystem::processEntities( const vector<Entity*>& p_entities )
 
 void MenuSystem::inserted( Entity* p_entity )
 {
-	auto menuItem = static_cast<MenuItem*>(p_entity->getComponent(ComponentType::MenuItem));
+	//auto menuItem = static_cast<MenuItem*>(p_entity->getComponent(ComponentType::MenuItem));
 
-	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
-		m_world->getSystem(SystemType::LibRocketBackendSystem));
+	//auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+	//	m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	rocketBackend->loadDocumentByName(menuItem->documentName.c_str(), menuItem->initiallyVisible, menuItem->modal);
-	for (int i = 0; i < menuItem->handlerNames.size(); i++)
-	{
-		
-	}
+	//rocketBackend->loadDocumentByName(menuItem->documentName.c_str(), menuItem->initiallyVisible, menuItem->modal);
+	//for (int i = 0; i < menuItem->handlerNames.size(); i++)
+	//{
+	//	
+	//}
 }

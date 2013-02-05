@@ -470,6 +470,9 @@
     <ClInclude Include="LibRocketInputHelper.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
+    <ClInclude Include="GameOptionsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -779,6 +782,9 @@
     </ClCompile>
     <ClCompile Include="LibRocketInputHelper.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOptionsSystem.cpp">
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

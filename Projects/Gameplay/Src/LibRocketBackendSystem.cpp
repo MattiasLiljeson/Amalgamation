@@ -165,7 +165,7 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 
 void LibRocketBackendSystem::registerEventHandler( EventHandler* p_eventHandler )
 {
-	m_eventManager->RegisterEventHandler(p_eventHandler->getName().c_str(), p_eventHandler);
+	m_eventManager->registerEventHandler(p_eventHandler->getName().c_str(), p_eventHandler);
 }
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
@@ -294,6 +294,18 @@ void LibRocketBackendSystem::processKeyStates()
 		}
 	}
 }
+
+void LibRocketBackendSystem::showCursor()
+{
+	m_rocketContext->ShowMouseCursor(true);
+}
+
+void LibRocketBackendSystem::hideCursor()
+{
+	m_rocketContext->ShowMouseCursor(false);
+}
+
+
 
 
 

@@ -40,6 +40,9 @@ public:
 	void hideDocument(int p_docId);
 	void focusDocument(int p_docId);
 
+	void showCursor();
+	void hideCursor();
+
 	void process();
 	void render();
 

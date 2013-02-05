@@ -27,6 +27,6 @@ class EventManager
 public:
 	EventManager(){};
 	virtual ~EventManager(){};
-	virtual void ProcessEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value) = 0;
-	virtual void RegisterEventHandler(EventHandler* p_eventHandler) = 0;
+	virtual void processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value) = 0;
+	virtual void registerEventHandler(EventHandler* p_eventHandler) = 0;
 };

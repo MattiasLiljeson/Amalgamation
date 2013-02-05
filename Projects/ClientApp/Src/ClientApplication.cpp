@@ -85,6 +85,7 @@
 #include <LoadMeshSystem.h>
 #include <GameStatsSystem.h>
 #include <MoveShipLightsSystem.h>
+#include <GameOptionsSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -237,6 +238,11 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
+	m_world->setSystem( new GameOptionsSystem() );
+
+	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
+	// that they can be properly be added to the LibRocketEventManager.
+	// The alternative would be that every event handler adds itself.
 	m_world->setSystem( new MenuSystem(), true );
 
 	/************************************************************************/

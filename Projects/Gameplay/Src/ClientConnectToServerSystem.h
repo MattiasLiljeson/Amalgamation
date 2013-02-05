@@ -67,7 +67,7 @@ public:
 	void connectToNetworkAddress();
 	void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
 
-	virtual void ProcessEvent( Rocket::Core::Event& event, const Rocket::Core::String& value );
+	virtual void processEvent( Rocket::Core::Event& event, const Rocket::Core::String& value );
 private:
 	TcpClient* m_tcpClient;
 

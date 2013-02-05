@@ -42,6 +42,7 @@ public:	//Enums
 		PositionalSoundSystem,
 		LibRocketBackendSystem,
 		MenuSystem,
+		GameOptionsSystem,
 		HudSystem,
 		NetworkUpdateScoresSystem,
 		DisplayPlayerScoreSystem,

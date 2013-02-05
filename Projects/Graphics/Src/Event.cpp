@@ -40,7 +40,7 @@ Event::~Event()
 // Sends the event value through to Invader's event processing system.
 void Event::ProcessEvent(Rocket::Core::Event& event)
 {
-	m_eventManager->ProcessEvent(event, value);
+	m_eventManager->processEvent(event, value);
 }
 
 // Destroys the event.

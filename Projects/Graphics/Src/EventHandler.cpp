@@ -37,7 +37,7 @@ EventHandler::EventHandler(const char* p_handlerName)
 	m_handlerName = p_handlerName;
 }
 
-void EventHandler::ConnectToManager( EventManager* p_eventManager )
+void EventHandler::connectToManager( EventManager* p_eventManager )
 {
 	m_eventManager = p_eventManager;
 }
