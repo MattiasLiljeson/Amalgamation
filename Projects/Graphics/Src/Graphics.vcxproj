@@ -15,7 +15,6 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventInstancer.cpp" />
-    <ClCompile Include="LibRocketEventManager.cpp" />
     <ClCompile Include="LightMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
@@ -42,8 +41,8 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventInstancer.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
-    <ClInclude Include="LibRocketEventManager.h" />
     <ClInclude Include="LightMesh.h" />
     <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />

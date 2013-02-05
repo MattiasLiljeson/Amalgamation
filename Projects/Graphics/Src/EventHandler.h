@@ -24,18 +24,19 @@
  * THE SOFTWARE.
  *
  */
-
 #pragma once
+
 #include <Rocket/Core/String.h>
 
-namespace Rocket 
+namespace Rocket
 {
-	namespace Core 
+	namespace Core
 	{
 		class Event;
 	}
 }
-class LibRocketEventManager;
+
+class EventManager;
 
 /**
 	@author Peter Curry
@@ -45,13 +46,13 @@ class EventHandler
 {
 public:
 	EventHandler(const char* p_handlerName);
-	void ConnectToManager(LibRocketEventManager* p_eventManager);
+	void ConnectToManager(EventManager* p_eventManager);
 	const std::string& getName() const;
 
 	virtual ~EventHandler();
 	virtual void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value) = 0;
 protected:
-	LibRocketEventManager* m_eventManager;
+	EventManager* m_eventManager;
 	std::string m_handlerName;
 };
 

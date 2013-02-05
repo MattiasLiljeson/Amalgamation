@@ -19,8 +19,12 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	int docId = rocketBackend->loadDocumentByName("main_menu", true, true);
-
+	rocketBackend->loadDocumentByName("main_menu", true, true);
+	rocketBackend->loadDocumentByName("play");
+		rocketBackend->loadDocumentByName("join");
+		rocketBackend->loadDocumentByName("host");
+	rocketBackend->loadDocumentByName("options");
+	rocketBackend->loadDocumentByName("credits");
 
 	//if (docId >= 0)
 	{

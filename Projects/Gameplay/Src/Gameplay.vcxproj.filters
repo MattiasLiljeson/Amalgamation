@@ -464,6 +464,9 @@
     <ClInclude Include="LibRocketSystemInterface.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
+    <ClInclude Include="LibRocketEventManager.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
     <ClInclude Include="LibRocketInputHelper.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
@@ -769,6 +772,9 @@
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketSystemInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketEventManager.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketInputHelper.cpp">

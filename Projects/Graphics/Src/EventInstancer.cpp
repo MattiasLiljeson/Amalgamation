@@ -27,10 +27,10 @@
 
 
 #include "EventInstancer.h"
-#include "LibRocketEventManager.h"
+#include "EventManager.h"
 #include "Event.h"
 
-EventInstancer::EventInstancer(LibRocketEventManager* p_eventManager)
+EventInstancer::EventInstancer(EventManager* p_eventManager)
 	: EventListenerInstancer()
 {
 	m_eventManager = p_eventManager;

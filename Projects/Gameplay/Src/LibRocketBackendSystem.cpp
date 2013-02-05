@@ -14,7 +14,7 @@
 #include <EventInstancer.h>
 #include "LibRocketInputHelper.h"
 #include "ClientConnectToServerSystem.h"
-#include <LibRocketEventManager.h>
+#include "LibRocketEventManager.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -68,8 +68,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
-	Rocket::Debugger::Initialise( m_rocketContext );
-	Rocket::Debugger::SetVisible( true );
+	//Rocket::Debugger::Initialise( m_rocketContext );
+	//Rocket::Debugger::SetVisible( true );
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -93,7 +93,7 @@ void LibRocketBackendSystem::initialize()
 	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
 	eventInstancer->RemoveReference();
 
-	m_eventManager->Initialise(m_rocketContext);
+	m_eventManager->Initialize(m_rocketContext);
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
@@ -124,8 +124,8 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 }
 
 int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName, 
-											   bool p_initiallyShown/*=true*/, 
-											   bool p_modal/*=true */ )
+											   bool p_initiallyShown/*=false*/, 
+											   bool p_modal/*=false */ )
 {
 	int docId = loadDocument((GUI_MENU_PATH + 
 								toString("temp/") + 
@@ -233,6 +233,11 @@ void LibRocketBackendSystem::process()
 void LibRocketBackendSystem::render()
 {
 	m_rocketContext->Render();
+}
+
+Rocket::Core::Context* LibRocketBackendSystem::getContext() const
+{
+	return m_rocketContext;
 }
 
 void LibRocketBackendSystem::processMouseMove()

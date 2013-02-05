@@ -26,7 +26,6 @@
  */
 
 #include "EventHandler.h"
-#include "LibRocketEventManager.h"
 
 EventHandler::~EventHandler()
 {
@@ -38,7 +37,7 @@ EventHandler::EventHandler(const char* p_handlerName)
 	m_handlerName = p_handlerName;
 }
 
-void EventHandler::ConnectToManager( LibRocketEventManager* p_eventManager )
+void EventHandler::ConnectToManager( EventManager* p_eventManager )
 {
 	m_eventManager = p_eventManager;
 }

@@ -24,6 +24,7 @@
  * THE SOFTWARE.
  *
  */
+#pragma once
 
 #include "LibRocketEventManager.h"
 #include <Rocket/Core/Context.h>
@@ -36,29 +37,18 @@
 #include <Globals.h>
 #include <ToString.h>
 
-// The game's element context.
-//Rocket::Core::Context* EventManager::context;
-//
-//bool EventManager::wantsToExit = false;
-//
-//// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
-//EventHandler* EventManager::event_handler = NULL;
-//// The event handlers registered with the manager.
-//typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
-//EventHandlerMap EventManager::event_handlers;
-
 LibRocketEventManager::LibRocketEventManager()
 {
 	context = NULL;
 	wantsToExit = false;
-
+	event_handler = NULL;
 }
 
 LibRocketEventManager::~LibRocketEventManager()
 {
 }
 
-void LibRocketEventManager::Initialise( Rocket::Core::Context* p_context )
+void LibRocketEventManager::Initialize(Rocket::Core::Context* p_context)
 {
 	context = p_context;
 }
@@ -76,7 +66,7 @@ void LibRocketEventManager::Shutdown()
 // Registers a new event handler with the manager.
 void LibRocketEventManager::RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
 {
-	handler->ConnectToManager(this);
+	//handler->ConnectToManager(this);
 	// Release any handler bound under the same name.
 	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
 	if (iterator != event_handlers.end())
@@ -115,20 +105,23 @@ void LibRocketEventManager::ProcessEvent(Rocket::Core::Event& event, const Rocke
 		if (values[0] == "goto" && values.size() > 1)
 		{
 			// Load the window, and if successful close the old window.
-			if (LoadWindow(values[1], false))
+			if (LoadWindow(values[1]))
+			{
+
 				event.GetTargetElement()->GetOwnerDocument()->Close();
+			}
 		}
 		else if (values[0] == "load" &&	values.size() > 1)
 		{
 			// Load the window.
-			LoadWindow(values[1], true);
+			LoadWindow(values[1]);
 		}
 		else if (values[0] == "close")
 		{
 			Rocket::Core::ElementDocument* target_document = NULL;
 
 			if (values.size() > 1)
-				target_document = context->GetDocument(values[1].CString());
+				target_document = context->LoadDocument(values[1].CString());
 			else
 				target_document = event.GetTargetElement()->GetOwnerDocument();
 
@@ -156,7 +149,7 @@ void LibRocketEventManager::ProcessEvent(Rocket::Core::Event& event, const Rocke
 }
 
 // Loads a window and binds the event handler for it.
-bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name, bool p_modal)
+bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 {
 	// Set the event handler for the new screen, if one has been registered.
 	EventHandler* old_event_handler = event_handler;
@@ -189,13 +182,15 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name, 
 	if (title != NULL)
 		title->SetInnerRML(document->GetTitle());
 
-	if (p_modal)
-		document->Show(Rocket::Core::ElementDocument::MODAL);
-	else
-		document->Show(Rocket::Core::ElementDocument::FOCUS);
+	document->Show(Rocket::Core::ElementDocument::MODAL);
 
 	// Remove the caller's reference.
-	document->RemoveReference();
+	//document->RemoveReference();
 
 	return true;
+}
+
+void LibRocketEventManager::RegisterEventHandler( EventHandler* handler )
+{
+
 }

@@ -90,7 +90,7 @@ void ClientConnectToServerSystem::ProcessEvent( Rocket::Core::Event& event, cons
 {
 	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
 	// and enable the system.
-	if (value == "connect")
+	if (value == "join_server")
 	{
 		// NOTE: Issue!
 		// Boost seem to be unable to resolve servers specified by a name (localhost does

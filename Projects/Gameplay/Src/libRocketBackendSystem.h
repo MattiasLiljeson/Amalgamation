@@ -1,11 +1,11 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <RenderInterface.h>
 #include <string>
 #include <vector>
 #include <Rocket/Core.h>
 #include <Rocket/Debugger.h>
+#include <RenderInterface.h>
 
 class AntTweakBarWrapper;
 class Control;
@@ -28,7 +28,7 @@ public:
 
 	void loadFontFace( const char* p_fontPath );
 	int loadDocumentByName(const char* p_windowName, 
-							bool p_initiallyShown=true, 
+							bool p_initiallyShown=false, 
 							bool p_modal=false);
 	int loadDocument( const char* p_filePath, bool p_initiallyShown=true);
 	void registerEventHandler(EventHandler* p_eventHandler);
@@ -43,6 +43,7 @@ public:
 	void process();
 	void render();
 
+	Rocket::Core::Context* getContext() const;
 private:
 	void processMouseMove();
 	void processKeyStates();

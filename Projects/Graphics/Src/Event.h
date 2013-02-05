@@ -29,7 +29,7 @@
 
 #include <Rocket/Core/EventListener.h>
 
-class LibRocketEventManager;
+class EventManager;
 /**
 	@author Peter Curry
  */
@@ -37,7 +37,7 @@ class LibRocketEventManager;
 class Event : public Rocket::Core::EventListener
 {
 public:
-	Event(LibRocketEventManager* p_eventManager, const Rocket::Core::String& value);
+	Event(EventManager* p_eventManager, const Rocket::Core::String& value);
 	virtual ~Event();
 
 	/// Sends the event value through to Invader's event processing system.
@@ -48,6 +48,6 @@ public:
 
 private:
 	Rocket::Core::String value;
-	LibRocketEventManager* m_eventManager;
+	EventManager* m_eventManager;
 
 };

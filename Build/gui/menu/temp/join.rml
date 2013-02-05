@@ -17,7 +17,7 @@
 		</style>
 	</head>
 	<body template="window">
-		<form onsubmit="connect">
+		<form onsubmit="join_server">
 			<div>
 				<!--<Input id="computername" name="server_name" type="text" size="9" maxlength="15" value="localhost" hidden/>
 				<br/>or<br/>-->

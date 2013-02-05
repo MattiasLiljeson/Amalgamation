@@ -27,6 +27,8 @@
 
 #pragma once
 #include <Rocket/Core/Event.h>
+#include <EventManager.h>
+#include <EntitySystem.h>
 
 namespace Rocket
 {
@@ -43,13 +45,13 @@ class EventHandler;
 	@modifiers	Robin Thunström, Alexander Brodén
  */
 
-class LibRocketEventManager
+class LibRocketEventManager : public EventManager
 {
 public:
 	LibRocketEventManager();
 	~LibRocketEventManager();
 
-	void Initialise(Rocket::Core::Context* p_context);
+	void Initialize(Rocket::Core::Context* p_context);
 	/// Releases all event handlers registered with the manager.
 	void Shutdown();
 
@@ -57,6 +59,7 @@ public:
 	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
 	/// @param[in] handler The event handler.
 	void RegisterEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+	void RegisterEventHandler(EventHandler* handler);
 
 	EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
 
@@ -66,7 +69,7 @@ public:
 	void ProcessEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] window_name The name of the window to load.
-	bool LoadWindow(const Rocket::Core::String& window_name, bool p_modal);
+	bool LoadWindow(const Rocket::Core::String& window_name);
 
 	bool wantsToExit;
 private:
@@ -76,6 +79,7 @@ private:
 	EventHandler* event_handler;
 	// The event handlers registered with the manager.
 	typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
+
 	EventHandlerMap event_handlers;
 
 };

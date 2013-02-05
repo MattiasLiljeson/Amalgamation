@@ -69,9 +69,6 @@
     <ClCompile Include="EventInstancer.cpp">
       <Filter>LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="LibRocketEventManager.cpp">
-      <Filter>LibRocket</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -201,7 +198,7 @@
     <ClInclude Include="EventInstancer.h">
       <Filter>LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketEventManager.h">
+    <ClInclude Include="EventManager.h">
       <Filter>LibRocket</Filter>
     </ClInclude>
   </ItemGroup>

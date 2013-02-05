@@ -26,9 +26,9 @@
  */
 
 #include "Event.h"
-#include "LibRocketEventManager.h"
+#include "EventManager.h"
 
-Event::Event(LibRocketEventManager* p_eventManager, const Rocket::Core::String& value) : value(value)
+Event::Event(EventManager* p_eventManager, const Rocket::Core::String& value) : value(value)
 {
 	m_eventManager = p_eventManager;
 }

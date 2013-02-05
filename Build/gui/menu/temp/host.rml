@@ -17,9 +17,9 @@
 		</style>
 	</head>
 	<body template="window">
-		<form onsubmit="host">
+		<form onsubmit="host_server">
 			<div>
-				<Input name="server_name" type="text" size="15" maxlength="20" value="Untitled Server" disabled/>
+				<Input name="server_name" type="text" size="10" maxlength="20" value="Untitled Server" />
 				<br/>
 			</div>
 			<input type="submit" value="accept">Create</input>

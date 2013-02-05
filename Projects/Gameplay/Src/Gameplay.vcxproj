@@ -47,6 +47,7 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketEventManager.h" />
     <ClInclude Include="LibRocketInputHelper.h" />
     <ClInclude Include="LightBlinker.h" />
     <ClInclude Include="LightBlinkerSystem.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LibRocketEventManager.cpp" />
     <ClCompile Include="LibRocketInputHelper.cpp" />
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
@@ -301,6 +303,8 @@
     </Link>
     <Lib>
       <AdditionalDependencies>RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
+      <Verbose>
+      </Verbose>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
