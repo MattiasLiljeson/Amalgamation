@@ -15,11 +15,11 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 
 ParticleRenderSystem::~ParticleRenderSystem()
 {
-	for(unsigned int i = 0; i < m_particleSystems.size();i++)
+	for(unsigned int i = 0; i < m_collections.size();i++)
 	{
 		/*delete m_particleSystems[i].first;*/
 	}
-	m_particleSystems.clear();
+	m_collections.clear();
 }
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
@@ -34,7 +34,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			p_entities[i]->getComponent( ComponentType::ParticleEmitters ) );
 		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
 
-		m_particleSystems.push_back( particlesComp->getCollectionPtr() );
+		m_collections.push_back( particlesComp->getCollectionPtr() );
 		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
 }
@@ -64,11 +64,13 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 void ParticleRenderSystem::render()
 {
-	for( unsigned int collectionIdx=0; collectionIdx<m_particleSystems.size(); collectionIdx++ )
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_collections.size();
+		collectionIdx++ )
 	{
-		ParticleSystemCollection* collection = m_particleSystems[collectionIdx];
+		ParticleSystemCollection* collection = m_collections[collectionIdx];
 		for( unsigned int systemIdx=0;
-			systemIdx < m_particleSystems.size();
+			systemIdx < collection->m_particleSystems.size();
 			systemIdx++ )
 		{
 			AglParticleSystem* system = &collection->m_particleSystems[systemIdx];

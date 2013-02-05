@@ -372,9 +372,6 @@
     <ClInclude Include="BoundingVolumeInitData.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleUpdateData.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -462,6 +459,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystemCreationInfo.h">
       <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemServerComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

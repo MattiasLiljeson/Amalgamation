@@ -35,9 +35,7 @@ public:
 
 	Entity* getEntity(int p_bodyID)
 	{
-		if (m_entityMap[p_bodyID] < 0)
-			return NULL;
-		return m_world->getEntity(m_entityMap[p_bodyID]);
+		return m_world->getEntity(m_entityMap.at(p_bodyID));
 	}
 
 private:

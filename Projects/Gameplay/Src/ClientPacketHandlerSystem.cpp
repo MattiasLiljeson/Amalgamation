@@ -591,13 +591,29 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 		ParticleEmitters* particleComp = static_cast<ParticleEmitters*>(
 			entity->getComponent( ComponentType::ParticleEmitters ) );
 
-		ParticleSystemCollection* collection = particleComp->getCollectionPtr();
-		int idx = p_data.particleSystemIdx;
+		if( particleComp != NULL )
+		{
+			ParticleSystemCollection* collection = particleComp->getCollectionPtr();
+			int idx = p_data.particleSystemIdx;
 
-		collection->m_particleSystems[idx].setSpawnPoint(		p_data.position);
-		collection->m_particleSystems[idx].setSpawnDirection(	p_data.direction);
-		collection->m_particleSystems[idx].setSpawnSpeed(		p_data.speed);
-		collection->m_particleSystems[idx].setSpawnFrequency(	p_data.spawnFrequency);
+			if( -1 < idx && idx < collection->m_particleSystems.size() )
+			{
+				collection->m_particleSystems[idx].setSpawnPoint(		p_data.position);
+				collection->m_particleSystems[idx].setSpawnDirection(	p_data.direction);
+				collection->m_particleSystems[idx].setSpawnSpeed(		p_data.speed);
+				collection->m_particleSystems[idx].setSpawnFrequency(	p_data.spawnFrequency);
+			}
+			else
+			{
+				// This should never happen as the particle systems should be synced.
+				int breakHere = 1;
+			}
+		}
+		else
+		{
+			// This should never happen as the entity should be correctly mapped.
+			int breakHere = 1;
+		}
 	}
 }
 

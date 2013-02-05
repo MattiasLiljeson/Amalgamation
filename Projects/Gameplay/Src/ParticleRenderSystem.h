@@ -42,6 +42,6 @@ private:
 	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
 
 	// pointer to save performance. No ownership
-	vector< ParticleSystemCollection* > m_particleSystems;
+	vector< ParticleSystemCollection* > m_collections;
 };
 

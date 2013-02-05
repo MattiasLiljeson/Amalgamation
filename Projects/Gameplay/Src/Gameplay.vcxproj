@@ -69,7 +69,7 @@
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
-    <ClInclude Include="ParticleUpdateData.h" />
+    <ClInclude Include="ParticleSystemServerComponent.h" />
     <ClInclude Include="ParticleUpdatePacket.h" />
     <ClInclude Include="PickComponent.h" />
     <ClInclude Include="ClientPickingSystem.h" />

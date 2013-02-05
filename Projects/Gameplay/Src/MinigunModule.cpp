@@ -1,7 +1,9 @@
 #include "MinigunModule.h"
 
-MinigunModule::MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection)
+MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirection )
 {
+	m_componentTypeId = ComponentType::MinigunModule;
+
 	muzzleOffset = p_muzzleOffset;
 	fireDirection = p_fireDirection;
 	laserSightEntity = -1;

@@ -21,6 +21,7 @@
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
+#include "ParticleEmitters.h"
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
@@ -71,6 +72,7 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 	{
 		meal = m_world->createEntity();
 		it->second->cook( meal );
+		meal->setName( p_entityName );
 	}
 
 	return meal;
@@ -438,15 +440,32 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 		SystemType::GraphicsBackendSystem ))->getMeshId("minigun.agl");
 
 	Entity* entity = m_world->createEntity();
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	Component* component = new Transform( p_packet.translation, p_packet.rotation, p_packet.scale );
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
-	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+	component = new RenderInfo( meshId );
+	entity->addComponent( ComponentType::RenderInfo, component );
+	entity->addComponent( ComponentType::NetworkSynced,
+		new NetworkSynced( p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType) );
 	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	m_world->addEntity(entity);
+	AglParticleSystemHeader header;
+	header.particleSize = AglVector2(2, 2);
+	header.spawnFrequency = 10;
+	header.spawnSpeed = 5.0f;
+	header.spread = 0.0f;
+	header.fadeOutStart = 2.0f;
+	header.fadeInStop = 0.0f;
+	header.particleAge = 2;
+	header.maxOpacity = 1.0f;
+	header.color = AglVector4(0, 1, 0, 1.0f);
+	header.alignmentType = AglParticleSystemHeader::OBSERVER;
+
+	ParticleEmitters* psComp = new ParticleEmitters();
+	psComp->addParticleSystem( header );
+	entity->addComponent( psComp );
+	//int particleSysIdx = psComp->addParticleSystem( ParticleSystemData( header, updateData, "minigun" ) );
+
+	m_world->addEntity( entity );
 	return entity;
 }
 Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)

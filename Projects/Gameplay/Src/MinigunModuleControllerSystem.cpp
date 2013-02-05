@@ -12,7 +12,7 @@
 #include "NetworkSynced.h"
 #include <PhysicsController.h>
 #include "ParticleUpdatePacket.h"
-#include "ParticleUpdateData.h"
+#include "ParticleSystemServerComponent.h"
 #include "SpawnSoundEffectPacket.h"
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleEmitters.h"
@@ -280,14 +280,6 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 {
 	MinigunModule* gun = static_cast<MinigunModule*>
 		( p_entity->getComponent( ComponentType::MinigunModule) );
-	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
-		( p_entity->getComponent( ComponentType::ParticleEmitters) );
-
-	if( particleComp == NULL )
-	{
-		particleComp = new ParticleEmitters();
-		p_entity->addComponent( particleComp );
-	}
 
 	if (gun && gun->particleSystemEntity < 0)
 	{
@@ -310,36 +302,31 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		//m_server->broadcastPacket(data.pack());
 		//m_world->addEntity(entity);
 
-		AglParticleSystemHeader header;
-		header.particleSize = AglVector2(2, 2);
-		header.spawnFrequency = 10;
-		header.spawnSpeed = 5.0f;
-		header.spread = 0.0f;
-		header.fadeOutStart = 2.0f;
-		header.fadeInStop = 0.0f;
-		header.particleAge = 2;
-		header.maxOpacity = 1.0f;
-		header.color = AglVector4(0, 1, 0, 1.0f);
-		header.alignmentType = AglParticleSystemHeader::OBSERVER;
-		int particleSysIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
+		EntityCreationPacket creationPacket;
+		creationPacket.entityType			= EntityType::MinigunModule;
+		creationPacket.owner				= -1;
+		creationPacket.networkIdentity		= p_entity->getIndex();
+		creationPacket.translation			= AglVector3( 0, 0, 0 );
+		creationPacket.rotation				= AglQuaternion::identity();
+		creationPacket.scale				= AglVector3( 0, 0, 0 );
+		creationPacket.meshInfo				= 0;
+		m_server->broadcastPacket( creationPacket.pack() );
+		
+		//p_entity->addComponent( new NetworkSynced( p_entity->getIndex(), -1,
+		//	EntityType::ParticleSystem ) );
 
-		ParticleSystemCreationInfo psInfo;
-		psInfo.entityNetId = p_entity->getIndex();
-		psInfo.particleSysIdx = particleSysIdx;
-		psInfo.particleSysHeader = header;
+		//ParticleSystemCreationInfo psInfo;
+		//psInfo.entityNetId = p_entity->getIndex();
+		//psInfo.particleSysIdx = particleSysIdx;
+		//psInfo.particleSysHeader = header;
 
-		Packet packet( PacketType::ParticleSystemCreationInfo );
-		packet.WriteData( (char*)&psInfo, sizeof(ParticleSystemCreationInfo) );
-		m_server->broadcastPacket( packet );
-
-		p_entity->addComponent( new ParticleUpdateData() );
+		//Packet packet( PacketType::ParticleSystemCreationInfo );
+		//packet.WriteData( (char*)&psInfo, sizeof( ParticleSystemCreationInfo ) );
+		//m_server->broadcastPacket( packet );
 
 		gun->particleSystemEntity = p_entity->getIndex(); // Itself
-
-		p_entity->addComponent( new NetworkSynced( p_entity->getIndex(), -1,
-			EntityType::ParticleSystem ) );
 	}
-	else if (gun)
+	else if( gun )
 	{
 		//Entity* entity = m_world->getEntity(gun->particleSystemEntity);
 		
@@ -353,23 +340,23 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 			( p_entity->getComponent( ComponentType::Transform) );
 
 		AglVector3 dir = gun->fireDirection;
-		parentTrans->getRotation().transformVector(dir);
+		parentTrans->getRotation().transformVector( dir );
 
 		AglVector3 vel = physics->getController()->getBody( body->m_id )->GetVelocity();
 		vel += dir * 50; // Why 50? /ML
 
-		ParticleUpdateData* particleData = static_cast<ParticleUpdateData*>
-			( p_entity->getComponent( ComponentType::ParticleUpdateData) );
+		ParticleSystemServerComponent* particleComp = static_cast<ParticleSystemServerComponent*>
+			( p_entity->getComponent( ComponentType::ParticleSystemServerComponent) );
 
-		particleData->speed = vel.length();
-
+		ParticleSystemData* data = particleComp->getParticleSystemDataPtrFromName( "minigun" );
+		data->updateData.speed = vel.length();
 		vel.normalize();
-		particleData->spawnPoint = parentTrans->getTranslation();
-		particleData->direction = vel;
+		data->updateData.spawnPoint = parentTrans->getTranslation();
+		data->updateData.direction = vel;
 	
 		ShipModule* module = static_cast<ShipModule*>
-			( p_entity->getComponent( ComponentType::ShipModule) );
-		particleData->spawnFrequency = module->m_active * 10;//200; // Why 10? /ML
+			( p_entity->getComponent( ComponentType::ShipModule ) );
+		data->updateData.spawnFrequency = module->m_active * 10;//200; // Why 10? /ML
 	}
 
 }

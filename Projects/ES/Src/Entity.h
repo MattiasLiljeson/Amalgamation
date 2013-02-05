@@ -6,6 +6,7 @@
 #include "ComponentManager.h"
 
 #include "Tag.h" // Added by Jarl 2013-01-09, temporary management of tags
+#include <string>
 
 class ComponentType;
 class EntityWorld;
@@ -100,6 +101,8 @@ public:
 	bool isEnabled();
 	void setEnabled( bool p_enabled );
 
+	void setName( string p_name ) { name = p_name; }
+
 private:
 	// Universal Unique ID. This id is unique in the network and will never be reused. 
 	int m_UUID; ///<NOT IMPLEMENTED!
@@ -107,6 +110,9 @@ private:
 	// This id  is used as an index for the components internally. If an entity is deleted
 	// from the world its id will be reused for future created entities.
 	int m_index;
+
+	/// Used for debug purposes
+	string name; 
 
 	EntityWorld* m_world;
 

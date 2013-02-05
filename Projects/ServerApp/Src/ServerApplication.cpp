@@ -43,6 +43,7 @@
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
+#include <ParticleSystemServerComponent.h>
 
 namespace Srv
 {
@@ -260,9 +261,15 @@ namespace Srv
 				BodyInitData::DYNAMIC, 
 				BodyInitData::SINGLE, false));
 
-			entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
-			m_world->addEntity(entity);
+			ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+			psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+			entity->addComponent( psServerComp );
+
+			entity->addComponent( 
+				new MinigunModule( AglVector3(0, 0, 0), AglVector3(0, 0, 1) ) );
+			entity->addComponent( 
+				new NetworkSynced( entity->getIndex(), -1, EntityType::MinigunModule ) );
+			m_world->addEntity( entity );
 		}
 
 
