@@ -109,9 +109,9 @@ int PhysicsController::AddConvexHull(AglVector3 pPosition, float pSize, float pM
 		pParent->AddChild(h);
 	return mBodies.size()-1;
 }
-int PhysicsController::AddCompoundBody(AglVector3 p_position)
+int PhysicsController::AddCompoundBody(AglMatrix p_transform)
 {
-	CompoundBody* cb = new CompoundBody(p_position);
+	CompoundBody* cb = new CompoundBody(p_transform);
 	mBodies.push_back(cb);
 	mCompoundBodies.push_back(cb);
 	return mBodies.size()-1;

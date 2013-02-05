@@ -53,9 +53,9 @@ AglBoundingSphere CompoundBody::MergeSpheres(AglBoundingSphere pS1, AglBoundingS
 	}
 }
 
-CompoundBody::CompoundBody(AglVector3 pPosition)
+CompoundBody::CompoundBody(AglMatrix pTransform)
 {
-	mLocalTransform = mPreviousLocalTransform = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
+	mLocalTransform = mPreviousLocalTransform = pTransform;
 	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	mVelocity = mPreviousVelocity = mForce = mAngularVelocity = mPreviousAngularVelocity = AglVector3(0, 0, 0);
 	mStatic = false;

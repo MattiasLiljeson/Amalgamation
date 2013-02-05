@@ -172,13 +172,15 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 
 		int t=0;
 		int* bodyId = &t; // temp storage of id
-		AglVector3 offset=AglVector3(0.0f,0.0f,0.0f);
+		AglMatrix offset=AglMatrix::identityMatrix();
 		if (init->m_compound)
 		{
 			// Add compound body as id to component
-			body->m_id = m_physicsController->AddCompoundBody(init->m_position);
+			AglMatrix transform;
+			AglMatrix::componentsToMatrix(transform, AglVector3(1, 1, 1), init->m_orientation, init->m_position);
+			body->m_id = m_physicsController->AddCompoundBody(transform);
 			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->m_id));
-			offset = init->m_position;
+			offset = transform;
 		}
 		else // repoint id storage; only add shape id to body component if not compound
 			bodyId = &(body->m_id); 
@@ -187,7 +189,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		if (init->m_type == BodyInitData::BOX)
 		{
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
+			world *= offset.inverse();
 			*bodyId = m_physicsController->AddBox(world,
 				init->m_scale*2, 1, 
 				init->m_velocity, 
@@ -199,7 +202,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		{
 			float radius = max(max(init->m_scale.x, init->m_scale.y), init->m_scale.z);
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
+			world *= offset.inverse();
 			*bodyId = m_physicsController->AddSphere(world,
 				radius, 1, 
 				init->m_velocity, 
@@ -229,15 +233,11 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
 		{
-			//BAJSET FUNGERAR BRA MED IDENTITY MATRIX!
-
-			//ROTATION DOES NOT WORK FOR COMPOUND BODIES
-
 			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), AglQuaternion::identity(), init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
 
-			//AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
+			world *= offset.inverse();
 
 			body->setOffset(obb.world);
 
@@ -248,7 +248,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 
-			//Debug information
+
+			//Debug information - Not updated - May be incorrect
 			/*Entity* entity = m_world->createEntity();
 			Transform* t = new Transform(AglMatrix::createScaleMatrix(obb.size*0.5f)*obb.world);
 			entity->addComponent( ComponentType::Transform, t );

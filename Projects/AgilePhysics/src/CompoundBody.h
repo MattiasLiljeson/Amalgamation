@@ -26,7 +26,7 @@ private:
 	void ComputeInertia();
 	AglBoundingSphere MergeSpheres(AglBoundingSphere pS1, AglBoundingSphere pS2);
 public:
-	CompoundBody(AglVector3 pPosition);
+	CompoundBody(AglMatrix pTransform);
 	virtual ~CompoundBody();
 
 	void AddChild(RigidBody* pRigidBody);
