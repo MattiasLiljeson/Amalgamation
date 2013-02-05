@@ -82,12 +82,13 @@ void GraphicsRendererSystem::endShadowPass(){
 void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 	m_wrapper->clearRenderTargets();
 	m_wrapper->setBaseRenderTargets();
 }
 
 void GraphicsRendererSystem::endMeshPass(){
+		m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 }
 
 void GraphicsRendererSystem::initLightPass(){
