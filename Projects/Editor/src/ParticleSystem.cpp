@@ -62,7 +62,7 @@ ParticleSystem::~ParticleSystem()
 }
 void ParticleSystem::Draw()
 {
-	AglMatrix psWorld = AglMatrix::createTranslationMatrix(mSystem->getHeader().spawnPoint);
+	AglMatrix psWorld = AglMatrix::createTranslationMatrix(mSystem->getHeaderPtr().spawnPoint);
 	psWorld[0] = 0.1f;
 	psWorld[5] = 0.1f;
 	psWorld[10] = 0.1f;
@@ -72,7 +72,7 @@ void ParticleSystem::Draw()
 	psWorld[10] = 0.01f;
 	//SPHEREMESH->Draw(psWorld, AglVector3(0, 0.0f, 0));
 
-	vector<AglStandardParticle> particles = mSystem->getParticles();
+	vector<AglStandardParticle> particles = mSystem->getParticlesPtr();
 	//Update vertex buffer
 	if (particles.size() > 0)
 	{

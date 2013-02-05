@@ -3,9 +3,9 @@
 #include <ParticleSystemCollection.h>
 #include <vector>
 
-class AglVector3;
+struct AglVector3;
 class AglParticleSystem;
-class ParticleSystemCollection;
+struct ParticleSystemCollection;
 
 class ParticleEmitters : public Component
 {

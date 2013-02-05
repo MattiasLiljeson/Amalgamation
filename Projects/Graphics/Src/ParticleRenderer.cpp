@@ -31,16 +31,16 @@ ParticleRenderer::~ParticleRenderer(){
 	delete m_texture;
 }
 
-void ParticleRenderer::renderParticles(AglParticleSystem* p_system, 
-									   RendererSceneInfo p_info){
-
-	vector<AglStandardParticle> particles = p_system->getParticles();
-	if (particles.size() > 0){
+void ParticleRenderer::renderParticles( AglParticleSystem& p_system, 
+									   const RendererSceneInfo& p_info )
+{
+	const vector<AglStandardParticle>* particles = p_system.getParticlesPtr();
+	if (particles->size() > 0){
 		SAFE_RELEASE(m_vertexBuffer);
 		D3D11_BUFFER_DESC bD;
 		ZeroMemory(&bD, sizeof(bD));
 		bD.Usage			= D3D11_USAGE_DYNAMIC;
-		bD.ByteWidth		= sizeof(AglStandardParticle)* particles.size();
+		bD.ByteWidth		= sizeof(AglStandardParticle)* particles->size();
 		bD.BindFlags		= D3D11_BIND_VERTEX_BUFFER;
 		bD.CPUAccessFlags	= D3D11_CPU_ACCESS_WRITE;
 
@@ -52,9 +52,9 @@ void ParticleRenderer::renderParticles(AglParticleSystem* p_system,
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 		
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-		data->accessBuffer.setParticleData(p_system->getHeader());
+		data->accessBuffer.setParticleData(p_system.getHeader());
 
-		beginRendering(p_system, particles.size());
+		beginRendering(&p_system, particles->size());
 	}
 }
 

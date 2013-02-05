@@ -49,11 +49,22 @@ AglParticleSystem::~AglParticleSystem()
 {
 }
 
-AglParticleSystemHeader AglParticleSystem::getHeader()
+const AglParticleSystemHeader* AglParticleSystem::getHeaderPtr()
+{
+	return &m_header;
+}
+
+const AglParticleSystemHeader& AglParticleSystem::getHeader()
 {
 	return m_header;
 }
-vector<AglStandardParticle> AglParticleSystem::getParticles()
+
+const vector<AglStandardParticle>* AglParticleSystem::getParticlesPtr()
+{
+	return &m_particles;
+}
+
+const vector<AglStandardParticle>& AglParticleSystem::getParticles()
 {
 	return m_particles;
 }

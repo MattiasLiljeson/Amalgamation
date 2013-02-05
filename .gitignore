@@ -139,6 +139,7 @@ External/*
 *.PIXExp
 *.dgml
 *.bsc
+*.vspx
 
 [Ll]oc[Mm]etrics*.*
 

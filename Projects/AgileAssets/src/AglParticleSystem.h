@@ -35,8 +35,10 @@ public:
 	AglParticleSystem(AglParticleSystemHeader p_header);
 	virtual ~AglParticleSystem();
 
-	AglParticleSystemHeader getHeader();
-	vector<AglStandardParticle> getParticles();
+	const AglParticleSystemHeader* getHeaderPtr();
+	const AglParticleSystemHeader& getHeader();
+	const vector<AglStandardParticle>* getParticlesPtr();
+	const vector<AglStandardParticle>& getParticles();
 
 	void setSpawnPoint(AglVector3 p_spawnPoint);
 	void setParticleAge(float p_age);

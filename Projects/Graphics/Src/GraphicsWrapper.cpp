@@ -488,7 +488,7 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 }
 
 void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
-	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
+	m_particleRenderer->renderParticles( *p_system, m_renderSceneInfo );
 }
 
 void GraphicsWrapper::setParticleRenderState()

@@ -299,6 +299,11 @@ namespace Srv
 				new MinigunModule( AglVector3(0, 0, 0), AglVector3(0, 0, 1) ) );
 			entity->addComponent( 
 				new NetworkSynced( entity->getIndex(), -1, EntityType::MinigunModule ) );
+
+			ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
+				AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));  entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+
 			m_world->addEntity( entity );
 		}
 

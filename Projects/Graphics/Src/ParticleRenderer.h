@@ -27,7 +27,7 @@ class ParticleRenderer
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticles(AglParticleSystem* p_system, RendererSceneInfo p_info);
+	void renderParticles( AglParticleSystem& p_system, const RendererSceneInfo& p_info );
 private:
 	void initShaders();
 	void initDepthStencil();

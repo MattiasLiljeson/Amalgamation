@@ -24,6 +24,9 @@ ParticleRenderSystem::~ParticleRenderSystem()
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	// Clear the old particle systems
+	m_collections.clear();
+
 	// HACK! 
 	// must be set to real camera pos as soon as possible. Sorting doesn't work now!
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
