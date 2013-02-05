@@ -9,6 +9,7 @@ class EntitySystem;
 class EntityWorld;
 class Manager;
 class SystemType;
+class PreciseTimer;
 
 class SystemManager : public Manager
 {
@@ -18,18 +19,6 @@ public:
 
 	void initialize(){ initializeAll(); };
 	EntitySystem* getSystem( SystemType::SystemTypeIdx p_systemIndex );
-
-	/**
-	 * Will add a system to this manager.
-	 *  
-	 * @param p_type Type of system.
-	 * @param p_system The system to add.
-	 * @param p_enabled Wether or not this system will be processed by World.process().
-	 * Defaults to true.
-	 * @return The added system.
-	 */
-	EntitySystem* setSystem( SystemType p_type, EntitySystem* p_system,
-		bool p_enabled = true );
 
 	/**
 	 * Will add a system to this manager.
@@ -71,5 +60,8 @@ private:
 
 	// Vector that stores systems in the order they've been added. For dependencies
 	vector<EntitySystem*> m_systemList;
+	// For every system this vector contains a vector of every process() call execution time.
+	vector< vector<float> > m_systemsExecutionTimeMeasurements;
+	PreciseTimer* m_executionTimer;
 };
 

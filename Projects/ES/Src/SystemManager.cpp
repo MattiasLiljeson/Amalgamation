@@ -1,8 +1,10 @@
 #include "SystemManager.h"
+#include <PreciseTimer.h>
 
 SystemManager::SystemManager( EntityWorld* p_world )
 {
 	m_world = p_world;
+	m_executionTimer = new PreciseTimer();
 }
 
 SystemManager::~SystemManager()
@@ -13,19 +15,12 @@ SystemManager::~SystemManager()
 		delete it->second;
 		it->second = NULL;
 	}
+	delete m_executionTimer;
 }
 
 EntitySystem* SystemManager::getSystem( SystemType::SystemTypeIdx p_systemIndex )
 {
 	return m_systems[p_systemIndex];
-}
-
-EntitySystem* SystemManager::setSystem( SystemType p_type, EntitySystem* p_system,
-									   bool p_enabled )
-{
-	p_system->setEnabled( p_enabled );
-	m_systems[(SystemType::SystemTypeIdx)p_type.getIndex()] = p_system;
-	return p_system;
 }
 
 EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
@@ -39,6 +34,7 @@ EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 			it = m_systemList.erase(it);
 	}
 	m_systemList.push_back( p_system );
+	m_systemsExecutionTimeMeasurements.push_back( vector<float>() );
 	
 	p_system->setEnabled( p_enabled );
 	m_systems[p_typeIdx] = p_system;
@@ -113,7 +109,17 @@ void SystemManager::updateSynchronous()
 	{
 		EntitySystem* system = m_systemList[i];
 		if( system->getEnabled() )
+		{
+			m_executionTimer->start();
 			system->process();
+			double elapsedTime = m_executionTimer->stop();
+			m_systemsExecutionTimeMeasurements[i].push_back(elapsedTime);
+		}
+		else
+		{
+			// Time is exactly zero if not executed.
+			m_systemsExecutionTimeMeasurements[i].push_back(0.0f);
+		}
 	}
 }
 
