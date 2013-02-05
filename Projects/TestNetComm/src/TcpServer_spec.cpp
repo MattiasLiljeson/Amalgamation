@@ -6,6 +6,7 @@ using namespace igloo;
 #include <TcpServer.h>
 #include <TcpClient.h>
 
+#define _STRESS_TEST
 static const int TEST_PACKET_TYPE = 100;
 
 Describe(a_tcp_server)
@@ -348,11 +349,6 @@ Describe(a_tcp_server)
 		server.processMessages();
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
-		//boost::this_thread::sleep(boost::posix_time::millisec(50));
-		//server.processMessages();
-		//boost::this_thread::sleep(boost::posix_time::millisec(50));
-		//server.processMessages();
-
 
 		Assert::That(server.activeConnectionsCount(), Equals(0));
 	}
@@ -419,13 +415,23 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		Packet packet(TEST_PACKET_TYPE);
+#ifdef STRESS_TEST
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket( packet );
 		}
+#else
+		for(int i=0; i<500; i++) {
+			server.broadcastPacket( packet );
+		}
+#endif
 		// NOTE (Johan): No need for clients to actually process the messages.
 		unsigned int totalBroadcasts = server.getTotalBroadcasts();
 		server.askForCommProcessInfo();
+#ifdef STRESS_TEST
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+#else
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+#endif
 		for(int i=0; i<3; i++) {
 			clients[i].processMessages();
 		}

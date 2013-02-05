@@ -161,14 +161,24 @@ Describe(a_tcp_client)
 		server.processMessages();
 
 		Packet packet(TEST_PACKET_TYPE);
+#ifdef STRESS_TEST
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket(packet);
 		}
+#else
+		for(int i=0; i<500; i++) {
+			server.broadcastPacket(packet);
+		}
+#endif
 
+#ifdef STRESS_TEST
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+#else
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+#endif
 		client.processMessages();
 //		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
-		Assert::That(client.newPacketsCount(), Equals(50000));
+		Assert::That(client.newPacketsCount(), Equals(500));
 	}
 
 	It(can_verify_that_the_total_packets_received_is_the_same_on_higher_level_as_it_is_on_lower_level)
@@ -181,10 +191,21 @@ Describe(a_tcp_client)
 		server.processMessages();
 
 		Packet packet(TEST_PACKET_TYPE);
+#ifdef STRESS_TEST
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket(packet);
 		}
+#else
+		for(int i=0; i<500; i++) {
+			server.broadcastPacket(packet);
+		}
+#endif
+
+#ifdef STRESS_TEST
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+#else
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+#endif
 		client.processMessages();
 		client.askForCommProcessInfo();
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
