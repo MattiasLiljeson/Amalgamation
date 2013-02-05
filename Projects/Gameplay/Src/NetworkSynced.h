@@ -22,6 +22,7 @@ public:
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced()
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
@@ -36,6 +37,7 @@ public:
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced( int p_networkIdentity, int p_owner )
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
@@ -43,7 +45,9 @@ public:
 		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
-	NetworkSynced( int p_networkIdentity, int p_owner, EntityType::EntityEnums p_networkType )
+	NetworkSynced( int p_networkIdentity, int p_owner,
+		EntityType::EntityEnums p_networkType )
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;

@@ -3,6 +3,7 @@
 ComponentRegister<Transform> Transform::s_reg("Transform");
 
 Transform::Transform()
+	: Component( ComponentType::Transform )
 {
 	m_translation.x = 0.0f;
 	m_translation.y = 0.0f;
@@ -15,10 +16,10 @@ Transform::Transform()
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
-	m_componentTypeId = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform( float p_posX, float p_posY, float p_posZ )
+	: Component( ComponentType::Transform )
 {
 	m_translation.x = p_posX;
 	m_translation.y = p_posY;
@@ -31,21 +32,21 @@ Transform::Transform( float p_posX, float p_posY, float p_posZ )
 	m_rotation = AglQuaternion::identity();
 
 	calcCompMatrix();
-	m_componentTypeId = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
 					 const AglVector3& p_scale)
+	: Component( ComponentType::Transform )
 {
 	m_translation = p_translation;
 	m_rotation = p_rotation;
 	m_scale = p_scale;
 
 	calcCompMatrix();
-	m_componentTypeId = ComponentType::ComponentTypeIdx::Transform;
 }
 
 Transform::Transform(const AglMatrix& p_matrix)
+	: Component( ComponentType::Transform )
 {
 	setMatrix(p_matrix);
 }
@@ -203,4 +204,11 @@ void Transform::calcComponents(bool p_calcScale/*=true*/, bool p_calcRotation/*=
 	{
 		m_instanceData.worldTransform[i] = transMat[i];
 	}
+}
+
+const AglVector3& Transform::getLookAt() const{
+	AglVector3 lookAt = getTranslation()+getForward();
+	AglVector3::normalize(lookAt);
+
+	return lookAt;
 }

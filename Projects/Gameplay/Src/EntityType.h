@@ -25,6 +25,7 @@ public:
 		ShieldModule,
 		RocketLauncherModule,
 		BoosterModule,
+		PlayerCamera,
 		EndModule, //Should never be used. Marks the end of module subsection
 		//End Modules
 		ParticleSystem,
@@ -34,6 +35,7 @@ public:
 		Shield,
 		SelectionSphere, //For edit mode
 		EndBatch, //Marks the end of a batch of entity updates
+		DebugBox, //Marks a debug box that should be drawn 
 		Other,
 	};
 

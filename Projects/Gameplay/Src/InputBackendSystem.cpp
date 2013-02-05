@@ -224,12 +224,18 @@ Control* InputBackendSystem::getControlByEnum( InputHelper::MouseAxes p_axis )
 
 Control* InputBackendSystem::getControlByEnum( InputHelper::Xbox360Digitals p_digital )
 {
-	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_digital]);
+	return m_inputManager->getControl(m_xboxDigitalIdxsbyEnum[p_digital]);
 }
 
 Control* InputBackendSystem::getControlByEnum( InputHelper::Xbox360Analogs p_analog )
 {
-	return m_inputManager->getControl(m_xboxDigitalIdxsbyEnum[p_analog]);
+	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_analog]);
+}
+
+void InputBackendSystem::setControllerVibration(float p_leftMotor, float p_rightMotor)
+{
+	XInputFetcher* xinput = m_inputManager->getXInputFetcher();
+	if (xinput) xinput->vibrate(p_leftMotor,p_rightMotor);
 }
 
 void InputBackendSystem::saveControl( InputHelper::InputDeviceTypes p_deviceType, 
@@ -265,11 +271,11 @@ vector<int>* InputBackendSystem::vectorFromDeviceType( InputHelper::InputDeviceT
 		break;
 
 	case InputHelper::InputDeviceTypes_XINPUT_DIGITAL:
-		vec = &m_xboxAnalogIdxsbyEnum;
+		vec = &m_xboxDigitalIdxsbyEnum;
 		break;
 
 	case InputHelper::InputDeviceTypes_XINPUT_ANALOG:
-		vec = &m_xboxDigitalIdxsbyEnum;
+		vec = &m_xboxAnalogIdxsbyEnum;
 		break;
 
 	default:

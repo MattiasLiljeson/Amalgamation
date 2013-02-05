@@ -1,5 +1,7 @@
 #include "AglQuaternion.h"
 
+const float AglQuaternion::minslerpdiff = 0.005f;
+
 AglQuaternion::AglQuaternion(AglVector3 p_u, float p_v)
 {
 	u = p_u;
@@ -117,21 +119,47 @@ void AglQuaternion::transformVector(AglVector3& p_vector) const
 }
 
 //Static functions
-AglQuaternion AglQuaternion::lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t)
+
+float AglQuaternion::dotProduct( const AglQuaternion& pV1, const AglQuaternion& pV2 )
+{
+	// added by Jarl 2013-02-01
+	return pV1.u.x * pV2.u.x + pV1.u.y * pV2.u.y + pV1.u.z * pV2.u.z + pV1.v * pV2.v;
+}
+
+AglQuaternion AglQuaternion::lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, 
+								  const float& p_t)
 {
 	AglQuaternion q = p_q1 * (1.0f - p_t) + p_q2 * p_t;
 	q.normalize();
 	return q;
 }
-AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t)
+AglQuaternion AglQuaternion::slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, 
+								   const float& p_t, const bool p_shortestWay)
 {
 	float phi = p_q1.u.x*p_q2.u.x + p_q1.u.y*p_q2.u.y + p_q1.u.z*p_q2.u.z + p_q1.v*p_q2.v;
 
 	float denom = sin(phi);
 
-	float factor1 = sin(phi*(1.0f-p_t)) / denom;
-	float factor2 = sin(phi*p_t) / denom;
+	float factor1=0.0f;
+	float factor2=0.0f;
+	if (denom > minslerpdiff) // added by Jarl 2013-02-01
+	{
+		factor1 = sin(phi*(1.0f-p_t)) / denom;
+		factor2 = sin(phi*p_t) / denom;
+	}
+	else
+	{
+		// Added by Jarl 2013-02-01, almost the same, so lerp
+		factor1 = 1.0f - p_t;
+		factor2 = p_t;
+	}
+
+	// added by Jarl 2013-02-01
+	// slerp the shortest way
+	if (p_shortestWay && dotProduct(p_q1,p_q2)<0.0f)
+	{
+		factor2 = -factor2;
+	}
 
 	return p_q1 * factor1 + p_q2 * factor2;
-
 }

@@ -104,7 +104,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	int AddConvexHull(AglVector3 p_position, float p_size, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static = false, CompoundBody* pParent = NULL);
 
-	int AddCompoundBody(AglVector3 p_position);
+	int AddCompoundBody(AglMatrix p_transform);
 
 	int AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
 		AglInteriorSphereGrid* pSphereGrid = NULL);
@@ -159,6 +159,7 @@ public:
 	vector<unsigned int> CollidesWith(unsigned int p_b);
 
 	vector<unsigned int> LineCollidesWith(unsigned int p_line);
+	vector<LineCollisionData> LineSortedCollisions(unsigned int p_line);
 	int					 LineClosestCollision(unsigned int p_line);
 
 	void ActivateBody(unsigned int pBody);

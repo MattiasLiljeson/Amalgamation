@@ -35,8 +35,8 @@ class ParticleSystemServerComponent: public Component
 {
 public:
 	ParticleSystemServerComponent()
+		: Component( ComponentType::ParticleSystemServerComponent )
 	{
-		m_componentTypeId = ComponentType::ParticleSystemServerComponent;
 	}
 
 	/// Add particle system to component. \return Index of the newly added particle system.

@@ -19,6 +19,7 @@ struct Light
 	//AglVector3 translation;
 	AglMatrix offsetMat;
 	LightInstanceData instanceData;
+	int castingShadow;
 	Light();
 };
 

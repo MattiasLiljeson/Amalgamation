@@ -5,6 +5,7 @@
 #include "DeferredComposeShader.h"
 #include "GUIShader.h"
 #include "ParticleShader.h"
+#include "ShadowShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -67,8 +68,34 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	ShaderVariableContainer shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
-												m_bufferFactory->createSimpleCBuffer());
+	return new DeferredBaseShader(shaderInitData);
+}
+
+DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
+{
+	VSData* vertexData = new VSData();
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+
+	PSData* pixelData = new PSData();
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
+	createAllShaderStages(vertexData,pixelData);
+
+	ID3D11InputLayout* inputLayout = NULL;
+	//createPTVertexInputLayout(vertexData,&inputLayout);
+	createInstancedLightInputLayout( vertexData, &inputLayout );
+
+	ID3D11SamplerState* samplerState = NULL;
+	createSamplerState( &samplerState );
+
+	ShaderVariableContainer shaderInitData;
+	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
+
+	//DeferredComposeShader* newDeferredComposeShader = NULL;
+	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
+	//return newDeferredComposeShader;
+
+	DeferredBaseShader* newDeferredBaseShader = NULL;
+	newDeferredBaseShader = new DeferredBaseShader(shaderInitData);
 	return newDeferredBaseShader;
 }
 
@@ -93,38 +120,6 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 	return new DeferredComposeShader(shaderVariables);
 }
 
-DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
-{
-
-	//BufferConfig* initConfig  = NULL;
-
-	VSData* vertexData = new VSData();
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
-
-	PSData* pixelData = new PSData();
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
-	createAllShaderStages(vertexData,pixelData);
-	
-	ID3D11InputLayout* inputLayout = NULL;
-	//createPTVertexInputLayout(vertexData,&inputLayout);
-	createInstancedLightInputLayout( vertexData, &inputLayout );
-
-	ID3D11SamplerState* samplerState = NULL;
-	createSamplerState( &samplerState );
-
-	ShaderVariableContainer shaderInitData;
-	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
-
-	//DeferredComposeShader* newDeferredComposeShader = NULL;
-	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
-	//return newDeferredComposeShader;
-
-	DeferredBaseShader* newDeferredBaseShader = NULL;
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData,
-		m_bufferFactory->createSimpleCBuffer());
-	return newDeferredBaseShader;
-}
-
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 {
 	GUIShader* guiShader = NULL;
@@ -144,8 +139,7 @@ GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
 	ShaderVariableContainer shaderInitData;
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
-	guiShader = new GUIShader(shaderInitData,
-		m_bufferFactory->createSimpleCBuffer());
+	guiShader = new GUIShader(shaderInitData);
 	return guiShader;
 }
 
@@ -171,6 +165,22 @@ ParticleShader* ShaderFactory::createParticleShader( const LPCWSTR& p_filePath )
 		samplerState, geometryD);
 
 	return new ParticleShader(shaderInitData, m_bufferFactory->createParticleCBuffer());
+}
+
+ShadowShader* ShaderFactory::createShadowShader( const LPCWSTR& p_filePath ){
+	ID3D11SamplerState* samplerState = NULL;
+	ID3D11InputLayout* inputLayout = NULL;
+	ShaderVariableContainer shaderInitData;
+
+	VSData* vertexData = new VSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+
+	createAllShaderStages(vertexData);
+	createInstancedPNTTBVertexInputLayout(vertexData, &inputLayout);
+	createShaderInitData(&shaderInitData, inputLayout, vertexData);
+
+	return new ShadowShader(shaderInitData, m_bufferFactory->createShadowBuffer());
 }
 
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
@@ -255,10 +265,8 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 		else
 			pixelCompiled = true;
 	}
-	else
-		throw D3DException("Missing pixel shader", __FILE__,__FUNCTION__,__LINE__);
 
-	if(vertexCompiled && pixelCompiled)
+	if(vertexCompiled)
 	{
 		if (p_gs)
 		{
@@ -305,10 +313,6 @@ void ShaderFactory::createAllShaderStages(VSData* p_vs/* =NULL */,
 			throw D3DException("Invalid shader stage config",__FILE__,__FUNCTION__,
 			__LINE__);
 	}
-	else
-		throw D3DException("Either pixel or vertex shader failed to compile", __FILE__,
-		__FUNCTION__,__LINE__);
-
 }
 
 void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
@@ -335,21 +339,20 @@ void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
 
 void ShaderFactory::createShaderInitData(ShaderVariableContainer* p_shaderInitData, 
 										 ID3D11InputLayout* p_inputLayout,
-										 VSData* p_vsd, PSData* p_psd,
+										 VSData* p_vsd, PSData* p_psd/* =NULL */,
 										 ID3D11SamplerState* p_samplerState/* =NULL */,
 										 GSData* p_gsd/* =NULL */, 
 										 HSData* p_hsd/* =NULL */, 
 										 DSData* p_dsd/* =NULL */)
 {
-	p_shaderInitData->device = m_device;
 	p_shaderInitData->deviceContext = m_deviceContext;
-	p_shaderInitData->domainShader = p_dsd;
+	p_shaderInitData->inputLayout	= p_inputLayout;
+	p_shaderInitData->vertexShader	= p_vsd;
+	p_shaderInitData->hullShader	= p_hsd;
+	p_shaderInitData->domainShader	= p_dsd;
 	p_shaderInitData->geometryShader = p_gsd;
-	p_shaderInitData->hullShader = p_hsd;
-	p_shaderInitData->vertexShader = p_vsd;
-	p_shaderInitData->pixelShader = p_psd;
+	p_shaderInitData->pixelShader	= p_psd;
 	p_shaderInitData->samplerState = p_samplerState;
-	p_shaderInitData->inputLayout = p_inputLayout;
 }
 
 
@@ -501,7 +504,8 @@ void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{"TYPE", 0, DXGI_FORMAT_R32_SINT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
-
+		{"SHADOWIDX", 0, DXGI_FORMAT_R32_SINT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
 	int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L

@@ -187,6 +187,11 @@ void AglWriter::write(AglScene* p_scene)
 		buf = (char*)&triangles[0];
 		file.write(buf, sizeof(unsigned int) * bspheader.triangleCount);
 
+		//Write the triangles2 of the bsp tree
+		AglVector3* triangles2 = d.bspTrees[i]->getTriangles2();
+		buf = (char*)&triangles2[0];
+		file.write(buf, sizeof(AglVector3) * bspheader.triangleCount*3);
+
 		//Write the nodes of the bsp tree
 		AglBspNode* nodes = d.bspTrees[i]->getNodes();
 		buf = (char*)&nodes[0];

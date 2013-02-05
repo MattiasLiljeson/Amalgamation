@@ -37,6 +37,14 @@ public:
 	virtual double getCalibratedAnalog( int p_analog );
 	virtual void calibrate( double p_epsilon );
 
+	///-----------------------------------------------------------------------------------
+	/// Vibrate the controller
+	/// \param p_leftMotor a value between 0-100 indicating motor percentage use
+	/// \param p_rightMotor a value between 0-100 indicating motor percentage use
+	/// added by Jarl, for the lols, 02-02-2013
+	///-----------------------------------------------------------------------------------
+	void vibrate(float p_leftMotor, float p_rightMotor) const;
+
 private:
 	static int s_btnMaskMap[InputHelper::Xbox360Digitals_CNT];
 

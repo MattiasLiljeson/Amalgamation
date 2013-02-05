@@ -11,11 +11,18 @@
 #include "NetworkSynced.h"
 #include "LevelGenSystem.h"
 #include "LevelPiece.h"
+#include "EntityCreationPacket.h"
 
-PhysicsSystem::PhysicsSystem()
+//COMPOUND BODIES HAR INTE STÖD FÖR ROTATION. DÄRFÖR BLIR DET KANSKE KNAS
+
+AglVector3 minPhys = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+AglVector3 maxPhys = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+PhysicsSystem::PhysicsSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
 {
 	m_physicsController = new PhysicsController();
+	m_server = p_server;
 }
 
 
@@ -26,13 +33,14 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::initialize()
 {
-	LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
+	//HARDCODED BASED ON PRISON RIGHT NOW
+	//m_physicsController->InitStaticBodiesOctree(AglVector3(0, 0, 0), AglVector3(0, 0, 0));
+	/*LevelGenSystem* levelSystem = static_cast<LevelGenSystem*>(m_world->getSystem(SystemType::LevelGenSystem));
 	if (levelSystem)
 	{
 		AglVector3 minP = levelSystem->getWorldMin();
 		AglVector3 maxP = levelSystem->getWorldMax();
 		vector<LevelPiece*> pieces = levelSystem->getGeneratedPieces();
-		m_physicsController->InitStaticBodiesOctree(minP, maxP);
 		for (unsigned int i = 0; i < pieces.size(); i++)
 		{
 			const ModelResource* mr = pieces[i]->getModelResource();
@@ -43,8 +51,6 @@ void PhysicsSystem::initialize()
 
 			AglVector3 s = transform.getScale();
 			AglOBB obb = mr->meshHeader.minimumOBB;
-			AglMatrix w = obb.world;
-			w *= rt;
 
 			if (s.x > 1.0001f || s.x < 0.999f || s.y > 1.0001f || s.y < 0.999f || s.z > 1.0001f || s.z < 0.999f)
 			{
@@ -54,11 +60,14 @@ void PhysicsSystem::initialize()
 			}
 			m_physicsController->AddMeshBody(rt, mr->meshHeader.minimumOBB, mr->meshHeader.boundingSphere, s, mr->looseBspTree);
 		}
-	}
+	}*/
 }
 
 void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 {
+	//HARDCODED BASED ON PRISON RIGHT NOW
+	m_physicsController->InitStaticBodiesOctree(minPhys, maxPhys);
+
 	float dt = m_world->getDelta();
 	m_physicsController->Update(dt);
 
@@ -86,6 +95,26 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 
 				// Update the rigidbody
 				AglMatrix world = b->GetWorld();
+
+				if (body->getDebugData() >= 0)
+				{
+					Entity* debugData = m_world->getEntity(body->getDebugData());
+					Transform* debugT = static_cast<Transform*>(debugData->getComponent(
+						ComponentType::Transform));
+					AglVector3 pos;
+					AglVector3 scale;
+					AglQuaternion rot;
+					AglMatrix::matrixToComponents(world, scale, rot, pos);
+					debugT->setTranslation(pos);
+					debugT->setRotation(rot);
+
+				}
+				
+				
+				//Offset the transform in relation to the physics representation
+				world = body->getOffset().inverse()*world;
+				
+				
 				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
 					ComponentType::Transform));
 				AglVector3 pos;
@@ -143,13 +172,15 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 
 		int t=0;
 		int* bodyId = &t; // temp storage of id
-		AglVector3 offset=AglVector3(0.0f,0.0f,0.0f);
+		AglMatrix offset=AglMatrix::identityMatrix();
 		if (init->m_compound)
 		{
 			// Add compound body as id to component
-			body->m_id = m_physicsController->AddCompoundBody(init->m_position);
+			AglMatrix transform;
+			AglMatrix::componentsToMatrix(transform, AglVector3(1, 1, 1), init->m_orientation, init->m_position);
+			body->m_id = m_physicsController->AddCompoundBody(transform);
 			cb = static_cast<CompoundBody*>(m_physicsController->getBody(body->m_id));
-			offset = init->m_position;
+			offset = transform;
 		}
 		else // repoint id storage; only add shape id to body component if not compound
 			bodyId = &(body->m_id); 
@@ -158,7 +189,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		if (init->m_type == BodyInitData::BOX)
 		{
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
+			world *= offset.inverse();
 			*bodyId = m_physicsController->AddBox(world,
 				init->m_scale*2, 1, 
 				init->m_velocity, 
@@ -170,7 +202,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		{
 			float radius = max(max(init->m_scale.x, init->m_scale.y), init->m_scale.z);
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
+			world *= offset.inverse();
 			*bodyId = m_physicsController->AddSphere(world,
 				radius, 1, 
 				init->m_velocity, 
@@ -178,14 +211,71 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 		}
-		else if (init->m_type == BodyInitData::MESH)
+		else if (init->m_type == BodyInitData::MESH && init->m_modelResource)
 		{
-			//Not supported
-			//m_physicsController->AddMeshBody()
+			if (!init->m_static)
+			{
+				//Not supported
+				int k = 0;
+				k = 1.0f / k;
+			}
+			AglVector3 pos = init->m_position;
+			AglQuaternion orient = init->m_orientation;
+			AglVector3 scale = init->m_scale;
+
+			AglMatrix rt;
+			AglMatrix::componentsToMatrix(rt, AglVector3(1, 1, 1), orient, pos);
+
+			AglVector3 s = scale;
+			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
+			AglBoundingSphere bs = init->m_modelResource->meshHeader.boundingSphere;
+			*bodyId = m_physicsController->AddMeshBody(rt, obb, bs, s, init->m_modelResource->looseBspTree);
+		}
+		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
+		{
+			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
+			AglMatrix world;
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
+
+			world *= offset.inverse();
+
+			body->setOffset(obb.world);
+
+			*bodyId = m_physicsController->AddBox(world,
+				obb.size, 1, 
+				init->m_velocity, 
+				init->m_angularVelocity, 
+				init->m_static,
+				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+
+
+			//Debug information - Not updated - May be incorrect
+			/*Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(AglMatrix::createScaleMatrix(obb.size*0.5f)*obb.world);
+			entity->addComponent( ComponentType::Transform, t );
+
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::DebugBox));
+			m_world->addEntity(entity);
+			body->setDebugData(entity->getIndex());
+
+			EntityCreationPacket data;
+			data.entityType		= static_cast<char>(EntityType::DebugBox);
+			data.owner			= -1;
+			data.networkIdentity = entity->getIndex();
+			data.translation	= t->getTranslation();
+			data.rotation		= t->getRotation();
+			data.scale			= t->getScale();
+
+			m_server->broadcastPacket(data.pack());*/
+
 		}
 		else
 		{
-			//Not Supported
+			//Not Supported - Remove the body
+			p_entity->removeComponent(ComponentType::PhysicsBody);
+			p_entity->removeComponent(ComponentType::BodyInitData);
+			p_entity->applyComponentChanges();
+			return;
 		}
 
 		//Add the physics body to the entity map

@@ -20,6 +20,7 @@ struct RasterizerState
 		FILLED_CW_SCISSOR,		// Filled, backface-cull, clockwise, scissor culling
 		FILLED_CCW_SCISSOR,		// Filled, backface-cull, counter-clockwise, scissor culling
 		FILLED_NOCULL,			// Filled, no cull
+		FILLED_NOCULL_NOCLIP,	// Filled, no cull, no z-clipping
 		WIREFRAME,				// Wireframe, backface-cull
 		WIREFRAME_FRONTCULL,// Wireframe, frontface-cull
 		WIREFRAME_NOCULL,		// Wireframe, no cull

@@ -1,49 +1,51 @@
 #include "ServerApplication.h"
 
 #include "TcpServer.h"
-
 #include <ComponentAssemblageAllocator.h>
 
 // Systems
-#include <PhysicsSystem.h>
-#include <ProcessingMessagesSystem.h>
-#include <ServerWelcomeSystem.h>
-#include <ServerPacketHandlerSystem.h>
-#include <ServerUpdateSystem.h>
-#include <ServerScoreSystem.h>
-#include <ServerDynamicObjectsSystem.h>
-#include <ServerStaticObjectsSystem.h>
-#include <TimerSystem.h>
-#include <EntityFactory.h>
-#include <LevelGenSystem.h>
-#include <ServerPickingSystem.h>
-#include <MinigunModuleControllerSystem.h>
-#include <ShieldModuleControllerSystem.h>
-#include <RocketLauncherModuleControllerSystem.h>
-#include <MineControllerSystem.h>
-#include <MineLayerModuleControllerSystem.h>
-#include <ShipModulesControllerSystem.h>
-#include <ShipManagerSystem.h>
-#include <RocketControllerSystem.h>
-#include <NetSyncedPlayerScoreTrackerSystem.h>
-#include <ServerClientInfoSystem.h>
-#include <WinningConditionSystem.h>
-
-#include "Transform.h"
-#include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "NetworkSynced.h"
+#include "PhysicsBody.h"
 #include "StaticProp.h"
-
+#include "Transform.h"
+#include <EntityFactory.h>
+#include <LevelGenSystem.h>
+#include <LoadMeshSystemServer.h>
+#include <LookAtSystem.h>
+#include <MineControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MinigunModuleControllerSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <PhysicsSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <RocketControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ServerClientInfoSystem.h>
+#include <ServerDynamicObjectsSystem.h>
+#include <ServerPacketHandlerSystem.h>
+#include <ServerPickingSystem.h>
+#include <ServerScoreSystem.h>
+#include <ServerStaticObjectsSystem.h>
+#include <ServerUpdateSystem.h>
+#include <ServerWelcomeSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <ShipManagerSystem.h>
+#include <ShipModulesControllerSystem.h>
+#include <ShipModulesTrackerSystem.h>
+#include <TimerSystem.h>
+#include <WinningConditionSystem.h>
 
 //Modules
-#include <ShipModule.h>
+#include <MineLayerModule.h>
 #include <MinigunModule.h>
-#include <SpeedBoosterModule.h>
+#include <ParticleSystemServerComponent.h>
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
-#include <MineLayerModule.h>
-#include <ParticleSystemServerComponent.h>
+#include <ShipModule.h>
+#include <SpeedBoostModuleControllerSystem.h>
+#include <SpeedBoosterModule.h>
+
 
 namespace Srv
 {
@@ -55,8 +57,6 @@ namespace Srv
 
 		m_world = new EntityWorld();
 		initSystems();
-
-		ComponentAssemblageAllocator allocator();
 
 		initEntities();
 	}
@@ -91,10 +91,8 @@ namespace Srv
 
 			m_prevTimeStamp = currTimeStamp;
 
-			// HACK: Static delta and really high for testing purposes.
 			step( static_cast<float>(dt) );
 
-			// HACK: Maybe place input in systems? :D
 			if( _kbhit() )
 			{
 				if( _getch() == 27 )
@@ -104,6 +102,7 @@ namespace Srv
 				}
 			}
 			processMessages();
+			
 			sleep(2);
 		}
 	}
@@ -129,6 +128,13 @@ namespace Srv
 		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Mesh loading															*/
+		/************************************************************************/
+		// Note! Must set *after* EntityFactory and *before* Physics
+		m_world->setSystem(SystemType::LoadMeshSystemServer, new LoadMeshSystemServer(), 
+			true); 
+
+		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
 		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
@@ -138,7 +144,7 @@ namespace Srv
 		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
-		PhysicsSystem* physics = new PhysicsSystem();
+		PhysicsSystem* physics = new PhysicsSystem(m_server);
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
 		/************************************************************************/
@@ -156,6 +162,18 @@ namespace Srv
 		m_world->setSystem( SystemType::ProcessingMessagesSystem,
 			new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
 			true );
+
+		/************************************************************************/
+		/* General controlling													*/
+		/************************************************************************/
+		LookAtSystem* lookAtSystem = new LookAtSystem();
+		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+
+		/************************************************************************/
+		/* Picking																*/
+		/************************************************************************/
+		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
+
 
 		/************************************************************************/
 		/* Network																*/
@@ -176,22 +194,21 @@ namespace Srv
 
 		m_world->setSystem( new ServerClientInfoSystem(), true);
 
-		/************************************************************************/
-		/* Picking																*/
-		/************************************************************************/
-		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
 
 		/************************************************************************/
 		/* Gameplay															*/
 		/************************************************************************/
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
-		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineControllerSystem(m_server), true);
-		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
+		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
+		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
+		// Important for any module-damaging logic to happen before this.
+		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
@@ -200,6 +217,13 @@ namespace Srv
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
 		m_world->initialize();
+
+
+
+
+		// Run component assemblage allocator (not a system, so don't delete)
+		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+		delete allocator;
 	}
 
 	void ServerApplication::initEntities()
@@ -242,6 +266,12 @@ namespace Srv
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
 
+		// First test by Jarl, instead of Anton
+		// Create rocks
+		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		entity = factory->entityFromRecipe( "rocksServer" );									 
+		m_world->addEntity( entity );
+
 		//Minigun
 		for (int x=0;x<4;x++)
 		{
@@ -274,7 +304,7 @@ namespace Srv
 
 
 		//Shield
-		entity = m_world->createEntity();
+		/*entity = m_world->createEntity();
 		component = new Transform(20, 0, 0);
 		entity->addComponent( ComponentType::Transform, component );
 
@@ -292,57 +322,28 @@ namespace Srv
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
-		m_world->addEntity(entity);
+		m_world->addEntity(entity);*/
 
-		for (int x=0;x<4;x++)
+
+		EntityCreationPacket cp;
+
+		//Rocket Launcher
+		for (unsigned int i = 0; i < 4; i++)
 		{
-			entity = m_world->createEntity();
-			component = new Transform(30, 0, 0);
-			((Transform*)component)->setScale(AglVector3(2,2,2));
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(30, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-			entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
-			m_world->addEntity(entity);
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40, 0, i*10));
+			cp.entityType = EntityType::RocketLauncherModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Mine Layer
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30, 0, i*10));
+			cp.entityType = EntityType::MineLayerModule;
+			factory->entityFromPacket(cp, &pos);
 		}
 
-		for (int x=0;x<4;x++)
-		{
-			entity = m_world->createEntity();
-			component = new Transform(40, 0, 0);
-			((Transform*)component)->setScale(AglVector3(2,2,2));
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(40, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(2, 2, 2), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::MineLayerModule, new MineLayerModule());
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
-			m_world->addEntity(entity);
-		}
-
-		for (int x=0;x<4;x++)
+		//Speed Booster
+		/*for (int x=0;x<4;x++)
 		{
 			entity = m_world->createEntity();
 			component = new Transform(50, 0, 0);
@@ -364,7 +365,7 @@ namespace Srv
 			entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
 			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
 			m_world->addEntity(entity);
-		}
+		}*/
 
 
 

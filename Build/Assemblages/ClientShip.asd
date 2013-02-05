@@ -1,5 +1,8 @@
 e ClientShip
 
+c LoadMesh
+d s m_filename Ship.agl
+
 c LightsComponent
 
 # Left lantern
@@ -37,7 +40,7 @@ d f 2:translationZ 10
 
 d f 2:range 1000.0
 d f 2:spotPower 8.0
-d f 2:attenuationX 0.4
+d f 2:attenuationX 0.1
 d f 2:attenuationY 0.0
 d f 2:attenuationZ 0.0
 d f 2:diffuseR 0.3

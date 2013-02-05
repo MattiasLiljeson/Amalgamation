@@ -224,6 +224,26 @@ void RenderStateHelper::fillRasterizerStateList(ID3D11Device* p_device,
 				p_device->CreateRasterizerState( &rasterizerStateDesc, &rasterizerstate ); 
 				break;
 			}
+		case RasterizerState::FILLED_NOCULL_NOCLIP:
+			{
+				rasterizerstate = NULL;
+				ZeroMemory(&rasterizerStateDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+				rasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
+				rasterizerStateDesc.CullMode = D3D11_CULL_NONE;
+				rasterizerStateDesc.FrontCounterClockwise = FALSE;
+				rasterizerStateDesc.DepthClipEnable = TRUE;
+				rasterizerStateDesc.AntialiasedLineEnable = FALSE;
+				rasterizerStateDesc.MultisampleEnable = FALSE;
+				rasterizerStateDesc.DepthBias = 0;
+				rasterizerStateDesc.DepthBiasClamp = 0.0f;
+				rasterizerStateDesc.DepthClipEnable = FALSE;
+				rasterizerStateDesc.SlopeScaledDepthBias = 0.0f;
+				rasterizerStateDesc.ScissorEnable = false;
+
+				p_device->CreateRasterizerState( &rasterizerStateDesc, &rasterizerstate ); 
+				break;
+			}
 		case RasterizerState::WIREFRAME:
 			{
 				rasterizerstate = NULL;

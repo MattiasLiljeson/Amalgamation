@@ -45,5 +45,8 @@ private:
 	vector<Entity*> m_deleted;
 
 	vector<Component*> m_deleteOnPost;
+	vector< pair<int, int> > m_deleteComponentsByTypeOnPostPerform;
+	// m_deleteComponentsByTypeOnPostPerform.push_back(
+	//		&m_componentsByType[p_typeIdx][entityIndex] );
 };
 

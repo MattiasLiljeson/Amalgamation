@@ -22,6 +22,7 @@ class BoundingVolumeInitData : public Component
 public:
 	BoundingVolumeInitData(const AglBoundingSphere& p_boundingSphere, const AglOBB& p_obb,
 				AglMatrix p_worldTransform)
+	: Component( ComponentType::BoundingVolumeInitData )
 	{
 		m_boundingSphere	= p_boundingSphere;
 		m_obb				= p_obb;

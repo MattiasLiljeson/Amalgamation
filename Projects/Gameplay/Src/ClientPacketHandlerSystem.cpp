@@ -1,70 +1,68 @@
-#include "ClientPacketHandlerSystem.h"
-#include "NetSyncedPlayerScoreTrackerSystem.h"
-#include "GameStatsSystem.h"
 #include "AudioListener.h"
-#include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "ClientPacketHandlerSystem.h"
+#include "GameStatsSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "PhysicsBody.h"
 #include <AntTweakBarWrapper.h>
-#include <Entity.h>
+#include <AntTweakBarWrapper.h>
 #include <Component.h>
 #include <ComponentType.h>
-#include <SystemType.h>
-#include <AntTweakBarWrapper.h>
-
+#include <Entity.h>
 #include <Packet.h>
+#include <SystemType.h>
 #include <TcpClient.h>
 
 // Components
-#include "NetworkSynced.h"
-#include "Transform.h"
-#include "RenderInfo.h"
-#include "ShipFlyController.h"
+#include "AudioBackendSystem.h"
+#include "AudioInfo.h"
 #include "CameraInfo.h"
-#include "MainCamera.h"
-#include "Input.h"
-#include "LookAtEntity.h"
-#include "PlayerScore.h"
-#include "GameplayTags.h"
-#include "PlayerCameraController.h"
-#include "HudElement.h"
-
-#include "GraphicsBackendSystem.h"
-#include "Control.h"
-#include "EntityType.h"
-#include "PacketType.h"
-#include "PickComponent.h"
-#include "ParticleSystemEmitter.h"
-#include "ShipEditController.h"
 #include "ConnectionPointSet.h"
-#include "TimerSystem.h"
-#include "PingPacket.h"
-#include "PongPacket.h"
-#include "EntityUpdatePacket.h"
-#include "ParticleUpdatePacket.h"
+#include "Control.h"
 #include "EntityCreationPacket.h"
 #include "EntityDeletionPacket.h"
-#include "WelcomePacket.h"
-#include "UpdateClientStatsPacket.h"
+#include "EntityType.h"
+#include "EntityUpdatePacket.h"
 #include "Extrapolate.h"
+#include "GameplayTags.h"
+#include "HudElement.h"
+#include "Input.h"
 #include "InputBackendSystem.h"
+#include "InterpolationComponent.h"
+#include "LookAtEntity.h"
+#include "NetsyncDirectMapperSystem.h"
+#include "NetworkSynced.h"
+#include "PacketType.h"
 #include "ParticleRenderSystem.h"
-#include "AudioInfo.h"
+#include "ParticleSystemEmitter.h"
+#include "ParticleUpdatePacket.h"
+#include "PickComponent.h"
+#include "PingPacket.h"
+#include "PlayerCameraController.h"
+#include "PlayerScore.h"
+#include "PongPacket.h"
+#include "PositionalSoundSource.h"
+#include "RenderInfo.h"
+#include "ShipEditController.h"
+#include "ShipFlyController.h"
+#include "SpawnSoundEffectPacket.h"
+#include "TimerSystem.h"
+#include "Transform.h"
+#include "UpdateClientStatsPacket.h"
+#include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
-#include "AudioBackendSystem.h"
-#include "PositionalSoundSource.h"
-#include "SpawnSoundEffectPacket.h"
-#include "NetsyncDirectMapperSystem.h"
 
 // Debug
-#include <DebugUtil.h>
-#include <ToString.h>
+#include "EntityFactory.h"
 #include "LightSources.h"
 #include "LightsComponent.h"
-#include "EntityFactory.h"
-#include "PlayersWinLosePacket.h"
 #include "ParticleEmitters.h"
 #include "ParticleSystemCreationInfo.h"
+#include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
+#include <DebugUtil.h>
+#include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -116,8 +114,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
-			if (data.entityType == (char)EntityType::EndBatch)
-			{
+			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch();
 			}
 			else
@@ -145,14 +142,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma region Shitsk
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
 			SpawnSoundEffectPacket spawnSoundPacket;
 			spawnSoundPacket.unpack( packet );
 			if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-					m_world->getSystem(SystemType::AudioBackendSystem));
 				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
 					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 					spawnSoundPacket.position);
@@ -160,6 +157,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
 			{
+				// Attached positional sound source.
 				NetsyncDirectMapperSystem* directMapper =
 					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 					SystemType::NetsyncDirectMapperSystem));
@@ -171,11 +169,30 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
 						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 						true, 1.0f));
+					entity->applyComponentChanges();
 				}
 			}
-			else
+			else if( !spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				// Ambient sound effect.
+				// Short ambient sound effect.
+				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+			}
+		}
+		else if(packetType == (char)PacketType::RemoveSoundEffect)
+		{
+			RemoveSoundEffectPacket data;
+			data.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+			if( entity != NULL )
+			{
+				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->applyComponentChanges();
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)
@@ -278,6 +295,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			handleWelcomePacket(packet);
 		}
+		else
+		{
+			DEBUGWARNING(( "Unhandled packet type!" ));
+		}
 	}
 #pragma endregion
 }
@@ -300,8 +321,22 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
 	EntityFactory* factory = static_cast<EntityFactory*>
-		( m_world->getSystem(SystemType::EntityFactory) );
-	factory->entityFromPacket(p_packet);
+	(m_world->getSystem(SystemType::EntityFactory));
+	if (p_packet.entityType != EntityType::DebugBox)
+	{
+		factory->entityFromPacket(p_packet);
+	}
+	else
+	{
+		Entity* entity = factory->entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
+
+		Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+		m_world->addEntity(entity);
+	}
 }
 
 void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket p_packet)
@@ -553,26 +588,34 @@ void ClientPacketHandlerSystem::handleBatch()
 			Transform* transform = NULL;
 			transform = static_cast<Transform*>(
 				entity->getComponent( ComponentType::Transform ) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
+
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				transform->setTranslation( data.translation );
-				transform->setRotation( data.rotation );
-				transform->setScale( data.scale );
+				/*InterpolationComponent* interpolation = NULL;
+				Component* intcomp = m_world->getComponentManager()->getComponent(
+					entity->getIndex(), ComponentType::InterpolationComponent );
+				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
+				if (interpolation )
+				{
+					// set up goal for queuing
+					float handledTime = data.timestamp;
+					InterpolationComponent::TransformGoal transformGoal;
+					transformGoal.timestamp = handledTime;
+					transformGoal.translation = data.translation;
+					transformGoal.rotation = data.rotation;
+					transformGoal.scale = data.scale;
+					// enqueue data
+					interpolation ->m_transformBuffer.push(transformGoal);
+				}
+				else*/
+				{
+					transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );
+				}
 			}
 
-			Extrapolate* extrapolate = NULL;
-			extrapolate = static_cast<Extrapolate*>(
-				entity->getComponent(ComponentType::Extrapolate) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
-			/*if( extrapolate != NULL )
-			{
-				extrapolate->serverUpdateTimeStamp = data.timestamp;
-				extrapolate->velocityVector = data.velocity;
-				extrapolate->angularVelocity = data.angularVelocity;
-			}*/
+			// Add extrapolation here if deemed necessary
 		}
 	}
 	m_batch.clear();

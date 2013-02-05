@@ -7,6 +7,7 @@ class PickComponent : public Component
 {
 public:
 	PickComponent()
+	: Component( ComponentType::PickComponent )
 	{
 		m_rayIndex = -1;
 		m_latestPick = -1;

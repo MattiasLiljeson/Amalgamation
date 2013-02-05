@@ -49,7 +49,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
 			gun->timeSinceRocket += dt;
-			if (gun->coolDown == 0 && (module->m_active || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
+			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
 				spawnRocket(p_entities[i]);
 				gun->timeSinceRocket = 0;
@@ -203,12 +203,12 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 	data.meshInfo		= 1;
 	m_server->broadcastPacket(data.pack());
 
-	// Also send a positional sound effect.
-	SpawnSoundEffectPacket soundEffectPacket;
-	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
-	soundEffectPacket.positional = true;
-	soundEffectPacket.position = t->getTranslation();
-	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
-	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-	m_server->broadcastPacket(soundEffectPacket.pack());
+//	// Also send a positional sound effect.
+//	SpawnSoundEffectPacket soundEffectPacket;
+//	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
+//	soundEffectPacket.positional = true;
+//	soundEffectPacket.position = t->getTranslation();
+//	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
+//	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
+//	m_server->broadcastPacket(soundEffectPacket.pack());
 }

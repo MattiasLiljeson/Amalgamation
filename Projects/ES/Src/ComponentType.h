@@ -24,6 +24,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		Extrapolate,
+		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
 		CameraInfo,
@@ -36,7 +37,6 @@ public:	//Enums
 		BodyInitData,
 		BoundingVolumeInitData,
 		LookAtEntity,
-		MainCamera,
 		PlayerCameraController,
 		PlayerScore,
 		MenuItem,
@@ -56,6 +56,7 @@ public:	//Enums
 		Connector1to2Module,
 		LightSources,
 		LightBlinker,
+		Vibration,
 		ParticleEmitters,
 		PickComponent,
 		ParticleSystemEmitter,
@@ -65,11 +66,15 @@ public:	//Enums
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
 		// -------------------
+		Tag,
 		TAG_ShipFlyMode,		
 		TAG_ShipEditMode,
 		TAG_LookAtFollowMode,
 		TAG_LookAtOrbitMode,
-		TAG_Ship, 
+		TAG_Ship,
+		TAG_MyShip,
+		TAG_MainCamera,
+		TAG_ShadowCamera,
 		// -------------------
 	
 		/************************************************************************/
@@ -78,6 +83,7 @@ public:	//Enums
 		/************************************************************************/
 		StaticProp,
 		LightsComponent,
+		MeshOffsetTransform,
 		NUM_COMPONENT_TYPES
 	};
 

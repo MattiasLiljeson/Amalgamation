@@ -22,6 +22,7 @@ struct TimerIntervals
 	{
 		EverySecond,
 		HalfSecond,
+		Every32Millisecond,
 		Every16Millisecond,
 		Every8Millisecond,
 		NUM_TIMERINTERVALS,

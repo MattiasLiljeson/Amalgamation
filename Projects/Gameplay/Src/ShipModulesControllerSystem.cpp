@@ -85,15 +85,19 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 			{
 				Entity* entity = m_world->getEntity(e);
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
-				
-				//m->m_health -= 50 * m_world->getDelta();
-				if (m->m_health <= 0)
+
+				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
-					drop(p_parent, i);
-				}
-				else
-				{
-					checkDrop(entity);
+					m->applyDamage();
+					if (m->m_health <= 0)
+					{
+						drop(p_parent, i);
+					}
+					else
+					{
+						checkDrop(entity);
+					}
 				}
 			}
 		}
@@ -101,6 +105,8 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 }
 void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 {
+	if (p_slot < 0)
+		return;
 	//Module is dropped based on damage it sustains
 	ConnectionPointSet* connected =
 		static_cast<ConnectionPointSet*>(
@@ -108,6 +114,8 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
 	Entity* toDrop = m_world->getEntity(connected->m_connectionPoints[p_slot].cpConnectedEntity);
+
+	ShipModule* m = static_cast<ShipModule*>(toDrop->getComponent(ComponentType::ShipModule));
 
 	ConnectionPointSet* toDropConnected =
 		static_cast<ConnectionPointSet*>(
@@ -119,14 +127,17 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 		for (unsigned int i = 0; i < toDropConnected->m_connectionPoints.size(); i++)
 		{
 			int e = toDropConnected->m_connectionPoints[i].cpConnectedEntity;
-			if (e >= 0)
-				drop(m_world->getEntity(e), i);
+			if (e >= 0 && m->m_parentEntity != e)
+				drop(toDrop, i);
+			else if (m->m_parentEntity == e)
+			{
+				toDropConnected->m_connectionPoints[i].cpConnectedEntity = -1;
+			}
 		}
 	}
 
 	//Perform the drop
 	connected->m_connectionPoints[p_slot].cpConnectedEntity = -1;
-	ShipModule* m = static_cast<ShipModule*>(toDrop->getComponent(ComponentType::ShipModule));
 	m->m_parentEntity = -1;
 	PhysicsBody* b = static_cast<PhysicsBody*>(toDrop->getComponent(ComponentType::PhysicsBody));
 	PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
@@ -138,7 +149,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	//Update module data
 	m->m_health = 100.0f;
 	m->m_value = m->m_value * 0.5f;
-	m->m_active = false;
+	m->deactivate();
 }
 void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
 {
@@ -157,7 +168,7 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
 	{
 		Entity* currEn = m_world->getEntity(current);
 		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->m_active = false;
+		currModule->deactivate();
 	}
 
 	connected->m_highlighted = p_new;
@@ -175,7 +186,15 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 	{
 		Entity* currEn = m_world->getEntity(current);
 		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->m_active = p_value;
+		if(p_value == true)
+		{
+			currModule->activate();
+		}
+		else
+		{
+			currModule->deactivate();
+		}
+		//currModule->m_active = p_value;
 		setActivationChildren(currEn, p_value);
 	}
 }
@@ -185,6 +204,9 @@ void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p
 		static_cast<ConnectionPointSet*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+
 	if (connected)
 	{
 		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
@@ -193,8 +215,20 @@ void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p
 			{
 				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-				currModule->m_active = p_value;
-				setActivationChildren(currEn, p_value);
+				
+
+				if (currModule && (!module || module->m_parentEntity != currEn->getIndex()))
+				{
+					if(p_value == true)
+					{
+						currModule->activate();
+					}
+					else
+					{
+						currModule->deactivate();
+					}
+					setActivationChildren(currEn, p_value);
+				}
 			}
 		}
 	}
@@ -215,6 +249,12 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 		static_cast<ConnectionPointSet*>(
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	ShipModule* module =
+		static_cast<ShipModule*>(
+		m_world->getComponentManager()->getComponent(p_entity,
+		ComponentType::getTypeFor(ComponentType::ShipModule)));
+
 	if (connected)
 	{
 		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
@@ -222,14 +262,15 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
 			{
 				Entity* e = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
-				score += calculateScore(e);
+				if (module && e->getIndex() == module->m_parentEntity)
+				{
+					//Do nothing
+				}
+				else
+					score += calculateScore(e);
 			}
 		}
 	}
-	ShipModule* module =
-		static_cast<ShipModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ShipModule)));
 	if (module)
 		score += module->m_value;
 	return score;

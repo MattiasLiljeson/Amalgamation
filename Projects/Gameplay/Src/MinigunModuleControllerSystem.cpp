@@ -90,10 +90,9 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 
 			//Check fire
 			gun->coolDown = max(0, gun->coolDown - dt);
-			if (gun->coolDown == 0 && module->m_active)
+			if (gun->coolDown == 0 && module->getActive())
 			{
-				if (module->m_active)
-					spawnRay(p_entities[i]);
+				spawnRay(p_entities[i]);
 			}
 			updateRays(p_entities[i]);
 		}
@@ -351,12 +350,12 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		ParticleSystemData* data = particleComp->getParticleSystemDataPtrFromName( "minigun" );
 		data->updateData.speed = vel.length();
 		vel.normalize();
-		data->updateData.spawnPoint = parentTrans->getTranslation();
-		data->updateData.direction = vel;
-	
+
 		ShipModule* module = static_cast<ShipModule*>
 			( p_entity->getComponent( ComponentType::ShipModule ) );
-		data->updateData.spawnFrequency = module->m_active * 10;//200; // Why 10? /ML
+		data->updateData.spawnPoint = parentTrans->getTranslation();
+		data->updateData.direction = vel;
+		data->updateData.spawnFrequency = ( (float)module->getActive() ) * 10;//200; // Why 10? /ML
 	}
 
 }

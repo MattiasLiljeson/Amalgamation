@@ -4,6 +4,7 @@
 #include <ParticleSystemCollection.h>
 
 ParticleEmitters::ParticleEmitters()
+	: Component( ComponentType::ParticleEmitters )
 {
 	m_componentTypeId = ComponentType::ParticleEmitters;
 }
