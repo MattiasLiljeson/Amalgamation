@@ -3,9 +3,8 @@
 ComponentRegister<BodyInitData> BodyInitData::s_reg("BodyInitData");
 
 BodyInitData::BodyInitData()
+	: Component( ComponentType::BodyInitData )
 {
-	m_componentType = ComponentType::ComponentTypeIdx::BodyInitData;
-
 	m_position = AglVector3::zero();
 	m_orientation = AglQuaternion::identity();
 	m_scale = AglVector3::one();
@@ -27,9 +26,8 @@ BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
 			 BodyInitData::CompoundMode p_compoundMode, 
 			 bool p_impulseEnabled,
 			 bool p_collisionEnabled)
+	: Component( ComponentType::BodyInitData )
 {
-	m_componentType = ComponentType::ComponentTypeIdx::BodyInitData;
-
 	m_position = p_position;
 	m_orientation = p_orientation;
 	m_scale = p_scale;

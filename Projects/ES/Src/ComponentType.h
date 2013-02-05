@@ -66,6 +66,7 @@ public:	//Enums
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
 		// -------------------
+		Tag,
 		TAG_ShipFlyMode,		
 		TAG_ShipEditMode,
 		TAG_LookAtFollowMode,

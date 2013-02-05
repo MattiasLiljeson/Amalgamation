@@ -3,6 +3,7 @@
 ComponentRegister<HudElement> HudElement::s_reg("HudElement");
 
 HudElement::HudElement()
+	: Component( ComponentType::HudElement )
 {
 	m_element = "";
 	m_changed = true;
@@ -11,6 +12,7 @@ HudElement::HudElement()
 }
 
 HudElement::HudElement( string p_element )
+	: Component( ComponentType::HudElement )
 {
 	m_element = p_element;
 	m_changed = true;

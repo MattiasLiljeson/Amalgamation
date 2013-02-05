@@ -105,9 +105,6 @@
     <ClInclude Include="Input.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkClientControllable.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -125,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipController.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="LibRocketRenderInterface.h">
       <Filter>Systems\GUI</Filter>
@@ -266,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="ShieldModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuItem.h">
-      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="ClientConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -473,17 +464,37 @@
     <ClInclude Include="ModuleEvent.h">
       <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
-    <ClInclude Include="OnActivateShieldModule.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="OnDeActivateShieldModule.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="SlotInputControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivation.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleActivation.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
     <ClInclude Include="MeshOffsetTransform.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
+    <ClInclude Include="Vibration.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticProp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Components\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -624,9 +635,6 @@
     </ClCompile>
     <ClCompile Include="ShieldModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuItem.cpp">
-      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ClientConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
@@ -797,6 +805,25 @@
     </ClCompile>
     <ClCompile Include="RemoveSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotInputControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="LightBlinker.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Vibration.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Components\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

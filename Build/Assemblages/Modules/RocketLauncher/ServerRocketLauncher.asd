@@ -23,3 +23,11 @@ c PhysicsBody
 c ShipModule
 d f m_health 100.0f
 d f m_value 100.0f
+
+c RocketLauncherModule
+d f muzzleOffsetX 0
+d f muzzleOffsetY 0
+d f muzzleOffsetZ 0
+d f fireDirectionX 0
+d f fireDirectionY 0
+d f fireDirectionZ 1.0

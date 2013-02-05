@@ -21,6 +21,7 @@ class ShipEditController : public Component
 {
 public:
 	ShipEditController()
+	: Component( ComponentType::ShipEditController )
 	{
 		m_nada=0.0f;
 	}

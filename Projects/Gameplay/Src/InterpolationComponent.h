@@ -32,10 +32,14 @@ public:
 		float timestamp;
 	};
 
-	InterpolationComponent(){m_currentTransformTimestamp=-1.0f;}
+	InterpolationComponent()
+	: Component( ComponentType::InterpolationComponent )
+	{
+		m_currentTransformTimestamp=-1.0f;
+	}
 	virtual ~InterpolationComponent() {}
 
-
+public:
 	float m_currentTransformTimestamp;
 	float m_startTransformTimestamp;
 	float m_goalTransformTimestamp;

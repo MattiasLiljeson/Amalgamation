@@ -3,9 +3,8 @@
 ComponentRegister<PhysicsBody> PhysicsBody::s_reg("PhysicsBody");
 
 PhysicsBody::PhysicsBody()
+	: Component( ComponentType::PhysicsBody )
 {
-	m_componentType = ComponentType::ComponentTypeIdx::PhysicsBody;
-
 	m_id = -1;
 	m_parentId = -1;
 	m_parentChanged = false;

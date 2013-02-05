@@ -7,6 +7,7 @@ class MeshOffsetTransform: public Component
 {
 public:
 	MeshOffsetTransform(AglMatrix p_offset)
+		: Component( ComponentType::MeshOffsetTransform )
 	{
 		offset = p_offset;
 	}

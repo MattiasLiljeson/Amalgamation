@@ -13,12 +13,11 @@
 #include "AudioBackendSystem.h"
 #include <Globals.h>
 #include "SpawnSoundEffectPacket.h"
-#include "OnActivateShieldModule.h"
-#include "OnDeActivateShieldModule.h"
+#include "ShieldModuleActivation.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 2,
-	ComponentType::ShieldModule, ComponentType::ShipModule)
+	ComponentType::ShieldModule, ComponentType::ShipModule, ComponentType::Transform)
 {
 	m_server = p_server;
 }
@@ -134,12 +133,12 @@ void ShieldModuleControllerSystem::inserted( Entity* p_entity )
 {
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(
 		ComponentType::ShipModule));
-	module->addOnActivate(new OnActivateShieldModule(p_entity, m_server));
-	module->addOnDeActivate(new OnDeActivateShieldModule(p_entity, m_server));
+	module->addActivationEvent(new ShieldModuleActivation(p_entity, m_server));
 }
 
 void ShieldModuleControllerSystem::removed( Entity* p_entity )
 {
 	// HACK: NOTE: HACK: NOTE: REMOVE THE EVENTS!
 	// NOTE: Or does the module destroy its own events? Well, maybe it does!
+	// NOTE: Yeah, they do. Don't bother the guy writing the first line (A).
 }

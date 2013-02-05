@@ -8,7 +8,8 @@
 #include "ShipModule.h"
 
 RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::RocketControllerSystem, 1, ComponentType::StandardRocket)
+	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
+	ComponentType::Transform, ComponentType::PhysicsBody)
 {
 	m_turnPower = 2.0f;
 	m_enginePower = 50.0f;

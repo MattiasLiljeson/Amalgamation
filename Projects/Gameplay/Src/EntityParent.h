@@ -17,9 +17,16 @@
 class EntityParent : public Component
 {
 public:
-	EntityParent(){m_entityId=-1;}
+	EntityParent()
+		: Component( ComponentType::EntityParent )
+	{
+		m_entityId=-1;
+	}
 	EntityParent(int p_entityId, const AglMatrix& p_localTransform) 
-		: m_entityId(p_entityId), m_localTransform(p_localTransform) {}
+		: Component( ComponentType::EntityParent ),
+		m_entityId(p_entityId), m_localTransform(p_localTransform)
+	{
+	}
 
 	const AglMatrix& getLocalTransform() {return m_localTransform;}
 	int getParentEntityId() {return m_entityId;}

@@ -203,22 +203,27 @@ void GraphicsWrapper::mapSceneInfo(){
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
-	
-	unsigned int arraySize = mesh->getMaterialInfo().SIZE;
-	Texture** textureArray = new Texture*[arraySize];
-	for (unsigned int i = 0; i < arraySize; i++)
-	{
-		unsigned int textureId;
-		textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
 
-		/************************************************************************/
-		/* Check if the texture ID is active and get the texture resource or	*/
-		/* set the value in the texture array to NULL							*/
-		/************************************************************************/
-		if(textureId != 0)
-			textureArray[i] = m_textureManager->getResource(textureId);
-		else
-			textureArray[i] = NULL;
+	unsigned int arraySize = 0;
+	Texture** textureArray=NULL;
+
+	if(!m_renderingShadows){
+		arraySize = mesh->getMaterialInfo().SIZE;
+		textureArray = new Texture*[arraySize];
+		for (unsigned int i = 0; i < arraySize; i++)
+		{
+			unsigned int textureId;
+			textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
+
+			/************************************************************************/
+			/* Check if the texture ID is active and get the texture resource or	*/
+			/* set the value in the texture array to NULL							*/
+			/************************************************************************/
+			if(textureId != 0)
+				textureArray[i] = m_textureManager->getResource(textureId);
+			else
+				textureArray[i] = NULL;
+		}
 	}
 
 	Buffer<InstanceData>* instanceBuffer;
@@ -306,7 +311,11 @@ void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 }
 
 void GraphicsWrapper::mapDeferredBaseToShader(){
-	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
+}
+
+void GraphicsWrapper::unmapDeferredBaseFromShader(){
+	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
 void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
@@ -496,7 +505,7 @@ void GraphicsWrapper::renderComposeStage(){
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapVariousPassesToComposeStage(m_shadowMapRenderer->getShadowMap());
+	m_deferredRenderer->mapVariousPassesToComposeStage();
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
@@ -554,7 +563,7 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 	m_deviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(p_indexBufferRef), 
 		DXGI_FORMAT_R32_UINT, 0);
 
-	if(m_renderingShadows == false)
+	if(!m_renderingShadows)
 		p_shader->apply();
 
 	// Draw instanced data

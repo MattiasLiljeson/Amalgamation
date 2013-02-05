@@ -1,28 +1,24 @@
 #pragma once
-
-#include <Component.h>
-#include <ComponentFactory.h>
-
+#include <EntitySystem.h>
+class TcpServer;
 // =======================================================================================
-//	MineLayerModule
+// SpeedBoostModuleControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that deploys mines
+/// \brief Brief...
 ///        
-/// # PlayerScore
+/// # SpeedBoostModuleControllerSystem
 /// Detailed description...
-/// Created on: 4-1-2013 
+/// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class MineLayerModule: public Component
+class SpeedBoostModuleControllerSystem: public EntitySystem
 {
 public:
-	MineLayerModule();
-	~MineLayerModule();
-	void init( vector<ComponentData> p_initData );
+	SpeedBoostModuleControllerSystem(TcpServer* p_server);
+	~SpeedBoostModuleControllerSystem();
+	void inserted( Entity* p_entity );
 
-public:
-	float m_cooldown;
-	static ComponentRegister<MineLayerModule> s_reg;
+private:
+	TcpServer* m_server;
 };
