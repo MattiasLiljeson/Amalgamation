@@ -63,6 +63,7 @@ public:	//Enums
 		ParticleSystemEmitter,
 		ParticleUpdateData,
 		DebugMove,
+		PlayerState,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

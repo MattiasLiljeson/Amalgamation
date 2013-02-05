@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="InstanceData.h" />
     <ClInclude Include="LightInstanceData.h" />
+    <ClInclude Include="PlayerStates.h" />
     <ClInclude Include="RawTransformData.h" />
   </ItemGroup>
   <ItemGroup>

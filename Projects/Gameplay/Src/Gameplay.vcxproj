@@ -20,6 +20,7 @@
     <ClInclude Include="BodyInitData.h" />
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />

@@ -55,6 +55,8 @@ void ServerPacketHandlerSystem::initialize()
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	float dt = m_world->getDelta();
+
 	while( m_server->hasNewPackets() )
 	{
 		Packet packet = m_server->popNewPacket();
@@ -92,7 +94,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					boostVector = thrustPacket.thrustVector*3;
 			}
 
-			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector+boostVector,
+			m_physics->applyImpulse( physicsBody->m_id, (thrustPacket.thrustVector+boostVector),
 				thrustPacket.angularVector );
 		}
 		else if ( packetType == (char)PacketType::CameraControlPacket)
@@ -115,6 +117,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					(entity->getComponent(ComponentType::LookAtEntity)); 
 				if (lookAt)
 				{
+					lookAt->setOrbitMovement(cameraControlPacket.movement);
 					// get lookAt tags if they exist
 					LookAtFollowMode_TAG* lookAtFollow=NULL;
 					LookAtOrbitMode_TAG* lookAtOrbit=NULL;
@@ -127,14 +130,14 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 					// handle "state" switch
 					if (lookAtFollow && !lookAtOrbit &&
-						cameraControlPacket.state==CameraControlPacket::editState)
+						cameraControlPacket.state==PlayerStates::editState)
 					{
 						entity->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
 						entity->addComponent(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
 						entity->applyComponentChanges();
 					}
 					else if (lookAtOrbit && !lookAtFollow && 
-						cameraControlPacket.state==CameraControlPacket::steeringState)				
+						cameraControlPacket.state==PlayerStates::steeringState)				
 					{
 						// lookAt->
 						// if (cameraControlPacket.state==CameraControlPacket::steeringState)

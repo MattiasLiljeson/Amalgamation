@@ -2,6 +2,7 @@
 
 #include <Packet.h>
 #include "Packetizer.h"
+#include <PlayerStates.h>
 
 // =======================================================================================
 //                                      CameraControlPacket
@@ -39,7 +40,4 @@ public:
 	AglVector3 movement;
 	int state;
 	int entityId;
-
-	static const int steeringState = 0;
-	static const int editState = 1;
 };

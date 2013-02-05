@@ -485,8 +485,6 @@
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
     <ClInclude Include="InterpolationSystem.h" />
-    <ClInclude Include="LoadMeshSystemClient.h" />
-    <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="Vibration.h" />
     <ClInclude Include="ConnectionPointSet.h">
       <Filter>Components\Point sets</Filter>
@@ -496,6 +494,15 @@
     </ClInclude>
     <ClInclude Include="CameraControlPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -810,8 +817,6 @@
     <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LightBlinker.cpp" />
-    <ClCompile Include="LoadMeshSystemClient.cpp" />
-    <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="Vibration.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp">
       <Filter>Components\Point sets</Filter>
@@ -821,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="CameraControlPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

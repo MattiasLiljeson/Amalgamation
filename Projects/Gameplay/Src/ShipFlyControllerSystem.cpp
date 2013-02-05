@@ -129,6 +129,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 }
 
 
+
 void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
 													   AglVector3& p_thrust, 
 													   AglVector3& p_angularVec)

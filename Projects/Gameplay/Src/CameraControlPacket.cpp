@@ -3,7 +3,7 @@
 CameraControlPacket::CameraControlPacket()
 {
 	movement=AglVector3();
-	state = steeringState;
+	state = PlayerStates::steeringState;
 	entityId = -1;
 }
 

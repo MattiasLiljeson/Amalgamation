@@ -101,6 +101,8 @@ void GraphicsRendererSystem::endLightPass(){
 
 void GraphicsRendererSystem::initComposePass()
 {
+	m_wrapper->setRasterizerStateSettings(
+		RasterizerState::DEFAULT, false);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
 	m_wrapper->mapVariousStagesForCompose();

@@ -4,6 +4,7 @@
 
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
+#include "PlayerState.h"
 #include "CameraControlPacket.h"
 #include "TimerSystem.h"
 #include "NetworkSynced.h"
@@ -11,7 +12,8 @@
 PlayerCameraControllerSystem::PlayerCameraControllerSystem( ShipInputProcessingSystem* p_shipInput,
 														   TcpClient* p_client ) : 
 					EntitySystem( SystemType::PlayerCameraControllerSystem, 1,
-								  ComponentType::ComponentTypeIdx::PlayerCameraController)
+								  ComponentType::ComponentTypeIdx::PlayerCameraController,
+								  ComponentType::ComponentTypeIdx::PlayerState)
 
 {
 	m_shipInput = p_shipInput;
@@ -41,50 +43,38 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 			Entity* ship = p_entities[i];
 			PlayerCameraController* controller = static_cast<PlayerCameraController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerCameraController ) );
+			PlayerState* state = static_cast<PlayerState*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerState ) );
 
-			// get lookAt tags if they exist
-			LookAtFollowMode_TAG* lookAtFollow=NULL;
-			LookAtOrbitMode_TAG* lookAtOrbit=NULL;
+			// Get current input
+			AglVector3 inputMovement(input.verticalInput,input.horizontalInput,0.0f);
 
-			Component* t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::TAG_LookAtFollowMode );
-			if (t!=NULL)
-				lookAtFollow = static_cast<LookAtFollowMode_TAG*>(t);
-
-
-			t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::TAG_LookAtOrbitMode );
-			if (t!=NULL)
-				lookAtOrbit = static_cast<LookAtOrbitMode_TAG*>(t);
+			// accumulate movement for transfer
+			controller->accumulatedCameraMovement += inputMovement*controller->orbitSpeed*dt;
 
 			// State switch handling
 			if (input.stateSwitchInput)
 			{
-				if (lookAtFollow)
-				{
-					ship->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
-					ship->addTag(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
-					ship->applyComponentChanges();
-				}
-				else if (lookAtOrbit)
-				{
-					ship->removeComponent(ComponentType::TAG_LookAtOrbitMode); // Disable this state...
-					ship->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());  // ...and switch to follow state.
-					ship->applyComponentChanges();
-				}
+				if (state->state==PlayerStates::steeringState)
+					state->state=PlayerStates::editState;
+				else
+					state->state=PlayerStates::steeringState;
 			}
 
 			// packet handling
 			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 				checkTimeInterval(TimerIntervals::Every8Millisecond))
 			{
-				int stateForPacket = CameraControlPacket::steeringState;
-				if (lookAtOrbit) stateForPacket=CameraControlPacket::editState;
 				/************************************************************************/
 				/* Send the control packet to the server!								*/
 				/************************************************************************/
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
 
-				sendCameraControllerPacketToServer(netSync,AglVector3::up(),stateForPacket);
+				sendCameraControllerPacketToServer(netSync,
+					controller->accumulatedCameraMovement,state->state);
+
+				controller->accumulatedCameraMovement = AglVector3();
 			}
 		}
 	}

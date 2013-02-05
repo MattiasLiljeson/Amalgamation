@@ -12,7 +12,7 @@
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
-	m_angleInputMultiplier = 1000;
+	m_angleInputMultiplier = 1000.0f;
 
 	m_controllerEpsilon = 0.15f;
 	m_editSwitchTrigReleased = true;
