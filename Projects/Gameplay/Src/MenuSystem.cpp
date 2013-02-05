@@ -1,5 +1,6 @@
 #include "MenuSystem.h"
 #include "LibRocketBackendSystem.h"
+#include "LibRocketEventManager.h"
 #include "ClientConnectToServerSystem.h"
 #include "GameOptionsSystem.h"
 #include <Globals.h>
@@ -21,14 +22,17 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
+	auto rocketEventManager = static_cast<LibRocketEventManager*>(
+		m_world->getSystem(SystemType::LibRocketEventManager));
+
 	auto connectToServerSys = static_cast<ClientConnectToServerSystem*>(
 		m_world->getSystem(SystemType::NetworkConnectoToServerSystem));
 
 	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
 		m_world->getSystem(SystemType::GameOptionsSystem));
 
-	rocketBackend->registerEventHandler(connectToServerSys);
-	rocketBackend->registerEventHandler(gameOptionsSys);
+	rocketEventManager->registerEventHandler(connectToServerSys);
+	rocketEventManager->registerEventHandler(gameOptionsSys);
 
 	rocketBackend->loadDocumentByName("main_menu", true, true);
 	rocketBackend->loadDocumentByName("play");
@@ -37,9 +41,6 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocumentByName("options");
 	rocketBackend->loadDocumentByName("credits");
 
-	//if (docId >= 0)
-	{
-	}
 }
 
 void MenuSystem::processEntities( const vector<Entity*>& p_entities )

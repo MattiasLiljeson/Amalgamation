@@ -9,7 +9,7 @@
 		}
 		</style>
 	</head>
-	<body template="window">
+	<body id="main_menu" template="window" onshow="modal">
 		<button onclick="goto play">Play</button>
 		<button onclick="goto options">Options</button>
 		<button onclick="goto credits">Credits</button>

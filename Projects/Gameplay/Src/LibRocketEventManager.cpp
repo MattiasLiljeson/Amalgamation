@@ -32,13 +32,16 @@
 #include <Rocket/Core/ElementUtilities.h>
 //#include <Shell.h>
 #include "EventHandler.h"
+#include "EventInstancer.h"
 //#include "GameDetails.h"
 #include <map>
 #include <Globals.h>
 #include <ToString.h>
 #include <DebugUtil.h>
+#include "libRocketBackendSystem.h"
 
 LibRocketEventManager::LibRocketEventManager()
+	: EntitySystem(SystemType::LibRocketEventManager)
 {
 	context = NULL;
 	wantsToExit = false;
@@ -47,11 +50,19 @@ LibRocketEventManager::LibRocketEventManager()
 
 LibRocketEventManager::~LibRocketEventManager()
 {
+	Shutdown();
 }
 
-void LibRocketEventManager::Initialize(Rocket::Core::Context* p_context)
+void LibRocketEventManager::initialize()
 {
-	context = p_context;
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+	context = rocketBackend->getContext();
+
+	EventInstancer* eventInstancer = new EventInstancer(this);
+	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
+	eventInstancer->RemoveReference();
 }
 
 // Releases all event handlers registered with the manager.
@@ -100,20 +111,24 @@ void LibRocketEventManager::processEvent(Rocket::Core::Event& event, const Rocke
 	Rocket::Core::StringUtilities::ExpandString(commands, value, ';');
 	for (size_t i = 0; i < commands.size(); ++i)
 	{
-		// Check for a generic 'load' or 'exit' command.
+		// Check for a generic 'load', 'exit' or 'set' command.
 		Rocket::Core::StringList values;
 		Rocket::Core::StringUtilities::ExpandString(values, commands[i], ' ');
 
 		if (values.empty())
 			return;
 
-		if (values[0] == "goto" && values.size() > 1)
+		auto ownerDocument = event.GetTargetElement()->GetOwnerDocument();
+		if (values[0] == "modal" && !ownerDocument->IsModal())
 		{
-			// Load the window, and if successful close the old window.
+			ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
+		}
+		else if (values[0] == "goto" && values.size() > 1)
+		{
+			// Load the window, and if successful hide the old window.
 			if (LoadWindow(values[1]))
 			{
-
-				event.GetTargetElement()->GetOwnerDocument()->Close();
+				event.GetTargetElement()->GetOwnerDocument()->Hide();
 			}
 		}
 		else if (values[0] == "load" &&	values.size() > 1)
@@ -169,15 +184,20 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 		Rocket::Core::String((GUI_MENU_PATH + toString("assets/")).c_str())+
 		window_name + Rocket::Core::String(".rml");
 	*/
-	Rocket::Core::String document_path = 
-		(GUI_MENU_PATH + 
-		toString("temp/") + 
-		toString((window_name).CString()) +
-		toString(".rml")).c_str();
+	//Rocket::Core::String document_path = 
+	//	(GUI_MENU_PATH + 
+	//	toString("temp/") + 
+	//	toString((window_name).CString()) +
+	//	toString(".rml")).c_str();
 	
-	Rocket::Core::ElementDocument* document = context->LoadDocument(document_path.CString());
+	//Rocket::Core::ElementDocument* document = context->LoadDocument(document_path.CString());
+	auto document = context->GetDocument(window_name);
 	if (document == NULL)
 	{
+		DEBUGWARNING(((
+			toString("LibRocketEventManager::loadWindow\nNo document with the body id\"")
+			+ toString(window_name.CString())
+			+ toString("\" has been loaded.")).c_str()));
 		event_handler = old_event_handler;
 		return false;
 	}
@@ -187,7 +207,8 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 	if (title != NULL)
 		title->SetInnerRML(document->GetTitle());
 
-	document->Show(Rocket::Core::ElementDocument::MODAL);
+	document->Show();
+	context->PullDocumentToFront(document);
 
 	// Remove the caller's reference.
 	//document->RemoveReference();
@@ -197,5 +218,11 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 
 void LibRocketEventManager::registerEventHandler( EventHandler* handler )
 {
+	registerEventHandler(handler->getName().c_str(), handler);
+}
 
+void LibRocketEventManager::process()
+{
+	if (wantsToExit)
+		m_world->requestToShutDown();
 }

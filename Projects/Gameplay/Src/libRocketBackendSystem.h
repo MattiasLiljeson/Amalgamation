@@ -15,7 +15,6 @@ class GraphicsBackendSystem;
 class InputBackendSystem;
 class LibRocketRenderInterface;
 class LibRocketSystemInterface;
-class LibRocketEventManager;
 
 class LibRocketBackendSystem : public EntitySystem, public RenderInterface
 {
@@ -31,7 +30,6 @@ public:
 							bool p_initiallyShown=false, 
 							bool p_modal=false);
 	int loadDocument( const char* p_filePath, bool p_initiallyShown=true);
-	void registerEventHandler(EventHandler* p_eventHandler);
 
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
@@ -57,7 +55,6 @@ private:
 
 	GraphicsBackendSystem* m_graphicsBackend;
 	InputBackendSystem* m_inputBackend;
-	LibRocketEventManager* m_eventManager;
 
 	Cursor* m_cursor;
 

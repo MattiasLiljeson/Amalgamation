@@ -16,7 +16,7 @@
 			}*/
 		</style>
 	</head>
-	<body template="window">
+	<body id="join" template="window" onshow="modal">
 		<form onsubmit="join_server">
 			<div>
 				<!--<Input id="computername" name="server_name" type="text" size="9" maxlength="15" value="localhost" hidden/>

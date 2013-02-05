@@ -16,7 +16,7 @@
 			}*/
 		</style>
 	</head>
-	<body template="window">
+	<body id="play" template="window" onshow="modal">
 		<button onclick="goto join">Join</button>
 		<button onclick="goto host">Host</button>
 		<button onclick="goto main_menu">Back</button>

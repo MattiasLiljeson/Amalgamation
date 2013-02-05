@@ -32,8 +32,8 @@ LibRocketBackendSystem::~LibRocketBackendSystem()
 	// Therefor, it is unregistered manually.
 	//m_eventManager->UnregisterEventHandler("join");
 
-	m_eventManager->Shutdown();
-	delete m_eventManager;
+	//m_eventManager->Shutdown();
+	//delete m_eventManager;
 
 	for( unsigned int i=0; i<m_documents.size(); i++ )
 	{
@@ -87,13 +87,14 @@ void LibRocketBackendSystem::initialize()
 		loadFontFace( tmp.c_str() );
 	}
 
-	m_eventManager = new LibRocketEventManager();
+	//m_eventManager = static_cast<LibRocketEventManager*>(
+	//	m_world->getSystem(SystemType::LibRocketEventManager));
 	// Initialise event instancer and handlers.
-	EventInstancer* eventInstancer = new EventInstancer(m_eventManager);
-	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
-	eventInstancer->RemoveReference();
+	//EventInstancer* eventInstancer = new EventInstancer(m_eventManager);
+	//Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
+	//eventInstancer->RemoveReference();
 
-	m_eventManager->Initialize(m_rocketContext);
+	//m_eventManager->Initialize(m_rocketContext);
 
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
@@ -163,10 +164,7 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 	return docId;
 }
 
-void LibRocketBackendSystem::registerEventHandler( EventHandler* p_eventHandler )
-{
-	m_eventManager->registerEventHandler(p_eventHandler->getName().c_str(), p_eventHandler);
-}
+
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
 {
@@ -221,11 +219,6 @@ void LibRocketBackendSystem::process()
 	
 	processMouseMove();
 	processKeyStates();
-
-	if (m_eventManager->wantsToExit)
-	{
-		m_world->requestToShutDown();
-	}
 
 	m_rocketContext->Update();
 }

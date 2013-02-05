@@ -45,20 +45,18 @@ class EventHandler;
 	@modifiers	Robin Thunström, Alexander Brodén
  */
 
-class LibRocketEventManager : public EventManager
+class LibRocketEventManager : public EntitySystem, public EventManager
 {
 public:
 	LibRocketEventManager();
 	~LibRocketEventManager();
 
-	void Initialize(Rocket::Core::Context* p_context);
+	void initialize();
 	/// Releases all event handlers registered with the manager.
 	void Shutdown();
 
-	/// Registers a new event handler with the manager.
-	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
-	/// @param[in] handler The event handler.
-	void registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+	void process();
+
 	void registerEventHandler(EventHandler* handler);
 
 	EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
@@ -73,6 +71,11 @@ public:
 
 	bool wantsToExit;
 private:
+	/// Registers a new event handler with the manager.
+	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
+	/// @param[in] handler The event handler.
+	void registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+
 	// The game's element context (declared in main.cpp).
 	Rocket::Core::Context* context;
 	// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.

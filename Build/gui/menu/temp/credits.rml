@@ -14,7 +14,7 @@
 			}-->
 		</style> 
 	</head>
-	<body template="window">
+	<body id="credits" template="window" onshow="modal">
 <!--		<form onsubmit="goto main_menu"> -->
 			<div>
 				<h1>The Creators!</h1>
