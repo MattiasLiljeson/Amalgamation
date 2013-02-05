@@ -11,14 +11,18 @@
 #include "NetworkSynced.h"
 #include "LevelGenSystem.h"
 #include "LevelPiece.h"
+#include "EntityCreationPacket.h"
+
+//COMPOUND BODIES HAR INTE STÖD FÖR ROTATION. DÄRFÖR BLIR DET KANSKE KNAS
 
 AglVector3 minPhys = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
 AglVector3 maxPhys = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 
-PhysicsSystem::PhysicsSystem()
+PhysicsSystem::PhysicsSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::PhysicsSystem, 2, ComponentType::Transform, ComponentType::PhysicsBody)
 {
 	m_physicsController = new PhysicsController();
+	m_server = p_server;
 }
 
 
@@ -91,10 +95,24 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 
 				// Update the rigidbody
 				AglMatrix world = b->GetWorld();
+
+				if (body->getDebugData() >= 0)
+				{
+					Entity* debugData = m_world->getEntity(body->getDebugData());
+					Transform* debugT = static_cast<Transform*>(debugData->getComponent(
+						ComponentType::Transform));
+					AglVector3 pos;
+					AglVector3 scale;
+					AglQuaternion rot;
+					AglMatrix::matrixToComponents(world, scale, rot, pos);
+					debugT->setTranslation(pos);
+					debugT->setRotation(rot);
+
+				}
 				
 				
 				//Offset the transform in relation to the physics representation
-				world = body->getOffset().inverse() * world;
+				world = body->getOffset().inverse()*world;
 				
 				
 				Transform* t = static_cast<Transform*>( p_entities[i]->getComponent(
@@ -211,13 +229,15 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
 		{
+			//BAJSET FUNGERAR BRA MED IDENTITY MATRIX!
+
+			//ROTATION DOES NOT WORK FOR COMPOUND BODIES
+
 			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
 			AglMatrix world;
-			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position-offset);
+			AglMatrix::componentsToMatrix(world, AglVector3::one(), AglQuaternion::identity(), init->m_position-offset);
 
-			AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
-
-			world = obb.world*world;
+			//AglMatrix meshTransform = init->m_modelResource->meshHeader.transform;
 
 			body->setOffset(obb.world);
 
@@ -227,6 +247,26 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				init->m_angularVelocity, 
 				init->m_static,
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
+
+			//Debug information
+			/*Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(AglMatrix::createScaleMatrix(obb.size*0.5f)*obb.world);
+			entity->addComponent( ComponentType::Transform, t );
+
+			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::DebugBox));
+			m_world->addEntity(entity);
+			body->setDebugData(entity->getIndex());
+
+			EntityCreationPacket data;
+			data.entityType		= static_cast<char>(EntityType::DebugBox);
+			data.owner			= -1;
+			data.networkIdentity = entity->getIndex();
+			data.translation	= t->getTranslation();
+			data.rotation		= t->getRotation();
+			data.scale			= t->getScale();
+
+			m_server->broadcastPacket(data.pack());*/
+
 		}
 		else
 		{

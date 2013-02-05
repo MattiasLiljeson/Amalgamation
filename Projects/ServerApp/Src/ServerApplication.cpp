@@ -147,7 +147,7 @@ namespace Srv
 		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
-		PhysicsSystem* physics = new PhysicsSystem();
+		PhysicsSystem* physics = new PhysicsSystem(m_server);
 		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
 		/************************************************************************/

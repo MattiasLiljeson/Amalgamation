@@ -35,6 +35,7 @@ public:
 		Shield,
 		SelectionSphere, //For edit mode
 		EndBatch, //Marks the end of a batch of entity updates
+		DebugBox, //Marks a debug box that should be drawn 
 		Other,
 	};
 

@@ -219,7 +219,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
-	PhysicsSystem* physics = new PhysicsSystem();
+	PhysicsSystem* physics = new PhysicsSystem(NULL);
 	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
 
 	/************************************************************************/

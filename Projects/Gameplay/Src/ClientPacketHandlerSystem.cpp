@@ -316,7 +316,21 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
-	factory->entityFromPacket(p_packet);
+	if (p_packet.entityType != EntityType::DebugBox)
+	{
+		factory->entityFromPacket(p_packet);
+	}
+	else
+	{
+		Entity* entity = factory->entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
+
+		Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+		m_world->addEntity(entity);
+	}
 }
 
 void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket p_packet)

@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "AglVector3.h"
 #include "ConnectionPointSet.h"
+#include "TcpServer.h"
 
 extern AglVector3 minPhys;//(FLT_MAX, FLT_MAX, FLT_MAX);
 extern AglVector3 maxPhys;//(FLT_MIN, FLT_MIN, FLT_MIN);
@@ -25,7 +26,7 @@ class Body;
 class PhysicsSystem: public EntitySystem
 {
 public:
-	PhysicsSystem();
+	PhysicsSystem(TcpServer* p_server);
 	~PhysicsSystem();
 
 	virtual void initialize();
@@ -57,5 +58,6 @@ private:
 private:
 	PhysicsController* m_physicsController;
 	vector<int>	m_entityMap;
+	TcpServer* m_server;
 
 };

@@ -49,6 +49,8 @@ public:
 
 	void setOffset(AglMatrix p_offset){ m_offset = p_offset; }
 	AglMatrix getOffset(){ return m_offset; }
+	int getDebugData(){return m_debugData;}
+	void setDebugData(int p_data){ m_debugData = p_data;}
 
 private:
 	static ComponentRegister<PhysicsBody> s_reg;
@@ -57,4 +59,5 @@ private:
 	int m_oldParentId;
 	bool m_parentChanged;
 	AglMatrix m_offset;
+	int m_debugData;
 };

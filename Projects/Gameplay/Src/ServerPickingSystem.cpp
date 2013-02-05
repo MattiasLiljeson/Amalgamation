@@ -364,7 +364,9 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		}
 
 		//Child
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform);
+		PhysicsBody* childBody = static_cast<PhysicsBody*>(p_entity->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
 
 		//Parent Connection points
 		cps = static_cast<ConnectionPointSet*>(
@@ -378,7 +380,9 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 				ind = i;
 		}
 		//Parent
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform);
+		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
 		
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 		p_entity = parent;
@@ -458,6 +462,9 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
 			ComponentType::PhysicsBody));
 
+		PhysicsBody* targetBody = static_cast<PhysicsBody*>(target->getComponent(
+			ComponentType::PhysicsBody));
+
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
 			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
@@ -467,7 +474,10 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
 		//Parent transform
-		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse());
+		//AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
+
+		//transform *= shipBody->getOffset().inverse();
 
 		physX->getController()->AttachBodyToCompound(comp, r, transform);
 		
