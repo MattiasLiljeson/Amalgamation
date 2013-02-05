@@ -152,6 +152,7 @@ private:
 private:
 	int m_readPos;
 	vector<char> m_data;
+	unsigned int m_dataSize;
 
 	// Variable that is set on a received packet and identifies its sender.
 	int m_senderId;
@@ -164,5 +165,6 @@ private:
 public:
 	// HEADER_SIZE must be equal to the byte size of the header variables combined.
 	static const int HEADER_SIZE = 6;
+	static const unsigned int PACKET_BUFFER_SIZE = 256;
 
 };

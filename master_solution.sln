@@ -105,6 +105,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Projects\Common\S
 		{7BC84332-97E7-4A31-AA8A-77E4B91F24A2} = {7BC84332-97E7-4A31-AA8A-77E4B91F24A2}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestNetComm", "Projects\TestNetComm\src\TestNetComm.vcxproj", "{193B35D9-7155-43DE-A676-BA77CBE782E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3FDA2AC9-E14F-47E2-987E-F05F799AFAF8} = {3FDA2AC9-E14F-47E2-987E-F05F799AFAF8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -175,6 +180,10 @@ Global
 		{7F47C59D-55F8-45CF-A0B4-1CBB2254F680}.Debug|Win32.Build.0 = Debug|Win32
 		{7F47C59D-55F8-45CF-A0B4-1CBB2254F680}.Release|Win32.ActiveCfg = Release|Win32
 		{7F47C59D-55F8-45CF-A0B4-1CBB2254F680}.Release|Win32.Build.0 = Release|Win32
+		{193B35D9-7155-43DE-A676-BA77CBE782E4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{193B35D9-7155-43DE-A676-BA77CBE782E4}.Debug|Win32.Build.0 = Debug|Win32
+		{193B35D9-7155-43DE-A676-BA77CBE782E4}.Release|Win32.ActiveCfg = Release|Win32
+		{193B35D9-7155-43DE-A676-BA77CBE782E4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
