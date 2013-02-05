@@ -174,7 +174,7 @@ Describe(a_tcp_client)
 #ifdef STRESS_TEST
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
 #else
-		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		boost::this_thread::sleep(boost::posix_time::millisec(100));
 #endif
 		client.processMessages();
 //		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
@@ -204,7 +204,7 @@ Describe(a_tcp_client)
 #ifdef STRESS_TEST
 		boost::this_thread::sleep(boost::posix_time::millisec(2000));
 #else
-		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		boost::this_thread::sleep(boost::posix_time::millisec(100));
 #endif
 		client.processMessages();
 		client.askForCommProcessInfo();

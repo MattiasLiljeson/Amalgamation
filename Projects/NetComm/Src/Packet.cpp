@@ -38,7 +38,7 @@ void Packet::clear()
 	m_uniquePacketIdentifier = 0;
 	m_senderId = -1;
 	m_readPos = HEADER_SIZE;
-	m_data.resize(HEADER_SIZE);
+	m_data.resize(PACKET_BUFFER_SIZE);
 	m_data[0] = 0;
 	m_dataSize = (unsigned int)HEADER_SIZE;
 }
@@ -64,7 +64,6 @@ void Packet::setData(char* p_data, unsigned int p_size)
 {
 	if (p_size <= 255)
 	{
-		m_data.resize(p_size);
 		m_dataSize = p_size;
 		memcpy(&m_data[0], p_data, p_size);
 		readHeaderData(&m_data[0]);
@@ -261,7 +260,6 @@ void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 	else 
 	{
 		unsigned int oldPacketSize = m_dataSize;
-		m_data.resize(m_dataSize + p_dataSize);
 		m_dataSize += p_dataSize;
 		memcpy(&m_data[oldPacketSize], p_data, p_dataSize);
 	}

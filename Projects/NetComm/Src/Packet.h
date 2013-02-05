@@ -165,5 +165,6 @@ private:
 public:
 	// HEADER_SIZE must be equal to the byte size of the header variables combined.
 	static const int HEADER_SIZE = 6;
+	static const unsigned int PACKET_BUFFER_SIZE = 256;
 
 };
