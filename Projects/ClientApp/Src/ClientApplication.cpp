@@ -276,7 +276,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 
 	// Controller logic for camera
-	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc );
+	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc,
+		m_client);
 	m_world->setSystem( cameraControl , true );
 	// Camera system sets its viewport info to the graphics backend for render
 	CameraSystem* camera = new CameraSystem( graphicsBackend );

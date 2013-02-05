@@ -1,16 +1,21 @@
 #include "PlayerCameraControllerSystem.h"
-
+#include "AglVector3.h"
 #include "ShipInputProcessingSystem.h"
 
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
+#include "CameraControlPacket.h"
+#include "TimerSystem.h"
+#include "NetworkSynced.h"
 
-PlayerCameraControllerSystem::PlayerCameraControllerSystem( ShipInputProcessingSystem* p_shipInput) : 
+PlayerCameraControllerSystem::PlayerCameraControllerSystem( ShipInputProcessingSystem* p_shipInput,
+														   TcpClient* p_client ) : 
 					EntitySystem( SystemType::PlayerCameraControllerSystem, 1,
 								  ComponentType::ComponentTypeIdx::PlayerCameraController)
 
 {
 	m_shipInput = p_shipInput;
+	m_client=p_client;
 }
 
 PlayerCameraControllerSystem::~PlayerCameraControllerSystem()
@@ -33,7 +38,6 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
-			/* This only works when camera not handled by server, rewrite this like shipflycontroller
 			Entity* ship = p_entities[i];
 			PlayerCameraController* controller = static_cast<PlayerCameraController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerCameraController ) );
@@ -67,7 +71,32 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 					ship->applyComponentChanges();
 				}
 			}
-			*/
+
+			// packet handling
+			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+				checkTimeInterval(TimerIntervals::Every8Millisecond))
+			{
+				int stateForPacket = CameraControlPacket::steeringState;
+				if (lookAtOrbit) stateForPacket=CameraControlPacket::editState;
+				/************************************************************************/
+				/* Send the control packet to the server!								*/
+				/************************************************************************/
+				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+					ComponentType::NetworkSynced));
+
+				sendCameraControllerPacketToServer(netSync,AglVector3::up(),stateForPacket);
+			}
 		}
 	}
+}
+
+void PlayerCameraControllerSystem::sendCameraControllerPacketToServer( NetworkSynced* p_syncedInfo, 
+																	  AglVector3& p_movement, int p_state )
+{
+	CameraControlPacket cameraPacket;
+	cameraPacket.entityId = p_syncedInfo->getNetworkIdentity();
+	cameraPacket.movement = p_movement;
+	cameraPacket.state = p_state;
+
+	m_client->sendPacket( cameraPacket.pack() );
 }

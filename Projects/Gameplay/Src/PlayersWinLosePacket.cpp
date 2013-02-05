@@ -24,7 +24,7 @@ Packet PlayersWinLosePacket::pack()
 	return packet;
 }
 
-void PlayersWinLosePacket::unpack( Packet p_packet )
+void PlayersWinLosePacket::unpack( Packet& p_packet )
 {
 	p_packet >> activePlayers;
 	for(int i=0; i<MAXPLAYERS; i++)

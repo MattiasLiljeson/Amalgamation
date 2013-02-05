@@ -37,7 +37,7 @@ Packet SpawnSoundEffectPacket::pack()
 	return packet;
 }
 
-void SpawnSoundEffectPacket::unpack( Packet p_packet )
+void SpawnSoundEffectPacket::unpack( Packet& p_packet )
 {
 	p_packet >> soundIdentifier;
 	p_packet >> attachedToNetsyncEntity;

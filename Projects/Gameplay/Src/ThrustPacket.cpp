@@ -19,7 +19,7 @@ Packet ThrustPacket::pack()
 	return packet;
 }
 
-void ThrustPacket::unpack( Packet p_packet )
+void ThrustPacket::unpack( Packet& p_packet )
 {
 	p_packet >> entityId;
 	p_packet >> thrustVector;

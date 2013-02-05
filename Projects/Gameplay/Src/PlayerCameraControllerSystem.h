@@ -2,7 +2,10 @@
 
 #include <EntitySystem.h>
 
+class TcpClient;
 class ShipInputProcessingSystem;
+class NetworkSynced;
+struct AglVector3;
 
 // =======================================================================================
 //                              PlayerCameraControllerSystem
@@ -19,7 +22,8 @@ class ShipInputProcessingSystem;
 class PlayerCameraControllerSystem : public EntitySystem
 {
 public:
-	PlayerCameraControllerSystem(ShipInputProcessingSystem* p_shipInput);
+	PlayerCameraControllerSystem(ShipInputProcessingSystem* p_shipInput,
+		TcpClient* p_client);
 	~PlayerCameraControllerSystem();
 
 	virtual void initialize();
@@ -28,5 +32,9 @@ public:
 protected:
 private:
 
+	void sendCameraControllerPacketToServer(NetworkSynced* p_syncedInfo, AglVector3& p_movement,
+		int p_state);
+
 	ShipInputProcessingSystem* m_shipInput;	
+	TcpClient* m_client;
 };

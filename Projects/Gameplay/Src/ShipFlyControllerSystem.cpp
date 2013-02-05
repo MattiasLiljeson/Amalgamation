@@ -128,12 +128,10 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	}
 }
 
-// NOTE: (Johan) 1/2-13 Removed the whole getSpeedBoost method on client side, since
-// it wasn't used, and that was quite confusing.
 
 void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
-													   AglVector3 p_thrust, 
-													   AglVector3 p_angularVec)
+													   AglVector3& p_thrust, 
+													   AglVector3& p_angularVec)
 {
 	ThrustPacket thrustPacket;
 	thrustPacket.entityId = p_syncedInfo->getNetworkIdentity();

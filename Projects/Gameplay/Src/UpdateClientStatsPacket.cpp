@@ -33,7 +33,7 @@ Packet UpdateClientStatsPacket::pack()
 	return packet;
 }
 
-void UpdateClientStatsPacket::unpack( Packet p_packet )
+void UpdateClientStatsPacket::unpack( Packet& p_packet )
 {
 	p_packet >> activePlayers;
 	p_packet >> currentServerTimestamp;

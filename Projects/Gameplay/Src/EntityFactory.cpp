@@ -272,15 +272,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
+		// add a myShip tag to the ship first!
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
-		// int shipId = entity->getIndex();
-									 // HACK!
-		float aspectRatio = 800/600; // Note: retrieve the aspect ratio here somehow
-								     // without using dx-graphics stuff
-		// old:
-		/*	static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getAspectRatio();*/
-
+		// Create the camera
 		entity = m_world->createEntity();
 		component = new CameraInfo( m_world->getAspectRatio() );
 		entity->addComponent( ComponentType::CameraInfo, component );
@@ -290,6 +284,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
+		entity->addComponent( ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent(ComponentType::PickComponent, new PickComponent());
 		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());

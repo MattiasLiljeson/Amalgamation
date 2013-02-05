@@ -43,6 +43,7 @@ public:
 		ModuleHighlightPacket,
 		SimpleEvent,
 		ParticleUpdate,
+		CameraControlPacket
 	};
 
 };

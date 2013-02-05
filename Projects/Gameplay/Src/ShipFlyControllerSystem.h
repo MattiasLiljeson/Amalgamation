@@ -26,7 +26,7 @@ class Transform;
 class ShipFlyControllerSystem : public EntitySystem
 {
 public:
-	ShipFlyControllerSystem(ShipInputProcessingSystem* p_inputBackend,
+	ShipFlyControllerSystem(ShipInputProcessingSystem* p_shipInput,
 						 PhysicsSystem* p_physicsSystem,
 						 TcpClient* p_client );
 	~ShipFlyControllerSystem();
@@ -34,8 +34,8 @@ public:
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 private:
-	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3 p_thrust,
-		AglVector3 p_angularVec);
+	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3& p_thrust,
+		AglVector3& p_angularVec);
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;

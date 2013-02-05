@@ -494,6 +494,9 @@
     <ClInclude Include="SpawnPointSet.h">
       <Filter>Components\Point sets</Filter>
     </ClInclude>
+    <ClInclude Include="CameraControlPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -815,6 +818,9 @@
     </ClCompile>
     <ClCompile Include="SpawnPointSet.cpp">
       <Filter>Components\Point sets</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControlPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
