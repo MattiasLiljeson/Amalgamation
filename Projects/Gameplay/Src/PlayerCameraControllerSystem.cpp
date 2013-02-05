@@ -47,7 +47,8 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerState ) );
 
 			// Get current input
-			AglVector3 inputMovement(input.verticalInput,input.horizontalInput,0.0f);
+			AglVector3 inputMovement(input.editMoveVerticalInput,
+				-input.editMoveHorizontalInput,0.0f);
 
 			// accumulate movement for transfer
 			controller->accumulatedCameraMovement += inputMovement*controller->orbitSpeed*dt;
