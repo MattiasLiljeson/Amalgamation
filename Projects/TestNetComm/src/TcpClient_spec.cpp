@@ -6,6 +6,8 @@ using namespace igloo;
 
 #include <boost/thread/thread.hpp>
 
+static const int TEST_PACKET_TYPE = 100;
+
 Describe(a_tcp_client)
 {
 	It(can_have_an_active_connection_if_it_has_connected)
@@ -72,7 +74,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		Packet packet_src;
+		Packet packet_src(TEST_PACKET_TYPE);
 		packet_src << (int)42;
 		server.broadcastPacket( packet_src );
 		
@@ -93,8 +95,8 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		server.broadcastPacket( Packet(  ) );
-		server.broadcastPacket( Packet(  ) );
+		server.broadcastPacket( Packet( TEST_PACKET_TYPE ) );
+		server.broadcastPacket( Packet( TEST_PACKET_TYPE ) );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();
@@ -119,7 +121,7 @@ Describe(a_tcp_client)
 		int	i_src[3] = { 42, 4, 2 };
 		int	i_dst[3];
 
-		Packet packets[3];
+		Packet packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for(int i=0; i<3; i++)
 			packets[i] << i_src[i];
 
@@ -158,7 +160,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket(packet);
 		}
@@ -178,7 +180,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket(packet);
 		}

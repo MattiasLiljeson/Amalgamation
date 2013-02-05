@@ -6,6 +6,8 @@ using namespace igloo;
 #include <TcpServer.h>
 #include <TcpClient.h>
 
+static const int TEST_PACKET_TYPE = 100;
+
 Describe(a_tcp_server)
 {
 	It(can_start_listening_on_a_port)
@@ -124,7 +126,7 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 		
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		packet << (int)0;
 
 		client.sendPacket( packet );
@@ -136,7 +138,7 @@ Describe(a_tcp_server)
 
 	It(can_receive_several_packets_from_a_connected_client)
 	{
-		Packet packets[3];
+		Packet packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for (int i = 0; i < 3; i++)
 			packets[i] << i;
 
@@ -160,7 +162,7 @@ Describe(a_tcp_server)
 	It(can_return_newly_received_packets)
 	{
 
-		Packet packets[3];
+		Packet packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for (int i = 0; i < 3; i++)
 			packets[i] << i;
 
@@ -242,7 +244,7 @@ Describe(a_tcp_server)
 		server.processMessages();
 		
 		int i_src = 32;
-		Packet packet_src;
+		Packet packet_src(TEST_PACKET_TYPE);
 		packet_src << i_src;
 		server.broadcastPacket( packet_src );
 		
@@ -274,7 +276,7 @@ Describe(a_tcp_server)
 		server.processMessages();
 		
 		int i_src = 32;
-		Packet packet_src;
+		Packet packet_src(TEST_PACKET_TYPE);
 		packet_src << i_src;
 
 		vector<int> connections;
@@ -312,7 +314,7 @@ Describe(a_tcp_server)
 		
 		vector<int> currentConnections = server.getActiveConnections();
 
-		Packet packets[3];
+		Packet packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for (int i = 0; i < 3; i++)
 		{
 			packets[i] << i + 111;
@@ -385,7 +387,7 @@ Describe(a_tcp_server)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		Packet src_packets[3];
+		Packet src_packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for(int i=0; i<3; i++)
 		{
 			src_packets[i] << ( 'A' + (char)i );
@@ -397,7 +399,7 @@ Describe(a_tcp_server)
 
 		Assert::That(server.newPacketsCount(), Equals(3));
 
-		Packet dst_packets[3];
+		Packet dst_packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for(int i=0; i<3; i++)
 		{
 			dst_packets[i] = server.popNewPacket();
@@ -416,7 +418,7 @@ Describe(a_tcp_server)
 		}
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		for(int i=0; i<50000; i++) {
 			server.broadcastPacket( packet );
 		}
