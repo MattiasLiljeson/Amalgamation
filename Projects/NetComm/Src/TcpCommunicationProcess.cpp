@@ -168,9 +168,9 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 			char* readPtr = m_asyncData;
 
 			// Some debug info:
-			vector<char> dbg_data;
-			dbg_data.resize(p_bytesTransferred);
-			memcpy(&dbg_data[0], m_asyncData, p_bytesTransferred);
+//			vector<char> dbg_data;
+//			dbg_data.resize(p_bytesTransferred);
+//			memcpy(&dbg_data[0], m_asyncData, p_bytesTransferred);
 
 			if( m_packetRestSize > 0 )
 			{
@@ -184,7 +184,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				memcpy(&m_reserveBuffer[oldReserveBufferSize], readPtr, m_packetRestSize);
 
 				// Create the whole packet now.
-				Packet packet(getId(),&m_reserveBuffer[0], m_reserveBuffer.size());
+				Packet packet(getId(), &m_reserveBuffer[0], m_reserveBuffer.size());
 				packets.push( packet );
 
 				// Update readPosition to not start from 0.
@@ -215,7 +215,7 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 				}
 				else
 				{
-					Packet packet(getId(), readPtr, currentReadSize );
+					Packet packet(getId(), readPtr, currentReadSize);
 					packets.push( packet );
 					readPosition += currentReadSize;
 					readPtr = m_asyncData + readPosition;
