@@ -220,4 +220,14 @@ Describe(a_packet)
 		Assert::That(f_dst, Equals(f_src));
 	}
 
+	It(can_return_the_packet_byte_size)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		packet << 10 << 10.0f;
+		Assert::That(packet.getDataSize(), Equals(14));
+
+		int i_dst = 0;
+		packet >> i_dst;
+		Assert::That(packet.getDataSize(), Equals(14));
+	}
 };
