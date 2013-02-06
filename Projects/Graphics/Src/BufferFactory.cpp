@@ -346,8 +346,8 @@ Mesh* BufferFactory::createSphereMesh()
 	Mesh* newSphere = new Mesh( createVertexBuffer(mesh, vertexCount),
 								createIndexBuffer(indices, indexCount));
 
-	delete mesh;
-	delete indices;
+	delete [] mesh;
+	delete [] indices;
 
 	return newSphere;
 }

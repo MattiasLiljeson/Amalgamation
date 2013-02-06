@@ -207,7 +207,8 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	Component* component = new LookAtEntity(newShip->getIndex(),
 		AglVector3(0,7,-28),
 		13.0f,
-		20.0f,
+		10.0f,
+		3.0f,
 		40.0f);
 	playerCam->addComponent( ComponentType::LookAtEntity, component );
 	playerCam->addComponent( ComponentType::Transform, new Transform( transformComp->getMatrix() ) );

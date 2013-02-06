@@ -99,7 +99,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			if (lookAt->getMoveSpd()*dt<1.0f)
 			{
 				position = AglVector3::lerp(position,lookTargetPos+offset,
-					lookAt->getMoveSpd()*dt);
+					saturate(lookAt->getMoveSpd()*dt));
 			}
 			else
 			{
@@ -110,7 +110,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			if (lookAt->getRotationSpeed()*dt<1.0f)
 			{
 				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-					lookAt->getRotationSpeed()*dt,true);
+					saturate(lookAt->getRotationSpeed()*dt),true);
 				rotation.normalize();
 			}
 			else
@@ -126,7 +126,15 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// orbit behaviour
 		else if (lookAtOrbit)
 		{
-			rotation *= AglQuaternion::constructFromAngularVelocity(lookAt->getOrbitMovement()*dt);
+			AglQuaternion interRotation = lookAt->getOrbitOffset();
+			AglVector3 move = lookAt->getOrbitMovement()*lookAt->getOrbitRotationSpeed();
+			if (move.length()>0.0f)	
+				interRotation *= AglQuaternion::constructFromAngularVelocity(move*dt);
+			interRotation.normalize();
+			lookAt->setOrbitOffset(interRotation);
+
+			rotation = AglQuaternion::slerp(rotation,interRotation,
+				saturate(lookAt->getRotationSpeed()*dt),true);
 			rotation.normalize();
 
 			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();

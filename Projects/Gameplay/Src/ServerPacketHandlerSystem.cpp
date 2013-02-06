@@ -228,7 +228,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		else if (packetType == (char)PacketType::SimpleEvent)
 		{
 			// =========================================
-			// SIMPLEVENTPACKET
+			// SIMPLEEVENTPACKET
 			// =========================================
 			ShipModulesControllerSystem* modsystem = 
 				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));

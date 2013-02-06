@@ -9,6 +9,7 @@ string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";
 string MeshNameScriptParser::light = "L";
+string MeshNameScriptParser::lighthex = "LX";
 string MeshNameScriptParser::pointlightType = "point";
 string MeshNameScriptParser::spotlightType = "spot";
 string MeshNameScriptParser::dirlightType = "dir";
@@ -37,7 +38,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		data.spawnSpecName = extractPart(p_string,0);
 		data.name = extractPart(p_string,1);
 	}
-	else if (instr==light)
+	else if (instr==light || instr==lighthex)
 	{
 		data.name = extractPart(p_string,0);
 		if (data.name==pointlightType)
@@ -56,19 +57,43 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 			data.lightSpec.type = LightCreationData::DIR;
 		}
 		// raw data
-		string diffuse = extractPart(p_string,1);
-		string specular = extractPart(p_string,2);
-		string ambient = extractPart(p_string,3);
-		string glossFloat = extractPart(p_string,4);
-		string distFloat = extractPart(p_string,5);
-		string pwrFloat = extractPart(p_string,6);
-		string constAttFloat = extractPart(p_string,7);
-		string linAttFloat = extractPart(p_string,8);
-		string quadAttFloat = extractPart(p_string,9);
+		int offset=0;
+		if (instr==light) // rgb
+		{
+			float diffuseR = getFloatFromDecimalString(extractPart(p_string,1));
+			float diffuseG = getFloatFromDecimalString(extractPart(p_string,2));
+			float diffuseB = getFloatFromDecimalString(extractPart(p_string,3));
+			float specR = getFloatFromDecimalString(extractPart(p_string,4));
+			float specG = getFloatFromDecimalString(extractPart(p_string,5));
+			float specB = getFloatFromDecimalString(extractPart(p_string,6));
+			float ambientR = getFloatFromDecimalString(extractPart(p_string,7));
+			float ambientG = getFloatFromDecimalString(extractPart(p_string,8));
+			float ambientB = getFloatFromDecimalString(extractPart(p_string,9));
+			// store data
+			data.lightSpec.diffuse = AglVector3(diffuseR,diffuseG,diffuseB);
+			data.lightSpec.specular = AglVector3(specR,specG,specB);
+			data.lightSpec.ambient = AglVector3(ambientR,ambientG,ambientB);
+			// for further data when rgb
+			offset=6;
+		}
+		else // hex
+		{
+			string diffuse = extractPart(p_string,1);
+			string specular = extractPart(p_string,2);
+			string ambient = extractPart(p_string,3);
+			// store hex as rgb
+			getRGB(data.lightSpec.diffuse,diffuse);
+			getRGB(data.lightSpec.specular,specular);
+			getRGB(data.lightSpec.ambient,ambient);
+			// no offset when hex
+		}
+		string glossFloat = extractPart(p_string,offset+4);
+		string distFloat = extractPart(p_string,offset+5);
+		string pwrFloat = extractPart(p_string,offset+6);
+		string constAttFloat = extractPart(p_string,offset+7);
+		string linAttFloat = extractPart(p_string,offset+8);
+		string quadAttFloat = extractPart(p_string,offset+9);
 		// store converted in data
-		getRGB(data.lightSpec.diffuse,diffuse);
-		getRGB(data.lightSpec.specular,specular);
-		getRGB(data.lightSpec.ambient,ambient);
 		data.lightSpec.gloss = getFloatFromDecimalString(glossFloat);
 		data.lightSpec.range = getFloatFromDecimalString(distFloat);
 		data.lightSpec.power = getFloatFromDecimalString(pwrFloat);

@@ -51,7 +51,7 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 				-input.editMoveHorizontalInput,0.0f);
 
 			// accumulate movement for transfer
-			controller->accumulatedCameraMovement += inputMovement*controller->orbitSpeed*dt;
+			controller->accumulatedCameraMovement += inputMovement;
 
 			// State switch handling
 			if (input.stateSwitchInput)
@@ -69,6 +69,9 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 				/************************************************************************/
 				/* Send the control packet to the server!								*/
 				/************************************************************************/
+				if (controller->accumulatedCameraMovement.length()>0.0f &&
+					controller->accumulatedCameraMovement.length()<1.0f)
+					AglVector3::normalize(controller->accumulatedCameraMovement);
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
 
