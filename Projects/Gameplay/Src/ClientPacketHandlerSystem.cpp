@@ -85,6 +85,7 @@ ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	m_totalNumberOfStaticPropPacketsReceived = 0;
 	m_lastBroadcastPacketIdentifier = 0;
 	m_totalBroadcastPacketLost = 0;
+	setInfo("ClientPacketHandler");
 }
 
 ClientPacketHandlerSystem::~ClientPacketHandlerSystem()

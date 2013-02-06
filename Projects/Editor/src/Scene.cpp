@@ -23,6 +23,7 @@ Scene::Scene()
 	mAglScene = NULL;
 	mQuaternionRotation = AglQuaternion(0, 0, 0, 1);
 	mPosition = AglVector3(0, 0, 0);
+	mDrawPlanes = true;
 }
 Scene::~Scene()
 {
@@ -231,6 +232,8 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 		AglAnimation* anim = mAglScene->getAnimation(0);
 		anim->play();
 	}
+
+	createScenePlane();
 }
 void Scene::Update(float pElapsedTime)
 {
@@ -366,6 +369,29 @@ void Scene::Draw()
 	newW.SetTranslation(AglVector3(0, 0, 0));
 	minP.transform(newW*invMax);
 	maxP.transform(newW*invMax);
+
+	if (mDrawPlanes)
+	{
+		planeDown->Draw(AglMatrix::identityMatrix());
+		//planeRight->Draw(AglMatrix::identityMatrix());
+		//planeBack->Draw(AglMatrix::identityMatrix());
+
+		//X-Axis
+		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(1.0f, 0.001f, 0.001f));
+		AglMatrix trans = AglMatrix::createTranslationMatrix(GetCenter()-AglVector3(0.0f, 0.5f, 0.5f));
+		BOXMESH->Draw(scale * trans, AglVector3(1, 0, 0));
+
+		//Y-Axis
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 1.0f, 0.001f));
+		trans = AglMatrix::createTranslationMatrix(GetCenter()-AglVector3(0.5f, 0.0f, 0.5f));
+		BOXMESH->Draw(scale * trans, AglVector3(0, 1, 0));
+
+		//Z-Axis
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, 1.0f));
+		trans = AglMatrix::createTranslationMatrix(GetCenter()-AglVector3(0.5f, 0.5f, 0.0f));
+		BOXMESH->Draw(scale * trans, AglVector3(0, 0, 1));
+
+	}
 }
 AglNode Scene::GetNode(int pIndex)
 {
@@ -466,9 +492,9 @@ void Scene::Save(string pPath)
 AglVector3 Scene::GetCenter() 
 { 
 	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
-	float invMax = 1.0f / maxV*0.5f;
+	float invMax = 1.0f / maxV;
 	AglVector3 c = ((mMin+mMax)*0.5f);
-	c.transform(m_world*invMax);
+	c.transform(m_world*AglMatrix::createScaleMatrix(AglVector3(invMax, invMax, invMax)));
 	return c;
 }
 bool Scene::IsLeftHanded()
@@ -557,4 +583,78 @@ void Scene::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
 		}
 	}
 	mAglScene->RemoveParticleEffect(pParticleSystem);
+}
+void Scene::createScenePlane()
+{
+	//Plane Down
+	planeDown = new Mesh(mDevice, mDeviceContext, this);
+	AglVector3 c = GetCenter();
+	AglMeshHeader h;
+	h.indexCount = 6;
+	h.vertexCount = 4;
+	h.transform = AglMatrix::identityMatrix();
+	h.vertexFormat = AGL_VERTEX_FORMAT_PNTTBN;
+
+	AglVertexSTBN* vertices = new AglVertexSTBN[4];
+	vertices[0].position = c+AglVector3(0.5f, -0.5f, 0.5f);	vertices[0].normal = AglVector3(0, 1, 0);
+	vertices[1].position = c+AglVector3(0.5f, -0.5f, -0.5f);	vertices[1].normal = AglVector3(0, 1, 0);
+	vertices[2].position = c+AglVector3(-0.5f, -0.5f, -0.5f);	vertices[2].normal = AglVector3(0, 1, 0);
+	vertices[3].position = c+AglVector3(-0.5f, -0.5f, 0.5f); 	vertices[3].normal = AglVector3(0, 1, 0);
+
+	unsigned int* indices = new unsigned int[6];
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+	indices[3] = 0;
+	indices[4] = 2;
+	indices[5] = 3;
+
+	AglMesh* mesh = new AglMesh(h, vertices, indices);
+
+	planeDown->Init(mesh);
+
+	//Plane Right
+	planeRight = new Mesh(mDevice, mDeviceContext, this);
+
+	vertices = new AglVertexSTBN[4];
+	vertices[0].position = c+AglVector3(0.5f, 0.5f, 0.5f);	vertices[0].normal = AglVector3(-1, 0, 0);
+	vertices[1].position = c+AglVector3(0.5f, 0.5f, -0.5f);	vertices[1].normal = AglVector3(-1, 0, 0);
+	vertices[2].position = c+AglVector3(0.5f, -0.5f, -0.5f);	vertices[2].normal = AglVector3(-1, 0, 0);
+	vertices[3].position = c+AglVector3(0.5f, -0.5f, 0.5f); 	vertices[3].normal = AglVector3(-1, 0, 0);
+
+	indices = new unsigned int[6];
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+	indices[3] = 0;
+	indices[4] = 2;
+	indices[5] = 3;
+
+	mesh = new AglMesh(h, vertices, indices);
+
+	planeRight->Init(mesh);
+
+	//Plane Back
+	planeBack = new Mesh(mDevice, mDeviceContext, this);
+
+	vertices = new AglVertexSTBN[4];
+	vertices[0].position = c+AglVector3(0.5f, 0.5f, 0.5f);	vertices[0].normal = AglVector3(0, 0, -1);
+	vertices[1].position = c+AglVector3(-0.5f, 0.5f, 0.5f);	vertices[1].normal = AglVector3(0, 0, -1);
+	vertices[2].position = c+AglVector3(-0.5f, -0.5f, 0.5f);	vertices[2].normal = AglVector3(0, 0, -1);
+	vertices[3].position = c+AglVector3(0.5f, -0.5f, 0.5f); 	vertices[3].normal = AglVector3(0, 0, -1);
+
+	indices = new unsigned int[6];
+
+	indices[0] = 0;
+	indices[1] = 2;
+	indices[2] = 1;
+	indices[3] = 2;
+	indices[4] = 0;
+	indices[5] = 3;
+
+	mesh = new AglMesh(h, vertices, indices);
+
+	planeBack->Init(mesh);
 }

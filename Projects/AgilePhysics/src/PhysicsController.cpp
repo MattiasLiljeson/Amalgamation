@@ -4,6 +4,7 @@ PhysicsController::PhysicsController(): COLLISION_REPETITIONS(5)
 {
 	mTimeAccum = 0;
 	mStaticBodies = NULL;
+	mStaticBodies = new AxisPruner();
 }
 PhysicsController::~PhysicsController()
 {
@@ -665,6 +666,6 @@ void PhysicsController::AttachBodyToCompound(CompoundBody* p_compound, RigidBody
 }
 void PhysicsController::InitStaticBodiesOctree(AglVector3 pMin, AglVector3 pMax)
 {
-	if (!mStaticBodies)
-		mStaticBodies = new Octree(4, pMin, pMax);
+	//if (!mStaticBodies)
+		//mStaticBodies = new Octree(4, pMin, pMax);
 }

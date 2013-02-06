@@ -8,6 +8,7 @@
 #include <AglLooseBspTree.h>
 #include <typeindex>
 #include "Octree.h"
+#include "AxisPruner.h"
 
 struct LineCollisionData
 {
@@ -43,7 +44,7 @@ private:
 
 	vector<LineCollisionData> mLineSegmentCollisions; ///< Index to line segment first then body
 
-	Octree* mStaticBodies;
+	AxisPruner* mStaticBodies;
 
 	float mTimeAccum;
 

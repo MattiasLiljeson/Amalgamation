@@ -49,6 +49,8 @@ private:
 	//Temp
 	AglVector3 spos;
 
+	AglMaterial* overrideMaterial;
+
 public:
 	Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene);
 	~Mesh();
@@ -94,6 +96,7 @@ public:
 	unsigned int*		getTreeLevel(){ return &m_treeLevel; }
 	AglMatrix			getTransform(){ return mMesh->getHeader().transform; }
 	bool				hasSkeleton(){ return mSkeletonMappings.size() > 0;}
+	void				setOverrideMaterial(AglMaterial* p_mat){ overrideMaterial = p_mat;}
 };
 
 template <typename T>

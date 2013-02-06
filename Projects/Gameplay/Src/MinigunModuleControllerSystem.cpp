@@ -74,17 +74,13 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 						gun->rays[j].energy -= 0.25f * dt;
 						Entity* hitE = physics->getEntity(col);
 
-						if( hitE != NULL)
+						if (hitE)
 						{
-							ShipModule* hitModule = static_cast<ShipModule*>
-								(hitE->getComponent(ComponentType::ShipModule));
+							ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
 							if (hitModule && hitModule != module)
 							{
 								hitModule->m_health -= 100 * dt;
 							}
-
-							//physics->getController()->ApplyExternalImpulse(
-							//	col, dir, AglVector3::zero());
 						}
 					}
 				}

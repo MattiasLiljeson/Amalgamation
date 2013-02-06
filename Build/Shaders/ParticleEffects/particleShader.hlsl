@@ -15,12 +15,13 @@ sampler defaultSampler : register(s0);
 
 struct Particle
 {
-	float3 Position        : POSITION;
-	float3 Velocity        : VELOCITY;
-	float2 Size            : SIZE;
-	float Age			   : AGE;
-	float AngularVelocity  : ANGULARVELOCITY;
-	float Rotation		   : ROTATION;
+	float3 Position			: POSITION;
+	float Age				: AGE;
+	float3 Velocity			: VELOCITY;
+	float AngularVelocity	: ANGULARVELOCITY;
+	float2 Size				: SIZE;
+	float Rotation			: ROTATION;
+	float pad				: PAD;
 };
 struct GS_OUT
 {
@@ -41,7 +42,7 @@ Particle VS(Particle vIn)
 
 [maxvertexcount(4)]
 void GS(point Particle gIn[1], 
-            inout TriangleStream<GS_OUT> triStream)
+			inout TriangleStream<GS_OUT> triStream)
 {		
 	float4x4 W;
 	if (Alignment.x < 0.5f) //Observer

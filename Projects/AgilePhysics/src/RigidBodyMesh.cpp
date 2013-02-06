@@ -91,18 +91,18 @@ bool RigidBodyMesh::EvaluateBox(RigidBodyBox* pBox, vector<AglVector3>& pData)
 	AglMatrix aInv = a.inverse();
 	AglMatrix b = pBox->GetWorld();
 	b *= aInv;
-	vector<AglVector3> corn;
+	AglVector3 corn[8];
 	AglVector3 HalfSize = pBox->GetSizeAsVector3() / 2;
 	//HalfSize = AglVector3(1000000, 1000000, 1000000);
 
-	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]));
-	corn.push_back(AglVector3( HalfSize[0], -HalfSize[1], -HalfSize[2]));
-	corn.push_back(AglVector3(-HalfSize[0],  HalfSize[1], -HalfSize[2]));
-	corn.push_back(AglVector3(-HalfSize[0], -HalfSize[1],  HalfSize[2]));
-	corn.push_back(AglVector3( HalfSize[0],  HalfSize[1], -HalfSize[2]));
-	corn.push_back(AglVector3( HalfSize[0], -HalfSize[1],  HalfSize[2]));
-	corn.push_back(AglVector3(-HalfSize[0],  HalfSize[1],  HalfSize[2]));
-	corn.push_back(AglVector3( HalfSize[0],  HalfSize[1],  HalfSize[2]));
+	corn[0] = AglVector3(-HalfSize[0], -HalfSize[1], -HalfSize[2]);
+	corn[1] = AglVector3( HalfSize[0], -HalfSize[1], -HalfSize[2]);
+	corn[2] = AglVector3(-HalfSize[0],  HalfSize[1], -HalfSize[2]);
+	corn[3] = AglVector3(-HalfSize[0], -HalfSize[1],  HalfSize[2]);
+	corn[4] = AglVector3( HalfSize[0],  HalfSize[1], -HalfSize[2]);
+	corn[5] = AglVector3( HalfSize[0], -HalfSize[1],  HalfSize[2]);
+	corn[6] = AglVector3(-HalfSize[0],  HalfSize[1],  HalfSize[2]);
+	corn[7] = AglVector3( HalfSize[0],  HalfSize[1],  HalfSize[2]);
 	for (int i = 0; i < 8; i++)
 	{
 		AglVec3Transform(corn[i], b);
@@ -205,7 +205,7 @@ bool RigidBodyMesh::Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>
 	return false;
 }
 
-bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData)
+bool RigidBodyMesh::Evaluate(AglVector3* p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData)
 {
 	//Skip nine of the axes as they usually prevent few collisions.
 	//This creates deeper traversal but evaluation of each node will
@@ -222,7 +222,7 @@ bool RigidBodyMesh::Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVe
 	vector<AglBspNode> toEvaluate;
 	toEvaluate.push_back(m_nodes[0]);
 
-	vector<AglVector3> points2(8);
+	AglVector3 points2[8];
 
 	vector<AglVector3> points(3);
 

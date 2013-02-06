@@ -5,11 +5,17 @@
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_info = "";
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 }
 
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_info = "";
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );
@@ -35,6 +41,45 @@ SystemType EntitySystem::getSystemType()
 SystemType::SystemTypeIdx EntitySystem::getSystemTypeIdx()
 {
 	return m_type.getIndex();
+}
+const string& EntitySystem::getInfo() const
+{
+	return m_info;
+}
+
+void EntitySystem::setInfo(string p_info)
+{
+	m_info = p_info;
+}
+
+const double& EntitySystem::getTimeUsedPerSecond() const
+{
+	return m_timeUsedPerSecond;
+}
+
+void EntitySystem::setTimeUsedPerSecond(double p_timeUsed)
+{
+	m_timeUsedPerSecond = p_timeUsed;
+}
+
+const double& EntitySystem::getLastExecutionTime() const
+{
+	return m_lastExecutionTime;
+}
+
+void EntitySystem::setLastExecutionTime(double p_timeUsed)
+{
+	m_lastExecutionTime = p_timeUsed;
+}
+
+const double& EntitySystem::getAverageExecutionTime() const
+{
+	return m_averageExecutionTime;
+}
+
+void EntitySystem::setAverageExecutionTime(double p_average)
+{
+	m_averageExecutionTime = p_average;
 }
 
 EntitySystem::~EntitySystem()

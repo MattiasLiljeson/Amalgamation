@@ -124,6 +124,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		{
 			sceneDialog->AddPE(ps[i]->getParticleSystem());
 		}
+
+		TwAddVarRW(sceneDialog->m_dialog, "Draw Scene Planes", TW_TYPE_BOOLCPP, Scene::GetInstance()->getDrawPlanes(), "group='Debug'");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)

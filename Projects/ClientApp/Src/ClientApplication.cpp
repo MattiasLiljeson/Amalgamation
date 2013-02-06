@@ -48,6 +48,7 @@
 #include <CameraInfo.h>
 #include <CameraSystem.h>
 #include <ClientConnectToServerSystem.h>
+#include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
 #include <DebugMovementSystem.h>
@@ -56,6 +57,7 @@
 #include <EntityFactory.h>
 #include <ExtrapolationSystem.h>
 #include <GameStatsSystem.h>
+#include <GameStatsSystem.h>
 #include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
 #include <GraphicsRendererSystem.h>
@@ -63,10 +65,13 @@
 #include <HudSystem.h>
 #include <InputBackendSystem.h>
 #include <InterpolationSystem.h>
+#include <InterpolationSystem.h>
 #include <LevelGenSystem.h>
 #include <LibRocketBackendSystem.h>
 #include <LightBlinkerSystem.h>
+#include <LightBlinkerSystem.h>
 #include <LightRenderSystem.h>
+#include <LoadMeshSystemClient.h>
 #include <LoadMeshSystemClient.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
@@ -75,8 +80,10 @@
 #include <MineLayerModuleControllerSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <MoveShipLightsSystem.h>
+#include <MoveShipLightsSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <NetsyncDirectMapperSystem.h>
+#include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <ParticleRenderSystem.h>
 #include <PhysicsSystem.h>
@@ -85,6 +92,7 @@
 #include <PositionalSoundSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
+#include <ShadowSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <ShipEditControllerSystem.h>
@@ -366,6 +374,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
+	m_world->setSystem( new ClientMeasurementSystem(), true );
 
 	m_world->initialize();
 
@@ -374,7 +383,7 @@ void ClientApplication::initSystems()
 
 	// Run component assemblage allocator (not a system, so don't delete)
 	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
-	delete allocator;
+	delete allocator; // NOTE: (Johan) Why u delete when u say "don't delete"?
 }
 
 void ClientApplication::initEntities()

@@ -32,6 +32,7 @@
       <Filter>Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="AxisPruner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionManager.h" />
@@ -62,6 +63,7 @@
       <Filter>Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Octree.h" />
+    <ClInclude Include="AxisPruner.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Bodies">
