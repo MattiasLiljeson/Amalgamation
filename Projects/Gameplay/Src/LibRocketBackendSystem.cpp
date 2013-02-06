@@ -151,6 +151,12 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 	{
 		docId = m_documents.size();
 		m_documents.push_back( tmpDoc );
+		
+		// Set the element's title on the title; IDd 'title' in the RML.
+		Rocket::Core::Element* title = tmpDoc->GetElementById("title");
+		if (title != NULL)
+			title->SetInnerRML(tmpDoc->GetTitle());
+		
 		if (p_initiallyShown)
 			tmpDoc->Show();
 

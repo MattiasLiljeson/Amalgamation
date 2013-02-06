@@ -202,11 +202,6 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 		return false;
 	}
 
-	// Set the element's title on the title; IDd 'title' in the RML.
-	Rocket::Core::Element* title = document->GetElementById("title");
-	if (title != NULL)
-		title->SetInnerRML(document->GetTitle());
-
 	document->Show();
 	context->PullDocumentToFront(document);
 
