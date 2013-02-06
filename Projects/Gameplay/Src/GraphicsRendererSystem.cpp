@@ -42,7 +42,6 @@ void GraphicsRendererSystem::process(){
 	endShadowPass();
 	
 	initMeshPass();
-	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_NOCULL);
 	m_meshRenderer->render();
 	endMeshPass();
 
@@ -83,7 +82,7 @@ void GraphicsRendererSystem::endShadowPass(){
 void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 	m_wrapper->clearRenderTargets();
 	m_wrapper->setBaseRenderTargets();
 }

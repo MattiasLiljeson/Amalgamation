@@ -105,6 +105,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AxisPruner.cpp" />
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="CompoundBody.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="RigidBodySphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AxisPruner.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CompoundBody.h" />

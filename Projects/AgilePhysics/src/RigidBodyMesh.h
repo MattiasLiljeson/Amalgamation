@@ -33,7 +33,7 @@ private:
 private:
 	void CalculateInertiaTensor();
 	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
-	bool Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData);
+	bool Evaluate(AglVector3* p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData);
 	bool Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles);
 
 public:
