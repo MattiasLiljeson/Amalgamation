@@ -6,6 +6,8 @@ class GraphicsBackendSystem;
 class GraphicsWrapper;
 class ShadowSystem;
 
+struct AglMatrix;
+
 // =======================================================================================
 //                                      GraphicsRendererSystem
 // =======================================================================================
@@ -63,4 +65,5 @@ private:
 	RenderInterface* m_lightRenderSystem;
 
 	int* m_activeShadows;
+	AglMatrix* m_shadowViewProjections;
 };

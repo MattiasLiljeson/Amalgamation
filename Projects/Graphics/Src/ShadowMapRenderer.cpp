@@ -2,6 +2,7 @@
 #include "D3DException.h"
 #include "D3DUtil.h"
 #include "ShaderFactory.h"
+#include <DebugUtil.h>
 
 ShadowMapRenderer::ShadowMapRenderer(ID3D11Device* p_device, 
 									 ID3D11DeviceContext* p_deviceContext, 
@@ -12,8 +13,6 @@ ShadowMapRenderer::ShadowMapRenderer(ID3D11Device* p_device,
 	m_shaderFactory = p_shaderFactory;
 
 	initDepthStencil();
-
-	createANewShadowMap();
 }
 
 ShadowMapRenderer::~ShadowMapRenderer()
@@ -27,6 +26,9 @@ ShadowMapRenderer::~ShadowMapRenderer()
 
 unsigned int ShadowMapRenderer::createANewShadowMap()
 {
+	if(m_shadowMaps.size()>8)
+		DEBUGWARNING(( "Creating too many shadows!" ));
+
 	ShadowMap* newShadowMap = new ShadowMap();
 	generateShadowMap( &newShadowMap->depthStencilView, &newShadowMap->resourceView);
 	m_shadowMaps.push_back(newShadowMap);

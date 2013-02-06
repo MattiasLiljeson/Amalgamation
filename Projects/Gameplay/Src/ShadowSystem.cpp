@@ -58,3 +58,11 @@ AglMatrix ShadowSystem::getViewProjection( const unsigned int p_index ){
 
 	return viewProj;
 }
+
+int ShadowSystem::getShadowIdx( const unsigned int p_index )
+{
+	CameraInfo* cameraInfo = static_cast<CameraInfo*>(
+		m_shadowCameras[p_index]->getComponent(ComponentType::CameraInfo));
+
+	return cameraInfo->m_shadowMapIdx;
+}

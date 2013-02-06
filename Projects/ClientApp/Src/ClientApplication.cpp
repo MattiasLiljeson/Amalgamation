@@ -413,12 +413,14 @@ void ClientApplication::initEntities()
 			entity->getComponent(ComponentType::LightsComponent));
 		int shadowIdx = -1;
 		vector<Light>* lights = lightComp->getLightsPtr();
+
 		for (unsigned int i = 0; i < lights->size(); i++){
 			if(lights->at(i).instanceData.shadowIdx != -1){
 				shadowIdx = graphicsBackend->getGfxWrapper()->generateShadowMap();
 				lights->at(i).instanceData.shadowIdx = shadowIdx;
 			}
 		}
+
 		CameraInfo* cameraInfo = new CameraInfo(1);
 		cameraInfo->m_shadowMapIdx = shadowIdx;
 		entity->addComponent(ComponentType::CameraInfo, cameraInfo);

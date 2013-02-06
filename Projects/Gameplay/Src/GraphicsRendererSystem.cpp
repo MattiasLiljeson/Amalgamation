@@ -21,7 +21,9 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+
 	m_activeShadows			= new int[MAXSHADOWS];
+	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
 
 	clearShadowStuf();
 }
@@ -34,6 +36,11 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 	m_wrapper = m_backend->getGfxWrapper();
 
+	//Fill the shadow view projections
+	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
+		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
+		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = m_shadowSystem->getViewProjection(i);
+	}
 	
 	initShadowPass();
 	for(unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
@@ -149,5 +156,6 @@ void GraphicsRendererSystem::clearShadowStuf()
 {
 	for(int i = 0; i < MAXSHADOWS; i++){
 		m_activeShadows[i] = -1;
+		m_shadowViewProjections[i] = AglMatrix::identityMatrix();
 	}
 }
