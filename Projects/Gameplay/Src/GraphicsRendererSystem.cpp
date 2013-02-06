@@ -21,9 +21,12 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+	m_activeShadows			= new int[MAXSHADOWS];
+
+	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
-
+	delete m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
 
@@ -140,4 +143,11 @@ void GraphicsRendererSystem::endGUIPass(){
 
 void GraphicsRendererSystem::flipBackbuffer(){
 	m_wrapper->flipBackBuffer();
+}
+
+void GraphicsRendererSystem::clearShadowStuf()
+{
+	for(int i = 0; i < MAXSHADOWS; i++){
+		m_activeShadows[i] = -1;
+	}
 }

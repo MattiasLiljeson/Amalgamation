@@ -30,7 +30,7 @@ public:
 
 	virtual void initialize();
 	virtual void process();
-	
+
 	void initShadowPass();
 	void endShadowPass();
 
@@ -50,6 +50,8 @@ public:
 	void endGUIPass();
 	
 	void flipBackbuffer();
+
+	void clearShadowStuf();
 private:
 	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
@@ -59,4 +61,6 @@ private:
 	RenderInterface* m_particleRenderSystem;
 	RenderInterface* m_antTweakBarSystem;
 	RenderInterface* m_lightRenderSystem;
+
+	int* m_activeShadows;
 };

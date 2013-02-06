@@ -55,8 +55,8 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		vector<Light>* lights = lightsComp->getLightsPtr();
 		for( unsigned int j=0; j<lights->size(); j++ )
 		{
-			if(lights->at(j).instanceData.shadowIdx){
-				//lights->at(j).instanceData.shadowIdx = 0;
+			if(lights->at(j).instanceData.shadowIdx != -1){
+				int i = 0;
 			}
 
 			AglMatrix finalMat;
