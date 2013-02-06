@@ -2,6 +2,7 @@
 
 #include <Component.h>
 #include <AglVector3.h>
+#include <ComponentFactory.h>
 
 struct MinigunRay
 {
@@ -37,6 +38,7 @@ public:
 	MinigunModule();
 	MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~MinigunModule();
+	void init( vector<ComponentData> p_initData );
 
 	AglVector3 muzzleOffset;
 	AglVector3 fireDirection;
@@ -51,5 +53,7 @@ public:
 	//Maybe temporary
 	int		   laserSightEntity;
 	int		   particleSystemEntity;
+
+	static ComponentRegister<MinigunModule> s_reg;
 
 };

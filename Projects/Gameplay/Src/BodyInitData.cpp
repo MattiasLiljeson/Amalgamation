@@ -17,6 +17,7 @@ BodyInitData::BodyInitData()
 	m_impulseEnabled=true;
 	m_collisionEnabled=true;
 	m_modelResource = NULL;
+	m_copyToChildren = true;
 }
 
 BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
@@ -110,6 +111,11 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&temp);
 			m_collisionEnabled = temp==1?true:false;
+		}
+		else if( p_initData[i].dataName == "m_copyToChildren" )
+		{
+			p_initData[i].getData<int>(&temp);
+			m_copyToChildren = temp==1?true:false;
 		}
 
 	}

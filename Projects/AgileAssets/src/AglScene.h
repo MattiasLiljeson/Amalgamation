@@ -70,6 +70,9 @@ private:
 	AglCoordinateSystem				m_coordinateSystem; ///< Coordinate system of the scene
 
 	unsigned int m_currentAnimation; ///< Currently played animation
+
+	AglOBB m_sceneOBB; ///< Box covering the entire scene
+
 public:
 	///
 	/// Default Constructor
@@ -363,6 +366,8 @@ public:
 
 	void RemoveMaterial(AglMaterial* p_material);
 	void RemoveParticleEffect(AglParticleSystem* p_particleSystem);
+
+	AglOBB getSceneOBB();
 };
 
 #endif

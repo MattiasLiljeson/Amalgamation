@@ -35,9 +35,9 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 										 PhysicsBody* p_rootPhysicsBody,
 										 AglMatrix& baseTransform )
 {
-	if (p_rootRigidBodyData)
+	if (p_rootRigidBodyData && p_rootRigidBodyData->m_copyToChildren)
 	{
-		PhysicsBody* pb = new PhysicsBody();
+ 		PhysicsBody* pb = new PhysicsBody();
 		if (p_rootRigidBodyData->m_compound)
 			pb->setParentId(p_rootPhysicsBody->m_id);
 		p_entity->addComponent( ComponentType::PhysicsBody, 
@@ -63,6 +63,10 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 
 		//Should be moved to base class to follow up on all bodies
 		if (b->m_type == BodyInitData::MESH)
+		{
+			b->m_modelResource = p_modelResource;
+		}
+		else if (b->m_type == BodyInitData::BOXFROMMESHOBB)
 		{
 			b->m_modelResource = p_modelResource;
 		}
