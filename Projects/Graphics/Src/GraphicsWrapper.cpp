@@ -49,6 +49,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 		m_device->GetFeatureLevel());
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
+	m_perShadowBuffer = m_bufferFactory->createPerShadowBuffer();
+
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
@@ -93,6 +95,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_textureFactory;
 	delete m_modelFactory;
 	delete m_renderSceneInfoBuffer;
+	delete m_perShadowBuffer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)

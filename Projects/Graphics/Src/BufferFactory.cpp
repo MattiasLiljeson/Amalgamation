@@ -177,6 +177,21 @@ Buffer<ShadowCBuffer>* BufferFactory::createShadowBuffer(){
 	return new Buffer<ShadowCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
 }
 
+Buffer<PerShadowCBuffer>* BufferFactory::createPerShadowBuffer()
+{
+	PerShadowCBuffer data;
+	UINT32 elementSize = sizeof(float)*4;
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS;
+	bufferDesc.Slot = BufferConfig::PEROBJECT;
+
+	return new Buffer<PerShadowCBuffer>( m_device, m_deviceContext, &data, bufferDesc);
+}
+
 
 Mesh* BufferFactory::createBoxMesh()
 {
@@ -422,3 +437,4 @@ Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob,
 
 	return newMesh;
 }
+

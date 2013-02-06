@@ -55,6 +55,7 @@
     <ClInclude Include="ParticleCBuffer.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="PerShadowCBuffer.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

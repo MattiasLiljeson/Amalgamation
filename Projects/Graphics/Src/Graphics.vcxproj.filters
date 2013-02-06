@@ -42,12 +42,6 @@
     <ClCompile Include="TextureFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
-    <ClCompile Include="ModelExtendedManagedFactory.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshNameScriptParser.cpp">
-      <Filter>Graphics Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Renderer\Particle</Filter>
     </ClCompile>
@@ -66,6 +60,7 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="ModelExtendedFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -158,12 +153,6 @@
     <ClInclude Include="TextureFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="ModelExtendedManagedFactory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshNameScriptParser.h">
-      <Filter>Graphics Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Renderer\Particle</Filter>
     </ClInclude>
@@ -192,11 +181,14 @@
     <ClInclude Include="ShaderFactory.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="BufferFactory.h">
-      <Filter>Factory</Filter>
-	</ClInclude>
     <ClInclude Include="ModelExtendedFactory.h">
       <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="PerShadowCBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferFactory.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

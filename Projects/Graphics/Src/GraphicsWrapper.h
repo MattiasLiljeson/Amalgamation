@@ -43,6 +43,7 @@ struct LightInstanceData;
 struct Model;
 struct Texture;
 struct AglMatrix;
+struct PerShadowCBuffer;
 
 class GraphicsWrapper
 {
@@ -240,7 +241,7 @@ private:
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
-
+	Buffer<PerShadowCBuffer>* m_perShadowBuffer;
 
 	GUIShader*				m_guiShader;
 
