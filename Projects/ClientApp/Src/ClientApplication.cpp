@@ -401,6 +401,11 @@ void ClientApplication::initEntities()
 	m_world->addEntity( entity );
 	
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
+
+	for(int i = 0; i < 1; i++)
+	{
+
+	}
 	entity = factory->entityFromRecipe( "SpotLight" );	
 	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
 	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());

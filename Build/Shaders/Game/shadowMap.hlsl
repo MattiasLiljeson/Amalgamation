@@ -12,6 +12,6 @@ struct VertexIn
 
 float4 VS(VertexIn p_input) : SV_POSITION
 {
-	float4x4 wvp 		= mul(p_input.instanceTransform, shadowViewProj);	
+	float4x4 wvp 	= mul(p_input.instanceTransform, shadowViewProj);	
 	return mul( float4 (p_input.position,1.0f),wvp);;
 }

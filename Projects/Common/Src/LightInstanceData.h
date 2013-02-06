@@ -49,8 +49,8 @@ struct LightInstanceData
 {
 	float worldTransform[16];
 
-	float range;
 	float lightDir[3];
+	float range;
 
 	float attenuation[3];	// Used in the formula: x, x^2, x^3
 	float spotPower;		// Spot cone width. Power of 10.

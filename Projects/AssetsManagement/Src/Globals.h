@@ -41,3 +41,4 @@ static const string& TESTTEXTUREPATH = "Assets/Textures/Test/";
 /* MISC														*/
 /************************************************************************/
 static const int MAXPLAYERS = 8;
+static const int MAXSHADOWS = 8;

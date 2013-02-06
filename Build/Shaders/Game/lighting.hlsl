@@ -13,12 +13,13 @@ SamplerState pointSampler : register(s0);
 
 struct VertexIn
 {
+	//PerVertex
 	float3 position : POSITION;	
-	float4x4 instanceTransform : INSTANCETRANSFORM;
-	//LightInfo light : LIGHT;
 	
-	float 	range		: RANGE;
+	//PerInstance
+	float4x4 instanceTransform : INSTANCETRANSFORM;
 	float3 	lightDir	: LIGHTDIR;
+	float 	range		: RANGE;
 	float3 	attenuation	: ATTENUATION;
 	float 	spotPower	: SPOTPOWER;
 	float4 	ambient		: AMBIENT;
