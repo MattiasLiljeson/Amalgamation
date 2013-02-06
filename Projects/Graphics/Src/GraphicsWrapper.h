@@ -99,6 +99,8 @@ public:
 
 	void setShadowMapAsRenderTarget();
 
+	void setShadowMapAsRenderTarget(unsigned int p_shadowMapIdx);
+
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
 
 	void setShadowViewProjections( AglMatrix* p_viewProj );

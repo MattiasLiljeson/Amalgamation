@@ -46,10 +46,11 @@ void GraphicsRendererSystem::process(){
 	m_wrapper->setShadowViewProjections(m_shadowViewProjections);
 
 	initShadowPass();
-	for(unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
-		//AglMatrix vp = m_shadowSystem->getViewProjection(i);
-		//m_wrapper->setShadowViewProjection(vp);
-		m_meshRenderer->render();
+	for(unsigned int i = 0; i < MAXSHADOWS; i++){
+		if(m_activeShadows[i] != -1){
+			m_wrapper->setShadowMapAsRenderTarget(i);
+			m_meshRenderer->render();
+		}
 	}
 	endShadowPass();
 	
@@ -82,10 +83,8 @@ void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_wrapper->setShadowMapAsRenderTarget();
 	m_wrapper->setViewportToShadowMapSize();
 	m_wrapper->setRenderingShadows();
-	m_wrapper->mapSceneInfo();
 }
 
 void GraphicsRendererSystem::endShadowPass(){
@@ -93,6 +92,7 @@ void GraphicsRendererSystem::endShadowPass(){
 	m_wrapper->stopedRenderingShadows();
 }
 void GraphicsRendererSystem::initMeshPass(){
+	m_wrapper->mapSceneInfo();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);

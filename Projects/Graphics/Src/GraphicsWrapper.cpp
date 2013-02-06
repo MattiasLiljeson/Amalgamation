@@ -607,6 +607,10 @@ void GraphicsWrapper::setShadowMapAsRenderTarget()
 	m_shadowMapRenderer->mapShadowMapToRenderTarget();
 }
 
+void GraphicsWrapper::setShadowMapAsRenderTarget( unsigned int p_shadowMapIdx ){
+	m_shadowMapRenderer->mapShadowMapToRenderTarget(p_shadowMapIdx);
+}
+
 void GraphicsWrapper::setRenderingShadows(){
 	m_renderingShadows = true;
 }
