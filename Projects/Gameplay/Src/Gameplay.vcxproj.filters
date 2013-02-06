@@ -499,6 +499,9 @@
     <ClInclude Include="ClientMeasurementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="ServerMeasurementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -829,6 +832,9 @@
       <Filter>Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ClientMeasurementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerMeasurementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>

@@ -47,6 +47,7 @@
 #include <ShieldModule.h>
 #include <MineLayerModule.h>
 #include <SpeedBoostModuleControllerSystem.h>
+#include <ServerMeasurementSystem.h>
 
 
 namespace Srv
@@ -127,14 +128,13 @@ namespace Srv
 		/************************************************************************/
 		/* Timer																*/
 		/************************************************************************/
-		m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+		m_world->setSystem(new TimerSystem(), true);
 
 		/************************************************************************/
 		/* Mesh loading															*/
 		/************************************************************************/
 		// Note! Must set *after* EntityFactory and *before* Physics
-		m_world->setSystem(SystemType::LoadMeshSystemServer, new LoadMeshSystemServer(), 
-			true); 
+		m_world->setSystem(new LoadMeshSystemServer(), true); 
 
 		/************************************************************************/
 		/* Level Generation														*/
@@ -147,58 +147,45 @@ namespace Srv
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem(m_server);
-		m_world->setSystem(SystemType::PhysicsSystem, physics, true);
+		m_world->setSystem(physics, true);
 
 		/************************************************************************/
 		/* Objects Systems														*/
 		/************************************************************************/
-		m_world->setSystem(SystemType::ServerDynamicObjectsSystem, 
-			new ServerDynamicObjectsSystem(), true);
-
-		m_world->setSystem(SystemType::ServerStaticObjectsSystem, 
-			new ServerStaticObjectsSystem(), true);
+		m_world->setSystem(new ServerDynamicObjectsSystem(), true);
+		m_world->setSystem(new ServerStaticObjectsSystem(), true);
 
 		/************************************************************************/
 		/* Threading															*/
 		/************************************************************************/
-		m_world->setSystem( SystemType::ProcessingMessagesSystem,
-			new ProcessingMessagesSystem( static_cast< ThreadSafeMessaging* >(m_server) ),
-			true );
+		m_world->setSystem(new ProcessingMessagesSystem(
+			static_cast< ThreadSafeMessaging* >(m_server) ), true );
 
 		/************************************************************************/
 		/* General controlling													*/
 		/************************************************************************/
 		LookAtSystem* lookAtSystem = new LookAtSystem();
-		m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+		m_world->setSystem(lookAtSystem, true);
 
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
-		m_world->setSystem(SystemType::ServerPickingSystem, new ServerPickingSystem(m_server), true);
+		m_world->setSystem(new ServerPickingSystem(m_server), true);
 
 
 		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
-		m_world->setSystem( SystemType::NetworkListenerSystem,
-			new ServerWelcomeSystem( m_server ), true );
-
-		m_world->setSystem( SystemType::ServerPacketHandlerSystem,
-			new ServerPacketHandlerSystem( m_server ), true );
-
-		m_world->setSystem( SystemType::NetworkUpdateSystem,
-			new ServerUpdateSystem( m_server ), true );
-
-		m_world->setSystem( SystemType::NetworkUpdateScoresSystem,
-			new ServerScoreSystem( m_server ), true );
-		m_world->setSystem( SystemType::NetSyncedPlayerScoreTrackerSystem,
-			new NetSyncedPlayerScoreTrackerSystem(), true );
-
-		m_world->setSystem( new ServerClientInfoSystem(), true);
+		m_world->setSystem(new ServerWelcomeSystem( m_server ), true);
+		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
+		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
+		m_world->setSystem(new ServerScoreSystem( m_server ), true);
+		m_world->setSystem(new NetSyncedPlayerScoreTrackerSystem(), true);
+		m_world->setSystem(new ServerClientInfoSystem(), true);
 
 
 		/************************************************************************/
-		/* Gameplay															*/
+		/* Game play															*/
 		/************************************************************************/
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
@@ -211,10 +198,16 @@ namespace Srv
 		// Important for any module-damaging logic to happen before this.
 		m_world->setSystem(new ShipModulesControllerSystem(), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
+
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
+
+		/************************************************************************/
+		/* Debugging															*/
+		/************************************************************************/
+		m_world->setSystem(new ServerMeasurementSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
@@ -225,7 +218,7 @@ namespace Srv
 
 		// Run component assemblage allocator (not a system, so don't delete)
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
-		delete allocator;
+		delete allocator; // NOTE: (Johan) Why u keep deleting it then?
 	}
 
 	void ServerApplication::initEntities()

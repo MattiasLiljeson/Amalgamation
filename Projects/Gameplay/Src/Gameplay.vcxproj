@@ -74,6 +74,7 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="GameStatsSystem.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerMeasurementSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />

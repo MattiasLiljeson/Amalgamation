@@ -49,8 +49,6 @@ public:
 
 	SystemType getSystemType();
 	SystemType::SystemTypeIdx getSystemTypeIdx();
-	const string& getInfo() const;
-	void setInfo(string p_info);
 	const double& getTimeUsedPerSecond() const;
 	void setTimeUsedPerSecond(double p_timeUsed);
 	const double& getLastExecutionTime() const;
@@ -174,7 +172,6 @@ private:
 
 	//bitset<SystemType::NUM_SYSTEM_TYPES> m_systemBits;
 	SystemType m_type;
-	string m_info;
 	double m_timeUsedPerSecond;
 	double m_lastExecutionTime;
 	double m_averageExecutionTime;
