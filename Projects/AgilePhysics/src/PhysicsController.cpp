@@ -279,12 +279,6 @@ void PhysicsController::Update(float pElapsedTime)
 			if (mStaticBodies)
 			{
 				vector<PhyCollisionData> staticCol = mStaticBodies->Query(mRigidBodies[i].first);
-				int heh = 10;
-				while (heh > 0)
-				{
-					staticCol = mStaticBodies->Query(mRigidBodies[i].first);
-					heh--;
-				}
 				for (unsigned int j = 0; j < staticCol.size(); j++)
 				{
 					collisions.push_back(staticCol[j]);

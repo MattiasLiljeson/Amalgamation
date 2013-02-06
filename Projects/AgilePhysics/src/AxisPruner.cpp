@@ -97,6 +97,9 @@ vector<PhyCollisionData> AxisPruner::Query( RigidBody* pBody )
 {
 	vector<PhyCollisionData> collisions;
 
+	if (mAxis->sortedList.size() == 0)
+		return collisions;
+
 	IntProjection proj;
 	Project(pBody, &proj);
 
