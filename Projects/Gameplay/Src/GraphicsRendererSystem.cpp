@@ -49,6 +49,7 @@ void GraphicsRendererSystem::process(){
 	for(unsigned int i = 0; i < MAXSHADOWS; i++){
 		if(m_activeShadows[i] != -1){
 			m_wrapper->setShadowMapAsRenderTarget(i);
+			//m_wrapper->setActiveShadow(i);
 			m_meshRenderer->render();
 		}
 	}
@@ -93,6 +94,7 @@ void GraphicsRendererSystem::initShadowPass(){
 void GraphicsRendererSystem::endShadowPass(){
 	m_wrapper->resetViewportToOriginalSize();
 	m_wrapper->stopedRenderingShadows();
+	//m_wrapper->unmapPerShadowBuffer();
 }
 void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->mapSceneInfo();

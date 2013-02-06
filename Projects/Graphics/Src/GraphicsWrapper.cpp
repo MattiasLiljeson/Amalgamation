@@ -203,6 +203,16 @@ void GraphicsWrapper::mapSceneInfo(){
 	m_renderSceneInfoBuffer->apply();
 }
 
+void GraphicsWrapper::setActiveShadow( int p_activeShadow ){
+	m_perShadowBuffer->accessBuffer.currentShadow = p_activeShadow;
+	m_perShadowBuffer->update();
+	m_perShadowBuffer->apply();
+}
+void GraphicsWrapper::unmapPerShadowBuffer()
+{
+	m_perShadowBuffer->unApply();
+}
+
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
@@ -316,10 +326,6 @@ void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
 	m_shadowShader->sendViewProjections(p_viewProj);
 	m_shadowShader->apply();
-}
-
-void GraphicsWrapper::mapDeferredBaseToShader(){
-	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
 }
 
 void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
@@ -622,11 +628,6 @@ void GraphicsWrapper::resetViewportToOriginalSize(){
 	vp.MaxDepth = 1.0f;
 
 	m_deviceContext->RSSetViewports(1,&vp);
-}
-
-void GraphicsWrapper::setShadowMapAsRenderTarget()
-{
-	m_shadowMapRenderer->mapShadowMapToRenderTarget();
 }
 
 void GraphicsWrapper::setShadowMapAsRenderTarget( unsigned int p_shadowMapIdx ){

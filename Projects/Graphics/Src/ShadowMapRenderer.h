@@ -30,9 +30,7 @@ public:
 	ShadowMapRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		ShaderFactory* p_shaderFactory);
 	~ShadowMapRenderer();
-	void mapShadowMapToRenderTarget();
 	void mapShadowMapToRenderTarget(unsigned int p_index);
-	ID3D11ShaderResourceView* getShadowMap();
 	ID3D11ShaderResourceView*const* getShadowMap(unsigned int p_index);
 	unsigned int createANewShadowMap();
 private:
@@ -42,10 +40,9 @@ private:
 public:
 	const static int SHADOWMAPSIZE = 512;
 private:
+	unsigned int m_counter;
 	ID3D11Device*				m_device;
 	ID3D11DeviceContext*		m_deviceContext;
-	ID3D11DepthStencilView*		m_depthStencilView;
-	ID3D11ShaderResourceView*	m_resourceView;
 
 	ShaderFactory*		m_shaderFactory;
 

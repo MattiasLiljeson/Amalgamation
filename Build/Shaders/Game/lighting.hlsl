@@ -7,27 +7,32 @@ Texture2D gDiffuseMap 	: register(t0);
 Texture2D gNormalMap 	: register(t1);
 Texture2D gSpecular 	: register(t2);
 Texture2D gDepth 		: register(t3);
-Texture2D gShadow;
+
+Texture2D gShadow1 		: register(t4);
+Texture2D gShadow2 		: register(t5);
+Texture2D gShadow3		: register(t6);
+Texture2D gShadow4		: register(t7);
 
 SamplerState pointSampler : register(s0);
 
+//Total of 168 bytes
 struct VertexIn
 {
 	//PerVertex
-	float3 position : POSITION;	
+	float3 position : POSITION;						//12 bytes
 	
 	//PerInstance
-	float4x4 instanceTransform : INSTANCETRANSFORM;
-	float3 	lightDir	: LIGHTDIR;
-	float 	range		: RANGE;
-	float3 	attenuation	: ATTENUATION;
-	float 	spotPower	: SPOTPOWER;
-	float4 	ambient		: AMBIENT;
-	float4 	diffuse		: DIFFUSE;
-	float4 	specular	: SPECULAR;
-	int 	enabled 	: ENABLED;
-	int 	type 		: TYPE;
-	int		shadowIdx	: SHADOWIDX;
+	float4x4 instanceTransform : INSTANCETRANSFORM;	//64 bytes
+	float3 	lightDir	: LIGHTDIR;					//12 bytes
+	float 	range		: RANGE;					//4 bytes	
+	float3 	attenuation	: ATTENUATION;				//12 bytes
+	float 	spotPower	: SPOTPOWER;				//4 bytes
+	float4 	ambient		: AMBIENT;					//16 bytes
+	float4 	diffuse		: DIFFUSE;					//16 bytes
+	float4 	specular	: SPECULAR;					//16 bytes
+	int 	enabled 	: ENABLED;					//4 bytes
+	int 	type 		: TYPE;						//4 bytes
+	int		shadowIdx	: SHADOWIDX;				//4 bytes
 };
 struct VertexOut
 {
@@ -96,10 +101,27 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	}
 
 	float shadowCoeff = 1.0f;
-	if( p_input.light.shadowIdx != -1 )
+	int shadowIndex = p_input.light.shadowIdx;
+	if( shadowIndex != -1 )
 	{
-		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[p_input.light.shadowIdx]);
-		shadowCoeff = doShadowing(gShadow, pointSampler, shadowWorldPos);
+		if( shadowIndex == 0){
+			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+			shadowCoeff = doShadowing(gShadow1, pointSampler, shadowWorldPos);
+		}
+		else if( shadowIndex == 1){
+			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+			shadowCoeff = doShadowing(gShadow2, pointSampler, shadowWorldPos);
+		}
+		/*
+		else if( shadowIndex == 2){
+			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+			shadowCoeff = doShadowing(gShadow3, pointSampler, shadowWorldPos);
+		}
+		else{
+			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+			shadowCoeff = doShadowing(gShadow4, pointSampler, shadowWorldPos);
+		}
+		*/
 	}
 	lightCol *= shadowCoeff;
 	

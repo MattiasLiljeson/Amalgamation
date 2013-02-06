@@ -97,8 +97,6 @@ public:
 
 	void resetViewportToOriginalSize();
 
-	void setShadowMapAsRenderTarget();
-
 	void setShadowMapAsRenderTarget(unsigned int p_shadowMapIdx);
 
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
@@ -108,6 +106,10 @@ public:
 	void setRenderingShadows();
 	
 	void stopedRenderingShadows();
+
+	void setActiveShadow( int p_activeShadow );
+
+	void unmapPerShadowBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
@@ -250,7 +252,7 @@ private:
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
-	Buffer<PerShadowCBuffer>* m_perShadowBuffer;
+	Buffer<PerShadowCBuffer>*		m_perShadowBuffer;
 
 	GUIShader*				m_guiShader;
 
