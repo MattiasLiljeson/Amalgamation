@@ -267,32 +267,12 @@ namespace Srv
 		m_world->addEntity( entity );
 
 		//Minigun
-		for (int x=0;x<4;x++)
-		{
-			status = factory->readAssemblageFile( "Assemblages/minigunModule.asd" );
-			entity = factory->entityFromRecipe( "MinigunModule" );
-			//component = new Transform(10, 0, 0);
-			//entity->addComponent( ComponentType::Transform, component );
+		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
+		entity = factory->entityFromRecipe( "ServerMinigun" );
 
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(10, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			ConnectionPointSet* cpset = new ConnectionPointSet();
-			cpset->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::identityMatrix()));
-
-			entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-			entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
-			m_world->addEntity(entity);
-		}
+		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
+		m_world->addEntity(entity);
 
 
 		//Shield
@@ -324,14 +304,14 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40, 0, i*10));
 			cp.entityType = EntityType::RocketLauncherModule;
-			factory->entityFromPacket(cp, &pos);
+			//factory->entityFromPacket(cp, &pos);
 		}
 		//Mine Layer
 		for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30, 0, i*10));
 			cp.entityType = EntityType::MineLayerModule;
-			factory->entityFromPacket(cp, &pos);
+			//factory->entityFromPacket(cp, &pos);
 		}
 
 		//Speed Booster

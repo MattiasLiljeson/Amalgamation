@@ -392,6 +392,21 @@ void Scene::Draw()
 		BOXMESH->Draw(scale * trans, AglVector3(0, 0, 1));
 
 	}
+
+	if (BOXMESH)
+	{
+		AglOBB sceneOBB = mAglScene->getSceneOBB();
+
+		AglMatrix sw = sceneOBB.world;
+		AglMatrix size;
+		AglMatrix::componentsToMatrix(size, sceneOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
+		sw = size * sw;
+		sw = sw * m_avoidJump;
+		sw = sw * invMax;
+		sw *= w;
+		sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
+		BOXMESH->Draw(sw, mBoxColors[0]);
+	}
 }
 AglNode Scene::GetNode(int pIndex)
 {

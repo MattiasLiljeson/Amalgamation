@@ -182,10 +182,17 @@ void StandardShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	if (pMaterial.gradientDataIndex >= 0)
 	{
 		AglGradient* g = Scene::GetInstance()->GetGradient(pMaterial.gradientDataIndex);
-		vector<AglGradientMaterial*> layers = g->getLayers();
-		for (unsigned int i = 0; i < layers.size(); i++)
-			matbuffer->gradientColors[i] = layers[i]->color;
-		matbuffer->Flags.w = (float)layers.size();
+		if (g)
+		{
+			vector<AglGradientMaterial*> layers = g->getLayers();
+			for (unsigned int i = 0; i < layers.size(); i++)
+				matbuffer->gradientColors[i] = layers[i]->color;
+			matbuffer->Flags.w = (float)layers.size();
+		}
+		else
+		{
+			matbuffer->Flags.z = 0;
+		}
 	}
 	
 	mDeviceContext->Unmap(mMaterialBuffer, 0);

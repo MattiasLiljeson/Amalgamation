@@ -183,7 +183,13 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData(
 	unsigned int numberOfModels = p_scene->getMeshes().size();
 	if (numberOfModels>1 || numberOfModels==0)
 	{
-		models->collection.push_back(new ModelResource(p_instanceData->filename+"-ROOT"));
+		ModelResource* mr = new ModelResource(p_instanceData->filename+"-ROOT");
+
+		//Neccessary Oriented bounding box for collision detection - ADDED BY ANTON
+		mr->meshHeader.minimumOBB = p_scene->getSceneOBB();
+		mr->meshHeader.transform = AglMatrix::identityMatrix();
+
+		models->collection.push_back(mr);
 		models->rootIndex=models->collection.size()-1;
 	}
 	// check all models

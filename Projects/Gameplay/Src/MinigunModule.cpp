@@ -1,5 +1,7 @@
 #include "MinigunModule.h"
 
+ComponentRegister<MinigunModule> MinigunModule::s_reg("MinigunModule");
+
 MinigunModule::MinigunModule()
 	: Component( ComponentType::MinigunModule )	
 {
@@ -21,4 +23,19 @@ MinigunModule::MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirecti
 MinigunModule::~MinigunModule()
 {
 
+}
+
+void MinigunModule::init( vector<ComponentData> p_initData )
+{
+	muzzleOffset = AglVector3(0, 0, 0);
+	fireDirection = AglVector3(0, 0, 1);
+	laserSightEntity = -1;
+	coolDown = 0;
+	currentRay = 0;
+	range = 300;
+	particleSystemEntity = -1;
+
+	for(unsigned int i=0; i<p_initData.size(); i++)
+	{
+	}
 }
