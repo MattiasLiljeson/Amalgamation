@@ -13,5 +13,5 @@ cbuffer perFrame: register(b0)
 
 cbuffer shadowBuffer: register(b2)
 {
-	float4x4 shadowViewProj[8];		//512 bytes
+	float4x4 shadowViewProj[2];		//512 bytes
 }
