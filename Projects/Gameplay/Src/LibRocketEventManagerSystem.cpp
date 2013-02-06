@@ -26,7 +26,7 @@
  */
 #pragma once
 
-#include "LibRocketEventManager.h"
+#include "LibRocketEventManagerSystem.h"
 #include <Rocket/Core/Context.h>
 #include <Rocket/Core/ElementDocument.h>
 #include <Rocket/Core/ElementUtilities.h>
@@ -40,20 +40,20 @@
 #include <DebugUtil.h>
 #include "libRocketBackendSystem.h"
 
-LibRocketEventManager::LibRocketEventManager()
-	: EntitySystem(SystemType::LibRocketEventManager)
+LibRocketEventManagerSystem::LibRocketEventManagerSystem()
+	: EntitySystem(SystemType::LibRocketEventManagerSystem)
 {
 	context = NULL;
 	wantsToExit = false;
 	event_handler = NULL;
 }
 
-LibRocketEventManager::~LibRocketEventManager()
+LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
 {
 	Shutdown();
 }
 
-void LibRocketEventManager::initialize()
+void LibRocketEventManagerSystem::initialize()
 {
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
@@ -66,7 +66,7 @@ void LibRocketEventManager::initialize()
 }
 
 // Releases all event handlers registered with the manager.
-void LibRocketEventManager::Shutdown()
+void LibRocketEventManagerSystem::Shutdown()
 {
 	//for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
 	//	delete (*i).second;
@@ -76,7 +76,7 @@ void LibRocketEventManager::Shutdown()
 }
 
 // Registers a new event handler with the manager.
-void LibRocketEventManager::registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
+void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
 {
 	//handler->ConnectToManager(this);
 	// Release any handler bound under the same name.
@@ -84,14 +84,14 @@ void LibRocketEventManager::registerEventHandler(const Rocket::Core::String& han
 	if (iterator != event_handlers.end())
 	{	//delete (*iterator).second;
 		DEBUGWARNING(((
-			toString("LibRocketEventManager::registerEventHandler\nAttempting to register EventHandler[")
+			toString("LibRocketEventManagerSystem::registerEventHandler\nAttempting to register EventHandler[")
 			+ toString(handler_name.CString())
 			+ toString("] which has already been registred in the EventManager.")).c_str()));
 	}
 	event_handlers[handler_name] = handler;
 }
 
-EventHandler* LibRocketEventManager::UnregisterEventHandler( const Rocket::Core::String& handler_name )
+EventHandler* LibRocketEventManagerSystem::UnregisterEventHandler( const Rocket::Core::String& handler_name )
 {
 	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
 	EventHandler* handler = NULL;
@@ -105,7 +105,7 @@ EventHandler* LibRocketEventManager::UnregisterEventHandler( const Rocket::Core:
 }
 
 // Processes an event coming through from Rocket.
-void LibRocketEventManager::processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
+void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
 {
 	Rocket::Core::StringList commands;
 	Rocket::Core::StringUtilities::ExpandString(commands, value, ';');
@@ -169,7 +169,7 @@ void LibRocketEventManager::processEvent(Rocket::Core::Event& event, const Rocke
 }
 
 // Loads a window and binds the event handler for it.
-bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
+bool LibRocketEventManagerSystem::LoadWindow(const Rocket::Core::String& window_name)
 {
 	// Set the event handler for the new screen, if one has been registered.
 	EventHandler* old_event_handler = event_handler;
@@ -195,7 +195,7 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 	if (document == NULL)
 	{
 		DEBUGWARNING(((
-			toString("LibRocketEventManager::loadWindow\nNo document with the body id\"")
+			toString("LibRocketEventManagerSystem::loadWindow\nNo document with the body id\"")
 			+ toString(window_name.CString())
 			+ toString("\" has been loaded.")).c_str()));
 		event_handler = old_event_handler;
@@ -211,12 +211,12 @@ bool LibRocketEventManager::LoadWindow(const Rocket::Core::String& window_name)
 	return true;
 }
 
-void LibRocketEventManager::registerEventHandler( EventHandler* handler )
+void LibRocketEventManagerSystem::registerEventHandler( EventHandler* handler )
 {
 	registerEventHandler(handler->getName().c_str(), handler);
 }
 
-void LibRocketEventManager::process()
+void LibRocketEventManagerSystem::process()
 {
 	if (wantsToExit)
 		m_world->requestToShutDown();

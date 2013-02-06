@@ -1,6 +1,6 @@
 #include "MenuSystem.h"
 #include "LibRocketBackendSystem.h"
-#include "LibRocketEventManager.h"
+#include "LibRocketEventManagerSystem.h"
 #include "ClientConnectToServerSystem.h"
 #include "GameOptionsSystem.h"
 #include <Globals.h>
@@ -22,11 +22,11 @@ void MenuSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	auto rocketEventManager = static_cast<LibRocketEventManager*>(
-		m_world->getSystem(SystemType::LibRocketEventManager));
+	auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+		m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
 	auto connectToServerSys = static_cast<ClientConnectToServerSystem*>(
-		m_world->getSystem(SystemType::NetworkConnectoToServerSystem));
+		m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
 	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
 		m_world->getSystem(SystemType::GameOptionsSystem));

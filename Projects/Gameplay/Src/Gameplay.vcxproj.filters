@@ -499,14 +499,14 @@
     <ClInclude Include="LibRocketSystemInterface.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketEventManager.h">
-      <Filter>Systems\GUI\LibRocket</Filter>
-    </ClInclude>
     <ClInclude Include="LibRocketInputHelper.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
     <ClInclude Include="GameOptionsSystem.h">
       <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketEventManagerSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -837,14 +837,14 @@
     <ClCompile Include="LibRocketSystemInterface.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="LibRocketEventManager.cpp">
-      <Filter>Systems\GUI\LibRocket</Filter>
-    </ClCompile>
     <ClCompile Include="LibRocketInputHelper.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
     <ClCompile Include="GameOptionsSystem.cpp">
       <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketEventManagerSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

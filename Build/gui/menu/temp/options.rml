@@ -3,14 +3,13 @@
 		<title>Options</title>
 		<link type="text/template" href="window.rml" />
 		<style>
-			div#title_bar div#icon
+			<!--div#title_bar div#icon
 			{
 					display: none;
-			}
-			form div
+			}-->
+			body.window
 			{
-				width: 200px;
-				margin: auto;
+				height: 400px;
 			}
 		</style>
 	</head>
@@ -30,8 +29,8 @@
 					<input id="3d" type="checkbox" name="3d" value="true" /> 3D Spatialisation
 				</p>
 			</div>
-			<input type="submit" value="accept">Accept</input>
-			<input type="submit" value="cancel">Cancel</input>
+			<input id="save" type="submit" value="accept">Accept</input>
+			<input id="back" type="submit" value="cancel">Cancel</input>
 		</form>
 	</body>
 </rml>

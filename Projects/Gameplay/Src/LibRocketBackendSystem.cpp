@@ -14,7 +14,7 @@
 #include <EventInstancer.h>
 #include "LibRocketInputHelper.h"
 #include "ClientConnectToServerSystem.h"
-#include "LibRocketEventManager.h"
+#include "LibRocketEventManagerSystem.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -68,8 +68,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
-	//Rocket::Debugger::Initialise( m_rocketContext );
-	//Rocket::Debugger::SetVisible( true );
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( true );
 	
 	m_cursor = m_inputBackend->getCursor();
 

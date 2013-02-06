@@ -4,12 +4,12 @@ body
 	font-style: normal;
 	font-size: 15;
 	color: white;
-	background: gray;
+	background: rgba(0, 0, 0, 196);
 	
 	font-weight: bold;
 	
     shadow-font-effect: shadow;
-    shadow-offset: 1px 1px;
+    shadow-offset: 2px 2px;
     shadow-color: black;
 }
 
@@ -145,7 +145,6 @@ input.submit
 }
 
 
-
 button,
 input.submit
 {
@@ -155,14 +154,31 @@ input.submit
 	height: 37px;
 
 	padding-top: 8px;
-	vertical-align: -18px;
-
+	vertical-align: middle;
+	margin-bottom: 8px;
+	
 	font-size: 18;
 	text-align: center;
 	tab-index: auto;
-
+	background: black;
+	
 	/*background-decorator: image;
 	background-image: ../../Assets/gui/texture/invader.tga 247px 0px 406px 45px;*/
+}
+
+
+button#back, input.submit#back
+{
+	position: absolute;
+	left: 23px;
+	bottom: 8px;
+}
+
+input.submit#save
+{
+	position: absolute;
+	left: 23px;
+	bottom: 60px;
 }
 
 button:focus,
@@ -190,13 +206,14 @@ input.submit:active
 }
 
 
-
 input.text
 {
 	height: 31px;
 	padding-left: 2px;
 	
 	background: rgb(255, 128, 128);
+	
+	shadow-font-effect: none;
 	/*background-decorator: tiled-horizontal;
 	background-left-image: ../../Assets/gui/texture/invader.tga 162px 192px 176px 223px;
 	background-center-image: ../../Assets/gui/texture/invader.tga stretch 176px 192px 177px 223px;*/

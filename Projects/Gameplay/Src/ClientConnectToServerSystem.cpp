@@ -7,7 +7,7 @@
 ClientConnectToServerSystem* ClientConnectToServerSystem::m_selfPointer = NULL;
 
 ClientConnectToServerSystem::ClientConnectToServerSystem( TcpClient* p_tcpClient )
-	: EntitySystem( SystemType::NetworkConnectoToServerSystem ), EventHandler("join")
+	: EntitySystem( SystemType::ClientConnectoToServerSystem ), EventHandler("join")
 {
 	m_tcpClient = p_tcpClient;
 	

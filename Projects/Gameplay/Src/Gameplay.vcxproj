@@ -51,7 +51,7 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
-    <ClInclude Include="LibRocketEventManager.h" />
+    <ClInclude Include="LibRocketEventManagerSystem.h" />
     <ClInclude Include="LibRocketInputHelper.h" />
     <ClInclude Include="LightBlinker.h" />
     <ClInclude Include="LightBlinkerSystem.h" />
@@ -188,7 +188,7 @@
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
-    <ClCompile Include="LibRocketEventManager.cpp" />
+    <ClCompile Include="LibRocketEventManagerSystem.cpp" />
     <ClCompile Include="LibRocketInputHelper.cpp" />
     <ClCompile Include="LightBlinker.cpp" />
     <ClCompile Include="LightBlinkerSystem.cpp" />

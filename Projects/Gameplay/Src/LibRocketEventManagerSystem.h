@@ -45,11 +45,11 @@ class EventHandler;
 	@modifiers	Robin Thunström, Alexander Brodén
  */
 
-class LibRocketEventManager : public EntitySystem, public EventManager
+class LibRocketEventManagerSystem : public EntitySystem, public EventManager
 {
 public:
-	LibRocketEventManager();
-	~LibRocketEventManager();
+	LibRocketEventManagerSystem();
+	~LibRocketEventManagerSystem();
 
 	void initialize();
 	/// Releases all event handlers registered with the manager.
