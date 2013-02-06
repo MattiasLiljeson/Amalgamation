@@ -12,7 +12,7 @@ Light::Light()
 	//rotation = AglQuaternion( 0.0f, 0.0f, 0.0f, 0.0f );
 	//translation = AglVector3::zero();
 	offsetMat = AglMatrix::identityMatrix();
-	castingShadow = 0;
+	instanceData.shadowIdx = -1;
 }
 
 
@@ -183,7 +183,7 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 			}
 		}
 		else if( lightInfoStr == "hasShadow"){
-			p_initData[i].getData<int>( &m_lights[lightIdx].castingShadow );
+			p_initData[i].getData<int>( &m_lights[lightIdx].instanceData.shadowIdx );
 		}
 	}
 
