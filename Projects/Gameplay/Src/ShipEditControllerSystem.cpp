@@ -1,17 +1,8 @@
 #include "ShipEditControllerSystem.h"
 #include "ShipEditController.h"
 
-#include <TcpClient.h>
 #include <AglQuaternion.h>
-#include "InputBackendSystem.h"
-#include "PhysicsSystem.h"
 #include "Transform.h"
-#include "PacketType.h"
-#include "EntityType.h"
-#include "NetworkSynced.h"
-#include "Control.h"
-#include "AntTweakBarWrapper.h"
-#include "PhysicsBody.h"
 #include "ShipInputProcessingSystem.h"
 
 #include "GameplayTags.h"

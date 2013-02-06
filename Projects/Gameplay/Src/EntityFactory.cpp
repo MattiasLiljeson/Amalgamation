@@ -283,11 +283,15 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		/* This is where the audio listener is created and therefor the master  */
 		/* volume is added to Ant Tweak Bar here.								*/
 		/************************************************************************/
-		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-			AntTweakBarWrapper::OVERALL,
-			"Master_volume", TwType::TW_TYPE_FLOAT, 
-			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-			"group=Sound min=0 max=10 step=0.001 precision=3");
+		/************************************************************************/
+		/* Sorry. This breaks the server, so it must be moved out of here when	*/
+		/* needed. */
+		/************************************************************************/
+//		AntTweakBarWrapper::getInstance()->addWriteVariable( 
+//			AntTweakBarWrapper::OVERALL,
+//			"Master_volume", TwType::TW_TYPE_FLOAT, 
+//			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+//			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 
 	component = new PlayerScore();

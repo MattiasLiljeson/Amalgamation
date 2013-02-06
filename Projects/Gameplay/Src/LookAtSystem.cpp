@@ -1,9 +1,6 @@
 #include "LookAtSystem.h"
 
-#include "CameraSystem.h"
 #include "CameraInfo.h"
-#include "GraphicsBackendSystem.h"
-#include "InputBackendSystem.h"
 #include "LookAtEntity.h"
 #include "Transform.h"
 #include "GameplayTags.h"
@@ -116,12 +113,12 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 // 				dir.y *= dir.y;
 // 				dir.z *= dir.z;
 				// dir = AglVector3::lerp(lookAt->m_oldPos,dir,dt);
- 				// position += (dir)*dt;
+				// position += (dir)*dt;
 // 			}
 // 			else
 // 			{
 				// AglVector3 zoom = dir*AglVector3::lengthSquared(lookAt->m_oldPos-(lookTargetPos+offset));
- 				// position = lookTargetPos+offset;
+				// position = lookTargetPos+offset;
 // 				position = AglVector3::lerp(lookAt->m_oldPos,position,dt);
 // 			}
 
@@ -168,9 +165,9 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// just lookat behaviour
 		else if (!lookAtOrbit && !lookAtFollow)
 		{
- 			AglVector3 dir = position-lookTargetPos;
- 			AglVector3::normalize(dir);
- 			transform->setForwardDirection(dir);
+			AglVector3 dir = position-lookTargetPos;
+			AglVector3::normalize(dir);
+			transform->setForwardDirection(dir);
 			// transform->setTranslation( position );
 			// transform->setRotation(AglQuaternion:: );
 // 			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
