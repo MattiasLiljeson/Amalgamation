@@ -110,6 +110,9 @@ public:
 
 	ResultingInputForces& getProcessedInput();
 
+	void setCursorVisibility(bool p_show);
+	void resetCursor();
+
 private:
 	//Added by Anton 15/1 - 13
 	void sendModuleSlotHighlight(int p_slot);

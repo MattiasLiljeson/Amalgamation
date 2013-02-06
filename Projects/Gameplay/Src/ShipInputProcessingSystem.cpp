@@ -6,6 +6,7 @@
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
 #include "AudioBackendSystem.h"
+#include "Cursor.h"
 #include <Globals.h>
 
 
@@ -61,6 +62,21 @@ void ShipInputProcessingSystem::process()
 
 	updateAntTweakBar(m_processedInput);
 }
+
+void ShipInputProcessingSystem::setCursorVisibility(bool p_show)
+{
+	if (p_show)
+		m_inputBackend->getCursor()->show();
+	else
+		m_inputBackend->getCursor()->hide();
+}
+
+
+void ShipInputProcessingSystem::resetCursor()
+{
+	m_inputBackend->getCursor()->reset();
+}
+
 
 ShipInputProcessingSystem::ResultingInputForces& ShipInputProcessingSystem::getProcessedInput()
 {

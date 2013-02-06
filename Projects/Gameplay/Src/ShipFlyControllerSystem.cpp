@@ -50,6 +50,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	if (p_entities.size()>0)
 	{
 		float dt = m_world->getDelta();
+		m_shipInput->setCursorVisibility(false);
 		
 		// Fetch the status of the various input methods.
 		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
@@ -123,6 +124,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
+				m_shipInput->resetCursor();
 			}
 
 			// Send data to server

@@ -45,6 +45,8 @@ void ShipEditControllerSystem::processEntities( const vector<Entity*>& p_entitie
 	if (p_entities.size()>0)
 	{
 		float dt = m_world->getDelta();
+		m_shipInput->setCursorVisibility(true);
+
 		// Fetch the status of the various input methods.
 		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
 

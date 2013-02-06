@@ -136,11 +136,16 @@ public:
 	///------------------------------------------------------------------------------------
 	double getSecondaryDelta();
 
+	bool isVisible() {return m_visible;}
+	void hide() {m_visible=false;}
+	void show() {m_visible=true;}
+
 	int m_screenWidth;
 	int m_screenHeight;
 private:
 	double m_x; // double used internally in input
 	double m_y; // double used internally in input
+	bool m_visible;
 
 	vector<ControlSet> m_controlSets;
 };

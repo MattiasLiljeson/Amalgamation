@@ -122,7 +122,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					LookAtFollowMode_TAG* lookAtFollow=NULL;
 					LookAtOrbitMode_TAG* lookAtOrbit=NULL;
 					Transform* cameraTransform=NULL;
-					AglQuaternion currentRotation = AglQuaternion::identity();
 
 					Component* t = entity->getComponent(ComponentType::ComponentTypeIdx::TAG_LookAtFollowMode);
 					if (t!=NULL) lookAtFollow = static_cast<LookAtFollowMode_TAG*>(t);
@@ -132,14 +131,13 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 					t = entity->getComponent( ComponentType::ComponentTypeIdx::Transform );
 					if (t!=NULL) cameraTransform = static_cast<Transform*>(t);
-// 					if (cameraTransform)
-// 						currentRotation = cameraTransform->getRotation();
+
 
 					// handle "state" switch
 					if (lookAtFollow && !lookAtOrbit &&
 						cameraControlPacket.state==PlayerStates::editState)
 					{
-						lookAt->setOrbitOffset(currentRotation);
+						lookAt->setOrbitOffset(AglQuaternion::identity());
 						entity->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
 						entity->addComponent(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
 						entity->applyComponentChanges();
@@ -147,8 +145,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					else if (lookAtOrbit && !lookAtFollow && 
 						cameraControlPacket.state==PlayerStates::steeringState)				
 					{
-						// lookAt->
-						// if (cameraControlPacket.state==CameraControlPacket::steeringState)
 						{
 							entity->removeComponent(ComponentType::TAG_LookAtOrbitMode); // Disable this state...
 							entity->addComponent(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());  // ...and switch to follow state.

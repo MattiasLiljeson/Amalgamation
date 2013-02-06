@@ -129,7 +129,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
 			rotation.transformVector(offset);
 			position = AglVector3::lerp(position, lookTargetPos + offset,
-				saturate(lookAt->getMoveSpd()*dt));
+				saturate(lookAt->getMoveSpd()*3.0f*dt));
 			
 
 			// update

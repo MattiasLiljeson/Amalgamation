@@ -8,6 +8,7 @@
 
 Cursor::Cursor()
 {
+	m_visible=true;
 	reset();
 }
 
