@@ -84,17 +84,6 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			offset.transformNormal(targetTransform->getMatrix());
 			// update transform
 
-
-			// position = AglVector3::lerp(position,lookTargetPos+offset,saturate(30.0f*dt));	
-			// position += ((lookTargetPos+offset)-position)*dt*3.0f;
-			AglVector3 dir = (lookTargetPos+offset)-position;			
-
-			if ( targetEntity->getComponent(ComponentType::ComponentTypeIdx::ShipFlyController)!=NULL )
-			{
-				DEBUGPRINT(( ("\nX: "+toString(dir.x)+"  Y: "+toString(dir.y)+"  Z: "+toString(dir.z)+"\n").c_str() ));
-				DEBUGPRINT(( ("\nDT: "+toString(dt)+"\n").c_str() ));
-			}
-
 			// lerp
 			if (lookAt->getMoveSpd()*dt<1.0f)
 			{
@@ -133,13 +122,14 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			interRotation.normalize();
 			lookAt->setOrbitOffset(interRotation);
 
-			rotation = AglQuaternion::slerp(rotation,interRotation,
-				saturate(lookAt->getRotationSpeed()*dt),true);
+			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation()*interRotation,
+				saturate(lookAt->getRotationSpeed()*0.7f*dt),true);
 			rotation.normalize();
 
 			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
 			rotation.transformVector(offset);
-			position = lookTargetPos + offset;
+			position = AglVector3::lerp(position, lookTargetPos + offset,
+				saturate(lookAt->getMoveSpd()*dt));
 			
 
 			// update

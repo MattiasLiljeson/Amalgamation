@@ -211,6 +211,10 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			LightCreationData* source = &(*lights)[i];
 			Light light;
 			light.offsetMat = source->transform;
+			AglVector3 forward = source->transform.GetForward();
+			light.instanceData.lightDir[0] = forward.x;
+			light.instanceData.lightDir[1] = forward.y;
+			light.instanceData.lightDir[2] = forward.z;
 			light.instanceData.diffuse[0] = source->diffuse.x;
 			light.instanceData.diffuse[1] = source->diffuse.y;
 			light.instanceData.diffuse[2] = source->diffuse.z;
