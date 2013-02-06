@@ -188,6 +188,7 @@ public:
 	void mapVariousStagesForCompose();
 
 	void unmapVariousStagesForCompose();
+	unsigned int generateShadowMap();
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);

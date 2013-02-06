@@ -609,3 +609,8 @@ void GraphicsWrapper::setRenderingShadows(){
 void GraphicsWrapper::stopedRenderingShadows(){
 	m_renderingShadows = false;
 }
+
+unsigned int GraphicsWrapper::generateShadowMap()
+{
+	return m_shadowMapRenderer->createANewShadowMap();
+}

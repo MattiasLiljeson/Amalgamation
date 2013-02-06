@@ -8,9 +8,6 @@ ComponentRegister<LightsComponent> LightsComponent::s_reg("LightsComponent");
 
 Light::Light()
 {
-	//scale = AglVector3::one();
-	//rotation = AglQuaternion( 0.0f, 0.0f, 0.0f, 0.0f );
-	//translation = AglVector3::zero();
 	offsetMat = AglMatrix::identityMatrix();
 	instanceData.shadowIdx = -1;
 }

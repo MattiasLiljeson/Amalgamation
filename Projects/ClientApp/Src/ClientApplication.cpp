@@ -402,16 +402,29 @@ void ClientApplication::initEntities()
 	
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
-	entity = factory->entityFromRecipe( "SpotLight" );	
-	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
-	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
-	m_world->addEntity( entity );
-
 	EntitySystem* tempSys = NULL;
 
-	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+
+	for(int i = 0; i < 1; i++){
+		entity = factory->entityFromRecipe( "SpotLight" );
+		LightsComponent* lightComp = static_cast<LightsComponent*>(
+			entity->getComponent(ComponentType::LightsComponent));
+		int shadowIdx = -1;
+		vector<Light>* lights = lightComp->getLightsPtr();
+		for (unsigned int i = 0; i < lights->size(); i++){
+			if(lights->at(i).instanceData.shadowIdx != -1){
+				shadowIdx = graphicsBackend->getGfxWrapper()->generateShadowMap();
+				lights->at(i).instanceData.shadowIdx = shadowIdx;
+			}
+		}
+		CameraInfo* cameraInfo = new CameraInfo(1);
+		cameraInfo->m_shadowMapIdx = shadowIdx;
+		entity->addComponent(ComponentType::CameraInfo, cameraInfo);
+		entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+		m_world->addEntity( entity );
+	}
 	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
