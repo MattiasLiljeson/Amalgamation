@@ -5,11 +5,13 @@
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_info = "";
 }
 
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_info = "";
 
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );
@@ -35,6 +37,15 @@ SystemType EntitySystem::getSystemType()
 SystemType::SystemTypeIdx EntitySystem::getSystemTypeIdx()
 {
 	return m_type.getIndex();
+}
+const string& EntitySystem::getInfo() const
+{
+	return m_info;
+}
+
+void EntitySystem::setInfo(string p_info)
+{
+	m_info = p_info;
 }
 
 EntitySystem::~EntitySystem()

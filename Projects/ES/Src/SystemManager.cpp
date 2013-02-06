@@ -5,6 +5,7 @@ SystemManager::SystemManager( EntityWorld* p_world )
 {
 	m_world = p_world;
 	m_executionTimer = new PreciseTimer();
+	m_secondTimer = 0;
 }
 
 SystemManager::~SystemManager()
@@ -34,8 +35,11 @@ EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 			it = m_systemList.erase(it);
 	}
 	m_systemList.push_back( p_system );
-	m_systemsExecutionTimeMeasurements.push_back( vector<float>() );
-	
+	if(p_system->getInfo() != "")
+	{
+		m_systemsTimePerSecond[m_systemList.size() - 1] = 0;
+	}
+	m_systemsExecutionTimeMeasurements.push_back(0.0);	
 	p_system->setEnabled( p_enabled );
 	m_systems[p_typeIdx] = p_system;
 
@@ -104,7 +108,12 @@ void SystemManager::updateSynchronous()
 	//map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	//	it->second->process();
-
+	m_secondTimer += static_cast<double>(m_world->getDelta());
+	bool reset = m_secondTimer > 1.0;
+	if(reset)
+	{
+		m_secondTimer = 0.0;
+	}
 	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		EntitySystem* system = m_systemList[i];
@@ -113,12 +122,19 @@ void SystemManager::updateSynchronous()
 			m_executionTimer->start();
 			system->process();
 			double elapsedTime = m_executionTimer->stop();
-			m_systemsExecutionTimeMeasurements[i].push_back(elapsedTime);
+				m_systemsExecutionTimeMeasurements[i] += elapsedTime;
+			if(reset) // NOTE: &&
+			{
+				if(m_systemsTimePerSecond.count(i) > 0)
+				{
+					m_systemsTimePerSecond[i] = m_systemsExecutionTimeMeasurements[i];
+					m_systemsExecutionTimeMeasurements[i] = 0;
+				}
+			}
 		}
 		else
 		{
 			// Time is exactly zero if not executed.
-			m_systemsExecutionTimeMeasurements[i].push_back(0.0f);
 		}
 	}
 }

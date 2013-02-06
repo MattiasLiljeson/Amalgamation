@@ -49,6 +49,8 @@ public:
 
 	SystemType getSystemType();
 	SystemType::SystemTypeIdx getSystemTypeIdx();
+	const string& getInfo() const;
+	void setInfo(string p_info);
 
 	/**
 	 * Called before processing of entities begins. 
@@ -166,6 +168,7 @@ private:
 
 	//bitset<SystemType::NUM_SYSTEM_TYPES> m_systemBits;
 	SystemType m_type;
+	string m_info;
 	bitset<ComponentType::NUM_COMPONENT_TYPES> m_componentBits;
 };
 
