@@ -98,7 +98,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float shadowCoeff = 1.0f;
 	if( p_input.light.shadowIdx != -1 )
 	{
-		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj);
+		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[0]);
 		shadowCoeff = doShadowing(gShadow, pointSampler, shadowWorldPos);
 	}
 	lightCol *= shadowCoeff;

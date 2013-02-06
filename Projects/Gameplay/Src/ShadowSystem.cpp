@@ -3,10 +3,11 @@
 #include "CameraInfo.h"
 #include "Transform.h"
 
-ShadowSystem::ShadowSystem() : EntitySystem( SystemType::ShadowSystem, 3, 
+ShadowSystem::ShadowSystem() : EntitySystem( SystemType::ShadowSystem, 4, 
 											ComponentType::CameraInfo,
 											ComponentType::TAG_ShadowCamera,
-											ComponentType::Transform){
+											ComponentType::Transform,
+											ComponentType::LightsComponent){
 	
 }
 
