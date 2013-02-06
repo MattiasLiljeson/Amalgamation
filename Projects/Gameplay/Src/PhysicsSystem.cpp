@@ -23,6 +23,7 @@ PhysicsSystem::PhysicsSystem(TcpServer* p_server)
 {
 	m_physicsController = new PhysicsController();
 	m_server = p_server;
+	setInfo("Physics");
 }
 
 

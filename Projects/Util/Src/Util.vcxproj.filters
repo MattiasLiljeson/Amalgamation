@@ -8,16 +8,25 @@
       <Filter>Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="ValueClamp.h" />
+    <ClInclude Include="PreciseTimer.h">
+      <Filter>PreciseTimer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />
     <ClCompile Include="FileCheck.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="PreciseTimer.cpp">
+      <Filter>PreciseTimer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Filesystem">
       <UniqueIdentifier>{b264805b-dc01-4223-a1cd-30c3db85cb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PreciseTimer">
+      <UniqueIdentifier>{4036536b-2633-4970-9e98-6840eca2a662}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
