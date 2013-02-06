@@ -55,6 +55,8 @@ public:
 	void setTimeUsedPerSecond(double p_timeUsed);
 	const double& getLastExecutionTime() const;
 	void setLastExecutionTime(double p_timeUsed);
+	const double& getAverageExecutionTime() const;
+	void setAverageExecutionTime(double p_average);
 
 	/**
 	 * Called before processing of entities begins. 
@@ -175,6 +177,7 @@ private:
 	string m_info;
 	double m_timeUsedPerSecond;
 	double m_lastExecutionTime;
+	double m_averageExecutionTime;
 	bitset<ComponentType::NUM_COMPONENT_TYPES> m_componentBits;
 };
 

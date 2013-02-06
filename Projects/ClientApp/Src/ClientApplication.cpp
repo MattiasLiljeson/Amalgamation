@@ -92,6 +92,7 @@
 #include <ParticleRenderSystem.h>
 #include <InterpolationSystem.h>
 #include <ShadowSystem.h>
+#include <ClientMeasurementSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -364,6 +365,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
+	m_world->setSystem( new ClientMeasurementSystem(), true );
 
 	m_world->initialize();
 
@@ -372,7 +374,7 @@ void ClientApplication::initSystems()
 
 	// Run component assemblage allocator (not a system, so don't delete)
 	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
-	delete allocator;
+	delete allocator; // NOTE: (Johan) Why u delete when u say "don't delete"?
 }
 
 void ClientApplication::initEntities()

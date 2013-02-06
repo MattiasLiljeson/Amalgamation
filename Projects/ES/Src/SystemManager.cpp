@@ -6,6 +6,7 @@ SystemManager::SystemManager( EntityWorld* p_world )
 	m_world = p_world;
 	m_executionTimer = new PreciseTimer();
 	m_secondTimer = 0;
+	m_tickCounter = 0;
 }
 
 SystemManager::~SystemManager()
@@ -40,6 +41,11 @@ EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 	m_systems[p_typeIdx] = p_system;
 
 	return p_system;
+}
+
+const vector<EntitySystem*>& SystemManager::getSystemList() const
+{
+	return m_systemList;
 }
 
 void SystemManager::deleteSystem( SystemType p_type )
@@ -105,11 +111,8 @@ void SystemManager::updateSynchronous()
 	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	//	it->second->process();
 	m_secondTimer += static_cast<double>(m_world->getDelta());
+	m_tickCounter += 1;
 	bool reset = m_secondTimer > 1.0;
-	if(reset)
-	{
-		m_secondTimer = 0.0;
-	}
 	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		EntitySystem* system = m_systemList[i];
@@ -117,20 +120,30 @@ void SystemManager::updateSynchronous()
 		{
 			m_executionTimer->start();
 			system->process();
+
 			double elapsedTime = m_executionTimer->stop();
 			m_systemsExecutionTimeMeasurements[i] += elapsedTime;
 			m_systemList[i]->setLastExecutionTime(elapsedTime);
 			if(reset)
 			{
-				m_systemList[i]->setTimeUsedPerSecond(m_systemsExecutionTimeMeasurements[i]);
+				m_systemList[i]->setAverageExecutionTime(
+					m_systemsExecutionTimeMeasurements[i] / (double)m_tickCounter);
+				m_systemList[i]->setTimeUsedPerSecond(
+					m_systemsExecutionTimeMeasurements[i]);
 				m_systemsExecutionTimeMeasurements[i] = 0;
 			}
 		}
 		else
 		{
+			m_systemList[i]->setAverageExecutionTime(0.0);
 			m_systemList[i]->setTimeUsedPerSecond(0.0);
 			m_systemList[i]->setLastExecutionTime(0.0);
 		}
+	}
+	if(reset)
+	{
+		m_secondTimer = 0.0;
+		m_tickCounter = 0;
 	}
 }
 

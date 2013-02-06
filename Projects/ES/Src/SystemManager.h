@@ -32,6 +32,12 @@ public:
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
 		bool p_enabled = true );
 
+	///-----------------------------------------------------------------------------------
+	/// Get a reference to the system list, to be iterated over.
+	/// \return const vector<EntitySystem*>&
+	///-----------------------------------------------------------------------------------
+	const vector<EntitySystem*>& getSystemList() const;
+
 	/**
 	 * Remove the specified system from the manager.
 	 * @param p_type Type of system to be deleted from manager.
@@ -62,6 +68,7 @@ private:
 	vector<EntitySystem*> m_systemList;
 	// For every system this vector contains a vector of every process() call execution time per second.
 	vector< double > m_systemsExecutionTimeMeasurements;
+	unsigned int m_tickCounter;
 	double m_secondTimer;
 	PreciseTimer* m_executionTimer;
 };

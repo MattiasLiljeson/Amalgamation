@@ -72,6 +72,16 @@ void EntitySystem::setLastExecutionTime(double p_timeUsed)
 	m_lastExecutionTime = p_timeUsed;
 }
 
+const double& EntitySystem::getAverageExecutionTime() const
+{
+	return m_averageExecutionTime;
+}
+
+void EntitySystem::setAverageExecutionTime(double p_average)
+{
+	m_averageExecutionTime = p_average;
+}
+
 EntitySystem::~EntitySystem()
 {
 }
