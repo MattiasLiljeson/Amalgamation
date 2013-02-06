@@ -489,7 +489,7 @@ void ClientApplication::initEntities()
 	header.alignmentType = AglParticleSystemHeader::OBSERVER;
 	ps->addParticleSystem( header );
 	ps->getCollectionPtr()->m_particleSystems[0].setSpawnDirection( AglVector3(1.1f, 1.2f, 1.3f) );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnSpeed( 234.0f );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnSpeed( 2.340f );
 	ps->getCollectionPtr()->m_particleSystems[0].setMaxOpacity( 3.1f );
 	ps->getCollectionPtr()->m_particleSystems[0].setSpawnAngularVelocity( 45.6f );
 	ps->getCollectionPtr()->m_particleSystems[0].setSpread( 7.8f );
@@ -500,8 +500,6 @@ void ClientApplication::initEntities()
 	ps->getCollectionPtr()->m_particleSystems[0].setParticleSize(AglVector2(12.1f, 12.2f));
 	ps->getCollectionPtr()->m_particleSystems[0].setParticleAge( 13.1f );
 	ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
-
-
 	entity->addComponent( ps );
 
 	m_world->addEntity(entity);
