@@ -12,14 +12,6 @@ ClientMeasurementSystem::~ClientMeasurementSystem()
 
 void ClientMeasurementSystem::process()
 {
-	vector<EntitySystem*> systems = m_world->getSystems()->getSystemList();
-	for(unsigned int i=0; i<systems.size(); i++)
-	{
-		if(systems[i]->getTimeUsedPerSecond() > 0.05)
-		{
-			int a = 0;
-		}
-	}
 }
 
 void ClientMeasurementSystem::initialize()
