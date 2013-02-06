@@ -35,10 +35,6 @@ EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 			it = m_systemList.erase(it);
 	}
 	m_systemList.push_back( p_system );
-	if(p_system->getInfo() != "")
-	{
-		m_systemsTimePerSecond[m_systemList.size() - 1] = 0;
-	}
 	m_systemsExecutionTimeMeasurements.push_back(0.0);	
 	p_system->setEnabled( p_enabled );
 	m_systems[p_typeIdx] = p_system;
@@ -122,19 +118,18 @@ void SystemManager::updateSynchronous()
 			m_executionTimer->start();
 			system->process();
 			double elapsedTime = m_executionTimer->stop();
-				m_systemsExecutionTimeMeasurements[i] += elapsedTime;
-			if(reset) // NOTE: &&
+			m_systemsExecutionTimeMeasurements[i] += elapsedTime;
+			m_systemList[i]->setLastExecutionTime(elapsedTime);
+			if(reset)
 			{
-				if(m_systemsTimePerSecond.count(i) > 0)
-				{
-					m_systemsTimePerSecond[i] = m_systemsExecutionTimeMeasurements[i];
-					m_systemsExecutionTimeMeasurements[i] = 0;
-				}
+				m_systemList[i]->setTimeUsedPerSecond(m_systemsExecutionTimeMeasurements[i]);
+				m_systemsExecutionTimeMeasurements[i] = 0;
 			}
 		}
 		else
 		{
-			// Time is exactly zero if not executed.
+			m_systemList[i]->setTimeUsedPerSecond(0.0);
+			m_systemList[i]->setLastExecutionTime(0.0);
 		}
 	}
 }

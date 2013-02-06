@@ -11,6 +11,7 @@ namespace AntTweakBarStrings{
 	static const string& graphics	= "Graphics";
 	static const string& input		= "Input";
 	static const string& network	= "Network";
+	static const string& measurement= "Measurement";
 }
 
 using namespace AntTweakBarStrings;
@@ -33,7 +34,7 @@ class AntTweakBarWrapper
 public:
 	enum BarType
 	{
-		OVERALL, SOUND, GRAPHICS, INPUT, NETWORK
+		OVERALL, SOUND, GRAPHICS, INPUT, NETWORK, MEASUREMENT
 	};
 public:
 	///-----------------------------------------------------------------------------------
@@ -170,6 +171,7 @@ private:
 	TwBar* m_graphicsBar;
 	TwBar* m_input;
 	TwBar* m_network;
+	TwBar* m_measurement;
 
 	static AntTweakBarWrapper* sInstance;
 };

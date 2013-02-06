@@ -60,11 +60,9 @@ private:
 
 	// Vector that stores systems in the order they've been added. For dependencies
 	vector<EntitySystem*> m_systemList;
-	// For every system this vector contains a vector of every process() call execution time.
-//	vector< vector<double> > m_systemsExecutionTimeMeasurements;
+	// For every system this vector contains a vector of every process() call execution time per second.
 	vector< double > m_systemsExecutionTimeMeasurements;
 	double m_secondTimer;
-	map<unsigned int, double> m_systemsTimePerSecond;
 	PreciseTimer* m_executionTimer;
 };
 

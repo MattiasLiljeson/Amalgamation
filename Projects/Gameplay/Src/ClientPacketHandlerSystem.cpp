@@ -344,6 +344,14 @@ void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket 
 
 void ClientPacketHandlerSystem::initialize()
 {
+	/************************************************************************/
+	/* Timer debug info. (Would be nice to move this to a general system	*/
+	/* handling all timings in a neat way.									*/
+	/************************************************************************/
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::MEASUREMENT,
+		getInfo().c_str(), TwType::TW_TYPE_DOUBLE, &getTimeUsedPerSecond(), "" );
+	// End
+
 	AntTweakBarWrapper::getInstance()->modifyTheRefreshRate(AntTweakBarWrapper::NETWORK,
 		0.1f );
 

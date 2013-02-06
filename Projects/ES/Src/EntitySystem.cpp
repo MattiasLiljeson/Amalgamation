@@ -6,12 +6,16 @@ EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 {
 	m_type = SystemType::getTypeFor(p_type);
 	m_info = "";
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 }
 
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
 {
 	m_type = SystemType::getTypeFor(p_type);
 	m_info = "";
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );
@@ -46,6 +50,26 @@ const string& EntitySystem::getInfo() const
 void EntitySystem::setInfo(string p_info)
 {
 	m_info = p_info;
+}
+
+const double& EntitySystem::getTimeUsedPerSecond() const
+{
+	return m_timeUsedPerSecond;
+}
+
+void EntitySystem::setTimeUsedPerSecond(double p_timeUsed)
+{
+	m_timeUsedPerSecond = p_timeUsed;
+}
+
+const double& EntitySystem::getLastExecutionTime() const
+{
+	return m_lastExecutionTime;
+}
+
+void EntitySystem::setLastExecutionTime(double p_timeUsed)
+{
+	m_lastExecutionTime = p_timeUsed;
 }
 
 EntitySystem::~EntitySystem()
