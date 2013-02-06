@@ -1,6 +1,7 @@
 #include "PlayerScore.h"
 
 PlayerScore::PlayerScore()
+	: Component( ComponentType::PlayerScore )
 {
 	m_baseScore = 0;
 	m_moduleScore = 0;

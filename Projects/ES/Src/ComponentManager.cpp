@@ -79,7 +79,12 @@ void ComponentManager::removeComponent( Entity* p_entity, ComponentType::Compone
 	{
 		// delete her OK? Any references left?
 		m_deleteOnPost.push_back(m_componentsByType[p_typeIdx][p_entity->getIndex()]);
-		m_componentsByType[p_typeIdx][entityIndex] = NULL;
+
+		// HACK: (Johan) Omg, don't forget that you made a change in the matrix, fool!
+//		m_componentsByType[p_typeIdx][entityIndex] = NULL;
+		m_deleteComponentsByTypeOnPostPerform.push_back(
+			pair<int, int>( p_typeIdx, p_entity->getIndex() ));
+
 		p_entity->setComponentBit( p_typeIdx, false );
 	}
 }
@@ -145,6 +150,14 @@ void ComponentManager::removeComponentsOfEntity( Entity* p_entity )
 
 void ComponentManager::postPerform()
 {
+	for(unsigned int i=0; i<m_deleteComponentsByTypeOnPostPerform.size(); i++)
+	{
+		int typeIndex = m_deleteComponentsByTypeOnPostPerform[i].first;
+		int entityIndex = m_deleteComponentsByTypeOnPostPerform[i].second;
+		m_componentsByType[typeIndex][entityIndex] = NULL;
+	}
+	m_deleteComponentsByTypeOnPostPerform.clear();
+
 	// Remove all components here!
 	for (unsigned int i = 0; i < m_deleted.size(); i++)
 	{
@@ -158,4 +171,5 @@ void ComponentManager::postPerform()
 		delete m_deleteOnPost[i];
 	}
 	m_deleteOnPost.clear();
+
 }

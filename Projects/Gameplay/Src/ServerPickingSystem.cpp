@@ -66,7 +66,8 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			else if (m_pickComponents[i].m_selection >= 0)
 			{
 				Entity* SelectionSphere = m_world->getEntity(m_pickComponents[i].m_selection);
-				Transform* SelectionSphereTransform = static_cast<Transform*>(SelectionSphere->getComponent(ComponentType::Transform));
+				Transform* SelectionSphereTransform = static_cast<Transform*>
+					(SelectionSphere->getComponent(ComponentType::Transform));
 				SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 			}
 		}
@@ -75,7 +76,8 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			//Create the selection highlighter sphere
 			Entity* entity = m_world->createEntity();
 
-			Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::identity(), AglVector3(1, 1, 1));
+			Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::identity(), 
+				AglVector3(1, 1, 1));
 			entity->addComponent( ComponentType::Transform, t);
 			m_world->addEntity(entity);
 			m_pickComponents[i].m_selection = entity->getIndex();
@@ -152,12 +154,28 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
 
-		int col = physX->getPhysicsController()->LineClosestCollision(p_pc.m_rayIndex);
-		if (col >= 0)
+		vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
+		if (cols.size() > 0)
 		{
+			//Find closest module
+			int col = -1;
+			for (unsigned int i = 0; i < cols.size(); i++)
+			{
+				Entity* e = physX->getEntity(cols[i].bodyID);
+				if (e && e->getComponent(ComponentType::ShipModule))
+				{
+					col = cols[i].bodyID;
+					break;
+				}
+			}
+
+			if (col < 0)
+				return;
+
 			for (unsigned int i = 0; i < p_entities.size(); i++)
 			{
-				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
+				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+					ComponentType::PhysicsBody));
 				if (pb && pb->m_id == col)
 				{
 					//Found a pick
@@ -193,7 +211,8 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	physX->getController()->GetRay(p_ray.m_rayIndex, origin, dir);
 
 
-	PhysicsBody* projectBody = static_cast<PhysicsBody*>(toProject->getComponent(ComponentType::PhysicsBody));
+	PhysicsBody* projectBody = static_cast<PhysicsBody*>(toProject->getComponent(
+		ComponentType::PhysicsBody));
 	Body* body = physX->getController()->getBody(projectBody->m_id);
 
 	AglVector3 vec = body->GetWorld().GetTranslation() - origin;
@@ -201,56 +220,68 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	AglVector3 dest = origin + dir * p_ray.m_preferredDistance;
 
 
-	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(
+		SystemType::ShipManagerSystem));
 
 	//Handle the ship
 	Entity* ship = sms->findShip(p_ray.m_clientIndex);
 
-	PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(ComponentType::PhysicsBody));
+	PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
+		ComponentType::PhysicsBody));
 	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
 
-	AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
+	//Ship should always be a compound body
+	CompoundBody* physicalShipCompoundBody = static_cast<CompoundBody*>(physicalShipBody);
 
-	float radius = 4; //Hard coded radius for now
+	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	dir = dest - sphereCenter;
+	//AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
+
+	//float radius = 4; //Hard coded radius for now
+
+	dir = dest - bs.position;
 	dir.normalize();
-	dest = sphereCenter + dir * radius;
+	dest = bs.position + dir * bs.radius;
 
 	AglVector3 vel = body->GetVelocity();
 
-	float t = getT(origin, dir, sphereCenter, radius);
+	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
 		dest = origin + dir*t;
 	body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
 
 	//Fix selection sphere
 	Entity* SelectionSphere = m_world->getEntity(p_ray.m_selection);
-	Transform* SelectionSphereTransform = static_cast<Transform*>(SelectionSphere->getComponent(ComponentType::Transform));
+	Transform* SelectionSphereTransform = static_cast<Transform*>
+		(SelectionSphere->getComponent(ComponentType::Transform));
 	SelectionSphereTransform->setTranslation(closestConnectionPoint(dest, ship, p_ray));
 	if (p_ray.m_targetEntity >= 0)
-		SelectionSphereTransform->setScale(AglVector3(1, 1, 1));
+		SelectionSphereTransform->setScale(AglVector3(2, 2, 2));
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 }
-AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc)
+AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, 
+													   Entity* p_entity, PickComponent& p_pc)
 {
 	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 		SystemType::PhysicsSystem));
 
-	ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(p_entity->getComponent(ComponentType::ConnectionPointSet));
-	Transform* transform = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
+	ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>
+		(p_entity->getComponent(ComponentType::ConnectionPointSet));
+	Transform* transform = static_cast<Transform*>(p_entity->getComponent(
+		ComponentType::Transform));
 
 	vector<pair<int, Entity*>> free = getFreeConnectionPoints(conPoints, p_entity);
 
-	PhysicsBody* phyBody = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
+	PhysicsBody* phyBody = static_cast<PhysicsBody*>(p_entity->getComponent(
+		ComponentType::PhysicsBody));
 	Body* b = physX->getController()->getBody(phyBody->m_id);
 	AglVector3 parentPos = b->GetWorld().GetTranslation();
 
 	AglVector3 closest = AglVector3(0, 0, 0);
 	if (free.size() > 0)
 	{
-		AglVector3 pos = (conPoints->m_connectionPoints[free[0].first].cpTransform*transform->getMatrix()).GetTranslation();
+		AglVector3 pos(FLT_MAX, FLT_MAX, FLT_MAX);// = (conPoints->m_connectionPoints[free[0].first].cpTransform*transform->getMatrix()).GetTranslation();
 		closest = pos;
 		p_pc.m_targetEntity = free[0].second->getIndex();
 		p_pc.m_targetSlot = free[0].first;
@@ -258,7 +289,8 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 		{
 			conPoints = static_cast<ConnectionPointSet*>(free[i].second->getComponent(ComponentType::ConnectionPointSet));
 			transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
-			AglVector3 pos = (conPoints->m_connectionPoints[free[i].first].cpTransform*transform->getMatrix()).GetTranslation();
+			AglVector3 pos = conPoints->m_connectionPoints[free[i].first].cpTransform.GetTranslation();
+			pos.transform(transform->getMatrix());
 			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
 			{
 				closest = pos;
@@ -276,7 +308,8 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, En
 }
 
 
-vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent)
+vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(
+	ConnectionPointSet* p_set, Entity* p_parent)
 {
 	vector<pair<int, Entity*>> free;
 	for (unsigned int i = 0; i < p_set->m_connectionPoints.size(); i++)
@@ -286,48 +319,99 @@ vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(Connecti
 			i, p_parent));
 		else
 		{
-			Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
-
-			ConnectionPointSet* connector =
-				static_cast<ConnectionPointSet*>(
-				m_world->getComponentManager()->getComponent(module,
-				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-			if (connector)
+			ShipModule* parentModule = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+			if (!parentModule || (parentModule->m_parentEntity != p_set->m_connectionPoints[i].cpConnectedEntity))
 			{
-				vector<pair<int, Entity*>> moreFree 
-					= getFreeConnectionPoints(connector, module);
-				for (unsigned int j = 0; j < moreFree.size(); j++)
-					free.push_back(moreFree[j]);
+				Entity* module = m_world->getEntity(p_set->m_connectionPoints[i].cpConnectedEntity);
+
+				ConnectionPointSet* connector =
+					static_cast<ConnectionPointSet*>(
+					m_world->getComponentManager()->getComponent(module,
+					ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+				if (connector)
+				{
+					vector<pair<int, Entity*>> moreFree 
+						= getFreeConnectionPoints(connector, module);
+					for (unsigned int j = 0; j < moreFree.size(); j++)
+						free.push_back(moreFree[j]);
+				}
 			}
 		}
 	}
 	return free;
 }
 
-AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base)
+AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset)
 {
 	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+	vector<AglMatrix> transforms;
+	transforms.push_back(p_offset);
+	transforms.push_back(p_base);
 	while (module)
 	{
 		Entity* parent = m_world->getEntity(module->m_parentEntity);
 
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-			m_world->getComponentManager()->getComponent(parent,
+			m_world->getComponentManager()->getComponent(p_entity,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
 		unsigned int ind = 0;
 		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
 		{
-			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+			if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
 				ind = i;
 		}
 
-		transform = transform * cps->m_connectionPoints[ind].cpTransform;
+		//Child
+		PhysicsBody* childBody = static_cast<PhysicsBody*>(p_entity->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
+
+		//Parent Connection points
+		cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(parent,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
+			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				ind = i;
+		}
+		//Parent
+		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
+		
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 		p_entity = parent;
 	}
-	return transform;
+
+	AglMatrix finalTransform = AglMatrix::identityMatrix();
+	AglMatrix final = AglMatrix::identityMatrix();
+
+	while (transforms.size() > 0)
+	{
+		//Parent transform
+		AglMatrix transform = transforms.back();
+
+		//Child Transform
+		AglMatrix childTransform = transforms[transforms.size()-2];
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation();
+		rot.transformVector(childTrans);
+
+		//Negate to get correct
+		finalTransform.SetTranslation(transform.GetTranslation() - childTrans);
+		transforms.pop_back();
+		transforms.pop_back();
+
+		final = finalTransform*final;
+	}
+	return final;
 }
 
 
@@ -340,18 +424,46 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
-		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
-		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
+		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
+			ComponentType::ShipModule));
+		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
+			ComponentType::PhysicsBody));
+
+		//Find module connection point
+		ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(module->getComponent(ComponentType::ConnectionPointSet));
+
+		//Don't allow connection if the module has no connection points
+		if (!conPoints)
+			return;
+
+		int sel = -1;
+		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+		{
+			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
+			{
+				sel = i;
+				break;
+			}
+		}
+
+		//Don't allow connection if the module doesn't have any free connection points
+		if (sel < 0)
+			return;
 
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
 		Entity* ship = target;
 		while (ship->getComponent(ComponentType::ShipModule))
 		{
-			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(ComponentType::ShipModule));
+			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
+				ComponentType::ShipModule));
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
-		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(ComponentType::PhysicsBody));
+		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
+			ComponentType::PhysicsBody));
+
+		PhysicsBody* targetBody = static_cast<PhysicsBody*>(target->getComponent(
+			ComponentType::PhysicsBody));
 
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
 			m_world->getComponentManager()->getComponent(target,
@@ -361,11 +473,19 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
+		//Parent transform
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse());
+		//AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
 
+		//transform *= shipBody->getOffset().inverse();
 
-		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform);
 		physX->getController()->AttachBodyToCompound(comp, r, transform);
+		
+		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
+		
+		//Set the module connection point
+		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
 
@@ -384,8 +504,10 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
-		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(ComponentType::ShipModule));
-		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(ComponentType::PhysicsBody));
+		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
+			ComponentType::ShipModule));
+		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
+			ComponentType::PhysicsBody));
 
 		//Make sure the module is not connecting other modules
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
@@ -395,7 +517,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
 			{
-				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0)
+				if (cps->m_connectionPoints[i].cpConnectedEntity >= 0 &&
+					cps->m_connectionPoints[i].cpConnectedEntity != shipModule->m_parentEntity)
 					return false;
 			}
 		}
@@ -404,22 +527,35 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
-			cps = static_cast<ConnectionPointSet*>(
+			ConnectionPointSet* cpsParent = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 			
+			//Find parent slot
 			int slot = 0;
-			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			for (unsigned int i = 0; i < cpsParent->m_connectionPoints.size(); i++)
 			{
-				if (cps->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
+				if (cpsParent->m_connectionPoints[i].cpConnectedEntity == module->getIndex())
 				{
 					slot = i;
 					break;
 				}
 			}
 
+			//Find Child slot
+			int childslot = 0;
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
+				{
+					childslot = i;
+					break;
+				}
+			}
+
 			//Detach
-			cps->m_connectionPoints[slot].cpConnectedEntity = -1;
+			cpsParent->m_connectionPoints[slot].cpConnectedEntity = -1;
+			cps->m_connectionPoints[childslot].cpConnectedEntity = -1;
 			shipModule->m_parentEntity = -1;
 			moduleBody->setParentId(-1);
 
@@ -429,3 +565,37 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 	}
 	return true;
 }
+
+
+	/*AglMatrix finalTransform = AglMatrix::identityMatrix();
+	while (transforms.size() > 0)
+	{
+		//AFAGAgAG
+		AglVector3 trans = transforms.back().GetTranslation();
+		transforms.back().SetTranslation(AglVector3(0, 0, 0));
+		transforms.back() *= finalTransform;
+		trans.transform(finalTransform);
+		transforms.back().SetTranslation(trans + transforms.back().GetTranslation());
+		//SAGSAGSAG
+
+
+		//Parent transform
+		AglMatrix transform = transforms.back();
+
+		//Child Transform
+		AglMatrix childTransform = transforms[transforms.size()-2];
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+		finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation()-transform;
+		rot.transformVector(childTrans);
+		finalTransform.SetTranslation(transform.GetTranslation() + childTrans);
+		transforms.pop_back();
+		transforms.pop_back();
+	}
+	/*AglVector3 trans = p_base.GetTranslation();
+	p_base.SetTranslation(AglVector3(0, 0, 0));
+	p_base *= finalTransform;
+	trans.transform(finalTransform);
+	p_base.SetTranslation(trans + p_base.GetTranslation());*/
+	//return finalTransform;

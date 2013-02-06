@@ -60,10 +60,10 @@ public:
 	void processMessages();
 
 	/// Broadcasts a packet to all connected clients
-	void broadcastPacket( Packet p_packet );
-	void multicastPacket( vector<int> p_connectionIdentities, Packet p_packet );
+	void broadcastPacket( Packet& p_packet, int p_excludeClientId=-1 );
+	void multicastPacket( vector<int> p_connectionIdentities, Packet& p_packet );
 	/// Unicast sends a packet to only one specified client
-	void unicastPacket( Packet p_packet, int p_clientId );
+	void unicastPacket( Packet& p_packet, int p_clientId );
 	void unicastPacketQueue( queue<Packet> p_packets, int p_clientId );
 	const unsigned int& getTotalBroadcasts();
 	void askForCommProcessInfo();

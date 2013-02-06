@@ -19,8 +19,10 @@
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
 #include "ThrustPacket.h"
+#include "EntityUpdatePacket.h"
+#include "MeshOffsetTransform.h"
 
-
+#define FORCE_VS_OUTPUT
 
 ShipFlyControllerSystem::ShipFlyControllerSystem( ShipInputProcessingSystem* p_shipInput,
 										    PhysicsSystem* p_physicsSystem,
@@ -55,6 +57,8 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+
+			// Calculate impulse data to send to server
 			Entity* ship = p_entities[i];
 			ShipFlyController* controller = static_cast<ShipFlyController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
@@ -62,13 +66,26 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			Transform* transform = static_cast<Transform*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
+			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
+
+			if (meshOffset)
+			{
+				AglMatrix mat = meshOffset->offset;
+				transform = new Transform(mat.transpose() * transform->getMatrix());
+			}
+			else
+			{
+				transform = new Transform(transform->getMatrix());
+			}
+
 			// Calc rotation from player input
 			AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
 
 			// Turning multiplier
 			float  turnSpeed = controller->getTurningSpeed() * dt;
 			// Thrust multiplier
-			float  thrustPower = (controller->getThrustPower()+getSpeedBoost(ship, controller->getThrustPower())) * dt;
+			float  thrustPower = controller->getThrustPower() * dt;
 
 			// Calc translation from player input
 			AglVector3 thrustVec;
@@ -84,21 +101,23 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
-			m_thrustVec += thrustVec;
-			m_angularVec += angularVec;
 
+			controller->m_thrustPowerAccumulator += thrustVec;
+			controller->m_turnPowerAccumulator += angularVec;
 
+			// Handle switch to edit mode
 			if (input.stateSwitchInput != 0)
 			{
-				m_thrustVec = AglVector3::zero();
-				m_angularVec = AglVector3::zero();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
 			}
 
+			// Send data to server
 			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-				checkTimeInterval(TimerIntervals::Every16Millisecond))
+				checkTimeInterval(TimerIntervals::Every8Millisecond))
 			{
 				/************************************************************************/
 				/* Send the thrust packet to the server!								*/
@@ -106,42 +125,24 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
-				sendThrustPacketToServer(netSync,m_thrustVec, m_angularVec);
+				sendThrustPacketToServer(netSync,
+					controller->m_thrustPowerAccumulator, 
+					controller->m_turnPowerAccumulator);
 
-				m_thrustVec = AglVector3();
-				m_angularVec = AglVector3();
+				controller->m_thrustPowerAccumulator = AglVector3::zero();
+				controller->m_turnPowerAccumulator = AglVector3::zero();
 			}
 
+			// Handle data sent to us from server
+			// handleTransformInterpolation( controller, transform );
 
+			delete transform;
 		}
 	}
 }
 
-//Anton - 9/1-13
-float ShipFlyControllerSystem::getSpeedBoost(Entity* p_entity, float p_baseThrust)
-{
-	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::ConnectionPointSet ) );
-	if (!cps)
-		return 0;
-
-	float speedBoost = 0;
-	vector<ConnectionPoint> list = cps->m_connectionPoints;
-	for (unsigned int i = 0; i < list.size(); i++)
-	{
-		if (list[i].cpConnectedEntity >= 0)
-		{
-			Entity* module = m_world->getEntity(list[i].cpConnectedEntity);
-
-			SpeedBoosterModule* booster = static_cast<SpeedBoosterModule*>(
-				module->getComponent( ComponentType::ComponentTypeIdx::SpeedBoosterModule ) );
-
-			if (booster)
-				speedBoost += 5.0f*p_baseThrust;
-		}
-	}
-	return speedBoost;
-}
+// NOTE: (Johan) 1/2-13 Removed the whole getSpeedBoost method on client side, since
+// it wasn't used, and that was quite confusing.
 
 void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
 													   AglVector3 p_thrust, 

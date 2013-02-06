@@ -1,10 +1,10 @@
 e GlobalLight
 c LightsComponent
 d s 0:typeAsStr pointLight
-d f 0:scaleX 2000
-d f 0:scaleY 2000
-d f 0:scaleZ 2000
-d f 0:range 2000
+d f 0:scaleX 0
+d f 0:scaleY 0
+d f 0:scaleZ 0
+d f 0:range 0
 d f 0:attenuationX 0.8
 d f 0:attenuationY 0.0001
 d f 0:attenuationZ 0.0001

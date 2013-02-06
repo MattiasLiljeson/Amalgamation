@@ -15,6 +15,7 @@ class DeferredBaseShader;
 class DeferredComposeShader;
 class GUIShader;
 class ParticleShader;
+class ShadowShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -54,6 +55,8 @@ public:
 	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
 
 	ParticleShader* createParticleShader(const LPCWSTR& p_filePath);
+
+	ShadowShader* createShadowShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------
@@ -99,7 +102,7 @@ private:
 	///-----------------------------------------------------------------------------------
 	void createShaderInitData(ShaderVariableContainer* p_shaderInitData,
 		ID3D11InputLayout* p_inputLayout,
-		VSData* p_vsd, PSData* p_psd, 
+		VSData* p_vsd, PSData* p_psd=NULL, 
 		ID3D11SamplerState* p_samplerState=NULL,
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 

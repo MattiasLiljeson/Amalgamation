@@ -19,6 +19,7 @@ class DebugMove: public Component
 {
 public:
 	DebugMove(AglVector3 p_direction)
+	: Component( ComponentType::DebugMove )
 	{
 		direction = p_direction;
 	}

@@ -64,6 +64,12 @@ public:
 	Control* getControlByEnum( InputHelper::Xbox360Digitals p_digital );
 	Control* getControlByEnum( InputHelper::Xbox360Analogs p_analog );
 
+	///-----------------------------------------------------------------------------------
+	/// Activates rumble on controller. Provide values between 
+	/// 0-100 indicating motor percentage use.
+	///-----------------------------------------------------------------------------------
+	void setControllerVibration(float p_leftMotor, float p_rightMotor);
+
 private:
 	///-----------------------------------------------------------------------------------
 	/// Helper function used to add a Control to all maps. 

@@ -38,9 +38,12 @@
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
     <ClInclude Include="GameOptionsSystem.h" />
+    <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
     <ClInclude Include="LevelGenSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
@@ -57,19 +60,24 @@
     <ClInclude Include="LightSources.h" />
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="LookAtSystem.h" />
-    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuSystem.h" />
     <ClInclude Include="BoundingVolumeInitData.h" />
+    <ClInclude Include="MeshOffsetTransform.h" />
     <ClInclude Include="MineControllerSystem.h" />
     <ClInclude Include="MineLayerModuleControllerSystem.h" />
     <ClInclude Include="MineLayerModule.h" />
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="ModuleEvent.h" />
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="ShieldModuleActivation.h" />
+    <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
     <ClInclude Include="ParticleUpdateData.h" />
@@ -88,6 +96,7 @@
     <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
+    <ClInclude Include="RemoveSoundEffectPacket.h" />
     <ClInclude Include="RocketControllerSystem.h" />
     <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
     <ClInclude Include="RocketLauncherModule.h" />
@@ -100,6 +109,7 @@
     <ClInclude Include="ServerStaticObjectsSystem.h" />
     <ClInclude Include="ServerUpdateSystem.h" />
     <ClInclude Include="ServerWelcomeSystem.h" />
+    <ClInclude Include="ShadowSystem.h" />
     <ClInclude Include="ShipEditController.h" />
     <ClInclude Include="ShipEditControllerSystem.h" />
     <ClInclude Include="ShipFlyController.h" />
@@ -115,27 +125,30 @@
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
-    <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputBackendSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
     <ClInclude Include="MeshRenderSystem.h" />
-    <ClInclude Include="ShipController.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
     <ClInclude Include="ShipModulesControllerSystem.h" />
+    <ClInclude Include="ShipModulesTrackerSystem.h" />
     <ClInclude Include="SimpleEventPacket.h" />
+    <ClInclude Include="SlotInputControllerSystem.h" />
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
+    <ClInclude Include="StaticProp.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="EntityParent.h" />
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="Vibration.h" />
     <ClInclude Include="WelcomePacket.h" />
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
@@ -163,24 +176,29 @@
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GameOptionsSystem.cpp" />
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="LibRocketEventManager.cpp" />
     <ClCompile Include="LibRocketInputHelper.cpp" />
+    <ClCompile Include="LightBlinker.cpp" />
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
     <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
@@ -216,6 +234,7 @@
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
+    <ClCompile Include="ShadowSystem.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="ShipInputProcessingSystem.cpp" />
@@ -232,9 +251,13 @@
     <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
+    <ClCompile Include="ShipModulesTrackerSystem.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
+    <ClCompile Include="RemoveSoundEffectPacket.cpp" />
+    <ClCompile Include="SlotInputControllerSystem.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
@@ -243,6 +266,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformParentHandlerSystem.cpp" />
     <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="Vibration.cpp" />
     <ClCompile Include="WelcomePacket.cpp" />
     <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>
@@ -305,8 +329,6 @@
     </Link>
     <Lib>
       <AdditionalDependencies>RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
-      <Verbose>
-      </Verbose>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

@@ -38,6 +38,6 @@ private:
 	AglVector3 closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc);
 	void attemptConnect(PickComponent& p_ray);
 	bool attemptDetach(PickComponent& p_ray);
-	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base);
+	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
 };

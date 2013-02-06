@@ -2,9 +2,12 @@
 
 #include <EntitySystem.h>
 
-class GraphicsBackendSystem;
 class Transform;
 struct ModelResource;
+class BodyInitData;
+class PhysicsBody;
+struct AglMatrix;
+
 
 // =======================================================================================
 //                                      LoadMeshSystem
@@ -14,7 +17,9 @@ struct ModelResource;
 /// \brief System that processes entities with LoadMeshJobComponents and loads the
 /// specified mesh from file, which can result in additional components on the entity as
 /// well as new entities.
-///        
+///
+/// Base class with pure virtual meshresource creation method.
+///
 /// # LoadMeshSystem
 /// Detailed description.....
 /// Created on: 22-1-2013 
@@ -23,7 +28,7 @@ struct ModelResource;
 class LoadMeshSystem : public EntitySystem
 {
 public:
-	LoadMeshSystem(GraphicsBackendSystem* p_gfxBackend);
+	LoadMeshSystem();
 	virtual ~LoadMeshSystem();
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
@@ -35,7 +40,7 @@ private:
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	void setRootData(Entity* p_entity, ModelResource* p_modelResource, 
-					Transform* p_outTransform);
+		Transform* p_outTransform);
 
 	///-----------------------------------------------------------------------------------
 	/// Create children entities, if any are specified
@@ -44,7 +49,23 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createChildrenEntities(vector<ModelResource*>* p_modelResources,
-								Entity* p_rootEntity);
+		Entity* p_rootEntity);
 
-	GraphicsBackendSystem* m_gfxBackend;
+	///-----------------------------------------------------------------------------------
+	/// A way to generate model resources
+	/// \return vector<ModelResource*>*
+	///-----------------------------------------------------------------------------------
+	virtual vector<ModelResource*>* createModels(const string& p_filename, 
+		const string& p_filePath,
+		bool p_isPrimitive)=0;
+
+	virtual void setUpRenderInfo(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpConnectionPoints(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource);
+
+	virtual void setUpRootCollision(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 
+									 BodyInitData* p_rootRigidBodyData,
+									 PhysicsBody* p_rootPhysicsBody,
+									 AglMatrix& baseTransform)=0;
 };

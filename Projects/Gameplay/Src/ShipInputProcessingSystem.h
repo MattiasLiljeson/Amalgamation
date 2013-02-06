@@ -2,11 +2,9 @@
 
 #include <EntitySystem.h>
 #include "ShipInputProcessingSystem.h"
-#include "TcpClient.h"
 
 class Control;
 class InputBackendSystem;
-
 
 // =======================================================================================
 //                              ShipSystemsInputHelper
@@ -23,7 +21,7 @@ class InputBackendSystem;
 class ShipInputProcessingSystem : public EntitySystem
 {
 public:
-	ShipInputProcessingSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client);
+	ShipInputProcessingSystem(InputBackendSystem* p_inputBackend);
 	virtual ~ShipInputProcessingSystem() {}
 
 	virtual void initialize();
@@ -97,16 +95,9 @@ public:
 	ResultingInputForces& getProcessedInput();
 
 private:
-	//Added by Anton 15/1 - 13
-	void sendModuleSlotHighlight(int p_slot);
-	void sendSlotActivation();
-	void sendSlotDeactivation();
-
-private:
 
 	float* getControllerEpsilonPointer();
 	RawInputForces readAllInput();
-	void updateAntTweakBar(const ResultingInputForces& p_input);
 
 	ResultingInputForces m_processedInput;
 
@@ -140,20 +131,10 @@ private:
 
 	Control* m_keyboardEditModeTrig;
 
-	// The values of analogue sticks as a vector3 (used in anttweakbar).
-
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
 
 	float m_angleInputMultiplier;
-
-	// Correction vectors for the left and right thumb sticks.
-	//double m_leftStickCorrection[2];
-	//double m_rightStickCorrection[2];
-
-	//Added by Anton 15/1 - 13
-	Control* m_keyboardModuleSlots[4];
-	Control* m_mouseModuleActivation;
 
 	void initGamePad();
 	void initMouse();
@@ -161,5 +142,4 @@ private:
 
 	bool m_editSwitchTrigReleased;
 	InputBackendSystem* m_inputBackend;
-	TcpClient* m_client;
 };

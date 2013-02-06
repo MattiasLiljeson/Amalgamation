@@ -1,16 +1,15 @@
 #include "EntityFactory.h"
 
 #include <AssemblageReader.h>
+#include <AssemblageException.h>
 #include <Entity.h>
 #include "AudioListener.h"
 #include "CameraInfo.h"
 #include "ConnectionPointSet.h"
 #include "Extrapolate.h"
 #include "GameplayTags.h"
-#include "GraphicsBackendSystem.h"
 #include "LightsComponent.h"
 #include "LookAtEntity.h"
-#include "MainCamera.h"
 #include "NetworkSynced.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
@@ -21,6 +20,20 @@
 #include "Transform.h"
 #include "ParticleRenderSystem.h"
 #include "LightBlinker.h"
+#include "PhysicsBody.h"
+#include "BodyInitData.h"
+#include "Vibration.h"
+#include "PositionalSoundSource.h"
+#include "AudioBackendSystem.h"
+#include "InterpolationComponent.h"
+#include "RocketLauncherModule.h"
+#include "MineLayerModule.h"
+#include <time.h>
+#include "BodyInitData.h"
+
+
+
+#define FORCE_VS_DBG_OUTPUT
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
@@ -58,6 +71,11 @@ AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_fileP
 			m_entityRecipes[newRecipe->getName()] = newRecipe;
 		}
 	}
+	else if (status==AssemblageHelper::FileStatus_FILE_NOT_FOUND)
+	{
+		throw AssemblageException("Error reading assemblage! "+p_filePath,__FILE__,
+			__FUNCTION__,__LINE__);
+	}
 
 	return status;
 }
@@ -75,245 +93,176 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 
 	return meal;
 }
-Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet)
+Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint)
 {
 	EntityType::EntityEnums type = static_cast<EntityType::EntityEnums>(p_packet.entityType);
+
+	Entity* e = NULL;
+
 	if (type == EntityType::Ship)
 	{
 		if (m_client)
-			return createShipEntityClient(p_packet);
+			e = createShipEntityClient(p_packet);
 		else
-			return createShipEntityServer(p_packet);
+			e = createShipEntityServer(p_packet);
 	}
 	else if (type == EntityType::MineLayerModule)
 	{
 		if (m_client)
-			return createMineLayerClient(p_packet);
+			e = createMineLayerClient(p_packet);
 		else
-			return createMineLayerServer(p_packet);
+			e = createMineLayerServer(p_packet);
 	}
 	else if (type == EntityType::RocketLauncherModule)
 	{
 		if (m_client)
-			return createRocketLauncherClient(p_packet);
+			e = createRocketLauncherClient(p_packet);
 		else
-			return createRocketLauncherServer(p_packet);
+			e = createRocketLauncherServer(p_packet);
 	}
 	else if (type == EntityType::BoosterModule)
 	{
 		if (m_client)
-			return createSpeedBoosterClient(p_packet);
+			e = createSpeedBoosterClient(p_packet);
 		else
-			return createSpeedBoosterServer(p_packet);
+			e = createSpeedBoosterServer(p_packet);
 	}
 	else if (type == EntityType::MinigunModule)
 	{
 		if (m_client)
-			return createMinigunClient(p_packet);
+			e = createMinigunClient(p_packet);
 		else
-			return createMinigunServer(p_packet);
+			e = createMinigunServer(p_packet);
 	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
-			return createModuleClient(p_packet);
+			e = createModuleClient(p_packet);
 		else
-			return createModuleServer(p_packet);
+			e = createModuleServer(p_packet);
 	}
 	else if (type == EntityType::LaserSight)
 	{
 		if (m_client)
-			return createLaserSightClient(p_packet);
+			e = createLaserSightClient(p_packet);
 		else
-			return createLaserSightServer(p_packet);
+			e = createLaserSightServer(p_packet);
 	}
 	else if (type == EntityType::ParticleSystem)
 	{
 		if (m_client)
-			return createParticleSystemClient(p_packet);
+			e = createParticleSystemClient(p_packet);
 		else
-			return createParticleSystemServer(p_packet);
+			e = createParticleSystemServer(p_packet);
 	}
 	else if (type == EntityType::SelectionSphere)
 	{
 		if (m_client)
-			return createSelectionSphereClient(p_packet);
+			e = createSelectionSphereClient(p_packet);
 		else
-			return createSelectionSphereServer(p_packet);
+			e = createSelectionSphereServer(p_packet);
 	}
 	else if (type == EntityType::Mine)
 	{
 		if (m_client)
-			return createMineClient(p_packet);
+			e = createMineClient(p_packet);
 		else
-			return createMineServer(p_packet);
+			e = createMineServer(p_packet);
 	}
 	else if (type == EntityType::Rocket)
 	{
 		if (m_client)
-			return createRocketClient(p_packet);
+			e = createRocketClient(p_packet);
 		else
-			return createRocketServer(p_packet);
+			e = createRocketServer(p_packet);
 	}
 	else if (type == EntityType::Shield)
 	{
 		if (m_client)
-			return createShieldClient(p_packet);
+			e = createShieldClient(p_packet);
 		else
-			return createShieldServer(p_packet);
+			e = createShieldServer(p_packet);
 	}
 	else if (type == EntityType::Other)
 	{
 		if (m_client)
-			return createOtherClient(p_packet);
+			e = createOtherClient(p_packet);
 		else
-			return createOtherServer(p_packet);
+			e = createOtherServer(p_packet);
 	}
-	DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
-	return NULL;
+
+	if (e)
+	{
+		if (p_spawnPoint)
+		{
+			BodyInitData* init = static_cast<BodyInitData*>(e->getComponent(ComponentType::BodyInitData));
+			if (init)
+			{
+				AglMatrix::matrixToComponents(*p_spawnPoint, init->m_scale, init->m_orientation, init->m_position);
+			}
+			else
+			{
+				Transform* transform = static_cast<Transform*>(e->getComponent(ComponentType::Transform));
+				if (transform)
+				{
+					transform->setMatrix(*p_spawnPoint);
+				}
+			}
+		}
+		return e;
+	}
+	else
+	{
+		DEBUGPRINT(("Network Warning: Received unknown entity type from server!\n"));
+		return NULL;
+	}
 }
 
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 {
-	int shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("Ship.agl");
-
-	//shipMeshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		//SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-
 	Entity* entity = NULL;
-	//entity = m_world->createEntity();
 
-	readAssemblageFile( "Assemblages/ClientShip.asd" );
-	entity = entityFromRecipe( "ClientShip" );
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "ClientShip", "Assemblages/ClientShip.asd");
 
+	// Add network dependent components
 	Transform* transform = new Transform( p_packet.translation, p_packet.rotation, 
 		p_packet.scale);
-
-	Component* component = new RenderInfo( shipMeshId );
-	entity->addComponent( ComponentType::RenderInfo, component );
 	entity->addComponent( ComponentType::Transform, transform );
+
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-//<<<<<<< HEAD
-	//LightsComponent* lightComp = new LightsComponent();
-	//Light floodLight;
-	//float range = 100.0f;
-	//AglMatrix::componentsToMatrix(
-	//	floodLight.offsetMat,
-	//	AglVector3( range, range, range*20 ),
-	//	AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-	//	AglVector3( 2.0f, 0.0f, 0.0f )
-	//	);
-	//floodLight.instanceData.range = range*20;
-	//floodLight.instanceData.attenuation[1] = 0.1f;
-	//floodLight.instanceData.spotPower = 8.0f;
-	//floodLight.instanceData.lightDir[0] = 0.0f;
-	//floodLight.instanceData.lightDir[1] = 0.0f;
-	//floodLight.instanceData.lightDir[2] = 1.0f;
-	//floodLight.instanceData.diffuse[0] = 0.0f;
-	//floodLight.instanceData.diffuse[1] = 1.0f;
-	//floodLight.instanceData.diffuse[2] = 0.0f;
-	////floodLight.instanceData.ambient[0] = 0.0f;
-	////floodLight.instanceData.ambient[1] = 0.0f;
-	////floodLight.instanceData.ambient[2] = 1.0f;
-	////floodLight.instanceData.specular[0] = 2.0f;
-	////floodLight.instanceData.specular[1] = 2.0f;
-	////floodLight.instanceData.specular[2] = 2.0f;
-	//floodLight.instanceData.enabled = true;
-	//floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	//lightComp->addLight( floodLight );
-	//AglMatrix::componentsToMatrix(
-	//	floodLight.offsetMat,
-	//	AglVector3( range, range, range*20 ),
-	//	AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-	//	AglVector3( -2.0f, 0.0f, 0.0f )
-	//	);
-	//floodLight.instanceData.diffuse[0] = 1.0f;
-	//floodLight.instanceData.diffuse[1] = 0.0f;
-	//floodLight.instanceData.diffuse[2] = 0.0f;
-	//lightComp->addLight( floodLight );
-
-	//entity->addComponent( ComponentType::LightsComponent, lightComp);
-//=======
-//	LightsComponent* lightComp = new LightsComponent();
-//	Light floodLight;
-//	float range = 200.0f;
-//	floodLight.instanceData.range = range;
-//	floodLight.instanceData.attenuation[1] = 0.1f;
-//	floodLight.instanceData.spotPower = 8.0f;
-//	floodLight.instanceData.lightDir[0] = 0.0f;
-//	floodLight.instanceData.lightDir[1] = 0.0f;
-//	floodLight.instanceData.lightDir[2] = 1.0f;
-//	floodLight.instanceData.diffuse[0] = 1.0f;
-//	floodLight.instanceData.diffuse[1] = 1.0f;
-//	floodLight.instanceData.diffuse[2] = 1.0f;
-////	floodLight.instanceData.specular[0] = 2.0f;
-////	floodLight.instanceData.specular[1] = 2.0f;
-////	floodLight.instanceData.specular[2] = 2.0f;
-//	floodLight.instanceData.enabled = true;
-//	floodLight.instanceData.type = LightTypes::E_LightTypes_SPOT;
-//	// Left spotlight
-//	AglMatrix::componentsToMatrix(
-//		floodLight.offsetMat,
-//		AglVector3( range, range, range ),
-//		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-//		AglVector3( -2.0f, 0.0f, 5.0f )
-//		);
-//	lightComp->addLight( floodLight );
-//	// Right spotlight
-//	AglMatrix::componentsToMatrix(
-//		floodLight.offsetMat,
-//		AglVector3( range, range, range ),
-//		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-//		AglVector3( 2.0f, 0.0f, 5.0f )
-//		);
-//	lightComp->addLight( floodLight );
-//
-//	floodLight.instanceData.type = LightTypes::E_LightTypes_POINT;
-//	range = 2.0f;
-//	floodLight.instanceData.range = range;
-//	// Left pointlight
-//	AglMatrix::componentsToMatrix(
-//		floodLight.offsetMat,
-//		AglVector3( range, range, range ),
-//		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-//		AglVector3( -3.0f, 0.0f, -2.0f )
-//		);
-//	floodLight.instanceData.diffuse[0] = 1.0f;
-//	floodLight.instanceData.diffuse[1] = 0.0f;
-//	floodLight.instanceData.diffuse[2] = 0.0f;
-//	lightComp->addLight( floodLight );
-//	// Right pointlight
-//	AglMatrix::componentsToMatrix(
-//		floodLight.offsetMat,
-//		AglVector3( range, range, range ),
-//		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-//		AglVector3( 3.0f, 0.0f, -2.0f )
-//		);
-//	floodLight.instanceData.diffuse[0] = 0.0f;
-//	floodLight.instanceData.diffuse[1] = 1.0f;
-//	floodLight.instanceData.diffuse[2] = 0.0f;
-//	lightComp->addLight( floodLight );
-//
-//	entity->addComponent( ComponentType::LightsComponent, lightComp);
-//>>>>>>> 6992faf7bc6868a43996e5118a42de6f75d2adfd
+	Component* component = NULL; // for temp usage
 
 	/************************************************************************/
 	/* Check if the owner is the same as this client.						*/
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(5.0f, 50.0f);
+		component = new ShipFlyController(5.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
 
 		component = new ShipEditController();
 		entity->addComponent( ComponentType::ShipEditController, component);
 
 		entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
+		/*
+		entity->addComponent( ComponentType::PhysicsBody, 
+			new PhysicsBody() );
+
+		BodyInitData* bodyData = new BodyInitData(p_packet.translation,
+			p_packet.rotation,
+			p_packet.scale, AglVector3(0, 0, 0), 
+			AglVector3(0, 0, 0), 0, 
+			BodyInitData::DYNAMIC, 
+			BodyInitData::SINGLE, true, false);
+			
+
+		entity->addComponent( ComponentType::BodyInitData, bodyData);*/
 
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
@@ -329,47 +278,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// convenient for debugging!
 		component = new AudioListener();
 		entity->addComponent(ComponentType::AudioListener, component);
-	}
-
-	/************************************************************************/
-	/* HACK: Score should probably be located in another entity.			*/
-	/************************************************************************/
-	component = new PlayerScore();
-	entity->addComponent( ComponentType::PlayerScore, component );
-	m_world->addEntity(entity);
-
-	/************************************************************************/
-	/* Attach a camera if it's the clients ship!							*/
-	/************************************************************************/
-	if(p_packet.owner == m_client->getId())
-	{
-		int shipId = entity->getIndex();
-		float aspectRatio = 
-			static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getAspectRatio();
-
-		entity = m_world->createEntity();
-		component = new CameraInfo( aspectRatio );
-		entity->addComponent( ComponentType::CameraInfo, component );
-		component = new MainCamera();
-		entity->addComponent( ComponentType::MainCamera, component );
-		component = new Transform( -5.0f, 0.0f, -5.0f );
-		entity->addComponent( ComponentType::Transform, component );
-		component = new LookAtEntity(shipId,
-			AglVector3(0,6,-13),
-			AglQuaternion::identity(),
-			10.0f,
-			10.0f,
-			10.0f);
-		entity->addComponent( ComponentType::LookAtEntity, component );
-		// default tag is follow
-		entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
-
-		//Add a picking ray to the camera so that edit mode can be performed
-		entity->addComponent(ComponentType::PickComponent, new PickComponent());
-
-		m_world->addEntity(entity);
 
 		/************************************************************************/
 		/* This is where the audio listener is created and therefor the master  */
@@ -381,6 +289,40 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
 			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
+
+	component = new PlayerScore();
+	entity->addComponent( ComponentType::PlayerScore, component );
+	m_world->addEntity(entity);
+
+	/************************************************************************/
+	/* Attach a camera if it's the client's ship!							*/
+	/************************************************************************/
+	if(p_packet.owner == m_client->getId())
+	{
+		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
+		// int shipId = entity->getIndex();
+									 // HACK!
+		float aspectRatio = 1280.0f / 720.0f;//3.1415f / 4.0f;//   1280/768; // Note: retrieve the aspect ratio here somehow
+								     // without using dx-graphics stuff
+		// old:
+		/*	static_cast<GraphicsBackendSystem*>(m_world->getSystem(
+			SystemType::GraphicsBackendSystem ))->getAspectRatio();*/
+
+		entity = m_world->createEntity();
+		component = new CameraInfo( m_world->getAspectRatio() );
+		entity->addComponent( ComponentType::CameraInfo, component );
+		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
+		component = new Transform( -5.0f, 0.0f, -5.0f );
+		entity->addComponent( ComponentType::Transform, component );
+		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
+		//Add a picking ray to the camera so that edit mode can be performed
+		entity->addComponent(ComponentType::PickComponent, new PickComponent());
+		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+
+		m_world->addEntity(entity);
+	}
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
@@ -390,61 +332,67 @@ Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("MineWeaponFinal.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "MineLayer","Assemblages/Modules/MineLayer/ClientMineLayer.asd" );
+
+	// Add network dependent components
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+		
+	entity->addComponent(ComponentType::InterpolationComponent, new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
 }
 Entity* EntityFactory::createMineLayerServer(EntityCreationPacket p_packet)
 {
-	//Not moved here yet!
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/MineLayer/ServerMineLayer.asd" );
+	Entity* entity = entityFromRecipe( "ServerMineLayer" );
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MineLayerModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("rocket_launcher.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "RocketLauncher", "Assemblages/Modules/RocketLauncher/ClientRocketLauncher.asd" );
+
+	// Add network dependent components
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
 }
 Entity* EntityFactory::createRocketLauncherServer(EntityCreationPacket p_packet)
 {
-	//Not moved here yet!
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/RocketLauncher/ServerRocketLauncher.asd" );
+	Entity* entity = entityFromRecipe( "RocketLauncher" );									 
+//	entity->addComponent(ComponentType::RocketLauncherModule, new RocketLauncherModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::RocketLauncherModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("minigun.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "Minigun", "Assemblages/Minigun.asd" );
+
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -455,17 +403,18 @@ Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("SpeedBooster.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/SpeedBooster.asd"  );
+
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -476,17 +425,17 @@ Entity* EntityFactory::createSpeedBoosterServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
+	entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
+
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -498,21 +447,20 @@ Entity* EntityFactory::createModuleServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createLaserSightClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+	Entity* entity = NULL;
 
 	if (p_packet.meshInfo == 1)
-		meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+	else
+		entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
-	Entity* entity = m_world->createEntity();
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -566,21 +514,19 @@ Entity* EntityFactory::createParticleSystemServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createSelectionSphereClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
+	Entity* entity = NULL;
 
 	if (p_packet.meshInfo == 1)
-		meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+	else
+		entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
-	Entity* entity = m_world->createEntity();
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
 	m_world->addEntity(entity);
 	return entity;
@@ -592,19 +538,24 @@ Entity* EntityFactory::createSelectionSphereServer(EntityCreationPacket p_packet
 }
 Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("rocket.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "Rocket","Assemblages/Rocket.asd"  );
+
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
 	m_world->addEntity(entity);
+	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
+		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
+		p_packet.translation);
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)
@@ -614,38 +565,25 @@ Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("MineFinal.agl");
+	Entity* entity = NULL;
 
-	Entity* entity = m_world->createEntity();
+	// read basic assemblage
+	entity = entityFromRecipeOrFile( "Mine", "Assemblages/Mine.asd" );
+
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	
-	LightsComponent* lightComp = new LightsComponent();
-	Light floodLight;
-	float range = 2.0f;
-	AglMatrix::componentsToMatrix(
-		floodLight.offsetMat,
-		AglVector3( range, range, range ),
-		AglQuaternion::constructFromAxisAndAngle( AglVector3( .0f, .0f, .0f), .0f ),
-		AglVector3( 0.0f, 0.0f, 0.0f )
-		);
-	floodLight.instanceData.range = range;
-	floodLight.instanceData.attenuation[1] = 0.1f;
-	floodLight.instanceData.diffuse[0] = 1.0f;
-	floodLight.instanceData.diffuse[1] = 0.3f;
-	floodLight.instanceData.diffuse[2] = 0.3f;
-	floodLight.instanceData.enabled = true;
-	floodLight.instanceData.type = LightTypes::E_LightTypes_POINT;
-	lightComp->addLight(floodLight);
-	entity->addComponent( ComponentType::LightsComponent, lightComp );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 
-	entity->addComponent( ComponentType::LightBlinker, new LightBlinker(5.0f) );
+	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
+	v->enabled = true;
+	entity->addComponent( ComponentType::Vibration, v );
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -656,21 +594,20 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	int meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-
+	Entity* entity = NULL;
+	
 	if (p_packet.meshInfo == 1)
-		meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-		SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+	else
+		entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
-	Entity* entity = m_world->createEntity();
+	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
+	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -681,29 +618,25 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
-	int meshId = -1;
-
-	GraphicsBackendSystem* gfxBackend = static_cast<GraphicsBackendSystem*>(
-		m_world->getSystem( SystemType::GraphicsBackendSystem ));
+	Entity* entity = NULL;
 
 	if (p_packet.isLevelProp)
 	{
-		meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		// meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
+		// changed during refactoring by Jarl 30-1-2013
+		// use an assemblage, like this:
+		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
 	}
 	else	
 	{
-		meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_cube");
-
 		if (p_packet.meshInfo == 1)
-			meshId = static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getMeshId("P_sphere");
+			entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+		else
+			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
+
 	}
-	Entity* entity = m_world->createEntity();
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
-	component = new RenderInfo(meshId);
-	entity->addComponent(ComponentType::RenderInfo, component);
 
 	m_world->addEntity(entity);
 	return entity;
@@ -712,4 +645,21 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 {
 	//Not moved here yet!
 	return NULL;
+}
+
+Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )
+{
+	// performance test
+	clock_t init, final;
+	init=clock();
+	//
+	Entity* entity = entityFromRecipe(p_entityName);
+	if (entity==NULL)
+	{	
+		readAssemblageFile( p_filePath );
+		entity = entityFromRecipe( p_entityName );
+	}
+	final=clock()-init;
+	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
+	return entity;
 }

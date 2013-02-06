@@ -91,6 +91,12 @@
     <Filter Include="Systems\GUI\LibRocket">
       <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Gameplay\Tracking">
+      <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
+      <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -100,9 +106,6 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkClientControllable.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="CameraSystem.h">
@@ -122,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipController.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
@@ -170,9 +170,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsBody.h">
       <Filter>Components\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="MainCamera.h">
-      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="LevelPiece.h">
       <Filter>Systems\Level Gen</Filter>
@@ -260,9 +257,6 @@
     </ClInclude>
     <ClInclude Include="ShieldModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuItem.h">
-      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="ClientConnectToServerSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -455,6 +449,47 @@
     <ClInclude Include="WinningConditionSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="ShipModulesTrackerSystem.h">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEvent.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoveSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotInputControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivation.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleActivation.h">
+      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshOffsetTransform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
+    <ClInclude Include="Vibration.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticProp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Components\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="LibRocketBackendSystem.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
@@ -603,9 +638,6 @@
     </ClCompile>
     <ClCompile Include="ShieldModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuItem.cpp">
-      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ClientConnectToServerSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
@@ -767,6 +799,34 @@
     </ClCompile>
     <ClCompile Include="WinningConditionSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesTrackerSystem.cpp">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotInputControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="LightBlinker.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Vibration.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="LibRocketBackendSystem.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>

@@ -2,6 +2,8 @@
 
 #include <Component.h>
 #include <AglVector3.h>
+#include <vector>
+#include <ComponentFactory.h>
 
 // =======================================================================================
 //	MineLayerModule
@@ -18,17 +20,12 @@
 class RocketLauncherModule: public Component
 {
 public:
-	RocketLauncherModule()
-	{
-		coolDown=0.0f; 
-		laserSightEntity=-1;
-		burstCount = 2;
-		timeSinceRocket = FLT_MAX;
-		currentBurst = 0;
-	}
+	RocketLauncherModule();
 	RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection);
 	~RocketLauncherModule();
+	void init( vector<ComponentData> p_initData );
 
+public:
 	AglVector3 muzzleOffset;
 	AglVector3 fireDirection;
 	float	   coolDown;
@@ -39,4 +36,5 @@ public:
 	//Maybe temporary
 	int		   laserSightEntity;
 
+	static ComponentRegister<RocketLauncherModule> s_reg;
 };

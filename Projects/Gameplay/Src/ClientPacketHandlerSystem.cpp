@@ -20,15 +20,14 @@
 #include "RenderInfo.h"
 #include "ShipFlyController.h"
 #include "CameraInfo.h"
-#include "MainCamera.h"
 #include "Input.h"
 #include "LookAtEntity.h"
 #include "PlayerScore.h"
 #include "GameplayTags.h"
 #include "PlayerCameraController.h"
 #include "HudElement.h"
+#include "InterpolationComponent.h"
 
-#include "GraphicsBackendSystem.h"
 #include "Control.h"
 #include "EntityType.h"
 #include "PacketType.h"
@@ -63,6 +62,7 @@
 #include "LightsComponent.h"
 #include "EntityFactory.h"
 #include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -114,8 +114,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityUpdatePacket data;
 			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
-			if (data.entityType == (char)EntityType::EndBatch)
-			{
+			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch();
 			}
 			else
@@ -139,14 +138,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma endregion 
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
 			SpawnSoundEffectPacket spawnSoundPacket;
 			spawnSoundPacket.unpack( packet );
 			if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-					m_world->getSystem(SystemType::AudioBackendSystem));
 				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
 					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 					spawnSoundPacket.position);
@@ -154,6 +153,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
 			{
+				// Attached positional sound source.
 				NetsyncDirectMapperSystem* directMapper =
 					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 					SystemType::NetsyncDirectMapperSystem));
@@ -165,11 +165,30 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
 						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 						true, 1.0f));
+					entity->applyComponentChanges();
 				}
 			}
-			else
+			else if( !spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
-				// Ambient sound effect.
+				// Short ambient sound effect.
+				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+			}
+		}
+		else if(packetType == (char)PacketType::RemoveSoundEffect)
+		{
+			RemoveSoundEffectPacket data;
+			data.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+			if( entity != NULL )
+			{
+				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->applyComponentChanges();
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)
@@ -272,6 +291,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			handleWelcomePacket(packet);
 		}
+		else
+		{
+			DEBUGWARNING(( "Unhandled packet type!" ));
+		}
 	}
 }
 
@@ -293,7 +316,21 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
-	factory->entityFromPacket(p_packet);
+	if (p_packet.entityType != EntityType::DebugBox)
+	{
+		factory->entityFromPacket(p_packet);
+	}
+	else
+	{
+		Entity* entity = factory->entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
+
+		Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+		entity->addComponent( ComponentType::Transform, component );
+		entity->addComponent(ComponentType::NetworkSynced,
+			new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+		m_world->addEntity(entity);
+	}
 }
 
 void ClientPacketHandlerSystem::handleEntityDeletionPacket(EntityDeletionPacket p_packet)
@@ -546,26 +583,34 @@ void ClientPacketHandlerSystem::handleBatch()
 			transform = static_cast<Transform*>(
 				m_world->getComponentManager()->getComponent(
 				entity->getIndex(), ComponentType::Transform ) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
+			
 			if( transform != NULL ) // Throw exception? /ML
 			{
-				transform->setTranslation( data.translation );
-				transform->setRotation( data.rotation );
-				transform->setScale( data.scale );
+				/*InterpolationComponent* interpolation = NULL;
+				Component* intcomp = m_world->getComponentManager()->getComponent(
+					entity->getIndex(), ComponentType::InterpolationComponent );
+				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
+				if (interpolation )
+				{
+					// set up goal for queuing
+					float handledTime = data.timestamp;
+					InterpolationComponent::TransformGoal transformGoal;
+					transformGoal.timestamp = handledTime;
+					transformGoal.translation = data.translation;
+					transformGoal.rotation = data.rotation;
+					transformGoal.scale = data.scale;
+					// enqueue data
+					interpolation ->m_transformBuffer.push(transformGoal);
+				}
+				else*/
+				{
+					transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );
+				}
 			}
 
-			Extrapolate* extrapolate = NULL;
-			extrapolate = static_cast<Extrapolate*>(
-				entity->getComponent(ComponentType::Extrapolate) );
-			// HACK! below check should not have to be done. Is the packet of the 
-			// wrong type? Throw exception? /ML
-			/*if( extrapolate != NULL )
-			{
-				extrapolate->serverUpdateTimeStamp = data.timestamp;
-				extrapolate->velocityVector = data.velocity;
-				extrapolate->angularVelocity = data.angularVelocity;
-			}*/
+			// Add extrapolation here if deemed necessary
 		}
 	}
 	m_batch.clear();

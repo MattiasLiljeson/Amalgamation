@@ -21,6 +21,7 @@ class Extrapolate: public Component
 {
 public:
 	Extrapolate()
+		: Component( ComponentType::Extrapolate )
 	{
 		serverUpdateTimeStamp = 0;
 		velocityVector = AglVector3();

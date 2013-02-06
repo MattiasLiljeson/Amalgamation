@@ -54,7 +54,17 @@ public:
 	///-----------------------------------------------------------------------------------
 	Entity* entityFromRecipe( const string& p_entityName );
 
-	Entity* entityFromPacket(EntityCreationPacket p_packet);
+
+	///-----------------------------------------------------------------------------------
+	/// Combination of readAssemblageFile and entityFromRecipe, will only read assemblage
+	/// file if not already read.
+	/// \param p_entityName
+	/// \param p_filePath
+	/// \return Entity*
+	///-----------------------------------------------------------------------------------
+	Entity* entityFromRecipeOrFile( const string& p_entityName, string p_filePath );
+
+	Entity* entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint = NULL);
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);

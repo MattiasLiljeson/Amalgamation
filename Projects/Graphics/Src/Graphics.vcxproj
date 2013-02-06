@@ -25,13 +25,14 @@
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
     <ClCompile Include="GUIShader.cpp" />
-    <ClCompile Include="MeshNameScriptParser.cpp" />
-    <ClCompile Include="ModelExtendedManagedFactory.cpp" />
+    <ClCompile Include="ModelExtendedFactory.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
+    <ClCompile Include="ShadowMapRenderer.cpp" />
+    <ClCompile Include="ShadowShader.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -57,8 +58,7 @@
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
-    <ClInclude Include="MeshNameScriptParser.h" />
-    <ClInclude Include="ModelExtendedManagedFactory.h" />
+    <ClInclude Include="ModelExtendedFactory.h" />
     <ClInclude Include="ParticleCBuffer.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleShader.h" />
@@ -78,6 +78,9 @@
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderVariableContainer.h" />
     <ClInclude Include="ShaderStageData.h" />
+    <ClInclude Include="ShadowCBuffer.h" />
+    <ClInclude Include="ShadowMapRenderer.h" />
+    <ClInclude Include="ShadowShader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />

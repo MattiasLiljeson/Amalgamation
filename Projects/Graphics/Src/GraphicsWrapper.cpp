@@ -19,6 +19,10 @@
 #include <LightInstanceData.h>
 #include "ShaderFactory.h"
 #include "GUIShader.h"
+#include "LightMesh.h"
+#include "DeferredBaseShader.h"
+#include "ShadowMapRenderer.h"
+#include "ShadowShader.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -32,13 +36,14 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_height= p_height;
 	m_windowed = p_windowed;
 	m_wireframeMode = false;
+	m_renderingShadows = false;
 
 	initSwapChain(p_hWnd);
 	initHardware();
 
 	initBackBuffer();
 
-	initViewport();
+	resetViewportToOriginalSize();
 
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -48,17 +53,22 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_textureManager	= new ResourceManager<Texture>();
 
 	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
-	m_modelFactory		= new ModelExtendedManagedFactory(m_device,m_bufferFactory,m_meshManager,
+	m_modelFactory		= new ModelExtendedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
 
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
+
+	m_shadowShader = m_shaderFactory->createShadowShader(
+		L"Shaders/Game/shadowMap.hlsl");
 
 	createTexture("mesherror.png",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
+
+	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
 
 	clearRenderTargets();
 }
@@ -71,9 +81,12 @@ GraphicsWrapper::~GraphicsWrapper()
 	releaseBackBuffer();
 	
 	delete m_guiShader;
+	delete m_shadowShader;
 	delete m_deferredRenderer;
 	delete m_particleRenderer;
+	delete m_shadowMapRenderer;
 	delete m_deferredBaseShader;
+	delete m_shaderFactory;
 	delete m_bufferFactory;
 	delete m_meshManager;
 	delete m_textureManager;
@@ -179,7 +192,6 @@ void GraphicsWrapper::clearRenderTargets()
 
 void GraphicsWrapper::updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo){
 	m_renderSceneInfo = p_sceneInfo;
-	m_deferredRenderer->setSceneInfo(p_sceneInfo);
 }
 
 void GraphicsWrapper::mapSceneInfo(){
@@ -189,38 +201,66 @@ void GraphicsWrapper::mapSceneInfo(){
 }
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
-								 vector<InstanceData>* p_instanceList)
-{
+								 vector<InstanceData>* p_instanceList){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
-	
-	/************************************************************************/
-	/* Get the size of the materials and use it to create a new texture		*/
-	/* array.																*/
-	/************************************************************************/
-	unsigned int arraySize = mesh->getMaterialInfo().SIZE;
-	Texture** textureArray = new Texture*[arraySize];
-	for (unsigned int i = 0; i < arraySize; i++)
-	{
-		unsigned int textureId;
-		textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
 
-		/************************************************************************/
-		/* Check if the texture ID is active and get the texture resource or	*/
-		/* set the value in the texture array to NULL							*/
-		/************************************************************************/
-		if(textureId != 0)
-			textureArray[i] = m_textureManager->getResource(textureId);
-		else
-			textureArray[i] = NULL;
+	unsigned int arraySize = 0;
+	Texture** textureArray=NULL;
+
+	if(!m_renderingShadows){
+		arraySize = mesh->getMaterialInfo().SIZE;
+		textureArray = new Texture*[arraySize];
+		for (unsigned int i = 0; i < arraySize; i++)
+		{
+			unsigned int textureId;
+			textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
+
+			/************************************************************************/
+			/* Check if the texture ID is active and get the texture resource or	*/
+			/* set the value in the texture array to NULL							*/
+			/************************************************************************/
+			if(textureId != 0)
+				textureArray[i] = m_textureManager->getResource(textureId);
+			else
+				textureArray[i] = NULL;
+		}
 	}
 
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
-	m_deferredRenderer->renderMeshInstanced(mesh, textureArray, arraySize, instanceBuffer);
+	renderMeshInstanced( 
+		mesh->getVertexBuffer()->getBufferPointer(),
+		mesh->getVertexBuffer()->getElementSize(),
+		mesh->getIndexBuffer()->getBufferPointer(),
+		mesh->getIndexBuffer()->getElementCount(),
+		textureArray, arraySize,
+		instanceBuffer->getElementSize(), 
+		instanceBuffer->getBufferPointer(),
+		m_deferredRenderer->getDeferredBaseShader());
 
 	delete textureArray;
 	delete instanceBuffer;
+}
+void GraphicsWrapper::renderLights( LightMesh* p_mesh,
+								   vector<LightInstanceData>* p_instanceList )
+{
+	Buffer<LightInstanceData>* instanceBuffer;
+	instanceBuffer = m_bufferFactory->createLightInstanceBuffer( &(*p_instanceList)[0],
+		p_instanceList->size() );
+
+	renderMeshInstanced( 
+		p_mesh->getVertexBuffer()->getBufferPointer(),
+		p_mesh->getVertexBuffer()->getElementSize(),
+		p_mesh->getIndexBuffer()->getBufferPointer(),
+		p_mesh->getIndexBuffer()->getElementCount(), 
+		NULL, 0,
+		instanceBuffer->getElementSize(),
+		instanceBuffer->getBufferPointer(),
+		m_deferredRenderer->getDeferredLightShader());
+
+	delete instanceBuffer;
+	instanceBuffer = NULL;
 }
 
 void GraphicsWrapper::setRasterizerStateSettings(RasterizerState::Mode p_state, 
@@ -265,8 +305,17 @@ void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 void GraphicsWrapper::setLightPassRenderTarget(){
 	m_deferredRenderer->setLightRenderTarget();
 }
+void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
+	m_shadowShader->sendViewProjection(p_viewProj);
+	m_shadowShader->apply();
+}
+
 void GraphicsWrapper::mapDeferredBaseToShader(){
-	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
+}
+
+void GraphicsWrapper::unmapDeferredBaseFromShader(){
+	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
 void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
@@ -285,41 +334,22 @@ void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId,
 	delete instanceBuffer;
 }
 
-void GraphicsWrapper::renderLights( LightMesh* p_mesh,
-								   vector<LightInstanceData>* p_instanceList )
-{
-	if( p_mesh != NULL && p_instanceList != NULL )
-	{
-		Buffer<LightInstanceData>* instanceBuffer;
-		instanceBuffer = m_bufferFactory->createLightInstanceBuffer( &(*p_instanceList)[0],
-			p_instanceList->size() );
-
-		m_deferredRenderer->renderLights( p_mesh, instanceBuffer );
-
-		delete instanceBuffer;
-		instanceBuffer = NULL;
-	}
-	else
-	{
-		m_deferredRenderer->renderLights( NULL, NULL );
-	}
-}
 
 void GraphicsWrapper::flipBackBuffer()
 {
 	m_swapChain->Present( 0, 0);
 }
 
-ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
-						   const string* p_path)
-{
-	return m_modelFactory->createModelResource(p_name,p_path);
-}
+// ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
+// 						   const string* p_path,bool p_isPrimitive)
+// {
+// 	return m_modelFactory->createModelResource(p_name,p_path,p_isPrimitive);
+// }
 
 vector<ModelResource*>* GraphicsWrapper::createModelsFromFile(const string& p_name,
-									 const string* p_path)
+									 const string* p_path,bool p_isPrimitive)
 {
-	return m_modelFactory->createModelResources(p_name,p_path);
+	return m_modelFactory->createModelResources(p_name,p_path,p_isPrimitive);
 }
 
 unsigned int GraphicsWrapper::createMeshFromRaw( const string& p_name, 
@@ -368,19 +398,6 @@ unsigned int GraphicsWrapper::createTexture( const byte* p_source, int p_width,
 int GraphicsWrapper::getMeshId( const string& p_name )
 {
 	return m_meshManager->getResourceId(p_name);
-}
-
-void GraphicsWrapper::initViewport()
-{
-	D3D11_VIEWPORT vp;
-	vp.Width	= (float)m_width;
-	vp.Height	= (float)m_height;
-	vp.MaxDepth = 1.0f;
-	vp.MinDepth = 0.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-
-	m_deviceContext->RSSetViewports(1, &vp);
 }
 
 ID3D11Device* GraphicsWrapper::getDevice()
@@ -447,7 +464,7 @@ void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height ){
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	initBackBuffer();
-	initViewport();
+	resetViewportToOriginalSize();
 
 	m_deferredRenderer->initRendertargetsAndDepthStencil( m_width, m_height );
 }
@@ -507,4 +524,85 @@ void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
 	}
 	// Draw instanced data
 	m_deviceContext->DrawIndexed(p_mesh->getIndexBuffer()->getElementCount(),0,0);
+}
+
+void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_vertexSize, 
+										  void* p_indexBufferRef, UINT32 p_elmentCount, 
+										  Texture** p_textureArray, 
+										  unsigned int p_textureArraySize, 
+										  UINT32 p_instanceDataSize, void* p_instanceRef,
+										  ShaderBase* p_shader)
+{
+
+	if(p_textureArray){
+		UINT startSlot = 0;
+		UINT numViews = 1;
+		for (unsigned int i = 0; i < p_textureArraySize; i++)
+		{
+			if(p_textureArray[i] != NULL)
+			{
+				// set textures
+				m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+					&p_textureArray[i]->data );
+				startSlot++;
+			}
+		}
+	}
+
+	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = { 
+		static_cast<ID3D11Buffer*>(p_vertexBufferRef), 
+		static_cast<ID3D11Buffer*>(p_instanceRef) 
+	};
+
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(p_indexBufferRef), 
+		DXGI_FORMAT_R32_UINT, 0);
+
+	if(!m_renderingShadows)
+		p_shader->apply();
+
+	// Draw instanced data
+	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
+}
+
+void GraphicsWrapper::setViewportToShadowMapSize(){
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
+	vp.Height	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+void GraphicsWrapper::resetViewportToOriginalSize(){
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= static_cast<float>(m_width);
+	vp.Height	= static_cast<float>(m_height);
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+void GraphicsWrapper::setShadowMapAsRenderTarget()
+{
+	m_shadowMapRenderer->mapShadowMapToRenderTarget();
+}
+
+void GraphicsWrapper::setRenderingShadows(){
+	m_renderingShadows = true;
+}
+
+void GraphicsWrapper::stopedRenderingShadows(){
+	m_renderingShadows = false;
 }

@@ -23,8 +23,8 @@ class LookAtEntity : public Component
 {
 public:
 	LookAtEntity(int p_entityId,
-		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f
-		)
+		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = AglVector3::zero();
@@ -37,6 +37,7 @@ public:
 		const AglVector3& p_followPositionOffset,
 		float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f
 		)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = p_followPositionOffset;
@@ -51,6 +52,7 @@ public:
 				float p_moveSpeed=1.0f,float p_rotationSpeed=1.0f,
 				float p_orbitDistance=1.0f
 				)
+		: Component( ComponentType::LookAtEntity )
 	{
 		m_entityId = p_entityId;
 		m_followPositionOffset = p_followPositionOffset;
@@ -73,7 +75,9 @@ public:
 	void setOrbitRotationOffset(const AglQuaternion& p_offset) {m_orbitRotationOffset=p_offset;}
 	void setOrbitDistance(float p_orbitDistance) {m_orbitDistance = p_orbitDistance;}
 	void setRotationSpeed(float p_val) {m_rotationSpd=p_val;}
-	void setMoveSpeed(float p_val) {m_moveSpd=p_val;}
+	void setMoveSpeed(float p_val) {m_moveSpd=p_val;}	
+	
+	AglVector3 m_oldPos;
 private:
 	int m_entityId;
 	AglVector3 m_followPositionOffset; ///< offset position from target
@@ -81,5 +85,6 @@ private:
 	float m_rotationSpd; ///< Speed of rotation towards goal
 	float m_moveSpd; ///< Speed of movement towards goal  
 	float m_orbitDistance; ///< distance from target when orbiting
+
 };
 

@@ -33,6 +33,7 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+			/* This only works when camera not handled by server, rewrite this like shipflycontroller
 			Entity* ship = p_entities[i];
 			PlayerCameraController* controller = static_cast<PlayerCameraController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerCameraController ) );
@@ -66,6 +67,7 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 					ship->applyComponentChanges();
 				}
 			}
+			*/
 		}
 	}
 }

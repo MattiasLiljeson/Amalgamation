@@ -48,6 +48,13 @@ public:
 	AglOBB GetOBB()
 	{
 		AglOBB obb = mOBB;
+
+		AglMatrix s = AglMatrix::createScaleMatrix(mSize);
+		AglVector3 trans = obb.world.GetTranslation();
+		trans.transform(s);
+
+		obb.world.SetTranslation(trans);
+
 		obb.size *= mSize;
 		obb.world *= GetWorld();
 		return obb; 
@@ -55,6 +62,8 @@ public:
 	virtual AglBoundingSphere GetBoundingSphere() const
 	{
 		AglVector3 newPos = mBoundingSphere.position;
+		AglMatrix s = AglMatrix::createScaleMatrix(mSize);
+		newPos.transform(s);
 		newPos.transform(GetWorld());
 
 		AglBoundingSphere bs;

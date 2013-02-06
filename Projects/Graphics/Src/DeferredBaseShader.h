@@ -19,12 +19,8 @@
 class DeferredBaseShader : public ShaderBase
 {
 public:
-	DeferredBaseShader( ShaderVariableContainer p_initData, Buffer<SimpleCBuffer>* p_cBuffer );
+	DeferredBaseShader( ShaderVariableContainer p_initData);
 	virtual ~DeferredBaseShader();
 
-	Buffer<SimpleCBuffer>* getPerFrameBufferPtr();
-
 	void apply();
-private:
-	Buffer<SimpleCBuffer>* m_perFrameBuffer;
 };

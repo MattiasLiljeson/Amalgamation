@@ -31,11 +31,14 @@ public:	//Enums
 		LookAtSystem,
 		TransformParentHandlerSystem,
 		InputBackendSystem,
+		InterpolationSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,
 		ShipInputProcessingSystem,
 		ImpulseSystem,
 		LoadMeshSystem,
+		LoadMeshSystemClient,
+		LoadMeshSystemServer,
 		AudioBackendSystem,
 		AudioControllerSystem,
 		AudioListenerSystem,
@@ -72,7 +75,12 @@ public:	//Enums
 		ParticleSystemEmitterSystem,
 		ServerClientInfoSystem,
 		LightBlinkerSystem,
+		GamepadRumbleSystem,
 		WinningConditionSystem,
+		ShipModulesTrackerSystem,
+		ShadowSystem,
+		SlotInputController,
+		SpeedBoostModuleControllerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

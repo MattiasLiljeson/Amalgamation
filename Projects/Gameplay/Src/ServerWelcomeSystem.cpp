@@ -28,12 +28,16 @@
 #include "GameplayTags.h"
 #include "StaticProp.h"
 #include "ClientInfo.h"
+#include "LookAtEntity.h"
+#include "LoadMesh.h"
 
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 
 #include <Globals.h>
+#include "EntityFactory.h"
+
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
@@ -200,6 +204,22 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
 	m_world->addEntity(newShip);
 
+	// also create a camera
+	Entity* playerCam = m_world->createEntity();
+	Component* component = new LookAtEntity(newShip->getIndex(),
+		AglVector3(0,7,-38),
+		AglQuaternion::identity(),
+		13.0f,
+		20.0f,
+		10.0f);
+	playerCam->addComponent( ComponentType::LookAtEntity, component );
+	playerCam->addComponent( ComponentType::Transform, new Transform( transformComp->getMatrix() ) );
+	// default tag is follow
+	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	playerCam->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
+	m_world->addEntity(playerCam);
+
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */
 	/************************************************************************/
@@ -210,6 +230,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	data.translation	= transformComp->getTranslation();
 	data.rotation		= transformComp->getRotation();
 	data.scale			= transformComp->getScale();
+	data.miscData		= playerCam->getIndex();
 
 	m_server->broadcastPacket(data.pack());
 }
@@ -220,29 +241,36 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 	/************************************************************************/
 	/* Creating the ship entity.											*/
 	/************************************************************************/
+
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+
 	Entity* e = m_world->createEntity();
 
-	e->addComponent(ComponentType::Transform, p_shipTransform);
+	e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
+
+	//e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
 	
-	e->addComponent( ComponentType::PhysicsBody, 
-		new PhysicsBody() );
+	//e->addComponent( ComponentType::PhysicsBody, 
+		//new PhysicsBody() );
 
-	e->addComponent( ComponentType::BodyInitData, 
+	//e->addComponent(ComponentType::LoadMesh, new LoadMesh("Ship.agl"));
+
+	/*e->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData( p_shipTransform->getTranslation(),
 		AglQuaternion::identity(),
 		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));
+		BodyInitData::COMPOUND));*/
 
-	ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(4.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(-4.5f, 0, 0))));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix::createTranslationMatrix(AglVector3(0, 4.5f, 0))));
+	/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3.0f, 0, 0, 1)));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, -3.0f, 0, 0, 1)));
+	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.0f, 0, 1)));*/
 
-	e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+	//e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
 

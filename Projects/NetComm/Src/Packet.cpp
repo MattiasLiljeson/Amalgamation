@@ -10,7 +10,8 @@ Packet::Packet( const Packet& p_other )
 	m_readPos(p_other.m_readPos),
 	m_packetSize(p_other.m_packetSize),
 	m_packetType(p_other.m_packetType),
-	m_uniquePacketIdentifier(p_other.m_uniquePacketIdentifier)
+	m_uniquePacketIdentifier(p_other.m_uniquePacketIdentifier),
+	m_dataSize(p_other.m_dataSize)
 {
 }
 
@@ -37,15 +38,16 @@ void Packet::clear()
 	m_uniquePacketIdentifier = 0;
 	m_senderId = -1;
 	m_readPos = HEADER_SIZE;
-	m_data.resize(HEADER_SIZE);
+	m_data.resize(PACKET_BUFFER_SIZE);
 	m_data[0] = 0;
+	m_dataSize = (unsigned int)HEADER_SIZE;
 }
 
 char* Packet::getDataPtr()
 {
 	if (! m_data.empty() )
 	{
-		m_packetSize = m_data.size() - 1;
+		m_packetSize = m_dataSize - 1;
 		writeHeaderData(&m_data[0]);
 		return &m_data[0];
 	}
@@ -55,14 +57,14 @@ char* Packet::getDataPtr()
 
 unsigned int Packet::getDataSize() const
 {
-	return m_data.size();
+	return m_dataSize;
 }
 
 void Packet::setData(char* p_data, unsigned int p_size)
 {
 	if (p_size <= 255)
 	{
-		m_data.resize(p_size);
+		m_dataSize = p_size;
 		memcpy(&m_data[0], p_data, p_size);
 		readHeaderData(&m_data[0]);
 	}
@@ -73,7 +75,7 @@ void Packet::setData(char* p_data, unsigned int p_size)
 bool Packet::isEmpty() const
 {
 	bool empty;
-	empty = (m_data.size() <= HEADER_SIZE);
+	empty = (m_dataSize <= HEADER_SIZE);
 
 	return empty;
 }
@@ -134,14 +136,22 @@ Packet& Packet::operator << (double p_data)
 	return *this;
 }
 
-Packet& Packet::operator << (AglVector3 p_data)
+Packet& Packet::operator<<( AglMatrix& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator <<( AglQuaternion p_data )
+
+Packet& Packet::operator << ( AglVector3& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator <<( AglQuaternion& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
 	WriteData(&p_data, dataSize);
@@ -212,7 +222,14 @@ Packet& Packet::operator >> ( double& p_data )
 	return *this;
 }
 
-Packet& Packet::operator >> (AglVector3& p_data)
+Packet& Packet::operator >> ( AglMatrix& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator >> ( AglVector3& p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
 	ReadData(&p_data, dataSize);
@@ -235,22 +252,22 @@ Packet& Packet::operator>>( SYSTEMTIME& p_data )
 
 void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 {
-	if (m_data.size() + p_dataSize > 255)
+	if (m_dataSize + p_dataSize > 255)
 	{
 		throw std::out_of_range( "Trying to stream in more data than\
 							what is allowed (255) to be written in the Packet." );
 	}
 	else 
 	{
-		unsigned int oldPacketSize = m_data.size();
-		m_data.resize(m_data.size() + p_dataSize);
+		unsigned int oldPacketSize = m_dataSize;
+		m_dataSize += p_dataSize;
 		memcpy(&m_data[oldPacketSize], p_data, p_dataSize);
 	}
 }
 
 void Packet::ReadData(void* p_data, unsigned int p_dataSize)
 {
-	if( m_data.size() - m_readPos < p_dataSize )
+	if( m_dataSize - m_readPos < p_dataSize )
 	{
 		throw std::out_of_range( "Trying to stream out more data than\
 							what is left to be read in the Packet." );

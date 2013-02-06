@@ -3,17 +3,20 @@
 ComponentRegister<PhysicsBody> PhysicsBody::s_reg("PhysicsBody");
 
 PhysicsBody::PhysicsBody()
+	: Component( ComponentType::PhysicsBody )
 {
-	m_componentType = ComponentType::ComponentTypeIdx::PhysicsBody;
-
 	m_id = -1;
 	m_parentId = -1;
 	m_parentChanged = false;
+	m_offset = AglMatrix::identityMatrix();
+	m_debugData = -1;
 }
 
 void PhysicsBody::init( vector<ComponentData> p_initData )
 {
 	// Nothing needed here right now
+	m_offset = AglMatrix::identityMatrix();
+	m_debugData = -1;
 }
 
 void PhysicsBody::setParentId( int p_parentId )

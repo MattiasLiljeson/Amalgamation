@@ -102,7 +102,7 @@ public:
 							unsigned int p_targetMesh);
 
 	AglLooseBspTree(AglLooseBspTreeHeader p_header, unsigned int* p_triangles,
-		AglBspNode* p_nodes);
+		AglVector3* p_triangles2, AglBspNode* p_nodes);
 
 	virtual ~AglLooseBspTree();
 
@@ -127,6 +127,8 @@ public:
 	AglBspNode*				getNodes();
 
 	AglVector3*				getTriangles2(){ return m_triangles2; }
+
+	AglLooseBspTree*		clone();
 };
 
 #endif

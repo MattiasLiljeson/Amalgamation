@@ -5,9 +5,11 @@
 #include "PhysicsSystem.h"
 #include <PhysicsController.h>
 #include "SpawnSoundEffectPacket.h"
+#include "ShipModule.h"
 
 RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::RocketControllerSystem, 1, ComponentType::StandardRocket)
+	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
+	ComponentType::Transform, ComponentType::PhysicsBody)
 {
 	m_turnPower = 2.0f;
 	m_enginePower = 50.0f;
@@ -86,6 +88,19 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 				ps->getController()->ApplyExternalImpulse(body->GetWorld().GetTranslation(), 20, 20);
 				ps->getController()->InactivateBody(pb->m_id);
 
+				// Apply damage to first found collision
+				Entity* hitEntity = ps->getEntity(cols[0]);
+				if(hitEntity)
+				{
+					ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(
+						ComponentType::ShipModule));
+					if(hitModule)
+					{
+//						hitModule->m_health = 0;
+						hitModule->addDamageThisTick(101.0f); // Above max hp.
+					}
+				}
+
 				//Send an explosion sound effect
 				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 
@@ -98,7 +113,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 				m_world->deleteEntity(p_entities[i]);
 			}
-		}	
+		}
 	}
 }
 

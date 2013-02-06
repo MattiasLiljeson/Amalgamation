@@ -1,21 +1,34 @@
 #include "CameraInfo.h"
-#include <AglMatrix.h>
 
-CameraInfo::CameraInfo( float p_aspectRatio )
+CameraInfo::CameraInfo(float p_aspectRatio, 
+					   float p_fieldOfViewAsRadians/* =0.785398163f */, 
+					   float p_nearPlane/* =0.1f */, 
+					   float p_farPlane/* =10000.0f */)
+	: Component( ComponentType::CameraInfo )
 {
-	m_projMat = AglMatrix::identityMatrix();
-	createPerspectiveMatrix(p_aspectRatio);
+	m_projMat		= AglMatrix::identityMatrix();
+	m_aspectRatio	= p_aspectRatio;
+	m_fieldOfViewAsRadians	= p_fieldOfViewAsRadians;
+	m_nearPlane		= p_nearPlane;
+	m_farPlane		= p_farPlane;
+
+	createPerspectiveMatrix();
 }
 
-void CameraInfo::createPerspectiveMatrix( float p_aspectRatio , 
-										 float p_nearClip /*= 0.1f*/, 
-										 float p_farClip /*= 10000.0f*/ )
-{
-	float fovAsRadians = 3.14f/2.0f;	
-	m_projMat = AglMatrix::createPerspectiveMatrix(fovAsRadians,p_aspectRatio,
-		p_nearClip,
-		p_farClip);
+void CameraInfo::createPerspectiveMatrix(){
+	m_projMat = AglMatrix::createPerspectiveMatrix(m_aspectRatio,m_fieldOfViewAsRadians,
+		m_nearPlane,
+		m_farPlane);
+}
 
-	m_farPlane = p_farClip;
+void CameraInfo::createPerspectiveMatrix(float p_aspectRatio , 
+										 float p_fieldOfViewAsRadians/* =0.785398163f */, 
+										 float p_nearClip/* =0.1f */, 
+										 float p_farClip/* =10000.0f */)
+{
+	m_aspectRatio = p_aspectRatio;
+	m_fieldOfViewAsRadians = p_fieldOfViewAsRadians;
 	m_nearPlane = p_nearClip;
+	m_farPlane = p_farClip;
+	createPerspectiveMatrix();
 }
