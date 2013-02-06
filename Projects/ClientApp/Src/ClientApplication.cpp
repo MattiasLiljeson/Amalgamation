@@ -14,84 +14,86 @@
 #include <AudioListener.h>
 #include <BodyInitData.h>
 #include <ConnectionPointSet.h>
+#include <Connector1to2Module.h>
+#include <DebugMove.h>
+#include <EntityParent.h>
 #include <GameplayTags.h>
 #include <HudElement.h>
+#include <InterpolationComponent.h>
+#include <LightsComponent.h>
+#include <LoadMesh.h>
+#include <MineLayerModule.h>
 #include <MinigunModule.h>
+#include <MinigunModule.h>
+#include <ParticleEmitters.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
+#include <PositionalSoundSource.h>
 #include <RenderInfo.h>
+#include <RocketLauncherModule.h>
+#include <ShieldModule.h>
 #include <ShipEditController.h>
 #include <ShipFlyController.h>
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
-#include <MinigunModule.h>
-#include <ShieldModule.h>
-#include <MineLayerModule.h>
-#include <RocketLauncherModule.h>
-#include <Connector1to2Module.h>
 #include <Transform.h>
-#include <PositionalSoundSource.h>
-#include <DebugMove.h>
-#include <EntityParent.h>
-#include <LoadMesh.h>
-#include <LightsComponent.h>
-#include <InterpolationComponent.h>
+
 
 // Systems
+#include <AntTweakBarSystem.h>
 #include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
 #include <CameraInfo.h>
 #include <CameraSystem.h>
+#include <ClientConnectToServerSystem.h>
 #include <ClientPacketHandlerSystem.h>
+#include <ClientPickingSystem.h>
+#include <DebugMovementSystem.h>
+#include <DisplayPlayerScoreSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <EntityFactory.h>
+#include <ExtrapolationSystem.h>
+#include <GameStatsSystem.h>
+#include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
+#include <GraphicsRendererSystem.h>
+#include <HudSystem.h>
 #include <HudSystem.h>
 #include <InputBackendSystem.h>
+#include <InterpolationSystem.h>
+#include <LevelGenSystem.h>
 #include <LibRocketBackendSystem.h>
+#include <LightBlinkerSystem.h>
+#include <LightRenderSystem.h>
+#include <LoadMeshSystemClient.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
-//#include <MainCamera.h>
-#include <MinigunModuleControllerSystem.h>
-#include <ClientConnectToServerSystem.h>
-#include <PhysicsSystem.h>
-#include <ClientPickingSystem.h>
-#include <PlayerCameraControllerSystem.h>
-#include <ProcessingMessagesSystem.h>
 #include <MeshRenderSystem.h>
+#include <MineControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MinigunModuleControllerSystem.h>
+#include <MoveShipLightsSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <NetsyncDirectMapperSystem.h>
+#include <ParticleRenderSystem.h>
+#include <ParticleRenderSystem.h>
 #include <PhysicsSystem.h>
+#include <PhysicsSystem.h>
+#include <PlayerCameraControllerSystem.h>
+#include <PositionalSoundSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ShadowSystem.h>
+#include <ShieldModuleControllerSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
-#include <DisplayPlayerScoreSystem.h>
-#include <HudSystem.h>
-#include <GamepadRumbleSystem.h>
-#include <ShieldModuleControllerSystem.h>
-#include <MineLayerModuleControllerSystem.h>
-#include <MineControllerSystem.h>
-#include <RocketLauncherModuleControllerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
-#include <LevelGenSystem.h>
-#include <ExtrapolationSystem.h>
-#include <PositionalSoundSystem.h>
-#include <NetsyncDirectMapperSystem.h>
-#include <NetSyncedPlayerScoreTrackerSystem.h>
-#include <GraphicsRendererSystem.h>
-#include <DebugMovementSystem.h>
-#include <LightRenderSystem.h>
-#include <AntTweakBarSystem.h>
-#include <ParticleRenderSystem.h>
 #include <TransformParentHandlerSystem.h>
-#include <LoadMeshSystemClient.h>
-#include <GameStatsSystem.h>
-#include <MoveShipLightsSystem.h>
-#include <LightBlinkerSystem.h>
-#include <ParticleRenderSystem.h>
-#include <InterpolationSystem.h>
-#include <ShadowSystem.h>
+//#include <MainCamera.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -456,13 +458,43 @@ void ClientApplication::initEntities()
 
 	// Test sound source
 	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, new Transform(0, 0, 0));
+	entity->addComponent(ComponentType::Transform, new Transform(10, 10, 10));
 	// entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId)); //deprecated way of loading
 	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH,
 		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
+
+	ParticleEmitters* ps = new ParticleEmitters();
+	AglParticleSystemHeader header;
+	header.particleSize = AglVector2(2, 2);
+	header.spawnFrequency = 10;
+	header.spawnSpeed = 5.0f;
+	header.spread = 0.0f;
+	header.fadeOutStart = 2.0f;
+	header.fadeInStop = 0.0f;
+	header.particleAge = 2;
+	header.maxOpacity = 1.0f;
+	header.color = AglVector4(0, 1, 0, 1.0f);
+	header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	ps->addParticleSystem( header );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnDirection( AglVector3(1.1f, 1.2f, 1.3f) );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnSpeed( 234.0f );
+	ps->getCollectionPtr()->m_particleSystems[0].setMaxOpacity( 3.1f );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnAngularVelocity( 45.6f );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpread( 7.8f );
+	ps->getCollectionPtr()->m_particleSystems[0].setFadeOutStart( 8.9f );
+	ps->getCollectionPtr()->m_particleSystems[0].setFadeInStop( 0.1f );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnPoint(AglVector3(-11.1f, -11.2f, -11.3f));
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+	ps->getCollectionPtr()->m_particleSystems[0].setParticleSize(AglVector2(12.1f, 12.2f));
+	ps->getCollectionPtr()->m_particleSystems[0].setParticleAge( 13.1f );
+	ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
+
+
+	entity->addComponent( ps );
+
 	m_world->addEntity(entity);
 
 }

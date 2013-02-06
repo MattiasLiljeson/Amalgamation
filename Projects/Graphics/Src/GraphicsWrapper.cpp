@@ -165,15 +165,30 @@ void GraphicsWrapper::initHardware()
 
 void GraphicsWrapper::initBackBuffer()
 {
+	if( m_deviceContext == NULL ) {
+		throw D3DException("DeviceContext not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
+	if( m_device == NULL ) {
+		throw D3DException("Device not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* backBufferTexture;
 
 	hr = m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), 
 		(LPVOID*)&backBufferTexture );
 
-	if( FAILED(hr) )
+	if( FAILED(hr))
 		throw D3DException("Failed to get backbuffer from swap chain.",__FILE__,
 		__FUNCTION__,__LINE__);
+
+	if( backBufferTexture == NULL) {
+		throw D3DException("Failed to get backbuffer from swap chain. back buffer is NULL",
+			__FILE__, __FUNCTION__,__LINE__);
+	}
 
 	hr = m_device->CreateRenderTargetView( backBufferTexture, NULL, &m_backBuffer );
 	backBufferTexture->Release();
@@ -548,6 +563,10 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 			}
 		}
 	}
+
+	//TEMP!
+	int t = sizeof(LightInstanceData);
+
 
 	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
 	UINT offsets[2] = { 0, 0 };

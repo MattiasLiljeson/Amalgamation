@@ -210,9 +210,9 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 	{
 		mParticleSystems.push_back(new ParticleSystem(ps[i], mDevice, mDeviceContext));
 
-		if (ps[i]->getHeaderPtr().textureNameIndex >= 0)
+		if (ps[i]->getHeader().textureNameIndex >= 0)
 		{
-			string path = mAglScene->getName(ps[i]->getHeaderPtr().textureNameIndex);
+			string path = mAglScene->getName(ps[i]->getHeader().textureNameIndex);
 			int ind = TextureManager::GetInstance()->LoadTexture(path);
 			if (ind < 0)
 			{
@@ -221,7 +221,7 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 			else
 			{
 				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
-				mAglScene->setName(ps[i]->getHeaderPtr().textureNameIndex, data->Path);
+				mAglScene->setName(ps[i]->getHeader().textureNameIndex, data->Path);
 			}
 		}
 	}
