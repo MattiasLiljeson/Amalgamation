@@ -48,4 +48,7 @@ void ClientMeasurementSystem::initMeasuredSystems()
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::GraphicsRendererSystem),
 		"GraphicsRenderer"));
+	m_measuredSystems.push_back(pair<EntitySystem*, string>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem),
+		"LibRocket"));
 }
