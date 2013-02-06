@@ -313,6 +313,11 @@ void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 	m_shadowShader->apply();
 }
 
+void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
+	m_shadowShader->sendViewProjections(p_viewProj);
+	m_shadowShader->apply();
+}
+
 void GraphicsWrapper::mapDeferredBaseToShader(){
 	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
 }

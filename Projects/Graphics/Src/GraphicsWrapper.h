@@ -101,6 +101,8 @@ public:
 
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
 
+	void setShadowViewProjections( AglMatrix* p_viewProj );
+
 	void setRenderingShadows();
 	
 	void stopedRenderingShadows();

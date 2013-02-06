@@ -39,13 +39,16 @@ void GraphicsRendererSystem::process(){
 	//Fill the shadow view projections
 	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
 		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
-		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = m_shadowSystem->getViewProjection(i);
+		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
+			m_shadowSystem->getViewProjection(i);
 	}
-	
+
+	m_wrapper->setShadowViewProjections(m_shadowViewProjections);
+
 	initShadowPass();
 	for(unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
-		AglMatrix vp = m_shadowSystem->getViewProjection(i);
-		m_wrapper->setShadowViewProjection(vp);
+		//AglMatrix vp = m_shadowSystem->getViewProjection(i);
+		//m_wrapper->setShadowViewProjection(vp);
 		m_meshRenderer->render();
 	}
 	endShadowPass();

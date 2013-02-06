@@ -94,6 +94,9 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
       <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{0e1465fb-e357-4dae-949a-dbdd4754f433}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -375,7 +378,6 @@
     <ClInclude Include="GraphicsRendererSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -433,7 +435,6 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="MoveShipLightsSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
@@ -482,11 +483,6 @@
     <ClInclude Include="MeshOffsetTransform.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GamepadRumbleSystem.h" />
-    <ClInclude Include="InterpolationComponent.h" />
-    <ClInclude Include="InterpolationSystem.h" />
-    <ClInclude Include="LoadMeshSystemClient.h" />
-    <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="Vibration.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -495,6 +491,27 @@
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Components\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentAssemblageAllocator.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -732,7 +749,6 @@
     <ClCompile Include="GraphicsRendererSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="LoadMesh.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
@@ -778,7 +794,6 @@
     <ClCompile Include="NetsyncDirectMapperSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
-    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
@@ -812,10 +827,6 @@
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="GamepadRumbleSystem.cpp" />
-    <ClCompile Include="InterpolationSystem.cpp" />
-    <ClCompile Include="LoadMeshSystemClient.cpp" />
-    <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LightBlinker.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
@@ -824,6 +835,24 @@
     </ClCompile>
     <ClCompile Include="MenuItem.cpp">
       <Filter>Components\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAssemblageAllocator.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Misc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
