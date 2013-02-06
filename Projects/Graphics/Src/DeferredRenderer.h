@@ -69,6 +69,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_shadowMap);
 
+	void mapDeferredBaseRTSToShader();
+
 	void unmapDeferredBaseFromShader();
 
 	void mapVariousPassesToComposeStage();
@@ -119,6 +121,8 @@ public:
 	DeferredBaseShader* getDeferredLightShader();
 
 	void renderComposeStage();
+
+	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
 	// ===================================================================================
 	// Debug

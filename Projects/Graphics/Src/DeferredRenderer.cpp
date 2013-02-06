@@ -93,7 +93,14 @@ void DeferredRenderer::mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_sh
 	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
 	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
-	m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+
+		m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+}
+void DeferredRenderer::mapDeferredBaseRTSToShader()
+{	
+	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DEPTH] );
 }
 
 void DeferredRenderer::unmapDeferredBaseFromShader(){
@@ -321,4 +328,10 @@ DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 DeferredBaseShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
+
+ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderTargets p_target )
+{
+	return &m_gBuffersShaderResource[p_target];
+}
+
 

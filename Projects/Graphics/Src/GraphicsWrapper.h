@@ -120,7 +120,11 @@ public:
 
 	void mapDeferredBaseToShader();
 
+	void mapNeededShaderResourceToLightPass(int* p_activeShadows);
+
 	void unmapDeferredBaseFromShader();
+
+	void unmapUsedShaderResourceFromLightPass(int* p_activeShadows);
 
 	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );

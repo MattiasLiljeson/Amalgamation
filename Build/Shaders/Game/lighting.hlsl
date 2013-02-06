@@ -7,7 +7,7 @@ Texture2D gDiffuseMap 	: register(t0);
 Texture2D gNormalMap 	: register(t1);
 Texture2D gSpecular 	: register(t2);
 Texture2D gDepth 		: register(t3);
-Texture2D gShadow 		: register(t4);
+Texture2D gShadow;
 
 SamplerState pointSampler : register(s0);
 
@@ -98,7 +98,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float shadowCoeff = 1.0f;
 	if( p_input.light.shadowIdx != -1 )
 	{
-		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[0]);
+		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[p_input.light.shadowIdx]);
 		shadowCoeff = doShadowing(gShadow, pointSampler, shadowWorldPos);
 	}
 	lightCol *= shadowCoeff;

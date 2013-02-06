@@ -33,7 +33,7 @@ public:
 	void mapShadowMapToRenderTarget();
 	void mapShadowMapToRenderTarget(unsigned int p_index);
 	ID3D11ShaderResourceView* getShadowMap();
-	ID3D11ShaderResourceView* getShadowMap(unsigned int p_index);
+	ID3D11ShaderResourceView*const* getShadowMap(unsigned int p_index);
 	unsigned int createANewShadowMap();
 private:
 	void generateShadowMap( ID3D11DepthStencilView** p_depthStencileView, 

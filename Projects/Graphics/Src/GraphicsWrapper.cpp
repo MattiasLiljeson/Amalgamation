@@ -322,9 +322,31 @@ void GraphicsWrapper::mapDeferredBaseToShader(){
 	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
 }
 
+void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
+	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	int startSlot = 4;
+	for(int i = 0; i < MAXSHADOWS; i++){
+		if(p_activeShadows[i] != -1){
+			m_deviceContext->PSSetShaderResources( startSlot, 1, m_shadowMapRenderer->getShadowMap(i));
+		}
+	}
+}
+
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
 	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
+
+void GraphicsWrapper::unmapUsedShaderResourceFromLightPass( int* p_activeShadows ){
+
+	ID3D11ShaderResourceView* nulz = NULL;
+	int startSlot = 4;
+	for(int i = 0; i < MAXSHADOWS; i++){
+		if(p_activeShadows[i] != -1){
+			m_deviceContext->PSSetShaderResources( startSlot, 1, &nulz);
+		}
+	}
+}
+
 void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
 {
@@ -623,3 +645,4 @@ unsigned int GraphicsWrapper::generateShadowMap()
 {
 	return m_shadowMapRenderer->createANewShadowMap();
 }
+

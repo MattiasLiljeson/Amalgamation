@@ -160,7 +160,7 @@ ID3D11ShaderResourceView* ShadowMapRenderer::getShadowMap()
 	return m_resourceView;
 }
 
-ID3D11ShaderResourceView* ShadowMapRenderer::getShadowMap( unsigned int p_index )
+ID3D11ShaderResourceView*const* ShadowMapRenderer::getShadowMap( unsigned int p_index )
 {
-	return m_shadowMaps[p_index]->resourceView;
+	return &m_shadowMaps[p_index]->resourceView;
 }
