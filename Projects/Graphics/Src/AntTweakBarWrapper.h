@@ -143,6 +143,14 @@ public:
 	///-----------------------------------------------------------------------------------
 	void modifyTheRefreshRate(BarType p_barType, float p_value);
 
+	///-----------------------------------------------------------------------------------
+	/// A help method that allows for easy addition of defines for a given Bar.
+	/// \param p_nameOfBar
+	/// \param p_params
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void defineParametersForABar(const char* p_nameOfBar, const char* p_params);
+
 private:
 	///-----------------------------------------------------------------------------------
 	/// The constructor is private since ATBW is a singleton class
@@ -157,14 +165,6 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void initBars();
-
-	///-----------------------------------------------------------------------------------
-	/// A help method that allows for easy addition of defines for a given Bar.
-	/// \param p_nameOfBar
-	/// \param p_params
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void defineParametersForABar(const char* p_nameOfBar, const char* p_params);
 private:
 	TwBar* m_overallBar;
 	TwBar* m_soundBar;

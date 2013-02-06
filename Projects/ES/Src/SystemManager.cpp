@@ -127,7 +127,8 @@ void SystemManager::updateSynchronous()
 			if(reset)
 			{
 				m_systemList[i]->setAverageExecutionTime(
-					m_systemsExecutionTimeMeasurements[i] / (double)m_tickCounter);
+					m_systemsExecutionTimeMeasurements[i] / (double)m_tickCounter
+					* 1000.0);
 				m_systemList[i]->setTimeUsedPerSecond(
 					m_systemsExecutionTimeMeasurements[i]);
 				m_systemsExecutionTimeMeasurements[i] = 0;

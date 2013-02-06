@@ -21,6 +21,7 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+	setInfo("GraphicsRender");
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
 
