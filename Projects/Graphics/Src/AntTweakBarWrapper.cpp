@@ -31,7 +31,7 @@ void AntTweakBarWrapper::initBars()
 	defineParametersForABar(graphics.c_str()," color='255 217 102' iconified=true");
 	defineParametersForABar(input.c_str()," color='224 102 102' iconified=true");
 	defineParametersForABar(network.c_str()," color='147 196 125' iconified=true");
-	defineParametersForABar(measurement.c_str()," color='147 196 125' position='1000 0' size='280 500'");
+	defineParametersForABar(measurement.c_str()," color='147 196 125' position='1020 0' size='260 300'");
 	modifyTheRefreshRate(INPUT,0.1f);
 }
 
