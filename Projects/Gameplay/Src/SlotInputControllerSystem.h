@@ -19,7 +19,8 @@ class SlotInputControllerSystem: public EntitySystem
 public:
 	SlotInputControllerSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client);
 	~SlotInputControllerSystem();
-
+	void sendModuleSlotHighlightDeactivateAll();
+	void handleSlotSelection();
 private:
 	void initialize();
 	void process();
@@ -28,7 +29,7 @@ private:
 	void initMouse();
 	void sendModuleSlotHighlight(int p_slot);
 	void sendModuleSlotHighlightDeactivate(int p_slot);
-	void sendModuleSlotHighlightDeactivateAll();
+
 	void sendSlotActivation();
 	void sendSlotDeactivation();
 

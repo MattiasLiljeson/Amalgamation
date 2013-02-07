@@ -86,13 +86,20 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				ship->getComponent(ComponentType::ShipConnectionPointHighlights) );
 			
 			AglVector3 boostVector = AglVector3(0, 0, 0);
-			if (connected->m_connectionPoints[highlights->current].cpConnectedEntity >= 0)
+
+			for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 			{
-				Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[highlights->current].cpConnectedEntity);
-				ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
-				SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-				if (module->getActive() && boostmodule)
-					boostVector = thrustPacket.thrustVector*3;
+				if (highlights->slotStatus[i])
+				{
+					if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+					{
+						Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+						ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
+						SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
+						if (module->getActive() && boostmodule)
+							boostVector = thrustPacket.thrustVector*3;
+					}
+				}
 			}
 
 			m_physics->applyImpulse( physicsBody->m_id, (thrustPacket.thrustVector+boostVector),

@@ -19,7 +19,8 @@ SlotInputControllerSystem::~SlotInputControllerSystem()
 {
 }
 
-void SlotInputControllerSystem::process()
+
+void SlotInputControllerSystem::handleSlotSelection()
 {
 	for (unsigned int i = 0; i < 4; i++)
 	{
@@ -45,6 +46,12 @@ void SlotInputControllerSystem::process()
 	{
 		sendSlotDeactivation();
 	}
+}
+
+
+void SlotInputControllerSystem::process()
+{
+	
 }
 
 void SlotInputControllerSystem::initialize()
