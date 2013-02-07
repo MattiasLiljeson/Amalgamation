@@ -587,7 +587,7 @@ void Scene::Draw()
 		AglMatrix size;
 		AglMatrix::componentsToMatrix(size, sceneOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
 		sw = size * sw;
-		sw = sw * m_avoidJump;
+		//sw = sw * m_avoidJump;
 		sw = sw * invMax;
 		sw *= w;
 		sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
