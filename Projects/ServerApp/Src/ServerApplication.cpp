@@ -304,14 +304,14 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*10.0f));
 			cp.entityType = EntityType::RocketLauncherModule;
-			//factory->entityFromPacket(cp, &pos);
+			factory->entityFromPacket(cp, &pos);
 		}
 		//Mine Layer
 		for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*10.0f));
 			cp.entityType = EntityType::MineLayerModule;
-			//factory->entityFromPacket(cp, &pos);
+			factory->entityFromPacket(cp, &pos);
 		}
 
 		//Speed Booster

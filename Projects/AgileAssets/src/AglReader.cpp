@@ -23,6 +23,10 @@ AglReader::AglReader(const char* p_path)
 	{
 		desc.materials.push_back(readMaterial());
 	}
+	for (int i = 0; i < m_topHeader.gradientCount; i++)
+	{
+		desc.gradients.push_back(readGradient());
+	}
 	for (int i = 0; i < m_topHeader.materialMappingCount; i++)
 	{
 		desc.materialMappings.push_back(readMaterialMapping());
@@ -143,6 +147,22 @@ AglMaterial* AglReader::readMaterial()
 	AglMaterial* material = new AglMaterial();
 	m_file.read((char*)material, sizeof(AglMaterial));
 	return material;
+}
+AglGradient* AglReader::readGradient()
+{
+	AglGradient* gradient = new AglGradient();
+	
+	unsigned int size = 0;
+	m_file.read((char*)&size, sizeof(unsigned int));
+
+	for (unsigned int i = 0; i < size; i++)
+	{
+		AglGradientMaterial* mat = new AglGradientMaterial();
+		m_file.read((char*)mat, sizeof(AglGradientMaterial));
+		gradient->addLayer(mat);
+	}
+
+	return gradient;
 }
 AglMaterialMapping AglReader::readMaterialMapping()
 {
