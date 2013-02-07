@@ -76,7 +76,8 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	AglVector3::normalize(up);
 
 	RendererSceneInfo sceneInfo;
-	sceneInfo.viewProj = viewProj;
+	sceneInfo.view		= view;
+	sceneInfo.viewProj	= viewProj;
 	sceneInfo.cameraPos = position;
 	sceneInfo.cameraForward = lookTarget;
 	sceneInfo.cameraUp = up;
