@@ -43,14 +43,15 @@
 LibRocketEventManagerSystem::LibRocketEventManagerSystem()
 	: EntitySystem(SystemType::LibRocketEventManagerSystem)
 {
-	context = NULL;
+	m_context = NULL;
 	wantsToExit = false;
-	event_handler = NULL;
+	m_eventHandler = NULL;
+	m_currentDocId = "";
 }
 
 LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
 {
-	Shutdown();
+	shutdown();
 }
 
 void LibRocketEventManagerSystem::initialize()
@@ -58,7 +59,7 @@ void LibRocketEventManagerSystem::initialize()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	context = rocketBackend->getContext();
+	m_context = rocketBackend->getContext();
 
 	EventInstancer* eventInstancer = new EventInstancer(this);
 	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
@@ -66,158 +67,176 @@ void LibRocketEventManagerSystem::initialize()
 }
 
 // Releases all event handlers registered with the manager.
-void LibRocketEventManagerSystem::Shutdown()
+void LibRocketEventManagerSystem::shutdown()
 {
 	//for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
 	//	delete (*i).second;
 
-	event_handlers.clear();
-	event_handler = NULL;
+	m_eventHandlers.clear();
+	m_eventHandler = NULL;
+}
+
+void LibRocketEventManagerSystem::registerEventHandler( EventHandler* p_handler )
+{
+	registerEventHandler(p_handler->getName().c_str(), p_handler);
 }
 
 // Registers a new event handler with the manager.
-void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler)
+void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& p_handlerName, EventHandler* p_handler)
 {
-	//handler->ConnectToManager(this);
+	p_handler->connectToManager(this);
 	// Release any handler bound under the same name.
-	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
-	if (iterator != event_handlers.end())
+	EventHandlerMap::iterator iterator = m_eventHandlers.find(p_handlerName);
+	if (iterator != m_eventHandlers.end())
 	{	//delete (*iterator).second;
 		DEBUGWARNING(((
 			toString("LibRocketEventManagerSystem::registerEventHandler\nAttempting to register EventHandler[")
-			+ toString(handler_name.CString())
+			+ toString(p_handlerName.CString())
 			+ toString("] which has already been registred in the EventManager.")).c_str()));
 	}
-	event_handlers[handler_name] = handler;
+	m_eventHandlers[p_handlerName] = p_handler;
 }
 
-EventHandler* LibRocketEventManagerSystem::UnregisterEventHandler( const Rocket::Core::String& handler_name )
+EventHandler* LibRocketEventManagerSystem::unregisterEventHandler( const Rocket::Core::String& p_handlerName )
 {
-	EventHandlerMap::iterator iterator = event_handlers.find(handler_name);
+	EventHandlerMap::iterator iterator = m_eventHandlers.find(p_handlerName);
 	EventHandler* handler = NULL;
-	if (iterator != event_handlers.end())
+	if (iterator != m_eventHandlers.end())
 	{
 		handler = (*iterator).second;
 		handler->connectToManager(NULL);
-		event_handlers[handler_name] = NULL;
+		m_eventHandlers[p_handlerName] = NULL;
 	}
 	return handler;
 }
 
+void LibRocketEventManagerSystem::clearDocumentStack()
+{
+	while (!m_docIdStack.empty())
+	{
+		auto document = m_context->GetDocument(m_docIdStack.top());
+		m_docIdStack.pop();
+		if (document->IsVisible())
+			document->Hide();
+	}
+	m_currentDocId = "";
+}
+
 // Processes an event coming through from Rocket.
-void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value)
+void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value)
 {
 	Rocket::Core::StringList commands;
-	Rocket::Core::StringUtilities::ExpandString(commands, value, ';');
+	Rocket::Core::StringUtilities::ExpandString(commands, p_value, ';');
 	for (size_t i = 0; i < commands.size(); ++i)
 	{
-		// Check for a generic 'load', 'exit' or 'set' command.
+		// Check for a generic 'load', 'exit' or 'modal' command.
 		Rocket::Core::StringList values;
 		Rocket::Core::StringUtilities::ExpandString(values, commands[i], ' ');
 
 		if (values.empty())
 			return;
 
-		auto ownerDocument = event.GetTargetElement()->GetOwnerDocument();
-		if (values[0] == "modal" && !ownerDocument->IsModal())
+		auto ownerDocument = p_event.GetTargetElement()->GetOwnerDocument();
+		if (values[0] == "modal")
 		{
-			ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
+			if (!ownerDocument->IsModal() && m_currentDocId == ownerDocument->GetId())
+				ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
 		}
 		else if (values[0] == "goto" && values.size() > 1)
 		{
-			// Load the window, and if successful hide the old window.
-			if (LoadWindow(values[1]))
+			// Clear the stack from windows that are on top of the triggering one.
+			clearStackUntilFoundDocId(ownerDocument->GetId());
+			// If goto previous is specified, then hide this window, and open the
+			// previous one saved on the stack
+			if (values[1] == "previous")
 			{
-				event.GetTargetElement()->GetOwnerDocument()->Hide();
+				// Pop current document id from the stack.
+				m_docIdStack.pop();
+				// Top and pop next document id. On loadWindow, it will be added again.
+				// That's not pretty/efficient, but it isn't a problem either. // Alex
+				Rocket::Core::String window = m_docIdStack.top();
+				m_docIdStack.pop();
+				if (loadWindow(window))
+					ownerDocument->Hide();
+			}
+			// Load the window, and if successful hide the old window.
+			else if (loadWindow(values[1]))
+			{
+				ownerDocument->Hide();
 			}
 		}
-		else if (values[0] == "load" &&	values.size() > 1)
+		else if (values[0] == "open" &&	values.size() > 1)
 		{
-			// Load the window.
-			LoadWindow(values[1]);
+			// Opens a window and pushes it to the stack, without hiding the parent window.
+			// Clear other open windows on top.
+			clearStackUntilFoundDocId(ownerDocument->GetId());
+			loadWindow(values[1]);
+			ownerDocument->Show(Rocket::Core::ElementDocument::NONE);
 		}
-		else if (values[0] == "close")
-		{
-			Rocket::Core::ElementDocument* target_document = NULL;
 
-			if (values.size() > 1)
-				target_document = context->LoadDocument(values[1].CString());
-			else
-				target_document = event.GetTargetElement()->GetOwnerDocument();
-
-			if (target_document != NULL)
-				target_document->Close();
-		}
 		else if (values[0] == "exit")
 		{
 			wantsToExit = true;
 		}
-		else if (values[0] == "pause")
-		{
-			//GameDetails::SetPaused(true);
-		}
-		else if (values[0] == "unpause")
-		{
-			//GameDetails::SetPaused(false);
-		}
 		else
 		{
-			if (event_handler != NULL)
-				event_handler->processEvent(event, commands[i]);
+			if (m_eventHandler != NULL)
+				m_eventHandler->processEvent(p_event, commands[i]);
 		}
 	}
 }
 
 // Loads a window and binds the event handler for it.
-bool LibRocketEventManagerSystem::LoadWindow(const Rocket::Core::String& window_name)
+bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windowName)
 {
 	// Set the event handler for the new screen, if one has been registered.
-	EventHandler* old_event_handler = event_handler;
-	EventHandlerMap::iterator iterator = event_handlers.find(window_name);
-	if (iterator != event_handlers.end())
-		event_handler = (*iterator).second;
+	EventHandler* old_event_handler = m_eventHandler;
+	EventHandlerMap::iterator iterator = m_eventHandlers.find(p_windowName);
+	if (iterator != m_eventHandlers.end())
+		m_eventHandler = (*iterator).second;
 	else
-		event_handler = NULL;
+		m_eventHandler = NULL;
 
-	// Attempt to load the referenced RML document.
-	/*Rocket::Core::String document_path = 
-		Rocket::Core::String((GUI_MENU_PATH + toString("assets/")).c_str())+
-		window_name + Rocket::Core::String(".rml");
-	*/
-	//Rocket::Core::String document_path = 
-	//	(GUI_MENU_PATH + 
-	//	toString("temp/") + 
-	//	toString((window_name).CString()) +
-	//	toString(".rml")).c_str();
-	
-	//Rocket::Core::ElementDocument* document = context->LoadDocument(document_path.CString());
-	auto document = context->GetDocument(window_name);
+	auto document = m_context->GetDocument(p_windowName);
 	if (document == NULL)
 	{
 		DEBUGWARNING(((
 			toString("LibRocketEventManagerSystem::loadWindow\nNo document with the body id\"")
-			+ toString(window_name.CString())
+			+ toString(p_windowName.CString())
 			+ toString("\" has been loaded.")).c_str()));
-		event_handler = old_event_handler;
+		m_eventHandler = old_event_handler;
 		return false;
 	}
 
+	// Add this document to the stack!
+	m_currentDocId = p_windowName;
+	m_docIdStack.push(p_windowName);
+
 	document->Show();
-	context->PullDocumentToFront(document);
+	document->PullToFront();
 
 	// Remove the caller's reference.
 	//document->RemoveReference();
 
+
 	return true;
 }
 
-void LibRocketEventManagerSystem::registerEventHandler( EventHandler* handler )
-{
-	registerEventHandler(handler->getName().c_str(), handler);
-}
+
 
 void LibRocketEventManagerSystem::process()
 {
 	if (wantsToExit)
 		m_world->requestToShutDown();
+}
+
+void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core::String&  p_docId )
+{
+	while (m_docIdStack.top() != p_docId)
+	{	
+		auto document = m_context->GetDocument(m_docIdStack.top());
+		m_docIdStack.pop();
+		if (document->IsVisible())
+			document->Hide();
+	}
 }

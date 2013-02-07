@@ -29,6 +29,7 @@
 #include <Rocket/Core/Event.h>
 #include <EventManager.h>
 #include <EntitySystem.h>
+#include <stack>
 
 namespace Rocket
 {
@@ -53,38 +54,44 @@ public:
 
 	void initialize();
 	/// Releases all event handlers registered with the manager.
-	void Shutdown();
+	void shutdown();
 
 	void process();
 
-	void registerEventHandler(EventHandler* handler);
+	void registerEventHandler(EventHandler* p_handler);
 
-	EventHandler* UnregisterEventHandler(const Rocket::Core::String& handler_name);
+	EventHandler* unregisterEventHandler(const Rocket::Core::String& p_handlerName);
+
+	void clearDocumentStack();
 
 	/// Processes an event coming through from Rocket.
 	/// @param[in] event The Rocket event that spawned the application event.
 	/// @param[in] value The application-specific event value.
-	void processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value);
+	void processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value);
 	/// Loads a window and binds the event handler for it.
-	/// @param[in] window_name The name of the window to load.
-	bool LoadWindow(const Rocket::Core::String& window_name);
+	/// @param[in] p_windowName The name of the window to load.
+	bool loadWindow(const Rocket::Core::String& p_windowName);
 
 	bool wantsToExit;
 private:
 	/// Registers a new event handler with the manager.
-	/// @param[in] handler_name The name of the handler; this must be the same as the window it is handling events for.
+	/// @param[in] p_handlerName The name of the handler; this must be the same as the window it is handling events for.
 	/// @param[in] handler The event handler.
-	void registerEventHandler(const Rocket::Core::String& handler_name, EventHandler* handler);
+	void registerEventHandler(const Rocket::Core::String& p_handlerName, EventHandler* p_handler);
 
-	// The game's element context (declared in main.cpp).
-	Rocket::Core::Context* context;
+	/// Pops all docIds and hides them until the parameter doc id is the top one.
+	void clearStackUntilFoundDocId(const Rocket::Core::String&  p_docId);
+
+	// The game's element context (retrieved from the rocket backend system).
+	Rocket::Core::Context* m_context;
 	// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
-	EventHandler* event_handler;
+	EventHandler* m_eventHandler;
 	// The event handlers registered with the manager.
 	typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
+	EventHandlerMap m_eventHandlers;
 
-	EventHandlerMap event_handlers;
-
+	Rocket::Core::String				m_currentDocId;
+	std::stack<Rocket::Core::String>	m_docIdStack;
 };
 
 

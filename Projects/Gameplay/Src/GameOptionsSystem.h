@@ -22,6 +22,6 @@ public:
 	virtual ~GameOptionsSystem();
 
 
-	virtual void processEvent( Rocket::Core::Event& event, const Rocket::Core::String& value );
+	virtual void processEvent( Rocket::Core::Event& p_event, const Rocket::Core::String& p_value );
 
 };

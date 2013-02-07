@@ -14,7 +14,7 @@
 		</style>
 	</head>
 	<body id="options" template="window" onload="restore_settings" onshow="modal">
-		<form onsubmit="apply_settings; goto main_menu">
+		<form onsubmit="apply_settings; goto previous">
 			<div>
 				<p>
 					Graphics:<br />

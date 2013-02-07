@@ -2,7 +2,7 @@
 #include "Control.h"
 #include <TcpClient.h>
 #include <Rocket/Core/Event.h>
-#include "LibRocketBackendSystem.h"
+#include "LibRocketEventManagerSystem.h"
 
 ClientConnectToServerSystem* ClientConnectToServerSystem::m_selfPointer = NULL;
 
@@ -32,6 +32,12 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		m_isLookingForConnection = false;
 		m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
 		setEnabled(false);
+
+		auto eventManagerSys = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+		// Clears and hides all currently visible documents.
+		eventManagerSys->clearDocumentStack();
 	}
 }
 
@@ -80,18 +86,16 @@ void ClientConnectToServerSystem::connectToNetworkAddress(
 	m_isLookingForConnection = true;
 }
 
-void ClientConnectToServerSystem::processEvent( Rocket::Core::Event& event, const Rocket::Core::String& value )
+void ClientConnectToServerSystem::processEvent( Rocket::Core::Event& p_event, const Rocket::Core::String& p_value )
 {
 	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
 	// and enable the system.
-	if (value == "join_server")
+	if (p_value == "join_server")
 	{
-		// NOTE: Issue!
-		// Boost seem to be unable to resolve servers specified by a pc-name (localhost does
-		// work). This needs to be researched further if we want this kind of support. // Alex
-		//string server_name		= event.GetParameter<Rocket::Core::String>("server_name", "").CString();
-		string server_host = event.GetParameter<Rocket::Core::String>("server_host", "localhost").CString();
-		string server_port = event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
+		// "server_host" is the name attribute specified in the input element in the rml file.
+		// "localhost" simply is provided as a default value, if the host isn't set. This could be left as "" as well.
+		string server_host = p_event.GetParameter<Rocket::Core::String>("server_host", "localhost").CString();
+		string server_port = p_event.GetParameter<Rocket::Core::String>("server_port", "1337").CString();
 
 		if( !m_tcpClient->hasActiveConnection() &&  !m_isLookingForConnection)
 			connectToNetworkAddress(server_host, server_port);

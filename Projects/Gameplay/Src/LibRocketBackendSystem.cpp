@@ -99,7 +99,8 @@ void LibRocketBackendSystem::initialize()
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
 	//tmp = GUI_HUD_PATH + "infoPanel.rml";
-	loadDocument( tmp.c_str() );
+	int i = loadDocument( tmp.c_str() );
+	m_documents[i]->Hide();
 
 	//tmp = GUI_HUD_PATH + "main.rml";
 	//loadDocument( tmp.c_str() );
@@ -124,24 +125,18 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 	}
 }
 
-int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName, 
-											   bool p_initiallyShown/*=false*/, 
-											   bool p_modal/*=false */ )
+int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName)
 {
 	int docId = loadDocument((GUI_MENU_PATH + 
 								toString("temp/") + 
 								toString(p_windowName) +
-								toString(".rml")).c_str(), p_initiallyShown);
+								toString(".rml")).c_str(),
+								p_windowName);
 
-	if (docId >= 0)
-	{
-		/*m_eventManager->LoadWindow(p_windowName);*/
-	}
 	return docId;
 }
 
-int LibRocketBackendSystem::loadDocument( const char* p_filePath, 
-										bool p_initiallyShown/*=true*/)
+int LibRocketBackendSystem::loadDocument( const char* p_filePath, const char* p_windowName/*=NULL*/)
 {
 	int docId = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;
@@ -156,9 +151,28 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 		Rocket::Core::Element* title = tmpDoc->GetElementById("title");
 		if (title != NULL)
 			title->SetInnerRML(tmpDoc->GetTitle());
-		
-		if (p_initiallyShown)
-			tmpDoc->Show();
+
+		Rocket::Core::String storedName;
+		// If no windowName was specified, extract it using the full filePath.
+		if (p_windowName == NULL)
+		{
+			Rocket::Core::StringList splitPath;
+			Rocket::Core::StringUtilities::ExpandString(splitPath, p_filePath, '/');
+			 // The unformatted window name, needs to get rid of the file extension.
+			std::string name = splitPath[splitPath.size()-1].CString();
+			int splitPos = name.find_last_of('.');
+			if (splitPos != -1)
+				name.erase(splitPos);
+
+			storedName = name.c_str();
+		}
+		else
+		{
+			storedName = p_windowName;
+		}
+		// Set the element's id and map the resulting name.
+		m_documents[docId]->SetId(storedName);
+		m_docStringIdMap[storedName] = docId;
 
 		//tmpDoc->RemoveReference();
 	}
@@ -170,7 +184,14 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath,
 	return docId;
 }
 
-
+int LibRocketBackendSystem::getDocumentByName( const char* p_name ) const
+{
+	auto it = m_docStringIdMap.find(p_name);
+	if (it != m_docStringIdMap.end())
+		return it->second;
+	else
+		return -1;
+}
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
 {
@@ -303,7 +324,6 @@ void LibRocketBackendSystem::hideCursor()
 {
 	m_rocketContext->ShowMouseCursor(false);
 }
-
 
 
 

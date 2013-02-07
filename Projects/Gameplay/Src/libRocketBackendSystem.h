@@ -6,6 +6,7 @@
 #include <Rocket/Core.h>
 #include <Rocket/Debugger.h>
 #include <RenderInterface.h>
+#include <map>
 
 class AntTweakBarWrapper;
 class Control;
@@ -26,10 +27,12 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	int loadDocumentByName(const char* p_windowName, 
-							bool p_initiallyShown=false, 
-							bool p_modal=false);
-	int loadDocument( const char* p_filePath, bool p_initiallyShown=true);
+	int loadDocumentByName(const char* p_windowName);
+	int loadDocument( const char* p_filePath, const char* p_windowName=NULL);
+
+	// Gets a document that matches the name (a.k.a body id). This function can only be
+	// used if the document was loaded by name.
+	int getDocumentByName(const char* p_id) const;
 
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
@@ -64,5 +67,6 @@ private:
 	LibRocketSystemInterface*	m_systemInterface;
 
 	vector<Rocket::Core::ElementDocument*> m_documents;
+	map<Rocket::Core::String, int> m_docStringIdMap;
 };
 

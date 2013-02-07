@@ -30,7 +30,7 @@
 			</div>
 			<!-- <input type="submit" value="Back">Back</input>
 		</form> -->
-		<button onclick="goto main_menu">Back</button>
+		<button onclick="goto previous">Back</button>
 	</body>
 </rml>
 					

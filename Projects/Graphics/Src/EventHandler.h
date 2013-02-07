@@ -50,7 +50,7 @@ public:
 	const std::string& getName() const;
 
 	virtual ~EventHandler() = 0;
-	virtual void processEvent(Rocket::Core::Event& event, const Rocket::Core::String& value) = 0;
+	virtual void processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value) = 0;
 protected:
 	EventManager*	m_eventManager;
 	std::string		m_handlerName;

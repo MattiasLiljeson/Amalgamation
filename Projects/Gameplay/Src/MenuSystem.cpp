@@ -34,12 +34,14 @@ void MenuSystem::initialize()
 	rocketEventManager->registerEventHandler(connectToServerSys);
 	rocketEventManager->registerEventHandler(gameOptionsSys);
 
-	rocketBackend->loadDocumentByName("main_menu", true, true);
+	rocketBackend->loadDocumentByName("main_menu");
 	rocketBackend->loadDocumentByName("play");
 	rocketBackend->loadDocumentByName("join");
 	rocketBackend->loadDocumentByName("host");
 	rocketBackend->loadDocumentByName("options");
 	rocketBackend->loadDocumentByName("credits");
+
+	rocketEventManager->loadWindow("main_menu");
 
 }
 

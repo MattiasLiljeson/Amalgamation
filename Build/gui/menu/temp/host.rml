@@ -16,14 +16,14 @@
 			}*/
 		</style>
 	</head>
-	<body id="host" template="window" onshow="modal">
+	<body id="" template="window" onshow="">
 		<form onsubmit="host_server">
 			<div>
 				<Input name="server_name" type="text" size="10" maxlength="20" value="Untitled Server" />
 				<br/>
 			</div>
 			<input type="submit" value="accept">Create</input>
-			<button onclick="goto play">Back</button>
+			<button onclick="goto previous">Back</button>
 		</form>
 	</body>
 </rml>
