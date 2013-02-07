@@ -137,6 +137,7 @@ private:
 	void unMapGBuffers();
 	void initShaders();
 	void initFullScreenQuad();
+	void initSSAO();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -163,6 +164,8 @@ private:
 	// rasterizer states
 	vector<ID3D11RasterizerState*> m_rasterizerStates;
 	RasterizerState::Mode m_currentRasterizerStateType;
+
+	SSAOBuffer	m_ssaoData;
 
 	int m_width;
 	int m_height;

@@ -125,7 +125,7 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 	createPTVertexInputLayout(vertexData,&inputLayout);
 	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,samplerState,NULL);
 
-	return new DeferredComposeShader(shaderVariables);
+	return new DeferredComposeShader(m_bufferFactory->createSSAOBuffer(), shaderVariables);
 }
 
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
