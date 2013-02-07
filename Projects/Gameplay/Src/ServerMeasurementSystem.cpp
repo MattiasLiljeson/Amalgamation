@@ -16,7 +16,7 @@ void ServerMeasurementSystem::process()
 {
 	if(m_secondTimer.elapsed() > 1.0)
 	{
-		OutputDebugStringA( "--------------------------------\n" );
+		OutputDebugStringA( "----------------------------\n" );
 		OutputDebugStringA( "- Per second ratio -\n" );
 		for(unsigned int i=0; i<m_measuredSystems.size(); i++)
 		{
