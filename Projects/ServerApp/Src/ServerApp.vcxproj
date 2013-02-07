@@ -48,7 +48,7 @@
     <LibraryPath>$(SolutionDir)Projects/Assetsmanagement/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)Projects/Common/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
@@ -68,6 +68,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>AssetsManagement_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;AgilePhysics_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -82,13 +83,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
       <AdditionalDependencies>AssetsManagement_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;AgilePhysics_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
