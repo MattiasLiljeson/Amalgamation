@@ -57,6 +57,8 @@ public:
 	bool m_impulseEnabled;
 
 	bool m_collisionEnabled;
+
+	bool m_copyToChildren;
 private:
 	static ComponentRegister<BodyInitData> s_reg;
 };

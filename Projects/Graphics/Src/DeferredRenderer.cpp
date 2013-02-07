@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "LightShader.h"
 #include "GUIShader.h"
 
 
@@ -42,6 +43,8 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 
 	buildBlendStates();
 	m_currentBlendStateType = BlendState::DEFAULT;
+	m_blendMask = 0xffffffff;
+	for (int i=0;i<4;i++) m_blendFactors[i]=1;
 
 	buildRasterizerStates();
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;
@@ -93,7 +96,14 @@ void DeferredRenderer::mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_sh
 	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
 	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
-	m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+
+		m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+}
+void DeferredRenderer::mapDeferredBaseRTSToShader()
+{	
+	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DEPTH] );
 }
 
 void DeferredRenderer::unmapDeferredBaseFromShader(){
@@ -318,7 +328,13 @@ DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
 
-DeferredBaseShader* DeferredRenderer::getDeferredLightShader(){
+LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
+
+ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderTargets p_target )
+{
+	return &m_gBuffersShaderResource[p_target];
+}
+
 

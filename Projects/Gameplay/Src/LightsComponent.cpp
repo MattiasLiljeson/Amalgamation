@@ -8,11 +8,8 @@ ComponentRegister<LightsComponent> LightsComponent::s_reg("LightsComponent");
 
 Light::Light()
 {
-	//scale = AglVector3::one();
-	//rotation = AglQuaternion( 0.0f, 0.0f, 0.0f, 0.0f );
-	//translation = AglVector3::zero();
 	offsetMat = AglMatrix::identityMatrix();
-	castingShadow = 0;
+	instanceData.shadowIdx = -1;
 }
 
 
@@ -32,7 +29,7 @@ vector<Light>* LightsComponent::getLightsPtr()
 	return &m_lights;
 }
 
-void LightsComponent::addLight( Light p_light  )
+void LightsComponent::addLight( Light& p_light  )
 {
 	m_lights.push_back( p_light );
 }
@@ -183,7 +180,7 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 			}
 		}
 		else if( lightInfoStr == "hasShadow"){
-			p_initData[i].getData<int>( &m_lights[lightIdx].castingShadow );
+			p_initData[i].getData<int>( &m_lights[lightIdx].instanceData.shadowIdx );
 		}
 	}
 

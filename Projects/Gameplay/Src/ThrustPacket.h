@@ -31,7 +31,7 @@ public:
 	/// \param p_packet
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void unpack( Packet p_packet );
+	void unpack( Packet& p_packet );
 
 public:
 	int entityId;

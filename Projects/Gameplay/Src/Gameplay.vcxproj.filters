@@ -508,6 +508,15 @@
     <ClInclude Include="LibRocketEventManagerSystem.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
+    <ClInclude Include="ClientMeasurementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerMeasurementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControlPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -845,6 +854,15 @@
     </ClCompile>
     <ClCompile Include="LibRocketEventManagerSystem.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientMeasurementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerMeasurementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControlPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

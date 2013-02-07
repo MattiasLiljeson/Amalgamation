@@ -4,6 +4,7 @@
     <ClInclude Include="InstanceData.h" />
     <ClInclude Include="RawTransformData.h" />
     <ClInclude Include="LightInstanceData.h" />
+    <ClInclude Include="PlayerStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InstanceData.cpp" />

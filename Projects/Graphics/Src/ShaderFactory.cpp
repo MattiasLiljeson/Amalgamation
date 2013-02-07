@@ -6,6 +6,7 @@
 #include "GUIShader.h"
 #include "ParticleShader.h"
 #include "ShadowShader.h"
+#include "LightShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -56,22 +57,26 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	ID3D11InputLayout* inputLayout = NULL;
 
 	VSData* vertexData = new VSData();
+	HSData* hullData	= NULL;//new HSData();
+	DSData* domainData	= NULL;//new DSData();
 	PSData* pixelData = new PSData();
 
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	//hullData->stageConfig = new ShaderStageConfig(p_filePath,"HS",m_shaderModelVersion);
+	//domainData->stageConfig = new ShaderStageConfig(p_filePath,"DS",m_shaderModelVersion);
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
 
-	createAllShaderStages(vertexData,pixelData);
+	createAllShaderStages(vertexData,pixelData, NULL, hullData, domainData);
 	createSamplerState(&samplerState);
 	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
 
 	ShaderVariableContainer shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState, NULL, hullData, domainData);
 
 	return new DeferredBaseShader(shaderInitData);
 }
 
-DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
+LightShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )
 {
 	VSData* vertexData = new VSData();
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
@@ -87,6 +92,9 @@ DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath 
 	ID3D11SamplerState* samplerState = NULL;
 	createSamplerState( &samplerState );
 
+	ID3D11SamplerState* shadowSampler = NULL;
+	createShadowSamplerState( &shadowSampler );
+
 	ShaderVariableContainer shaderInitData;
 	createShaderInitData( &shaderInitData, inputLayout, vertexData, pixelData, samplerState );
 
@@ -94,9 +102,9 @@ DeferredBaseShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath 
 	//newDeferredComposeShader = new DeferredComposeShader(shaderInitData);
 	//return newDeferredComposeShader;
 
-	DeferredBaseShader* newDeferredBaseShader = NULL;
-	newDeferredBaseShader = new DeferredBaseShader(shaderInitData);
-	return newDeferredBaseShader;
+	LightShader* newLightShader = NULL;
+	newLightShader = new LightShader(shaderInitData, shadowSampler);
+	return newLightShader;
 }
 
 DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR& p_filePath )
@@ -115,7 +123,7 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 	createAllShaderStages(vertexData, pixelData);
 	createSamplerState(&samplerState);
 	createPTVertexInputLayout(vertexData,&inputLayout);
-	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,samplerState);
+	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,samplerState,NULL);
 
 	return new DeferredComposeShader(shaderVariables);
 }
@@ -178,7 +186,7 @@ ShadowShader* ShaderFactory::createShadowShader( const LPCWSTR& p_filePath ){
 
 	createAllShaderStages(vertexData);
 	createInstancedPNTTBVertexInputLayout(vertexData, &inputLayout);
-	createShaderInitData(&shaderInitData, inputLayout, vertexData);
+	createShaderInitData(&shaderInitData, inputLayout, vertexData, NULL, samplerState);
 
 	return new ShadowShader(shaderInitData, m_bufferFactory->createShadowBuffer());
 }
@@ -337,6 +345,28 @@ void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
 }
 
 
+void ShaderFactory::createShadowSamplerState( ID3D11SamplerState** p_samplerState )
+{
+	HRESULT hr = S_OK;
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc,sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = m_device->CreateSamplerState(&samplerDesc,p_samplerState );
+	if(FAILED(hr))
+		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
+}
+
+
 void ShaderFactory::createShaderInitData(ShaderVariableContainer* p_shaderInitData, 
 										 ID3D11InputLayout* p_inputLayout,
 										 VSData* p_vsd, PSData* p_psd/* =NULL */,
@@ -470,6 +500,7 @@ void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 
+		// Per instance
 		{"INSTANCETRANSFORM", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
@@ -483,11 +514,11 @@ void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 
-		// Per instance
-		{"RANGE", 0, DXGI_FORMAT_R32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{"LIGHTDIR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"RANGE", 0, DXGI_FORMAT_R32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
 		{"ATTENUATION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{"SPOTPOWER", 0, DXGI_FORMAT_R32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT,

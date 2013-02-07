@@ -1,0 +1,77 @@
+cbuffer ConstBuffer
+{
+    matrix World;
+    matrix View;
+    matrix Proj;
+	float  Scale;
+	float Displacement;
+	float UseAlpha;
+};
+
+Texture2D<float4> DisplacementTexture;
+SamplerState SampleType : register(s0);
+
+struct HOut
+{
+    float3 wpos         : POSITION;
+	float3 normal	    : NORMAL;
+    float3 tangent      : TANGENT;
+    float3 bitangent    : BITANGENT;
+	float2 texCoord     : TEXCOORD;
+};
+struct COut
+{
+	float edges[3] 	: SV_TessFactor;
+	float inside 	: SV_InsideTessFactor;
+};
+
+/////DOMAIN SHADER/////////
+struct DOut
+{
+    float4 position     : SV_POSITION;
+    float3 wpos         : POSITION;
+	float3 normal	    : NORMAL;
+    float3 tangent      : TANGENT;
+    float3 bitangent    : BITANGENT;
+	float2 texCoord     : TEXCOORD;
+};
+
+[domain("tri")]
+DOut DShader(COut input, float3 uvw : SV_DomainLocation, const OutputPatch<HOut, 3> patch)
+{
+	float3 pos;
+	float3 norm;
+	float3 tan;
+	float3 bin;
+	float2 tex;
+	DOut output;
+	
+	pos = uvw.x * patch[0].wpos + uvw.y * patch[1].wpos + uvw.z * patch[2].wpos;
+	norm = uvw.x * patch[0].normal + uvw.y * patch[1].normal + uvw.z * patch[2].normal;
+	tan = uvw.x * patch[0].tangent + uvw.y * patch[1].tangent + uvw.z * patch[2].tangent;
+	bin = uvw.x * patch[0].bitangent + uvw.y * patch[1].bitangent + uvw.z * patch[2].bitangent;
+	tex = uvw.x * patch[0].texCoord + uvw.y * patch[1].texCoord + uvw.z * patch[2].texCoord;
+	
+	tan    = normalize(tan);
+	bin    = normalize(bin);
+	norm    = normalize(norm);
+	
+	float disp;
+	if (UseAlpha)
+		disp = DisplacementTexture.SampleLevel(SampleType, tex, 0).a;
+	else
+		disp = DisplacementTexture.SampleLevel(SampleType, tex, 0).r;
+	
+	disp = (disp - 0.5f) * 2 * Displacement;
+	pos = pos + disp * norm;
+	
+	output.position = float4(pos,1.0f);
+	output.wpos 	= output.position.xyz;
+    output.position = mul(output.position, View);
+    output.position = mul(output.position, Proj);
+	output.tangent = tan;
+	output.bitangent = bin;
+	output.normal = norm;
+	output.texCoord = tex;
+	return output;
+}

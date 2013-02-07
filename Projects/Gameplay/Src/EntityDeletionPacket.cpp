@@ -18,7 +18,7 @@ Packet EntityDeletionPacket::pack()
 	return packet;
 }
 
-void EntityDeletionPacket::unpack( Packet p_packet )
+void EntityDeletionPacket::unpack( Packet& p_packet )
 {
 	p_packet >> networkIdentity;
 }

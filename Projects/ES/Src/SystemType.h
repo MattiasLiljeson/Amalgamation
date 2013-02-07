@@ -81,6 +81,8 @@ public:	//Enums
 		ShadowSystem,
 		SlotInputController,
 		SpeedBoostModuleControllerSystem,
+		ClientMeasurementSystem,
+		ServerMeasurementSystem,
 		NUM_SYSTEM_TYPES
 	};
 

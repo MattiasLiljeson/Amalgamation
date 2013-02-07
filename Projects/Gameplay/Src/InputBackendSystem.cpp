@@ -151,7 +151,7 @@ void InputBackendSystem::initialize()
 	// Intitiate cursor
 	m_cursor = new Cursor();
 	m_cursor->addControlSet(
-		40000.0, 40000.0, false,
+		60000.0, 60000.0, false,
 		getControlByEnum( InputHelper::MouseAxes_X_NEGATIVE ),
 		getControlByEnum( InputHelper::MouseAxes_X_POSITIVE ),
 		getControlByEnum( InputHelper::MouseAxes_Y_NEGATIVE ),
@@ -190,7 +190,8 @@ void InputBackendSystem::process()
 		// Fetch old cursor pixel position and use it to then get a new ndc position,
 		// based on the new window width and height.
 		auto oldCursorPixelPos = m_graphicsBackend->getGfxWrapper()->
-			getScreenPixelPosFromNDC(m_cursor->getX(), m_cursor->getY(), cursorWidth, cursorHeight);
+			getScreenPixelPosFromNDC((float)m_cursor->getX(), (float)m_cursor->getY(), 
+			cursorWidth, cursorHeight);
 		auto newNdcPos = m_graphicsBackend->getGfxWrapper()->
 			getNDCPosFromScreenPixel(oldCursorPixelPos.first, oldCursorPixelPos.second);
 		m_cursor->overridePosition(newNdcPos.first, newNdcPos.second);

@@ -11,7 +11,7 @@ CameraInfo::CameraInfo(float p_aspectRatio,
 	m_fieldOfViewAsRadians	= p_fieldOfViewAsRadians;
 	m_nearPlane		= p_nearPlane;
 	m_farPlane		= p_farPlane;
-
+	m_shadowMapIdx	= -1;
 	createPerspectiveMatrix();
 }
 

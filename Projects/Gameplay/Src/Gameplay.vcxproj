@@ -18,8 +18,10 @@
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="BodyInitData.h" />
+    <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ClientMeasurementSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
@@ -76,6 +78,7 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -160,10 +163,12 @@
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
+    <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
+    <ClCompile Include="ClientMeasurementSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
@@ -228,6 +233,7 @@
     <ClCompile Include="GameStatsSystem.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerMeasurementSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />

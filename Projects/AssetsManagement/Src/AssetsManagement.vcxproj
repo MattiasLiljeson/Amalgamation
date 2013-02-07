@@ -14,12 +14,14 @@
     <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="InstanceInstruction.h" />
+    <ClInclude Include="LightDataCollection.h" />
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelBaseFactory.h" />
     <ClInclude Include="ParticleSystemCollection.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SpawnPointCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeshNameScriptParser.cpp" />

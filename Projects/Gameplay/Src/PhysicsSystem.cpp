@@ -73,10 +73,7 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
-		PhysicsBody* body =
-			static_cast<PhysicsBody*>(
-			m_world->getComponentManager()->getComponent( p_entities[i],
-			ComponentType::getTypeFor(ComponentType::PhysicsBody)));
+		PhysicsBody* body = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 
 		if (body->m_id == -1)
 		{

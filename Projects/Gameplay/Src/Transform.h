@@ -58,6 +58,8 @@ public:
 	/// \return The translation vector.
 	///-----------------------------------------------------------------------------------
 	const AglVector3& getTranslation() const;
+
+	const AglVector3 getLookAt() const;
 	
 	///-----------------------------------------------------------------------------------
 	/// \param p_translation The new translation as a vector

@@ -26,6 +26,7 @@
 #include "PositionalSoundSource.h"
 #include "AudioBackendSystem.h"
 #include "InterpolationComponent.h"
+#include "PlayerState.h"
 #include "RocketLauncherModule.h"
 #include "MineLayerModule.h"
 #include <time.h>
@@ -249,21 +250,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		component = new ShipEditController();
 		entity->addComponent( ComponentType::ShipEditController, component);
 
-		entity->addTag(ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG());
-		/*
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
-
-		BodyInitData* bodyData = new BodyInitData(p_packet.translation,
-			p_packet.rotation,
-			p_packet.scale, AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, true, false);
-			
-
-		entity->addComponent( ComponentType::BodyInitData, bodyData);*/
-
+		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
+	
+		// hardcoded
 		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
@@ -283,11 +272,15 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		/* This is where the audio listener is created and therefor the master  */
 		/* volume is added to Ant Tweak Bar here.								*/
 		/************************************************************************/
-		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-			AntTweakBarWrapper::OVERALL,
-			"Master_volume", TwType::TW_TYPE_FLOAT, 
-			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-			"group=Sound min=0 max=10 step=0.001 precision=3");
+		/************************************************************************/
+		/* Sorry. This breaks the server, so it must be moved out of here when	*/
+		/* needed. */
+		/************************************************************************/
+//		AntTweakBarWrapper::getInstance()->addWriteVariable( 
+//			AntTweakBarWrapper::OVERALL,
+//			"Master_volume", TwType::TW_TYPE_FLOAT, 
+//			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
+//			"group=Sound min=0 max=10 step=0.001 precision=3");
 	}
 
 	component = new PlayerScore();
@@ -299,27 +292,22 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
+		// add a myShip tag to the ship first!
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
-		// int shipId = entity->getIndex();
-									 // HACK!
-		float aspectRatio = 1280.0f / 720.0f;//3.1415f / 4.0f;//   1280/768; // Note: retrieve the aspect ratio here somehow
-								     // without using dx-graphics stuff
-		// old:
-		/*	static_cast<GraphicsBackendSystem*>(m_world->getSystem(
-			SystemType::GraphicsBackendSystem ))->getAspectRatio();*/
-
+		// Create the camera
 		entity = m_world->createEntity();
 		component = new CameraInfo( m_world->getAspectRatio() );
 		entity->addComponent( ComponentType::CameraInfo, component );
 		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
 		component = new Transform( -5.0f, 0.0f, -5.0f );
 		entity->addComponent( ComponentType::Transform, component );
-		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController() );
+		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
+		entity->addComponent( ComponentType::PlayerState, new PlayerState );
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent(ComponentType::PickComponent, new PickComponent());
-		entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 		m_world->addEntity(entity);
 	}
@@ -341,7 +329,7 @@ Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 		
-	entity->addComponent(ComponentType::InterpolationComponent, new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent, new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -365,7 +353,7 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -384,15 +372,12 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "Minigun", "Assemblages/Minigun.asd" );
+	entity = entityFromRecipeOrFile( "ClientMinigun", "Assemblages/Modules/Minigun/ClientMinigun.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -414,7 +399,7 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -435,7 +420,7 @@ Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -460,7 +445,7 @@ Entity* EntityFactory::createLaserSightClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;
@@ -489,7 +474,7 @@ Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 	else
 	{
 		h.particleAge = 1;
-		h.spawnSpeed = 0.02;
+		h.spawnSpeed = 0.02f;
 		h.spread = 1.0f;
 		h.spawnFrequency = 10;
 		h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
@@ -576,7 +561,7 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 
@@ -607,7 +592,7 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	m_world->addEntity(entity);
 	return entity;

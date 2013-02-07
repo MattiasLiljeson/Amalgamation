@@ -57,6 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,6 +75,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -87,12 +89,14 @@
   <ItemGroup>
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="FileCheck.h" />
+    <ClInclude Include="PreciseTimer.h" />
     <ClInclude Include="ValueClamp.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileCheck.cpp" />
+    <ClCompile Include="PreciseTimer.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,6 +9,7 @@
 #include "DIndex.h"
 #include "RenderSceneInfoCBuffer.h"
 #include "ShadowCBuffer.h"
+#include "PerShadowCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
@@ -84,6 +85,8 @@ public:
 	Buffer<RenderSceneInfoCBuffer>*  createRenderSceneInfoCBuffer();
 
 	Buffer<ShadowCBuffer>* createShadowBuffer();
+
+	Buffer<PerShadowCBuffer>* createPerShadowBuffer();
 
 
 	///-----------------------------------------------------------------------------------

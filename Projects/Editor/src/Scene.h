@@ -48,6 +48,13 @@ private:
 	AglQuaternion mQuaternionRotation;
 	AglVector3 mPosition;
 
+	bool mDrawPlanes;
+	Mesh* planeDown;
+	Mesh* planeRight;
+	Mesh* planeBack;
+
+	string mPath;
+
 public:
 	static AglMatrix m_world;
 	static AglMatrix m_avoidJump;
@@ -60,6 +67,9 @@ private:
 private:
 	Scene();
 	~Scene();
+
+	void createScenePlane();
+
 public:
 	static Scene* GetInstance();
 	static void Release();
@@ -124,6 +134,11 @@ public:
 	{
 		mAglScene->addBspTree(p_tree);
 	}
+
+	bool* getDrawPlanes(){ return &mDrawPlanes; }
+
+	vector<string> FindFiles(string pPath);
+	void MaterialFromStrings(vector<string> pStrings);
 };
 
 #endif

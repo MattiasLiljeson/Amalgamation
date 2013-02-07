@@ -18,7 +18,7 @@ Packet WelcomePacket::pack()
 	return packet;
 }
 
-void WelcomePacket::unpack( Packet p_packet )
+void WelcomePacket::unpack( Packet& p_packet )
 {
 	p_packet >> clientNetworkIdentity;
 }

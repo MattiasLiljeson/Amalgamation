@@ -19,7 +19,7 @@ Packet HighlightSlotPacket::pack()
 	return packet;
 }
 
-void HighlightSlotPacket::unpack( Packet p_packet )
+void HighlightSlotPacket::unpack( Packet& p_packet )
 {
 	p_packet >> id;
 }

@@ -1,8 +1,5 @@
 #pragma once
-#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
-#include "Buffer.h"
-#include "CBuffers.h"
 
 // =======================================================================================
 //                                      Shader

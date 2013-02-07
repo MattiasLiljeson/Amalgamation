@@ -16,6 +16,7 @@
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventInstancer.cpp" />
     <ClCompile Include="LightMesh.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
     <ClInclude Include="LightMesh.h" />
+    <ClInclude Include="LightShader.h" />
     <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
@@ -62,6 +64,7 @@
     <ClInclude Include="ParticleCBuffer.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="PerShadowCBuffer.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />

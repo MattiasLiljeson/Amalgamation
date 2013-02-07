@@ -27,6 +27,7 @@ Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pS
 	bsptree = NULL;
 	m_grid = NULL;
 	mCurrentMaterial = -1;
+	overrideMaterial = NULL;
 }
 Mesh::~Mesh()
 {
@@ -48,14 +49,16 @@ void Mesh::Init(AglMesh* pMesh)
 	minP = maxP = AglVector3(v[0].position.x, v[0].position.y, v[0].position.z);
 	for (int i = 1; i < h.vertexCount; i++)
 	{
-		minP = AglVector3(min(minP.x, v[i].position.x), min(minP.y, v[i].position.y), min(minP.z, v[i].position.z));
-		maxP = AglVector3(max(maxP.x, v[i].position.x), max(maxP.y, v[i].position.y), max(maxP.z, v[i].position.z));
+		AglVector3 p = v[i].position;
+		p.transform(h.transform);
+		minP = AglVector3(min(minP.x, p.x), min(minP.y, p.y), min(minP.z, p.z));
+		maxP = AglVector3(max(maxP.x, p.x), max(maxP.y, p.y), max(maxP.z, p.z));
 	}
 	mMin = minP;
 	mMax = maxP;
 	
 	mVisible = true;
-	mCurrentMaterial = 0;
+	mCurrentMaterial = -1;
 	mMesh = pMesh;
 }
 
@@ -138,6 +141,9 @@ void Mesh::Draw(AglMatrix pWorld, float pScale)
 	}
 	else
 		matp = mat;
+
+	if (overrideMaterial)
+		matp = *overrideMaterial;
 	if (mVisible)
 	{
 		if (mGradients.size() > 0)
@@ -252,21 +258,9 @@ void Mesh::AddSkeletonMapping(SkeletonMapping* pSkeletonMapping)
 {
 	mSkeletonMappings.push_back(pSkeletonMapping);
 }
-void Mesh::AddMaterial(int pMaterial, bool pSetAsCurrent)
+void Mesh::SetMaterial(int pMaterial)
 {
-	//Not defined yet!
-	/*for (int i = 0; i < mMaterials.size(); i++)
-	{
-		if (mMaterials[i] == pMaterial)
-		{
-			if (pSetAsCurrent)
-				mCurrentMaterial = i;
-			return;
-		}
-	}
-	mMaterials.push_back(pMaterial);
-	if (pSetAsCurrent)
-		mCurrentMaterial = mMaterials.size() - 1;*/
+	mCurrentMaterial = pMaterial;
 }
 void Mesh::AddGradient(AglGradient* pGradient, bool pSetAsCurrent)
 {

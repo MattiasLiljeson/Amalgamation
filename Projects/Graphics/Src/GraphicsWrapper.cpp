@@ -49,6 +49,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 		m_device->GetFeatureLevel());
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
+	m_perShadowBuffer = m_bufferFactory->createPerShadowBuffer();
+
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
 
@@ -93,6 +95,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_textureFactory;
 	delete m_modelFactory;
 	delete m_renderSceneInfoBuffer;
+	delete m_perShadowBuffer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -200,6 +203,16 @@ void GraphicsWrapper::mapSceneInfo(){
 	m_renderSceneInfoBuffer->apply();
 }
 
+void GraphicsWrapper::setActiveShadow( int p_activeShadow ){
+	m_perShadowBuffer->accessBuffer.currentShadow = p_activeShadow;
+	m_perShadowBuffer->update();
+	m_perShadowBuffer->apply();
+}
+void GraphicsWrapper::unmapPerShadowBuffer()
+{
+	m_perShadowBuffer->unApply();
+}
+
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
@@ -239,8 +252,8 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 		instanceBuffer->getBufferPointer(),
 		m_deferredRenderer->getDeferredBaseShader());
 
-	delete textureArray;
-	delete instanceBuffer;
+	delete [] textureArray;
+	delete [] instanceBuffer;
 }
 void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 								   vector<LightInstanceData>* p_instanceList )
@@ -257,7 +270,7 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		NULL, 0,
 		instanceBuffer->getElementSize(),
 		instanceBuffer->getBufferPointer(),
-		m_deferredRenderer->getDeferredLightShader());
+		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()));
 
 	delete instanceBuffer;
 	instanceBuffer = NULL;
@@ -310,13 +323,36 @@ void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 	m_shadowShader->apply();
 }
 
-void GraphicsWrapper::mapDeferredBaseToShader(){
-	m_deferredRenderer->mapDeferredBaseRTSToShader(m_shadowMapRenderer->getShadowMap());
+void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
+	m_shadowShader->sendViewProjections(p_viewProj);
+	m_shadowShader->apply();
+}
+
+void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
+	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	int startSlot = 4;
+	for(int i = 0; i < MAXSHADOWS; i++){
+		if(p_activeShadows[i] != -1){
+			m_deviceContext->PSSetShaderResources( startSlot, 1, m_shadowMapRenderer->getShadowMap(i));
+		}
+	}
 }
 
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
 	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
+
+void GraphicsWrapper::unmapUsedShaderResourceFromLightPass( int* p_activeShadows ){
+
+	ID3D11ShaderResourceView* nulz = NULL;
+	int startSlot = 4;
+	for(int i = 0; i < MAXSHADOWS; i++){
+		if(p_activeShadows[i] != -1){
+			m_deviceContext->PSSetShaderResources( startSlot, 1, &nulz);
+		}
+	}
+}
+
 void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId, 
 									 vector<InstanceData>* p_instanceList )
 {
@@ -594,9 +630,8 @@ void GraphicsWrapper::resetViewportToOriginalSize(){
 	m_deviceContext->RSSetViewports(1,&vp);
 }
 
-void GraphicsWrapper::setShadowMapAsRenderTarget()
-{
-	m_shadowMapRenderer->mapShadowMapToRenderTarget();
+void GraphicsWrapper::setShadowMapAsRenderTarget( unsigned int p_shadowMapIdx ){
+	m_shadowMapRenderer->mapShadowMapToRenderTarget(p_shadowMapIdx);
 }
 
 void GraphicsWrapper::setRenderingShadows(){
@@ -606,3 +641,9 @@ void GraphicsWrapper::setRenderingShadows(){
 void GraphicsWrapper::stopedRenderingShadows(){
 	m_renderingShadows = false;
 }
+
+unsigned int GraphicsWrapper::generateShadowMap()
+{
+	return m_shadowMapRenderer->createANewShadowMap();
+}
+

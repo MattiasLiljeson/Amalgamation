@@ -10,7 +10,6 @@
 #include "EntityCreationPacket.h"
 #include "NetworkSynced.h"
 #include "ShipModulesTrackerSystem.h"
-#include "AudioBackendSystem.h"
 #include <Globals.h>
 #include "SpawnSoundEffectPacket.h"
 #include "ShieldModuleActivation.h"

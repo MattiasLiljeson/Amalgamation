@@ -13,7 +13,7 @@ Packet PingPacket::pack()
 	return packet;
 }
 
-void PingPacket::unpack( Packet p_packet )
+void PingPacket::unpack( Packet& p_packet )
 {
 	p_packet >> timeStamp;
 }

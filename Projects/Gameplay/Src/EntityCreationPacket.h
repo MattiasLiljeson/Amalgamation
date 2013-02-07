@@ -21,7 +21,7 @@ public:
 
 	virtual Packet pack();
 
-	virtual void unpack( Packet p_packet );
+	virtual void unpack( Packet& p_packet );
 
 public:
 	char			entityType;

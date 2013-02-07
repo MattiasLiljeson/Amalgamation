@@ -7,18 +7,18 @@
 using namespace std;
 
 
+
 // =======================================================================================
-//	ConnectionPointSet
+//	ConnectionPoint
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that boosts the ship speed
+/// \brief A connection point that can have an entity attached.
 ///        
-/// # PlayerScore
+/// # ConnectionPoint
 /// Detailed description...
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
-
 struct ConnectionPoint
 {
 	AglMatrix cpTransform;
@@ -26,13 +26,24 @@ struct ConnectionPoint
 
 	ConnectionPoint() {cpConnectedEntity=-1;}
 
-	ConnectionPoint(AglMatrix p_transform)
+	ConnectionPoint(const AglMatrix& p_transform)
 	{
 		cpTransform = p_transform;
 		cpConnectedEntity = -1;
 	}
 };
 
+// =======================================================================================
+//	ConnectionPointSet
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief Set of connection points
+///        
+/// # ConnectionPointSet
+/// Detailed description...
+/// Created on: 4-1-2013 
+///---------------------------------------------------------------------------------------
 class ConnectionPointSet: public Component
 {
 public:

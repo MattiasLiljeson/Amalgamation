@@ -12,6 +12,7 @@ AntTweakBarWrapper::AntTweakBarWrapper( ID3D11Device* p_device)
 	m_graphicsBar	= TwNewBar(graphics.c_str());
 	m_input			= TwNewBar(input.c_str());
 	m_network		= TwNewBar(network.c_str());
+	m_measurement	= TwNewBar(measurement.c_str());
 
 	initBars();
 }
@@ -30,6 +31,7 @@ void AntTweakBarWrapper::initBars()
 	defineParametersForABar(graphics.c_str()," color='255 217 102' iconified=true");
 	defineParametersForABar(input.c_str()," color='224 102 102' iconified=true");
 	defineParametersForABar(network.c_str()," color='147 196 125' iconified=true");
+	defineParametersForABar(measurement.c_str()," color='147 196 125' position='1020 0' size='260 300'");
 	modifyTheRefreshRate(INPUT,0.1f);
 }
 
@@ -94,6 +96,9 @@ void AntTweakBarWrapper::addReadOnlyVariable(BarType p_barType, const char* p_na
 	case AntTweakBarWrapper::NETWORK:
 		TwAddVarRO(m_network,p_name,p_type,p_var,p_misc);
 		break;
+	case AntTweakBarWrapper::MEASUREMENT:
+		TwAddVarRO(m_measurement,p_name,p_type,p_var,p_misc);
+		break;
 	default:
 		TwAddVarRO(m_overallBar,p_name,p_type,p_var,p_misc);
 		break;
@@ -118,6 +123,9 @@ void AntTweakBarWrapper::addWriteVariable(BarType p_barType, const char* p_name,
 	case AntTweakBarWrapper::NETWORK:
 		TwAddVarRW(m_network,p_name,p_type,p_var,p_misc);
 		break;
+	case AntTweakBarWrapper::MEASUREMENT:
+		TwAddVarRW(m_measurement,p_name,p_type,p_var,p_misc);
+		break;
 	default:
 		TwAddVarRW(m_overallBar,p_name,p_type,p_var,p_misc);
 		break;
@@ -141,6 +149,9 @@ TwBar* AntTweakBarWrapper::getAntBar(BarType p_barType)
 		break;
 	case AntTweakBarWrapper::NETWORK:
 		searchedBar = m_network;
+		break;
+	case AntTweakBarWrapper::MEASUREMENT:
+		searchedBar = m_measurement;
 		break;
 	default:
 		searchedBar = m_overallBar;
@@ -176,6 +187,9 @@ void AntTweakBarWrapper::modifyTheRefreshRate(BarType p_barType, float p_value)
 		break;
 	case AntTweakBarWrapper::NETWORK:
 		defineParametersForABar(network.c_str(),tmp.c_str());
+		break;
+	case AntTweakBarWrapper::MEASUREMENT:
+		defineParametersForABar(measurement.c_str(),tmp.c_str());
 		break;
 	default:
 		defineParametersForABar(overall.c_str(),tmp.c_str());

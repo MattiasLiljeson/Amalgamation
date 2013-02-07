@@ -21,14 +21,14 @@ public:
 	~Vibration(){}
 	virtual void init( vector<ComponentData> p_initData );
 public:
-	float leftPower;
-	float rightPower;
-	float maxRadius;
-	float minRadius;
+	float leftPower;	///< Power applied to left motor 0-100
+	float rightPower;	///< Power applied to right motor 0-100
+	float maxRadius;	///< Maximum radius for 3d vibration
+	float minRadius;	///< Minimum radius for 3d vibration
 	float linearDeclineEffectMultiplier; ///< multiplier that will linearly decrease until triggering shutdown of vibration
-	bool enabled;
-	bool enableDeclineEffect;
-	bool distanceAttenuated;
+	bool enabled;		///< For switching effect on/off
+	bool enableDeclineEffect;	///< Switch on in order to activate linear decline over time
+	bool distanceAttenuated;	///< 3d vibration on/off
 private:
 	static ComponentRegister<Vibration> s_reg;
 };

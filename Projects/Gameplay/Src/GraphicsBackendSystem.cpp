@@ -167,5 +167,5 @@ void GraphicsBackendSystem::renderAParticleSystem(AglParticleSystem* p_system){
 }
 
 AglVector2 GraphicsBackendSystem::getWindowSize(){
-	return AglVector2(m_scrWidth, m_scrHeight);
+	return AglVector2((float)m_scrWidth, (float)m_scrHeight);
 }

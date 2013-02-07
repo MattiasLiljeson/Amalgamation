@@ -205,3 +205,10 @@ void Transform::calcComponents(bool p_calcScale/*=true*/, bool p_calcRotation/*=
 		m_instanceData.worldTransform[i] = transMat[i];
 	}
 }
+
+const AglVector3 Transform::getLookAt() const{
+	AglVector3 lookAt = getTranslation()+getForward();
+	AglVector3::normalize(lookAt);
+
+	return lookAt;
+}
