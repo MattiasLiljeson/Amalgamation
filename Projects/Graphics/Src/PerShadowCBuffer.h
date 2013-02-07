@@ -1,23 +1,18 @@
 #pragma once
-#include "ShaderBase.h"
 
 // =======================================================================================
-//                                      Shader
+//                                      PerShadowCBuffer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	
 ///        
-/// # Shader
+/// # PerShadowCBuffer
 /// Detailed description.....
-/// Created on: 27-11-2012 
+/// Created on: 6-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class DeferredBaseShader : public ShaderBase
+struct PerShadowCBuffer
 {
-public:
-	DeferredBaseShader( ShaderVariableContainer p_initData);
-	virtual ~DeferredBaseShader();
-
-	void apply();
+	int currentShadow;
 };

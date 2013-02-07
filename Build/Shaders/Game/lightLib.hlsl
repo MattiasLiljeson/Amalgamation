@@ -28,7 +28,6 @@ SurfaceLightingData Lambert(Light p_light, float4 p_surfaceNormal)
 // New light structs and algorithms /Mattias L
 struct LightInfo
 {
-	//float4x4 lightViewProj; // For shadowmapgeneration;
 	float3 	pos;
 	float 	range		: RANGE;
 	float3 	lightDir	: LIGHTDIR;
