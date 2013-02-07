@@ -24,6 +24,7 @@ private:
 	void initialize();
 	void process();
 	void initKeyboard();
+	void initGamepad();
 	void initMouse();
 	void sendModuleSlotHighlight(int p_slot);
 	void sendSlotActivation();
@@ -33,5 +34,7 @@ private:
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
 	Control* m_keyboardModuleSlots[4];
+	Control* m_gamepadModuleSlots[4];
 	Control* m_mouseModuleActivation;
+	Control* m_gamepadModuleActivation;
 };
