@@ -51,6 +51,7 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_particleSystems = p_desc.particleSystems;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
+	m_gradients = p_desc.gradients;
 
 	//Initialize scene obb
 	AglVector3 minP, maxP;
@@ -293,6 +294,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.connectionPoints = this->m_connectionPoints;
 	desc.particleSystems = this->m_particleSystems;
 	desc.coordinateSystem = this->m_coordinateSystem;
+	desc.gradients = this->m_gradients;
 	return desc;
 }
 

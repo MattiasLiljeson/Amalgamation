@@ -92,6 +92,8 @@ void TW_CALL MaterialDialog::AddLayer(void *clientData)
 	{
 		g = new AglGradient();
 		mat->gradientDataIndex = Scene::GetInstance()->AddGradient(g);
+		layer = new AglGradientMaterial();
+		g->addLayer(layer);
 		layer = g->getLayers()[0];
 		index = 0;
 	}
@@ -243,5 +245,18 @@ void MaterialDialog::setMaterial(int pIndex)
 	TwAddButton(m_dialog, "Add Layer", AddLayer, this, " label='Add Layer' key=c help='Load an Agile file into the editor.' group='Gradient Mapping'");
 
 	TwAddButton(m_dialog, "Delete", Delete, this, "");
+
+
+	if (m_material->gradientDataIndex >= 0)
+	{
+		AglGradient* g = Scene::GetInstance()->GetGradient(m_material->gradientDataIndex);
+		vector<AglGradientMaterial*> layers = g->getLayers();
+		for (unsigned int i = 0; i < layers.size(); i++)
+		{
+			AddLayer(g, layers[i], i);
+		}
+	}
+
+
 	show();
 }
