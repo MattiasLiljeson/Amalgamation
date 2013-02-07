@@ -66,6 +66,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	createTexture("mesherror.png",TEXTUREPATH);
 
+	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
+
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
@@ -542,6 +544,8 @@ void GraphicsWrapper::renderComposeStage(){
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
 	m_deferredRenderer->mapVariousPassesToComposeStage();
+	m_deviceContext->PSSetShaderResources(3,1,
+		&m_textureManager->getResource(m_randomNormalTextures)->data);
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){

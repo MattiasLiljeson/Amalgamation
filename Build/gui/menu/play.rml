@@ -1,0 +1,24 @@
+<rml>
+	<head>
+		<title>Play</title>
+		<link type="text/template" href="window.rml" />
+		<style>
+			/*div#title_bar div#icon
+			{
+				icon-image-s: 230px 281px;
+				icon-image-t: 152px 191px;
+			}
+			
+			form div
+			{
+				width: 200px;
+				margin: auto;
+			}*/
+		</style>
+	</head>
+	<body id="play" template="window" onshow="modal">
+		<button onclick="open join">Join</button>
+		<button onclick="open host">Host</button>
+		<button onclick="goto previous">Back</button>
+	</body>
+</rml>

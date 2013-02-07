@@ -54,6 +54,7 @@
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
 //#include <MainCamera.h>
+#include <MenuSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <PhysicsSystem.h>
@@ -92,6 +93,8 @@
 #include <ParticleRenderSystem.h>
 #include <InterpolationSystem.h>
 #include <ShadowSystem.h>
+#include <GameOptionsSystem.h>
+#include <LibRocketEventManagerSystem.h>
 #include <ClientMeasurementSystem.h>
 
 // Helpers
@@ -249,6 +252,14 @@ void ClientApplication::initSystems()
 
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
+
+	m_world->setSystem( new LibRocketEventManagerSystem(), true );
+	m_world->setSystem( new GameOptionsSystem() );
+
+	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
+	// that they can be properly be added to the LibRocketEventManager.
+	// The alternative would be that every event handler adds itself.
+	m_world->setSystem( new MenuSystem(), true );
 
 	/************************************************************************/
 	/* Player    															*/

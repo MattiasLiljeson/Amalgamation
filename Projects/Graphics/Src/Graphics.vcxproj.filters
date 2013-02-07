@@ -60,6 +60,15 @@
     <ClCompile Include="BufferFactory.cpp">
       <Filter>Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="EventHandler.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="EventInstancer.cpp">
+      <Filter>LibRocket</Filter>
+    </ClCompile>
     <ClCompile Include="ModelExtendedFactory.cpp" />
     <ClCompile Include="LightShader.cpp">
       <Filter>Shader\Shader types</Filter>
@@ -187,6 +196,18 @@
     <ClInclude Include="ModelExtendedFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="EventInstancer.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>LibRocket</Filter>
+    </ClInclude>
     <ClInclude Include="PerShadowCBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
@@ -195,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="LightShader.h">
       <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="SSAOCBuffer.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +263,9 @@
     </Filter>
     <Filter Include="Buffer">
       <UniqueIdentifier>{bd084ec0-9a62-4ac7-b5f4-2229da7a11f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LibRocket">
+      <UniqueIdentifier>{bef9cad0-8125-4166-a98f-3c94a356fbf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

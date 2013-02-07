@@ -21,6 +21,7 @@ public:
 	ServerMeasurementSystem();
 	~ServerMeasurementSystem();
 	void process();
+
 	void initialize();
 
 private:
