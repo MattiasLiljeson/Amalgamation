@@ -73,7 +73,7 @@
       </MultiProcessorCompilation>
       <OpenMPSupport>
       </OpenMPSupport>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <EnableParallelCodeGeneration>
       </EnableParallelCodeGeneration>
