@@ -1,28 +1,32 @@
 #pragma once
 
-#include <EntitySystem.h>
-
+#include <Rocket/Core/String.h>
 // =======================================================================================
-//                                      MenuSystem
+//                                      EventManager
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # MenuSystem
+/// # EventManager
 /// Detailed description.....
-/// Created on: 4-2-2013 
+/// Created on: 5-2-2013 
 ///---------------------------------------------------------------------------------------
+class EventHandler;
 
-class MenuSystem : public EntitySystem
+namespace Rocket
+{
+	namespace Core
+	{
+		class Event;
+	}
+}
+
+class EventManager
 {
 public:
-	MenuSystem();
-	~MenuSystem();
-	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
-
-	virtual void inserted( Entity* p_entity );
-
+	EventManager(){};
+	virtual ~EventManager(){};
+	virtual void processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value) = 0;
+	virtual void registerEventHandler(EventHandler* p_eventHandler) = 0;
 };
-

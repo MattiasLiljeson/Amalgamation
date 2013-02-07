@@ -38,6 +38,7 @@ struct AglSceneDesc
 	vector<AglAnimation*>			animations;
 	vector<AglSkeleton*>			skeletons;
 	vector<AglMaterial*>			materials;
+	vector<AglGradient*>			gradients;
 	vector<string>					names;
 	vector<AglMaterialMapping>		materialMappings;
 	vector<AglSkeletonMapping*>		skeletonMappings;

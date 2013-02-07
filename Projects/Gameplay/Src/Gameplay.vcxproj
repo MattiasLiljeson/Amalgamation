@@ -39,6 +39,7 @@
     <ClInclude Include="EntityUpdatePacket.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
+    <ClInclude Include="GameOptionsSystem.h" />
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
@@ -52,6 +53,8 @@
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketEventManagerSystem.h" />
+    <ClInclude Include="LibRocketInputHelper.h" />
     <ClInclude Include="LightBlinker.h" />
     <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
@@ -177,6 +180,7 @@
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
+    <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
@@ -189,6 +193,8 @@
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
+    <ClCompile Include="LibRocketEventManagerSystem.cpp" />
+    <ClCompile Include="LibRocketInputHelper.cpp" />
     <ClCompile Include="LightBlinker.cpp" />
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />

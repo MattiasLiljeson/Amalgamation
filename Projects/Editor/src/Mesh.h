@@ -66,7 +66,7 @@ public:
 	void DrawNormals(AglMatrix pWorld, float pScale);
 
 	void AddSkeletonMapping(SkeletonMapping* pSkeletonMapping);
-	void AddMaterial(int pMaterial, bool pSetAsCurrent);
+	void SetMaterial(int pMaterial);
 	void AddGradient(AglGradient* pGradient, bool pSetAsCurrent);
 
 	int					  GetIndexCount();

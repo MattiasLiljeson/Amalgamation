@@ -79,6 +79,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Common_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Gameplay_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;XINPUT9_1_0.lib;NetComm_x86_$(Configuration).lib;FreeImage.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkStatus>
+      </LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>

@@ -81,10 +81,21 @@ bool Game::Cleanup()
 bool Game::Update(float pElapsedTime)
 {
 	DX11Application::Update(pElapsedTime);
-	if(GetAsyncKeyState(VK_F5) & 0x8000)
+	/*if(GetAsyncKeyState(VK_F5) & 0x8000)
 	{
 		TextureManager::GetInstance()->ReloadAll();
+	}*/
+	if(GetAsyncKeyState(VK_F5) & 0x8000)
+	{
+			Scene::GetInstance()->Save("");
 	}
+	else if(GetAsyncKeyState(VK_F6) & 0x8000)
+	{
+		string file = savefilename();
+		if (file != "")
+			Scene::GetInstance()->Save(file);
+	}
+
 	m_cameraController->Update(pElapsedTime);
 	Scene::GetInstance()->Update(pElapsedTime);
 	return true;
