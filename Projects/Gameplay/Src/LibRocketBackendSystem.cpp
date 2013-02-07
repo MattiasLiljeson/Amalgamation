@@ -69,7 +69,7 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
 	Rocket::Debugger::Initialise( m_rocketContext );
-	Rocket::Debugger::SetVisible( true );
+	Rocket::Debugger::SetVisible( false );
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -128,7 +128,6 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName)
 {
 	int docId = loadDocument((GUI_MENU_PATH + 
-								toString("temp/") + 
 								toString(p_windowName) +
 								toString(".rml")).c_str(),
 								p_windowName);
