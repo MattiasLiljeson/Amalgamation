@@ -203,6 +203,7 @@ AglLooseBspTree::~AglLooseBspTree()
 {
 	delete[] m_nodes;
 	delete[] m_triangles;
+	delete[] m_triangles2;
 }
 bool AglLooseBspTree::evaluate(AglVector3 p_c, float p_r)
 {

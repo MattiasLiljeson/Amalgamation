@@ -18,7 +18,8 @@ ConnectionPointSet::ConnectionPointSet(const vector<AglMatrix>& p_connectionPoin
 {
 	for (int i=0;i<p_connectionPoints.size();i++)
 	{
-		m_connectionPoints.push_back(p_connectionPoints[i]);
+		ConnectionPoint cp(p_connectionPoints[i]);
+		m_connectionPoints.push_back(cp);
 	}
 	
 	m_highlighted = 0;
