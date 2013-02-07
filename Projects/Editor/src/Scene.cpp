@@ -16,6 +16,175 @@ Scene* Scene::sInstance = NULL;
 AglMatrix Scene::m_avoidJump = AglMatrix();
 AglMatrix Scene::m_world = AglMatrix();
 
+void Scene::MaterialFromStrings(vector<string> pStrings)
+{
+	vector<string> lookFor;
+	lookFor.push_back("diffuse");
+	lookFor.push_back("specular");
+	lookFor.push_back("normal");
+	lookFor.push_back("emissive");
+	lookFor.push_back("gradient");
+
+	AglMaterial* mat = mAglScene->getMaterial(0);
+
+	for (unsigned int i = 0; i < pStrings.size(); i++)
+	{
+		if (pStrings[i].find(lookFor[0]) != string::npos) //Diffuse
+		{
+			int ind = TextureManager::GetInstance()->LoadTexture(pStrings[i]);
+			TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+			ind = AddName(pStrings[i]);
+			mat->diffuseTextureNameIndex = ind;
+		}
+		else if (pStrings[i].find(lookFor[1]) != string::npos) //Specular
+		{
+			int ind = TextureManager::GetInstance()->LoadTexture(pStrings[i]);
+			TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+			ind = AddName(pStrings[i]);
+			mat->specularTextureNameIndex = ind;
+		}
+		else if (pStrings[i].find(lookFor[2]) != string::npos) //Normal
+		{
+			int ind = TextureManager::GetInstance()->LoadTexture(pStrings[i]);
+			TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+			ind = AddName(pStrings[i]);
+			mat->normalTextureNameIndex = ind;
+		}
+		else if (pStrings[i].find(lookFor[3]) != string::npos) //Emissive
+		{
+			int ind = TextureManager::GetInstance()->LoadTexture(pStrings[i]);
+			TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+			ind = AddName(pStrings[i]);
+			mat->glowTextureNameIndex = ind;
+		}
+		else if (pStrings[i].find(lookFor[4]) != string::npos) //Gradient
+		{
+			int ind = TextureManager::GetInstance()->LoadTexture(pStrings[i]);
+			TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+			ind = AddName(pStrings[i]);
+			mat->gradientTextureNameIndex = ind;
+		}
+	}
+
+	//AddMaterial(mat, true, true);
+}
+
+vector<string> Scene::FindFiles(string pPath)
+{	
+	string thefolder;
+	int ind = pPath.find_last_of('\\');
+	if (ind == -1)
+		ind = pPath.find_last_of('/');
+	if (ind == -1)
+		thefolder = ".";
+	else
+	{
+		thefolder = pPath.substr(0, ind);
+	}
+
+	thefolder += "\\*.*";
+
+	WIN32_FIND_DATA file;
+	HANDLE folder = FindFirstFile(thefolder.c_str(),&file);
+
+	vector<string> files;
+	if(folder != INVALID_HANDLE_VALUE) 
+	{
+		do
+		{
+			char* nPtr = new char[lstrlen(file.cFileName) + 1];
+
+			for (int i = 0; i < lstrlen(file.cFileName); i++)
+			{
+				nPtr[i] = char(file.cFileName[i]);
+			}
+
+			nPtr[lstrlen(file.cFileName)] = '\0';
+
+			files.push_back(string(nPtr));
+			delete[] nPtr;
+
+		} while(FindNextFile(folder, &file));
+	} 
+	else 
+	{
+		cout << "Error: No such folder." << endl;
+	}
+
+	FindClose(folder);
+
+	for (int i = files.size()-1; i >= 0; i--)
+	{
+		if (files[i].size() < 3)
+		{
+			files[i] = files.back();
+			files.pop_back();
+		}
+		else
+		{
+			string end = files[i].substr(files[i].size()-3, 3);
+			if (end != "png" && end != "tga")
+			{
+				files[i] = files.back();
+				files.pop_back();
+			}
+		}
+	}
+
+	vector<string> lookFor;
+	lookFor.push_back("diffuse");
+	lookFor.push_back("specular");
+	lookFor.push_back("normal");
+	lookFor.push_back("emissive");
+	lookFor.push_back("gradient");
+
+	vector<string> found;
+
+	AglMaterial* defaultMat = mAglScene->getMaterial(0);
+
+	for (unsigned int i = 0; i < files.size(); i++)
+	{
+		std::transform(files[i].begin(), files[i].end(), files[i].begin(), ::tolower);
+
+		for (unsigned j = 0; j < lookFor.size(); j++)
+		{
+			if (files[i].find(lookFor[j]) != string::npos)
+			{
+				if (j == 0 && defaultMat->diffuseTextureNameIndex >= 0)
+					break;
+				else if (j == 1 && defaultMat->specularTextureNameIndex >= 0)
+					break;
+				else if (j == 2 && defaultMat->normalTextureNameIndex >= 0)
+					break;
+				else if (j == 3 && defaultMat->glowTextureNameIndex >= 0)
+					break;
+				else if (j == 4 && defaultMat->gradientTextureNameIndex >= 0)
+					break;
+				found.push_back(files[i]);
+				break;
+			}
+		}
+	}
+
+	if (found.size() > 0)
+	{
+		string founds;
+		for (unsigned int i = 0; i < found.size(); i++)
+		{
+			founds += "'" + found[i] + "'\n";
+		}
+
+		string msg = "Found the following:\n" + founds + "textures in the root folder. Use on default material?";
+		int proceed = MessageBox(NULL, msg.c_str(), "Found Textures", MB_OKCANCEL);
+		if (proceed == IDOK)
+		{
+			MaterialFromStrings(found);
+		}
+	}
+
+	return files;
+}
+
 Scene::Scene()
 {
 	mRotation = 0;
@@ -61,6 +230,8 @@ void Scene::Release()
 }
 void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
+	mPath = pPath;
+
 	AglReader r(pPath.c_str());
 	mAglScene = r.getScene();
 	mDevice = pDevice;
@@ -146,12 +317,26 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 				mAglScene->setName(materials[i]->glowTextureNameIndex, data->Path);
 			}
 		}
+		if (materials[i]->gradientTextureNameIndex >= 0)
+		{
+			string gradpath = mAglScene->getName(materials[i]->gradientTextureNameIndex);
+			int ind = TextureManager::GetInstance()->LoadTexture(gradpath);
+			if (ind < 0)
+			{
+				materials[i]->gradientTextureNameIndex = -1;
+			}
+			else
+			{
+				TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+				mAglScene->setName(materials[i]->gradientTextureNameIndex, data->Path);
+			}
+		}
 	}
 
 	vector<AglMaterialMapping> mm = mAglScene->getMaterialMappings();
 	for (unsigned int i = 0; i < mm.size(); i++)
 	{
-		mMeshes[mm[i].meshID]->AddMaterial(mm[i].materialID, true);
+		mMeshes[mm[i].meshID]->SetMaterial(mm[i].materialID);
 	}
 
 	vector<SkeletonMesh*> skeletons;
@@ -234,6 +419,7 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 	}
 
 	createScenePlane();
+	FindFiles(pPath);
 }
 void Scene::Update(float pElapsedTime)
 {
@@ -451,12 +637,16 @@ void Scene::SetCurrentAnimation(int pIndex)
 void Scene::AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent)
 {
 	mAglScene->addMaterial(pMaterial);
-	int count = mAglScene->getMaterials().size();
 	if (pAddToMeshes)
 	{
 		for (unsigned int i = 0; i < mMeshes.size(); i++)
 		{
-			mMeshes[i]->AddMaterial(count-1, pSetAsCurrent);
+			AglMaterialMapping mm;
+			mm.materialID = pMaterial->id;
+			mm.meshID = i;
+			mAglScene->addMaterialMapping(mm);
+			if (pSetAsCurrent)
+				mMeshes[i]->SetMaterial(pMaterial->id);
 		}
 	}
 }
@@ -501,6 +691,8 @@ int Scene::AddName(string pName)
 }
 void Scene::Save(string pPath)
 {
+	if (pPath == "")
+		pPath = mPath;
 	AglWriter w(pPath);
 	w.write(mAglScene);
 }
@@ -575,14 +767,14 @@ void Scene::RemoveMaterial(AglMaterial* pMaterial)
 	//Remove degenerate materials from meshes
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
-		mMeshes[i]->AddMaterial(-1, true);
+		mMeshes[i]->SetMaterial(-1);
 	}
 
 	//Add updated materials
 	vector<AglMaterialMapping> mm = mAglScene->getMaterialMappings();
 	for (unsigned int i = 0; i < mm.size(); i++)
 	{
-		mMeshes[mm[i].meshID]->AddMaterial(mm[i].materialID, true);
+		mMeshes[mm[i].meshID]->SetMaterial(mm[i].materialID);
 	}
 }
 void Scene::RemoveParticleSystem(AglParticleSystem* pParticleSystem)

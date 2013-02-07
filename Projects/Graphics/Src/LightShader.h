@@ -1,23 +1,27 @@
 #pragma once
+
 #include "ShaderBase.h"
 
 // =======================================================================================
-//                                      Shader
+//                                      LightShader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # Shader
+/// # LightShader
 /// Detailed description.....
-/// Created on: 27-11-2012 
+/// Created on: 7-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class DeferredBaseShader : public ShaderBase
+class LightShader : public ShaderBase
 {
 public:
-	DeferredBaseShader( ShaderVariableContainer p_initData);
-	virtual ~DeferredBaseShader();
+	LightShader( ShaderVariableContainer p_initData );
+	LightShader( ShaderVariableContainer p_initData, ID3D11SamplerState* p_shadowSampler);
+	virtual ~LightShader();
 
 	void apply();
+private:
+	ID3D11SamplerState* m_shadowSampler;
 };

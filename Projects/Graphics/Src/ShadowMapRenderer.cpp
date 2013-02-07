@@ -2,6 +2,8 @@
 #include "D3DException.h"
 #include "D3DUtil.h"
 #include "ShaderFactory.h"
+#include <DebugUtil.h>
+#include <Globals.h>
 
 ShadowMapRenderer::ShadowMapRenderer(ID3D11Device* p_device, 
 									 ID3D11DeviceContext* p_deviceContext, 
@@ -10,17 +12,30 @@ ShadowMapRenderer::ShadowMapRenderer(ID3D11Device* p_device,
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
 	m_shaderFactory = p_shaderFactory;
-
-	initDepthStencil();
 }
 
 ShadowMapRenderer::~ShadowMapRenderer()
 {
-	SAFE_RELEASE(m_depthStencilView);
-	SAFE_RELEASE(m_resourceView);
+	for (unsigned int i = 0; i < m_shadowMaps.size(); i++){
+		SAFE_RELEASE(m_shadowMaps[i]->depthStencilView);
+		SAFE_RELEASE(m_shadowMaps[i]->resourceView);
+		delete m_shadowMaps[i];
+	}
 }
 
-void ShadowMapRenderer::initDepthStencil()
+unsigned int ShadowMapRenderer::createANewShadowMap()
+{
+	if(m_shadowMaps.size()>MAXSHADOWS)
+		DEBUGWARNING(( "Creating too many shadows!" ));
+
+	ShadowMap* newShadowMap = new ShadowMap();
+	generateShadowMap( &newShadowMap->depthStencilView, &newShadowMap->resourceView);
+	m_shadowMaps.push_back(newShadowMap);
+	return (m_shadowMaps.size()-1);
+}
+
+void ShadowMapRenderer::generateShadowMap(ID3D11DepthStencilView** p_depthStencileView, 
+										  ID3D11ShaderResourceView** p_shaderResourceView)
 {
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* shadowMapTexture;
@@ -49,7 +64,7 @@ void ShadowMapRenderer::initDepthStencil()
 	if (FAILED(hr=m_device->CreateDepthStencilView(
 		shadowMapTexture,
 		&depthStencilViewDesc,
-		&m_depthStencilView)
+		p_depthStencileView)
 		))
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 
@@ -63,21 +78,25 @@ void ShadowMapRenderer::initDepthStencil()
 	if (FAILED(hr=m_device->CreateShaderResourceView(
 		shadowMapTexture,
 		&shaderResourceDesc,
-		&m_resourceView)
+		p_shaderResourceView)
 		))
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 
 	shadowMapTexture->Release();
 }
 
-void ShadowMapRenderer::mapShadowMapToRenderTarget()
+void ShadowMapRenderer::mapShadowMapToRenderTarget( unsigned int p_index )
 {
 	ID3D11RenderTargetView* temp = NULL;
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	m_deviceContext->OMSetRenderTargets(1, &temp, m_depthStencilView);
+	m_deviceContext->ClearDepthStencilView(
+		m_shadowMaps[p_index]->depthStencilView, 
+		D3D11_CLEAR_DEPTH, 
+		1.0f, 
+		0);
+	m_deviceContext->OMSetRenderTargets(1, &temp, m_shadowMaps[p_index]->depthStencilView );
 }
 
-ID3D11ShaderResourceView* ShadowMapRenderer::getShadowMap()
+ID3D11ShaderResourceView*const* ShadowMapRenderer::getShadowMap( unsigned int p_index )
 {
-	return m_resourceView;
+	return &m_shadowMaps[p_index]->resourceView;
 }

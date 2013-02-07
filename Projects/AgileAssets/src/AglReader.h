@@ -44,6 +44,12 @@ private:
 	AglMaterial*		readMaterial();
 
 	///
+	/// Reads a gradient from an AGL file
+	/// \return The gradient
+	///
+	AglGradient* readGradient();
+
+	///
 	/// Reads a material mapping from an AGL file
 	/// \return The material mapping
 	///

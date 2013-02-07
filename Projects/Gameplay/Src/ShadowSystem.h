@@ -29,6 +29,7 @@ public:
 	unsigned int getNumberOfShadowCameras() const;
 	Entity*	getShadowEntity(const unsigned int p_index);
 	AglMatrix getViewProjection(const unsigned int p_index);
+	int getShadowIdx(const unsigned int p_index);
 private:
 	vector<Entity*> m_shadowCameras;
 };
