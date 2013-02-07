@@ -1,6 +1,5 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
-#include "SSAO.hlsl"
 
 Texture2D gLightPass 		: register(t0);
 Texture2D gNormalBuffer		: register(t1);
