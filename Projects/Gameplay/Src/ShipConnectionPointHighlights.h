@@ -20,7 +20,7 @@ class ShipConnectionPointHighlights : public Component
 public:
 	ShipConnectionPointHighlights();
 	~ShipConnectionPointHighlights(){}
+	static const unsigned int slots = 4;
 public:
-	bool slotStatus[4];
-	int current;
+	bool slotStatus[slots];
 };

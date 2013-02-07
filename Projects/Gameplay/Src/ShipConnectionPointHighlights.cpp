@@ -4,8 +4,7 @@
 ShipConnectionPointHighlights::ShipConnectionPointHighlights() 
 	: Component( ComponentType::ShipConnectionPointHighlights)
 {
-	current=0;
-	for (int i=0;i<4;i++)
+	for (unsigned int i=0;i<slots;i++)
 	{
 		slotStatus[i]=false;
 	}

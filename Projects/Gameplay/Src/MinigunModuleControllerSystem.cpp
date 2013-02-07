@@ -172,10 +172,16 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 				parent->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
-			if (cps->m_connectionPoints[highlights->current].cpConnectedEntity == p_entity->getIndex())
-				laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
-			else
-				laserTransform->setScale(AglVector3(0, 0, 0));
+			for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+			{
+				if (highlights->slotStatus[i])
+				{
+					if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+						laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
+					else
+						laserTransform->setScale(AglVector3(0, 0, 0));
+				}
+			}
 		}
 		else
 		{
