@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <Globals.h>
 using namespace std;
 // =======================================================================================
 //                                      LevelPieceModelMapping
@@ -28,4 +29,5 @@ public:
 protected:
 private:
 	vector<string> m_fileNames;
+	string m_unknown;
 };
