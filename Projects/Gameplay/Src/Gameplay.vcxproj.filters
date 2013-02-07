@@ -505,6 +505,9 @@
     <ClInclude Include="CameraControlPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ShipConnectionPointHighlights.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -842,6 +845,9 @@
     </ClCompile>
     <ClCompile Include="CameraControlPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipConnectionPointHighlights.cpp">
+      <Filter>Components\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -235,7 +235,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	Component* component = NULL; // for temp usage
 

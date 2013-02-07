@@ -6,9 +6,11 @@
 #include "NetworkSynced.h"
 #include "PlayerScore.h"
 #include "PhysicsController.h"
+#include "ShipConnectionPointHighlights.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem()
-	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::TAG_Ship)
+	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
+	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {
 }
 
@@ -32,7 +34,8 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 			if (m_toHighlight[j].id == netSync->getNetworkOwner())
 			{
 				//Do highlight
-				changeHighlight(p_entities[i], m_toHighlight[j].slot);
+				changeHighlight(p_entities[i], m_toHighlight[j].slot,
+					m_toHighlight[j].status);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
 				j--;
@@ -156,33 +159,57 @@ void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_
 	HighlightEvent e = {p_id, p_slot,p_status};
 	m_toHighlight.push_back(e);
 }
-void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
+void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new, 
+												  int p_status)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	// Changed by Jarl 07-02-2013
+	// To allow for deactivation signal for highlighting
+	// of all or one slot. This is done for example for edit mode.
+	// This can also be used later on if the toggle way of doing activation is changed.
 
+	// Get all slots(connection points)
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+					p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
-	if (current >= 0)
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
+
+	if (p_new!=-1)
 	{
-		Entity* currEn = m_world->getEntity(current);
-		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->deactivate();
+		// ---------------------------------
+		// This is the original code which toggles
+		// separate slots on/off.
+		// It will deactivate the currently active slot.
+		int current = connected->m_connectionPoints[highlights->current].cpConnectedEntity;
+		if (current >= 0)
+		{
+			Entity* currEn = m_world->getEntity(current);
+			ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+			currModule->deactivate();
+		}
+
+		highlights->current = p_new;
+		// ---------------------------------
+	}
+	else
+	{
+		// if the new specified slot==-1, deactivate all
+		// this id is sent for example when switching to edit mode
+		// connected->m_highlighted =
 	}
 
-	connected->m_highlighted = p_new;
+
 }
 void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
+
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
+	int current = connected->m_connectionPoints[highlights->current].cpConnectedEntity;
 	if (current >= 0)
 	{
 		Entity* currEn = m_world->getEntity(current);
