@@ -27,6 +27,8 @@ private:
 	void initGamepad();
 	void initMouse();
 	void sendModuleSlotHighlight(int p_slot);
+	void sendModuleSlotHighlightDeactivate(int p_slot);
+	void sendModuleSlotHighlightDeactivateAll();
 	void sendSlotActivation();
 	void sendSlotDeactivation();
 

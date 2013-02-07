@@ -62,6 +62,20 @@ void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)
 	m_client->sendPacket( packet.pack() );
 }
 
+
+void SlotInputControllerSystem::sendModuleSlotHighlightDeactivate( int p_slot )
+{
+	HighlightSlotPacket packet(HighlightSlotPacket::UNHIGHLIGHT_SLOT,p_slot);
+	m_client->sendPacket( packet.pack() );
+}
+
+void SlotInputControllerSystem::sendModuleSlotHighlightDeactivateAll()
+{
+	HighlightSlotPacket packet(HighlightSlotPacket::UNHIGHLIGHT_ALL);
+	m_client->sendPacket( packet.pack() );
+}
+
+
 void SlotInputControllerSystem::sendSlotActivation()
 {
 	SimpleEventPacket packet;

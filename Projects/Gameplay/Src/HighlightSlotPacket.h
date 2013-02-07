@@ -18,7 +18,14 @@
 class HighlightSlotPacket : public Packetizer
 {
 public:
+	enum Mode
+	{
+		HIGHLIGHT_SLOT,
+		UNHIGHLIGHT_SLOT,
+		UNHIGHLIGHT_ALL
+	};
 	HighlightSlotPacket();
+	HighlightSlotPacket(Mode p_mode,int p_slot=0);
 	~HighlightSlotPacket();
 
 	Packet pack();
@@ -26,6 +33,6 @@ public:
 	void unpack( Packet& p_packet );
 
 public:
-	int id;
-
+	int id; ///< id of slot, -1 indicates to deactivate all slots
+	int status; ///< On(1)/off(0)
 };

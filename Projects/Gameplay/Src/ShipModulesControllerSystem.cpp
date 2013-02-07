@@ -29,10 +29,10 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		
 		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
 		{
-			if (m_toHighlight[j].first == netSync->getNetworkOwner())
+			if (m_toHighlight[j].id == netSync->getNetworkOwner())
 			{
 				//Do highlight
-				changeHighlight(p_entities[i], m_toHighlight[j].second);
+				changeHighlight(p_entities[i], m_toHighlight[j].slot);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
 				j--;
@@ -151,9 +151,10 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
 }
-void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
+void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_status)
 {
-	m_toHighlight.push_back(pair<int, int>(p_id, p_slot));
+	HighlightEvent e = {p_id, p_slot,p_status};
+	m_toHighlight.push_back(e);
 }
 void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
 {
