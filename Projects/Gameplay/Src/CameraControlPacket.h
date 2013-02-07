@@ -2,40 +2,42 @@
 
 #include <Packet.h>
 #include "Packetizer.h"
+#include <PlayerStates.h>
 
 // =======================================================================================
-//	ThrustPacket
+//                                      CameraControlPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Packet describing various client actions regarding the camera. 
+/// These will most likely be state changes between steer- and edit mode, 
+/// as well as manual control during edit mode.
 ///        
-/// # ThrustPacket
-/// Detailed description...
-/// Created on: 14-1-2013 
+/// # CameraControlPacket
+/// Detailed description.....
+/// Created on: 5-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ThrustPacket: Packetizer
+class CameraControlPacket : public Packetizer
 {
 public:
-	ThrustPacket();
+	CameraControlPacket();
+	virtual ~CameraControlPacket();
 
 	///-----------------------------------------------------------------------------------
-	/// Generate a packet from the ThrustPacket's variables.
+	/// Generate a packet from the CameraControlPacket's variables.
 	/// \return Packet
 	///-----------------------------------------------------------------------------------
 	Packet pack();
 
 	///-----------------------------------------------------------------------------------
-	/// Unpacks a packet, storing it in the ThrustPacket's variables.
+	/// Unpacks a packet, storing it in the CameraControlPacket's variables.
 	/// \param p_packet
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void unpack( Packet& p_packet );
 
-public:
+	AglVector3 movement;
+	int state;
 	int entityId;
-	AglVector3 thrustVector;
-	AglVector3 angularVector;
-
 };

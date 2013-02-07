@@ -2,19 +2,21 @@
 
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
+#include "SpawnPointCollection.h"
 #include "ParticleSystemCollection.h"
+#include "LightDataCollection.h"
 #include "InstanceInstruction.h"
 #include <AglLooseBspTree.h>
 
 // =======================================================================================
-//                                        Model
+//                                    ModelResource
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	A model object containing data for describing a collection of mesh related
 /// data to be used during loading and before they're put into ES
 ///        
-/// # Model
+/// # ModelResource
 /// Detailed description.....
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
@@ -31,6 +33,8 @@ public:
         name = p_copy.name;
         meshHeader = p_copy.meshHeader;
         connectionPoints = p_copy.connectionPoints;
+		spawnPoints = p_copy.spawnPoints;
+		lightCollection = p_copy.lightCollection;
         particleSystems = p_copy.particleSystems;
         transform = p_copy.transform;
 		instances = p_copy.instances;
@@ -45,6 +49,8 @@ public:
     string						name;
     AglMeshHeader				meshHeader;
     ConnectionPointCollection	connectionPoints;
+	SpawnPointCollection		spawnPoints;
+	LightDataCollection			lightCollection;
     ParticleSystemCollection	particleSystems;
     AglMatrix					transform;
     vector<InstanceInstruction> instances;

@@ -1,24 +1,26 @@
 #pragma once
-
-#include "PacketType.h"
-#include <Packet.h>
-
+#include <Component.h>
+#include <ComponentFactory.h>
+#include <PlayerStates.h>
 // =======================================================================================
-//	Packetizer
+//                                      PlayerState
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	State
 ///        
-/// # Packetizer
-/// Detailed description...
-/// Created on: 14-1-2013 
+/// # PlayerState
+/// Detailed description.....
+/// Created on: 5-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class Packetizer
+class PlayerState : public Component
 {
 public:
-	virtual Packet pack() = 0;
-	virtual void unpack( Packet& p_packet ) = 0;
 
+	PlayerState() : Component(ComponentType::PlayerState)
+	{state=PlayerStates::steeringState;}
+	virtual ~PlayerState() {}
+
+	int state;
 };

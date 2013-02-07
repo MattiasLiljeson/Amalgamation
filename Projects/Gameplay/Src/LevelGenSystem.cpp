@@ -25,8 +25,8 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 {
 	m_server = p_server;
 
-	m_worldMin = AglVector3(INT_MAX, INT_MAX, INT_MAX);
-	m_worldMax = AglVector3(INT_MIN, INT_MIN, INT_MIN);
+	m_worldMin = AglVector3((float)INT_MAX, (float)INT_MAX, (float)INT_MAX);
+	m_worldMax = AglVector3((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
 
 	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
 	{
@@ -43,13 +43,13 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 LevelGenSystem::~LevelGenSystem()
 {
 	// TODO: delete generated pieces in order to prevent memory leaks!
-	for (int i = 0; i < m_generatedPieces.size(); i++)
+	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
 
-	for (int i = 0; i < m_modelResources.size(); i++)
+	for (unsigned int i = 0; i < m_modelResources.size(); i++)
 		delete m_modelResources[i];
 
 	m_modelResources.clear();

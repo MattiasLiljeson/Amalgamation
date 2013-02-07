@@ -32,7 +32,7 @@ vector<Light>* LightsComponent::getLightsPtr()
 	return &m_lights;
 }
 
-void LightsComponent::addLight( Light p_light  )
+void LightsComponent::addLight( Light& p_light  )
 {
 	m_lights.push_back( p_light );
 }

@@ -94,48 +94,22 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			offset.transformNormal(targetTransform->getMatrix());
 			// update transform
 
-
-			// position = AglVector3::lerp(position,lookTargetPos+offset,saturate(30.0f*dt));	
-			// position += ((lookTargetPos+offset)-position)*dt*3.0f;
-			AglVector3 dir = (lookTargetPos+offset)-position;			
-
-			if ( targetEntity->getComponent(ComponentType::ComponentTypeIdx::ShipFlyController)!=NULL )
-			{
-				DEBUGPRINT(( ("\nX: "+toString(dir.x)+"  Y: "+toString(dir.y)+"  Z: "+toString(dir.z)+"\n").c_str() ));
-				DEBUGPRINT(( ("\nDT: "+toString(dt)+"\n").c_str() ));
-			}
-
-
-// 			if (AglVector3::lengthSquared(dir)>0.3f)
-// 			{
-				// AglVector3::normalize(dir);
-// 				dir.x *= dir.x;
-// 				dir.y *= dir.y;
-// 				dir.z *= dir.z;
-				// dir = AglVector3::lerp(lookAt->m_oldPos,dir,dt);
-				// position += (dir)*dt;
-// 			}
-// 			else
-// 			{
-				// AglVector3 zoom = dir*AglVector3::lengthSquared(lookAt->m_oldPos-(lookTargetPos+offset));
-				// position = lookTargetPos+offset;
-// 				position = AglVector3::lerp(lookAt->m_oldPos,position,dt);
-// 			}
-
-// 			lookAt->m_oldPos = dir;
+			// lerp
 			if (lookAt->getMoveSpd()*dt<1.0f)
 			{
-				position = AglVector3::lerp(position,lookTargetPos+offset,lookAt->getMoveSpd()*dt);
+				position = AglVector3::lerp(position,lookTargetPos+offset,
+					saturate(lookAt->getMoveSpd()*dt));
 			}
 			else
 			{
 				position = lookTargetPos+offset;
 			}
 
+			// slerp
 			if (lookAt->getRotationSpeed()*dt<1.0f)
 			{
 				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-					lookAt->getRotationSpeed()*dt,true);
+					saturate(lookAt->getRotationSpeed()*dt),true);
 				rotation.normalize();
 			}
 			else
@@ -151,13 +125,23 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		// orbit behaviour
 		else if (lookAtOrbit)
 		{
-			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), 0); ///CHANGED BY ANTON!!!
+			AglQuaternion interRotation = lookAt->getOrbitOffset();
+			AglVector3 move = lookAt->getOrbitMovement()*lookAt->getOrbitRotationSpeed();
+			if (move.length()>0.0f)	
+				interRotation *= AglQuaternion::constructFromAngularVelocity(move*dt);
+			interRotation.normalize();
+			lookAt->setOrbitOffset(interRotation);
+
+			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation()*interRotation,
+				saturate(lookAt->getRotationSpeed()*0.7f*dt),true);
 			rotation.normalize();
 
 			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
 			rotation.transformVector(offset);
-			position = lookTargetPos + offset;
+			position = AglVector3::lerp(position, lookTargetPos + offset,
+				saturate(lookAt->getMoveSpd()*3.0f*dt));
 			
+
 			// update
 			transform->setTranslation( position );
 			transform->setRotation( rotation );
@@ -168,14 +152,6 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			AglVector3 dir = position-lookTargetPos;
 			AglVector3::normalize(dir);
 			transform->setForwardDirection(dir);
-			// transform->setTranslation( position );
-			// transform->setRotation(AglQuaternion:: );
-// 			rotation *= AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), dt);
-// 			rotation.normalize();
-// 
-// 			// update
-// 			transform->setTranslation( position );
-// 			transform->setRotation( rotation );
 		}
 		delete targetTransform;
 	}

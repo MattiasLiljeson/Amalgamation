@@ -42,6 +42,8 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 
 	buildBlendStates();
 	m_currentBlendStateType = BlendState::DEFAULT;
+	m_blendMask = 0xffffffff;
+	for (int i=0;i<4;i++) m_blendFactors[i]=1;
 
 	buildRasterizerStates();
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;

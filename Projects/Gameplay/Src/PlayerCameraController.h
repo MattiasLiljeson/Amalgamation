@@ -19,11 +19,15 @@
 class PlayerCameraController : public Component
 {
 public:
-	PlayerCameraController()
+	PlayerCameraController(float p_orbitspeed=1.0f)
 	: Component( ComponentType::PlayerCameraController )
 	{
+		orbitSpeed=p_orbitspeed;
 	}
 
 	~PlayerCameraController() {}
+	AglVector3 accumulatedCameraMovement;
+	float orbitSpeed;
+private:
 
 };

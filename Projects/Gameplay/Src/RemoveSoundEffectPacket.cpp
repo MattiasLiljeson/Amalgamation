@@ -11,7 +11,7 @@ Packet RemoveSoundEffectPacket::pack()
 	return packet;
 }
 
-void RemoveSoundEffectPacket::unpack( Packet p_packet )
+void RemoveSoundEffectPacket::unpack( Packet& p_packet )
 {
 	p_packet >> attachedNetsyncIdentity;
 }

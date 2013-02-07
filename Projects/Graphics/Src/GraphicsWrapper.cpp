@@ -239,8 +239,8 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 		instanceBuffer->getBufferPointer(),
 		m_deferredRenderer->getDeferredBaseShader());
 
-	delete textureArray;
-	delete instanceBuffer;
+	delete [] textureArray;
+	delete [] instanceBuffer;
 }
 void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 								   vector<LightInstanceData>* p_instanceList )

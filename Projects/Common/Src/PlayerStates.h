@@ -1,24 +1,19 @@
 #pragma once
 
-#include "PacketType.h"
-#include <Packet.h>
-
 // =======================================================================================
-//	Packetizer
+//                                      PlayerStates
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Brief
 ///        
-/// # Packetizer
-/// Detailed description...
-/// Created on: 14-1-2013 
+/// # PlayerStates
+/// Detailed description.....
+/// Created on: 5-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class Packetizer
+struct PlayerStates
 {
-public:
-	virtual Packet pack() = 0;
-	virtual void unpack( Packet& p_packet ) = 0;
-
+	static const int steeringState = 0;
+	static const int editState = 1;
 };

@@ -51,6 +51,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	if (p_entities.size()>0)
 	{
 		float dt = m_world->getDelta();
+		m_shipInput->setCursorVisibility(false);
 		
 		// Fetch the status of the various input methods.
 		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
@@ -87,6 +88,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			// Thrust multiplier
 			float  thrustPower = controller->getThrustPower() * dt;
 
+
 			// Calc translation from player input
 			AglVector3 thrustVec;
 			thrustVec += transform->getMatrix().GetForward()	* input.thrustInput 
@@ -96,13 +98,35 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			thrustVec += transform->getMatrix().GetUp()			* input.strafeVerticalInput 
 				* thrustPower;
 
+			// Increase gear if thrust is on
+			/* Disabled for now, as it was hard to test in current environment
+			float thrustLen = thrustVec.length();
+			float gearMultiply = 100.0f;
+			if (thrustLen>0.0f)
+			{
+				if (controller->m_gear < 4.0f)
+				{
+					controller->m_gear+=(0.5f/thrustLen)*dt;
+				}
+			}
+			else if (controller->m_gear>1.0f)
+			{
+				controller->m_gear -= 10.0f*dt;
+			}
+			else
+			{
+				controller->m_gear=1.0f/gearMultiply;
+			}
+			AglVector3 gearShift = transform->getMatrix().GetForward() * (float)((int)controller->m_gear)*gearMultiply*dt;
+			*/
+
 			// Calc rotation from player input
 			AglVector3 angularVec=inputAngles*turnSpeed;
 			AglQuaternion quat = transform->getRotation();
 			quat.transformVector(angularVec);
 
 
-			controller->m_thrustPowerAccumulator += thrustVec;
+			controller->m_thrustPowerAccumulator += thrustVec/*+gearShift*/;
 			controller->m_turnPowerAccumulator += angularVec;
 
 			// Handle switch to edit mode
@@ -113,6 +137,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				ship->removeComponent(ComponentType::TAG_ShipFlyMode); // Disable this state...
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
+				m_shipInput->resetCursor();
 			}
 
 			// Send data to server
@@ -141,12 +166,11 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 	}
 }
 
-// NOTE: (Johan) 1/2-13 Removed the whole getSpeedBoost method on client side, since
-// it wasn't used, and that was quite confusing.
+
 
 void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedInfo, 
-													   AglVector3 p_thrust, 
-													   AglVector3 p_angularVec)
+													   AglVector3& p_thrust, 
+													   AglVector3& p_angularVec)
 {
 	ThrustPacket thrustPacket;
 	thrustPacket.entityId = p_syncedInfo->getNetworkIdentity();

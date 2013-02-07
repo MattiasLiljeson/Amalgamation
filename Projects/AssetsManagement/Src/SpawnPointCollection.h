@@ -1,24 +1,26 @@
 #pragma once
 
-#include "PacketType.h"
-#include <Packet.h>
+#include <vector>
+#include <string>
+#include <utility>
+using namespace std;
+
+struct AglMatrix;
 
 // =======================================================================================
-//	Packetizer
+//                                SpawnPointCollection
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief description...
+/// \brief	Collection of spawn point data
 ///        
-/// # Packetizer
-/// Detailed description...
-/// Created on: 14-1-2013 
+/// # SpawnPointCollection
+/// Detailed description.....
+/// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class Packetizer
+struct SpawnPointCollection
 {
 public:
-	virtual Packet pack() = 0;
-	virtual void unpack( Packet& p_packet ) = 0;
-
+	vector<pair<string,AglMatrix>> m_collection;
 };

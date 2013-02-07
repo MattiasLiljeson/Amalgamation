@@ -174,6 +174,7 @@ void LibRocketBackendSystem::process()
 	int mouseY = mousePos.second;
 
 	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
+	m_rocketContext->ShowMouseCursor(m_cursor->isVisible());
 	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED )
 	{
 		m_rocketContext->ProcessMouseButtonDown( 0, 0 );

@@ -10,7 +10,7 @@ InputManager::InputManager( IMouseKeyboardFetcher* p_mlFetcher, XInputFetcher* p
 {
 	m_mouseKeyboardFetcher = p_mlFetcher;
 	m_xInputFetcher = p_xiFetcher;
-	double joyPadDeadZone = 0.1;
+	double joyPadDeadZone = 0.3;
 
 	m_xInputFetcher->calibrate( joyPadDeadZone );
 }
