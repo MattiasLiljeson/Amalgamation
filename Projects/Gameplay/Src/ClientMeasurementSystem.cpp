@@ -21,7 +21,7 @@ void ClientMeasurementSystem::initialize()
 	AntTweakBarWrapper::getInstance()->modifyTheRefreshRate(
 		AntTweakBarWrapper::MEASUREMENT, 0.1f );
 	AntTweakBarWrapper::getInstance()->defineParametersForABar(
-		AntTweakBarStrings::measurement.c_str(), "mybar valueswidth=120");
+		AntTweakBarStrings::measurement.c_str(), " valueswidth=120");
 
 	vector<EntitySystem*> systems = m_world->getSystems()->getSystemList();
 	for(unsigned int i=0; i<m_measuredSystems.size(); i++)
