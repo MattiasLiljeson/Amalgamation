@@ -18,6 +18,7 @@
 
 struct RenderSceneInfoCBuffer
 {
+	float view[16];
 	float viewProj[16];
 	float viewProjInv[16];
 	float cameraPos[4];

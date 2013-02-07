@@ -196,6 +196,9 @@
     <ClInclude Include="LightShader.h">
       <Filter>Shader\Shader types</Filter>
     </ClInclude>
+    <ClInclude Include="SSAOCBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

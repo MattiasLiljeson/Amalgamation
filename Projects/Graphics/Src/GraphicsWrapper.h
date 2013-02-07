@@ -258,6 +258,9 @@ private:
 
 	int m_height;
 	int m_width;
+
+	int m_randomNormalTextures;
+
 	bool m_windowed;
 	bool m_wireframeMode;
 	bool m_renderingShadows;

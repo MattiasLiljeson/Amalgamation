@@ -77,6 +77,7 @@
     <ClInclude Include="ShadowCBuffer.h" />
     <ClInclude Include="ShadowMapRenderer.h" />
     <ClInclude Include="ShadowShader.h" />
+    <ClInclude Include="SSAOCBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />
