@@ -276,7 +276,7 @@ namespace Srv
 
 
 		//Shield
-		/*entity = m_world->createEntity();
+		entity = m_world->createEntity();
 		component = new Transform(20, 0, 0);
 		entity->addComponent( ComponentType::Transform, component );
 
@@ -294,7 +294,7 @@ namespace Srv
 		entity->addComponent(ComponentType::ShipModule, new ShipModule());
 		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
-		m_world->addEntity(entity);*/
+		m_world->addEntity(entity);
 
 
 		EntityCreationPacket cp;
@@ -304,14 +304,14 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*10.0f));
 			cp.entityType = EntityType::RocketLauncherModule;
-			//factory->entityFromPacket(cp, &pos);
+			factory->entityFromPacket(cp, &pos);
 		}
 		//Mine Layer
 		for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*10.0f));
 			cp.entityType = EntityType::MineLayerModule;
-			//factory->entityFromPacket(cp, &pos);
+			factory->entityFromPacket(cp, &pos);
 		}
 
 		//Speed Booster
