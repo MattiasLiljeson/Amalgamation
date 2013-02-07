@@ -270,7 +270,7 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		NULL, 0,
 		instanceBuffer->getElementSize(),
 		instanceBuffer->getBufferPointer(),
-		m_deferredRenderer->getDeferredLightShader());
+		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()));
 
 	delete instanceBuffer;
 	instanceBuffer = NULL;

@@ -83,3 +83,9 @@ void ShaderBase::unApplyStages()
 		m_deviceContext->IASetInputLayout(NULL);
 }
 
+void ShaderBase::applyCustomSamplerState( ID3D11SamplerState* p_sampler, UINT p_index )
+{
+	m_deviceContext->PSSetSamplers(p_index,1,&p_sampler);
+}
+
+

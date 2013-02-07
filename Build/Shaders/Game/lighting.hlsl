@@ -14,6 +14,7 @@ Texture2D gShadow3		: register(t6);
 Texture2D gShadow4		: register(t7);
 
 SamplerState pointSampler : register(s0);
+SamplerState shadowSampler : register(s1);
 
 //Total of 168 bytes
 struct VertexIn
@@ -104,15 +105,16 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	int shadowIndex = p_input.light.shadowIdx;
 	if( shadowIndex != -1 )
 	{
-		if( shadowIndex == 0){
+		//if( shadowIndex == 0){
 			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow1, pointSampler, shadowWorldPos);
-		}
+			shadowCoeff = doShadowing(gShadow1, shadowSampler, shadowWorldPos);
+		//}
+		/*
 		else if( shadowIndex == 1){
 			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow2, pointSampler, shadowWorldPos);
+			shadowCoeff = doShadowing(gShadow2, shadowSampler, shadowWorldPos);
 		}
-		/*
+
 		else if( shadowIndex == 2){
 			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
 			shadowCoeff = doShadowing(gShadow3, pointSampler, shadowWorldPos);

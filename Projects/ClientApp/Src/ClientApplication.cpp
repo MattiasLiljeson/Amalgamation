@@ -410,6 +410,7 @@ void ClientApplication::initEntities()
 	float rotation = 0.78;
 	AglQuaternion quat;
 	for(int i = 0; i < 1; i++){
+
 		entity = factory->entityFromRecipe( "SpotLight" );
 		LightsComponent* lightComp = static_cast<LightsComponent*>(
 			entity->getComponent(ComponentType::LightsComponent));

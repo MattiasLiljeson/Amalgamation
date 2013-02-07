@@ -61,6 +61,9 @@
       <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ModelExtendedFactory.cpp" />
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -189,6 +192,9 @@
     </ClInclude>
     <ClInclude Include="BufferFactory.h">
       <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

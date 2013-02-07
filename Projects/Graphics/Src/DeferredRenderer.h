@@ -10,6 +10,7 @@ class BufferFactory;
 class ShaderBase;
 class DeferredBaseShader;
 class DeferredComposeShader;
+class LightShader;
 class GUIShader;
 class ShaderFactory;
 class RenderStateHelper;
@@ -118,7 +119,7 @@ public:
 
 	DeferredBaseShader* getDeferredBaseShader();
 
-	DeferredBaseShader* getDeferredLightShader();
+	LightShader* getDeferredLightShader();
 
 	void renderComposeStage();
 
@@ -148,7 +149,7 @@ private:
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
-	DeferredBaseShader*		m_lightShader;
+	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

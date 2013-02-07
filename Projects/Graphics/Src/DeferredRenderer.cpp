@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "LightShader.h"
 #include "GUIShader.h"
 
 
@@ -325,7 +326,7 @@ DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
 
-DeferredBaseShader* DeferredRenderer::getDeferredLightShader(){
+LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
 

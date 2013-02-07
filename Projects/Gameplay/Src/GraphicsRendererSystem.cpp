@@ -56,7 +56,6 @@ void GraphicsRendererSystem::process(){
 	endShadowPass();
 	
 	initMeshPass();
-	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_NOCULL);
 	m_meshRenderer->render();
 	endMeshPass();
 
@@ -72,17 +71,16 @@ void GraphicsRendererSystem::process(){
 	m_particleRenderSystem->render();
 	endParticlePass();
 	
-	/*
+	
 	initGUIPass();
 	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
-	*/
+	
 
 	flipBackbuffer();
 }
 void GraphicsRendererSystem::initShadowPass(){
-
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
