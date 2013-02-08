@@ -65,6 +65,10 @@ void GraphicsRendererSystem::process(){
 	m_lightRenderSystem->render();
 	endLightPass();
 
+	beginSsao();
+	m_wrapper->renderSsao();
+	endSsao();
+
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
@@ -123,6 +127,19 @@ void GraphicsRendererSystem::endLightPass(){
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	//m_wrapper->unmapDeferredBaseFromShader();
 	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+}
+
+void GraphicsRendererSystem::beginSsao()
+{
+	m_wrapper->setRasterizerStateSettings(
+		RasterizerState::FILLED_NOCULL_NOCLIP, false);
+	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
+}
+
+void GraphicsRendererSystem::endSsao()
+{
+	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
+	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 }
 
 void GraphicsRendererSystem::initComposePass()

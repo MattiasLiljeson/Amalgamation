@@ -554,6 +554,10 @@ void GraphicsWrapper::unmapDepthFromShader(){
 	m_deferredRenderer->unmapDepthFromShaderVariables();
 }
 
+void GraphicsWrapper::renderSsao(){
+	m_deferredRenderer->renderSsao();
+}
+
 void GraphicsWrapper::renderComposeStage(){
 	m_deferredRenderer->renderComposeStage();
 }

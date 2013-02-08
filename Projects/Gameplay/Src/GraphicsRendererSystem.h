@@ -42,11 +42,14 @@ public:
 	void initParticlePass();
 	void endParticlePass();
 
-	void initComposePass();
-	void endComposePass();
-
 	void initLightPass();
 	void endLightPass();
+
+	void beginSsaoPass();
+	void endSsaoPass();
+
+	void initComposePass();
+	void endComposePass();
 	
 	void initGUIPass();
 	void endGUIPass();

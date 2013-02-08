@@ -174,6 +174,8 @@ public:
 
 	void renderParticleSystem(AglParticleSystem* p_system, InstanceData p_transform);
 
+	void renderSsao();
+
 	void renderComposeStage();
 
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
