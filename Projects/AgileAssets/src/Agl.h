@@ -49,6 +49,7 @@ struct AglTopHeader
 	int		nameArrayLength;		///< Length of name array
 	int		meshCount;				///< Number of meshes in the file
 	int		materialCount;			///< Number of materials in the file
+	int		gradientCount;			///< Number of gradients in the file
 	int		materialMappingCount;	///< Number of material mappings in the file
 	int		nodeCount;				///< Number of nodes in the file
 	int		skeletonCount;			///< Number of skeletons in the file

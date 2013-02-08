@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 #include <utility>
+#include "LightDataCollection.h"
 
 using namespace std;
+struct AglVector3;
 
 // =======================================================================================
 //                                      MeshNameScriptParser
@@ -24,13 +26,23 @@ public:
 		MESH,
 		CONNECTIONPOINT,
 		INSTANTIATE,
-		SPAWNPOINT
+		SPAWNPOINT,
+		POINTLIGHT,
+		DIRLIGHT,
+		SPOTLIGHT
 	};
 
+	///-----------------------------------------------------------------------------------
+	/// \brief	Super simple solution for data retrieval from empty, 
+	/// contains several specifics (for each empty type) as well as generics.
+	///-----------------------------------------------------------------------------------
 	struct Data
 	{
+		Data() {name=""; instanceSpecFilename=""; spawnSpecName="";}
 		string name;
-		string filename;
+		string instanceSpecFilename;				///< For instance points (file name)
+		string spawnSpecName;						///< For spawn points (action name)
+		LightCreationData lightSpec;				///< Light specific
 	};
 
 	static pair<Data,Token> parse(const string& p_string);
@@ -38,8 +50,16 @@ protected:
 private:
 	static string getInstruction(const string& p_string);
 	static string extractPart(const string& p_string,int offset=0);
+	static float getFloatFromDecimalString(const string& p_string);
+	static void getRGB(AglVector3& p_outVec, const string& p_hex);
 	static string separators;
+	static string decimalSeparator;
 	static string instantiate;
 	static string connectionpoint;
 	static string spawnpoint;
+	static string light;
+	static string lighthex;
+	static string pointlightType;
+	static string spotlightType;
+	static string dirlightType;
 };

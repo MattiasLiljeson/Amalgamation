@@ -29,6 +29,7 @@ public:
 	{
 		m_turnSpeed = 10.0f;
 		m_thrustPower = 0.2f;
+		m_gear=1.0f;
 	}
 
 	ShipFlyController(float p_turnSpeed, float p_thrustPower)
@@ -36,6 +37,7 @@ public:
 	{
 		m_turnSpeed = p_turnSpeed;
 		m_thrustPower = p_thrustPower;
+		m_gear=1.0f;
 	}
 
 	~ShipFlyController() {}
@@ -48,6 +50,7 @@ public:
 
 	float m_turnSpeed;
 	float m_thrustPower;
+	float m_gear;
 
 	AglVector3 m_turnPowerAccumulator;
 	AglVector3 m_thrustPowerAccumulator;

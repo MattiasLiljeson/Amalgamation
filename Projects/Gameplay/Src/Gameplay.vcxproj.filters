@@ -88,6 +88,9 @@
     <Filter Include="Systems\Network\Packet Translation\Packet Structs">
       <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\GUI\LibRocket">
+      <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
@@ -122,12 +125,6 @@
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketRenderInterface.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketSystemInterface.h">
-      <Filter>Systems\GUI</Filter>
     </ClInclude>
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
@@ -397,9 +394,6 @@
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="LibRocketBackendSystem.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GameStatsSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
@@ -496,11 +490,32 @@
     <ClInclude Include="MenuItem.h">
       <Filter>Components\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="LibRocketBackendSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketRenderInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketSystemInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketInputHelper.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOptionsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketEventManagerSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
     <ClInclude Include="ClientMeasurementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="ServerMeasurementSystem.h">
       <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControlPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -518,15 +533,6 @@
     </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketBackendSystem.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketRenderInterface.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketSystemInterface.cpp">
-      <Filter>Systems\GUI</Filter>
     </ClCompile>
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
@@ -831,11 +837,32 @@
     <ClCompile Include="MenuItem.cpp">
       <Filter>Components\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="LibRocketBackendSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketRenderInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketSystemInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketInputHelper.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOptionsSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketEventManagerSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
     <ClCompile Include="ClientMeasurementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="ServerMeasurementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControlPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

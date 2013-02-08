@@ -19,7 +19,7 @@ class PlayersWinLosePacket: public Packetizer
 public:
 	PlayersWinLosePacket();
 	Packet pack();
-	void unpack( Packet p_packet );
+	void unpack( Packet& p_packet );
 
 public:
 	int activePlayers;

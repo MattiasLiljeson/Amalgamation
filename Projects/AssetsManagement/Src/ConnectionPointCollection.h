@@ -13,7 +13,7 @@ struct AglMatrix;
 ///---------------------------------------------------------------------------------------
 /// \brief	Collection of connection point data
 ///        
-/// # HardPointCollection
+/// # ConnectionPointCollection
 /// Detailed description.....
 /// Created on: 8-1-2013 
 ///---------------------------------------------------------------------------------------

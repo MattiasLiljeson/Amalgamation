@@ -28,7 +28,7 @@ MessageLoopFetcher::MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool
 		m_keysReleased[i] = false;
 	}
 	
-	for( int i=0; i<VK_LCONTROL+1; i++ ) //VK_LCONTROL is the last char
+	for( int i=0; i<LAST_CHAR_KEY+1; i++ ) //LAST_CHAR_KEY is the last char
 		m_keyFromCharMap[i] = -1;
 
 	// Letters/Characters have the same index as in the ascii table 
@@ -44,6 +44,7 @@ MessageLoopFetcher::MessageLoopFetcher( HINSTANCE p_hInstance, HWND p_hWnd, bool
 	m_keyFromCharMap[VK_F4]			= InputHelper::KeyboardKeys_F4;
 	m_keyFromCharMap[VK_LCONTROL]	= InputHelper::KeyboardKeys_LCTRL;
 	m_keyFromCharMap[VK_ESCAPE]		= InputHelper::KeyboardKeys_ESC;
+	m_keyFromCharMap[VK_OEM_PERIOD]	= InputHelper::KeyboardKeys_PERIOD;
 }
 
 MessageLoopFetcher::~MessageLoopFetcher()

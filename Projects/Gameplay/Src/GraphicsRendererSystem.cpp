@@ -21,9 +21,14 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+
+	m_activeShadows			= new int[MAXSHADOWS];
+	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
+
+	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
-
+	delete m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
 
@@ -31,12 +36,22 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 	m_wrapper = m_backend->getGfxWrapper();
 
-	
+	clearShadowStuf();
+
+	//Fill the shadow view projections
+	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
+		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
+		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
+			m_shadowSystem->getViewProjection(i);
+	}
+
 	initShadowPass();
-	for(unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
-		AglMatrix vp = m_shadowSystem->getViewProjection(i);
-		m_wrapper->setShadowViewProjection(vp);
-		m_meshRenderer->render();
+	for(unsigned int i = 0; i < MAXSHADOWS; i++){
+		if(m_activeShadows[i] != -1){
+			m_wrapper->setShadowMapAsRenderTarget(i);
+			//m_wrapper->setActiveShadow(i);
+			m_meshRenderer->render();
+		}
 	}
 	endShadowPass();
 	
@@ -55,30 +70,32 @@ void GraphicsRendererSystem::process(){
 	initParticlePass();
 	m_particleRenderSystem->render();
 	endParticlePass();
-
+	
+	
 	initGUIPass();
 	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
+	
 
 	flipBackbuffer();
 }
 void GraphicsRendererSystem::initShadowPass(){
-
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_wrapper->setShadowMapAsRenderTarget();
 	m_wrapper->setViewportToShadowMapSize();
 	m_wrapper->setRenderingShadows();
-	m_wrapper->mapSceneInfo();
+	m_wrapper->setShadowViewProjections(m_shadowViewProjections);
 }
 
 void GraphicsRendererSystem::endShadowPass(){
 	m_wrapper->resetViewportToOriginalSize();
 	m_wrapper->stopedRenderingShadows();
+	//m_wrapper->unmapPerShadowBuffer();
 }
 void GraphicsRendererSystem::initMeshPass(){
+	m_wrapper->mapSceneInfo();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
@@ -95,17 +112,21 @@ void GraphicsRendererSystem::initLightPass(){
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
 	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
 	m_wrapper->setLightPassRenderTarget();
-	m_wrapper->mapDeferredBaseToShader();
+	//m_wrapper->mapDeferredBaseToShader();
+	m_wrapper->mapNeededShaderResourceToLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::endLightPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->unmapDeferredBaseFromShader();
+	//m_wrapper->unmapDeferredBaseFromShader();
+	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::initComposePass()
 {
+	m_wrapper->setRasterizerStateSettings(
+		RasterizerState::DEFAULT, false);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
 	m_wrapper->mapVariousStagesForCompose();
@@ -140,4 +161,12 @@ void GraphicsRendererSystem::endGUIPass(){
 
 void GraphicsRendererSystem::flipBackbuffer(){
 	m_wrapper->flipBackBuffer();
+}
+
+void GraphicsRendererSystem::clearShadowStuf()
+{
+	for(int i = 0; i < MAXSHADOWS; i++){
+		m_activeShadows[i] = -1;
+		m_shadowViewProjections[i] = AglMatrix::identityMatrix();
+	}
 }

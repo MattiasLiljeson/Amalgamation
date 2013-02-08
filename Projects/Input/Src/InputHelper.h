@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "Rocket/Core/Input.h"
-
 // =======================================================================================
 //                                      InputHelper
 // =======================================================================================
@@ -118,6 +116,7 @@ public:
 		KeyboardKeys_BACKSPACE,
 		KeyboardKeys_RETURN,
 		KeyboardKeys_LCTRL,
+		KeyboardKeys_PERIOD,
 		KeyboardKeys_ESC,
 		KeyboardKeys_F1,
 		KeyboardKeys_F2,
@@ -263,9 +262,27 @@ public:
 	///\return The corresponding status of the supplied state
 	static double statusFromState( const KeyStates p_state );
 
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
 	
+	/// Converts a keyboard key to a character.
+	///\param p_keyCode		KeyboardKeys-code to convert from
+	///\param p_upperCase	
+	///\return The corresponding character code
+	static char charFromKeyboardKey(KeyboardKeys p_keyCode, bool p_upperCase=false);
+
+	// Identifier for an unsupported character 
+	static const char NONPRINTABLE_CHAR = '\0';
+
+	/// Initializes private class members.
+	static void initialize();
 private:
+	// Character maps. These contain upper and lower case representations that match the
+	// KeyboardKeys. There will be duplicated values and excessive characters that doesn't
+	// have a graphical representation, as this is an implementation that favours
+	// performance over memory consumption.
+	static char upperCaseCharacterMap[KeyboardKeys_CNT];
+	static char lowerCaseCharacterMap[KeyboardKeys_CNT];
+
 	// libRocket map
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[NUM_KEYB_KEYS];
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[KeyboardKeys_CNT];
 };

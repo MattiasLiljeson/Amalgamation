@@ -3,12 +3,17 @@
 #include "Control.h"
 #include <ValueClamp.h>
 #include "AntTweakBarWrapper.h"
+#include "HighlightSlotPacket.h"
+#include "SimpleEventPacket.h"
+#include "AudioBackendSystem.h"
+#include "Cursor.h"
+#include <Globals.h>
 
 
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
-	m_angleInputMultiplier = 1000;
+	m_angleInputMultiplier = 1000.0f;
 
 	m_controllerEpsilon = 0.15f;
 	m_editSwitchTrigReleased = true;
@@ -41,19 +46,36 @@ void ShipInputProcessingSystem::process()
 	//m_processedInput.verticalInput += static_cast<float>(m_leftStickCorrection[1]);
 
 	// Apply a threshold value to eliminate some of the analogue stick noise.
-	if( abs(m_processedInput.horizontalInput) < m_controllerEpsilon ) 
-		m_processedInput.horizontalInput = 0;
+// 	if( abs(m_processedInput.horizontalInput) < m_controllerEpsilon ) 
+// 		m_processedInput.horizontalInput = 0;
+// 
+// 	if( abs(m_processedInput.verticalInput) < m_controllerEpsilon ) 
+// 		m_processedInput.verticalInput = 0;
+// 
+// 	if( abs(m_processedInput.strafeHorizontalInput) < m_controllerEpsilon ) 
+// 		m_processedInput.strafeHorizontalInput = 0;
+// 
+// 	if( abs(m_processedInput.strafeVerticalInput) < m_controllerEpsilon ) 
+// 		m_processedInput.strafeVerticalInput = 0;
 
-	if( abs(m_processedInput.verticalInput) < m_controllerEpsilon ) 
-		m_processedInput.verticalInput = 0;
 
-	if( abs(m_processedInput.strafeHorizontalInput) < m_controllerEpsilon ) 
-		m_processedInput.strafeHorizontalInput = 0;
-
-	if( abs(m_processedInput.strafeVerticalInput) < m_controllerEpsilon ) 
-		m_processedInput.strafeVerticalInput = 0;
-
+	// updateAntTweakBar(m_processedInput);
 }
+
+void ShipInputProcessingSystem::setCursorVisibility(bool p_show)
+{
+	if (p_show)
+		m_inputBackend->getCursor()->show();
+	else
+		m_inputBackend->getCursor()->hide();
+}
+
+
+void ShipInputProcessingSystem::resetCursor()
+{
+	m_inputBackend->getCursor()->reset();
+}
+
 
 ShipInputProcessingSystem::ResultingInputForces& ShipInputProcessingSystem::getProcessedInput()
 {
@@ -85,6 +107,15 @@ void ShipInputProcessingSystem::initGamePad()
 	m_gamepadStrafeVerticalNegative	= m_inputBackend->getControlByEnum(
 		InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE);
 
+	m_gamepadEditModeHorizontalPos	= m_inputBackend->getControlByEnum( 
+		InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
+	m_gamepadEditModeHorizontalNeg	= m_inputBackend->getControlByEnum( 
+		InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
+	m_gamepadEditModeVerticalPos	= m_inputBackend->getControlByEnum(
+		InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE);
+	m_gamepadEditModeVerticalNeg	= m_inputBackend->getControlByEnum(
+		InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE);
+
 	m_gamepadEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_BACK );
 }
 
@@ -104,23 +135,32 @@ void ShipInputProcessingSystem::initMouse()
 void ShipInputProcessingSystem::initKeyboard()
 {
 	m_keyboardRollRight = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_D);
-	m_keyboardRollLeft =m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_A);
-
-	m_keyboardThrust = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_W);
-
-	m_keyboardStrafeVerticalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_O);
-	m_keyboardStrafeVerticalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_L);
-	m_keyboarStrafeHorizontalPos = m_inputBackend->getControlByEnum(
 		InputHelper::KeyboardKeys_E);
-	m_keyboarStrafeHorizontalNeg = m_inputBackend->getControlByEnum(
+	m_keyboardRollLeft =m_inputBackend->getControlByEnum(
 		InputHelper::KeyboardKeys_Q);
 
+	m_keyboardThrust = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_SPACE);
+
+	m_keyboardStrafeVerticalPos = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_W);
+	m_keyboardStrafeVerticalNeg = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_S);
+	m_keyboarStrafeHorizontalPos = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_D);
+	m_keyboarStrafeHorizontalNeg = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_A);
+
 	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C );
+
+	m_keyboardEditModeVerticalPos = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_W);
+	m_keyboardEditModeVerticalNeg = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_S);
+	m_keyboardEditModeHorizontalPos = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_D);
+	m_keyboardEditModeHorizontalNeg = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_A);
 }
 
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
@@ -131,6 +171,9 @@ float* ShipInputProcessingSystem::getControllerEpsilonPointer()
 ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInput()
 {
 	RawInputForces input;
+
+	// rotate
+
 	input.hPositive = m_gamepadHorizontalPositive->getStatus();
 	input.hPositive += m_mouseHorizontalPositive->getStatus()*m_angleInputMultiplier;
 	saturate(input.hPositive); // ?
@@ -146,6 +189,8 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	input.vNegative = m_gamepadVerticalNegative->getStatus();
 	input.vNegative += m_mouseVerticalNegative->getStatus()*m_angleInputMultiplier;
 	saturate(input.vNegative); // ?
+
+	// strafe
 
 	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
 	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
@@ -163,6 +208,26 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	input.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
 	saturate(input.svNegative);
 
+	// edit mode rotate
+
+	input.ehPositive = m_gamepadEditModeHorizontalPos->getStatus();
+	input.ehPositive += m_keyboardEditModeHorizontalPos->getStatus();
+	saturate(input.ehPositive);
+
+	input.ehNegative = m_gamepadEditModeHorizontalNeg->getStatus();
+	input.ehNegative += m_keyboardEditModeHorizontalNeg->getStatus();
+	saturate(input.ehNegative);
+
+	input.evPositive = m_gamepadEditModeVerticalPos->getStatus();
+	input.evPositive += m_keyboardEditModeVerticalPos->getStatus();
+	saturate(input.evPositive);
+
+	input.evNegative = m_gamepadEditModeVerticalNeg->getStatus();
+	input.evNegative += m_keyboardEditModeVerticalNeg->getStatus();
+	saturate(input.evNegative);
+
+	// roll
+
 	input.rRight = m_gamepadRollRight->getStatus();
 	input.rRight += m_keyboardRollRight->getStatus();
 	saturate(input.rRight);
@@ -171,9 +236,13 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	input.rLeft += m_keyboardRollLeft->getStatus();
 	saturate(input.rLeft);
 
+	// thrust
+
 	input.thrust =  m_gamepadThrust->getStatus();
 	input.thrust += m_keyboardThrust->getStatus();
 	saturate(input.thrust);
+
+	// edit mode
 
 	double etv = m_gamepadEditModeTrig->getStatus();
 	etv += m_keyboardEditModeTrig->getStatus();

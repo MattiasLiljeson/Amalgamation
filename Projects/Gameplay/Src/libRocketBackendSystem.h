@@ -1,15 +1,17 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <RenderInterface.h>
 #include <string>
 #include <vector>
 #include <Rocket/Core.h>
 #include <Rocket/Debugger.h>
+#include <RenderInterface.h>
+#include <map>
 
 class AntTweakBarWrapper;
 class Control;
 class Cursor;
+class EventHandler;
 class GraphicsBackendSystem;
 class InputBackendSystem;
 class LibRocketRenderInterface;
@@ -25,15 +27,30 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	int loadDocument( const char* p_filePath, bool p_initiallyShown=true );
+	int loadDocumentByName(const char* p_windowName);
+	int loadDocument( const char* p_filePath, const char* p_windowName=NULL);
+
+	// Gets a document that matches the name (a.k.a body id). This function can only be
+	// used if the document was loaded by name.
+	int getDocumentByName(const char* p_id) const;
+
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
 
-	void showDocument(int p_docId);
+	void showDocument(int p_docId, int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 	void hideDocument(int p_docId);
+	void focusDocument(int p_docId);
+
+	void showCursor();
+	void hideCursor();
 
 	void process();
 	void render();
+
+	Rocket::Core::Context* getContext() const;
+private:
+	void processMouseMove();
+	void processKeyStates();
 
 private:
 	int m_wndHeight;
@@ -44,11 +61,12 @@ private:
 
 	Cursor* m_cursor;
 
-	std::string m_rocketContextName;
-	Rocket::Core::Context* m_rocketContext;
-	LibRocketRenderInterface* m_renderInterface;
-	LibRocketSystemInterface* m_systemInterface;
+	std::string					m_rocketContextName;
+	Rocket::Core::Context*		m_rocketContext;
+	LibRocketRenderInterface*	m_renderInterface;
+	LibRocketSystemInterface*	m_systemInterface;
 
 	vector<Rocket::Core::ElementDocument*> m_documents;
+	map<Rocket::Core::String, int> m_docStringIdMap;
 };
 

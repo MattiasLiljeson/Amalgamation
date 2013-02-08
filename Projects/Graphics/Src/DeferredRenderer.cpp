@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "LightShader.h"
 #include "GUIShader.h"
 
 
@@ -37,11 +38,13 @@ DeferredRenderer::DeferredRenderer(ID3D11Device* p_device,
 	initRendertargetsAndDepthStencil( m_width, m_height );
 
 	initShaders();
-
+	initSSAO();
 	initFullScreenQuad();
 
 	buildBlendStates();
 	m_currentBlendStateType = BlendState::DEFAULT;
+	m_blendMask = 0xffffffff;
+	for (int i=0;i<4;i++) m_blendFactors[i]=1;
 
 	buildRasterizerStates();
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;
@@ -83,6 +86,7 @@ void DeferredRenderer::clearBuffers()
 
 void DeferredRenderer::renderComposeStage()
 {
+	m_composeShader->setSSAOBufferData(m_ssaoData);
 	m_composeShader->apply();
 	m_fullscreenQuad->apply();
 
@@ -93,7 +97,14 @@ void DeferredRenderer::mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_sh
 	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
 	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
-	m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+
+		m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+}
+void DeferredRenderer::mapDeferredBaseRTSToShader()
+{	
+	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DEPTH] );
 }
 
 void DeferredRenderer::unmapDeferredBaseFromShader(){
@@ -103,12 +114,17 @@ void DeferredRenderer::unmapDeferredBaseFromShader(){
 void DeferredRenderer::mapVariousPassesToComposeStage(){
 	m_deviceContext->PSSetShaderResources(0, 1, &m_gBuffersShaderResource[
 		RenderTargets::LIGHT] );
+	m_deviceContext->PSSetShaderResources(1, 1, &m_gBuffersShaderResource[
+			RenderTargets::NORMAL] );
+	m_deviceContext->PSSetShaderResources(2, 1, &m_gBuffersShaderResource[
+		RenderTargets::DEPTH] );
 }
 
 void DeferredRenderer::unmapVariousPassesFromComposeStage(){
 	ID3D11ShaderResourceView* nulz = NULL;
 	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 2, 1, &nulz );
 }
 void DeferredRenderer::unMapGBuffers()
 {
@@ -239,6 +255,21 @@ void DeferredRenderer::initFullScreenQuad()
 }
 
 void DeferredRenderer::hookUpAntTweakBar(){
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Scale",TwType::TW_TYPE_FLOAT,&m_ssaoData.scale,
+		"group=SSAO min=0 max=10 step=0.001");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Bias",TwType::TW_TYPE_FLOAT,&m_ssaoData.bias,
+		"group=SSAO step=0.001");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Intensity",TwType::TW_TYPE_FLOAT,&m_ssaoData.intensity,
+		"group=SSAO step=0.001");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"SampleRad",TwType::TW_TYPE_FLOAT,&m_ssaoData.sampleRadius,
+		"group=SSAO step=0.001");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Epsilon",TwType::TW_TYPE_FLOAT,&m_ssaoData.epsilon,
+		"group=SSAO step=0.001");
 }
 
 
@@ -318,7 +349,20 @@ DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
 
-DeferredBaseShader* DeferredRenderer::getDeferredLightShader(){
+LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
 
+ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderTargets p_target )
+{
+	return &m_gBuffersShaderResource[p_target];
+}
+
+void DeferredRenderer::initSSAO()
+{
+	m_ssaoData.scale	= 1.5f;
+	m_ssaoData.bias		= 0.2f;
+	m_ssaoData.intensity= 1.0f;
+	m_ssaoData.sampleRadius=0.3f;
+	m_ssaoData.epsilon  = 0.0f;
+}

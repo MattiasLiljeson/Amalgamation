@@ -2,7 +2,6 @@
 
 AglGradient::AglGradient()
 {
-	m_layers.push_back(new AglGradientMaterial());
 }
 AglGradient::~AglGradient()
 {

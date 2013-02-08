@@ -206,7 +206,7 @@ void Transform::calcComponents(bool p_calcScale/*=true*/, bool p_calcRotation/*=
 	}
 }
 
-const AglVector3& Transform::getLookAt() const{
+const AglVector3 Transform::getLookAt() const{
 	AglVector3 lookAt = getTranslation()+getForward();
 	AglVector3::normalize(lookAt);
 

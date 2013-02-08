@@ -14,7 +14,7 @@ Packet RayPacket::pack()
 	return packet;
 }
 
-void RayPacket::unpack( Packet p_packet )
+void RayPacket::unpack( Packet& p_packet )
 {
 	p_packet >> o;
 	p_packet >> d;

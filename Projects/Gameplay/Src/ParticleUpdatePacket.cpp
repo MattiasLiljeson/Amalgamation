@@ -27,7 +27,7 @@ Packet ParticleUpdatePacket::pack()
 	return packet;
 }
 
-void ParticleUpdatePacket::unpack( Packet p_packet )
+void ParticleUpdatePacket::unpack( Packet& p_packet )
 {
 	p_packet >> networkIdentity 
 		>> position 

@@ -10,6 +10,7 @@ BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_devi
 {
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
+	m_elementSize = sizeof(float)*4;
 }
 
 BufferFactory::~BufferFactory()
@@ -28,14 +29,12 @@ Buffer<SimpleCBuffer>*  BufferFactory::createSimpleCBuffer()
 		 0.0f,0.0f,1.0f,  0.0f,
 		 0.0f,0.0f,0.0f,  1.0f}
 	};
-	UINT32 elemSz = sizeof(float)*4; // applicable even if we have matrices, 
-									 // hlsl only cares about total size of buffer
 
 	// set up buffer description: usage, type and size
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = elemSz;
+	bufferDesc.ElementSize = m_elementSize;
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
-	bufferDesc.NumElements = sizeof(data)/elemSz;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS_PS;
 	bufferDesc.Slot = BufferConfig::PEROBJECT;
 	
@@ -135,12 +134,10 @@ Buffer<DIndex>* BufferFactory::createIndexBuffer( DIndex* p_indices,
 Buffer<ParticleCBuffer>* BufferFactory::createParticleCBuffer(){
 	ParticleCBuffer data;
 
-	UINT32 elemSz = sizeof(float)*4;
-
 	BufferConfig::BUFFER_INIT_DESC bD;
-	bD.ElementSize = elemSz;
+	bD.ElementSize = m_elementSize;
 	bD.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
-	bD.NumElements = sizeof(data)/elemSz;
+	bD.NumElements = sizeof(data)/m_elementSize;
 	bD.Type = BufferConfig::CONSTANT_BUFFER_VS_GS_PS;
 	bD.Slot = BufferConfig::PEROBJECT;
 
@@ -150,12 +147,10 @@ Buffer<ParticleCBuffer>* BufferFactory::createParticleCBuffer(){
 Buffer<RenderSceneInfoCBuffer>* BufferFactory::createRenderSceneInfoCBuffer(){
 	RenderSceneInfoCBuffer data;
 
-	UINT32 elementSize = sizeof(float)*4; // 16 byte alignment
-
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = elementSize;
+	bufferDesc.ElementSize = m_elementSize;
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
-	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_ALL;
 	bufferDesc.Slot = BufferConfig::PERFRAME;
 
@@ -165,18 +160,45 @@ Buffer<RenderSceneInfoCBuffer>* BufferFactory::createRenderSceneInfoCBuffer(){
 Buffer<ShadowCBuffer>* BufferFactory::createShadowBuffer(){
 
 	ShadowCBuffer data;
-	UINT32 elementSize = sizeof(float)*4; // 16 byte alignment
 
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = elementSize;
+	bufferDesc.ElementSize = m_elementSize;
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
-	bufferDesc.NumElements = sizeof(data)/elementSize;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_ALL;
 	bufferDesc.Slot = BufferConfig::SHADOWBUFFER;
 
 	return new Buffer<ShadowCBuffer>(m_device,m_deviceContext,&data,bufferDesc);
 }
 
+Buffer<PerShadowCBuffer>* BufferFactory::createPerShadowBuffer()
+{
+	PerShadowCBuffer data;
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = m_elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS;
+	bufferDesc.Slot = BufferConfig::PEROBJECT;
+
+	return new Buffer<PerShadowCBuffer>( m_device, m_deviceContext, &data, bufferDesc);
+}
+
+
+Buffer<SSAOBuffer>* BufferFactory::createSSAOBuffer()
+{
+	SSAOBuffer data;
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = m_elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
+	bufferDesc.Slot = BufferConfig::PEROBJECT;
+
+	return new Buffer<SSAOBuffer>( m_device, m_deviceContext, &data, bufferDesc);
+}
 
 Mesh* BufferFactory::createBoxMesh()
 {
@@ -346,8 +368,8 @@ Mesh* BufferFactory::createSphereMesh()
 	Mesh* newSphere = new Mesh( createVertexBuffer(mesh, vertexCount),
 								createIndexBuffer(indices, indexCount));
 
-	delete mesh;
-	delete indices;
+	delete [] mesh;
+	delete [] indices;
 
 	return newSphere;
 }
@@ -422,3 +444,4 @@ Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob,
 
 	return newMesh;
 }
+
