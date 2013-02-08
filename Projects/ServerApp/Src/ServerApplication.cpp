@@ -204,7 +204,7 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), false);
+		m_world->setSystem(new ServerMeasurementSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.

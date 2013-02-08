@@ -83,6 +83,7 @@ public:	//Enums
 		SpeedBoostModuleControllerSystem,
 		ClientMeasurementSystem,
 		ServerMeasurementSystem,
+		ClientEntityCountSystem,
 		NUM_SYSTEM_TYPES
 	};
 

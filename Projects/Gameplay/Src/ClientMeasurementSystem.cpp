@@ -43,12 +43,9 @@ void ClientMeasurementSystem::initMeasuredSystems()
 		m_world->getSystem(SystemType::ClientPacketHandlerSystem),
 		"ClientPacketHandler"));
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
-		m_world->getSystem(SystemType::InputBackendSystem),
-		"InputBackend"));
-	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::GraphicsRendererSystem),
 		"GraphicsRenderer"));
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
-		m_world->getSystem(SystemType::LibRocketBackendSystem),
-		"LibRocket"));
+		m_world->getSystem(SystemType::RenderPrepSystem),
+		"InstanceBaking"));
 }

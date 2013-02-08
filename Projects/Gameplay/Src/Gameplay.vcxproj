@@ -21,6 +21,7 @@
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
+    <ClCompile Include="ClientEntityCountSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientMeasurementSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
