@@ -46,6 +46,7 @@ public:	//Enums
 		Transform,
 		ShipModule,
 		ConnectionPointSet,
+		ShipConnectionPointHighlights,
 		SpawnPointSet,
 		SpeedBoosterModule,
 		MinigunModule,
@@ -61,7 +62,7 @@ public:	//Enums
 		ParticleEmitters,
 		PickComponent,
 		ParticleSystemEmitter,
-		ParticleUpdateData,
+		ParticleSystemServerComponent,
 		DebugMove,
 		PlayerState,
 

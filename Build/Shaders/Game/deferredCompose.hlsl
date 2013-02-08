@@ -48,7 +48,8 @@ float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position,
 	float d = length(diff)*scale;
 	
 	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
-	return clamp(ao,0.0f,0.5f);
+	// return clamp(ao,0.0f,0.5f);
+	return ao;
 }
 
 VertexOut VS(VertexIn p_input)
@@ -95,9 +96,12 @@ float4 PS(VertexOut input) : SV_TARGET
 	//ao -= 0.01f;
 	lightColor = float4(lightColor.r-ao, lightColor.g-ao, lightColor.b-ao, lightColor.a);
 	
+	float linDepth = length(position-gCameraPos) / ((1000.0f)-(300.0f));
+	float4 fog = linDepth*float4(0.2f,0.4f,0.3f,0.0f);
+	
 	//depth = pow(depth,99);
 	//return randomNormals;
 	//return float4(depth,depth,depth,1.0f);
-	return lightColor;
-	//return float4(1-ao,1-ao,1-ao,1.0f);
+	return lightColor+fog;;
+	// return float4(1-ao,1-ao,1-ao,1.0f);
 }

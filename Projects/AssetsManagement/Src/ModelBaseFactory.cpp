@@ -406,9 +406,13 @@ void ModelBaseFactory::readAndStoreParticleSystems( SourceData& p_source,
 	for (unsigned int n=0;n<particleSystems;n++)
 	{
 		AglParticleSystem* ps = p_source.scene->getParticleSystem(n);
+		ParticleSystemInstruction psIntr;
+		psIntr.particleSystem = *ps;
+		psIntr.textureFileName = p_source.scene->getName(ps->getHeader().textureNameIndex,
+														 true);
 		if (p_source.modelNumber==0) // add support for particle parent?
 		{
-			p_model->particleSystems.m_collection.push_back(*ps);
+			p_model->particleSystems.m_collection.push_back(psIntr);
 		}
 	}
 }

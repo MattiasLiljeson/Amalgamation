@@ -7,7 +7,6 @@ LoadMesh::LoadMesh()
 {
 	m_filename="";
 	m_isPrimitive=false;
-	m_componentType = ComponentType::ComponentTypeIdx::LoadMesh;
 }
 
 LoadMesh::LoadMesh( const string& p_filename,bool p_isPrimitive )
@@ -15,7 +14,6 @@ LoadMesh::LoadMesh( const string& p_filename,bool p_isPrimitive )
 {
 	m_filename=p_filename;
 	m_isPrimitive=p_isPrimitive;
-	m_componentType = ComponentType::ComponentTypeIdx::LoadMesh;
 }
 
 

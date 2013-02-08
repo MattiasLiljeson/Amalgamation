@@ -539,28 +539,33 @@ void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 
-	int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L
+	//int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L
+	int elementCnt = 15;
 	constructInputLayout(input, elementCnt, p_vertexShader, p_inputLayout);
 }
 
 void ShaderFactory::createParticleInputLayout( VSData* p_vs, 
-											  ID3D11InputLayout** p_inpuyLayout )
+											  ID3D11InputLayout** p_inputLayout )
 {
 	D3D11_INPUT_ELEMENT_DESC input[] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
-		D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"AGE", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"ANGULARVELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"ROTATION", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"PAD", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inpuyLayout);
+	//int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L
+	int elementCnt = 7;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_inputDesc, 

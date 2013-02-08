@@ -243,8 +243,8 @@ void AglWriter::write(AglScene* p_scene)
 	for (unsigned int i = 0; i < d.particleSystems.size(); i++)
 	{
 		//Write the particle system headers to the file
-		AglParticleSystemHeader psheader = d.particleSystems[i]->getHeader();
-		buf = (char*)&psheader;
+		const AglParticleSystemHeader* psheader = d.particleSystems[i]->getHeaderPtr();
+		buf = (char*)psheader;
 		file.write(buf, sizeof(AglParticleSystemHeader));
 	}
 

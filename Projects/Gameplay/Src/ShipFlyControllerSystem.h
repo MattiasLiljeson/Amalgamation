@@ -7,6 +7,7 @@ class Control;
 class TcpClient;
 class PhysicsSystem;
 class ShipInputProcessingSystem;
+class SlotInputControllerSystem;
 class NetworkSynced;
 class ShipFlyController;
 class Transform;
@@ -28,7 +29,8 @@ class ShipFlyControllerSystem : public EntitySystem
 public:
 	ShipFlyControllerSystem(ShipInputProcessingSystem* p_shipInput,
 						 PhysicsSystem* p_physicsSystem,
-						 TcpClient* p_client );
+						 TcpClient* p_client,
+						 SlotInputControllerSystem* p_slotInput );
 	~ShipFlyControllerSystem();
 
 	virtual void initialize();
@@ -39,6 +41,6 @@ private:
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;
-
+	SlotInputControllerSystem* m_slotInput;
 	ShipInputProcessingSystem* m_shipInput;
 };

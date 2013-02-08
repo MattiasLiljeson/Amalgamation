@@ -4,12 +4,12 @@
 #include <AglQuaternion.h>
 #include "Transform.h"
 #include "ShipInputProcessingSystem.h"
-
 #include "GameplayTags.h"
+#include "SlotInputControllerSystem.h"
 
 ShipEditControllerSystem::ShipEditControllerSystem( ShipInputProcessingSystem* p_shipInput, 
-									   PhysicsSystem* p_physicsSystem/*, 
-									   TcpClient* p_client */ ) : 
+									   PhysicsSystem* p_physicsSystem,
+									   SlotInputControllerSystem* p_slotInput ) : 
 					EntitySystem( SystemType::ShipEditControllerSystem, 3,
 								  ComponentType::ComponentTypeIdx::ShipEditController,
 								  ComponentType::ComponentTypeIdx::TAG_ShipEditMode,
@@ -18,7 +18,7 @@ ShipEditControllerSystem::ShipEditControllerSystem( ShipInputProcessingSystem* p
 {
 	m_shipInput = p_shipInput;
 	m_physics = p_physicsSystem;
-	// m_client = p_client;
+	m_slotInput = p_slotInput;
 }
 
 ShipEditControllerSystem::~ShipEditControllerSystem()
@@ -46,7 +46,6 @@ void ShipEditControllerSystem::processEntities( const vector<Entity*>& p_entitie
 			Entity* ship = p_entities[i];
 			ShipEditController* controller = static_cast<ShipEditController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );
-
 
 			// State switch handling
 			if (input.stateSwitchInput)

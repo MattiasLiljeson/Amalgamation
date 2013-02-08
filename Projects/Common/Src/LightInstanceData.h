@@ -63,7 +63,7 @@ struct LightInstanceData
 	int type;				// Use E_LightTypes
 	int shadowIdx;
 
-	float pad[1];			// Padding
+	//float pad[1];			// Padding
 
 	LightInstanceData()
 	{

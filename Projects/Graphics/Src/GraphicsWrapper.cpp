@@ -170,15 +170,30 @@ void GraphicsWrapper::initHardware()
 
 void GraphicsWrapper::initBackBuffer()
 {
+	if( m_deviceContext == NULL ) {
+		throw D3DException("DeviceContext not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
+	if( m_device == NULL ) {
+		throw D3DException("Device not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* backBufferTexture;
 
 	hr = m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), 
 		(LPVOID*)&backBufferTexture );
 
-	if( FAILED(hr) )
+	if( FAILED(hr))
 		throw D3DException("Failed to get backbuffer from swap chain.",__FILE__,
 		__FUNCTION__,__LINE__);
+
+	if( backBufferTexture == NULL) {
+		throw D3DException("Failed to get backbuffer from swap chain. back buffer is NULL",
+			__FILE__, __FUNCTION__,__LINE__);
+	}
 
 	hr = m_device->CreateRenderTargetView( backBufferTexture, NULL, &m_backBuffer );
 	backBufferTexture->Release();
@@ -244,6 +259,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
+
 	renderMeshInstanced( 
 		mesh->getVertexBuffer()->getBufferPointer(),
 		mesh->getVertexBuffer()->getElementSize(),
@@ -251,6 +267,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 		mesh->getIndexBuffer()->getElementCount(),
 		textureArray, arraySize,
 		instanceBuffer->getElementSize(), 
+		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
 		m_deferredRenderer->getDeferredBaseShader());
 
@@ -271,6 +288,7 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		p_mesh->getIndexBuffer()->getElementCount(), 
 		NULL, 0,
 		instanceBuffer->getElementSize(),
+		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
 		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()));
 
@@ -525,8 +543,9 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
-	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
+void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system, InstanceData p_transform )
+{
+	m_particleRenderer->renderParticles( p_system, &m_renderSceneInfo, p_transform);
 }
 
 void GraphicsWrapper::setParticleRenderState()
@@ -567,10 +586,12 @@ void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
 }
 
 void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_vertexSize, 
-										  void* p_indexBufferRef, UINT32 p_elmentCount, 
+										  void* p_indexBufferRef, UINT32 p_indexElementCount, 
 										  Texture** p_textureArray, 
 										  unsigned int p_textureArraySize, 
-										  UINT32 p_instanceDataSize, void* p_instanceRef,
+										  UINT32 p_instanceDataSize,
+										  UINT32 p_instanceElementCount,
+										  void* p_instanceRef,
 										  ShaderBase* p_shader)
 {
 
@@ -588,7 +609,6 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 			}
 		}
 	}
-
 	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
 	UINT offsets[2] = { 0, 0 };
 	// Set up an array of the buffers for the vertices
@@ -607,7 +627,7 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 		p_shader->apply();
 
 	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
+	m_deviceContext->DrawIndexedInstanced( p_indexElementCount, p_instanceElementCount, 0,0,0);
 }
 
 void GraphicsWrapper::setViewportToShadowMapSize(){

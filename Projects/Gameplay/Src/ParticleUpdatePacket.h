@@ -27,6 +27,7 @@ public:
 
 public:
 	int networkIdentity;
+	int particleSystemIdx;
 	AglVector3 position;
 	AglVector3 direction;
 	float	   speed;

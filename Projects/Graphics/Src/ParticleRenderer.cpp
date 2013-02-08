@@ -9,6 +9,7 @@
 #include "TextureParser.h"
 #include "ParticleCBuffer.h"
 #include <AglVector4.h>
+#include <InstanceData.h>
 
 ParticleRenderer::ParticleRenderer( ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext ){
@@ -31,30 +32,30 @@ ParticleRenderer::~ParticleRenderer(){
 	delete m_texture;
 }
 
-void ParticleRenderer::renderParticles(AglParticleSystem* p_system, 
-									   RendererSceneInfo p_info){
-
-	vector<AglStandardParticle> particles = p_system->getParticles();
-	if (particles.size() > 0){
+void ParticleRenderer::renderParticles( AglParticleSystem* p_system, 
+	RendererSceneInfo* p_info, const InstanceData& p_transform )
+{
+	vector<AglStandardParticle>* particles = p_system->getParticlesPtr();
+	if (particles->size() > 0){
 		SAFE_RELEASE(m_vertexBuffer);
 		D3D11_BUFFER_DESC bD;
 		ZeroMemory(&bD, sizeof(bD));
 		bD.Usage			= D3D11_USAGE_DYNAMIC;
-		bD.ByteWidth		= sizeof(AglStandardParticle)* particles.size();
+		bD.ByteWidth		= sizeof(AglStandardParticle)* particles->size();
 		bD.BindFlags		= D3D11_BIND_VERTEX_BUFFER;
 		bD.CPUAccessFlags	= D3D11_CPU_ACCESS_WRITE;
 
 		D3D11_SUBRESOURCE_DATA vD;
-		vD.pSysMem			= &particles[0];
+		vD.pSysMem			= &(*particles)[0];
 		vD.SysMemPitch		= 0;
 		vD.SysMemSlicePitch	= 0;
 
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 		
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-		data->accessBuffer.setParticleData(p_system->getHeader());
+		data->accessBuffer.setParticleData(p_system->getHeader(), p_transform.worldTransform);
 
-		beginRendering(p_system, particles.size());
+		beginRendering(p_system, particles->size());
 	}
 }
 

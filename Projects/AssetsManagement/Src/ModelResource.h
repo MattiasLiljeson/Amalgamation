@@ -6,6 +6,7 @@
 #include "ParticleSystemCollection.h"
 #include "LightDataCollection.h"
 #include "InstanceInstruction.h"
+#include "ParticleSystemInstruction.h"
 #include <AglLooseBspTree.h>
 
 // =======================================================================================

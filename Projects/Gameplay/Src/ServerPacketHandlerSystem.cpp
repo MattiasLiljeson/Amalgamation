@@ -29,6 +29,7 @@
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
 #include "CameraControlPacket.h"
+#include "ShipConnectionPointHighlights.h"
 
 
 
@@ -72,30 +73,38 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			ThrustPacket thrustPacket;
 			thrustPacket.unpack( packet );
 
-			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
-				(m_world->getEntity(thrustPacket.entityId)->getComponent(
-				ComponentType::PhysicsBody)); // not safe to assume entityId is the same everywhere?
-
-			//Added by Anton
 			Entity* ship = m_world->getEntity(thrustPacket.entityId);
 
-			ConnectionPointSet* connected =
-				static_cast<ConnectionPointSet*>(
-				m_world->getComponentManager()->getComponent(ship,
-				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			PhysicsBody* physicsBody = static_cast<PhysicsBody*>
+				(ship->getComponent(ComponentType::PhysicsBody));
+
+
+			ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+				ship->getComponent(ComponentType::ConnectionPointSet) );
+
+			ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+				ship->getComponent(ComponentType::ShipConnectionPointHighlights) );
 			
 			AglVector3 boostVector = AglVector3(0, 0, 0);
-			if (connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity >= 0)
+
+			for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 			{
-				Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity);
-				ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
-				SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-				if (module->getActive() && boostmodule)
-					boostVector = thrustPacket.thrustVector*3;
+				if (highlights->slotStatus[i])
+				{
+					if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+					{
+						Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+						ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
+						SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
+						if (module->getActive() && boostmodule)
+							boostVector = thrustPacket.thrustVector*3;
+					}
+				}
 			}
 
 			m_physics->applyImpulse( physicsBody->m_id, (thrustPacket.thrustVector+boostVector),
 				thrustPacket.angularVector );
+			
 		}
 		else if ( packetType == (char)PacketType::CameraControlPacket)
 		{

@@ -7,10 +7,16 @@
 #include "ConnectionPointSet.h"
 #include "LightsComponent.h"
 #include "BodyInitData.h"
+#include "ConnectionPointSet.h"
+#include "EntityParent.h"
+#include "LoadMesh.h"
+#include "MeshOffsetTransform.h"
+#include "ParticleEmitters.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
-#include "MeshOffsetTransform.h"
+#include "Transform.h"
 #include <Globals.h>
+#include <ModelResource.h>
 
 LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -85,7 +91,6 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 
 	// Handle particles here
 	setUpParticles(entity,modelResource);
-
 
 	//Should not be here - ONLY RELEVANT FOR SHIP
 	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
@@ -282,5 +287,10 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 
 void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
 {
-	// NOT IMPLEMENTED
+	if (!p_modelResource->particleSystems.m_collection.empty())
+	{
+		ParticleEmitters* particleComp = new ParticleEmitters();
+		particleComp->addParticleSystems( p_modelResource->particleSystems );
+		p_entity->addComponent( particleComp );
+	}
 }

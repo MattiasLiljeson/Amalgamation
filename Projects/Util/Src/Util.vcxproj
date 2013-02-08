@@ -91,6 +91,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Gameplay\Src\ComponentAssemblageAllocator.h" />
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="FileCheck.h" />
     <ClInclude Include="PreciseTimer.h" />

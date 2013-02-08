@@ -30,6 +30,7 @@
 #include "ClientInfo.h"
 #include "LookAtEntity.h"
 #include "LoadMesh.h"
+#include "ShipConnectionPointHighlights.h"
 
 // Packets
 #include "EntityCreationPacket.h"
@@ -37,6 +38,7 @@
 
 #include <Globals.h>
 #include "EntityFactory.h"
+
 
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
@@ -244,7 +246,10 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId)
 
 	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
 
-	//e->addComponent(ComponentType::Transform, p_shipTransform);
+
+	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
+		new ShipConnectionPointHighlights());
+
 	e->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
 	

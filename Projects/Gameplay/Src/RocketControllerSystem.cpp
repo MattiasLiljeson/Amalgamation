@@ -28,14 +28,14 @@ void RocketControllerSystem::initialize()
 void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-
+	float waitUntilActivation = 0.2f;
+	float rocketMaxAge = 15.0f;
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		StandardRocket* rocket = static_cast<StandardRocket*>(p_entities[i]->getComponent(ComponentType::StandardRocket));
 		rocket->m_age += dt;
-
 		//Check collision
-		if (rocket->m_age > 0.2f)
+		if (rocket->m_age > waitUntilActivation && rocket->m_age <= rocketMaxAge)
 		{
 			//Start targeting ships
 			ShipManagerSystem* shipManager = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
@@ -79,44 +79,52 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 
-
-
 			//Check collision	
 			vector<unsigned int> cols = ps->getController()->CollidesWith(pb->m_id);
 			if (cols.size() > 0)
 			{
-				ps->getController()->ApplyExternalImpulse(body->GetWorld().GetTranslation(), 20, 20);
-				ps->getController()->InactivateBody(pb->m_id);
-
 				// Apply damage to first found collision
 				Entity* hitEntity = ps->getEntity(cols[0]);
 				if(hitEntity)
 				{
 					ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(
 						ComponentType::ShipModule));
-					if(hitModule)
+					StandardRocket* hitRocket = static_cast<StandardRocket*>(hitEntity->getComponent(
+						ComponentType::StandardRocket));
+					if(hitModule && hitRocket==NULL)
 					{
-//						hitModule->m_health = 0;
 						hitModule->addDamageThisTick(101.0f); // Above max hp.
+						explodeRocket(ps, pb, body, p_entities[i]);
 					}
 				}
-
-				//Send an explosion sound effect
-				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-
-				SpawnSoundEffectPacket soundEffectPacket;
-				soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::Explosion;
-				soundEffectPacket.positional = true;
-				soundEffectPacket.position = t->getTranslation();
-				soundEffectPacket.attachedToNetsyncEntity = -1;
-				m_server->broadcastPacket(soundEffectPacket.pack());
-
-				m_world->deleteEntity(p_entities[i]);
 			}
+		}// if (rocket->m_age > waitUntilActivation && rocket->m_age <= rocketMaxAge)
+		else if(rocket->m_age > rocketMaxAge)
+		{
+			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
+			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
+			explodeRocket(ps, pb, body, p_entities[i]);
 		}
 	}
 }
 
+void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
+	PhysicsBody* p_physicsBody, RigidBody* p_rigidBody, Entity* p_entity)
+{
+	// Remove the rocket...
+	p_physicsSystem->getController()->ApplyExternalImpulse(p_rigidBody->GetWorld().GetTranslation(), 20, 20);
+	p_physicsSystem->getController()->InactivateBody(p_physicsBody->m_id);
+	m_world->deleteEntity(p_entity);
+	// ...and play an explosion sound effect.
+	Transform* t = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
+	SpawnSoundEffectPacket soundEffectPacket;
+	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::Explosion;
+	soundEffectPacket.positional = true;
+	soundEffectPacket.position = t->getTranslation();
+	soundEffectPacket.attachedToNetsyncEntity = -1;
+	m_server->broadcastPacket(soundEffectPacket.pack());
+}
 
 
 //Old funny fish

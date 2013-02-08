@@ -16,9 +16,9 @@ public:
 
 	virtual void init( vector<ComponentData> p_initData );
 	virtual void setComponentType( ComponentType::ComponentTypeIdx p_type );
-	virtual ComponentType::ComponentTypeIdx getComponentType();
+	virtual ComponentType::ComponentTypeIdx getComponentTypeId();
 protected:
-	ComponentType::ComponentTypeIdx m_componentType;
+	ComponentType::ComponentTypeIdx m_componentTypeId;
 	static int m_counter;
 	int m_id;
 };
