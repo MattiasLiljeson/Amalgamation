@@ -38,6 +38,7 @@ ServerPickingSystem::ServerPickingSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;
+	mrota = 0;
 }
 
 
@@ -52,7 +53,7 @@ void ServerPickingSystem::initialize()
 void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-
+	mrota += dt;
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
 	{
 		if (m_pickComponents[i].m_latestPick >= 0)
@@ -215,11 +216,6 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 		ComponentType::PhysicsBody));
 	Body* body = physX->getController()->getBody(projectBody->m_id);
 
-	AglVector3 vec = body->GetWorld().GetTranslation() - origin;
-	float len = vec.length();
-	AglVector3 dest = origin + dir * p_ray.m_preferredDistance;
-
-
 	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(
 		SystemType::ShipManagerSystem));
 
@@ -235,28 +231,32 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 
 	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	//AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
-
-	//float radius = 4; //Hard coded radius for now
-
-	dir = dest - bs.position;
-	dir.normalize();
-	dest = bs.position + dir * bs.radius;
-
 	AglVector3 vel = body->GetVelocity();
 
 	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
-		dest = origin + dir*t;
-	body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+	{
+		AglVector3 dest = origin + dir*t;
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+	}
+	else
+	{
+		body->AddImpulse(-vel);
+	}
 
 	//Fix selection sphere
 	Entity* SelectionSphere = m_world->getEntity(p_ray.m_selection);
 	Transform* SelectionSphereTransform = static_cast<Transform*>
 		(SelectionSphere->getComponent(ComponentType::Transform));
-	SelectionSphereTransform->setTranslation(closestConnectionPoint(dest, ship, p_ray));
+
+	Transform* toProjectTransform = static_cast<Transform*>
+		(toProject->getComponent(ComponentType::Transform));
+
+	SelectionSphereTransform->setTranslation(closestConnectionPoint(toProjectTransform->getTranslation(), ship, p_ray));
 	if (p_ray.m_targetEntity >= 0)
+	{
 		SelectionSphereTransform->setScale(AglVector3(2, 2, 2));
+	}
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 }
@@ -399,6 +399,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		//Child Transform
 		AglMatrix childTransform = transforms[transforms.size()-2];
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+
 		finalTransform = AglMatrix::createRotationMatrix(rot);
 
 		AglVector3 childTrans = childTransform.GetTranslation();

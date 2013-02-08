@@ -89,3 +89,7 @@ bool Body::IsStatic() const
 {
 	return mStatic || mTempStatic;
 }
+void Body::setTransform(AglMatrix p_setTransform)
+{
+	mLocalTransform = p_setTransform;
+}

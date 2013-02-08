@@ -150,7 +150,7 @@ void CompoundBody::AddImpulse(AglVector3 pImpulse)
 	if (!mStatic && !mTempStatic)
 		mVelocity += pImpulse * GetInvMass();
 }
-void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse)
+void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate)
 {
 	if (!mStatic && !mTempStatic)
 		mAngularVelocity += pAngularImpulse;

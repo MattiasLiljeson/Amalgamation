@@ -42,7 +42,7 @@ public:
 	bool IsCompoundBody();
 
 	void AddImpulse(AglVector3 pImpulse);
-	void AddAngularImpulse(AglVector3 pAngularImpulse);
+	void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true);
 
 	void RevertVelocity();
 	void RevertPosition();

@@ -219,14 +219,14 @@ void RigidBody::AddImpulse(AglVector3 pImpulse)
 			mVelocity += pImpulse * GetInvMass();
 	}
 }
-void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse)
+void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate)
 {
 	if (_isnan((double)pAngularImpulse.x) || _isnan((double)pAngularImpulse.y) || _isnan((double)pAngularImpulse.z))
 	{
 		mLocalTransform.data[0] = 0;
 		return;
 	}
-	if (mParent)
+	if (mParent && p_propagate)
 		mParent->AddAngularImpulse(pAngularImpulse);
 	else
 	{
