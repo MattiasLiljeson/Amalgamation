@@ -314,32 +314,32 @@ namespace Srv
 			factory->entityFromPacket(cp, &pos);
 		}
 		// Mine field
-		for(unsigned int x=0; x<60; x++)
-		{
-			for(unsigned int y=0; y<30; y++)
-			{
-				AglVector3 position((float)x * -2.0f - 5.0f,
-					(float)y * -2.0f + -10.0f, 0);
-				Entity* entity = m_world->createEntity();
-				Transform* t = new Transform(position, AglQuaternion(),
-					AglVector3(0.8f, 0.8f, 0.8f));
-				entity->addComponent( ComponentType::Transform, t);
-				entity->addComponent(ComponentType::StandardMine, new StandardMine());
-				entity->addComponent( ComponentType::PhysicsBody, 
-					new PhysicsBody() );
-				entity->addComponent( ComponentType::BodyInitData, 
-					new BodyInitData(position,
-					 AglQuaternion(),
-					AglVector3(0.8f, 0.8f, 0.8f), AglVector3(),
-					AglVector3(0, 0, 0), 0, 
-					BodyInitData::DYNAMIC, 
-					BodyInitData::SINGLE, false, true));
-				entity->addComponent(ComponentType::NetworkSynced, 
-					new NetworkSynced( entity->getIndex(), -1, EntityType::Mine));
-
-				m_world->addEntity(entity);
-			}
-		}
+//		for(unsigned int x=0; x<30; x++)
+//		{
+//			for(unsigned int y=0; y<15; y++)
+//			{
+//				AglVector3 position((float)x * -2.0f - 5.0f,
+//					(float)y * -2.0f + -10.0f, 0);
+//				Entity* entity = m_world->createEntity();
+//				Transform* t = new Transform(position, AglQuaternion(),
+//					AglVector3(0.8f, 0.8f, 0.8f));
+//				entity->addComponent( ComponentType::Transform, t);
+//				entity->addComponent(ComponentType::StandardMine, new StandardMine());
+//				entity->addComponent( ComponentType::PhysicsBody, 
+//					new PhysicsBody() );
+//				entity->addComponent( ComponentType::BodyInitData, 
+//					new BodyInitData(position,
+//					 AglQuaternion(),
+//					AglVector3(0.8f, 0.8f, 0.8f), AglVector3(),
+//					AglVector3(0, 0, 0), 0, 
+//					BodyInitData::DYNAMIC, 
+//					BodyInitData::SINGLE, false, true));
+//				entity->addComponent(ComponentType::NetworkSynced, 
+//					new NetworkSynced( entity->getIndex(), -1, EntityType::Mine));
+//
+//				m_world->addEntity(entity);
+//			}
+//		}
 
 		//Speed Booster
 		/*for (int x=0;x<4;x++)

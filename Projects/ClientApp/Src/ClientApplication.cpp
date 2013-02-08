@@ -506,4 +506,30 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
+	initInstanceFieldsByJohan("rocket.agl", 30, 15, 0.0f, 0.8f);
+	initInstanceFieldsByJohan("MineFinal.agl", 30, 15, 5.0f, 0.8f);
+	initInstanceFieldsByJohan("RockA.agl", 30, 15, 10.0f, 10.0f);
+	initInstanceFieldsByJohan("RockB.agl", 30, 15, 15.0f, 0.1f);
+	initInstanceFieldsByJohan("RockC.agl", 30, 15, 20.0f, 0.1f);
+	initInstanceFieldsByJohan("SpeedBooster.agl", 30, 15, 25.0f, 0.5f);
+}
+
+void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
+												  unsigned int p_sizeY, float p_z, float p_scale)
+{
+	for(unsigned int x=0; x<p_sizeX; x++)
+	{
+		for(unsigned int y=0; y<p_sizeY; y++)
+		{
+			AglVector3 position((float)x * -2.0f - 5.0f,
+				(float)y * -2.0f + -10.0f, p_z);
+			Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(position, AglQuaternion(),
+				AglVector3(p_scale, p_scale, p_scale));
+			entity->addComponent(ComponentType::Transform, t);
+			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+
+			m_world->addEntity(entity);
+		}
+	}
 }
