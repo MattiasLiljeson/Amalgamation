@@ -24,10 +24,11 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
 	m_shadowPassTime		= 0.0f;
+	m_counter				= 0;
 
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
-
+ 
 	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
@@ -42,7 +43,6 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
-	m_wrapper->getGPUTimer()->Start();
 
 	clearShadowStuf();
 	//Fill the shadow view projections
@@ -61,11 +61,12 @@ void GraphicsRendererSystem::process(){
 		}
 	}
 	endShadowPass();
-	m_wrapper->getGPUTimer()->Stop();
-	
+
+	m_wrapper->getGPUTimer()->Start(m_counter);
 	initMeshPass();
 	m_meshRenderer->render();
 	endMeshPass();
+	m_wrapper->getGPUTimer()->Stop(m_counter);
 
 	initLightPass();
 	m_lightRenderSystem->render();
@@ -79,15 +80,14 @@ void GraphicsRendererSystem::process(){
 	m_particleRenderSystem->render();
 	endParticlePass();
 	
-	
 	initGUIPass();
 	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
-	
-	m_shadowPassTime = m_wrapper->getGPUTimer()->GetTime();
 
 	flipBackbuffer();
+
+	updateTimers();
 }
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
@@ -177,5 +177,17 @@ void GraphicsRendererSystem::clearShadowStuf()
 	for(int i = 0; i < MAXSHADOWS; i++){
 		m_activeShadows[i] = -1;
 		m_shadowViewProjections[i] = AglMatrix::identityMatrix();
+	}
+}
+
+void GraphicsRendererSystem::updateTimers()
+{
+	if(m_counter == 0){
+		m_shadowPassTime = m_wrapper->getGPUTimer()->getTheTimeAndReset(1);
+		m_counter = 1;
+	}
+	else if(m_counter==1){
+		m_shadowPassTime = m_wrapper->getGPUTimer()->getTheTimeAndReset(0);
+		m_counter = 0;
 	}
 }

@@ -22,15 +22,15 @@ class GPUTimer
 public:
 	GPUTimer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~GPUTimer();
-	void initTimers();
-	void Start();
-	void Stop();
+	void Start(unsigned int p_index);
+	void Stop(unsigned int p_index);
 
-	double GetTime();
+	double getTheTimeAndReset(unsigned int p_index);
 private:
-
+	void initTimers();
+public:
 	static const UINT64 QUREY_LATENCY = 5;
-
+private:
 	struct Timer{
 		ID3D11Query*	disjoint;
 		ID3D11Query*	start;
@@ -46,18 +46,7 @@ private:
 		}
 	};
 
-	struct TimerHandler{
-		vector<Timer*> timers;
-
-		TimerHandler(){
-			for (unsigned int i = 0 ; i < QUREY_LATENCY; i++){
-				timers.push_back(new Timer());
-			}
-		}
-	};
-	
-	
-	
+	vector<Timer*> timers;
 
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;

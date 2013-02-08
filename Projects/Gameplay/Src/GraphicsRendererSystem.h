@@ -54,6 +54,8 @@ public:
 	void flipBackbuffer();
 
 	void clearShadowStuf();
+
+	void updateTimers();
 private:
 	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
@@ -67,4 +69,5 @@ private:
 	int* m_activeShadows;
 	AglMatrix* m_shadowViewProjections;
 	double	m_shadowPassTime;
+	int m_counter;
 };
