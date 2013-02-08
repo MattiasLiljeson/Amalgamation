@@ -23,12 +23,22 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
-	m_shadowPassTime		= 0.0f;
-	m_counter				= 0;
+
+	m_shadowPassTime = m_meshPassTime = m_lightPassTime = m_composePassTime 
+		= m_particlePassTime = m_guiPassTime = m_totalTime =0.0f;	
+
+	m_currentFrame			= 0;
 
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
- 
+
+	m_shadowProfile = "Shadow";
+	m_meshProfile	= "Mesh";
+	m_lightProfile  = "Light";
+	m_composeProfile= "Compose";
+	m_particleProfile="Particle";
+	m_guiProfile	= "GUI";
+
 	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
@@ -39,11 +49,38 @@ void GraphicsRendererSystem::initialize(){
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT,"ShadowPass",TwType::TW_TYPE_DOUBLE,
 		&m_shadowPassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"MeshPass",TwType::TW_TYPE_DOUBLE,
+		&m_meshPassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"LightPass",TwType::TW_TYPE_DOUBLE,
+		&m_lightPassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"ComposePass",TwType::TW_TYPE_DOUBLE,
+		&m_composePassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"ParticlePass",TwType::TW_TYPE_DOUBLE,
+		&m_particlePassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"GUIPass",TwType::TW_TYPE_DOUBLE,
+		&m_guiPassTime,"group=GPU");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"Total",TwType::TW_TYPE_DOUBLE,
+		&m_totalTime,"group=GPU");
+
+
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_shadowProfile);
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_meshProfile);
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_lightProfile);
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_composeProfile);
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_particleProfile);
+	m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_guiProfile);
 }
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
 
+	m_wrapper->getGPUTimer()->Start(m_shadowProfile, m_currentFrame);
 	clearShadowStuf();
 	//Fill the shadow view projections
 	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
@@ -61,29 +98,38 @@ void GraphicsRendererSystem::process(){
 		}
 	}
 	endShadowPass();
+	m_wrapper->getGPUTimer()->Stop(m_shadowProfile, m_currentFrame);
 
-	m_wrapper->getGPUTimer()->Start(m_counter);
+	m_wrapper->getGPUTimer()->Start(m_meshProfile, m_currentFrame);
 	initMeshPass();
 	m_meshRenderer->render();
 	endMeshPass();
-	m_wrapper->getGPUTimer()->Stop(m_counter);
+	m_wrapper->getGPUTimer()->Stop(m_meshProfile, m_currentFrame);
 
+	m_wrapper->getGPUTimer()->Start(m_lightProfile, m_currentFrame);
 	initLightPass();
 	m_lightRenderSystem->render();
 	endLightPass();
+	m_wrapper->getGPUTimer()->Stop(m_lightProfile, m_currentFrame);
 
+	m_wrapper->getGPUTimer()->Start(m_composeProfile, m_currentFrame);
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
+	m_wrapper->getGPUTimer()->Stop(m_composeProfile, m_currentFrame);
 
+	m_wrapper->getGPUTimer()->Start(m_particleProfile, m_currentFrame);
 	initParticlePass();
 	m_particleRenderSystem->render();
 	endParticlePass();
+	m_wrapper->getGPUTimer()->Stop(m_particleProfile, m_currentFrame);
 	
+	m_wrapper->getGPUTimer()->Start(m_guiProfile, m_currentFrame);
 	initGUIPass();
 	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
+	m_wrapper->getGPUTimer()->Stop(m_guiProfile, m_currentFrame);
 
 	flipBackbuffer();
 
@@ -182,12 +228,20 @@ void GraphicsRendererSystem::clearShadowStuf()
 
 void GraphicsRendererSystem::updateTimers()
 {
-	if(m_counter == 0){
-		m_shadowPassTime = m_wrapper->getGPUTimer()->getTheTimeAndReset(1);
-		m_counter = 1;
+	if(m_currentFrame == 0){
+		m_currentFrame = 1;
 	}
-	else if(m_counter==1){
-		m_shadowPassTime = m_wrapper->getGPUTimer()->getTheTimeAndReset(0);
-		m_counter = 0;
+	else if(m_currentFrame==1){
+		m_currentFrame = 0;
 	}
+	m_totalTime = 0;
+	GPUTimer* timer = m_wrapper->getGPUTimer();
+	m_meshPassTime = timer->getTheTimeAndReset(m_meshProfile,m_currentFrame);
+	m_shadowPassTime = timer->getTheTimeAndReset(m_shadowProfile,m_currentFrame);
+	m_lightPassTime = timer->getTheTimeAndReset(m_lightProfile,m_currentFrame);
+	m_composePassTime = timer->getTheTimeAndReset(m_composeProfile, m_currentFrame);
+	m_particlePassTime = timer->getTheTimeAndReset(m_particleProfile, m_currentFrame);
+	m_guiPassTime = timer->getTheTimeAndReset(m_guiProfile, m_currentFrame);
+	m_totalTime += m_meshPassTime+m_shadowPassTime+m_lightPassTime+m_composePassTime+
+		m_particlePassTime+m_guiPassTime;
 }

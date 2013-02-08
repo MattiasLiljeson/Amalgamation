@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include <string>
 
 class RenderInterface;
 class GraphicsBackendSystem;
@@ -68,6 +69,21 @@ private:
 
 	int* m_activeShadows;
 	AglMatrix* m_shadowViewProjections;
+
+	std::string m_shadowProfile;
+	std::string m_meshProfile;
+	std::string m_lightProfile;
+	std::string m_composeProfile;
+	std::string m_particleProfile;
+	std::string m_guiProfile;
+
 	double	m_shadowPassTime;
-	int m_counter;
+	double	m_meshPassTime;
+	double	m_lightPassTime;
+	double	m_composePassTime;
+	double	m_particlePassTime;
+	double	m_guiPassTime;
+	double	m_totalTime;
+
+	int		m_currentFrame;
 };
