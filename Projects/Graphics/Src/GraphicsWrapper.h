@@ -58,14 +58,9 @@ public:
 
 	///-----------------------------------------------------------------------------------
 	/// Sets up the frame, prepares the renderer for draw calls.
-	/// \return void
 	///-----------------------------------------------------------------------------------
 	void mapSceneInfo();
 
-	///-----------------------------------------------------------------------------------
-	/// Renders the whole scene
-	/// \return void
-	///-----------------------------------------------------------------------------------
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
 
 	///-----------------------------------------------------------------------------------
@@ -74,7 +69,6 @@ public:
 	/// \param p_state
 	/// \param p_allowWireframeModeOverride If true: will ignore change if global 
 	/// wireframe mode is on. Will ignore wireframe mode if set to false. True by default.
-	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
 									bool p_allowWireframeModeOverride=true);
@@ -114,9 +108,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
 	/// shader is used.
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
 	///-----------------------------------------------------------------------------------
 	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
@@ -132,7 +123,6 @@ public:
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
-	/// \return void
 	///-----------------------------------------------------------------------------------
 	void flipBackBuffer();
 
@@ -179,17 +169,10 @@ public:
 	/// Sets the global wireframe mode. Causes everything to be displayed in wireframe.
 	/// Separate rasterizer change calls can force to ignore global wireframe mode 
 	/// explicitly though.
-	/// \param p_wireframe
-	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
 
-	///-----------------------------------------------------------------------------------
-	/// Handles all the rendering of the particle systems.
-	/// \param p_system
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderParticleSystem(AglParticleSystem* p_system);
+	void renderParticleSystem(AglParticleSystem* p_system, InstanceData p_transform);
 
 	void renderComposeStage();
 
@@ -198,24 +181,20 @@ public:
 	void mapVariousStagesForCompose();
 
 	void unmapVariousStagesForCompose();
+
 	unsigned int generateShadowMap();
+
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
 
 	///-----------------------------------------------------------------------------------
-	/// Initialize the graphic card, need input is a win32 window used to present the 
-	/// render result
-	/// \return void
+	/// Initializes the graphics card. Needs an initiated SwapChainDesc with a HWND. Call initSwapChain() before calling this function
 	///-----------------------------------------------------------------------------------
 	void initHardware();
 
 	void releaseBackBuffer();
 
-	///-----------------------------------------------------------------------------------
-	/// Creates the true back buffer
-	/// \return void
-	///-----------------------------------------------------------------------------------
 	void initBackBuffer();
 
 	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 

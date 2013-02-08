@@ -10,7 +10,6 @@ ShipModule::ShipModule()
 	m_value = 100;
 	m_health = 100.0f;
 	m_addedDamage = 0;
-	m_componentType = ComponentType::ShipModule;
 }
 
 ShipModule::~ShipModule()

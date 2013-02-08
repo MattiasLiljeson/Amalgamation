@@ -25,6 +25,8 @@ AglScene::~AglScene()
 		delete m_sphereGrids[i];
 	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
 		delete m_particleSystems[i];
+	for (unsigned int i = 0; i < m_gradients.size(); i++)
+		delete m_gradients[i];
 }
 void AglScene::init(AglSceneDesc p_desc)
 {

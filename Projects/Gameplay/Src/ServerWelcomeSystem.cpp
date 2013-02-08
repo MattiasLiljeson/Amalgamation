@@ -199,10 +199,9 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	Transform* transformComp = new Transform( 
-		0, 0, -10*static_cast<float>(p_newlyConnectedClientId));
-	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, transformComp);
+	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId);
 	m_world->addEntity(newShip);
+	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(ComponentType::Transform));
 
 	// also create a camera
 	Entity* playerCam = m_world->createEntity();
@@ -235,8 +234,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	m_server->broadcastPacket(data.pack());
 }
 
-Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, 
-												 Transform* p_shipTransform)
+Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId)
 {
 	/************************************************************************/
 	/* Creating the ship entity.											*/
@@ -244,9 +242,7 @@ Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId,
 
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
 
-	Entity* e = m_world->createEntity();
-
-	e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
+	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
 
 	//e->addComponent(ComponentType::Transform, p_shipTransform);
 	e->addComponent( ComponentType::NetworkSynced, 

@@ -8,7 +8,10 @@ struct AglGradientMaterial
 	AglVector4 color;
 
 	AglGradientMaterial();
-	virtual ~AglGradientMaterial();
+	~AglGradientMaterial()
+	{
+
+	}
 };
 
 #endif

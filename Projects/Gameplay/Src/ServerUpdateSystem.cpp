@@ -11,7 +11,7 @@
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "PhysicsController.h"
-#include "ParticleUpdateData.h"
+#include "ParticleSystemServerComponent.h"
 #include "ParticleUpdatePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
@@ -123,35 +123,45 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 #endif
 	if( timerSys->checkTimeInterval(entityupdateInterval) )
 	{
-		for( unsigned int i=0; i<p_entities.size(); i++ )
+		for( unsigned int entityIdx=0; entityIdx<p_entities.size(); entityIdx++ )
 		{
 
 			netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent(
-				p_entities[i]->getIndex(), ComponentType::NetworkSynced ) );
+				p_entities[entityIdx]->getIndex(), ComponentType::NetworkSynced ) );
 
-			if (netSync->getNetworkType() == EntityType::ParticleSystem)
+			if( netSync->getNetworkType() == EntityType::MinigunModule )
 			{
-				ParticleUpdateData* data = static_cast<ParticleUpdateData*>(
-					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::ParticleUpdateData ) );
+				ParticleSystemServerComponent* psServerComp = 
+					static_cast<ParticleSystemServerComponent*>
+					(p_entities[entityIdx]->getComponent( 
+					ComponentType::ParticleSystemServerComponent ) );
 
-				ParticleUpdatePacket updatePacket;
-				updatePacket.networkIdentity = netSync->getNetworkIdentity();
-				updatePacket.position		= data->spawnPoint;
-				updatePacket.direction		= data->direction;
-				updatePacket.speed			= data->speed;
-				updatePacket.spawnFrequency	= data->spawnFrequency;
-				m_server->broadcastPacket( updatePacket.pack() );
+				if( psServerComp != NULL )
+				{
+					for( unsigned int psIdx=0; psIdx<psServerComp->particleSystems.size(); psIdx++ )
+					{
+						ParticleSystemUpdateData* updateData =
+							&psServerComp->particleSystems[psIdx].updateData;
+						ParticleUpdatePacket updatePacket;
+						updatePacket.networkIdentity	= netSync->getNetworkIdentity();
+						updatePacket.particleSystemIdx	= psIdx;
+						updatePacket.position			= updateData->spawnPoint;
+						updatePacket.direction			= updateData->direction;
+						updatePacket.speed				= updateData->speed;
+						updatePacket.spawnFrequency		= updateData->spawnFrequency;
+						m_server->broadcastPacket( updatePacket.pack() );
+					}
+				}
 			}
-			else
+			//else
 			{
 				transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(
-					p_entities[i]->getIndex(), ComponentType::Transform ) );
+					p_entities[entityIdx]->getIndex(), ComponentType::Transform ) );
 
 				physicsBody = static_cast<PhysicsBody*>(
-					p_entities[i]->getComponent(ComponentType::PhysicsBody));
+					p_entities[entityIdx]->getComponent(ComponentType::PhysicsBody));
 				AglVector3 velocity = AglVector3();
 				AglVector3 angularVelocity = AglVector3();
 				if( physicsBody != NULL )	/* It is probably the ray entity that is

@@ -1,52 +1,50 @@
 #include "ServerApplication.h"
 
 #include "TcpServer.h"
-
 #include <ComponentAssemblageAllocator.h>
 // Systems
-#include <PhysicsSystem.h>
-#include <ProcessingMessagesSystem.h>
-#include <ServerWelcomeSystem.h>
-#include <ServerPacketHandlerSystem.h>
-#include <ServerUpdateSystem.h>
-#include <ServerScoreSystem.h>
-#include <ServerDynamicObjectsSystem.h>
-#include <ServerStaticObjectsSystem.h>
-#include <TimerSystem.h>
-#include <EntityFactory.h>
-#include <LevelGenSystem.h>
-#include <ServerPickingSystem.h>
-#include <MinigunModuleControllerSystem.h>
-#include <ShieldModuleControllerSystem.h>
-#include <RocketLauncherModuleControllerSystem.h>
-#include <MineControllerSystem.h>
-#include <MineLayerModuleControllerSystem.h>
-#include <ShipModulesControllerSystem.h>
-#include <ShipManagerSystem.h>
-#include <RocketControllerSystem.h>
-#include <NetSyncedPlayerScoreTrackerSystem.h>
-#include <ServerClientInfoSystem.h>
-#include <LoadMeshSystemServer.h>
-#include <LookAtSystem.h>
-#include <WinningConditionSystem.h>
-#include <ShipModulesTrackerSystem.h>
-
-#include "Transform.h"
-#include "PhysicsBody.h"
 #include "BodyInitData.h"
 #include "NetworkSynced.h"
+#include "PhysicsBody.h"
 #include "StaticProp.h"
-
+#include "Transform.h"
+#include <EntityFactory.h>
+#include <LevelGenSystem.h>
+#include <LoadMeshSystemServer.h>
+#include <LookAtSystem.h>
+#include <MineControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MinigunModuleControllerSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <PhysicsSystem.h>
+#include <ProcessingMessagesSystem.h>
+#include <RocketControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ServerClientInfoSystem.h>
+#include <ServerDynamicObjectsSystem.h>
+#include <ServerPacketHandlerSystem.h>
+#include <ServerPickingSystem.h>
+#include <ServerScoreSystem.h>
+#include <ServerStaticObjectsSystem.h>
+#include <ServerUpdateSystem.h>
+#include <ServerWelcomeSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <ShipManagerSystem.h>
+#include <ShipModulesControllerSystem.h>
+#include <ShipModulesTrackerSystem.h>
+#include <TimerSystem.h>
+#include <WinningConditionSystem.h>
 
 //Modules
-#include <ShipModule.h>
-#include <MinigunModule.h>
-#include <SpeedBoosterModule.h>
-#include <RocketLauncherModule.h>
-#include <ShieldModule.h>
 #include <MineLayerModule.h>
-#include <SpeedBoostModuleControllerSystem.h>
+#include <MinigunModule.h>
+#include <ParticleSystemServerComponent.h>
+#include <RocketLauncherModule.h>
 #include <ServerMeasurementSystem.h>
+#include <ShieldModule.h>
+#include <ShipModule.h>
+#include <SpeedBoostModuleControllerSystem.h>
+#include <SpeedBoosterModule.h>
 
 
 namespace Srv
@@ -270,7 +268,12 @@ namespace Srv
 		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
 		entity = factory->entityFromRecipe( "ServerMinigun" );
 
-		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+		ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+		psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+		entity->addComponent( psServerComp );
+
+		//Will cause memory leaks
+		//entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 		m_world->addEntity(entity);
 
