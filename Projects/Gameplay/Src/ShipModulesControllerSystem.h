@@ -36,6 +36,9 @@ private:
 	void setActivation(Entity* p_entity, bool p_value);
 	void setActivationChildren(Entity* p_entity, bool p_value);
 	float calculateScore(Entity* p_entity);
+
+	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation);
+
 private:
 	struct HighlightEvent
 	{		
@@ -47,6 +50,9 @@ private:
 	vector<HighlightEvent> m_toHighlight;
 	vector<int> m_toActivate;
 	vector<int> m_toDeactivate;
+
+	//Temp
+	float mRot;
 
 
 };

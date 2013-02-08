@@ -66,7 +66,7 @@ public:
 	void					SetTempStatic(bool pValue){ mTempStatic = pValue;} //NOT
 
 	void AddImpulse(AglVector3 pImpulse);
-	void AddAngularImpulse(AglVector3 pAngularImpulse);
+	void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true);
 
 	void RevertVelocity(); //NOT
 	void RevertPosition(); //NOT
