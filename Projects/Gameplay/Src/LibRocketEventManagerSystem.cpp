@@ -117,8 +117,12 @@ void LibRocketEventManagerSystem::clearDocumentStack()
 		auto document = m_context->GetDocument(m_docIdStack.top());
 		m_docIdStack.pop();
 		if (document->IsVisible())
+		{
+			document->Show(Rocket::Core::ElementDocument::NONE);
 			document->Hide();
+		}
 	}
+	
 	m_currentDocId = "";
 }
 
@@ -237,6 +241,9 @@ void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core:
 		auto document = m_context->GetDocument(m_docIdStack.top());
 		m_docIdStack.pop();
 		if (document->IsVisible())
+		{
+			document->Show(Rocket::Core::ElementDocument::NONE);
 			document->Hide();
+		}
 	}
 }
