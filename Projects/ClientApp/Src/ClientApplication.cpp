@@ -402,7 +402,7 @@ void ClientApplication::initEntities()
 
 	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	entity = factory->entityFromRecipe( "ScoreHudElement" );
 	m_world->addEntity( entity );
 
 	// Read monkey!
@@ -412,9 +412,10 @@ void ClientApplication::initEntities()
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	entity = factory->entityFromRecipe( "rocksClient" );									 
+	entity = factory->entityFromRecipe( "rocksClient" );	
+
 	m_world->addEntity( entity );
-	
+
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
 	EntitySystem* tempSys = NULL;

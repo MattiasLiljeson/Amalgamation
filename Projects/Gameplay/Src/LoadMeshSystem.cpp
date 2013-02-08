@@ -87,11 +87,11 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	setUpParticles(entity,modelResource);
 
 
-
+	//Should not be here - ONLY RELEVANT FOR SHIP
 	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
 	if (initData)
 	{
-		if (initData->m_type == BodyInitData::BOXFROMMESHOBB)
+		if (initData->m_type == BodyInitData::BOXFROMMESHOBB && !p_entity->getComponent(ComponentType::MeshOffsetTransform))
 		{
 			initData->m_modelResource = p_modelResource; 
 			p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
@@ -100,22 +100,20 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		//Should not be here but is common with body init data right now
 
 	}
-	//Should not be here - ONLY RELEVANT FOR SHIP
-	p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
+	else
+		p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
 
 	if (p_modelResource->connectionPoints.m_collection.size() > 0)
 	{
-		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
+		ConnectionPointSet* connectionPointSet = static_cast<ConnectionPointSet*>(p_entity->getComponent(ComponentType::ConnectionPointSet));
+		AglMatrix inv = p_modelResource->meshHeader.transform.inverse();
+		for (unsigned int i = 0; i < connectionPointSet->m_connectionPoints.size(); i++)
 		{
 			//This inverse is performed to bring the connection point from world space
 			//to local space of the mesh. This should not really be done if the mesh
 			//is already parent to the transform. Make check for this later.
-			AglMatrix inv = p_modelResource->meshHeader.transform.inverse();
-			AglMatrix m = p_modelResource->connectionPoints.m_collection[i] * inv;
-			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(m));
+			connectionPointSet->m_connectionPoints[i].cpTransform *= inv;
 		}
-		p_entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 	}
 
 	//END should not be here
@@ -218,7 +216,12 @@ void LoadMeshSystem::setUpConnectionPoints( Entity* p_entity,
 {
 	if (!p_modelResource->connectionPoints.m_collection.empty())
 	{
-		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		ConnectionPointSet* component = new ConnectionPointSet();
+		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
+		{
+			ConnectionPoint cp(p_modelResource->connectionPoints.m_collection[i]);
+			component->m_connectionPoints.push_back(cp);
+		}
 		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
 	}
 }

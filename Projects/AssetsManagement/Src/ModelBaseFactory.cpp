@@ -2,6 +2,7 @@
 #include <AglReader.h>
 #include <AglScene.h>
 #include "MeshNameScriptParser.h"
+#include <AglLooseBspTree.h>
 
 
 ModelBaseFactory::ModelBaseFactory()
@@ -12,6 +13,8 @@ ModelBaseFactory::ModelBaseFactory()
 ModelBaseFactory::~ModelBaseFactory()
 {
 	delete m_modelResourceCache;
+	for (unsigned int i = 0; i < m_bspTrees.size(); i++)
+		delete m_bspTrees[i];
 }
 
 
@@ -278,7 +281,9 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 	{
 		if (trees[i]->getHeader().targetMesh == p_source.aglMesh->getHeader().id)
 		{
-			model->looseBspTree = trees[i]->clone();
+			AglLooseBspTree* tree = trees[i]->clone();
+			m_bspTrees.push_back(tree);
+			model->looseBspTree = tree;
 		}
 	}
 

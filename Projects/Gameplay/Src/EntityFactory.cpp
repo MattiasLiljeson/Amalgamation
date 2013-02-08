@@ -253,14 +253,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 	
 		// hardcoded
-		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+		/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);*/
 		// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
 		// because it was really weird to hear from the camera. This can of course
 		// be changed back if game play fails in this way, but it's at least more
