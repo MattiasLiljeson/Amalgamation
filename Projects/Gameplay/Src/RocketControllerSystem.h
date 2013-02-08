@@ -4,6 +4,9 @@
 #include "StandardRocket.h"
 #include "Transform.h"
 #include "TcpServer.h"
+class PhysicsSystem;
+class PhysicsBody;
+class RigidBody;
 
 // =======================================================================================
 //                                      RocketControllerSystem
@@ -24,6 +27,11 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+
+private:
+	void explodeRocket(PhysicsSystem* p_physicsSystem, PhysicsBody* p_physicsBody,
+		RigidBody* p_rigidBody, Entity* p_entity);
+
 private:
 	float m_turnPower;
 	float m_enginePower;
