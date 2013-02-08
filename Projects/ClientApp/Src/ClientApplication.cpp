@@ -508,12 +508,12 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
-	initInstanceFieldsByJohan("rocket.agl",			30, 15, 0.0f, 0.8f);
-	initInstanceFieldsByJohan("MineFinal.agl",		30, 15, 5.0f, 0.8f);
-	initInstanceFieldsByJohan("RockA.agl",			30, 15, 10.0f, 10.0f);
-	initInstanceFieldsByJohan("RockB.agl",			30, 15, 15.0f, 0.1f);
-	initInstanceFieldsByJohan("RockC.agl",			30, 15, 20.0f, 0.1f);
-	initInstanceFieldsByJohan("SpeedBooster.agl",	30, 15, 25.0f, 0.5f);
+	initInstanceFieldsByJohan("rocket.agl",			50, 50, 0.0f, 1.2f);
+	initInstanceFieldsByJohan("MineFinal.agl",		50, 50, 5.0f, 0.8f);
+	initInstanceFieldsByJohan("RockA.agl",			50, 50, 10.0f, 0.7f);
+	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
+	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
+	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
@@ -530,6 +530,11 @@ void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned in
 				AglVector3(p_scale, p_scale, p_scale));
 			entity->addComponent(ComponentType::Transform, t);
 			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+			float rX = (float)rand()/(float)RAND_MAX;
+			float rY = (float)rand()/(float)RAND_MAX;
+			float rZ = (float)rand()/(float)RAND_MAX;
+			float factor = 0.1f;
+			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor)));
 
 			m_world->addEntity(entity);
 		}
