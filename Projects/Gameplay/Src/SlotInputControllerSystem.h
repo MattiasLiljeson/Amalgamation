@@ -33,6 +33,10 @@ private:
 	void sendSlotActivation();
 	void sendSlotDeactivation();
 
+	void sendSlotRotationAdd();
+	void sendSlotRotationSub();
+	void sendSlotRotationNone();
+
 private:
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
@@ -40,4 +44,6 @@ private:
 	Control* m_gamepadModuleSlots[4];
 	Control* m_mouseModuleActivation;
 	Control* m_gamepadModuleActivation;
+
+	Control* m_keyboardRotateModuleSlots[2];
 };

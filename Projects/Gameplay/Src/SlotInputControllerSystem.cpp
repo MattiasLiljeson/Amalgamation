@@ -46,6 +46,20 @@ void SlotInputControllerSystem::handleSlotSelection()
 	{
 		sendSlotDeactivation();
 	}
+
+	if (m_keyboardRotateModuleSlots[0]->getDelta() > 0)
+	{
+		sendSlotRotationAdd();
+	}
+	else if (m_keyboardRotateModuleSlots[1]->getDelta() > 0)
+	{
+		sendSlotRotationSub();
+	}
+	else if (m_keyboardRotateModuleSlots[0]->getDelta() < 0
+				|| m_keyboardRotateModuleSlots[1]->getDelta() < 0)
+	{
+		sendSlotRotationNone();
+	}
 }
 
 
@@ -98,6 +112,27 @@ void SlotInputControllerSystem::sendSlotDeactivation()
 
 	m_client->sendPacket( packet.pack() );
 }
+void SlotInputControllerSystem::sendSlotRotationAdd()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ROTATE_ADD;
+
+	m_client->sendPacket( packet.pack() );
+}
+void SlotInputControllerSystem::sendSlotRotationSub()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ROTATE_SUB;
+
+	m_client->sendPacket( packet.pack() );
+}
+void SlotInputControllerSystem::sendSlotRotationNone()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ROTATE_NONE;
+
+	m_client->sendPacket( packet.pack() );
+}
 
 void SlotInputControllerSystem::initKeyboard()
 {
@@ -109,6 +144,11 @@ void SlotInputControllerSystem::initKeyboard()
 		InputHelper::KeyboardKeys_3);
 	m_keyboardModuleSlots[3] = m_inputBackend->getControlByEnum(
 		InputHelper::KeyboardKeys_4);
+
+	m_keyboardRotateModuleSlots[0] = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_NUMPAD_7);
+	m_keyboardRotateModuleSlots[1] = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_NUMPAD_8);
 }
 
 
