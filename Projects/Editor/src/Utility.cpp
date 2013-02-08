@@ -109,7 +109,7 @@ string openFolder()
 	BROWSEINFO   bi; 
 	ZeroMemory(&bi,   sizeof(bi)); 
 	TCHAR   szDisplayName[MAX_PATH]; 
-	szDisplayName[0]    =   '';  
+	szDisplayName[0]    =   ' ';  
 
 	bi.hwndOwner        =   NULL; 
 	bi.pidlRoot         =   NULL; 

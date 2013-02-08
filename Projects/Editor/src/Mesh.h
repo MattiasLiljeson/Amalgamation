@@ -97,6 +97,7 @@ public:
 	AglMatrix			getTransform(){ return mMesh->getHeader().transform; }
 	bool				hasSkeleton(){ return mSkeletonMappings.size() > 0;}
 	void				setOverrideMaterial(AglMaterial* p_mat){ overrideMaterial = p_mat;}
+	int					getCurrentMaterial(){ return mCurrentMaterial; }
 };
 
 template <typename T>
