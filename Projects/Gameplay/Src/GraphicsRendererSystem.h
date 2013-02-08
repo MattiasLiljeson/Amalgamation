@@ -66,4 +66,5 @@ private:
 
 	int* m_activeShadows;
 	AglMatrix* m_shadowViewProjections;
+	double	m_shadowPassTime;
 };

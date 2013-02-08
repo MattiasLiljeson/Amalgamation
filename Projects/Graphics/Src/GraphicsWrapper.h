@@ -38,6 +38,7 @@ class GUIShader;
 class ShaderBase;
 class ShadowMapRenderer;
 class ShadowShader;
+class GPUTimer;
 
 struct LightInstanceData;
 struct Model;
@@ -198,7 +199,10 @@ public:
 	void mapVariousStagesForCompose();
 
 	void unmapVariousStagesForCompose();
+	
 	unsigned int generateShadowMap();
+
+	GPUTimer* getGPUTimer();
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
@@ -255,6 +259,8 @@ private:
 	Buffer<PerShadowCBuffer>*		m_perShadowBuffer;
 
 	GUIShader*				m_guiShader;
+
+	GPUTimer*	m_gpuTimer;
 
 	int m_height;
 	int m_width;

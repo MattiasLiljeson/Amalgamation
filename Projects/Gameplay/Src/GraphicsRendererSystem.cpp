@@ -4,6 +4,8 @@
 #include <GraphicsWrapper.h>
 #include <RenderStateEnums.h>
 #include "ShadowSystem.h"
+#include <GPUTimer.h>
+#include <AntTweakBarWrapper.h>
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -21,6 +23,7 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+	m_shadowPassTime		= 0.0f;
 
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
@@ -32,13 +35,16 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 	delete[] m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
-
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT,"ShadowPass",TwType::TW_TYPE_DOUBLE,
+		&m_shadowPassTime,"group=GPU");
 }
 void GraphicsRendererSystem::process(){
+
 	m_wrapper = m_backend->getGfxWrapper();
+	m_wrapper->getGPUTimer()->Start();
 
 	clearShadowStuf();
-
 	//Fill the shadow view projections
 	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
 		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
@@ -55,6 +61,7 @@ void GraphicsRendererSystem::process(){
 		}
 	}
 	endShadowPass();
+	m_wrapper->getGPUTimer()->Stop();
 	
 	initMeshPass();
 	m_meshRenderer->render();
@@ -78,6 +85,7 @@ void GraphicsRendererSystem::process(){
 	m_libRocketRenderSystem->render();
 	endGUIPass();
 	
+	m_shadowPassTime = m_wrapper->getGPUTimer()->GetTime();
 
 	flipBackbuffer();
 }
