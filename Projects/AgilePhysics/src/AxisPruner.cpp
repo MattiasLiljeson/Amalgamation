@@ -84,7 +84,7 @@ AxisPruner::AxisPruner()
 
 AxisPruner::~AxisPruner()
 {
-
+	delete mAxis;
 }
 
 void AxisPruner::Insert( RigidBody* pBody )

@@ -14,10 +14,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	}
 
 	SetThreadAffinityMask(GetCurrentThread(), 1);
-
 	application->run();
 
 	delete application;
+
+	UINT32 numLeaks = VLDGetLeaksCount();
+
+	/*if(numLeaks > 1233){
+		MessageBoxA(NULL, "MEMORY LEAK DETECTED!!", "Warning!", MB_ICONWARNING);
+	}*/
 
 	return 0;
 }

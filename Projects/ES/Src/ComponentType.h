@@ -46,6 +46,7 @@ public:	//Enums
 		Transform,
 		ShipModule,
 		ConnectionPointSet,
+		ShipConnectionPointHighlights,
 		SpawnPointSet,
 		SpeedBoosterModule,
 		MinigunModule,

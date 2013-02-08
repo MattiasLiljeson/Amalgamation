@@ -235,7 +235,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	Component* component = NULL; // for temp usage
 
@@ -244,7 +244,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(5.0f, 100.0f);
+		component = new ShipFlyController(3.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
 
 		component = new ShipEditController();
@@ -253,14 +253,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 	
 		// hardcoded
-		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+		/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);*/
 		// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
 		// because it was really weird to hear from the camera. This can of course
 		// be changed back if game play fails in this way, but it's at least more

@@ -72,7 +72,7 @@ float4 PS(VertexOut input) : SV_TARGET
 	float2 rand 	= getRandomVector(input.texCoord);
 	
 	float ao = 0.0f;
-	float radius = sampleRadius/position.z;
+	float radius = sampleRadius/depth;
 	
 	const float2 vec[4] = { float2 (1,0), float2 (-1,0),
 							float2 (0,1), float2 (0,-1)};

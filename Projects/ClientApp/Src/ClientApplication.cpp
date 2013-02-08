@@ -267,15 +267,16 @@ void ClientApplication::initSystems()
 	// Input system for ships
 	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
 	m_world->setSystem( shipInputProc, true);
-	m_world->setSystem( new SlotInputControllerSystem(inputBackend, m_client), true );
+	SlotInputControllerSystem* slotInput = new SlotInputControllerSystem(inputBackend, m_client);
+	m_world->setSystem( slotInput, true );
 
 	// Controller systems for the ship
 	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,
-		m_client );
+		m_client, slotInput );
 	m_world->setSystem( shipFlyController, true);
 
-	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
-		m_client*/ );
+	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics,
+		slotInput);
 	m_world->setSystem( shipEditController, true);
 
 	/************************************************************************/
@@ -401,7 +402,7 @@ void ClientApplication::initEntities()
 
 	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	entity = factory->entityFromRecipe( "ScoreHudElement" );
 	m_world->addEntity( entity );
 
 	// Read monkey!
@@ -411,9 +412,10 @@ void ClientApplication::initEntities()
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	entity = factory->entityFromRecipe( "rocksClient" );									 
+	entity = factory->entityFromRecipe( "rocksClient" );	
+
 	m_world->addEntity( entity );
-	
+
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
 	EntitySystem* tempSys = NULL;

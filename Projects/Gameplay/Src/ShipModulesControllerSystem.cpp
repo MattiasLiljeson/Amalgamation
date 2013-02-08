@@ -6,9 +6,11 @@
 #include "NetworkSynced.h"
 #include "PlayerScore.h"
 #include "PhysicsController.h"
+#include "ShipConnectionPointHighlights.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem()
-	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::TAG_Ship)
+	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
+	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {
 }
 
@@ -29,10 +31,11 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		
 		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
 		{
-			if (m_toHighlight[j].first == netSync->getNetworkOwner())
+			if (m_toHighlight[j].id == netSync->getNetworkOwner())
 			{
 				//Do highlight
-				changeHighlight(p_entities[i], m_toHighlight[j].second);
+				changeHighlight(p_entities[i], m_toHighlight[j].slot,
+					m_toHighlight[j].status);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
 				j--;
@@ -71,10 +74,8 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 }
 void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_parent,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
 	if (connected)
 	{
@@ -108,10 +109,8 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	if (p_slot < 0)
 		return;
 	//Module is dropped based on damage it sustains
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_parent,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
 	Entity* toDrop = m_world->getEntity(connected->m_connectionPoints[p_slot].cpConnectedEntity);
 
@@ -151,59 +150,114 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
 }
-void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
+void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_status)
 {
-	m_toHighlight.push_back(pair<int, int>(p_id, p_slot));
+	HighlightEvent e = {p_id, p_slot,p_status};
+	m_toHighlight.push_back(e);
 }
-void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
+void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new, 
+												  int p_status)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	// Changed by Jarl 07-02-2013
+	// To allow for deactivation signal for highlighting
+	// of all or one slot. This is done for example for edit mode.
+	// This can also be used later on if the toggle way of doing activation is changed.
+	// For example if several slots need to be highlighted at ones
 
+	// Get all slots(connection points)
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+					p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
-	if (current >= 0)
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
+
+	if (p_new!=-1)
 	{
-		Entity* currEn = m_world->getEntity(current);
-		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->deactivate();
+		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+		{
+			if (i!=p_new)
+			{
+				if (highlights->slotStatus[i])
+				{
+					// ---------------------------------
+					// This is the original code which toggles
+					// separate slots on/off.
+					// It will deactivate a currently active slot.
+					int current = connected->m_connectionPoints[i].cpConnectedEntity;
+					if (current >= 0)
+					{
+						Entity* currEn = m_world->getEntity(current);
+						ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+						currModule->deactivate();
+					}
+					//
+					highlights->slotStatus[i]=false;
+					// ---------------------------------
+				}
+			}
+			else
+			{
+				highlights->slotStatus[i]=true;
+			}
+		}	
+	}
+	else
+	{
+		// if the new specified slot==-1, deactivate all
+		// this id is sent for example when switching to edit mode
+		// connected->m_highlighted =
+		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+		{
+			// copy of above disable code
+			int current = connected->m_connectionPoints[i].cpConnectedEntity;
+			if (current >= 0)
+			{
+				Entity* currEn = m_world->getEntity(current);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				currModule->deactivate();
+			}
+			//
+			highlights->slotStatus[i]=false;
+		}
 	}
 
-	connected->m_highlighted = p_new;
+
 }
 void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
-	if (current >= 0)
+	for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 	{
-		Entity* currEn = m_world->getEntity(current);
-		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		if(p_value == true)
+		if (highlights->slotStatus[i])
 		{
-			currModule->activate();
+			int current = connected->m_connectionPoints[i].cpConnectedEntity;
+			if (current >= 0)
+			{
+				Entity* currEn = m_world->getEntity(current);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				if(p_value == true)
+				{
+					currModule->activate();
+				}
+				else
+				{
+					currModule->deactivate();
+				}
+				//currModule->m_active = p_value;
+				setActivationChildren(currEn, p_value);
+			}
 		}
-		else
-		{
-			currModule->deactivate();
-		}
-		//currModule->m_active = p_value;
-		setActivationChildren(currEn, p_value);
 	}
 }
 void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
 
@@ -245,15 +299,11 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 {
 	float score = 0;
 
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
-	ShipModule* module =
-		static_cast<ShipModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ShipModule)));
+	ShipModule* module = static_cast<ShipModule*>(
+		p_entity->getComponent(ComponentType::ShipModule) );
 
 	if (connected)
 	{

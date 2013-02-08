@@ -30,6 +30,8 @@ public:
 		m_turnSpeed = 10.0f;
 		m_thrustPower = 0.2f;
 		m_gear=1.0f;
+		m_turnPowerAccumulator=AglVector3::zero();
+		m_thrustPowerAccumulator==AglVector3::zero();
 	}
 
 	ShipFlyController(float p_turnSpeed, float p_thrustPower)
@@ -38,6 +40,8 @@ public:
 		m_turnSpeed = p_turnSpeed;
 		m_thrustPower = p_thrustPower;
 		m_gear=1.0f;
+		m_turnPowerAccumulator=AglVector3::zero();
+		m_thrustPowerAccumulator==AglVector3::zero();
 	}
 
 	~ShipFlyController() {}

@@ -1,25 +1,24 @@
 #pragma once
 
-#include <vector>
-#include "ParticleSystemInstruction.h"
+#include <AglParticleSystem.h>
+#include <string>
 
 using namespace std;
 
-
-
 // =======================================================================================
-//                              ParticleSystemCollection
+//                                      ParticleSystemInstruction
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of particle systems
+/// \brief	Contains instructions for creating a particlesystem
 ///        
-/// # HardPointCollection
+/// # ParticleSystemInstruction
 /// Detailed description.....
-/// Created on: 15-1-2013 
+/// Created on: 7-2-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ParticleSystemCollection
+struct ParticleSystemInstruction
 {
-	vector<ParticleSystemInstruction> m_collection;
+	AglParticleSystem particleSystem;
+	string textureFileName;
 };

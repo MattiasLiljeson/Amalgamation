@@ -1,25 +1,26 @@
 #pragma once
 
-#include <vector>
-#include "ParticleSystemInstruction.h"
-
-using namespace std;
-
-
+#include <Component.h>
+#include <ComponentFactory.h>
 
 // =======================================================================================
-//                              ParticleSystemCollection
+//                               ShipConnectionPointHighlights
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of particle systems
+/// \brief	Brief
 ///        
-/// # HardPointCollection
+/// # ShipConnectionPointHighlights
 /// Detailed description.....
-/// Created on: 15-1-2013 
+/// Created on: 7-2-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ParticleSystemCollection
+class ShipConnectionPointHighlights : public Component
 {
-	vector<ParticleSystemInstruction> m_collection;
+public:
+	ShipConnectionPointHighlights();
+	~ShipConnectionPointHighlights(){}
+	static const unsigned int slots = 4;
+public:
+	bool slotStatus[slots];
 };

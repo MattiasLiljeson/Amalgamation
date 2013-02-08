@@ -14,6 +14,7 @@
 #include "ParticleUpdatePacket.h"
 #include "ParticleUpdateData.h"
 #include "SpawnSoundEffectPacket.h"
+#include "ShipConnectionPointHighlights.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -168,10 +169,19 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			}
 
 			ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(parent->getComponent(ComponentType::ConnectionPointSet));
-			if (cps->m_connectionPoints[cps->m_highlighted].cpConnectedEntity == p_entity->getIndex())
-				laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
-			else
-				laserTransform->setScale(AglVector3(0, 0, 0));
+			ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+				parent->getComponent(ComponentType::ShipConnectionPointHighlights) );
+
+			for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+			{
+				if (highlights->slotStatus[i])
+				{
+					if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+						laserTransform->setScale(AglVector3(0.03f, 0.03f, 20));
+					else
+						laserTransform->setScale(AglVector3(0, 0, 0));
+				}
+			}
 		}
 		else
 		{

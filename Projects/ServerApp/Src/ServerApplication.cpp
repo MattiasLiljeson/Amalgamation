@@ -270,7 +270,8 @@ namespace Srv
 		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
 		entity = factory->entityFromRecipe( "ServerMinigun" );
 
-		entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
+		//Will cause memory leaks
+		//entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 		m_world->addEntity(entity);
 
