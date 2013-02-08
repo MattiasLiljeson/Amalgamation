@@ -23,6 +23,7 @@
 #include "DeferredBaseShader.h"
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
+#include "GPUTimer.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -74,6 +75,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
 
+	m_gpuTimer = new GPUTimer(m_device,m_deviceContext);
+
 	clearRenderTargets();
 }
 
@@ -98,6 +101,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_modelFactory;
 	delete m_renderSceneInfoBuffer;
 	delete m_perShadowBuffer;
+	delete m_gpuTimer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -670,4 +674,10 @@ unsigned int GraphicsWrapper::generateShadowMap()
 {
 	return m_shadowMapRenderer->createANewShadowMap();
 }
+
+GPUTimer* GraphicsWrapper::getGPUTimer()
+{
+	return m_gpuTimer;
+}
+
 

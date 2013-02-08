@@ -15,6 +15,7 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventInstancer.cpp" />
+    <ClCompile Include="GPUTimer.cpp" />
     <ClCompile Include="LightMesh.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="EventInstancer.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="GPUTimer.h" />
     <ClInclude Include="LightMesh.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="MaterialInfo.h" />

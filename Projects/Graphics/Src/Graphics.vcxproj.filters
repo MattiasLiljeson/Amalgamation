@@ -73,6 +73,9 @@
     <ClCompile Include="LightShader.cpp">
       <Filter>Shader\Shader types</Filter>
     </ClCompile>
+    <ClCompile Include="GPUTimer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -220,6 +223,9 @@
     <ClInclude Include="SSAOCBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="GPUTimer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">
@@ -266,6 +272,9 @@
     </Filter>
     <Filter Include="LibRocket">
       <UniqueIdentifier>{bef9cad0-8125-4166-a98f-3c94a356fbf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{808aff3b-a208-4dea-8004-bb3f53ec3b57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
