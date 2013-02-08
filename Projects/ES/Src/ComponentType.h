@@ -61,7 +61,7 @@ public:	//Enums
 		ParticleEmitters,
 		PickComponent,
 		ParticleSystemEmitter,
-		ParticleUpdateData,
+		ParticleSystemServerComponent,
 		DebugMove,
 		PlayerState,
 

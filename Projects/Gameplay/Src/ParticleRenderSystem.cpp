@@ -4,54 +4,77 @@
 #include <vector>
 #include <GraphicsWrapper.h>
 #include "Transform.h"
+#include "ParticleEmitters.h"
+#include "..\..\AgileAssets\src\AglParticleSystemHeader.h"
 
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
-										   : EntitySystem( SystemType::ParticleRenderSystem){
+	: EntitySystem( SystemType::ParticleRenderSystem, 2,
+	ComponentType::ParticleEmitters, ComponentType::Transform )
+{
 	m_gfxBackend = p_gfxBackend;
 }
 
 
 ParticleRenderSystem::~ParticleRenderSystem()
 {
-	for(unsigned int i = 0; i < m_particleSystems.size();i++){
-		delete m_particleSystems[i].first;
-	}
-	m_particleSystems.clear();
-}
-
-void ParticleRenderSystem::process()
-{
-	for(unsigned int i = 0; i < m_particleSystems.size();i++)
+	for(unsigned int i = 0; i < m_collections.size();i++)
 	{
-		m_particleSystems[i].first->update(m_world->getDelta(), AglVector3(0,0,0));
+		/*delete m_particleSystems[i].first;*/
 	}
+	m_collections.clear();
 }
 
-void ParticleRenderSystem::renderParticles(AglParticleSystem *particleSystem){
-	m_gfxBackend->renderAParticleSystem(particleSystem);
-}
-
-unsigned int ParticleRenderSystem::addParticleSystem( 
-	const AglParticleSystemHeader& p_header, int p_index){
-	m_particleSystems.push_back(pair<AglParticleSystem*, int>(new AglParticleSystem(p_header), p_index));
-
-	return m_particleSystems.size()-1;
-}
-AglParticleSystem* ParticleRenderSystem::getParticleSystem(int p_index)
+void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+	// Clear the old particle systems
+	m_collections.clear();
+
+	// HACK! 
+	// must be set to real camera pos as soon as possible. Sorting doesn't work now!
+	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
+
+	for( unsigned int i = 0; i<p_entities.size(); i++ )
 	{
-		if (m_particleSystems[i].second == p_index)
-			return m_particleSystems[i].first;
+		Transform* transform = static_cast<Transform*>(
+			p_entities[i]->getComponent( ComponentType::Transform ) );
+
+		ParticleEmitters* particlesComp = static_cast<ParticleEmitters*>(
+			p_entities[i]->getComponent( ComponentType::ParticleEmitters ) );
+
+		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
+		
+		// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
+		// double transform
+		ParticleSystemCollection* collection = particlesComp->getCollectionPtr();
+		for( unsigned int i=0; i<collection->m_particleSystems.size(); i++ ) {
+			AglParticleSystemHeader header = collection->m_particleSystems[i].getHeader();
+			if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
+				particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
+			}
+		}
+		pair< ParticleSystemCollection*, Transform* > ps( collection, transform );
+		m_collections.push_back( ps );
+		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
-	return NULL;
 }
 
 void ParticleRenderSystem::render()
 {
-	for (unsigned int i = 0; i < m_particleSystems.size(); i++){
-		renderParticles(m_particleSystems[i].first);
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_collections.size();
+		collectionIdx++ )
+	{
+		ParticleSystemCollection* collection = m_collections[collectionIdx].first;
+		Transform* transform = m_collections[collectionIdx].second;
+		
+		for( unsigned int systemIdx=0;
+			systemIdx < collection->m_particleSystems.size();
+			systemIdx++ )
+		{
+			AglParticleSystem* system = &collection->m_particleSystems[systemIdx];
+			m_gfxBackend->renderParticleSystem( system, transform->getInstanceDataRef() );
+		}
 	}
 	
 }

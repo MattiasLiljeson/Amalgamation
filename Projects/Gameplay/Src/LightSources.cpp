@@ -4,7 +4,7 @@
 LightSources::LightSources()
 	: Component( ComponentType::LightSources )
 {
-	m_componentType = ComponentType::LightSources;
+	m_componentTypeId = ComponentType::LightSources;
 }
 
 

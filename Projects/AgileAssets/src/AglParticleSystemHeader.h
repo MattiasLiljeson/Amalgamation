@@ -30,11 +30,16 @@ struct AglParticleSystemHeader{
 		OBSERVER, SCREEN, WORLD, VELOCITY, 
 	};
 
+	enum AglSpace{
+		AglSpace_LOCAL, AglSpace_GLOBAL
+	};
+
 	AglVector3			spawnPoint;
 	AglSpawnType		spawnType;
 	float				spawnOffset;
 	AglSpawnOffsetType	spawnOffsetType;
 	AglVector3			spawnDirection;
+	AglVector3			currSpawnDirection;
 	float				spawnSpeed;
 	float				spawnAngularVelocity;
 	float				particleAge;
@@ -52,6 +57,8 @@ struct AglParticleSystemHeader{
 	AglAlignmentType	alignmentType;
 	float				spawnRotation;
 	float				spawnRotationOffset;
+	int					relative; // used as bool
+	int					space; // used together with AglSpace 
 
 	AglParticleSystemHeader()
 	{

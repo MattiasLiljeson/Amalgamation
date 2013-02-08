@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 
 class AglScene;
+class AglLooseBspTree;
 
 using namespace std;
 
@@ -173,6 +174,8 @@ protected:
 	virtual AglLooseBspTree* createBspTree(AglMesh* p_mesh);
 
 protected:
+	//Cloned bsp trees that should be deleted on program exit
+	vector<AglLooseBspTree*> m_bspTrees;
 	///-----------------------------------------------------------------------------------
 	/// The ModelResourceCache is used for when a mesh has already been loaded 
 	/// and the creation instructions are needed again without loading the file again.

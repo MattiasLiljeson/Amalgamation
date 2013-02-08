@@ -66,6 +66,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	createTexture("mesherror.png",TEXTUREPATH);
 
+	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
+
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height);
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
@@ -168,15 +170,30 @@ void GraphicsWrapper::initHardware()
 
 void GraphicsWrapper::initBackBuffer()
 {
+	if( m_deviceContext == NULL ) {
+		throw D3DException("DeviceContext not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
+	if( m_device == NULL ) {
+		throw D3DException("Device not uninitialized.",__FILE__,
+			__FUNCTION__,__LINE__);
+	}
+
 	HRESULT hr = S_OK;
 	ID3D11Texture2D* backBufferTexture;
 
 	hr = m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), 
 		(LPVOID*)&backBufferTexture );
 
-	if( FAILED(hr) )
+	if( FAILED(hr))
 		throw D3DException("Failed to get backbuffer from swap chain.",__FILE__,
 		__FUNCTION__,__LINE__);
+
+	if( backBufferTexture == NULL) {
+		throw D3DException("Failed to get backbuffer from swap chain. back buffer is NULL",
+			__FILE__, __FUNCTION__,__LINE__);
+	}
 
 	hr = m_device->CreateRenderTargetView( backBufferTexture, NULL, &m_backBuffer );
 	backBufferTexture->Release();
@@ -523,8 +540,9 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
-	m_particleRenderer->renderParticles(p_system, m_renderSceneInfo);
+void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system, InstanceData p_transform )
+{
+	m_particleRenderer->renderParticles( p_system, &m_renderSceneInfo, p_transform);
 }
 
 void GraphicsWrapper::setParticleRenderState()
@@ -542,6 +560,8 @@ void GraphicsWrapper::renderComposeStage(){
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
 	m_deferredRenderer->mapVariousPassesToComposeStage();
+	m_deviceContext->PSSetShaderResources(3,1,
+		&m_textureManager->getResource(m_randomNormalTextures)->data);
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
@@ -584,7 +604,6 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 			}
 		}
 	}
-
 	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
 	UINT offsets[2] = { 0, 0 };
 	// Set up an array of the buffers for the vertices

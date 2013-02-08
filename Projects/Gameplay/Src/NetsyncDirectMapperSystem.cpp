@@ -43,6 +43,6 @@ bool NetsyncDirectMapperSystem::checkProcessing()
 Entity* NetsyncDirectMapperSystem::getEntity( int p_networkIdentity )
 {
 	if(p_networkIdentity < (int)m_networkEntityIndices.size())
-		return m_world->getEntity(m_networkEntityIndices[p_networkIdentity]);
+		return m_world->getEntity(m_networkEntityIndices.at(p_networkIdentity));
 	return NULL;
 }

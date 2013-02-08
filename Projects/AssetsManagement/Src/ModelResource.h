@@ -38,12 +38,14 @@ public:
         particleSystems = p_copy.particleSystems;
         transform = p_copy.transform;
 		instances = p_copy.instances;
-        looseBspTree = p_copy.looseBspTree;
+		looseBspTree = p_copy.looseBspTree;
     }	
 
     ModelResource(const string& p_name) {transform=AglMatrix::identityMatrix(); 
 										 meshId=-1; name=p_name; looseBspTree = NULL;}
-    virtual ~ModelResource(){}
+    virtual ~ModelResource()
+	{
+	}
 
     int							meshId;
     string						name;
