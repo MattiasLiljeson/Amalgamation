@@ -8,7 +8,7 @@ DeferredComposeShader::DeferredComposeShader(Buffer<SSAOBuffer>* p_ssaoBuffer,
 }
 
 DeferredComposeShader::~DeferredComposeShader(){
-
+	delete m_ssaoBuffer;
 }
 
 void DeferredComposeShader::apply(){
