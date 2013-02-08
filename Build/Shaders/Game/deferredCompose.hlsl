@@ -48,7 +48,8 @@ float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position,
 	float d = length(diff)*scale;
 	
 	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
-	return clamp(ao,0.0f,0.5f);
+	// return clamp(ao,0.0f,0.5f);
+	return ao;
 }
 
 VertexOut VS(VertexIn p_input)
@@ -98,6 +99,6 @@ float4 PS(VertexOut input) : SV_TARGET
 	//depth = pow(depth,99);
 	//return randomNormals;
 	//return float4(depth,depth,depth,1.0f);
-	return lightColor;
-	//return float4(1-ao,1-ao,1-ao,1.0f);
+	// return lightColor;
+	return float4(1-ao,1-ao,1-ao,1.0f);
 }
