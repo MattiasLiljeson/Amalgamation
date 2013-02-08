@@ -37,7 +37,7 @@ float3 getPosition(float2 uv)
 
 float2 getRandomVector( float2 uv)
 {
-	return normalize(gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f);
+	return gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f;
 }
 
 float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
@@ -47,8 +47,7 @@ float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position,
 	float3 v = normalize(diff);
 	float d = length(diff)*scale;
 	
-	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
-	// return clamp(ao,0.0f,0.5f);
+	float ao = max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity;
 	return ao;
 }
 
@@ -73,6 +72,7 @@ float4 PS(VertexOut input) : SV_TARGET
 	float2 rand 	= getRandomVector(input.texCoord);
 	
 	float ao = 0.0f;
+	
 	float radius = sampleRadius/depth;
 	
 	const float2 vec[4] = { float2 (1,0), float2 (-1,0),
