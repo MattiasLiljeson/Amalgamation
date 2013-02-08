@@ -91,9 +91,12 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 						ComponentType::ShipModule));
 					StandardRocket* hitRocket = static_cast<StandardRocket*>(hitEntity->getComponent(
 						ComponentType::StandardRocket));
-					if(hitModule && hitRocket==NULL)
+					if(hitRocket==NULL)
 					{
-						hitModule->addDamageThisTick(101.0f); // Above max hp.
+						if (hitModule)
+						{
+							hitModule->addDamageThisTick(101.0f); // Above max hp.
+						}
 						explodeRocket(ps, pb, body, p_entities[i]);
 					}
 				}
