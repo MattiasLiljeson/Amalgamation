@@ -19,6 +19,8 @@
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "BoundingVolumeInitData.h"
+#include "LoadMeshSystemServer.h"
+#include "EntityFactory.h"
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem)
@@ -28,51 +30,52 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 	m_worldMin = AglVector3((float)INT_MAX, (float)INT_MAX, (float)INT_MAX);
 	m_worldMax = AglVector3((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
 
-	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
-	{
-		string modelName = m_modelFileMapping.getModelFileName(i);
 
-		auto resourcesFromModel = m_unmanagedModelFactory.createModelResources(modelName,
-			&TESTMODELPATH);
-		m_modelResources.push_back( resourcesFromModel->at(0) );
-
-		delete resourcesFromModel;
-	}
 }
 
 LevelGenSystem::~LevelGenSystem()
 {
-	// TODO: delete generated pieces in order to prevent memory leaks!
 	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
-
-	for (unsigned int i = 0; i < m_modelResources.size(); i++)
-		delete m_modelResources[i];
-
-	m_modelResources.clear();
 }
 
 void LevelGenSystem::initialize()
 {
+	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
+		m_world->getSystem(SystemType::LoadMeshSystem));
+
+	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = m_modelFileMapping.getModelFileName(i);
+
+		auto resourcesFromModel = loadMeshSys->createModels(modelName, MODELPATH, false);
+		//	&TESTMODELPATH);
+		// HACK! Set radius of root
+		resourcesFromModel->at(0)->meshHeader.boundingSphere.radius = 900;
+
+		m_modelResources.push_back( resourcesFromModel->at(0) );
+		//delete resourcesFromModel;
+	}
 }
 
 void LevelGenSystem::run()
 {
 	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(3);
+	generateLevelPieces(0);
 	createLevelEntities();
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(15, 20, 15), 
-										AglQuaternion::identity(),
-										AglVector3::one() * 10.0f);
-	
+	//Transform* transform = new Transform(AglVector3(15, 20, 15), 
+	//									AglQuaternion::identity(),
+	//									AglVector3::one() * 10.0f);
+	Transform* transform = new Transform();
+
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
 	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
@@ -108,12 +111,19 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 {
-	Entity* entity = m_world->createEntity();
-	
-	AglOBB obb = p_piece->getBoundingBox();
+	auto entityFactory = static_cast<EntityFactory*>(
+		m_world->getSystem(SystemType::EntityFactory));
 
-	entity->addComponent(ComponentType::Transform, p_piece->getTransform());
-	entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
+	Entity* entity = entityFactory->entityFromRecipe(m_modelFileMapping.getModelFileName(p_piece->getTypeId()));
+	//Transform* transform = static_cast<Transform*>(
+	//	entity->getComponent(ComponentType::Transform));
+	//transform->setMatrix(p_piece->getTransform()->getMatrix());
+
+	//Entity* entity = m_world->createEntity();
+	//AglOBB obb = p_piece->getBoundingBox();
+
+	//entity->addComponent(ComponentType::Transform, p_piece->getTransform());
+	//entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
 	
 	/*entity->addComponent(ComponentType::BodyInitData,
 		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
@@ -213,8 +223,8 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			bool colliding = false;
 			for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 			{
-				if (AglCollision::isColliding( piece->getBoundingBox(),
-					m_generatedPieces[i]->getBoundingBox()) && 
+				if (AglCollision::isColliding( piece->getBoundingSphere(),
+					m_generatedPieces[i]->getBoundingSphere()) && 
 					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
 				{
 					colliding = true;
@@ -226,7 +236,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			{
 				// Remove the connected component.
 				p_targetPiece->setChild(slot, NULL);
-				piece->deleteMainTransform();
+				//piece->deleteMainTransform();
 				delete piece;
 			}			
 			else

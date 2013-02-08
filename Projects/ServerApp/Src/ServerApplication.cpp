@@ -138,7 +138,6 @@ namespace Srv
 		/************************************************************************/
 		LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
-		levelGen->run();
 
 		/************************************************************************/
 		/* Physics																*/
@@ -210,7 +209,7 @@ namespace Srv
 		// GET INITIALIZED.
 		m_world->initialize();
 
-
+		levelGen->run();
 
 
 		// Run component assemblage allocator (not a system, so don't delete)
@@ -261,8 +260,8 @@ namespace Srv
 		// First test by Jarl, instead of Anton
 		// Create rocks
 		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
-		entity = factory->entityFromRecipe( "rocksServer" );									 
-		m_world->addEntity( entity );
+		//entity = factory->entityFromRecipe( "rocksServer" );									 
+		//m_world->addEntity( entity );
 
 		//Minigun
 		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );

@@ -53,7 +53,7 @@ private:
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
-	ModelBaseFactory m_unmanagedModelFactory;
+	//ModelBaseFactory m_unmanagedModelFactory;
 
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;
