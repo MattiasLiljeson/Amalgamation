@@ -28,7 +28,8 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
-	delete m_activeShadows;
+	delete[] m_shadowViewProjections;
+	delete[] m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
 
