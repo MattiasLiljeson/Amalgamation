@@ -506,12 +506,12 @@ void ClientApplication::initEntities()
 		0, 1.0f, 0)));
 	m_world->addEntity(entity);
 
-	initInstanceFieldsByJohan("rocket.agl", 30, 15, 0.0f, 0.8f);
-	initInstanceFieldsByJohan("MineFinal.agl", 30, 15, 5.0f, 0.8f);
-	initInstanceFieldsByJohan("RockA.agl", 30, 15, 10.0f, 10.0f);
-	initInstanceFieldsByJohan("RockB.agl", 30, 15, 15.0f, 0.1f);
-	initInstanceFieldsByJohan("RockC.agl", 30, 15, 20.0f, 0.1f);
-	initInstanceFieldsByJohan("SpeedBooster.agl", 30, 15, 25.0f, 0.5f);
+	initInstanceFieldsByJohan("rocket.agl",			30, 15, 0.0f, 0.8f);
+	initInstanceFieldsByJohan("MineFinal.agl",		30, 15, 5.0f, 0.8f);
+	initInstanceFieldsByJohan("RockA.agl",			30, 15, 10.0f, 10.0f);
+	initInstanceFieldsByJohan("RockB.agl",			30, 15, 15.0f, 0.1f);
+	initInstanceFieldsByJohan("RockC.agl",			30, 15, 20.0f, 0.1f);
+	initInstanceFieldsByJohan("SpeedBooster.agl",	30, 15, 25.0f, 0.5f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
