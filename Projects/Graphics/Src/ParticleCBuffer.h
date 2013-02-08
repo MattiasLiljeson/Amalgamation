@@ -18,18 +18,37 @@
 
 struct ParticleCBuffer
 {
-	float color[4];
-	float variousFloats[4];	//Containing fadeIn, fadeOut, particleMaxAge, maxOpacity
-	float alignment[4];
+	float worldMat[16];
 
-	void setParticleData(const AglParticleSystemHeader& p_header){
-		setColor(p_header.color);
-		setFadeIn(p_header.fadeInStop);
-		setFadeOut(p_header.fadeOutStart);
-		setParticleMaxAge(p_header.particleAge);
-		setMaxOpacity(p_header.maxOpacity);
-		setAlignment(p_header.alignmentType);
+	float color[4];
+	//float variousFloats[4];	//Containing fadeIn, fadeOut, particleMaxAge, maxOpacity
+	float fadeIn;
+	float fadeOut;
+	float particleMaxAge;
+	float maxOpacity;
+	int alignment;
+	int relative;
+	int space;
+	float pad; //padding
+
+	void setWorldMat( const float p_worldMat[16] )
+	{
+		memcpy( worldMat, p_worldMat, sizeof(float)*16 );
 	}
+
+	void setParticleData(const AglParticleSystemHeader& p_header, const float p_worldMat[16] )
+	{
+		setWorldMat( p_worldMat );
+		setColor( p_header.color );
+		setFadeIn( p_header.fadeInStop );
+		setFadeOut( p_header.fadeOutStart );
+		setParticleMaxAge( p_header.particleAge );
+		setMaxOpacity( p_header.maxOpacity );
+		setAlignment( p_header.alignmentType );
+		setRelative( p_header.relative );
+		setSpace( p_header.space );
+	}
+
 	void setColor(const AglVector4& p_color){
 		color[0] = p_color[0];
 		color[1] = p_color[1];
@@ -37,21 +56,25 @@ struct ParticleCBuffer
 		color[3] = p_color[3];
 	}
 	void setFadeIn(const float& p_fadeIn){
-		variousFloats[0] = p_fadeIn;
+		fadeIn = p_fadeIn;
 	}
 	void setFadeOut(const float& p_fadeOut){
-		variousFloats[1] = p_fadeOut;
+		fadeOut = p_fadeOut;
 	}
 	void setParticleMaxAge(const float& p_maxAge){
-		variousFloats[2] = p_maxAge;
+		particleMaxAge = p_maxAge;
 	}
 	void setMaxOpacity(const float& p_maxOpacity){
-		variousFloats[3] = p_maxOpacity;
+		maxOpacity = p_maxOpacity;
 	}
 	void setAlignment(const int& p_alignment){
-		alignment[0] = static_cast<float>(p_alignment);
-		alignment[1] = 0;
-		alignment[2] = 0;
-		alignment[3] = 0;
+		alignment = static_cast<float>(p_alignment);
 	}
+	void setRelative( int p_relative ) {
+		relative = p_relative;
+	}
+	void setSpace( int p_space ) {
+		space = p_space;
+	}
+
 };

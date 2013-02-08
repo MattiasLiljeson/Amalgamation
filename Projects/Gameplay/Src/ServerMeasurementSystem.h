@@ -1,27 +1,30 @@
 #pragma once
 #include <EntitySystem.h>
+#include <vector>
 #include <string>
+#include <PreciseTimer.h>
 using namespace std;
 // =======================================================================================
-// ClientMeasurementSystem
+// ServerMeasurementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # ClientMeasurementSystem
+/// # ServerMeasurementSystem
 /// Detailed description...
 /// Created on: 6-2-2013 
 ///---------------------------------------------------------------------------------------
-class ClientMeasurementSystem: public EntitySystem
+class ServerMeasurementSystem: public EntitySystem
 {
 public:
-	ClientMeasurementSystem();
-	~ClientMeasurementSystem();
+	ServerMeasurementSystem();
+	~ServerMeasurementSystem();
 	void process();
 	void initialize();
-	void initMeasuredSystems();
+
 private:
 	vector< pair<EntitySystem*, string> > m_measuredSystems;
+	PreciseTimer m_secondTimer;
 
 };

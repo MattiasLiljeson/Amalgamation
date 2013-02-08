@@ -32,6 +32,27 @@ vector<int> ParticleEmitters::addParticleSystems( const ParticleSystemCollection
 	return indicies;
 }
 
+void ParticleEmitters::updateParticleSystems( const float p_dt,
+											 const AglVector3& p_cameraPosition )
+{
+	for( unsigned int i=0; i<m_collection.m_particleSystems.size(); i++ )
+	{
+		m_collection.m_particleSystems[i].update( p_dt, p_cameraPosition );
+	}
+}
+
+void ParticleEmitters::setSpawn( const AglVector3& p_spawnPoint,
+								const AglVector3& p_spawnDirection )
+{
+	for( unsigned int i=0; i<m_collection.m_particleSystems.size(); i++ )
+	{
+		m_collection.m_particleSystems[i].setSpawnPoint( p_spawnPoint );
+		AglVector3 dir = m_collection.m_particleSystems[i].getSpawnDirection();
+		AglVector3 newDir = dir + p_spawnPoint;
+		m_collection.m_particleSystems[i].setCurrSpawnDirection( newDir );
+	}
+}
+
 const ParticleSystemCollection& ParticleEmitters::getCollection()
 {
 	return m_collection;
@@ -40,13 +61,4 @@ const ParticleSystemCollection& ParticleEmitters::getCollection()
 ParticleSystemCollection* ParticleEmitters::getCollectionPtr()
 {
 	return &m_collection;
-}
-
-void ParticleEmitters::updateParticleSystems( const float p_dt,
-											 const AglVector3& p_cameraPosition )
-{
-	for( unsigned int i=0; i<m_collection.m_particleSystems.size(); i++ )
-	{
-		m_collection.m_particleSystems[i].update( p_dt, p_cameraPosition );
-	}
 }

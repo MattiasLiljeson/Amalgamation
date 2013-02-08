@@ -21,6 +21,8 @@ struct AglParticleSystemHeader;
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
+class Transform;
+
 class ParticleRenderSystem : public EntitySystem, public RenderInterface
 {
 public:
@@ -42,6 +44,6 @@ private:
 	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
 
 	// pointer to save performance. No ownership
-	vector< ParticleSystemCollection* > m_collections;
+	vector< pair< ParticleSystemCollection*, Transform* > > m_collections;
 };
 

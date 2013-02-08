@@ -211,8 +211,6 @@ void LoadMeshSystem::setUpConnectionPoints( Entity* p_entity,
 
 void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
 {
-	// NOT IMPLEMENTED
-
 	if (!p_modelResource->particleSystems.m_particleSystems.empty())
 	{
 		ParticleEmitters* particleComp = new ParticleEmitters();

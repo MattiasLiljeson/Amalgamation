@@ -2,12 +2,16 @@
 
 cbuffer cbPerObject: register(b1)
 {
+	float4x4 worldMat;
 	float4 color;
 	float fadeIn;
 	float fadeOut;
 	float particleMaxAge;
 	float maxOpacity;
-	float4 Alignment; //changed it from int to float
+	int alignment;
+	int relative;
+	int space;
+	float pad; // Padding
 };
 
 Texture2D Texture : register(t0);
@@ -44,18 +48,23 @@ Particle VS(Particle vIn)
 void GS(point Particle gIn[1], 
 			inout TriangleStream<GS_OUT> triStream)
 {		
+	float4 position = float4( gIn[0].Position.xyz, 1.0 );
+	if( space ) {
+		position = mul( position, worldMat );
+	}
+
 	float4x4 W;
-	if (Alignment.x < 0.5f) //Observer
+	if (alignment.x < 0.5f) //Observer
 	{
-		float3 look  = normalize(gCameraPos.xyz - gIn[0].Position);
+		float3 look  = normalize(gCameraPos.xyz - position.xyz);
 		float3 right = normalize(cross(float3(0,1,0), look));
 		float3 up    = cross(look, right);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
 		W[2] = float4(look,        0.0f);
-		W[3] = float4(gIn[0].Position, 1.0f);
+		W[3] = float4(position.xyz, 1.0f);
 	}
-	else if (Alignment.x < 1.5f) //Screen
+	else if (alignment.x < 1.5f) //Screen
 	{
 		float3 look  = -gCameraForward.xyz;
 		float3 up    = gCameraUp.xyz;
@@ -63,36 +72,36 @@ void GS(point Particle gIn[1],
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
 		W[2] = float4(look,        0.0f);
-		W[3] = float4(gIn[0].Position, 1.0f);
+		W[3] = float4(position.xyz, 1.0f);
 	}
-	else if (Alignment.x < 2.5) //World Up
+	else if (alignment.x < 2.5) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
-		float3 right = normalize(cross(up, gCameraPos.xyz - gIn[0].Position));
+		float3 right = normalize(cross(up, gCameraPos.xyz - position.xyz));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
 		W[2] = float4(look,        0.0f);
-		W[3] = float4(gIn[0].Position, 1.0f);
+		W[3] = float4(position.xyz, 1.0f);
 	}
 	else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
-		float3 up 	 = normalize(cross(gCameraPos.xyz - gIn[0].Position, right));
+		float3 up 	 = normalize(cross(gCameraPos.xyz - position.xyz, right));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
 		W[2] = float4(look,        0.0f);
-		W[3] = float4(gIn[0].Position, 1.0f);
+		W[3] = float4(position.xyz, 1.0f);
 	}
-	
 	
 	float4x4 rot = float4x4(cos(gIn[0].Rotation), -sin(gIn[0].Rotation), 0, 0,
 						sin(gIn[0].Rotation), cos(gIn[0].Rotation), 0, 0,
 						0, 0, 1, 0,
 						0, 0, 0, 1);
 
-	W = mul(rot, W);
+	W = mul( rot, W );
+
 	float4x4 WVP = mul(W, gViewProj);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;

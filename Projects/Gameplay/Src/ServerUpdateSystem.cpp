@@ -137,21 +137,24 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 					(p_entities[entityIdx]->getComponent( 
 					ComponentType::ParticleSystemServerComponent ) );
 
-				for( unsigned int psIdx=0; psIdx<psServerComp->particleSystems.size(); psIdx++ )
+				if( psServerComp != NULL )
 				{
-					ParticleSystemUpdateData* updateData =
-						&psServerComp->particleSystems[psIdx].updateData;
-					ParticleUpdatePacket updatePacket;
-					updatePacket.networkIdentity	= netSync->getNetworkIdentity();
-					updatePacket.particleSystemIdx	= psIdx;
-					updatePacket.position			= updateData->spawnPoint;
-					updatePacket.direction			= updateData->direction;
-					updatePacket.speed				= updateData->speed;
-					updatePacket.spawnFrequency		= updateData->spawnFrequency;
-					m_server->broadcastPacket( updatePacket.pack() );
+					for( unsigned int psIdx=0; psIdx<psServerComp->particleSystems.size(); psIdx++ )
+					{
+						ParticleSystemUpdateData* updateData =
+							&psServerComp->particleSystems[psIdx].updateData;
+						ParticleUpdatePacket updatePacket;
+						updatePacket.networkIdentity	= netSync->getNetworkIdentity();
+						updatePacket.particleSystemIdx	= psIdx;
+						updatePacket.position			= updateData->spawnPoint;
+						updatePacket.direction			= updateData->direction;
+						updatePacket.speed				= updateData->speed;
+						updatePacket.spawnFrequency		= updateData->spawnFrequency;
+						m_server->broadcastPacket( updatePacket.pack() );
+					}
 				}
 			}
-			else
+			//else
 			{
 				transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(

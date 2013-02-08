@@ -502,8 +502,9 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system ){
-	m_particleRenderer->renderParticles( p_system, &m_renderSceneInfo );
+void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system, InstanceData p_transform )
+{
+	m_particleRenderer->renderParticles( p_system, &m_renderSceneInfo, p_transform);
 }
 
 void GraphicsWrapper::setParticleRenderState()
@@ -563,11 +564,6 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 			}
 		}
 	}
-
-	//TEMP!
-	int t = sizeof(LightInstanceData);
-
-
 	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
 	UINT offsets[2] = { 0, 0 };
 	// Set up an array of the buffers for the vertices

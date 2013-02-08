@@ -22,12 +22,15 @@ struct RendererSceneInfo;
 /// Created on: 16-1-2013 
 ///---------------------------------------------------------------------------------------
 
+struct InstanceData;
+
 class ParticleRenderer
 {
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticles( AglParticleSystem* p_system, RendererSceneInfo* p_info );
+	void renderParticles( AglParticleSystem* p_system, RendererSceneInfo* p_info,
+		const InstanceData& p_transform );
 private:
 	void initShaders();
 	void initDepthStencil();

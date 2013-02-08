@@ -42,7 +42,10 @@ public:
 
 	void setSpawnPoint(AglVector3 p_spawnPoint);
 	void setParticleAge(float p_age);
+	const AglVector3& getSpawnDirection();
+	const AglVector3& getCurrSpawnDirection();
 	void setSpawnDirection(AglVector3 p_direction);
+	void setCurrSpawnDirection(AglVector3 p_direction);
 	void setSpawnSpeed(float p_speed);
 	void setSpread(float p_spread);
 	void setSpawnFrequency(float p_frequency);
@@ -59,6 +62,9 @@ public:
 	void setFadeInStop(float p_fadeInStop);
 	void setTextureNameIndex(int p_textureNameIndex);
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
+
+	AglParticleSystemHeader::AglSpace getSpace();
+	void setSpace( AglParticleSystemHeader::AglSpace p_space );
 
 	float getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir);
 

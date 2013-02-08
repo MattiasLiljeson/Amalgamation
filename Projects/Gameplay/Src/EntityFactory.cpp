@@ -384,33 +384,30 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "Minigun", "Assemblages/Minigun.asd" );
+	entity = entityFromRecipeOrFile( "ClientMinigun", "Assemblages/Modules/Minigun/ClientMinigun.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	AglParticleSystemHeader header;
-	header.particleSize = AglVector2(2, 2);
-	header.spawnFrequency = 10;
-	header.spawnSpeed = 5.0f;
-	header.spread = 0.0f;
-	header.fadeOutStart = 2.0f;
-	header.fadeInStop = 0.0f;
-	header.particleAge = 2;
-	header.maxOpacity = 1.0f;
-	header.color = AglVector4(0, 1, 0, 1.0f);
-	header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	//AglParticleSystemHeader header;
+	//header.particleSize = AglVector2(2, 2);
+	//header.spawnFrequency = 10;
+	//header.spawnSpeed = 5.0f;
+	//header.spread = 0.0f;
+	//header.fadeOutStart = 2.0f;
+	//header.fadeInStop = 0.0f;
+	//header.particleAge = 2;
+	//header.maxOpacity = 1.0f;
+	//header.color = AglVector4(0, 1, 0, 1.0f);
+	//header.alignmentType = AglParticleSystemHeader::OBSERVER;
 
-	ParticleEmitters* psComp = new ParticleEmitters();
-	psComp->addParticleSystem( header );
-	entity->addComponent( psComp );
+	//ParticleEmitters* psComp = new ParticleEmitters();
+	//psComp->addParticleSystem( header );
+	//entity->addComponent( psComp );
 	//int particleSysIdx = psComp->addParticleSystem( ParticleSystemData( header, updateData, "minigun" ) );
-
+	
 	m_world->addEntity( entity );
 	return entity;
 }

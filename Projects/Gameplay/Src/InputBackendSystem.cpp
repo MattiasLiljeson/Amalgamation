@@ -24,7 +24,6 @@ InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 	m_graphicsBackend = p_graphicsBackend;
 
 	m_cursor = NULL;
-	setInfo("Input");
 }
 
 InputBackendSystem::~InputBackendSystem()

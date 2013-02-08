@@ -51,6 +51,26 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_particleSystems = p_desc.particleSystems;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
+
+	//Initialize scene obb
+	AglVector3 minP, maxP;
+	minP = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+	maxP = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
+	{
+		AglMatrix transform = m_meshes[i]->getHeader().transform;
+		AglVertexSTBN* points = (AglVertexSTBN*)m_meshes[i]->getVertices();
+		for (unsigned int j = 0; j < m_meshes[i]->getHeader().vertexCount; j++)
+		{
+			AglVector3 p = points[j].position;
+			p.transform(transform);
+			minP = AglVector3(min(minP.x, p.x), min(minP.y, p.y), min(minP.z, p.z));
+			maxP = AglVector3(max(maxP.x, p.x), max(maxP.y, p.y), max(maxP.z, p.z));
+		}
+	}
+	AglVector3 pos = (maxP+minP)*0.5f;
+	AglVector3 size = maxP-minP;
+	m_sceneOBB = AglOBB(AglMatrix::createTranslationMatrix(pos), size);
 }
 
 AglNode AglScene::getNode(int p_index)
@@ -121,6 +141,8 @@ vector<AglGradient*> AglScene::getGradients()
 }
 AglGradient* AglScene::getGradient(int p_index)
 {
+	if (p_index >= m_gradients.size() || p_index < 0)
+		return NULL;
 	return m_gradients[p_index];
 }
 AglParticleSystem* AglScene::getParticleSystem(int p_index)
@@ -381,4 +403,8 @@ void AglScene::RemoveParticleEffect(AglParticleSystem* p_particleSystem)
 			break;
 		}
 	}
+}	
+AglOBB AglScene::getSceneOBB()
+{
+	return m_sceneOBB;
 }

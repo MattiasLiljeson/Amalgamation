@@ -9,6 +9,7 @@
 #include "TextureParser.h"
 #include "ParticleCBuffer.h"
 #include <AglVector4.h>
+#include <InstanceData.h>
 
 ParticleRenderer::ParticleRenderer( ID3D11Device* p_device, 
 								   ID3D11DeviceContext* p_deviceContext ){
@@ -32,7 +33,7 @@ ParticleRenderer::~ParticleRenderer(){
 }
 
 void ParticleRenderer::renderParticles( AglParticleSystem* p_system, 
-									   RendererSceneInfo* p_info )
+	RendererSceneInfo* p_info, const InstanceData& p_transform )
 {
 	vector<AglStandardParticle>* particles = p_system->getParticlesPtr();
 	if (particles->size() > 0){
@@ -52,7 +53,7 @@ void ParticleRenderer::renderParticles( AglParticleSystem* p_system,
 		m_device->CreateBuffer(&bD, &vD, &m_vertexBuffer);
 		
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
-		data->accessBuffer.setParticleData(p_system->getHeader());
+		data->accessBuffer.setParticleData(p_system->getHeader(), p_transform.worldTransform);
 
 		beginRendering(p_system, particles->size());
 	}

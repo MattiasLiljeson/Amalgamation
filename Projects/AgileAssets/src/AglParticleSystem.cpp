@@ -38,6 +38,9 @@ AglParticleSystem::AglParticleSystem()
 
 	m_age = 0;
 	m_timeSinceSpawn = 0;
+
+	m_header.relative = false;
+	m_header.space = AglParticleSystemHeader::AglSpace::AglSpace_LOCAL;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
@@ -77,11 +80,25 @@ void AglParticleSystem::setParticleAge(float p_age)
 {
 	m_header.particleAge = p_age;
 }
+const AglVector3& AglParticleSystem::getSpawnDirection()
+{
+	return m_header.spawnDirection;
+}
 void AglParticleSystem::setSpawnDirection(AglVector3 p_direction)
 {
 	p_direction.normalize();
 	m_header.spawnDirection = p_direction;
 }
+const AglVector3& AglParticleSystem::getCurrSpawnDirection()
+{
+	return m_header.currSpawnDirection;
+}
+void AglParticleSystem::setCurrSpawnDirection( AglVector3 p_direction )
+{
+	p_direction.normalize();
+	m_header.currSpawnDirection = p_direction;
+}
+
 void AglParticleSystem::setSpawnSpeed(float p_speed)
 {
 	if (p_speed >= 0)
@@ -182,6 +199,15 @@ void AglParticleSystem::setTextureNameIndex(int p_textureNameIndex)
 void AglParticleSystem::setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment)
 {
 	m_header.alignmentType = p_alignment;
+}
+
+AglParticleSystemHeader::AglSpace AglParticleSystem::getSpace()
+{
+	return (AglParticleSystemHeader::AglSpace)m_header.space;
+}
+void AglParticleSystem::setSpace( AglParticleSystemHeader::AglSpace p_space )
+{
+	m_header.space = p_space;
 }
 
 float AglParticleSystem::getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir)

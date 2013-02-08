@@ -22,7 +22,7 @@ struct AglStandardParticle
 	float		angularVelocity;
 	AglVector2	size;
 	float		rotation;
-	float		pad; //padding, not used
+	float		pad; // Padding: not used
 
 	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
 		float p_angularVelocity, float p_rotation);

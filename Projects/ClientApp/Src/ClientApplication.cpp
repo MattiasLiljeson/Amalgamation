@@ -425,20 +425,20 @@ void ClientApplication::initEntities()
 	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
-// 	graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
-// 	graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
-// 	graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
-// 	graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
-// 	graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
-// 	graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+ 	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
-// 	LevelPieceFileMapping modelLevelFileMapping;	
-// 	for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
-// 	{
-// 		string modelName = modelLevelFileMapping.getModelFileName(i);
-// 		graphicsBackend->loadSingleMesh( modelName,
-// 				&TESTMODELPATH);
-// 	}
+ 	//LevelPieceFileMapping modelLevelFileMapping;	
+ 	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+ 	//{
+ 	//	string modelName = modelLevelFileMapping.getModelFileName(i);
+ 	//	graphicsBackend->loadSingleMesh( modelName,
+ 	//			&TESTMODELPATH);
+ 	//}
 
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
@@ -475,32 +475,32 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
 
-	ParticleEmitters* ps = new ParticleEmitters();
-	AglParticleSystemHeader header;
-	header.particleSize = AglVector2(2, 2);
-	header.spawnFrequency = 10;
-	header.spawnSpeed = 5.0f;
-	header.spread = 0.0f;
-	header.fadeOutStart = 2.0f;
-	header.fadeInStop = 0.0f;
-	header.particleAge = 2;
-	header.maxOpacity = 1.0f;
-	header.color = AglVector4(0, 1, 0, 1.0f);
-	header.alignmentType = AglParticleSystemHeader::OBSERVER;
-	ps->addParticleSystem( header );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnDirection( AglVector3(1.1f, 1.2f, 1.3f) );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnSpeed( 2.340f );
-	ps->getCollectionPtr()->m_particleSystems[0].setMaxOpacity( 3.1f );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnAngularVelocity( 45.6f );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpread( 7.8f );
-	ps->getCollectionPtr()->m_particleSystems[0].setFadeOutStart( 8.9f );
-	ps->getCollectionPtr()->m_particleSystems[0].setFadeInStop( 0.1f );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnPoint(AglVector3(-11.1f, -11.2f, -11.3f));
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
-	ps->getCollectionPtr()->m_particleSystems[0].setParticleSize(AglVector2(12.1f, 12.2f));
-	ps->getCollectionPtr()->m_particleSystems[0].setParticleAge( 13.1f );
-	ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
-	entity->addComponent( ps );
+	//ParticleEmitters* ps = new ParticleEmitters();
+	//AglParticleSystemHeader header;
+	//header.particleSize = AglVector2(2, 2);
+	//header.spawnFrequency = 10;
+	//header.spawnSpeed = 5.0f;
+	//header.spread = 0.0f;
+	//header.fadeOutStart = 2.0f;
+	//header.fadeInStop = 0.0f;
+	//header.particleAge = 2;
+	//header.maxOpacity = 1.0f;
+	//header.color = AglVector4(0, 1, 0, 1.0f);
+	//header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	//ps->addParticleSystem( header );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnDirection( AglVector3(1.1f, 1.2f, 1.3f) );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnSpeed( 2.340f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setMaxOpacity( 3.1f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnAngularVelocity( 45.6f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpread( 7.8f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setFadeOutStart( 8.9f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setFadeInStop( 0.1f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnPoint(AglVector3(-11.1f, -11.2f, -11.3f));
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+	//ps->getCollectionPtr()->m_particleSystems[0].setParticleSize(AglVector2(12.1f, 12.2f));
+	//ps->getCollectionPtr()->m_particleSystems[0].setParticleAge( 13.1f );
+	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
+	//entity->addComponent( ps );
 
 	m_world->addEntity(entity);
 

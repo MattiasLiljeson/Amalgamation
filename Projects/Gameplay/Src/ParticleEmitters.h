@@ -20,6 +20,7 @@ public:
 	vector<int> addParticleSystems( const ParticleSystemCollection& p_system );
 
 	void updateParticleSystems( const float p_dt, const AglVector3& p_cameraPosition );
+	void setSpawn( const AglVector3& p_spawnPoint, const AglVector3& p_spawnDirection );
 
 	const ParticleSystemCollection& getCollection();
 	ParticleSystemCollection* getCollectionPtr();
