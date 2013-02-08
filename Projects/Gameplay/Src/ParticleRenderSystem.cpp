@@ -47,8 +47,8 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
 		// double transform
 		ParticleSystemCollection* collection = particlesComp->getCollectionPtr();
-		for( unsigned int i=0; i<collection->m_particleSystems.size(); i++ ) {
-			AglParticleSystemHeader header = collection->m_particleSystems[i].getHeader();
+		for( unsigned int i=0; i<collection->m_collection.size(); i++ ) {
+			AglParticleSystemHeader header = collection->m_collection[i].particleSystem.getHeader();
 			if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
 				particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
 			}
@@ -69,10 +69,10 @@ void ParticleRenderSystem::render()
 		Transform* transform = m_collections[collectionIdx].second;
 		
 		for( unsigned int systemIdx=0;
-			systemIdx < collection->m_particleSystems.size();
+			systemIdx < collection->m_collection.size();
 			systemIdx++ )
 		{
-			AglParticleSystem* system = &collection->m_particleSystems[systemIdx];
+			AglParticleSystem* system = &collection->m_collection[systemIdx].particleSystem;
 			m_gfxBackend->renderParticleSystem( system, transform->getInstanceDataRef() );
 		}
 	}

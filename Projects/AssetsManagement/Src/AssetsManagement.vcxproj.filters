@@ -48,6 +48,9 @@
     <ClInclude Include="LightDataCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemInstruction.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">

@@ -639,12 +639,13 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 			ParticleSystemCollection* collection = particleComp->getCollectionPtr();
 			int idx = p_data.particleSystemIdx;
 
-			if( -1 < idx && idx < collection->m_particleSystems.size() )
+			if( -1 < idx && idx < collection->m_collection.size() )
 			{
-				collection->m_particleSystems[idx].setSpawnPoint(		p_data.position);
-				collection->m_particleSystems[idx].setSpawnDirection(	p_data.direction);
-				collection->m_particleSystems[idx].setSpawnSpeed(		p_data.speed);
-				collection->m_particleSystems[idx].setSpawnFrequency(	p_data.spawnFrequency);
+				AglParticleSystem* particlesys = &(collection->m_collection[idx].particleSystem);
+				particlesys->setSpawnPoint(		p_data.position);
+				particlesys->setSpawnDirection(	p_data.direction);
+				particlesys->setSpawnSpeed(		p_data.speed);
+				particlesys->setSpawnFrequency(	p_data.spawnFrequency);
 			}
 			else
 			{

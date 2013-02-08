@@ -52,6 +52,6 @@ public:
 	ConnectionPointSet(const vector<AglMatrix>& p_connectionPoints);
 	~ConnectionPointSet();
 	vector<ConnectionPoint> m_connectionPoints;
-	int m_highlighted;
+	// int m_highlighted;
 
 };
