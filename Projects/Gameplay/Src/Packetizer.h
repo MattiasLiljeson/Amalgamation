@@ -19,6 +19,6 @@ class Packetizer
 {
 public:
 	virtual Packet pack() = 0;
-	virtual void unpack( Packet p_packet ) = 0;
+	virtual void unpack( Packet& p_packet ) = 0;
 
 };

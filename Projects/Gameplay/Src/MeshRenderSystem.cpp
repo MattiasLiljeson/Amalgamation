@@ -62,7 +62,6 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		// Finally, add the entity to the instance vector
 		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
 	}
-		
 }
 
 void MeshRenderSystem::render()

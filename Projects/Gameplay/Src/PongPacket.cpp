@@ -14,7 +14,7 @@ Packet PongPacket::pack()
 	return packet;
 }
 
-void PongPacket::unpack( Packet p_packet )
+void PongPacket::unpack( Packet& p_packet )
 {
 	p_packet >> timeStamp;
 }

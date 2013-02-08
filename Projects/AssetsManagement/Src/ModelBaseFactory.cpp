@@ -2,6 +2,7 @@
 #include <AglReader.h>
 #include <AglScene.h>
 #include "MeshNameScriptParser.h"
+#include <AglLooseBspTree.h>
 
 
 ModelBaseFactory::ModelBaseFactory()
@@ -12,6 +13,8 @@ ModelBaseFactory::ModelBaseFactory()
 ModelBaseFactory::~ModelBaseFactory()
 {
 	delete m_modelResourceCache;
+	for (unsigned int i = 0; i < m_bspTrees.size(); i++)
+		delete m_bspTrees[i];
 }
 
 
@@ -209,7 +212,7 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData(
 			{
 				if (p_outInstanceInstructions!=NULL)
 				{
-					InstanceInstruction inst = {parsedAction.first.filename,
+					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						aglMeshHeader.transform};
 
 					DEBUGWARNING(((p_instanceData->filename+": Found mesh with instancing instruction. Conversion error?").c_str()));
@@ -278,7 +281,9 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 	{
 		if (trees[i]->getHeader().targetMesh == p_source.aglMesh->getHeader().id)
 		{
-			model->looseBspTree = trees[i]->clone();
+			AglLooseBspTree* tree = trees[i]->clone();
+			m_bspTrees.push_back(tree);
+			model->looseBspTree = tree;
 		}
 	}
 
@@ -318,7 +323,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 			{
 				if (cp->parentMesh == p_source.modelNumber) // handle global and local call the same
 				{
-					InstanceInstruction inst = {parsedAction.first.filename,
+					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 					p_model->instances.push_back(inst);
@@ -328,35 +333,66 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				break;
 			}
 
-		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp
+		case MeshNameScriptParser::SPAWNPOINT: // spawn point		
 			{
+				bool isOk = false;
 				if (p_source.modelNumber!=-1) // call from parent
-				{
-					if (cp->parentMesh == p_source.modelNumber)
-					{
-						// DEBUGWARNING(( string("Found connection point for mesh!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
-					}
-				}
+					isOk = (cp->parentMesh == p_source.modelNumber);
 				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
 				{
-					// make pointed model to parent
-					if (cp->parentMesh == -1 && p_model!=NULL)
-					{
-						// DEBUGWARNING(( string("Found global connection point!").c_str() ));
-						p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
-					}
+					pair<string,AglMatrix> sp(parsedAction.first.spawnSpecName,
+						cp->transform*p_offset);
+					p_model->spawnPoints.m_collection.push_back(sp);
 				}
 
 				break;
 			}
+			
+		case MeshNameScriptParser::CONNECTIONPOINT: // normal cp			
+			{
+				bool isOk = false;
+				if (p_source.modelNumber!=-1) // call from parent
+					isOk = (cp->parentMesh == p_source.modelNumber);
+				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
+					p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
+
+				break;
+			}
+			
+		case MeshNameScriptParser::POINTLIGHT: // lights
+		case MeshNameScriptParser::DIRLIGHT:
+		case MeshNameScriptParser::SPOTLIGHT:	
+			{
+				bool isOk = false;
+				if (p_source.modelNumber!=-1) // call from parent
+					isOk = (cp->parentMesh == p_source.modelNumber);
+				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
+
+				if (isOk)
+				{
+					LightCreationData ld = parsedAction.first.lightSpec;
+					ld.transform = cp->transform*p_offset;
+					p_model->lightCollection.m_collection.push_back(ld);
+				}
+
+				break;
+			}
+
+
+			
 		default:				
 			{
 				break;
-			}
-
+			}			
+			
 		}
-
 	}
 }
 

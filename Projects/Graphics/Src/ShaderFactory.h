@@ -13,6 +13,7 @@
 class BufferFactory;
 class DeferredBaseShader;
 class DeferredComposeShader;
+class LightShader;
 class GUIShader;
 class ParticleShader;
 class ShadowShader;
@@ -45,7 +46,7 @@ public:
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
-	DeferredBaseShader* createLightShader(const LPCWSTR& p_filePath);
+	LightShader* createLightShader(const LPCWSTR& p_filePath);
 
 	///-----------------------------------------------------------------------------------
 	/// This method returns the GUI shader used for menus and HUDs.
@@ -87,6 +88,8 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createSamplerState(ID3D11SamplerState** p_samplerState);
+
+	void createShadowSamplerState(ID3D11SamplerState** p_samplerState);
 
 	///-----------------------------------------------------------------------------------
 	/// A helper function that creates and configures the shader from the specified input

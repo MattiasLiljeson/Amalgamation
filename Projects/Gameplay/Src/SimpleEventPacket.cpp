@@ -13,7 +13,7 @@ Packet SimpleEventPacket::pack()
 	return packet;
 }
 
-void SimpleEventPacket::unpack( Packet p_packet )
+void SimpleEventPacket::unpack( Packet& p_packet )
 {
 	p_packet >> type;
 }

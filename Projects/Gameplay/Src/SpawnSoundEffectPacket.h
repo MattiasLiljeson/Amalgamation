@@ -22,7 +22,7 @@ class SpawnSoundEffectPacket: public Packetizer
 public:
 	SpawnSoundEffectPacket();
 	Packet pack();
-	void unpack( Packet p_packet );
+	void unpack( Packet& p_packet );
 
 public:
 	int soundIdentifier;

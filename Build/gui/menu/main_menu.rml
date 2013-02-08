@@ -1,0 +1,18 @@
+<rml>
+	<head>
+		<title>MainMenu</title>
+		<link type="text/template" href="window.rml" />
+		<style>
+			<!--div#title_bar div#icon
+			{
+				display: none;
+			}-->
+		</style>
+	</head>
+	<body id="main_menu" template="window" onshow="modal">
+		<button onclick="goto play">Play</button>
+		<button onclick="goto options">Options</button>
+		<button onclick="goto credits">Credits</button>
+		<button id="back" onclick="exit">Exit</button>
+	</body>
+</rml>

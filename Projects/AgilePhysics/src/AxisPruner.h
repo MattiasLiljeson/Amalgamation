@@ -48,6 +48,13 @@ struct IntervalAxis
 	{
 		axis = pAxis;
 	}
+	~IntervalAxis()
+	{
+		for (unsigned int i = 0; i < sortedList.size(); i++)
+		{
+			delete sortedList[i];
+		}
+	}
 };
 
 struct IntProjection

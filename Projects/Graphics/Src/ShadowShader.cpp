@@ -21,3 +21,7 @@ void ShadowShader::apply(){
 void ShadowShader::sendViewProjection( const AglMatrix& p_matrix ){
 	m_bufferPointer->accessBuffer.setViewProjection(p_matrix);
 }
+
+void ShadowShader::sendViewProjections( AglMatrix* p_matrix ){
+	m_bufferPointer->accessBuffer.setViewProjections(p_matrix);
+}

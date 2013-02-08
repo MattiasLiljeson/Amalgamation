@@ -3,12 +3,12 @@ body
 	color: black;
 
 	background-decorator: image;
-	background-image-src: ../../Assets/gui/texture/cursor.tga;
+	background-image-src: ../../Assets/gui/texture/cursor.png;
 	margin: auto;
 	
-	min-width: 9px;
-	max-width: 9px;
+	min-width: 21px;
+	max-width: 21px;
 	
-	min-height: 16x;
-	max-height: 16px;
+	min-height: 27x;
+	max-height: 27px;
 }

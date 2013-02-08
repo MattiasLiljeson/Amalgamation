@@ -1,0 +1,32 @@
+<rml>
+	<head>
+		<title>Join</title>
+		<link type="text/template" href="window.rml" />
+		<style>
+			/*div#title_bar div#icon
+			{
+				icon-image-s: 230px 281px;
+				icon-image-t: 152px 191px;
+			}
+			
+			form div
+			{
+				width: 200px;
+				margin: auto;
+			}*/
+		</style>
+	</head>
+	<body id="" template="window" onshow="">
+		<form onsubmit="join_server">
+			<div>
+				<!--<Input id="computername" name="server_name" type="text" size="9" maxlength="15" value="localhost" hidden/>
+				<br/>or<br/>-->
+				<Input id="host" name="server_host" type="text" size="9" maxlength="15" value="localhost" />
+				<br/>
+				<Input id="port" name="server_port" type="text" size="4" maxlength="5" value="1337" />
+			</div>
+			<input type="submit" value="accept">Connect</input>
+			<button onclick="goto previous">Back</button>
+		</form>
+	</body>
+</rml>

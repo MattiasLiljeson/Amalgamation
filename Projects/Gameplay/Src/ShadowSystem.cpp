@@ -3,10 +3,11 @@
 #include "CameraInfo.h"
 #include "Transform.h"
 
-ShadowSystem::ShadowSystem() : EntitySystem( SystemType::ShadowSystem, 3, 
+ShadowSystem::ShadowSystem() : EntitySystem( SystemType::ShadowSystem, 4, 
 											ComponentType::CameraInfo,
 											ComponentType::TAG_ShadowCamera,
-											ComponentType::Transform){
+											ComponentType::Transform,
+											ComponentType::LightsComponent){
 	
 }
 
@@ -56,4 +57,12 @@ AglMatrix ShadowSystem::getViewProjection( const unsigned int p_index ){
 	viewProj = AglMatrix::transpose( viewProj );
 
 	return viewProj;
+}
+
+int ShadowSystem::getShadowIdx( const unsigned int p_index )
+{
+	CameraInfo* cameraInfo = static_cast<CameraInfo*>(
+		m_shadowCameras[p_index]->getComponent(ComponentType::CameraInfo));
+
+	return cameraInfo->m_shadowMapIdx;
 }

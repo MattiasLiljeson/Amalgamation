@@ -43,6 +43,7 @@ struct LightInstanceData;
 struct Model;
 struct Texture;
 struct AglMatrix;
+struct PerShadowCBuffer;
 
 class GraphicsWrapper
 {
@@ -90,13 +91,19 @@ public:
 
 	void resetViewportToOriginalSize();
 
-	void setShadowMapAsRenderTarget();
+	void setShadowMapAsRenderTarget(unsigned int p_shadowMapIdx);
 
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
+
+	void setShadowViewProjections( AglMatrix* p_viewProj );
 
 	void setRenderingShadows();
 	
 	void stopedRenderingShadows();
+
+	void setActiveShadow( int p_activeShadow );
+
+	void unmapPerShadowBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Render compiled rocket geometry. Use this with libRocket so that the correct
@@ -106,7 +113,11 @@ public:
 
 	void mapDeferredBaseToShader();
 
+	void mapNeededShaderResourceToLightPass(int* p_activeShadows);
+
 	void unmapDeferredBaseFromShader();
+
+	void unmapUsedShaderResourceFromLightPass(int* p_activeShadows);
 
 	void unmapDepthFromShader();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
@@ -171,6 +182,8 @@ public:
 
 	void unmapVariousStagesForCompose();
 
+	unsigned int generateShadowMap();
+
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
@@ -218,12 +231,15 @@ private:
 
 	RendererSceneInfo		m_renderSceneInfo;
 	Buffer<RenderSceneInfoCBuffer>* m_renderSceneInfoBuffer;
-
+	Buffer<PerShadowCBuffer>*		m_perShadowBuffer;
 
 	GUIShader*				m_guiShader;
 
 	int m_height;
 	int m_width;
+
+	int m_randomNormalTextures;
+
 	bool m_windowed;
 	bool m_wireframeMode;
 	bool m_renderingShadows;

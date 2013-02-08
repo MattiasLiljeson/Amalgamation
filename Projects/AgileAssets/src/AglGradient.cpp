@@ -2,10 +2,11 @@
 
 AglGradient::AglGradient()
 {
-	m_layers.push_back(new AglGradientMaterial());
 }
 AglGradient::~AglGradient()
 {
+	for (unsigned int i = 0; i < m_layers.size(); i++)
+		delete m_layers[i];
 }
 vector<AglGradientMaterial*> AglGradient::getLayers()
 {

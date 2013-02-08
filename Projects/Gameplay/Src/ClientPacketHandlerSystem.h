@@ -82,6 +82,7 @@ private:
 	unsigned int m_totalNumberOfStaticPropPacketsReceived;
 	vector< pair<int,int> > m_staticPropIdentitiesForAntTweakBar;
 	unsigned int m_lastBroadcastPacketIdentifier;
+
 	unsigned int m_totalBroadcastPacketLost;
 
 	queue<int> m_staticPropIdentities;

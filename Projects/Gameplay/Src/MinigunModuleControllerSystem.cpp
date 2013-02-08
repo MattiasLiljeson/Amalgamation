@@ -280,25 +280,6 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 
 	if (gun && gun->particleSystemEntity < 0)
 	{
-		//Entity* entity = m_world->createEntity();
-		//
-		//entity->addComponent( ComponentType::ParticleUpdateData, new ParticleUpdateData());
-		//
-		//EntityCreationPacket data;
-		//data.entityType			= static_cast<char>(EntityType::ParticleSystem);
-		//data.owner				= -1;
-		//data.networkIdentity		= entity->getIndex();
-		//data.translation			= AglVector3(0, 0, 0);
-		//data.rotation				= AglQuaternion::identity();
-		//data.scale				= AglVector3(0, 0, 0);
-		//data.meshInfo				= 0;
-		//
-		//entity->addComponent( new NetworkSynced( entity->getIndex(), -1,
-		//	EntityType::ParticleSystem ) );
-		//
-		//m_server->broadcastPacket(data.pack());
-		//m_world->addEntity(entity);
-
 		EntityCreationPacket creationPacket;
 		creationPacket.entityType			= EntityType::MinigunModule;
 		creationPacket.owner				= -1;
@@ -308,14 +289,16 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		creationPacket.scale				= AglVector3( 0, 0, 0 );
 		creationPacket.meshInfo				= 0;
 		m_server->broadcastPacket( creationPacket.pack() );
-		
+
+		// DEPRECATED //ML
 		//p_entity->addComponent( new NetworkSynced( p_entity->getIndex(), -1,
 		//	EntityType::ParticleSystem ) );
 
 		//ParticleSystemCreationInfo psInfo;
 		//psInfo.entityNetId = p_entity->getIndex();
-		//psInfo.particleSysIdx = particleSysIdx;
-		//psInfo.particleSysHeader = header;
+		////psInfo.particleSysIdx = particleSysIdx;
+		//psInfo.particleSysIdx = 0;
+		////psInfo.particleSysHeader = header;
 
 		//Packet packet( PacketType::ParticleSystemCreationInfo );
 		//packet.WriteData( (char*)&psInfo, sizeof( ParticleSystemCreationInfo ) );

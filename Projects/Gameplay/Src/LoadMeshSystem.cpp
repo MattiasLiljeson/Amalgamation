@@ -1,5 +1,11 @@
 #include "LoadMeshSystem.h"
 
+#include "LoadMesh.h"
+#include <ModelResource.h>
+#include "Transform.h"
+#include "EntityParent.h"
+#include "ConnectionPointSet.h"
+#include "LightsComponent.h"
 #include "BodyInitData.h"
 #include "ConnectionPointSet.h"
 #include "EntityParent.h"
@@ -77,13 +83,20 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Connection points
 	setUpConnectionPoints(entity,modelResource);
 
+	// Lights
+	setUpLights(entity,modelResource);
+
+	// Spawn points
+	setUpSpawnPoints(entity,modelResource);
+
 	// Handle particles here
 	setUpParticles(entity,modelResource);
 
+	//Should not be here - ONLY RELEVANT FOR SHIP
 	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
 	if (initData)
 	{
-		if (initData->m_type == BodyInitData::BOXFROMMESHOBB)
+		if (initData->m_type == BodyInitData::BOXFROMMESHOBB && !p_entity->getComponent(ComponentType::MeshOffsetTransform))
 		{
 			initData->m_modelResource = p_modelResource; 
 			p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
@@ -92,22 +105,20 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 		//Should not be here but is common with body init data right now
 
 	}
-	//Should not be here - ONLY RELEVANT FOR SHIP
-	p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
+	else
+		p_entity->addComponent(ComponentType::MeshOffsetTransform, new MeshOffsetTransform(p_modelResource->meshHeader.transform));
 
 	if (p_modelResource->connectionPoints.m_collection.size() > 0)
 	{
-		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
+		ConnectionPointSet* connectionPointSet = static_cast<ConnectionPointSet*>(p_entity->getComponent(ComponentType::ConnectionPointSet));
+		AglMatrix inv = p_modelResource->meshHeader.transform.inverse();
+		for (unsigned int i = 0; i < connectionPointSet->m_connectionPoints.size(); i++)
 		{
 			//This inverse is performed to bring the connection point from world space
 			//to local space of the mesh. This should not really be done if the mesh
 			//is already parent to the transform. Make check for this later.
-			AglMatrix inv = p_modelResource->meshHeader.transform.inverse();
-			AglMatrix m = p_modelResource->connectionPoints.m_collection[i] * inv;
-			connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(m));
+			connectionPointSet->m_connectionPoints[i].cpTransform *= inv;
 		}
-		p_entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
 	}
 
 	//END should not be here
@@ -167,6 +178,12 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Connection points
 		setUpConnectionPoints(entity,modelResource);
 
+		// Lights
+		setUpLights(entity,modelResource);
+
+		// Spawn points
+		setUpSpawnPoints(entity,modelResource);
+
 		// Particles
 		setUpParticles(entity,modelResource);
 
@@ -204,8 +221,67 @@ void LoadMeshSystem::setUpConnectionPoints( Entity* p_entity,
 {
 	if (!p_modelResource->connectionPoints.m_collection.empty())
 	{
-		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		ConnectionPointSet* component = new ConnectionPointSet();
+		for (unsigned int i = 0; i < p_modelResource->connectionPoints.m_collection.size(); i++)
+		{
+			ConnectionPoint cp(p_modelResource->connectionPoints.m_collection[i]);
+			component->m_connectionPoints.push_back(cp);
+		}
 		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
+	}
+}
+
+
+void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelResource )
+{
+	if (!p_modelResource->spawnPoints.m_collection.empty())
+	{
+		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		p_entity->addComponent( ComponentType::SpawnPointSet, component );
+	}
+}
+
+
+void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
+{
+	vector<LightCreationData>* lights= &(p_modelResource->lightCollection.m_collection);
+	if (!lights->empty())
+	{
+		LightsComponent* component = new LightsComponent();
+		for (unsigned int i=0;i<lights->size();i++)
+		{
+			// This'll be fun		
+			LightCreationData* source = &(*lights)[i];
+			Light light;
+			light.offsetMat = source->transform;
+			AglVector3 forward = source->transform.GetForward();
+			light.instanceData.lightDir[0] = forward.x;
+			light.instanceData.lightDir[1] = forward.y;
+			light.instanceData.lightDir[2] = forward.z;
+			light.instanceData.diffuse[0] = source->diffuse.x;
+			light.instanceData.diffuse[1] = source->diffuse.y;
+			light.instanceData.diffuse[2] = source->diffuse.z;
+			light.instanceData.specular[0] = source->specular.x;
+			light.instanceData.specular[1] = source->specular.y;
+			light.instanceData.specular[2] = source->specular.z;
+			light.instanceData.specular[3] = source->gloss;
+			light.instanceData.ambient[0] = source->ambient.x;
+			light.instanceData.ambient[1] = source->ambient.y;
+			light.instanceData.ambient[2] = source->ambient.z;
+			if (source->type==LightCreationData::POINT)
+				light.instanceData.type = LightTypes::E_LightTypes_POINT;
+			else if (source->type==LightCreationData::SPOT)
+				light.instanceData.type = LightTypes::E_LightTypes_SPOT;
+			else
+				light.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
+			light.instanceData.range = source->range;
+			light.instanceData.attenuation[0] = source->attenuation.x;
+			light.instanceData.attenuation[1] = source->attenuation.y;
+			light.instanceData.attenuation[2] = source->attenuation.z;
+			light.instanceData.spotPower = source->power;	
+			component->addLight(light);
+		}
+		p_entity->addComponent( ComponentType::LightsComponent, component );
 	}
 }
 

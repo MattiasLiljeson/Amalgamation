@@ -46,6 +46,7 @@ public:	//Enums
 		Transform,
 		ShipModule,
 		ConnectionPointSet,
+		SpawnPointSet,
 		SpeedBoosterModule,
 		MinigunModule,
 		ShieldModule,
@@ -62,6 +63,7 @@ public:	//Enums
 		ParticleSystemEmitter,
 		ParticleSystemServerComponent,
 		DebugMove,
+		PlayerState,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

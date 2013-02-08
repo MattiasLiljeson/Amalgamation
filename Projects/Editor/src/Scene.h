@@ -53,6 +53,8 @@ private:
 	Mesh* planeRight;
 	Mesh* planeBack;
 
+	string mPath;
+
 public:
 	static AglMatrix m_world;
 	static AglMatrix m_avoidJump;
@@ -134,6 +136,9 @@ public:
 	}
 
 	bool* getDrawPlanes(){ return &mDrawPlanes; }
+
+	vector<string> FindFiles(string pPath);
+	void MaterialFromStrings(vector<string> pStrings);
 };
 
 #endif

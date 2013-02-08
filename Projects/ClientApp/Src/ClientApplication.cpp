@@ -41,7 +41,6 @@
 
 // Systems
 #include <AntTweakBarSystem.h>
-#include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
 #include <AudioController.h>
 #include <AudioListenerSystem.h>
@@ -53,46 +52,38 @@
 #include <ClientPickingSystem.h>
 #include <DebugMovementSystem.h>
 #include <DisplayPlayerScoreSystem.h>
-#include <DisplayPlayerScoreSystem.h>
 #include <EntityFactory.h>
 #include <ExtrapolationSystem.h>
-#include <GameStatsSystem.h>
+#include <GameOptionsSystem.h>
 #include <GameStatsSystem.h>
 #include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
 #include <GraphicsRendererSystem.h>
 #include <HudSystem.h>
-#include <HudSystem.h>
 #include <InputBackendSystem.h>
-#include <InterpolationSystem.h>
 #include <InterpolationSystem.h>
 #include <LevelGenSystem.h>
 #include <LibRocketBackendSystem.h>
-#include <LightBlinkerSystem.h>
+#include <LibRocketEventManagerSystem.h>
 #include <LightBlinkerSystem.h>
 #include <LightRenderSystem.h>
 #include <LoadMeshSystemClient.h>
-#include <LoadMeshSystemClient.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
+#include <MenuSystem.h>
 #include <MeshRenderSystem.h>
 #include <MineControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MinigunModuleControllerSystem.h>
 #include <MoveShipLightsSystem.h>
-#include <MoveShipLightsSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <NetsyncDirectMapperSystem.h>
 #include <ParticleRenderSystem.h>
-#include <ParticleRenderSystem.h>
-#include <ParticleRenderSystem.h>
-#include <PhysicsSystem.h>
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <PositionalSoundSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
-#include <ShadowSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <ShipEditControllerSystem.h>
@@ -101,7 +92,8 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-//#include <MainCamera.h>
+
+
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -259,6 +251,14 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
+	m_world->setSystem( new LibRocketEventManagerSystem(), true );
+	m_world->setSystem( new GameOptionsSystem() );
+
+	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
+	// that they can be properly be added to the LibRocketEventManager.
+	// The alternative would be that every event handler adds itself.
+	m_world->setSystem( new MenuSystem(), true );
+
 	/************************************************************************/
 	/* Player    															*/
 	/************************************************************************/
@@ -287,7 +287,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 
 	// Controller logic for camera
-	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc );
+	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc,
+		m_client);
 	m_world->setSystem( cameraControl , true );
 	// Camera system sets its viewport info to the graphics backend for render
 	CameraSystem* camera = new CameraSystem( graphicsBackend );
@@ -398,7 +399,7 @@ void ClientApplication::initEntities()
 
 	// Score HUD
 	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );									 
+	entity = factory->entityFromRecipe( "ScoreHudElement" );
 	m_world->addEntity( entity );
 
 	// Read monkey!
@@ -408,20 +409,48 @@ void ClientApplication::initEntities()
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	entity = factory->entityFromRecipe( "rocksClient" );									 
+	entity = factory->entityFromRecipe( "rocksClient" );	
+
 	m_world->addEntity( entity );
-	
+
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
-	entity = factory->entityFromRecipe( "SpotLight" );	
-	entity->addComponent(ComponentType::CameraInfo, new CameraInfo(1));
-	entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
-	m_world->addEntity( entity );
 
 	EntitySystem* tempSys = NULL;
 
-	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
+
+	float rotation = 0.78;
+	AglQuaternion quat;
+	for(int i = 0; i < 1; i++){
+
+		entity = factory->entityFromRecipe( "SpotLight" );
+		LightsComponent* lightComp = static_cast<LightsComponent*>(
+			entity->getComponent(ComponentType::LightsComponent));
+		int shadowIdx = -1;
+		vector<Light>* lights = lightComp->getLightsPtr();
+
+		for (unsigned int i = 0; i < lights->size(); i++){
+			if(lights->at(i).instanceData.shadowIdx != -1){
+				shadowIdx = graphicsBackend->getGfxWrapper()->generateShadowMap();
+				lights->at(i).instanceData.shadowIdx = shadowIdx;
+			}
+		}
+
+		Transform* transform = static_cast<Transform*>(
+			entity->getComponent(ComponentType::Transform));
+
+		quat = AglQuaternion::constructFromAxisAndAngle(AglVector3::up(),rotation);
+		transform->setRotation(quat);
+
+		CameraInfo* cameraInfo = new CameraInfo(1);
+		cameraInfo->m_shadowMapIdx = shadowIdx;
+		entity->addComponent(ComponentType::CameraInfo, cameraInfo);
+		entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+		m_world->addEntity( entity );
+
+		rotation -= 0.78;
+	}
 	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	

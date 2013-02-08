@@ -10,6 +10,8 @@
 #include "PhysicsBody.h"
 #include "ShipModule.h"
 #include "SpeedBoosterModule.h"
+#include "LookAtEntity.h"
+#include "GameplayTags.h"
 
 // NetComm
 #include <TcpServer.h>
@@ -26,6 +28,8 @@
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
 #include "PlayerScore.h"
+#include "CameraControlPacket.h"
+
 
 
 
@@ -51,6 +55,8 @@ void ServerPacketHandlerSystem::initialize()
 
 void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	float dt = m_world->getDelta();
+
 	while( m_server->hasNewPackets() )
 	{
 		Packet packet = m_server->popNewPacket();
@@ -60,6 +66,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		
 		if(packetType == (char)PacketType::ThrustPacket)
 		{
+			// =========================================
+			// THRUSTPACKET
+			// =========================================
 			ThrustPacket thrustPacket;
 			thrustPacket.unpack( packet );
 
@@ -85,12 +94,74 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						boostVector = thrustPacket.thrustVector*3;
 				}
 
-			m_physics->applyImpulse( physicsBody->m_id, thrustPacket.thrustVector+boostVector,
+			m_physics->applyImpulse( physicsBody->m_id, (thrustPacket.thrustVector+boostVector),
 				thrustPacket.angularVector );
 			}
 		}
-		if( packetType == (char)PacketType::Ping )
+		else if ( packetType == (char)PacketType::CameraControlPacket)
 		{
+			// =========================================
+			// CAMERACONTROLPACKET
+			// =========================================
+			// Camera controlling by client
+			CameraControlPacket cameraControlPacket;
+			cameraControlPacket.unpack( packet );
+
+			Entity* entity = m_world->getEntity(cameraControlPacket.entityId);
+
+			if (entity)
+			{
+				// Handle lookat tags based on state
+				// Maybe the tags are to cumbersome? 
+				// Implement a state component for camera instead?
+				LookAtEntity* lookAt = static_cast<LookAtEntity*>
+					(entity->getComponent(ComponentType::LookAtEntity)); 
+				if (lookAt)
+				{
+					lookAt->setOrbitMovement(cameraControlPacket.movement);
+					// get lookAt tags if they exist
+					LookAtFollowMode_TAG* lookAtFollow=NULL;
+					LookAtOrbitMode_TAG* lookAtOrbit=NULL;
+					Transform* cameraTransform=NULL;
+
+					Component* t = entity->getComponent(ComponentType::ComponentTypeIdx::TAG_LookAtFollowMode);
+					if (t!=NULL) lookAtFollow = static_cast<LookAtFollowMode_TAG*>(t);
+
+					t = entity->getComponent( ComponentType::ComponentTypeIdx::TAG_LookAtOrbitMode );
+					if (t!=NULL) lookAtOrbit = static_cast<LookAtOrbitMode_TAG*>(t);
+
+					t = entity->getComponent( ComponentType::ComponentTypeIdx::Transform );
+					if (t!=NULL) cameraTransform = static_cast<Transform*>(t);
+
+
+					// handle "state" switch
+					if (lookAtFollow && !lookAtOrbit &&
+						cameraControlPacket.state==PlayerStates::editState)
+					{
+						lookAt->setOrbitOffset(AglQuaternion::identity());
+						entity->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
+						entity->addComponent(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
+						entity->applyComponentChanges();
+					}
+					else if (lookAtOrbit && !lookAtFollow && 
+						cameraControlPacket.state==PlayerStates::steeringState)				
+					{
+						{
+							entity->removeComponent(ComponentType::TAG_LookAtOrbitMode); // Disable this state...
+							entity->addComponent(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());  // ...and switch to follow state.
+							entity->applyComponentChanges();
+						}
+					}
+				}
+
+			}
+
+		}
+		else if( packetType == (char)PacketType::Ping )
+		{
+			// =========================================
+			// PINGPACKET
+			// =========================================
 			PingPacket pingPacket;
 			pingPacket.unpack( packet );
 
@@ -101,6 +172,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if( packetType == (char)PacketType::Pong)
 		{
+			// =========================================
+			// PONGPACKET
+			// =========================================
 			//auto clientInfo = static_cast<ClientInfo*>(m_world->getEntityManager()->get)
 			
 
@@ -134,6 +208,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{
+			// =========================================
+			// RAYPACKET
+			// =========================================
 			ServerPickingSystem* picking = 
 				static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
 
@@ -143,6 +220,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if (packetType == (char)PacketType::ModuleHighlightPacket)
 		{
+			// =========================================
+			// MODULEHIGHLIGHTPACKET
+			// =========================================
 			ShipModulesControllerSystem* modsystem = 
 				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
 
@@ -152,6 +232,9 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		}
 		else if (packetType == (char)PacketType::SimpleEvent)
 		{
+			// =========================================
+			// SIMPLEEVENTPACKET
+			// =========================================
 			ShipModulesControllerSystem* modsystem = 
 				static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
 

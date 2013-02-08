@@ -35,7 +35,7 @@ Packet EntityCreationPacket::pack()
 	return packet;
 }
 
-void EntityCreationPacket::unpack( Packet p_packet )
+void EntityCreationPacket::unpack( Packet& p_packet )
 {
 	p_packet >> entityType
 		>> isLevelProp

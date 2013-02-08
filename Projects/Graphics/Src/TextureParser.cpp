@@ -177,8 +177,8 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	p_context->GenerateMips(newShaderResurceView);
 
 	texture->Release();
-	delete newData;
-	delete[] data;
+	delete [] newData;
+	delete [] data;
 
 	return newShaderResurceView;
 }

@@ -80,7 +80,7 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 
 		double x = input->getCursor()->getX();
 		double y = -input->getCursor()->getY();
-		AglVector4 targetNDC( x, y, 1.0f, 1.0f );
+		AglVector4 targetNDC( (float)x, (float)y, 1.0f, 1.0f );
 		targetNDC.transform(inv);
 		targetNDC /= targetNDC.w;
 		AglVector3 target(targetNDC.x, targetNDC.y, targetNDC.z);

@@ -11,6 +11,10 @@
 #include <GraphicsWrapper.h>
 #include <DebugUtil.h>
 #include <Rocket/Controls.h>
+#include <EventInstancer.h>
+#include "LibRocketInputHelper.h"
+#include "ClientConnectToServerSystem.h"
+#include "LibRocketEventManagerSystem.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -18,14 +22,23 @@ LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphic
 {
 	m_graphicsBackend = p_graphicsBackend;
 	m_inputBackend = p_inputBackend;
+
 }
 
 
 LibRocketBackendSystem::~LibRocketBackendSystem()
 {
+	// The connect handler is also an EntitySystem, and thus owned by the SystemManager.
+	// Therefor, it is unregistered manually.
+	//m_eventManager->UnregisterEventHandler("join");
+
+	//m_eventManager->Shutdown();
+	//delete m_eventManager;
+
 	for( unsigned int i=0; i<m_documents.size(); i++ )
 	{
-		m_documents[i]->GetContext()->UnloadDocument(m_documents[i]);
+		m_rocketContext->UnloadDocument(m_documents[i]);
+		m_documents[i]->RemoveReference();
 	}
 
 	m_rocketContext->RemoveReference(); //release context
@@ -36,6 +49,8 @@ LibRocketBackendSystem::~LibRocketBackendSystem()
 
 void LibRocketBackendSystem::initialize()
 {
+	LibRocketInputHelper::initialize();
+
 	m_renderInterface = new LibRocketRenderInterface( m_graphicsBackend->getGfxWrapper() );
 	m_systemInterface = new LibRocketSystemInterface( m_world );
 
@@ -53,8 +68,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
-//	Rocket::Debugger::Initialise( m_rocketContext );
-//	Rocket::Debugger::SetVisible( true );
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( false );
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -72,10 +87,20 @@ void LibRocketBackendSystem::initialize()
 		loadFontFace( tmp.c_str() );
 	}
 
+	//m_eventManager = static_cast<LibRocketEventManager*>(
+	//	m_world->getSystem(SystemType::LibRocketEventManager));
+	// Initialise event instancer and handlers.
+	//EventInstancer* eventInstancer = new EventInstancer(m_eventManager);
+	//Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
+	//eventInstancer->RemoveReference();
+
+	//m_eventManager->Initialize(m_rocketContext);
+
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
 	//tmp = GUI_HUD_PATH + "infoPanel.rml";
-	loadDocument( tmp.c_str() );
+	int i = loadDocument( tmp.c_str() );
+	m_documents[i]->Hide();
 
 	//tmp = GUI_HUD_PATH + "main.rml";
 	//loadDocument( tmp.c_str() );
@@ -100,19 +125,55 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 	}
 }
 
-int LibRocketBackendSystem::loadDocument( const char* p_filePath, bool p_initiallyShown/*=true*/)
+int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName)
+{
+	int docId = loadDocument((GUI_MENU_PATH + 
+								toString(p_windowName) +
+								toString(".rml")).c_str(),
+								p_windowName);
+
+	return docId;
+}
+
+int LibRocketBackendSystem::loadDocument( const char* p_filePath, const char* p_windowName/*=NULL*/)
 {
 	int docId = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;
 	tmpDoc = m_rocketContext->LoadDocument( Rocket::Core::String(p_filePath) );
-	
+
 	if( tmpDoc != NULL )
 	{
 		docId = m_documents.size();
 		m_documents.push_back( tmpDoc );
-		if (p_initiallyShown)
-			tmpDoc->Show();
-		tmpDoc->RemoveReference();
+		
+		// Set the element's title on the title; IDd 'title' in the RML.
+		Rocket::Core::Element* title = tmpDoc->GetElementById("title");
+		if (title != NULL)
+			title->SetInnerRML(tmpDoc->GetTitle());
+
+		Rocket::Core::String storedName;
+		// If no windowName was specified, extract it using the full filePath.
+		if (p_windowName == NULL)
+		{
+			Rocket::Core::StringList splitPath;
+			Rocket::Core::StringUtilities::ExpandString(splitPath, p_filePath, '/');
+			 // The unformatted window name, needs to get rid of the file extension.
+			std::string name = splitPath[splitPath.size()-1].CString();
+			int splitPos = name.find_last_of('.');
+			if (splitPos != -1)
+				name.erase(splitPos);
+
+			storedName = name.c_str();
+		}
+		else
+		{
+			storedName = p_windowName;
+		}
+		// Set the element's id and map the resulting name.
+		m_documents[docId]->SetId(storedName);
+		m_docStringIdMap[storedName] = docId;
+
+		//tmpDoc->RemoveReference();
 	}
 	else{
 		DEBUGWARNING(( 
@@ -120,6 +181,15 @@ int LibRocketBackendSystem::loadDocument( const char* p_filePath, bool p_initial
 			toString(p_filePath)).c_str() ));
 	}
 	return docId;
+}
+
+int LibRocketBackendSystem::getDocumentByName( const char* p_name ) const
+{
+	auto it = m_docStringIdMap.find(p_name);
+	if (it != m_docStringIdMap.end())
+		return it->second;
+	else
+		return -1;
 }
 
 void LibRocketBackendSystem::loadCursor( const char* p_cursorPath )
@@ -144,9 +214,10 @@ void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string
 }
 
 
-void LibRocketBackendSystem::showDocument( int p_docId )
+void LibRocketBackendSystem::showDocument( int p_docId, 
+								int p_focusFlags/*= Rocket::Core::ElementDocument::FOCUS*/)
 {
-	m_documents[p_docId]->Show();
+	m_documents[p_docId]->Show(p_focusFlags);
 }
 
 void LibRocketBackendSystem::hideDocument( int p_docId )
@@ -154,6 +225,11 @@ void LibRocketBackendSystem::hideDocument( int p_docId )
 	m_documents[p_docId]->Hide();
 }
 
+
+void LibRocketBackendSystem::focusDocument( int p_docId )
+{
+	m_documents[p_docId]->Focus();
+}
 
 void LibRocketBackendSystem::process()
 {
@@ -167,21 +243,8 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 	
-
-	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
-														   (float)m_cursor->getY());
-	int mouseX = mousePos.first;
-	int mouseY = mousePos.second;
-
-	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
-	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED )
-	{
-		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
-	}
-	else if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_RELEASED )
-	{
-		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
-	}
+	processMouseMove();
+	processKeyStates();
 
 	m_rocketContext->Update();
 }
@@ -190,3 +253,78 @@ void LibRocketBackendSystem::render()
 {
 	m_rocketContext->Render();
 }
+
+Rocket::Core::Context* LibRocketBackendSystem::getContext() const
+{
+	return m_rocketContext;
+}
+
+void LibRocketBackendSystem::processMouseMove()
+{
+	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
+
+	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
+		(float)m_cursor->getY());
+	int mouseX = mousePos.first;
+	int mouseY = mousePos.second;
+
+	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
+	m_rocketContext->ShowMouseCursor(m_cursor->isVisible());
+	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED )
+	{
+		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
+	}
+	else if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_RELEASED )
+	{
+		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
+	}
+}
+
+void LibRocketBackendSystem::processKeyStates()
+{
+	for (int keyCode = 0; keyCode < InputHelper::KeyboardKeys_CNT; keyCode++)
+	{
+		InputHelper::KeyboardKeys kbk = (InputHelper::KeyboardKeys)keyCode;
+		Control* control = m_inputBackend->getControlByEnum(kbk);
+		if (LibRocketInputHelper::isKeyMapped(keyCode) && control->getDelta() != 0)
+		{
+			if (control->getStatus() > 0.5f)
+			{
+				DEBUGPRINT(((toString("Key ") +
+							toString(keyCode) + 
+							toString(" was pressed\n")).c_str()));
+				m_rocketContext->ProcessKeyDown(
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+
+				char c = InputHelper::charFromKeyboardKey(kbk);
+				if (c != InputHelper::NONPRINTABLE_CHAR)
+				{	
+					m_rocketContext->ProcessTextInput(c);
+				}
+			}
+			else
+			{
+				DEBUGPRINT(((toString("Key ") +
+							toString(keyCode) + 
+							toString(" was released\n")).c_str()));
+				m_rocketContext->ProcessKeyUp(
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+			}
+
+		}
+	}
+}
+
+void LibRocketBackendSystem::showCursor()
+{
+	m_rocketContext->ShowMouseCursor(true);
+}
+
+void LibRocketBackendSystem::hideCursor()
+{
+	m_rocketContext->ShowMouseCursor(false);
+}
+
+
+
+

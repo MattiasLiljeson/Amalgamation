@@ -23,7 +23,7 @@ public:
 
 	Packet pack();
 
-	void unpack( Packet p_packet );
+	void unpack( Packet& p_packet );
 
 public:
 	int id;

@@ -7,6 +7,7 @@ AglWriter::AglWriter(string p_path)
 	m_header.version = AGLVERSION;
 	m_header.meshCount = 0;
 	m_header.materialCount = 0;
+	m_header.gradientCount = 0;
 	m_header.materialMappingCount = 0;
 	m_header.nodeCount = 0;
 	m_header.skeletonCount = 0;
@@ -48,6 +49,7 @@ void AglWriter::write(AglScene* p_scene)
 	m_header.connectionPointCount	= d.connectionPoints.size();
 	m_header.particleSystemCount	= d.particleSystems.size();
 	m_header.coordinateSystem		= d.coordinateSystem;
+	m_header.gradientCount			= d.gradients.size();
 
 	ofstream file;
 
@@ -99,6 +101,28 @@ void AglWriter::write(AglScene* p_scene)
 	{
 		buf = (char*)&materials[0];
 		file.write(buf, sizeof(AglMaterial) * m_header.materialCount);
+	}
+
+
+	//Write all the gradient data to the file
+	for (unsigned int i = 0; i < d.gradients.size(); i++)
+	{
+		vector<AglGradientMaterial*> gms = d.gradients[i]->getLayers();
+		unsigned int size = gms.size();
+		buf = (char*)&size;
+		file.write(buf, sizeof(unsigned int));
+
+		vector<AglGradientMaterial> gms2;
+		for (unsigned int j = 0; j < gms.size(); j++)
+		{
+			gms2.push_back(*gms[j]);
+		}
+
+		if (gms2.size() > 0)
+		{
+			buf = (char*)&gms2[0];
+			file.write(buf, sizeof(AglGradientMaterial) * gms2.size());
+		}
 	}
 
 	//Write all the material mapping data to the file

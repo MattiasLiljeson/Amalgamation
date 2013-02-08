@@ -10,6 +10,7 @@ class BufferFactory;
 class ShaderBase;
 class DeferredBaseShader;
 class DeferredComposeShader;
+class LightShader;
 class GUIShader;
 class ShaderFactory;
 class RenderStateHelper;
@@ -69,6 +70,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_shadowMap);
 
+	void mapDeferredBaseRTSToShader();
+
 	void unmapDeferredBaseFromShader();
 
 	void mapVariousPassesToComposeStage();
@@ -116,9 +119,11 @@ public:
 
 	DeferredBaseShader* getDeferredBaseShader();
 
-	DeferredBaseShader* getDeferredLightShader();
+	LightShader* getDeferredLightShader();
 
 	void renderComposeStage();
+
+	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
 	// ===================================================================================
 	// Debug
@@ -132,6 +137,7 @@ private:
 	void unMapGBuffers();
 	void initShaders();
 	void initFullScreenQuad();
+	void initSSAO();
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -144,7 +150,7 @@ private:
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
-	DeferredBaseShader*		m_lightShader;
+	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
@@ -158,6 +164,8 @@ private:
 	// rasterizer states
 	vector<ID3D11RasterizerState*> m_rasterizerStates;
 	RasterizerState::Mode m_currentRasterizerStateType;
+
+	SSAOBuffer	m_ssaoData;
 
 	int m_width;
 	int m_height;

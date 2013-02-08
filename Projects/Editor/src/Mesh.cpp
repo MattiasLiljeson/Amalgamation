@@ -58,7 +58,7 @@ void Mesh::Init(AglMesh* pMesh)
 	mMax = maxP;
 	
 	mVisible = true;
-	mCurrentMaterial = 0;
+	mCurrentMaterial = -1;
 	mMesh = pMesh;
 }
 
@@ -258,21 +258,9 @@ void Mesh::AddSkeletonMapping(SkeletonMapping* pSkeletonMapping)
 {
 	mSkeletonMappings.push_back(pSkeletonMapping);
 }
-void Mesh::AddMaterial(int pMaterial, bool pSetAsCurrent)
+void Mesh::SetMaterial(int pMaterial)
 {
-	//Not defined yet!
-	/*for (int i = 0; i < mMaterials.size(); i++)
-	{
-		if (mMaterials[i] == pMaterial)
-		{
-			if (pSetAsCurrent)
-				mCurrentMaterial = i;
-			return;
-		}
-	}
-	mMaterials.push_back(pMaterial);
-	if (pSetAsCurrent)
-		mCurrentMaterial = mMaterials.size() - 1;*/
+	mCurrentMaterial = pMaterial;
 }
 void Mesh::AddGradient(AglGradient* pGradient, bool pSetAsCurrent)
 {
