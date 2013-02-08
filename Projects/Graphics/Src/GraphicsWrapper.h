@@ -219,10 +219,11 @@ private:
 	void initBackBuffer();
 
 	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
-		void* p_indexBufferRef, UINT32 p_elmentCount,
+		void* p_indexBufferRef, UINT32 p_indexElementCount,
 		Texture** p_textureArray,
 		unsigned int p_textureArraySize,
-		UINT32 p_instanceDataSize, void* p_instanceRef,
+		UINT32 p_instanceDataSize, UINT32 p_instanceElementCount,
+		void* p_instanceRef,
 		ShaderBase* p_shader);
 private:
 	ID3D11Device*			m_device;
