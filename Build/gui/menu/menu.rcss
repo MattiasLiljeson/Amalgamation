@@ -68,10 +68,6 @@ div#title_bar span
 	font-size: 22;
 	font-weight: bold;
 
-	outline-font-effect: outline;
-	outline-width: 1px;
-	outline-color: green;
-
 	/*background-decorator: tiled-horizontal;
 	background-left-image: ../../Assets/gui/texture/invader.tga 147px 0px 229px 85px;
 	background-center-image: ../../Assets/gui/texture/invader.tga stretch 229px 0px 230px 85px;
@@ -194,15 +190,12 @@ input.submit:focus
 button:hover,
 input.submit:hover
 {
-	
-	background: red;
-	background-image-t: 45px 90px;
+	background: rgba(200,200,200,255);
 }
 
 button:active,
 input.submit:active
 {
-	background-image-t: 90px 135px;
 }
 
 
