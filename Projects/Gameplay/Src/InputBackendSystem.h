@@ -24,7 +24,6 @@ class inputControlFactory;
 class InputBackendSystem : public EntitySystem
 {
 public:
-
 	///-----------------------------------------------------------------------------------
 	/// Constructor. HINSTANCE is needed to fetch input from a window. The 
 	/// GraphicsBackendSystem is also needed to fetch input from a window.

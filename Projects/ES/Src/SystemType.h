@@ -31,6 +31,7 @@ public:	//Enums
 		LookAtSystem,
 		TransformParentHandlerSystem,
 		InputBackendSystem,
+		InputActionsBackendSystem,
 		InterpolationSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,

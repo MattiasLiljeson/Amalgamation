@@ -47,6 +47,7 @@
 #include <CameraInfo.h>
 #include <CameraSystem.h>
 #include <ClientConnectToServerSystem.h>
+#include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
@@ -60,6 +61,7 @@
 #include <GraphicsBackendSystem.h>
 #include <GraphicsRendererSystem.h>
 #include <HudSystem.h>
+#include <InputActionsBackendSystem.h>
 #include <InputBackendSystem.h>
 #include <InterpolationSystem.h>
 #include <LevelGenSystem.h>
@@ -92,7 +94,6 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-#include <ClientEntityCountSystem.h>
 
 
 
@@ -238,6 +239,8 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
+	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "input.ini" ),
+		true );
 
 	GamepadRumbleSystem* gamepadRumble = new GamepadRumbleSystem( inputBackend );
 	m_world->setSystem( gamepadRumble, true);

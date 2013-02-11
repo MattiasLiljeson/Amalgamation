@@ -37,6 +37,8 @@ static const string& TESTMUSICPATH = "Assets/Sound/Music/Test/";
 static const string& TESTMODELPATH = "Assets/Models/Test/";
 static const string& TESTTEXTUREPATH = "Assets/Textures/Test/";
 
+static const string& SETTINGSPATH = "Assets/Settings/";
+
 /************************************************************************/
 /* MISC														*/
 /************************************************************************/

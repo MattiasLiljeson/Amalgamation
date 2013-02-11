@@ -44,6 +44,7 @@
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
+    <ClInclude Include="InputActionsBackendSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
     <ClInclude Include="InterpolationSystem.h" />
     <ClInclude Include="LevelGenSystem.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
+    <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
