@@ -97,6 +97,9 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
       <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Debugging">
+      <UniqueIdentifier>{d9fcfc31-8723-4888-a42a-30eced2650b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -414,9 +417,6 @@
     <ClInclude Include="PositionalSoundSource.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="DebugMove.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
@@ -524,6 +524,15 @@
     </ClInclude>
     <ClInclude Include="ClientEntityCountSystem.h">
       <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMove.h">
+      <Filter>Components\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovement.h">
+      <Filter>Components\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -876,6 +885,9 @@
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="ClientEntityCountSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>

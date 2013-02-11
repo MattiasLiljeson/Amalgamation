@@ -17,6 +17,7 @@ public:	//Enums
 		ProcessingMessagesSystem,
 		NetworkListenerSystem,
 		ServerPacketHandlerSystem,
+		CircularMovementSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,

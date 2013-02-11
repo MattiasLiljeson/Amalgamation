@@ -23,6 +23,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		ClientInfo,
+		CircularMovement,
 		Extrapolate,
 		InterpolationComponent,
 		PhysicsBody,
