@@ -11,6 +11,7 @@
 #include "EntityType.h"
 #include "NetworkSynced.h"
 #include "ShipModule.h"
+#include "ShipManagerSystem.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -495,9 +496,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 {
-	//Add Check so that modules with other modules connected to them
-	//cannot be removed
-
 	if (p_ray.m_latestPick >= 0)
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
@@ -507,6 +505,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
+
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
 			ComponentType::PhysicsBody));
 
@@ -528,6 +527,26 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+
+			//Ensure that the module is not connected to an enemy ship.
+			ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+			Entity* rayShip = sms->findShip(p_ray.m_clientIndex);
+			
+			Entity* parentShip = parent;
+			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+				ComponentType::ShipModule));
+
+			while (parentModule)
+			{
+				parentShip = m_world->getEntity(parentModule->m_parentEntity);
+				parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+					ComponentType::ShipModule));
+			}
+
+			if (parentShip != rayShip)
+				return false;
+
+
 			ConnectionPointSet* cpsParent = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
