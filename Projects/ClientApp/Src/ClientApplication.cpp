@@ -541,6 +541,7 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
+//	initInstanceAsteroidFieldByJohan("RockA.agl", 10, 1000, 10.0f, 1.0f, 1.0f, 0.3f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
@@ -562,6 +563,38 @@ void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned in
 			float rZ = (float)rand()/(float)RAND_MAX;
 			float factor = 0.1f;
 			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor)));
+
+			m_world->addEntity(entity);
+		}
+	}
+}
+
+void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
+	unsigned int p_width, unsigned int p_numbersInCircle, float p_radius,
+	float p_spacing, float p_diffY, float p_scale)
+{
+	for(unsigned int circleIndex=0; circleIndex<p_width; circleIndex++)
+	{
+		float currentRadius = p_radius + (float)circleIndex * p_spacing;
+		for(unsigned int i=0; i<p_numbersInCircle; i++)
+		{
+			float circleRandom = 2.0f * 3.141592653f * (float)rand()/(float)RAND_MAX;
+
+			float y = p_diffY * ((float)rand()/(float)RAND_MAX - 0.5f);
+			AglVector3 position(
+				- 50.0f + cos(circleRandom) * currentRadius,
+				- 50.0f + sin(circleRandom) * currentRadius,
+				0.0f);
+			Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(position, AglQuaternion(),
+				AglVector3(p_scale, p_scale, p_scale));
+			entity->addComponent(ComponentType::Transform, t);
+			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+//			float rX = (float)rand()/(float)RAND_MAX;
+//			float rY = (float)rand()/(float)RAND_MAX;
+//			float rZ = (float)rand()/(float)RAND_MAX;
+//			float factor = 0.1f;
+//			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor)));
 
 			m_world->addEntity(entity);
 		}
