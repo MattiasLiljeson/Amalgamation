@@ -537,6 +537,7 @@ void Scene::Draw()
 		}
 		t = cp[i].transform*t;
 		t.SetTranslation(t.GetTranslation()*invMax);
+		//t *= m_avoidJump;
 		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(0.1f, 0.001f, 0.001f));
 		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * 0.05f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(1, 0, 0));

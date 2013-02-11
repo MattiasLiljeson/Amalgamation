@@ -61,7 +61,13 @@ void AglScene::init(AglSceneDesc p_desc)
 	maxP = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 	for (unsigned int i = 0; i < m_meshes.size(); i++)
 	{
+		AglJoint* j1 = m_skeletons[0]->getRoot();
+
+		//What is it?
+		AglMatrix m_avoidJump = m_skeletons[0]->getInverseBindMatrix(j1->id) * m_skeletons[0]->getGlobalTransform(j1->id);
+
 		AglMatrix transform = m_meshes[i]->getHeader().transform;
+		transform = m_avoidJump;
 		AglVertexSTBN* points = (AglVertexSTBN*)m_meshes[i]->getVertices();
 		for (unsigned int j = 0; j < m_meshes[i]->getHeader().vertexCount; j++)
 		{

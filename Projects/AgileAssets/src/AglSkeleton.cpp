@@ -34,7 +34,7 @@ AglJoint* AglSkeleton::getRoot()
 		}
 	}
 	int count = 0;
-	do 
+	/*do 
 	{
 		int newInd = -1;
 		for (int i = 0; i < m_header.jointCount; i++)
@@ -50,7 +50,7 @@ AglJoint* AglSkeleton::getRoot()
 			ind = newInd;
 			j = &m_joints[ind];
 		}
-	} while (count > 0 && count < 2);
+	} while (count > 0 && count < 2);*/
 	return j;
 }
 
