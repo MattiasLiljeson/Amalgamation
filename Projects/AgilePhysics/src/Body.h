@@ -56,6 +56,8 @@ public:
 	virtual void ComputeInertia() = 0;
 
 	void setTransform(AglMatrix p_setTransform);
+
+	virtual float GetMass() const = 0;
 };
 
 #endif // BODY_H
