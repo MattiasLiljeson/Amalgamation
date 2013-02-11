@@ -250,13 +250,13 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 
 	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	AglVector3 vel = body->GetVelocity();
+	AglVector3 vel = body->GetVelocity() * body->GetMass();
 
 	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
 	{
 		AglVector3 dest = origin + dir*t;
-		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
 	}
 	else
 	{
