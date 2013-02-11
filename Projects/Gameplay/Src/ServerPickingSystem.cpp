@@ -181,6 +181,24 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 				if (pb && pb->m_id == col)
 				{
 					//Found a pick
+
+					//Verify that the pick is not already picked
+					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
+					{
+						if (m_pickComponents[pcs].m_latestPick == p_entities[i]->getIndex())
+							return;
+					}
+
+					//Only allow picking a certain distance
+					ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+					Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
+					
+					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
+					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+						return;
+
+
 					p_pc.m_latestPick = p_entities[i]->getIndex();
 
 					//Attempt a detach if the entity is already connected
