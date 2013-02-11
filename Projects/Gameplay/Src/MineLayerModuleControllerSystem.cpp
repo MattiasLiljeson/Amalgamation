@@ -69,7 +69,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 
 	Entity* entity = m_world->createEntity();
 	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(),
-		AglVector3(0.8f, 0.8f, 0.8f));
+		AglVector3(1.4f, 1.4f, 1.4f));
 	entity->addComponent( ComponentType::Transform, t);
 	entity->addComponent(ComponentType::StandardMine, new StandardMine());
 	entity->addComponent( ComponentType::PhysicsBody, 
@@ -80,7 +80,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(p_transform->getTranslation(),
 		p_transform->getRotation(),
-		AglVector3(0.8f, 0.8f, 0.8f), fireDirection * 10.0f + p_moduleVelocity,
+		AglVector3(1.4f, 1.4f, 1.4f), fireDirection * 10.0f + p_moduleVelocity,
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, true));

@@ -57,9 +57,12 @@ private:
 	static string instantiate;
 	static string connectionpoint;
 	static string spawnpoint;
-	static string light;
-	static string lighthex;
-	static string pointlightType;
-	static string spotlightType;
-	static string dirlightType;
+/*	static string light;*/
+	static string lightpoint;
+	static string lightdir;
+	static string lightspot;
+/*	static string lighthex;*/
+// 	static string pointlightType;
+// 	static string spotlightType;
+// 	static string dirlightType;
 };

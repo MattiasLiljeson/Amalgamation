@@ -101,6 +101,6 @@ float4 PS(VertexOut input) : SV_TARGET
 	//depth = pow(depth,99);
 	//return randomNormals;
 	//return float4(depth,depth,depth,1.0f);
-	return lightColor+fog;
+	return lightColor;
 	// return float4(1-ao,1-ao,1-ao,1.0f);
 }
