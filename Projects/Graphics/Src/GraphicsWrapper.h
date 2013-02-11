@@ -246,7 +246,7 @@ private:
 	int m_width;
 
 	int m_randomNormalTextures;
-	int m_transparentTexture;
+	int m_solidWhiteTexture;
 
 	bool m_windowed;
 	bool m_wireframeMode;
