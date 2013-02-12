@@ -253,7 +253,11 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			// This'll be fun		
 			LightCreationData* source = &(*lights)[i];
 			Light light;
-			light.offsetMat = source->transform;
+			TransformComponents transformHelper;
+			transformHelper.scale = AglVector3(source->range,source->range,source->range);
+			transformHelper.rotation = source->transform.GetRotation();
+			transformHelper.translation = source->transform.GetTranslation();
+			light.offsetMat = transformHelper.toMatrix();
 			AglVector3 forward = source->transform.GetForward();
 			light.instanceData.lightDir[0] = forward.x;
 			light.instanceData.lightDir[1] = forward.y;
