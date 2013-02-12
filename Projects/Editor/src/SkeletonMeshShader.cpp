@@ -61,6 +61,26 @@ SkeletonMeshShader::SkeletonMeshShader(ID3D11Device* pDevice, ID3D11DeviceContex
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	pDevice->CreateSamplerState(&samplerDesc, &mSampler);
+
+
+	//NEW! Sample matrices from texture
+	createSkeletonTexture();
+
+	D3D11_SAMPLER_DESC samplerDescBones;
+	samplerDescBones.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	samplerDescBones.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDescBones.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDescBones.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDescBones.MipLODBias = 0.0f;
+	samplerDescBones.MaxAnisotropy = 1;
+	samplerDescBones.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDescBones.BorderColor[0] = 0;
+	samplerDescBones.BorderColor[1] = 0;
+	samplerDescBones.BorderColor[2] = 0;
+	samplerDescBones.BorderColor[3] = 0;
+	samplerDescBones.MinLOD = 0;
+	samplerDescBones.MaxLOD = D3D11_FLOAT32_MAX;
+	pDevice->CreateSamplerState(&samplerDescBones, &mBoneTextureSampler);
 }
 SkeletonMeshShader::~SkeletonMeshShader()
 {
@@ -158,4 +178,102 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 
 	mDeviceContext->PSSetSamplers(0, 1, &mSampler);
 	mDeviceContext->DSSetSamplers(0, 1, &mSampler);
+
+
+	//Bone texture data
+	mDeviceContext->VSSetSamplers(0, 1, &mBoneTextureSampler);
+
+	D3D11_MAPPED_SUBRESOURCE mappedTex;
+	mDeviceContext->Map(mBoneTexture, D3D11CalcSubresource(0, 0, 1), D3D11_MAP_WRITE_DISCARD, 0, &mappedTex);
+
+	float* values = (float*)mappedTex.pData;
+
+	jointCount = pSkeleton->getHeader().jointCount;
+	for (unsigned int i = 0; i < jointCount; i++)
+	{
+		AglMatrix am = pSkeleton->getInverseBindMatrix(i) * pSkeleton->getGlobalTransform(i);
+		//am = AglMatrix::transpose(am);
+
+		int pos = i*16;
+
+		//Row1
+		values[pos] = am[0];
+		values[pos+1] = am[1];
+		values[pos+2] = am[2];
+		values[pos+3] = am[3];
+		//Row2
+		values[pos+4] = am[4];
+		values[pos+5] = am[5];
+		values[pos+6] = am[6]; 
+		values[pos+7] = am[7]; 
+		//Row3
+		values[pos+8] = am[8];
+		values[pos+9] = am[9];
+		values[pos+10] =am[10];
+		values[pos+11] =am[11];
+		//Row4
+		values[pos+12] = am[12];
+		values[pos+13] = am[13];
+		values[pos+14] = am[14];
+		values[pos+15] = am[15];
+	}
+
+	mDeviceContext->Unmap(mBoneTexture, D3D11CalcSubresource(0, 0, 1));
+	mDeviceContext->VSSetShaderResources(0, 1, &mBoneSRV);
+}
+
+void SkeletonMeshShader::createSkeletonTexture()
+{
+	D3D11_TEXTURE1D_DESC desc;
+	desc.MiscFlags = 0;
+	desc.Width = 16384; // 2^14
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; //One row in the matrix
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	HRESULT res = mDevice->CreateTexture1D(&desc, NULL, &mBoneTexture );
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srDesc;
+	srDesc.Format = desc.Format;
+	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
+	srDesc.Texture2D.MostDetailedMip = 0;
+	srDesc.Texture2D.MipLevels = 1;
+	mDevice->CreateShaderResourceView(mBoneTexture, &srDesc, &mBoneSRV );
+
+
+
+	D3D11_MAPPED_SUBRESOURCE mappedTex;
+	res = mDeviceContext->Map(mBoneTexture, D3D11CalcSubresource(0, 0, 1), D3D11_MAP_WRITE_DISCARD, 0, &mappedTex);
+
+	float* values = (float*)mappedTex.pData;
+	for( UINT col = 0; col < desc.Width; )
+	{
+		//Row1
+		values[col++] = 1;
+		values[col++] = 0;
+		values[col++] = 0; 
+		values[col++] = 0; 
+		//Row2
+		values[col++] = 0;
+		values[col++] = 1;
+		values[col++] = 0; 
+		values[col++] = 0; 
+		//Row3
+		values[col++] = 0;
+		values[col++] = 0;
+		values[col++] = 1; 
+		values[col++] = 0; 
+		//Row4
+		values[col++] = 0;
+		values[col++] = 0;
+		values[col++] = 0; 
+		values[col++] = 1; 
+	}
+
+	mDeviceContext->Unmap(mBoneTexture, D3D11CalcSubresource(0, 0, 1));
+
+
 }
