@@ -326,8 +326,21 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+
+					AglVector3 oldForward = inst.transform.GetForward();
+					AglVector3 oldUp = inst.transform.GetUp();
+					AglVector3 oldRight = inst.transform.GetRight();
+
+					inst.transform.SetLeft(-oldRight);
+					inst.transform.SetForward(oldUp);
+					inst.transform.SetUp(oldForward);
+					inst.transform *= AglMatrix::createScaleMatrix(AglVector3(1.0f,1.0f,-1.0f));
+					
+
 					p_model->instances.push_back(inst);
+
 					inst.transform *= p_offset;
+
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;

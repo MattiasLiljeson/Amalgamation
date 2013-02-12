@@ -91,12 +91,15 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float3	lightCol;
 	
 	if( p_input.light.type == 0 ) { // Directional light
+		/*DEBUG transform and col: lightCol = p_input.light.diffuse;*/
 		lightCol = parallelLight( surface, p_input.light, gCameraPos.xyz, normalVec,
 		worldPos );
 	} else if ( p_input.light.type == 1 ) { // Point light
+		/*DEBUG transform and col:lightCol = p_input.light.diffuse;*/
 		lightCol = pointLight( surface, p_input.light, gCameraPos.xyz, normalVec,
 		worldPos );
 	} else if ( p_input.light.type == 2 ) { // Spot light
+		/*DEBUG transform and col:lightCol = p_input.light.diffuse;*/
 		lightCol = spotLight( surface, p_input.light, gCameraPos.xyz, normalVec,
 		worldPos );
 	}

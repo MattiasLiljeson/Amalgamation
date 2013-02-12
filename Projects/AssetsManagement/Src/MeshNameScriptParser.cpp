@@ -8,11 +8,14 @@ string MeshNameScriptParser::decimalSeparator = "d";
 string MeshNameScriptParser::instantiate = "I";
 string MeshNameScriptParser::connectionpoint = "CP";
 string MeshNameScriptParser::spawnpoint = "SP";
-string MeshNameScriptParser::light = "L";
-string MeshNameScriptParser::lighthex = "LX";
-string MeshNameScriptParser::pointlightType = "point";
-string MeshNameScriptParser::spotlightType = "spot";
-string MeshNameScriptParser::dirlightType = "dir";
+/*string MeshNameScriptParser::light = "L";*/
+string MeshNameScriptParser::lightpoint = "LP";
+string MeshNameScriptParser::lightdir = "LD";
+string MeshNameScriptParser::lightspot = "LS";
+// string MeshNameScriptParser::lighthex = "LX";
+// string MeshNameScriptParser::pointlightType = "point";
+// string MeshNameScriptParser::spotlightType = "spot";
+// string MeshNameScriptParser::dirlightType = "dir";
 
 pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token> 
 	MeshNameScriptParser::parse(const string& p_string)
@@ -38,15 +41,15 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		data.spawnSpecName = extractPart(p_string,0);
 		data.name = extractPart(p_string,1);
 	}
-	else if (instr==light || instr==lighthex)
+	else if (instr==lightpoint || instr==lightdir || instr==lightspot)
 	{
 		data.name = extractPart(p_string,0);
-		if (data.name==pointlightType)
+		if ( instr==lightpoint )
 		{
 			tokenVal = POINTLIGHT;
 			data.lightSpec.type = LightCreationData::POINT;
 		}
-		else if (data.name==spotlightType)
+		else if ( instr==lightspot )
 		{
 			tokenVal = SPOTLIGHT;
 			data.lightSpec.type = LightCreationData::SPOT;
@@ -58,46 +61,50 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		}
 		// raw data
 		int offset=0;
-		if (instr==light) // rgb
-		{
-			float diffuseR = getFloatFromDecimalString(extractPart(p_string,1));
-			float diffuseG = getFloatFromDecimalString(extractPart(p_string,2));
-			float diffuseB = getFloatFromDecimalString(extractPart(p_string,3));
-			float specR = getFloatFromDecimalString(extractPart(p_string,4));
-			float specG = getFloatFromDecimalString(extractPart(p_string,5));
-			float specB = getFloatFromDecimalString(extractPart(p_string,6));
-			float ambientR = getFloatFromDecimalString(extractPart(p_string,7));
-			float ambientG = getFloatFromDecimalString(extractPart(p_string,8));
-			float ambientB = getFloatFromDecimalString(extractPart(p_string,9));
+		// if ( instr==light ) // rgb
+		// {
+			float diffuseR = getFloatFromDecimalString(extractPart(p_string,0));
+			float diffuseG = getFloatFromDecimalString(extractPart(p_string,1));
+			float diffuseB = getFloatFromDecimalString(extractPart(p_string,2));
+// 			float specR = getFloatFromDecimalString(extractPart(p_string,4));
+// 			float specG = getFloatFromDecimalString(extractPart(p_string,5));
+// 			float specB = getFloatFromDecimalString(extractPart(p_string,6));
+// 			float ambientR = getFloatFromDecimalString(extractPart(p_string,7));
+// 			float ambientG = getFloatFromDecimalString(extractPart(p_string,8));
+// 			float ambientB = getFloatFromDecimalString(extractPart(p_string,9));
 			// store data
 			data.lightSpec.diffuse = AglVector3(diffuseR,diffuseG,diffuseB);
-			data.lightSpec.specular = AglVector3(specR,specG,specB);
-			data.lightSpec.ambient = AglVector3(ambientR,ambientG,ambientB);
+
+			// hardcode:
+			data.lightSpec.specular = AglVector3(0.0f,0.0f,0.0f);
+			data.lightSpec.ambient = AglVector3(0.0f,0.0f,0.0f);
+// 			data.lightSpec.specular = AglVector3(specR,specG,specB);
+// 			data.lightSpec.ambient = AglVector3(ambientR,ambientG,ambientB);
 			// for further data when rgb
-			offset=6;
-		}
-		else // hex
-		{
-			string diffuse = extractPart(p_string,1);
-			string specular = extractPart(p_string,2);
-			string ambient = extractPart(p_string,3);
-			// store hex as rgb
-			getRGB(data.lightSpec.diffuse,diffuse);
-			getRGB(data.lightSpec.specular,specular);
-			getRGB(data.lightSpec.ambient,ambient);
-			// no offset when hex
-		}
-		string glossFloat = extractPart(p_string,offset+4);
-		string distFloat = extractPart(p_string,offset+5);
-		string pwrFloat = extractPart(p_string,offset+6);
-		string constAttFloat = extractPart(p_string,offset+7);
-		string linAttFloat = extractPart(p_string,offset+8);
-		string quadAttFloat = extractPart(p_string,offset+9);
+			// offset=6;
+		// }
+// 		else // hex
+// 		{
+// 			string diffuse = extractPart(p_string,1);
+// 			string specular = extractPart(p_string,2);
+// 			string ambient = extractPart(p_string,3);
+// 			// store hex as rgb
+// 			getRGB(data.lightSpec.diffuse,diffuse);
+// 			getRGB(data.lightSpec.specular,specular);
+// 			getRGB(data.lightSpec.ambient,ambient);
+// 			// no offset when hex
+// 		}
+		// string glossFloat = extractPart(p_string,offset+3);
+		string distFloat = extractPart(p_string,offset+3);
+		string pwrFloat = extractPart(p_string,offset+4);
+		// string constAttFloat = extractPart(p_string,offset+6);
+		string linAttFloat = extractPart(p_string,offset+5);
+		string quadAttFloat = extractPart(p_string,offset+6);
 		// store converted in data
-		data.lightSpec.gloss = getFloatFromDecimalString(glossFloat);
+		data.lightSpec.gloss = 0.0f;
 		data.lightSpec.range = getFloatFromDecimalString(distFloat);
 		data.lightSpec.power = getFloatFromDecimalString(pwrFloat);
-		data.lightSpec.attenuation.x = getFloatFromDecimalString(constAttFloat);
+		data.lightSpec.attenuation.x = 0.0f;
 		data.lightSpec.attenuation.y = getFloatFromDecimalString(linAttFloat);
 		data.lightSpec.attenuation.z = getFloatFromDecimalString(quadAttFloat);
 	}
@@ -127,9 +134,13 @@ float MeshNameScriptParser::getFloatFromDecimalString( const string& p_string )
 {
 	// replace decimal separator with a dot
 	string withDot = p_string;
-	withDot.replace(p_string.find(decimalSeparator),1,".");
+	size_t pos = p_string.find(decimalSeparator);
+	if (pos!=string::npos)
+		withDot.replace(p_string.find(decimalSeparator),1,".");
 	// convert to a float
-	float convVal = (float)::atof(withDot.c_str());
+	float convVal = 0.0f;
+	if (withDot!=".") // keep as zero if string is only dot
+		convVal=(float)::atof(withDot.c_str());
 	return convVal;
 }
 
