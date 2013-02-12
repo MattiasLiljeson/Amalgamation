@@ -103,7 +103,7 @@ namespace Srv
 			}
 			processMessages();
 			
-			sleep(2);
+			sleep(20);
 		}
 	}
 
@@ -204,7 +204,7 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), true);
+		m_world->setSystem(new ServerMeasurementSystem(), false);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
