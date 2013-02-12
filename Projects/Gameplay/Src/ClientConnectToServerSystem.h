@@ -2,7 +2,6 @@
 
 #include <EntitySystem.h>
 #include <EventHandler.h>
-#include <AntTweakBarWrapper.h>
 #include <string>
 #include <ToString.h>
 
@@ -73,12 +72,4 @@ private:
 
 	bool	m_isLookingForConnection;
 	NetworkAdress m_connectionAddress;
-
-	/************************************************************************/
-	/* DEBUG FUNCTIONS ONLY! */
-	/************************************************************************/
-	static ClientConnectToServerSystem* m_selfPointer;
-private:
-	static void TW_CALL callbackConnectToNetworkAddress(void* p_clientData);
-
 };

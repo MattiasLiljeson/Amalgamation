@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
