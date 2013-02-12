@@ -69,7 +69,7 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
 	Rocket::Debugger::Initialise( m_rocketContext );
-	Rocket::Debugger::SetVisible( false );
+	Rocket::Debugger::SetVisible( true );
 	
 	m_cursor = m_inputBackend->getCursor();
 

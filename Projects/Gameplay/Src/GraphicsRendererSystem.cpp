@@ -103,19 +103,19 @@ void GraphicsRendererSystem::process(){
 	m_wrapper->getGPUTimer()->Start(m_meshProfile, m_currentFrame);
 	initMeshPass();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW);
-	//m_meshRenderer->render();
+	m_meshRenderer->render();
 	endMeshPass();
 	m_wrapper->getGPUTimer()->Stop(m_meshProfile, m_currentFrame);
 
 	m_wrapper->getGPUTimer()->Start(m_lightProfile, m_currentFrame);
 	initLightPass();
-	//m_lightRenderSystem->render();
+	m_lightRenderSystem->render();
 	endLightPass();
 	m_wrapper->getGPUTimer()->Stop(m_lightProfile, m_currentFrame);
 
 	m_wrapper->getGPUTimer()->Start(m_composeProfile, m_currentFrame);
 	initComposePass();
-	//m_wrapper->renderComposeStage();
+	m_wrapper->renderComposeStage();
 	endComposePass();
 	m_wrapper->getGPUTimer()->Stop(m_composeProfile, m_currentFrame);
 

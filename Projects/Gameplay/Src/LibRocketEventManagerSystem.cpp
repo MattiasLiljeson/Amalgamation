@@ -138,8 +138,8 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, con
 		auto ownerDocument = p_event.GetTargetElement()->GetOwnerDocument();
 		if (values[0] == "modal")
 		{
-			if (!ownerDocument->IsModal() && m_currentDocId == ownerDocument->GetId())
-				ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
+		//	if (!ownerDocument->IsModal() && m_currentDocId == ownerDocument->GetId())
+		//		ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
 		}
 		else if (values[0] == "goto" && values.size() > 1)
 		{
