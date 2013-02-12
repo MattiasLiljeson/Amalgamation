@@ -234,7 +234,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	Component* component = NULL; // for temp usage
 
@@ -243,7 +243,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(5.0f, 100.0f);
+		component = new ShipFlyController(3.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
 
 		component = new ShipEditController();

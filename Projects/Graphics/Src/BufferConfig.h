@@ -53,6 +53,10 @@ struct BufferConfig
 		SLOT0,
 		SLOT1,
 	};
+	enum VERTEX_BUFFER_SLOT{
+		MISCSLOT,
+		SHIPSLOT,
+	};
 
 	struct BUFFER_INIT_DESC
 	{

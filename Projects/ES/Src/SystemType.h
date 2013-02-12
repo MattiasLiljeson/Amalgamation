@@ -31,6 +31,7 @@ public:	//Enums
 		LookAtSystem,
 		TransformParentHandlerSystem,
 		InputBackendSystem,
+		InputActionsBackendSystem,
 		InterpolationSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,
@@ -83,6 +84,7 @@ public:	//Enums
 		SpeedBoostModuleControllerSystem,
 		ClientMeasurementSystem,
 		ServerMeasurementSystem,
+		ClientEntityCountSystem,
 		NUM_SYSTEM_TYPES
 	};
 

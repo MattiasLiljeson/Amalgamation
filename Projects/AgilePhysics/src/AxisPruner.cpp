@@ -105,13 +105,16 @@ vector<PhyCollisionData> AxisPruner::Query( RigidBody* pBody )
 
 	//LOCATE START
 	//Should switch to binary search later
+
+	int limit = mAxis->sortedList.size()-1;
+
 	int loc = 0;
-	while (proj.xMax < mAxis->sortedList[loc]->minPx)
+	while (proj.xMax < mAxis->sortedList[loc]->minPx && loc < limit)
 		loc++;
 
 	int counter = 0;
 	//FIND INTERVAL
-	while (proj.xMax > mAxis->sortedList[loc]->minPx)
+	while (loc <= limit && proj.xMax > mAxis->sortedList[loc]->minPx)
 	{
 		if (proj.xMin < mAxis->sortedList[loc]->maxPx)
 		{

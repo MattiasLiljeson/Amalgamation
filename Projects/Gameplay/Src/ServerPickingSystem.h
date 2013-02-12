@@ -32,6 +32,9 @@ public:
 private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;
+
+	//Temp
+	float mrota;
 private:
 	void handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities);
 	void project(Entity* toProject, PickComponent& p_ray);

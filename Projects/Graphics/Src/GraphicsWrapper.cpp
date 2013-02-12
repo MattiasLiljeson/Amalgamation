@@ -23,6 +23,7 @@
 #include "DeferredBaseShader.h"
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
+#include "GPUTimer.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -74,6 +75,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
 
+	m_gpuTimer = new GPUTimer(m_device,m_deviceContext);
+
 	clearRenderTargets();
 }
 
@@ -98,6 +101,7 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_modelFactory;
 	delete m_renderSceneInfoBuffer;
 	delete m_perShadowBuffer;
+	delete m_gpuTimer;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -259,6 +263,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
+
 	renderMeshInstanced( 
 		mesh->getVertexBuffer()->getBufferPointer(),
 		mesh->getVertexBuffer()->getElementSize(),
@@ -266,6 +271,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 		mesh->getIndexBuffer()->getElementCount(),
 		textureArray, arraySize,
 		instanceBuffer->getElementSize(), 
+		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
 		m_deferredRenderer->getDeferredBaseShader());
 
@@ -286,6 +292,7 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		p_mesh->getIndexBuffer()->getElementCount(), 
 		NULL, 0,
 		instanceBuffer->getElementSize(),
+		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
 		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()));
 
@@ -595,10 +602,12 @@ void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
 }
 
 void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_vertexSize, 
-										  void* p_indexBufferRef, UINT32 p_elmentCount, 
+										  void* p_indexBufferRef, UINT32 p_indexElementCount, 
 										  Texture** p_textureArray, 
 										  unsigned int p_textureArraySize, 
-										  UINT32 p_instanceDataSize, void* p_instanceRef,
+										  UINT32 p_instanceDataSize,
+										  UINT32 p_instanceElementCount,
+										  void* p_instanceRef,
 										  ShaderBase* p_shader)
 {
 
@@ -634,7 +643,7 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 		p_shader->apply();
 
 	// Draw instanced data
-	m_deviceContext->DrawIndexedInstanced( p_elmentCount, p_instanceDataSize, 0,0,0);
+	m_deviceContext->DrawIndexedInstanced( p_indexElementCount, p_instanceElementCount, 0,0,0);
 }
 
 void GraphicsWrapper::setViewportToShadowMapSize(){
@@ -676,4 +685,9 @@ void GraphicsWrapper::stopedRenderingShadows(){
 unsigned int GraphicsWrapper::generateShadowMap()
 {
 	return m_shadowMapRenderer->createANewShadowMap();
+}
+
+GPUTimer* GraphicsWrapper::getGPUTimer()
+{
+	return m_gpuTimer;
 }

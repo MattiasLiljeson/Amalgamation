@@ -14,7 +14,7 @@
 #include "PhysicsBody.h"
 #include "ShipInputProcessingSystem.h"
 #include "TimerSystem.h"
-
+#include "ShipSlotControllerSystem.h"
 #include "GameplayTags.h"
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
@@ -26,7 +26,8 @@
 
 ShipFlyControllerSystem::ShipFlyControllerSystem( ShipInputProcessingSystem* p_shipInput,
 										    PhysicsSystem* p_physicsSystem,
-											TcpClient* p_client ) : 
+											TcpClient* p_client,
+											SlotInputControllerSystem* p_slotInput) : 
 					  EntitySystem( SystemType::ShipFlyControllerSystem, 3,
 									ComponentType::ComponentTypeIdx::ShipFlyController,
 									ComponentType::ComponentTypeIdx::Transform,
@@ -35,6 +36,7 @@ ShipFlyControllerSystem::ShipFlyControllerSystem( ShipInputProcessingSystem* p_s
 	m_shipInput = p_shipInput;
 	m_physics = p_physicsSystem;
 	m_client = p_client;
+	m_slotInput = p_slotInput;
 }
 
 ShipFlyControllerSystem::~ShipFlyControllerSystem()
@@ -58,6 +60,8 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+			// activation of firiring
+			m_slotInput->handleSlotSelection();
 
 			// Calculate impulse data to send to server
 			Entity* ship = p_entities[i];
@@ -138,6 +142,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				ship->addTag(ComponentType::TAG_ShipEditMode, new ShipEditMode_TAG()); // ...and switch to edit state.
 				ship->applyComponentChanges();
 				m_shipInput->resetCursor();
+				m_slotInput->sendModuleSlotHighlightDeactivateAll();
 			}
 
 			// Send data to server

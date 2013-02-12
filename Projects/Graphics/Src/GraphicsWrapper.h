@@ -38,6 +38,7 @@ class GUIShader;
 class ShaderBase;
 class ShadowMapRenderer;
 class ShadowShader;
+class GPUTimer;
 
 struct LightInstanceData;
 struct Model;
@@ -188,6 +189,7 @@ public:
 
 	unsigned int generateShadowMap();
 
+	GPUTimer* getGPUTimer();
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
@@ -202,10 +204,11 @@ private:
 	void initBackBuffer();
 
 	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
-		void* p_indexBufferRef, UINT32 p_elmentCount,
+		void* p_indexBufferRef, UINT32 p_indexElementCount,
 		Texture** p_textureArray,
 		unsigned int p_textureArraySize,
-		UINT32 p_instanceDataSize, void* p_instanceRef,
+		UINT32 p_instanceDataSize, UINT32 p_instanceElementCount,
+		void* p_instanceRef,
 		ShaderBase* p_shader);
 private:
 	ID3D11Device*			m_device;
@@ -238,6 +241,8 @@ private:
 	Buffer<PerShadowCBuffer>*		m_perShadowBuffer;
 
 	GUIShader*				m_guiShader;
+
+	GPUTimer*	m_gpuTimer;
 
 	int m_height;
 	int m_width;

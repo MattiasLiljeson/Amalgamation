@@ -47,6 +47,7 @@
 #include <CameraInfo.h>
 #include <CameraSystem.h>
 #include <ClientConnectToServerSystem.h>
+#include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
@@ -60,6 +61,7 @@
 #include <GraphicsBackendSystem.h>
 #include <GraphicsRendererSystem.h>
 #include <HudSystem.h>
+#include <InputActionsBackendSystem.h>
 #include <InputBackendSystem.h>
 #include <InterpolationSystem.h>
 #include <LevelGenSystem.h>
@@ -105,7 +107,7 @@ using namespace std;
 #include <time.h>
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
-#include <SlotInputControllerSystem.h>
+#include <ShipSlotControllerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -237,6 +239,8 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend, true);
+	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "input.ini" ),
+		true );
 
 	GamepadRumbleSystem* gamepadRumble = new GamepadRumbleSystem( inputBackend );
 	m_world->setSystem( gamepadRumble, true);
@@ -265,15 +269,16 @@ void ClientApplication::initSystems()
 	// Input system for ships
 	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
 	m_world->setSystem( shipInputProc, true);
-	m_world->setSystem( new SlotInputControllerSystem(inputBackend, m_client), true );
+	SlotInputControllerSystem* slotInput = new SlotInputControllerSystem(inputBackend, m_client);
+	m_world->setSystem( slotInput, true );
 
 	// Controller systems for the ship
 	ShipFlyControllerSystem* shipFlyController = new ShipFlyControllerSystem(shipInputProc, physics,
-		m_client );
+		m_client, slotInput );
 	m_world->setSystem( shipFlyController, true);
 
-	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics/*,
-		m_client*/ );
+	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics,
+		slotInput);
 	m_world->setSystem( shipEditController, true);
 
 	/************************************************************************/
@@ -376,6 +381,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new DebugMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
 	m_world->setSystem( new ClientMeasurementSystem(), true );
+	m_world->setSystem( new ClientEntityCountSystem(), true );
 
 	m_world->initialize();
 
@@ -454,20 +460,20 @@ void ClientApplication::initEntities()
 	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
- 	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
- 	//LevelPieceFileMapping modelLevelFileMapping;	
- 	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
- 	//{
- 	//	string modelName = modelLevelFileMapping.getModelFileName(i);
- 	//	graphicsBackend->loadSingleMesh( modelName,
- 	//			&TESTMODELPATH);
- 	//}
+	//LevelPieceFileMapping modelLevelFileMapping;	
+	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	//{
+	//	string modelName = modelLevelFileMapping.getModelFileName(i);
+	//	graphicsBackend->loadSingleMesh( modelName,
+	//			&TESTMODELPATH);
+	//}
 
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
@@ -503,6 +509,7 @@ void ClientApplication::initEntities()
 		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
+	m_world->addEntity(entity);
 
 	//ParticleEmitters* ps = new ParticleEmitters();
 	//AglParticleSystemHeader header;
@@ -531,6 +538,35 @@ void ClientApplication::initEntities()
 	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
 	//entity->addComponent( ps );
 
-	m_world->addEntity(entity);
+//	initInstanceFieldsByJohan("rocket.agl",			50, 50, 0.0f, 1.2f);
+//	initInstanceFieldsByJohan("MineFinal.agl",		50, 50, 5.0f, 0.8f);
+//	initInstanceFieldsByJohan("RockA.agl",			50, 50, 10.0f, 0.7f);
+//	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
+//	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
+//	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
+}
 
+void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
+												  unsigned int p_sizeY, float p_z, float p_scale)
+{
+	for(unsigned int x=0; x<p_sizeX; x++)
+	{
+		for(unsigned int y=0; y<p_sizeY; y++)
+		{
+			AglVector3 position((float)x * -2.0f - 5.0f,
+				(float)y * -2.0f + -10.0f, p_z);
+			Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(position, AglQuaternion(),
+				AglVector3(p_scale, p_scale, p_scale));
+			entity->addComponent(ComponentType::Transform, t);
+			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+			float rX = (float)rand()/(float)RAND_MAX;
+			float rY = (float)rand()/(float)RAND_MAX;
+			float rZ = (float)rand()/(float)RAND_MAX;
+			float factor = 0.1f;
+			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor)));
+
+			m_world->addEntity(entity);
+		}
+	}
 }

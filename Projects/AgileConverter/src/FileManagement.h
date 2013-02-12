@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 #include <commdlg.h>
+#include <ShlObj.h>
 
 using namespace std;
 
@@ -41,6 +42,31 @@ string savefilename(char *filter, HWND owner)
 	if ( GetSaveFileNameA(&ofn) )
 		fileNameStr = fileName;
 	return fileNameStr;
+}
+string openFolder()
+{
+	BROWSEINFO   bi; 
+	ZeroMemory(&bi,   sizeof(bi)); 
+	TCHAR   szDisplayName[MAX_PATH]; 
+	szDisplayName[0]    =   ' ';  
+
+	bi.hwndOwner        =   NULL; 
+	bi.pidlRoot         =   NULL; 
+	bi.pszDisplayName   =   szDisplayName; 
+	bi.lpszTitle        =   "Please select a folder for storing received files :"; 
+	bi.ulFlags          =   BIF_RETURNONLYFSDIRS;
+	bi.lParam           =   NULL; 
+	bi.iImage           =   0;  
+
+	LPITEMIDLIST   pidl   =   SHBrowseForFolder(&bi);
+	TCHAR   szPathName[MAX_PATH]; 
+	if   (NULL   !=   pidl)
+	{
+		BOOL bRet = SHGetPathFromIDList(pidl,szPathName);
+		if(FALSE == bRet)
+			return "";
+	}
+	return szPathName;
 }
 
 #endif

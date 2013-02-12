@@ -32,7 +32,7 @@ public:
 	void AddChild(RigidBody* pRigidBody);
 	void AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform);
 	void DetachChild(RigidBody* pRigidBody);
-	float GetMass();
+	float GetMass() const;
 	float GetInvMass();
 	AglMatrix GetWorld() const;
 	AglVector3 GetVelocity() const;
@@ -42,7 +42,7 @@ public:
 	bool IsCompoundBody();
 
 	void AddImpulse(AglVector3 pImpulse);
-	void AddAngularImpulse(AglVector3 pAngularImpulse);
+	void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true);
 
 	void RevertVelocity();
 	void RevertPosition();

@@ -40,7 +40,7 @@ public:
 	virtual AglVector3 GetVelocity() const = 0;
 	virtual AglVector3 GetAngularVelocity() const = 0;
 	virtual void AddImpulse(AglVector3 pImpulse) = 0;
-	virtual void AddAngularImpulse(AglVector3 pAngularImpulse) = 0;
+	virtual void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true) = 0;
 	virtual void UpdateVelocity(float pElapsedTime);
 	virtual void UpdatePosition(float pElapsedTime);
 	virtual void RevertVelocity() = 0;
@@ -54,6 +54,10 @@ public:
 	bool IsActive();
 
 	virtual void ComputeInertia() = 0;
+
+	void setTransform(AglMatrix p_setTransform);
+
+	virtual float GetMass() const = 0;
 };
 
 #endif // BODY_H

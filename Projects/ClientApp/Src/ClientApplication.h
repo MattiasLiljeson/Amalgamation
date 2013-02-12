@@ -69,6 +69,8 @@ private:
 	void initEntities();
 
 	void InitModulesTestByAnton();
+	void initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
+		unsigned int p_sizeY, float p_z, float p_scale);
 
 private:
 	HINSTANCE m_hInstance;

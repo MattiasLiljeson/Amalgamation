@@ -59,6 +59,8 @@ public:
 	bool m_collisionEnabled;
 
 	bool m_copyToChildren;
+
+	float m_mass;
 private:
 	static ComponentRegister<BodyInitData> s_reg;
 };

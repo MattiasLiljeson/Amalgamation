@@ -47,7 +47,7 @@ float3 getPosition(float2 uv)
 
 float2 getRandomVector( float2 uv)
 {
-	return normalize(gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f);
+	return gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f;
 }
 
 float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
@@ -57,8 +57,7 @@ float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position,
 	float3 v = normalize(diff);
 	float d = length(diff)*scale;
 	
-	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
-	return clamp(ao,0.0f,0.5f);
+	return max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity;
 }
 
 VertexOut VS(VertexIn p_input)
@@ -85,7 +84,8 @@ float4 PS(VertexOut input) : SV_TARGET
 	index.xy = input.position.xy;
 	index.z = 0;
 	float ao = 0.0f;
-	ao = lightColor.a;
+
+	//ao = lightColor.a;
 	float aoMult = 1.0f;
 	for(int x=-2;x<3;x++)
 	{
@@ -95,8 +95,11 @@ float4 PS(VertexOut input) : SV_TARGET
 		}
 	}
 
+
 	//return float4( ao, ao, ao, 1.0f );
 	//lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
 	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
-	return lightColor;
+	float linDepth = length(position-gCameraPos) / ((1000.0f)-(300.0f));
+	float4 fog = linDepth*float4(0.2f,0.4f,0.3f,0.0f);
+	return lightColor+fog;
 }

@@ -21,6 +21,9 @@ enum SimpleEventType
 	ACTIVATE_PICK, //Starts picking an object
 	DEACTIVATE_PICK, //Stops picking an object. Object snaps to closest location
 	RELEASE_PICK, //Stops picking an object. Objects is released back into space
+	ROTATE_ADD,
+	ROTATE_SUB,
+	ROTATE_NONE,
 	EVENT_NONE,
 };
 

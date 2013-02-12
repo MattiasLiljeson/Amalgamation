@@ -287,7 +287,7 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 
 void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
 {
-	if (!p_modelResource->particleSystems.m_particleSystems.empty())
+	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
 		ParticleEmitters* particleComp = new ParticleEmitters();
 		particleComp->addParticleSystems( p_modelResource->particleSystems );

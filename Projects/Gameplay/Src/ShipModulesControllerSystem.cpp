@@ -6,9 +6,94 @@
 #include "NetworkSynced.h"
 #include "PlayerScore.h"
 #include "PhysicsController.h"
+#include "ShipConnectionPointHighlights.h"
+
+AglMatrix ShipModulesControllerSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation)
+{
+	AglMatrix transform = p_base;
+	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+	vector<AglMatrix> transforms;
+	transforms.push_back(p_offset);
+	transforms.push_back(p_base);
+	while (module)
+	{
+		Entity* parent = m_world->getEntity(module->m_parentEntity);
+
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(p_entity,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		unsigned int ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
+			if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
+				ind = i;
+		}
+
+		//Child
+		PhysicsBody* childBody = static_cast<PhysicsBody*>(p_entity->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
+
+		//Parent Connection points
+		cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(parent,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		ind = 0;
+		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
+		{
+			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				ind = i;
+		}
+		//Parent
+		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
+			ComponentType::PhysicsBody));
+		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
+
+		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
+		p_entity = parent;
+	}
+
+	AglMatrix finalTransform = AglMatrix::identityMatrix();
+	AglMatrix final = AglMatrix::identityMatrix();
+
+	bool first = true;
+	while (transforms.size() > 0)
+	{
+		//Parent transform
+		AglMatrix transform = transforms.back();
+
+		//Child Transform
+		AglMatrix childTransform = transforms[transforms.size()-2];
+		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+
+		if (first)//transforms.size() == 2)
+		{
+			//Rotate around connection axis
+			AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
+			rot = rot2*rot;
+			first = false;
+		}
+
+		finalTransform = AglMatrix::createRotationMatrix(rot);
+
+		AglVector3 childTrans = childTransform.GetTranslation();
+		rot.transformVector(childTrans);
+
+		//Negate to get correct
+		finalTransform.SetTranslation(transform.GetTranslation() - childTrans);
+		transforms.pop_back();
+		transforms.pop_back();
+
+		final = finalTransform*final;
+	}
+	return final;
+}
 
 ShipModulesControllerSystem::ShipModulesControllerSystem()
-	: EntitySystem(SystemType::ShipModulesControllerSystem, 1, ComponentType::TAG_Ship)
+	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
+	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {
 }
 
@@ -29,10 +114,11 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		
 		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
 		{
-			if (m_toHighlight[j].first == netSync->getNetworkOwner())
+			if (m_toHighlight[j].id == netSync->getNetworkOwner())
 			{
 				//Do highlight
-				changeHighlight(p_entities[i], m_toHighlight[j].second);
+				changeHighlight(p_entities[i], m_toHighlight[j].slot,
+					m_toHighlight[j].status);
 				m_toHighlight[j] = m_toHighlight.back();
 				m_toHighlight.pop_back();
 				j--;
@@ -60,6 +146,17 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				j--;
 			}
 		}
+		for (unsigned int j = 0; j < m_toSetRotationState.size(); j++)
+		{
+			if (m_toSetRotationState[j].targetShip == netSync->getNetworkOwner())
+			{
+				//Do Deactivate
+				setRotationState(p_entities[i], m_toSetRotationState[j].direction);
+				m_toSetRotationState[j] = m_toSetRotationState.back();
+				m_toSetRotationState.pop_back();
+				j--;
+			}
+		}
 
 		PlayerScore* score = static_cast<PlayerScore*>(p_entities[i]->getComponent(ComponentType::PlayerScore));
 		//Calculate score
@@ -67,14 +164,15 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 
 		//Check to see if modules should be dropped
 		checkDrop(p_entities[i]);
+
+		//Rotate relevant modules
+		rotateModules(p_entities[i]);
 	}
 }
 void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_parent,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
 	if (connected)
 	{
@@ -98,6 +196,35 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 					{
 						checkDrop(entity);
 					}
+
+					//Do some hardcoded rotation shit - WORKS!
+					if (m)
+					{
+						/*PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_parent->getComponent(ComponentType::PhysicsBody));
+
+						ConnectionPointSet* conPoints =
+							static_cast<ConnectionPointSet*>(
+							m_world->getComponentManager()->getComponent(entity,
+							ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+						int sel = 0;
+						for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+						{
+							if (conPoints->m_connectionPoints[i].cpConnectedEntity == p_parent->getIndex())
+							{
+								sel = i;
+								break;
+							}
+						}
+						PhysicsBody* moduleBody = static_cast<PhysicsBody*>(entity->getComponent(ComponentType::PhysicsBody));
+
+						AglMatrix transform = offsetTemp(p_parent, connected->m_connectionPoints[i].cpTransform*targetBody->getOffset().inverse(), 
+							conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), 0);
+
+						PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+						Body* body = ps->getController()->getBody(moduleBody->m_id);
+						body->setTransform(transform);*/
+					}
 				}
 			}
 		}
@@ -108,10 +235,8 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	if (p_slot < 0)
 		return;
 	//Module is dropped based on damage it sustains
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_parent,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
 	Entity* toDrop = m_world->getEntity(connected->m_connectionPoints[p_slot].cpConnectedEntity);
 
@@ -151,59 +276,114 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
 }
-void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id)
+void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_status)
 {
-	m_toHighlight.push_back(pair<int, int>(p_id, p_slot));
+	HighlightEvent e = {p_id, p_slot,p_status};
+	m_toHighlight.push_back(e);
 }
-void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new)
+void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new, 
+												  int p_status)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	// Changed by Jarl 07-02-2013
+	// To allow for deactivation signal for highlighting
+	// of all or one slot. This is done for example for edit mode.
+	// This can also be used later on if the toggle way of doing activation is changed.
+	// For example if several slots need to be highlighted at ones
 
+	// Get all slots(connection points)
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+					p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
-	if (current >= 0)
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
+
+	if (p_new!=-1)
 	{
-		Entity* currEn = m_world->getEntity(current);
-		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		currModule->deactivate();
+		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+		{
+			if (i!=p_new)
+			{
+				if (highlights->slotStatus[i])
+				{
+					// ---------------------------------
+					// This is the original code which toggles
+					// separate slots on/off.
+					// It will deactivate a currently active slot.
+					int current = connected->m_connectionPoints[i].cpConnectedEntity;
+					if (current >= 0)
+					{
+						Entity* currEn = m_world->getEntity(current);
+						ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+						currModule->deactivate();
+					}
+					//
+					highlights->slotStatus[i]=false;
+					// ---------------------------------
+				}
+			}
+			else
+			{
+				highlights->slotStatus[i]=true;
+			}
+		}	
+	}
+	else
+	{
+		// if the new specified slot==-1, deactivate all
+		// this id is sent for example when switching to edit mode
+		// connected->m_highlighted =
+		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
+		{
+			// copy of above disable code
+			int current = connected->m_connectionPoints[i].cpConnectedEntity;
+			if (current >= 0)
+			{
+				Entity* currEn = m_world->getEntity(current);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				currModule->deactivate();
+			}
+			//
+			highlights->slotStatus[i]=false;
+		}
 	}
 
-	connected->m_highlighted = p_new;
+
 }
 void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
+	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
-	int current = connected->m_connectionPoints[connected->m_highlighted].cpConnectedEntity;
-	if (current >= 0)
+	for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 	{
-		Entity* currEn = m_world->getEntity(current);
-		ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-		if(p_value == true)
+		if (highlights->slotStatus[i])
 		{
-			currModule->activate();
+			int current = connected->m_connectionPoints[i].cpConnectedEntity;
+			if (current >= 0)
+			{
+				Entity* currEn = m_world->getEntity(current);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				if(p_value == true)
+				{
+					currModule->activate();
+				}
+				else
+				{
+					currModule->deactivate();
+				}
+				//currModule->m_active = p_value;
+				setActivationChildren(currEn, p_value);
+			}
 		}
-		else
-		{
-			currModule->deactivate();
-		}
-		//currModule->m_active = p_value;
-		setActivationChildren(currEn, p_value);
 	}
 }
 void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
 {
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
 
@@ -245,15 +425,11 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 {
 	float score = 0;
 
-	ConnectionPointSet* connected =
-		static_cast<ConnectionPointSet*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_entity->getComponent(ComponentType::ConnectionPointSet) );
 
-	ShipModule* module =
-		static_cast<ShipModule*>(
-		m_world->getComponentManager()->getComponent(p_entity,
-		ComponentType::getTypeFor(ComponentType::ShipModule)));
+	ShipModule* module = static_cast<ShipModule*>(
+		p_entity->getComponent(ComponentType::ShipModule) );
 
 	if (connected)
 	{
@@ -274,4 +450,83 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 	if (module)
 		score += module->m_value;
 	return score;
+}
+
+void ShipModulesControllerSystem::addRotationEvent(RotationState p_rotationState)
+{
+	m_toSetRotationState.push_back(p_rotationState);
+}
+
+void ShipModulesControllerSystem::rotateModules(Entity* p_ship)
+{
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_ship->getComponent(ComponentType::ConnectionPointSet) );
+
+	ShipModule* module = static_cast<ShipModule*>(p_ship->getComponent(ComponentType::ShipModule));
+
+	if (connected)
+	{
+		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
+		{
+			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+			{
+				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+				currModule->m_rotation += currModule->m_rotationDirection * m_world->getDelta();
+
+				if (currModule && (!module || module->m_parentEntity != currEn->getIndex()))
+				{
+					PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_ship->getComponent(ComponentType::PhysicsBody));
+
+					ConnectionPointSet* conPoints =
+						static_cast<ConnectionPointSet*>(
+						m_world->getComponentManager()->getComponent(currEn,
+						ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+					int sel = 0;
+					for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+					{
+						if (conPoints->m_connectionPoints[i].cpConnectedEntity == p_ship->getIndex())
+						{
+							sel = i;
+							break;
+						}
+					}
+					PhysicsBody* moduleBody = static_cast<PhysicsBody*>(currEn->getComponent(ComponentType::PhysicsBody));
+
+					AglMatrix transform = offsetTemp(p_ship, connected->m_connectionPoints[i].cpTransform*targetBody->getOffset().inverse(), 
+						conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), currModule->m_rotation);
+
+					PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+					Body* body = ps->getController()->getBody(moduleBody->m_id);
+					body->setTransform(transform);
+				}
+			}
+		}
+	}
+}
+void ShipModulesControllerSystem::setRotationState(Entity* p_ship, int p_state)
+{
+	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+		p_ship->getComponent(ComponentType::ConnectionPointSet) );
+
+	ShipModule* module = static_cast<ShipModule*>(p_ship->getComponent(ComponentType::ShipModule));
+
+	if (connected)
+	{
+		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
+		{
+			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+			{
+				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
+
+
+				if (currModule && (!module || module->m_parentEntity != currEn->getIndex()))
+				{
+					currModule->m_rotationDirection = p_state;
+				}
+			}
+		}
+	}
 }

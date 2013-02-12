@@ -21,6 +21,7 @@
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
+    <ClInclude Include="InputActionsBackendSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
     <ClInclude Include="InterpolationSystem.h" />
     <ClInclude Include="LevelGenSystem.h" />
@@ -80,6 +82,7 @@
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
+    <ClInclude Include="ShipConnectionPointHighlights.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
@@ -138,7 +141,7 @@
     <ClInclude Include="ShipModulesControllerSystem.h" />
     <ClInclude Include="ShipModulesTrackerSystem.h" />
     <ClInclude Include="SimpleEventPacket.h" />
-    <ClInclude Include="SlotInputControllerSystem.h" />
+    <ClInclude Include="ShipSlotControllerSystem.h" />
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
@@ -167,6 +170,7 @@
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
+    <ClCompile Include="ClientEntityCountSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientMeasurementSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
@@ -187,6 +191,7 @@
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
+    <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
@@ -241,6 +246,7 @@
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ShadowSystem.cpp" />
+    <ClCompile Include="ShipConnectionPointHighlights.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
     <ClCompile Include="ShipInputProcessingSystem.cpp" />
@@ -261,7 +267,7 @@
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
-    <ClCompile Include="SlotInputControllerSystem.cpp" />
+    <ClCompile Include="ShipSlotControllerSystem.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
