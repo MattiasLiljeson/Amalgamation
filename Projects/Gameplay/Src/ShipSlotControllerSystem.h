@@ -1,6 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 class Control;
+class InputActionsBackendSystem;
 class InputBackendSystem;
 class TcpClient;
 // =======================================================================================
@@ -38,12 +39,7 @@ private:
 	void sendSlotRotationNone();
 
 private:
+	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
-	Control* m_keyboardModuleSlots[4];
-	Control* m_gamepadModuleSlots[4];
-	Control* m_mouseModuleActivation;
-	Control* m_gamepadModuleActivation;
-
-	Control* m_keyboardRotateModuleSlots[2];
 };

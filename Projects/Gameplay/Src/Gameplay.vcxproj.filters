@@ -463,9 +463,6 @@
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="SlotInputControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
@@ -524,6 +521,12 @@
     </ClInclude>
     <ClInclude Include="ClientEntityCountSystem.h">
       <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="InputActionsBackendSystem.h">
+      <Filter>Systems\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipSlotControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -826,9 +829,6 @@
     <ClCompile Include="RemoveSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="SlotInputControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
@@ -877,6 +877,12 @@
     </ClCompile>
     <ClCompile Include="ClientEntityCountSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="InputActionsBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipSlotControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

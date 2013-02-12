@@ -51,6 +51,8 @@ public:
 	InputHelper::KeyStates getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
+	void setMouseSensitivity( const float p_sensitivity );
+	const float getMouseSensitivity() const;
 
 private:
 	void init();
@@ -68,6 +70,7 @@ private:
 	HWND m_hWnd;
 	bool m_onlyForeground;
 	bool m_exclusive;
+	float m_mouseSensitivity;
 
 	LPDIRECTINPUT8 m_din;    // the pointer to our DirectInput interface
 	LPDIRECTINPUTDEVICE8 m_dinkeyboard;    // the pointer to the keyboard device

@@ -5,7 +5,7 @@
 #include "Transform.h"
 #include "ShipInputProcessingSystem.h"
 #include "GameplayTags.h"
-#include "SlotInputControllerSystem.h"
+#include "ShipSlotControllerSystem.h"
 
 ShipEditControllerSystem::ShipEditControllerSystem( ShipInputProcessingSystem* p_shipInput, 
 									   PhysicsSystem* p_physicsSystem,

@@ -4,6 +4,7 @@
 #include "ShipInputProcessingSystem.h"
 
 class Control;
+class InputActionsBackendSystem;
 class InputBackendSystem;
 
 // =======================================================================================
@@ -118,69 +119,12 @@ private:
 
 	ResultingInputForces m_processedInput;
 
-	// Rotating, steering
-	// gamepad
-	Control* m_gamepadHorizontalPositive;
-	Control* m_gamepadHorizontalNegative;
-	Control* m_gamepadVerticalPositive;
-	Control* m_gamepadVerticalNegative;
-	// mouse
-	Control* m_mouseHorizontalPositive;
-	Control* m_mouseHorizontalNegative;
-	Control* m_mouseVerticalPositive;
-	Control* m_mouseVerticalNegative;
-
-	// Rolling, gamepad
-	Control* m_gamepadRollRight;
-	Control* m_gamepadRollLeft;
-
-	// Thrust, gamepad
-	Control* m_gamepadThrust;
-
-	// Strafing, gamepad
-	Control* m_gamepadStrafeHorizontalPositive;
-	Control* m_gamepadStrafeHorizontalNegative;
-	Control* m_gamepadStrafeVerticalNegative;
-	Control* m_gamepadStrafeVerticalPositive;
-
-	// Editmode rotating, gamepad
-	Control* m_gamepadEditModeHorizontalPos;
-	Control* m_gamepadEditModeHorizontalNeg;
-	Control* m_gamepadEditModeVerticalPos;
-	Control* m_gamepadEditModeVerticalNeg;
-
-	// Editmode trigger, gamepad
-	Control* m_gamepadEditModeTrig;
-
-	// Rolling, keyboard
-	Control* m_keyboardRollRight;
-	Control* m_keyboardRollLeft;
-	Control* m_keyboardThrust;
-
-	// Thrust, keyboard
-	Control* m_keyboarStrafeHorizontalPos;
-	Control* m_keyboarStrafeHorizontalNeg;
-	Control* m_keyboardStrafeVerticalPos;
-	Control* m_keyboardStrafeVerticalNeg;
-
-	// Editmode rotating, keyboard
-	Control* m_keyboardEditModeHorizontalPos;
-	Control* m_keyboardEditModeHorizontalNeg;
-	Control* m_keyboardEditModeVerticalPos;
-	Control* m_keyboardEditModeVerticalNeg;
-
-	// Editmode trigger, keyboard
-	Control* m_keyboardEditModeTrig;
-
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
 
 	float m_angleInputMultiplier;
 
-	void initGamePad();
-	void initMouse();
-	void initKeyboard();
-
 	bool m_editSwitchTrigReleased;
+	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
 };

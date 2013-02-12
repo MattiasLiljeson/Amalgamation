@@ -4,6 +4,7 @@
 #include "GraphicsBackendSystem.h"
 #include <AglMatrix.h>
 #include <AglQuaternion.h>
+#include "InputActionsBackendSystem.h"
 #include "InputBackendSystem.h"
 #include "PhysicsSystem.h"
 #include "CameraInfo.h"
@@ -29,6 +30,8 @@ ClientPickingSystem::~ClientPickingSystem()
 
 void ClientPickingSystem::initialize()
 {
+	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
+		SystemType::InputActionsBackendSystem));
 }
 
 void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
@@ -102,19 +105,19 @@ void ClientPickingSystem::processEntities(const vector<Entity*>& p_entities)
 			rp.d = dir;
 			m_client->sendPacket(rp.pack());
 
-			if (ctrl->getDelta() > 0) //Start picking
+			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_MOVE_MODULE) > 0) //Start picking
 			{
 				SimpleEventPacket packet;
 				packet.type = SimpleEventType::ACTIVATE_PICK;
 				m_client->sendPacket( packet.pack() );
 			}
-			else if (ctrl->getDelta() < 0) //Stop picking
+			else if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_MOVE_MODULE) < 0) //Stop picking
 			{
 				SimpleEventPacket packet;
 				packet.type = SimpleEventType::DEACTIVATE_PICK;
 				m_client->sendPacket( packet.pack() );
 			}
-			if (ctrl2->getDelta() > 0) //Release current module
+			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_DROP_MODULE) > 0) //Release current module
 			{
 				SimpleEventPacket packet;
 				packet.type = SimpleEventType::RELEASE_PICK;

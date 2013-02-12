@@ -106,7 +106,8 @@ vector<pair<string, Control*>> InputControlFactory::createAToZ()
 	for( int i=0; i<NUM_CHARS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_";
+//		ss << "KEY_";
+		ss << "KeyboardKeys_";
 		ss << (char)( 'A' + i );
 		names[i] = ss.str();
 	}
@@ -134,7 +135,8 @@ vector<pair<string, Control*>> InputControlFactory::create0To9()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_";
+//		ss << "KEY_";
+		ss << "KeyboardKeys_";
 		ss << (char)( '0' + i );
 		names[i] = ss.str();
 	}
@@ -161,7 +163,7 @@ vector<pair<string, Control*>> InputControlFactory::createNumpad0ToNumpad9()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_NUM";
+		ss << "KeyboardKeys_NUMPAD_";
 		ss << (char)( '0' + i );
 		names[i] = ss.str();
 	}
@@ -186,15 +188,21 @@ vector< pair<string, Control*> > InputControlFactory::createAllMouseAxes()
 {
 	string names[InputHelper::MouseAxes_CNT];
 	vector< pair< string, Control* > > controls;
+	names[InputHelper::MouseAxes_X_POSITIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_X_POSITIVE";
+	names[InputHelper::MouseAxes_X_NEGATIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_X_NEGATIVE";
+	names[InputHelper::MouseAxes_Y_POSITIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_Y_POSITIVE";
+	names[InputHelper::MouseAxes_Y_NEGATIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_Y_NEGATIVE";
+	names[InputHelper::MouseAxes_Z_POSITIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_Z_POSITIVE";
+	names[InputHelper::MouseAxes_Z_NEGATIVE - InputHelper::MouseAxes_FIRST] = "MouseAxes_Z_NEGATIVE";
 
 	// Axes
-	for( int i=0; i<InputHelper::MouseAxes_CNT; i++ )
-	{
-		stringstream ss;
-		ss << "MouseAxes_";
-		ss << (char)( '0' + i );
-		names[i] = ss.str();
-	}
+//	for( int i=0; i<InputHelper::MouseAxes_CNT; i++ )
+//	{
+//		stringstream ss;
+//		ss << "MouseAxes_";
+//		ss << (char)( '0' + i );
+//		names[i] = ss.str();
+//	}
 
 	for( int i=0; i<InputHelper::MouseAxes_CNT; i++ )
 	{
@@ -217,7 +225,7 @@ vector< pair<string, Control*> > InputControlFactory::createAllMouseButtons()
 	for( int i=0; i<InputHelper::MouseButtons_CNT; i++ )
 	{
 		stringstream ss;
-		ss << "MouseButton_";
+		ss << "MouseButtons_";
 		ss << (char)( '0' + i );
 		names[i] = ss.str();
 	}
