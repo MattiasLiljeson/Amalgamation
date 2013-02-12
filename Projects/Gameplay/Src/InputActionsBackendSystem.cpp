@@ -20,20 +20,23 @@ void InputActionsBackendSystem::initialize()
 		m_world->getSystem( SystemType::InputBackendSystem) );
 	ifstream file;
 	file.open(m_inputIniFile.c_str());
+	string line = "";
 	string token = "";
-	string keyboardString = "";
-	string xboxString = "";
 	int currentAction = 0;
 	if(file.is_open())
 	{
-		getline(file, token); // discard the first line which is a comment.
+		getline(file, line); // discard the first line which is a comment.
 		while(!file.eof() && currentAction < (int)Actions_CNT)
 		{
-			file >> token; // discard the first column which is the activation enum
-			file >> keyboardString;
-			readControlFromString(keyboardString, &m_mappedKeyboardAndMouseInputControls[currentAction]);
-			file >> xboxString;
-			readControlFromString(xboxString, &m_mappedGamepadInputControls[currentAction]);
+			getline(file, line);
+			stringstream ss(line);
+			ss >> token; // discard the first column which is the activation enum
+			while(!ss.eof())
+			{
+				ss >> token;
+				m_inputControls[currentAction].push_back(NULL);
+				readControlFromString(token, &m_inputControls[currentAction].back());
+			}
 			currentAction += 1;
 		}
 	}
@@ -59,23 +62,19 @@ void InputActionsBackendSystem::readControlFromString(string p_key, Control** p_
 double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 {
 	double delta = 0.0;
-	if(m_mappedGamepadInputControls[p_action])
-		delta += m_mappedGamepadInputControls[p_action]->getDelta();
-	if(m_mappedKeyboardAndMouseInputControls[p_action])
-		delta += m_mappedKeyboardAndMouseInputControls[p_action]->getDelta();
-	if(delta > 1.0)
-		delta = 1.0;
+	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
+	{
+		delta += m_inputControls[p_action][i]->getDelta();
+	}
 	return delta;
 }
 
 double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 {
 	double status = 0.0;
-	if(m_mappedGamepadInputControls[p_action])
-		status += m_mappedGamepadInputControls[p_action]->getStatus();
-	if(m_mappedKeyboardAndMouseInputControls[p_action])
-		status += m_mappedKeyboardAndMouseInputControls[p_action]->getStatus();
-	if(status > 1.0)
-		status = 1.0;
+	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
+	{
+		status += m_inputControls[p_action][i]->getStatus();
+	}
 	return status;
 }

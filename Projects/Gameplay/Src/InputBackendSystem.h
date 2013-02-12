@@ -68,6 +68,8 @@ public:
 	/// 0-100 indicating motor percentage use.
 	///-----------------------------------------------------------------------------------
 	void setControllerVibration(float p_leftMotor, float p_rightMotor);
+	void setMouseSensitivity( const float p_sensitivity );
+	const float getMouseSensitivity() const;
 
 private:
 	///-----------------------------------------------------------------------------------

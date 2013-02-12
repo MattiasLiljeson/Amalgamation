@@ -24,8 +24,6 @@ void ShipInputProcessingSystem::initialize()
 {
 	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
 		SystemType::InputActionsBackendSystem));
-	initGamePad();
-	initMouse();
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::INPUT,
 		"ControllerEpsilon", TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), 
@@ -37,6 +35,7 @@ void ShipInputProcessingSystem::initialize()
 
 void ShipInputProcessingSystem::process()
 {
+	m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
 	// Fetch the status of the various input methods.
 	RawInputForces rawInput = readAllInput();
 	// processed input
@@ -83,31 +82,6 @@ ShipInputProcessingSystem::ResultingInputForces& ShipInputProcessingSystem::getP
 	return m_processedInput;
 }
 
-void ShipInputProcessingSystem::initGamePad()
-{
-	m_gamepadHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_LX_POSITIVE);
-	m_gamepadHorizontalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_LX_NEGATIVE);
-	m_gamepadVerticalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE);
-	m_gamepadVerticalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE);
-}
-
-
-void ShipInputProcessingSystem::initMouse()
-{
-	m_mouseHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::MouseAxes_X_POSITIVE);
-	m_mouseHorizontalNegative	= m_inputBackend->getControlByEnum(
-		InputHelper::MouseAxes_X_NEGATIVE);
-	m_mouseVerticalPositive		= m_inputBackend->getControlByEnum( 
-		InputHelper::MouseAxes_Y_POSITIVE);
-	m_mouseVerticalNegative		= m_inputBackend->getControlByEnum( 
-		InputHelper::MouseAxes_Y_NEGATIVE);
-}
-
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
 {
 	return &m_controllerEpsilon;
@@ -119,20 +93,20 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 
 	// rotate
 
-	input.hPositive = m_gamepadHorizontalPositive->getStatus();
-	input.hPositive += m_mouseHorizontalPositive->getStatus()*m_angleInputMultiplier;
+	input.hPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_TURN_RIGHT);
 	saturate(input.hPositive); // ?
 
-	input.hNegative = m_gamepadHorizontalNegative->getStatus();
-	input.hNegative += m_mouseHorizontalNegative->getStatus()*m_angleInputMultiplier;
+	input.hNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_TURN_LEFT);
 	saturate(input.hNegative); // ?
 
-	input.vPositive = m_gamepadVerticalPositive->getStatus();
-	input.vPositive += m_mouseVerticalPositive->getStatus()*m_angleInputMultiplier;
+	input.vPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_TURN_DOWN);
 	saturate(input.vPositive); // ?
 
-	input.vNegative = m_gamepadVerticalNegative->getStatus();
-	input.vNegative += m_mouseVerticalNegative->getStatus()*m_angleInputMultiplier;
+	input.vNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_TURN_UP);
 	saturate(input.vNegative); // ?
 
 	// strafe

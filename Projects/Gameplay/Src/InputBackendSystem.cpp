@@ -151,7 +151,7 @@ void InputBackendSystem::initialize()
 	// Intitiate cursor
 	m_cursor = new Cursor();
 	m_cursor->addControlSet(
-		60000.0, 60000.0, false,
+		60.0, 60.0, false,
 		getControlByEnum( InputHelper::MouseAxes_X_NEGATIVE ),
 		getControlByEnum( InputHelper::MouseAxes_X_POSITIVE ),
 		getControlByEnum( InputHelper::MouseAxes_Y_NEGATIVE ),
@@ -243,6 +243,16 @@ void InputBackendSystem::setControllerVibration(float p_leftMotor, float p_right
 {
 	XInputFetcher* xinput = m_inputManager->getXInputFetcher();
 	if (xinput) xinput->vibrate(p_leftMotor,p_rightMotor);
+}
+
+void InputBackendSystem::setMouseSensitivity( const float p_sensitivity )
+{
+	m_inputManager->getMouseKeyboardFetcher()->setMouseSensitivity(p_sensitivity);
+}
+
+const float InputBackendSystem::getMouseSensitivity() const
+{
+	return m_inputManager->getMouseKeyboardFetcher()->getMouseSensitivity();
 }
 
 void InputBackendSystem::saveControl( InputHelper::InputDeviceTypes p_deviceType, 

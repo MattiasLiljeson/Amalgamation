@@ -65,8 +65,7 @@ private:
 	void readControlFromString(string p_key, Control** p_control);
 
 private:
-	Control* m_mappedKeyboardAndMouseInputControls[Actions_CNT];
-	Control* m_mappedGamepadInputControls[Actions_CNT];
+	vector<Control*> m_inputControls[Actions_CNT];
 	string m_inputIniFile;
 	InputBackendSystem* m_inputBackend;
 

@@ -113,27 +113,11 @@ public:
 	void resetCursor();
 
 private:
-	void initGamePad();
-	void initMouse();
-
-private:
 
 	float* getControllerEpsilonPointer();
 	RawInputForces readAllInput();
 
 	ResultingInputForces m_processedInput;
-
-	// Rotating, steering
-	// gamepad
-	Control* m_gamepadHorizontalPositive;
-	Control* m_gamepadHorizontalNegative;
-	Control* m_gamepadVerticalPositive;
-	Control* m_gamepadVerticalNegative;
-	// mouse
-	Control* m_mouseHorizontalPositive;
-	Control* m_mouseHorizontalNegative;
-	Control* m_mouseVerticalPositive;
-	Control* m_mouseVerticalNegative;
 
 	// Threshold value for the Gamepad's analogue stick error.
 	float m_controllerEpsilon;
