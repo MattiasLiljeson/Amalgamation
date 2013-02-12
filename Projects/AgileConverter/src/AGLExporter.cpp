@@ -79,7 +79,7 @@ void AGLExporter::AddSkeleton(SkeletonData* pData)
 		joints[i].nodeID = pData->Joints[i]->NodeID;
 		joints[i].parentIndex = pData->Joints[i]->Parent;
 	}
-	mSkeletons.push_back(new AglSkeleton(h, joints, NULL));
+	mSkeletons.push_back(new AglSkeleton(h, joints, mScene));
 	mScene->addSkeleton(mSkeletons.back());
 }
 void AGLExporter::AddMeshSkeletonMapping(AglSkeletonMapping* pData)
@@ -194,6 +194,25 @@ void AGLExporter::Write()
 		mMaterialMappings.push_back(m);
 		mScene->addMaterialMapping(m);
 	}
+
+	//Update mesh transforms if the mesh has a skeleton
+
+	//Blir fel för mesh walker
+	for (unsigned int i = 0; i < mMeshSkeletonMappings.size(); i++)
+	{
+		int m = mMeshSkeletonMappings[i]->getHeader().meshID;
+		int s = mMeshSkeletonMappings[i]->getHeader().skeletonID;
+
+		if (mMeshes[m]->getHeader().transform == AglMatrix::identityMatrix())
+		{
+			AglJoint* root = mSkeletons[s]->getRoot();
+			AglMatrix invBind = mSkeletons[s]->getInverseBindMatrix(root->id);
+			AglMatrix trans = mSkeletons[s]->getGlobalTransform(root->id);
+			mMeshes[m]->setTransform(invBind*trans);
+		}
+	}
+
+
 
 	//Flip the scene
 	AglMatrix transform(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);

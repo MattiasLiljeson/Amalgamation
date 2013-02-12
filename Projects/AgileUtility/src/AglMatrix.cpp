@@ -190,6 +190,14 @@ AglMatrix& AglMatrix::operator*=(const float& pFactor)
 	return (*this);
 }
 
+bool AglMatrix::operator==(const AglMatrix& pOther) const
+{
+	for (unsigned int i = 0; i < 16; i++)
+		if (data[i] != pOther[i])
+			return false;
+	return true;
+}
+
 //Member function
 
 //Member Getters

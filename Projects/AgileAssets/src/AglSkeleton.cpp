@@ -33,24 +33,6 @@ AglJoint* AglSkeleton::getRoot()
 			break;
 		}
 	}
-	int count = 0;
-	/*do 
-	{
-		int newInd = -1;
-		for (int i = 0; i < m_header.jointCount; i++)
-		{
-			if (m_joints[i].parentIndex == ind)
-			{
-				newInd = i;
-				count++;
-			}
-		}
-		if (count == 1)
-		{
-			ind = newInd;
-			j = &m_joints[ind];
-		}
-	} while (count > 0 && count < 2);*/
 	return j;
 }
 

@@ -131,6 +131,7 @@ void FBXParser::Parse()
 }
 void FBXParser::ParseNode(FbxNode* pNode)
 {
+	static int skelCount = 0;
 	FbxNodeAttribute* attr = pNode->GetNodeAttribute();
 	if (attr)
 	{

@@ -97,3 +97,7 @@ void AglMesh::transformOld(AglMatrix p_transform) //DEPRECHATED!!!
 	m_header.boundingSphere.position.transform(p_transform);
 	m_header.transform *= p_transform;
 }
+void AglMesh::setTransform(AglMatrix p_transform)
+{
+	m_header.transform = p_transform;
+}

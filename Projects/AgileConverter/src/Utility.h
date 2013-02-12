@@ -54,6 +54,7 @@ struct JointData
 	int ID;
 	int NodeID;
 	FbxNode* FbxParent;
+	FbxSkeleton::EType Type;
 	int Parent;
 };
 

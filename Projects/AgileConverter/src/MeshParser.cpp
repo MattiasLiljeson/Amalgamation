@@ -121,6 +121,8 @@ void MeshParser::Parse()
 	while (parent)
 	{
 		const char* name = parent->GetName();
+		FbxMatrix transform2 = parent->EvaluateGlobalTransform();
+
 		parent = parent->GetParent();
 	}
 
