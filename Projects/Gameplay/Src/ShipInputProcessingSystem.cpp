@@ -26,7 +26,6 @@ void ShipInputProcessingSystem::initialize()
 		SystemType::InputActionsBackendSystem));
 	initGamePad();
 	initMouse();
-	initKeyboard();
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::INPUT,
 		"ControllerEpsilon", TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), 
@@ -94,31 +93,6 @@ void ShipInputProcessingSystem::initGamePad()
 		InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE);
 	m_gamepadVerticalNegative	= m_inputBackend->getControlByEnum( 
 		InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE);
-
-	m_gamepadRollRight	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_SHOULDER_PRESS_R);
-	m_gamepadRollLeft	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_SHOULDER_PRESS_L);
-
-	m_gamepadThrust	= m_inputBackend->getControlByEnum( InputHelper::Xbox360Analogs_TRIGGER_R);
-
-	m_gamepadStrafeHorizontalPositive	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-	m_gamepadStrafeHorizontalNegative	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
-	m_gamepadStrafeVerticalPositive	= m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE);
-	m_gamepadStrafeVerticalNegative	= m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE);
-
-	m_gamepadEditModeHorizontalPos	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-	m_gamepadEditModeHorizontalNeg	= m_inputBackend->getControlByEnum( 
-		InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
-	m_gamepadEditModeVerticalPos	= m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE);
-	m_gamepadEditModeVerticalNeg	= m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE);
-
-	m_gamepadEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_BACK );
 }
 
 
@@ -132,37 +106,6 @@ void ShipInputProcessingSystem::initMouse()
 		InputHelper::MouseAxes_Y_POSITIVE);
 	m_mouseVerticalNegative		= m_inputBackend->getControlByEnum( 
 		InputHelper::MouseAxes_Y_NEGATIVE);
-}
-
-void ShipInputProcessingSystem::initKeyboard()
-{
-	m_keyboardRollRight = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_E);
-	m_keyboardRollLeft =m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_Q);
-
-	m_keyboardThrust = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_SPACE);
-
-	m_keyboardStrafeVerticalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_W);
-	m_keyboardStrafeVerticalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_S);
-	m_keyboarStrafeHorizontalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_D);
-	m_keyboarStrafeHorizontalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_A);
-
-	m_keyboardEditModeTrig = m_inputBackend->getControlByEnum( InputHelper::KeyboardKeys_C );
-
-	m_keyboardEditModeVerticalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_W);
-	m_keyboardEditModeVerticalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_S);
-	m_keyboardEditModeHorizontalPos = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_D);
-	m_keyboardEditModeHorizontalNeg = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_A);
 }
 
 float* ShipInputProcessingSystem::getControllerEpsilonPointer()
@@ -194,62 +137,60 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 
 	// strafe
 
-//	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
-//	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
 	input.shPositive = m_actionBackend->getStatusByAction(
 		InputActionsBackendSystem::Actions_STRAFE_RIGHT);
 	saturate(input.shPositive);
 
-	input.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();
-	input.shNegative += m_keyboarStrafeHorizontalNeg->getStatus();
+	input.shNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_STRAFE_LEFT);
 	saturate(input.shNegative);
 
-	input.svPositive = m_gamepadStrafeVerticalPositive->getStatus();
-	input.svPositive += m_keyboardStrafeVerticalPos->getStatus();
+	input.svPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_STRAFE_UP);
 	saturate(input.svPositive);
 
-	input.svNegative = m_gamepadStrafeVerticalNegative->getStatus();
-	input.svNegative += m_keyboardStrafeVerticalNeg->getStatus();
+	input.svNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_STRAFE_DOWN);
 	saturate(input.svNegative);
 
 	// edit mode rotate
 
-	input.ehPositive = m_gamepadEditModeHorizontalPos->getStatus();
-	input.ehPositive += m_keyboardEditModeHorizontalPos->getStatus();
+	input.ehPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_EDIT_MODE_RIGHT);
 	saturate(input.ehPositive);
 
-	input.ehNegative = m_gamepadEditModeHorizontalNeg->getStatus();
-	input.ehNegative += m_keyboardEditModeHorizontalNeg->getStatus();
+	input.ehNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_EDIT_MODE_LEFT);
 	saturate(input.ehNegative);
 
-	input.evPositive = m_gamepadEditModeVerticalPos->getStatus();
-	input.evPositive += m_keyboardEditModeVerticalPos->getStatus();
+	input.evPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_EDIT_MODE_UP);
 	saturate(input.evPositive);
 
-	input.evNegative = m_gamepadEditModeVerticalNeg->getStatus();
-	input.evNegative += m_keyboardEditModeVerticalNeg->getStatus();
+	input.evNegative = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_EDIT_MODE_DOWN);
 	saturate(input.evNegative);
 
 	// roll
 
-	input.rRight = m_gamepadRollRight->getStatus();
-	input.rRight += m_keyboardRollRight->getStatus();
+	input.rRight = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_ROLL_RIGHT);
 	saturate(input.rRight);
 
-	input.rLeft = m_gamepadRollLeft->getStatus();
-	input.rLeft += m_keyboardRollLeft->getStatus();
+	input.rLeft = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_ROLL_LEFT);
 	saturate(input.rLeft);
 
 	// thrust
 
-	input.thrust =  m_gamepadThrust->getStatus();
-	input.thrust += m_keyboardThrust->getStatus();
+	input.thrust = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_THRUST_FORWARD);
 	saturate(input.thrust);
 
 	// edit mode
 
-	double etv = m_gamepadEditModeTrig->getStatus();
-	etv += m_keyboardEditModeTrig->getStatus();
+	double etv = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
 	input.stateSwitchTrig=saturate(etv)>0.5;
 
 	if (m_editSwitchTrigReleased)

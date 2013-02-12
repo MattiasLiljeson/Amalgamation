@@ -35,6 +35,10 @@ public:
 		Actions_TURN_RIGHT,
 		Actions_TURN_UP,
 		Actions_TURN_DOWN,
+		Actions_EDIT_MODE_LEFT,
+		Actions_EDIT_MODE_RIGHT,
+		Actions_EDIT_MODE_UP,
+		Actions_EDIT_MODE_DOWN,
 		Actions_CURSOR_LEFT,
 		Actions_CURSOR_RIGHT,
 		Actions_CURSOR_UP,
@@ -54,6 +58,7 @@ public:
 	void initialize();
 	double getDeltaByAction(Actions p_action);
 	double getStatusByAction(Actions p_action);
+	void setMouseSensitivity(float p_sensitivity);
 
 private:
 	void readControlFromString(string p_key, Control** p_control);
