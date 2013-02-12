@@ -83,7 +83,6 @@ ID3D11InputLayout* SkeletonMeshShader::GetInputLayout()
 }
 void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pProjection, float pScale, AglSkeleton* pSkeleton, AglMaterial pMaterial)
 {
-	AglMatrix inv = Scene::m_avoidJump.inverse();
 	pWorld = AglMatrix::transpose(pWorld);
 	pView = AglMatrix::transpose(pView);
 	pProjection = AglMatrix::transpose(pProjection);

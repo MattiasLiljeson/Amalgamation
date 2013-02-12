@@ -55,9 +55,6 @@ private:
 
 	string mPath;
 
-public:
-	static AglMatrix m_world;
-	static AglMatrix m_avoidJump;
 private:
 	int mCurrentAnimation;
 
@@ -117,7 +114,6 @@ public:
 
 	AglQuaternion* GetQuaternionRotation(){ return &mQuaternionRotation; }
 	AglVector3* GetPosition(){ return &mPosition; }
-	AglMatrix GetWorld() { return m_world; }
 	AglVector3 GetCenter();
 
 	bool IsLeftHanded();
