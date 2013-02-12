@@ -361,6 +361,7 @@ void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows )
 			m_deviceContext->PSSetShaderResources( startSlot, 1, m_shadowMapRenderer->getShadowMap(i));
 		}
 	}
+
 }
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
 	m_deferredRenderer->unmapDeferredBaseFromShader();
@@ -399,6 +400,13 @@ void GraphicsWrapper::flipBackBuffer()
 {
 	m_swapChain->Present( 0, 0);
 }
+
+void GraphicsWrapper::mapRandomVecTexture()
+{
+	m_deviceContext->PSSetShaderResources(4,1,
+		&m_textureManager->getResource(m_randomNormalTextures)->data);
+}
+
 
 // ModelResource* GraphicsWrapper::createModelFromFile(const string& p_name,
 // 						   const string* p_path,bool p_isPrimitive)
@@ -561,14 +569,18 @@ void GraphicsWrapper::unmapDepthFromShader(){
 	m_deferredRenderer->unmapDepthFromShaderVariables();
 }
 
+void GraphicsWrapper::renderSsao(){
+	m_deferredRenderer->renderSsao();
+}
+
 void GraphicsWrapper::renderComposeStage(){
 	m_deferredRenderer->renderComposeStage();
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
 	m_deferredRenderer->mapVariousPassesToComposeStage();
-	m_deviceContext->PSSetShaderResources(3,1,
-		&m_textureManager->getResource(m_randomNormalTextures)->data);
+	//m_deviceContext->PSSetShaderResources(3,1,
+	//	&m_textureManager->getResource(m_randomNormalTextures)->data);
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
@@ -687,6 +699,3 @@ int GraphicsWrapper::getEmptyTexture()
 {
 	return m_solidWhiteTexture;
 }
-
-
-

@@ -121,6 +121,8 @@ public:
 
 	LightShader* getDeferredLightShader();
 
+	void renderSsao();
+
 	void renderComposeStage();
 
 	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
@@ -151,6 +153,7 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	LightShader*			m_lightShader;
+	DeferredComposeShader*	m_ssaoShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

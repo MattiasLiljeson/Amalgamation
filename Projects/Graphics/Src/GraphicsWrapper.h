@@ -128,6 +128,8 @@ public:
 	void flipBackBuffer();
 
 
+	void mapRandomVecTexture();
+
 // 	ModelResource* createModelFromFile(const string& p_name,
 // 							   const string* p_path);
 
@@ -174,6 +176,8 @@ public:
 	void setWireframeMode(bool p_wireframe);
 
 	void renderParticleSystem(AglParticleSystem* p_system, InstanceData p_transform);
+
+	void renderSsao();
 
 	void renderComposeStage();
 

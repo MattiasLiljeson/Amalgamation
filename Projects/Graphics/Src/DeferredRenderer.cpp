@@ -75,13 +75,22 @@ void DeferredRenderer::clearBuffers()
 {
 	unMapGBuffers();
 	float clearColor[] = {
-		0.0f,0.0f,0.0f,1.0f
+		0.0f,0.0f,0.0f,0.0f
 	};
 	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void DeferredRenderer::renderSsao()
+{
+	m_ssaoShader->setSSAOBufferData(m_ssaoData);
+	m_ssaoShader->apply();
+	m_fullscreenQuad->apply();
+
+	m_deviceContext->Draw(6,0);
 }
 
 void DeferredRenderer::renderComposeStage()
@@ -242,11 +251,14 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
-	m_composeShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/deferredCompose.hlsl");
+	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/ssaoGenerate.hlsl");
 
 	m_lightShader = m_shaderFactory->createLightShader(
 		L"Shaders/Game/lighting.hlsl");
+
+	m_composeShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/deferredCompose.hlsl");
 }
 
 void DeferredRenderer::initFullScreenQuad()

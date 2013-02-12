@@ -80,6 +80,7 @@ void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
 
+	//Shadows
 	m_wrapper->getGPUTimer()->Start(m_shadowProfile, m_currentFrame);
 	clearShadowStuf();
 	//Fill the shadow view projections
@@ -100,6 +101,7 @@ void GraphicsRendererSystem::process(){
 	endShadowPass();
 	m_wrapper->getGPUTimer()->Stop(m_shadowProfile, m_currentFrame);
 
+	// Meshes
 	m_wrapper->getGPUTimer()->Start(m_meshProfile, m_currentFrame);
 	initMeshPass();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW);
@@ -107,24 +109,33 @@ void GraphicsRendererSystem::process(){
 	endMeshPass();
 	m_wrapper->getGPUTimer()->Stop(m_meshProfile, m_currentFrame);
 
+	// Lights
 	m_wrapper->getGPUTimer()->Start(m_lightProfile, m_currentFrame);
 	initLightPass();
 	m_lightRenderSystem->render();
 	endLightPass();
 	m_wrapper->getGPUTimer()->Stop(m_lightProfile, m_currentFrame);
 
+	//SSAO
+	beginSsao();
+	m_wrapper->renderSsao();
+	endSsao();
+
+	//Compose
 	m_wrapper->getGPUTimer()->Start(m_composeProfile, m_currentFrame);
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
 	m_wrapper->getGPUTimer()->Stop(m_composeProfile, m_currentFrame);
 
+	//Particles
 	m_wrapper->getGPUTimer()->Start(m_particleProfile, m_currentFrame);
 	initParticlePass();
 	m_particleRenderSystem->render();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_particleProfile, m_currentFrame);
 	
+	//GUI
 	m_wrapper->getGPUTimer()->Start(m_guiProfile, m_currentFrame);
 	initGUIPass();
 	m_antTweakBarSystem->render();
@@ -166,17 +177,36 @@ void GraphicsRendererSystem::endMeshPass(){
 void GraphicsRendererSystem::initLightPass(){
 	m_wrapper->setRasterizerStateSettings(
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
-	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
+	m_wrapper->setBlendStateSettings(BlendState::LIGHT);
 	m_wrapper->setLightPassRenderTarget();
 	//m_wrapper->mapDeferredBaseToShader();
 	m_wrapper->mapNeededShaderResourceToLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::endLightPass(){
+	//m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
+	//m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
+	//m_wrapper->unmapDeferredBaseFromShader();
+	//m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+}
+
+void GraphicsRendererSystem::beginSsao()
+{
+	// not used anymore
+	//m_wrapper->mapRandomVecTexture();
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
+	m_wrapper->setBlendStateSettings(BlendState::SSAO);
+	//m_wrapper->setRasterizerStateSettings(
+	//	RasterizerState::FILLED_NOCULL_NOCLIP, false);
+}
+
+void GraphicsRendererSystem::endSsao()
+{
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	//m_wrapper->unmapDeferredBaseFromShader();
+	m_wrapper->unmapDeferredBaseFromShader();
 	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+
 }
 
 void GraphicsRendererSystem::initComposePass()
