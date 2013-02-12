@@ -116,25 +116,27 @@ void GraphicsRendererSystem::endMeshPass(){
 void GraphicsRendererSystem::initLightPass(){
 	m_wrapper->setRasterizerStateSettings(
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
-	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
+	m_wrapper->setBlendStateSettings(BlendState::LIGHT);
 	m_wrapper->setLightPassRenderTarget();
 	//m_wrapper->mapDeferredBaseToShader();
 	m_wrapper->mapNeededShaderResourceToLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::endLightPass(){
-	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
-	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
+	//m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
+	//m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	//m_wrapper->unmapDeferredBaseFromShader();
 	//m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::beginSsao()
 {
+	// not used anymore
+	//m_wrapper->mapRandomVecTexture();
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
-	m_wrapper->setRasterizerStateSettings(
-		RasterizerState::FILLED_NOCULL_NOCLIP, false);
-	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
+	m_wrapper->setBlendStateSettings(BlendState::SSAO);
+	//m_wrapper->setRasterizerStateSettings(
+	//	RasterizerState::FILLED_NOCULL_NOCLIP, false);
 }
 
 void GraphicsRendererSystem::endSsao()

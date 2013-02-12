@@ -1,6 +1,16 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
 
+static const float blurFilter3[3][3] = {{0.01f,0.08f,0.01f},
+									   {0.08f,0.64f,0.01f},
+									   {0.01f,0.08f,0.01f}};
+
+static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
+										{0.02f,0.04f,0.08f,0.04f,0.02f},
+										{0.04f,0.08f,0.16f,0.08f,0.04f},
+										{0.02f,0.04f,0.08f,0.04f,0.02f},
+										{0.01f,0.02f,0.04f,0.02f,0.01f}};
+
 Texture2D gLightPass 		: register(t0);
 Texture2D gNormalBuffer		: register(t1);
 Texture2D depthBuffer		: register(t2);
@@ -71,32 +81,22 @@ float4 PS(VertexOut input) : SV_TARGET
 	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
 	float2 rand 	= getRandomVector(input.texCoord);
 	
-	float ao = 1.0f;
-	//ao = lightColor.a;
-	//float radius = sampleRadius/depth;
-//
-	//const float2 vec[4] = { float2 (1,0), float2 (-1,0),
-	//						float2 (0,1), float2 (0,-1)};
-//
-	//const int iterations = 4;
-	//for ( int i = 0; i < iterations; i++)
-	//{
-	//	float2 coord1 = reflect(vec[i], rand)*radius;
-	//	float2 coord2 = float2 (coord1.x*0.707f - coord1.y*0.707f,
-	//							coord1.x*0.707f + coord1.y*0.707f);
-	//							
-	//	ao += doAmbientOcclusion(input.texCoord, coord1*0.25f, position, normal);
-	//	ao += doAmbientOcclusion(input.texCoord, coord2*0.5f, position, normal);
-	//	ao += doAmbientOcclusion(input.texCoord, coord1*0.75f, position, normal);
-	//	ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
-	//}
-	
-	//ao/=(float)iterations*4.0f;
-	
-	//ao = 1.0f - ao;
-	//ao = pow(ao,10000);
-	return float4( ao/10, ao/10, ao/10, 1.0f );
-	lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
-	//lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
+	uint3 index;
+	index.xy = input.position.xy;
+	index.z = 0;
+	float ao = 0.0f;
+	ao = lightColor.a;
+	float aoMult = 1.0f;
+	for(int x=-2;x<3;x++)
+	{
+		for(int y=-2;y<3;y++)
+		{
+			ao += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+		}
+	}
+
+	//return float4( ao, ao, ao, 1.0f );
+	//lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
+	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
 	return lightColor;
 }

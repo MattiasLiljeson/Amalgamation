@@ -39,6 +39,8 @@ struct BlendState
 		MULTIPLY,
 		ADDITIVE,
 		PARTICLE,
+		LIGHT,
+		SSAO,
 		NUMBER_OF_MODES
 	};
 };

@@ -127,6 +127,8 @@ public:
 	void flipBackBuffer();
 
 
+	void mapRandomVecTexture();
+
 // 	ModelResource* createModelFromFile(const string& p_name,
 // 							   const string* p_path);
 

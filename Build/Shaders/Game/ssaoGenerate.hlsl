@@ -1,22 +1,12 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
 
-static const float blurFilter3[3][3] = {{0.01f,0.08f,0.01f},
-									   {0.08f,0.64f,0.01f},
-									   {0.01f,0.08f,0.01f}};
-
-static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
-										{0.02f,0.04f,0.08f,0.04f,0.02f},
-										{0.04f,0.08f,0.16f,0.08f,0.04f},
-										{0.02f,0.04f,0.08f,0.04f,0.02f},
-										{0.01f,0.02f,0.04f,0.02f,0.01f}};
-
-Texture2D gLightPass 		: register(t0);
-Texture2D gNormalBuffer		: register(t1);
-Texture2D depthBuffer		: register(t3);
-Texture2D gRandomNormals 	: register(t2);
+Texture2D gNormalMap 		: register(t1);
+Texture2D gDepth 			: register(t3);
+//Texture2D gRandomNormals	: register(t4);
 
 SamplerState pointSampler : register(s0);
+SamplerState shadowSampler : register(s1);
 
 cbuffer SSAO : register(b1)
 {
@@ -41,13 +31,33 @@ struct VertexOut
 
 float3 getPosition(float2 uv)
 {
-	float depthValue = depthBuffer.Sample(pointSampler, uv).r;
+	float depthValue = gDepth.Sample(shadowSampler, uv).r;
 	return getWorldPosFromTexCoord( uv, depthValue, gViewProjInverse);
 }
 
-float2 getRandomVector( float2 uv)
+// Input: It uses texture coords as the random number seed.
+// Output: Random number: [0,1), that is between 0.0 and 0.999999... inclusive.
+// Author: Michael Pohoreski
+// Copyright: Copyleft 2012 :-)
+float random( float2 p )
 {
-	return normalize(gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f);
+  // We need irrationals for pseudo randomness.
+  // Most (all?) known transcendental numbers will (generally) work.
+  const float2 r = float2(
+    23.1406926327792690,  // e^pi (Gelfond's constant)
+     2.6651441426902251); // 2^sqrt(2) (Gelfond–Schneider constant)
+  return frac( cos( fmod( 123456789., 1e-7 + 256. * dot(p,r) ) ) );  
+}
+
+float2 getRandomVector( float2 uv )
+{
+	//return normalize(gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f);
+
+	float2 rand;
+	rand.x = random( uv.xy );
+	rand.y = random( uv.yx );
+	rand = normalize( rand );
+	return rand;
 }
 
 float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
@@ -72,15 +82,11 @@ VertexOut VS(VertexIn p_input)
 
 float4 PS(VertexOut input) : SV_TARGET
 {
-	float4 lightColor = float4(gLightPass.Sample(pointSampler,input.texCoord).rgb,1.0f);
-	float depth = depthBuffer.Sample(pointSampler, input.texCoord).r;
-	float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
-	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
-	
+	float depth = gDepth.Sample(pointSampler, input.texCoord).r;
 	float3 position = getPosition(input.texCoord);
-	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
-	float2 rand 	= getRandomVector(input.texCoord);
-	
+	float3 normal 	= convertSampledNormal(gNormalMap.Sample(pointSampler, input.texCoord).rgb);
+	float2 rand 	= getRandomVector( position.xy );
+
 	float ao = 0.0f;
 	float radius = sampleRadius/depth;
 	
@@ -100,14 +106,6 @@ float4 PS(VertexOut input) : SV_TARGET
 		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
 	}
 	
-	//ao/=(float)iterations*4.0f;
-	
-	ao = 1.0f - ao;
-	//return float4(1,1,1,1);
-	//return float4(0,0,0,0);
-	//return float4(0.0f, 0.0f, 0.0f, position.x );
-	//return float4(0.0f, 0.0f, 0.0f, lightColor.x );
-	//return float4(0.0f, 0.0f, 0.0f, normal.x );
-	return float4(0.0f, 0.0f, 0.0f, depth );
+	ao = 1.0f - ao;;
 	return float4(0.0f, 0.0f, 0.0f, ao );
 }
