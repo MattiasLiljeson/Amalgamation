@@ -389,9 +389,6 @@ void ClientApplication::initSystems()
 
 	m_world->initialize();
 
-
-
-
 	// Run component assemblage allocator (not a system, so don't delete)
 	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 	delete allocator; // NOTE: (Johan) Why u delete when u say "don't delete"?
@@ -441,11 +438,6 @@ void ClientApplication::initEntities()
 	entity->addComponent( ComponentType::Transform, component );
 	m_world->addEntity(entity);
 
-	status = factory->readAssemblageFile("Assemblages/ClientShip.asd");
-	entity = factory->entityFromRecipe("ClientShip");
-	component = new Transform( 20.0f, -30.0f, 80.0f);
-	entity->addComponent(ComponentType::Transform, component);
-	m_world->addEntity(entity);
 
 	/************************************************************************/
 	/* Create shadow camera and spotlight.									*/
