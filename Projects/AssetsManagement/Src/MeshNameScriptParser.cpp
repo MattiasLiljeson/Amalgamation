@@ -76,7 +76,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 			data.lightSpec.diffuse = AglVector3(diffuseR,diffuseG,diffuseB);
 
 			// hardcode:
-			data.lightSpec.specular = AglVector3(1.0f,1.0f,1.0f);
+			data.lightSpec.specular = AglVector3(0.0f,0.0f,0.0f);
 			data.lightSpec.ambient = AglVector3(0.0f,0.0f,0.0f);
 // 			data.lightSpec.specular = AglVector3(specR,specG,specB);
 // 			data.lightSpec.ambient = AglVector3(ambientR,ambientG,ambientB);
@@ -101,7 +101,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		string linAttFloat = extractPart(p_string,offset+5);
 		string quadAttFloat = extractPart(p_string,offset+6);
 		// store converted in data
-		data.lightSpec.gloss = 1.0f;
+		data.lightSpec.gloss = 0.0f;
 		data.lightSpec.range = getFloatFromDecimalString(distFloat);
 		data.lightSpec.power = getFloatFromDecimalString(pwrFloat);
 		data.lightSpec.attenuation.x = 0.0f;
