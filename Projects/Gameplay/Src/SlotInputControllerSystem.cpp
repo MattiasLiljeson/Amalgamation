@@ -1,5 +1,6 @@
 #include "SlotInputControllerSystem.h"
 #include <Control.h>
+#include "InputActionsBackendSystem.h"
 #include "InputBackendSystem.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
@@ -24,8 +25,10 @@ void SlotInputControllerSystem::handleSlotSelection()
 {
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		if (m_keyboardModuleSlots[i]->getDelta() > 0 ||
-			m_gamepadModuleSlots[i]->getDelta() > 0)
+		if (m_actionBackend->getDeltaByAction(
+			static_cast<InputActionsBackendSystem::Actions>(
+			(int)InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1 +
+			i) ) > 0.0)
 		{
 			//Highlight slot
 			sendModuleSlotHighlight(i);
@@ -70,6 +73,8 @@ void SlotInputControllerSystem::process()
 
 void SlotInputControllerSystem::initialize()
 {
+	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
+		SystemType::InputActionsBackendSystem));
 	initMouse();
 	initKeyboard();
 	initGamepad();
@@ -136,15 +141,6 @@ void SlotInputControllerSystem::sendSlotRotationNone()
 
 void SlotInputControllerSystem::initKeyboard()
 {
-	m_keyboardModuleSlots[0] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_1);
-	m_keyboardModuleSlots[1] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_2);
-	m_keyboardModuleSlots[2] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_3);
-	m_keyboardModuleSlots[3] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_4);
-
 	m_keyboardRotateModuleSlots[0] = m_inputBackend->getControlByEnum(
 		InputHelper::KeyboardKeys_NUMPAD_7);
 	m_keyboardRotateModuleSlots[1] = m_inputBackend->getControlByEnum(
@@ -154,15 +150,6 @@ void SlotInputControllerSystem::initKeyboard()
 
 void SlotInputControllerSystem::initGamepad()
 {
-	m_gamepadModuleSlots[0] = m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Digitals_BTN_A);
-	m_gamepadModuleSlots[1] = m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Digitals_BTN_Y);
-	m_gamepadModuleSlots[2] = m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Digitals_BTN_X);
-	m_gamepadModuleSlots[3] = m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Digitals_BTN_B);
-
 	m_gamepadModuleActivation = m_inputBackend->getControlByEnum(
 		InputHelper::Xbox360Analogs_TRIGGER_L);
 }
