@@ -30,10 +30,8 @@
 #include <Rocket/Core/Context.h>
 #include <Rocket/Core/ElementDocument.h>
 #include <Rocket/Core/ElementUtilities.h>
-//#include <Shell.h>
 #include "EventHandler.h"
 #include "EventInstancer.h"
-//#include "GameDetails.h"
 #include <map>
 #include <Globals.h>
 #include <ToString.h>
@@ -69,9 +67,6 @@ void LibRocketEventManagerSystem::initialize()
 // Releases all event handlers registered with the manager.
 void LibRocketEventManagerSystem::shutdown()
 {
-	//for (EventHandlerMap::iterator i = event_handlers.begin(); i != event_handlers.end(); ++i)
-	//	delete (*i).second;
-
 	m_eventHandlers.clear();
 	m_eventHandler = NULL;
 }
@@ -143,8 +138,8 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, con
 		auto ownerDocument = p_event.GetTargetElement()->GetOwnerDocument();
 		if (values[0] == "modal")
 		{
-			if (!ownerDocument->IsModal() && m_currentDocId == ownerDocument->GetId())
-				ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
+		//	if (!ownerDocument->IsModal() && m_currentDocId == ownerDocument->GetId())
+		//		ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
 		}
 		else if (values[0] == "goto" && values.size() > 1)
 		{

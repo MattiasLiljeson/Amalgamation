@@ -210,9 +210,6 @@ namespace Srv
 		// GET INITIALIZED.
 		m_world->initialize();
 
-
-
-
 		// Run component assemblage allocator (not a system, so don't delete)
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 		delete allocator; // NOTE: (Johan) Why u keep deleting it then?

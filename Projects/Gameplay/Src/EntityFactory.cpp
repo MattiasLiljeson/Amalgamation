@@ -293,13 +293,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		// add a myShip tag to the ship first!
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
-		// Create the camera
-		entity = m_world->createEntity();
-		component = new CameraInfo( m_world->getAspectRatio() );
-		entity->addComponent( ComponentType::CameraInfo, component );
-		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
-		component = new Transform( -5.0f, 0.0f, -5.0f );
-		entity->addComponent( ComponentType::Transform, component );
+		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
+			ComponentType::TAG_MainCamera);
+		
 		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));

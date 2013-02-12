@@ -67,6 +67,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 
 	createTexture("mesherror.png",TEXTUREPATH);
 
+	m_solidWhiteTexture = createTexture("1x1_solid_white.png", TEXTUREPATH);
 	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
@@ -362,7 +363,6 @@ void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows )
 	}
 
 }
-
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
 	m_deferredRenderer->unmapDeferredBaseFromShader();
 }
@@ -584,7 +584,10 @@ void GraphicsWrapper::mapVariousStagesForCompose(){
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
+	ID3D11ShaderResourceView* nulz = NULL;
 	m_deferredRenderer->unmapVariousPassesFromComposeStage();
+	m_deviceContext->PSSetShaderResources(3,1,
+		&m_textureManager->getResource(m_solidWhiteTexture)->data);
 }
 
 void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
@@ -690,4 +693,9 @@ unsigned int GraphicsWrapper::generateShadowMap()
 GPUTimer* GraphicsWrapper::getGPUTimer()
 {
 	return m_gpuTimer;
+}
+
+int GraphicsWrapper::getEmptyTexture()
+{
+	return m_solidWhiteTexture;
 }
