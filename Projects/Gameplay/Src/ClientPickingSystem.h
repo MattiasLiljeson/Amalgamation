@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "PickComponent.h"
 #include "TcpClient.h"
+class InputActionsBackendSystem;
 
 // =======================================================================================
 //                                      ClientPickingSystem
@@ -26,4 +27,5 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 private:
 	TcpClient* m_client;
+	InputActionsBackendSystem* m_actionBackend;
 };
