@@ -7,6 +7,7 @@
 #include "PlayerScore.h"
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
+#include "OnHitScoreEffectPacket.h"
 
 AglMatrix ShipModulesControllerSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation)
 {

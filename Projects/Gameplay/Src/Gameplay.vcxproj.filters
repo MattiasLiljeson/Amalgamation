@@ -528,6 +528,9 @@
     <ClInclude Include="ShipSlotControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="OnHitScoreEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -883,6 +886,9 @@
     </ClCompile>
     <ClCompile Include="ShipSlotControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="OnHitScoreEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

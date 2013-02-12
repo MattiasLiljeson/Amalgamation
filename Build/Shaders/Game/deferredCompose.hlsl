@@ -95,13 +95,15 @@ float4 PS(VertexOut input) : SV_TARGET
 	//ao -= 0.01f;
 	lightColor = float4(lightColor.r-ao, lightColor.g-ao, lightColor.b-ao, lightColor.a);
 	
-	float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)));
+	float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)) );
 	float4 fog = float4(0.2f,0.0745f,0.0f,0.0f);
+	// float fogDepth = length(position-gCameraPos) / ((1200.0f)-(300.0f));
+	// float4 fog = fogDepth*float4(0.5f,0.5f,0.5f,0.0f);
 	
 	//depth = pow(depth,99);
 	//return randomNormals;
 	//return float4(depth,depth,depth,1.0f);
 	return lerp(lightColor,fog,saturate(fogDepth)); // can do this when light is separate from diffuse
-	// lightColor+fog;
+	// return lightColor+fog;
 	// return float4(1-ao,1-ao,1-ao,1.0f);
 }
