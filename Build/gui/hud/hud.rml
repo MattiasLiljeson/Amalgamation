@@ -2,8 +2,14 @@
 	<head>
 		<link type="text/rcss" href="hud.rcss"/>
 	</head>
-	<body id="hudelement" class="content">
-		<div id="score">
+	<body id="hudelements" class="content">
+		<div id="context">
+			<div id="timer">
+			Time Elapsed:
+			</div>
+			<div id="score">
+			Score:
+			</div>
 		</div>
 	</body>
 </rml>
