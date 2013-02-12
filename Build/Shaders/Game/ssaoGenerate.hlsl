@@ -13,8 +13,8 @@ static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
 
 Texture2D gLightPass 		: register(t0);
 Texture2D gNormalBuffer		: register(t1);
-Texture2D depthBuffer		: register(t2);
-Texture2D gRandomNormals 	: register(t3);
+Texture2D depthBuffer		: register(t3);
+Texture2D gRandomNormals 	: register(t2);
 
 SamplerState pointSampler : register(s0);
 
@@ -103,5 +103,11 @@ float4 PS(VertexOut input) : SV_TARGET
 	//ao/=(float)iterations*4.0f;
 	
 	ao = 1.0f - ao;
+	//return float4(1,1,1,1);
+	//return float4(0,0,0,0);
+	//return float4(0.0f, 0.0f, 0.0f, position.x );
+	//return float4(0.0f, 0.0f, 0.0f, lightColor.x );
+	//return float4(0.0f, 0.0f, 0.0f, normal.x );
+	return float4(0.0f, 0.0f, 0.0f, depth );
 	return float4(0.0f, 0.0f, 0.0f, ao );
 }

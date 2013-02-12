@@ -45,8 +45,8 @@ public:
 	void initLightPass();
 	void endLightPass();
 
-	void beginSsaoPass();
-	void endSsaoPass();
+	void beginSsao();
+	void endSsao();
 
 	void initComposePass();
 	void endComposePass();

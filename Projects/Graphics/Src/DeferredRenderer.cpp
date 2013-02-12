@@ -75,7 +75,7 @@ void DeferredRenderer::clearBuffers()
 {
 	unMapGBuffers();
 	float clearColor[] = {
-		0.0f,0.0f,0.0f,1.0f
+		0.0f,0.0f,0.0f,0.0f
 	};
 	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);

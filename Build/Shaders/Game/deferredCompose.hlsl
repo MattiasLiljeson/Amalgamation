@@ -62,7 +62,7 @@ VertexOut VS(VertexIn p_input)
 
 float4 PS(VertexOut input) : SV_TARGET
 {
-	float4 lightColor = float4(gLightPass.Sample(pointSampler,input.texCoord).rgb,1.0f);
+	float4 lightColor = gLightPass.Sample(pointSampler,input.texCoord);
 	float depth = depthBuffer.Sample(pointSampler, input.texCoord).r;
 	float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
@@ -71,28 +71,32 @@ float4 PS(VertexOut input) : SV_TARGET
 	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
 	float2 rand 	= getRandomVector(input.texCoord);
 	
-	float ao = 0.0f;
-	float radius = sampleRadius/depth;
-	
-	const float2 vec[4] = { float2 (1,0), float2 (-1,0),
-							float2 (0,1), float2 (0,-1)};
-	
-	const int iterations = 4;
-	for ( int i = 0; i < iterations; i++)
-	{
-		float2 coord1 = reflect(vec[i], rand)*radius;
-		float2 coord2 = float2 (coord1.x*0.707f - coord1.y*0.707f,
-								coord1.x*0.707f + coord1.y*0.707f);
-								
-		ao += doAmbientOcclusion(input.texCoord, coord1*0.25f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord2*0.5f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord1*0.75f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
-	}
+	float ao = 1.0f;
+	//ao = lightColor.a;
+	//float radius = sampleRadius/depth;
+//
+	//const float2 vec[4] = { float2 (1,0), float2 (-1,0),
+	//						float2 (0,1), float2 (0,-1)};
+//
+	//const int iterations = 4;
+	//for ( int i = 0; i < iterations; i++)
+	//{
+	//	float2 coord1 = reflect(vec[i], rand)*radius;
+	//	float2 coord2 = float2 (coord1.x*0.707f - coord1.y*0.707f,
+	//							coord1.x*0.707f + coord1.y*0.707f);
+	//							
+	//	ao += doAmbientOcclusion(input.texCoord, coord1*0.25f, position, normal);
+	//	ao += doAmbientOcclusion(input.texCoord, coord2*0.5f, position, normal);
+	//	ao += doAmbientOcclusion(input.texCoord, coord1*0.75f, position, normal);
+	//	ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
+	//}
 	
 	//ao/=(float)iterations*4.0f;
 	
-	ao = 1.0f - ao;
-	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, lightColor.a);
+	//ao = 1.0f - ao;
+	//ao = pow(ao,10000);
+	return float4( ao/10, ao/10, ao/10, 1.0f );
+	lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
+	//lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
 	return lightColor;
 }

@@ -126,11 +126,12 @@ void GraphicsRendererSystem::endLightPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	//m_wrapper->unmapDeferredBaseFromShader();
-	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+	//m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
 }
 
 void GraphicsRendererSystem::beginSsao()
 {
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setRasterizerStateSettings(
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
 	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
@@ -140,6 +141,9 @@ void GraphicsRendererSystem::endSsao()
 {
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
+	m_wrapper->unmapDeferredBaseFromShader();
+	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+
 }
 
 void GraphicsRendererSystem::initComposePass()
