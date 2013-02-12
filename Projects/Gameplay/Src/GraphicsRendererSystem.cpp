@@ -127,7 +127,7 @@ void GraphicsRendererSystem::process(){
 	
 	m_wrapper->getGPUTimer()->Start(m_guiProfile, m_currentFrame);
 	initGUIPass();
-	//m_antTweakBarSystem->render();
+	m_antTweakBarSystem->render();
 	m_libRocketRenderSystem->render();
 	endGUIPass();
 	m_wrapper->getGPUTimer()->Stop(m_guiProfile, m_currentFrame);

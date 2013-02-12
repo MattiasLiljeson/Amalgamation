@@ -204,14 +204,11 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), false);
+		m_world->setSystem(new ServerMeasurementSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.
 		m_world->initialize();
-
-
-
 
 		// Run component assemblage allocator (not a system, so don't delete)
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();

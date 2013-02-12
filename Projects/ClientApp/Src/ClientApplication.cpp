@@ -107,6 +107,7 @@ using namespace std;
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
 #include <SlotInputControllerSystem.h>
+#include <MeshOffsetTransform.h>
 
 #define FORCE_VS_DBG_OUTPUT
 

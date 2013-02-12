@@ -1,11 +1,11 @@
 body
 {
-	font-family: Delicious;
+	font-family: Armorhide;
 	font-style: normal;
-	font-size: 15;
+	font-size: 20;
 	color: white;
 	background: rgba(20, 20, 20, 80);
-	
+    font-charset: U+00??;
 	font-weight: bold;
 	
     /*shadow-font-effect: shadow;
@@ -29,11 +29,20 @@ body.window
 	margin-right: 	5%;
 	width:			350px;
 	height:			80%;
+	max-height: 	700px;
 	/*padding-top: 	10%;
 	padding-bottom:	10%;*/
 }
 
-
+body.Pop-up
+{
+	margin-right: 	5%;
+	margin:		 	auto;
+	width:			350px;
+	height: 		42%;
+	min-height:		205px;
+	background: 	rgba(0,60,0,80);
+}
 
 div#title_bar
 {
@@ -104,6 +113,7 @@ div#content
 	height: 75%;
 	overflow: hidden auto;
 	text-align: center;
+	padding-bottom: 8px;
 }
 
 p
@@ -127,20 +137,6 @@ h1
 	shadow-color: black;*/
 }
 
-
-
-input,
-select,
-dataselect
-{
-
-}
-
-input.submit
-{
-	margin-left: 0px;
-}
-
 button,
 input.submit
 {
@@ -156,7 +152,7 @@ input.submit
 	vertical-align: middle;
 	padding-bottom: 8px;
 	
-	font-size: 18;
+	font-size: 25;
 	text-align: center;
 	tab-index: auto;
 }
@@ -168,8 +164,6 @@ button.Big
 	/*background-decorator: image;
 	background-image: ../../Assets/gui/texture/invader.tga 247px 0px 406px 45px;*/
 }
-
-
 
 button#back, input.submit#back
 {
@@ -193,7 +187,6 @@ button:focus,
 input.submit:focus
 {
     font-weight: bold;
-    
 	/*
     shadow-font-effect: shadow;
     shadow-offset: 1px 1px;
@@ -215,12 +208,12 @@ input.submit:active
 
 input.text
 {
-	height: 31px;
-	padding-left: 2px;
-	
+	margin-bottom: 8px;
+	height: auto;
+	width: auto;
+	border-width: 1px;
+	border-color: grey;
 	/*background: rgb(255, 128, 128);*/
-	
-	shadow-font-effect: none;
 	/*background-decorator: tiled-horizontal;
 	background-left-image: ../../Assets/gui/texture/invader.tga 162px 192px 176px 223px;
 	background-center-image: ../../Assets/gui/texture/invader.tga stretch 176px 192px 177px 223px;*/
@@ -230,8 +223,9 @@ input.text,
 select,
 dataselect
 {
-	color: black;
-	font-size: 13;
+	text-align: center;
+	color: 		white;
+	font-size: 	18;
 }
 
 datagrid input.text

@@ -81,6 +81,8 @@ void LibRocketBackendSystem::initialize()
 	fonts.push_back( "Delicious-Bold.otf" );
 	fonts.push_back( "Delicious-Italic.otf" );
 	fonts.push_back( "Delicious-Roman.otf" );
+	fonts.push_back( "DisplayOTF.otf" );
+	fonts.push_back( "Armorhide.ttf" );
 	for( unsigned int i=0; i<fonts.size(); i++ )
 	{
 		string tmp = GUI_FONT_PATH + fonts[i]; 
