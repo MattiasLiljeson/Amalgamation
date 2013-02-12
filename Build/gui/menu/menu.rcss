@@ -173,16 +173,20 @@ button.Big
 
 button#back, input.submit#back
 {
+/*
 	position: absolute;
 	left: 23px;
 	bottom: 8px;
+	*/
 }
 
 input.submit#save
 {
+/*
 	position: absolute;
 	left: 23px;
 	bottom: 60px;
+	*/
 }
 
 button:focus,
