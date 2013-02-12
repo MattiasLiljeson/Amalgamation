@@ -55,7 +55,7 @@ struct NetworkAdress
 class ClientConnectToServerSystem: public EntitySystem, public EventHandler
 {
 public:
-	ClientConnectToServerSystem( TcpClient* p_tcpClient );
+	ClientConnectToServerSystem( TcpClient* p_tcpClient, bool p_connectDirectly=false);
 
 	~ClientConnectToServerSystem();
 
@@ -71,5 +71,6 @@ private:
 	TcpClient* m_tcpClient;
 
 	bool	m_isLookingForConnection;
+	bool	m_connectStraightAway;
 	NetworkAdress m_connectionAddress;
 };

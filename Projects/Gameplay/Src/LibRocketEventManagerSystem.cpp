@@ -122,7 +122,8 @@ void LibRocketEventManagerSystem::clearDocumentStack()
 }
 
 // Processes an event coming through from Rocket.
-void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value)
+void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, 
+											   const Rocket::Core::String& p_value)
 {
 	Rocket::Core::StringList commands;
 	Rocket::Core::StringUtilities::ExpandString(commands, p_value, ';');

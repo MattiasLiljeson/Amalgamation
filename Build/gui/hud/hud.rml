@@ -3,12 +3,7 @@
 		<link type="text/rcss" href="hud.rcss"/>
 	</head>
 	<body id="hudelement" class="content">
-		<div id="logo">
-		</div>
 		<div id="score">
-			<div id="scoreText">
-				asd
-			</div>
 		</div>
 	</body>
 </rml>

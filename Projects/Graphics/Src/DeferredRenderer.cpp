@@ -67,6 +67,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
+	delete m_ssaoShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 }

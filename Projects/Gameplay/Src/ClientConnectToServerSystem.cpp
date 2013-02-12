@@ -5,10 +5,12 @@
 #include "LibRocketEventManagerSystem.h"
 #include "InputBackendSystem.h"
 
-ClientConnectToServerSystem::ClientConnectToServerSystem( TcpClient* p_tcpClient )
+ClientConnectToServerSystem::ClientConnectToServerSystem(TcpClient* p_tcpClient,
+														 bool p_connectDirectly/* =false */)
 	: EntitySystem( SystemType::ClientConnectoToServerSystem ), EventHandler("join")
 {
 	m_tcpClient = p_tcpClient;
+	m_connectStraightAway = p_connectDirectly;
 	
 	m_isLookingForConnection = false;
 	m_connectionAddress.octets1 = 127;
@@ -49,6 +51,9 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 
 void ClientConnectToServerSystem::initialize()
 {
+	if(m_connectStraightAway){
+		connectToNetworkAddress();
+	}
 }
 
 

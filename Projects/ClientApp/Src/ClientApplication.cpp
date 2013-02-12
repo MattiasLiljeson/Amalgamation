@@ -330,7 +330,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( msgProcSystem , true );
 
 	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client);
+		new ClientConnectToServerSystem( m_client, false);
 	m_world->setSystem( connect, true );
 	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
 	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
@@ -404,11 +404,6 @@ void ClientApplication::initEntities()
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
-	// Score HUD
-	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );
-	m_world->addEntity( entity );
-
 	// Read monkey!
 	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
 	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
@@ -445,7 +440,6 @@ void ClientApplication::initEntities()
 	float rotation = 0.78;
 	AglQuaternion quat;
 	for(int i = 0; i < 1; i++){
-
 		entity = factory->entityFromRecipe( "SpotLight" );
 		LightsComponent* lightComp = static_cast<LightsComponent*>(
 			entity->getComponent(ComponentType::LightsComponent));
