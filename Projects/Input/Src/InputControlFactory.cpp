@@ -163,7 +163,7 @@ vector<pair<string, Control*>> InputControlFactory::createNumpad0ToNumpad9()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_NUM";
+		ss << "KeyboardKeys_NUMPAD_";
 		ss << (char)( '0' + i );
 		names[i] = ss.str();
 	}

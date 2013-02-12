@@ -25,6 +25,7 @@ public:
 		Actions_ACTIVATE_SLOT_2,
 		Actions_ACTIVATE_SLOT_3,
 		Actions_ACTIVATE_SLOT_4,
+		Actions_ACTIVATE_MODULE,
 		Actions_ROTATE_MODULE_LEFT,
 		Actions_ROTATE_MODULE_RIGHT,
 		Actions_STRAFE_LEFT,

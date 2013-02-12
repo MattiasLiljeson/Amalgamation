@@ -20,7 +20,6 @@ SlotInputControllerSystem::~SlotInputControllerSystem()
 {
 }
 
-
 void SlotInputControllerSystem::handleSlotSelection()
 {
 	for (unsigned int i = 0; i < 4; i++)
@@ -39,27 +38,29 @@ void SlotInputControllerSystem::handleSlotSelection()
 		}
 	}
 	
-	if (m_mouseModuleActivation->getDelta() > 0 ||
-		m_gamepadModuleActivation->getDelta()>0)
+	if (m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_ACTIVATE_MODULE) > 0)
 	{
 		sendSlotActivation();
 	}
-	else if (m_mouseModuleActivation->getDelta() < 0 ||
-			m_gamepadModuleActivation->getDelta() < 0)
+	else if (m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_ACTIVATE_MODULE) < 0)
 	{
 		sendSlotDeactivation();
 	}
 
-	if (m_keyboardRotateModuleSlots[0]->getDelta() > 0)
+	if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ROTATE_MODULE_RIGHT) > 0)
 	{
 		sendSlotRotationAdd();
 	}
-	else if (m_keyboardRotateModuleSlots[1]->getDelta() > 0)
+	else if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ROTATE_MODULE_LEFT) > 0)
 	{
 		sendSlotRotationSub();
 	}
-	else if (m_keyboardRotateModuleSlots[0]->getDelta() < 0
-				|| m_keyboardRotateModuleSlots[1]->getDelta() < 0)
+	else if (m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_ROTATE_MODULE_RIGHT) < 0 ||
+		m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_ROTATE_MODULE_LEFT) < 0)
 	{
 		sendSlotRotationNone();
 	}
@@ -75,9 +76,6 @@ void SlotInputControllerSystem::initialize()
 {
 	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
 		SystemType::InputActionsBackendSystem));
-	initMouse();
-	initKeyboard();
-	initGamepad();
 }
 
 void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)
@@ -137,26 +135,4 @@ void SlotInputControllerSystem::sendSlotRotationNone()
 	packet.type = SimpleEventType::ROTATE_NONE;
 
 	m_client->sendPacket( packet.pack() );
-}
-
-void SlotInputControllerSystem::initKeyboard()
-{
-	m_keyboardRotateModuleSlots[0] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_NUMPAD_7);
-	m_keyboardRotateModuleSlots[1] = m_inputBackend->getControlByEnum(
-		InputHelper::KeyboardKeys_NUMPAD_8);
-}
-
-
-void SlotInputControllerSystem::initGamepad()
-{
-	m_gamepadModuleActivation = m_inputBackend->getControlByEnum(
-		InputHelper::Xbox360Analogs_TRIGGER_L);
-}
-
-
-void SlotInputControllerSystem::initMouse()
-{
-	m_mouseModuleActivation = m_inputBackend->getControlByEnum(
-		InputHelper::MouseButtons_0);
 }

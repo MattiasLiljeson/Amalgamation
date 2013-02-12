@@ -42,8 +42,4 @@ private:
 	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
-	Control* m_mouseModuleActivation;
-	Control* m_gamepadModuleActivation;
-
-	Control* m_keyboardRotateModuleSlots[2];
 };
