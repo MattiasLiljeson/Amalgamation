@@ -1,11 +1,11 @@
 #include "ShipInputProcessingSystem.h"
+#include "InputActionsBackendSystem.h"
 #include "InputBackendSystem.h"
 #include "Control.h"
 #include <ValueClamp.h>
 #include "AntTweakBarWrapper.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
-#include "AudioBackendSystem.h"
 #include "Cursor.h"
 #include <Globals.h>
 
@@ -22,6 +22,8 @@ ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_input
 
 void ShipInputProcessingSystem::initialize()
 {
+	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
+		SystemType::InputActionsBackendSystem));
 	initGamePad();
 	initMouse();
 	initKeyboard();
@@ -192,8 +194,10 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 
 	// strafe
 
-	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
-	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
+//	input.shPositive = m_gamepadStrafeHorizontalPositive->getStatus();
+//	input.shPositive += m_keyboarStrafeHorizontalPos->getStatus();
+	input.shPositive = m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_STRAFE_RIGHT);
 	saturate(input.shPositive);
 
 	input.shNegative = m_gamepadStrafeHorizontalNegative->getStatus();

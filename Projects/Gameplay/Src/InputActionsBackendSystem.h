@@ -1,6 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 class Control;
+class InputBackendSystem;
 // =======================================================================================
 // InputActionsBackendSystem
 // =======================================================================================
@@ -52,10 +53,15 @@ public:
 	~InputActionsBackendSystem();
 	void initialize();
 	double getDeltaByAction(Actions p_action);
+	double getStatusByAction(Actions p_action);
+
+private:
+	void readControlFromString(string p_key, Control** p_control);
 
 private:
 	Control* m_mappedKeyboardAndMouseInputControls[Actions_CNT];
 	Control* m_mappedGamepadInputControls[Actions_CNT];
 	string m_inputIniFile;
+	InputBackendSystem* m_inputBackend;
 
 };

@@ -4,6 +4,7 @@
 #include "ShipInputProcessingSystem.h"
 
 class Control;
+class InputActionsBackendSystem;
 class InputBackendSystem;
 
 // =======================================================================================
@@ -182,5 +183,6 @@ private:
 	void initKeyboard();
 
 	bool m_editSwitchTrigReleased;
+	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
 };

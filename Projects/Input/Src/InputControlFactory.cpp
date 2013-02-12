@@ -106,7 +106,8 @@ vector<pair<string, Control*>> InputControlFactory::createAToZ()
 	for( int i=0; i<NUM_CHARS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_";
+//		ss << "KEY_";
+		ss << "KeyboardKeys_";
 		ss << (char)( 'A' + i );
 		names[i] = ss.str();
 	}
@@ -134,7 +135,8 @@ vector<pair<string, Control*>> InputControlFactory::create0To9()
 	for( int i=0; i<NUM_NUMBERS; i++ )
 	{
 		stringstream ss;
-		ss << "KEY_";
+//		ss << "KEY_";
+		ss << "KeyboardKeys_";
 		ss << (char)( '0' + i );
 		names[i] = ss.str();
 	}
