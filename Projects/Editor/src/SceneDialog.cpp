@@ -119,6 +119,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 			string name = Scene::GetInstance()->GetName(cps[i].nameID);
 			TwAddButton(sceneDialog->m_dialog, name.c_str(), NULL, (void*)0, "group='Connection Points'");
 		}
+		TwAddVarRW(sceneDialog->m_dialog, "Base Size", TW_TYPE_FLOAT, Scene::GetInstance()->GetConPointLengthPtr(), "group='Connection Points' min=0.0 max=1.0 step=0.001");
+
 		vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
 		for (unsigned int i = 0; i < ps.size(); i++)
 		{

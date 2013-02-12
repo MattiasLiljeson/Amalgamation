@@ -195,6 +195,10 @@ void AGLExporter::Write()
 		mScene->addMaterialMapping(m);
 	}
 
+	//Flip the scene
+	AglMatrix transform(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	mScene->transform(transform);
+
 	AglWriter writer(mPath);
 	writer.write(mScene);
 }

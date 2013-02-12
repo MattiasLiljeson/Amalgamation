@@ -55,6 +55,8 @@ private:
 
 	string mPath;
 
+	float conpointLength;
+
 private:
 	int mCurrentAnimation;
 
@@ -135,6 +137,11 @@ public:
 
 	vector<string> FindFiles(string pPath);
 	void MaterialFromStrings(vector<string> pStrings);
+
+	float* GetConPointLengthPtr()
+	{
+		 return &conpointLength;
+	}
 };
 
 #endif

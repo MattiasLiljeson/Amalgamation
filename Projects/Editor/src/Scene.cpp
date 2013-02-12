@@ -190,6 +190,7 @@ Scene::Scene()
 	mQuaternionRotation = AglQuaternion(0, 0, 0, 1);
 	mPosition = AglVector3(0, 0, 0);
 	mDrawPlanes = true;
+	conpointLength = 0.1f;
 }
 Scene::~Scene()
 {
@@ -412,8 +413,11 @@ void Scene::Draw()
 {
 	if (!mAglScene)
 		return;
+	
 	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
 	float invMax = 1.0f / maxV;
+	if (mMeshes.size() == 0)
+		invMax = 1.0f;
 	
 	AglMatrix w;
 
@@ -491,6 +495,7 @@ void Scene::Draw()
 	}
 
 
+	//Connection points
 	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
 	for (unsigned int i = 0; i < cp.size(); i++)
 	{
@@ -502,14 +507,14 @@ void Scene::Draw()
 		}
 		t = cp[i].transform*t;
 		t.SetTranslation(t.GetTranslation()*invMax);
-		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(0.1f, 0.001f, 0.001f));
-		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * 0.05f);
+		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(conpointLength, 0.001f, 0.001f));
+		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(1, 0, 0));
-		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.1f, 0.001f));
-		trans = AglMatrix::createTranslationMatrix(t.GetDown() * 0.05f);
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, conpointLength, 0.001f));
+		trans = AglMatrix::createTranslationMatrix(t.GetDown() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(0, 1, 0));
-		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, 0.1f));
-		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * 0.05f);
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, conpointLength));
+		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(0, 0, 1));
 	}
 
@@ -536,7 +541,7 @@ void Scene::Draw()
 
 	}
 
-	if (BOXMESH)
+	if (BOXMESH && mBoxColors.size() > 0)
 	{
 		AglOBB sceneOBB = mAglScene->getSceneOBB();
 
