@@ -32,7 +32,7 @@ public:
 	void AddChild(RigidBody* pRigidBody);
 	void AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform);
 	void DetachChild(RigidBody* pRigidBody);
-	float GetMass();
+	float GetMass() const;
 	float GetInvMass();
 	AglMatrix GetWorld() const;
 	AglVector3 GetVelocity() const;

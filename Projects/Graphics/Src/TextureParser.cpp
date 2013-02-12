@@ -77,15 +77,17 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	{
 		width = max(width / 2, 1);
 		height = max(height / 2, 1);
-		numOfMipLevels++;
+		++numOfMipLevels;
 	}
 
 	byte* newData = NULL;
 
 	if(p_bitLevel == 24){
+
 		newData = new byte[p_width*p_height*4];
 		unsigned int ind = 0;
 		unsigned int counter = 0;
+		
 		for (int i = 0; i < p_width * p_height*4;i++){
 			if(counter < 3){
 				newData[i] = p_source[ind++];
@@ -106,7 +108,7 @@ ID3D11ShaderResourceView* TextureParser::createTexture( ID3D11Device* p_device,
 	else{
 		data[0].pSysMem = (void*)p_source;
 	}
-	data[0].SysMemPitch = p_pitch;
+	data[0].SysMemPitch = p_width*4;
 	data[0].SysMemSlicePitch = 0;
 
 	width = p_width;

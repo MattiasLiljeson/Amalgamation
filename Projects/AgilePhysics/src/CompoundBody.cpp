@@ -104,7 +104,7 @@ void CompoundBody::DetachChild(RigidBody* pRigidBody)
 		}
 	}
 }
-float CompoundBody::GetMass()
+float CompoundBody::GetMass() const
 {
 	float m = 0;
 	for (unsigned int i = 0; i < mChildren.size(); i++)

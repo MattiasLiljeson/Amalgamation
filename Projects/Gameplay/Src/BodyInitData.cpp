@@ -18,6 +18,7 @@ BodyInitData::BodyInitData()
 	m_collisionEnabled=true;
 	m_modelResource = NULL;
 	m_copyToChildren = true;
+	m_mass = 1.0f;
 }
 
 BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
@@ -41,6 +42,7 @@ BodyInitData::BodyInitData(AglVector3 p_position, AglQuaternion p_orientation,
 	m_impulseEnabled = p_impulseEnabled;
 	m_collisionEnabled = p_collisionEnabled;
 	m_modelResource = NULL;
+	m_mass = 1.0f;
 }
 
 void BodyInitData::init( vector<ComponentData> p_initData )
@@ -116,6 +118,10 @@ void BodyInitData::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&temp);
 			m_copyToChildren = temp==1?true:false;
+		}
+		else if( p_initData[i].dataName == "m_mass" )
+		{
+			p_initData[i].getData<float>(&m_mass);
 		}
 
 	}

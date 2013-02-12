@@ -11,6 +11,7 @@
 #include "EntityType.h"
 #include "NetworkSynced.h"
 #include "ShipModule.h"
+#include "ShipManagerSystem.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -180,6 +181,24 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 				if (pb && pb->m_id == col)
 				{
 					//Found a pick
+
+					//Verify that the pick is not already picked
+					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
+					{
+						if (m_pickComponents[pcs].m_latestPick == p_entities[i]->getIndex())
+							return;
+					}
+
+					//Only allow picking a certain distance
+					ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+					Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
+					
+					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
+					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+						return;
+
+
 					p_pc.m_latestPick = p_entities[i]->getIndex();
 
 					//Attempt a detach if the entity is already connected
@@ -231,13 +250,13 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 
 	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	AglVector3 vel = body->GetVelocity();
+	AglVector3 vel = body->GetVelocity() * body->GetMass();
 
 	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
 	{
 		AglVector3 dest = origin + dir*t;
-		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
 	}
 	else
 	{
@@ -495,9 +514,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 {
-	//Add Check so that modules with other modules connected to them
-	//cannot be removed
-
 	if (p_ray.m_latestPick >= 0)
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
@@ -507,6 +523,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
+
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
 			ComponentType::PhysicsBody));
 
@@ -528,6 +545,26 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+
+			//Ensure that the module is not connected to an enemy ship.
+			ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+			Entity* rayShip = sms->findShip(p_ray.m_clientIndex);
+			
+			Entity* parentShip = parent;
+			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+				ComponentType::ShipModule));
+
+			while (parentModule)
+			{
+				parentShip = m_world->getEntity(parentModule->m_parentEntity);
+				parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+					ComponentType::ShipModule));
+			}
+
+			if (parentShip != rayShip)
+				return false;
+
+
 			ConnectionPointSet* cpsParent = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
