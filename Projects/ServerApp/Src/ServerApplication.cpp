@@ -275,30 +275,8 @@ namespace Srv
 		m_world->addEntity(entity);
 
 
-		//Shield
-		entity = m_world->createEntity();
-		component = new Transform(20, 0, 0);
-		entity->addComponent( ComponentType::Transform, component );
-
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
-
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(20, 0, 0),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, false));
-
-		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-		entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShieldModule));
-		m_world->addEntity(entity);
-
-
 		EntityCreationPacket cp;
-
+		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
 		//Rocket Launcher
 		for (unsigned int i = 0; i < 4; i++)
 		{
@@ -311,6 +289,13 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*10.0f));
 			cp.entityType = EntityType::MineLayerModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Shield modules
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*10.0f));
+			cp.entityType = EntityType::ShieldModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 

@@ -31,6 +31,9 @@
 #include <AssemblageReader.h>
 #include <Entity.h>
 #include <time.h>
+#include "ShipModule.h"
+#include "ShieldModule.h"
+#include "LoadMesh.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -134,6 +137,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 		else
 			e = createMinigunServer(p_packet);
 	}
+	else if (type == EntityType::ShieldModule)
+	{
+		if (m_client)
+			e = createShieldClient(p_packet);
+		else
+			e = createShieldServer(p_packet);
+	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
@@ -175,13 +185,6 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 			e = createRocketClient(p_packet);
 		else
 			e = createRocketServer(p_packet);
-	}
-	else if (type == EntityType::Shield)
-	{
-		if (m_client)
-			e = createShieldClient(p_packet);
-		else
-			e = createShieldServer(p_packet);
 	}
 	else if (type == EntityType::Other)
 	{
@@ -593,27 +596,37 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* entity = NULL;
-	
-	if (p_packet.meshInfo == 1)
-		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
-	else
-		entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
-
+	Entity* entity = m_world->createEntity();
 	// Add network dependent components
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
+	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
 	m_world->addEntity(entity);
 	return entity;
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	Entity* entity = m_world->createEntity();
+	Component* component = new Transform(p_packet.translation, p_packet.rotation,
+		p_packet.scale);
+	entity->addComponent( ComponentType::Transform, component );
+	entity->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(p_packet.translation,
+		p_packet.rotation,
+		p_packet.scale, AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
+		entity->getIndex(), -1, EntityType::ShieldModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
