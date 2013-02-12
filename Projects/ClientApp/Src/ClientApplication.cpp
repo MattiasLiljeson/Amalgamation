@@ -474,7 +474,7 @@ void ClientApplication::initEntities()
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
 	m_world->addEntity( entity );
-/*	
+
 	factory->readAssemblageFile("Assemblages/GreenLight.asd");
 	entity = factory->entityFromRecipe( "GreenLight" );									 
 	m_world->addEntity( entity );
@@ -494,7 +494,7 @@ void ClientApplication::initEntities()
 	factory->readAssemblageFile("Assemblages/RedLight.asd");
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
-	*/
+
 
 
 	// Test sound source

@@ -256,7 +256,7 @@ unsigned int* AglLooseBspTree::getTriangles()
 }
 AglBspNode* AglLooseBspTree::getNodes()
 {
-	return m_nodes;
+ 	return m_nodes;
 }
 AglLooseBspTree* AglLooseBspTree::clone()
 {
