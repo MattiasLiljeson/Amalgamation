@@ -108,6 +108,7 @@ using namespace std;
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
+#include <MeshOffsetTransform.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -425,6 +426,26 @@ void ClientApplication::initEntities()
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
 
+	/************************************************************************/
+	/* Create the main camera used to render the scene						*/
+	/************************************************************************/
+	entity = m_world->createEntity();
+	component = new CameraInfo( m_world->getAspectRatio() );
+	entity->addComponent( ComponentType::CameraInfo, component );
+	entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
+	component = new Transform( -20.0f, 0.0f, -5.0f );
+	entity->addComponent( ComponentType::Transform, component );
+	m_world->addEntity(entity);
+
+	status = factory->readAssemblageFile("Assemblages/ClientShip.asd");
+	entity = factory->entityFromRecipe("ClientShip");
+	component = new Transform( 20.0f, -30.0f, 80.0f);
+	entity->addComponent(ComponentType::Transform, component);
+	m_world->addEntity(entity);
+
+	/************************************************************************/
+	/* Create shadow camera and spotlight.									*/
+	/************************************************************************/
 	float rotation = 0.78;
 	AglQuaternion quat;
 	for(int i = 0; i < 1; i++){

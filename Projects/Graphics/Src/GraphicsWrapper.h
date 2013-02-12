@@ -186,6 +186,8 @@ public:
 	unsigned int generateShadowMap();
 
 	GPUTimer* getGPUTimer();
+
+	int getEmptyTexture();
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);
@@ -244,6 +246,7 @@ private:
 	int m_width;
 
 	int m_randomNormalTextures;
+	int m_solidWhiteTexture;
 
 	bool m_windowed;
 	bool m_wireframeMode;

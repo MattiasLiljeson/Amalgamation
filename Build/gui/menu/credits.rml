@@ -2,17 +2,6 @@
 	<head>
 		<title>Credits</title>
 		<link type="text/template" href="window.rml" />
-		<style>
-<!--			div#title_bar div#icon
-			{
-					display: none;
-			}
-			form div
-			{
-				width: 200px;
-				margin: auto;
-			}-->
-		</style> 
 	</head>
 	<body id="credits" template="window" onshow="modal">
 <!--		<form onsubmit="goto main_menu"> -->
@@ -25,7 +14,7 @@
 				Robin Karlsson<br />
 				Jarl Larsson<br />
 				Mattias Liljeson<br />
-				Robin Thunstrom<br /><br />
+				Robin Thunström<br /><br />
 				
 			</div>
 			<!-- <input type="submit" value="Back">Back</input>
