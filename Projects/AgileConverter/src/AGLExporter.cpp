@@ -214,9 +214,9 @@ void AGLExporter::Write()
 
 
 
-	//Flip the scene
-	AglMatrix transform(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-	mScene->transform(transform);
+	//Flip the scene - TURNED OFF. MAY NOT WORK!
+	//AglMatrix transform(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	//mScene->transform(transform);
 
 	AglWriter writer(mPath);
 	writer.write(mScene);
