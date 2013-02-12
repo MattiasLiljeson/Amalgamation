@@ -17,6 +17,7 @@
 #include "Transform.h"
 #include <Globals.h>
 #include <ModelResource.h>
+#include "SpawnPointSet.h"
 
 LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -236,7 +237,7 @@ void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelR
 {
 	if (!p_modelResource->spawnPoints.m_collection.empty())
 	{
-		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		Component* component = new SpawnPointSet( p_modelResource->spawnPoints.m_collection );
 		p_entity->addComponent( ComponentType::SpawnPointSet, component );
 	}
 }

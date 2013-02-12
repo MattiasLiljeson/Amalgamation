@@ -17,6 +17,8 @@
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleEmitters.h"
 #include "ShipConnectionPointHighlights.h"
+#include "SpawnPointSet.h"
+#include "MeshOffsetTransform.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -136,10 +138,31 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	}
 	else
 	{
-		Transform* gunTransform = static_cast<Transform*>(
-			m_world->getComponentManager()->getComponent(p_entity,
-			ComponentType::getTypeFor(ComponentType::Transform)));
+		//Find the transform of the physics body
+		PhysicsSystem* physics = static_cast<PhysicsSystem*>
+			( m_world->getSystem( SystemType::SystemTypeIdx::PhysicsSystem ) );
 
+		PhysicsBody* body = static_cast<PhysicsBody*>
+			( p_entity->getComponent( ComponentType::PhysicsBody) );
+
+		Body* rigidBody = physics->getController()->getBody(body->m_id);
+
+		MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+			( p_entity->getComponent( ComponentType::MeshOffsetTransform) );
+
+		SpawnPointSet* sps = static_cast<SpawnPointSet*>(p_entity->getComponent(ComponentType::SpawnPointSet));
+		AglMatrix sightOffset = AglMatrix::identityMatrix();
+		for (unsigned int sp = 0; sps->m_spawnPoints.size(); sp++)
+		{
+			if (sps->m_spawnPoints[sp].spAction == "Laser")
+			{
+				sightOffset = sps->m_spawnPoints[sp].spTransform;
+				break;
+			}
+		}
+
+		Transform gunTransform = Transform(sightOffset*meshOffset->offset*body->getOffset().inverse()*rigidBody->GetWorld());
+		
 		Entity* entity = m_world->getEntity(gun->laserSightEntity);
 
 		Transform* laserTransform = static_cast<Transform*>(
@@ -148,13 +171,15 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 		if (module->m_parentEntity >= 0)
 		{
-			AglQuaternion rot = gunTransform->getRotation()*AglQuaternion::rotateToFrom(
+			/*AglQuaternion rot = gunTransform.getRotation()*AglQuaternion::rotateToFrom(
 				AglVector3(0, 0, 1), gun->fireDirection);
 
 			AglVector3 offset = AglVector3(0.03f, 0.03f, 20.0f);
 			rot.transformVector(offset);
-			laserTransform->setTranslation(gunTransform->getTranslation()+offset);
-			laserTransform->setRotation(rot);
+			laserTransform->setTranslation(gunTransform.getTranslation()+offset);
+			laserTransform->setRotation(rot);*/
+
+			laserTransform->setMatrix(gunTransform.getMatrix());
 
 
 			//Check if the module is highlighted

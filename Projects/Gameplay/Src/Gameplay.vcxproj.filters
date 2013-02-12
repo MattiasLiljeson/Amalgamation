@@ -525,6 +525,9 @@
     <ClInclude Include="ClientEntityCountSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -877,6 +880,9 @@
     </ClCompile>
     <ClCompile Include="ClientEntityCountSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
