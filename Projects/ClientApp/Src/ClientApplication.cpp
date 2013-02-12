@@ -107,7 +107,7 @@ using namespace std;
 #include <time.h>
 #include <AntTweakBarWrapper.h>
 #include <LightInstanceData.h>
-#include <SlotInputControllerSystem.h>
+#include <ShipSlotControllerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 

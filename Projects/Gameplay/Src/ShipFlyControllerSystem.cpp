@@ -14,7 +14,7 @@
 #include "PhysicsBody.h"
 #include "ShipInputProcessingSystem.h"
 #include "TimerSystem.h"
-#include "SlotInputControllerSystem.h"
+#include "ShipSlotControllerSystem.h"
 #include "GameplayTags.h"
 #include "ConnectionPointSet.h"
 #include "SpeedBoosterModule.h"
