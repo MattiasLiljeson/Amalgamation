@@ -22,9 +22,9 @@ void HudSystem::initialize()
 	m_hudIndex = m_backend->loadDocument( GUI_HUD_PATH.c_str(), "hud" );
 	m_backend->showDocument(m_hudIndex);
 
-	setHUDData(SCORE,"0");
-	setHUDData(MAPPING,"MAAPPPING");
-	setHUDData(TIME,"10:00");
+	setHUDData(SCORE,"-1");
+	setHUDData(MAPPING,"Empty");
+	setHUDData(TIME,"00:00");
 }
 
 void HudSystem::processEntities( const vector<Entity*>& p_entities )
