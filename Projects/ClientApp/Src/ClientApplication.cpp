@@ -330,7 +330,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( msgProcSystem , true );
 
 	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client, false);
+		new ClientConnectToServerSystem( m_client, true);
 	m_world->setSystem( connect, true );
 	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
 	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );

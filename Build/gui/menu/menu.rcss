@@ -196,7 +196,6 @@ input.submit:focus
 button:hover,
 input.submit:hover
 {
-	/*background: rgba(200,200,200,255);*/
 	border-color:white;
 }
 
