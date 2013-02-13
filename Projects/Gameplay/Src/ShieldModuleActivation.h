@@ -25,7 +25,7 @@ public:
 		m_server = p_server;
 	}
 	
-	void activate() // NOTE: (Johan) try "virtual void happen() final" later. :)
+	void activate()
 	{
 		Transform* transform = static_cast<Transform*>(m_shipEntity->getComponent(
 			ComponentType::Transform));

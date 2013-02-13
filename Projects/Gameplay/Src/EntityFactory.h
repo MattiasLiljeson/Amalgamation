@@ -112,6 +112,8 @@ private:
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
 
+	void circularRandom(float* p_spawnX, float* p_spawnY);
+
 private:
 	map<string, Recipe*> m_entityRecipes;
 

@@ -91,6 +91,7 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
+#include <ShieldPlatingSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
@@ -373,6 +374,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
 	m_world->setSystem( new LightBlinkerSystem(), true );
+	m_world->setSystem( new ShieldPlatingSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -573,7 +575,7 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
-//	initInstanceAsteroidFieldByJohan("RockA.agl", 300, 50, 1.0f, 0.5f, 5.0f, 0.3f);
+//	initInstanceAsteroidFieldByJohan("RockA.agl",	400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,

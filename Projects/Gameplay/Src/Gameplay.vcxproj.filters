@@ -531,6 +531,14 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="CircularMovement.h" />
+    <ClInclude Include="CircularMovementSystem.h" />
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlate.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -889,6 +897,10 @@
     </ClCompile>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularMovementSystem.cpp" />
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

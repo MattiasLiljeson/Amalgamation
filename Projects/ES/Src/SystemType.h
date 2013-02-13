@@ -57,6 +57,7 @@ public:	//Enums
 		EntityFactory,
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,
+		ShieldPlatingSystem,
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
 		RocketControllerSystem,

@@ -34,6 +34,9 @@
 #include "ShipModule.h"
 #include "ShieldModule.h"
 #include "LoadMesh.h"
+#include "LoadMeshSystemClient.h"
+#include "EntityParent.h"
+#include "ShieldPlate.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -596,15 +599,39 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* entity = m_world->createEntity();
+	Entity* shieldEntity = m_world->createEntity();
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	entity->addComponent(ComponentType::NetworkSynced,
+	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	shieldEntity->addComponent( ComponentType::Transform, transform );
+	shieldEntity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
-	m_world->addEntity(entity);
-	return entity;
+	shieldEntity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
+	shieldEntity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+	m_world->addEntity(shieldEntity);
+
+	for(unsigned int i=0; i<60; i++)
+	{
+		float spawnX, spawnY;
+		circularRandom(&spawnX, &spawnY);
+		Entity* entity = m_world->createEntity();
+		AglVector3 spawnPoint = AglVector3(0, 7.0f, 0); // Replace with real spawn point.
+		float radius = 10.0f;
+		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, 0, radius * spawnY);
+		position.normalize();
+		AglQuaternion plateRotation = AglQuaternion::identity();
+		position = position * spawnPoint.length();
+		float plateScale = 1.0f;
+		Transform* plateTransform = new Transform(position, plateRotation,
+			AglVector3(plateScale, plateScale, plateScale));
+		entity->addComponent(plateTransform);
+		entity->addComponent(new LoadMesh("shield_plate.agl"));
+		entity->addComponent(new EntityParent(shieldEntity->getIndex(),
+			plateTransform->getMatrix()));
+		entity->addComponent(new ShieldPlate(0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
+		m_world->addEntity(entity);
+	}
+
+	return shieldEntity;
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
@@ -657,6 +684,40 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 {
 	//Not moved here yet!
 	return NULL;
+}
+
+void EntityFactory::circularRandom( float* p_spawnX, float* p_spawnY )
+{
+//	float x = 0.0f;
+//	float y = 0.0f;
+//	do
+//	{
+//		x = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+//		y = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+//	} while( x * x + y * y > 1.0f );
+//	*p_spawnX = x;
+//	*p_spawnY = y;
+
+	// NOTE: This was almost right. Going for the simpler for now though.
+	float x = 0.0f;
+	float y = 0.0f;
+	do
+	{
+		float x_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+		float y_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+		bool x_negative = x_rand < 0;
+		bool y_negative = y_rand < 0;
+		x_rand = x_rand * x_rand;
+		y_rand = y_rand * y_rand;
+		if(x_negative)
+			x_rand = -x_rand;
+		if(y_negative)
+			y_rand = -y_rand;
+		x = x_rand;
+		y = y_rand;
+	} while( x * x + y * y > 1.0f );
+	*p_spawnX = x;
+	*p_spawnY = y;
 }
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )

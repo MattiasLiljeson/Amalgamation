@@ -280,21 +280,21 @@ namespace Srv
 		//Rocket Launcher
 		for (unsigned int i = 0; i < 4; i++)
 		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*10.0f));
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::RocketLauncherModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 		//Mine Layer
 		for (unsigned int i = 0; i < 4; i++)
 		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*10.0f));
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::MineLayerModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 		//Shield modules
 		for (unsigned int i = 0; i < 4; i++)
 		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*10.0f));
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::ShieldModule;
 			factory->entityFromPacket(cp, &pos);
 		}

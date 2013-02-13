@@ -52,6 +52,7 @@ public:	//Enums
 		SpeedBoosterModule,
 		MinigunModule,
 		ShieldModule,
+		ShieldPlate,
 		MineLayerModule,
 		StandardMine,
 		StandardRocket,

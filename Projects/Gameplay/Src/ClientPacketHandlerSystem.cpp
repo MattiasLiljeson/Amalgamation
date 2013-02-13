@@ -5,7 +5,6 @@
 #include "NetSyncedPlayerScoreTrackerSystem.h"
 #include "PhysicsBody.h"
 #include <AntTweakBarWrapper.h>
-#include <AntTweakBarWrapper.h>
 #include <Component.h>
 #include <ComponentType.h>
 #include <Entity.h>
