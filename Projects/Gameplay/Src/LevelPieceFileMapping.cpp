@@ -19,6 +19,9 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
+	m_clientAsdNames.push_back("rocksClient");
+	m_clientAsdNames.push_back("rocksClient");
+	m_clientAsdNames.push_back("rocksClient");
 
 	// End plug
 	m_asdNames.push_back(m_unknown);
@@ -33,10 +36,20 @@ LevelPieceFileMapping::~LevelPieceFileMapping()
 
 const string& LevelPieceFileMapping::getAssemblageFileName( unsigned int p_id ) const
 {
-	if (p_id >= 0 && p_id < m_fileNames.size())
+	if (p_id >= 0 && p_id < m_asdNames.size())
 		return m_asdNames[p_id];
 	else{
 		DEBUGPRINT(("LevelPiece Error, could not find the specified assemblage file \n"));
+		return m_unknown;
+	}
+}
+
+const string& LevelPieceFileMapping::getClientAssemblageFileName( unsigned int p_id ) const
+{
+	if (p_id >= 0 && p_id < m_clientAsdNames.size())
+		return m_clientAsdNames[p_id];
+	else{
+		DEBUGPRINT(("LevelPiece Error, could not find the specified client assemblage file \n"));
 		return m_unknown;
 	}
 }

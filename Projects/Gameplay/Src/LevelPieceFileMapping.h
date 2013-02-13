@@ -23,6 +23,7 @@ public:
 	virtual ~LevelPieceFileMapping();
 
 	const string&	getAssemblageFileName(unsigned int p_id) const;
+	const string&	getClientAssemblageFileName(unsigned int p_id) const;
 	const string&	getModelFileName(unsigned int p_id) const;
 	int				getModelFileCount() const;
 	int				getRandomPieceId() const;
@@ -31,5 +32,6 @@ public:
 private:
 	vector<string> m_fileNames;
 	vector<string> m_asdNames;
+	vector<string> m_clientAsdNames;
 	string m_unknown;
 };

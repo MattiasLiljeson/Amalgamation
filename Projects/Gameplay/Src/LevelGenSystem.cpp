@@ -181,7 +181,8 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId
 	}
 	else
 	{
-		entity->addComponent(new LevelPieceInfo(p_piece->getTypeId()));
+		entity->addComponent(new LevelPieceInfo(i));
+		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
 	}
 
 	return entity;
@@ -285,7 +286,6 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			{
 				// Remove the connected component.
 				p_targetPiece->setChild(slot, NULL);
-				piece->deleteMainTransform();
 				delete piece;
 			}			
 			else
