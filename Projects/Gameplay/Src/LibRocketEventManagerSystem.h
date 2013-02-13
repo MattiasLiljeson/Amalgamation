@@ -39,7 +39,7 @@ namespace Rocket
 	}
 }
 class EventHandler;
-
+class GameState;
 
 /**
 	@author		Peter Curry
@@ -56,8 +56,6 @@ public:
 	/// Releases all event handlers registered with the manager.
 	void shutdown();
 
-	void process();
-
 	void processEntities(const vector<Entity*>& p_entities);
 
 	void registerEventHandler(EventHandler* p_handler);
@@ -73,7 +71,7 @@ public:
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] p_windowName The name of the window to load.
 	bool loadWindow(const Rocket::Core::String& p_windowName);
-
+public:
 	bool wantsToExit;
 private:
 	/// Registers a new event handler with the manager.
@@ -103,6 +101,8 @@ private:
 	Rocket::Core::String				m_currentDocId;
 	std::stack<Rocket::Core::String>	m_docIdStack;
 	Entity*								m_stateEntity;
+	GameState*							m_stateComp;
+	int m_stateDelay;
 };
 
 

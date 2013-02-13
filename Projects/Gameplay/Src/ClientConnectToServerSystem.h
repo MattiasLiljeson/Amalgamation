@@ -64,13 +64,17 @@ public:
 	virtual void initialize();
 
 	void connectToNetworkAddress();
-	void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
+	//void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
 
 	virtual void processEvent( Rocket::Core::Event& p_event, const Rocket::Core::String& p_value );
+
+	void setConnectionAddress(const std::string& p_address, const std::string& p_port);
 private:
 	TcpClient* m_tcpClient;
 
 	bool	m_isLookingForConnection;
 	bool	m_connectStraightAway;
-	NetworkAdress m_connectionAddress;
+
+	string m_serverAddress;
+	string m_serverPort;
 };

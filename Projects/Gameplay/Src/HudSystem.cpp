@@ -3,9 +3,10 @@
 #include "HudElement.h"
 #include "LibRocketBackendSystem.h"
 #include <Globals.h>
+#include "GameState.h"
 
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
-	: EntitySystem( SystemType::HudSystem, 1, ComponentType::HudElement )
+	: EntitySystem( SystemType::HudSystem, 1, ComponentType::GameState )
 {
 	m_backend = p_backend;
 	m_hudVisible = false;
@@ -20,24 +21,21 @@ HudSystem::~HudSystem()
 void HudSystem::initialize()
 {
 	m_hudIndex = m_backend->loadDocument( GUI_HUD_PATH.c_str(), "hud" );
-	m_backend->showDocument(m_hudIndex);
 
-	setHUDData(SCORE,"-1");
-	setHUDData(MAPPING,"Empty");
-	setHUDData(TIME,"00:00");
 }
 
 void HudSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	bool changed = false;
-	if(m_currentState != m_hudVisible){
-		m_currentState = m_hudVisible;
-		changed = true;
-	}
+	if(p_entities.size()>0){
+		auto comp = static_cast<GameState*>(p_entities[0]->getComponent(
+			ComponentType::GameState));
 
-	for(unsigned int i=0;i < p_entities.size(); i++){
+		if(comp->getStateDelta(INGAME) != 0){
+			m_backend->showDocument(m_hudIndex);
 
-		if(changed){
+			setHUDData(SCORE,"-1");
+			setHUDData(MAPPING,"Empty");
+			setHUDData(TIME,"00:00");
 		}
 	}
 }
