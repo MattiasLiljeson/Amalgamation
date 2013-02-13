@@ -1,5 +1,4 @@
-body
-{
+body{
 	font-family: Armorhide;
 	font-charset: U+00??;
 	font-style: normal;
@@ -9,11 +8,11 @@ body
 	
 	margin-top: 7%;
 	height: 12.5%;
-	width: 100%;
+	width: 99.8%;
 	margin-bottom: 80.5%;
 	border-style: solid;
 	border-width: 1px;
-	border-color: black;
+	border-color: white;
 	background: rgba(20,20,20,40);
 }
 
@@ -23,20 +22,13 @@ div.elements{
 	height: 100%;
 }
 
-div#context
-{
-
+div#context{
+	text-align: center;
 }
 
-div#score
-{ 
-	background: green;
+div#scoreElem{ 
 }
-div#timer
-{
-	background: orange;
+div#timerElem{
 }
-div#mapping
-{
-	background: purple;
+div#mappingElem{
 }

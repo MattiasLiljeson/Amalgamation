@@ -4,14 +4,20 @@
 	</head>
 	<body id="hudelements" class="content">
 		<div id="context">
-			<div class="elements" id="mapping">
+			<div class="elements" id="mappingElem">
 				MappedKeys
+				<p id="mapping">
+				</p>
 			</div>
-			<div class="elements" id="timer">
+			<div class="elements" id="timerElem">
 				Time Elapsed:
+				<p id="time">
+				</p>
 			</div>
-			<div class="elements" id="score">
+			<div class="elements" id="scoreElem">
 				Score:
+				<p id="score">
+				</p>
 			</div>
 		</div>
 	</body>
