@@ -10,7 +10,7 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	//m_fileNames.push_back("test_parts_3sphere.agl");
 	//m_fileNames.push_back("test_parts_4tunnel.agl");
 	//m_fileNames.push_back("test_parts_4tunnel.agl");
-	m_fileNames.push_back("")
+	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 	// End plug
 	m_fileNames.push_back("P_cube");
 

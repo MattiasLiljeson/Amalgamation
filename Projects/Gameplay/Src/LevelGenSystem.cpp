@@ -19,25 +19,20 @@
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
 #include "BoundingVolumeInitData.h"
+#include "LevelPieceInfo.h"
+#include "LoadMeshSystemServer.h"
+#include "EntityFactory.h"
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
-	: EntitySystem(SystemType::LevelGenSystem)
+	: EntitySystem(SystemType::LevelGenSystem, 2, ComponentType::Transform, ComponentType::LevelPieceInfo)
 {
 	m_server = p_server;
 
 	m_worldMin = AglVector3((float)INT_MAX, (float)INT_MAX, (float)INT_MAX);
 	m_worldMax = AglVector3((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
 
-	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
-	{
-		string modelName = m_modelFileMapping.getModelFileName(i);
+	m_entityFactory = NULL;
 
-		auto resourcesFromModel = m_unmanagedModelFactory.createModelResources(modelName,
-			&TESTMODELPATH);
-		m_modelResources.push_back( resourcesFromModel->at(0) );
-
-		delete resourcesFromModel;
-	}
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -49,20 +44,46 @@ LevelGenSystem::~LevelGenSystem()
 	}
 	m_generatedPieces.clear();
 
-	for (unsigned int i = 0; i < m_modelResources.size(); i++)
-		delete m_modelResources[i];
+	//for (unsigned int i = 0; i < m_modelResources.size(); i++)
+	//	delete m_modelResources[i];
 
-	m_modelResources.clear();
+	//m_modelResources.clear();
 }
 
 void LevelGenSystem::initialize()
 {
+	m_entityFactory = static_cast<EntityFactory*>(
+		m_world->getSystem(SystemType::EntityFactory));
+
+	// Preload entity recipes here. These are then used to create entities.
+	AssemblageHelper::E_FileStatus status = 
+		m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+
+	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
+		m_world->getSystem(SystemType::LoadMeshSystem));
+	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
+	{
+		string modelName = m_modelFileMapping.getModelFileName(i);	
+
+		// Preload chamber models here. This is required, and must be done before an
+		// entity is created.
+		auto resourcesFromModel = loadMeshSys->createModels(modelName,
+			MODELPATH, false);
+		m_modelResources.push_back( resourcesFromModel->at(0) );
+
+		//delete resourcesFromModel;
+	}
+}
+
+void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
+{
+	
 }
 
 void LevelGenSystem::run()
 {
 	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(3);
+	generateLevelPieces(0);
 	createLevelEntities();
 }
 
@@ -108,13 +129,13 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 {
-	Entity* entity = m_world->createEntity();
+	//Entity* entity = m_world->createEntity();
 	
-	AglOBB obb = p_piece->getBoundingBox();
+	//AglOBB obb = p_piece->getBoundingBox();
 
-	entity->addComponent(ComponentType::Transform, p_piece->getTransform());
-	entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
-	
+	//entity->addComponent(ComponentType::Transform, p_piece->getTransform());
+	//entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
+	//
 	/*entity->addComponent(ComponentType::BodyInitData,
 		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
 			obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
@@ -125,6 +146,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 				p_piece->getTransform()->getTranslation() ) ) );
 
 	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());*/
+	Entity entity = m_entityFactory->entityFromRecipe()
 
 	return entity;
 }

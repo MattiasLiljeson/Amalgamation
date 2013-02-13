@@ -8,6 +8,7 @@
 class Transform;
 class LevelPiece;
 class TcpServer;
+class EntityFactory;
 struct ModelResource;
 struct AglVector3;
 
@@ -32,6 +33,8 @@ public:
 
 	void initialize();
 
+	void processEntities( const vector<Entity*>& p_entities );
+
 	void run();
 	void createLevelEntities();
 	const AglVector3& getWorldMin() const;
@@ -53,7 +56,8 @@ private:
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
-	ModelBaseFactory m_unmanagedModelFactory;
+	//ModelBaseFactory m_unmanagedModelFactory;
+	EntityFactory*	m_entityFactory;
 
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;

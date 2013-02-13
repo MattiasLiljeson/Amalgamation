@@ -54,6 +54,7 @@
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
+    <ClInclude Include="LevelPieceInfo.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
     <ClInclude Include="LibRocketEventManagerSystem.h" />
     <ClInclude Include="LibRocketInputHelper.h" />

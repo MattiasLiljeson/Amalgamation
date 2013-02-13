@@ -49,8 +49,10 @@ public:
 	/// Create an entity by supplying recipe/entity name.
 	/// \param p_entityName Name of the entity.
 	/// \return Entity* An entity which has been created by the world but not added to it.
-	/// This is so that you can make last minute changes to the components and their data
-	/// before letting it out in the wild. NULL if the requested recipe isn't found.
+	/// NULL if the requested recipe isn't found.
+	/// This makes it possible to add last minute components to the entity before it is
+	/// released into the wild. In order to manipulate already created components, a system
+	/// is required.
 	///-----------------------------------------------------------------------------------
 	Entity* entityFromRecipe( const string& p_entityName );
 

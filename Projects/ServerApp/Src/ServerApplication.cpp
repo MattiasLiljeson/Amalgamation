@@ -138,7 +138,6 @@ namespace Srv
 		/************************************************************************/
 		LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
-		levelGen->run();
 
 		/************************************************************************/
 		/* Physics																*/
@@ -213,6 +212,10 @@ namespace Srv
 		// Run component assemblage allocator (not a system, so don't delete)
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 		delete allocator; // NOTE: (Johan) Why u keep deleting it then?
+
+		// TEMP: (Alex) This is only to test and make sure the level gen works.
+		// This should be ran when starting a game session later.
+		levelGen->run();
 	}
 
 	void ServerApplication::initEntities()
@@ -242,6 +245,7 @@ namespace Srv
 	{
 		body();
 	}
+
 	void ServerApplication::InitModulesTestByAnton()
 	{
 		Entity* entity;
