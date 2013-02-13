@@ -1,5 +1,6 @@
 #include "SkeletalAnimationSystem.h"
 #include "SkeletalAnimation.h"
+#include <AglScene.h>
 
 SkeletalAnimationSystem::SkeletalAnimationSystem() : EntitySystem( SystemType::SkeletalAnimationSystem, 1, 
 											ComponentType::SkeletalAnimation){
@@ -18,5 +19,14 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 	{
 		SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
 		anim->m_time += dt;
+
+		float maxTime = anim->m_scene->getAnimation(0)->getMaxTime();
+		float minTime = anim->m_scene->getAnimation(0)->getMinTime();
+		while (anim->m_time > maxTime)
+		{
+			anim->m_time -= maxTime-minTime;
+		}
+		if (anim->m_time < minTime)
+			anim->m_time = minTime;
 	}
 }

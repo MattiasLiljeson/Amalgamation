@@ -91,6 +91,8 @@ public:
 	///
 	void appendTransform(float p_time, float p_weight);
 
+	AglMatrix evaluate(float p_time);
+
 	///
 	///Returns the minimum time of the animation sequence
 	///\return The minimum time

@@ -50,6 +50,16 @@ AglMatrix AglSkeleton::getGlobalTransform(int p_joint)
 		return transform * getGlobalTransform(j.parentIndex);
 	return transform * m_header.baseTransform;
 }
+AglMatrix AglSkeleton::getGlobalTransform(int p_joint, float p_time)
+{
+	int k = 0;
+	k = 1 / k;
+	//INCORRECT!
+	//AglAnimation* anim = m_scene->getAnimation(0);
+	//return anim->evaluate(p_time, m_joints[p_joint].nodeID);
+	return AglMatrix::identityMatrix();
+}
+
 AglMatrix AglSkeleton::getInverseBindMatrix(int p_joint)
 {
 	AglJoint j = m_joints[p_joint];

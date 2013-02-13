@@ -73,6 +73,8 @@ public:
 	///
 	void evaluate(float p_time);
 
+	AglMatrix evaluate(float p_time, unsigned int p_node);
+
 	///
 	/// Get the minimum time of the animation layer
 	/// \return The minimum time of the animation layer

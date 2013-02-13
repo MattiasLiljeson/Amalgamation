@@ -59,7 +59,7 @@ void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_mod
 
 		if (index >= 0)
 		{
-			SkeletalAnimation* anim = new SkeletalAnimation(0, p_modelResource->scene);
+			SkeletalAnimation* anim = new SkeletalAnimation(0, p_modelResource->scene, p_modelResource->meshHeader.transform);
 			p_entity->addComponent(anim);
 		}
 	}

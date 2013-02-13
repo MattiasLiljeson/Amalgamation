@@ -421,3 +421,12 @@ AglOBB AglScene::getSceneOBB()
 {
 	return m_sceneOBB;
 }
+void AglScene::setTime(float p_time)
+{
+	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
+	{
+		m_dynamicNodes[i].animated = false;
+	}
+	if (m_animations.size() > 0)
+		m_animations[0]->setTime(p_time);
+}

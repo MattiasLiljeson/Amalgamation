@@ -79,6 +79,8 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_gpuTimer = new GPUTimer(m_device,m_deviceContext);
 
 	clearRenderTargets();
+
+	initBoneMatrixTexture();
 }
 
 GraphicsWrapper::~GraphicsWrapper()
@@ -236,7 +238,8 @@ void GraphicsWrapper::unmapPerShadowBuffer()
 }
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
-								 vector<InstanceData>* p_instanceList){
+								 vector<InstanceData>* p_instanceList,
+								 vector<AglMatrix>* p_boneMatrices){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 
 	unsigned int arraySize = 0;
@@ -266,6 +269,8 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 														   p_instanceList->size());
 	if (mesh->getSkeletonVertexBuffer() != NULL)
 	{
+		updateBoneMatrixTexture(p_boneMatrices);
+
 		renderMeshInstanced( 
 			mesh->getVertexBuffer()->getBufferPointer(),
 			mesh->getVertexBuffer()->getElementSize(),
@@ -277,7 +282,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			instanceBuffer->getElementSize(), 
 			instanceBuffer->getElementCount(),
 			instanceBuffer->getBufferPointer(),
-			m_deferredRenderer->getDeferredAnimatedBaseShader());
+			m_deferredRenderer->getDeferredAnimatedBaseShader(), m_boneMatrixTexture);
 	}
 	else
 	{
@@ -292,7 +297,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			instanceBuffer->getElementSize(), 
 			instanceBuffer->getElementCount(),
 			instanceBuffer->getBufferPointer(),
-			m_deferredRenderer->getDeferredBaseShader());
+			m_deferredRenderer->getDeferredBaseShader(), NULL);
 
 	}
 
@@ -317,7 +322,7 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		instanceBuffer->getElementSize(),
 		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
-		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()));
+		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()), NULL);
 
 	delete instanceBuffer;
 	instanceBuffer = NULL;
@@ -620,7 +625,8 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 										  UINT32 p_instanceDataSize,
 										  UINT32 p_instanceElementCount,
 										  void* p_instanceRef,
-										  ShaderBase* p_shader)
+										  ShaderBase* p_shader,
+											Texture* p_boneMatrixTexture)
 {
 
 	if(p_textureArray){
@@ -637,16 +643,40 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 			}
 		}
 	}
-	UINT strides[2] = { p_vertexSize, p_instanceDataSize };
-	UINT offsets[2] = { 0, 0 };
-	// Set up an array of the buffers for the vertices
-	ID3D11Buffer* buffers[2] = { 
-		static_cast<ID3D11Buffer*>(p_vertexBufferRef), 
-		static_cast<ID3D11Buffer*>(p_instanceRef) 
-	};
 
-	// Set array of buffers to context 
-	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	if (p_boneMatrixTexture)
+	{
+		m_deviceContext->VSSetShaderResources(0, 1, &p_boneMatrixTexture->data);
+	}
+
+	if (!p_vertexAnimationBufferRef)
+	{
+		UINT strides[2] = { p_vertexSize, p_instanceDataSize };
+		UINT offsets[2] = { 0, 0 };
+		// Set up an array of the buffers for the vertices
+		ID3D11Buffer* buffers[2] = { 
+			static_cast<ID3D11Buffer*>(p_vertexBufferRef), 
+			static_cast<ID3D11Buffer*>(p_instanceRef) 
+		};
+
+		// Set array of buffers to context 
+		m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	}
+	else
+	{
+		UINT strides[3] = { p_vertexSize, p_vertexAnimationSize, p_instanceDataSize };
+		UINT offsets[3] = { 0, 0, 0 };
+		// Set up an array of the buffers for the vertices
+		ID3D11Buffer* buffers[3] = { 
+			static_cast<ID3D11Buffer*>(p_vertexBufferRef), 
+			static_cast<ID3D11Buffer*>(p_vertexAnimationBufferRef),
+			static_cast<ID3D11Buffer*>(p_instanceRef) 
+		};
+
+		// Set array of buffers to context 
+		m_deviceContext->IASetVertexBuffers(0, 3, buffers, strides, offsets);
+	}
+
 	// And the index buffer
 	m_deviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(p_indexBufferRef), 
 		DXGI_FORMAT_R32_UINT, 0);
@@ -702,6 +732,96 @@ unsigned int GraphicsWrapper::generateShadowMap()
 GPUTimer* GraphicsWrapper::getGPUTimer()
 {
 	return m_gpuTimer;
+}
+
+void GraphicsWrapper::initBoneMatrixTexture()
+{
+	D3D11_TEXTURE1D_DESC desc;
+	desc.MiscFlags = 0;
+	desc.Width = 16384; // 2^14
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; //One row in the matrix
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	HRESULT res = m_device->CreateTexture1D(&desc, NULL, &m_boneMatrixResource );
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srDesc;
+	srDesc.Format = desc.Format;
+	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
+	srDesc.Texture2D.MostDetailedMip = 0;
+	srDesc.Texture2D.MipLevels = 1;
+
+	ID3D11ShaderResourceView* srv;
+	m_device->CreateShaderResourceView(m_boneMatrixResource, &srDesc, &srv );
+	m_boneMatrixTexture = new Texture(srv);
+
+	D3D11_MAPPED_SUBRESOURCE mappedTex;
+	res = m_deviceContext->Map(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1), D3D11_MAP_WRITE_DISCARD, 0, &mappedTex);
+
+	float* values = (float*)mappedTex.pData;
+	for( UINT col = 0; col < desc.Width; )
+	{
+		//Row1
+		values[col++] = 1;
+		values[col++] = 0;
+		values[col++] = 0; 
+		values[col++] = 0; 
+		//Row2
+		values[col++] = 0;
+		values[col++] = 1;
+		values[col++] = 0; 
+		values[col++] = 0; 
+		//Row3
+		values[col++] = 0;
+		values[col++] = 0;
+		values[col++] = 1; 
+		values[col++] = 0; 
+		//Row4
+		values[col++] = 0;
+		values[col++] = 0;
+		values[col++] = 0; 
+		values[col++] = 1; 
+	}
+	m_deviceContext->Unmap(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1));
+}	
+void GraphicsWrapper::updateBoneMatrixTexture(vector<AglMatrix>* p_data)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedTex;
+	m_deviceContext->Map(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1), D3D11_MAP_WRITE_DISCARD, 0, &mappedTex);
+
+	float* values = (float*)mappedTex.pData;
+
+	for (unsigned int i = 0; i < p_data->size(); i++)
+	{
+		AglMatrix am = (*p_data)[i];
+		int pos = i*16;
+
+		//Row1
+		values[pos] = am[0];
+		values[pos+1] = am[1];
+		values[pos+2] = am[2];
+		values[pos+3] = am[3];
+		//Row2
+		values[pos+4] = am[4];
+		values[pos+5] = am[5];
+		values[pos+6] = am[6]; 
+		values[pos+7] = am[7]; 
+		//Row3
+		values[pos+8] = am[8];
+		values[pos+9] = am[9];
+		values[pos+10] =am[10];
+		values[pos+11] =am[11];
+		//Row4
+		values[pos+12] = am[12];
+		values[pos+13] = am[13];
+		values[pos+14] = am[14];
+		values[pos+15] = am[15];
+	}
+
+	m_deviceContext->Unmap(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1));
 }
 
 

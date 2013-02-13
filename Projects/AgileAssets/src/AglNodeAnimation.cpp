@@ -46,6 +46,33 @@ void AglNodeAnimation::appendTransform(float p_time, float p_weight)
 		m_scene->appendTransform(m_header.targetNode, transform);
 	}
 }
+
+AglMatrix AglNodeAnimation::evaluate(float p_time)
+{
+	if (p_time <= m_keyFrames[0].time)
+		return m_header.targetNode, m_keyFrames[0].transform;
+	else if (p_time > m_keyFrames[m_header.keyFrameCount-1].time)
+		return m_header.targetNode, m_keyFrames[m_header.keyFrameCount-1].transform;
+	else
+	{
+		unsigned int pos = 0;
+		while (pos < m_header.keyFrameCount-2 && m_keyFrames[pos+1].time < p_time)
+		{
+			pos++;
+		}
+
+		unsigned int pos2 = pos+1;
+
+		float frac = (p_time - m_keyFrames[pos].time) / (m_keyFrames[pos2].time - m_keyFrames[pos].time);
+
+		AglMatrix m1 = m_keyFrames[pos].transform;
+		AglMatrix m2 = m_keyFrames[pos2].transform;
+		AglMatrix transform = m1*(1-frac) + m2*frac;
+
+		return transform;
+	}
+}
+
 float AglNodeAnimation::getMinTime()
 {
 	return m_keyFrames[0].time;

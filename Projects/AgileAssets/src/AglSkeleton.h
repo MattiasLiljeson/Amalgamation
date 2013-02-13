@@ -102,6 +102,8 @@ public:
 	///
 	AglMatrix	  getGlobalTransform(int p_joint);
 
+	AglMatrix	  getGlobalTransform(int p_joint, float p_time);
+
 	///
 	///Gets the inverse bind transform of a joint.
 	/// \param p_joint The index to the joint.
