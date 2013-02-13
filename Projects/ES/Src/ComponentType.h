@@ -65,6 +65,7 @@ public:	//Enums
 		ParticleSystemServerComponent,
 		DebugMove,
 		PlayerState,
+		GameState,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

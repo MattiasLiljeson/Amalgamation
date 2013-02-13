@@ -97,6 +97,12 @@
     <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
       <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\States">
+      <UniqueIdentifier>{9e022492-9da3-4858-bcdf-adee07cbdfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -531,6 +537,12 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="EnumGameStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Components\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -889,6 +901,9 @@
     </ClCompile>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Components\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

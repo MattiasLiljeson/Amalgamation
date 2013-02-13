@@ -39,12 +39,13 @@
 #include "libRocketBackendSystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem()
-	: EntitySystem(SystemType::LibRocketEventManagerSystem)
+	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
 {
 	m_context = NULL;
 	wantsToExit = false;
 	m_eventHandler = NULL;
 	m_currentDocId = "";
+	m_stateEntity = NULL;
 }
 
 LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
@@ -77,7 +78,9 @@ void LibRocketEventManagerSystem::registerEventHandler( EventHandler* p_handler 
 }
 
 // Registers a new event handler with the manager.
-void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& p_handlerName, EventHandler* p_handler)
+void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& 
+													   p_handlerName, 
+													   EventHandler* p_handler)
 {
 	p_handler->connectToManager(this);
 	// Release any handler bound under the same name.
@@ -92,7 +95,8 @@ void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::Strin
 	m_eventHandlers[p_handlerName] = p_handler;
 }
 
-EventHandler* LibRocketEventManagerSystem::unregisterEventHandler( const Rocket::Core::String& p_handlerName )
+EventHandler* LibRocketEventManagerSystem::unregisterEventHandler( 
+	const Rocket::Core::String& p_handlerName )
 {
 	EventHandlerMap::iterator iterator = m_eventHandlers.find(p_handlerName);
 	EventHandler* handler = NULL;
@@ -230,6 +234,14 @@ void LibRocketEventManagerSystem::process()
 		m_world->requestToShutDown();
 }
 
+void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
+{
+	if(p_entities.size()>0){
+		int x = 0;
+	}
+}
+
+
 void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core::String&  p_docId )
 {
 	while (m_docIdStack.top() != p_docId)
@@ -242,4 +254,16 @@ void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core:
 			document->Hide();
 		}
 	}
+}
+
+void LibRocketEventManagerSystem::inserted( Entity* p_entity )
+{
+	if(m_stateEntity == NULL)
+		m_stateEntity = p_entity;
+}
+
+void LibRocketEventManagerSystem::removed( Entity* p_entity )
+{
+	if(m_stateEntity)
+		m_stateEntity = NULL;
 }

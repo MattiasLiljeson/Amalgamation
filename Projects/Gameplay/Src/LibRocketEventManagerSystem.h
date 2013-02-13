@@ -58,6 +58,8 @@ public:
 
 	void process();
 
+	void processEntities(const vector<Entity*>& p_entities);
+
 	void registerEventHandler(EventHandler* p_handler);
 
 	EventHandler* unregisterEventHandler(const Rocket::Core::String& p_handlerName);
@@ -75,16 +77,24 @@ public:
 	bool wantsToExit;
 private:
 	/// Registers a new event handler with the manager.
-	/// @param[in] p_handlerName The name of the handler; this must be the same as the window it is handling events for.
+	/// @param[in] p_handlerName The name of the handler; this must be the same as the 
+	/// window it is handling events for.
 	/// @param[in] handler The event handler.
 	void registerEventHandler(const Rocket::Core::String& p_handlerName, EventHandler* p_handler);
 
 	/// Pops all docIds and hides them until the parameter doc id is the top one.
 	void clearStackUntilFoundDocId(const Rocket::Core::String&  p_docId);
 
+	virtual void inserted( Entity* p_entity );
+
+	virtual void removed( Entity* p_entity );
+
+
+private:
 	// The game's element context (retrieved from the rocket backend system).
 	Rocket::Core::Context* m_context;
-	// The event handler for the current screen. This may be NULL if the current screen has no specific functionality.
+	// The event handler for the current screen. This may be NULL if the current screen 
+	// has no specific functionality.
 	EventHandler* m_eventHandler;
 	// The event handlers registered with the manager.
 	typedef std::map< Rocket::Core::String, EventHandler* > EventHandlerMap;
@@ -92,6 +102,7 @@ private:
 
 	Rocket::Core::String				m_currentDocId;
 	std::stack<Rocket::Core::String>	m_docIdStack;
+	Entity*								m_stateEntity;
 };
 
 

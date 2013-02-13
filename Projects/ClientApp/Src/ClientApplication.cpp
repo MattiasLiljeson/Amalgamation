@@ -37,7 +37,7 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <Transform.h>
-
+#include <GameState.h>
 
 // Systems
 #include <AntTweakBarEnablerSystem.h>
@@ -110,6 +110,7 @@ using namespace std;
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
+
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -510,7 +511,9 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
 
-
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::GameState,new GameState(MENU));
+	m_world->addEntity(entity);
 
 	// Test sound source
 	entity = m_world->createEntity();
