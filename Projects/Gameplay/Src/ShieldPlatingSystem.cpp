@@ -35,22 +35,26 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 			scaleComponent, quarternionComponent, positionComponent);
 		float deltaScale = m_world->getDelta() * 0.5f;
 		plate->scale -= deltaScale;
+		if(p_entities[i]->isEnabled())
+		{
 			if(plate->scale <= 0.0f)
 			{
 				child->setLocalTransform(plate->spawnTransform); // Respawn.
 				plate->scale = plate->scaleSeed;
 			}
-		if(p_entities[i]->isEnabled())
-		{
-		scaleComponent.x = plate->scale;
-		scaleComponent.y = plate->scale;
-		scaleComponent.z = plate->scale;
+			scaleComponent.x = plate->scale;
+			scaleComponent.y = plate->scale;
+			scaleComponent.z = plate->scale;
 		}
 		else
 		{
-		scaleComponent.x = 0.0f;
-		scaleComponent.y = 0.0f;
-		scaleComponent.z = 0.0f;
+			if(plate->scale <= 0.0f)
+			{
+				plate->scale = 0.0f;
+			}
+			scaleComponent.x = plate->scale;
+			scaleComponent.y = plate->scale;
+			scaleComponent.z = plate->scale;
 		}
 		AglMatrix rescaledLocalTransform;
 		AglMatrix::componentsToMatrix(rescaledLocalTransform,
