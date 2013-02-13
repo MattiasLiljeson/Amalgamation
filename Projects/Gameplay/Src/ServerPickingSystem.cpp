@@ -35,11 +35,13 @@ float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 	return -1;
 }
 
-ServerPickingSystem::ServerPickingSystem(TcpServer* p_server)
+ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
+										 OnHitEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;
 	mrota = 0;
+	m_effectbuffer = p_effectBuffer;
 }
 
 
@@ -444,6 +446,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
+			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
@@ -494,7 +498,9 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
 		//Parent transform
-		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse());
+		AglMatrix transform = offsetTemp(target, 
+			cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), 
+			conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse());
 		//AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
 
 		//transform *= shipBody->getOffset().inverse();
@@ -510,6 +516,9 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		shipModule->m_parentEntity = target->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
+
+		// set an effect
+		setScoreEffect( ship, moduleTransform, shipModule->m_value);
 	}
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
@@ -521,6 +530,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
+			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
 
@@ -599,10 +610,25 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 			physX->getController()->DetachBodyFromCompound(body, false);
+
+			// set an effect
+			setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
 		}
 	}
 	return true;
 }
+
+void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, 
+										  int p_score )
+{
+	OnHitScoreEffectPacket fxPacket;
+	fxPacket.score = p_score;
+	fxPacket.position = p_moduleTransform->getTranslation();
+	fxPacket.angle = p_moduleTransform->getRotation();
+
+	m_effectbuffer->enqueueEffect(p_player,fxPacket);
+}
+
 
 
 	/*AglMatrix finalTransform = AglMatrix::identityMatrix();

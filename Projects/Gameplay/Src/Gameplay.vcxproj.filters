@@ -531,6 +531,9 @@
     <ClInclude Include="OnHitScoreEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="OnHitEffectBufferSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -889,6 +892,9 @@
     </ClCompile>
     <ClCompile Include="OnHitScoreEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="OnHitEffectBufferSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

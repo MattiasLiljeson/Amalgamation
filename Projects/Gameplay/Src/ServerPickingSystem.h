@@ -5,6 +5,7 @@
 #include "PickComponent.h"
 #include "TcpServer.h"
 #include "ConnectionPointSet.h"
+#include "OnHitEffectBufferSystem.h"
 
 // =======================================================================================
 //                                      ServerPickingSystem
@@ -20,7 +21,8 @@
 class ServerPickingSystem: public EntitySystem
 {
 public:
-	ServerPickingSystem(TcpServer* p_server);
+	ServerPickingSystem(TcpServer* p_server,
+		OnHitEffectBufferSystem* p_effectBuffer);
 	~ServerPickingSystem();
 
 	virtual void initialize();
@@ -41,6 +43,12 @@ private:
 	AglVector3 closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc);
 	void attemptConnect(PickComponent& p_ray);
 	bool attemptDetach(PickComponent& p_ray);
+
+	void setScoreEffect(Entity* p_player, Transform* p_moduleTransform, int p_score);
+
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
+
+	// Effects
+	OnHitEffectBufferSystem* m_effectbuffer;
 };

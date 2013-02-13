@@ -34,6 +34,7 @@
 #include <ShipModulesTrackerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
+#include <OnHitEffectBufferSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -139,6 +140,12 @@ namespace Srv
 		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
 		levelGen->run();*/
+
+		/************************************************************************/
+		/* Effects																*/
+		/************************************************************************/
+		OnHitEffectBufferSystem* onhiteffect = new OnHitEffectBufferSystem(m_server);
+		m_world->setSystem(onhiteffect, true);
 
 		/************************************************************************/
 		/* Physics																*/

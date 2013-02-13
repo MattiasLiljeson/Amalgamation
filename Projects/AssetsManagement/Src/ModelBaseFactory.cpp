@@ -327,15 +327,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
 
-					AglVector3 oldForward = inst.transform.GetForward();
-					AglVector3 oldUp = inst.transform.GetUp();
-					AglVector3 oldRight = inst.transform.GetRight();
-
-					inst.transform.SetLeft(-oldRight);
-					inst.transform.SetForward(oldUp);
-					inst.transform.SetUp(oldForward);
-					inst.transform *= AglMatrix::createScaleMatrix(AglVector3(1.0f,1.0f,-1.0f));
-					
+					FixTransform(inst.transform);			
 
 					p_model->instances.push_back(inst);
 
@@ -356,6 +348,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 
 				if (isOk)
 				{
+					// FixTransform(cp->transform);	
 					pair<string,AglMatrix> sp(parsedAction.first.spawnSpecName,
 						cp->transform*p_offset);
 					p_model->spawnPoints.m_collection.push_back(sp);
@@ -373,7 +366,10 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					isOk = (cp->parentMesh == -1 && p_model!=NULL);
 
 				if (isOk)
+				{
+					// FixTransform(cp->transform);
 					p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
+				}
 
 				break;
 			}
@@ -391,6 +387,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				if (isOk)
 				{
 					LightCreationData ld = parsedAction.first.lightSpec;
+					// FixTransform(cp->transform);
 					ld.transform = cp->transform*p_offset;
 					p_model->lightCollection.m_collection.push_back(ld);
 				}
@@ -460,4 +457,17 @@ AglLooseBspTree* ModelBaseFactory::createBspTree(AglMesh* p_mesh)
 	return constructor.createTree();
 	//END ANTON
 }
+
+void ModelBaseFactory::FixTransform( AglMatrix& p_transform )
+{
+	AglVector3 oldForward = p_transform.GetForward();
+	AglVector3 oldUp = p_transform.GetUp();
+	AglVector3 oldLeft = p_transform.GetLeft();
+
+	p_transform.SetLeft(oldLeft);
+	p_transform.SetForward(oldUp);
+	p_transform.SetUp(oldForward);
+	p_transform *= AglMatrix::createScaleMatrix(AglVector3(1.0f,1.0f,-1.0f));
+}
+
 
