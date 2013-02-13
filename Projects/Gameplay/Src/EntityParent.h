@@ -28,7 +28,11 @@ public:
 	{
 	}
 
-	const AglMatrix& getLocalTransform() {return m_localTransform;}
+	const AglMatrix& getLocalTransform() const {return m_localTransform;}
+	void setLocalTransform(AglMatrix p_localTransform)
+	{
+		m_localTransform = p_localTransform;
+	}
 	int getParentEntityId() {return m_entityId;}
 private:
 	int m_entityId;

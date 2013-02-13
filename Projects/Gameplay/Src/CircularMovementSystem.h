@@ -1,19 +1,20 @@
 #pragma once
+#include <EntitySystem.h>
 // =======================================================================================
-// ModuleEvent
+// CircularMovementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief ModuleEvent interface.
+/// \brief Brief...
 ///        
-/// # ModuleEvent
-/// Realize/implement the pure virtual function and you can use the event in ShipModule.
-/// Created on: 1-2-2013 
+/// # CircularMovementSystem
+/// Detailed description...
+/// Created on: 11-2-2013 
 ///---------------------------------------------------------------------------------------
-class ModuleEvent
+class CircularMovementSystem: public EntitySystem
 {
 public:
-	virtual ~ModuleEvent(){}
-	virtual void activate() = 0;
-	virtual void deactivate() = 0;
+	CircularMovementSystem();
+	~CircularMovementSystem();
+	void processEntities( const vector<Entity*>& p_entities );
 };

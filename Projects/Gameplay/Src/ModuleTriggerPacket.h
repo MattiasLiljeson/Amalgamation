@@ -1,19 +1,25 @@
 #pragma once
+#include "Packetizer.h"
 // =======================================================================================
-// ModuleEvent
+// ModuleTriggerPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief ModuleEvent interface.
+/// \brief Brief...
 ///        
-/// # ModuleEvent
-/// Realize/implement the pure virtual function and you can use the event in ShipModule.
-/// Created on: 1-2-2013 
+/// # ModuleTriggerPacket
+/// Detailed description...
+/// Created on: 13-2-2013 
 ///---------------------------------------------------------------------------------------
-class ModuleEvent
+class ModuleTriggerPacket: public Packetizer
 {
 public:
-	virtual ~ModuleEvent(){}
-	virtual void activate() = 0;
-	virtual void deactivate() = 0;
+	ModuleTriggerPacket();
+	virtual Packet pack() final;
+	virtual void unpack( Packet& p_packet ) final;
+
+public:
+	int moduleNetsyncIdentity;
+	bool moduleTrigger;
+
 };
