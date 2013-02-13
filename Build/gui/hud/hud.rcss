@@ -1,9 +1,11 @@
 body
 {
 	font-family: Armorhide;
-	font-style: normal;
-	font-size: 15;
 	font-charset: U+00??;
+	font-style: normal;
+	font-size: 20;
+	font-weight: bold;
+	color: white;
 }
 
 body.content
