@@ -94,14 +94,20 @@
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
-      <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\States">
       <UniqueIdentifier>{9e022492-9da3-4858-bcdf-adee07cbdfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events">
+      <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Server%29">
+      <UniqueIdentifier>{7d99334e-e016-4792-a741-2e4a2c01a176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Client%29">
+      <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -464,19 +470,13 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleEvent.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+      <Filter>Components\Modules\Events</Filter>
     </ClInclude>
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ShieldModuleActivation.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="SpeedBoostModuleActivation.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
     <ClInclude Include="MeshOffsetTransform.h">
       <Filter>Components</Filter>
@@ -542,6 +542,30 @@
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Components\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlate.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTriggerPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivationClient.h">
+      <Filter>Components\Modules\Events\Module Events %28Client%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -904,6 +928,15 @@
     </ClCompile>
     <ClCompile Include="GameState.cpp">
       <Filter>Components\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularMovementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTriggerPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
