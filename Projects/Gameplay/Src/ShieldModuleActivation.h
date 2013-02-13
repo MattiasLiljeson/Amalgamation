@@ -3,8 +3,10 @@
 #include <Entity.h>
 #include "Transform.h"
 #include <TcpServer.h>
-#include "SpawnSoundEffectPacket.h"
-#include "RemoveSoundEffectPacket.h"
+#include "ModuleTriggerPacket.h"
+//#include "SpawnSoundEffectPacket.h"
+//#include "RemoveSoundEffectPacket.h"
+
 // =======================================================================================
 // SpeedBoostModuleActivation
 // =======================================================================================
@@ -31,12 +33,16 @@ public:
 			ComponentType::Transform));
 		if(transform)
 		{
-			SpawnSoundEffectPacket data;
-			data.attachedToNetsyncEntity = m_shipEntity->getIndex();
-			data.positional = true;
-			data.position = transform->getTranslation();
-			data.soundIdentifier = SpawnSoundEffectPacket::ShieldActive;
+			ModuleTriggerPacket data;
+			data.moduleNetsyncIdentity = m_shipEntity->getIndex();
+			data.moduleTrigger = true;
 			m_server->broadcastPacket(data.pack());
+//			SpawnSoundEffectPacket data;
+//			data.attachedToNetsyncEntity = m_shipEntity->getIndex();
+//			data.positional = true;
+//			data.position = transform->getTranslation();
+//			data.soundIdentifier = SpawnSoundEffectPacket::ShieldActive;
+//			m_server->broadcastPacket(data.pack());
 		}
 	}
 
@@ -46,9 +52,13 @@ public:
 			ComponentType::Transform));
 		if(transform)
 		{
-			RemoveSoundEffectPacket data;
-			data.attachedNetsyncIdentity = m_shipEntity->getIndex();
+			ModuleTriggerPacket data;
+			data.moduleNetsyncIdentity = m_shipEntity->getIndex();
+			data.moduleTrigger = false;
 			m_server->broadcastPacket(data.pack());
+//			RemoveSoundEffectPacket data;
+//			data.attachedNetsyncIdentity = m_shipEntity->getIndex();
+//			m_server->broadcastPacket(data.pack());
 		}
 	}
 

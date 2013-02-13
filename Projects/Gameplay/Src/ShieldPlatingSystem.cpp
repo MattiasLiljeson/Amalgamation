@@ -31,18 +31,27 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3 positionComponent;
 		AglQuaternion quarternionComponent;
 		AglVector3 scaleComponent;
-		AglMatrix::matrixToComponents(child->getLocalTransform(),
+		AglMatrix::matrixToComponents(plate->spawnTransform,
 			scaleComponent, quarternionComponent, positionComponent);
 		float deltaScale = m_world->getDelta() * 0.5f;
 		plate->scale -= deltaScale;
-		if(plate->scale < 0.0f)
+			if(plate->scale <= 0.0f)
+			{
+				child->setLocalTransform(plate->spawnTransform); // Respawn.
+				plate->scale = plate->scaleSeed;
+			}
+		if(p_entities[i]->isEnabled())
 		{
-			child->setLocalTransform(plate->spawnTransform); // Respawn.
-			plate->scale = plate->scaleSeed;
-		}
 		scaleComponent.x = plate->scale;
 		scaleComponent.y = plate->scale;
 		scaleComponent.z = plate->scale;
+		}
+		else
+		{
+		scaleComponent.x = 0.0f;
+		scaleComponent.y = 0.0f;
+		scaleComponent.z = 0.0f;
+		}
 		AglMatrix rescaledLocalTransform;
 		AglMatrix::componentsToMatrix(rescaledLocalTransform,
 			scaleComponent, quarternionComponent, positionComponent);

@@ -37,6 +37,7 @@
 #include "LoadMeshSystemClient.h"
 #include "EntityParent.h"
 #include "ShieldPlate.h"
+#include "ShieldModuleActivationClient.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -602,23 +603,29 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	Entity* shieldEntity = m_world->createEntity();
 	// Add network dependent components
 	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	shieldEntity->addComponent( ComponentType::Transform, transform );
-	shieldEntity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	shieldEntity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
-	shieldEntity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+	shieldEntity->addComponent(transform );
+	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	shieldEntity->addComponent(new LoadMesh("shield_module.agl"));
+	ShipModule* shipModule = new ShipModule();
+	shieldEntity->addComponent(shipModule);
+	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
-	for(unsigned int i=0; i<80; i++)
+	const int plateCount = 120;
+	vector<Entity*> plateEntities;
+	plateEntities.resize(120);
+	for(unsigned int i=0; i<plateCount; i++)
 	{
+		Entity* entity = m_world->createEntity();
+		plateEntities[i] = entity;
 		float spawnX, spawnY;
 		circularRandom(&spawnX, &spawnY, true);
-		Entity* entity = m_world->createEntity();
-		AglVector3 spawnPoint = AglVector3(0, 7.0f, 0); // Replace with real spawn point.
+		AglVector3 spawnPoint = AglVector3(0, 6.5f, 0); // Replace with real spawn point.
 		float radius = 10.0f;
 		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, 0, radius * spawnY);
 		position.normalize();
-		AglQuaternion plateRotation = AglQuaternion::identity();
+		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
 		position = position * spawnPoint.length();
 		float plateScale = 1.0f;
 		Transform* plateTransform = new Transform(position, plateRotation,
@@ -628,8 +635,10 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 		entity->addComponent(new EntityParent(shieldEntity->getIndex(),
 			plateTransform->getMatrix()));
 		entity->addComponent(new ShieldPlate(0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
+		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}
+	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities));
 
 	return shieldEntity;
 }
