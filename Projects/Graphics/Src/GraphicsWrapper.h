@@ -45,6 +45,7 @@ struct Model;
 struct Texture;
 struct AglMatrix;
 struct PerShadowCBuffer;
+struct ParticleSystemAndTexture;
 
 class GraphicsWrapper
 {
@@ -175,7 +176,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
 
-	void renderParticleSystem(AglParticleSystem* p_system, InstanceData p_transform);
+	void renderParticleSystem( ParticleSystemAndTexture* p_system, InstanceData p_transform );
 
 	void renderSsao();
 

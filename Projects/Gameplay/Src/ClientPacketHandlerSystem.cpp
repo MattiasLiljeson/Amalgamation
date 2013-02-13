@@ -57,12 +57,13 @@
 #include "EntityFactory.h"
 #include "LightSources.h"
 #include "LightsComponent.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "ParticleSystemCreationInfo.h"
 #include "PlayersWinLosePacket.h"
 #include "RemoveSoundEffectPacket.h"
 #include <DebugUtil.h>
 #include <ToString.h>
+#include <ParticleSystemAndTexture.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -631,21 +632,19 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 	{
 		//Transform* transform = NULL;
 
-		ParticleEmitters* particleComp = static_cast<ParticleEmitters*>(
-			entity->getComponent( ComponentType::ParticleEmitters ) );
+		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
+			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
 
 		if( particleComp != NULL )
 		{
-			ParticleSystemCollection* collection = particleComp->getCollectionPtr();
 			int idx = p_data.particleSystemIdx;
-
-			if( -1 < idx && idx < collection->m_collection.size() )
+			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
-				AglParticleSystem* particlesys = &(collection->m_collection[idx].particleSystem);
-				particlesys->setSpawnPoint(		p_data.position);
-				particlesys->setSpawnDirection(	p_data.direction);
-				particlesys->setSpawnSpeed(		p_data.speed);
-				particlesys->setSpawnFrequency(	p_data.spawnFrequency);
+				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
+				particleSys->setSpawnPoint(		p_data.position);
+				particleSys->setSpawnDirection(	p_data.direction);
+				particleSys->setSpawnSpeed(		p_data.speed);
+				particleSys->setSpawnFrequency(	p_data.spawnFrequency);
 			}
 			else
 			{
@@ -669,17 +668,19 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	int NetId = p_creationInfo.entityNetId;
 	Entity* entity = directMapper->getEntity(NetId);
 
-	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
-		( entity->getComponent( ComponentType::ParticleEmitters) );
+	ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>
+		( entity->getComponent( ComponentType::ParticleSystemsComponent) );
 
 	if( particleComp == NULL )
 	{
-		particleComp = new ParticleEmitters();
+		particleComp = new ParticleSystemsComponent();
 		entity->addComponent( particleComp );
 	}
 
-	AglParticleSystemHeader header = p_creationInfo.particleSysHeader;
-	int psIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
+	ParticleSystemInstruction instruction;
+	instruction.textureFileName = p_creationInfo.textureFileName;
+	instruction.particleSystem = AglParticleSystem(p_creationInfo.particleSysHeader);
+	int psIdx = particleComp->addParticleSystemInstruction( instruction );
 	if( psIdx != p_creationInfo.particleSysIdx )
 	{
 		// PARTICLE SYSTEMS NOT IN SYNC!

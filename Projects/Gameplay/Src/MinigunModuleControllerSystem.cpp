@@ -15,7 +15,7 @@
 #include "ParticleSystemServerComponent.h"
 #include "SpawnSoundEffectPacket.h"
 #include "ParticleSystemCreationInfo.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "ShipConnectionPointHighlights.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)

@@ -11,7 +11,7 @@
 #include "EntityParent.h"
 #include "LoadMesh.h"
 #include "MeshOffsetTransform.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
 #include "Transform.h"
@@ -293,8 +293,8 @@ void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelRes
 {
 	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
-		ParticleEmitters* particleComp = new ParticleEmitters();
-		particleComp->addParticleSystems( p_modelResource->particleSystems );
+		ParticleSystemsComponent* particleComp = new ParticleSystemsComponent();
+		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
 		p_entity->addComponent( particleComp );
 	}
 }

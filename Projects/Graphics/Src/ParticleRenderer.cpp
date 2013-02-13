@@ -29,11 +29,11 @@ ParticleRenderer::~ParticleRenderer(){
 	SAFE_RELEASE(m_depthStencil);
 	delete m_shaderFactory;
 	delete m_shader;
-	delete m_texture;
+	delete m_stdTexture;
 }
 
-void ParticleRenderer::renderParticles( AglParticleSystem* p_system, 
-	RendererSceneInfo* p_info, const InstanceData& p_transform )
+void ParticleRenderer::renderParticleSystem( AglParticleSystem* p_system, 
+	RendererSceneInfo* p_info, const InstanceData& p_transform, Texture* p_texture )
 {
 	vector<AglStandardParticle>* particles = p_system->getParticlesPtr();
 	if (particles->size() > 0){
@@ -55,12 +55,12 @@ void ParticleRenderer::renderParticles( AglParticleSystem* p_system,
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
 		data->accessBuffer.setParticleData(p_system->getHeader(), p_transform.worldTransform);
 
-		beginRendering(p_system, particles->size());
+		renderParticles(p_system, particles->size(), p_texture );
 	}
 }
 
-void ParticleRenderer::beginRendering(AglParticleSystem* p_system, 
-									  const int numOfParticles){
+void ParticleRenderer::renderParticles( AglParticleSystem* p_system, 
+									  const int numOfParticles, Texture* p_texture ){
 	ID3D11DepthStencilState* old;
 	UINT stencil;
 	m_deviceContext->OMGetDepthStencilState(&old, &stencil);
@@ -71,7 +71,10 @@ void ParticleRenderer::beginRendering(AglParticleSystem* p_system,
 	UINT stride = sizeof(AglStandardParticle);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-	m_deviceContext->PSSetShaderResources(0, 1, &m_texture->data);
+
+	if( p_texture == NULL )
+		p_texture = m_stdTexture;
+	m_deviceContext->PSSetShaderResources(0, 1, &p_texture->data);
 
 	m_deviceContext->Draw(numOfParticles, 0);
 
@@ -115,6 +118,6 @@ void ParticleRenderer::initDepthStencil(){
 
 void ParticleRenderer::initTexture()
 {
-	m_texture = new Texture(TextureParser::loadTexture(
+	m_stdTexture = new Texture(TextureParser::loadTexture(
 		m_device,m_deviceContext,"Assets/Textures/Test/smoke.png"));
 }

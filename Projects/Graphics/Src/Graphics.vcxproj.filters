@@ -226,6 +226,9 @@
     <ClInclude Include="GPUTimer.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemAndTexture.h">
+      <Filter>Renderer\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Exceptions">

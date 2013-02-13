@@ -25,7 +25,7 @@
 #include <MineLayerModule.h>
 #include <MinigunModule.h>
 #include <MinigunModule.h>
-#include <ParticleEmitters.h>
+#include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
 #include <PositionalSoundSource.h>
@@ -94,7 +94,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-
+#include <ParticleSystemInstructionTranslatorSystem.h>
 
 
 // Helpers
@@ -221,7 +221,8 @@ void ClientApplication::initSystems()
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem(SystemType::LoadMeshSystemClient, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
-
+	m_world->setSystem(new ParticleSystemInstructionTranslatorSystem( graphicsBackend ),
+		true );
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
@@ -480,20 +481,20 @@ void ClientApplication::initEntities()
 	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
 	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
 	
- 	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
- 	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
+	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
 
- 	//LevelPieceFileMapping modelLevelFileMapping;	
- 	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
- 	//{
- 	//	string modelName = modelLevelFileMapping.getModelFileName(i);
- 	//	graphicsBackend->loadSingleMesh( modelName,
- 	//			&TESTMODELPATH);
- 	//}
+	//LevelPieceFileMapping modelLevelFileMapping;	
+	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
+	//{
+	//	string modelName = modelLevelFileMapping.getModelFileName(i);
+	//	graphicsBackend->loadSingleMesh( modelName,
+	//			&TESTMODELPATH);
+	//}
 
 
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");

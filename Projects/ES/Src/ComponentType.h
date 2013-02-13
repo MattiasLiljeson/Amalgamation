@@ -59,7 +59,7 @@ public:	//Enums
 		LightSources,
 		LightBlinker,
 		Vibration,
-		ParticleEmitters,
+		ParticleSystemsComponent,
 		PickComponent,
 		ParticleSystemEmitter,
 		ParticleSystemServerComponent,

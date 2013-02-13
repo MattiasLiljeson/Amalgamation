@@ -80,6 +80,8 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
+    <ClInclude Include="ParticleSystemInstructionComponent.h" />
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
@@ -91,7 +93,7 @@
     <ClInclude Include="PickComponent.h" />
     <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
-    <ClInclude Include="ParticleEmitters.h" />
+    <ClInclude Include="ParticleSystemsComponent.h" />
     <ClInclude Include="ParticleRenderSystem.h" />
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
@@ -220,7 +222,9 @@
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
-    <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ParticleSystemInstructionComponent.cpp" />
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
+    <ClCompile Include="ParticleSystemsComponent.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="ParticleRenderSystem.cpp" />
     <ClCompile Include="ParticleSystemEmitterSystem.cpp" />

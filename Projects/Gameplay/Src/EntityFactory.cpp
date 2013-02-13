@@ -13,7 +13,7 @@
 #include "LookAtEntity.h"
 #include "MineLayerModule.h"
 #include "NetworkSynced.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "ParticleRenderSystem.h"
 #include "PhysicsBody.h"
 #include "PickComponent.h"

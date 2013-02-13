@@ -19,7 +19,7 @@
     <ClInclude Include="MeshNameScriptParser.h" />
     <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelBaseFactory.h" />
-    <ClInclude Include="ParticleSystemCollection.h" />
+    <ClInclude Include="ParticleSystemInstructionCollection.h" />
     <ClInclude Include="ParticleSystemInstruction.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SpawnPointCollection.h" />

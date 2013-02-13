@@ -27,9 +27,6 @@
     <ClInclude Include="ConnectionPointCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemCollection.h">
-      <Filter>Mesh resource\Resource data</Filter>
-    </ClInclude>
     <ClInclude Include="ModelResource.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
@@ -49,6 +46,9 @@
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystemInstruction.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemInstructionCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
   </ItemGroup>
