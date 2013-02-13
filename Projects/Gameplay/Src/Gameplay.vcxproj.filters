@@ -528,6 +528,12 @@
     <ClInclude Include="SpawnPointSet.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletalAnimation.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimationSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -883,6 +889,9 @@
     </ClCompile>
     <ClCompile Include="SpawnPointSet.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimationSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

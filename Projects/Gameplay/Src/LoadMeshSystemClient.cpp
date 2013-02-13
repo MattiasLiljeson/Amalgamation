@@ -10,6 +10,8 @@
 #include "ConnectionPointSet.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
+#include <AglSkeletonMapping.h>
+#include "SkeletalAnimation.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -40,4 +42,25 @@ void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity,
 {
 	// Do nothing on client here, trolololo
 	// Check server version for how to set up collision data
+}
+
+void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)
+{
+	if (p_modelResource->scene)
+	{
+		vector<AglSkeletonMapping*> sm = p_modelResource->scene->getSkeletonMappings();
+
+		int index = -1;
+		for (unsigned int i = 0; i < sm.size(); i++)
+		{
+			if (sm[i]->getHeader().meshID == p_modelResource->meshHeader.id)
+				index = i;
+		}
+
+		if (index >= 0)
+		{
+			SkeletalAnimation* anim = new SkeletalAnimation(0, p_modelResource->scene);
+			p_entity->addComponent(anim);
+		}
+	}
 }

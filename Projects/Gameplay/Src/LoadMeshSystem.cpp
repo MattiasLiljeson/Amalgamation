@@ -93,6 +93,9 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 	// Handle particles here
 	setUpParticles(entity,modelResource);
 
+	//Handle animations
+	setUpAnimation(entity, modelResource);
+
 	//Should not be here - ONLY RELEVANT FOR SHIP
 	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
 	if (initData)
@@ -191,6 +194,9 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Collision
 		setUpChildCollision(entity,modelResource,
 			rootRigidBody,rootPhysicsBody,baseTransform);
+
+		//Animation
+		setUpAnimation(entity, modelResource);
 
 		// Hierarchy
 		component = new EntityParent( rootId, modelResource->transform );

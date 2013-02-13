@@ -82,6 +82,8 @@
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
+    <ClInclude Include="SkeletalAnimation.h" />
+    <ClInclude Include="SkeletalAnimationSystem.h" />
     <ClInclude Include="SpawnPointSet.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -266,6 +268,7 @@
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
+    <ClCompile Include="SkeletalAnimationSystem.cpp" />
     <ClCompile Include="SlotInputControllerSystem.cpp" />
     <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />

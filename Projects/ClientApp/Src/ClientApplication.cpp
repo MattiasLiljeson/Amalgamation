@@ -93,6 +93,7 @@
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <ClientEntityCountSystem.h>
+#include <SkeletalAnimationSystem.h>
 
 
 
@@ -364,6 +365,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
 	m_world->setSystem( new LightBlinkerSystem(), true );
+
+	/************************************************************************/
+	/* Animation															*/
+	/************************************************************************/
+	m_world->setSystem(new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/

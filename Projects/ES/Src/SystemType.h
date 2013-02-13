@@ -84,6 +84,7 @@ public:	//Enums
 		ClientMeasurementSystem,
 		ServerMeasurementSystem,
 		ClientEntityCountSystem,
+		SkeletalAnimationSystem,
 		NUM_SYSTEM_TYPES
 	};
 
