@@ -181,7 +181,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId
 	}
 	else
 	{
-		entity->addComponent(new LevelPieceInfo(i));
+		entity->addComponent(new LevelPieceInfo(p_pieceInstanceId));
 		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
 	}
 
