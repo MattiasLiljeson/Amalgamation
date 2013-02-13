@@ -239,8 +239,6 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 
 	// Remove the caller's reference.
 	//document->RemoveReference();
-
-
 	return true;
 }
 
