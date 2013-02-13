@@ -405,11 +405,6 @@ void ClientApplication::initEntities()
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
-	// Read monkey!
-	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
-	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
-	m_world->addEntity( entity );
-
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
 	entity = factory->entityFromRecipe( "rocksClient" );	
