@@ -242,6 +242,9 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
+	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
+		L"Shaders/Game/deferredAnimatedBase.hlsl");
+
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
 
@@ -348,7 +351,9 @@ void DeferredRenderer::setLightRenderTarget(){
 DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
-
+DeferredAnimatedBaseShader* DeferredRenderer::getDeferredAnimatedBaseShader(){
+	return m_animatedBaseShader;
+}
 LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }

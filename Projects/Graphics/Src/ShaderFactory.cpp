@@ -7,6 +7,7 @@
 #include "ParticleShader.h"
 #include "ShadowShader.h"
 #include "LightShader.h"
+#include "DeferredAnimatedBaseShader.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -74,6 +75,31 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState, NULL, hullData, domainData);
 
 	return new DeferredBaseShader(shaderInitData);
+}
+
+DeferredAnimatedBaseShader* ShaderFactory::createDeferredAnimatedShader(const LPCWSTR& p_filePath)
+{
+	ID3D11SamplerState* samplerState = NULL;
+	ID3D11InputLayout* inputLayout = NULL;
+
+	VSData* vertexData = new VSData();
+	HSData* hullData	= NULL;//new HSData();
+	DSData* domainData	= NULL;//new DSData();
+	PSData* pixelData = new PSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	//hullData->stageConfig = new ShaderStageConfig(p_filePath,"HS",m_shaderModelVersion);
+	//domainData->stageConfig = new ShaderStageConfig(p_filePath,"DS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
+
+	createAllShaderStages(vertexData,pixelData, NULL, hullData, domainData);
+	createSamplerState(&samplerState);
+	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
+
+	ShaderVariableContainer shaderInitData;
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState, NULL, hullData, domainData);
+
+	return new DeferredAnimatedBaseShader(shaderInitData);
 }
 
 LightShader* ShaderFactory::createLightShader( const LPCWSTR& p_filePath )

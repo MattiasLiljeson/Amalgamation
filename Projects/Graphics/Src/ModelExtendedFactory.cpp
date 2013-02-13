@@ -99,9 +99,27 @@ unsigned int ModelExtendedFactory::createMeshData( SourceData& p_source,
 	void* indices = static_cast<void*>(p_source.aglMesh->getIndices());
 	unsigned int numVertices = static_cast<unsigned int>(p_source.meshHeader->vertexCount);
 	unsigned int numIndices =  static_cast<unsigned int>(p_source.meshHeader->indexCount);
+
+	//Also extract any skeleton mappings that can be found
+	void* skeletonVertices = NULL;
+	unsigned int numSkeletonVertices = 0;
+
+	vector<AglSkeletonMapping*> sm = p_source.scene->getSkeletonMappings();
+	for (unsigned int i = 0; i < sm.size(); i++)
+	{
+		if (sm[i]->getHeader().meshID == p_source.meshHeader->id)
+		{
+			skeletonVertices = static_cast<void*>(sm[i]->getVertices());
+			numSkeletonVertices = static_cast<unsigned int>(sm[i]->getHeader().vertexCount);
+			break;
+		}
+	}
+
+
 	// Internal mesh format creation
-	Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, indices,
+	Mesh* mesh = m_bufferFactory->createMeshFromRaw(vertices, skeletonVertices, indices,
 		numVertices,
+		numSkeletonVertices,
 		numIndices);
 	readAndStoreTextures(p_source, mesh);
 	// put in manager			

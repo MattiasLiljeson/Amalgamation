@@ -21,6 +21,7 @@
 #include "GUIShader.h"
 #include "LightMesh.h"
 #include "DeferredBaseShader.h"
+#include "DeferredAnimatedBaseShader.h"
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
 #include "GPUTimer.h"
@@ -263,17 +264,37 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	Buffer<InstanceData>* instanceBuffer;
 	instanceBuffer = m_bufferFactory->createInstanceBuffer(&(*p_instanceList)[0],
 														   p_instanceList->size());
+	if (mesh->getSkeletonVertexBuffer() != NULL)
+	{
+		renderMeshInstanced( 
+			mesh->getVertexBuffer()->getBufferPointer(),
+			mesh->getVertexBuffer()->getElementSize(),
+			mesh->getSkeletonVertexBuffer()->getBufferPointer(),
+			mesh->getSkeletonVertexBuffer()->getElementSize(),
+			mesh->getIndexBuffer()->getBufferPointer(),
+			mesh->getIndexBuffer()->getElementCount(),
+			textureArray, arraySize,
+			instanceBuffer->getElementSize(), 
+			instanceBuffer->getElementCount(),
+			instanceBuffer->getBufferPointer(),
+			m_deferredRenderer->getDeferredAnimatedBaseShader());
+	}
+	else
+	{
+		renderMeshInstanced( 
+			mesh->getVertexBuffer()->getBufferPointer(),
+			mesh->getVertexBuffer()->getElementSize(),
+			NULL,
+			0,
+			mesh->getIndexBuffer()->getBufferPointer(),
+			mesh->getIndexBuffer()->getElementCount(),
+			textureArray, arraySize,
+			instanceBuffer->getElementSize(), 
+			instanceBuffer->getElementCount(),
+			instanceBuffer->getBufferPointer(),
+			m_deferredRenderer->getDeferredBaseShader());
 
-	renderMeshInstanced( 
-		mesh->getVertexBuffer()->getBufferPointer(),
-		mesh->getVertexBuffer()->getElementSize(),
-		mesh->getIndexBuffer()->getBufferPointer(),
-		mesh->getIndexBuffer()->getElementCount(),
-		textureArray, arraySize,
-		instanceBuffer->getElementSize(), 
-		instanceBuffer->getElementCount(),
-		instanceBuffer->getBufferPointer(),
-		m_deferredRenderer->getDeferredBaseShader());
+	}
 
 	delete [] textureArray;
 	delete [] instanceBuffer;
@@ -288,6 +309,8 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 	renderMeshInstanced( 
 		p_mesh->getVertexBuffer()->getBufferPointer(),
 		p_mesh->getVertexBuffer()->getElementSize(),
+		NULL,
+		NULL,
 		p_mesh->getIndexBuffer()->getBufferPointer(),
 		p_mesh->getIndexBuffer()->getElementCount(), 
 		NULL, 0,
@@ -590,6 +613,7 @@ void GraphicsWrapper::renderSingleGUIMesh( Mesh* p_mesh, Texture* p_texture )
 }
 
 void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_vertexSize, 
+										  void* p_vertexAnimationBufferRef, UINT32 p_vertexAnimationSize,
 										  void* p_indexBufferRef, UINT32 p_indexElementCount, 
 										  Texture** p_textureArray, 
 										  unsigned int p_textureArraySize, 

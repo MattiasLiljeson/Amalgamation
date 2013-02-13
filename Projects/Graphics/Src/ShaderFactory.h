@@ -12,6 +12,7 @@
 
 class BufferFactory;
 class DeferredBaseShader;
+class DeferredAnimatedBaseShader;
 class DeferredComposeShader;
 class LightShader;
 class GUIShader;
@@ -43,6 +44,8 @@ public:
 	/// \return DeferredBaseShader*
 	///-----------------------------------------------------------------------------------
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
+
+	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
