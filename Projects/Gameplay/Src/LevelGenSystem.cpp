@@ -59,6 +59,8 @@ void LevelGenSystem::initialize()
 	AssemblageHelper::E_FileStatus status = 
 		m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
 
+
+
 	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
 		m_world->getSystem(SystemType::LoadMeshSystem));
 	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
@@ -83,8 +85,8 @@ void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 void LevelGenSystem::run()
 {
 	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(0);
-	createLevelEntities();
+	//generateLevelPieces(0);
+	//createLevelEntities();
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
@@ -146,7 +148,11 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 				p_piece->getTransform()->getTranslation() ) ) );
 
 	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());*/
-	Entity entity = m_entityFactory->entityFromRecipe()
+	Entity* entity = m_entityFactory->entityFromRecipe( 
+		m_modelFileMapping.getAssemblageFileName( p_piece->getTypeId() ) );
+	
+	if (!entity)
+		DEBUGWARNING(("LevelGenSystem Warning: Unable to create the specified level piece entity!"));
 
 	return entity;
 }

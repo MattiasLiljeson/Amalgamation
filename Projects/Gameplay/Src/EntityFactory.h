@@ -67,6 +67,7 @@ public:
 	Entity* entityFromRecipeOrFile( const string& p_entityName, string p_filePath );
 
 	Entity* entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint = NULL);
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);
@@ -113,6 +114,10 @@ private:
 	//Other
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
+
+	//Level
+	Entity* createLevelClient(EntityCreationPacket p_packet);
+	Entity* createLevelServer(EntityCreationPacket p_packet);
 
 private:
 	map<string, Recipe*> m_entityRecipes;

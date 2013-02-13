@@ -333,9 +333,6 @@
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="LevelPieceFileMapping.h">
-      <Filter>Systems\Level Gen</Filter>
-    </ClInclude>
     <ClInclude Include="ExtrapolationSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -533,6 +530,9 @@
     </ClInclude>
     <ClInclude Include="LevelPieceInfo.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceFileMapping.h">
+      <Filter>Systems\Level Gen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -734,9 +734,6 @@
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="LevelPieceFileMapping.cpp">
-      <Filter>Systems\Level Gen</Filter>
-    </ClCompile>
     <ClCompile Include="ExtrapolationSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
@@ -892,6 +889,9 @@
     </ClCompile>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceFileMapping.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

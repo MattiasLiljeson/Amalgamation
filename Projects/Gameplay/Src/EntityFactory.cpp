@@ -646,6 +646,17 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 	return NULL;
 }
 
+Entity* EntityFactory::createLevelClient( EntityCreationPacket p_packet )
+{
+	return NULL; //NYI
+}
+
+Entity* EntityFactory::createLevelServer( EntityCreationPacket p_packet )
+{
+	return NULL; //NYI
+}
+
+
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )
 {
 	// performance test
@@ -662,3 +673,4 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
 	return entity;
 }
+

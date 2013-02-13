@@ -24,7 +24,9 @@ LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* 
 
 LevelPiece::~LevelPiece()
 {
-	// Don't delete the transform here, since it is active in ES.
+	// Delete main piece now, as it will be used as a copy for the created entity later,
+	// and not be owned by ES
+	deleteMainTransform();
 }
 
 vector<int> LevelPiece::findFreeConnectionPointSlots()
