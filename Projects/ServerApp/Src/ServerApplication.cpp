@@ -259,11 +259,12 @@ namespace Srv
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
 
-		// First test by Jarl, instead of Anton
+		// First test by Jarl, instead of Anton.
+		// Commented out by Alex, since the assemblage is now read in the LevelGenSystem.
 		// Create rocks
-		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
-		entity = factory->entityFromRecipe( "rocksServer" );									 
-		m_world->addEntity( entity );
+		//status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		//entity = factory->entityFromRecipe( "rocksServer" );									 
+		//m_world->addEntity( entity );
 
 		//Minigun
 		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
