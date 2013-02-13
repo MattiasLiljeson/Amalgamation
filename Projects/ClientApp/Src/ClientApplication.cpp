@@ -94,6 +94,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
+#include <ScoreWorldVisualizerSystem.h>
 
 
 
@@ -262,6 +263,13 @@ void ClientApplication::initSystems()
 	// that they can be properly be added to the LibRocketEventManager.
 	// The alternative would be that every event handler adds itself.
 	m_world->setSystem( new MenuSystem(), true );
+
+
+	/************************************************************************/
+	/* Effects																*/
+	/************************************************************************/
+	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
+	m_world->setSystem( scoreVisSystem, true );
 
 	/************************************************************************/
 	/* Player    															*/

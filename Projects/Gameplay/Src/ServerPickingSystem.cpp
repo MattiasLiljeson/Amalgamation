@@ -144,9 +144,41 @@ void ServerPickingSystem::setReleased(int p_index)
 	{
 		if (m_pickComponents[i].m_clientIndex == p_index)
 		{
+			Entity* parentShip = NULL;
+			ShipModule* shipModule = NULL;
+			Transform* moduleTransform = NULL;
+
+			// Get data for current module
+			if (m_pickComponents[i].m_latestPick>-1)
+			{
+				Entity* shipModuleEntity = m_world->getEntity(m_pickComponents[i].m_latestPick);
+				shipModule = NULL;
+				if (shipModuleEntity)
+				{
+					shipModule = static_cast<ShipModule*>(shipModuleEntity->getComponent(
+							ComponentType::ShipModule));
+				}
+				if (shipModule)
+				{
+					// get parent
+					parentShip = m_world->getEntity(shipModule->m_lastParentWhenAttached);
+
+					// also store the current transform
+					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
+					if (transformComp) moduleTransform = static_cast<Transform*>(transformComp);
+				}
+			}
+
 			//Release the picked module
 			m_pickComponents[i].m_latestPick = -1;
 			m_pickComponents[i].m_active = false;
+			if (shipModule) shipModule->m_lastParentWhenAttached = -1; // module is now totally detached from parent ship
+
+			// set an effect
+			if (moduleTransform && parentShip && shipModule)
+				setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
+
+
 			return;
 		}
 	}
@@ -510,15 +542,19 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
 		
+
+		// set an effect
+		if (shipModule->m_lastParentWhenAttached == -1) // only if not attached/moved before
+			setScoreEffect( ship, moduleTransform, shipModule->m_value);
+
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
+		shipModule->m_lastParentWhenAttached = target->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
 
-		// set an effect
-		setScoreEffect( ship, moduleTransform, shipModule->m_value);
 	}
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
@@ -565,12 +601,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
 				ComponentType::ShipModule));
 
-			while (parentModule)
-			{
-				parentShip = m_world->getEntity(parentModule->m_parentEntity);
-				parentModule = static_cast<ShipModule*>(parentShip->getComponent(
-					ComponentType::ShipModule));
-			}
+			FindParentShip(parentShip,parentModule);
 
 			if (parentShip != rayShip)
 				return false;
@@ -611,8 +642,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 			physX->getController()->DetachBodyFromCompound(body, false);
 
-			// set an effect
-			setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
+
 		}
 	}
 	return true;
@@ -629,37 +659,12 @@ void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleT
 	m_effectbuffer->enqueueEffect(p_player,fxPacket);
 }
 
-
-
-	/*AglMatrix finalTransform = AglMatrix::identityMatrix();
-	while (transforms.size() > 0)
+void ServerPickingSystem::FindParentShip( Entity* p_inoutShip, ShipModule* p_inoutModule )
+{
+	while (p_inoutModule)
 	{
-		//AFAGAgAG
-		AglVector3 trans = transforms.back().GetTranslation();
-		transforms.back().SetTranslation(AglVector3(0, 0, 0));
-		transforms.back() *= finalTransform;
-		trans.transform(finalTransform);
-		transforms.back().SetTranslation(trans + transforms.back().GetTranslation());
-		//SAGSAGSAG
-
-
-		//Parent transform
-		AglMatrix transform = transforms.back();
-
-		//Child Transform
-		AglMatrix childTransform = transforms[transforms.size()-2];
-		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
-		finalTransform = AglMatrix::createRotationMatrix(rot);
-
-		AglVector3 childTrans = childTransform.GetTranslation()-transform;
-		rot.transformVector(childTrans);
-		finalTransform.SetTranslation(transform.GetTranslation() + childTrans);
-		transforms.pop_back();
-		transforms.pop_back();
+		p_inoutShip = m_world->getEntity(p_inoutModule->m_parentEntity);
+		p_inoutModule = static_cast<ShipModule*>(p_inoutShip->getComponent(
+			ComponentType::ShipModule));
 	}
-	/*AglVector3 trans = p_base.GetTranslation();
-	p_base.SetTranslation(AglVector3(0, 0, 0));
-	p_base *= finalTransform;
-	trans.transform(finalTransform);
-	p_base.SetTranslation(trans + p_base.GetTranslation());*/
-	//return finalTransform;
+}

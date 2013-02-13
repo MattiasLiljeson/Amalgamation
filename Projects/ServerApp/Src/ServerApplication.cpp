@@ -174,7 +174,7 @@ namespace Srv
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerPickingSystem(m_server), true);
+		m_world->setSystem(new ServerPickingSystem(m_server,onhiteffect), true);
 
 
 		/************************************************************************/

@@ -22,12 +22,12 @@ public:
 	~PickComponent() {}
 
 	int m_rayIndex;
-	int m_clientIndex;
-	int m_latestPick;
+	int m_clientIndex; ///< owner client index
+	int m_latestPick; ///< the current picked entity
 	bool m_active;
 	float m_preferredDistance;
-	int m_selection;
+	int m_selection; ///< index to selection sphere
 
-	int m_targetEntity;
-	int m_targetSlot;
+	int m_targetEntity; ///< current entity to receive latest pick if released
+	int m_targetSlot; ///< idx to current target connection point of targetentity
 };

@@ -32,7 +32,7 @@ void OnHitEffectBufferSystem::process()
 				infoPair.first->getComponent(ComponentType::NetworkSynced));
 
 			m_server->unicastPacket(infoPair.second.pack(), 
-				netSync->getNetworkIdentity());
+				netSync->getNetworkOwner());
 
 			m_queue.pop();
 		}

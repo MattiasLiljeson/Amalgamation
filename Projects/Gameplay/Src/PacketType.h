@@ -32,6 +32,7 @@ public:
 		SpawnSoundEffect,
 		TransformPacket,
 		RemoveSoundEffect,
+		OnHitScoreEffectPacket,
 
 		// Client -> Server:
 		/************************************************************************/

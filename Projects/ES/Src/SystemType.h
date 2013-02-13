@@ -42,6 +42,7 @@ public:	//Enums
 		LoadMeshSystemServer,
 		AudioBackendSystem,
 		AudioControllerSystem,
+		ScoreWorldVisualizerSystem,
 		AudioListenerSystem,
 		PositionalSoundSystem,
 		OnHitEffectBufferSystem,

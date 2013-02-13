@@ -52,6 +52,8 @@
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "OnHitScoreEffectPacket.h"
+#include "ScoreWorldVisualizerSystem.h"
 
 // Debug
 #include "EntityFactory.h"
@@ -277,6 +279,23 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						MessageBoxA(NULL, "Loser!", "Warning!", MB_ICONWARNING);
 					}
 				}
+			}
+		}
+		else if (packetType == (char)PacketType::OnHitScoreEffectPacket)
+		{
+			// number effect for score
+			auto scoreVis = static_cast<ScoreWorldVisualizerSystem*>(
+				m_world->getSystem(SystemType::ScoreWorldVisualizerSystem));
+
+			if (scoreVis)
+			{
+				OnHitScoreEffectPacket scoreFx;
+				scoreFx.unpack(packet);
+				ScoreWorldVisualizerSystem::ScoreEffectCreationData inst;
+				inst.score = scoreFx.score;
+				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
+
+				scoreVis->addEffect(inst);
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)

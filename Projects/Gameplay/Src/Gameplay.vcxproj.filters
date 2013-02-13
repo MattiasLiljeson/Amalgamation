@@ -534,6 +534,9 @@
     <ClInclude Include="OnHitEffectBufferSystem.h">
       <Filter>Systems\Gameplay\Server Only</Filter>
     </ClInclude>
+    <ClInclude Include="ScoreWorldVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -895,6 +898,9 @@
     </ClCompile>
     <ClCompile Include="OnHitEffectBufferSystem.cpp">
       <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreWorldVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
