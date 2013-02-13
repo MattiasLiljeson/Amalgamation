@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+class AudioBackendSystem;
 // =======================================================================================
 // ShieldPlatingSystem
 // =======================================================================================
@@ -17,5 +18,9 @@ public:
 	ShieldPlatingSystem();
 	void inserted( Entity* p_entity );
 	void processEntities( const vector<Entity*>& p_entities );
+	void initialize();
+
+private:
+	AudioBackendSystem* m_audioBackend;
 
 };
