@@ -609,10 +609,10 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	shieldEntity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
-	for(unsigned int i=0; i<60; i++)
+	for(unsigned int i=0; i<80; i++)
 	{
 		float spawnX, spawnY;
-		circularRandom(&spawnX, &spawnY);
+		circularRandom(&spawnX, &spawnY, true);
 		Entity* entity = m_world->createEntity();
 		AglVector3 spawnPoint = AglVector3(0, 7.0f, 0); // Replace with real spawn point.
 		float radius = 10.0f;
@@ -686,38 +686,41 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 	return NULL;
 }
 
-void EntityFactory::circularRandom( float* p_spawnX, float* p_spawnY )
+void EntityFactory::circularRandom( float* p_spawnX, float* p_spawnY,
+	bool p_warpCompensation )
 {
-//	float x = 0.0f;
-//	float y = 0.0f;
-//	do
-//	{
-//		x = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-//		y = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-//	} while( x * x + y * y > 1.0f );
-//	*p_spawnX = x;
-//	*p_spawnY = y;
-
-	// NOTE: This was almost right. Going for the simpler for now though.
-	float x = 0.0f;
-	float y = 0.0f;
-	do
+	if(!p_warpCompensation)
 	{
-		float x_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-		float y_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-		bool x_negative = x_rand < 0;
-		bool y_negative = y_rand < 0;
-		x_rand = x_rand * x_rand;
-		y_rand = y_rand * y_rand;
-		if(x_negative)
-			x_rand = -x_rand;
-		if(y_negative)
-			y_rand = -y_rand;
-		x = x_rand;
-		y = y_rand;
-	} while( x * x + y * y > 1.0f );
-	*p_spawnX = x;
-	*p_spawnY = y;
+		float x = 0.0f;
+		float y = 0.0f;
+		do
+		{
+			x = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			y = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+		} while( x * x + y * y > 1.0f );
+		*p_spawnX = x;
+		*p_spawnY = y;
+	}
+	else
+	{
+		// NOTE: This version of circular random compensates for sphere warping
+		// quite roughly. With not too high of a warp angle it looks nice.
+		// It is much slower than the simple circular random generation.
+		float x = 0.0f;
+		float y = 0.0f;
+		do
+		{
+			float x_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			float y_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			x = x_rand;
+			y = y_rand;
+		} while( x * x + y * y > 1.0f );
+		float len = sqrt(x * x + y * y);
+		x = x * len;
+		y = y * len;
+		*p_spawnX = x;
+		*p_spawnY = y;
+	}
 }
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )
