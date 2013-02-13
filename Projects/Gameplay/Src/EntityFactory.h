@@ -111,13 +111,9 @@ private:
 	Entity* createShieldClient(EntityCreationPacket p_packet);
 	Entity* createShieldServer(EntityCreationPacket p_packet);
 
-	//Other
+	//Other - Level generation goes here for now.
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
-
-	//Level
-	Entity* createLevelClient(EntityCreationPacket p_packet);
-	Entity* createLevelServer(EntityCreationPacket p_packet);
 
 private:
 	map<string, Recipe*> m_entityRecipes;

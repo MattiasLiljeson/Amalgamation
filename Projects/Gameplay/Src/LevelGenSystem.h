@@ -35,6 +35,8 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 
+	void clearGeneratedData();
+
 	void run();
 	void createLevelEntities();
 	const AglVector3& getWorldMin() const;

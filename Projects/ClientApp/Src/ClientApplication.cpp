@@ -419,9 +419,9 @@ void ClientApplication::initEntities()
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	entity = factory->entityFromRecipe( "rocksClient" );	
+	//entity = factory->entityFromRecipe( "rocksClient" );	
 
-	m_world->addEntity( entity );
+	//m_world->addEntity( entity );
 
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 

@@ -624,7 +624,9 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
 		// changed during refactoring by Jarl 30-1-2013
 		// use an assemblage, like this:
-		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
+		entity = entityFromRecipe( asdName );
 	}
 	else	
 	{
@@ -634,6 +636,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
 	}
+	// NOTE: This leads to memory leaks in ES, due to the recipe creating a such component.
 	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	entity->addComponent( ComponentType::Transform, component );
 
@@ -645,17 +648,6 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 	//Not moved here yet!
 	return NULL;
 }
-
-Entity* EntityFactory::createLevelClient( EntityCreationPacket p_packet )
-{
-	return NULL; //NYI
-}
-
-Entity* EntityFactory::createLevelServer( EntityCreationPacket p_packet )
-{
-	return NULL; //NYI
-}
-
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )
 {
