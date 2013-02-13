@@ -71,7 +71,13 @@ void LevelGenSystem::initialize()
 		// entity is created.
 		auto resourcesFromModel = loadMeshSys->createModels(modelName,
 			MODELPATH, false);
-		m_modelResources.push_back( resourcesFromModel->at(0) );
+
+		ModelResource* rootResource = resourcesFromModel->at(0);
+		// NOTE: Hard-coded bounding sphere volume size for now!
+		// This should later on be calculated using the meshes
+		rootResource->meshHeader.boundingSphere.radius = 900.0f;
+
+		m_modelResources.push_back( rootResource );
 
 		//delete resourcesFromModel;
 	}
@@ -79,22 +85,40 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	
+	LevelPieceInfo* pieceInfo = NULL;
+	Transform*		transform = NULL;
+	Transform*		fetchedTransform = NULL;
+
+	for (int i = 0; i < p_entities.size(); i++)
+	{
+		Entity* entity = p_entities[i];
+
+		pieceInfo = static_cast<LevelPieceInfo*>(
+			entity->getComponent(ComponentType::LevelPieceInfo));
+		transform = static_cast<Transform*>(
+			entity->getComponent(ComponentType::Transform));
+		fetchedTransform = m_generatedPieces[pieceInfo->getPieceInstanceId()]->getTransform();
+
+		// Update the position and rotation for now.
+		transform->setTranslation(fetchedTransform->getTranslation());
+		transform->setRotation(fetchedTransform->getRotation());
+
+		entity->removeComponent(ComponentType::LevelPieceInfo);
+		entity->applyComponentChanges();
+	}
 }
 
 void LevelGenSystem::run()
 {
 	srand(static_cast<unsigned int>(time(NULL)));
-	//generateLevelPieces(0);
-	//createLevelEntities();
+	generateLevelPieces(1);
+	createLevelEntities();
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(15, 20, 15), 
-										AglQuaternion::identity(),
-										AglVector3::one() * 10.0f);
+	Transform* transform = new Transform();
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
@@ -129,7 +153,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	}
 }
 
-Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
+Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId )
 {
 	//Entity* entity = m_world->createEntity();
 	
@@ -152,7 +176,13 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece )
 		m_modelFileMapping.getAssemblageFileName( p_piece->getTypeId() ) );
 	
 	if (!entity)
+	{
 		DEBUGWARNING(("LevelGenSystem Warning: Unable to create the specified level piece entity!"));
+	}
+	else
+	{
+		entity->addComponent(new LevelPieceInfo(p_piece->getTypeId()));
+	}
 
 	return entity;
 }
@@ -241,10 +271,11 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			bool colliding = false;
 			for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 			{
-				if (AglCollision::isColliding( piece->getBoundingBox(),
-					m_generatedPieces[i]->getBoundingBox()) && 
+				if (AglCollision::isColliding( piece->getBoundingSphere(),
+					m_generatedPieces[i]->getBoundingSphere()) && 
 					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
 				{
+					DEBUGWARNING(("Collision between chambers detected. Failed to generate!"));
 					colliding = true;
 					break;
 				}
@@ -306,7 +337,7 @@ void LevelGenSystem::createLevelEntities()
 {
 	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
-		Entity* e = createEntity(m_generatedPieces[i]);
+		Entity* e = createEntity(m_generatedPieces[i], i);
 		m_world->addEntity(e);
 	}
 }

@@ -46,7 +46,7 @@ private:
 	int popIntVector(vector<int>& p_vector);
 	
 	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
-	Entity* createEntity(LevelPiece* p_piece);
+	Entity* createEntity(LevelPiece* p_piece, int p_pieceInstanceId);
 
 	void generateLevelPieces(int p_maxDepth);
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 

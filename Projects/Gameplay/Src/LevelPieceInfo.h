@@ -17,10 +17,15 @@
 class LevelPieceInfo : public Component
 {
 public:
-	LevelPieceInfo()
+	LevelPieceInfo(int p_pieceInstanceId)
 		: Component(ComponentType::LevelPieceInfo)
 	{
-		pieceInstanceId = -1;
+		m_pieceInstanceId = p_pieceInstanceId;
 	}
-	int pieceInstanceId;
+	int getPieceInstanceId() const
+	{
+		return m_pieceInstanceId;
+	}
+private:
+	int m_pieceInstanceId;
 };

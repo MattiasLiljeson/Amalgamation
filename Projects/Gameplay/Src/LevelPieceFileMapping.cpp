@@ -14,6 +14,10 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	m_unknown = "(UNKNOWN)";
 
 	m_asdNames.push_back("rocksServer");
+	m_asdNames.push_back("rocksServer");
+	m_asdNames.push_back("rocksServer");
+	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
+	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 
 	// End plug
@@ -30,7 +34,7 @@ LevelPieceFileMapping::~LevelPieceFileMapping()
 const string& LevelPieceFileMapping::getAssemblageFileName( unsigned int p_id ) const
 {
 	if (p_id >= 0 && p_id < m_fileNames.size())
-		return m_fileNames[p_id];
+		return m_asdNames[p_id];
 	else{
 		DEBUGPRINT(("LevelPiece Error, could not find the specified assemblage file \n"));
 		return m_unknown;
