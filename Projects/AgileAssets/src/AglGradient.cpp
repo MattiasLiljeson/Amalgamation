@@ -5,6 +5,8 @@ AglGradient::AglGradient()
 }
 AglGradient::~AglGradient()
 {
+	for (unsigned int i = 0; i < m_layers.size(); i++)
+		delete m_layers[i];
 }
 vector<AglGradientMaterial*> AglGradient::getLayers()
 {

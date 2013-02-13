@@ -31,6 +31,7 @@ public:	//Enums
 		LookAtSystem,
 		TransformParentHandlerSystem,
 		InputBackendSystem,
+		InputActionsBackendSystem,
 		InterpolationSystem,
 		ShipFlyControllerSystem,
 		ShipEditControllerSystem,
@@ -68,6 +69,7 @@ public:	//Enums
 		ParticleRenderSystem,
 		LightRenderSystem,
 		AntTweakBarSystem,
+		AntTweakBarEnablerSystem,
 		ShipManagerSystem,
 		NetSyncedPlayerScoreTrackerSystem,
 		NetsyncDirectMapperSystem,
@@ -83,6 +85,7 @@ public:	//Enums
 		SpeedBoostModuleControllerSystem,
 		ClientMeasurementSystem,
 		ServerMeasurementSystem,
+		ClientEntityCountSystem,
 		NUM_SYSTEM_TYPES
 	};
 

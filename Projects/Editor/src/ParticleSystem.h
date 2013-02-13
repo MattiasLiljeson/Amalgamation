@@ -54,7 +54,7 @@ public:
 	{
 		mSystem->setSpawnFrequency(p_frequency);
 	}
-	AglParticleSystemHeader GetHeader()
+	const AglParticleSystemHeader& GetHeader()
 	{
 		return mSystem->getHeader();
 	}
@@ -64,11 +64,11 @@ public:
 	}
 	int getTextureIndex()
 	{
-		return mSystem->getHeader().textureNameIndex;
+		return mSystem->getHeaderPtr()->textureNameIndex;
 	}
 	AglVector4 getColor()
 	{
-		return mSystem->getHeader().color;
+		return mSystem->getHeaderPtr()->color;
 	}
 	void setColor(AglVector4 pColor)
 	{
@@ -77,7 +77,7 @@ public:
 
 	float getFadeInStop()
 	{
-		return mSystem->getHeader().fadeInStop;
+		return mSystem->getHeaderPtr()->fadeInStop;
 	}
 	void setFadeInStop(float pFadeInStop)
 	{
@@ -85,7 +85,7 @@ public:
 	}
 	float getFadeOutStart()
 	{
-		return mSystem->getHeader().fadeOutStart;
+		return mSystem->getHeaderPtr()->fadeOutStart;
 	}
 	void setFadeOutStart(float pFadeOutStart)
 	{
@@ -121,15 +121,15 @@ public:
 	}
 	void setParticleSizeX(float p_size)
 	{
-		mSystem->setParticleSize(AglVector2(p_size, mSystem->getHeader().particleSize.y));
+		mSystem->setParticleSize(AglVector2(p_size, mSystem->getHeaderPtr()->particleSize.y));
 	}
 	void setParticleSizeY(float p_size)
 	{
-		mSystem->setParticleSize(AglVector2(mSystem->getHeader().particleSize.x, p_size));
+		mSystem->setParticleSize(AglVector2(mSystem->getHeaderPtr()->particleSize.x, p_size));
 	}
 	AglParticleSystemHeader::AglAlignmentType getAlignment()
 	{
-		return mSystem->getHeader().alignmentType;
+		return mSystem->getHeaderPtr()->alignmentType;
 	}
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType pType)
 	{

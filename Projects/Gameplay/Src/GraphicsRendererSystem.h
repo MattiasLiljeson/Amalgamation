@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include <string>
 
 class RenderInterface;
 class GraphicsBackendSystem;
@@ -42,11 +43,14 @@ public:
 	void initParticlePass();
 	void endParticlePass();
 
-	void initComposePass();
-	void endComposePass();
-
 	void initLightPass();
 	void endLightPass();
+
+	void beginSsao();
+	void endSsao();
+
+	void initComposePass();
+	void endComposePass();
 	
 	void initGUIPass();
 	void endGUIPass();
@@ -54,6 +58,8 @@ public:
 	void flipBackbuffer();
 
 	void clearShadowStuf();
+
+	void updateTimers();
 private:
 	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
@@ -66,4 +72,21 @@ private:
 
 	int* m_activeShadows;
 	AglMatrix* m_shadowViewProjections;
+
+	std::string m_shadowProfile;
+	std::string m_meshProfile;
+	std::string m_lightProfile;
+	std::string m_composeProfile;
+	std::string m_particleProfile;
+	std::string m_guiProfile;
+
+	double	m_shadowPassTime;
+	double	m_meshPassTime;
+	double	m_lightPassTime;
+	double	m_composePassTime;
+	double	m_particlePassTime;
+	double	m_guiPassTime;
+	double	m_totalTime;
+
+	int		m_currentFrame;
 };

@@ -7,6 +7,7 @@ class TcpClient;
 class InputBackendSystem;
 class PhysicsSystem;
 class ShipInputProcessingSystem;
+class SlotInputControllerSystem;
 
 // =======================================================================================
 //                                   ShipEditControllerSystem
@@ -24,8 +25,8 @@ class ShipEditControllerSystem : public EntitySystem
 {
 public:
 	ShipEditControllerSystem(ShipInputProcessingSystem* p_shipInput,
-					   PhysicsSystem* p_physicsSystem/*,
-					   TcpClient* p_client */);
+					   PhysicsSystem* p_physicsSystem,
+					   SlotInputControllerSystem* p_slotInput);
 	~ShipEditControllerSystem();
 
 	virtual void initialize();
@@ -34,7 +35,6 @@ public:
 protected:
 private:
 	PhysicsSystem* m_physics;
-	// TcpClient* m_client;
-
+	SlotInputControllerSystem* m_slotInput;
 	ShipInputProcessingSystem* m_shipInput;	
 };

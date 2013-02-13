@@ -1,68 +1,68 @@
-#include "ClientPacketHandlerSystem.h"
-#include "NetSyncedPlayerScoreTrackerSystem.h"
-#include "GameStatsSystem.h"
 #include "AudioListener.h"
-#include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "ClientPacketHandlerSystem.h"
+#include "GameStatsSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "PhysicsBody.h"
 #include <AntTweakBarWrapper.h>
-#include <Entity.h>
+#include <AntTweakBarWrapper.h>
 #include <Component.h>
 #include <ComponentType.h>
-#include <SystemType.h>
-#include <AntTweakBarWrapper.h>
-
+#include <Entity.h>
 #include <Packet.h>
+#include <SystemType.h>
 #include <TcpClient.h>
 
 // Components
-#include "NetworkSynced.h"
-#include "Transform.h"
-#include "RenderInfo.h"
-#include "ShipFlyController.h"
+#include "AudioBackendSystem.h"
+#include "AudioInfo.h"
 #include "CameraInfo.h"
-#include "Input.h"
-#include "LookAtEntity.h"
-#include "PlayerScore.h"
-#include "GameplayTags.h"
-#include "PlayerCameraController.h"
-#include "HudElement.h"
-#include "InterpolationComponent.h"
-
-#include "Control.h"
-#include "EntityType.h"
-#include "PacketType.h"
-#include "PickComponent.h"
-#include "ParticleSystemEmitter.h"
-#include "ShipEditController.h"
 #include "ConnectionPointSet.h"
-#include "TimerSystem.h"
-#include "PingPacket.h"
-#include "PongPacket.h"
-#include "EntityUpdatePacket.h"
-#include "ParticleUpdatePacket.h"
+#include "Control.h"
 #include "EntityCreationPacket.h"
 #include "EntityDeletionPacket.h"
-#include "WelcomePacket.h"
-#include "UpdateClientStatsPacket.h"
+#include "EntityType.h"
+#include "EntityUpdatePacket.h"
 #include "Extrapolate.h"
+#include "GameplayTags.h"
+#include "HudElement.h"
+#include "Input.h"
 #include "InputBackendSystem.h"
+#include "InterpolationComponent.h"
+#include "LookAtEntity.h"
+#include "NetsyncDirectMapperSystem.h"
+#include "NetworkSynced.h"
+#include "PacketType.h"
 #include "ParticleRenderSystem.h"
-#include "AudioInfo.h"
+#include "ParticleSystemEmitter.h"
+#include "ParticleUpdatePacket.h"
+#include "PickComponent.h"
+#include "PingPacket.h"
+#include "PlayerCameraController.h"
+#include "PlayerScore.h"
+#include "PongPacket.h"
+#include "PositionalSoundSource.h"
+#include "RenderInfo.h"
+#include "ShipEditController.h"
+#include "ShipFlyController.h"
+#include "SpawnSoundEffectPacket.h"
+#include "TimerSystem.h"
+#include "Transform.h"
+#include "UpdateClientStatsPacket.h"
+#include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
-#include "AudioBackendSystem.h"
-#include "PositionalSoundSource.h"
-#include "SpawnSoundEffectPacket.h"
-#include "NetsyncDirectMapperSystem.h"
 
 // Debug
-#include <DebugUtil.h>
-#include <ToString.h>
+#include "EntityFactory.h"
 #include "LightSources.h"
 #include "LightsComponent.h"
-#include "EntityFactory.h"
+#include "ParticleEmitters.h"
+#include "ParticleSystemCreationInfo.h"
 #include "PlayersWinLosePacket.h"
 #include "RemoveSoundEffectPacket.h"
+#include <DebugUtil.h>
+#include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -122,20 +122,24 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				m_batch.push_back(data);
 			}
 		}
-		else if (packetType == (char)PacketType::ParticleUpdate)
-		{			
-			ParticleUpdatePacket data;
-			data.unpack(packet);
-			ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
-				SystemType::ParticleRenderSystem ));
-			AglParticleSystem* ps = gfx->getParticleSystem(data.networkIdentity);
+#pragma endregion
 
-			ps->setSpawnPoint(data.position);
-			ps->setSpawnDirection(data.direction);
-			ps->setSpawnSpeed(data.speed);
-			ps->setSpawnFrequency(data.spawnFrequency);
+		else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
+		{
+			ParticleSystemCreationInfo info;
+			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
+			handleParticleSystemCreation( info );
 		}
-#pragma endregion 
+
+		else if (packetType == (char)PacketType::ParticleUpdate)
+		{
+			ParticleUpdatePacket particleData;
+			particleData.unpack( packet );
+			handleParticleSystemUpdate( particleData );
+			
+		}
+
+#pragma region Shitsk
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
 			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
@@ -296,6 +300,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
 	}
+#pragma endregion
 }
 
 void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
@@ -315,7 +320,8 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+	EntityFactory* factory = static_cast<EntityFactory*>
+	(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		factory->entityFromPacket(p_packet);
@@ -581,9 +587,8 @@ void ClientPacketHandlerSystem::handleBatch()
 		{
 			Transform* transform = NULL;
 			transform = static_cast<Transform*>(
-				m_world->getComponentManager()->getComponent(
-				entity->getIndex(), ComponentType::Transform ) );
-			
+				entity->getComponent( ComponentType::Transform ) );
+
 			if( transform != NULL ) // Throw exception? /ML
 			{
 				/*InterpolationComponent* interpolation = NULL;
@@ -614,4 +619,69 @@ void ClientPacketHandlerSystem::handleBatch()
 		}
 	}
 	m_batch.clear();
+}
+
+void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdatePacket& p_data )
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.networkIdentity );
+	if( entity != NULL )
+	{
+		//Transform* transform = NULL;
+
+		ParticleEmitters* particleComp = static_cast<ParticleEmitters*>(
+			entity->getComponent( ComponentType::ParticleEmitters ) );
+
+		if( particleComp != NULL )
+		{
+			ParticleSystemCollection* collection = particleComp->getCollectionPtr();
+			int idx = p_data.particleSystemIdx;
+
+			if( -1 < idx && idx < collection->m_collection.size() )
+			{
+				AglParticleSystem* particlesys = &(collection->m_collection[idx].particleSystem);
+				particlesys->setSpawnPoint(		p_data.position);
+				particlesys->setSpawnDirection(	p_data.direction);
+				particlesys->setSpawnSpeed(		p_data.speed);
+				particlesys->setSpawnFrequency(	p_data.spawnFrequency);
+			}
+			else
+			{
+				// This should never happen as the particle systems should be synced.
+				int breakHere = 1;
+			}
+		}
+		else
+		{
+			// This should never happen as the entity should be correctly mapped.
+			int breakHere = 1;
+		}
+	}
+}
+
+void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	int NetId = p_creationInfo.entityNetId;
+	Entity* entity = directMapper->getEntity(NetId);
+
+	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
+		( entity->getComponent( ComponentType::ParticleEmitters) );
+
+	if( particleComp == NULL )
+	{
+		particleComp = new ParticleEmitters();
+		entity->addComponent( particleComp );
+	}
+
+	AglParticleSystemHeader header = p_creationInfo.particleSysHeader;
+	int psIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
+	if( psIdx != p_creationInfo.particleSysIdx )
+	{
+		// PARTICLE SYSTEMS NOT IN SYNC!
+	}
 }

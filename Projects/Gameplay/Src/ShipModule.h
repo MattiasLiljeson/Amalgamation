@@ -25,6 +25,9 @@ public:
 	float m_value; ///< Value of the module. Generates score.
 	float m_health; ///< Health of the module. A module that loses all health is removed
 
+	float m_rotation; ///< Current Rotation of the module
+	int	  m_rotationDirection; ///< Current Rotation direction of the module {-1 = Negative, 0 = None, 1 = Positive }
+
 	ShipModule();
 	~ShipModule();
 	void init( vector<ComponentData> p_initData );

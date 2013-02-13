@@ -5,13 +5,14 @@
 #include <Windows.h>
 
 
-class Window;
-class GraphicsWrapper;
 class AglParticleSystem;
-struct ConnectionPointCollection;
+class GraphicsWrapper;
+class Window;
 struct AglMeshHeader;
-struct RendererSceneInfo;
 struct AglVector2;
+struct ConnectionPointCollection;
+struct InstanceData;
+struct RendererSceneInfo;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================
@@ -45,7 +46,8 @@ public:
 	float getAspectRatio();
 	AglVector2 getWindowSize();
 
-	void renderAParticleSystem(AglParticleSystem* p_system);
+	void renderParticleSystem( AglParticleSystem* p_system,
+		const InstanceData& p_worldTransform );
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 

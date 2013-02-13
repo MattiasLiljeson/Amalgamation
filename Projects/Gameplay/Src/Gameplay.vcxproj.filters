@@ -363,16 +363,12 @@
     <ClInclude Include="BoundingVolumeInitData.h">
       <Filter>Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleUpdateData.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsRendererSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentAssemblageAllocator.h" />
     <ClInclude Include="LoadMesh.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -449,6 +445,12 @@
     <ClInclude Include="WinningConditionSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemCreationInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemServerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="ShipModulesTrackerSystem.h">
       <Filter>Systems\Gameplay\Tracking</Filter>
     </ClInclude>
@@ -460,9 +462,6 @@
     </ClInclude>
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClInclude>
-    <ClInclude Include="SlotInputControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
@@ -516,6 +515,21 @@
     </ClInclude>
     <ClInclude Include="CameraControlPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipConnectionPointHighlights.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientEntityCountSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="InputActionsBackendSystem.h">
+      <Filter>Systems\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipSlotControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarEnablerSystem.h">
+      <Filter>Systems\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -818,9 +832,6 @@
     <ClCompile Include="RemoveSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="SlotInputControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
@@ -863,6 +874,21 @@
     </ClCompile>
     <ClCompile Include="CameraControlPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipConnectionPointHighlights.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientEntityCountSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="InputActionsBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipSlotControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="AntTweakBarEnablerSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

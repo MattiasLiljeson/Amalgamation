@@ -3,6 +3,7 @@
 
 ParticleUpdatePacket::ParticleUpdatePacket()
 {
+	particleSystemIdx = -1;
 	networkIdentity = -1;
 	position = AglVector3();
 	direction = AglVector3(1, 0, 0);
@@ -18,7 +19,8 @@ ParticleUpdatePacket::~ParticleUpdatePacket()
 Packet ParticleUpdatePacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::ParticleUpdate));	
-	packet << networkIdentity
+	packet << particleSystemIdx
+		<< networkIdentity
 		<< position
 		<< direction
 		<< speed
@@ -29,7 +31,8 @@ Packet ParticleUpdatePacket::pack()
 
 void ParticleUpdatePacket::unpack( Packet& p_packet )
 {
-	p_packet >> networkIdentity 
+	p_packet >> particleSystemIdx
+		>> networkIdentity 
 		>> position 
 		>> direction
 		>> speed

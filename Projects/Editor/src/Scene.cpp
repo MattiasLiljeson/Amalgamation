@@ -587,7 +587,7 @@ void Scene::Draw()
 		AglMatrix size;
 		AglMatrix::componentsToMatrix(size, sceneOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
 		sw = size * sw;
-		sw = sw * m_avoidJump;
+		//sw = sw * m_avoidJump;
 		sw = sw * invMax;
 		sw *= w;
 		sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
@@ -720,14 +720,19 @@ void Scene::SetCoordinateSystem(AglCoordinateSystem pSystem)
 void Scene::Transform(AglMatrix p_transform)
 {
 	mAglScene->transform(p_transform);
+	vector<int> mats;
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
+	{
+		mats.push_back(mMeshes[i]->getCurrentMaterial());
 		delete mMeshes[i];
+	}
 	mMeshes.clear();
 	vector<AglMesh*> meshes = mAglScene->getMeshes();
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
 		Mesh* m = new Mesh(mDevice, mDeviceContext, this);
 		m->Init(meshes[i]);
+		m->SetMaterial(mats[i]);
 		mMeshes.push_back(m);
 	}
 

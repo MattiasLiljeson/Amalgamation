@@ -11,6 +11,7 @@
 #include "EntityType.h"
 #include "NetworkSynced.h"
 #include "ShipModule.h"
+#include "ShipManagerSystem.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -38,6 +39,7 @@ ServerPickingSystem::ServerPickingSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;
+	mrota = 0;
 }
 
 
@@ -52,7 +54,7 @@ void ServerPickingSystem::initialize()
 void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-
+	mrota += dt;
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
 	{
 		if (m_pickComponents[i].m_latestPick >= 0)
@@ -179,6 +181,24 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 				if (pb && pb->m_id == col)
 				{
 					//Found a pick
+
+					//Verify that the pick is not already picked
+					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
+					{
+						if (m_pickComponents[pcs].m_latestPick == p_entities[i]->getIndex())
+							return;
+					}
+
+					//Only allow picking a certain distance
+					ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+					Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
+					
+					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
+					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+						return;
+
+
 					p_pc.m_latestPick = p_entities[i]->getIndex();
 
 					//Attempt a detach if the entity is already connected
@@ -215,11 +235,6 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 		ComponentType::PhysicsBody));
 	Body* body = physX->getController()->getBody(projectBody->m_id);
 
-	AglVector3 vec = body->GetWorld().GetTranslation() - origin;
-	float len = vec.length();
-	AglVector3 dest = origin + dir * p_ray.m_preferredDistance;
-
-
 	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(
 		SystemType::ShipManagerSystem));
 
@@ -235,28 +250,32 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 
 	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
 
-	//AglVector3 sphereCenter = physicalShipBody->GetWorld().GetTranslation();
-
-	//float radius = 4; //Hard coded radius for now
-
-	dir = dest - bs.position;
-	dir.normalize();
-	dest = bs.position + dir * bs.radius;
-
-	AglVector3 vel = body->GetVelocity();
+	AglVector3 vel = body->GetVelocity() * body->GetMass();
 
 	float t = getT(origin, dir, bs.position, bs.radius);
 	if (t > 0)
-		dest = origin + dir*t;
-	body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10);
+	{
+		AglVector3 dest = origin + dir*t;
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
+	}
+	else
+	{
+		body->AddImpulse(-vel);
+	}
 
 	//Fix selection sphere
 	Entity* SelectionSphere = m_world->getEntity(p_ray.m_selection);
 	Transform* SelectionSphereTransform = static_cast<Transform*>
 		(SelectionSphere->getComponent(ComponentType::Transform));
-	SelectionSphereTransform->setTranslation(closestConnectionPoint(dest, ship, p_ray));
+
+	Transform* toProjectTransform = static_cast<Transform*>
+		(toProject->getComponent(ComponentType::Transform));
+
+	SelectionSphereTransform->setTranslation(closestConnectionPoint(toProjectTransform->getTranslation(), ship, p_ray));
 	if (p_ray.m_targetEntity >= 0)
+	{
 		SelectionSphereTransform->setScale(AglVector3(2, 2, 2));
+	}
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
 }
@@ -399,6 +418,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		//Child Transform
 		AglMatrix childTransform = transforms[transforms.size()-2];
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+
 		finalTransform = AglMatrix::createRotationMatrix(rot);
 
 		AglVector3 childTrans = childTransform.GetTranslation();
@@ -494,9 +514,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 {
-	//Add Check so that modules with other modules connected to them
-	//cannot be removed
-
 	if (p_ray.m_latestPick >= 0)
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
@@ -506,6 +523,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		Entity* module = m_world->getEntity(p_ray.m_latestPick);
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
+
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
 			ComponentType::PhysicsBody));
 
@@ -527,6 +545,26 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+
+			//Ensure that the module is not connected to an enemy ship.
+			ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+			Entity* rayShip = sms->findShip(p_ray.m_clientIndex);
+			
+			Entity* parentShip = parent;
+			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+				ComponentType::ShipModule));
+
+			while (parentModule)
+			{
+				parentShip = m_world->getEntity(parentModule->m_parentEntity);
+				parentModule = static_cast<ShipModule*>(parentShip->getComponent(
+					ComponentType::ShipModule));
+			}
+
+			if (parentShip != rayShip)
+				return false;
+
+
 			ConnectionPointSet* cpsParent = static_cast<ConnectionPointSet*>(
 				m_world->getComponentManager()->getComponent(parent,
 				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));

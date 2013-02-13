@@ -9,9 +9,11 @@ MinigunModule::MinigunModule()
 	laserSightEntity=-1;
 }
 
-MinigunModule::MinigunModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection)
+MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirection )
 	: Component( ComponentType::MinigunModule )
 {
+	m_componentTypeId = ComponentType::MinigunModule;
+
 	muzzleOffset = p_muzzleOffset;
 	fireDirection = p_fireDirection;
 	laserSightEntity = -1;

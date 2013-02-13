@@ -104,7 +104,7 @@ void CompoundBody::DetachChild(RigidBody* pRigidBody)
 		}
 	}
 }
-float CompoundBody::GetMass()
+float CompoundBody::GetMass() const
 {
 	float m = 0;
 	for (unsigned int i = 0; i < mChildren.size(); i++)
@@ -150,7 +150,7 @@ void CompoundBody::AddImpulse(AglVector3 pImpulse)
 	if (!mStatic && !mTempStatic)
 		mVelocity += pImpulse * GetInvMass();
 }
-void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse)
+void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate)
 {
 	if (!mStatic && !mTempStatic)
 		mAngularVelocity += pAngularImpulse;

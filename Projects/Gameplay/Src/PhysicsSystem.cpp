@@ -189,7 +189,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
 			world *= offset.inverse();
 			*bodyId = m_physicsController->AddBox(world,
-				init->m_scale*2, 1, 
+				init->m_scale*2, init->m_mass, 
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
@@ -202,7 +202,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			AglMatrix::componentsToMatrix(world, AglVector3::one(), init->m_orientation, init->m_position);
 			world *= offset.inverse();
 			*bodyId = m_physicsController->AddSphere(world,
-				radius, 1, 
+				radius, init->m_mass, 
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
@@ -210,7 +210,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 		else if (init->m_type == BodyInitData::MESH && init->m_modelResource)
 		{
-			if (!init->m_static)
+			if (!init->m_static || init->m_mass != 1.0f)
 			{
 				//Not supported
 				int k = 0;
@@ -239,7 +239,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			body->setOffset(obb.world);
 
 			*bodyId = m_physicsController->AddBox(world,
-				obb.size, 1, 
+				obb.size, init->m_mass, 
 				init->m_velocity, 
 				init->m_angularVelocity, 
 				init->m_static,
@@ -276,8 +276,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		}
 
 		//Add the physics body to the entity map
-		while (static_cast<unsigned int>(body->m_id) >= m_entityMap.size())
-			m_entityMap.push_back(-1);
+		while (static_cast<unsigned int>(*bodyId) >= m_entityMap.size())
+			m_entityMap.push_back(*bodyId);
 
 		m_entityMap[body->m_id] = p_entity->getIndex();
 		

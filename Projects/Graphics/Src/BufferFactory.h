@@ -10,6 +10,7 @@
 #include "RenderSceneInfoCBuffer.h"
 #include "ShadowCBuffer.h"
 #include "PerShadowCBuffer.h"
+#include "SSAOCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
@@ -86,8 +87,9 @@ public:
 
 	Buffer<ShadowCBuffer>* createShadowBuffer();
 
-	Buffer<PerShadowCBuffer>* createPerShadowBuffer();
+	Buffer<PerShadowCBuffer>*	createPerShadowBuffer();
 
+	Buffer<SSAOBuffer>*		createSSAOBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.
@@ -126,6 +128,7 @@ protected:
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
+	UINT32 m_elementSize;
 };
 
 template<typename T>

@@ -1,38 +1,36 @@
 #include "EntityFactory.h"
 
-#include <AssemblageReader.h>
-#include <AssemblageException.h>
-#include <Entity.h>
+#include "AudioBackendSystem.h"
 #include "AudioListener.h"
+#include "BodyInitData.h"
 #include "CameraInfo.h"
 #include "ConnectionPointSet.h"
 #include "Extrapolate.h"
 #include "GameplayTags.h"
+#include "InterpolationComponent.h"
+#include "LightBlinker.h"
 #include "LightsComponent.h"
 #include "LookAtEntity.h"
+#include "MineLayerModule.h"
 #include "NetworkSynced.h"
+#include "ParticleEmitters.h"
+#include "ParticleRenderSystem.h"
+#include "PhysicsBody.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
 #include "PlayerScore.h"
+#include "PlayerState.h"
+#include "PositionalSoundSource.h"
 #include "RenderInfo.h"
+#include "RocketLauncherModule.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
 #include "Transform.h"
-#include "ParticleRenderSystem.h"
-#include "LightBlinker.h"
-#include "PhysicsBody.h"
-#include "BodyInitData.h"
 #include "Vibration.h"
-#include "PositionalSoundSource.h"
-#include "AudioBackendSystem.h"
-#include "InterpolationComponent.h"
-#include "PlayerState.h"
-#include "RocketLauncherModule.h"
-#include "MineLayerModule.h"
+#include <AssemblageException.h>
+#include <AssemblageReader.h>
+#include <Entity.h>
 #include <time.h>
-#include "BodyInitData.h"
-
-
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -90,6 +88,7 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 	{
 		meal = m_world->createEntity();
 		it->second->cook( meal );
+		meal->setName( p_entityName );
 	}
 
 	return meal;
@@ -235,7 +234,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
 	Component* component = NULL; // for temp usage
 
@@ -244,7 +243,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(5.0f, 100.0f);
+		component = new ShipFlyController(3.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
 
 		component = new ShipEditController();
@@ -253,14 +252,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 	
 		// hardcoded
-		ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
+		/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
 		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
 			AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
+		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);*/
 		// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
 		// because it was really weird to hear from the camera. This can of course
 		// be changed back if game play fails in this way, but it's at least more
@@ -294,13 +293,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		// add a myShip tag to the ship first!
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
-		// Create the camera
-		entity = m_world->createEntity();
-		component = new CameraInfo( m_world->getAspectRatio() );
-		entity->addComponent( ComponentType::CameraInfo, component );
-		entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
-		component = new Transform( -5.0f, 0.0f, -5.0f );
-		entity->addComponent( ComponentType::Transform, component );
+		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
+			ComponentType::TAG_MainCamera);
+		
 		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
 		entity->addComponent(ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
@@ -379,7 +374,24 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	m_world->addEntity(entity);
+	//AglParticleSystemHeader header;
+	//header.particleSize = AglVector2(2, 2);
+	//header.spawnFrequency = 10;
+	//header.spawnSpeed = 5.0f;
+	//header.spread = 0.0f;
+	//header.fadeOutStart = 2.0f;
+	//header.fadeInStop = 0.0f;
+	//header.particleAge = 2;
+	//header.maxOpacity = 1.0f;
+	//header.color = AglVector4(0, 1, 0, 1.0f);
+	//header.alignmentType = AglParticleSystemHeader::OBSERVER;
+
+	//ParticleEmitters* psComp = new ParticleEmitters();
+	//psComp->addParticleSystem( header );
+	//entity->addComponent( psComp );
+	//int particleSysIdx = psComp->addParticleSystem( ParticleSystemData( header, updateData, "minigun" ) );
+	
+	m_world->addEntity( entity );
 	return entity;
 }
 Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
@@ -457,39 +469,41 @@ Entity* EntityFactory::createLaserSightServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createParticleSystemClient(EntityCreationPacket p_packet)
 {
-	AglParticleSystemHeader h;
-	if (p_packet.meshInfo == 0)
-	{
-		h.particleSize = AglVector2(2, 2);
-		h.alignmentType = AglParticleSystemHeader::OBSERVER;
-		h.spawnFrequency = 10;
-		h.spawnSpeed = 5.0f;
-		h.spread = 0.0f;
-		h.fadeOutStart = 2.0f;
-		h.fadeInStop = 0.0f;
-		h.particleAge = 2;
-		h.maxOpacity = 1.0f;
-		h.color = AglVector4(0, 1, 0, 1.0f);
-	}
-	else
-	{
-		h.particleAge = 1;
-		h.spawnSpeed = 0.02f;
-		h.spread = 1.0f;
-		h.spawnFrequency = 10;
-		h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
-		h.fadeInStop = 0.5f;
-		h.fadeOutStart = 0.5f;
-		h.spawnOffset = 4.0f;
-		h.maxOpacity = 0.5f;
-		h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
-		h.particleSize = AglVector2(1.0f, 1.0f);
-	}
+	// DEPRECATED! //ML
+	//AglParticleSystemHeader h;
+	//if (p_packet.meshInfo == 0)
+	//{
+	//	h.particleSize = AglVector2(2, 2);
+	//	h.spawnFrequency = 10;
+	//	h.spawnSpeed = 5.0f;
+	//	h.spread = 0.0f;
+	//	h.fadeOutStart = 2.0f;
+	//	h.fadeInStop = 0.0f;
+	//	h.particleAge = 2;
+	//	h.maxOpacity = 1.0f;
+	//	h.color = AglVector4(0, 1, 0, 1.0f);
+	//	h.alignmentType = AglParticleSystemHeader::OBSERVER;
+	//}
+	//else
+	//{
+	//	h.particleSize = AglVector2(1.0f, 1.0f);
+	//	h.spawnFrequency = 10;
+	//	h.spawnSpeed = 0.02;
+	//	h.particleAge = 1;
+	//	h.spread = 1.0f;
+	//	h.fadeOutStart = 0.5f;
+	//	h.fadeInStop = 0.5f;
+	//	h.particleAge = 1;
+	//	h.maxOpacity = 0.5f;
+	//	h.color = AglVector4(0, 1.0f, 0.7f, 1.0f);
+	//	h.spawnOffset = 4.0f;
+	//	h.spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+	//}
 
-	ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
-		SystemType::ParticleRenderSystem ));
+	//ParticleRenderSystem* gfx = static_cast<ParticleRenderSystem*>(m_world->getSystem(
+	//	SystemType::ParticleRenderSystem ));
 	//gfx->addParticleSystem();
-	gfx->addParticleSystem(h, p_packet.networkIdentity);
+	//gfx->addParticleSystem(h, p_packet.networkIdentity);
 	return NULL;
 }
 Entity* EntityFactory::createParticleSystemServer(EntityCreationPacket p_packet)

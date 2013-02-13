@@ -2,6 +2,7 @@
 #include <AglReader.h>
 #include <AglScene.h>
 #include "MeshNameScriptParser.h"
+#include <AglLooseBspTree.h>
 
 
 ModelBaseFactory::ModelBaseFactory()
@@ -12,6 +13,8 @@ ModelBaseFactory::ModelBaseFactory()
 ModelBaseFactory::~ModelBaseFactory()
 {
 	delete m_modelResourceCache;
+	for (unsigned int i = 0; i < m_bspTrees.size(); i++)
+		delete m_bspTrees[i];
 }
 
 
@@ -278,7 +281,9 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 	{
 		if (trees[i]->getHeader().targetMesh == p_source.aglMesh->getHeader().id)
 		{
-			model->looseBspTree = trees[i]->clone();
+			AglLooseBspTree* tree = trees[i]->clone();
+			m_bspTrees.push_back(tree);
+			model->looseBspTree = tree;
 		}
 	}
 
@@ -321,8 +326,21 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					InstanceInstruction inst = {parsedAction.first.instanceSpecFilename,
 						cp->transform};
 					// DEBUGWARNING(( ("Found instance "+parsedAction.first.filename).c_str() ));
+
+					AglVector3 oldForward = inst.transform.GetForward();
+					AglVector3 oldUp = inst.transform.GetUp();
+					AglVector3 oldRight = inst.transform.GetRight();
+
+					inst.transform.SetLeft(-oldRight);
+					inst.transform.SetForward(oldUp);
+					inst.transform.SetUp(oldForward);
+					inst.transform *= AglMatrix::createScaleMatrix(AglVector3(1.0f,1.0f,-1.0f));
+					
+
 					p_model->instances.push_back(inst);
+
 					inst.transform *= p_offset;
+
 					p_outInstanceInstructions->push_back(inst);
 				}
 				break;
@@ -401,9 +419,13 @@ void ModelBaseFactory::readAndStoreParticleSystems( SourceData& p_source,
 	for (unsigned int n=0;n<particleSystems;n++)
 	{
 		AglParticleSystem* ps = p_source.scene->getParticleSystem(n);
+		ParticleSystemInstruction psIntr;
+		psIntr.particleSystem = *ps;
+		psIntr.textureFileName = p_source.scene->getName(ps->getHeader().textureNameIndex,
+														 true);
 		if (p_source.modelNumber==0) // add support for particle parent?
 		{
-			p_model->particleSystems.m_collection.push_back(*ps);
+			p_model->particleSystems.m_collection.push_back(psIntr);
 		}
 	}
 }

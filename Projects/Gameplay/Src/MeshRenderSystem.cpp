@@ -32,6 +32,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();
 	}
+//	DEBUGPRINT(( ("\nEntities rendered: "+toString(p_entities.size())).c_str() ));
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{

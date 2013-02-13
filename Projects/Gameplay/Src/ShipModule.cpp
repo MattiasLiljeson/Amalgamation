@@ -10,7 +10,8 @@ ShipModule::ShipModule()
 	m_value = 100;
 	m_health = 100.0f;
 	m_addedDamage = 0;
-	m_componentType = ComponentType::ShipModule;
+	m_rotationDirection = 0;
+	m_rotation = 0;
 }
 
 ShipModule::~ShipModule()
@@ -30,6 +31,8 @@ void ShipModule::init( vector<ComponentData> p_initData )
 		else if( p_initData[i].dataName == "m_health" )
 			p_initData[i].getData<float>(&m_health);
 	}
+	m_rotation = 0;
+	m_rotationDirection = 0;
 }
 
 void ShipModule::addDamageThisTick( float p_amount )

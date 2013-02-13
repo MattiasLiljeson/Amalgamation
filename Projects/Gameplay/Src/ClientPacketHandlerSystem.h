@@ -7,6 +7,8 @@
 #include "LevelPieceFileMapping.h"
 #include <queue>
 #include "EntityUpdatePacket.h"
+#include "ParticleSystemCreationInfo.h"
+#include "ParticleUpdatePacket.h"
 
 using namespace std;
 
@@ -59,6 +61,9 @@ private:
 	//Added by Anton
 	void handleBatch();
 
+	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
+	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
+
 private:
 	TcpClient* m_tcpClient;
 	LevelPieceFileMapping m_levelPieceMapping;
@@ -77,6 +82,7 @@ private:
 	unsigned int m_totalNumberOfStaticPropPacketsReceived;
 	vector< pair<int,int> > m_staticPropIdentitiesForAntTweakBar;
 	unsigned int m_lastBroadcastPacketIdentifier;
+
 	unsigned int m_totalBroadcastPacketLost;
 
 	queue<int> m_staticPropIdentities;

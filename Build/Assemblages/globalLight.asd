@@ -1,22 +1,22 @@
 e GlobalLight
 c LightsComponent
 d s 0:typeAsStr pointLight
-d f 0:scaleX 0
-d f 0:scaleY 0
-d f 0:scaleZ 0
-d f 0:range 0
-d f 0:attenuationX 0.8
-d f 0:attenuationY 0.0001
-d f 0:attenuationZ 0.0001
-d f 0:ambientR 0.7
-d f 0:ambientG 0.8
-d f 0:ambientB 0.7
-d f 0:diffuseR 0.6
-d f 0:diffuseG 0.6
-d f 0:diffuseB 0.5
-d f 0:specularR 0.000001
-d f 0:specularG 0.000001
-d f 0:specularB 0.000001
+d f 0:scaleX 3000
+d f 0:scaleY 3000
+d f 0:scaleZ 3000
+d f 0:range 3000
+d f 0:attenuationX 1.0
+d f 0:attenuationY 0.0000001
+d f 0:attenuationZ 0.00000001
+d f 0:ambientR 0.0
+d f 0:ambientG 0.0
+d f 0:ambientB 0.0
+d f 0:diffuseR 1.0
+d f 0:diffuseG 1.0
+d f 0:diffuseB 1.0
+d f 0:specularR 0.000000001
+d f 0:specularG 0.000000001
+d f 0:specularB 0.000000001
 
 c Transform
 d f m_scaleX 1

@@ -11,6 +11,7 @@ DirectInputFetcher::DirectInputFetcher(HINSTANCE _hInstance, HWND _hWnd,
 	m_hWnd = _hWnd;
 	m_onlyForeground = p_onlyForeground;
 	m_exclusive = p_exclusive;
+	m_mouseSensitivity = 1000.0f;
 
 	if( m_hWnd != 0 && m_hInstance != 0 )
 	{
@@ -97,6 +98,16 @@ int DirectInputFetcher::getMouseTravel(int axis)
 		return m_mouseTravel[axis];
 	else
 		return 0;
+}
+
+void DirectInputFetcher::setMouseSensitivity( const float p_sensitivity )
+{
+	m_mouseSensitivity = p_sensitivity;
+}
+
+const float DirectInputFetcher::getMouseSensitivity() const
+{
+	return m_mouseSensitivity;
 }
 
 /************************************************************************/

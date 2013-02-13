@@ -2,9 +2,9 @@ e SpotLight
 
 c LightsComponent
 d s 0:typeAsStr spot
-d f 0:scaleX 100
-d f 0:scaleY 1000
-d f 0:scaleZ 1000
+d f 0:scaleX 0
+d f 0:scaleY 0
+d f 0:scaleZ 0
 
 d f 0:translationX 0
 d f 0:translationY 0

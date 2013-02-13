@@ -108,5 +108,8 @@ void AntTweakBarSystem::feedInput()
 
 void AntTweakBarSystem::render()
 {
-	AntTweakBarWrapper::getInstance()->render();
+	if(this->getEnabled())
+	{
+		AntTweakBarWrapper::getInstance()->render();
+	}
 }

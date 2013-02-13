@@ -24,12 +24,11 @@ public:
 		InputBackendSystem* p_inputBackend );
 	~AntTweakBarSystem();
 
-	virtual void process();
-
-	void feedInput();
-
+	void process();
 	virtual void render();
 
+private:
+	void feedInput();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;

@@ -3,8 +3,7 @@
 #include <TcpClient.h>
 #include <Rocket/Core/Event.h>
 #include "LibRocketEventManagerSystem.h"
-
-ClientConnectToServerSystem* ClientConnectToServerSystem::m_selfPointer = NULL;
+#include "InputBackendSystem.h"
 
 ClientConnectToServerSystem::ClientConnectToServerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientConnectoToServerSystem ), EventHandler("join")
@@ -17,8 +16,6 @@ ClientConnectToServerSystem::ClientConnectToServerSystem( TcpClient* p_tcpClient
 	m_connectionAddress.octets3 = 0;
 	m_connectionAddress.octets4 = 1;
 	m_connectionAddress.port =	1337;
-
-	m_selfPointer = this;
 }
 
 ClientConnectToServerSystem::~ClientConnectToServerSystem()
@@ -39,34 +36,21 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		// Clears and hides all currently visible documents.
 		eventManagerSys->clearDocumentStack();
 	}
+	else
+	{
+		InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(
+			SystemType::InputBackendSystem));
+		if( inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 )
+		{
+			connectToNetworkAddress();
+		}
+	}
 }
 
 void ClientConnectToServerSystem::initialize()
 {
-
-	TwStructMember ipMembers[] = {
-		{ "Ip-part1", TW_TYPE_INT32, offsetof(NetworkAdress,octets1),"min=0 max=255"},
-		{ "Ip-part2", TW_TYPE_INT32, offsetof(NetworkAdress,octets2),"min=0 max=255"},
-		{ "Ip-part3", TW_TYPE_INT32, offsetof(NetworkAdress,octets3),"min=0 max=255"},
-		{ "Ip-part4", TW_TYPE_INT32, offsetof(NetworkAdress,octets4),"min=0 max=255"},
-		{ "Port",	  TW_TYPE_INT32, offsetof(NetworkAdress,port),"min=0"	},
-	};
-
-	TwType myStruct;
-
-	myStruct = TwDefineStruct("IP-address", ipMembers,5,sizeof(NetworkAdress),NULL,NULL);
-	AntTweakBarWrapper::getInstance()->addWriteVariable(AntTweakBarWrapper::NETWORK,
-		"Connection address",myStruct,&m_connectionAddress,"");
-
-	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::NETWORK),
-		"Connect to address", callbackConnectToNetworkAddress, NULL, "key=F4");
 }
 
-void TW_CALL ClientConnectToServerSystem::callbackConnectToNetworkAddress( void* p_clientData )
-{
-	if( m_selfPointer->getEnabled())
-		m_selfPointer->connectToNetworkAddress();
-}
 
 void ClientConnectToServerSystem::connectToNetworkAddress()
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "AglParticleSystem.h"
+#include "ParticleSystemInstruction.h"
 
 using namespace std;
 
@@ -21,5 +21,5 @@ using namespace std;
 
 struct ParticleSystemCollection
 {
-	vector<AglParticleSystem> m_collection;
+	vector<ParticleSystemInstruction> m_collection;
 };

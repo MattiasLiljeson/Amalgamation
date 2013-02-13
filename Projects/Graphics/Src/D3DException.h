@@ -53,7 +53,8 @@ public:
 	D3DException(ID3DBlob* p_errorBlob,const string &p_file,const string &p_func,int p_line)
 	{
 		char msg[1000];
-		strcpy_s(msg, sizeof(msg), (char*)p_errorBlob->GetBufferPointer());
+		char* bfrPtr = (char*)p_errorBlob->GetBufferPointer();
+		strcpy_s(msg, sizeof(msg), bfrPtr);
 		SetMsg(toString(msg),p_file,p_func,p_line);
 	}
 

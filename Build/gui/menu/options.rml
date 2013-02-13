@@ -2,16 +2,6 @@
 	<head>
 		<title>Options</title>
 		<link type="text/template" href="window.rml" />
-		<style>
-			<!--div#title_bar div#icon
-			{
-					display: none;
-			}-->
-			body.window
-			{
-				height: 400px;
-			}
-		</style>
 	</head>
 	<body id="options" template="window" onload="restore_settings" onshow="modal">
 		<form onsubmit="apply_settings; goto previous">

@@ -15,6 +15,7 @@
 #include <AglVector3.h>
 #include <Agl.h>
 #include <AntTweakBar.h>
+#include <ShlObj.h>
 
 using namespace std;
 
@@ -65,6 +66,7 @@ ShaderData* loadShaderBlob(string p_file);
 void saveShaderBlob(string p_file, ID3DBlob* p_blob);
 
 string openfilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
+string openFolder();
 string savefilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
 
 void removePath(string& s);

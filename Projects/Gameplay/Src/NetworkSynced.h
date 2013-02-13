@@ -27,11 +27,12 @@ public:
 		m_networkIdentity = -1;
 		m_owner = -1;
 		m_networkType = EntityType::NON_EXISTENT;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the private networkIdentity to argument's value.
-	/// Sets the private owner to argument's value.
+	/// Sets the private owner to argument's value. //Whats an "owner"? //ML
 	/// \param p_networkIdentity
 	/// \return 
 	///-----------------------------------------------------------------------------------
@@ -41,6 +42,7 @@ public:
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
 		m_networkType = EntityType::NON_EXISTENT;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
 	NetworkSynced( int p_networkIdentity, int p_owner,
@@ -50,6 +52,7 @@ public:
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
 		m_networkType = p_networkType;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
 	~NetworkSynced()
