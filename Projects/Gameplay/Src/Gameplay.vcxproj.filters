@@ -534,6 +534,9 @@
     <ClInclude Include="SkeletalAnimationSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -892,6 +895,9 @@
     </ClCompile>
     <ClCompile Include="SkeletalAnimationSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

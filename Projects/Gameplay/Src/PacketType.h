@@ -45,6 +45,7 @@ public:
 		ParticleUpdate,
 		ParticleSystemCreationInfo,
 		CameraControlPacket,
+		AnimationUpdatePacket,
 	};
 
 };
