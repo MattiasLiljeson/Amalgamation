@@ -56,7 +56,6 @@ class AglNodeAnimation
 private:
 	AglNodeAnimationHeader	m_header;		///< The header
 	AglKeyFrame*			m_keyFrames;		///< List of keyframes
-	unsigned int			m_lastEvaluated; ///< Last evaluated keyframe
 	AglScene*				m_scene;			///< Pointer to the scene context
 public:
 
