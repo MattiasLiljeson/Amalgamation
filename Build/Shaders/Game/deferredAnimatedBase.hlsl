@@ -30,6 +30,8 @@ struct VertexIn
 	
 	//Vertex Buffer 3
 	float4x4 instanceTransform : INSTANCETRANSFORM;
+	uint instanceId : SV_InstanceID;
+
 };
 struct VertexOut
 {
@@ -61,6 +63,7 @@ float4x4 getMatrix(int pIndex)
 
 VertexOut VS(VertexIn p_input)
 {
+	int id = p_input.instanceId;
 	float4 pos = float4(p_input.position, 1.0f);
 	
 	float4 norm = float4(p_input.normal, 0.0f);

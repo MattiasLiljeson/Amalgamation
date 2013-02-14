@@ -20,45 +20,57 @@ SlotInputControllerSystem::~SlotInputControllerSystem()
 }
 
 
-void SlotInputControllerSystem::handleSlotSelection()
+void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 {
-	for (unsigned int i = 0; i < 4; i++)
+	if (p_editMode)
 	{
-		if (m_keyboardModuleSlots[i]->getDelta() > 0 ||
-			m_gamepadModuleSlots[i]->getDelta() > 0)
+		if (m_keyboardRotateModuleSlots[0]->getDelta() > 0)
 		{
-			//Highlight slot
-			sendModuleSlotHighlight(i);
-			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-				m_world->getSystem(SystemType::AudioBackendSystem));
-			audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-				"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
+			sendSlotRotationAdd();
+		}
+		else if (m_keyboardRotateModuleSlots[1]->getDelta() > 0)
+		{
+			sendSlotRotationSub();
+		}
+		else if (m_keyboardRotateModuleSlots[0]->getDelta() < 0
+			|| m_keyboardRotateModuleSlots[1]->getDelta() < 0)
+		{
+			sendSlotRotationNone();
+		}
+		if (m_keyboardRotateModuleSlots[2]->getDelta() > 0)
+		{
+			sendSlot90Add();
+		}
+		else if (m_keyboardRotateModuleSlots[3]->getDelta() > 0)
+		{
+			sendSlot90Sub();
 		}
 	}
-	
-	if (m_mouseModuleActivation->getDelta() > 0 ||
-		m_gamepadModuleActivation->getDelta()>0)
+	else
 	{
-		sendSlotActivation();
-	}
-	else if (m_mouseModuleActivation->getDelta() < 0 ||
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			if (m_keyboardModuleSlots[i]->getDelta() > 0 ||
+				m_gamepadModuleSlots[i]->getDelta() > 0)
+			{
+				//Highlight slot
+				sendModuleSlotHighlight(i);
+				AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+					m_world->getSystem(SystemType::AudioBackendSystem));
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
+			}
+		}
+		if (m_mouseModuleActivation->getDelta() > 0 ||
+			m_gamepadModuleActivation->getDelta()>0)
+		{
+			sendSlotActivation();
+		}
+		else if (m_mouseModuleActivation->getDelta() < 0 ||
 			m_gamepadModuleActivation->getDelta() < 0)
-	{
-		sendSlotDeactivation();
-	}
-
-	if (m_keyboardRotateModuleSlots[0]->getDelta() > 0)
-	{
-		sendSlotRotationAdd();
-	}
-	else if (m_keyboardRotateModuleSlots[1]->getDelta() > 0)
-	{
-		sendSlotRotationSub();
-	}
-	else if (m_keyboardRotateModuleSlots[0]->getDelta() < 0
-				|| m_keyboardRotateModuleSlots[1]->getDelta() < 0)
-	{
-		sendSlotRotationNone();
+		{
+			sendSlotDeactivation();
+		}
 	}
 }
 
@@ -133,6 +145,20 @@ void SlotInputControllerSystem::sendSlotRotationNone()
 
 	m_client->sendPacket( packet.pack() );
 }
+void SlotInputControllerSystem::sendSlot90Sub()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ROTATE_90_SUB;
+
+	m_client->sendPacket( packet.pack() );
+}
+void SlotInputControllerSystem::sendSlot90Add()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::ROTATE_90_ADD;
+
+	m_client->sendPacket( packet.pack() );
+}
 
 void SlotInputControllerSystem::initKeyboard()
 {
@@ -149,6 +175,10 @@ void SlotInputControllerSystem::initKeyboard()
 		InputHelper::KeyboardKeys_NUMPAD_7);
 	m_keyboardRotateModuleSlots[1] = m_inputBackend->getControlByEnum(
 		InputHelper::KeyboardKeys_NUMPAD_8);
+	m_keyboardRotateModuleSlots[2] = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_NUMPAD_4);
+	m_keyboardRotateModuleSlots[3] = m_inputBackend->getControlByEnum(
+		InputHelper::KeyboardKeys_NUMPAD_5);
 }
 
 

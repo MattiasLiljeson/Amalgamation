@@ -17,6 +17,7 @@
 /// Detailed description.....
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
+
 class ServerPickingSystem: public EntitySystem
 {
 public:
@@ -29,6 +30,11 @@ public:
 	void setRay(int p_index, AglVector3 p_o, AglVector3 p_d);
 	void setEnabled(int p_index, bool p_value);
 	void setReleased(int p_index);
+
+	//Rotation event
+	void addRotationEvent(int direction, int client);
+	void add90RotationEvent(int direction, int client);
+
 private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;
@@ -41,6 +47,9 @@ private:
 	AglVector3 closestConnectionPoint(AglVector3 p_position, Entity* p_entity, PickComponent& p_pc);
 	void attemptConnect(PickComponent& p_ray);
 	bool attemptDetach(PickComponent& p_ray);
-	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset);
+	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation = 0);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
+
+	//Rotation of modules
+	void rotateModule(Entity* p_ship, int p_dir);
 };
