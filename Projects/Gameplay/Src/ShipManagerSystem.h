@@ -18,14 +18,7 @@ class ShipManagerSystem : public EntitySystem
 {
 public:
 	ShipManagerSystem();
-	~ShipManagerSystem();
-
-	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
-
-	vector<Entity*> getShips();
+	const vector<Entity*>& getShips() const;
 	Entity* findShip(int p_ownerId);
-private:
-	vector<Entity*> m_ships;
 
 };
