@@ -12,6 +12,7 @@
 #include "NetworkSynced.h"
 #include "ShipModule.h"
 #include "ShipManagerSystem.h"
+#include "ModuleHelper.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -602,7 +603,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
 				ComponentType::ShipModule));
 
-			FindParentShip(parentShip,parentModule);
+			ModuleHelper::FindParentShip(m_world,&parentShip,&parentModule);
 
 			if (parentShip != rayShip)
 				return false;
@@ -658,14 +659,4 @@ void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleT
 	fxPacket.angle = p_moduleTransform->getRotation();
 
 	m_effectbuffer->enqueueEffect(p_player,fxPacket);
-}
-
-void ServerPickingSystem::FindParentShip( Entity* p_inoutShip, ShipModule* p_inoutModule )
-{
-	while (p_inoutModule)
-	{
-		p_inoutShip = m_world->getEntity(p_inoutModule->m_parentEntity);
-		p_inoutModule = static_cast<ShipModule*>(p_inoutShip->getComponent(
-			ComponentType::ShipModule));
-	}
 }

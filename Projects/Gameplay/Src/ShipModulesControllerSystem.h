@@ -4,6 +4,10 @@
 #include "AglVector3.h"
 #include "ConnectionPointSet.h"
 
+class Transform;
+class TcpServer;
+class OnHitEffectBufferSystem;
+
 // =======================================================================================
 //                                      ShipModulesControllerSystem
 // =======================================================================================
@@ -31,7 +35,8 @@ struct RotationState
 class ShipModulesControllerSystem: public EntitySystem
 {
 public:
-	ShipModulesControllerSystem();
+	ShipModulesControllerSystem(TcpServer* p_server,
+		OnHitEffectBufferSystem* p_effectBuffer);
 	~ShipModulesControllerSystem();
 
 	virtual void initialize();
@@ -57,6 +62,7 @@ private:
 
 	void rotateModules(Entity* p_ship);
 	void setRotationState(Entity* p_ship, int p_state);
+	void setScoreEffect(int p_networkOwner, Transform* p_moduleTransform, int p_score);
 
 private:
 	struct HighlightEvent
@@ -72,4 +78,7 @@ private:
 
 	vector<RotationState> m_toSetRotationState;
 
+	// system dependencies
+	TcpServer* m_server;
+	OnHitEffectBufferSystem* m_effectbuffer;
 };

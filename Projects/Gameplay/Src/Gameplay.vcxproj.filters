@@ -537,6 +537,7 @@
     <ClInclude Include="ScoreWorldVisualizerSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -902,5 +903,6 @@
     <ClCompile Include="ScoreWorldVisualizerSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleHelper.cpp" />
   </ItemGroup>
 </Project>

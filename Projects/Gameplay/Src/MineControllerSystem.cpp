@@ -55,7 +55,7 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 						if (hitModule)
 						{
 //							hitModule->m_health = 0;
-							hitModule->addDamageThisTick(101.0f); // Above max hp.
+							hitModule->addDamageThisTick(101.0f,mine->m_ownerId); // Above max hp.
 						}
 					}
 				}

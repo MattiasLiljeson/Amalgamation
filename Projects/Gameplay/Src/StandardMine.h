@@ -18,6 +18,7 @@ class StandardMine: public Component
 {
 public:
 	float m_age;
+	int m_ownerId;
 	StandardMine();
 	~StandardMine();
 private:

@@ -47,7 +47,6 @@ private:
 	bool attemptDetach(PickComponent& p_ray);
 
 	void setScoreEffect(Entity* p_player, Transform* p_moduleTransform, int p_score);
-	void FindParentShip(Entity* p_inoutShip, ShipModule* p_inoutModule);
 
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);

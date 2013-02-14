@@ -30,8 +30,10 @@ public:
 	virtual void process();
 
 	void enqueueEffect(Entity* p_entity, OnHitScoreEffectPacket& p_packet);
+	void enqueueEffect(int p_networkOwnerId, OnHitScoreEffectPacket& p_packet);
 protected:
 private:
-	queue<pair<Entity*,OnHitScoreEffectPacket>> m_queue;
+	queue<pair<Entity*,OnHitScoreEffectPacket>> m_queue_entity;
+	queue<pair<int,OnHitScoreEffectPacket>> m_queue_netowner;
 	TcpServer* m_server;
 };

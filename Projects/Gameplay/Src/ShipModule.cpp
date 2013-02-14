@@ -10,7 +10,6 @@ ShipModule::ShipModule()
 	m_active = false;
 	m_value = 100;
 	m_health = 100.0f;
-	m_addedDamage = 0;
 	m_rotationDirection = 0;
 	m_rotation = 0;
 }
@@ -36,25 +35,26 @@ void ShipModule::init( vector<ComponentData> p_initData )
 	m_rotationDirection = 0;
 }
 
-void ShipModule::addDamageThisTick( float p_amount )
+void ShipModule::addDamageThisTick( float p_amount,int p_perpClientId )
 {
-	m_addedDamage += p_amount;
+	m_damageAcc.accumulatedDamage += p_amount;
+	m_damageAcc.latestPerp = p_perpClientId;
 }
 
 void ShipModule::applyDamage()
 {
-	m_health -= m_addedDamage;
-	m_addedDamage = 0;
+	m_health -= m_damageAcc.accumulatedDamage;
+	m_damageAcc.reset();
 }
 
 void ShipModule::resetDamage()
 {
-	m_addedDamage = 0;
+	m_damageAcc.reset();
 }
 
 bool ShipModule::damageTaken() const
 {
-	return m_addedDamage > 0;
+	return m_damageAcc.accumulatedDamage > 0;
 }
 
 const bool& ShipModule::getActive() const
@@ -83,4 +83,9 @@ void ShipModule::deactivate()
 void ShipModule::addActivationEvent( ModuleEvent* p_event )
 {
 	m_activationEvents.push_back( p_event );
+}
+
+int ShipModule::getLatestPerpetratorClient()
+{
+	return m_damageAcc.latestPerp;
 }

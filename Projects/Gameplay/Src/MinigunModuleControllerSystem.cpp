@@ -17,6 +17,7 @@
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleEmitters.h"
 #include "ShipConnectionPointHighlights.h"
+#include "ModuleHelper.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -45,6 +46,9 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 		ShipModule* module = static_cast<ShipModule*>(
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::ShipModule)));
+
+		// get owner for damage set
+		int ownerId = ModuleHelper::FindParentShipClientId(m_world, &module);
 
 		handleParticleSystem(p_entities[i]);
 		handleLaserSight(p_entities[i]);
@@ -79,7 +83,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 							ShipModule* hitModule = static_cast<ShipModule*>(hitE->getComponent(ComponentType::ShipModule));
 							if (hitModule && hitModule != module)
 							{
-								hitModule->m_health -= 100 * dt;
+								hitModule->addDamageThisTick(100.0f*dt,ownerId);
 							}
 						}
 					}
