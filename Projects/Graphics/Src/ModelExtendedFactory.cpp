@@ -8,7 +8,6 @@
 
 #define FORCE_VS_DBG_OUTPUT
 
-
 // Primitives
 const string& ModelExtendedFactory::primitiveCubeName="P_cube";
 const string& ModelExtendedFactory::primitiveSphereName="P_sphere";
