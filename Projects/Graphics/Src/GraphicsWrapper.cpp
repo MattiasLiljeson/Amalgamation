@@ -107,6 +107,8 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_renderSceneInfoBuffer;
 	delete m_perShadowBuffer;
 	delete m_gpuTimer;
+	SAFE_RELEASE(m_boneMatrixResource);
+	delete m_boneMatrixTexture;
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)

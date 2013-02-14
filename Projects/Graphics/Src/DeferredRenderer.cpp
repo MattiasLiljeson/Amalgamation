@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "DeferredAnimatedBaseShader.h"
 #include "LightShader.h"
 #include "GUIShader.h"
 
@@ -70,6 +71,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_ssaoShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
+	delete m_animatedBaseShader;
 }
 
 void DeferredRenderer::clearBuffers()
