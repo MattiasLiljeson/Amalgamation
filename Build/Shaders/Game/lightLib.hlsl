@@ -76,12 +76,14 @@ float3 parallelLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float
 		litColor += diffuseFactor * surface.diffuse.xyz * light.diffuse.xyz;
 		litColor += specFactor * surface.specular.xyz * light.specular.xyz;
 	}
-
+	return float3(1,1,1);
 	return litColor;
 }
 
 float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
 {	
+
+
 	//return surface.diffuse.xyz;
 
 	// lulz tonemapping
@@ -91,25 +93,34 @@ float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 n
 	float3 lightVec = light.pos - pixelPos;
 	
 	// The distance from surface to light.
-	float d = length( lightVec );
+	float dist = length( lightVec );
 	
-	if( d > light.range )
+	if( dist > light.range )
 	{
-		return light.ambient.xyz;
+		//return float3(0,0.2,0);
+		//return float3(0.0026,0.00035,0.0021);
+		return float3(0,0,0);
+		//return light.ambient.xyz;
 		//float3 green = float3(0.0f, 1.0f, 0.0f);
 		//return green;
 	}
-	
 	// Normalize the light vector.
-	lightVec /= d;
+	lightVec /= dist;
 	
 	// Add the ambient light term.
 	float3 litColor = float3( 0.0f, 0.0f, 0.0f );
-	litColor += surface.diffuse.xyz * light.ambient.xyz;
-	
+
+	//litColor += surface.diffuse.xyz * light.ambient.xyz;
+	//litColor += surface.diffuse.xyz * float3(0.013,0.00035,0.010);
+
 	// Add diffuse and specular term, provided the surface is in
 	// the line of site of the light.
+
+
+	//float attenuation = 1.0f / light.range;
+	//attenuation = attenuation * pow(clampedCosine, 
 	
+	//attenuation = 1.0f / (1.0f +  light.attenuation.y*dist+ light.attenuation.z*dist*dist)*2;
 	float diffuseFactor = dot( lightVec, normal );
 	[branch]
 	if( diffuseFactor > 0.0f )
@@ -119,13 +130,22 @@ float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 n
 		float3 toEye = normalize( eyePos - pixelPos );
 		float3 R = reflect( -lightVec, normal );
 		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
-		
+		float attenuation;
+		attenuation = ((light.range*light.range / ( light.range*light.range + light.attenuation.z*R*R)));
+		//float lightIntensity
 		// diffuse and specular terms
-		litColor += diffuseFactor * (surface.diffuse.rgb * light.diffuse.rgb);
-		litColor += specFactor * (surface.specular.rgb * light.specular.rgb);
+		litColor += saturate(diffuseFactor * (surface.diffuse.rgb * light.diffuse.rgb* attenuation));
+		litColor += saturate(specFactor * (surface.specular.rgb * light.specular.rgb* attenuation));
 	}
+	//litColor = attenuation * litColor;
+	//litColor = float3(0,0,0);
+	return litColor;
 	// attenuate
-	return litColor / dot( light.attenuation, float3(1.0f, d, d*d) );
+	//litColor = litColor / dot( float3(0,0.00,0.00005), float3(1.0f, dist, dist*dist) );
+	litColor = litColor / dot( float3(0,0.00,0.000015), float3(1.0f, dist, dist*dist) );
+	
+	//litColor = litColor / dot( light.attenuation, float3(1.0f, dist, dist*dist) );
+	return litColor;
 }
 
 float3 spotLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )

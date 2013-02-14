@@ -44,3 +44,10 @@ static const string& SETTINGSPATH = "Assets/Settings/";
 /************************************************************************/
 static const int MAXPLAYERS = 8;
 static const int MAXSHADOWS = 2;
+
+/************************************************************************/
+/* HUD																	*/
+/************************************************************************/
+static const char* TIMERELEMENT = "time";
+static const char* SCOREELEMENT = "score";
+static const char* MAPPINGELEMENT = "mapping";

@@ -23,6 +23,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		ClientInfo,
+		CircularMovement,
 		Extrapolate,
 		InterpolationComponent,
 		PhysicsBody,
@@ -51,6 +52,7 @@ public:	//Enums
 		SpeedBoosterModule,
 		MinigunModule,
 		ShieldModule,
+		ShieldPlate,
 		MineLayerModule,
 		StandardMine,
 		StandardRocket,
@@ -65,6 +67,7 @@ public:	//Enums
 		ParticleSystemServerComponent,
 		DebugMove,
 		PlayerState,
+		GameState,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

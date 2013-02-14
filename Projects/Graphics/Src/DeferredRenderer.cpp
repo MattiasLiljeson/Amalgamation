@@ -67,6 +67,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
+	delete m_ssaoShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 }
@@ -372,9 +373,9 @@ ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderT
 
 void DeferredRenderer::initSSAO()
 {
-	m_ssaoData.scale	= 1.5f;
-	m_ssaoData.bias		= 0.2f;
+	m_ssaoData.scale	= 4.0f;
+	m_ssaoData.bias		= 0.242f;
 	m_ssaoData.intensity= 1.0f;
-	m_ssaoData.sampleRadius=0.3f;
+	m_ssaoData.sampleRadius=0.02f;
 	m_ssaoData.epsilon  = 0.0f;
 }

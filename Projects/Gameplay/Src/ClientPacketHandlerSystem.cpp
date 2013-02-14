@@ -5,7 +5,6 @@
 #include "NetSyncedPlayerScoreTrackerSystem.h"
 #include "PhysicsBody.h"
 #include <AntTweakBarWrapper.h>
-#include <AntTweakBarWrapper.h>
 #include <Component.h>
 #include <ComponentType.h>
 #include <Entity.h>
@@ -19,10 +18,7 @@
 #include "CameraInfo.h"
 #include "ConnectionPointSet.h"
 #include "Control.h"
-#include "EntityCreationPacket.h"
-#include "EntityDeletionPacket.h"
 #include "EntityType.h"
-#include "EntityUpdatePacket.h"
 #include "Extrapolate.h"
 #include "GameplayTags.h"
 #include "HudElement.h"
@@ -35,7 +31,6 @@
 #include "PacketType.h"
 #include "ParticleRenderSystem.h"
 #include "ParticleSystemEmitter.h"
-#include "ParticleUpdatePacket.h"
 #include "PickComponent.h"
 #include "PingPacket.h"
 #include "PlayerCameraController.h"
@@ -45,25 +40,36 @@
 #include "RenderInfo.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
-#include "SpawnSoundEffectPacket.h"
 #include "TimerSystem.h"
 #include "Transform.h"
-#include "UpdateClientStatsPacket.h"
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "ShipModule.h"
+
+// Packets
+#include "EntityCreationPacket.h"
+#include "EntityDeletionPacket.h"
+#include "EntityUpdatePacket.h"
+#include "ParticleSystemCreationInfo.h"
+#include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
+#include "SpawnSoundEffectPacket.h"
+#include "UpdateClientStatsPacket.h"
+#include "ParticleUpdatePacket.h"
+#include "ModuleTriggerPacket.h"
 
 // Debug
 #include "EntityFactory.h"
 #include "LightSources.h"
 #include "LightsComponent.h"
-#include "ParticleSystemsComponent.h"
 #include "ParticleSystemCreationInfo.h"
+#include "ParticleSystemsComponent.h"
 #include "PlayersWinLosePacket.h"
 #include "RemoveSoundEffectPacket.h"
 #include <DebugUtil.h>
-#include <ToString.h>
 #include <ParticleSystemAndTexture.h>
+#include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -295,6 +301,28 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		else if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
+		}
+		else if(packetType == (char)PacketType::ModuleTriggerPacket)
+		{
+			ModuleTriggerPacket data;
+			data.unpack(packet);
+			Entity* moduleEntity = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.moduleNetsyncIdentity);
+			ShipModule* shipModule = static_cast<ShipModule*>(moduleEntity->getComponent(
+				ComponentType::ShipModule));
+			if(shipModule)
+			{
+				// Call client side activation/deactivation event.
+				if(data.moduleTrigger)
+				{
+					shipModule->activate();
+				}
+				else
+				{
+					shipModule->deactivate();
+				}
+			}
 		}
 		else
 		{

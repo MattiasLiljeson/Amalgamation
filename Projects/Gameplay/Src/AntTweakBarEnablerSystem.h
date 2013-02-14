@@ -1,37 +1,26 @@
 #pragma once
 #include <EntitySystem.h>
-#include <RenderInterface.h>
-
-class GraphicsBackendSystem;
+class AntTweakBarSystem;
 class InputBackendSystem;
-
 // =======================================================================================
-//                                      AntTweakBarSystem
+// AntTweakBarEnablerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief...
 ///        
-/// # AntTweakBarSystem
-/// Detailed description.....
-/// Created on: 15-1-2013 
+/// # AntTweakBarEnablerSystem
+/// Detailed description...
+/// Created on: 12-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class AntTweakBarSystem : public EntitySystem, public RenderInterface
+class AntTweakBarEnablerSystem: public EntitySystem
 {
 public:
-	AntTweakBarSystem( GraphicsBackendSystem* p_gfxBackend,
-		InputBackendSystem* p_inputBackend );
-	~AntTweakBarSystem();
-
+	AntTweakBarEnablerSystem();
+	void initialize();
 	void process();
-	virtual void render();
 
 private:
-	void feedInput();
-
-private:
-	GraphicsBackendSystem* m_gfxBackend;
+	AntTweakBarSystem* m_antSystem;
 	InputBackendSystem* m_inputBackend;
 };
-

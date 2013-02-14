@@ -29,7 +29,8 @@ public:
 		WelcomePacket,
 		UpdateClientStats,
 		PlayerWinLose,
-		SpawnSoundEffect,
+		SpawnSoundEffect, // NOTE: (Johan) Should rather be replaced than be used more. (Move sound to client only)
+		ModuleTriggerPacket,
 		TransformPacket,
 		RemoveSoundEffect,
 
