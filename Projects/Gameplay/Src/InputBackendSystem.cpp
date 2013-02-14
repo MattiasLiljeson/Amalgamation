@@ -239,6 +239,31 @@ Control* InputBackendSystem::getControlByEnum( InputHelper::Xbox360Analogs p_ana
 	return m_inputManager->getControl(m_xboxAnalogIdxsbyEnum[p_analog]);
 }
 
+const double InputBackendSystem::getDeltaByEnum( InputHelper::KeyboardKeys p_key )
+{
+	return getControlByEnum(p_key)->getDelta();
+}
+
+const double InputBackendSystem::getDeltaByEnum( InputHelper::MouseButtons p_btn )
+{
+	return getControlByEnum(p_btn)->getDelta();
+}
+
+const double InputBackendSystem::getDeltaByEnum( InputHelper::MouseAxes p_axis )
+{
+	return getControlByEnum(p_axis)->getDelta();
+}
+
+const double InputBackendSystem::getDeltaByEnum( InputHelper::Xbox360Digitals p_digital )
+{
+	return getControlByEnum(p_digital)->getDelta();
+}
+
+const double InputBackendSystem::getDeltaByEnum( InputHelper::Xbox360Analogs p_analog )
+{
+	return getControlByEnum(p_analog)->getDelta();
+}
+
 void InputBackendSystem::setControllerVibration(float p_leftMotor, float p_rightMotor)
 {
 	XInputFetcher* xinput = m_inputManager->getXInputFetcher();

@@ -39,6 +39,7 @@ void DisplayPlayerScoreSystem::process()
 	{
 		if (m_playerEntity)
 		{
+			/*
 			// TODO: refactoring... This is maybe some weird shit I write here // Alex
 			auto score	= static_cast<PlayerScore*>
 				(m_playerEntity->getComponent( ComponentType::PlayerScore ));
@@ -54,6 +55,7 @@ void DisplayPlayerScoreSystem::process()
 					(hudEntity->getComponent( ComponentType::HudElement ));
 				hud->setValue("Score:&nbsp;" + toString(score->getTotalScore()));
 			}
+			*/
 		}
 	}
 }

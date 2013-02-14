@@ -3,11 +3,12 @@
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
 #include "SpawnPointCollection.h"
-#include "ParticleSystemCollection.h"
+#include "ParticleSystemInstructionCollection.h"
 #include "LightDataCollection.h"
 #include "InstanceInstruction.h"
 #include "ParticleSystemInstruction.h"
 #include <AglLooseBspTree.h>
+#include <AglScene.h>
 
 // =======================================================================================
 //                                    ModelResource
@@ -26,7 +27,7 @@ struct ModelResource
 {
 public:
     ModelResource() {meshId=-1; name="noname"; 
-					 looseBspTree = NULL; transform=AglMatrix::identityMatrix();}
+					 looseBspTree = NULL; transform=AglMatrix::identityMatrix(); scene = NULL;}
 
     ModelResource(const ModelResource& p_copy)
     {
@@ -40,10 +41,11 @@ public:
         transform = p_copy.transform;
 		instances = p_copy.instances;
 		looseBspTree = p_copy.looseBspTree;
+		scene = p_copy.scene;
     }	
 
     ModelResource(const string& p_name) {transform=AglMatrix::identityMatrix(); 
-										 meshId=-1; name=p_name; looseBspTree = NULL;}
+										 meshId=-1; name=p_name; looseBspTree = NULL; scene = NULL;}
     virtual ~ModelResource()
 	{
 	}
@@ -54,8 +56,9 @@ public:
     ConnectionPointCollection	connectionPoints;
 	SpawnPointCollection		spawnPoints;
 	LightDataCollection			lightCollection;
-    ParticleSystemCollection	particleSystems;
+    ParticleSystemInstructionCollection	particleSystems;
     AglMatrix					transform;
     vector<InstanceInstruction> instances;
     AglLooseBspTree*			looseBspTree;
+	AglScene*					scene;
 };

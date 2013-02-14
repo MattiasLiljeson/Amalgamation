@@ -1,6 +1,16 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
 
+static const float blurFilter3[3][3] = {{0.01f,0.08f,0.01f},
+									   {0.08f,0.64f,0.01f},
+									   {0.01f,0.08f,0.01f}};
+
+static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
+										{0.02f,0.04f,0.08f,0.04f,0.02f},
+										{0.04f,0.08f,0.16f,0.08f,0.04f},
+										{0.02f,0.04f,0.08f,0.04f,0.02f},
+										{0.01f,0.02f,0.04f,0.02f,0.01f}};
+
 Texture2D gLightPass 		: register(t0);
 Texture2D gNormalBuffer		: register(t1);
 Texture2D depthBuffer		: register(t2);
@@ -61,7 +71,7 @@ VertexOut VS(VertexIn p_input)
 
 float4 PS(VertexOut input) : SV_TARGET
 {
-	float4 lightColor = float4(gLightPass.Sample(pointSampler,input.texCoord).rgb,1.0f);
+	float4 lightColor = gLightPass.Sample(pointSampler,input.texCoord);
 	float depth = depthBuffer.Sample(pointSampler, input.texCoord).r;
 	float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
@@ -70,40 +80,28 @@ float4 PS(VertexOut input) : SV_TARGET
 	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
 	float2 rand 	= getRandomVector(input.texCoord);
 	
+	uint3 index;
+	index.xy = input.position.xy;
+	index.z = 0;
 	float ao = 0.0f;
-	
-	float radius = sampleRadius/depth;
-	
-	const float2 vec[4] = { float2 (1,0), float2 (-1,0),
-							float2 (0,1), float2 (0,-1)};
-	
-	const int iterations = 4;
-	for ( int i = 0; i < iterations; i++)
+
+	//ao = lightColor.a;
+	float aoMult = 1.0f;
+	for(int x=-2;x<3;x++)
 	{
-		float2 coord1 = reflect(vec[i], rand)*radius;
-		float2 coord2 = float2 (coord1.x*0.707f - coord1.y*0.707f,
-								coord1.x*0.707f + coord1.y*0.707f);
-								
-		ao += doAmbientOcclusion(input.texCoord, coord1*0.25f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord2*0.5f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord1*0.75f, position, normal);
-		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
+		for(int y=-2;y<3;y++)
+		{
+			ao += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+		}
 	}
-	
-	ao/=(float)iterations*4.0f;
-	
-	//ao -= 0.01f;
-	lightColor = float4(lightColor.r-ao, lightColor.g-ao, lightColor.b-ao, lightColor.a);
-	
-	float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)) );
-	float4 fog = float4(0.2f,0.0745f,0.0f,0.0f);
-	// float fogDepth = length(position-gCameraPos) / ((1200.0f)-(300.0f));
-	// float4 fog = fogDepth*float4(0.5f,0.5f,0.5f,0.0f);
-	
-	//depth = pow(depth,99);
-	//return randomNormals;
-	//return float4(depth,depth,depth,1.0f);
-	return lerp(lightColor,fog,saturate(fogDepth)); // can do this when light is separate from diffuse
-	// return lightColor+fog;
-	// return float4(1-ao,1-ao,1-ao,1.0f);
+
+	//return float4( ao, ao, ao, 1.0f );
+	//lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
+	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
+	float linDepth = length(position-gCameraPos) / ((1000.0f)-(300.0f));
+	float4 fog = linDepth*float4(0.2f,0.4f,0.3f,0.0f);
+	//float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)));
+	//float4 fog = float4(0.2f,0.0745f,0.0f,0.0f);
+	//return lerp(lightColor,fog,saturate(fogDepth)); // can do this when light is separate from diffuse
+	return lightColor+fog;
 }

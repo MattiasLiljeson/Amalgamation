@@ -8,6 +8,9 @@ cbuffer ConstBuffer
 	float TextureScale;
 };
 
+Texture1D boneTexture : register(t0);
+SamplerState pointSampler : register(s0);
+
 struct VIn
 {
 	float3 position : POSITION;
@@ -30,9 +33,22 @@ struct VOut
 	float2 texCoord     : TEXCOORD;
 };
 
+float4x4 getMatrix(int pIndex)
+{
+	pIndex = pIndex * 4;
+	float4 row1 = boneTexture.Load(int2(pIndex, 0));
+	float4 row2 = boneTexture.Load(int2(pIndex+1, 0));
+	float4 row3 = boneTexture.Load(int2(pIndex+2, 0));
+	float4 row4 = boneTexture.Load(int2(pIndex+3, 0));
+
+	float4x4 bonemat = float4x4(row1, row2, row3, row4);
+	return bonemat;
+}
+
 VOut VShader(VIn pInput)
 {
 	float4 pos = float4(pInput.position, 1.0f);
+	
 	float4 norm = float4(pInput.normal, 0.0f);
     float4 tan = float4(pInput.tangent, 0.0f);
 	float4 bin = float4(pInput.bitangent, 0.0f);
@@ -41,25 +57,26 @@ VOut VShader(VIn pInput)
 	float4 n = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 t = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 b = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	
     [unroll]
 	for (int i = 0; i < 4; i++)
 	{
-        //if (pInput.weights1[i] == 0)
-            //break;
-		p1 += (pInput.weights1[i] * mul(pos, Palette[pInput.indices1[i]])).xyz;
-		n += pInput.weights1[i] * mul(norm, Palette[pInput.indices1[i]]);
-        t += pInput.weights1[i] * mul(tan, Palette[pInput.indices1[i]]);
-		b += pInput.weights1[i] * mul(bin, Palette[pInput.indices1[i]]);
+		float4x4 bonemat = getMatrix(pInput.indices1[i]);
+	
+		p1 += (pInput.weights1[i] * mul(pos, bonemat)).xyz;
+		n += pInput.weights1[i] * mul(norm, bonemat);
+        t += pInput.weights1[i] * mul(tan, bonemat);
+		b += pInput.weights1[i] * mul(bin, bonemat);
 	}
     [unroll]
 	for (int i = 0; i < 4; i++)
 	{
-        //if (pInput.weights2[i] == 0)
-            //break;
-		p1 += (pInput.weights2[i] * mul(pos, Palette[pInput.indices2[i]])).xyz;
-		n += pInput.weights2[i] * mul(norm, Palette[pInput.indices2[i]]);
-        t += pInput.weights2[i] * mul(tan, Palette[pInput.indices2[i]]);
-		b += pInput.weights2[i] * mul(bin, Palette[pInput.indices2[i]]);
+		float4x4 bonemat = getMatrix(pInput.indices2[i]);
+		
+		p1 += (pInput.weights2[i] * mul(pos, bonemat)).xyz;
+		n += pInput.weights2[i] * mul(norm, bonemat);
+        t += pInput.weights2[i] * mul(tan, bonemat);
+		b += pInput.weights2[i] * mul(bin, bonemat);
 	}
 
 	VOut vOut;

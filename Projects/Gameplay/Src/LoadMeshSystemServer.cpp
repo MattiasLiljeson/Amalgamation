@@ -87,3 +87,7 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 		p_entity->addComponent( ComponentType::BodyInitData, b);
 	}
 }
+void LoadMeshSystemServer::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)
+{
+	//Do nothing. No animation on server
+}

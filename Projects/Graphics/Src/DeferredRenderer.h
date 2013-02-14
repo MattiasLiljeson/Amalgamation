@@ -9,6 +9,7 @@
 class BufferFactory;
 class ShaderBase;
 class DeferredBaseShader;
+class DeferredAnimatedBaseShader;
 class DeferredComposeShader;
 class LightShader;
 class GUIShader;
@@ -38,7 +39,7 @@ public:
 	/* See wiki for more details.											*/
 	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
 	/************************************************************************/
-	const static int BASESHADERS = 3;
+	const static int BASESHADERS = 4;
 	const static int RT0 = 0;
 	const static int RT1 = 1;
 	const static int RT2 = 2;
@@ -119,7 +120,11 @@ public:
 
 	DeferredBaseShader* getDeferredBaseShader();
 
+	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
+
 	LightShader* getDeferredLightShader();
+
+	void renderSsao();
 
 	void renderComposeStage();
 
@@ -151,7 +156,9 @@ private:
 
 	DeferredBaseShader*		m_baseShader;
 	LightShader*			m_lightShader;
+	DeferredComposeShader*	m_ssaoShader;
 	DeferredComposeShader*	m_composeShader;
+	DeferredAnimatedBaseShader*	m_animatedBaseShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 

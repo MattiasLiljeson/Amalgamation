@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "DeferredAnimatedBaseShader.h"
 #include "LightShader.h"
 #include "GUIShader.h"
 
@@ -67,21 +68,32 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
+	delete m_ssaoShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
+	delete m_animatedBaseShader;
 }
 
 void DeferredRenderer::clearBuffers()
 {
 	unMapGBuffers();
 	float clearColor[] = {
-		0.0f,0.0f,0.0f,1.0f
+		0.0f,0.0f,0.0f,0.0f
 	};
 	for (unsigned int i = 0; i < RenderTargets::NUMTARGETS; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void DeferredRenderer::renderSsao()
+{
+	m_ssaoShader->setSSAOBufferData(m_ssaoData);
+	m_ssaoShader->apply();
+	m_fullscreenQuad->apply();
+
+	m_deviceContext->Draw(6,0);
 }
 
 void DeferredRenderer::renderComposeStage()
@@ -242,6 +254,12 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBase.hlsl");
 
+	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/ssaoGenerate.hlsl");
+		
+	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
+		L"Shaders/Game/deferredAnimatedBase.hlsl");
+
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
 
@@ -348,7 +366,9 @@ void DeferredRenderer::setLightRenderTarget(){
 DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
-
+DeferredAnimatedBaseShader* DeferredRenderer::getDeferredAnimatedBaseShader(){
+	return m_animatedBaseShader;
+}
 LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
@@ -360,9 +380,9 @@ ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderT
 
 void DeferredRenderer::initSSAO()
 {
-	m_ssaoData.scale	= 1.5f;
-	m_ssaoData.bias		= 0.2f;
+	m_ssaoData.scale	= 4.0f;
+	m_ssaoData.bias		= 0.242f;
 	m_ssaoData.intensity= 1.0f;
-	m_ssaoData.sampleRadius=0.3f;
+	m_ssaoData.sampleRadius=0.02f;
 	m_ssaoData.epsilon  = 0.0f;
 }

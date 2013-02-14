@@ -1,65 +1,34 @@
-body
-{
-	font-family: Delicious;
-	font-weight: normal;
+body{
+	font-family: Armorhide;
+	font-charset: U+00??;
 	font-style: normal;
-	font-size: 15;
-	
+	font-size: 20;
+	font-weight: bold;
 	color: white;
+	
+	margin-top: 7%;
+	height: 12.5%;
+	width: 99.8%;
+	margin-bottom: 80.5%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
+	background: rgba(20,20,20,40);
 }
 
-body.content
-{
-	color: black;
-	margin: auto;
-	
-	width: 100%;
+div.elements{
+	float: left;
+	width: 33.3%;
 	height: 100%;
 }
 
-div#logo
-{
-	/*background-decorator: image;*/
-	/*background-image-src: ../../Assets/gui/texture/logo.tga;*/
-	
-	min-width: 400px;
-	max-width: 400px;
-	
-	min-height: 110x;
-	max-height: 110x;	
-	position: absolute;
-	bottom: 10px;
-	right: 10px;
+div#context{
+	text-align: center;
 }
 
-div#score
-{ 
-	background: rgba(100,100,200,128);
-
-	min-width: 400px;
-	max-width: 400px;
-	
-	min-height: 110x;
-	max-height: 110x;	
-	position: absolute;
-	bottom: 10px;
-	left: 10px;
+div#scoreElem{ 
 }
-
-div#scoreText
-{
-/* 	min-width: 100%;
-	max-width: 100%;
-	
-	min-height: 100%;
-	max-height: 100%; */
-
-	vertical-align:middle;
-	margin-left:50%;
-	margin-right:50%;
-
-	font-family: delicious;
-	font-weight: bold;
-	font-style: italic;
-	font-size: 24;
+div#timerElem{
+}
+div#mappingElem{
 }

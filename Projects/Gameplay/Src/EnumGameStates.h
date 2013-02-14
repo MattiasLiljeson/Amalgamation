@@ -1,0 +1,4 @@
+enum EnumGameStates
+{
+	MENU, LOBBY, INGAME, PAUSE, NUMSTATES
+};

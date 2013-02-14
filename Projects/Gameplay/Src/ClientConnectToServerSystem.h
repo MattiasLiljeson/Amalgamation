@@ -2,7 +2,6 @@
 
 #include <EntitySystem.h>
 #include <EventHandler.h>
-#include <AntTweakBarWrapper.h>
 #include <string>
 #include <ToString.h>
 
@@ -56,7 +55,7 @@ struct NetworkAdress
 class ClientConnectToServerSystem: public EntitySystem, public EventHandler
 {
 public:
-	ClientConnectToServerSystem( TcpClient* p_tcpClient );
+	ClientConnectToServerSystem( TcpClient* p_tcpClient, bool p_connectDirectly=false);
 
 	~ClientConnectToServerSystem();
 
@@ -65,20 +64,17 @@ public:
 	virtual void initialize();
 
 	void connectToNetworkAddress();
-	void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
+	//void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
 
 	virtual void processEvent( Rocket::Core::Event& p_event, const Rocket::Core::String& p_value );
+
+	void setConnectionAddress(const std::string& p_address, const std::string& p_port);
 private:
 	TcpClient* m_tcpClient;
 
 	bool	m_isLookingForConnection;
-	NetworkAdress m_connectionAddress;
+	bool	m_connectStraightAway;
 
-	/************************************************************************/
-	/* DEBUG FUNCTIONS ONLY! */
-	/************************************************************************/
-	static ClientConnectToServerSystem* m_selfPointer;
-private:
-	static void TW_CALL callbackConnectToNetworkAddress(void* p_clientData);
-
+	string m_serverAddress;
+	string m_serverPort;
 };

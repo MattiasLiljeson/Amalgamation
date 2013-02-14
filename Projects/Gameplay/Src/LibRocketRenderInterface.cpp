@@ -126,7 +126,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 	
 	// Make sure to use the std tex if no texture is defined
 	if( p_texture == 0){
-		p_texture = 1;
+		p_texture = m_wrapper->getEmptyTexture();
 	}
 
 	stringstream ss;

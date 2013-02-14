@@ -4,6 +4,7 @@
 #include <RenderInterface.h>
 
 class GraphicsBackendSystem;
+struct AglMatrix;
 struct InstanceData;
 // =======================================================================================
 //                                      MeshRenderSystem
@@ -29,6 +30,7 @@ public:
 	virtual void render();
 private:
 	vector< vector<InstanceData> > m_instanceLists;
+	vector< vector<AglMatrix> > m_boneMatrices;
 	GraphicsBackendSystem* m_gfxBackend;
 };
 

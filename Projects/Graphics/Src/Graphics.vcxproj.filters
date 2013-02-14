@@ -76,6 +76,9 @@
     <ClCompile Include="GPUTimer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredAnimatedBaseShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -225,6 +228,15 @@
     </ClInclude>
     <ClInclude Include="GPUTimer.h">
       <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemAndTexture.h">
+      <Filter>Renderer\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonMappingVertex.h">
+      <Filter>Renderer\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredAnimatedBaseShader.h">
+      <Filter>Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

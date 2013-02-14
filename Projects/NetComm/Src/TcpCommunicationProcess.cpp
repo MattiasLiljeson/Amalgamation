@@ -198,7 +198,9 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 
 			while( readPosition < p_bytesTransferred )
 			{
-				unsigned int currentReadSize = (unsigned int)readPtr[0] + 1;
+				unsigned char packetSizeByte;
+				memcpy(&packetSizeByte, &readPtr[0], 1);
+				unsigned int currentReadSize = (unsigned int)packetSizeByte + 1;//(unsigned int)readPtr[0] + 1;
 				
 				if( readPosition + currentReadSize > p_bytesTransferred )
 				{

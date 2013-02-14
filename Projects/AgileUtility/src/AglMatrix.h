@@ -47,6 +47,8 @@ struct AglMatrix
 	AglMatrix operator*(const float& pFactor) const;
 	AglMatrix& operator*=(const float& pFactor);
 
+	bool operator==(const AglMatrix& pOther) const;
+
 
 	//Member Getters
 	AglVector3 GetForward() const;

@@ -18,10 +18,7 @@
 #include "CameraInfo.h"
 #include "ConnectionPointSet.h"
 #include "Control.h"
-#include "EntityCreationPacket.h"
-#include "EntityDeletionPacket.h"
 #include "EntityType.h"
-#include "EntityUpdatePacket.h"
 #include "Extrapolate.h"
 #include "GameplayTags.h"
 #include "HudElement.h"
@@ -34,7 +31,6 @@
 #include "PacketType.h"
 #include "ParticleRenderSystem.h"
 #include "ParticleSystemEmitter.h"
-#include "ParticleUpdatePacket.h"
 #include "PickComponent.h"
 #include "PingPacket.h"
 #include "PlayerCameraController.h"
@@ -44,25 +40,37 @@
 #include "RenderInfo.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
-#include "SpawnSoundEffectPacket.h"
 #include "TimerSystem.h"
 #include "Transform.h"
-#include "UpdateClientStatsPacket.h"
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
 #include "OnHitScoreEffectPacket.h"
 #include "ScoreWorldVisualizerSystem.h"
+#include "ShipModule.h"
+
+// Packets
+#include "EntityCreationPacket.h"
+#include "EntityDeletionPacket.h"
+#include "EntityUpdatePacket.h"
+#include "ParticleSystemCreationInfo.h"
+#include "PlayersWinLosePacket.h"
+#include "RemoveSoundEffectPacket.h"
+#include "SpawnSoundEffectPacket.h"
+#include "UpdateClientStatsPacket.h"
+#include "ParticleUpdatePacket.h"
+#include "ModuleTriggerPacket.h"
 
 // Debug
 #include "EntityFactory.h"
 #include "LightSources.h"
 #include "LightsComponent.h"
-#include "ParticleEmitters.h"
 #include "ParticleSystemCreationInfo.h"
+#include "ParticleSystemsComponent.h"
 #include "PlayersWinLosePacket.h"
 #include "RemoveSoundEffectPacket.h"
 #include <DebugUtil.h>
+#include <ParticleSystemAndTexture.h>
 #include <ToString.h>
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
@@ -312,6 +320,28 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		else if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
+		}
+		else if(packetType == (char)PacketType::ModuleTriggerPacket)
+		{
+			ModuleTriggerPacket data;
+			data.unpack(packet);
+			Entity* moduleEntity = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.moduleNetsyncIdentity);
+			ShipModule* shipModule = static_cast<ShipModule*>(moduleEntity->getComponent(
+				ComponentType::ShipModule));
+			if(shipModule)
+			{
+				// Call client side activation/deactivation event.
+				if(data.moduleTrigger)
+				{
+					shipModule->activate();
+				}
+				else
+				{
+					shipModule->deactivate();
+				}
+			}
 		}
 		else
 		{
@@ -649,21 +679,19 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 	{
 		//Transform* transform = NULL;
 
-		ParticleEmitters* particleComp = static_cast<ParticleEmitters*>(
-			entity->getComponent( ComponentType::ParticleEmitters ) );
+		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
+			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
 
 		if( particleComp != NULL )
 		{
-			ParticleSystemCollection* collection = particleComp->getCollectionPtr();
 			int idx = p_data.particleSystemIdx;
-
-			if( -1 < idx && idx < collection->m_collection.size() )
+			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
-				AglParticleSystem* particlesys = &(collection->m_collection[idx].particleSystem);
-				particlesys->setSpawnPoint(		p_data.position);
-				particlesys->setSpawnDirection(	p_data.direction);
-				particlesys->setSpawnSpeed(		p_data.speed);
-				particlesys->setSpawnFrequency(	p_data.spawnFrequency);
+				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
+				particleSys->setSpawnPoint(		p_data.position);
+				particleSys->setSpawnDirection(	p_data.direction);
+				particleSys->setSpawnSpeed(		p_data.speed);
+				particleSys->setSpawnFrequency(	p_data.spawnFrequency);
 			}
 			else
 			{
@@ -684,20 +712,22 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
 		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
 
-	int NetId = p_creationInfo.entityNetId;
-	Entity* entity = directMapper->getEntity(NetId);
+	int netID = p_creationInfo.entityNetId;
+	Entity* entity = directMapper->getEntity(netID);
 
-	ParticleEmitters* particleComp = static_cast<ParticleEmitters*>
-		( entity->getComponent( ComponentType::ParticleEmitters) );
+	ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>
+		( entity->getComponent( ComponentType::ParticleSystemsComponent) );
 
 	if( particleComp == NULL )
 	{
-		particleComp = new ParticleEmitters();
+		particleComp = new ParticleSystemsComponent();
 		entity->addComponent( particleComp );
 	}
 
-	AglParticleSystemHeader header = p_creationInfo.particleSysHeader;
-	int psIdx = particleComp->addParticleSystem( AglParticleSystem(header) );
+	ParticleSystemInstruction instruction;
+	instruction.textureFileName = p_creationInfo.textureFileName;
+	instruction.particleSystem = AglParticleSystem(p_creationInfo.particleSysHeader);
+	int psIdx = particleComp->addParticleSystemInstruction( instruction, p_creationInfo.particleSysIdx );
 	if( psIdx != p_creationInfo.particleSysIdx )
 	{
 		// PARTICLE SYSTEMS NOT IN SYNC!

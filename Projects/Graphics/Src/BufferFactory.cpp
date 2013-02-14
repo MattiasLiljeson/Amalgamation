@@ -260,6 +260,7 @@ Mesh* BufferFactory::createBoxMesh()
 
 	Mesh* newBox = new Mesh(createVertexBuffer(&mesh[0],
 							sizeof(mesh)/sizeof(PNTTBVertex)),
+							NULL,
 							createIndexBuffer(&indices[0],
 							sizeof(indices)/sizeof(DIndex)));
 
@@ -328,7 +329,7 @@ LightMesh* BufferFactory::createLightBoxMesh()
 	int vertexCnt = sizeof(mesh) / sizeof(PVertex);
 	Buffer<PVertex>* vertexBuffer = createVertexBuffer( &mesh[0], vertexCnt );
 
-	LightMesh* newBox = new LightMesh( vertexBuffer, indexBuffer );
+	LightMesh* newBox = new LightMesh( vertexBuffer, NULL, indexBuffer );
 
 	return newBox;
 }
@@ -366,6 +367,7 @@ Mesh* BufferFactory::createSphereMesh()
 	memcpy(indices, &sphereMesh.indices[0], sizeof(unsigned int) * indexCount);
 
 	Mesh* newSphere = new Mesh( createVertexBuffer(mesh, vertexCount),
+								NULL,
 								createIndexBuffer(indices, indexCount));
 
 	delete [] mesh;
@@ -398,7 +400,7 @@ Mesh* BufferFactory::createMeshFromPNTTBVerticesAndIndices(
 	Buffer<DIndex>* indexBuffer = new Buffer<DIndex>( m_device, m_deviceContext, p_indices,
 		indexBufferDesc );
 
-	Mesh* mesh = new Mesh( vertexBuffer, indexBuffer );
+	Mesh* mesh = new Mesh( vertexBuffer, NULL, indexBuffer );
 
 	return mesh;
 }
@@ -432,12 +434,15 @@ Mesh* BufferFactory::createMeshFromPTVerticesAndIndices(
 	return NULL;
 }
 
-Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_indexBlob, 
-									   unsigned int p_numberOfVertices, 
-									   unsigned int p_numberOfIndices )
+Mesh* BufferFactory::createMeshFromRaw( void* p_vertexBlob, void* p_skeletonVertexBlob, void* p_indexBlob, 
+									   unsigned int p_numberOfVertices,
+									   unsigned int p_numberOfSkeletonVertices,
+									   unsigned int p_numberOfIndices)
 {
 	Mesh* newMesh = new Mesh(createVertexBuffer(static_cast<PNTTBVertex*>(p_vertexBlob),
 												p_numberOfVertices),
+							 createVertexBuffer(static_cast<SkeletonMappingVertex*>(p_skeletonVertexBlob),
+												p_numberOfSkeletonVertices),
 							 createIndexBuffer(static_cast<DIndex*>(p_indexBlob),
 												p_numberOfIndices) 
 							);

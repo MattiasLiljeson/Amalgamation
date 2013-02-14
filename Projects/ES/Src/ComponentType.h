@@ -23,6 +23,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		ClientInfo,
+		CircularMovement,
 		Extrapolate,
 		InterpolationComponent,
 		PhysicsBody,
@@ -51,6 +52,7 @@ public:	//Enums
 		SpeedBoosterModule,
 		MinigunModule,
 		ShieldModule,
+		ShieldPlate,
 		MineLayerModule,
 		StandardMine,
 		StandardRocket,
@@ -59,12 +61,13 @@ public:	//Enums
 		LightSources,
 		LightBlinker,
 		Vibration,
-		ParticleEmitters,
+		ParticleSystemsComponent,
 		PickComponent,
 		ParticleSystemEmitter,
 		ParticleSystemServerComponent,
 		DebugMove,
 		PlayerState,
+		GameState,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -87,6 +90,7 @@ public:	//Enums
 		StaticProp,
 		LightsComponent,
 		MeshOffsetTransform,
+		SkeletalAnimation,
 		NUM_COMPONENT_TYPES
 	};
 

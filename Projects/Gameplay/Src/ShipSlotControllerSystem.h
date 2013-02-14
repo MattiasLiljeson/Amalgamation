@@ -21,13 +21,10 @@ public:
 	SlotInputControllerSystem(InputBackendSystem* p_inputBackend, TcpClient* p_client);
 	~SlotInputControllerSystem();
 	void sendModuleSlotHighlightDeactivateAll();
-	void handleSlotSelection();
+	void handleSlotSelection(bool p_editMode = false);
 private:
 	void initialize();
 	void process();
-	void initKeyboard();
-	void initGamepad();
-	void initMouse();
 	void sendModuleSlotHighlight(int p_slot);
 	void sendModuleSlotHighlightDeactivate(int p_slot);
 
@@ -37,6 +34,9 @@ private:
 	void sendSlotRotationAdd();
 	void sendSlotRotationSub();
 	void sendSlotRotationNone();
+
+	void sendSlot90Sub();
+	void sendSlot90Add();
 
 private:
 	InputActionsBackendSystem* m_actionBackend;

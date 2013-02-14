@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="DeferredAnimatedBaseShader.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventInstancer.cpp" />
@@ -41,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="DeferredAnimatedBaseShader.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventInstancer.h" />
@@ -66,6 +68,7 @@
     <ClInclude Include="ParticleCBuffer.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="ParticleSystemAndTexture.h" />
     <ClInclude Include="PerShadowCBuffer.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
@@ -86,6 +89,7 @@
     <ClInclude Include="ShadowCBuffer.h" />
     <ClInclude Include="ShadowMapRenderer.h" />
     <ClInclude Include="ShadowShader.h" />
+    <ClInclude Include="SkeletonMappingVertex.h" />
     <ClInclude Include="SSAOCBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />

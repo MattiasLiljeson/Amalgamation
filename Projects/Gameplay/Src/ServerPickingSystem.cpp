@@ -60,9 +60,9 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 	mrota += dt;
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
 	{
-		if (m_pickComponents[i].m_latestPick >= 0)
+		if (m_pickComponents[i].getLatestPick() >= 0)
 		{
-			project(m_world->getEntity(m_pickComponents[i].m_latestPick), m_pickComponents[i]);
+			project(m_world->getEntity(m_pickComponents[i].getLatestPick()), m_pickComponents[i]);
 		}
 		else
 		{
@@ -101,6 +101,10 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 
 			m_server->broadcastPacket(data.pack());
 		}
+
+		//Rotate relevant modules
+		if (m_pickComponents[i].m_latestAttached >= 0 && m_pickComponents[i].m_rotationDirection != 0)
+		rotateModule(m_world->getEntity(m_pickComponents[i].m_latestAttached), m_pickComponents[i].m_rotationDirection);
 	}
 }
 void ServerPickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_d)
@@ -133,7 +137,7 @@ void ServerPickingSystem::setEnabled(int p_index, bool p_value)
 			if (!p_value)
 			{
 				attemptConnect(m_pickComponents[i]);
-				m_pickComponents[i].m_latestPick = -1;
+				m_pickComponents[i].setLatestPick(-1);
 			}
 			return;
 		}
@@ -150,9 +154,9 @@ void ServerPickingSystem::setReleased(int p_index)
 			Transform* moduleTransform = NULL;
 
 			// Get data for current module
-			if (m_pickComponents[i].m_latestPick>-1)
+			if (m_pickComponents[i].getLatestPick()>-1)
 			{
-				Entity* shipModuleEntity = m_world->getEntity(m_pickComponents[i].m_latestPick);
+				Entity* shipModuleEntity = m_world->getEntity(m_pickComponents[i].getLatestPick());
 				shipModule = NULL;
 				if (shipModuleEntity)
 				{
@@ -172,7 +176,7 @@ void ServerPickingSystem::setReleased(int p_index)
 			}
 
 			//Release the picked module
-			m_pickComponents[i].m_latestPick = -1;
+			m_pickComponents[i].setLatestPick(-1);
 			m_pickComponents[i].m_active = false;
 			if (shipModule) shipModule->m_lastParentWhenAttached = -1; // module is now totally detached from parent ship
 
@@ -221,7 +225,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 					//Verify that the pick is not already picked
 					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
 					{
-						if (m_pickComponents[pcs].m_latestPick == p_entities[i]->getIndex())
+						if (m_pickComponents[pcs].getLatestPick() == p_entities[i]->getIndex())
 							return;
 					}
 
@@ -235,7 +239,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 						return;
 
 
-					p_pc.m_latestPick = p_entities[i]->getIndex();
+					p_pc.setLatestPick(p_entities[i]->getIndex());
 
 					//Attempt a detach if the entity is already connected
 					if (attemptDetach(p_pc))
@@ -249,7 +253,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 					}
 					else
 					{
-						p_pc.m_latestPick = -1;
+						p_pc.setLatestPick(-1);
 					}
 					break;
 				}
@@ -396,7 +400,7 @@ vector<pair<int, Entity*>> ServerPickingSystem::getFreeConnectionPoints(
 	return free;
 }
 
-AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset)
+AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation)
 {
 	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
@@ -446,6 +450,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 	AglMatrix finalTransform = AglMatrix::identityMatrix();
 	AglMatrix final = AglMatrix::identityMatrix();
 
+	bool first = true;
 	while (transforms.size() > 0)
 	{
 		//Parent transform
@@ -454,6 +459,14 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		//Child Transform
 		AglMatrix childTransform = transforms[transforms.size()-2];
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
+
+		if (first)//transforms.size() == 2)
+		{
+			//Rotate around connection axis
+			AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
+			rot = rot2*rot;
+			first = false;
+		}
 
 		finalTransform = AglMatrix::createRotationMatrix(rot);
 
@@ -473,13 +486,13 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 
 void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 {
-	if (p_ray.m_latestPick >= 0 && p_ray.m_targetEntity >= 0)
+	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0)
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
 
 		//Module
-		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		Entity* module = m_world->getEntity(p_ray.getLatestPick());
 		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
 			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
@@ -532,9 +545,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
 		//Parent transform
-		AglMatrix transform = offsetTemp(target, 
-			cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), 
-			conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse());
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), 
+			conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), shipModule->m_rotation);
 		//AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform, conPoints->m_connectionPoints[sel].cpTransform);
 
 		//transform *= shipBody->getOffset().inverse();
@@ -557,17 +569,18 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		moduleBody->setParentId(shipBody->m_id);
 
+		p_ray.m_latestAttached = module->getIndex();
 	}
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 {
-	if (p_ray.m_latestPick >= 0)
+	if (p_ray.getLatestPick() >= 0)
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
 
 		//Module
-		Entity* module = m_world->getEntity(p_ray.m_latestPick);
+		Entity* module = m_world->getEntity(p_ray.getLatestPick());
 		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
 			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
@@ -656,7 +669,91 @@ void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleT
 	OnHitScoreEffectPacket fxPacket;
 	fxPacket.score = p_score;
 	fxPacket.position = p_moduleTransform->getTranslation();
-	fxPacket.angle = p_moduleTransform->getRotation();
-
+	fxPacket.angle = p_moduleTransform->getRotation();	
 	m_effectbuffer->enqueueEffect(p_player,fxPacket);
+}
+//Rotation
+void ServerPickingSystem::addRotationEvent(int direction, int client)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (client == m_pickComponents[i].m_clientIndex)
+		{
+			m_pickComponents[i].m_rotationDirection = direction;
+			break;
+		}
+	}
+}
+void ServerPickingSystem::add90RotationEvent(int direction, int client)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (client == m_pickComponents[i].m_clientIndex)
+		{
+			if (m_pickComponents[i].m_latestAttached >= 0)
+			{
+				Entity* e = m_world->getEntity(m_pickComponents[i].m_latestAttached);
+				if (e)
+				{
+					ShipModule*  module = static_cast<ShipModule*>(e->getComponent(ComponentType::ShipModule));
+					if (module)
+					{
+						module->m_rotation += direction * 3.14159f / 2.0f;
+						rotateModule(e, 0);
+					}
+				}
+
+			}
+			break;
+		}
+	}
+}
+
+
+void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
+{
+	ShipModule*  module = static_cast<ShipModule*>(p_module->getComponent(ComponentType::ShipModule));
+	module->m_rotation += m_world->getDelta()*p_dir;
+
+	PhysicsBody* moduleBody = static_cast<PhysicsBody*>(p_module->getComponent(ComponentType::PhysicsBody));
+
+	Entity* parent = m_world->getEntity(module->m_parentEntity);
+	PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(ComponentType::PhysicsBody));
+
+	ConnectionPointSet* parentCon =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(parent,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	int parentSlot = 0;
+	for (unsigned int i = 1; i < parentCon->m_connectionPoints.size(); i++)
+	{
+		if (parentCon->m_connectionPoints[i].cpConnectedEntity == p_module->getIndex())
+		{
+			parentSlot = i;
+			break;
+		}
+	}
+
+	ConnectionPointSet* childCon =
+		static_cast<ConnectionPointSet*>(
+		m_world->getComponentManager()->getComponent(p_module,
+		ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+	int childSlot = 0;
+	for (unsigned int i = 1; i < childCon->m_connectionPoints.size(); i++)
+	{
+		if (childCon->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
+		{
+			childSlot = i;
+			break;
+		}
+	}
+
+	AglMatrix transform = offsetTemp(parent, parentCon->m_connectionPoints[parentSlot].cpTransform*parentBody->getOffset().inverse(), 
+		childCon->m_connectionPoints[childSlot].cpTransform*moduleBody->getOffset().inverse(), module->m_rotation);
+
+	PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+	Body* body = ps->getController()->getBody(moduleBody->m_id);
+	body->setTransform(transform);
 }

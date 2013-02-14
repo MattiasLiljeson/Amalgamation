@@ -174,6 +174,8 @@ protected:
 	virtual AglLooseBspTree* createBspTree(AglMesh* p_mesh);
 
 protected:
+
+	vector<AglScene*> m_scenes;
 	//Cloned bsp trees that should be deleted on program exit
 	vector<AglLooseBspTree*> m_bspTrees;
 	///-----------------------------------------------------------------------------------

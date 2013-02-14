@@ -12,89 +12,6 @@
 #include "Transform.h"
 #include "ModuleHelper.h"
 
-AglMatrix ShipModulesControllerSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation)
-{
-	AglMatrix transform = p_base;
-	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
-	vector<AglMatrix> transforms;
-	transforms.push_back(p_offset);
-	transforms.push_back(p_base);
-	while (module)
-	{
-		Entity* parent = m_world->getEntity(module->m_parentEntity);
-
-		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
-			m_world->getComponentManager()->getComponent(p_entity,
-			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-
-		unsigned int ind = 0;
-		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
-		{
-			if (cps->m_connectionPoints[i].cpConnectedEntity == parent->getIndex())
-				ind = i;
-		}
-
-		//Child
-		PhysicsBody* childBody = static_cast<PhysicsBody*>(p_entity->getComponent(
-			ComponentType::PhysicsBody));
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
-
-		//Parent Connection points
-		cps = static_cast<ConnectionPointSet*>(
-			m_world->getComponentManager()->getComponent(parent,
-			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-
-		ind = 0;
-		for (unsigned int i = 1; i < cps->m_connectionPoints.size(); i++)
-		{
-			if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
-				ind = i;
-		}
-		//Parent
-		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
-			ComponentType::PhysicsBody));
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
-
-		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
-		p_entity = parent;
-	}
-
-	AglMatrix finalTransform = AglMatrix::identityMatrix();
-	AglMatrix final = AglMatrix::identityMatrix();
-
-	bool first = true;
-	while (transforms.size() > 0)
-	{
-		//Parent transform
-		AglMatrix transform = transforms.back();
-
-		//Child Transform
-		AglMatrix childTransform = transforms[transforms.size()-2];
-		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
-
-		if (first)//transforms.size() == 2)
-		{
-			//Rotate around connection axis
-			AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
-			rot = rot2*rot;
-			first = false;
-		}
-
-		finalTransform = AglMatrix::createRotationMatrix(rot);
-
-		AglVector3 childTrans = childTransform.GetTranslation();
-		rot.transformVector(childTrans);
-
-		//Negate to get correct
-		finalTransform.SetTranslation(transform.GetTranslation() - childTrans);
-		transforms.pop_back();
-		transforms.pop_back();
-
-		final = finalTransform*final;
-	}
-	return final;
-}
-
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
@@ -153,17 +70,6 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				j--;
 			}
 		}
-		for (unsigned int j = 0; j < m_toSetRotationState.size(); j++)
-		{
-			if (m_toSetRotationState[j].targetShip == netSync->getNetworkOwner())
-			{
-				//Do Deactivate
-				setRotationState(p_entities[i], m_toSetRotationState[j].direction);
-				m_toSetRotationState[j] = m_toSetRotationState.back();
-				m_toSetRotationState.pop_back();
-				j--;
-			}
-		}
 
 		PlayerScore* score = static_cast<PlayerScore*>(p_entities[i]->getComponent(ComponentType::PlayerScore));
 		//Calculate score
@@ -171,9 +77,6 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 
 		//Check to see if modules should be dropped
 		checkDrop(p_entities[i]);
-
-		//Rotate relevant modules
-		rotateModules(p_entities[i]);
 	}
 }
 void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
@@ -471,86 +374,6 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 		score += module->m_value;
 	return score;
 }
-
-void ShipModulesControllerSystem::addRotationEvent(RotationState p_rotationState)
-{
-	m_toSetRotationState.push_back(p_rotationState);
-}
-
-void ShipModulesControllerSystem::rotateModules(Entity* p_ship)
-{
-	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
-		p_ship->getComponent(ComponentType::ConnectionPointSet) );
-
-	ShipModule* module = static_cast<ShipModule*>(p_ship->getComponent(ComponentType::ShipModule));
-
-	if (connected)
-	{
-		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
-		{
-			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
-			{
-				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
-				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-				currModule->m_rotation += currModule->m_rotationDirection * m_world->getDelta();
-
-				if (currModule && (!module || module->m_parentEntity != currEn->getIndex()))
-				{
-					PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_ship->getComponent(ComponentType::PhysicsBody));
-
-					ConnectionPointSet* conPoints =
-						static_cast<ConnectionPointSet*>(
-						m_world->getComponentManager()->getComponent(currEn,
-						ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-
-					int sel = 0;
-					for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
-					{
-						if (conPoints->m_connectionPoints[i].cpConnectedEntity == p_ship->getIndex())
-						{
-							sel = i;
-							break;
-						}
-					}
-					PhysicsBody* moduleBody = static_cast<PhysicsBody*>(currEn->getComponent(ComponentType::PhysicsBody));
-
-					AglMatrix transform = offsetTemp(p_ship, connected->m_connectionPoints[i].cpTransform*targetBody->getOffset().inverse(), 
-						conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), currModule->m_rotation);
-
-					PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
-					Body* body = ps->getController()->getBody(moduleBody->m_id);
-					body->setTransform(transform);
-				}
-			}
-		}
-	}
-}
-void ShipModulesControllerSystem::setRotationState(Entity* p_ship, int p_state)
-{
-	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
-		p_ship->getComponent(ComponentType::ConnectionPointSet) );
-
-	ShipModule* module = static_cast<ShipModule*>(p_ship->getComponent(ComponentType::ShipModule));
-
-	if (connected)
-	{
-		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
-		{
-			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
-			{
-				Entity* currEn = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
-				ShipModule* currModule = static_cast<ShipModule*>(currEn->getComponent(ComponentType::ShipModule));
-
-
-				if (currModule && (!module || module->m_parentEntity != currEn->getIndex()))
-				{
-					currModule->m_rotationDirection = p_state;
-				}
-			}
-		}
-	}
-}
-
 void ShipModulesControllerSystem::setScoreEffect( int p_networkOwner, Transform* p_moduleTransform, 
 										 int p_score )
 {

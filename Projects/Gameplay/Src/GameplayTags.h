@@ -5,33 +5,33 @@
 ///
 /// ShipFlyMode_TAG
 ///
-class ShipFlyMode_TAG : public Tag {};
+class ShipFlyMode_TAG : public Tag{ public: ShipFlyMode_TAG() : Tag( ComponentType::TAG_ShipFlyMode ){}};
 
 ///
 /// ShipEditMode_TAG
 ///
-class ShipEditMode_TAG : public Tag {};
+class ShipEditMode_TAG : public Tag{ public: ShipEditMode_TAG() : Tag( ComponentType::TAG_ShipEditMode ){}};
 
 ///
 /// LookAtFollowMode_TAG
 ///
-class LookAtFollowMode_TAG : public Tag {};
+class LookAtFollowMode_TAG : public Tag{ public: LookAtFollowMode_TAG() : Tag( ComponentType::TAG_LookAtFollowMode ){}};
 
 ///
 /// LookatOrbitMode_TAG
 ///
-class LookAtOrbitMode_TAG : public Tag {};
+class LookAtOrbitMode_TAG : public Tag{ public: LookAtOrbitMode_TAG() : Tag( ComponentType::TAG_LookAtOrbitMode ){}};
 
 ///
 /// Ship_TAG for server
 ///
-class Ship_TAG : public Tag {};
+class Ship_TAG : public Tag{ public: Ship_TAG() : Tag( ComponentType::TAG_Ship ){}};
 
 ///
 /// MyShip_TAG for client
 ///
-class MyShip_TAG : public Tag {};
+class MyShip_TAG : public Tag{ public: MyShip_TAG() : Tag( ComponentType::TAG_MyShip ){}};
 
-class MainCamera_TAG : public Tag{};
+class MainCamera_TAG : public Tag{ public: MainCamera_TAG() : Tag( ComponentType::TAG_MainCamera ){}};
 
-class ShadowCamera_TAG : public Tag{};
+class ShadowCamera_TAG : public Tag{ public: ShadowCamera_TAG() : Tag( ComponentType::TAG_ShadowCamera ){}};

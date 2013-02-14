@@ -5,6 +5,7 @@
 #include "DIndex.h"
 #include "Buffer.h"
 #include "MaterialInfo.h"
+#include "SkeletonMappingVertex.h"
 
 // =======================================================================================
 //                                      Mesh
@@ -21,7 +22,7 @@
 class Mesh
 {
 public:
-	Mesh( Buffer<PNTTBVertex>* p_vertexBuffer, Buffer<DIndex>* p_indexBuffer);
+	Mesh( Buffer<PNTTBVertex>* p_vertexBuffer, Buffer<SkeletonMappingVertex>* p_skeletonVertexBuffer, Buffer<DIndex>* p_indexBuffer);
 
 	///-----------------------------------------------------------------------------------
 	/// The Managers for the mesh will handle the deletion of each entities data.
@@ -36,6 +37,12 @@ public:
 	Buffer<PNTTBVertex>*	getVertexBuffer();
 
 	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the skeleton vertex buffer.
+	/// \return Buffer<SkeletonMappingVertex>*
+	///-----------------------------------------------------------------------------------
+	Buffer<SkeletonMappingVertex>*	getSkeletonVertexBuffer();
+
+	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the index buffer.
 	/// \return Buffer<DIndex>*
 	///-----------------------------------------------------------------------------------
@@ -46,6 +53,7 @@ public:
 	void			setMaterial(const MaterialInfo& p_materialInfo);
 private:
 	Buffer<PNTTBVertex>* m_vertexBuffer;
+	Buffer<SkeletonMappingVertex>* m_skeletonVertexBuffer;
 	Buffer<DIndex>* m_indexBuffer;
 	MaterialInfo m_materialInfo;
 };
