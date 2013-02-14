@@ -162,7 +162,7 @@ float GraphicsBackendSystem::getAspectRatio()
 	return (float)m_scrWidth / m_scrHeight;
 }
 
-void GraphicsBackendSystem::renderParticleSystem( AglParticleSystem* p_system,
+void GraphicsBackendSystem::renderParticleSystem( ParticleSystemAndTexture* p_system,
 												 const InstanceData& p_worldTransform )
 {
 	m_graphicsWrapper->renderParticleSystem( p_system, p_worldTransform );

@@ -19,7 +19,7 @@ using namespace std;
 /// Created on: 15-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct ParticleSystemCollection
+struct ParticleSystemInstructionCollection
 {
 	vector<ParticleSystemInstruction> m_collection;
 };

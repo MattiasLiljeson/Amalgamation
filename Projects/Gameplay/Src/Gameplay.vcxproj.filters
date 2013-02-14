@@ -387,9 +387,6 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleEmitters.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LightSources.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -533,6 +530,12 @@
     </ClInclude>
     <ClInclude Include="ShipSlotControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemsComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="AntTweakBarEnablerSystem.h">
       <Filter>Systems\Debugging</Filter>
@@ -804,9 +807,6 @@
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleEmitters.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LightSources.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
@@ -922,6 +922,12 @@
     </ClCompile>
     <ClCompile Include="ShipSlotControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemsComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp">
       <Filter>Systems\Debugging</Filter>

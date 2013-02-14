@@ -7,10 +7,10 @@ c LightBlinker
 d f maxrange 5.0
 d i increase 1
 
-c Transform
-d f m_scaleX 3.0f;
-d f m_scaleY 3.0f;
-d f m_scaleZ 3.0f;
+//c Transform
+//d f m_scaleX 3.0f;
+//d f m_scaleY 3.0f;
+//d f m_scaleZ 3.0f;
 
 c LightsComponent
 

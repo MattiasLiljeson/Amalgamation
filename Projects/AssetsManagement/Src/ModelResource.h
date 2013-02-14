@@ -3,7 +3,7 @@
 #include <AglMesh.h>
 #include "ConnectionPointCollection.h"
 #include "SpawnPointCollection.h"
-#include "ParticleSystemCollection.h"
+#include "ParticleSystemInstructionCollection.h"
 #include "LightDataCollection.h"
 #include "InstanceInstruction.h"
 #include "ParticleSystemInstruction.h"
@@ -54,7 +54,7 @@ public:
     ConnectionPointCollection	connectionPoints;
 	SpawnPointCollection		spawnPoints;
 	LightDataCollection			lightCollection;
-    ParticleSystemCollection	particleSystems;
+    ParticleSystemInstructionCollection	particleSystems;
     AglMatrix					transform;
     vector<InstanceInstruction> instances;
     AglLooseBspTree*			looseBspTree;

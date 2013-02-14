@@ -158,7 +158,7 @@ private:
 	int m_senderId;
 
 	// Header data (stored in the byte buffer).
-	char m_packetSize;
+	unsigned char m_packetSize;
 	char m_packetType;
 	unsigned int m_uniquePacketIdentifier;
 

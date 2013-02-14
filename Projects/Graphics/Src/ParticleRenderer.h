@@ -29,19 +29,19 @@ class ParticleRenderer
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticles( AglParticleSystem* p_system, RendererSceneInfo* p_info,
-		const InstanceData& p_transform );
+	void renderParticleSystem( AglParticleSystem* p_system, RendererSceneInfo* p_info,
+		const InstanceData& p_transform, Texture* p_texture );
 private:
 	void initShaders();
 	void initDepthStencil();
 	void initTexture();
-	void beginRendering(AglParticleSystem* p_system, const int numOfParticles);
+	void renderParticles( AglParticleSystem* p_system, const int numOfParticles, Texture* p_texture );
 private:
 	ParticleShader*			m_shader;
 	ShaderFactory*			m_shaderFactory;
 	ID3D11DepthStencilState*m_depthStencil;
 	ID3D11Buffer*			m_vertexBuffer;
-	Texture*				m_texture;
+	Texture*				m_stdTexture;
 
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;

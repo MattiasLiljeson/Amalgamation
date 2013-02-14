@@ -42,20 +42,35 @@ public:
 	/// Add particle system to component. \return Index of the newly added particle system.
 	int addParticleSystem( const ParticleSystemData& p_particleSystem)
 	{
-		int index = particleSystems.size();
-		particleSystems.push_back( p_particleSystem );
-		return index;
+		int idx = getParticleSystemIdxFromName( p_particleSystem.name );
+		if( idx == -1) {
+			idx = particleSystems.size();
+			particleSystems.push_back( p_particleSystem );
+		} else {
+			particleSystems[idx].updateData = p_particleSystem.updateData;
+		}
+		return idx;
 	}
 
 	ParticleSystemData* getParticleSystemDataPtrFromName( const string& p_name )
 	{
 		ParticleSystemData* data = NULL;
+		int idx = getParticleSystemIdxFromName( p_name );
+		if(idx != -1) {
+			return &particleSystems[idx];
+		} else {
+			return NULL;
+		}
+	}
 
+	int getParticleSystemIdxFromName( const string& p_name )
+	{
 		for( unsigned int i=0; i<particleSystems.size(); i++ ) {
 			if( particleSystems[i].name == p_name ) {
-				return &particleSystems[i];
+				return i;
 			}
 		}
+		return -1;
 	}
 
 	vector< ParticleSystemData > particleSystems;

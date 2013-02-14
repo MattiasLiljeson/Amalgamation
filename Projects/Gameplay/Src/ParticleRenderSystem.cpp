@@ -4,13 +4,13 @@
 #include <vector>
 #include <GraphicsWrapper.h>
 #include "Transform.h"
-#include "ParticleEmitters.h"
-#include "..\..\AgileAssets\src\AglParticleSystemHeader.h"
-
+#include "ParticleSystemsComponent.h"
+#include <AglParticleSystemHeader.h>
+#include <ParticleSystemAndTexture.h>
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::ParticleRenderSystem, 2,
-	ComponentType::ParticleEmitters, ComponentType::Transform )
+	ComponentType::ParticleSystemsComponent, ComponentType::Transform )
 {
 	m_gfxBackend = p_gfxBackend;
 }
@@ -39,22 +39,29 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::Transform ) );
 
-		ParticleEmitters* particlesComp = static_cast<ParticleEmitters*>(
-			p_entities[i]->getComponent( ComponentType::ParticleEmitters ) );
+		ParticleSystemsComponent* particlesComp = static_cast<ParticleSystemsComponent*>(
+			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
 		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
 		
-		// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
-		// double transform
-		ParticleSystemCollection* collection = particlesComp->getCollectionPtr();
-		for( unsigned int i=0; i<collection->m_collection.size(); i++ ) {
-			AglParticleSystemHeader header = collection->m_collection[i].particleSystem.getHeader();
-			if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
-				particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
+		if( particlesComp->getParticleSystemCnt() > 0 )
+		{
+			for( unsigned int i=0; i<particlesComp->getParticleSystemsPtr()->size(); i++ )
+			{
+				ParticleSystemAndTexture* psAndTex = particlesComp->getParticleSystemAndTexturePtr(i);
+				if( psAndTex != NULL ) {
+					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
+
+					// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
+					// double transform
+					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
+						particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
+					}
+					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
+					m_collections.push_back( ps );
+				}
 			}
 		}
-		pair< ParticleSystemCollection*, Transform* > ps( collection, transform );
-		m_collections.push_back( ps );
 		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
 }
@@ -65,16 +72,9 @@ void ParticleRenderSystem::render()
 		collectionIdx<m_collections.size();
 		collectionIdx++ )
 	{
-		ParticleSystemCollection* collection = m_collections[collectionIdx].first;
+		ParticleSystemAndTexture* psAndTex = m_collections[collectionIdx].first;
 		Transform* transform = m_collections[collectionIdx].second;
-		
-		for( unsigned int systemIdx=0;
-			systemIdx < collection->m_collection.size();
-			systemIdx++ )
-		{
-			AglParticleSystem* system = &collection->m_collection[systemIdx].particleSystem;
-			m_gfxBackend->renderParticleSystem( system, transform->getInstanceDataRef() );
-		}
+		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
 	}
 	
 }

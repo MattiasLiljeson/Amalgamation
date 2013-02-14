@@ -26,7 +26,7 @@
 #include <MineLayerModule.h>
 #include <MinigunModule.h>
 #include <MinigunModule.h>
-#include <ParticleEmitters.h>
+#include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
 #include <PositionalSoundSource.h>
@@ -98,7 +98,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-
+#include <ParticleSystemInstructionTranslatorSystem.h>
 
 
 // Helpers
@@ -226,7 +226,8 @@ void ClientApplication::initSystems()
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem(SystemType::LoadMeshSystemClient, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
-
+	m_world->setSystem(new ParticleSystemInstructionTranslatorSystem( graphicsBackend ),
+		true );
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
@@ -410,11 +411,6 @@ void ClientApplication::initEntities()
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
-	// Read monkey!
-	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
-	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
-	m_world->addEntity( entity );
-
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
 	entity = factory->entityFromRecipe( "rocksClient" );	
@@ -432,7 +428,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	component = new CameraInfo( m_world->getAspectRatio() );
+	component = new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f );
 	entity->addComponent( ComponentType::CameraInfo, component );
 	entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
 	component = new Transform( -20.0f, 0.0f, -5.0f );

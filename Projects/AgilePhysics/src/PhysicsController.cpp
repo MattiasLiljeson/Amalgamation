@@ -276,14 +276,14 @@ void PhysicsController::Update(float pElapsedTime)
 				}
 			}
 			//Check for collision against static geometry
-		/*	if (mStaticBodies)
+			if (mStaticBodies)
 			{
 				vector<PhyCollisionData> staticCol = mStaticBodies->Query(mRigidBodies[i].first);
 				for (unsigned int j = 0; j < staticCol.size(); j++)
 				{
 					collisions.push_back(staticCol[j]);
 				}
-			} */
+			} 
 		}
 	}
 

@@ -24,6 +24,7 @@
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
 #include "GPUTimer.h"
+#include "ParticleSystemAndTexture.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
 {
@@ -555,9 +556,12 @@ void GraphicsWrapper::setWireframeMode( bool p_wireframe )
 	m_wireframeMode = p_wireframe;
 }
 
-void GraphicsWrapper::renderParticleSystem( AglParticleSystem* p_system, InstanceData p_transform )
+void GraphicsWrapper::renderParticleSystem( ParticleSystemAndTexture* p_system,
+										   InstanceData p_transform )
 {
-	m_particleRenderer->renderParticles( p_system, &m_renderSceneInfo, p_transform);
+	Texture* texture = m_textureManager->getResource( p_system->textureIdx );
+	m_particleRenderer->renderParticleSystem( &p_system->particleSystem,
+		&m_renderSceneInfo, p_transform, texture );
 }
 
 void GraphicsWrapper::setParticleRenderState()
