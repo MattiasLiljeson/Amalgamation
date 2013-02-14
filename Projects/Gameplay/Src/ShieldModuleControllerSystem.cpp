@@ -102,29 +102,30 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 	}
 	else
 	{
+		// HACKHACKHACK: (Just to search for l8ter).
 		//Create Shield
 		Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(parentTransform->getTranslation(), AglQuaternion::identity(), AglVector3(2, 2, 2));
 		entity->addComponent( ComponentType::Transform, t);
-		
-		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(EntityType::Shield);
-		data.meshInfo		= 1; //Sphere
-		data.owner			= -1;
-		data.networkIdentity = entity->getIndex();
-		data.translation	= t->getTranslation();
-		data.rotation		= t->getRotation();
-		data.scale			= t->getScale();
-
-		entity->addComponent(ComponentType::NetworkSynced, 
-			new NetworkSynced( entity->getIndex(), -1, EntityType::Shield));
-
-		m_server->broadcastPacket(data.pack());
-		
+		// NOTE: (Johan) Read the note a few rows below.
+//		entity->addComponent(ComponentType::NetworkSynced, 
+//			new NetworkSynced( entity->getIndex(), -1, EntityType::Shield));
 		m_world->addEntity(entity);
-
 		p_module->m_shieldEntity = entity->getIndex();
+		
+		// NOTE: (Johan) This was unhandled by the client side --resulting in the world
+		// kind of disappearing.
+//		EntityCreationPacket data;
+//		data.entityType		= static_cast<char>(EntityType::Shield);
+//		data.meshInfo		= 1; //Sphere
+//		data.owner			= -1;
+//		data.networkIdentity = entity->getIndex();
+//		data.translation	= t->getTranslation();
+//		data.rotation		= t->getRotation();
+//		data.scale			= t->getScale();
+//
+//		m_server->broadcastPacket(data.pack());
 	}
 }
 

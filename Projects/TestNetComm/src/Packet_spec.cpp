@@ -4,6 +4,7 @@ using namespace igloo;
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include "LargePacketStruct.h"
 
 static const int TEST_PACKET_TYPE = 100;
 
@@ -229,5 +230,17 @@ Describe(a_packet)
 		int i_dst = 0;
 		packet >> i_dst;
 		Assert::That(packet.getDataSize(), Equals(14));
+	}
+
+	It(can_be_of_size_256_minus_header_size)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		LargePacketStruct large;
+		packet.WriteData(&large, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+
+		LargePacketStruct large_dst;
+		packet.ReadData(&large_dst, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
 	}
 };

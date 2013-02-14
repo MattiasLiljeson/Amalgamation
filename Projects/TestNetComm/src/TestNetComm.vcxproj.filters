@@ -29,4 +29,9 @@
       <UniqueIdentifier>{548c5009-ab2f-4a41-93ca-18a9014bfc02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LargePacketStruct.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

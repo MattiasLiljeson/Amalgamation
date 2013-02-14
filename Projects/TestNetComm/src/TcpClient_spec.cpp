@@ -5,6 +5,7 @@ using namespace igloo;
 #include <TcpServer.h>
 
 #include <boost/thread/thread.hpp>
+#include "LargePacketStruct.h"
 
 static const int TEST_PACKET_TYPE = 100;
 
@@ -149,6 +150,26 @@ Describe(a_tcp_client)
 			packet >> i_dst[i];
 			Assert::That(i_dst[i], Equals(i_src[i]));
 		}
+	}
+
+	It(can_send_and_receive_packets_of_size_256_minus_header_size)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		Packet packet(TEST_PACKET_TYPE);
+		LargePacketStruct large;
+		packet.WriteData(&large, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+		client.sendPacket(packet);
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		Packet packet_dst = server.popNewPacket();
+		Assert::That(packet_dst.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+
 	}
 
 	It(can_verify_that_all_server_broadcasts_are_received)

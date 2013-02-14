@@ -1,5 +1,5 @@
 #pragma once
-
+#include <AglVector3.h>
 /************************************************************************/
 /* This defines if a local server should be created or not. Simply add	*/
 /* a _ before to use the local server. Otherwise start a separate server*/
@@ -71,7 +71,7 @@ private:
 	void InitModulesTestByAnton();
 	void initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
 		unsigned int p_sizeY, float p_z, float p_scale);
-	void initInstanceAsteroidFieldByJohan(string p_meshName, unsigned int p_width,
+	void initInstanceAsteroidFieldByJohan(string p_meshName, AglVector3 p_origin, unsigned int p_width,
 		unsigned int p_numbersInCircle, float p_radius, float p_spacing, float p_diffY, float p_scale);
 
 private:

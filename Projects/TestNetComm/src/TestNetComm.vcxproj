@@ -94,6 +94,9 @@
     <ClCompile Include="TcpServer_spec.cpp" />
     <ClCompile Include="TestNetCommRunner.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LargePacketStruct.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
