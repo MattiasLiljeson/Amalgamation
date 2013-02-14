@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
+    <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -93,6 +94,9 @@
     <ClInclude Include="ShieldPlate.h" />
     <ClInclude Include="ShieldPlatingSystem.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
+    <ClInclude Include="SkeletalAnimation.h" />
+    <ClInclude Include="SkeletalAnimationSystem.h" />
+    <ClInclude Include="SpawnPointSet.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
@@ -170,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
+    <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
@@ -284,6 +289,8 @@
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="ShipSlotControllerSystem.cpp" />
+    <ClCompile Include="SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />

@@ -33,6 +33,11 @@ private:
 	PixelShader*			mPS;
 
 	ID3D11SamplerState*		mSampler;
+
+	ID3D11Texture1D*		mBoneTexture;
+	ID3D11SamplerState*		mBoneTextureSampler;
+	ID3D11ShaderResourceView* mBoneSRV;
+
 public:
 	SkeletonMeshShader(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, VertexShader* pVS, PixelShader* pPS);
 	~SkeletonMeshShader();
@@ -40,6 +45,8 @@ public:
 	ID3D11PixelShader*	GetPixelShader();
 	ID3D11InputLayout*	GetInputLayout();
 	void				SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pProjection, float pScale, AglSkeleton* pSkeleton, AglMaterial pMaterial);
+
+	void createSkeletonTexture();
 };
 
 #endif

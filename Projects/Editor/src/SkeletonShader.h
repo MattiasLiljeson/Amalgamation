@@ -26,6 +26,7 @@ private:
 
 	VertexShader*			mVS;
 	PixelShader*			mPS;
+
 public:
 	SkeletonShader(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, VertexShader* pVS, PixelShader* pPS);
 	~SkeletonShader();

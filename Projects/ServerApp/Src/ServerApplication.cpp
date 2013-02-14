@@ -45,6 +45,7 @@
 #include <ShipModule.h>
 #include <SpeedBoostModuleControllerSystem.h>
 #include <SpeedBoosterModule.h>
+#include <SpawnPointSet.h>
 
 
 namespace Srv
@@ -272,8 +273,8 @@ namespace Srv
 		//Will cause memory leaks
 		//entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
 		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
-		m_world->addEntity(entity);
 
+		m_world->addEntity(entity);
 
 		EntityCreationPacket cp;
 		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);

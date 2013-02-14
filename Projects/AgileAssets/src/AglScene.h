@@ -369,6 +369,8 @@ public:
 	void RemoveParticleEffect(AglParticleSystem* p_particleSystem);
 
 	AglOBB getSceneOBB();
+
+	void setTime(float p_time);
 };
 
 #endif

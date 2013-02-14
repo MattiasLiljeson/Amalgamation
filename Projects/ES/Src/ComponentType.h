@@ -90,6 +90,7 @@ public:	//Enums
 		StaticProp,
 		LightsComponent,
 		MeshOffsetTransform,
+		SkeletalAnimation,
 		NUM_COMPONENT_TYPES
 	};
 

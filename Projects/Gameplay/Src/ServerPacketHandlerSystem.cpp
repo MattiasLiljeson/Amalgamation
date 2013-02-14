@@ -256,11 +256,15 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			else if (sep.type == SimpleEventType::DEACTIVATE_MODULE)
 				modsystem->addDeactivateEvent(packet.getSenderId());
 			else if (sep.type == SimpleEventType::ROTATE_ADD)
-				modsystem->addRotationEvent(RotationState(1, packet.getSenderId()));
+				pickSystem->addRotationEvent(1, packet.getSenderId());
 			else if (sep.type == SimpleEventType::ROTATE_SUB)
-				modsystem->addRotationEvent(RotationState(-1, packet.getSenderId()));
+				pickSystem->addRotationEvent(-1, packet.getSenderId());
 			else if (sep.type == SimpleEventType::ROTATE_NONE)
-				modsystem->addRotationEvent(RotationState(0, packet.getSenderId()));
+				pickSystem->addRotationEvent(0, packet.getSenderId());
+			else if (sep.type == SimpleEventType::ROTATE_90_ADD)
+				pickSystem->add90RotationEvent(1, packet.getSenderId());
+			else if (sep.type == SimpleEventType::ROTATE_90_SUB)
+				pickSystem->add90RotationEvent(-1, packet.getSenderId());
 			else if (sep.type == SimpleEventType::ACTIVATE_PICK)
 				pickSystem->setEnabled(packet.getSenderId(), true);
 			else if (sep.type == SimpleEventType::DEACTIVATE_PICK)

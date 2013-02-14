@@ -42,5 +42,7 @@ private:
 		PhysicsBody* p_rootPhysicsBody,
 		AglMatrix& baseTransform);
 
+	virtual void setUpAnimation(Entity* p_entity, ModelResource* p_modelResource);
+
 	ModelBaseFactory* m_modelBaseFactory;
 };

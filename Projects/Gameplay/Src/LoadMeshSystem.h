@@ -70,4 +70,5 @@ private:
 									 BodyInitData* p_rootRigidBodyData,
 									 PhysicsBody* p_rootPhysicsBody,
 									 AglMatrix& baseTransform)=0;
+	virtual void setUpAnimation(Entity* p_entity, ModelResource* p_modelResource) = 0;
 };

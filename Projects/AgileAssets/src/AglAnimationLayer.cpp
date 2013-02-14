@@ -30,6 +30,12 @@ void AglAnimationLayer::evaluate(float p_time)
 		nodeAnimation->appendTransform(p_time, 1.0f);
 	}
 }
+AglMatrix AglAnimationLayer::evaluate(float p_time, unsigned int p_node)
+{
+	AglNodeAnimation* nodeAnimation = m_scene->getNodeAnimation(m_nodes[p_node]);
+	return nodeAnimation->evaluate(p_time);
+}
+
 float AglAnimationLayer::getMinTime()
 {
 	if (m_header.nodeCount == 0)

@@ -55,9 +55,8 @@ private:
 
 	string mPath;
 
-public:
-	static AglMatrix m_world;
-	static AglMatrix m_avoidJump;
+	float conpointLength;
+
 private:
 	int mCurrentAnimation;
 
@@ -117,7 +116,6 @@ public:
 
 	AglQuaternion* GetQuaternionRotation(){ return &mQuaternionRotation; }
 	AglVector3* GetPosition(){ return &mPosition; }
-	AglMatrix GetWorld() { return m_world; }
 	AglVector3 GetCenter();
 
 	bool IsLeftHanded();
@@ -139,6 +137,11 @@ public:
 
 	vector<string> FindFiles(string pPath);
 	void MaterialFromStrings(vector<string> pStrings);
+
+	float* GetConPointLengthPtr()
+	{
+		 return &conpointLength;
+	}
 };
 
 #endif

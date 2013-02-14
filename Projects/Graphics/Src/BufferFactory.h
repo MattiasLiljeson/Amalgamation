@@ -120,9 +120,10 @@ public:
 	/// \param p_numberOfIndices
 	/// \return Mesh*
 	///-----------------------------------------------------------------------------------
-	Mesh* createMeshFromRaw(void* p_vertexBlob, void* p_indexBlob,
-							unsigned int p_numberOfVertices,
-							unsigned int p_numberOfIndices);
+	Mesh* createMeshFromRaw( void* p_vertexBlob, void* p_skeletonVertexBlob, void* p_indexBlob, 
+		unsigned int p_numberOfVertices,
+		unsigned int p_numberOfSkeletonVertices,
+		unsigned int p_numberOfIndices);
 
 protected:
 private:
@@ -135,6 +136,8 @@ template<typename T>
 Buffer<T>* BufferFactory::createVertexBuffer( T* p_vertices, 
 											  unsigned int p_numberOfElements )
 {		
+	if (p_numberOfElements == 0)
+		return NULL;
 	Buffer<T>* vertexBuffer;
 
 	// Create description for buffer

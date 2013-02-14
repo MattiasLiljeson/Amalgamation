@@ -570,6 +570,18 @@
     <ClInclude Include="ShieldModuleActivationClient.h">
       <Filter>Components\Modules\Events\Module Events %28Client%29</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimation.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimationSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -942,6 +954,14 @@
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTriggerPacket.cpp">
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimationSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

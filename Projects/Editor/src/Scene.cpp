@@ -13,9 +13,6 @@
 
 Scene* Scene::sInstance = NULL;
 
-AglMatrix Scene::m_avoidJump = AglMatrix();
-AglMatrix Scene::m_world = AglMatrix();
-
 void Scene::MaterialFromStrings(vector<string> pStrings)
 {
 	vector<string> lookFor;
@@ -193,6 +190,7 @@ Scene::Scene()
 	mQuaternionRotation = AglQuaternion(0, 0, 0, 1);
 	mPosition = AglVector3(0, 0, 0);
 	mDrawPlanes = true;
+	conpointLength = 0.1f;
 }
 Scene::~Scene()
 {
@@ -356,24 +354,6 @@ void Scene::Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDevi
 		mMeshes[grids[i]->getHeader().targetMesh]->SetInteriorSpheres(grids[i]);
 	}
 
-	if (mAglScene->getSkeletonCount() > 0)
-	{
-		AglSkeleton* s = mAglScene->getSkeleton(0);
-		AglJoint* j1 = s->getRoot();
-
-		//What is it?
-		m_world = s->getInverseBindMatrix(j1->id);// * s->getGlobalTransform(j1->id);
-		m_avoidJump = s->getInverseBindMatrix(j1->id) * s->getGlobalTransform(j1->id);
-		//mAglScene->tempFix(m_avoidJump.inverse());
-
-	}
-	else
-	{
-		m_avoidJump = AglMatrix::identityMatrix();
-		m_world = AglMatrix::identityMatrix();
-	}
-
-
 	mMax = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 	mMin = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
@@ -433,8 +413,11 @@ void Scene::Draw()
 {
 	if (!mAglScene)
 		return;
+	
 	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
 	float invMax = 1.0f / maxV;
+	if (mMeshes.size() == 0)
+		invMax = 1.0f;
 	
 	AglMatrix w;
 
@@ -447,19 +430,9 @@ void Scene::Draw()
 		w = w3 * w;
 	}
 
-	if (mAglScene && mAglScene->getSkeletonCount() > 0)
-	{
-		AglSkeleton* s = mAglScene->getSkeleton(0);
-		AglJoint* j1 = s->getRoot();
-		m_avoidJump = s->getInverseBindMatrix(j1->id) * s->getGlobalTransform(j1->id);
-	}
-	else
-		m_world = AglMatrix::identityMatrix();
-
 	//AglMatrix::MatrixToComponents(w2, v1, mQuaternionRotation, v2);
 	for (unsigned int i = 0; i < mMeshes.size(); i++)
 	{
-		AglMatrix manip = m_avoidJump.inverse();
 		mMeshes[i]->Draw(w, invMax);
 
 		AglMatrix meshTransform = mMeshes[i]->getTransform();
@@ -469,10 +442,8 @@ void Scene::Draw()
 			AglBoundingSphere bs = mMeshes[i]->getBoundingSphere();
 			AglMatrix sw;
 			AglMatrix::componentsToMatrix(sw, AglVector3(bs.radius, bs.radius, bs.radius), AglQuaternion::identity(), bs.position);
-			sw = sw * m_avoidJump;
 			sw = sw * invMax;
-			if (!mMeshes[i]->hasSkeleton())
-				sw *= meshTransform;
+			sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			SPHEREMESH->Draw(sw, mSphereColors[i]);
@@ -484,10 +455,8 @@ void Scene::Draw()
 			AglMatrix size;
 			AglMatrix::componentsToMatrix(size, obb.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
 			sw = size * sw;
-			sw = sw * m_avoidJump;
 			sw = sw * invMax;
-			if (!mMeshes[i]->hasSkeleton())
-				sw *= meshTransform;
+			sw *= meshTransform;
 			sw *= w;
 			sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 			BOXMESH->Draw(sw, mBoxColors[i]);
@@ -526,6 +495,7 @@ void Scene::Draw()
 	}
 
 
+	//Connection points
 	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
 	for (unsigned int i = 0; i < cp.size(); i++)
 	{
@@ -537,24 +507,16 @@ void Scene::Draw()
 		}
 		t = cp[i].transform*t;
 		t.SetTranslation(t.GetTranslation()*invMax);
-		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(0.1f, 0.001f, 0.001f));
-		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * 0.05f);
+		AglMatrix scale = AglMatrix::createScaleMatrix(AglVector3(conpointLength, 0.001f, 0.001f));
+		AglMatrix trans = AglMatrix::createTranslationMatrix(t.GetLeft() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(1, 0, 0));
-		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.1f, 0.001f));
-		trans = AglMatrix::createTranslationMatrix(t.GetDown() * 0.05f);
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, conpointLength, 0.001f));
+		trans = AglMatrix::createTranslationMatrix(t.GetDown() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(0, 1, 0));
-		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, 0.1f));
-		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * 0.05f);
+		scale = AglMatrix::createScaleMatrix(AglVector3(0.001f, 0.001f, conpointLength));
+		trans = AglMatrix::createTranslationMatrix(t.GetBackward() * conpointLength*0.5f);
 		BOXMESH->Draw(scale * t*trans, AglVector3(0, 0, 1));
 	}
-
-	AglVector3 minP = mMin;
-	AglVector3 maxP = mMax;
-
-	AglMatrix newW = m_world;
-	newW.SetTranslation(AglVector3(0, 0, 0));
-	minP.transform(newW*invMax);
-	maxP.transform(newW*invMax);
 
 	if (mDrawPlanes)
 	{
@@ -579,7 +541,7 @@ void Scene::Draw()
 
 	}
 
-	if (BOXMESH)
+	if (BOXMESH && mBoxColors.size() > 0)
 	{
 		AglOBB sceneOBB = mAglScene->getSceneOBB();
 
@@ -587,7 +549,6 @@ void Scene::Draw()
 		AglMatrix size;
 		AglMatrix::componentsToMatrix(size, sceneOBB.size, AglQuaternion::identity(), AglVector3(0, 0, 0));
 		sw = size * sw;
-		//sw = sw * m_avoidJump;
 		sw = sw * invMax;
 		sw *= w;
 		sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
@@ -697,12 +658,10 @@ void Scene::Save(string pPath)
 	w.write(mAglScene);
 }
 AglVector3 Scene::GetCenter() 
-{ 
-	float maxV = max(max(mMax.x - mMin.x, mMax.y - mMin.y), mMax.z - mMin.z);
-	float invMax = 1.0f / maxV;
-	AglVector3 c = ((mMin+mMax)*0.5f);
-	c.transform(m_world*AglMatrix::createScaleMatrix(AglVector3(invMax, invMax, invMax)));
-	return c;
+{
+	AglOBB obb = mAglScene->getSceneOBB();
+	float divideWith = max(obb.size.x, max(obb.size.y, obb.size.z));
+	return obb.world.GetTranslation() / divideWith;
 }
 bool Scene::IsLeftHanded()
 {
@@ -825,6 +784,11 @@ void Scene::createScenePlane()
 	AglMesh* mesh = new AglMesh(h, vertices, indices);
 
 	planeDown->Init(mesh);
+
+	AglMaterial* mat = new AglMaterial();
+	mat->diffuse = AglVector3(0, 0.5f, 0.5f);
+	mat->specular = AglVector3(0.0f, 0.0f, 0.0f);
+	planeDown->setOverrideMaterial(mat);
 
 	//Plane Right
 	planeRight = new Mesh(mDevice, mDeviceContext, this);

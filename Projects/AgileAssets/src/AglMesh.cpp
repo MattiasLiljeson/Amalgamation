@@ -67,7 +67,16 @@ void AglMesh::transform(AglMatrix p_transform)
 	//m_header.minimumOBB.world = p_transform * m_header.minimumOBB.world * p_transform.transpose();
 
 	//Fungerar
-	m_header.minimumOBB.world = m_header.minimumOBB.world * p_transform;
+	if (AglVector3::dotProduct(AglVector3::crossProduct(r, u), f) < 0)
+	{
+		//Mirror
+		m_header.minimumOBB.world = m_header.minimumOBB.world * p_transform * AglMatrix(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	}
+	else
+	{
+		//Dont Mirror
+		m_header.minimumOBB.world = m_header.minimumOBB.world * p_transform;
+	}
 
 	m_header.boundingSphere.position.transform(p_transform);
 
@@ -96,4 +105,8 @@ void AglMesh::transformOld(AglMatrix p_transform) //DEPRECHATED!!!
 	m_header.minimumOBB.world *= p_transform;
 	m_header.boundingSphere.position.transform(p_transform);
 	m_header.transform *= p_transform;
+}
+void AglMesh::setTransform(AglMatrix p_transform)
+{
+	m_header.transform = p_transform;
 }

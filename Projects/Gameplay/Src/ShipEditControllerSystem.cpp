@@ -43,6 +43,9 @@ void ShipEditControllerSystem::processEntities( const vector<Entity*>& p_entitie
 
 		for(unsigned int i=0; i<p_entities.size(); i++ )
 		{
+			//Rotation of modules
+			m_slotInput->handleSlotSelection(true);
+
 			Entity* ship = p_entities[i];
 			ShipEditController* controller = static_cast<ShipEditController*>(
 				ship->getComponent( ComponentType::ComponentTypeIdx::ShipFlyController ) );

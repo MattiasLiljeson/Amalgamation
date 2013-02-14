@@ -99,6 +99,8 @@
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <ParticleSystemInstructionTranslatorSystem.h>
+#include <ClientEntityCountSystem.h>
+#include <SkeletalAnimationSystem.h>
 
 
 // Helpers
@@ -377,6 +379,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem(new GameStatsSystem(), true);
 	m_world->setSystem( new LightBlinkerSystem(), true );
 	m_world->setSystem( new ShieldPlatingSystem(), true );
+
+	/************************************************************************/
+	/* Animation															*/
+	/************************************************************************/
+	m_world->setSystem(new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/

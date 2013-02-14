@@ -50,6 +50,7 @@ class SpawnPointSet: public Component
 public:
 	SpawnPointSet();
 	SpawnPointSet(const vector<SpawnPoint>& p_spawnPoints);
+	SpawnPointSet(const vector<pair<string, AglMatrix>>& p_spawnPoints);
 	~SpawnPointSet();
 	vector<SpawnPoint> m_spawnPoints;
 };

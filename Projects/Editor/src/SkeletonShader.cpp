@@ -62,11 +62,9 @@ void SkeletonShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 	AglSkeleton* s = pSkeletonMesh->GetSkeleton();
 	unsigned int jointCount = s->getHeader().jointCount;
 
-	AglMatrix inv = Scene::m_avoidJump.inverse();
 	for (unsigned int i = 0; i < jointCount; i++)
 	{
-		AglMatrix am = s->getGlobalTransform(i);// * mat;
-		//am *= inv;
+		AglMatrix am = s->getGlobalTransform(i);
 		am = AglMatrix::transpose(am);
 		buffer->Palette[i] = am;
 	}

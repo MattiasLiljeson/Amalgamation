@@ -127,6 +127,7 @@ public:
 
 	void transform(AglMatrix p_transform);
 	void transformOld(AglMatrix p_transform);
+	void setTransform(AglMatrix p_transform);
 
 };
 
