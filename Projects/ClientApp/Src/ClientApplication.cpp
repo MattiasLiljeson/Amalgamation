@@ -560,8 +560,7 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
-	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f),
-		400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
+//	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f), 400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
