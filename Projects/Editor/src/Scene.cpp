@@ -487,14 +487,6 @@ void Scene::Draw()
 		}
 	}
 
-
-	//Draw Particle systems
-	for (unsigned int i = 0; i < sortedPS.size(); i++)
-	{
-		sortedPS[i].first->Draw();
-	}
-
-
 	//Connection points
 	vector<AglConnectionPoint> cp = mAglScene->getConnectionPoints();
 	for (unsigned int i = 0; i < cp.size(); i++)
@@ -553,6 +545,12 @@ void Scene::Draw()
 		sw *= w;
 		sw.SetTranslation(sw.GetTranslation() + w.GetTranslation());
 		BOXMESH->Draw(sw, mBoxColors[0]);
+	}
+
+	//Draw Particle systems
+	for (unsigned int i = 0; i < sortedPS.size(); i++)
+	{
+		sortedPS[i].first->Draw();
 	}
 }
 AglNode Scene::GetNode(int pIndex)
