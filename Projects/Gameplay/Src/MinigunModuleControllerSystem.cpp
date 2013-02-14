@@ -288,6 +288,9 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 	MinigunModule* gun = static_cast<MinigunModule*>
 		( p_entity->getComponent( ComponentType::MinigunModule) );
 
+	ParticleSystemServerComponent* particleComp = static_cast<ParticleSystemServerComponent*>
+		( p_entity->getComponent( ComponentType::ParticleSystemServerComponent) );
+
 	if (gun && gun->particleSystemEntity < 0)
 	{
 		EntityCreationPacket creationPacket;
@@ -300,23 +303,32 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		creationPacket.meshInfo				= 0;
 		m_server->broadcastPacket( creationPacket.pack() );
 
-		// DEPRECATED //ML
-		//p_entity->addComponent( new NetworkSynced( p_entity->getIndex(), -1,
-		//	EntityType::ParticleSystem ) );
+		ParticleSystemData data("minigun");
+		int particleSysIdx = particleComp->addParticleSystem(data);
 
-		//ParticleSystemCreationInfo psInfo;
-		//psInfo.entityNetId = p_entity->getIndex();
-		////psInfo.particleSysIdx = particleSysIdx;
-		//psInfo.particleSysIdx = 0;
-		////psInfo.particleSysHeader = header;
+		ParticleSystemCreationInfo psInfo;
+		psInfo.entityNetId = p_entity->getIndex();
+		psInfo.particleSysIdx = particleSysIdx;
+		psInfo.particleSysIdx = 0;
+		psInfo.particleSysHeader.particleSize = AglVector2(2, 2);
+		psInfo.particleSysHeader.spawnFrequency = 10;
+		psInfo.particleSysHeader.spawnSpeed = 5.0f;
+		psInfo.particleSysHeader.spread = 0.0f;
+		psInfo.particleSysHeader.fadeOutStart = 2.0f;
+		psInfo.particleSysHeader.fadeInStop = 0.0f;
+		psInfo.particleSysHeader.particleAge = 2;
+		psInfo.particleSysHeader.maxOpacity = 1.0f;
+		psInfo.particleSysHeader.color = AglVector4(0, 1, 0, 1.0f);
+		psInfo.particleSysHeader.alignmentType = AglParticleSystemHeader::OBSERVER;
 
-		//Packet packet( PacketType::ParticleSystemCreationInfo );
-		//packet.WriteData( (char*)&psInfo, sizeof( ParticleSystemCreationInfo ) );
-		//m_server->broadcastPacket( packet );
+		Packet packet( PacketType::ParticleSystemCreationInfo );
+		int bice =  sizeof( ParticleSystemCreationInfo );
+		packet.WriteData( (char*)&psInfo, sizeof( ParticleSystemCreationInfo ) );
+		m_server->broadcastPacket( packet );
+	}
 
 		gun->particleSystemEntity = p_entity->getIndex(); // Itself
-	}
-	else if( gun )
+	if( gun )
 	{
 		//Entity* entity = m_world->getEntity(gun->particleSystemEntity);
 		
@@ -335,8 +347,6 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		AglVector3 vel = physics->getController()->getBody( body->m_id )->GetVelocity();
 		vel += dir * 50; // Why 50? /ML
 
-		ParticleSystemServerComponent* particleComp = static_cast<ParticleSystemServerComponent*>
-			( p_entity->getComponent( ComponentType::ParticleSystemServerComponent) );
 		if( particleComp != NULL )
 		{
 			ParticleSystemData* data = particleComp->getParticleSystemDataPtrFromName( "minigun" );

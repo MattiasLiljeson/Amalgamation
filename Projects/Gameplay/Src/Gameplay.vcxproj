@@ -80,7 +80,6 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
-    <ClInclude Include="ParticleSystemInstructionComponent.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
@@ -222,7 +221,6 @@
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
-    <ClCompile Include="ParticleSystemInstructionComponent.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
     <ClCompile Include="ParticleSystemsComponent.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />

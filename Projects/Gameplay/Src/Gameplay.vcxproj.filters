@@ -528,9 +528,6 @@
     <ClInclude Include="ParticleSystemsComponent.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemInstructionComponent.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -888,9 +885,6 @@
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystemsComponent.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystemInstructionComponent.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp">

@@ -665,8 +665,8 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
 		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
 
-	int NetId = p_creationInfo.entityNetId;
-	Entity* entity = directMapper->getEntity(NetId);
+	int netID = p_creationInfo.entityNetId;
+	Entity* entity = directMapper->getEntity(netID);
 
 	ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>
 		( entity->getComponent( ComponentType::ParticleSystemsComponent) );
@@ -680,7 +680,7 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	ParticleSystemInstruction instruction;
 	instruction.textureFileName = p_creationInfo.textureFileName;
 	instruction.particleSystem = AglParticleSystem(p_creationInfo.particleSysHeader);
-	int psIdx = particleComp->addParticleSystemInstruction( instruction );
+	int psIdx = particleComp->addParticleSystemInstruction( instruction, p_creationInfo.particleSysIdx );
 	if( psIdx != p_creationInfo.particleSysIdx )
 	{
 		// PARTICLE SYSTEMS NOT IN SYNC!
