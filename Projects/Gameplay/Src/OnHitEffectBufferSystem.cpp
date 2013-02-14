@@ -1,5 +1,6 @@
 #include "OnHitEffectBufferSystem.h"
 #include "TimerSystem.h"
+#include <TcpServer.h>
 #include "NetworkSynced.h"
 
 OnHitEffectBufferSystem::OnHitEffectBufferSystem(TcpServer* p_server) :

@@ -2,7 +2,7 @@
 #include <DebugUtil.h>
 #include <ToString.h>
 #include "Transform.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "LoadMesh.h"
 
 ScoreWorldVisualizerSystem::ScoreWorldVisualizerSystem() : 
@@ -26,7 +26,7 @@ void ScoreWorldVisualizerSystem::process()
 	while(!m_effectsToCreate.empty())
 	{
 		ScoreEffectCreationData data = m_effectsToCreate.back();
-		DEBUGWARNING((toString(data.score).c_str()));
+		// DEBUGWARNING((toString(data.score).c_str()));
 		createNumberEffectEntity(data);
 		m_effectsToCreate.pop_back();
 	}
@@ -46,7 +46,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 
 	LoadMesh* lm = new LoadMesh( "P_sphere",true );
 	effect->addComponent( ComponentType::LoadMesh, lm );
-
+	/*
 	ParticleEmitters* particleEmitters = new ParticleEmitters();
 	// add an emitter for each number in data
 	unsigned int size = toString(p_data.score).size();
@@ -65,7 +65,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 	}
 	
 	effect->addComponent( ComponentType::ParticleEmitters, particleEmitters );
-
+	*/
 	m_world->addEntity(effect);
 	return effect;
 }

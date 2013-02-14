@@ -3,10 +3,11 @@
 #include "OnHitScoreEffectPacket.h"
 #include <queue>
 #include <Entity.h>
-#include <TcpServer.h>
 #include <EntitySystem.h>
 
 using namespace std;
+
+class TcpServer;
 
 // =======================================================================================
 //                             OnHitEffectBufferSystem
