@@ -534,6 +534,12 @@
     <ClInclude Include="LevelPieceFileMapping.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
+    <ClInclude Include="LevelHandlerSystem.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceRoot.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -892,6 +898,12 @@
     </ClCompile>
     <ClCompile Include="LevelPieceFileMapping.cpp">
       <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelHandlerSystem.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceRoot.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

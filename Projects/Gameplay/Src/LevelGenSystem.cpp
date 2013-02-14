@@ -37,17 +37,7 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 
 LevelGenSystem::~LevelGenSystem()
 {
-	// TODO: delete generated pieces in order to prevent memory leaks!
-	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
-	{
-		delete m_generatedPieces[i];
-	}
-	m_generatedPieces.clear();
-
-	//for (unsigned int i = 0; i < m_modelResources.size(); i++)
-	//	delete m_modelResources[i];
-
-	//m_modelResources.clear();
+	clearGeneratedData();
 }
 
 void LevelGenSystem::initialize()
@@ -106,6 +96,20 @@ void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 		entity->removeComponent(ComponentType::LevelPieceInfo);
 		entity->applyComponentChanges();
 	}
+}
+
+void LevelGenSystem::clearGeneratedData()
+{
+	// Destroy generated pieces.
+	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
+	{
+		delete m_generatedPieces[i];
+	}
+	m_generatedPieces.clear();
+	// Clear modelresources (Don't delete, since the levelgen doesn't have ownership)
+	m_modelResources.clear();
+
+	// There's still data that exists, such as init data. These should not be destroyed.
 }
 
 void LevelGenSystem::run()
@@ -366,4 +370,5 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);
 	}
 }
+
 

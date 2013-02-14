@@ -95,7 +95,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-
+#include <LevelHandlerSystem.h>
 
 
 // Helpers
@@ -214,6 +214,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	EntityFactory* factory = new EntityFactory(m_client, NULL);
 	m_world->setSystem( factory, true);
+
+	/************************************************************************/
+	/* Level handling														*/
+	/************************************************************************/
+	LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
+	m_world->setSystem( levelHandler, true);
 
 
 	/************************************************************************/
@@ -419,9 +425,9 @@ void ClientApplication::initEntities()
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	//entity = factory->entityFromRecipe( "rocksClient" );	
+	entity = factory->entityFromRecipe( "rocksClient" );	
 
-	//m_world->addEntity( entity );
+	m_world->addEntity( entity );
 
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 

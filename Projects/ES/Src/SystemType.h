@@ -51,6 +51,7 @@ public:	//Enums
 		DisplayPlayerScoreSystem,
 		GameStatsSystem,
 		LevelGenSystem,
+		LevelHandlerSystem,
 		EntityFactory,
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,

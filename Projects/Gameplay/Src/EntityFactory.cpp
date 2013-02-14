@@ -31,6 +31,7 @@
 #include <AssemblageReader.h>
 #include <Entity.h>
 #include <time.h>
+#include "LevelPieceRoot.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -627,6 +628,17 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
 		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
 		entity = entityFromRecipe( asdName );
+
+		AglMatrix mat(p_packet.scale, p_packet.rotation, p_packet.translation);
+
+		//entity->addComponent(new LevelPieceRoot(mat));
+
+		//auto rootComponent = static_cast<LevelPieceRoot*>(
+		//	entity->getComponent(ComponentType::LevelPieceRoot));
+		//auto transform = static_cast<Transform*>(
+		//	entity->getComponent(ComponentType::Transform));
+		
+		int i = 0;
 	}
 	else	
 	{
@@ -636,11 +648,33 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
 	}
-	// NOTE: This leads to memory leaks in ES, due to the recipe creating a such component.
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
+	// Try fetch a transform component if it exists.
+	Transform* transform = NULL;
+	if (entity)
+	{	
+		transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+		if (transform)
+		{
+			// Update the existing transform
+			transform->setTranslation(p_packet.translation);
+			transform->setRotation(p_packet.rotation);
+			if (!p_packet.isLevelProp)
+				transform->setScale(p_packet.scale);
+		}
+		// If this else block is ran, is means no transform as been specified in the assemblage file
+		else
+		{
+			// Create a new transform and add it to the entity.
+			if (p_packet.isLevelProp)
+				transform = new Transform(p_packet.translation, p_packet.rotation, AglVector3::one());
+			else
+				transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 
-	m_world->addEntity(entity);
+			entity->addComponent( transform );
+		}
+
+		m_world->addEntity(entity);
+	}
 	return entity;
 }
 Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)

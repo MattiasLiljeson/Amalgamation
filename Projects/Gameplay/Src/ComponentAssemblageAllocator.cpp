@@ -28,6 +28,7 @@
 #include "LoadMesh.h"
 #include "LightsComponent.h"
 #include "LightBlinker.h"
+#include "LevelPieceRoot.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -56,4 +57,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<LoadMesh>();
 	handle<LightsComponent>();
 	handle<LightBlinker>();
+	handle<LevelPieceRoot>();
 }
