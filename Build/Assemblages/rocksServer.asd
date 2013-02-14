@@ -7,6 +7,9 @@ c Transform
 d f m_translationX 10.0
 d f m_translationY 10.0
 d f m_translationZ 10.0
+d f m_scaleX 1.0
+d f m_scaleY 1.0
+d f m_scaleZ 1.0
 
 #c BodyInitData
 #d f m_positionX 0.0
