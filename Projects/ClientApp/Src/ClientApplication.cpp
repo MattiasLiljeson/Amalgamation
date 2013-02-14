@@ -428,11 +428,10 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	component = new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
-	component = new Transform( -20.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
+	entity->addComponent( new MainCamera_TAG() );
+	entity->addComponent( new AudioListener());
+	entity->addComponent( new Transform( -20.0f, 0.0f, -5.0f ) );
 	m_world->addEntity(entity);
 
 

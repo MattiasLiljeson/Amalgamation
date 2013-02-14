@@ -271,8 +271,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// because it was really weird to hear from the camera. This can of course
 		// be changed back if game play fails in this way, but it's at least more
 		// convenient for debugging!
-		component = new AudioListener();
-		entity->addComponent(ComponentType::AudioListener, component);
+		/*component = new AudioListener();
+		entity->addComponent(ComponentType::AudioListener, component);*/
 
 		/************************************************************************/
 		/* This is where the audio listener is created and therefor the master  */
