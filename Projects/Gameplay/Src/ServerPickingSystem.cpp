@@ -161,7 +161,8 @@ void ServerPickingSystem::setReleased(int p_index)
 				if (shipModule)
 				{
 					// get parent
-					parentShip = m_world->getEntity(shipModule->m_lastParentWhenAttached);
+					if (shipModule->m_lastParentWhenAttached!=-1)
+						parentShip = m_world->getEntity(shipModule->m_lastParentWhenAttached);
 
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);

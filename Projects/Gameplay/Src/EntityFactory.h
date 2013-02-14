@@ -65,6 +65,7 @@ public:
 	Entity* entityFromRecipeOrFile( const string& p_entityName, string p_filePath );
 
 	Entity* entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint = NULL);
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);

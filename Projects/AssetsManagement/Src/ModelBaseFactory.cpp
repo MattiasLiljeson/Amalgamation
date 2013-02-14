@@ -348,7 +348,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 
 				if (isOk)
 				{
-					// FixTransform(cp->transform);	
+					// FixTransform(cp->transform);	 // not needed when z is used as forward in file
 					pair<string,AglMatrix> sp(parsedAction.first.spawnSpecName,
 						cp->transform*p_offset);
 					p_model->spawnPoints.m_collection.push_back(sp);
@@ -367,7 +367,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 
 				if (isOk)
 				{
-					// FixTransform(cp->transform);
+					// FixTransform(cp->transform); // not needed when z is used as forward in file
 					p_model->connectionPoints.m_collection.push_back(cp->transform*p_offset);
 				}
 
@@ -387,7 +387,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				if (isOk)
 				{
 					LightCreationData ld = parsedAction.first.lightSpec;
-					// FixTransform(cp->transform);
+					FixTransform(cp->transform);
 					ld.transform = cp->transform*p_offset;
 					p_model->lightCollection.m_collection.push_back(ld);
 				}

@@ -23,11 +23,16 @@ public:
 	GamepadRumbleSystem(InputBackendSystem* p_input);
 	~GamepadRumbleSystem();
 
+	void initialize();
+
 	void processEntities( const vector<Entity*>& p_entities );
+	void disable() {m_enabled=false;}
+	void enable() {m_enabled=true;}
 private:
 	void sendRumblePacketToServer(NetworkSynced* p_syncedInfo, 
 		float p_power1, float p_power2);
 
 	InputBackendSystem* m_input;
+	bool m_enabled;
 };
 

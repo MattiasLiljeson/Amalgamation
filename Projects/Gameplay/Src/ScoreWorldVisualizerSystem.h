@@ -38,4 +38,5 @@ protected:
 private:
 	vector<ScoreEffectCreationData> m_effectsToCreate;
 
+	Entity* createNumberEffectEntity(ScoreEffectCreationData& p_data);
 };
