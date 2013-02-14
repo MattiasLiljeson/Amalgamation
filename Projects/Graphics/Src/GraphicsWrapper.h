@@ -46,6 +46,7 @@ struct Texture;
 struct AglMatrix;
 struct PerShadowCBuffer;
 struct ParticleSystemAndTexture;
+struct MaterialInfo;
 
 class GraphicsWrapper
 {
@@ -194,6 +195,8 @@ public:
 	GPUTimer* getGPUTimer();
 
 	int getEmptyTexture();
+
+	MaterialInfo getMaterialInfoFromMeshID(unsigned int p_index);
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);

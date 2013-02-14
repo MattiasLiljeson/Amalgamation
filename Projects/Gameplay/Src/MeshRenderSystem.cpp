@@ -11,6 +11,7 @@
 #include <TextureParser.h>
 #include "SkeletalAnimation.h"
 #include "MeshOffsetTransform.h"
+#include <MaterialInfo.h>
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -68,10 +69,25 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 
 		// Finally, add the entity to the instance vector
-		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
+		InstanceData instanceData = transform->getInstanceDataRef();
+		instanceData.setGradientColor(
+			m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			renderInfo->m_meshId).getGradientColors());
+		instanceData.setNumberOfActiveGradientLayers(
+			m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			renderInfo->m_meshId).numberOfLayers
+			);
+		
+		if(instanceData.flags[0] != 0){
+			int x = 0;
+		}
+
+		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
-		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
+			(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+
 		if (skelAnim)
 		{
 			AglSkeleton* skeleton = skelAnim->m_scene->getSkeleton(0);

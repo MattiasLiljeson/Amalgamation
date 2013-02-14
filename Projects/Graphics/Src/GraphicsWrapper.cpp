@@ -261,7 +261,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			/* Check if the texture ID is active and get the texture resource or	*/
 			/* set the value in the texture array to NULL							*/
 			/************************************************************************/
-			if(textureId != 0)
+			if(textureId > 0)
 				textureArray[i] = m_textureManager->getResource(textureId);
 			else
 				textureArray[i] = NULL;
@@ -848,4 +848,9 @@ void GraphicsWrapper::updateBoneMatrixTexture(vector<AglMatrix>* p_data)
 	}
 
 	m_deviceContext->Unmap(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1));
+}
+
+MaterialInfo GraphicsWrapper::getMaterialInfoFromMeshID( unsigned int p_index )
+{
+	return m_meshManager->getResource(p_index)->getMaterialInfo();
 }

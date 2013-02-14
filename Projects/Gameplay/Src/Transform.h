@@ -123,6 +123,8 @@ public:
 	///----------------------------------------------------------------------------------
 	const AglMatrix& getMatrix() const;
 
+	float* getWorldMatrix();
+
 	inline AglVector3 getForward() const{
 		return m_compositionMatrix.GetForward();
 	}
