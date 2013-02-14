@@ -564,7 +564,8 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
-//	initInstanceAsteroidFieldByJohan("RockA.agl",	400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
+	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f),
+		400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
@@ -593,8 +594,8 @@ void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned in
 }
 
 void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
-	unsigned int p_width, unsigned int p_numbersInCircle, float p_radius,
-	float p_spacing, float p_diffZ, float p_scale)
+	AglVector3 p_origin, unsigned int p_width, unsigned int p_numbersInCircle,
+	float p_radius, float p_spacing, float p_diffZ, float p_scale)
 {
 	for(unsigned int circleIndex=0; circleIndex<p_width; circleIndex++)
 	{
@@ -605,9 +606,10 @@ void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
 
 			float z = p_diffZ * ((float)rand()/(float)RAND_MAX - 0.5f);
 			AglVector3 position(
-				- 50.0f + cos(circleRandom) * currentRadius,
-				- 50.0f + sin(circleRandom) * currentRadius,
+				cos(circleRandom) * currentRadius,
+				sin(circleRandom) * currentRadius,
 				z);
+			position += p_origin;
 			float randScale = p_scale * (float)rand()/(float)RAND_MAX + 0.2f;
 			Entity* entity = m_world->createEntity();
 			Transform* t = new Transform(position, AglQuaternion(),
