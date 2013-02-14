@@ -162,7 +162,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		}
 
 		Transform gunTransform = Transform(sightOffset*meshOffset->offset*body->getOffset().inverse()*rigidBody->GetWorld());
-		
+
 		Entity* entity = m_world->getEntity(gun->laserSightEntity);
 
 		Transform* laserTransform = static_cast<Transform*>(

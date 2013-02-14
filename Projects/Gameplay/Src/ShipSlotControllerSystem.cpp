@@ -84,6 +84,10 @@ void SlotInputControllerSystem::initialize()
 {
 	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
 		SystemType::InputActionsBackendSystem));
+
+	initKeyboard();
+	initMouse();
+	initGamepad();
 }
 
 void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)
