@@ -299,6 +299,16 @@ AglVector3 AglMatrix::GetScale() const
 
 	return AglVector3(lrow0, lrow1, lrow2);
 }
+AglVector4 AglMatrix::getRow(int p_index) const
+{
+	int start = p_index*4;
+	return AglVector4(data[start], data[start+1], data[start+2], data[start+3]);
+}
+AglVector4 AglMatrix::getColumn(int p_index) const
+{
+	int start = p_index;
+	return AglVector4(data[start], data[start+4], data[start+8], data[start+12]);
+}
 
 //Member Setters
 void AglMatrix::SetForward(const AglVector3& pValue)

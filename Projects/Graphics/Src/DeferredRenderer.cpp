@@ -252,7 +252,7 @@ void DeferredRenderer::initGeometryBuffers()
 void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
-		L"Shaders/Game/deferredBase.hlsl");
+		L"Shaders/Game/deferredBaseTess.hlsl");
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/ssaoGenerate.hlsl");

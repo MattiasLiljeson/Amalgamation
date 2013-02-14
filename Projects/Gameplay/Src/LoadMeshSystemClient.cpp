@@ -12,6 +12,8 @@
 #include "PhysicsBody.h"
 #include <AglSkeletonMapping.h>
 #include "SkeletalAnimation.h"
+#include "BoundingSphere.h"
+#include "MeshOffsetTransform.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -40,8 +42,15 @@ void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity,
 											   PhysicsBody* p_rootPhysicsBody, 
 											   AglMatrix& baseTransform )
 {
-	// Do nothing on client here, trolololo
-	// Check server version for how to set up collision data
+	//Setup bounding sphere for frustum culling
+	BoundingSphere* bs = new BoundingSphere(p_modelResource->meshHeader.boundingSphere);
+	p_entity->addComponent(ComponentType::BoundingSphere, bs);
+
+	if (!p_entity->getComponent(ComponentType::MeshOffsetTransform))
+	{
+		MeshOffsetTransform* offset = new MeshOffsetTransform(p_modelResource->meshHeader.transform);
+		p_entity->addComponent(ComponentType::MeshOffsetTransform, offset);
+	}
 }
 
 void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)
