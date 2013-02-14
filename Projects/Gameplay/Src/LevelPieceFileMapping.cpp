@@ -13,13 +13,13 @@ LevelPieceFileMapping::LevelPieceFileMapping()
 	//m_fileNames.push_back("test_parts_4tunnel.agl");
 	m_unknown = "(UNKNOWN)";
 
+	//m_asdNames.push_back("tunnelServer");
 	m_asdNames.push_back("rocksServer");
 	m_asdNames.push_back("rocksServer");
-	m_asdNames.push_back("rocksServer");
+	//m_fileNames.push_back("World_Tunnel_3Way.agl");
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
 	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
-	m_fileNames.push_back("WorldPrison_FinalWork_9_exporting.agl");
-	m_clientAsdNames.push_back("rocksClient");
+	//m_clientAsdNames.push_back("tunnelClient");
 	m_clientAsdNames.push_back("rocksClient");
 	m_clientAsdNames.push_back("rocksClient");
 

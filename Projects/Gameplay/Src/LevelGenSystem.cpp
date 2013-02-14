@@ -48,7 +48,8 @@ void LevelGenSystem::initialize()
 	// Preload entity recipes here. These are then used to create entities.
 	AssemblageHelper::E_FileStatus status = 
 		m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
-
+	//status = 
+	//	m_entityFactory->readAssemblageFile( "Assemblages/tunnelServer.asd" );
 
 
 	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
@@ -126,7 +127,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	auto quart = AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(),
 														(rand() % 360) * 3.1415f / 180.0f);
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(500, -500, 100), 
+	Transform* transform = new Transform(AglVector3(200, -200, 100), 
 										quart, 
 										AglVector3::one());
 	
