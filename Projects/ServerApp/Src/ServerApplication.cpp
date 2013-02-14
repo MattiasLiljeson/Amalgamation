@@ -34,6 +34,7 @@
 #include <ShipModulesTrackerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
+#include <LevelHandlerSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -127,6 +128,12 @@ namespace Srv
 		/* Timer																*/
 		/************************************************************************/
 		m_world->setSystem(new TimerSystem(), true);
+
+		/************************************************************************/
+		/* Level Handler														*/
+		/************************************************************************/
+		LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
+		m_world->setSystem( levelHandler, true);
 
 		/************************************************************************/
 		/* Mesh loading															*/

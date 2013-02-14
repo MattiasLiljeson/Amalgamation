@@ -75,7 +75,8 @@ void LevelGenSystem::initialize()
 
 void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	LevelPieceInfo* pieceInfo = NULL;
+	// Currently this piece of code is never ran.
+	/*LevelPieceInfo* pieceInfo = NULL;
 	Transform*		transform = NULL;
 	Transform*		fetchedTransform = NULL;
 
@@ -95,7 +96,7 @@ void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 
 		entity->removeComponent(ComponentType::LevelPieceInfo);
 		entity->applyComponentChanges();
-	}
+	}*/
 }
 
 void LevelGenSystem::clearGeneratedData()
@@ -121,8 +122,13 @@ void LevelGenSystem::run()
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 {
+	// Creates the first entity.
+	auto quart = AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(),
+														(rand() % 360) * 3.1415f / 180.0f);
 	// Create a initial piece.
-	Transform* transform = new Transform();
+	Transform* transform = new Transform(AglVector3(500, -500, 100), 
+										quart, 
+										AglVector3::one());
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
@@ -159,23 +165,6 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId )
 {
-	//Entity* entity = m_world->createEntity();
-	
-	//AglOBB obb = p_piece->getBoundingBox();
-
-	//entity->addComponent(ComponentType::Transform, p_piece->getTransform());
-	//entity->addComponent(ComponentType::StaticProp,	new StaticProp(p_piece->getTypeId(), true));
-	//
-	/*entity->addComponent(ComponentType::BodyInitData,
-		new BodyInitData(obb.world.GetTranslation(), obb.world.GetRotation(),
-			obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
-			0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true));
-	entity->addComponent(ComponentType::BoundingVolumeInitData,
-		new BoundingVolumeInitData(p_piece->getBoundingSphere(), p_piece->getBoundingBox(),
-			AglMatrix(AglVector3::one(), p_piece->getTransform()->getRotation(),
-				p_piece->getTransform()->getTranslation() ) ) );
-
-	entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());*/
 	Entity* entity = m_entityFactory->entityFromRecipe( 
 		m_modelFileMapping.getAssemblageFileName( p_piece->getTypeId() ) );
 	
@@ -185,56 +174,30 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId
 	}
 	else
 	{
-		entity->addComponent(new LevelPieceInfo(p_pieceInstanceId));
+		//entity->addComponent(new LevelPieceInfo(p_pieceInstanceId));
+		auto transform = static_cast<Transform*>(
+			entity->getComponent(ComponentType::Transform));
+
+		// ISSUE?!? Scale can not be transferred from the piece
+		if (transform)
+		{
+			transform->setTranslation( p_piece->getTransform()->getTranslation() );
+			transform->setRotation( p_piece->getTransform()->getRotation() );
+			//transform->setMatrix( p_piece->getTransform()->getMatrix() );
+		}
+		else
+		{	
+			transform = new Transform();
+			transform->setTranslation( p_piece->getTransform()->getTranslation() );
+			transform->setRotation( p_piece->getTransform()->getRotation() );
+			entity->addComponent( transform );
+		}
 		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
 	}
 
 	return entity;
 }
 
-/*void LevelGenSystem::createAndAddEntity( int p_type, Transform* p_transform, const AglOBB& p_obb)
-{
-	Entity* entity = m_world->createEntity();
-
-	entity->addComponent(ComponentType::Transform, p_transform);
-	entity->addComponent(ComponentType::StaticProp, new StaticProp(p_type, true));
-	
-	//if ( !(p_obbScale == AglVector3::zero()) )
-	{
-		entity->addComponent(ComponentType::BodyInitData, 
-			new BodyInitData(p_obb.world.GetTranslation(), p_obb.world.GetRotation(),
-							p_obb.size * 0.5f, AglVector3::zero(), AglVector3::zero(),
-							0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true)); 
-		entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
-	}
-
-	if ( !m_server )
-	{
-		entity->addComponent(ComponentType::RenderInfo, 
-			new RenderInfo( getMeshFromPieceType( p_type ) ));
-	}
-
-	// TODO: There needs to be added more components to the entity before it is added to
-	// the world
-	m_world->addEntity(entity);
-
-	p_transform = new Transform(p_obb.world);
-	p_transform->setScale(p_obb.size*0.5f);
-	//p_transform->setRotation(AglQuaternion::identity());
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, p_transform);
-	entity->addComponent(ComponentType::StaticProp, new StaticProp());
-
-
-	//entity->addComponent(ComponentType::BodyInitData, 
-	//	new BodyInitData(p_transform->getTranslation(), p_transform->getRotation(),
-	//	p_transform->getScale(), AglVector3::zero(), AglVector3::zero(),
-	//	0, BodyInitData::STATIC, BodyInitData::SINGLE, true, true)); 
-	//entity->addComponent(ComponentType::PhysicsBody, new PhysicsBody());
-
-	m_world->addEntity(entity);
-}*/
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
 										   vector<LevelPiece*>& out_pieces )

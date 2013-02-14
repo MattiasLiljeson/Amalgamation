@@ -676,17 +676,6 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
 		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
 		entity = entityFromRecipe( asdName );
-
-		AglMatrix mat(p_packet.scale, p_packet.rotation, p_packet.translation);
-
-		//entity->addComponent(new LevelPieceRoot(mat));
-
-		//auto rootComponent = static_cast<LevelPieceRoot*>(
-		//	entity->getComponent(ComponentType::LevelPieceRoot));
-		//auto transform = static_cast<Transform*>(
-		//	entity->getComponent(ComponentType::Transform));
-		
-		int i = 0;
 	}
 	else	
 	{
@@ -706,16 +695,16 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			// Update the existing transform
 			transform->setTranslation(p_packet.translation);
 			transform->setRotation(p_packet.rotation);
-			if (!p_packet.isLevelProp)
+			//if (!p_packet.isLevelProp)
 				transform->setScale(p_packet.scale);
 		}
 		// If this else block is ran, is means no transform as been specified in the assemblage file
 		else
 		{
 			// Create a new transform and add it to the entity.
-			if (p_packet.isLevelProp)
-				transform = new Transform(p_packet.translation, p_packet.rotation, AglVector3::one());
-			else
+			//if (p_packet.isLevelProp)
+			//	transform = new Transform(p_packet.translation, p_packet.rotation, AglVector3::one());
+			//else
 				transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 
 			entity->addComponent( transform );
