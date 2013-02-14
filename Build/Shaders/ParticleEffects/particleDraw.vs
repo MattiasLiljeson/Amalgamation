@@ -1,11 +1,12 @@
 struct Particle
 {
-	float3 Position        : POSITION;
-	float3 Velocity        : VELOCITY;
-	float2 Size            : SIZE;
-	float Age			   : AGE;
-	float AngularVelocity  : ANGULARVELOCITY;
-	float Rotation		   : ROTATION;
+	float3 Position			: POSITION;
+	float Age				: AGE;
+	float3 Velocity			: VELOCITY;
+	float AngularVelocity	: ANGULARVELOCITY;
+	float2 Size				: SIZE;
+	float Rotation			: ROTATION;
+	float pad				: PAD;
 };
   
 struct VS_OUT

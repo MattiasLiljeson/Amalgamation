@@ -283,7 +283,7 @@ void PhysicsController::Update(float pElapsedTime)
 				{
 					collisions.push_back(staticCol[j]);
 				}
-			}
+			} 
 		}
 	}
 

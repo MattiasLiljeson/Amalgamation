@@ -13,6 +13,7 @@
 class ModuleEvent
 {
 public:
+	virtual ~ModuleEvent(){}
 	virtual void activate() = 0;
 	virtual void deactivate() = 0;
 };

@@ -117,6 +117,15 @@ void MeshParser::Parse()
 
 	mParent->AddMesh(m);
 
+	FbxNode* parent = m->SourceNode->GetParent();
+	while (parent)
+	{
+		const char* name = parent->GetName();
+		FbxMatrix transform2 = parent->EvaluateGlobalTransform();
+
+		parent = parent->GetParent();
+	}
+
 	//CREATE THE MESH WITHOUT USING A HASH TABLE TO REMOVE DUPLICATED VERTICES. COSTS MORE MEMORY
 	/*AglVector3 p, n;
 	AglVector2 uv;

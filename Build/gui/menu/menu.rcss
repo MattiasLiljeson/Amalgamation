@@ -2,11 +2,11 @@ body
 {
 	font-family: Armorhide;
 	font-style: normal;
+    font-charset: U+00??;
+	font-weight: bold;
 	font-size: 20;
 	color: white;
 	background: rgba(20, 20, 20, 80);
-    font-charset: U+00??;
-	font-weight: bold;
 	
     /*shadow-font-effect: shadow;
     shadow-offset: 2px 2px;
@@ -196,7 +196,6 @@ input.submit:focus
 button:hover,
 input.submit:hover
 {
-	/*background: rgba(200,200,200,255);*/
 	border-color:white;
 }
 

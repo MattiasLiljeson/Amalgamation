@@ -61,7 +61,13 @@ void AglScene::init(AglSceneDesc p_desc)
 	maxP = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
 	for (unsigned int i = 0; i < m_meshes.size(); i++)
 	{
+		//AglJoint* j1 = m_skeletons[0]->getRoot();
+
+		//What is it?
+		//AglMatrix m_avoidJump = m_skeletons[0]->getInverseBindMatrix(j1->id) * m_skeletons[0]->getGlobalTransform(j1->id);
+
 		AglMatrix transform = m_meshes[i]->getHeader().transform;
+		//transform = m_avoidJump;
 		AglVertexSTBN* points = (AglVertexSTBN*)m_meshes[i]->getVertices();
 		for (unsigned int j = 0; j < m_meshes[i]->getHeader().vertexCount; j++)
 		{
@@ -239,6 +245,9 @@ void AglScene::addMaterialMapping(AglMaterialMapping p_materialMapping)
 void AglScene::addNode(AglNode p_node)
 {
 	m_nodes.push_back(p_node);
+	AglDynamicNode n;
+	n.animated = false;
+	m_dynamicNodes.push_back(n);
 }
 void AglScene::addSkeleton(AglSkeleton* p_skeleton)
 {
@@ -411,4 +420,13 @@ void AglScene::RemoveParticleEffect(AglParticleSystem* p_particleSystem)
 AglOBB AglScene::getSceneOBB()
 {
 	return m_sceneOBB;
+}
+void AglScene::setTime(float p_time)
+{
+	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
+	{
+		m_dynamicNodes[i].animated = false;
+	}
+	if (m_animations.size() > 0)
+		m_animations[0]->setTime(p_time);
 }

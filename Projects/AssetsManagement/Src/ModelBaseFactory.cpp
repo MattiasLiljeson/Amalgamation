@@ -15,6 +15,8 @@ ModelBaseFactory::~ModelBaseFactory()
 	delete m_modelResourceCache;
 	for (unsigned int i = 0; i < m_bspTrees.size(); i++)
 		delete m_bspTrees[i];
+	for (unsigned int i = 0; i < m_scenes.size(); i++)
+		delete m_scenes[i];
 }
 
 
@@ -103,7 +105,8 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 				models->push_back(getFallback());
 			}
 			// cleanup
-			delete scene;
+			m_scenes.push_back(scene);
+			//delete scene;
 		}
 		else // the mesh already exists
 		{
@@ -188,12 +191,13 @@ vector<ModelResource*>* ModelBaseFactory::createAllModelData(
 	{
 		ModelResource* mr = new ModelResource(p_instanceData->filename+"-ROOT");
 
-		//Neccessary Oriented bounding box for collision detection - ADDED BY ANTON
+		//Necessary Oriented bounding box for collision detection - ADDED BY ANTON
 		mr->meshHeader.minimumOBB = p_scene->getSceneOBB();
 		mr->meshHeader.transform = AglMatrix::identityMatrix();
 
 		models->collection.push_back(mr);
 		models->rootIndex=models->collection.size()-1;
+		mr->scene = p_scene;
 	}
 	// check all models
 	for (unsigned int i=0; i<numberOfModels; i++)
@@ -254,6 +258,8 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 	// set
 	ModelResource* model = new ModelResource();
 	model->meshHeader = *(p_source.meshHeader);
+	model->scene = p_source.scene;
+
 	p_source.nameSuffix = "_"+p_source.nameSuffix;
 	if (p_source.modelNumber==0)
 	{
@@ -419,13 +425,16 @@ void ModelBaseFactory::readAndStoreParticleSystems( SourceData& p_source,
 	for (unsigned int n=0;n<particleSystems;n++)
 	{
 		AglParticleSystem* ps = p_source.scene->getParticleSystem(n);
-		ParticleSystemInstruction psIntr;
-		psIntr.particleSystem = *ps;
-		psIntr.textureFileName = p_source.scene->getName(ps->getHeader().textureNameIndex,
-														 true);
-		if (p_source.modelNumber==0) // add support for particle parent?
+		if( ps->getHeader().textureNameIndex != -1 ) // If the particle effect has a texture
 		{
-			p_model->particleSystems.m_collection.push_back(psIntr);
+			ParticleSystemInstruction psIntr;
+			psIntr.particleSystem = *ps;
+			psIntr.textureFileName = p_source.scene->getName(ps->getHeader().textureNameIndex,
+															 true);
+			if (p_source.modelNumber==0) // add support for particle parent?
+			{
+				p_model->particleSystems.m_collection.push_back(psIntr);
+			}
 		}
 	}
 }

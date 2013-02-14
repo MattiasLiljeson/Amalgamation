@@ -13,7 +13,7 @@
 #include "LookAtEntity.h"
 #include "MineLayerModule.h"
 #include "NetworkSynced.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "ParticleRenderSystem.h"
 #include "PhysicsBody.h"
 #include "PickComponent.h"
@@ -31,8 +31,14 @@
 #include <AssemblageReader.h>
 #include <Entity.h>
 #include <time.h>
+#include "ShipModule.h"
+#include "ShieldModule.h"
+#include "LoadMesh.h"
+#include "LoadMeshSystemClient.h"
+#include "EntityParent.h"
+#include "ShieldPlate.h"
+#include "ShieldModuleActivationClient.h"
 #include "LevelPieceRoot.h"
-
 #define FORCE_VS_DBG_OUTPUT
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
@@ -135,6 +141,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 		else
 			e = createMinigunServer(p_packet);
 	}
+	else if (type == EntityType::ShieldModule)
+	{
+		if (m_client)
+			e = createShieldClient(p_packet);
+		else
+			e = createShieldServer(p_packet);
+	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
@@ -176,13 +189,6 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 			e = createRocketClient(p_packet);
 		else
 			e = createRocketServer(p_packet);
-	}
-	else if (type == EntityType::Shield)
-	{
-		if (m_client)
-			e = createShieldClient(p_packet);
-		else
-			e = createShieldServer(p_packet);
 	}
 	else if (type == EntityType::Other)
 	{
@@ -265,8 +271,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// because it was really weird to hear from the camera. This can of course
 		// be changed back if game play fails in this way, but it's at least more
 		// convenient for debugging!
-		component = new AudioListener();
-		entity->addComponent(ComponentType::AudioListener, component);
+		/*component = new AudioListener();
+		entity->addComponent(ComponentType::AudioListener, component);*/
 
 		/************************************************************************/
 		/* This is where the audio listener is created and therefor the master  */
@@ -594,27 +600,69 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* entity = NULL;
-	
-	if (p_packet.meshInfo == 1)
-		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
-	else
-		entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
-
+	Entity* shieldEntity = m_world->createEntity();
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	shieldEntity->addComponent(transform );
+	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	shieldEntity->addComponent(new LoadMesh("shield_module.agl"));
+	ShipModule* shipModule = new ShipModule();
+	shieldEntity->addComponent(shipModule);
+	shieldEntity->addComponent(new ShieldModule());
+	m_world->addEntity(shieldEntity);
 
-	m_world->addEntity(entity);
-	return entity;
+	const int plateCount = 120;
+	vector<Entity*> plateEntities;
+	plateEntities.resize(120);
+	for(unsigned int i=0; i<plateCount; i++)
+	{
+		Entity* entity = m_world->createEntity();
+		plateEntities[i] = entity;
+		float spawnX, spawnY;
+		circularRandom(&spawnX, &spawnY, true);
+		AglVector3 spawnPoint = AglVector3(0, 6.5f, 0); // Replace with real spawn point.
+		float radius = 10.0f;
+		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, 0, radius * spawnY);
+		position.normalize();
+		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
+		position = position * spawnPoint.length();
+		float plateScale = 1.0f;
+		Transform* plateTransform = new Transform(position, plateRotation,
+			AglVector3(plateScale, plateScale, plateScale));
+		entity->addComponent(plateTransform);
+		entity->addComponent(new LoadMesh("shield_plate.agl"));
+		entity->addComponent(new EntityParent(shieldEntity->getIndex(),
+			plateTransform->getMatrix()));
+		entity->addComponent(new ShieldPlate(0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
+		entity->setEnabled(false);
+		m_world->addEntity(entity);
+	}
+	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities));
+
+	return shieldEntity;
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	Entity* entity = m_world->createEntity();
+	Component* component = new Transform(p_packet.translation, p_packet.rotation,
+		p_packet.scale);
+	entity->addComponent( ComponentType::Transform, component );
+	entity->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
+	entity->addComponent( ComponentType::BodyInitData, 
+		new BodyInitData(p_packet.translation,
+		p_packet.rotation,
+		p_packet.scale, AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
+	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
+		entity->getIndex(), -1, EntityType::ShieldModule));
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
@@ -681,6 +729,43 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 {
 	//Not moved here yet!
 	return NULL;
+}
+
+void EntityFactory::circularRandom( float* p_spawnX, float* p_spawnY,
+	bool p_warpCompensation )
+{
+	if(!p_warpCompensation)
+	{
+		float x = 0.0f;
+		float y = 0.0f;
+		do
+		{
+			x = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			y = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+		} while( x * x + y * y > 1.0f );
+		*p_spawnX = x;
+		*p_spawnY = y;
+	}
+	else
+	{
+		// NOTE: This version of circular random compensates for sphere warping
+		// quite roughly. With not too high of a warp angle it looks nice.
+		// It is much slower than the simple circular random generation.
+		float x = 0.0f;
+		float y = 0.0f;
+		do
+		{
+			float x_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			float y_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+			x = x_rand;
+			y = y_rand;
+		} while( x * x + y * y > 1.0f );
+		float len = sqrt(x * x + y * y);
+		x = x * len;
+		y = y * len;
+		*p_spawnX = x;
+		*p_spawnY = y;
+	}
 }
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )

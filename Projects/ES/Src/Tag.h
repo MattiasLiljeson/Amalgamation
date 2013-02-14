@@ -10,7 +10,7 @@
 class Tag : public Component
 {
 public:
-	Tag() : Component( ComponentType::Tag )
+	Tag( ComponentType::ComponentTypeIdx p_type ) : Component( p_type )
 	{
 	}
 

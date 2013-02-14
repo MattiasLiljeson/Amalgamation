@@ -24,6 +24,8 @@ enum SimpleEventType
 	ROTATE_ADD,
 	ROTATE_SUB,
 	ROTATE_NONE,
+	ROTATE_90_ADD,
+	ROTATE_90_SUB,
 	EVENT_NONE,
 };
 

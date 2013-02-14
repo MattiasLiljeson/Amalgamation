@@ -11,12 +11,13 @@
 #include "EntityParent.h"
 #include "LoadMesh.h"
 #include "MeshOffsetTransform.h"
-#include "ParticleEmitters.h"
+#include "ParticleSystemsComponent.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
 #include "Transform.h"
 #include <Globals.h>
 #include <ModelResource.h>
+#include "SpawnPointSet.h"
 
 LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -91,6 +92,9 @@ void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResour
 
 	// Handle particles here
 	setUpParticles(entity,modelResource);
+
+	//Handle animations
+	setUpAnimation(entity, modelResource);
 
 	//Should not be here - ONLY RELEVANT FOR SHIP
 	BodyInitData* initData = static_cast<BodyInitData*>(p_entity->getComponent(ComponentType::BodyInitData));
@@ -191,6 +195,9 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		setUpChildCollision(entity,modelResource,
 			rootRigidBody,rootPhysicsBody,baseTransform);
 
+		//Animation
+		setUpAnimation(entity, modelResource);
+
 		// Hierarchy
 		component = new EntityParent( rootId, modelResource->transform );
 		entity->addComponent( ComponentType::EntityParent, component );
@@ -236,7 +243,7 @@ void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelR
 {
 	if (!p_modelResource->spawnPoints.m_collection.empty())
 	{
-		Component* component = new ConnectionPointSet( p_modelResource->connectionPoints.m_collection );
+		Component* component = new SpawnPointSet( p_modelResource->spawnPoints.m_collection );
 		p_entity->addComponent( ComponentType::SpawnPointSet, component );
 	}
 }
@@ -293,8 +300,8 @@ void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelRes
 {
 	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
-		ParticleEmitters* particleComp = new ParticleEmitters();
-		particleComp->addParticleSystems( p_modelResource->particleSystems );
+		ParticleSystemsComponent* particleComp = new ParticleSystemsComponent();
+		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
 		p_entity->addComponent( particleComp );
 	}
 }

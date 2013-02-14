@@ -6,6 +6,7 @@
 
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
+#include "DeferredAnimatedBaseShader.h"
 #include "LightShader.h"
 #include "GUIShader.h"
 
@@ -67,8 +68,10 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
+	delete m_ssaoShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
+	delete m_animatedBaseShader;
 }
 
 void DeferredRenderer::clearBuffers()
@@ -253,12 +256,15 @@ void DeferredRenderer::initShaders()
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/ssaoGenerate.hlsl");
-
-	m_lightShader = m_shaderFactory->createLightShader(
-		L"Shaders/Game/lighting.hlsl");
+		
+	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
+		L"Shaders/Game/deferredAnimatedBase.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
+
+	m_lightShader = m_shaderFactory->createLightShader(
+		L"Shaders/Game/lighting.hlsl");
 }
 
 void DeferredRenderer::initFullScreenQuad()
@@ -360,7 +366,9 @@ void DeferredRenderer::setLightRenderTarget(){
 DeferredBaseShader* DeferredRenderer::getDeferredBaseShader(){
 	return m_baseShader;
 }
-
+DeferredAnimatedBaseShader* DeferredRenderer::getDeferredAnimatedBaseShader(){
+	return m_animatedBaseShader;
+}
 LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
 }
@@ -372,9 +380,9 @@ ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderT
 
 void DeferredRenderer::initSSAO()
 {
-	m_ssaoData.scale	= 1.5f;
-	m_ssaoData.bias		= 0.2f;
+	m_ssaoData.scale	= 4.0f;
+	m_ssaoData.bias		= 0.242f;
 	m_ssaoData.intensity= 1.0f;
-	m_ssaoData.sampleRadius=0.3f;
+	m_ssaoData.sampleRadius=0.02f;
 	m_ssaoData.epsilon  = 0.0f;
 }

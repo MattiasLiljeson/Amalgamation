@@ -5,9 +5,7 @@
 </head>
 <body class="window">
 	<div id="title-bar">
-		<handle move_target="#document">
-			<span id="title">Dummy Title</span>
-		</handle>
+		<span id="title">Dummy Title</span>
 	</div>
 	<div id="content">
 	</div>

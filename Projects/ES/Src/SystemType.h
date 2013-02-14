@@ -17,6 +17,7 @@ public:	//Enums
 		ProcessingMessagesSystem,
 		NetworkListenerSystem,
 		ServerPacketHandlerSystem,
+		CircularMovementSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,
@@ -55,6 +56,7 @@ public:	//Enums
 		EntityFactory,
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,
+		ShieldPlatingSystem,
 		MineLayerModuleControllerSystem,
 		MineControllerSystem,
 		RocketControllerSystem,
@@ -85,6 +87,8 @@ public:	//Enums
 		ClientMeasurementSystem,
 		ServerMeasurementSystem,
 		ClientEntityCountSystem,
+		ParticleSystemInstructionTranslatorSystem,
+		SkeletalAnimationSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -13,6 +13,7 @@
 #include <AudioInfo.h>
 #include <AudioListener.h>
 #include <BodyInitData.h>
+#include <CircularMovement.h>
 #include <ConnectionPointSet.h>
 #include <Connector1to2Module.h>
 #include <DebugMove.h>
@@ -25,7 +26,7 @@
 #include <MineLayerModule.h>
 #include <MinigunModule.h>
 #include <MinigunModule.h>
-#include <ParticleEmitters.h>
+#include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
 #include <PositionalSoundSource.h>
@@ -37,7 +38,7 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <Transform.h>
-
+#include <GameState.h>
 
 // Systems
 #include <AntTweakBarEnablerSystem.h>
@@ -47,6 +48,7 @@
 #include <AudioListenerSystem.h>
 #include <CameraInfo.h>
 #include <CameraSystem.h>
+#include <CircularMovementSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
@@ -89,12 +91,16 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
+#include <ShieldPlatingSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
+#include <ParticleSystemInstructionTranslatorSystem.h>
+#include <ClientEntityCountSystem.h>
+#include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
 
 
@@ -110,6 +116,7 @@ using namespace std;
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
+
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -228,7 +235,8 @@ void ClientApplication::initSystems()
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
-
+	m_world->setSystem(new ParticleSystemInstructionTranslatorSystem( graphicsBackend ),
+		true );
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
@@ -336,7 +344,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( msgProcSystem , true );
 
 	ClientConnectToServerSystem* connect =
-		new ClientConnectToServerSystem( m_client);
+		new ClientConnectToServerSystem( m_client, false);
 	m_world->setSystem( connect, true );
 	m_world->setSystem( new NetsyncDirectMapperSystem(), true );
 	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem(), true );
@@ -377,6 +385,12 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
 	m_world->setSystem(new GameStatsSystem(), true);
 	m_world->setSystem( new LightBlinkerSystem(), true );
+	m_world->setSystem( new ShieldPlatingSystem(), true );
+
+	/************************************************************************/
+	/* Animation															*/
+	/************************************************************************/
+	m_world->setSystem(new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -388,15 +402,13 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Debugging															*/
 	/************************************************************************/
-	m_world->setSystem( new DebugMovementSystem(), true );
+	m_world->setSystem( new DebugMovementSystem(), false );
+	m_world->setSystem( new CircularMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
 	m_world->setSystem( new ClientMeasurementSystem(), true );
 	m_world->setSystem( new AntTweakBarEnablerSystem(), true );
 
 	m_world->initialize();
-
-
-
 
 	// Run component assemblage allocator (not a system, so don't delete)
 	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
@@ -412,16 +424,6 @@ void ClientApplication::initEntities()
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
-
-	// Score HUD
-	status = factory->readAssemblageFile( "Assemblages/ScoreHudElement.asd" );
-	entity = factory->entityFromRecipe( "ScoreHudElement" );
-	m_world->addEntity( entity );
-
-	// Read monkey!
-	status = factory->readAssemblageFile( "Assemblages/SpecialMonkey.asd" );
-	entity = factory->entityFromRecipe( "SpecialMonkey" );									 
-	m_world->addEntity( entity );
 
 	// Create rocks
 	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
@@ -440,18 +442,12 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	component = new CameraInfo( m_world->getAspectRatio() );
-	entity->addComponent( ComponentType::CameraInfo, component );
-	entity->addComponent( ComponentType::TAG_MainCamera, new MainCamera_TAG() );
-	component = new Transform( -20.0f, 0.0f, -5.0f );
-	entity->addComponent( ComponentType::Transform, component );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
+	entity->addComponent( new MainCamera_TAG() );
+	entity->addComponent( new AudioListener());
+	entity->addComponent( new Transform( -20.0f, 0.0f, -5.0f ) );
 	m_world->addEntity(entity);
 
-	status = factory->readAssemblageFile("Assemblages/ClientShip.asd");
-	entity = factory->entityFromRecipe("ClientShip");
-	component = new Transform( 20.0f, -30.0f, 80.0f);
-	entity->addComponent(ComponentType::Transform, component);
-	m_world->addEntity(entity);
 
 	/************************************************************************/
 	/* Create shadow camera and spotlight.									*/
@@ -459,7 +455,6 @@ void ClientApplication::initEntities()
 	float rotation = 0.78;
 	AglQuaternion quat;
 	for(int i = 0; i < 1; i++){
-
 		entity = factory->entityFromRecipe( "SpotLight" );
 		LightsComponent* lightComp = static_cast<LightsComponent*>(
 			entity->getComponent(ComponentType::LightsComponent));
@@ -530,7 +525,9 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
 
-
+	entity = m_world->createEntity();
+	entity->addComponent(ComponentType::GameState,new GameState(MENU));
+	m_world->addEntity(entity);
 
 	// Test sound source
 	entity = m_world->createEntity();
@@ -541,6 +538,7 @@ void ClientApplication::initEntities()
 		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
 	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
 		0, 1.0f, 0)));
+	m_world->addEntity(entity);
 
 	//ParticleEmitters* ps = new ParticleEmitters();
 	//AglParticleSystemHeader header;
@@ -569,6 +567,73 @@ void ClientApplication::initEntities()
 	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
 	//entity->addComponent( ps );
 
-	m_world->addEntity(entity);
+//	initInstanceFieldsByJohan("rocket.agl",			50, 50, 0.0f, 1.2f);
+//	initInstanceFieldsByJohan("MineFinal.agl",		50, 50, 5.0f, 0.8f);
+//	initInstanceFieldsByJohan("RockA.agl",			50, 50, 10.0f, 0.7f);
+//	initInstanceFieldsByJohan("RockB.agl",			50, 50, 15.0f, 0.1f);
+//	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
+//	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
+//	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f), 400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
+}
 
+void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
+												  unsigned int p_sizeY, float p_z, float p_scale)
+{
+	for(unsigned int x=0; x<p_sizeX; x++)
+	{
+		for(unsigned int y=0; y<p_sizeY; y++)
+		{
+			AglVector3 position((float)x * -2.0f - 5.0f,
+				(float)y * -2.0f + -10.0f, p_z);
+			Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(position, AglQuaternion(),
+				AglVector3(p_scale, p_scale, p_scale));
+			entity->addComponent(ComponentType::Transform, t);
+			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+			float rX = (float)rand()/(float)RAND_MAX;
+			float rY = (float)rand()/(float)RAND_MAX;
+			float rZ = (float)rand()/(float)RAND_MAX;
+			float factor = 0.1f;
+			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor)));
+
+			m_world->addEntity(entity);
+		}
+	}
+}
+
+void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
+	AglVector3 p_origin, unsigned int p_width, unsigned int p_numbersInCircle,
+	float p_radius, float p_spacing, float p_diffZ, float p_scale)
+{
+	for(unsigned int circleIndex=0; circleIndex<p_width; circleIndex++)
+	{
+		float currentRadius = p_radius + (float)circleIndex * p_spacing;
+		for(unsigned int i=0; i<p_numbersInCircle; i++)
+		{
+			float circleRandom = 2.0f * 3.141592653f * (float)rand()/(float)RAND_MAX;
+
+			float z = p_diffZ * ((float)rand()/(float)RAND_MAX - 0.5f);
+			AglVector3 position(
+				cos(circleRandom) * currentRadius,
+				sin(circleRandom) * currentRadius,
+				z);
+			position += p_origin;
+			float randScale = p_scale * (float)rand()/(float)RAND_MAX + 0.2f;
+			Entity* entity = m_world->createEntity();
+			Transform* t = new Transform(position, AglQuaternion(),
+				AglVector3(randScale, randScale, randScale));
+			entity->addComponent(ComponentType::Transform, t);
+			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
+			float angularVelocity = 0.2f + 0.2f * (float)rand()/(float)RAND_MAX;
+			entity->addComponent(ComponentType::CircularMovement, new CircularMovement(AglVector3(
+				-50.0f, -50.0f, z), currentRadius, circleRandom, angularVelocity));
+			float rX = (float)rand()/(float)RAND_MAX - 0.5f;
+			float rY = (float)rand()/(float)RAND_MAX - 0.5f;
+			float rZ = (float)rand()/(float)RAND_MAX - 0.5f;
+			float factor = 100.0f;
+			entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(rX*factor, rY*factor, rZ*factor/10.0f)));
+
+			m_world->addEntity(entity);
+		}
+	}
 }

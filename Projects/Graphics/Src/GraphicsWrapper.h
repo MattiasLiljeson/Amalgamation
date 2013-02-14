@@ -45,6 +45,7 @@ struct Model;
 struct Texture;
 struct AglMatrix;
 struct PerShadowCBuffer;
+struct ParticleSystemAndTexture;
 
 class GraphicsWrapper
 {
@@ -62,7 +63,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void mapSceneInfo();
 
-	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList);
+	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList,
+		vector<AglMatrix>* p_boneMatrices);
 
 	///-----------------------------------------------------------------------------------
 	/// Set the current rasterizer state. By default it will allow to be overriden by the 
@@ -175,7 +177,7 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setWireframeMode(bool p_wireframe);
 
-	void renderParticleSystem(AglParticleSystem* p_system, InstanceData p_transform);
+	void renderParticleSystem( ParticleSystemAndTexture* p_system, InstanceData p_transform );
 
 	void renderSsao();
 
@@ -205,13 +207,17 @@ private:
 
 	void initBackBuffer();
 
-	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize, 
+	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize,
+		void* p_vertexAnimationBufferRef, UINT32 p_vertexAnimationSize,
 		void* p_indexBufferRef, UINT32 p_indexElementCount,
 		Texture** p_textureArray,
 		unsigned int p_textureArraySize,
 		UINT32 p_instanceDataSize, UINT32 p_instanceElementCount,
 		void* p_instanceRef,
-		ShaderBase* p_shader);
+		ShaderBase* p_shader, Texture* p_boneMatrixTexture);
+
+	void initBoneMatrixTexture();
+	void updateBoneMatrixTexture(vector<AglMatrix>* p_data);
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -255,4 +261,7 @@ private:
 	bool m_windowed;
 	bool m_wireframeMode;
 	bool m_renderingShadows;
+
+	Texture* m_boneMatrixTexture;
+	ID3D11Texture1D* m_boneMatrixResource;
 };

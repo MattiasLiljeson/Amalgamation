@@ -16,18 +16,6 @@
 /// Created on: 11-12-2012 
 ///---------------------------------------------------------------------------------------
 
-
-struct RotationState
-{
-	int direction;
-	int targetShip;
-	RotationState(int p_direction, int p_targetShip)
-	{
-		direction = p_direction;
-		targetShip = p_targetShip;
-	}
-};
-
 class ShipModulesControllerSystem: public EntitySystem
 {
 public:
@@ -43,8 +31,6 @@ public:
 	void addActivateEvent(int p_index);
 	void addDeactivateEvent(int p_index);
 
-	void addRotationEvent(RotationState p_rotationState);
-
 private:
 	void checkDrop(Entity* p_parent);
 	void drop(Entity* p_parent, unsigned int p_slot);
@@ -52,11 +38,6 @@ private:
 	void setActivation(Entity* p_entity, bool p_value);
 	void setActivationChildren(Entity* p_entity, bool p_value);
 	float calculateScore(Entity* p_entity);
-
-	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation);
-
-	void rotateModules(Entity* p_ship);
-	void setRotationState(Entity* p_ship, int p_state);
 
 private:
 	struct HighlightEvent
@@ -69,7 +50,4 @@ private:
 	vector<HighlightEvent> m_toHighlight;
 	vector<int> m_toActivate;
 	vector<int> m_toDeactivate;
-
-	vector<RotationState> m_toSetRotationState;
-
 };

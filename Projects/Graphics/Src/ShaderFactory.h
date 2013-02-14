@@ -12,6 +12,7 @@
 
 class BufferFactory;
 class DeferredBaseShader;
+class DeferredAnimatedBaseShader;
 class DeferredComposeShader;
 class LightShader;
 class GUIShader;
@@ -43,6 +44,8 @@ public:
 	/// \return DeferredBaseShader*
 	///-----------------------------------------------------------------------------------
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
+
+	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
@@ -152,6 +155,9 @@ private:
 	///-----------------------------------------------------------------------------------
 	void createInstancedPNTTBVertexInputLayout(VSData* p_vs, 
 		ID3D11InputLayout** p_inputLayout);
+
+	void createInstancedAnimatedPNTTBVertexInputLayout( VSData* p_vs, 
+		ID3D11InputLayout** p_inputLayout );
 
 	void createInstancedLightInputLayout( VSData* p_vertexShader,
 		ID3D11InputLayout** p_inputLayout);

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
+    <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -22,6 +23,8 @@
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="CircularMovement.h" />
+    <ClInclude Include="CircularMovementSystem.h" />
     <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
     <ClInclude Include="DebugMove.h" />
@@ -38,11 +41,13 @@
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="EnumGameStates.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
     <ClInclude Include="GameOptionsSystem.h" />
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
     <ClInclude Include="InputActionsBackendSystem.h" />
@@ -80,13 +85,21 @@
     <ClInclude Include="MinigunModuleControllerSystem.h" />
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="ModuleEvent.h" />
+    <ClInclude Include="ModuleTriggerPacket.h" />
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
+    <ClInclude Include="ShieldModuleActivationClient.h" />
+    <ClInclude Include="ShieldPlate.h" />
+    <ClInclude Include="ShieldPlatingSystem.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
+    <ClInclude Include="SkeletalAnimation.h" />
+    <ClInclude Include="SkeletalAnimationSystem.h" />
+    <ClInclude Include="SpawnPointSet.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
@@ -95,7 +108,7 @@
     <ClInclude Include="PickComponent.h" />
     <ClInclude Include="ClientPickingSystem.h" />
     <ClInclude Include="Packetizer.h" />
-    <ClInclude Include="ParticleEmitters.h" />
+    <ClInclude Include="ParticleSystemsComponent.h" />
     <ClInclude Include="ParticleRenderSystem.h" />
     <ClInclude Include="PingPacket.h" />
     <ClInclude Include="PlayerCameraController.h" />
@@ -164,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
+    <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
     <ClCompile Include="AudioController.cpp" />
@@ -174,6 +188,7 @@
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="CircularMovementSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientEntityCountSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
@@ -191,6 +206,7 @@
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
@@ -224,10 +240,12 @@
     <ClCompile Include="MineLayerModule.cpp" />
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="ModuleTriggerPacket.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
-    <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
+    <ClCompile Include="ParticleSystemsComponent.cpp" />
     <ClCompile Include="ClientPickingSystem.cpp" />
     <ClCompile Include="ParticleRenderSystem.cpp" />
     <ClCompile Include="ParticleSystemEmitterSystem.cpp" />
@@ -253,6 +271,7 @@
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ShadowSystem.cpp" />
+    <ClCompile Include="ShieldPlatingSystem.cpp" />
     <ClCompile Include="ShipConnectionPointHighlights.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
     <ClCompile Include="ShipFlyControllerSystem.cpp" />
@@ -275,6 +294,8 @@
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="ShipSlotControllerSystem.cpp" />
+    <ClCompile Include="SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />

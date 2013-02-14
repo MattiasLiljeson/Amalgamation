@@ -37,14 +37,19 @@
 #include <ToString.h>
 #include <DebugUtil.h>
 #include "libRocketBackendSystem.h"
+#include "ClientConnectToServerSystem.h"
+#include "GameState.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem()
-	: EntitySystem(SystemType::LibRocketEventManagerSystem)
+	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
 {
 	m_context = NULL;
 	wantsToExit = false;
 	m_eventHandler = NULL;
 	m_currentDocId = "";
+	m_stateEntity	= NULL;
+	m_stateComp		= NULL;
+	m_stateDelay	= -1;
 }
 
 LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
@@ -77,7 +82,9 @@ void LibRocketEventManagerSystem::registerEventHandler( EventHandler* p_handler 
 }
 
 // Registers a new event handler with the manager.
-void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& p_handlerName, EventHandler* p_handler)
+void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::String& 
+													   p_handlerName, 
+													   EventHandler* p_handler)
 {
 	p_handler->connectToManager(this);
 	// Release any handler bound under the same name.
@@ -92,7 +99,8 @@ void LibRocketEventManagerSystem::registerEventHandler(const Rocket::Core::Strin
 	m_eventHandlers[p_handlerName] = p_handler;
 }
 
-EventHandler* LibRocketEventManagerSystem::unregisterEventHandler( const Rocket::Core::String& p_handlerName )
+EventHandler* LibRocketEventManagerSystem::unregisterEventHandler( 
+	const Rocket::Core::String& p_handlerName )
 {
 	EventHandlerMap::iterator iterator = m_eventHandlers.find(p_handlerName);
 	EventHandler* handler = NULL;
@@ -122,7 +130,8 @@ void LibRocketEventManagerSystem::clearDocumentStack()
 }
 
 // Processes an event coming through from Rocket.
-void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value)
+void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, 
+											   const Rocket::Core::String& p_value)
 {
 	Rocket::Core::StringList commands;
 	Rocket::Core::StringUtilities::ExpandString(commands, p_value, ';');
@@ -179,8 +188,22 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event, con
 		}
 		else
 		{
-			if (m_eventHandler != NULL)
-				m_eventHandler->processEvent(p_event, commands[i]);
+			if (p_value == "join_server")
+			{
+				// "server_host" is the name attribute specified in the input element in the rml file.
+				// "localhost" simply is provided as a default value, if the host isn't set. This could be left as "" as well.
+				string server_address = p_event.GetParameter<Rocket::Core::String>
+					("server_host", "localhost").CString();
+				string server_port = p_event.GetParameter<Rocket::Core::String>
+					("server_port", "1337").CString();
+				
+				auto sys = static_cast<ClientConnectToServerSystem*>(
+					m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+				sys->setConnectionAddress(server_address, server_port);
+				m_stateComp->setStatesDelta(INGAME,1);
+				m_stateDelay = 0;
+			}
 		}
 	}
 }
@@ -216,18 +239,38 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 
 	// Remove the caller's reference.
 	//document->RemoveReference();
-
-
 	return true;
 }
 
 
-
-void LibRocketEventManagerSystem::process()
+void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	if (wantsToExit)
+	if(p_entities.size()>0){
+		if(m_stateDelay != -1){
+
+			m_stateDelay++;
+
+			if(m_stateDelay>1){
+				for (unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
+					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),0);
+				}
+				m_stateDelay = -1;
+			}
+		}
+		else{
+			for (unsigned int i = 0; i < EnumGameStates::NUMSTATES; i++){
+				if(m_stateComp->getStateDelta(static_cast<EnumGameStates>(i))!= 0){
+					m_stateDelay = 1;
+					break;
+				}
+			}
+		}
+	}
+	if (wantsToExit){
 		m_world->requestToShutDown();
+	}
 }
+
 
 void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core::String&  p_docId )
 {
@@ -240,5 +283,22 @@ void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core:
 			document->Show(Rocket::Core::ElementDocument::NONE);
 			document->Hide();
 		}
+	}
+}
+
+void LibRocketEventManagerSystem::inserted( Entity* p_entity )
+{
+	if(m_stateEntity == NULL){
+		m_stateEntity = p_entity;
+		m_stateComp = static_cast<GameState*>(m_stateEntity->getComponent(
+			ComponentType::GameState));
+	}
+}
+
+void LibRocketEventManagerSystem::removed( Entity* p_entity )
+{
+	if(m_stateEntity){
+		m_stateEntity = NULL;
+		m_stateComp = NULL;
 	}
 }

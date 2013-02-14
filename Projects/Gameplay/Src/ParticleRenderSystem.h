@@ -2,13 +2,14 @@
 #include <EntitySystem.h>
 #include <RenderInterface.h>
 #include <vector>
-#include <ParticleSystemCollection.h>
+#include <ParticleSystemInstructionCollection.h>
 
 using namespace std;
 
 class GraphicsBackendSystem;
 class AglParticleSystem;
 struct AglParticleSystemHeader;
+struct ParticleSystemAndTexture;
 // =======================================================================================
 //                                      ParticleRenderSystem
 // =======================================================================================
@@ -44,6 +45,6 @@ private:
 	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
 
 	// pointer to save performance. No ownership
-	vector< pair< ParticleSystemCollection*, Transform* > > m_collections;
+	vector< pair< ParticleSystemAndTexture*, Transform* > > m_collections;
 };
 

@@ -12,6 +12,7 @@ struct AglMeshHeader;
 struct AglVector2;
 struct ConnectionPointCollection;
 struct InstanceData;
+struct ParticleSystemAndTexture;
 struct RendererSceneInfo;
 // =======================================================================================
 //                                      GraphicsBackendSystem
@@ -46,7 +47,7 @@ public:
 	float getAspectRatio();
 	AglVector2 getWindowSize();
 
-	void renderParticleSystem( AglParticleSystem* p_system,
+	void renderParticleSystem( ParticleSystemAndTexture* p_system,
 		const InstanceData& p_worldTransform );
 private:
 	GraphicsWrapper* m_graphicsWrapper;

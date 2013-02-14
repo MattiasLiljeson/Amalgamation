@@ -97,20 +97,13 @@ void LibRocketBackendSystem::initialize()
 
 	//m_eventManager->Initialize(m_rocketContext);
 
+	/*
 	string tmp;
 	tmp = GUI_HUD_PATH + "hud.rml";
 	//tmp = GUI_HUD_PATH + "infoPanel.rml";
 	int i = loadDocument( tmp.c_str() );
 	m_documents[i]->Hide();
-
-	//tmp = GUI_HUD_PATH + "main.rml";
-	//loadDocument( tmp.c_str() );
-
-	//tmp = GUI_HUD_PATH + "index.rml";
-	//loadDocument( tmp.c_str() );
-
-	//tmp = GUI_HUD_PATH + "window.rml";
-	//loadDocument( tmp.c_str() );
+	*/
 
 	string cursorPath = GUI_CURSOR_PATH + "cursor.rml";
 	loadCursor(cursorPath.c_str());
@@ -126,17 +119,18 @@ void LibRocketBackendSystem::loadFontFace( const char* p_fontPath )
 	}
 }
 
-int LibRocketBackendSystem::loadDocumentByName( const char* p_windowName)
+int LibRocketBackendSystem::loadDocument(const char* p_path, 
+													  const char* p_windowName)
 {
-	int docId = loadDocument((GUI_MENU_PATH + 
-								toString(p_windowName) +
-								toString(".rml")).c_str(),
-								p_windowName);
+	int docId = loadDocumentP(
+		(
+		toString(p_path) + toString(p_windowName) +	toString(".rml")
+		).c_str(),p_windowName);
 
 	return docId;
 }
 
-int LibRocketBackendSystem::loadDocument( const char* p_filePath, const char* p_windowName/*=NULL*/)
+int LibRocketBackendSystem::loadDocumentP( const char* p_filePath, const char* p_windowName/*=NULL*/)
 {
 	int docId = -1;
 	Rocket::Core::ElementDocument* tmpDoc = NULL;

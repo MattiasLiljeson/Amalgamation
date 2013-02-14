@@ -1,25 +1,20 @@
 #pragma once
-
-#include <vector>
-#include "ParticleSystemInstruction.h"
-
-using namespace std;
-
-
-
+#include <EntitySystem.h>
 // =======================================================================================
-//                              ParticleSystemCollection
+// CircularMovementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of particle systems
+/// \brief Brief...
 ///        
-/// # HardPointCollection
-/// Detailed description.....
-/// Created on: 15-1-2013 
+/// # CircularMovementSystem
+/// Detailed description...
+/// Created on: 11-2-2013 
 ///---------------------------------------------------------------------------------------
-
-struct ParticleSystemCollection
+class CircularMovementSystem: public EntitySystem
 {
-	vector<ParticleSystemInstruction> m_collection;
+public:
+	CircularMovementSystem();
+	~CircularMovementSystem();
+	void processEntities( const vector<Entity*>& p_entities );
 };

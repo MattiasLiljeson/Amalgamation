@@ -27,8 +27,7 @@ public:
 	void initialize();
 
 	void loadFontFace( const char* p_fontPath );
-	int loadDocumentByName(const char* p_windowName);
-	int loadDocument( const char* p_filePath, const char* p_windowName=NULL);
+	int loadDocument(const char* p_path, const char* p_windowName);
 
 	// Gets a document that matches the name (a.k.a body id). This function can only be
 	// used if the document was loaded by name.
@@ -51,6 +50,7 @@ public:
 private:
 	void processMouseMove();
 	void processKeyStates();
+	int loadDocumentP( const char* p_filePath, const char* p_windowName=NULL);
 
 private:
 	int m_wndHeight;

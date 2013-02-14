@@ -94,8 +94,20 @@
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay\Server Only\Modules\Events">
+    <Filter Include="Misc">
+      <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\States">
+      <UniqueIdentifier>{9e022492-9da3-4858-bcdf-adee07cbdfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events">
       <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Server%29">
+      <UniqueIdentifier>{7d99334e-e016-4792-a741-2e4a2c01a176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Client%29">
+      <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,9 +384,6 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleEmitters.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LightSources.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -455,19 +464,13 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleEvent.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
+      <Filter>Components\Modules\Events</Filter>
     </ClInclude>
     <ClInclude Include="RemoveSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ShieldModuleActivation.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="SpeedBoostModuleActivation.h">
-      <Filter>Systems\Gameplay\Server Only\Modules\Events</Filter>
     </ClInclude>
     <ClInclude Include="MeshOffsetTransform.h">
       <Filter>Components</Filter>
@@ -525,8 +528,56 @@
     <ClInclude Include="ShipSlotControllerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemsComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
     <ClInclude Include="AntTweakBarEnablerSystem.h">
       <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumGameStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Components\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlate.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTriggerPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivationClient.h">
+      <Filter>Components\Modules\Events\Module Events %28Client%29</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimation.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimationSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="LevelPieceInfo.h">
       <Filter>Components</Filter>
@@ -539,8 +590,7 @@
     </ClInclude>
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -774,9 +824,6 @@
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleEmitters.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LightSources.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
@@ -893,8 +940,34 @@
     <ClCompile Include="ShipSlotControllerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystemsComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
     <ClCompile Include="AntTweakBarEnablerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Components\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularMovementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTriggerPacket.cpp">
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimationSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="LevelPieceFileMapping.cpp">
       <Filter>Systems\Level Gen</Filter>
@@ -904,6 +977,5 @@
     </ClCompile>
     <ClCompile Include="LevelPieceRoot.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-  </ItemGroup>
+    </ClCompile>  </ItemGroup>
 </Project>
