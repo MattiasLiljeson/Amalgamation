@@ -41,8 +41,8 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 {
 	Entity* effect = m_world->createEntity();
 
-	LoadMesh* lm = new LoadMesh( "P_sphere",true );
-	effect->addComponent( ComponentType::LoadMesh, lm );
+// 	LoadMesh* lm = new LoadMesh( "P_sphere",true );
+// 	effect->addComponent( ComponentType::LoadMesh, lm );
 	
 	// get camera up, spawn direction
 	AglVector3 cameraUp = AglVector3::up();
@@ -68,7 +68,18 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 
 	ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
 	// add an emitter for each number in data
-	unsigned int size = toString(p_data.score).size();
+	string scorestr = toString(p_data.score);
+	unsigned int size = scorestr.size();
+
+	float w = 616.0f;
+	float h = 8.0f;
+	float ww = 8.0f;
+	int no = w/ww;
+	int offset = 16;
+
+	float oN=offset/w;
+	float hN=h/h;
+	float wwN=ww/w;
 
 	for (unsigned int i=0;i<size;i++)
 	{
@@ -82,13 +93,14 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		// particleSystem.set
 		particleSystem.setSpace(AglParticleSystemHeader::AglSpace_LOCAL);
 		particleSystem.getHeaderPtr()->relative=false;
+		particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 		particleSystem.setSpawnSpeed(3.0f);
-		// particleSystem.setSpawnAngularVelocity(1.0f);
 		// Create an instruction for creation
 		ParticleSystemInstruction particleInstruction;
-		particleInstruction.textureFileName = "worldtexteffectfont.png";
+		particleInstruction.textureFileName = "text.png";
 		particleInstruction.particleSystem = particleSystem;
-		particleInstruction.uvRect = AglVector4(0.0f,0.0f,0.5f,0.5f);
+		unsigned int idx = min((unsigned int)9,(unsigned int)atoi(scorestr.substr(i,1).c_str()));
+		particleInstruction.uvRect = AglVector4(oN+idx*wwN,0.0f,oN+wwN+idx*wwN,hN);
 		// add instruction
 		particleEmitters->addParticleSystemInstruction(particleInstruction);
 	}
