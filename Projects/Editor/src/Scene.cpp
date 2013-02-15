@@ -550,7 +550,7 @@ void Scene::Draw()
 	//Draw Particle systems
 	for (unsigned int i = 0; i < sortedPS.size(); i++)
 	{
-		sortedPS[i].first->Draw();
+		sortedPS[i].first->Draw(invMax);
 	}
 }
 AglNode Scene::GetNode(int pIndex)

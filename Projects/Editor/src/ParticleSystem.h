@@ -26,6 +26,8 @@ private:
 
 	ID3D11BlendState* mBlendState;
 	ID3D11DepthStencilState* mDepthStencilState;
+
+	float m_scale;
 public:
 	ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	virtual ~ParticleSystem();
@@ -147,7 +149,11 @@ public:
 	{
 		return mSystem;
 	}
-	void Draw();
+	float getScale()
+	{
+		return m_scale;
+	}
+	void Draw(float p_scale);
 };
 
 #endif // PARTICLESYSTEM_H

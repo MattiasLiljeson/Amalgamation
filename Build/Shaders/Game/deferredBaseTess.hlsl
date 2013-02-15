@@ -85,13 +85,26 @@ patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, uint patchID: SV_
 {
 	patchConstantOut output;
 	
+	float3 pos = (input[0].position + input[1].position + input[2].position) / 3;
+	
+	float3 toSurface = pos - gCameraPos.xyz;
+	
+	float len = length(toSurface);
+	
+	int factor = 1;
+	
+	if (len < 200)
+	{
+		factor += 0.005*len*9;
+	}
+	
 	//The amount of points added on each respective edge of the triangle
-	output.edges[0] = 1;
-	output.edges[1] = 1;
-	output.edges[2] = 1;
+	output.edges[0] = factor;
+	output.edges[1] = factor;
+	output.edges[2] = factor;
 	
 	//The amount of points added INSIDE the triangle
-	output.inside = 1;
+	output.inside = factor;
 	
 	return output;
 }
