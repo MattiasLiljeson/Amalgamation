@@ -21,6 +21,7 @@ struct ParticleCBuffer
 	float worldMat[16];
 
 	float color[4];
+	float uvRect[4];
 	//float variousFloats[4];	//Containing fadeIn, fadeOut, particleMaxAge, maxOpacity
 	float fadeIn;
 	float fadeOut;
@@ -39,6 +40,7 @@ struct ParticleCBuffer
 	void setParticleData(const AglParticleSystemHeader& p_header, const float p_worldMat[16] )
 	{
 		setWorldMat( p_worldMat );
+		setRect(AglVector4(0.0f,0.0f,1.0f,1.0f));
 		setColor( p_header.color );
 		setFadeIn( p_header.fadeInStop );
 		setFadeOut( p_header.fadeOutStart );
@@ -49,6 +51,12 @@ struct ParticleCBuffer
 		setSpace( p_header.space );
 	}
 
+	void setRect(const AglVector4& p_normalizedRect){
+		uvRect[0] = p_normalizedRect[0];
+		uvRect[1] = p_normalizedRect[1];
+		uvRect[2] = p_normalizedRect[2];
+		uvRect[3] = p_normalizedRect[3];
+	}
 	void setColor(const AglVector4& p_color){
 		color[0] = p_color[0];
 		color[1] = p_color[1];

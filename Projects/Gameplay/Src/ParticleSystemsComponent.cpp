@@ -62,7 +62,9 @@ bool ParticleSystemsComponent::removeParticleSystemInstruction( int p_idx )
 int ParticleSystemsComponent::addParticleSystem( const AglParticleSystem& p_system,
 	int p_textureIdx, int p_idx )
 {
-	ParticleSystemAndTexture ps = { p_system, p_textureIdx };
+	ParticleSystemAndTexture ps;
+	ps.particleSystem = p_system;
+	ps.textureIdx = p_textureIdx;
 	return addParticleSystem( ps, p_idx );
 }
 

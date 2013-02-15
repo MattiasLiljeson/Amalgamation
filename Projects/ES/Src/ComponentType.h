@@ -66,6 +66,7 @@ public:	//Enums
 		ParticleSystemEmitter,
 		ParticleSystemServerComponent,
 		DebugMove,
+		uvRectCrop,
 		PlayerState,
 		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
