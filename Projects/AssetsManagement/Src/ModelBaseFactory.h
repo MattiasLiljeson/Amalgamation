@@ -183,5 +183,10 @@ protected:
 	/// and the creation instructions are needed again without loading the file again.
 	///-----------------------------------------------------------------------------------
 	ResourceManager<ModelResourceCollection>* m_modelResourceCache; 
-private:
+private:	///-----------------------------------------------------------------------------------
+	/// Transformfix to convert blender's axis flip to our system
+	/// \param p_transform
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void FixTransform(AglMatrix& p_transform);
 };

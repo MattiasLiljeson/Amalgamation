@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include "TcpServer.h"
 
+class ShipModule;
+
 // =======================================================================================
 //                                      PhysicsSystem
 // =======================================================================================
@@ -26,7 +28,8 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 private:
 	void handleLaserSight(Entity* p_entity);
-	void spawnRocket(Entity* p_entity);
+	void spawnRocket(Entity* p_entity,ShipModule* p_module);
 private:
 	TcpServer* m_server;
 };
+

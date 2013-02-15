@@ -24,6 +24,7 @@ class GeometryShader;
 struct ParticleBuffer
 {
 	AglVector4 EyePosition;
+	AglMatrix World;
 	AglMatrix View;
 	AglMatrix Projection;
 	AglVector4 Color;
@@ -34,7 +35,8 @@ struct ParticleBuffer
 	AglVector4 CameraZ;
 	AglVector4 CameraY;
 	int Alignment;
-	float buff[3];
+	float scale;
+	float buff[2];
 };
 
 class ParticleShader

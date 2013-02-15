@@ -2,6 +2,8 @@
 
 #include <EntitySystem.h>
 #include <RenderInterface.h>
+#include "Transform.h"
+#include <AglVector4.h>
 
 class GraphicsBackendSystem;
 struct AglMatrix;
@@ -29,8 +31,14 @@ public:
 
 	virtual void render();
 private:
+	bool shouldCull(Entity* p_entity);
+	void calcCameraPlanes();
+private:
 	vector< vector<InstanceData> > m_instanceLists;
 	vector< vector<AglMatrix> > m_boneMatrices;
 	GraphicsBackendSystem* m_gfxBackend;
+
+	//For culling
+	AglVector4 m_cameraPlanes[6];
 };
 

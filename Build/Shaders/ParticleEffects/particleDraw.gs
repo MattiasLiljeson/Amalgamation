@@ -1,6 +1,7 @@
 cbuffer cbPerFrame : register(b0)
 {
 	float4 gEyePosW;
+	matrix gWorld;
 	matrix gView; 
     matrix gProj;
 	float4 Color;
@@ -11,6 +12,7 @@ cbuffer cbPerFrame : register(b0)
 	float4 CameraZ;
 	float4 CameraY;
 	int Alignment;
+	float Scale;
 };
 
 cbuffer cbFixed
@@ -45,10 +47,12 @@ struct GS_OUT
 void GShader(point VS_OUT gIn[1], 
             inout TriangleStream<GS_OUT> triStream)
 {		
+	float3 checkPos = mul(gIn[0].Position, gWorld);
+	
 	matrix W;
-	[branch] if (Alignment == 0) //Observer
+	if (Alignment == 0) //Observer
 	{
-		float3 look  = normalize(gEyePosW.xyz - gIn[0].Position);
+		float3 look  = normalize(gEyePosW.xyz - checkPos);
 		float3 right = normalize(cross(float3(0,1,0), look));
 		float3 up    = cross(look, right);
 		W[0] = float4(right,       0.0f);
@@ -56,7 +60,7 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else if (Alignment == 1) //Screen
+	else if (Alignment == 1) //Screen
 	{
 		float3 look  = -CameraZ.xyz;
 		float3 up    = CameraY.xyz;
@@ -66,20 +70,20 @@ void GShader(point VS_OUT gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else if (Alignment == 2) //World Up
+	else if (Alignment == 2) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
-		float3 right = normalize(cross(up, gEyePosW.xyz - gIn[0].Position));
+		float3 right = normalize(cross(up, gEyePosW.xyz - checkPos));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
-	[branch] else //Velocity
+	else //Velocity
 	{
 		float3 right = normalize(gIn[0].Velocity);
-		float3 up 	 = normalize(cross(gEyePosW.xyz - gIn[0].Position, right));
+		float3 up 	 = normalize(cross(gEyePosW.xyz - checkPos, right));
 		float3 look  = cross(right, up);
 		W[0] = float4(right,       0.0f);
 		W[1] = float4(up,          0.0f);
@@ -94,11 +98,12 @@ void GShader(point VS_OUT gIn[1],
 						0, 0, 0, 1);
 
 	W = mul(rot, W);
+	W = mul(W, gWorld);
 	matrix vp = mul(gView, gProj);
 	matrix WVP = mul(W, vp);
 	
-	float halfWidth  = 0.5f*gIn[0].Size.x;
-	float halfHeight = 0.5f*gIn[0].Size.y;
+	float halfWidth  = 0.5f*gIn[0].Size.x * Scale;
+	float halfHeight = 0.5f*gIn[0].Size.y * Scale;
 
 	float4 v[4];
 	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);

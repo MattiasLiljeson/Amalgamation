@@ -582,6 +582,20 @@
     <ClInclude Include="AnimationUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreWorldVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="OnHitScoreEffectPacket.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="OnHitEffectBufferSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHelper.h" />
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -964,5 +978,15 @@
     <ClCompile Include="AnimationUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreWorldVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="OnHitScoreEffectPacket.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="OnHitEffectBufferSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHelper.cpp" />
   </ItemGroup>
 </Project>

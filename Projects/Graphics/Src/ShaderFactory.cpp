@@ -58,13 +58,13 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	ID3D11InputLayout* inputLayout = NULL;
 
 	VSData* vertexData = new VSData();
-	HSData* hullData	= NULL;//new HSData();
-	DSData* domainData	= NULL;//new DSData();
+	HSData* hullData	= new HSData();
+	DSData* domainData	= new DSData();
 	PSData* pixelData = new PSData();
 
 	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
-	//hullData->stageConfig = new ShaderStageConfig(p_filePath,"HS",m_shaderModelVersion);
-	//domainData->stageConfig = new ShaderStageConfig(p_filePath,"DS",m_shaderModelVersion);
+	hullData->stageConfig = new ShaderStageConfig(p_filePath,"HS",m_shaderModelVersion);
+	domainData->stageConfig = new ShaderStageConfig(p_filePath,"DS",m_shaderModelVersion);
 	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
 
 	createAllShaderStages(vertexData,pixelData, NULL, hullData, domainData);

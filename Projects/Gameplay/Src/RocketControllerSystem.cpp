@@ -95,7 +95,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 					{
 						if (hitModule)
 						{
-							hitModule->addDamageThisTick(101.0f); // Above max hp.
+							hitModule->addDamageThisTick(101.0f,rocket->m_ownerId); // Above max hp.
 						}
 						explodeRocket(ps, pb, body, p_entities[i]);
 					}

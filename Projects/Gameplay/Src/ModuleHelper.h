@@ -1,24 +1,26 @@
 #pragma once
+#include <Entity.h>
 
-#include <EntitySystem.h>
+class ShipModule;
 
 // =======================================================================================
-//                                   ShipManagerSystem
+//                                      ModuleHelper
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Manages all ships. Contains a list of these
+/// \brief	Helper class for modules
 ///        
-/// # ShipManagerSystem
+/// # ModuleHelper
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 14-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ShipManagerSystem : public EntitySystem
+class ModuleHelper
 {
 public:
-	ShipManagerSystem();
-	const vector<Entity*>& getShips() const;
-	Entity* findShip(int p_ownerId);
-
+	static void FindParentShip(EntityWorld* p_world,
+		Entity** p_inoutShip, ShipModule** p_inoutModule);
+	static int FindParentShipClientId(EntityWorld* p_world, ShipModule** p_inoutModule);
+protected:
+private:
 };

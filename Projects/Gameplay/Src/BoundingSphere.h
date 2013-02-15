@@ -1,24 +1,29 @@
-#pragma once
-
-#include <EntitySystem.h>
-
 // =======================================================================================
-//                                   ShipManagerSystem
+//                                      BoundingSphere
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Manages all ships. Contains a list of these
+/// \brief Used for culling
 ///        
-/// # ShipManagerSystem
+/// # BoundingSphere
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 14-02-2013 
 ///---------------------------------------------------------------------------------------
+#pragma once
+#include <Component.h>
+#include <AglBoundingSphere.h>
 
-class ShipManagerSystem : public EntitySystem
+class BoundingSphere : public Component
 {
 public:
-	ShipManagerSystem();
-	const vector<Entity*>& getShips() const;
-	Entity* findShip(int p_ownerId);
+	BoundingSphere(AglBoundingSphere p_sphere): Component(ComponentType::BoundingSphere)
+	{
+		sphere = p_sphere;
+	}
+	virtual ~BoundingSphere()
+	{
 
+	}
+
+	AglBoundingSphere sphere;
 };

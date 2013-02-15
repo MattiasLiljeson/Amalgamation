@@ -12,6 +12,7 @@
 #include "NetworkSynced.h"
 #include "ShipModule.h"
 #include "ShipManagerSystem.h"
+#include "ModuleHelper.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -35,11 +36,13 @@ float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 	return -1;
 }
 
-ServerPickingSystem::ServerPickingSystem(TcpServer* p_server)
+ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
+										 OnHitEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;
 	mrota = 0;
+	m_effectbuffer = p_effectBuffer;
 }
 
 
@@ -146,9 +149,42 @@ void ServerPickingSystem::setReleased(int p_index)
 	{
 		if (m_pickComponents[i].m_clientIndex == p_index)
 		{
+			Entity* parentShip = NULL;
+			ShipModule* shipModule = NULL;
+			Transform* moduleTransform = NULL;
+
+			// Get data for current module
+			if (m_pickComponents[i].getLatestPick()>-1)
+			{
+				Entity* shipModuleEntity = m_world->getEntity(m_pickComponents[i].getLatestPick());
+				shipModule = NULL;
+				if (shipModuleEntity)
+				{
+					shipModule = static_cast<ShipModule*>(shipModuleEntity->getComponent(
+							ComponentType::ShipModule));
+				}
+				if (shipModule)
+				{
+					// get parent
+					if (shipModule->m_lastParentWhenAttached!=-1)
+						parentShip = m_world->getEntity(shipModule->m_lastParentWhenAttached);
+
+					// also store the current transform
+					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
+					if (transformComp) moduleTransform = static_cast<Transform*>(transformComp);
+				}
+			}
+
 			//Release the picked module
 			m_pickComponents[i].setLatestPick(-1);
 			m_pickComponents[i].m_active = false;
+			if (shipModule) shipModule->m_lastParentWhenAttached = -1; // module is now totally detached from parent ship
+
+			// set an effect
+			if (moduleTransform && parentShip && shipModule)
+				setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
+
+
 			return;
 		}
 	}
@@ -457,6 +493,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.getLatestPick());
+		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
+			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
@@ -518,10 +556,16 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		//Set the parent connection point
 		cps->m_connectionPoints[p_ray.m_targetSlot].cpConnectedEntity = module->getIndex();
 		
+
+		// set an effect
+		if (shipModule->m_lastParentWhenAttached == -1) // only if not attached/moved before
+			setScoreEffect( ship, moduleTransform, shipModule->m_value);
+
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
+		shipModule->m_lastParentWhenAttached = target->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
 
@@ -537,6 +581,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 		//Module
 		Entity* module = m_world->getEntity(p_ray.getLatestPick());
+		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
+			ComponentType::Transform));
 		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
 			ComponentType::ShipModule));
 
@@ -570,12 +616,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
 				ComponentType::ShipModule));
 
-			while (parentModule)
-			{
-				parentShip = m_world->getEntity(parentModule->m_parentEntity);
-				parentModule = static_cast<ShipModule*>(parentShip->getComponent(
-					ComponentType::ShipModule));
-			}
+			ModuleHelper::FindParentShip(m_world,&parentShip,&parentModule);
 
 			if (parentShip != rayShip)
 				return false;
@@ -615,11 +656,22 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 			physX->getController()->DetachBodyFromCompound(body, false);
+
+
 		}
 	}
 	return true;
 }
 
+void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, 
+										  int p_score )
+{
+	OnHitScoreEffectPacket fxPacket;
+	fxPacket.score = p_score;
+	fxPacket.position = p_moduleTransform->getTranslation();
+	fxPacket.angle = p_moduleTransform->getRotation();	
+	m_effectbuffer->enqueueEffect(p_player,fxPacket);
+}
 //Rotation
 void ServerPickingSystem::addRotationEvent(int direction, int client)
 {
@@ -641,15 +693,22 @@ void ServerPickingSystem::add90RotationEvent(int direction, int client)
 			if (m_pickComponents[i].m_latestAttached >= 0)
 			{
 				Entity* e = m_world->getEntity(m_pickComponents[i].m_latestAttached);
-				ShipModule*  module = static_cast<ShipModule*>(e->getComponent(ComponentType::ShipModule));
-				module->m_rotation += direction * 3.14159f / 2.0f;
-				rotateModule(e, 0);
-			}
+				if (e)
+				{
+					ShipModule*  module = static_cast<ShipModule*>(e->getComponent(ComponentType::ShipModule));
+					if (module)
+					{
+						module->m_rotation += direction * 3.14159f / 2.0f;
+						rotateModule(e, 0);
+					}
+				}
 
+			}
 			break;
 		}
 	}
 }
+
 
 void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 {

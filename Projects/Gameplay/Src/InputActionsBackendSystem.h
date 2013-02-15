@@ -28,6 +28,8 @@ public:
 		Actions_ACTIVATE_MODULE,
 		Actions_ROTATE_MODULE_LEFT,
 		Actions_ROTATE_MODULE_RIGHT,
+		Actions_ROTATE90_MODULE_LEFT,
+		Actions_ROTATE90_MODULE_RIGHT,
 		Actions_STRAFE_LEFT,
 		Actions_STRAFE_RIGHT,
 		Actions_STRAFE_UP,

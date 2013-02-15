@@ -35,18 +35,18 @@ public:
 	}
 
 	int m_rayIndex;
-	int m_clientIndex;
+	int m_clientIndex; ///< owner client index
 	bool m_active;
 	float m_preferredDistance;
-	int m_selection;
+	int m_selection; ///< index to selection sphere
 
-	int m_targetEntity;
-	int m_targetSlot;
+	int m_targetEntity; ///< current entity to receive latest pick if released
+	int m_targetSlot; ///< idx to current target connection point of targetentity
 
 	//Used for rotation
 	int m_latestAttached;
 	int m_rotationDirection;
 
 private:
-	int m_latestPick;
+	int m_latestPick; ///< the current picked entity
 };
