@@ -40,6 +40,7 @@ void ParticleSystemInstructionTranslatorSystem::processEntities( const vector<En
 					int texId = m_gfxSystem->getGfxWrapper()->
 						createTexture( instruction->textureFileName, TEXTUREPATH );
 					psAndTexture.textureIdx = texId;
+					psAndTexture.uvRect = instruction->uvRect;
 
 					// Remove the instruction BEFORE adding the particle system. 
 					// Otherwise The particle system will be treated as a totally new 
