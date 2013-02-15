@@ -14,6 +14,8 @@
 #include "CameraSystem.h"
 #include "BoundingSphere.h"
 #include "CameraInfo.h"
+#include "MaterialInfo.h"
+#include "GradientComponent.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -77,10 +79,23 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			continue;
 
 		// Finally, add the entity to the instance vector
-		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
+		InstanceData instanceData = transform->getInstanceDataRef();
+		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			renderInfo->m_meshId);
+		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
+		if(gradient != NULL){ 
+			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
+			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
+		}
+		instanceData.setGradientColor( matInfo.getGradientColors() );
+		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+		
+		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
-		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
+			(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+
 		if (skelAnim)
 		{
 			AglSkeleton* skeleton = skelAnim->m_scene->getSkeleton(0);

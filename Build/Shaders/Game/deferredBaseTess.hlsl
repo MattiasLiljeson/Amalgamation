@@ -15,6 +15,8 @@ Texture2D diffuseTexture : register(t0);
 Texture2D normalTexture : register(t1);
 Texture2D specularTexture : register(t2);
 Texture2D glowTexture : register(t3);
+Texture2D displaceTexture : register(t4);
+Texture2D gradientTexture : register(t5);
 
 SamplerState pointSampler : register(s0);
 
@@ -26,6 +28,8 @@ struct VertexIn
 	float3 tangent : TANGENT;	
 	float3 binormal : BINORMAL;
 	float4x4 instanceTransform : INSTANCETRANSFORM;
+	float4x4 gradientColor 		: GRADIENTCOLOR;
+	float4 flags 	: FLAGS;
 };
 struct VertexOut
 {
@@ -33,6 +37,8 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
+	float4x4 gradientColor : GRADIENTCOLOR;
+	float4 flags	: FLAGS;
 };
 
 //Output from the patch constant function 
@@ -49,6 +55,8 @@ struct HullOut
 	float3 normal	    : NORMAL;
     float3 tangent      : TANGENT;
 	float2 texCoord     : TEXCOORD;
+	float4x4 gradientColor : GRADIENTCOLOR;
+	float4 flags	: FLAGS;
 };
 
 //Output from the domain shader
@@ -58,6 +66,8 @@ struct DomainOut
 	float3 normal	    : NORMAL;
     float3 tangent      : TANGENT;
 	float2 texCoord     : TEXCOORD;
+	float4x4 gradientColor : GRADIENTCOLOR;
+	float4 flags	: FLAGS;
 };
 
 struct PixelOut
@@ -75,7 +85,9 @@ VertexOut VS(VertexIn p_input)
 	vout.normal = mul(float4(p_input.normal,0.0f), p_input.instanceTransform).xyz;
 	vout.tangent = mul(float4(p_input.tangent,0.0f),p_input.instanceTransform).xyz;
 	vout.texCoord = p_input.texCoord;
-    
+    vout.gradientColor = p_input.gradientColor;
+	vout.flags = p_input.flags;
+	
 	return vout;
 }
 
@@ -122,6 +134,8 @@ HullOut HS(InputPatch<VertexOut, 3> patch, uint pointID : SV_OutputControlPointI
 	output.normal 	= patch[pointID].normal;
 	output.tangent 	= patch[pointID].tangent;
 	output.texCoord 	= patch[pointID].texCoord;
+	output.gradientColor = patch[pointID].gradientColor;
+	output.flags		= patch[pointID].flags;
 	return output;
 }
 
@@ -162,13 +176,22 @@ DomainOut DS(patchConstantOut input, float3 uvw : SV_DomainLocation, const Outpu
 	output.tangent = tan;
 	output.normal = norm;
 	output.texCoord = tex;
+	output.gradientColor = patch[0].gradientColor;
+	output.flags = patch[0].flags;
 	return output;
 }
 
 PixelOut PS(DomainOut p_input)
 {
 	PixelOut pixelOut;
-	pixelOut.diffuse = diffuseTexture.Sample(pointSampler, p_input.texCoord);
+	
+	int layerCount = p_input.flags.x+0.5f;
+	float value = gradientTexture.Sample(pointSampler, p_input.texCoord).x;
+	
+	int index = value * layerCount;
+	index = min(index, layerCount-1);
+	pixelOut.diffuse = p_input.gradientColor[index];
+	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
 	// temp fog
 	//float linDepth = pow(p_input.position.z, (gFarPlane-gNearPlane));

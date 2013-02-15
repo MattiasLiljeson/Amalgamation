@@ -71,6 +71,7 @@ public:	//Enums
 		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
 		GameState,
+		Gradient,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

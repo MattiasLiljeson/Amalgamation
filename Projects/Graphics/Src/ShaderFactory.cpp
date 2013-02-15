@@ -72,7 +72,8 @@ DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_fil
 	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
 
 	ShaderVariableContainer shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState, NULL, hullData, domainData);
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState,
+		NULL, hullData, domainData);
 
 	return new DeferredBaseShader(shaderInitData);
 }
@@ -514,6 +515,23 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 		{"INSTANCETRANSFORM", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+
+		{"GRADIENTCOLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"GRADIENTCOLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"GRADIENTCOLOR", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"GRADIENTCOLOR", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 
+		D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1},
+
+		{"FLAGS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA,1},
 	};
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }

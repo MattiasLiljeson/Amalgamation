@@ -56,6 +56,10 @@ public:
 	{
 		return &m_layers[p_index]->color;
 	}
+	AglVector4 getLayerColor(int p_index)
+	{
+		return m_layers[p_index]->color;
+	}
 
 };
 
