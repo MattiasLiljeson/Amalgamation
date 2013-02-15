@@ -604,6 +604,9 @@
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="LevelInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1001,6 +1004,9 @@
       <Filter>Systems\Level Gen</Filter>
     </ClCompile>
     <ClCompile Include="LevelPieceRoot.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfo.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>

@@ -40,23 +40,14 @@ LevelPieceFileMapping::~LevelPieceFileMapping()
 void LevelPieceFileMapping::resetToDefault()
 {
 	LevelPieceFileData data;
-	m_fileData.clear();
 
-	data.id = m_fileData.size();
-	data.clientAssemblageName	= "rocksClient";
-	data.serverAssemblageName	= "rocksServer";
-	data.modelFileName			= "WorldPrison_FinalWork_9_exporting.agl";
-	data.weight					= 0;
-	
-	m_fileData.push_back( data );
+	m_weightData.clear();
+	for (int i = m_fileData.size(); i >= 0; i--)
+	{
+		for (int w = 0; w < m_fileData[i].weight; w++)
+			m_weightData.push_back(i); // Pushes back the pieceFileId w times.
+	}
 
-	data.id = m_fileData.size();
-	data.clientAssemblageName	= "tunnelClient";
-	data.serverAssemblageName	= "tunnelServer";
-	data.modelFileName			= "WorldPrison_FinalWork_9_exporting.agl";
-	data.weight					= 0;
-
-	m_fileData.push_back( data );
 }
 
 const string& LevelPieceFileMapping::getAssemblageFileName( unsigned int p_id ) const

@@ -59,6 +59,7 @@
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="LevelHandlerSystem.h" />
+    <ClInclude Include="LevelInfo.h" />
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LevelPieceInfo.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelHandlerSystem.cpp" />
+    <ClCompile Include="LevelInfo.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LevelPieceRoot.cpp" />

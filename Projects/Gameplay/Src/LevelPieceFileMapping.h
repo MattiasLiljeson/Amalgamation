@@ -22,8 +22,7 @@ struct LevelPieceFileData
 {
 	int		id;
 	string	modelFileName;
-	string	clientAssemblageName;
-	string	serverAssemblageName;
+	string	assemblageName;
 	int		weight; // Weight not yet implemented
 };
 
@@ -48,6 +47,8 @@ public:
 	void	setWeight(int p_id, int p_newWeight);
 private:
 	vector<LevelPieceFileData> m_fileData;
+	vector<int> m_weightData;
+
 	vector<string> m_fileNames;
 	vector<string> m_asdNames;
 	vector<string> m_clientAsdNames;
