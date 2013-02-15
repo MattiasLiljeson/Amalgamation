@@ -695,18 +695,12 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			// Update the existing transform
 			transform->setTranslation(p_packet.translation);
 			transform->setRotation(p_packet.rotation);
-			//if (!p_packet.isLevelProp)
-				transform->setScale(p_packet.scale);
+			transform->setScale(p_packet.scale);
 		}
 		// If this else block is ran, is means no transform as been specified in the assemblage file
 		else
 		{
-			// Create a new transform and add it to the entity.
-			//if (p_packet.isLevelProp)
-			//	transform = new Transform(p_packet.translation, p_packet.rotation, AglVector3::one());
-			//else
-				transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-
+			transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 			entity->addComponent( transform );
 		}
 

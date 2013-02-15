@@ -27,9 +27,11 @@ public:
 
 	void initialize();
 
-	void added( Entity* p_entity );
+	//void added( Entity* p_entity );
 	
 	vector<Entity*> getStaticObjects();
+
+
 private:
-	vector<Entity*> m_objects;
+	//vector<Entity*> m_objects;
 };

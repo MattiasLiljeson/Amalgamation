@@ -66,11 +66,30 @@ void LevelGenSystem::initialize()
 		ModelResource* rootResource = resourcesFromModel->at(0);
 		// NOTE: Hard-coded bounding sphere volume size for now!
 		// This should later on be calculated using the meshes
-		rootResource->meshHeader.boundingSphere.radius = 900.0f;
+		//rootResource->meshHeader.boundingSphere.radius = 900.0f;
+		
+		// Calculate the entire chamber's collision sphere.
+		calculatePieceCollision(resourcesFromModel);
 
 		m_modelResources.push_back( rootResource );
 
 		//delete resourcesFromModel;
+	}
+}
+
+void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMesh )
+{
+	// Index 0 always contains the root.
+	if (p_pieceMesh->size() > 0)
+	{
+		AglBoundingSphere boundingSphere = p_pieceMesh->at(1)->meshHeader.boundingSphere;
+		for (unsigned int i = 2; i < p_pieceMesh->size(); i++)
+		{
+			boundingSphere = AglBoundingSphere::mergeSpheres(boundingSphere, 
+				p_pieceMesh->at(i)->meshHeader.boundingSphere);
+		}
+		boundingSphere.radius;
+		p_pieceMesh->at(0)->meshHeader.boundingSphere = boundingSphere;
 	}
 }
 
@@ -199,6 +218,21 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId
 	return entity;
 }
 
+Entity* LevelGenSystem::createDebugSphereEntity( LevelPiece* p_piece )
+{
+	/* DEBUG */
+	AglBoundingSphere boundingSphere = p_piece->getBoundingSphere();
+	AglVector3 scale(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius);
+	scale *= 2;
+
+	Entity* e = m_world->createEntity();
+	e->addComponent(new Transform(boundingSphere.position, AglQuaternion::identity(),
+		scale));
+	e->addComponent(new StaticProp(1));
+	m_world->addEntity(e);
+	return e;
+	/* END OF DEBUG */
+}
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
 										   vector<LevelPiece*>& out_pieces )
@@ -307,6 +341,8 @@ void LevelGenSystem::createLevelEntities()
 	{
 		Entity* e = createEntity(m_generatedPieces[i], i);
 		m_world->addEntity(e);
+		//e = createDebugSphereEntity(m_generatedPieces[i]);
+		//m_world->addEntity(e);
 	}
 }
 
@@ -334,5 +370,4 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);
 	}
 }
-
 

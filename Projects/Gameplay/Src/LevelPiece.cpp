@@ -82,7 +82,7 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	m_transform->setScale(tempScale);
 	updateConnectionPoints();
 
-	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
+	// 2) Flip forward vector using target connector and create a temp matrix.
 	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
 	//mat.SetForward( mat.GetBackward() );
 	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
@@ -95,10 +95,14 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	//				temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getForward(), 3.1415f),
 	//				temp.getTranslation() );
 
-	// 2) Transform this piece and connection points with target piece connector matrix or blä.
+	// 3) Transform this piece and connection points with target piece connector matrix or blä.
 	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
 	//m_transform->setMatrix( m_transform->getMatrix() * mat );
 	m_transform->setScale(temp.getScale());
+
+	// NOTE: This is most likely a temporary solution, since the bounding sphere is going
+	// to be ridiculously large if the scale is altered.
+	m_transform->setScale(AglVector3::one());
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!
