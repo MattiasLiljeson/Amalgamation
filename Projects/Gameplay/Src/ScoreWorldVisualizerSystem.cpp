@@ -93,7 +93,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		// particleSystem.set
 		particleSystem.setSpace(AglParticleSystemHeader::AglSpace_LOCAL);
 		particleSystem.getHeaderPtr()->relative=false;
-		particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
+		//particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 		particleSystem.setSpawnSpeed(3.0f);
 		// Create an instruction for creation
 		ParticleSystemInstruction particleInstruction;
