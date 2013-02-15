@@ -592,7 +592,6 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHelper.h" />
-  </ItemGroup>
     <ClInclude Include="LevelPieceInfo.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -604,7 +603,9 @@
     </ClInclude>
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
-    </ClInclude>  </ItemGroup>  <ItemGroup>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -993,7 +994,6 @@
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="ModuleHelper.cpp" />
-  </ItemGroup>
     <ClCompile Include="LevelPieceFileMapping.cpp">
       <Filter>Systems\Level Gen</Filter>
     </ClCompile>
@@ -1002,4 +1002,6 @@
     </ClCompile>
     <ClCompile Include="LevelPieceRoot.cpp">
       <Filter>Components</Filter>
-    </ClCompile>  </ItemGroup></Project>
+    </ClCompile>
+  </ItemGroup>
+</Project>
