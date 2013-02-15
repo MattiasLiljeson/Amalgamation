@@ -26,6 +26,7 @@
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
 #include "GPUTimer.h"
+#include "LightShader.h"
 #include "ParticleSystemAndTexture.h"
 
 GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
@@ -327,7 +328,8 @@ void GraphicsWrapper::renderLights( LightMesh* p_mesh,
 		instanceBuffer->getElementSize(),
 		instanceBuffer->getElementCount(),
 		instanceBuffer->getBufferPointer(),
-		reinterpret_cast<ShaderBase*>(m_deferredRenderer->getDeferredLightShader()), NULL);
+		m_deferredRenderer->getDeferredLightShader(),
+		NULL);
 
 	delete instanceBuffer;
 	instanceBuffer = NULL;

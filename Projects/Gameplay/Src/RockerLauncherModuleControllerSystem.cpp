@@ -14,6 +14,7 @@
 #include "StandardRocket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "ShipConnectionPointHighlights.h"
+#include "ModuleHelper.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -52,7 +53,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 			gun->timeSinceRocket += dt;
 			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
-				spawnRocket(p_entities[i]);
+				spawnRocket(p_entities[i],module);
 				gun->timeSinceRocket = 0;
 				gun->currentBurst++;
 				if (gun->currentBurst >= gun->burstCount)
@@ -158,7 +159,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		}
 	}
 }
-void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
+void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModule* p_module)
 {
 	RocketLauncherModule* gun = static_cast<RocketLauncherModule*>(
 		m_world->getComponentManager()->getComponent(p_entity,
@@ -198,7 +199,13 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity)
 
 	entity->addComponent( ComponentType::Transform, t);
 
-	entity->addComponent(ComponentType::StandardRocket, new StandardRocket());
+
+	// store owner data
+	StandardRocket* rocketModule = new StandardRocket();
+	rocketModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, &p_module);
+
+	entity->addComponent(ComponentType::StandardRocket, rocketModule);
+
 	entity->addComponent(ComponentType::NetworkSynced, 
 		new NetworkSynced( entity->getIndex(), -1, EntityType::Rocket));
 	m_world->addEntity(entity);

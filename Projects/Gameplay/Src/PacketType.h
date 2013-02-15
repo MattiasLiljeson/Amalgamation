@@ -33,6 +33,7 @@ public:
 		ModuleTriggerPacket,
 		TransformPacket,
 		RemoveSoundEffect,
+		OnHitScoreEffectPacket,
 
 		// Client -> Server:
 		/************************************************************************/

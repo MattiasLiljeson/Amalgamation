@@ -30,10 +30,19 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	// Clear the old particle systems
 	m_collections.clear();
 
-	// HACK! 
-	// must be set to real camera pos as soon as possible. Sorting doesn't work now!
+	// get camera pos, for sorting
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
+	auto entitymanager = m_world->getEntityManager();
+	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	if (cam)
+	{
+		Transform* camTransform = static_cast<Transform*>(
+			cam->getComponent( ComponentType::Transform ) );
+		if (camTransform) cameraPos = camTransform->getTranslation();
+	}
 
+	
+	// all particle systems
 	for( unsigned int i = 0; i<p_entities.size(); i++ )
 	{
 		Transform* transform = static_cast<Transform*>(

@@ -7,11 +7,18 @@
 #include "PlayerScore.h"
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
+#include "OnHitScoreEffectPacket.h"
+#include "OnHitEffectBufferSystem.h"
+#include "Transform.h"
+#include "ModuleHelper.h"
 
-ShipModulesControllerSystem::ShipModulesControllerSystem()
+ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
+														 OnHitEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
 	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {
+	m_server = p_server;
+	m_effectbuffer = p_effectBuffer;
 }
 
 
@@ -87,12 +94,25 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 				Entity* entity = m_world->getEntity(e);
 				ShipModule* m = static_cast<ShipModule*>(entity->getComponent(ComponentType::ShipModule));
 
+				Transform* moduleTransform = static_cast<Transform*>(
+					entity->getComponent(ComponentType::Transform));
+
 				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
 				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
 					m->applyDamage();
 					if (m->m_health <= 0)
 					{
+						int me = ModuleHelper::FindParentShipClientId(m_world,&m);
+
+						// score effect
+						if (moduleTransform && m &&
+							m->getLatestPerpetratorClient()!=me)
+						{
+							// set a positive effect to perp, if not yourself
+							setScoreEffect( m->getLatestPerpetratorClient(), 
+								moduleTransform, m->m_value/2);
+						}
 						drop(p_parent, i);
 					}
 					else
@@ -353,4 +373,14 @@ float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
 	if (module)
 		score += module->m_value;
 	return score;
+}
+void ShipModulesControllerSystem::setScoreEffect( int p_networkOwner, Transform* p_moduleTransform, 
+										 int p_score )
+{
+	OnHitScoreEffectPacket fxPacket;
+	fxPacket.score = p_score;
+	fxPacket.position = p_moduleTransform->getTranslation();
+	fxPacket.angle = p_moduleTransform->getRotation();
+
+	m_effectbuffer->enqueueEffect(p_networkOwner,fxPacket);
 }

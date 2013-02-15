@@ -30,6 +30,25 @@ public:
 
 	struct RawInputForces
 	{
+		RawInputForces()
+		{
+			hPositive=0.0f;
+			hNegative=0.0f;
+			vPositive=0.0f;
+			vNegative=0.0f;
+			shPositive=0.0f;
+			shNegative=0.0f;
+			svPositive=0.0f;
+			svNegative=0.0f;
+			ehPositive=0.0f;
+			ehNegative=0.0f;
+			evPositive=0.0f;
+			evNegative=0.0f;
+			rRight=0.0f;
+			rLeft=0.0f;
+			thrust=0.0f;
+			stateSwitchTrig=false;
+		}
 		double	hPositive,hNegative,
 			vPositive,vNegative,
 			shPositive,shNegative,

@@ -5,6 +5,9 @@
 #include "PickComponent.h"
 #include "TcpServer.h"
 #include "ConnectionPointSet.h"
+#include "OnHitEffectBufferSystem.h"
+
+class ShipModule;
 
 // =======================================================================================
 //                                      ServerPickingSystem
@@ -21,7 +24,8 @@
 class ServerPickingSystem: public EntitySystem
 {
 public:
-	ServerPickingSystem(TcpServer* p_server);
+	ServerPickingSystem(TcpServer* p_server,
+		OnHitEffectBufferSystem* p_effectBuffer);
 	~ServerPickingSystem();
 
 	virtual void initialize();
@@ -48,8 +52,12 @@ private:
 	void attemptConnect(PickComponent& p_ray);
 	bool attemptDetach(PickComponent& p_ray);
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation = 0);
+	void setScoreEffect(Entity* p_player, Transform* p_moduleTransform, int p_score);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
 
 	//Rotation of modules
 	void rotateModule(Entity* p_ship, int p_dir);
+
+	// Effects
+	OnHitEffectBufferSystem* m_effectbuffer;
 };
