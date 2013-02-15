@@ -117,6 +117,7 @@ using namespace std;
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
+#include <RandomUtil.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -588,6 +589,7 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
 //	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f), 400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
+//	initInstanceSphereByJohan("RockA.agl", AglVector3(50.0f, 0.0f, 0.0f), 50.0f, 5000);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
@@ -649,5 +651,23 @@ void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
 
 			m_world->addEntity(entity);
 		}
+	}
+}
+
+void ClientApplication::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
+	float p_radius, unsigned int p_numberInstances )
+{
+	for(unsigned int i=0; i<p_numberInstances; i++)
+	{
+		Entity* entity = m_world->createEntity();
+		AglVector3 randomDirection;
+		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
+			&randomDirection.z);
+		AglVector3 position = p_origin + randomDirection * p_radius;
+		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0.0f, 1.0f, 0.0f), p_origin-position);
+		AglVector3 scale(1.0f, 1.0f, 1.0f);
+		entity->addComponent(new Transform(position, rotation, scale));
+		entity->addComponent(new LoadMesh(p_meshName));
+		m_world->addEntity(entity);
 	}
 }
