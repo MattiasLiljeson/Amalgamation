@@ -153,7 +153,7 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 				/* Send the thrust packet to the server!								*/
 				/************************************************************************/
 
-				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+				auto netSync = static_cast<NetworkSynced*>(ship->getComponent(
 					ComponentType::NetworkSynced));
 				sendThrustPacketToServer(netSync,
 					controller->m_thrustPowerAccumulator, 

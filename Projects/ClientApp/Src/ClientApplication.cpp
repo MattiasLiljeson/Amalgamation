@@ -98,6 +98,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
+#include <ScoreWorldVisualizerSystem.h>
 #include <ParticleSystemInstructionTranslatorSystem.h>
 #include <ClientEntityCountSystem.h>
 #include <SkeletalAnimationSystem.h>
@@ -281,6 +282,13 @@ void ClientApplication::initSystems()
 	// The alternative would be that every event handler adds itself.
 	m_world->setSystem( new MenuSystem(), true );
 
+
+	/************************************************************************/
+	/* Effects																*/
+	/************************************************************************/
+	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
+	m_world->setSystem( scoreVisSystem, true );
+
 	/************************************************************************/
 	/* Player    															*/
 	/************************************************************************/
@@ -419,6 +427,12 @@ void ClientApplication::initEntities()
 {
 	Entity* entity = NULL;
 	Component* component = NULL;
+
+	// HACK: (Johan) This temporarily fixes the weird "hierarchy" bug.
+	entity = m_world->createEntity();
+	entity->addComponent(new Transform());
+	m_world->addEntity(entity);
+	// End hack.
 
 	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;

@@ -11,6 +11,9 @@
 #include <TextureParser.h>
 #include "SkeletalAnimation.h"
 #include "MeshOffsetTransform.h"
+#include "CameraSystem.h"
+#include "BoundingSphere.h"
+#include "CameraInfo.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -30,6 +33,8 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	calcCameraPlanes();
+
 	// Cleanup
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();
@@ -67,6 +72,10 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
 
+		//Perform some culling checks
+		if (shouldCull(p_entities[i]))
+			continue;
+
 		// Finally, add the entity to the instance vector
 		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
 
@@ -98,5 +107,82 @@ void MeshRenderSystem::render()
 			m_gfxBackend->getGfxWrapper()->renderMesh( meshIdx, 
 				&m_instanceLists[meshIdx], &m_boneMatrices[meshIdx]); // process a mesh
 		}
+	}
+}
+
+bool MeshRenderSystem::shouldCull(Entity* p_entity)
+{
+	Transform* transform = static_cast<Transform*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	BoundingSphere* bs = static_cast<BoundingSphere*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingSphere ) );
+
+	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
+	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
+
+	if (!bs)
+		return false;
+
+	AglBoundingSphere sphere = bs->sphere;
+	sphere.position.transform(transform->getMatrix());
+	AglVector3 scale = transform->getScale();
+
+	sphere.radius *= max(scale.x, max(scale.y, scale.z));
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		float val = m_cameraPlanes[i].x * sphere.position.x + 
+					m_cameraPlanes[i].y * sphere.position.y +
+					m_cameraPlanes[i].z * sphere.position.z +
+					m_cameraPlanes[i].w * 1;
+		if (val + sphere.radius < 0 )
+		{
+			return true;
+		}
+
+	}
+
+	return false;
+}
+void MeshRenderSystem::calcCameraPlanes()
+{
+	EntityManager* entitymanager = m_world->getEntityManager();
+	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+
+	CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
+
+	Transform* transform = static_cast<Transform*>(
+		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	AglVector3 position = transform->getTranslation();
+	AglQuaternion rotation = transform->getRotation();
+	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+	AglVector3 up = transform->getMatrix().GetUp();
+
+	AglMatrix view = AglMatrix::createViewMatrix(position,
+		lookTarget,
+		up);
+
+	AglMatrix viewProj = view * info->m_projMat;
+
+	m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
+	m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
+	m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
+	m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
+	m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
+	m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
+				  m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
+				  m_cameraPlanes[i].z * m_cameraPlanes[i].z);
+
+		m_cameraPlanes[i].x /= l;
+		m_cameraPlanes[i].y /= l;
+		m_cameraPlanes[i].z /= l;
+		m_cameraPlanes[i].w /= l;
 	}
 }

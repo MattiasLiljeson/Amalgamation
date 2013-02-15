@@ -4,6 +4,10 @@
 #include "AglVector3.h"
 #include "ConnectionPointSet.h"
 
+class Transform;
+class TcpServer;
+class OnHitEffectBufferSystem;
+
 // =======================================================================================
 //                                      ShipModulesControllerSystem
 // =======================================================================================
@@ -19,7 +23,8 @@
 class ShipModulesControllerSystem: public EntitySystem
 {
 public:
-	ShipModulesControllerSystem();
+	ShipModulesControllerSystem(TcpServer* p_server,
+		OnHitEffectBufferSystem* p_effectBuffer);
 	~ShipModulesControllerSystem();
 
 	virtual void initialize();
@@ -38,7 +43,7 @@ private:
 	void setActivation(Entity* p_entity, bool p_value);
 	void setActivationChildren(Entity* p_entity, bool p_value);
 	float calculateScore(Entity* p_entity);
-
+	void setScoreEffect(int p_networkOwner, Transform* p_moduleTransform, int p_score);
 private:
 	struct HighlightEvent
 	{		
@@ -50,4 +55,9 @@ private:
 	vector<HighlightEvent> m_toHighlight;
 	vector<int> m_toActivate;
 	vector<int> m_toDeactivate;
+
+	// system dependencies
+	TcpServer* m_server;
+	OnHitEffectBufferSystem* m_effectbuffer;
+
 };

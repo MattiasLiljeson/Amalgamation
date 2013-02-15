@@ -1,7 +1,7 @@
 e ServerMinigun
 
 c LoadMesh
-d s m_filename Minigun.agl
+d s m_filename MinigunAnim.agl
 
 c Transform
 d f m_translationX 40.0

@@ -62,6 +62,9 @@ ID3D11InputLayout* ParticleShader::GetInputLayout()
 }
 void ParticleShader::SetBuffer(ParticleSystem* pPS)
 {
+	float scale = pPS->getScale();
+	AglMatrix w = AglMatrix::createScaleMatrix(AglVector3(scale, scale, scale));
+
 	AglMatrix v = Camera::GetInstance()->GetViewMatrix();
 	AglMatrix p = Camera::GetInstance()->GetProjectionMatrix();
 	AglVector3 pos = Camera::GetInstance()->GetPosition();
@@ -73,6 +76,7 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	mDeviceContext->Map(mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
 	buffer = (ParticleBuffer*)resource.pData;
+	buffer->World = w;
 	buffer->View = v;
 	buffer->Projection = p;
 	buffer->EyePosition = AglVector4(pos.x, pos.y, pos.z, 1);
@@ -81,6 +85,7 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	buffer->FadeOut = pPS->getFadeOutStart();
 	buffer->ParticleMaxAge = pPS->GetHeader().particleAge;
 	buffer->Opacity = pPS->GetHeader().maxOpacity;
+	buffer->scale	= 1.0f;
 
 	AglVector3 y = Camera::GetInstance()->LocalYAxis();
 	AglVector3 z = Camera::GetInstance()->LocalZAxis();

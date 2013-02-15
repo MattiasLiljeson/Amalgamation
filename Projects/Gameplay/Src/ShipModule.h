@@ -22,6 +22,7 @@ class ShipModule: public Component
 {
 public:
 	int m_parentEntity;
+	int m_lastParentWhenAttached;
 	float m_value; ///< Value of the module. Generates score.
 	float m_health; ///< Health of the module. A module that loses all health is removed
 
@@ -31,17 +32,37 @@ public:
 	ShipModule();
 	~ShipModule();
 	void init( vector<ComponentData> p_initData );
-	void addDamageThisTick(float p_amount);
+	///-----------------------------------------------------------------------------------
+	/// Add damage for accumulation
+	/// The perpetrator id is needed.
+	/// \param p_amount
+	/// \param p_perpEntityShipId
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addDamageThisTick(float p_amount,int p_perpClientId);
 	void applyDamage();
 	void resetDamage();
+	///-----------------------------------------------------------------------------------
+	/// Get the id of the latest client to cause damage to this module
+	/// \return int
+	///-----------------------------------------------------------------------------------
+	int getLatestPerpetratorClient();
 	bool damageTaken() const;
 	const bool& getActive() const;
 	void activate();
 	void deactivate();
 	void addActivationEvent(ModuleEvent* p_event);
 private:
+	struct DamageAccumulator
+	{
+		DamageAccumulator(){reset();latestPerp=-1;}
+		void reset() {accumulatedDamage=0.0f;}
+		float accumulatedDamage;
+		int latestPerp;
+	};
+
 	bool m_active;
-	float m_addedDamage;
+	DamageAccumulator m_damageAcc;
 	static ComponentRegister<ShipModule> s_reg;
 	vector<ModuleEvent*> m_activationEvents;
 };

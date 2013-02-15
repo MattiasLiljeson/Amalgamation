@@ -601,6 +601,7 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
 	Entity* shieldEntity = m_world->createEntity();
+	shieldEntity->setName("shieldModuleClient");
 	// Add network dependent components
 	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
 	shieldEntity->addComponent(transform );
@@ -618,6 +619,7 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	for(unsigned int i=0; i<plateCount; i++)
 	{
 		Entity* entity = m_world->createEntity();
+		entity->setName("shieldPlateClient");
 		plateEntities[i] = entity;
 		float spawnX, spawnY;
 		circularRandom(&spawnX, &spawnY, true);

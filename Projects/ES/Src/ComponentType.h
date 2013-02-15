@@ -93,6 +93,7 @@ public:	//Enums
 		LightsComponent,
 		MeshOffsetTransform,
 		SkeletalAnimation,
+		BoundingSphere,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -85,13 +85,26 @@ patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, uint patchID: SV_
 {
 	patchConstantOut output;
 	
+	float3 pos = (input[0].position + input[1].position + input[2].position) / 3;
+	
+	float3 toSurface = pos - gCameraPos.xyz;
+	
+	float len = length(toSurface);
+	
+	int factor = 1;
+	
+	if (len < 200)
+	{
+		factor += 0.005*len*9;
+	}
+	
 	//The amount of points added on each respective edge of the triangle
-	output.edges[0] = 1;
-	output.edges[1] = 1;
-	output.edges[2] = 1;
+	output.edges[0] = factor;
+	output.edges[1] = factor;
+	output.edges[2] = factor;
 	
 	//The amount of points added INSIDE the triangle
-	output.inside = 1;
+	output.inside = factor;
 	
 	return output;
 }
@@ -151,24 +164,20 @@ DomainOut DS(patchConstantOut input, float3 uvw : SV_DomainLocation, const Outpu
 	return output;
 }
 
-
-
-
-
 PixelOut PS(DomainOut p_input)
 {
 	PixelOut pixelOut;
 	pixelOut.diffuse = diffuseTexture.Sample(pointSampler, p_input.texCoord);
-	
+
 	// temp fog
 	//float linDepth = pow(p_input.position.z, (gFarPlane-gNearPlane));
 	//float4 fog = float4(linDepth,linDepth,linDepth,0.0f);
-	
+
 	//pixelOut.diffuse += fog;
-	
+
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);
-	
+
 	pixelOut.specular = specularTexture.Sample(pointSampler, p_input.texCoord);
 
 	return pixelOut;

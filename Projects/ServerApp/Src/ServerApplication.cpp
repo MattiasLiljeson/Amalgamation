@@ -35,6 +35,7 @@
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
+#include <OnHitEffectBufferSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -148,6 +149,12 @@ namespace Srv
 		m_world->setSystem( levelGen, true);
 
 		/************************************************************************/
+		/* Effects																*/
+		/************************************************************************/
+		OnHitEffectBufferSystem* onhiteffect = new OnHitEffectBufferSystem(m_server);
+		m_world->setSystem(onhiteffect, true);
+
+		/************************************************************************/
 		/* Physics																*/
 		/************************************************************************/
 		PhysicsSystem* physics = new PhysicsSystem(m_server);
@@ -174,7 +181,7 @@ namespace Srv
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerPickingSystem(m_server), true);
+		m_world->setSystem(new ServerPickingSystem(m_server,onhiteffect), true);
 
 
 		/************************************************************************/
@@ -200,7 +207,7 @@ namespace Srv
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		// Important for any module-damaging logic to happen before this.
-		m_world->setSystem(new ShipModulesControllerSystem(), true);
+		m_world->setSystem(new ShipModulesControllerSystem(m_server,onhiteffect), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);

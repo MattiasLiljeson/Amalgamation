@@ -60,6 +60,8 @@ struct AglMatrix
 	AglVector3 GetTranslation() const;
 	AglQuaternion GetRotation() const;
 	AglVector3 GetScale() const;
+	AglVector4 getRow(int p_index) const;
+	AglVector4 getColumn(int p_index) const;
 
 	//Member Setters
 	void SetForward(const AglVector3& pValue);
