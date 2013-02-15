@@ -8,7 +8,6 @@
 
 #define FORCE_VS_DBG_OUTPUT
 
-
 // Primitives
 const string& ModelExtendedFactory::primitiveCubeName="P_cube";
 const string& ModelExtendedFactory::primitiveSphereName="P_sphere";
@@ -19,6 +18,7 @@ const string& ModelExtendedFactory::defaultDiffuseTextureName="defaultdiffuse.pn
 const string& ModelExtendedFactory::defaultSpecularTextureName="defaultspecular.png";
 const string& ModelExtendedFactory::defaultNormalTextureName="defaultnormal.png";
 const string& ModelExtendedFactory::defaultDisplacementTextureName="defaultdisplacement.png";
+const string& ModelExtendedFactory::defaultGradientTextureName="defaultgradient.png";
 
 ModelExtendedFactory::ModelExtendedFactory(ID3D11Device* p_device,BufferFactory* p_bufferFactory, 
 	ResourceManager<Mesh>* p_resourceManager,
@@ -136,6 +136,7 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 	vector<AglMaterialMapping> mmap = p_source.scene->getMaterialMappings();
 	int matId = mmap[p_source.modelNumber].materialID;
 	AglMaterial* mat = p_source.scene->getMaterial(matId);
+	AglGradient* gradients = NULL;
 	// get names
 	// diffuse
 	string diffuseName = defaultDiffuseTextureName;
@@ -165,6 +166,13 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 	string glowName = defaultSpecularTextureName;
 	if (mat->glowTextureNameIndex!=-1)
 		glowName = p_source.scene->getName(mat->glowTextureNameIndex,true);
+	// gradient
+	string gradientName = defaultGradientTextureName;
+	if (mat->gradientTextureNameIndex!=-1){
+		gradients = p_source.scene->getGradient(mat->gradientDataIndex);
+		gradientName = p_source.scene->getName(mat->gradientTextureNameIndex,true);
+
+	}
 
 	// Create material
 	MaterialInfo materialInfo;
@@ -180,7 +188,17 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 		m_textureFactory->createTexture(dispName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::GLOWMAP,
 		m_textureFactory->createTexture(glowName,TEXTUREPATH));
-	// and then set the resulting data to the mesh
+	materialInfo.setTextureId(MaterialInfo::GRADIENTMAP,
+		m_textureFactory->createTexture(gradientName, TEXTUREPATH));
+
+	if(gradients != NULL){
+		for (unsigned int i = 0 ; i < gradients->getLayers().size(); i++){
+			materialInfo.setGradientLayer(i,gradients->getLayerColor(i));
+		}
+		materialInfo.setNumberOfGradientLayers(gradients->getLayers().size());
+	}
+
+	// and then set the resulting data to the mesh, 
 	p_mesh->setMaterial(materialInfo);
 }
 
