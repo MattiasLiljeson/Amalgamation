@@ -2,6 +2,7 @@
 
 class ParticleShader;
 class AglParticleSystem;
+class AglVector4;
 class ShaderFactory;
 struct ID3D11Buffer;
 struct ID3D11Device;
@@ -29,8 +30,8 @@ class ParticleRenderer
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticleSystem( AglParticleSystem* p_system, RendererSceneInfo* p_info,
-		const InstanceData& p_transform, Texture* p_texture );
+	void renderParticleSystem( AglParticleSystem* p_system, RendererSceneInfo* p_info, 
+		const InstanceData& p_transform, Texture* p_texture, const AglVector4& p_uvRect);
 private:
 	void initShaders();
 	void initDepthStencil();

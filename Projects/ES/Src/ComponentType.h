@@ -66,6 +66,7 @@ public:	//Enums
 		ParticleSystemEmitter,
 		ParticleSystemServerComponent,
 		DebugMove,
+		uvRectCrop,
 		PlayerState,
 		GameState,
 

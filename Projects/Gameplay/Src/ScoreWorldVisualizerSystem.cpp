@@ -41,12 +41,31 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 {
 	Entity* effect = m_world->createEntity();
 
- 	Transform* transform = new Transform( p_data.transform );
- 	effect->addComponent( ComponentType::Transform, transform );
-
 	LoadMesh* lm = new LoadMesh( "P_sphere",true );
 	effect->addComponent( ComponentType::LoadMesh, lm );
 	
+	// get camera up, spawn direction
+	AglVector3 cameraUp = AglVector3::up();
+	AglQuaternion cameraRot = AglQuaternion::identity();
+	auto entitymanager = m_world->getEntityManager();
+	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	if (cam)
+	{
+		Transform* camTransform = static_cast<Transform*>(
+			cam->getComponent( ComponentType::Transform ) );
+		if (camTransform)
+		{
+			cameraUp = camTransform->getUp();
+			cameraRot = camTransform->getRotation();
+		}
+	}
+
+	p_data.transform = AglMatrix(p_data.transform.GetScale(),
+		cameraRot,p_data.transform.GetTranslation());
+	Transform* transform = new Transform( p_data.transform );
+	effect->addComponent( ComponentType::Transform, transform );
+
+
 	ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
 	// add an emitter for each number in data
 	unsigned int size = toString(p_data.score).size();
@@ -54,13 +73,23 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 	for (unsigned int i=0;i<size;i++)
 	{
 		AglParticleSystem particleSystem;
-		particleSystem.setSpawnPoint(AglVector3((float)size/2.0f-(float)i,0.0f,0.0f));
-		particleSystem.setSpawnAngularVelocity(1.0f);
-		// May have to change this as particle system component is updated
+		AglVector3 offset = AglVector3( 5.0f*((float)size/2.0f-(float)i),0.0f,0.0f);
+		// offset.transform(cameraRot);
+		particleSystem.setSpawnPoint(offset);
+		particleSystem.setSpawnDirection(cameraUp);
+		particleSystem.setSpawnFrequency(3.0f);
+		particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+		// particleSystem.set
+		particleSystem.setSpace(AglParticleSystemHeader::AglSpace_LOCAL);
+		particleSystem.getHeaderPtr()->relative=false;
+		particleSystem.setSpawnSpeed(3.0f);
+		// particleSystem.setSpawnAngularVelocity(1.0f);
+		// Create an instruction for creation
 		ParticleSystemInstruction particleInstruction;
 		particleInstruction.textureFileName = "worldtexteffectfont.png";
 		particleInstruction.particleSystem = particleSystem;
-		// add instruction here instead later
+		particleInstruction.uvRect = AglVector4(0.0f,0.0f,0.5f,0.5f);
+		// add instruction
 		particleEmitters->addParticleSystemInstruction(particleInstruction);
 	}
 	
