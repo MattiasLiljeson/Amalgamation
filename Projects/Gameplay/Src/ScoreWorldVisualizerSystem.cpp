@@ -46,8 +46,8 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 
 	LoadMesh* lm = new LoadMesh( "P_sphere",true );
 	effect->addComponent( ComponentType::LoadMesh, lm );
-	/*
-	ParticleEmitters* particleEmitters = new ParticleEmitters();
+	
+	ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
 	// add an emitter for each number in data
 	unsigned int size = toString(p_data.score).size();
 
@@ -61,11 +61,11 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		particleInstruction.textureFileName = "worldtexteffectfont.png";
 		particleInstruction.particleSystem = particleSystem;
 		// add instruction here instead later
-		particleEmitters->addParticleSystem(particleSystem);
+		particleEmitters->addParticleSystemInstruction(particleInstruction);
 	}
 	
-	effect->addComponent( ComponentType::ParticleEmitters, particleEmitters );
-	*/
+	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitters );
+	
 	m_world->addEntity(effect);
 	return effect;
 }
