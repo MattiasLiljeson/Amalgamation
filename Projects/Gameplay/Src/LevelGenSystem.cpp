@@ -64,11 +64,10 @@ void LevelGenSystem::initialize()
 			MODELPATH, false);
 
 		ModelResource* rootResource = resourcesFromModel->at(0);
-		// NOTE: Hard-coded bounding sphere volume size for now!
-		// This should later on be calculated using the meshes
-		//rootResource->meshHeader.boundingSphere.radius = 900.0f;
 		
 		// Calculate the entire chamber's collision sphere.
+		// NOTE: Uncertain whetehr or not this value should be multiplied by 2 or not
+		// before being used.
 		calculatePieceCollision(resourcesFromModel);
 
 		m_modelResources.push_back( rootResource );
