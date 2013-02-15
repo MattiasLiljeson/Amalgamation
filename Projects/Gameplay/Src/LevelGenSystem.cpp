@@ -146,7 +146,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	auto quart = AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(),
 														(rand() % 360) * 3.1415f / 180.0f);
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(200, -200, 100), 
+	Transform* transform = new Transform(AglVector3(20, -20, 10), 
 										quart, 
 										AglVector3::one());
 	
