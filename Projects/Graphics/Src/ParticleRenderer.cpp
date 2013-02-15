@@ -33,7 +33,10 @@ ParticleRenderer::~ParticleRenderer(){
 }
 
 void ParticleRenderer::renderParticleSystem( AglParticleSystem* p_system, 
-	RendererSceneInfo* p_info, const InstanceData& p_transform, Texture* p_texture )
+											RendererSceneInfo* p_info, 
+											const InstanceData& p_transform, 
+											Texture* p_texture, 
+											const AglVector4& p_uvRect )
 {
 	vector<AglStandardParticle>* particles = p_system->getParticlesPtr();
 	if (particles->size() > 0){
@@ -54,6 +57,7 @@ void ParticleRenderer::renderParticleSystem( AglParticleSystem* p_system,
 		
 		Buffer<ParticleCBuffer>* data = m_shader->getPerSystemBuffer();
 		data->accessBuffer.setParticleData(p_system->getHeader(), p_transform.worldTransform);
+		data->accessBuffer.setRect(p_uvRect);
 
 		renderParticles(p_system, particles->size(), p_texture );
 	}

@@ -35,7 +35,8 @@ struct AglBoundingSphere
 	bool pointInSphere(AglVector3 p_point);
 	bool pointInSphereMargin(AglVector3 p_point, float p_margin);
 	
-
+	static AglBoundingSphere mergeSpheres(const AglBoundingSphere& p_s1,
+											const AglBoundingSphere& p_s2);
 	static AglBoundingSphere minimumBoundingSphere(const vector<AglVector3>& p_points);
 private:
 	static AglBoundingSphere welzlComputation(const vector<AglVector3>& p_points, unsigned int p_size, 

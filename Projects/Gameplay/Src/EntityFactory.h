@@ -9,6 +9,7 @@
 #include <TcpClient.h>
 #include <TcpServer.h>
 #include "LevelPieceFileMapping.h"
+#include "ParticleSystemsComponent.h"
 
 class Entity;
 class EntityWorld;
@@ -49,8 +50,10 @@ public:
 	/// Create an entity by supplying recipe/entity name.
 	/// \param p_entityName Name of the entity.
 	/// \return Entity* An entity which has been created by the world but not added to it.
-	/// This is so that you can make last minute changes to the components and their data
-	/// before letting it out in the wild. NULL if the requested recipe isn't found.
+	/// NULL if the requested recipe isn't found.
+	/// This makes it possible to add last minute components to the entity before it is
+	/// released into the wild. In order to manipulate already created components, a system
+	/// is required.
 	///-----------------------------------------------------------------------------------
 	Entity* entityFromRecipe( const string& p_entityName );
 
@@ -109,12 +112,13 @@ private:
 	Entity* createShieldClient(EntityCreationPacket p_packet);
 	Entity* createShieldServer(EntityCreationPacket p_packet);
 
-	//Other
+	//Other - Level generation goes here for now.
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
 
 	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
-
+	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
+		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection );
 private:
 	map<string, Recipe*> m_entityRecipes;
 

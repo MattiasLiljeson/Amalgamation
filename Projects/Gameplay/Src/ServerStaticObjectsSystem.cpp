@@ -19,13 +19,14 @@ void ServerStaticObjectsSystem::initialize()
 {
 }
 
-void ServerStaticObjectsSystem::added( Entity* p_entity )
-{
-	if(p_entity->getComponent(ComponentType::StaticProp) != NULL)
-		m_objects.push_back(p_entity);
-}
+//void ServerStaticObjectsSystem::added( Entity* p_entity )
+//{
+//	if(p_entity->getComponent(ComponentType::StaticProp) != NULL)
+//		m_objects.push_back(p_entity);
+//}
 
 vector<Entity*> ServerStaticObjectsSystem::getStaticObjects()
 {
-	return m_objects;
+	return getActiveEntities();
+	//return m_objects;
 }

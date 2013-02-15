@@ -58,8 +58,11 @@
     <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
+    <ClInclude Include="LevelHandlerSystem.h" />
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
+    <ClInclude Include="LevelPieceInfo.h" />
+    <ClInclude Include="LevelPieceRoot.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
     <ClInclude Include="LibRocketEventManagerSystem.h" />
     <ClInclude Include="LibRocketInputHelper.h" />
@@ -218,8 +221,10 @@
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
+    <ClCompile Include="LevelHandlerSystem.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
+    <ClCompile Include="LevelPieceRoot.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="LibRocketEventManagerSystem.cpp" />
     <ClCompile Include="LibRocketInputHelper.cpp" />

@@ -102,6 +102,7 @@
 #include <ParticleSystemInstructionTranslatorSystem.h>
 #include <ClientEntityCountSystem.h>
 #include <SkeletalAnimationSystem.h>
+#include <LevelHandlerSystem.h>
 
 
 // Helpers
@@ -222,12 +223,18 @@ void ClientApplication::initSystems()
 	EntityFactory* factory = new EntityFactory(m_client, NULL);
 	m_world->setSystem( factory, true);
 
+	/************************************************************************/
+	/* Level handling														*/
+	/************************************************************************/
+	LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
+	m_world->setSystem( levelHandler, true);
+
 
 	/************************************************************************/
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
-	m_world->setSystem(SystemType::LoadMeshSystemClient, new LoadMeshSystemClient(graphicsBackend), 
+	m_world->setSystem(SystemType::LoadMeshSystem, new LoadMeshSystemClient(graphicsBackend), 
 						true); 
 	m_world->setSystem(new ParticleSystemInstructionTranslatorSystem( graphicsBackend ),
 		true );
@@ -420,6 +427,12 @@ void ClientApplication::initEntities()
 {
 	Entity* entity = NULL;
 	Component* component = NULL;
+
+	// HACK: (Johan) This temporarily fixes the weird "hierarchy" bug.
+	entity = m_world->createEntity();
+	entity->addComponent(new Transform());
+	m_world->addEntity(entity);
+	// End hack.
 
 	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;

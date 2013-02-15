@@ -34,6 +34,7 @@
 #include <ShipModulesTrackerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
+#include <LevelHandlerSystem.h>
 #include <OnHitEffectBufferSystem.h>
 
 //Modules
@@ -130,6 +131,12 @@ namespace Srv
 		m_world->setSystem(new TimerSystem(), true);
 
 		/************************************************************************/
+		/* Level Handler														*/
+		/************************************************************************/
+		LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
+		m_world->setSystem( levelHandler, true);
+
+		/************************************************************************/
 		/* Mesh loading															*/
 		/************************************************************************/
 		// Note! Must set *after* EntityFactory and *before* Physics
@@ -138,9 +145,8 @@ namespace Srv
 		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
-		/*LevelGenSystem* levelGen = new LevelGenSystem( m_server);
+		LevelGenSystem* levelGen = new LevelGenSystem( m_server);
 		m_world->setSystem( levelGen, true);
-		levelGen->run();*/
 
 		/************************************************************************/
 		/* Effects																*/
@@ -221,6 +227,10 @@ namespace Srv
 		// Run component assemblage allocator (not a system, so don't delete)
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 		delete allocator; // NOTE: (Johan) Why u keep deleting it then?
+
+		// TEMP: (Alex) This is only to test and make sure the level gen works.
+		// This should be ran when starting a game session later.
+		levelGen->run();
 	}
 
 	void ServerApplication::initEntities()
@@ -250,6 +260,7 @@ namespace Srv
 	{
 		body();
 	}
+
 	void ServerApplication::InitModulesTestByAnton()
 	{
 		Entity* entity;
@@ -263,11 +274,12 @@ namespace Srv
 			( m_world->getSystem( SystemType::EntityFactory ) );
 
 
-		// First test by Jarl, instead of Anton
+		// First test by Jarl, instead of Anton.
+		// Commented out by Alex, since the assemblage is now read in the LevelGenSystem.
 		// Create rocks
-		status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
-		entity = factory->entityFromRecipe( "rocksServer" );									 
-		m_world->addEntity( entity );
+		//status = factory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+		//entity = factory->entityFromRecipe( "rocksServer" );									 
+		//m_world->addEntity( entity );
 
 		EntityCreationPacket cp;
 		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);

@@ -62,7 +62,9 @@ bool ParticleSystemsComponent::removeParticleSystemInstruction( int p_idx )
 int ParticleSystemsComponent::addParticleSystem( const AglParticleSystem& p_system,
 	int p_textureIdx, int p_idx )
 {
-	ParticleSystemAndTexture ps = { p_system, p_textureIdx };
+	ParticleSystemAndTexture ps;
+	ps.particleSystem = p_system;
+	ps.textureIdx = p_textureIdx;
 	return addParticleSystem( ps, p_idx );
 }
 
@@ -144,6 +146,16 @@ void ParticleSystemsComponent::setSpawn( const AglVector3& p_spawnPoint,
 			AglVector3 dir = ps->getSpawnDirection();
 			AglVector3 newDir = dir + p_spawnPoint;
 			ps->setCurrSpawnDirection( newDir );
+		}
+	}
+}
+
+void ParticleSystemsComponent::setScale( const AglVector2& p_scale )
+{
+	for( unsigned int i=0; i<m_particleSystems.size(); i++ ) {
+		if( m_particleSystems[i].second != NULL ) {
+			AglParticleSystem* ps = &m_particleSystems[i].second->particleSystem;
+			ps->setParticleSize( p_scale );
 		}
 	}
 }

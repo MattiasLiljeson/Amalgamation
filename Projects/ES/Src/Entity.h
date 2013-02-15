@@ -101,7 +101,8 @@ public:
 	bool isEnabled();
 	void setEnabled( bool p_enabled );
 
-	void setName( string p_name ) { name = p_name; }
+	void setName( string p_name ) { m_name = p_name; }
+	const string& getName() const;
 
 private:
 	// Universal Unique ID. This id is unique in the network and will never be reused. 
@@ -112,7 +113,7 @@ private:
 	int m_index;
 
 	/// Used for debug purposes
-	string name; 
+	string m_name; 
 
 	EntityWorld* m_world;
 

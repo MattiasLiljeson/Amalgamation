@@ -66,6 +66,10 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
 						particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
 					}
+					// Always scale the particle effect according to it's entity
+					//particlesComp->setScale( AglVector2( transform->getScale().x, transform->getScale().x ) );
+					particlesComp->getParticleSystemPtr(0)->setSpawnSpeed( transform->getScale().x );
+
 					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
 					m_collections.push_back( ps );
 				}

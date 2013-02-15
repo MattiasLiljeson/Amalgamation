@@ -4,9 +4,9 @@ c LoadMesh
 d s m_filename WorldPrison_FinalWork_9_exporting.agl
 
 c Transform
-d f m_translationX 0.0
-d f m_translationY 0.0
-d f m_translationZ 0.0
+d f m_translationX 100.0
+d f m_translationY 100.0
+d f m_translationZ 100.0
 
 c BodyInitData
 d f m_positionX 0.0
@@ -17,3 +17,5 @@ d i m_static 1
 d i m_collisionEnabled 1
 
 c PhysicsBody
+
+c LevelPieceRoot
