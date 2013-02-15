@@ -405,8 +405,10 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
 	vector<AglMatrix> transforms;
+	vector<AglQuaternion> rots;
 	transforms.push_back(p_offset);
 	transforms.push_back(p_base);
+	rots.push_back(AglQuaternion::constructFromAxisAndAngle(p_base.GetForward(), p_rotation));
 	while (module)
 	{
 		Entity* parent = m_world->getEntity(module->m_parentEntity);
@@ -427,6 +429,9 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 			ComponentType::PhysicsBody));
 		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
 
+		//Child module
+		module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+
 		//Parent Connection points
 		cps = static_cast<ConnectionPointSet*>(
 			m_world->getComponentManager()->getComponent(parent,
@@ -441,7 +446,10 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		//Parent
 		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
 			ComponentType::PhysicsBody));
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
+
+		AglMatrix parentTrans = cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse();
+		transforms.push_back(parentTrans);
+		rots.push_back(AglQuaternion::constructFromAxisAndAngle(parentTrans.GetForward(), module->m_rotation));
 		
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 		p_entity = parent;
@@ -450,7 +458,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 	AglMatrix finalTransform = AglMatrix::identityMatrix();
 	AglMatrix final = AglMatrix::identityMatrix();
 
-	bool first = true;
+	//bool first = true;
 	while (transforms.size() > 0)
 	{
 		//Parent transform
@@ -460,12 +468,13 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		AglMatrix childTransform = transforms[transforms.size()-2];
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
 
-		if (first)//transforms.size() == 2)
+		if (true)//transforms.size() == 2)
 		{
 			//Rotate around connection axis
-			AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
-			rot = rot2*rot;
-			first = false;
+			//AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
+			rot = rots.back()*rot;
+			rots.pop_back();
+			//first = false;
 		}
 
 		finalTransform = AglMatrix::createRotationMatrix(rot);
