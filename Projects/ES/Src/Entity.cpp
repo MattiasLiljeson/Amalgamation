@@ -140,3 +140,8 @@ void Entity::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
 }
+
+const string& Entity::getName() const
+{
+	return m_name;
+}
