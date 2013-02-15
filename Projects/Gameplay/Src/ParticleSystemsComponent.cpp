@@ -148,6 +148,16 @@ void ParticleSystemsComponent::setSpawn( const AglVector3& p_spawnPoint,
 	}
 }
 
+void ParticleSystemsComponent::setScale( const AglVector2& p_scale )
+{
+	for( unsigned int i=0; i<m_particleSystems.size(); i++ ) {
+		if( m_particleSystems[i].second != NULL ) {
+			AglParticleSystem* ps = &m_particleSystems[i].second->particleSystem;
+			ps->setParticleSize( p_scale );
+		}
+	}
+}
+
 const vector< pair<ParticleSystemInstruction*, ParticleSystemAndTexture*> >& ParticleSystemsComponent::getParticleSystems()
 {
 	return m_particleSystems;
