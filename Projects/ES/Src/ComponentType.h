@@ -68,6 +68,7 @@ public:	//Enums
 		DebugMove,
 		PlayerState,
 		GameState,
+		Gradient,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

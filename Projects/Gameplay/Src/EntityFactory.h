@@ -9,6 +9,7 @@
 #include <TcpClient.h>
 #include <TcpServer.h>
 #include "LevelPieceFileMapping.h"
+#include "GradientMapping.h"
 
 class Entity;
 class EntityWorld;
@@ -121,5 +122,9 @@ private:
 	TcpServer* m_server;
 
 	LevelPieceFileMapping m_levelPieceMapping;
+
+private:
+	vector<GradientMapping> m_gradientColors;
+	int m_playerCounter;
 };
 

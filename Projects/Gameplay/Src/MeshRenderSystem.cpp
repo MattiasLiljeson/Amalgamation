@@ -12,6 +12,7 @@
 #include "SkeletalAnimation.h"
 #include "MeshOffsetTransform.h"
 #include <MaterialInfo.h>
+#include "GradientComponent.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -70,13 +71,16 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
-		instanceData.setGradientColor(
-			m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-			renderInfo->m_meshId).getGradientColors());
-		instanceData.setNumberOfActiveGradientLayers(
-			m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-			renderInfo->m_meshId).numberOfLayers
-			);
+		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			renderInfo->m_meshId);
+		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
+		if(gradient != NULL){ 
+			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
+			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
+		}
+		instanceData.setGradientColor( matInfo.getGradientColors() );
+
+		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
 		
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 

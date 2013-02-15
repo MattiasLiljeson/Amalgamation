@@ -38,9 +38,9 @@
 #include "EntityParent.h"
 #include "ShieldPlate.h"
 #include "ShieldModuleActivationClient.h"
+#include "GradientComponent.h"
 
 #define FORCE_VS_DBG_OUTPUT
-
 
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
@@ -48,6 +48,46 @@ EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 {
 	m_client = p_client;
 	m_server = p_server;
+	m_playerCounter = 0;
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,255.0f/255.0f),
+		AglVector4(104.0f/255.0f,47.0f/255.0f,208.0f/255.0f,255.0f/255.0f)));
+	
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
+		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
+		AglVector4(232.0f/255.0f,116.0f/255.0f,12.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1),
+		AglVector4(210.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(82.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1),
+		AglVector4(31.0f/255.0f,248.0f/255.0f,143.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(248.0f/255.0f,31.0f/255.0f,245.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,31.0f/255.0f,149.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
+		));
+	
 }
 
 EntityFactory::~EntityFactory()
@@ -238,6 +278,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	Transform* transform = new Transform( p_packet.translation, p_packet.rotation, 
 		p_packet.scale);
 	entity->addComponent( ComponentType::Transform, transform );
+
+	//HACK!!!!
+	entity->addComponent(ComponentType::Gradient, new GradientComponent(
+		m_gradientColors[m_playerCounter].playerSmall,
+		m_gradientColors[m_playerCounter].playerBig) );
+
+	m_playerCounter++;
+	//END HACK!!!
 
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
