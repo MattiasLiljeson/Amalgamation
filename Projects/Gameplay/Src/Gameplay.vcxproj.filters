@@ -595,7 +595,6 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHelper.h" />
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -968,6 +967,7 @@
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTriggerPacket.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="SpawnPointSet.cpp">
       <Filter>Components</Filter>
