@@ -38,6 +38,8 @@
 #include "EntityParent.h"
 #include "ShieldPlate.h"
 #include "ShieldModuleActivationClient.h"
+#include "SpeedBoosterModule.h"
+#include "ParticleSystemServerComponent.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -403,18 +405,26 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
+	Entity* entity = entityFromRecipe( "ServerMinigun" );
+
+	ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+	psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+	entity->addComponent( psServerComp );
+
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/SpeedBooster.asd"  );
+	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/Modules/SpeedBooster/ClientSpeedBooster.asd");
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -425,7 +435,14 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createSpeedBoosterServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/SpeedBooster/ServerSpeedBooster.asd" );
+	Entity* entity = entityFromRecipe( "SpeedBooster" );
+
+	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 {
