@@ -5,6 +5,7 @@
 #include <GraphicsWrapper.h>
 #include <Globals.h>
 #include <ParticleSystemAndTexture.h>
+#include <AglMatrix.h>
 
 ParticleSystemsComponent::ParticleSystemsComponent()
 	: Component( ComponentType::ParticleSystemsComponent )
@@ -62,7 +63,10 @@ bool ParticleSystemsComponent::removeParticleSystemInstruction( int p_idx )
 int ParticleSystemsComponent::addParticleSystem( const AglParticleSystem& p_system,
 	int p_textureIdx, int p_idx )
 {
-	ParticleSystemAndTexture ps = { p_system, p_textureIdx };
+	ParticleSystemAndTexture ps;
+	ps.particleSystem = p_system;
+	ps.psOriginalSettings = ps.particleSystem.getHeader();
+	ps.textureIdx = p_textureIdx;
 	return addParticleSystem( ps, p_idx );
 }
 
@@ -135,15 +139,19 @@ void ParticleSystemsComponent::updateParticleSystems( const float p_dt,
 }
 
 void ParticleSystemsComponent::setSpawn( const AglVector3& p_spawnPoint,
-								const AglVector3& p_spawnDirection )
+								const AglQuaternion& p_rotation )
 {
 	for( unsigned int i=0; i<m_particleSystems.size(); i++ ) {
 		if( m_particleSystems[i].second != NULL ) {
 			AglParticleSystem* ps = &m_particleSystems[i].second->particleSystem;
+			AglParticleSystemHeader* header = &m_particleSystems[i].second->psOriginalSettings;
+
 			ps->setSpawnPoint( p_spawnPoint );
-			AglVector3 dir = ps->getSpawnDirection();
-			AglVector3 newDir = dir + p_spawnPoint;
-			ps->setCurrSpawnDirection( newDir );
+
+			AglVector3 newDir = header->spawnDirection;
+			AglMatrix rotMat = AglMatrix::createRotationMatrix( p_rotation ); 
+			newDir.transform( rotMat );
+			ps->setSpawnDirection( newDir );
 		}
 	}
 }

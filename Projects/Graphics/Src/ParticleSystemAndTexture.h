@@ -4,6 +4,7 @@
 
 struct ParticleSystemAndTexture
 {
+	AglParticleSystemHeader psOriginalSettings;
 	AglParticleSystem particleSystem;
 	int textureIdx; //Index in TextureManager
 };

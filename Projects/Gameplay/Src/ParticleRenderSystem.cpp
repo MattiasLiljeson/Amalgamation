@@ -59,12 +59,33 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				ParticleSystemAndTexture* psAndTex = particlesComp->getParticleSystemAndTexturePtr(i);
 				if( psAndTex != NULL ) {
+					
+					//AglMatrix finalMat;
+					//AglMatrix baseMat = transform->getMatrix();
+					//finalMat = lights->at(j).offsetMat * baseMat;
+
+					//s
+
+					//AglQuaternion rot = finalMat.GetRotation();
+					//AglMatrix rotMat = AglMatrix::createRotationMatrix(rot);
+					//AglVector3 dir( 0.0f, 0.0f, 1.0f);
+					//dir.transform( rotMat );
+
+					//LightInstanceData inst = lights->at(j).instanceData;
+					//inst.lightDir[0] = dir.x;
+					//inst.lightDir[1] = dir.y;
+					//inst.lightDir[2] = dir.z;
+					//inst.setWorldTransform( finalMat );
+					//
+					//
 					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
+					//header.
+
+					// Update only local particle systems (PS) as the PS's otherwise will get a 
 					// double transform
 					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
-						particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
+						particlesComp->setSpawn( transform->getTranslation(), transform->getRotation() );
 					}
 					// Always scale the particle effect according to it's entity
 					//particlesComp->setScale( AglVector2( transform->getScale().x, transform->getScale().x ) );
