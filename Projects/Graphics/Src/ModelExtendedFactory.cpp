@@ -198,7 +198,7 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 		materialInfo.setNumberOfGradientLayers(gradients->getLayers().size());
 	}
 
-	// and then set the resulting data to the mesh
+	// and then set the resulting data to the mesh, 
 	p_mesh->setMaterial(materialInfo);
 }
 

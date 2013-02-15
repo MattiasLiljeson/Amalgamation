@@ -34,12 +34,9 @@ struct MaterialInfo
 			indexArray[i] = 0;
 		}
 		for (unsigned int i = 0; i <MAX_GRADIENTLAYERS; i++){
-			gradientLayers[i] = AglVector4(0,0,0,0);
+			gradientLayers[i] = AglVector4(1,1,1,1);
 		}
-		numberOfLayers = 0;
-		
-	}
-	~MaterialInfo(){
+		numberOfLayers = 1;
 	}
 	unsigned int getTextureType(TextureTypes p_textureType)
 	{

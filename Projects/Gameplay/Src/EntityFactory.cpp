@@ -41,6 +41,8 @@
 
 #define FORCE_VS_DBG_OUTPUT
 
+
+
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
 {

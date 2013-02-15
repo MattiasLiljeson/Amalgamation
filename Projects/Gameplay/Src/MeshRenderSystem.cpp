@@ -78,10 +78,6 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			renderInfo->m_meshId).numberOfLayers
 			);
 		
-		if(instanceData.flags[0] != 0){
-			int x = 0;
-		}
-
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms

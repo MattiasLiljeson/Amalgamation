@@ -90,6 +90,7 @@ void GraphicsRendererSystem::process(){
 			m_shadowSystem->getViewProjection(i);
 	}
 
+	/*
 	initShadowPass();
 	for(unsigned int i = 0; i < MAXSHADOWS; i++){
 		if(m_activeShadows[i] != -1){
@@ -99,6 +100,7 @@ void GraphicsRendererSystem::process(){
 		}
 	}
 	endShadowPass();
+	*/
 	m_wrapper->getGPUTimer()->Stop(m_shadowProfile, m_currentFrame);
 
 	// Meshes
