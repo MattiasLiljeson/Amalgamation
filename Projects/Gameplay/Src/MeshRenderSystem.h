@@ -4,6 +4,7 @@
 #include <RenderInterface.h>
 #include "Transform.h"
 #include <AglVector4.h>
+#include <AglOBB.h>
 
 class GraphicsBackendSystem;
 struct AglMatrix;
@@ -47,6 +48,8 @@ public:
 private:
 	bool shouldCull(Entity* p_entity);
 	void calcCameraPlanes();
+
+	bool BoxPlane(const AglOBB& p_box, const AglVector4& p_plane);
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	vector< vector<AglMatrix> > m_boneMatrices;
