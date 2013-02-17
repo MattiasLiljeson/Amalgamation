@@ -22,6 +22,10 @@ MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
+	
+	m_rendered = 0;
+	m_culled = 0;
+	m_culledFraction = 0.0f;
 }
 
 MeshRenderSystem::~MeshRenderSystem()
@@ -35,6 +39,8 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	m_culled = 0;
+	m_rendered = 0;
 	calcCameraPlanes();
 
 	// Cleanup
@@ -76,7 +82,14 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		//Perform some culling checks
 		if (shouldCull(p_entities[i]))
+		{
+			m_culled++;
 			continue;
+		}
+		else
+		{
+			m_rendered++;
+		}
 
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
@@ -111,6 +124,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 		}
 	}
+	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
 }
 
 void MeshRenderSystem::render()
