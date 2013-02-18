@@ -43,6 +43,7 @@
 #include "LevelPieceRoot.h"
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
+#include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -262,6 +263,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 				}
 			}
 		}
+
 		return e;
 	}
 	else

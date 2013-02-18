@@ -1,0 +1,100 @@
+#include "ConnectionVisualizerSystem.h"
+#include <DebugUtil.h>
+#include <ToString.h>
+#include "Transform.h"
+#include "ParticleSystemsComponent.h"
+#include "LoadMesh.h"
+
+ConnectionVisualizerSystem::ConnectionVisualizerSystem() : 
+	EntitySystem( SystemType::ConnectionVisualizerSystem)
+{
+
+}
+
+ConnectionVisualizerSystem::~ConnectionVisualizerSystem()
+{
+
+}
+
+void ConnectionVisualizerSystem::initialize()
+{
+
+}
+
+void ConnectionVisualizerSystem::process()
+{
+	while(!m_effectsToCreate.empty())
+	{
+		ConnectionEffectData data = m_effectsToCreate.back();
+		data.data = createConnectionEffectEntity(data);
+		m_createdEffects.push_back(data);
+		m_effectsToCreate.pop_back();
+	}
+	for (unsigned int i = 0; i < m_createdEffects.size(); i++)
+	{
+		Transform* parentTrans = static_cast<Transform*>(m_createdEffects[i].parent->getComponent(ComponentType::Transform));
+
+		AglMatrix parentMatrix = parentTrans->getMatrix();
+
+		AglMatrix chilMatrix = AglMatrix::createTranslationMatrix(m_createdEffects[i].offset);
+		chilMatrix *= parentMatrix;
+
+		ParticleSystemsComponent* psc = static_cast<ParticleSystemsComponent*>
+							(m_createdEffects[i].data->getComponent(ComponentType::ParticleSystemsComponent));
+
+		AglParticleSystem* ps = psc->getParticleSystemPtr(0);
+		if (ps)
+			ps->setSpawnPoint(chilMatrix.GetTranslation());
+
+		if (m_createdEffects[i].disabled)
+			ps->setSpawnFrequency(0);
+	}
+}
+
+void ConnectionVisualizerSystem::addEffect( ConnectionEffectData p_fx )
+{
+	m_effectsToCreate.push_back(p_fx);
+}
+
+Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffectData& p_data )
+{
+	Entity* effect = m_world->createEntity();
+
+	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
+
+	Transform* parentTrans = static_cast<Transform*>(p_data.parent->getComponent(ComponentType::Transform));
+
+	AglMatrix parentMatrix = parentTrans->getMatrix();
+
+	AglMatrix chilMatrix = AglMatrix::createTranslationMatrix(p_data.offset);
+	chilMatrix *= parentMatrix;
+
+	effect->addComponent( ComponentType::Transform, new Transform(chilMatrix));
+
+	AglParticleSystem particleSystem;
+	particleSystem.setSpawnPoint(chilMatrix.GetTranslation());
+	particleSystem.setSpawnDirection(AglVector3(0, 1, 0));
+	particleSystem.setSpawnFrequency(1.0f);
+	particleSystem.setAlignmentType(AglParticleSystemHeader::OBSERVER);
+	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.getHeaderPtr()->particleSpace=false;
+	particleSystem.setSpawnSpeed(0.0f);
+	particleSystem.setParticleSize(AglVector2(2, 2));
+	particleSystem.setParticleAge(0.5f);
+
+	ParticleSystemInstruction particleInstruction;
+	particleInstruction.textureFileName = "addModule.png";
+	particleInstruction.particleSystem = particleSystem;
+	particleEmitter->addParticleSystemInstruction(particleInstruction);
+
+	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
+	m_world->addEntity(effect);
+	return effect;
+}
+void ConnectionVisualizerSystem::disableAll()
+{
+	for (unsigned int i = 0; i < m_createdEffects.size(); i++)
+	{
+		m_createdEffects[i].disabled = true;
+	}
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <AglMatrix.h>
 
 // =======================================================================================
 //                                   ShipManagerSystem
@@ -13,6 +14,13 @@
 /// Detailed description.....
 /// Created on: 20-12-2012 
 ///---------------------------------------------------------------------------------------
+struct FreeSlotData
+{
+	Entity* parent;
+	AglMatrix offset;
+	int index;
+};
+
 
 class ShipManagerSystem : public EntitySystem
 {
@@ -20,5 +28,6 @@ public:
 	ShipManagerSystem();
 	const vector<Entity*>& getShips() const;
 	Entity* findShip(int p_ownerId);
+	vector<FreeSlotData> findFreeConnectionPoints(int p_ownerId);
 
 };

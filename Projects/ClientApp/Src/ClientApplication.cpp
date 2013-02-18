@@ -104,6 +104,7 @@
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
 #include <CullingSystem.h>
+#include <ConnectionVisualizerSystem.h>
 
 
 // Helpers
@@ -293,6 +294,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
 	m_world->setSystem( scoreVisSystem, true );
+	ConnectionVisualizerSystem* cvs = new ConnectionVisualizerSystem();
+	m_world->setSystem(cvs, true);
 
 	/************************************************************************/
 	/* Player    															*/

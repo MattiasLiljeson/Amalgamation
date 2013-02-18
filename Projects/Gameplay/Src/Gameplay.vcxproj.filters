@@ -612,6 +612,12 @@
     <ClInclude Include="CullingSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ConnectionVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotParticleEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1014,6 +1020,12 @@
     </ClCompile>
     <ClCompile Include="CullingSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotParticleEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

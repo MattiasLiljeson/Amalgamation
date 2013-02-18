@@ -29,6 +29,7 @@
     <ClInclude Include="CircularMovementSystem.h" />
     <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
+    <ClInclude Include="ConnectionVisualizerSystem.h" />
     <ClInclude Include="CullingSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />
@@ -108,6 +109,7 @@
     <ClInclude Include="ShipConnectionPointHighlights.h" />
     <ClInclude Include="SkeletalAnimation.h" />
     <ClInclude Include="SkeletalAnimationSystem.h" />
+    <ClInclude Include="SlotParticleEffectPacket.h" />
     <ClInclude Include="SpawnPointSet.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -205,6 +207,7 @@
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
+    <ClCompile Include="ConnectionVisualizerSystem.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="CullingSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
@@ -310,6 +313,7 @@
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="ShipSlotControllerSystem.cpp" />
     <ClCompile Include="SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="SlotParticleEffectPacket.cpp" />
     <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />

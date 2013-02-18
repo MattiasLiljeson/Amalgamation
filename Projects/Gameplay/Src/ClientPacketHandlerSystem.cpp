@@ -72,6 +72,8 @@
 #include <DebugUtil.h>
 #include <ParticleSystemAndTexture.h>
 #include <ToString.h>
+#include "SlotParticleEffectPacket.h"
+#include "ConnectionVisualizerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -146,6 +148,27 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			particleData.unpack( packet );
 			handleParticleSystemUpdate( particleData );
 			
+		}
+		else if (packetType == (char)PacketType::SlotParticleEffectPacket)
+		{
+			SlotParticleEffectPacket data;
+			data.unpack(packet);
+
+			if (data.networkIdentity < 0)
+			{
+				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+				conVis->disableAll();
+			}
+			else
+			{
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* parent = directMapper->getEntity(data.networkIdentity);
+
+				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset));
+			}
 		}
 
 #pragma region Shitsk
