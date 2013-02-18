@@ -281,20 +281,6 @@ namespace Srv
 		//entity = factory->entityFromRecipe( "rocksServer" );									 
 		//m_world->addEntity( entity );
 
-		//Minigun
-		status = factory->readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
-		entity = factory->entityFromRecipe( "ServerMinigun" );
-
-		ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
-		psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
-		entity->addComponent( psServerComp );
-
-		//Will cause memory leaks
-		//entity->addComponent(ComponentType::MinigunModule, new MinigunModule(AglVector3(0, 0, 0), AglVector3(0, 0, 1)));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
-
-		m_world->addEntity(entity);
-
 		EntityCreationPacket cp;
 		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
 		//Rocket Launcher
@@ -320,117 +306,19 @@ namespace Srv
 		}
 
 		//Speed Booster
-		/*for (int x=0;x<4;x++)
+		for (unsigned int i = 0; i < 4; i++)
 		{
-			entity = m_world->createEntity();
-			component = new Transform(50, 0, 0);
-
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(50, 0, x*10),
-				AglQuaternion::identity(),
-				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-			entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
-			m_world->addEntity(entity);
-		}*/
-
-
-
-		/*entity = m_world->createEntity();
-		component = new Transform(50, 0, -10);
-		entity->addComponent( ComponentType::Transform, component );
-
-		entity->addComponent( ComponentType::PhysicsBody, 
-			new PhysicsBody() );
-
-		entity->addComponent( ComponentType::BodyInitData, 
-			new BodyInitData(AglVector3(50, 0, -10),
-			AglQuaternion::identity(),
-			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-			AglVector3(0, 0, 0), 0, 
-			BodyInitData::DYNAMIC, 
-			BodyInitData::SINGLE, true, true));
-		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
-		m_world->addEntity(entity);
-
-		ConnectionPointSet* cpset = NULL;
-
-		for(int i=0; i<1; i++)
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(60.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::BoosterModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Minigun
+		for (unsigned int i = 0; i < 4; i++)
 		{
-			entity = m_world->createEntity();
-			component = new Transform(40, (float)i*10.0f, -10);
-			entity->addComponent( ComponentType::Transform, component );
-
-			entity->addComponent( ComponentType::PhysicsBody, 
-				new PhysicsBody() );
-
-			entity->addComponent( ComponentType::BodyInitData, 
-				new BodyInitData(AglVector3(40, (float)i*10.0f, -10),
-				AglQuaternion::identity(),
-				AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-				AglVector3(0, 0, 0), 0, 
-				BodyInitData::DYNAMIC, 
-				BodyInitData::SINGLE, false));
-
-			entity->addComponent(ComponentType::ShipModule, new ShipModule());
-
-
-			cpset = new ConnectionPointSet();
-			AglMatrix target1 = AglMatrix::createTranslationMatrix(AglVector3(1, 2, 0));
-			AglMatrix target2 = AglMatrix::createTranslationMatrix(AglVector3(-1, 2, 0));
-			cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-			cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-			entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-			entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
-			m_world->addEntity(entity);
-		}*/
-
-
-//		entity = m_world->createEntity();
-//		component = new Transform(30, 0, -10);
-//		entity->addComponent( ComponentType::Transform, component );
-//
-//		entity->addComponent( ComponentType::PhysicsBody, 
-//			new PhysicsBody() );
-//
-//		entity->addComponent( ComponentType::BodyInitData, 
-//			new BodyInitData(AglVector3(30, 0, -10),
-//			AglQuaternion::identity(),
-//			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-//			AglVector3(0, 0, 0), 0, 
-//			BodyInitData::DYNAMIC, 
-//			BodyInitData::SINGLE, false));
-//
-//		entity->addComponent(ComponentType::ShipModule, new ShipModule());
-//
-//
-//		cpset = new ConnectionPointSet();
-//		cpset->m_connectionPoints.push_back(ConnectionPoint(target1));
-//		cpset->m_connectionPoints.push_back(ConnectionPoint(target2));
-//		entity->addComponent(ComponentType::ConnectionPointSet, cpset);
-//		entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::ShipModule));
-//		m_world->addEntity(entity); 
-
-
-		//Ray entity
-		/*entity = m_world->createEntity();
-		component = new RenderInfo( cubeMeshId );
-		entity->addComponent( ComponentType::RenderInfo, component );
-
-
-		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), AglVector3(0, 1, 0)), AglVector3(0.1f, 0.1f, 10));
-		entity->addComponent( ComponentType::Transform, t);
-		m_world->addEntity(entity);*/
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::MinigunModule;
+			factory->entityFromPacket(cp, &pos);
+		}
 	}
 
 

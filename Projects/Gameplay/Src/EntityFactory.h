@@ -9,6 +9,8 @@
 #include <TcpClient.h>
 #include <TcpServer.h>
 #include "LevelPieceFileMapping.h"
+#include "ParticleSystemsComponent.h"
+#include "GradientMapping.h"
 
 class Entity;
 class EntityWorld;
@@ -118,7 +120,8 @@ private:
 	Entity* createOtherServer(EntityCreationPacket p_packet);
 
 	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
-
+	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
+		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection );
 private:
 	map<string, Recipe*> m_entityRecipes;
 
@@ -126,5 +129,9 @@ private:
 	TcpServer* m_server;
 
 	LevelPieceFileMapping m_levelPieceMapping;
+
+private:
+	vector<GradientMapping> m_gradientColors;
+	int m_playerCounter;
 };
 

@@ -1,35 +1,37 @@
-//ADDED BY ANTON 5/2-13 HULL AND DOMAIN SHADER:
-//		*struct patchConstantOut
-//		*struct HullOut
-//		*struct DomainOut
-//		*PatchConstant function
-//		*HS function
-//		*DS function
-//ALSO CHANGED THE FOLLOWING IN EXISTING CODE:
-//		*Changed VertexOut -     float4 position	: SV_POSITION; -> float3 position	: POSITION;
-
 #include "perFrameCBuffer.hlsl"
 #include "normalMapping.hlsl"
+
 
 Texture2D diffuseTexture : register(t0);
 Texture2D normalTexture : register(t1);
 Texture2D specularTexture : register(t2);
 Texture2D glowTexture : register(t3);
-Texture2D displaceTexture : register(t4);
-Texture2D gradientTexture : register(t5);
+
+Texture1D boneTexture : register(t0);
+
 
 SamplerState pointSampler : register(s0);
 
+
 struct VertexIn
 {
+	//Vertex Buffer 1
 	float3 position : POSITION;	
-	float3 normal : NORMAL;
+	float3 normal 	: NORMAL;
 	float2 texCoord : TEXCOORD; 
-	float3 tangent : TANGENT;	
+	float3 tangent 	: TANGENT;	
 	float3 binormal : BINORMAL;
+	
+	//Vertex Buffer 2
+	float4 weights1 : AWEIGHTS; 
+	float4 weights2 : BWEIGHTS;
+	int4 indices1 	: AINDICES;
+	int4 indices2 	: BINDICES;
+	
+	//Vertex Buffer 3
 	float4x4 instanceTransform : INSTANCETRANSFORM;
-	float4x4 gradientColor 		: GRADIENTCOLOR;
-	float4 flags 	: FLAGS;
+	uint instanceId : SV_InstanceID;
+
 };
 struct VertexOut
 {
@@ -37,9 +39,8 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
-	float4x4 gradientColor : GRADIENTCOLOR;
-	float4 flags	: FLAGS;
 };
+
 
 //Output from the patch constant function 
 struct patchConstantOut
@@ -55,8 +56,6 @@ struct HullOut
 	float3 normal	    : NORMAL;
     float3 tangent      : TANGENT;
 	float2 texCoord     : TEXCOORD;
-	float4x4 gradientColor : GRADIENTCOLOR;
-	float4 flags	: FLAGS;
 };
 
 //Output from the domain shader
@@ -66,8 +65,6 @@ struct DomainOut
 	float3 normal	    : NORMAL;
     float3 tangent      : TANGENT;
 	float2 texCoord     : TEXCOORD;
-	float4x4 gradientColor : GRADIENTCOLOR;
-	float4 flags	: FLAGS;
 };
 
 struct PixelOut
@@ -77,17 +74,50 @@ struct PixelOut
 	float4 specular : SV_TARGET2;		//specular
 };
 
+float4x4 getMatrix(int pIndex)
+{
+	pIndex = pIndex * 4;
+	float4 row1 = boneTexture.Load(int2(pIndex, 0));
+	float4 row2 = boneTexture.Load(int2(pIndex+1, 0));
+	float4 row3 = boneTexture.Load(int2(pIndex+2, 0));
+	float4 row4 = boneTexture.Load(int2(pIndex+3, 0));
+
+	float4x4 bonemat = float4x4(row1, row2, row3, row4);
+	return bonemat;
+}
+
 VertexOut VS(VertexIn p_input)
 {
+	int id = p_input.instanceId;
+	float4 pos = float4(p_input.position, 1.0f);
+	
+	float4 norm = float4(p_input.normal, 0.0f);
+    float4 tan = float4(p_input.tangent, 0.0f);
+	float4 bin = float4(p_input.binormal, 0.0f);
+
+	float3 p1 = float3(0.0f, 0.0f, 0.0f);
+	float4 n = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 t = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 b = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	
+    [unroll]
+	for (int i = 0; i < 4; i++)
+	{
+		float4x4 bonemat = getMatrix(p_input.indices1[i]);
+	
+		p1 += (p_input.weights1[i] * mul(pos, bonemat)).xyz;
+		n += p_input.weights1[i] * mul(norm, bonemat);
+        t += p_input.weights1[i] * mul(tan, bonemat);
+		b += p_input.weights1[i] * mul(bin, bonemat);
+	}
+
+
 	VertexOut vout;
-	
-	vout.position = mul(float4(p_input.position,1.0f), p_input.instanceTransform).xyz;
-	vout.normal = mul(float4(p_input.normal,0.0f), p_input.instanceTransform).xyz;
-	vout.tangent = mul(float4(p_input.tangent,0.0f),p_input.instanceTransform).xyz;
+
+	vout.position = mul(float4(p1,1.0f), p_input.instanceTransform);
+	vout.normal = mul(n, p_input.instanceTransform).xyz;
+	vout.tangent = mul(t,p_input.instanceTransform).xyz;
 	vout.texCoord = p_input.texCoord;
-    vout.gradientColor = p_input.gradientColor;
-	vout.flags = p_input.flags;
-	
 	return vout;
 }
 
@@ -134,8 +164,6 @@ HullOut HS(InputPatch<VertexOut, 3> patch, uint pointID : SV_OutputControlPointI
 	output.normal 	= patch[pointID].normal;
 	output.tangent 	= patch[pointID].tangent;
 	output.texCoord 	= patch[pointID].texCoord;
-	output.gradientColor = patch[pointID].gradientColor;
-	output.flags		= patch[pointID].flags;
 	return output;
 }
 
@@ -176,22 +204,13 @@ DomainOut DS(patchConstantOut input, float3 uvw : SV_DomainLocation, const Outpu
 	output.tangent = tan;
 	output.normal = norm;
 	output.texCoord = tex;
-	output.gradientColor = patch[0].gradientColor;
-	output.flags = patch[0].flags;
 	return output;
 }
 
 PixelOut PS(DomainOut p_input)
 {
 	PixelOut pixelOut;
-	
-	int layerCount = p_input.flags.x+0.5f;
-	float value = gradientTexture.Sample(pointSampler, p_input.texCoord).x;
-	
-	int index = value * layerCount;
-	index = min(index, layerCount-1);
-	pixelOut.diffuse = p_input.gradientColor[index];
-	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
+	pixelOut.diffuse = diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
 	// temp fog
 	//float linDepth = pow(p_input.position.z, (gFarPlane-gNearPlane));
@@ -206,4 +225,3 @@ PixelOut PS(DomainOut p_input)
 
 	return pixelOut;
 }
-

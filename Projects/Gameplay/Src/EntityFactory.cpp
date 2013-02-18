@@ -38,14 +38,60 @@
 #include "EntityParent.h"
 #include "ShieldPlate.h"
 #include "ShieldModuleActivationClient.h"
+#include "SpeedBoosterModule.h"
+#include "ParticleSystemServerComponent.h"
 #include "LevelPieceRoot.h"
+#include "ParticleSystemEmitter.h"
+#include "GradientComponent.h"
+
 #define FORCE_VS_DBG_OUTPUT
+
 
 EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 	: EntitySystem( SystemType::EntityFactory ) 
 {
 	m_client = p_client;
 	m_server = p_server;
+	m_playerCounter = 0;
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,255.0f/255.0f),
+		AglVector4(104.0f/255.0f,47.0f/255.0f,208.0f/255.0f,255.0f/255.0f)));
+	
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
+		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
+		AglVector4(232.0f/255.0f,116.0f/255.0f,12.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1),
+		AglVector4(210.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(82.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1),
+		AglVector4(31.0f/255.0f,248.0f/255.0f,143.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(248.0f/255.0f,31.0f/255.0f,245.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,31.0f/255.0f,149.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
+		));
+
+	m_gradientColors.push_back(GradientMapping(
+		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
+		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
+		));
+	
 }
 
 EntityFactory::~EntityFactory()
@@ -242,6 +288,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		p_packet.scale);
 	entity->addComponent( ComponentType::Transform, transform );
 
+	//HACK!!!!
+	entity->addComponent(ComponentType::Gradient, new GradientComponent(
+		m_gradientColors[m_playerCounter].playerSmall,
+		m_gradientColors[m_playerCounter].playerBig) );
+
+	m_playerCounter++;
+	//END HACK!!!
+
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -257,41 +311,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		component = new ShipFlyController(3.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
-
 		component = new ShipEditController();
 		entity->addComponent( ComponentType::ShipEditController, component);
-
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
-	
-		// hardcoded
-		/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);*/
-		// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
-		// because it was really weird to hear from the camera. This can of course
-		// be changed back if game play fails in this way, but it's at least more
-		// convenient for debugging!
-		/*component = new AudioListener();
-		entity->addComponent(ComponentType::AudioListener, component);*/
-
-		/************************************************************************/
-		/* This is where the audio listener is created and therefor the master  */
-		/* volume is added to Ant Tweak Bar here.								*/
-		/************************************************************************/
-		/************************************************************************/
-		/* Sorry. This breaks the server, so it must be moved out of here when	*/
-		/* needed. */
-		/************************************************************************/
-//		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-//			AntTweakBarWrapper::OVERALL,
-//			"Master_volume", TwType::TW_TYPE_FLOAT, 
-//			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-//			"group=Sound min=0 max=10 step=0.001 precision=3");
+		
+		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), AglVector3(0.0f, 1.0f, 1.0f)); // Forward
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), AglVector3(0.0f, 0.0f, -1.0f)); // Down
+		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), AglVector3(1.0f, 0.0f, 0.0f)); // Left
+		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), AglVector3(-1.0f, 0.0f, 0.0f)); // Right
+		entity->addComponent(emitters);
 	}
 
 	component = new PlayerScore();
@@ -408,18 +437,26 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
+	Entity* entity = entityFromRecipe( "ServerMinigun" );
+
+	ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+	psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+	entity->addComponent( psServerComp );
+
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/SpeedBooster.asd"  );
+	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/Modules/SpeedBooster/ClientSpeedBooster.asd");
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -430,7 +467,14 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createSpeedBoosterServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/SpeedBooster/ServerSpeedBooster.asd" );
+	Entity* entity = entityFromRecipe( "SpeedBooster" );
+
+	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 {
@@ -775,3 +819,26 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 	return entity;
 }
 
+void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
+	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection )
+{
+	AglParticleSystem particleSystem;
+	particleSystem.setSpawnPoint(p_spawnPosition);
+	particleSystem.setSpawnDirection(p_spawnDirection);
+	particleSystem.setParticleAge(1.0f);
+	particleSystem.setSpawnSpeed(1.0f);
+	particleSystem.setSpawnFrequency(1.0f);
+	particleSystem.setParticlesPerSpawn(100);
+	particleSystem.setSpreadType(AglParticleSystemHeader::INSPACE);
+	particleSystem.setSpread(0.21f);
+	particleSystem.setFadeOutStart(0.0f);
+	particleSystem.setFadeInStop(0.0f);
+	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
+	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.getHeaderPtr()->particleSpace = false;
+	ParticleSystemInstruction particleInstruction;
+	particleInstruction.textureFileName = "red-spot.png";
+	particleInstruction.particleSystem = particleSystem;
+	p_emitters->addParticleSystemInstruction(particleInstruction, 0);
+}

@@ -23,6 +23,8 @@
 #include "LightMesh.h"
 #include "DeferredBaseShader.h"
 #include "DeferredAnimatedBaseShader.h"
+#include "DeferredTessBaseShader.h"
+#include "DeferredTessAnimatedBaseShader.h"
 #include "ShadowMapRenderer.h"
 #include "ShadowShader.h"
 #include "GPUTimer.h"
@@ -263,7 +265,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			/* Check if the texture ID is active and get the texture resource or	*/
 			/* set the value in the texture array to NULL							*/
 			/************************************************************************/
-			if(textureId != 0)
+			if(textureId > 0)
 				textureArray[i] = m_textureManager->getResource(textureId);
 			else
 				textureArray[i] = NULL;
@@ -277,34 +279,73 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	{
 		updateBoneMatrixTexture(p_boneMatrices);
 
-		renderMeshInstanced( 
-			mesh->getVertexBuffer()->getBufferPointer(),
-			mesh->getVertexBuffer()->getElementSize(),
-			mesh->getSkeletonVertexBuffer()->getBufferPointer(),
-			mesh->getSkeletonVertexBuffer()->getElementSize(),
-			mesh->getIndexBuffer()->getBufferPointer(),
-			mesh->getIndexBuffer()->getElementCount(),
-			textureArray, arraySize,
-			instanceBuffer->getElementSize(), 
-			instanceBuffer->getElementCount(),
-			instanceBuffer->getBufferPointer(),
-			m_deferredRenderer->getDeferredAnimatedBaseShader(), m_boneMatrixTexture);
+		if (mesh->getMaterialInfo().hasDisplacementMap)
+		{
+			setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				mesh->getSkeletonVertexBuffer()->getBufferPointer(),
+				mesh->getSkeletonVertexBuffer()->getElementSize(),
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredTessAnimatedBaseShader(), m_boneMatrixTexture);
+		}
+		else
+		{
+			setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				mesh->getSkeletonVertexBuffer()->getBufferPointer(),
+				mesh->getSkeletonVertexBuffer()->getElementSize(),
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredAnimatedBaseShader(), m_boneMatrixTexture);
+		}
 	}
 	else
 	{
-		renderMeshInstanced( 
-			mesh->getVertexBuffer()->getBufferPointer(),
-			mesh->getVertexBuffer()->getElementSize(),
-			NULL,
-			0,
-			mesh->getIndexBuffer()->getBufferPointer(),
-			mesh->getIndexBuffer()->getElementCount(),
-			textureArray, arraySize,
-			instanceBuffer->getElementSize(), 
-			instanceBuffer->getElementCount(),
-			instanceBuffer->getBufferPointer(),
-			m_deferredRenderer->getDeferredBaseShader(), NULL);
-
+		if (mesh->getMaterialInfo().hasDisplacementMap)
+		{
+			setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				NULL,
+				0,
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredTessBaseShader(), NULL);
+		}
+		else
+		{
+			setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				NULL,
+				0,
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredBaseShader(), NULL);
+		}
 	}
 
 	delete [] textureArray;
@@ -594,7 +635,7 @@ void GraphicsWrapper::renderParticleSystem( ParticleSystemAndTexture* p_system,
 {
 	Texture* texture = m_textureManager->getResource( p_system->textureIdx );
 	m_particleRenderer->renderParticleSystem( &p_system->particleSystem,
-		&m_renderSceneInfo, p_transform, texture );
+		&m_renderSceneInfo, p_transform, texture,p_system->uvRect );
 }
 
 void GraphicsWrapper::setParticleRenderState()
@@ -851,4 +892,9 @@ void GraphicsWrapper::updateBoneMatrixTexture(vector<AglMatrix>* p_data)
 	}
 
 	m_deviceContext->Unmap(m_boneMatrixResource, D3D11CalcSubresource(0, 0, 1));
+}
+
+MaterialInfo GraphicsWrapper::getMaterialInfoFromMeshID( unsigned int p_index )
+{
+	return m_meshManager->getResource(p_index)->getMaterialInfo();
 }

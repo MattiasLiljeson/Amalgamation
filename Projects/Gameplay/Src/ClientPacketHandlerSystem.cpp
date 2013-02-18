@@ -688,10 +688,13 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
-				particleSys->setSpawnPoint(		p_data.position);
-				particleSys->setSpawnDirection(	p_data.direction);
-				particleSys->setSpawnSpeed(		p_data.speed);
-				particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+				if (particleSys)
+				{
+					particleSys->setSpawnPoint(		p_data.position);
+					particleSys->setSpawnDirection(	p_data.direction);
+					particleSys->setSpawnSpeed(		p_data.speed);
+					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+				}
 			}
 			else
 			{

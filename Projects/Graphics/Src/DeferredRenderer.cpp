@@ -7,6 +7,8 @@
 #include "DeferredBaseShader.h"
 #include "DeferredComposeShader.h"
 #include "DeferredAnimatedBaseShader.h"
+#include "DeferredTessAnimatedBaseShader.h"
+#include "DeferredTessBaseShader.h"
 #include "LightShader.h"
 #include "GUIShader.h"
 
@@ -72,6 +74,8 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 	delete m_animatedBaseShader;
+	delete m_tessAnimatedBaseShader;
+	delete m_tessBaseShader;
 }
 
 void DeferredRenderer::clearBuffers()
@@ -252,6 +256,9 @@ void DeferredRenderer::initGeometryBuffers()
 void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
+		L"Shaders/Game/deferredBase.hlsl");
+
+	m_tessBaseShader = m_shaderFactory->createDeferredTessBaseShader(
 		L"Shaders/Game/deferredBaseTess.hlsl");
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
@@ -259,6 +266,9 @@ void DeferredRenderer::initShaders()
 		
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
 		L"Shaders/Game/deferredAnimatedBase.hlsl");
+
+	m_tessAnimatedBaseShader = m_shaderFactory->createDeferredTessAnimatedShader(
+		L"Shaders/Game/deferredAnimatedBaseTess.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
@@ -371,6 +381,15 @@ DeferredAnimatedBaseShader* DeferredRenderer::getDeferredAnimatedBaseShader(){
 }
 LightShader* DeferredRenderer::getDeferredLightShader(){
 	return m_lightShader;
+}
+DeferredTessBaseShader* DeferredRenderer::getDeferredTessBaseShader()
+{
+	return m_tessBaseShader;
+}
+
+DeferredTessAnimatedBaseShader* DeferredRenderer::getDeferredTessAnimatedBaseShader()
+{
+	return m_tessAnimatedBaseShader;
 }
 
 ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderTargets p_target )

@@ -14,6 +14,7 @@
 #include "SkeletalAnimation.h"
 #include "BoundingSphere.h"
 #include "MeshOffsetTransform.h"
+#include "BoundingBox.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -42,15 +43,24 @@ void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity,
 											   PhysicsBody* p_rootPhysicsBody, 
 											   AglMatrix& baseTransform )
 {
-	//Setup bounding sphere for frustum culling
-	BoundingSphere* bs = new BoundingSphere(p_modelResource->meshHeader.boundingSphere);
-	p_entity->addComponent(ComponentType::BoundingSphere, bs);
-
-	if (!p_entity->getComponent(ComponentType::MeshOffsetTransform))
+	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(p_entity->getComponent(ComponentType::MeshOffsetTransform));
+	if (!offset)
 	{
-		MeshOffsetTransform* offset = new MeshOffsetTransform(p_modelResource->meshHeader.transform);
+		offset = new MeshOffsetTransform(p_modelResource->meshHeader.transform);
 		p_entity->addComponent(ComponentType::MeshOffsetTransform, offset);
 	}
+
+	//Setup bounding sphere for frustum culling
+	AglBoundingSphere sphere = p_modelResource->meshHeader.boundingSphere;
+
+	//Correct? No? Seems like this should not be done
+	//sphere.position.transform(offset->offset.inverse());
+
+	BoundingSphere* bs = new BoundingSphere(sphere);
+	p_entity->addComponent(ComponentType::BoundingSphere, bs);
+
+	BoundingBox* bb = new BoundingBox(p_modelResource->meshHeader.minimumOBB);
+	p_entity->addComponent(ComponentType::BoundingBox, bb);
 }
 
 void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)

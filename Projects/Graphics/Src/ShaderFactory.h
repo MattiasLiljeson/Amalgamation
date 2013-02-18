@@ -13,6 +13,8 @@
 class BufferFactory;
 class DeferredBaseShader;
 class DeferredAnimatedBaseShader;
+class DeferredTessBaseShader;
+class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
 class LightShader;
 class GUIShader;
@@ -46,6 +48,10 @@ public:
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
 
 	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
+
+	DeferredTessBaseShader* createDeferredTessBaseShader(const LPCWSTR& p_filePath);
+
+	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_filePath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 

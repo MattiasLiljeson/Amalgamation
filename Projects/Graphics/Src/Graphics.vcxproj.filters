@@ -69,7 +69,6 @@
     <ClCompile Include="EventInstancer.cpp">
       <Filter>LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="ModelExtendedFactory.cpp" />
     <ClCompile Include="LightShader.cpp">
       <Filter>Shader\Shader types</Filter>
     </ClCompile>
@@ -77,6 +76,15 @@
       <Filter>Timer</Filter>
     </ClCompile>
     <ClCompile Include="DeferredAnimatedBaseShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExtendedFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredTessAnimatedBaseShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredTessBaseShader.cpp">
       <Filter>Shader\Shader types</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,6 +244,12 @@
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="DeferredAnimatedBaseShader.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredTessAnimatedBaseShader.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredTessBaseShader.h">
       <Filter>Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>

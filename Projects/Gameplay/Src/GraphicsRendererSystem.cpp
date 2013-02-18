@@ -90,6 +90,7 @@ void GraphicsRendererSystem::process(){
 			m_shadowSystem->getViewProjection(i);
 	}
 
+	/*
 	initShadowPass();
 	for(unsigned int i = 0; i < MAXSHADOWS; i++){
 		if(m_activeShadows[i] != -1){
@@ -99,6 +100,7 @@ void GraphicsRendererSystem::process(){
 		}
 	}
 	endShadowPass();
+	*/
 	m_wrapper->getGPUTimer()->Stop(m_shadowProfile, m_currentFrame);
 
 	// Meshes
@@ -150,7 +152,7 @@ void GraphicsRendererSystem::process(){
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->setViewportToShadowMapSize();
 	m_wrapper->setRenderingShadows();
 	m_wrapper->setShadowViewProjections(m_shadowViewProjections);
@@ -165,7 +167,7 @@ void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->mapSceneInfo();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->clearRenderTargets();
 	m_wrapper->setBaseRenderTargets();
 }

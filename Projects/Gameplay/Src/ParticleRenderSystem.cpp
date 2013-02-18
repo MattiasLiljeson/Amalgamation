@@ -7,6 +7,7 @@
 #include "ParticleSystemsComponent.h"
 #include <AglParticleSystemHeader.h>
 #include <ParticleSystemAndTexture.h>
+#include "MeshOffsetTransform.h"
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::ParticleRenderSystem, 2,
@@ -48,6 +49,9 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::Transform ) );
 
+		MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+			p_entities[i]->getComponent( ComponentType::MeshOffsetTransform ) );
+
 		ParticleSystemsComponent* particlesComp = static_cast<ParticleSystemsComponent*>(
 			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
@@ -61,21 +65,25 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 				if( psAndTex != NULL ) {
 					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
-					// double transform
-					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
-						particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
-					}
-					// Always scale the particle effect according to it's entity
-					//particlesComp->setScale( AglVector2( transform->getScale().x, transform->getScale().x ) );
-					particlesComp->getParticleSystemPtr(0)->setSpawnSpeed( transform->getScale().x );
+					AglMatrix transMat = transform->getMatrix();
 
-					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
+					// Offset agl-loaded meshes by their offset matrix
+					if( offset != NULL ) {
+						transMat = offset->offset.inverse() * transMat;
+					}
+
+					// Update only local particle systems (PS) as the PS's otherwise will get a 
+					// double transform
+					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL ) {
+						particlesComp->setSpawn( transMat );
+					}
+
+					static Transform* test = new Transform(AglMatrix::identityMatrix());
+					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, test );
 					m_collections.push_back( ps );
 				}
 			}
 		}
-		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
 }
 
