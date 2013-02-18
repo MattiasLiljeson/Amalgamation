@@ -414,6 +414,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new CircularMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
 	m_world->setSystem( new ClientMeasurementSystem(), true );
+	m_world->setSystem( new ClientEntityCountSystem(), true );
 	m_world->setSystem( new AntTweakBarEnablerSystem(), true );
 
 	m_world->initialize();

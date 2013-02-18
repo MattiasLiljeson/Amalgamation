@@ -13,6 +13,8 @@
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
     <ClCompile Include="DeferredAnimatedBaseShader.cpp" />
+    <ClCompile Include="DeferredTessAnimatedBaseShader.cpp" />
+    <ClCompile Include="DeferredTessBaseShader.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventInstancer.cpp" />
@@ -43,6 +45,8 @@
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
     <ClInclude Include="DeferredAnimatedBaseShader.h" />
+    <ClInclude Include="DeferredTessAnimatedBaseShader.h" />
+    <ClInclude Include="DeferredTessBaseShader.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventInstancer.h" />

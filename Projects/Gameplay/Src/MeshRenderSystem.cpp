@@ -17,6 +17,7 @@
 #include "MaterialInfo.h"
 #include "GradientComponent.h"
 #include "BoundingBox.h"
+#include "InputBackendSystem.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -59,8 +60,9 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		RenderInfo* renderInfo = static_cast<RenderInfo*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 
-		// Don't render instances that hasn't got a mesh 
-		if( renderInfo->m_meshId == -1)
+		// Don't render instances that hasn't got a mesh...
+		// NOTE: (Johan) ...or if it's not supposed to render!
+		if( renderInfo->m_meshId == -1 || renderInfo->m_shouldBeRendered == false )
 		{
 			continue;
 		}
@@ -80,6 +82,13 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_instanceLists.resize( renderInfo->m_meshId + 1 );
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
+
+		//Check if the object should be drawn
+		RenderInfo* ri = static_cast<RenderInfo*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo) );
+
+		if (!ri->m_shouldBeRendered)
+			continue;
 
 		//Perform some culling checks
 		if (shouldCull(p_entities[i]))
@@ -240,8 +249,8 @@ void MeshRenderSystem::calcCameraPlanes()
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
-				  m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
-				  m_cameraPlanes[i].z * m_cameraPlanes[i].z);
+			m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
+			m_cameraPlanes[i].z * m_cameraPlanes[i].z);
 
 		m_cameraPlanes[i].x /= l;
 		m_cameraPlanes[i].y /= l;

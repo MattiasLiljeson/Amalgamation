@@ -543,9 +543,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Components\States</Filter>
     </ClInclude>
-    <ClInclude Include="ShieldPlatingSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="SpeedBoostModuleActivation.h">
       <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
     </ClInclude>
@@ -608,6 +605,9 @@
     <ClInclude Include="GradientComponent.h" />
     <ClInclude Include="BoundingBox.h">
       <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -971,9 +971,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Components\States</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlatingSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="CircularMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
@@ -1009,5 +1006,8 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="GradientComponent.cpp" />
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
