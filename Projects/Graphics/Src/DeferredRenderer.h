@@ -10,6 +10,8 @@ class BufferFactory;
 class ShaderBase;
 class DeferredBaseShader;
 class DeferredAnimatedBaseShader;
+class DeferredTessBaseShader;
+class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
 class LightShader;
 class GUIShader;
@@ -122,6 +124,10 @@ public:
 
 	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
 
+	DeferredTessBaseShader* getDeferredTessBaseShader();
+
+	DeferredTessAnimatedBaseShader* getDeferredTessAnimatedBaseShader();
+
 	LightShader* getDeferredLightShader();
 
 	void renderSsao();
@@ -154,8 +160,10 @@ private:
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMTARGETS];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
-	DeferredBaseShader*		m_baseShader;
-	DeferredAnimatedBaseShader*	m_animatedBaseShader;
+	DeferredBaseShader*				m_baseShader;
+	DeferredAnimatedBaseShader*		m_animatedBaseShader;
+	DeferredTessBaseShader*			m_tessBaseShader;
+	DeferredTessAnimatedBaseShader*	m_tessAnimatedBaseShader;
 
 	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_ssaoShader;

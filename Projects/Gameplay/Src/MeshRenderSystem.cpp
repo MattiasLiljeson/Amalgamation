@@ -220,55 +220,43 @@ bool MeshRenderSystem::shouldCull(Entity* p_entity)
 }
 void MeshRenderSystem::calcCameraPlanes()
 {
-	static bool first = false;
+	EntityManager* entitymanager = m_world->getEntityManager();
+	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
 
-	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+	CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
 
-	if (input->getDeltaByEnum(InputHelper::KeyboardKeys_RETURN) > 0)
-		first = false;
+	Transform* transform = static_cast<Transform*>(
+		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-	if (!first)
+	AglVector3 position = transform->getTranslation();
+	AglQuaternion rotation = transform->getRotation();
+	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+	AglVector3 up = transform->getMatrix().GetUp();
+
+	AglMatrix view = AglMatrix::createViewMatrix(position,
+		lookTarget,
+		up);
+
+	AglMatrix viewProj = view * info->m_projMat;
+
+	m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
+	m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
+	m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
+	m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
+	m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
+	m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
+
+	for (unsigned int i = 0; i < 6; i++)
 	{
-		first = true;
-		EntityManager* entitymanager = m_world->getEntityManager();
-		Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
+			m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
+			m_cameraPlanes[i].z * m_cameraPlanes[i].z);
 
-		CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
-
-		Transform* transform = static_cast<Transform*>(
-			cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
-		AglVector3 position = transform->getTranslation();
-		AglQuaternion rotation = transform->getRotation();
-		AglVector3 lookTarget = position+transform->getMatrix().GetForward();
-		AglVector3 up = transform->getMatrix().GetUp();
-
-		AglMatrix view = AglMatrix::createViewMatrix(position,
-			lookTarget,
-			up);
-
-		AglMatrix viewProj = view * info->m_projMat;
-
-		m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
-		m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
-		m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
-		m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
-		m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
-		m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
-
-		for (unsigned int i = 0; i < 6; i++)
-		{
-			float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
-				m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
-				m_cameraPlanes[i].z * m_cameraPlanes[i].z);
-
-			m_cameraPlanes[i].x /= l;
-			m_cameraPlanes[i].y /= l;
-			m_cameraPlanes[i].z /= l;
-			m_cameraPlanes[i].w /= l;
-		}
+		m_cameraPlanes[i].x /= l;
+		m_cameraPlanes[i].y /= l;
+		m_cameraPlanes[i].z /= l;
+		m_cameraPlanes[i].w /= l;
 	}
-
 }
 
 //Returns true if the box is completely outside the plane
