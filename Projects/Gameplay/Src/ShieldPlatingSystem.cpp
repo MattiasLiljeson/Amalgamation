@@ -2,10 +2,11 @@
 #include "ShieldPlate.h"
 #include "Transform.h"
 #include "EntityParent.h"
+#include "RenderInfo.h"
 
 ShieldPlatingSystem::ShieldPlatingSystem()
-	: EntitySystem( SystemType::ShieldPlatingSystem, 3, ComponentType::Transform,
-	ComponentType::ShieldPlate, ComponentType::EntityParent)
+	: EntitySystem( SystemType::ShieldPlatingSystem, 4, ComponentType::Transform,
+	ComponentType::ShieldPlate, ComponentType::EntityParent, ComponentType::RenderInfo )
 {
 }
 
@@ -28,6 +29,8 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 			ComponentType::EntityParent));
 		Transform* worldTransform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
+		RenderInfo* render = static_cast<RenderInfo*>(p_entities[i]->getComponent(
+			ComponentType::RenderInfo));
 		AglVector3 positionComponent;
 		AglQuaternion quarternionComponent;
 		AglVector3 scaleComponent;
@@ -37,6 +40,7 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 		plate->scale -= deltaScale;
 		if(p_entities[i]->isEnabled())
 		{
+			render->m_shouldBeRendered = true;
 			if(plate->scale <= 0.0f)
 			{
 				child->setLocalTransform(plate->spawnTransform); // Respawn.
@@ -51,6 +55,7 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 			if(plate->scale <= 0.0f)
 			{
 				plate->scale = 0.0f;
+				render->m_shouldBeRendered = false;
 			}
 			scaleComponent.x = plate->scale;
 			scaleComponent.y = plate->scale;

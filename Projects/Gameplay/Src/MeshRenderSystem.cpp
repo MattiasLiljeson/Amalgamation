@@ -59,8 +59,9 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		RenderInfo* renderInfo = static_cast<RenderInfo*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 
-		// Don't render instances that hasn't got a mesh 
-		if( renderInfo->m_meshId == -1)
+		// Don't render instances that hasn't got a mesh...
+		// NOTE: (Johan) ...or if it's not supposed to render!
+		if( renderInfo->m_meshId == -1 || renderInfo->m_shouldBeRendered == false )
 		{
 			continue;
 		}
