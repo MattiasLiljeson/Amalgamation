@@ -78,8 +78,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 						particlesComp->setSpawn( transMat );
 					}
 
-					static Transform* test = new Transform(AglMatrix::identityMatrix());
-					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, test );
+					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
 					m_collections.push_back( ps );
 				}
 			}
