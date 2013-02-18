@@ -187,6 +187,9 @@ void ClientApplication::run()
 
 			m_prevTimeStamp = currTimeStamp;
 
+			if(dt > 0.5f)
+				dt = 0.5f;
+
 			m_world->setDelta((float)dt);
 			m_world->process();
 

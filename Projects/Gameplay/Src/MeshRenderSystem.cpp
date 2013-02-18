@@ -75,15 +75,11 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_instanceLists.resize( renderInfo->m_meshId + 1 );
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
-
-		//Check if the object should be drawn
-		RenderInfo* ri = static_cast<RenderInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo) );
-
-		if (!ri->m_shouldBeRendered)
+		
+		if (!renderInfo->m_shouldBeRendered)
 			continue;
 
-		if (ri->m_shouldBeCulled)
+		if (renderInfo->m_shouldBeCulled)
 			continue;
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
@@ -128,7 +124,6 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 	}
 	// If none was found check why
 	else{
-
 		// Assume its a valid Ship Module
 		ShipModule* shipModule = static_cast<ShipModule*>(m_world->
 			getComponentManager()->getComponent(p_entity,ComponentType::ShipModule));
