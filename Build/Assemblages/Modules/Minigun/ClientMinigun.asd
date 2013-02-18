@@ -7,3 +7,5 @@ d f m_translationZ 0.0
 
 c LoadMesh
 d s m_filename MinigunAnim.agl
+
+c ShipModule

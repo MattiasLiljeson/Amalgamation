@@ -621,6 +621,9 @@
     <ClInclude Include="InterpolationSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleStateChangePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1030,6 +1033,9 @@
     </ClCompile>
     <ClCompile Include="InterpolationSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStateChangePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

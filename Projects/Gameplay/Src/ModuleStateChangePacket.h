@@ -1,29 +1,29 @@
 #pragma once
-#include <AglVector4.h>
+
+#include "Packetizer.h"
 
 // =======================================================================================
-//                                      Gradient
+//                                      AttachModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	
 ///        
-/// # Gradient
+/// # AttachModule
 /// Detailed description.....
-/// Created on: 15-2-2013 
+/// Created on: 18-2-2013 
 ///---------------------------------------------------------------------------------------
-struct GradientMapping 
+
+class ModuleStateChangePacket : public Packetizer
 {
-	AglVector4 layerOne;
-	AglVector4 layerTwo;
+public:
+	ModuleStateChangePacket();
 
-	GradientMapping()
-	{
+	Packet pack();
 
-	}
-
-	GradientMapping(AglVector4 p_layerOne, AglVector4 p_layerTwo){
-		layerOne = p_layerOne;
-		layerTwo = p_layerTwo;
-	}
+	void unpack( Packet& p_packet );
+public:
+	int affectedModule;
+	int previousParent;
+	int currentParrent;
 };

@@ -17,6 +17,8 @@
 #include "MaterialInfo.h"
 #include "GradientComponent.h"
 #include "BoundingBox.h"
+#include "ModuleHelper.h"
+#include "ShipModule.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -56,11 +58,11 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
-		RenderInfo* renderInfo = static_cast<RenderInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
+		RenderInfo* renderInfo = getRenderInfo(p_entities[i]);
 
-		// Don't render instances that hasn't got a mesh 
-		if( renderInfo->m_meshId == -1)
+		// Don't render instances that hasn't got a mesh...
+		// NOTE: (Johan) ...or if it's not supposed to render!
+		if( renderInfo->m_meshId == -1 || renderInfo->m_shouldBeRendered == false )
 		{
 			continue;
 		}
@@ -93,16 +95,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 
 		InstanceData instanceData = transform->getInstanceDataRef();
-		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-			renderInfo->m_meshId);
-		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
-		if(gradient != NULL){ 
-			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
-			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
-		}
-		instanceData.setGradientColor( matInfo.getGradientColors() );
-		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
-		
+		fillInstanceData(&instanceData,p_entities[i],renderInfo);
 		
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
@@ -128,18 +121,40 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
 }
 
-void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity){
-	
-	MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-		renderInfo->m_meshId);
-	auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(
+void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity, 
+										RenderInfo* p_renderInfo){
+	MaterialInfo matInfo;
+	auto gradient = static_cast<GradientComponent*>(p_entity->getComponent(
 		ComponentType::Gradient));
 	if(gradient != NULL){ 
-		matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
-		matInfo.setGradientLayer(2,gradient->m_color.playerBig);
+		matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			p_renderInfo->m_meshId);
+		matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+		matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
 	}
-	instanceData.setGradientColor( matInfo.getGradientColors() );
-	instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+	else{
+		ShipModule* shipModule = static_cast<ShipModule*>(m_world->
+			getComponentManager()->getComponent(p_entity,ComponentType::ShipModule));
+
+		if(shipModule != NULL && shipModule->m_parentEntity > -1){
+			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
+			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+			if(parentShip != NULL){
+				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);
+				matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+					parentShipRenderInfo->m_meshId);
+
+				auto gradient = static_cast<GradientComponent*>(parentShip->getComponent(
+					ComponentType::Gradient));
+
+				matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+				matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+			}
+		}
+	}
+
+	p_data->setGradientColor( matInfo.getGradientColors() );
+	p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
 	return;
 }
 
@@ -246,4 +261,10 @@ bool MeshRenderSystem::BoxPlane(const AglOBB& p_box, const AglVector4& p_plane)
 	float s = AglVector3::dotProduct(p_box.world.GetTranslation(), n)+p_plane.w;
 	
 	return s + e < 0;
+}
+
+RenderInfo* MeshRenderSystem::getRenderInfo( Entity* p_entity )
+{
+	return static_cast<RenderInfo*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 }
