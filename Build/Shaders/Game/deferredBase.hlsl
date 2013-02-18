@@ -64,10 +64,6 @@ PixelOut PS(VertexOut p_input)
 	int index = value * layerCount;
 	index = min(index, layerCount-1);
 	pixelOut.diffuse = p_input.gradientColor[index];
-	
-	if(layerCount<5){
-		pixelOut.diffuse = float4(0,0,0,1);
-	}
 	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
