@@ -155,10 +155,11 @@ private:
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*		m_baseShader;
+	DeferredAnimatedBaseShader*	m_animatedBaseShader;
+
 	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_ssaoShader;
 	DeferredComposeShader*	m_composeShader;
-	DeferredAnimatedBaseShader*	m_animatedBaseShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 

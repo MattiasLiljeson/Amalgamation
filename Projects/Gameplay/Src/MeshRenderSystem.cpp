@@ -17,6 +17,7 @@
 #include "MaterialInfo.h"
 #include "GradientComponent.h"
 #include "BoundingBox.h"
+#include "InputBackendSystem.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -80,6 +81,13 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_instanceLists.resize( renderInfo->m_meshId + 1 );
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
+
+		//Check if the object should be drawn
+		RenderInfo* ri = static_cast<RenderInfo*>(
+			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo) );
+
+		if (!ri->m_shouldBeRendered)
+			continue;
 
 		//Perform some culling checks
 		if (shouldCull(p_entities[i]))
@@ -211,43 +219,55 @@ bool MeshRenderSystem::shouldCull(Entity* p_entity)
 }
 void MeshRenderSystem::calcCameraPlanes()
 {
-	EntityManager* entitymanager = m_world->getEntityManager();
-	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	static bool first = false;
 
-	CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
+	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
 
-	Transform* transform = static_cast<Transform*>(
-		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+	if (input->getDeltaByEnum(InputHelper::KeyboardKeys_RETURN) > 0)
+		first = false;
 
-	AglVector3 position = transform->getTranslation();
-	AglQuaternion rotation = transform->getRotation();
-	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
-	AglVector3 up = transform->getMatrix().GetUp();
-
-	AglMatrix view = AglMatrix::createViewMatrix(position,
-		lookTarget,
-		up);
-
-	AglMatrix viewProj = view * info->m_projMat;
-
-	m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
-	m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
-	m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
-	m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
-	m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
-	m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
-
-	for (unsigned int i = 0; i < 6; i++)
+	if (!first)
 	{
-		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
-				  m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
-				  m_cameraPlanes[i].z * m_cameraPlanes[i].z);
+		first = true;
+		EntityManager* entitymanager = m_world->getEntityManager();
+		Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
 
-		m_cameraPlanes[i].x /= l;
-		m_cameraPlanes[i].y /= l;
-		m_cameraPlanes[i].z /= l;
-		m_cameraPlanes[i].w /= l;
+		CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
+
+		Transform* transform = static_cast<Transform*>(
+			cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+		AglVector3 position = transform->getTranslation();
+		AglQuaternion rotation = transform->getRotation();
+		AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+		AglVector3 up = transform->getMatrix().GetUp();
+
+		AglMatrix view = AglMatrix::createViewMatrix(position,
+			lookTarget,
+			up);
+
+		AglMatrix viewProj = view * info->m_projMat;
+
+		m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
+		m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
+		m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
+		m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
+		m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
+		m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
+
+		for (unsigned int i = 0; i < 6; i++)
+		{
+			float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
+				m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
+				m_cameraPlanes[i].z * m_cameraPlanes[i].z);
+
+			m_cameraPlanes[i].x /= l;
+			m_cameraPlanes[i].y /= l;
+			m_cameraPlanes[i].z /= l;
+			m_cameraPlanes[i].w /= l;
+		}
 	}
+
 }
 
 //Returns true if the box is completely outside the plane

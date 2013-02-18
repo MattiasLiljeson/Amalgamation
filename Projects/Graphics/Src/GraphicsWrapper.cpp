@@ -289,22 +289,44 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			instanceBuffer->getElementCount(),
 			instanceBuffer->getBufferPointer(),
 			m_deferredRenderer->getDeferredAnimatedBaseShader(), m_boneMatrixTexture);
+
+		if (mesh->getMaterialInfo().hasDisplacementMap)
+		{
+
+		}
 	}
 	else
 	{
-		renderMeshInstanced( 
-			mesh->getVertexBuffer()->getBufferPointer(),
-			mesh->getVertexBuffer()->getElementSize(),
-			NULL,
-			0,
-			mesh->getIndexBuffer()->getBufferPointer(),
-			mesh->getIndexBuffer()->getElementCount(),
-			textureArray, arraySize,
-			instanceBuffer->getElementSize(), 
-			instanceBuffer->getElementCount(),
-			instanceBuffer->getBufferPointer(),
-			m_deferredRenderer->getDeferredBaseShader(), NULL);
-
+		if (mesh->getMaterialInfo().hasDisplacementMap)
+		{
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				NULL,
+				0,
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredBaseShader(), NULL);
+		}
+		else
+		{
+			renderMeshInstanced( 
+				mesh->getVertexBuffer()->getBufferPointer(),
+				mesh->getVertexBuffer()->getElementSize(),
+				NULL,
+				0,
+				mesh->getIndexBuffer()->getBufferPointer(),
+				mesh->getIndexBuffer()->getElementCount(),
+				textureArray, arraySize,
+				instanceBuffer->getElementSize(), 
+				instanceBuffer->getElementCount(),
+				instanceBuffer->getBufferPointer(),
+				m_deferredRenderer->getDeferredBaseShader(), NULL);
+		}
 	}
 
 	delete [] textureArray;
