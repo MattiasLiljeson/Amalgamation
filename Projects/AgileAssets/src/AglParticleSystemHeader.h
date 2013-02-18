@@ -31,7 +31,12 @@ struct AglParticleSystemHeader{
 	};
 
 	enum AglSpace{
-		AglSpace_NONE = -1, AglSpace_LOCAL, AglSpace_GLOBAL
+		AglSpace_NON_EXISTING = -1,
+
+		AglSpace_LOCAL,
+		AglSpace_GLOBAL,
+
+		AglSpace_CNT
 	};
 
 	AglVector3			spawnPoint;
@@ -57,8 +62,8 @@ struct AglParticleSystemHeader{
 	AglAlignmentType	alignmentType;
 	float				spawnRotation;
 	float				spawnRotationOffset;
-	int					relative; // DEPRECATED, use AglSpace: NONE, LOCAL or GLOBAL
-	int					space; // used together with AglSpace 
+	int					particleSpace; // used together with AglSpace 
+	int					spawnSpace; // used together with AglSpace 
 
 	AglParticleSystemHeader()
 	{
@@ -85,7 +90,7 @@ struct AglParticleSystemHeader{
 		spawnRotation = 0;
 		spawnRotationOffset = 0;
 
-		relative = false;
-		space = AglSpace_NONE;
+		particleSpace = AglSpace_GLOBAL;
+		spawnSpace = AglSpace_LOCAL;
 	}
 };

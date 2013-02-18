@@ -74,7 +74,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 					// Update only local particle systems (PS) as the PS's otherwise will get a 
 					// double transform
-					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
+					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL ) {
 						particlesComp->setSpawn( transMat );
 					}
 
