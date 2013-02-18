@@ -24,4 +24,5 @@ public:
 	void unpack( Packet& p_packet );
 public:
 	int clientNetworkIdentity;
+	int playerID;
 };

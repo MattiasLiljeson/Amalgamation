@@ -14,6 +14,7 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="CircularMovementSystem.h" />
     <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
+    <ClInclude Include="CullingSystem.h" />
     <ClInclude Include="DebugMove.h" />
     <ClInclude Include="DebugMovementSystem.h" />
     <ClInclude Include="ClientConnectToServerSystem.h" />
@@ -205,6 +207,7 @@
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
+    <ClCompile Include="CullingSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
@@ -250,6 +253,7 @@
     <ClCompile Include="MinigunModule.cpp" />
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="ModuleHelper.cpp" />
+    <ClCompile Include="ModuleStateChangePacket.cpp" />
     <ClCompile Include="ModuleTriggerPacket.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />

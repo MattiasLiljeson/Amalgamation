@@ -1,25 +1,29 @@
-// =======================================================================================
-//                                      RenderInfo
-// =======================================================================================
-
-///---------------------------------------------------------------------------------------
-/// \brief	Brief
-///        
-/// # RenderInfo
-/// Detailed description.....
-/// Created on: 7-12-2012 
-///---------------------------------------------------------------------------------------
 #pragma once
-#include <Component.h>
 
-class RenderInfo : public Component
+#include "Packetizer.h"
+
+// =======================================================================================
+//                                      AttachModule
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	
+///        
+/// # AttachModule
+/// Detailed description.....
+/// Created on: 18-2-2013 
+///---------------------------------------------------------------------------------------
+
+class ModuleStateChangePacket : public Packetizer
 {
 public:
-	RenderInfo(bool p_shouldBeRendered=true);
-	RenderInfo( int p_mesh_id, bool p_shouldBeRendered=true);
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-	bool m_shouldBeRendered;
-	bool m_shouldBeCulled;
+	ModuleStateChangePacket();
+
+	Packet pack();
+
+	void unpack( Packet& p_packet );
+public:
+	int affectedModule;
+	int previousParent;
+	int currentParrent;
 };

@@ -103,6 +103,7 @@
 #include <ClientEntityCountSystem.h>
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
+#include <CullingSystem.h>
 
 
 // Helpers
@@ -262,6 +263,10 @@ void ClientApplication::initSystems()
 	GamepadRumbleSystem* gamepadRumble = new GamepadRumbleSystem( inputBackend );
 	m_world->setSystem( gamepadRumble, true);
 
+	/************************************************************************/
+	/* Culling																*/
+	/************************************************************************/
+	m_world->setSystem(new CullingSystem(), true);
 
 	
 	/************************************************************************/
@@ -497,24 +502,6 @@ void ClientApplication::initEntities()
 
 		rotation -= 0.78;
 	}
-	// int cubeMeshId = graphicsBackend->loadSingleMeshFromFile( "P_cube" );
-	// int sphereMeshId = graphicsBackend->loadSingleMeshFromFile( "P_sphere" );
-	
-	//graphicsBackend->loadSingleMeshFromFile( "MineWeaponFinal.agl", &MODELPATH );
-	//graphicsBackend->loadSingleMeshFromFile( "MineFinal.agl", &MODELPATH );
-	//graphicsBackend->loadSingleMeshFromFile( "rocket.agl", &MODELPATH );
-	//graphicsBackend->loadSingleMeshFromFile( "rocket_launcher.agl", &MODELPATH );
-	//graphicsBackend->loadSingleMeshFromFile( "minigun.agl", &MODELPATH );
-	//graphicsBackend->loadSingleMeshFromFile( "SpeedBooster.agl", &MODELPATH );
-
-	//LevelPieceFileMapping modelLevelFileMapping;	
-	//for (int i = 0; i < modelLevelFileMapping.getModelFileCount() - 1; i++)
-	//{
-	//	string modelName = modelLevelFileMapping.getModelFileName(i);
-	//	graphicsBackend->loadSingleMesh( modelName,
-	//			&TESTMODELPATH);
-	//}
-
 
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
@@ -544,17 +531,6 @@ void ClientApplication::initEntities()
 	entity->addComponent(ComponentType::GameState,new GameState(MENU));
 	m_world->addEntity(entity);
 
-	// Test sound source
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::Transform, new Transform(10, 10, 10));
-	// entity->addComponent(ComponentType::RenderInfo, new RenderInfo(sphereMeshId)); //deprecated way of loading
-	entity->addComponent(ComponentType::PositionalSoundSource, new PositionalSoundSource(
-		TESTSOUNDEFFECTPATH,
-		"Spaceship_Engine_Idle_-_Spaceship_Onboard_Cruise_Rumble_Drone_Subtle_Slow_Swells.wav"));
-	entity->addComponent(ComponentType::DebugMove, new DebugMove(AglVector3(
-		0, 1.0f, 0)));
-	m_world->addEntity(entity);
-
 	//ParticleEmitters* ps = new ParticleEmitters();
 	//AglParticleSystemHeader header;
 	//header.particleSize = AglVector2(2, 2);
@@ -582,6 +558,8 @@ void ClientApplication::initEntities()
 	//ps->getCollectionPtr()->m_particleSystems[0].setSpawnFrequency( 14.1f );
 	//entity->addComponent( ps );
 
+	// NOTE: (Johan) Some nice entities used for showing off the engine. (Do turn off
+	// hull and domain shader if used. Oh, and don't try this at home.)
 //	initInstanceFieldsByJohan("rocket.agl",			50, 50, 0.0f, 1.2f);
 //	initInstanceFieldsByJohan("MineFinal.agl",		50, 50, 5.0f, 0.8f);
 //	initInstanceFieldsByJohan("RockA.agl",			50, 50, 10.0f, 0.7f);

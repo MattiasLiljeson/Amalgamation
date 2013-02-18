@@ -14,16 +14,16 @@
 ///---------------------------------------------------------------------------------------
 struct GradientMapping 
 {
-	AglVector4 playerSmall;
-	AglVector4 playerBig;
+	AglVector4 layerOne;
+	AglVector4 layerTwo;
 
 	GradientMapping()
 	{
 
 	}
 
-	GradientMapping(AglVector4 p_small, AglVector4 p_big){
-		playerSmall = p_small;
-		playerBig = p_big;
+	GradientMapping(AglVector4 p_layerOne, AglVector4 p_layerTwo){
+		layerOne = p_layerOne;
+		layerTwo = p_layerTwo;
 	}
 };

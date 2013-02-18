@@ -52,41 +52,41 @@ EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 {
 	m_client = p_client;
 	m_server = p_server;
-	m_playerCounter = 0;
+	//Player 1 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,255.0f/255.0f),
 		AglVector4(104.0f/255.0f,47.0f/255.0f,208.0f/255.0f,255.0f/255.0f)));
-	
+	//Player 2 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
 		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)
 		));
-
+	//Player 3 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
 		AglVector4(232.0f/255.0f,116.0f/255.0f,12.0f/255.0f,1)
 		));
-
+	//Player 4 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1),
 		AglVector4(210.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1)
 		));
-
+	//Player 5 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(82.0f/255.0f,248.0f/255.0f,31.0f/255.0f,1),
 		AglVector4(31.0f/255.0f,248.0f/255.0f,143.0f/255.0f,1)
 		));
-
+	//Player 6 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(248.0f/255.0f,31.0f/255.0f,245.0f/255.0f,1),
 		AglVector4(248.0f/255.0f,31.0f/255.0f,149.0f/255.0f,1)
 		));
-
+	//Player 7 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,1),
 		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
 		));
-
+	//Player 8 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(232.0f/255.0f,44.0f/255.0f,12.0f/255.0f,1),
 		AglVector4(248.0f/255.0f,220.0f/255.0f,31.0f/255.0f,1)
@@ -283,21 +283,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		p_packet.scale);
 	entity->addComponent( ComponentType::Transform, transform );
 
-	//HACK!!!!
 	entity->addComponent(ComponentType::Gradient, new GradientComponent(
-		m_gradientColors[m_playerCounter].playerSmall,
-		m_gradientColors[m_playerCounter].playerBig) );
+		m_gradientColors[p_packet.playerID].layerOne,
+		m_gradientColors[p_packet.playerID].layerTwo) );
 
-	m_playerCounter++;
-	//END HACK!!!
+	//m_playerCounter++;
 
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 
-	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
-	Component* component = NULL; // for temp usage
+	Component* component = NULL;
 
 	/************************************************************************/
 	/* Check if the owner is the same as this client.						*/
@@ -318,15 +313,22 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			entity->addComponent( emitters );
 		}
 
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), AglVector3(0.0f, 1.0f, 1.0f)); // Forward
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), AglVector3(0.0f, 0.0f, -1.0f)); // Down
-		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), AglVector3(1.0f, 0.0f, 0.0f)); // Left
-		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), AglVector3(-1.0f, 0.0f, 0.0f)); // Right
+
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), 
+			AglVector3(0.0f, 1.0f, 1.0f)); // Forward
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), 
+			AglVector3(0.0f, 0.0f, -1.0f)); // Down
+		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), 
+			AglVector3(1.0f, 0.0f, 0.0f)); // Left
+		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), 
+			AglVector3(-1.0f, 0.0f, 0.0f)); // Right
 		entity->addComponent(emitters);
 	}
 
 	component = new PlayerScore();
 	entity->addComponent( ComponentType::PlayerScore, component );
+	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
+
 	m_world->addEntity(entity);
 
 	/************************************************************************/
@@ -334,20 +336,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(p_packet.owner == m_client->getId())
 	{
-		// add a myShip tag to the ship first!
-		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
-		
-		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
-		entity->addComponent(ComponentType::NetworkSynced,
+		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
+		entity->addComponent( ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
+		entity->addComponent( ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
 		entity->addComponent( ComponentType::PlayerState, new PlayerState );
 		//Add a picking ray to the camera so that edit mode can be performed
-		entity->addComponent(ComponentType::PickComponent, new PickComponent());
-		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
-		m_world->addEntity(entity);
+		entity->addComponent( ComponentType::PickComponent, new PickComponent());
+		entity->applyComponentChanges();
 	}
 	return entity;
 }
