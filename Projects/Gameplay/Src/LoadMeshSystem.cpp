@@ -303,8 +303,14 @@ void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelRes
 {
 	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
-		ParticleSystemsComponent* particleComp = new ParticleSystemsComponent();
+		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
+			p_entity->getComponent( ComponentType::ParticleSystemsComponent ) );
+
+		if( particleComp == NULL ) {
+			particleComp = new ParticleSystemsComponent();
+			p_entity->addComponent( particleComp );
+		}
+
 		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
-		p_entity->addComponent( particleComp );
 	}
 }

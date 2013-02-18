@@ -305,7 +305,15 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( ComponentType::ShipEditController, component);
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		
-		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
+		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
+			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
+
+		if( emitters == NULL ) {
+			emitters = new ParticleSystemsComponent();
+			entity->addComponent( emitters );
+		}
+
+
 		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), 
 			AglVector3(0.0f, 1.0f, 1.0f)); // Forward
 		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), 
@@ -314,7 +322,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			AglVector3(1.0f, 0.0f, 0.0f)); // Left
 		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), 
 			AglVector3(-1.0f, 0.0f, 0.0f)); // Right
-		entity->addComponent(emitters);
 	}
 
 	component = new PlayerScore();
@@ -828,7 +835,7 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
-	particleSystem.getHeaderPtr()->particleSpace = false;
+	particleSystem.getHeaderPtr()->modes = false;
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
