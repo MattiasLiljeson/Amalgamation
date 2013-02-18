@@ -461,7 +461,7 @@ void ClientApplication::initEntities()
 	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
-	entity->addComponent( new Transform( -20.0f, 0.0f, -5.0f ) );
+	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );
 	m_world->addEntity(entity);
 
 
@@ -563,7 +563,7 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
 //	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f), 400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
-//	initInstanceSphereByJohan("RockA.agl", AglVector3(50.0f, 0.0f, 0.0f), 50.0f, 5000);
+	initInstanceSphereByJohan("RockA.agl", AglVector3(0.0f, 0.0f, 100.0f), 50.0f, 7500);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
