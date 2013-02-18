@@ -103,6 +103,7 @@
 #include <ClientEntityCountSystem.h>
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
+#include <CullingSystem.h>
 
 
 // Helpers
@@ -262,6 +263,10 @@ void ClientApplication::initSystems()
 	GamepadRumbleSystem* gamepadRumble = new GamepadRumbleSystem( inputBackend );
 	m_world->setSystem( gamepadRumble, true);
 
+	/************************************************************************/
+	/* Culling																*/
+	/************************************************************************/
+	m_world->setSystem(new CullingSystem(), true);
 
 	
 	/************************************************************************/

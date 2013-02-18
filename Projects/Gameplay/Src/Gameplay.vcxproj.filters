@@ -609,6 +609,9 @@
     <ClInclude Include="ShieldPlatingSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="CullingSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1008,6 +1011,9 @@
     <ClCompile Include="GradientComponent.cpp" />
     <ClCompile Include="ShieldPlatingSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="CullingSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
