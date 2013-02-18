@@ -322,7 +322,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			AglVector3(1.0f, 0.0f, 0.0f)); // Left
 		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), 
 			AglVector3(-1.0f, 0.0f, 0.0f)); // Right
-		entity->addComponent(emitters);
 	}
 
 	component = new PlayerScore();

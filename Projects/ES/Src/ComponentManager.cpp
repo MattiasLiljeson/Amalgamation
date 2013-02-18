@@ -1,4 +1,5 @@
 #include "ComponentManager.h"
+#include "..\..\Util\Src\DebugUtil.h"
 
 
 ComponentManager::ComponentManager()
@@ -68,7 +69,11 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 		}
 	}
 
-	m_componentsByType[typeIndex][entityIndex] = p_component;
+	if( m_componentsByType[typeIndex][entityIndex] == NULL ) {
+		m_componentsByType[typeIndex][entityIndex] = p_component;
+	} else {
+		DEBUGWARNING(("Component already existing!"));
+	}
 
 	p_entity->setComponentBit( typeIndex, true );
 }
