@@ -36,6 +36,7 @@ void ParticleSystemInstructionTranslatorSystem::processEntities( const vector<En
 				if( instruction != NULL ) 
 				{
 					ParticleSystemAndTexture psAndTexture;
+					psAndTexture.psOriginalSettings = instruction->particleSystem.getHeader();
 					psAndTexture.particleSystem = instruction->particleSystem;
 					int texId = m_gfxSystem->getGfxWrapper()->
 						createTexture( instruction->textureFileName, TEXTUREPATH );

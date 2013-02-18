@@ -39,8 +39,8 @@ AglParticleSystem::AglParticleSystem()
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 
-	m_header.relative = false;
-	m_header.space = AglParticleSystemHeader::AglSpace::AglSpace_LOCAL;
+	m_header.particleSpace = AglParticleSystemHeader::AglSpace::AglSpace_GLOBAL;
+	m_header.spawnSpace = AglParticleSystemHeader::AglSpace::AglSpace_LOCAL;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
@@ -203,11 +203,11 @@ void AglParticleSystem::setAlignmentType(AglParticleSystemHeader::AglAlignmentTy
 
 AglParticleSystemHeader::AglSpace AglParticleSystem::getSpace()
 {
-	return (AglParticleSystemHeader::AglSpace)m_header.space;
+	return (AglParticleSystemHeader::AglSpace)m_header.spawnSpace;
 }
 void AglParticleSystem::setSpace( AglParticleSystemHeader::AglSpace p_space )
 {
-	m_header.space = p_space;
+	m_header.spawnSpace = p_space;
 }
 
 float AglParticleSystem::getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir)

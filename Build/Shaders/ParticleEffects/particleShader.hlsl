@@ -10,8 +10,8 @@ cbuffer cbPerObject: register(b1)
 	float particleMaxAge;
 	float maxOpacity;
 	int alignment;
-	int relative;
-	int space;
+	int particleSpace;
+	int spawnSpace;
 	float pad; // Padding
 };
 
@@ -50,7 +50,7 @@ void GS(point Particle gIn[1],
 			inout TriangleStream<GS_OUT> triStream)
 {		
 	float4 position = float4( gIn[0].Position.xyz, 1.0 );
-	if( space ) {
+	if( particleSpace == 1 ) { // GLOBAL
 		position = mul( position, worldMat );
 	}
 

@@ -831,7 +831,7 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
-	particleSystem.getHeaderPtr()->relative = false;
+	particleSystem.getHeaderPtr()->particleSpace = false;
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
