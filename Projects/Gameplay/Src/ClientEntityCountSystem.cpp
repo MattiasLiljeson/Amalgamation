@@ -23,12 +23,12 @@ void ClientEntityCountSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
 		"Entities total", TwType::TW_TYPE_UINT32, &m_entitiesTotal,
 		"group='Entities'");
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
-		"Inserted count", TwType::TW_TYPE_UINT32, &m_entitiesInsertedLastSecond,
-		"group='Entities'");
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
-		"Removed count", TwType::TW_TYPE_UINT32, &m_entitiesRemovedLastSecond,
-		"group='Entities'");
+//	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+//		"Inserted count", TwType::TW_TYPE_UINT32, &m_entitiesInsertedLastSecond,
+//		"group='Entities'");
+//	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+//		"Removed count", TwType::TW_TYPE_UINT32, &m_entitiesRemovedLastSecond,
+//		"group='Entities'");
 	m_secondTimer->start();
 }
 
