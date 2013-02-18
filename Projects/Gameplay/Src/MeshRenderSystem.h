@@ -2,11 +2,11 @@
 
 #include <EntitySystem.h>
 #include <RenderInterface.h>
-#include "Transform.h"
 #include <AglVector4.h>
 #include <AglOBB.h>
 
 class GraphicsBackendSystem;
+class RenderInfo;
 struct AglMatrix;
 struct InstanceData;
 // =======================================================================================
@@ -32,6 +32,10 @@ public:
 
 	virtual void render();
 
+private:
+	void fillInstanceData(InstanceData* p_data, Entity* p_entity, RenderInfo* p_renderInfo);
+
+	RenderInfo* getRenderInfo(Entity* p_entity);
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	vector< vector<AglMatrix> > m_boneMatrices;

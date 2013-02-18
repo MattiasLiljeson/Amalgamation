@@ -60,6 +60,7 @@
 #include "UpdateClientStatsPacket.h"
 #include "ParticleUpdatePacket.h"
 #include "ModuleTriggerPacket.h"
+#include "ModuleStateChangePacket.h"
 
 // Debug
 #include "EntityFactory.h"
@@ -117,7 +118,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		
 		packetType = packet.getPacketType();
 
-#pragma region EntityUpdate
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			EntityUpdatePacket data;
@@ -131,7 +131,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				m_batch.push_back(data);
 			}
 		}
-#pragma endregion
 
 		else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
 		{
@@ -148,7 +147,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			
 		}
 
-#pragma region Shitsk
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
 			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
@@ -343,6 +341,29 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::ModuleStateChangePacket){
+			ModuleStateChangePacket data;
+			data.unpack(packet);
+
+			Entity* affectedModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.affectedModule);
+
+			if(affectedModule != NULL){
+				ShipModule* shipModule = static_cast<ShipModule*>(
+					affectedModule->getComponent(ComponentType::ShipModule));
+
+				Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.currentParrent);
+
+				shipModule->m_parentEntity = parrentObjec->getIndex();
+			}
+			else{
+				DEBUGWARNING(( "Unhandled module has changed!" ));
+			}
+			
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -356,6 +377,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 	WelcomePacket data;
 	data.unpack(p_packet);
 	m_tcpClient->setId( data.clientNetworkIdentity );
+	m_tcpClient->setPlayerID( data.playerID );
 
 	/************************************************************************/
 	/* Debug info!															*/

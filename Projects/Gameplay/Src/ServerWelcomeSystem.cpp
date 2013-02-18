@@ -47,6 +47,7 @@ ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server,
 {
 	m_server = p_server;
 	m_activePort = p_activePort;
+	m_numOfConnectedPlayers = 0;
 }
 
 ServerWelcomeSystem::~ServerWelcomeSystem()
@@ -102,7 +103,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	/* It goes here if there are new clients that has connected to the		*/
 	/* server.																*/
 	/************************************************************************/
-	if ( m_server->isListening() )
+	if ( m_server->isListening() && m_numOfConnectedPlayers < 7)
 	{
 		while( m_server->hasNewConnections() )
 		{
@@ -134,6 +135,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 				EntityCreationPacket data;
 				data.entityType		= static_cast<char>(netSync->getNetworkType());
 				data.owner			= netSync->getNetworkOwner();
+				data.playerID		= netSync->getPlayerID();
 				data.networkIdentity = netSync->getNetworkIdentity();
 				
 				data.meshInfo		 = 0; //Temp
@@ -160,10 +162,6 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 
 			for (unsigned int i= 0; i < entities.size(); i++)
 			{
-//				if( i%20 == 0 )
-//				{
-//					boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-//				}
 				transform = static_cast<Transform*>(entities[i]->
 					getComponent(ComponentType::Transform));
 
@@ -183,8 +181,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 //				packets.push( packet );
 				m_server->unicastPacket( data.pack(), id );
 			}
-//			m_server->unicastPacketQueue( packets, id );
-			
+			m_numOfConnectedPlayers++;
 		}
 	}
 }
@@ -199,11 +196,13 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
+	welcomePacket.playerID = m_numOfConnectedPlayers;
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId);
+	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, m_numOfConnectedPlayers);
 	m_world->addEntity(newShip);
-	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(ComponentType::Transform));
+	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
+		ComponentType::Transform));
 
 	// also create a camera
 	Entity* playerCam = m_world->createEntity();
@@ -214,7 +213,8 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 		3.0f,
 		40.0f);
 	playerCam->addComponent( ComponentType::LookAtEntity, component );
-	playerCam->addComponent( ComponentType::Transform, new Transform( transformComp->getMatrix() ) );
+	playerCam->addComponent( ComponentType::Transform, new Transform( 
+		transformComp->getMatrix() ) );
 	// default tag is follow
 	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 	playerCam->addComponent( ComponentType::NetworkSynced, 
@@ -227,7 +227,8 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	EntityCreationPacket data;
 	data.entityType		= static_cast<char>(EntityType::Ship);
 	data.owner			= p_newlyConnectedClientId;
-	data.networkIdentity = newShip->getIndex();
+	data.playerID		= m_numOfConnectedPlayers;
+	data.networkIdentity= newShip->getIndex();
 	data.translation	= transformComp->getTranslation();
 	data.rotation		= transformComp->getRotation();
 	data.scale			= transformComp->getScale();
@@ -236,43 +237,21 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	m_server->broadcastPacket(data.pack());
 }
 
-Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId)
+Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)
 {
 	/************************************************************************/
 	/* Creating the ship entity.											*/
 	/************************************************************************/
-
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
 
 	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
-
 
 	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
 		new ShipConnectionPointHighlights());
 
 	e->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, EntityType::Ship ));
+		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, p_playerID, EntityType::Ship ));
 	
-	//e->addComponent( ComponentType::PhysicsBody, 
-		//new PhysicsBody() );
-
-	//e->addComponent(ComponentType::LoadMesh, new LoadMesh("Ship.agl"));
-
-	/*e->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData( p_shipTransform->getTranslation(),
-		AglQuaternion::identity(),
-		AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::COMPOUND));*/
-
-	/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3.0f, 0, 0, 1)));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(0, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, -3.0f, 0, 0, 1)));
-	connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(AglMatrix(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 2.0f, 0, 1)));*/
-
-	//e->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);
-
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
 
 	e->addComponent(ComponentType::PlayerScore, new PlayerScore());

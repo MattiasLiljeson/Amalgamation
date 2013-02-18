@@ -130,6 +130,5 @@ private:
 
 private:
 	vector<GradientMapping> m_gradientColors;
-	int m_playerCounter;
 };
 

@@ -6,6 +6,7 @@ EntityCreationPacket::EntityCreationPacket()
 {
 	entityType		= 'x';
 	owner			= -1;
+	playerID		= -1;
 	networkIdentity = -1;
 	translation		= AglVector3();
 	scale			= AglVector3();
@@ -25,6 +26,7 @@ Packet EntityCreationPacket::pack()
 	packet << entityType
 		<< isLevelProp
 		<< owner
+		<< playerID
 		<< networkIdentity
 		<< meshInfo
 		<< miscData
@@ -40,6 +42,7 @@ void EntityCreationPacket::unpack( Packet& p_packet )
 	p_packet >> entityType
 		>> isLevelProp
 		>> owner
+		>> playerID
 		>> networkIdentity
 		>> meshInfo
 		>> miscData
