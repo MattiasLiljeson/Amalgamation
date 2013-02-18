@@ -36,26 +36,54 @@ void LoadMeshSystem::initialize()
 
 }
 
-void LoadMeshSystem::inserted( Entity* p_entity )
+void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	LoadMesh* jobInfo = static_cast<LoadMesh*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
+	float dt = m_world->getDelta();
 
-	// Load creation instructions
-	vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
-		MODELPATH,
-		jobInfo->isPrimitive());
-	// Root
-	Transform* rootTransformData=NULL;
-	setRootData(p_entity,(*models)[0],rootTransformData);
-	// Children
-	if (models->size()>1)
-		createChildrenEntities(models,p_entity);
+	for(unsigned int i=0; i<p_entities.size(); i++ )
+	{
+		Entity* entity = p_entities[i];
+		//
+		LoadMesh* jobInfo = static_cast<LoadMesh*>(
+			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
 
-	// remove init data and update
-	p_entity->removeComponent(ComponentType::LoadMesh);
-	p_entity->applyComponentChanges();
+		// Load creation instructions
+		vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
+			MODELPATH,
+			jobInfo->isPrimitive());
+		// Root
+		Transform* rootTransformData=NULL;
+		setRootData(entity,(*models)[0],rootTransformData);
+		// Children
+		if (models->size()>1)
+			createChildrenEntities(models,entity);
+
+		// remove init data and update
+		p_entities[i]->removeComponent(ComponentType::LoadMesh);
+		p_entities[i]->applyComponentChanges();
+	}
 }
+
+//void LoadMeshSystem::inserted( Entity* p_entity )
+//{
+//	LoadMesh* jobInfo = static_cast<LoadMesh*>(
+//		p_entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
+//
+//	// Load creation instructions
+//	vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
+//		MODELPATH,
+//		jobInfo->isPrimitive());
+//	// Root
+//	Transform* rootTransformData=NULL;
+//	setRootData(p_entity,(*models)[0],rootTransformData);
+//	// Children
+//	if (models->size()>1)
+//		createChildrenEntities(models,p_entity);
+//
+//	// remove init data and update
+//	p_entity->removeComponent(ComponentType::LoadMesh);
+//	p_entity->applyComponentChanges();
+//}
 
 
 void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
