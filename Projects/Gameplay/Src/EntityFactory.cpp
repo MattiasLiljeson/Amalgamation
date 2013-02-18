@@ -291,23 +291,17 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	m_playerCounter++;
 	//END HACK!!!
 
-	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
-
+	entity->addComponent( new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		EntityType::Ship));
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
-	Component* component = NULL; // for temp usage
 
 	/************************************************************************/
 	/* Check if the owner is the same as this client.						*/
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(3.0f, 100.0f);
-		entity->addComponent( ComponentType::ShipFlyController, component );
-		component = new ShipEditController();
-		entity->addComponent( ComponentType::ShipEditController, component);
+		entity->addComponent( new ShipFlyController(3.0f, 100.0f) );
+		entity->addComponent( new ShipEditController() );
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		
 		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
@@ -316,10 +310,11 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), AglVector3(1.0f, 0.0f, 0.0f)); // Left
 		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), AglVector3(-1.0f, 0.0f, 0.0f)); // Right
 		entity->addComponent(emitters);
-	}
 
-	component = new PlayerScore();
-	entity->addComponent( ComponentType::PlayerScore, component );
+		entity->addComponent( new AudioListener(1.0f )); // This is "moved" from the camera to the ship.
+		entity->addComponent( new MyShip_TAG() );
+	}
+	entity->addComponent( new PlayerScore() );
 	m_world->addEntity(entity);
 
 	/************************************************************************/
@@ -328,19 +323,20 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	if(p_packet.owner == m_client->getId())
 	{
 		// add a myShip tag to the ship first!
-		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
-		
-		entity->addComponent(ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
-		entity->addComponent(ComponentType::NetworkSynced,
-			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
-		entity->addComponent( ComponentType::PlayerState, new PlayerState );
+		if(entity->getComponent(ComponentType::AudioListener))
+		{
+			entity->removeComponent(ComponentType::AudioListener); // This is "moved" from the camera to the ship.
+		}
+		entity->addComponent( new PlayerCameraController(90.0f) );
+		entity->addComponent( new NetworkSynced(p_packet.miscData, p_packet.owner,
+			EntityType::PlayerCamera) );
+		entity->addComponent( new PlayerState );
 		//Add a picking ray to the camera so that edit mode can be performed
-		entity->addComponent(ComponentType::PickComponent, new PickComponent());
+		entity->addComponent( new PickComponent() );
 		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-
-		m_world->addEntity(entity);
+		entity->applyComponentChanges();
 	}
 	return entity;
 }
@@ -684,7 +680,9 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}
-	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities));
+	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities,
+		shieldEntity, static_cast<AudioBackendSystem*>(
+		m_world->getSystem(SystemType::AudioBackendSystem))));
 
 	return shieldEntity;
 }
