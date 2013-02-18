@@ -193,12 +193,6 @@ PixelOut PS(DomainOut p_input)
 	pixelOut.diffuse = p_input.gradientColor[index];
 	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
 
-	// temp fog
-	//float linDepth = pow(p_input.position.z, (gFarPlane-gNearPlane));
-	//float4 fog = float4(linDepth,linDepth,linDepth,0.0f);
-
-	//pixelOut.diffuse += fog;
-
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);
 
