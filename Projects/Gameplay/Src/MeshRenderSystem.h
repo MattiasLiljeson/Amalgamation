@@ -4,6 +4,7 @@
 #include <RenderInterface.h>
 #include "Transform.h"
 #include <AglVector4.h>
+#include <AglOBB.h>
 
 class GraphicsBackendSystem;
 struct AglMatrix;
@@ -30,9 +31,25 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	virtual void render();
+
+	unsigned int* getCulledCountPtr()
+	{
+		return &m_culled;
+	}
+	unsigned int* getRenderedCountPtr()
+	{
+		return &m_rendered;
+	}
+	float* getCulledFractionPtr()
+	{
+		return &m_culledFraction;
+	}
+
 private:
 	bool shouldCull(Entity* p_entity);
 	void calcCameraPlanes();
+
+	bool BoxPlane(const AglOBB& p_box, const AglVector4& p_plane);
 private:
 	vector< vector<InstanceData> > m_instanceLists;
 	vector< vector<AglMatrix> > m_boneMatrices;
@@ -40,5 +57,9 @@ private:
 
 	//For culling
 	AglVector4 m_cameraPlanes[6];
+
+	unsigned int m_culled;
+	unsigned int m_rendered;
+	float m_culledFraction;
 };
 
