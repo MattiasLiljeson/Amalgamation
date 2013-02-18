@@ -4,6 +4,7 @@
 #include <vector>
 #include "LevelPieceFileMapping.h"
 #include <ModelBaseFactory.h>
+#include <string>
 
 class Transform;
 class LevelPiece;
@@ -45,6 +46,9 @@ public:
 protected:
 
 private:
+	void preloadLevelGenRecipeEntity(const string& p_filePath);
+	void preloadLevelPieceRecipes();
+
 	int popIntVector(vector<int>& p_vector);
 	
 	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
@@ -61,6 +65,9 @@ private:
 	void addEndPlug(Transform* p_atConnector);
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
+
+	virtual void inserted( Entity* p_entity );
+
 
 	//ModelBaseFactory m_unmanagedModelFactory;
 	EntityFactory*	m_entityFactory;

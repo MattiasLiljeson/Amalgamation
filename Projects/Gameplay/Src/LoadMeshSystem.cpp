@@ -36,34 +36,26 @@ void LoadMeshSystem::initialize()
 
 }
 
-void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
+void LoadMeshSystem::inserted( Entity* p_entity )
 {
-	float dt = m_world->getDelta();
+	LoadMesh* jobInfo = static_cast<LoadMesh*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
 
-	for(unsigned int i=0; i<p_entities.size(); i++ )
-	{
-		Entity* entity = p_entities[i];
-		//
-		LoadMesh* jobInfo = static_cast<LoadMesh*>(
-			entity->getComponent( ComponentType::ComponentTypeIdx::LoadMesh ) );
+	// Load creation instructions
+	vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
+		MODELPATH,
+		jobInfo->isPrimitive());
+	// Root
+	Transform* rootTransformData=NULL;
+	setRootData(p_entity,(*models)[0],rootTransformData);
+	// Children
+	if (models->size()>1)
+		createChildrenEntities(models,p_entity);
 
-		// Load creation instructions
-		vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
-													   MODELPATH,
-													   jobInfo->isPrimitive());
-		// Root
-		Transform* rootTransformData=NULL;
-		setRootData(entity,(*models)[0],rootTransformData);
-		// Children
-		if (models->size()>1)
-			createChildrenEntities(models,entity);
-
-		// remove init data and update
-		p_entities[i]->removeComponent(ComponentType::LoadMesh);
-		p_entities[i]->applyComponentChanges();
-	}
+	// remove init data and update
+	p_entity->removeComponent(ComponentType::LoadMesh);
+	p_entity->applyComponentChanges();
 }
-
 
 
 void LoadMeshSystem::setRootData( Entity* p_entity, ModelResource* p_modelResource, 
@@ -308,3 +300,4 @@ void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelRes
 		p_entity->addComponent( particleComp );
 	}
 }
+

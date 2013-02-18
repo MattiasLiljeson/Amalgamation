@@ -34,9 +34,14 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&m_branchCount);
 		}
-		else if (p_initData[i].dataName == "begin_piece")
+		else if (p_initData[i].dataName == "piece")
 		{
-			pieceData = new LevelPieceFileData();
+			string data;
+			p_initData[i].getDataAsString(&data);
+			if (data == "begin")
+				pieceData = new LevelPieceFileData();
+			else // If not begin, then the data is assumed to be "end"
+				m_fileData.push_back(pieceData);
 		}
 		else if (p_initData[i].dataName == "m_pieceAssemblageName")
 		{

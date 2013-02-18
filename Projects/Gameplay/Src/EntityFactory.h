@@ -40,10 +40,12 @@ public:
 	/// locally and used when queried for an Entity. If a recipe already exists it will be
 	/// replaced by this new one.
 	/// \param p_filePath Path to the assemblage definition file.
+	/// \param out_recipeName Name of the created recipe, if the parameter is not NULL.
 	/// \return AssemblageHelper::E_FileStatus Status of the operation. If the assemblage
 	/// was loaded successfully this function will return
 	///-----------------------------------------------------------------------------------
-	AssemblageHelper::E_FileStatus readAssemblageFile( string p_filePath );
+	AssemblageHelper::E_FileStatus readAssemblageFile( string p_filePath, 
+													string* out_recipeName=NULL );
 
 	///-----------------------------------------------------------------------------------
 	/// Create an entity by supplying recipe/entity name.

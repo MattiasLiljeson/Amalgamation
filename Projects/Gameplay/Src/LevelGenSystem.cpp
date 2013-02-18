@@ -22,9 +22,10 @@
 #include "LevelPieceInfo.h"
 #include "LoadMeshSystemServer.h"
 #include "EntityFactory.h"
+#include "LevelInfo.h"
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
-	: EntitySystem(SystemType::LevelGenSystem, 2, ComponentType::Transform, ComponentType::LevelPieceInfo)
+	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
 {
 	m_server = p_server;
 
@@ -46,11 +47,11 @@ void LevelGenSystem::initialize()
 		m_world->getSystem(SystemType::EntityFactory));
 
 	// Preload entity recipes here. These are then used to create entities.
-	AssemblageHelper::E_FileStatus status = 
-		m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
+	//AssemblageHelper::E_FileStatus status = 
+	//	m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
 	//status = 
 	//	m_entityFactory->readAssemblageFile( "Assemblages/tunnelServer.asd" );
-
+	preloadLevelGenRecipeEntity("Assemblages/LevelGenServer.asd");
 
 	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
 		m_world->getSystem(SystemType::LoadMeshSystem));
@@ -66,7 +67,7 @@ void LevelGenSystem::initialize()
 		ModelResource* rootResource = resourcesFromModel->at(0);
 		
 		// Calculate the entire chamber's collision sphere.
-		// NOTE: Uncertain whetehr or not this value should be multiplied by 2 or not
+		// NOTE: Uncertain whether or not this value should be multiplied by 2 or not
 		// before being used.
 		calculatePieceCollision(resourcesFromModel);
 
@@ -118,6 +119,22 @@ void LevelGenSystem::processEntities( const vector<Entity*>& p_entities )
 	}*/
 }
 
+
+void LevelGenSystem::preloadLevelGenRecipeEntity(const string& p_filePath)
+{
+	string recipeName;
+	m_entityFactory->readAssemblageFile(p_filePath, &recipeName);
+	Entity* e = m_entityFactory->entityFromRecipe(recipeName);
+	m_world->addEntity(e);
+}
+
+void LevelGenSystem::inserted( Entity* p_entity )
+{
+	auto levelInfo = static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
+	// TODO: parse levelInfo and generate!
+	int i = 0;
+}
+
 void LevelGenSystem::clearGeneratedData()
 {
 	// Destroy generated pieces.
@@ -126,7 +143,7 @@ void LevelGenSystem::clearGeneratedData()
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
-	// Clear modelresources (Don't delete, since the levelgen doesn't have ownership)
+	// Clear model resources (Don't delete, since the level gen doesn't have ownership)
 	m_modelResources.clear();
 
 	// There's still data that exists, such as init data. These should not be destroyed.
@@ -369,4 +386,5 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);
 	}
 }
+
 

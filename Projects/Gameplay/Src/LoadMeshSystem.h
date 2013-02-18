@@ -31,7 +31,7 @@ public:
 	LoadMeshSystem();
 	virtual ~LoadMeshSystem();
 	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
+	virtual void inserted( Entity* p_entity );
 private:
 
 	///-----------------------------------------------------------------------------------
