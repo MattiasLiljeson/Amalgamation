@@ -305,11 +305,13 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		
 		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), AglVector3(0.0f, 1.0f, 1.0f)); // Forward
 		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), AglVector3(0.0f, 0.0f, -1.0f)); // Down
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), AglVector3(0.0f, 1.0f, 1.0f)); // Forward
 		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), AglVector3(1.0f, 0.0f, 0.0f)); // Left
 		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), AglVector3(-1.0f, 0.0f, 0.0f)); // Right
-		entity->addComponent(emitters);
+		entity->addComponent( emitters );
+		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
+			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
 		entity->addComponent( new AudioListener(1.0f )); // This is "moved" from the camera to the ship.
 		entity->addComponent( new MyShip_TAG() );
@@ -833,5 +835,5 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
-	p_emitters->addParticleSystemInstruction(particleInstruction, 0);
+	p_emitters->addParticleSystemInstruction(particleInstruction);
 }

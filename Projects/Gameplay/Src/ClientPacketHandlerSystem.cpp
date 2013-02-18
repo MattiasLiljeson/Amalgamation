@@ -151,58 +151,58 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 #pragma region Shitsk
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
-			//AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-			//	m_world->getSystem(SystemType::AudioBackendSystem));
-			//SpawnSoundEffectPacket spawnSoundPacket;
-			//spawnSoundPacket.unpack( packet );
-			//if( spawnSoundPacket.positional &&
-			//	spawnSoundPacket.attachedToNetsyncEntity == -1 )
-			//{
-			//	// Short positional sound effect.
-			//	audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
-			//		SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-			//		spawnSoundPacket.position);
-			//}
-			//else if( spawnSoundPacket.positional &&
-			//	spawnSoundPacket.attachedToNetsyncEntity != -1 )
-			//{
-			//	// Attached positional sound source.
-			//	NetsyncDirectMapperSystem* directMapper =
-			//		static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-			//		SystemType::NetsyncDirectMapperSystem));
-			//	Entity* entity = directMapper->getEntity(
-			//		spawnSoundPacket.attachedToNetsyncEntity );
-			//	if( entity != NULL )
-			//	{
-			//		entity->addComponent(ComponentType::PositionalSoundSource,
-			//			new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-			//			SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-			//			true, 1.0f));
-			//		entity->applyComponentChanges();
-			//	}
-			//}
-			//else if( !spawnSoundPacket.positional &&
-			//	spawnSoundPacket.attachedToNetsyncEntity == -1 )
-			//{
-			//	// Short ambient sound effect.
-			//	// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
-			//	audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-			//		SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
-			//}
+			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+				m_world->getSystem(SystemType::AudioBackendSystem));
+			SpawnSoundEffectPacket spawnSoundPacket;
+			spawnSoundPacket.unpack( packet );
+			if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
+			{
+				// Short positional sound effect.
+				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+					spawnSoundPacket.position);
+			}
+			else if( spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity != -1 )
+			{
+				// Attached positional sound source.
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* entity = directMapper->getEntity(
+					spawnSoundPacket.attachedToNetsyncEntity );
+				if( entity != NULL )
+				{
+					entity->addComponent(ComponentType::PositionalSoundSource,
+						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+						true, 1.0f));
+					entity->applyComponentChanges();
+				}
+			}
+			else if( !spawnSoundPacket.positional &&
+				spawnSoundPacket.attachedToNetsyncEntity == -1 )
+			{
+				// Short ambient sound effect.
+				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+			}
 		}
 		else if(packetType == (char)PacketType::RemoveSoundEffect)
 		{
-			//RemoveSoundEffectPacket data;
-			//data.unpack( packet );
-			//NetsyncDirectMapperSystem* directMapper =
-			//	static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-			//	SystemType::NetsyncDirectMapperSystem));
-			//Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
-			//if( entity != NULL )
-			//{
-			//	entity->removeComponent(ComponentType::PositionalSoundSource);
-			//	entity->applyComponentChanges();
-			//}
+			RemoveSoundEffectPacket data;
+			data.unpack( packet );
+			NetsyncDirectMapperSystem* directMapper =
+				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+			if( entity != NULL )
+			{
+				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->applyComponentChanges();
+			}
 		}
 		else if(packetType == (char)PacketType::Ping)
 		{
