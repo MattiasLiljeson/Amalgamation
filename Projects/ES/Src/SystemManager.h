@@ -60,6 +60,7 @@ public:
 	void initializeAll();
 	void updateSynchronous();
 	void notifySystems( IPerformer* p_performer, Entity* p_entity );
+	const double& getTotalSystemExecutionTime() const;
 
 private:
 	map<SystemType::SystemTypeIdx, EntitySystem*> m_systems;
@@ -68,6 +69,7 @@ private:
 	vector<EntitySystem*> m_systemList;
 	// For every system this vector contains a vector of every process() call execution time per second.
 	vector< double > m_systemsExecutionTimeMeasurements;
+	double m_totalSystemsExecutionTime;
 	unsigned int m_tickCounter;
 	double m_secondTimer;
 	PreciseTimer* m_executionTimer;

@@ -310,6 +310,11 @@ bool EntityWorld::shouldShutDown()
 	return m_shutdown;
 }
 
+const double& EntityWorld::getTotalSystemsTime() const
+{
+	return m_systemManager->getTotalSystemExecutionTime();
+}
+
 void EntityWorld::prePerformManagers()
 {
 	for( unsigned int i=0; i<m_managersBag.size(); i++ )
