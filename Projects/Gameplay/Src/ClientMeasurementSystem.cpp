@@ -6,6 +6,8 @@
 ClientMeasurementSystem::ClientMeasurementSystem()
 	: EntitySystem( SystemType::ClientMeasurementSystem )
 {
+	m_ESTime = 0.0;
+	m_deltaTime = 0.0;
 }
 
 ClientMeasurementSystem::~ClientMeasurementSystem()
@@ -14,6 +16,7 @@ ClientMeasurementSystem::~ClientMeasurementSystem()
 
 void ClientMeasurementSystem::process()
 {
+	m_ESTime = 1000.0 * ((double)m_world->getDelta() - m_world->getTotalSystemsTime());
 }
 
 void ClientMeasurementSystem::initialize()
@@ -55,6 +58,11 @@ void ClientMeasurementSystem::initialize()
 		AntTweakBarWrapper::MEASUREMENT, "Culled Frac: ",
 		TwType::TW_TYPE_FLOAT, cull->getCulledFractionPtr(),
 		"group='Culling'" );
+
+	//ES time
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "ES Time",
+		TwType::TW_TYPE_DOUBLE, &m_ESTime, "group='other'" );
 }
 
 void ClientMeasurementSystem::initMeasuredSystems()

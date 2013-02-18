@@ -60,9 +60,6 @@
     <ClInclude Include="SoundBufferAndHeader.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="SoundDeleteAfterPlayback.h">
-      <Filter>AudioEngine\Callbacks</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundWrapper.cpp">

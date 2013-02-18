@@ -378,17 +378,12 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 #ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
+	m_world->setSystem( audioBackend, true );
 	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
+	m_world->setSystem( audioController, true );
 	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
-
-	m_world->setSystem( SystemType::PositionalSoundSystem, new PositionalSoundSystem(),
-		true );
+	m_world->setSystem( audioListener, true );
+	m_world->setSystem( new PositionalSoundSystem(), true );
 #endif // ENABLE_SOUND
 
 	/************************************************************************/
@@ -396,14 +391,14 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DisplayPlayerScoreSystem(m_client), true );
 	m_world->setSystem( new ClientPickingSystem(m_client), true );
-	m_world->setSystem(new GameStatsSystem(), true);
+	m_world->setSystem( new GameStatsSystem(), true );
 	m_world->setSystem( new LightBlinkerSystem(), true );
 	m_world->setSystem( new ShieldPlatingSystem(), true );
 
 	/************************************************************************/
 	/* Animation															*/
 	/************************************************************************/
-	m_world->setSystem(new SkeletalAnimationSystem(), true );
+	m_world->setSystem( new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/
@@ -464,7 +459,7 @@ void ClientApplication::initEntities()
 	entity = m_world->createEntity();
 	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
-	entity->addComponent( new AudioListener());
+	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( -20.0f, 0.0f, -5.0f ) );
 	m_world->addEntity(entity);
 
