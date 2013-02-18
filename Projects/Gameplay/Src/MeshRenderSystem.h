@@ -46,6 +46,8 @@ public:
 	}
 
 private:
+	void fillInstanceData(InstanceData* p_data, Entity* p_entity);
+
 	bool shouldCull(Entity* p_entity);
 	void calcCameraPlanes();
 

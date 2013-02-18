@@ -92,7 +92,6 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_rendered++;
 		}
 
-		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
 		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
 			renderInfo->m_meshId);
@@ -103,6 +102,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 		instanceData.setGradientColor( matInfo.getGradientColors() );
 		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+		
 		
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
@@ -126,6 +126,21 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 	}
 	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
+}
+
+void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity){
+	
+	MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+		renderInfo->m_meshId);
+	auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(
+		ComponentType::Gradient));
+	if(gradient != NULL){ 
+		matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
+		matInfo.setGradientLayer(2,gradient->m_color.playerBig);
+	}
+	instanceData.setGradientColor( matInfo.getGradientColors() );
+	instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+	return;
 }
 
 void MeshRenderSystem::render()
@@ -175,38 +190,6 @@ bool MeshRenderSystem::shouldCull(Entity* p_entity)
 		}
 
 	}
-
-
-	//Bounding Sphere check
-	/*BoundingSphere* bs = static_cast<BoundingSphere*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingSphere ) );
-
-	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
-	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
-
-	if (!bs)
-		return false;
-
-	AglBoundingSphere sphere = bs->sphere;
-	sphere.position.transform(transform->getMatrix());
-	AglVector3 scale = transform->getScale();
-
-	sphere.radius *= max(scale.x, max(scale.y, scale.z));
-
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		float val = m_cameraPlanes[i].x * sphere.position.x + 
-					m_cameraPlanes[i].y * sphere.position.y +
-					m_cameraPlanes[i].z * sphere.position.z +
-					m_cameraPlanes[i].w * 1;
-		if (val + sphere.radius < 0 )
-		{
-			return true;
-		}
-
-	}*/
-
 	return false;
 }
 void MeshRenderSystem::calcCameraPlanes()
