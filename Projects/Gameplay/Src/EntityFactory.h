@@ -119,7 +119,7 @@ private:
 
 	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
-		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection );
+		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
 private:
 	map<string, Recipe*> m_entityRecipes;
 

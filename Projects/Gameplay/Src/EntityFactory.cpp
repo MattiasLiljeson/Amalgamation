@@ -309,19 +309,19 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			emitters = new ParticleSystemsComponent();
 			entity->addComponent( emitters );
 		}
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), // Down
-			AglVector3(0.0f, 0.0f, -1.0f));
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), // Forward
-			AglVector3(0.0f, 1.0f, 1.0f));
-		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), // Left
-			AglVector3(1.0f, 0.0f, 0.0f));
-		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), // Right
-			AglVector3(-1.0f, 0.0f, 0.0f));
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
+			AglVector3(0.0f, 0.0f, -1.0f), 0);
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
+			AglVector3(0.0f, 1.0f, 1.0f), 1);
+		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
+			AglVector3(-1.0f, 0.0f, 0.0f), 2);
+		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
+			AglVector3(1.0f, 0.0f, 0.0f), 3);
 
 		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
-		entity->addComponent( new AudioListener(1.0f )); // This is "moved" from the camera to the ship.
+		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 		entity->addComponent( new MyShip_TAG() );
 	}
 	entity->addComponent( new PlayerScore() );
@@ -824,7 +824,7 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 }
 
 void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
-	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection )
+	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex )
 {
 	AglParticleSystem particleSystem;
 	particleSystem.setSpawnPoint(p_spawnPosition);
@@ -839,10 +839,10 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleSystem.setFadeInStop(0.0f);
 	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
-	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_SPAWN_LOCAL);
 	particleSystem.getHeaderPtr()->modes = false;
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
-	p_emitters->addParticleSystemInstruction(particleInstruction);
+	p_emitters->addParticleSystemInstruction(particleInstruction, p_desiredIndex);
 }
