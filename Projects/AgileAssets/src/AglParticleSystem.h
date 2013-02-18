@@ -64,6 +64,7 @@ public:
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
 
 	AglParticleSystemHeader::AglSpace getSpace();
+	void setModes( int p_mode );
 	void setSpace( AglParticleSystemHeader::AglSpace p_space );
 
 	float getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir);

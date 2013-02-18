@@ -19,17 +19,18 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 
 ParticleRenderSystem::~ParticleRenderSystem()
 {
-	for(unsigned int i = 0; i < m_collections.size();i++)
-	{
-		/*delete m_particleSystems[i].first;*/
-	}
-	m_collections.clear();
+	m_additiveCollection.clear();
+	m_alphaCollection.clear();
+	m_multiplyCollection.clear();
 }
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	// Clear the old particle systems
-	m_collections.clear();
+	m_additiveCollection.clear();
+	m_alphaCollection.clear();
+	m_multiplyCollection.clear();
+
 
 	// get camera pos, for sorting
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
@@ -74,12 +75,27 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 					// Update only local particle systems (PS) as the PS's otherwise will get a 
 					// double transform
-					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL ) {
+					// HACK: always transform spawn until support has been added to the editor. /ML 
+					if( header.space == AglParticleSystemHeader::AglSpace_SPAWN_LOCAL || true ) {
 						particlesComp->setSpawn( transMat );
 					}
 
 					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
-					m_collections.push_back( ps );
+					switch( header.modes )
+					{
+						case AglParticleSystemHeader::AglBlendMode_ADDITIVE:
+							m_additiveCollection.push_back( ps );
+							break;
+						case AglParticleSystemHeader::AglBlendMode_ALPHA:
+							m_alphaCollection.push_back( ps );
+							break;
+						case AglParticleSystemHeader::AglBlendMode_MULTIPLY:
+							m_multiplyCollection.push_back( ps );
+							break;
+						default :
+							m_alphaCollection.push_back( ps );
+							break;
+					}
 				}
 			}
 		}
@@ -88,13 +104,42 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 void ParticleRenderSystem::render()
 {
+
+}
+
+void ParticleRenderSystem::renderAdditiveParticles()
+{
 	for( unsigned int collectionIdx=0;
-		collectionIdx<m_collections.size();
+		collectionIdx<m_additiveCollection.size();
 		collectionIdx++ )
 	{
-		ParticleSystemAndTexture* psAndTex = m_collections[collectionIdx].first;
-		Transform* transform = m_collections[collectionIdx].second;
+		ParticleSystemAndTexture* psAndTex = m_additiveCollection[collectionIdx].first;
+		Transform* transform = m_additiveCollection[collectionIdx].second;
+		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	}
+}
+
+void ParticleRenderSystem::renderAlphaParticles()
+{
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_alphaCollection.size();
+		collectionIdx++ )
+	{
+		ParticleSystemAndTexture* psAndTex = m_alphaCollection[collectionIdx].first;
+		Transform* transform = m_alphaCollection[collectionIdx].second;
 		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
 	}
 	
+}
+
+void ParticleRenderSystem::renderMultiplyParticles()
+{
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_multiplyCollection.size();
+		collectionIdx++ )
+	{
+		ParticleSystemAndTexture* psAndTex = m_multiplyCollection[collectionIdx].first;
+		Transform* transform = m_multiplyCollection[collectionIdx].second;
+		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	}
 }
