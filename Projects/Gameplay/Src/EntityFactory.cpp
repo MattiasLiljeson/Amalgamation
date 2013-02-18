@@ -52,7 +52,6 @@ EntityFactory::EntityFactory(TcpClient* p_client, TcpServer* p_server)
 {
 	m_client = p_client;
 	m_server = p_server;
-	m_playerCounter = 0;
 	//Player 1 color code
 	m_gradientColors.push_back(GradientMapping(
 		AglVector4(47.0f/255.0f,77.0f/255.0f,82.0f/255.0f,255.0f/255.0f),
@@ -284,13 +283,11 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		p_packet.scale);
 	entity->addComponent( ComponentType::Transform, transform );
 
-	//HACK!!!!
 	entity->addComponent(ComponentType::Gradient, new GradientComponent(
-		m_gradientColors[m_playerCounter].layerOne,
-		m_gradientColors[m_playerCounter].layerTwo) );
+		m_gradientColors[p_packet.playerID].layerOne,
+		m_gradientColors[p_packet.playerID].layerTwo) );
 
-	m_playerCounter++;
-	//END HACK!!!
+	//m_playerCounter++;
 
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));

@@ -377,6 +377,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 	WelcomePacket data;
 	data.unpack(p_packet);
 	m_tcpClient->setId( data.clientNetworkIdentity );
+	m_tcpClient->setPlayerID( data.playerID );
 
 	/************************************************************************/
 	/* Debug info!															*/

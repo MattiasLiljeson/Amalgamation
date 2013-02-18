@@ -26,6 +26,7 @@ public:
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
+		m_playerID = -1;
 		m_networkType = EntityType::NON_EXISTENT;
 		m_componentTypeId = ComponentType::NetworkSynced;
 	}
@@ -41,6 +42,7 @@ public:
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
+		m_playerID = -1;
 		m_networkType = EntityType::NON_EXISTENT;
 		m_componentTypeId = ComponentType::NetworkSynced;
 	}
@@ -51,6 +53,17 @@ public:
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
+		m_playerID = -1;
+		m_networkType = p_networkType;
+		m_componentTypeId = ComponentType::NetworkSynced;
+	}	
+	NetworkSynced( int p_networkIdentity, int p_owner, int p_playerID,
+		EntityType::EntityEnums p_networkType )
+		: Component( ComponentType::NetworkSynced )
+	{
+		m_networkIdentity = p_networkIdentity;
+		m_owner = p_owner;
+		m_playerID = p_playerID;
 		m_networkType = p_networkType;
 		m_componentTypeId = ComponentType::NetworkSynced;
 	}
@@ -77,6 +90,9 @@ public:
 		return m_owner;
 	}
 
+	int getPlayerID() const{
+		return m_playerID;
+	}
 	///-----------------------------------------------------------------------------------
 	/// Get the network type.
 	/// \return NetworkType
@@ -114,5 +130,6 @@ public:
 private:
 	int m_networkIdentity;
 	int m_owner;
+	int m_playerID;
 	EntityType::EntityEnums m_networkType;
 };

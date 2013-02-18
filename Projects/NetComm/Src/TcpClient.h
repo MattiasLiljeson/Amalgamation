@@ -55,6 +55,9 @@ public:
 	int* getIdPointer();
 	void setId( int p_id );
 
+	int getPlayerID();
+	void setPlayerID( int p_playerId );
+
 	unsigned int getNumberOfSentPackets();
 	unsigned int getNumberOfReceivedPackets();
 	unsigned int getTotalDataSent();
@@ -86,7 +89,7 @@ private:
 	queue< Packet > m_newPackets;
 
 	int m_id;
-
+	int m_playerId;
 	unsigned int m_numberOfSentPackets;
 	unsigned int m_totalPacketsPopped;
 	unsigned int m_totalDataSent;
