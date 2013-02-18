@@ -611,7 +611,11 @@
     </ClInclude>
     <ClInclude Include="LevelInfo.h">
       <Filter>Components</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+    <ClInclude Include="LevelInfoLoader.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -1013,5 +1017,9 @@
     </ClCompile>
     <ClCompile Include="LevelInfo.cpp">
       <Filter>Components</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="LevelInfoLoader.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

@@ -23,10 +23,21 @@ public:
 	~LevelInfo();
 
 	void init( vector<ComponentData> p_initData );
+	const vector<LevelPieceFileData*>& getFileData() const;
+	LevelPieceFileData* getRandomFileData() const; // NOTE: Uses weight
+	LevelPieceFileData* getStartFileData() const;
+	LevelPieceFileData* getFileDataFromId(int p_id) const;
+	int getBranchCount() const;
+
+private:
+	void addWeightData(LevelPieceFileData* p_fromFileData);
+
 private:
 	vector<LevelPieceFileData*> m_fileData;
+	vector<int>					m_weightData;
 	int		m_branchCount;
 	bool	m_randomStartRotation;
-	
+	int		m_startPieceId;
+
 	static ComponentRegister<LevelInfo> s_reg;
 };

@@ -12,6 +12,7 @@ class TcpServer;
 class EntityFactory;
 struct ModelResource;
 struct AglVector3;
+class LevelInfo;
 
 using namespace std;
 // =======================================================================================
@@ -67,10 +68,11 @@ private:
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
 	virtual void inserted( Entity* p_entity );
-
+	virtual void removed( Entity* p_entity );
 
 	//ModelBaseFactory m_unmanagedModelFactory;
 	EntityFactory*	m_entityFactory;
+	LevelInfo* m_levelInfo; // This is a component, be cautious!
 
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;

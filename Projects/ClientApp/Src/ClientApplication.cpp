@@ -103,7 +103,7 @@
 #include <ClientEntityCountSystem.h>
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
-
+#include <LevelInfoLoader.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -228,7 +228,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
 	m_world->setSystem( levelHandler, true);
-
+	m_world->setSystem( new LevelInfoLoader(), true );
 
 	/************************************************************************/
 	/* Mesh loading															*/

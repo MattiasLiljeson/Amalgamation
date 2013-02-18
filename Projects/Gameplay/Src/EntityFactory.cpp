@@ -43,6 +43,8 @@
 #include "LevelPieceRoot.h"
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
+#include "LevelInfoLoader.h"
+#include "LevelPieceFileMapping.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -725,7 +727,10 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// changed during refactoring by Jarl 30-1-2013
 		// use an assemblage, like this:
 		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
-		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
+		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
+			m_world->getSystem(SystemType::LevelInfoLoader));
+		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo );
+		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
 		entity = entityFromRecipe( asdName );
 	}
 	else	

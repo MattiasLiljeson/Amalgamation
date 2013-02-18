@@ -33,7 +33,7 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 	m_worldMax = AglVector3((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
 
 	m_entityFactory = NULL;
-
+	m_levelInfo		= NULL;
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -51,30 +51,10 @@ void LevelGenSystem::initialize()
 	//	m_entityFactory->readAssemblageFile( "Assemblages/rocksServer.asd" );
 	//status = 
 	//	m_entityFactory->readAssemblageFile( "Assemblages/tunnelServer.asd" );
+
 	preloadLevelGenRecipeEntity("Assemblages/LevelGenServer.asd");
 
-	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
-		m_world->getSystem(SystemType::LoadMeshSystem));
-	for (int i = 0; i < m_modelFileMapping.getModelFileCount() - 1; i++)
-	{
-		string modelName = m_modelFileMapping.getModelFileName(i);	
 
-		// Preload chamber models here. This is required, and must be done before an
-		// entity is created.
-		auto resourcesFromModel = loadMeshSys->createModels(modelName,
-			MODELPATH, false);
-
-		ModelResource* rootResource = resourcesFromModel->at(0);
-		
-		// Calculate the entire chamber's collision sphere.
-		// NOTE: Uncertain whether or not this value should be multiplied by 2 or not
-		// before being used.
-		calculatePieceCollision(resourcesFromModel);
-
-		m_modelResources.push_back( rootResource );
-
-		//delete resourcesFromModel;
-	}
 }
 
 void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMesh )
@@ -130,9 +110,49 @@ void LevelGenSystem::preloadLevelGenRecipeEntity(const string& p_filePath)
 
 void LevelGenSystem::inserted( Entity* p_entity )
 {
-	auto levelInfo = static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
+	m_levelInfo = static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
 	// TODO: parse levelInfo and generate!
-	int i = 0;
+
+	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
+		m_world->getSystem(SystemType::LoadMeshSystem));
+
+	vector<LevelPieceFileData*> fileData = m_levelInfo->getFileData();
+	for (int i = 0; i < fileData.size(); i++)
+	{
+		string modelName = fileData[i]->modelFileName;	
+
+		// Preload chamber models here. This is required, and must be done before an
+		// entity is created.
+		auto resourcesFromModel = loadMeshSys->createModels(modelName,
+			MODELPATH, false);
+
+		ModelResource* rootResource = resourcesFromModel->at(0);
+
+		// Preload the chamber assemblages.
+		m_entityFactory->readAssemblageFile("Assemblages/"+fileData[i]->assemblageFileName,
+											&fileData[i]->assemblageName);
+
+		// Calculate the entire chamber's collision sphere.
+		// NOTE: Uncertain whether or not this value should be multiplied by 2 or not
+		// before being used.
+		calculatePieceCollision(resourcesFromModel);
+
+		m_modelResources.push_back( rootResource );
+
+		//delete resourcesFromModel;
+	}
+
+	// Temp: This is to make sure the system works.
+	srand(static_cast<unsigned int>(time(NULL)));
+	generateLevelPieces(m_levelInfo->getBranchCount());
+	createLevelEntities();
+
+	m_world->deleteEntity(p_entity);
+}
+
+void LevelGenSystem::removed( Entity* p_entity )
+{
+	m_levelInfo = NULL;
 }
 
 void LevelGenSystem::clearGeneratedData()
@@ -168,7 +188,8 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
-	LevelPiece* piece = new LevelPiece( 0, m_modelResources[0], transform);
+	int id = m_levelInfo->getStartFileData()->id;
+	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform);
 
 	// Create the entity and specify a mesh for it
 	//createAndAddEntity(0, transform, piece->getBoundingBox());
@@ -202,7 +223,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId )
 {
 	Entity* entity = m_entityFactory->entityFromRecipe( 
-		m_modelFileMapping.getAssemblageFileName( p_piece->getTypeId() ) );
+		m_levelInfo->getFileDataFromId( p_piece->getTypeId() )->assemblageName );
 	
 	if (!entity)
 	{

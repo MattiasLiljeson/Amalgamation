@@ -23,6 +23,7 @@ struct LevelPieceFileData
 	int		id;
 	string	modelFileName;
 	string	assemblageName;
+	string	assemblageFileName;
 	int		weight; // Weight not yet implemented
 };
 

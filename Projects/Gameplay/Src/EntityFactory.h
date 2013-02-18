@@ -8,13 +8,13 @@
 #include "EntityCreationPacket.h"
 #include <TcpClient.h>
 #include <TcpServer.h>
-#include "LevelPieceFileMapping.h"
 #include "ParticleSystemsComponent.h"
 #include "GradientMapping.h"
 
 class Entity;
 class EntityWorld;
 class AssemblageReader;
+class LevelInfo;
 
 using namespace std;
 
@@ -127,8 +127,6 @@ private:
 
 	TcpClient* m_client;
 	TcpServer* m_server;
-
-	LevelPieceFileMapping m_levelPieceMapping;
 
 private:
 	vector<GradientMapping> m_gradientColors;

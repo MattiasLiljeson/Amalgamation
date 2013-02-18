@@ -57,6 +57,7 @@
     <ClInclude Include="InputActionsBackendSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
     <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LevelInfoLoader.h" />
     <ClInclude Include="LevelGenSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="LevelInfoLoader.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelHandlerSystem.cpp" />
     <ClCompile Include="LevelInfo.cpp" />

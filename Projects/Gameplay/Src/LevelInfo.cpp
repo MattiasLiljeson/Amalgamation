@@ -1,5 +1,6 @@
 #include "LevelInfo.h"
 #include "LevelPieceFileMapping.h"
+#include <random>
 
 ComponentRegister<LevelInfo> LevelInfo::s_reg("LevelInfo");
 
@@ -41,11 +42,15 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 			if (data == "begin")
 				pieceData = new LevelPieceFileData();
 			else // If not begin, then the data is assumed to be "end"
+			{
+				pieceData->id = m_fileData.size();
 				m_fileData.push_back(pieceData);
+				addWeightData(pieceData);
+			}
 		}
-		else if (p_initData[i].dataName == "m_pieceAssemblageName")
+		else if (p_initData[i].dataName == "m_pieceAssemblageFileName")
 		{
-			p_initData[i].getDataAsString(&pieceData->assemblageName);
+			p_initData[i].getDataAsString(&pieceData->assemblageFileName);
 		}
 		else if (p_initData[i].dataName == "m_pieceModelName")
 		{
@@ -55,5 +60,42 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&pieceData->weight);
 		}
+		else if (p_initData[i].dataName == "m_startPieceId")
+		{
+			p_initData[i].getData<int>(&m_startPieceId);
+		}
 	}
 }
+
+const vector<LevelPieceFileData*>& LevelInfo::getFileData() const
+{
+	return m_fileData;
+}
+
+LevelPieceFileData* LevelInfo::getRandomFileData() const
+{
+	return m_fileData[ m_weightData[ rand() % m_weightData.size() ] ];
+}
+
+LevelPieceFileData* LevelInfo::getFileDataFromId( int p_id ) const
+{
+	return m_fileData[p_id];
+}
+
+LevelPieceFileData* LevelInfo::getStartFileData() const
+{
+	return m_fileData[m_startPieceId];
+}
+
+int LevelInfo::getBranchCount() const
+{
+	return m_branchCount;
+}
+
+void LevelInfo::addWeightData( LevelPieceFileData* p_fromFileData )
+{
+	for (int w = 0; w < p_fromFileData->weight; w++)
+		m_weightData.push_back(p_fromFileData->id); // Pushes back the pieceFileId w times.
+}
+
+
