@@ -4,6 +4,7 @@
 #include <Rocket/Core/Event.h>
 #include "LibRocketEventManagerSystem.h"
 #include "InputBackendSystem.h"
+#include "LevelHandlerSystem.h"
 #include "GameState.h"
 
 ClientConnectToServerSystem::ClientConnectToServerSystem(TcpClient* p_tcpClient,
@@ -50,6 +51,10 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 
 		// Clears and hides all currently visible documents.
 		eventManagerSys->clearDocumentStack();
+		
+		auto levelHandler = static_cast<LevelHandlerSystem*>(
+			m_world->getSystem(SystemType::LevelHandlerSystem));
+		levelHandler->destroyLevel();
 	}
 	else if(p_entities.size() > 0)
 	{

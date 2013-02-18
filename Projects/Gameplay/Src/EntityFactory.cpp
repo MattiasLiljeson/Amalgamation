@@ -38,6 +38,10 @@
 #include "EntityParent.h"
 #include "ShieldPlate.h"
 #include "ShieldModuleActivationClient.h"
+#include "SpeedBoosterModule.h"
+#include "ParticleSystemServerComponent.h"
+#include "LevelPieceRoot.h"
+#include "ParticleSystemEmitter.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -252,41 +256,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		component = new ShipFlyController(3.0f, 100.0f);
 		entity->addComponent( ComponentType::ShipFlyController, component );
-
 		component = new ShipEditController();
 		entity->addComponent( ComponentType::ShipEditController, component);
-
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
-	
-		// hardcoded
-		/*ConnectionPointSet* connectionPointSet = new ConnectionPointSet();
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(2.5f, 0, 0))));
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(-2.5f, 0, 0))));
-		connectionPointSet->m_connectionPoints.push_back(ConnectionPoint(
-			AglMatrix::createTranslationMatrix(AglVector3(0, 2.5f, 0))));
-		entity->addComponent(ComponentType::ConnectionPointSet, connectionPointSet);*/
-		// NOTE: (Johan) Moved the audio listener to the ship instead of the camera
-		// because it was really weird to hear from the camera. This can of course
-		// be changed back if game play fails in this way, but it's at least more
-		// convenient for debugging!
-		/*component = new AudioListener();
-		entity->addComponent(ComponentType::AudioListener, component);*/
-
-		/************************************************************************/
-		/* This is where the audio listener is created and therefor the master  */
-		/* volume is added to Ant Tweak Bar here.								*/
-		/************************************************************************/
-		/************************************************************************/
-		/* Sorry. This breaks the server, so it must be moved out of here when	*/
-		/* needed. */
-		/************************************************************************/
-//		AntTweakBarWrapper::getInstance()->addWriteVariable( 
-//			AntTweakBarWrapper::OVERALL,
-//			"Master_volume", TwType::TW_TYPE_FLOAT, 
-//			static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-//			"group=Sound min=0 max=10 step=0.001 precision=3");
+		
+		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), AglVector3(0.0f, 1.0f, 1.0f)); // Forward
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), AglVector3(0.0f, 0.0f, -1.0f)); // Down
+		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), AglVector3(1.0f, 0.0f, 0.0f)); // Left
+		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), AglVector3(-1.0f, 0.0f, 0.0f)); // Right
+		entity->addComponent(emitters);
 	}
 
 	component = new PlayerScore();
@@ -403,18 +382,26 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
+	Entity* entity = entityFromRecipe( "ServerMinigun" );
+
+	ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+	psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+	entity->addComponent( psServerComp );
+
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
 	// read basic assemblage
-	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/SpeedBooster.asd"  );
+	entity = entityFromRecipeOrFile( "SpeedBooster", "Assemblages/Modules/SpeedBooster/ClientSpeedBooster.asd");
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
@@ -425,7 +412,14 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createSpeedBoosterServer(EntityCreationPacket p_packet)
 {
-	return NULL;
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/SpeedBooster/ServerSpeedBooster.asd" );
+	Entity* entity = entityFromRecipe( "SpeedBooster" );
+
+	entity->addComponent(ComponentType::SpeedBoosterModule, new SpeedBoosterModule());
+	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::BoosterModule));
+
+	m_world->addEntity(entity);
+	return entity;
 }
 Entity* EntityFactory::createModuleClient(EntityCreationPacket p_packet)
 {
@@ -675,7 +669,9 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
 		// changed during refactoring by Jarl 30-1-2013
 		// use an assemblage, like this:
-		entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
+		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
+		entity = entityFromRecipe( asdName );
 	}
 	else	
 	{
@@ -685,10 +681,27 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
 	}
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
+	// Try fetch a transform component if it exists.
+	Transform* transform = NULL;
+	if (entity)
+	{	
+		transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+		if (transform)
+		{
+			// Update the existing transform
+			transform->setTranslation(p_packet.translation);
+			transform->setRotation(p_packet.rotation);
+			transform->setScale(p_packet.scale);
+		}
+		// If this else block is ran, is means no transform as been specified in the assemblage file
+		else
+		{
+			transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+			entity->addComponent( transform );
+		}
 
-	m_world->addEntity(entity);
+		m_world->addEntity(entity);
+	}
 	return entity;
 }
 Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
@@ -749,4 +762,28 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 	final=clock()-init;
 	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
 	return entity;
+}
+
+void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
+	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection )
+{
+	AglParticleSystem particleSystem;
+	particleSystem.setSpawnPoint(p_spawnPosition);
+	particleSystem.setSpawnDirection(p_spawnDirection);
+	particleSystem.setParticleAge(1.0f);
+	particleSystem.setSpawnSpeed(1.0f);
+	particleSystem.setSpawnFrequency(1.0f);
+	particleSystem.setParticlesPerSpawn(100);
+	particleSystem.setSpreadType(AglParticleSystemHeader::INSPACE);
+	particleSystem.setSpread(0.21f);
+	particleSystem.setFadeOutStart(0.0f);
+	particleSystem.setFadeInStop(0.0f);
+	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
+	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.getHeaderPtr()->relative = false;
+	ParticleSystemInstruction particleInstruction;
+	particleInstruction.textureFileName = "red-spot.png";
+	particleInstruction.particleSystem = particleSystem;
+	p_emitters->addParticleSystemInstruction(particleInstruction, 0);
 }

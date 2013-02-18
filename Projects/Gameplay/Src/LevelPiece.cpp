@@ -24,7 +24,9 @@ LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* 
 
 LevelPiece::~LevelPiece()
 {
-	// Don't delete the transform here, since it is active in ES.
+	// Delete main piece now, as it will be used as a copy for the created entity later,
+	// and not be owned by ES
+	deleteMainTransform();
 }
 
 vector<int> LevelPiece::findFreeConnectionPointSlots()
@@ -68,10 +70,11 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	AglVector3 tempScale = m_transform->getScale();
 
 	// Rotate the connection point arbitrarily around its forward!
-	Transform transform = m_connectionPoints[0];
-	transform.setRotation(transform.getRotation() 
-		* AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(), (rand() % 360) * 3.1415f / 180.0f));
-	m_connectionPoints[0] = transform;
+	// NOTE: Should be enabled again shortly.
+	//Transform transform = m_connectionPoints[0];
+	//transform.setRotation(transform.getRotation() 
+	//	* AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(), (rand() % 360) * 3.1415f / 180.0f));
+	//m_connectionPoints[0] = transform;
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.
@@ -79,7 +82,7 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	m_transform->setScale(tempScale);
 	updateConnectionPoints();
 
-	// 1.5) if step2 fails, flip forward vector using target connector and create matrix blä.
+	// 2) Flip forward vector using target connector and create a temp matrix.
 	//AglMatrix mat = p_targetPiece->getConnectionPointMatrix(p_targetSlot);
 	//mat.SetForward( mat.GetBackward() );
 	Transform temp = p_targetPiece->getConnectionPoint(p_targetSlot);
@@ -92,10 +95,14 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	//				temp.getRotation() * AglQuaternion::constructFromAxisAndAngle(temp.getForward(), 3.1415f),
 	//				temp.getTranslation() );
 
-	// 2) Transform this piece and connection points with target piece connector matrix or blä.
+	// 3) Transform this piece and connection points with target piece connector matrix or blä.
 	m_transform->setMatrix( m_transform->getMatrix() * temp.getMatrix() );
 	//m_transform->setMatrix( m_transform->getMatrix() * mat );
 	m_transform->setScale(temp.getScale());
+
+	// NOTE: This is most likely a temporary solution, since the bounding sphere is going
+	// to be ridiculously large if the scale is altered.
+	m_transform->setScale(AglVector3::one());
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!

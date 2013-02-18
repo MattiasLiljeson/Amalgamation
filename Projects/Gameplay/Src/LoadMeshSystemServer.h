@@ -27,7 +27,6 @@ public:
 	LoadMeshSystemServer();
 	virtual ~LoadMeshSystemServer();
 	virtual void initialize();
-private:
 	///-----------------------------------------------------------------------------------
 	/// A way to generate model resources
 	/// \return vector<ModelResource*>*
@@ -36,7 +35,7 @@ private:
 		const string& p_filePath,
 		bool p_isPrimitive);
 
-
+private:
 	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 
 		BodyInitData* p_rootRigidBodyData,
 		PhysicsBody* p_rootPhysicsBody,

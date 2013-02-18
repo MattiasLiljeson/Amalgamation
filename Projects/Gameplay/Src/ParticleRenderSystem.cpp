@@ -7,6 +7,7 @@
 #include "ParticleSystemsComponent.h"
 #include <AglParticleSystemHeader.h>
 #include <ParticleSystemAndTexture.h>
+#include "MeshOffsetTransform.h"
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::ParticleRenderSystem, 2,
@@ -48,6 +49,9 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::Transform ) );
 
+		MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+			p_entities[i]->getComponent( ComponentType::MeshOffsetTransform ) );
+
 		ParticleSystemsComponent* particlesComp = static_cast<ParticleSystemsComponent*>(
 			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
@@ -59,44 +63,27 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				ParticleSystemAndTexture* psAndTex = particlesComp->getParticleSystemAndTexturePtr(i);
 				if( psAndTex != NULL ) {
-					
-					//AglMatrix finalMat;
-					//AglMatrix baseMat = transform->getMatrix();
-					//finalMat = lights->at(j).offsetMat * baseMat;
-
-					//s
-
-					//AglQuaternion rot = finalMat.GetRotation();
-					//AglMatrix rotMat = AglMatrix::createRotationMatrix(rot);
-					//AglVector3 dir( 0.0f, 0.0f, 1.0f);
-					//dir.transform( rotMat );
-
-					//LightInstanceData inst = lights->at(j).instanceData;
-					//inst.lightDir[0] = dir.x;
-					//inst.lightDir[1] = dir.y;
-					//inst.lightDir[2] = dir.z;
-					//inst.setWorldTransform( finalMat );
-					//
-					//
 					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					//header.
+					AglMatrix transMat = transform->getMatrix();
+
+					// Offset agl-loaded meshes by their offset matrix
+					if( offset != NULL ) {
+						transMat = offset->offset.inverse() * transMat;
+					}
 
 					// Update only local particle systems (PS) as the PS's otherwise will get a 
 					// double transform
 					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
-						particlesComp->setSpawn( transform->getTranslation(), transform->getRotation() );
+						particlesComp->setSpawn( transMat );
 					}
-					// Always scale the particle effect according to it's entity
-					//particlesComp->setScale( AglVector2( transform->getScale().x, transform->getScale().x ) );
-					particlesComp->getParticleSystemPtr(0)->setSpawnSpeed( transform->getScale().x );
 
-					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
+					static Transform* test = new Transform(AglMatrix::identityMatrix());
+					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, test );
 					m_collections.push_back( ps );
 				}
 			}
 		}
-		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
 }
 

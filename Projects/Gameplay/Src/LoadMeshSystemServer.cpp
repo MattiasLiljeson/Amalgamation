@@ -48,10 +48,15 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 			AglQuaternion::identity(),
 			AglVector3(1, 1, 1), AglVector3(0, 0, 0), 
 			AglVector3(0, 0, 0), 0);
+
+		AglVector3		basePosition	= baseTransform.GetTranslation();
+		AglVector3		baseScale		= baseTransform.GetScale();
+		AglQuaternion	baseRotation	= baseTransform.GetRotation();
+
 		// Copy from parent
-		b->m_position		= baseTransform.GetTranslation();
-		b->m_orientation	= baseTransform.GetRotation();
-		b->m_scale			= baseTransform.GetScale();
+		b->m_position		= basePosition;
+		b->m_orientation	= baseRotation;
+		b->m_scale			= baseScale;
 		b->m_velocity			= p_rootRigidBodyData->m_velocity;
 		b->m_angularVelocity	= p_rootRigidBodyData->m_angularVelocity;
 		b->m_collisionEnabled	= p_rootRigidBodyData->m_collisionEnabled;

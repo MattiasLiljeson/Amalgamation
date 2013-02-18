@@ -124,6 +124,12 @@ void EntityWorld::addEntity( Entity* p_entity )
 {
 	if( p_entity != NULL )
 	{
+		// Add only to vector if not already in the m_added vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_added.size(); i++ )
+			if( m_added[i] == p_entity )
+				return;
+
 		m_added.push_back(p_entity);
 	}
 }
@@ -132,6 +138,12 @@ void EntityWorld::changedEntity( Entity* p_entity )
 {
 	if( p_entity != NULL )
 	{
+		// Add only to vector if not already in the m_changed vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_changed.size(); i++ )
+			if( m_changed[i] == p_entity )
+				return;
+
 		m_changed.push_back(p_entity);
 	}
 }
@@ -154,6 +166,12 @@ void EntityWorld::enable( Entity* p_entity )
 {
 	if( p_entity != NULL )
 	{
+		// Add only to vector if not already in the m_enable vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_enable.size(); i++ )
+			if( m_enable[i] == p_entity )
+				return;
+
 		m_enable.push_back(p_entity);
 	}
 }
@@ -162,6 +180,12 @@ void EntityWorld::disable( Entity* p_entity )
 {
 	if( p_entity != NULL )
 	{
+		// Add only to vector if not already in the m_disable vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_deleted.size(); i++ )
+			if( m_disable[i] == p_entity )
+				return;
+
 		m_disable.push_back(p_entity);
 	}
 }

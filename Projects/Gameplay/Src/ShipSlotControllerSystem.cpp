@@ -7,6 +7,9 @@
 #include <TcpClient.h>
 #include "AudioBackendSystem.h"
 #include <Globals.h>
+#include "ParticleSystemsComponent.h"
+#include "ParticleSystemAndTexture.h"
+#include <AglParticleSystem.h>
 
 SlotInputControllerSystem::SlotInputControllerSystem(InputBackendSystem* p_inputBackend,
 										 TcpClient* p_client)
@@ -48,15 +51,31 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 	}
 	else
 	{
+		Entity* myShip = m_world->getEntityManager()->getFirstEntityByComponentType(
+			ComponentType::TAG_MyShip);
+		ParticleSystemsComponent* particles = static_cast<ParticleSystemsComponent*>(
+			myShip->getComponent(ComponentType::ParticleSystemsComponent));
 		int highlight = -1;
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
+		{
 			highlight = 0;
+			particles->getParticleSystemAndTexturePtr(2)->particleSystem.restart();
+		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
+		{
 			highlight = 1;
+			particles->getParticleSystemAndTexturePtr(1)->particleSystem.restart();
+		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
+		{
 			highlight = 2;
+			particles->getParticleSystemAndTexturePtr(3)->particleSystem.restart();
+		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
+		{
 			highlight = 3;
+			particles->getParticleSystemAndTexturePtr(0)->particleSystem.restart();
+		}
 
 		if (highlight >= 0)
 		{

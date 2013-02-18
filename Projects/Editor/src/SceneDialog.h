@@ -37,7 +37,7 @@ private:
 	static void TW_CALL AddMaterial(void *clientData);
 	void				AddMaterial(AglMaterial* pMaterial);
 	static void TW_CALL AddPE(void* clientData);
-	void				AddPE(AglParticleSystem* pParticleSystem);
+	void				AddPE(AglParticleSystem* pParticleSystem, int p_index);
 
 	static void TW_CALL SetCOSystem(void *clientData);
 public:

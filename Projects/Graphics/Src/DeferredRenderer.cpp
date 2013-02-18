@@ -258,7 +258,7 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/ssaoGenerate.hlsl");
 		
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
-		L"Shaders/Game/deferredAnimatedBase.hlsl");
+		L"Shaders/Game/deferredAnimatedBaseTess.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");

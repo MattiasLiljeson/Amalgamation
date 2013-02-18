@@ -114,7 +114,6 @@ AglBoundingSphere::AglBoundingSphere(AglVector3 p_p1, AglVector3 p_p2, AglVector
 }												
 
 
-
 bool AglBoundingSphere::pointInSphere(AglVector3 p_point)
 {
 	AglVector3 dir = p_point - position;
@@ -128,6 +127,29 @@ bool AglBoundingSphere::pointInSphereMargin(AglVector3 p_point, float p_margin)
 	if (AglVector3::lengthSquared(dir) < (radius + p_margin) * (radius + p_margin))
 		return true;
 	return false;
+}
+
+AglBoundingSphere AglBoundingSphere::mergeSpheres(const AglBoundingSphere& p_s1,
+												  const AglBoundingSphere& p_s2)
+{
+	AglVector3 dVec = p_s2.position - p_s1.position;
+	float dist2 = AglVector3::dotProduct(dVec, dVec);
+	if ((p_s2.radius-p_s1.radius)*(p_s2.radius-p_s1.radius) >= dist2)
+	{
+		if (p_s1.radius > p_s2.radius)
+			return p_s1;
+		else
+			return p_s2;
+	}
+	else
+	{
+		AglBoundingSphere s;
+		float dist = sqrt(dist2);
+		s.radius = (dist+p_s1.radius+p_s2.radius)*0.5f;
+		s.position = p_s1.position;
+		s.position += dVec * ((s.radius-p_s1.radius) / dist);
+		return s;
+	}
 }
 
 AglBoundingSphere AglBoundingSphere::minimumBoundingSphere(const vector<AglVector3>& p_points)

@@ -57,7 +57,7 @@ struct AglParticleSystemHeader{
 	AglAlignmentType	alignmentType;
 	float				spawnRotation;
 	float				spawnRotationOffset;
-	int					relative; // DEPRECATED, use AglSpace: None, LOCAL och GLOBAL
+	int					relative; // DEPRECATED, use AglSpace: NONE, LOCAL or GLOBAL
 	int					space; // used together with AglSpace 
 
 	AglParticleSystemHeader()

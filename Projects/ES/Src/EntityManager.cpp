@@ -64,12 +64,14 @@ void EntityManager::disabled( Entity* p_entity )
 void EntityManager::deleted( Entity* p_entity )
 {
 	m_disabled[p_entity->getIndex()] = false;
-	m_availableIds.push(p_entity->getIndex());
+	//m_availableIds.push(p_entity->getIndex()); Done in postPerform to ensure everything
+	//is recycled without errors.
 	
 	// can we delete here? Alex says: NO!!!! are there still references? 
 	//delete m_entities[p_entity->getIndex()];
 	// Deletion needs to be done in postPerform! Add the entity to that list instead.
-	m_entities[p_entity->getIndex()] = NULL;
+	// Setting the entity in the list to null also needs to be done in postPerform
+	//m_entities[p_entity->getIndex()] = NULL;
 	m_deleteOnPost.push_back(p_entity);
 
 	// NO!!!
@@ -84,6 +86,8 @@ void EntityManager::postPerform()
 	// Delete entities here!
 	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
 	{
+		m_availableIds.push(m_deleteOnPost[i]->getIndex());
+		m_entities[m_deleteOnPost[i]->getIndex()] = NULL;
 		delete m_deleteOnPost[i];
 	}
 	m_deleteOnPost.clear();
@@ -131,7 +135,7 @@ Entity* EntityManager::getFirstEntityByComponentType( ComponentType::ComponentTy
 {
 	for(unsigned int i=0; i<m_entities.size(); i++)
 	{
-		if(m_entities[i]->getComponent( p_componentType ) != NULL)
+		if(m_entities[i] && m_entities[i]->getComponent( p_componentType ) != NULL)
 		{
 			return m_entities[i];
 		}

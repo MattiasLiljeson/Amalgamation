@@ -124,7 +124,7 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
 		for (unsigned int i = 0; i < ps.size(); i++)
 		{
-			sceneDialog->AddPE(ps[i]->getParticleSystem());
+			sceneDialog->AddPE(ps[i]->getParticleSystem(), i);
 		}
 
 		TwAddVarRW(sceneDialog->m_dialog, "Draw Scene Planes", TW_TYPE_BOOLCPP, Scene::GetInstance()->getDrawPlanes(), "group='Debug'");
@@ -154,15 +154,15 @@ void SceneDialog::AddMaterial(AglMaterial* pMaterial)
 void TW_CALL SceneDialog::AddPE(void* clientData)
 {
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	sceneDialog->AddPE(new AglParticleSystem());
+	sceneDialog->AddPE(new AglParticleSystem(), Scene::GetInstance()->GetParticleSystems().size()-1);
 }
-void SceneDialog::AddPE(AglParticleSystem* pParticleSystem)
+void SceneDialog::AddPE(AglParticleSystem* pParticleSystem, int p_index)
 {
 	if (Scene::GetInstance()->GetIndex(pParticleSystem) < 0)
 		Scene::GetInstance()->AddParticleSystem(pParticleSystem);
 	string s = "NoName";
 	string info = " label='" + s + "' group='Particle Effects'";
-	int index = Scene::GetInstance()->GetParticleSystems().size()-1;
+	int index = p_index;
 	TwAddButton(m_dialog, ("Particle Effect" + toString(index)).c_str(), OpenParticleSystemDialog, (void*)index, info.c_str());
 }
 void SceneDialog::ClonePE(AglParticleSystemHeader pHeader)

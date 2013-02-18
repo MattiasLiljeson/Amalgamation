@@ -6,6 +6,7 @@
 #include <Globals.h>
 #include <ParticleSystemAndTexture.h>
 #include <AglMatrix.h>
+#include <AglQuaternion.h>
 
 ParticleSystemsComponent::ParticleSystemsComponent()
 	: Component( ComponentType::ParticleSystemsComponent )
@@ -138,20 +139,18 @@ void ParticleSystemsComponent::updateParticleSystems( const float p_dt,
 	}
 }
 
-void ParticleSystemsComponent::setSpawn( const AglVector3& p_spawnPoint,
-								const AglQuaternion& p_rotation )
+void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base )
 {
 	for( unsigned int i=0; i<m_particleSystems.size(); i++ ) {
 		if( m_particleSystems[i].second != NULL ) {
 			AglParticleSystem* ps = &m_particleSystems[i].second->particleSystem;
 			AglParticleSystemHeader* header = &m_particleSystems[i].second->psOriginalSettings;
 
-			ps->setSpawnPoint( p_spawnPoint );
+			AglVector3 newPos = header->spawnPoint;
+			newPos.transform( p_base );
 
-			AglVector3 newDir = header->spawnDirection;
-			AglMatrix rotMat = AglMatrix::createRotationMatrix( p_rotation ); 
-			newDir.transform( rotMat );
-			ps->setSpawnDirection( newDir );
+			ps->setSpawnPoint( newPos );
+			ps->setSpawnDirection( -p_base.GetForward() );
 		}
 	}
 }

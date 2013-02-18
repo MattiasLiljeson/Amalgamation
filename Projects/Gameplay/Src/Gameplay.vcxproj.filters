@@ -345,9 +345,6 @@
     <ClInclude Include="ShipManagerSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="LevelPieceFileMapping.h">
-      <Filter>Systems\Level Gen</Filter>
-    </ClInclude>
     <ClInclude Include="ExtrapolationSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -595,6 +592,18 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHelper.h" />
+    <ClInclude Include="LevelPieceInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceFileMapping.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelHandlerSystem.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceRoot.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -795,9 +804,6 @@
     <ClCompile Include="ShipManagerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="LevelPieceFileMapping.cpp">
-      <Filter>Systems\Level Gen</Filter>
-    </ClCompile>
     <ClCompile Include="ExtrapolationSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
@@ -988,5 +994,14 @@
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="ModuleHelper.cpp" />
+    <ClCompile Include="LevelPieceFileMapping.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelHandlerSystem.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceRoot.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
