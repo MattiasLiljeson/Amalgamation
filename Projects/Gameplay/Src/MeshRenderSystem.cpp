@@ -14,12 +14,19 @@
 #include "CameraSystem.h"
 #include "BoundingSphere.h"
 #include "CameraInfo.h"
+#include "MaterialInfo.h"
+#include "GradientComponent.h"
+#include "BoundingBox.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
 		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
+	
+	m_rendered = 0;
+	m_culled = 0;
+	m_culledFraction = 0.0f;
 }
 
 MeshRenderSystem::~MeshRenderSystem()
@@ -33,6 +40,8 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	m_culled = 0;
+	m_rendered = 0;
 	calcCameraPlanes();
 
 	// Cleanup
@@ -74,13 +83,33 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		//Perform some culling checks
 		if (shouldCull(p_entities[i]))
+		{
+			m_culled++;
 			continue;
+		}
+		else
+		{
+			m_rendered++;
+		}
 
 		// Finally, add the entity to the instance vector
-		m_instanceLists[renderInfo->m_meshId].push_back( transform->getInstanceDataRef() );
+		InstanceData instanceData = transform->getInstanceDataRef();
+		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			renderInfo->m_meshId);
+		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
+		if(gradient != NULL){ 
+			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
+			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
+		}
+		instanceData.setGradientColor( matInfo.getGradientColors() );
+		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+		
+		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
-		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
+			(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+
 		if (skelAnim)
 		{
 			AglSkeleton* skeleton = skelAnim->m_scene->getSkeleton(0);
@@ -96,6 +125,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 		}
 	}
+	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
 }
 
 void MeshRenderSystem::render()
@@ -115,7 +145,40 @@ bool MeshRenderSystem::shouldCull(Entity* p_entity)
 	Transform* transform = static_cast<Transform*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-	BoundingSphere* bs = static_cast<BoundingSphere*>(
+	//Bounding Box check
+	BoundingBox* bb = static_cast<BoundingBox*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingBox ) );
+
+	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
+	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
+
+	if (!bb)
+		return false;
+
+	AglMatrix rbtransform;
+	AglMatrix::componentsToMatrix(rbtransform, AglVector3(1, 1, 1), transform->getRotation(), transform->getTranslation());
+	
+	AglOBB box = bb->box;
+	AglVector3 pos = box.world.GetTranslation();
+	
+	pos.transform(transform->getMatrix());
+	box.world *= rbtransform;
+	box.world.SetTranslation(pos);
+	box.size *= transform->getScale();
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		if (BoxPlane(box, m_cameraPlanes[i]))
+		{
+			return true;
+		}
+
+	}
+
+
+	//Bounding Sphere check
+	/*BoundingSphere* bs = static_cast<BoundingSphere*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingSphere ) );
 
 	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
@@ -142,7 +205,7 @@ bool MeshRenderSystem::shouldCull(Entity* p_entity)
 			return true;
 		}
 
-	}
+	}*/
 
 	return false;
 }
@@ -185,4 +248,19 @@ void MeshRenderSystem::calcCameraPlanes()
 		m_cameraPlanes[i].z /= l;
 		m_cameraPlanes[i].w /= l;
 	}
+}
+
+//Returns true if the box is completely outside the plane
+bool MeshRenderSystem::BoxPlane(const AglOBB& p_box, const AglVector4& p_plane)
+{
+	AglVector3 h = p_box.size * 0.5f;
+	AglVector3 n = AglVector3(p_plane.x, p_plane.y, p_plane.z);
+	float ex = h.x*abs(AglVector3::dotProduct(n, p_box.world.GetRight())); 
+	float ey = h.y*abs(AglVector3::dotProduct(n, p_box.world.GetUp())); 
+	float ez = h.z*abs(AglVector3::dotProduct(n, p_box.world.GetForward())); 
+	
+	float e = ex + ey + ez;
+	float s = AglVector3::dotProduct(p_box.world.GetTranslation(), n)+p_plane.w;
+	
+	return s + e < 0;
 }

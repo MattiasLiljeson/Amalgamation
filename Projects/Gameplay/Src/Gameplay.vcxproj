@@ -20,6 +20,7 @@
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="BodyInitData.h" />
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
@@ -49,6 +50,8 @@
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GradientMapping.h" />
+    <ClInclude Include="GradientComponent.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
     <ClInclude Include="GraphicsRendererSystem.h" />
     <ClInclude Include="InputActionsBackendSystem.h" />
@@ -212,6 +215,7 @@
     <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GradientComponent.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />

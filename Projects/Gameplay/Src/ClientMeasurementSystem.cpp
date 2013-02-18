@@ -1,5 +1,6 @@
 #include "ClientMeasurementSystem.h"
 #include <AntTweakBarWrapper.h>
+#include "MeshRenderSystem.h"
 
 ClientMeasurementSystem::ClientMeasurementSystem()
 	: EntitySystem( SystemType::ClientMeasurementSystem )
@@ -35,6 +36,24 @@ void ClientMeasurementSystem::initialize()
 			TwType::TW_TYPE_DOUBLE, &m_measuredSystems[i].first->getAverageExecutionTime(),
 			"group='Average process execution time (ms)' precision='4'" );
 	}
+
+	//Culling
+	MeshRenderSystem* mrs = static_cast<MeshRenderSystem*>(m_world->getSystem(SystemType::RenderPrepSystem));
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Rendered: ",
+		TwType::TW_TYPE_UINT32, mrs->getRenderedCountPtr(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Culled: ",
+		TwType::TW_TYPE_UINT32, mrs->getCulledCountPtr(),
+		"group='Culling'" );
+	 
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Culled Frac: ",
+		TwType::TW_TYPE_FLOAT, mrs->getCulledFractionPtr(),
+		"group='Culling'" );
 }
 
 void ClientMeasurementSystem::initMeasuredSystems()

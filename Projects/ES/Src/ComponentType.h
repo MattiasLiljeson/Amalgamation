@@ -71,6 +71,7 @@ public:	//Enums
 		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
 		GameState,
+		Gradient,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -95,6 +96,7 @@ public:	//Enums
 		MeshOffsetTransform,
 		SkeletalAnimation,
 		BoundingSphere,
+		BoundingBox,
 		NUM_COMPONENT_TYPES
 	};
 

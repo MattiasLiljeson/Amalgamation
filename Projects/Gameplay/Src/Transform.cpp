@@ -212,3 +212,8 @@ const AglVector3 Transform::getLookAt() const{
 
 	return lookAt;
 }
+
+float* Transform::getWorldMatrix()
+{
+	return m_instanceData.worldTransform;
+}
