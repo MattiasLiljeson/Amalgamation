@@ -96,7 +96,6 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		InstanceData instanceData = transform->getInstanceDataRef();
 		fillInstanceData(&instanceData,p_entities[i],renderInfo);
-		
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
@@ -124,21 +123,30 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity, 
 										RenderInfo* p_renderInfo){
 	MaterialInfo matInfo;
+	// Try and get the gradient component
 	auto gradient = static_cast<GradientComponent*>(p_entity->getComponent(
 		ComponentType::Gradient));
 	if(gradient != NULL){ 
+
+		// Set all the values needed
 		matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
 			p_renderInfo->m_meshId);
 		matInfo.setGradientLayer(1,gradient->m_color.layerOne);
 		matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+		p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
 	}
+	// If none was found check why
 	else{
+
+		// Assume its a valid Ship Module
 		ShipModule* shipModule = static_cast<ShipModule*>(m_world->
 			getComponentManager()->getComponent(p_entity,ComponentType::ShipModule));
 
 		if(shipModule != NULL && shipModule->m_parentEntity > -1){
+			
 			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
 			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+
 			if(parentShip != NULL){
 				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);
 				matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
@@ -149,13 +157,18 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 
 				matInfo.setGradientLayer(1,gradient->m_color.layerOne);
 				matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+				p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
 			}
 		}
-	}
+		// If not a Ship Module set values to default
+		else{
+			matInfo.setGradientLayer(1, AglVector4(1,1,1,1));
+			matInfo.setGradientLayer(2, AglVector4(1,1,1,1));
+			p_data->setNumberOfActiveGradientLayers( 1 );
+		}
+	}	
 
 	p_data->setGradientColor( matInfo.getGradientColors() );
-	p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
-	return;
 }
 
 void MeshRenderSystem::render()
