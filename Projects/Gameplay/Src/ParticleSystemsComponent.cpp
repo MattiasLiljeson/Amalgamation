@@ -11,7 +11,6 @@
 ParticleSystemsComponent::ParticleSystemsComponent()
 	: Component( ComponentType::ParticleSystemsComponent )
 {
-	m_componentTypeId = ComponentType::ParticleSystemsComponent;
 	m_instructionCnt = 0;
 	m_particleSystemCnt = 0;
 }
@@ -189,7 +188,9 @@ ParticleSystemInstruction* ParticleSystemsComponent::getParticleSystemInstructio
 {
 	ParticleSystemInstruction* instruction = NULL;
 	if( 0<= p_idx && p_idx < m_particleSystems.size() ) {
-		instruction = m_particleSystems[p_idx].first;
+		if( m_particleSystems[p_idx].first != NULL ) {
+			instruction = m_particleSystems[p_idx].first;
+		}
 	}
 	return instruction;
 }
@@ -198,7 +199,9 @@ AglParticleSystem* ParticleSystemsComponent::getParticleSystemPtr( int p_idx )
 {
 	AglParticleSystem* ps = NULL;
 	if( 0<= p_idx && p_idx < m_particleSystems.size() ) {
-		ps = &m_particleSystems[p_idx].second->particleSystem;
+		if( m_particleSystems[p_idx].second != NULL ) {
+			ps = &m_particleSystems[p_idx].second->particleSystem;
+		}
 	}
 	return ps;
 }
