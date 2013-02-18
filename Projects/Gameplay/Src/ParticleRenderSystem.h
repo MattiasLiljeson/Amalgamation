@@ -32,19 +32,22 @@ public:
 	
 	void processEntities( const vector<Entity*>& p_entities );
 
-	//unsigned int addParticleSystem(const AglParticleSystemHeader& p_header, int p_index);
-	//AglParticleSystem* getParticleSystem(int p_index);
+	virtual void render();
+	virtual void renderAdditiveParticles();
+	virtual void renderAlphaParticles();
+	virtual void renderMultiplyParticles();
+
 private:
 	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
 	void rebuildVertexBuffer(AglParticleSystem* p_particleSystem);
-
-	virtual void render();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
 	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
 
 	// pointer to save performance. No ownership
-	vector< pair< ParticleSystemAndTexture*, Transform* > > m_collections;
+	vector< pair< ParticleSystemAndTexture*, Transform* > > m_additiveCollection;
+	vector< pair< ParticleSystemAndTexture*, Transform* > > m_alphaCollection;
+	vector< pair< ParticleSystemAndTexture*, Transform* > > m_multiplyCollection;
 };
 

@@ -302,7 +302,13 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( new ShipEditController() );
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		
-		ParticleSystemsComponent* emitters = new ParticleSystemsComponent();
+		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
+			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
+
+		if( emitters == NULL ) {
+			emitters = new ParticleSystemsComponent();
+			entity->addComponent( emitters );
+		}
 		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), // Down
 			AglVector3(0.0f, 0.0f, -1.0f));
 		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), // Forward
@@ -311,7 +317,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			AglVector3(1.0f, 0.0f, 0.0f));
 		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), // Right
 			AglVector3(-1.0f, 0.0f, 0.0f));
-		entity->addComponent( emitters );
+
 		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
@@ -834,7 +840,7 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
-	particleSystem.getHeaderPtr()->particleSpace = false;
+	particleSystem.getHeaderPtr()->modes = false;
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
