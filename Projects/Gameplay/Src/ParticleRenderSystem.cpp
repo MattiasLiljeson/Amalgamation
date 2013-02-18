@@ -7,6 +7,7 @@
 #include "ParticleSystemsComponent.h"
 #include <AglParticleSystemHeader.h>
 #include <ParticleSystemAndTexture.h>
+#include "MeshOffsetTransform.h"
 
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::ParticleRenderSystem, 2,
@@ -18,17 +19,18 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 
 ParticleRenderSystem::~ParticleRenderSystem()
 {
-	for(unsigned int i = 0; i < m_collections.size();i++)
-	{
-		/*delete m_particleSystems[i].first;*/
-	}
-	m_collections.clear();
+	m_additiveCollection.clear();
+	m_alphaCollection.clear();
+	m_multiplyCollection.clear();
 }
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	// Clear the old particle systems
-	m_collections.clear();
+	m_additiveCollection.clear();
+	m_alphaCollection.clear();
+	m_multiplyCollection.clear();
+
 
 	// get camera pos, for sorting
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
@@ -48,6 +50,9 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::Transform ) );
 
+		MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+			p_entities[i]->getComponent( ComponentType::MeshOffsetTransform ) );
+
 		ParticleSystemsComponent* particlesComp = static_cast<ParticleSystemsComponent*>(
 			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
@@ -61,33 +66,80 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 				if( psAndTex != NULL ) {
 					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					// Update only nonrelative particle systems (PS) as the PS's otherwise will get a 
-					// double transform
-					if( header.space == AglParticleSystemHeader::AglSpace_LOCAL ) {
-						particlesComp->setSpawn( transform->getTranslation(), transform->getForward() );
+					AglMatrix transMat = transform->getMatrix();
+
+					// Offset agl-loaded meshes by their offset matrix
+					if( offset != NULL ) {
+						transMat = offset->offset.inverse() * transMat;
 					}
-					// Always scale the particle effect according to it's entity
-					//particlesComp->setScale( AglVector2( transform->getScale().x, transform->getScale().x ) );
-					particlesComp->getParticleSystemPtr(0)->setSpawnSpeed( transform->getScale().x );
+
+					// Update only local particle systems (PS) as the PS's otherwise will get a 
+					// double transform
+					// HACK: always transform spawn until support has been added to the editor. /ML 
+					if( header.space == AglParticleSystemHeader::AglSpace_SPAWN_LOCAL || true ) {
+						particlesComp->setSpawn( transMat );
+					}
 
 					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
-					m_collections.push_back( ps );
+					switch( header.modes )
+					{
+						case AglParticleSystemHeader::AglBlendMode_ADDITIVE:
+							m_additiveCollection.push_back( ps );
+							break;
+						case AglParticleSystemHeader::AglBlendMode_ALPHA:
+							m_alphaCollection.push_back( ps );
+							break;
+						case AglParticleSystemHeader::AglBlendMode_MULTIPLY:
+							m_multiplyCollection.push_back( ps );
+							break;
+						default :
+							m_alphaCollection.push_back( ps );
+							break;
+					}
 				}
 			}
 		}
-		//m_particleSystems[i].first->update( m_world->getDelta(), AglVector3(0.0f, 0.0f, 0.0f) );
 	}
 }
 
 void ParticleRenderSystem::render()
 {
+
+}
+
+void ParticleRenderSystem::renderAdditiveParticles()
+{
 	for( unsigned int collectionIdx=0;
-		collectionIdx<m_collections.size();
+		collectionIdx<m_additiveCollection.size();
 		collectionIdx++ )
 	{
-		ParticleSystemAndTexture* psAndTex = m_collections[collectionIdx].first;
-		Transform* transform = m_collections[collectionIdx].second;
+		ParticleSystemAndTexture* psAndTex = m_additiveCollection[collectionIdx].first;
+		Transform* transform = m_additiveCollection[collectionIdx].second;
+		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	}
+}
+
+void ParticleRenderSystem::renderAlphaParticles()
+{
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_alphaCollection.size();
+		collectionIdx++ )
+	{
+		ParticleSystemAndTexture* psAndTex = m_alphaCollection[collectionIdx].first;
+		Transform* transform = m_alphaCollection[collectionIdx].second;
 		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
 	}
 	
+}
+
+void ParticleRenderSystem::renderMultiplyParticles()
+{
+	for( unsigned int collectionIdx=0;
+		collectionIdx<m_multiplyCollection.size();
+		collectionIdx++ )
+	{
+		ParticleSystemAndTexture* psAndTex = m_multiplyCollection[collectionIdx].first;
+		Transform* transform = m_multiplyCollection[collectionIdx].second;
+		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	}
 }

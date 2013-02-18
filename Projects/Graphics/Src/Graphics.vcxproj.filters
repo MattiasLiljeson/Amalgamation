@@ -81,6 +81,12 @@
     <ClCompile Include="ModelExtendedFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredTessAnimatedBaseShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredTessBaseShader.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -238,6 +244,12 @@
       <Filter>Renderer\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="DeferredAnimatedBaseShader.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredTessAnimatedBaseShader.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredTessBaseShader.h">
       <Filter>Shader\Shader types</Filter>
     </ClInclude>
   </ItemGroup>

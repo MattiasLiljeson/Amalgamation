@@ -1,25 +1,23 @@
+#pragma once
+#include "ShaderBase.h"
+
 // =======================================================================================
-//                                      RenderInfo
+//                                      Shader
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # RenderInfo
+/// # Shader
 /// Detailed description.....
-/// Created on: 7-12-2012 
+/// Created on: 27-11-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-#include <Component.h>
 
-class RenderInfo : public Component
+class DeferredTessBaseShader : public ShaderBase
 {
 public:
-	RenderInfo(bool p_shouldBeRendered=true);
-	RenderInfo( int p_mesh_id, bool p_shouldBeRendered=true);
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-	bool m_shouldBeRendered;
-	bool m_shouldBeCulled;
+	DeferredTessBaseShader( ShaderVariableContainer p_initData);
+	virtual ~DeferredTessBaseShader();
+
+	void apply();
 };

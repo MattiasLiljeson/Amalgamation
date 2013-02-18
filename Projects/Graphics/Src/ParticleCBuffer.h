@@ -47,7 +47,7 @@ struct ParticleCBuffer
 		setParticleMaxAge( p_header.particleAge );
 		setMaxOpacity( p_header.maxOpacity );
 		setAlignment( p_header.alignmentType );
-		setRelative( p_header.relative );
+		setRelative( p_header.modes );
 		setSpace( p_header.space );
 	}
 

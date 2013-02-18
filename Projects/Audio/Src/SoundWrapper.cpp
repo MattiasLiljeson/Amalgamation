@@ -47,9 +47,9 @@ void SoundWrapper::initSoundEngine()
 	HRESULT hr = S_OK;
 
 	UINT32 flags = 0;
-//#ifdef _DEBUG
-//	flags |= XAUDIO2_DEBUG_ENGINE;
-//#endif
+#ifdef _DEBUG
+	flags |= XAUDIO2_DEBUG_ENGINE;
+#endif
 	if ( FAILED (hr = XAudio2Create(&m_soundDevice,flags)))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
@@ -73,9 +73,9 @@ void SoundWrapper::initSoundEngine()
 void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 {
 	X3DAUDIO_VECTOR front = {
-		p_sceneInfo.listenerOrientFront[0],
-		p_sceneInfo.listenerOrientFront[1],
-		p_sceneInfo.listenerOrientFront[2],
+		-p_sceneInfo.listenerOrientFront[0],
+		-p_sceneInfo.listenerOrientFront[1],
+		-p_sceneInfo.listenerOrientFront[2],
 	};
 
 	X3DAUDIO_VECTOR top = {

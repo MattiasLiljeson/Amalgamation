@@ -6,6 +6,7 @@
 #include "ShadowSystem.h"
 #include <GPUTimer.h>
 #include <AntTweakBarWrapper.h>
+#include "ParticleRenderSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -131,9 +132,21 @@ void GraphicsRendererSystem::process(){
 	m_wrapper->getGPUTimer()->Stop(m_composeProfile, m_currentFrame);
 
 	//Particles
+
+	// A ugly way to be able to call the different rendering functions. Needs refactoring /ML.
+	ParticleRenderSystem* psRender = static_cast<ParticleRenderSystem*>( m_particleRenderSystem );
+
 	m_wrapper->getGPUTimer()->Start(m_particleProfile, m_currentFrame);
 	initParticlePass();
-	m_particleRenderSystem->render();
+	m_wrapper->setBlendStateSettings( BlendState::ADDITIVE );
+	psRender->renderAdditiveParticles();
+
+	m_wrapper->setBlendStateSettings( BlendState::PARTICLE );
+	psRender->renderAlphaParticles();
+
+	m_wrapper->setBlendStateSettings( BlendState::MULTIPLY );
+	psRender->renderMultiplyParticles();
+
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_particleProfile, m_currentFrame);
 	
@@ -152,7 +165,7 @@ void GraphicsRendererSystem::process(){
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->setViewportToShadowMapSize();
 	m_wrapper->setRenderingShadows();
 	m_wrapper->setShadowViewProjections(m_shadowViewProjections);
@@ -167,7 +180,7 @@ void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->mapSceneInfo();
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	m_wrapper->clearRenderTargets();
 	m_wrapper->setBaseRenderTargets();
 }
@@ -229,7 +242,8 @@ void GraphicsRendererSystem::endComposePass()
 
 void GraphicsRendererSystem::initParticlePass(){
 	m_wrapper->setParticleRenderState();
-	m_wrapper->setBlendStateSettings(BlendState::PARTICLE);
+	//m_wrapper->setBlendStateSettings(BlendState::PARTICLE);
+	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
 }
 

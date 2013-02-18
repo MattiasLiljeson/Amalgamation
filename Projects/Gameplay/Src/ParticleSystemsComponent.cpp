@@ -5,11 +5,12 @@
 #include <GraphicsWrapper.h>
 #include <Globals.h>
 #include <ParticleSystemAndTexture.h>
+#include <AglMatrix.h>
+#include <AglQuaternion.h>
 
 ParticleSystemsComponent::ParticleSystemsComponent()
 	: Component( ComponentType::ParticleSystemsComponent )
 {
-	m_componentTypeId = ComponentType::ParticleSystemsComponent;
 	m_instructionCnt = 0;
 	m_particleSystemCnt = 0;
 }
@@ -64,6 +65,7 @@ int ParticleSystemsComponent::addParticleSystem( const AglParticleSystem& p_syst
 {
 	ParticleSystemAndTexture ps;
 	ps.particleSystem = p_system;
+	ps.psOriginalSettings = ps.particleSystem.getHeader();
 	ps.textureIdx = p_textureIdx;
 	return addParticleSystem( ps, p_idx );
 }
@@ -136,16 +138,18 @@ void ParticleSystemsComponent::updateParticleSystems( const float p_dt,
 	}
 }
 
-void ParticleSystemsComponent::setSpawn( const AglVector3& p_spawnPoint,
-								const AglVector3& p_spawnDirection )
+void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base )
 {
 	for( unsigned int i=0; i<m_particleSystems.size(); i++ ) {
 		if( m_particleSystems[i].second != NULL ) {
 			AglParticleSystem* ps = &m_particleSystems[i].second->particleSystem;
-			ps->setSpawnPoint( p_spawnPoint );
-			AglVector3 dir = ps->getSpawnDirection();
-			AglVector3 newDir = dir + p_spawnPoint;
-			ps->setCurrSpawnDirection( newDir );
+			AglParticleSystemHeader* header = &m_particleSystems[i].second->psOriginalSettings;
+
+			AglVector3 newPos = header->spawnPoint;
+			newPos.transform( p_base );
+
+			ps->setSpawnPoint( newPos );
+			ps->setSpawnDirection( -p_base.GetForward() );
 		}
 	}
 }
@@ -184,7 +188,9 @@ ParticleSystemInstruction* ParticleSystemsComponent::getParticleSystemInstructio
 {
 	ParticleSystemInstruction* instruction = NULL;
 	if( 0<= p_idx && p_idx < m_particleSystems.size() ) {
-		instruction = m_particleSystems[p_idx].first;
+		if( m_particleSystems[p_idx].second != NULL ) {
+			instruction = m_particleSystems[p_idx].first;
+		}
 	}
 	return instruction;
 }
@@ -193,7 +199,9 @@ AglParticleSystem* ParticleSystemsComponent::getParticleSystemPtr( int p_idx )
 {
 	AglParticleSystem* ps = NULL;
 	if( 0<= p_idx && p_idx < m_particleSystems.size() ) {
-		ps = &m_particleSystems[p_idx].second->particleSystem;
+		if( m_particleSystems[p_idx].second != NULL ) {
+			ps = &m_particleSystems[p_idx].second->particleSystem;
+		}
 	}
 	return ps;
 }

@@ -1,4 +1,5 @@
 #include "ComponentManager.h"
+#include "..\..\Util\Src\DebugUtil.h"
 
 
 ComponentManager::ComponentManager()
@@ -57,10 +58,22 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 	if( (int)m_componentsByType.size() <= typeIndex )
 		m_componentsByType.resize( typeIndex+1 );
 
-	if( (int)m_componentsByType[typeIndex].size() <= entityIndex )
+	int oldSize = (int)m_componentsByType[typeIndex].size();
+	if( oldSize <= entityIndex ) {
 		m_componentsByType[typeIndex].resize( entityIndex+1 );
 
-	m_componentsByType[typeIndex][entityIndex] = p_component;
+		// Set all new slots to NULL
+		int newSize = (int)m_componentsByType[typeIndex].size();
+		for( int i = oldSize; i<newSize; i++ ){
+			m_componentsByType[typeIndex][i] = NULL;
+		}
+	}
+
+	if( m_componentsByType[typeIndex][entityIndex] == NULL ) {
+		m_componentsByType[typeIndex][entityIndex] = p_component;
+	} else {
+		DEBUGWARNING(("Component already existing!"));
+	}
 
 	p_entity->setComponentBit( typeIndex, true );
 }

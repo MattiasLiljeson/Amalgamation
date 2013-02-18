@@ -13,6 +13,7 @@
 #include "ShipModule.h"
 #include "ShipManagerSystem.h"
 #include "ModuleHelper.h"
+#include "ModuleStateChangePacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -405,8 +406,10 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 	AglMatrix transform = p_base;
 	ShipModule* module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
 	vector<AglMatrix> transforms;
+	vector<AglQuaternion> rots;
 	transforms.push_back(p_offset);
 	transforms.push_back(p_base);
+	rots.push_back(AglQuaternion::constructFromAxisAndAngle(p_base.GetForward(), p_rotation));
 	while (module)
 	{
 		Entity* parent = m_world->getEntity(module->m_parentEntity);
@@ -427,6 +430,9 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 			ComponentType::PhysicsBody));
 		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*childBody->getOffset().inverse());
 
+		//Child module
+		module = static_cast<ShipModule*>(p_entity->getComponent(ComponentType::ShipModule));
+
 		//Parent Connection points
 		cps = static_cast<ConnectionPointSet*>(
 			m_world->getComponentManager()->getComponent(parent,
@@ -441,7 +447,10 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		//Parent
 		PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(
 			ComponentType::PhysicsBody));
-		transforms.push_back(cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse());
+
+		AglMatrix parentTrans = cps->m_connectionPoints[ind].cpTransform*parentBody->getOffset().inverse();
+		transforms.push_back(parentTrans);
+		rots.push_back(AglQuaternion::constructFromAxisAndAngle(parentTrans.GetForward(), module->m_rotation));
 		
 		module = static_cast<ShipModule*>(parent->getComponent(ComponentType::ShipModule));
 		p_entity = parent;
@@ -450,7 +459,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 	AglMatrix finalTransform = AglMatrix::identityMatrix();
 	AglMatrix final = AglMatrix::identityMatrix();
 
-	bool first = true;
+	//bool first = true;
 	while (transforms.size() > 0)
 	{
 		//Parent transform
@@ -460,12 +469,13 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 		AglMatrix childTransform = transforms[transforms.size()-2];
 		AglQuaternion rot = AglQuaternion::rotateToFrom(childTransform.GetForward(), -transform.GetForward());
 
-		if (first)//transforms.size() == 2)
+		if (true)//transforms.size() == 2)
 		{
 			//Rotate around connection axis
-			AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
-			rot = rot2*rot;
-			first = false;
+			//AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
+			rot = rots.back()*rot;
+			rots.pop_back();
+			//first = false;
 		}
 
 		finalTransform = AglMatrix::createRotationMatrix(rot);
@@ -570,6 +580,20 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		moduleBody->setParentId(shipBody->m_id);
 
 		p_ray.m_latestAttached = module->getIndex();
+
+		/************************************************************************/
+		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+		/************************************************************************/
+		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+			module->getComponent(ComponentType::NetworkSynced));
+		ModuleStateChangePacket moduleChanged;
+		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
+
+		networkSynced = static_cast<NetworkSynced*>(
+			target->getComponent(ComponentType::NetworkSynced));
+		moduleChanged.currentParrent = networkSynced->getNetworkIdentity();
+
+		m_server->broadcastPacket(moduleChanged.pack());
 	}
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
@@ -657,7 +681,9 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 			physX->getController()->DetachBodyFromCompound(body, false);
 
-
+			/************************************************************************/
+			/* SEND DETACH MESSAGE TO CLIENTS										*/
+			/************************************************************************/
 		}
 	}
 	return true;

@@ -1,25 +1,29 @@
 // =======================================================================================
-//                                      RenderInfo
+//                                      BoundingBox
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Used for culling
 ///        
-/// # RenderInfo
+/// # BoundingBox
 /// Detailed description.....
-/// Created on: 7-12-2012 
+/// Created on: 17-02-2013 
 ///---------------------------------------------------------------------------------------
 #pragma once
 #include <Component.h>
+#include <AglOBB.h>
 
-class RenderInfo : public Component
+class BoundingBox : public Component
 {
 public:
-	RenderInfo(bool p_shouldBeRendered=true);
-	RenderInfo( int p_mesh_id, bool p_shouldBeRendered=true);
-	virtual ~RenderInfo();
-	int m_instanceId;
-	int m_meshId;
-	bool m_shouldBeRendered;
-	bool m_shouldBeCulled;
+	BoundingBox(AglOBB p_box): Component(ComponentType::BoundingBox)
+	{
+		box = p_box;
+	}
+	virtual ~BoundingBox()
+	{
+
+	}
+
+	AglOBB box;
 };

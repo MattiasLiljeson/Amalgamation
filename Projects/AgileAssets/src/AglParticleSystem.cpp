@@ -39,8 +39,8 @@ AglParticleSystem::AglParticleSystem()
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 
-	m_header.relative = false;
-	m_header.space = AglParticleSystemHeader::AglSpace::AglSpace_LOCAL;
+	m_header.modes = AglParticleSystemHeader::AglBlendMode_ALPHA;
+	m_header.space = AglParticleSystemHeader::AglSpace_SPAWN_LOCAL;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
@@ -205,6 +205,12 @@ AglParticleSystemHeader::AglSpace AglParticleSystem::getSpace()
 {
 	return (AglParticleSystemHeader::AglSpace)m_header.space;
 }
+
+void AglParticleSystem::setModes( int p_modes )
+{
+	m_header.modes = p_modes;
+}
+
 void AglParticleSystem::setSpace( AglParticleSystemHeader::AglSpace p_space )
 {
 	m_header.space = p_space;

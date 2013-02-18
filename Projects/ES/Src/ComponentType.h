@@ -96,6 +96,7 @@ public:	//Enums
 		MeshOffsetTransform,
 		SkeletalAnimation,
 		BoundingSphere,
+		BoundingBox,
 		NUM_COMPONENT_TYPES
 	};
 
