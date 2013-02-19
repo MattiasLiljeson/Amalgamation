@@ -439,9 +439,9 @@ void ClientApplication::initEntities()
 	Component* component = NULL;
 
 	// HACK: (Johan) This temporarily fixes the weird "hierarchy" bug.
-	entity = m_world->createEntity();
-	entity->addComponent(new Transform());
-	m_world->addEntity(entity);
+//	entity = m_world->createEntity();
+//	entity->addComponent(new Transform());
+//	m_world->addEntity(entity);
 	// End hack.
 
 	// Read from assemblage
