@@ -4,27 +4,58 @@
 #include "CircularMovement.h"
 #include "AxisRotate.h"
 #include <RandomUtil.h>
+#include "InputBackendSystem.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
 {
+	m_deltaRotation = 0.0f;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 {
 }
 
+void MenuBackgroundSceneSystem::process()
+{
+	m_deltaRotation = 0.0f;
+	if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0)
+	{
+		double deltaPositive = m_inputBackend->getDeltaByEnum(InputHelper::MouseAxes_X_POSITIVE);
+		double deltaNegative = m_inputBackend->getDeltaByEnum(InputHelper::MouseAxes_X_NEGATIVE);
+		if(deltaPositive > 0.0)
+		{
+			m_deltaRotation -= (float)deltaPositive;
+		}
+		if(deltaNegative > 0.0)
+		{
+			m_deltaRotation += (float)deltaNegative;
+		}
+	}
+	AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
+	if(rotate != NULL)
+	{
+		rotate->angularVelocity = m_deltaRotation * 10.0f;
+	}
+}
+
+void MenuBackgroundSceneSystem::initialize()
+{
+	m_inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(
+		SystemType::InputBackendSystem));
+}
+
 void MenuBackgroundSceneSystem::sysEnabled()
 {
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
-		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 7500);
+		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 5000);
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-20.0f, 0, 50.0f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), AglVector3::backward());
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	m_ship->addComponent(new AxisRotate(AglVector3::up(), AglVector3::backward(), rotation, 0.5f));
+	m_ship->addComponent(new AxisRotate(AglVector3::up(), AglVector3::backward(), rotation, 0.0f));
 	m_world->addEntity(m_ship);
 }
 

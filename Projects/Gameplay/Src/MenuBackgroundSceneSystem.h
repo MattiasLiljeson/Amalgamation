@@ -1,6 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 #include <AglVector3.h>
+class InputBackendSystem;
 // =======================================================================================
 // MenuBackgroundSceneSystem
 // =======================================================================================
@@ -17,6 +18,8 @@ class MenuBackgroundSceneSystem: public EntitySystem
 public:
 	MenuBackgroundSceneSystem();
 	~MenuBackgroundSceneSystem();
+	virtual void process() final;
+	virtual void initialize() final;
 	virtual void sysEnabled() final;
 	virtual void sysDisabled() final;
 
@@ -27,4 +30,7 @@ private:
 private:
 	Entity* m_ship;
 	vector<Entity*> m_rocks;
+	InputBackendSystem* m_inputBackend;
+	float m_deltaRotation;
+
 };
