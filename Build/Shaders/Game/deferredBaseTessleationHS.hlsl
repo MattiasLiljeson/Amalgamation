@@ -17,7 +17,7 @@ patchConstant PatchConstant(InputPatch<TesselationStruct, 3> input,
 	
 	int factor = 1;
 	
-	float maxTess = 2.0f;
+	float maxTess = 10.0f;
 	if (len < 200)
 	{
 		factor += 0.005*len*maxTess;

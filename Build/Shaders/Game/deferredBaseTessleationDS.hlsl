@@ -3,6 +3,10 @@
 #include "tesselationStruct.hlsl"
 #include "perFrameCBuffer.hlsl"
 
+Texture2D displaceTexture : register(t4);
+
+SamplerState pointSampler : register(s0);
+
 [domain("tri")] //We are working with triangles
 PixelIn DS(patchConstant input, float3 uvw : SV_DomainLocation, 
 			const OutputPatch<TesselationStruct, 3> patch)
@@ -24,15 +28,10 @@ PixelIn DS(patchConstant input, float3 uvw : SV_DomainLocation,
 	bin    = normalize(bin);
 	
 	
-	//Displacement mapping - Not used right now
-	//float disp;
-	//if (UseAlpha)
-		//disp = DisplacementTexture.SampleLevel(SampleType, tex, 0).a;
-	//else
-		//disp = DisplacementTexture.SampleLevel(SampleType, tex, 0).r;
-	
-	//disp = (disp - 0.5f) * 2 * Displacement;
-	//pos = pos + disp * norm;
+	float disp;
+	disp = displaceTexture.SampleLevel(pointSampler, tex, 0).r;
+	disp = (disp - 0.5f) * 2 * 0.5f;
+	pos = pos + disp * norm;
 	
 	//Map output data
 	PixelIn output;
