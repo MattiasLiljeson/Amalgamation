@@ -15,6 +15,7 @@ struct AglVector3;
 class LevelInfo;
 
 using namespace std;
+
 // =======================================================================================
 //                                      LevelGenSystem
 // =======================================================================================
@@ -59,7 +60,7 @@ private:
 
 	void generateLevelPieces(int p_maxDepth);
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
-								vector<LevelPiece*>& out_pieces);
+								vector<LevelPiece*>& out_pieces, int p_generation);
 
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 

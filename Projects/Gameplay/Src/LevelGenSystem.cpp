@@ -24,6 +24,8 @@
 #include "EntityFactory.h"
 #include "LevelInfo.h"
 
+#define FORCE_VS_DBG_OUTPUT
+
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
 {
@@ -198,7 +200,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 	// Create the level piece to use later
 	//LevelPiece* piece = new LevelPiece( &m_pieceTypes[0], &m_meshHeaders[0], transform);
 	int id = m_levelInfo->getStartFileData()->id;
-	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform);
+	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
 
 	// Create the entity and specify a mesh for it
 	//createAndAddEntity(0, transform, piece->getBoundingBox());
@@ -215,7 +217,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth )
 		// Stores created pieces temporarily
 		vector<LevelPiece*> temps;
 		for (unsigned int i = 0; i < pieces.size(); i++)
-			generatePiecesOnPiece(pieces[i], temps);
+			generatePiecesOnPiece(pieces[i], temps, currentDepth+1);
 
 		// Creates a piece entity and adds it to the world
 		//for (int i = 0; i < temps.size(); i++)
@@ -282,7 +284,7 @@ Entity* LevelGenSystem::createDebugSphereEntity( LevelPiece* p_piece )
 }
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
-										   vector<LevelPiece*>& out_pieces )
+										   vector<LevelPiece*>& out_pieces, int p_generation )
 {
 	vector<int> freeConnectSlots = p_targetPiece->findFreeConnectionPointSlots();
 
@@ -311,7 +313,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			//									&m_meshHeaders[pieceType],
 			//									new Transform() );
 			LevelPiece* piece = new LevelPiece( pieceType, m_modelResources[pieceType],
-												new Transform() );
+												new Transform(), p_generation);
 
 			int slot = popIntVector(freeConnectSlots);
 			piece->connectTo(p_targetPiece, slot);

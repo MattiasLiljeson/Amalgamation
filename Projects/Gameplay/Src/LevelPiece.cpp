@@ -6,11 +6,12 @@
 #include <AglMesh.h>
 #include <ModelResource.h>
 
-LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform )
+LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform, int p_generation )
 {
 	m_modelResource = p_modelResource;
 	m_transform		= p_transform;
 	m_typeId		= p_typeId;
+	m_generation	= p_generation;
 
 	int maxChildCount = p_modelResource->connectionPoints.m_collection.size();
 	m_childSlotsOccupied.resize(maxChildCount);

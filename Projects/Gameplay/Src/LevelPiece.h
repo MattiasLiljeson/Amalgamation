@@ -38,7 +38,8 @@ public:
 	//			Transform* p_transform);
 	~LevelPiece();
 
-	LevelPiece( int p_typeId, ModelResource* p_modelResource, Transform* p_transform);
+	LevelPiece( int p_typeId, ModelResource* p_modelResource, Transform* p_transform,
+				int p_generation);
 
 	void		deleteMainTransform();
 	void		updateConnectionPoints();
@@ -60,7 +61,7 @@ private:
 
 	ModelResource*				m_modelResource;
 	int							m_typeId;
-
+	int							m_generation;
 	//ConnectionPointCollection*	m_localSpaceConnectionPoints;
 	//AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
