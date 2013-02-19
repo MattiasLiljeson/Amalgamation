@@ -1,6 +1,6 @@
-#include "perFrameCBuffer.hlsl"
-#include "deferredBasePixelStruct.hlsl"
 #include "animationVertexStruct.hlsl"
+#include "tesselationStruct.hlsl"
+#include "perFrameCBuffer.hlsl"
 
 Texture1D boneTexture : register(t0);
 
@@ -16,7 +16,7 @@ float4x4 getMatrix(int pIndex)
 	return bonemat;
 }
 
-PixelIn VS(VertexIn p_input)
+TesselationStruct VS(VertexIn p_input)
 {
 	int id = p_input.instanceId;
 	float4 pos = float4(p_input.position, 1.0f);
@@ -40,7 +40,7 @@ PixelIn VS(VertexIn p_input)
         t += p_input.weights1[i] * mul(tan, bonemat);
 		b += p_input.weights1[i] * mul(bin, bonemat);
 	}
-	PixelIn vout;
+	TesselationStruct vout;
 	float4x4 wvp = mul(p_input.instanceTransform,gViewProj);
 
 	vout.position = mul(float4(p1,1.0f), wvp);

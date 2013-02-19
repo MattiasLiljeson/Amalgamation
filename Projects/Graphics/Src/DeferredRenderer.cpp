@@ -269,7 +269,9 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/deferredBaseAnimatedVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_tessAnimatedBaseShader = m_shaderFactory->createDeferredTessAnimatedShader(
-		L"Shaders/Game/deferredAnimatedBaseTess.hlsl");
+		L"Shaders/Game/deferredAnimatedTesselationVS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationHS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");
