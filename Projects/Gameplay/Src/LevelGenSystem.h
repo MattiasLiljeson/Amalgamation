@@ -4,6 +4,7 @@
 #include <vector>
 #include "LevelPieceFileMapping.h"
 #include <ModelBaseFactory.h>
+#include <string>
 
 class Transform;
 class LevelPiece;
@@ -11,8 +12,10 @@ class TcpServer;
 class EntityFactory;
 struct ModelResource;
 struct AglVector3;
+class LevelInfo;
 
 using namespace std;
+
 // =======================================================================================
 //                                      LevelGenSystem
 // =======================================================================================
@@ -45,6 +48,9 @@ public:
 protected:
 
 private:
+	void preloadLevelGenRecipeEntity(const string& p_filePath);
+	void preloadLevelPieceRecipes();
+
 	int popIntVector(vector<int>& p_vector);
 	
 	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
@@ -52,9 +58,9 @@ private:
 	 // Used to generate a bounding sphere around the chamber.
 	Entity* createDebugSphereEntity(LevelPiece* p_piece);
 
-	void generateLevelPieces(int p_maxDepth);
+	void generateLevelPieces(int p_maxDepth, bool p_doRandomStartRotation);
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
-								vector<LevelPiece*>& out_pieces);
+								vector<LevelPiece*>& out_pieces, int p_generation);
 
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
@@ -62,8 +68,12 @@ private:
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
+	virtual void inserted( Entity* p_entity );
+	virtual void removed( Entity* p_entity );
+
 	//ModelBaseFactory m_unmanagedModelFactory;
 	EntityFactory*	m_entityFactory;
+	LevelInfo* m_levelInfo; // This is a component, be cautious!
 
 	vector<ModelResource*>	m_modelResources;
 	LevelPieceFileMapping	m_modelFileMapping;

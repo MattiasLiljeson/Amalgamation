@@ -71,6 +71,7 @@ public:	//Enums
 		PlayerState,
 		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
+		LevelInfo,
 		GameState,
 		Gradient,
 

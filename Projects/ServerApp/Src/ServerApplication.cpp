@@ -230,7 +230,7 @@ namespace Srv
 
 		// TEMP: (Alex) This is only to test and make sure the level gen works.
 		// This should be ran when starting a game session later.
-		levelGen->run();
+		// levelGen->run();
 	}
 
 	void ServerApplication::initEntities()

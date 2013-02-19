@@ -31,14 +31,17 @@ static const string& GUI_MENU_PATH		= "GUI/Menu/";
 static const string& GUI_FONT_PATH		= "Assets/GUI/Fonts/";
 static const string& GUI_TEXTURE_PATH	= "Assets/GUI/Texture/";
 
+/* TEST PATHS! */
+
 static const string& TESTSOUNDEFFECTPATH = "Assets/Sound/SoundEffect/Test/";
 static const string& TESTMUSICPATH = "Assets/Sound/Music/Test/";
 
 static const string& TESTMODELPATH = "Assets/Models/Test/";
 static const string& TESTTEXTUREPATH = "Assets/Textures/Test/";
 
-static const string& SETTINGSPATH = "Assets/Settings/";
-
+static const string& SETTINGSPATH = "Assets/Settings/"; 
+static const string& ASSEMBLAGESPATH = "Assemblages/";
+static const string& LEVELPIECESPATH = ASSEMBLAGESPATH + "Level Pieces/";
 /************************************************************************/
 /* MISC														*/
 /************************************************************************/

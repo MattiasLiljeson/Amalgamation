@@ -43,6 +43,8 @@
 #include "LevelPieceRoot.h"
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
+#include "LevelInfoLoader.h"
+#include "LevelPieceFileMapping.h"
 #include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
@@ -107,7 +109,8 @@ EntityFactory::~EntityFactory()
 	m_entityRecipes.clear();
 }
 
-AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_filePath )
+AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_filePath,
+															string* out_recipeName/*=NULL*/)
 {
 	Recipe* newRecipe = NULL;
 	AssemblageReader reader;
@@ -122,6 +125,10 @@ AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_fileP
 			// Delete previous recipe with the same name, it existing.
 			delete m_entityRecipes[newRecipe->getName()];
 			m_entityRecipes[newRecipe->getName()] = newRecipe;
+
+			// Set the out parameter if it has been desired.
+			if (out_recipeName)
+				(*out_recipeName) = newRecipe->getName();
 		}
 	}
 	else if (status==AssemblageHelper::FileStatus_FILE_NOT_FOUND)
@@ -731,7 +738,10 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// changed during refactoring by Jarl 30-1-2013
 		// use an assemblage, like this:
 		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
-		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
+		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
+			m_world->getSystem(SystemType::LevelInfoLoader));
+		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo );
+		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
 		entity = entityFromRecipe( asdName );
 	}
 	else	
