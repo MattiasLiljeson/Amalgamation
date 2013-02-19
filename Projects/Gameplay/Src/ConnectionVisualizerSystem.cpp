@@ -37,14 +37,16 @@ void ConnectionVisualizerSystem::process()
 		AglMatrix parentMatrix = parentTrans->getMatrix();
 
 		AglMatrix chilMatrix = AglMatrix::createTranslationMatrix(m_createdEffects[i].offset);
+		AglVector3 childForward = m_createdEffects[i].forward;
 		chilMatrix *= parentMatrix;
+		childForward.transformNormal(parentMatrix);
 
 		ParticleSystemsComponent* psc = static_cast<ParticleSystemsComponent*>
 							(m_createdEffects[i].data->getComponent(ComponentType::ParticleSystemsComponent));
 
 		AglParticleSystem* ps = psc->getParticleSystemPtr(0);
 		if (ps)
-			ps->setSpawnPoint(chilMatrix.GetTranslation());
+			ps->setSpawnPoint(chilMatrix.GetTranslation()+childForward*0.85f);
 
 		if (m_createdEffects[i].disabled)
 			ps->setSpawnFrequency(0);
@@ -77,10 +79,10 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	particleSystem.setSpawnFrequency(1.0f);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
-	particleSystem.getHeaderPtr()->particleSpace=false;
 	particleSystem.setSpawnSpeed(0.0f);
-	particleSystem.setParticleSize(AglVector2(2, 2));
+	particleSystem.setParticleSize(AglVector2(1.5f, 1.5f));
 	particleSystem.setParticleAge(0.5f);
+	particleSystem.setFadeOutStart(0.0f);
 
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "addModule.png";

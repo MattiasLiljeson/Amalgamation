@@ -25,14 +25,16 @@ public:
 		Entity*		parent;
 		int			slot;
 		AglVector3	offset;
+		AglVector3	forward;
 		Entity*		data;
 		bool		disabled;
 
-		ConnectionEffectData(Entity* p_parent, int p_slot, AglVector3 p_offset)
+		ConnectionEffectData(Entity* p_parent, int p_slot, AglVector3 p_offset, AglVector3 p_forward)
 		{
 			parent = p_parent;
 			slot = p_slot;
 			offset = p_offset;
+			forward = p_forward;
 			disabled = false;
 		}
 	};

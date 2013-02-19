@@ -163,6 +163,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 							SlotParticleEffectPacket slotPacket;
 							slotPacket.translationOffset = slots[i].offset.GetTranslation();
+							slotPacket.forwardDirection = slots[i].offset.GetForward();
 							slotPacket.slot = slots[i].index;
 							slotPacket.networkIdentity = netSync->getNetworkIdentity();
 							slotPacket.active = true;

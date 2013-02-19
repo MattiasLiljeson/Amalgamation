@@ -166,7 +166,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				Entity* parent = directMapper->getEntity(data.networkIdentity);
 
 				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
-				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset));
+				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection));
 			}
 		}
 

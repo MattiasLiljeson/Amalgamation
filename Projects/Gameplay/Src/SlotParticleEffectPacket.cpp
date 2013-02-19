@@ -7,6 +7,7 @@ SlotParticleEffectPacket::SlotParticleEffectPacket()
 	slot = -1;
 	active = false;
 	translationOffset = AglVector3();
+	forwardDirection = AglVector3();
 }
 
 Packet SlotParticleEffectPacket::pack()
@@ -15,7 +16,8 @@ Packet SlotParticleEffectPacket::pack()
 	packet << networkIdentity
 		<< slot
 		<< active
-		<< translationOffset;
+		<< translationOffset
+		<< forwardDirection;
 
 	return packet;
 }
@@ -25,5 +27,6 @@ void SlotParticleEffectPacket::unpack( Packet& p_packet )
 	p_packet	>> networkIdentity
 				>> slot
 				>> active
-				>> translationOffset;
+				>> translationOffset
+				>> forwardDirection;
 }
