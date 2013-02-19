@@ -31,7 +31,8 @@ PixelOut PS(PixelIn p_input)
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);
 
-	pixelOut.specular = specularTexture.Sample(pointSampler, p_input.texCoord);
+	pixelOut.specular.rgb = specularTexture.Sample(pointSampler, p_input.texCoord).rgb;
+	pixelOut.diffuse.a = glowTexture.Sample(pointSampler, p_input.texCoord).r;
 	
 	return pixelOut;
 }

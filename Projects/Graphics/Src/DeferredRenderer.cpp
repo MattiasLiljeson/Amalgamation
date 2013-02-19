@@ -134,6 +134,8 @@ void DeferredRenderer::mapVariousPassesToComposeStage(){
 			RenderTargets::NORMAL] );
 	m_deviceContext->PSSetShaderResources(2, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
+	m_deviceContext->PSSetShaderResources(3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DIFFUSE] );
 }
 
 void DeferredRenderer::unmapVariousPassesFromComposeStage(){
@@ -141,6 +143,7 @@ void DeferredRenderer::unmapVariousPassesFromComposeStage(){
 	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 2, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
 }
 void DeferredRenderer::unMapGBuffers()
 {
