@@ -15,5 +15,7 @@ struct VertexIn
 	
 	//Per instance
 	float4x4 instanceTransform 	: INSTANCETRANSFORM;
+	float4x4 gradientColor : GRADIENTCOLOR;
+	float4 flags : FLAGS;
 	uint instanceId : SV_InstanceID;
 };

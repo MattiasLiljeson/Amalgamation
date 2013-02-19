@@ -5,7 +5,6 @@ Texture2D diffuseTexture  : register(t0);
 Texture2D normalTexture   : register(t1);
 Texture2D specularTexture : register(t2);
 Texture2D glowTexture     : register(t3);
-Texture2D displaceTexture : register(t4);
 Texture2D gradientTexture : register(t5);
 
 SamplerState pointSampler : register(s0);

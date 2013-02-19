@@ -47,12 +47,8 @@ PixelIn VS(VertexIn p_input)
 	vout.normal = mul(n, p_input.instanceTransform).xyz;
 	vout.tangent = mul(t,p_input.instanceTransform).xyz;
 	vout.texCoord = p_input.texCoord;
-	
-	vout.gradientColor = float4x4(1,1,1,1,
-	1,1,1,1,
-	1,1,1,1,
-	1,1,1,1);
-	vout.flags = 1;
+	vout.gradientColor = p_input.gradientColor;
+	vout.flags = p_input.flags;
 	
 	return vout;
 }
