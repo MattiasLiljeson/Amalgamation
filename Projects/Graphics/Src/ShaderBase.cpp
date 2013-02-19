@@ -42,6 +42,9 @@ void ShaderBase::applyStages()
 		m_deviceContext->GSSetShader(NULL,0,0);
 	}
 	if (m_domainShader){
+		if(m_samplerState){
+			m_deviceContext->DSSetSamplers(0,1,&m_samplerState);
+		}
 		m_deviceContext->DSSetShader(m_domainShader->data,0,0);
 	}
 	else{
