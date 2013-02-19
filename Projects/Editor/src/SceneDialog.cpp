@@ -280,6 +280,6 @@ void SceneDialog::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
 	ps = Scene::GetInstance()->GetParticleSystems();
 	for (unsigned int i = 0; i < ps.size(); i++)
 	{
-		AddPE(ps[i]->getParticleSystem());
+		AddPE(ps[i]->getParticleSystem(), i);
 	}
 }
