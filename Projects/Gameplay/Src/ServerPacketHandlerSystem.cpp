@@ -30,6 +30,8 @@
 #include "PlayerScore.h"
 #include "CameraControlPacket.h"
 #include "ShipConnectionPointHighlights.h"
+#include "ShipManagerSystem.h"
+#include "SlotParticleEffectPacket.h"
 
 
 
@@ -150,6 +152,29 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						entity->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
 						entity->addComponent(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
 						entity->applyComponentChanges();
+
+						//Send a packet back to the client telling him where connection points are
+
+						ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+						smcs->setEditMode(true);
+
+						ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+						vector<FreeSlotData> slots = sms->findFreeConnectionPoints(packet.getSenderId());
+
+						for (unsigned int i = 0; i < slots.size(); i++)
+						{
+							NetworkSynced* netSync = static_cast<NetworkSynced*>(slots[i].parent->getComponent(ComponentType::NetworkSynced));
+
+							SlotParticleEffectPacket slotPacket;
+							slotPacket.translationOffset = slots[i].offset.GetTranslation();
+							slotPacket.forwardDirection = slots[i].offset.GetForward();
+							slotPacket.slot = slots[i].index;
+							slotPacket.networkIdentity = netSync->getNetworkIdentity();
+							slotPacket.active = true;
+
+							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
+						}
+
 					}
 					else if (lookAtOrbit && !lookAtFollow && 
 						cameraControlPacket.state==PlayerStates::steeringState)				
@@ -158,6 +183,19 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 							entity->removeComponent(ComponentType::TAG_LookAtOrbitMode); // Disable this state...
 							entity->addComponent(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG());  // ...and switch to follow state.
 							entity->applyComponentChanges();
+
+							//Send a packet back to the client telling him no connection points should be drawn
+
+							ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+							smcs->setEditMode(false);
+
+							SlotParticleEffectPacket slotPacket;
+							slotPacket.translationOffset = AglVector3::zero();
+							slotPacket.slot = -1;
+							slotPacket.networkIdentity = -1;
+							slotPacket.active = false;
+
+							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
 						}
 					}
 				}

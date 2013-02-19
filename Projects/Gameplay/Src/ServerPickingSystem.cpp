@@ -14,6 +14,7 @@
 #include "ShipManagerSystem.h"
 #include "ModuleHelper.h"
 #include "ModuleStateChangePacket.h"
+#include "SlotParticleEffectPacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -35,6 +36,15 @@ float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 		}*/
 	}
 	return -1;
+}
+
+//Projects a point on a ray
+AglVector3 ServerPickingSystem::project(AglVector3 p_o, AglVector3 p_d, AglVector3 p_point)
+{
+	p_d.normalize();
+	float t = AglVector3::dotProduct(p_d, p_point-p_o) / AglVector3::dotProduct(p_d, p_d);
+	t = max(t, 0);
+	return p_o + p_d*t;
 }
 
 ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
@@ -301,7 +311,11 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	}
 	else
 	{
-		body->AddImpulse(-vel);
+		AglVector3 dest = project(origin, dir, bs.position);
+		AglVector3 dir = dest - bs.position;
+		dir.normalize();
+		dest = bs.position + dir * bs.radius;
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
 	}
 
 	//Fix selection sphere
@@ -586,12 +600,39 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		/************************************************************************/
 		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 			module->getComponent(ComponentType::NetworkSynced));
+		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
+			target->getComponent(ComponentType::NetworkSynced));
+		NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
+			ship->getComponent(ComponentType::NetworkSynced));
+
+		//Add particle effects to the slot
+		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+		{
+			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
+			{
+				SlotParticleEffectPacket slotPacket;
+				slotPacket.translationOffset = conPoints->m_connectionPoints[i].cpTransform.GetTranslation();
+				slotPacket.forwardDirection = conPoints->m_connectionPoints[i].cpTransform.GetForward();
+				slotPacket.slot = i;
+				slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
+				slotPacket.active = true;
+				m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+			}
+		}
+
+		//Remove the parent slot
+		SlotParticleEffectPacket slotPacket;
+		slotPacket.translationOffset = AglVector3(0, 0, 0);
+		slotPacket.forwardDirection = AglVector3(0, 0, 0);
+		slotPacket.slot = p_ray.m_targetSlot;
+		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+		slotPacket.active = false;
+		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+
+		//Add parent change event to get correct gradient colors
 		ModuleStateChangePacket moduleChanged;
 		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
-
-		networkSynced = static_cast<NetworkSynced*>(
-			target->getComponent(ComponentType::NetworkSynced));
-		moduleChanged.currentParrent = networkSynced->getNetworkIdentity();
+		moduleChanged.currentParrent = parentNetworkSynced->getNetworkIdentity();
 
 		m_server->broadcastPacket(moduleChanged.pack());
 	}
@@ -684,6 +725,37 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			/************************************************************************/
 			/* SEND DETACH MESSAGE TO CLIENTS										*/
 			/************************************************************************/
+
+			NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+				module->getComponent(ComponentType::NetworkSynced));
+			NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
+				parent->getComponent(ComponentType::NetworkSynced));
+			NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
+				parentShip->getComponent(ComponentType::NetworkSynced));
+
+			//Remove particle effects from the slot
+			for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+			{
+				if (cps->m_connectionPoints[i].cpConnectedEntity < 0)
+				{
+					SlotParticleEffectPacket slotPacket;
+					slotPacket.translationOffset = AglVector3(0, 0, 0);
+					slotPacket.forwardDirection = AglVector3(0, 0, 0);
+					slotPacket.slot = i;
+					slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
+					slotPacket.active = false;
+					m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+				}
+			}
+
+			//Add back the parent slot
+			SlotParticleEffectPacket slotPacket;
+			slotPacket.translationOffset = cpsParent->m_connectionPoints[slot].cpTransform.GetTranslation();
+			slotPacket.forwardDirection = cpsParent->m_connectionPoints[slot].cpTransform.GetForward();
+			slotPacket.slot = slot;
+			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+			slotPacket.active = true;
+			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 		}
 	}
 	return true;
