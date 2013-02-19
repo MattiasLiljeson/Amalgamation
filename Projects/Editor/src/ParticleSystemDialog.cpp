@@ -285,6 +285,59 @@ void TW_CALL ParticleSystemDialog::GetSpawnAngularVelocity(void *value, void *cl
 	*(float*)value = ps->GetHeader().spawnAngularVelocity;
 }
 
+void TW_CALL ParticleSystemDialog::SetBlendAlpha(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ALPHA;
+}
+void TW_CALL ParticleSystemDialog::SetBlendAdditive(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+}
+void TW_CALL ParticleSystemDialog::SetBlendMultiply(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_MULTIPLY;
+}
+
+void TW_CALL ParticleSystemDialog::SetCullNone(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
+}
+void TW_CALL ParticleSystemDialog::SetCullZ(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_Z_CULLED;
+}
+void TW_CALL ParticleSystemDialog::SetGlobalSpace(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
+	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
+}
+void TW_CALL ParticleSystemDialog::SetLocalSpawn(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_LOCAL;
+	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
+}
+void TW_CALL ParticleSystemDialog::SetLocalLife(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_LOCAL;
+	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_LOCAL;
+}
+
 void TW_CALL ParticleSystemDialog::Clone(void* clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
@@ -383,6 +436,25 @@ void ParticleSystemDialog::setPS(int pIndex)
 
 	//Spawn Angular Velocity
 	TwAddVarCB(m_dialog, "Spawn Angular Velocity", TW_TYPE_FLOAT, SetSpawnAngularVelocity, GetSpawnAngularVelocity, (void*)this, "key=o step=0.01");
+
+	//Blend Modes
+	TwAddButton(m_dialog, "Alpha", SetBlendAlpha, (void*)this, "group='Blend Mode'");
+	TwAddButton(m_dialog, "Additive", SetBlendAdditive, (void*)this, "group='Blend Mode'");
+	TwAddButton(m_dialog, "Multiply", SetBlendMultiply, (void*)this, "group='Blend Mode'");
+
+	//Blend Modes
+	TwAddButton(m_dialog, "Alpha", SetBlendAlpha, (void*)this, "group='Blend Mode'");
+	TwAddButton(m_dialog, "Additive", SetBlendAdditive, (void*)this, "group='Blend Mode'");
+	TwAddButton(m_dialog, "Multiply", SetBlendMultiply, (void*)this, "group='Blend Mode'");
+
+	//Rasterizer modes
+	TwAddButton(m_dialog, "No Culling", SetCullNone, (void*)this, "group='Culling'");
+	TwAddButton(m_dialog, "Z-Culling", SetCullZ, (void*)this, "group='Culling'");
+
+	//Particle space
+	TwAddButton(m_dialog, "Global", SetGlobalSpace, (void*)this, "group='Particle Space'");
+	TwAddButton(m_dialog, "Local Spawn", SetLocalSpawn, (void*)this, "group='Particle Space'");
+	TwAddButton(m_dialog, "Local Life", SetLocalLife, (void*)this, "group='Particle Space'");
 
 	//Clone
 	TwAddButton(m_dialog, "Clone", Clone, (void*)this, " label='Clone'");
