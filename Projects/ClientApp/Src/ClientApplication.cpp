@@ -105,6 +105,7 @@
 #include <LevelHandlerSystem.h>
 #include <CullingSystem.h>
 #include <ConnectionVisualizerSystem.h>
+#include <SpeedFovAdjustSystem.h>
 
 
 // Helpers
@@ -119,7 +120,6 @@ using namespace std;
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
-
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -326,13 +326,11 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 
 	// Controller logic for camera
-	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc,
-		m_client);
-	m_world->setSystem( cameraControl , true );
+	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
 	// Camera system sets its viewport info to the graphics backend for render
-	CameraSystem* camera = new CameraSystem( graphicsBackend );
-	m_world->setSystem( camera , true );
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 
+	m_world->setSystem( new SpeedFovAdjustSystem(), true );
 
 
 	/************************************************************************/
