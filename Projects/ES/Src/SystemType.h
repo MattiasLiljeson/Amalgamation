@@ -93,6 +93,7 @@ public:	//Enums
 		SkeletalAnimationSystem,
 		CullingSystem,
 		ConnectionVisualizerSystem,
+		SpeedFovAdjustSystem,
 		NUM_SYSTEM_TYPES
 	};
 

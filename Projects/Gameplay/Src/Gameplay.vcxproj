@@ -174,6 +174,7 @@
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
+    <ClInclude Include="SpeedFovAdjustSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
     <ClInclude Include="StaticProp.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
+    <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
