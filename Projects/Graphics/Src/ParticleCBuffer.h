@@ -47,8 +47,8 @@ struct ParticleCBuffer
 		setParticleMaxAge( p_header.particleAge );
 		setMaxOpacity( p_header.maxOpacity );
 		setAlignment( p_header.alignmentType );
-		setRelative( p_header.particleSpace );
-		setSpace( p_header.spawnSpace );
+		setRelative( p_header.modes );
+		setSpace( p_header.space );
 	}
 
 	void setRect(const AglVector4& p_normalizedRect){

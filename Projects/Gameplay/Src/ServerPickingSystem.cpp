@@ -13,6 +13,7 @@
 #include "ShipModule.h"
 #include "ShipManagerSystem.h"
 #include "ModuleHelper.h"
+#include "ModuleStateChangePacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -579,6 +580,20 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		moduleBody->setParentId(shipBody->m_id);
 
 		p_ray.m_latestAttached = module->getIndex();
+
+		/************************************************************************/
+		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+		/************************************************************************/
+		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+			module->getComponent(ComponentType::NetworkSynced));
+		ModuleStateChangePacket moduleChanged;
+		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
+
+		networkSynced = static_cast<NetworkSynced*>(
+			target->getComponent(ComponentType::NetworkSynced));
+		moduleChanged.currentParrent = networkSynced->getNetworkIdentity();
+
+		m_server->broadcastPacket(moduleChanged.pack());
 	}
 }
 bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
@@ -666,7 +681,9 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			RigidBody* body = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 			physX->getController()->DetachBodyFromCompound(body, false);
 
-
+			/************************************************************************/
+			/* SEND DETACH MESSAGE TO CLIENTS										*/
+			/************************************************************************/
 		}
 	}
 	return true;

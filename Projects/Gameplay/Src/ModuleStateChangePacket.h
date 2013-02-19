@@ -1,28 +1,29 @@
 #pragma once
+
 #include "Packetizer.h"
 
 // =======================================================================================
-//                                      WelcomePacket
+//                                      AttachModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles the packing and unpacking of WelcomePacket
+/// \brief	
 ///        
-/// # WelcomePacket
+/// # AttachModule
 /// Detailed description.....
-/// Created on: 14-1-2013 
+/// Created on: 18-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class WelcomePacket : public Packetizer
+class ModuleStateChangePacket : public Packetizer
 {
 public:
-	WelcomePacket();
-	 ~WelcomePacket();
+	ModuleStateChangePacket();
 
 	Packet pack();
 
 	void unpack( Packet& p_packet );
 public:
-	int clientNetworkIdentity;
-	int playerID;
+	int affectedModule;
+	int previousParent;
+	int currentParrent;
 };

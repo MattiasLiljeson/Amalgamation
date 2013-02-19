@@ -475,11 +475,7 @@
     <ClInclude Include="MeshOffsetTransform.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
-    <ClInclude Include="InterpolationSystem.h" />
-    <ClInclude Include="LoadMeshSystemClient.h" />
-    <ClInclude Include="LoadMeshSystemServer.h" />
     <ClInclude Include="Vibration.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -543,6 +539,9 @@
     <ClInclude Include="GameState.h">
       <Filter>Components\States</Filter>
     </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="SpeedBoostModuleActivation.h">
       <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
     </ClInclude>
@@ -588,7 +587,6 @@
     <ClInclude Include="OnHitEffectBufferSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleHelper.h" />
     <ClInclude Include="LevelPieceInfo.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -601,13 +599,30 @@
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GradientMapping.h" />
-    <ClInclude Include="GradientComponent.h" />
     <ClInclude Include="BoundingBox.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ShieldPlatingSystem.h">
-      <Filter>Systems\Gameplay</Filter>
+    <ClInclude Include="GradientMapping.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHelper.h" />
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStateChangePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="CullingSystem.h">
       <Filter>Systems\GFX</Filter>
@@ -916,10 +931,6 @@
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="GamepadRumbleSystem.cpp" />
-    <ClCompile Include="InterpolationSystem.cpp" />
-    <ClCompile Include="LoadMeshSystemClient.cpp" />
-    <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LightBlinker.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
@@ -980,6 +991,9 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Components\States</Filter>
     </ClCompile>
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
     <ClCompile Include="CircularMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
@@ -1004,7 +1018,6 @@
     <ClCompile Include="OnHitEffectBufferSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp">
       <Filter>Systems\Level Gen</Filter>
     </ClCompile>
@@ -1014,9 +1027,24 @@
     <ClCompile Include="LevelPieceRoot.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="GradientComponent.cpp" />
-    <ClCompile Include="ShieldPlatingSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
+    <ClCompile Include="GamepadRumbleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHelper.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStateChangePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="CullingSystem.cpp">
       <Filter>Systems\GFX</Filter>

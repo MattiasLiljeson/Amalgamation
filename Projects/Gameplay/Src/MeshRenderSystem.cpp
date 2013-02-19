@@ -18,6 +18,8 @@
 #include "GradientComponent.h"
 #include "BoundingBox.h"
 #include "InputBackendSystem.h"
+#include "ModuleHelper.h"
+#include "ShipModule.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -49,8 +51,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
-		RenderInfo* renderInfo = static_cast<RenderInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
+		RenderInfo* renderInfo = getRenderInfo(p_entities[i]);
 
 		// Don't render instances that hasn't got a mesh...
 		// NOTE: (Johan) ...or if it's not supposed to render!
@@ -84,19 +85,9 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if (ri->m_shouldBeCulled)
 			continue;
-
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
-		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-			renderInfo->m_meshId);
-		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
-		if(gradient != NULL){ 
-			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
-			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
-		}
-		instanceData.setGradientColor( matInfo.getGradientColors() );
-		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
-		
+		fillInstanceData(&instanceData,p_entities[i],renderInfo);
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
@@ -120,6 +111,57 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
+void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity, 
+										RenderInfo* p_renderInfo){
+	MaterialInfo matInfo;
+	// Try and get the gradient component
+	auto gradient = static_cast<GradientComponent*>(p_entity->getComponent(
+		ComponentType::Gradient));
+	if(gradient != NULL){ 
+
+		// Set all the values needed
+		matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			p_renderInfo->m_meshId);
+		matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+		matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+		p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+	}
+	// If none was found check why
+	else{
+
+		// Assume its a valid Ship Module
+		ShipModule* shipModule = static_cast<ShipModule*>(m_world->
+			getComponentManager()->getComponent(p_entity,ComponentType::ShipModule));
+
+		if(shipModule != NULL && shipModule->m_parentEntity > -1){
+			
+			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
+			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+
+			if(parentShip != NULL){
+				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);
+				matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+					parentShipRenderInfo->m_meshId);
+
+				auto gradient = static_cast<GradientComponent*>(parentShip->getComponent(
+					ComponentType::Gradient));
+
+				matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+				matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+				p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+			}
+		}
+		// If not a Ship Module set values to default
+		else{
+			matInfo.setGradientLayer(1, AglVector4(1,1,1,1));
+			matInfo.setGradientLayer(2, AglVector4(1,1,1,1));
+			p_data->setNumberOfActiveGradientLayers( 1 );
+		}
+	}	
+
+	p_data->setGradientColor( matInfo.getGradientColors() );
+}
+
 void MeshRenderSystem::render()
 {
 	for(unsigned int meshIdx=0; meshIdx<m_instanceLists.size(); meshIdx++ ){
@@ -130,4 +172,10 @@ void MeshRenderSystem::render()
 				&m_instanceLists[meshIdx], &m_boneMatrices[meshIdx]); // process a mesh
 		}
 	}
+}
+
+RenderInfo* MeshRenderSystem::getRenderInfo( Entity* p_entity )
+{
+	return static_cast<RenderInfo*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 }

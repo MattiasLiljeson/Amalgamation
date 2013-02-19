@@ -31,6 +31,8 @@ TcpClient::TcpClient()
 	m_totalPacketsReceivedInCommProcess = 0;
 	m_totalPacketsSentInCommProcess = 0;
 
+	m_playerId = -1;
+
 }
 
 TcpClient::~TcpClient()
@@ -330,4 +332,14 @@ void TcpClient::askForCommProcessInfo()
 	ProcessMessageAskForCommProcessInfo* askForCommInfo =
 		new ProcessMessageAskForCommProcessInfo( this );
 	m_communicationProcess->putMessage( askForCommInfo );
+}
+
+int TcpClient::getPlayerID()
+{
+	return m_playerId;
+}
+
+void TcpClient::setPlayerID( int p_playerId )
+{
+	m_playerId = p_playerId;
 }

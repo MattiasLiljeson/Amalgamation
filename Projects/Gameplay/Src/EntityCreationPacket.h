@@ -27,6 +27,7 @@ public:
 	char			entityType;
 	bool			isLevelProp;
 	int				owner;
+	int				playerID;
 	int				networkIdentity;
 	int				meshInfo;
 	int				miscData; ///< extra data if needed

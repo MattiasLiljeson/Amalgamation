@@ -34,6 +34,7 @@ public:
 		TransformPacket,
 		RemoveSoundEffect,
 		OnHitScoreEffectPacket,
+		ModuleStateChangePacket,
 
 		// Client -> Server:
 		/************************************************************************/
