@@ -1,21 +1,20 @@
 #pragma once
 #include <EntitySystem.h>
 // =======================================================================================
-// CircularMovementSystem
+// AxisRotationSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # CircularMovementSystem
+/// # AxisRotationSystem
 /// Detailed description...
-/// Created on: 11-2-2013 
+/// Created on: 19-2-2013 
 ///---------------------------------------------------------------------------------------
-class CircularMovementSystem: public EntitySystem
+class AxisRotationSystem: public EntitySystem
 {
 public:
-	CircularMovementSystem();
-	~CircularMovementSystem();
+	AxisRotationSystem();
 	virtual void processEntities(const vector<Entity*>& p_entities) final;
 
 };

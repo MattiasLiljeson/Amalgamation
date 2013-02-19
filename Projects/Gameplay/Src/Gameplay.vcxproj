@@ -14,6 +14,9 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="AxisRotate.h" />
+    <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -76,7 +79,6 @@
     <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
-    <ClInclude Include="LightSources.h" />
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LoadMeshSystemClient.h" />
@@ -197,6 +199,7 @@
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="AxisRotationSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
@@ -243,12 +246,12 @@
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
-    <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LoadMeshSystemClient.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
     <ClCompile Include="MineControllerSystem.cpp" />

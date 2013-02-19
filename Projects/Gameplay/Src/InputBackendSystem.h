@@ -68,6 +68,12 @@ public:
 	const double getDeltaByEnum( InputHelper::MouseAxes p_axis );
 	const double getDeltaByEnum( InputHelper::Xbox360Digitals p_digital );
 	const double getDeltaByEnum( InputHelper::Xbox360Analogs p_analog );
+	
+	const double getStatusByEnum( InputHelper::KeyboardKeys p_key );
+	const double getStatusByEnum( InputHelper::MouseButtons p_btn );
+	const double getStatusByEnum( InputHelper::MouseAxes p_axis );
+	const double getStatusByEnum( InputHelper::Xbox360Digitals p_digital );
+	const double getStatusByEnum( InputHelper::Xbox360Analogs p_analog );
 
 	///-----------------------------------------------------------------------------------
 	/// Activates rumble on controller. Provide values between 

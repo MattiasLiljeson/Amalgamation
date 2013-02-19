@@ -64,7 +64,6 @@
 
 // Debug
 #include "EntityFactory.h"
-#include "LightSources.h"
 #include "LightsComponent.h"
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleSystemsComponent.h"

@@ -24,6 +24,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		CircularMovement,
+		AxisRotate,
 		Extrapolate,
 		InterpolationComponent,
 		PhysicsBody,

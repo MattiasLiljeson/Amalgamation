@@ -138,6 +138,9 @@ public:
 	 */
 	virtual void removed( Entity* p_entity ) {};
 
+	virtual void sysEnabled() {};
+	virtual void sysDisabled() {};
+
 	void removeFromSystem( Entity* p_entity );
 	void insertToSystem( Entity* p_entity );
 
