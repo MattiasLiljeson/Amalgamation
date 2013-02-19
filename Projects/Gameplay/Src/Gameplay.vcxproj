@@ -78,7 +78,6 @@
     <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
-    <ClInclude Include="LightSources.h" />
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LoadMeshSystemClient.h" />
@@ -243,7 +242,6 @@
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
-    <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LoadMeshSystemClient.cpp" />

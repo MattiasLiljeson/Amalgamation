@@ -5,6 +5,7 @@
 #include "AxisRotate.h"
 #include <RandomUtil.h>
 #include "InputBackendSystem.h"
+#include "LightsComponent.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -55,13 +56,17 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 5000);
 
+	Entity* entity = m_world->createEntity();
+	initPointLight(entity, AglVector3(0.0f, 0.0f, 50.0f), 1000.0f);
+	m_world->addEntity(entity);
+
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	m_ship->addComponent(new AxisRotate(AglVector3::up(), toVector, rotation, 0.0f));
+	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
 	m_world->addEntity(m_ship);
 }
 
@@ -96,4 +101,36 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 		m_world->addEntity(entity);
 		m_rocks[i] = entity;
 	}
+}
+
+void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_position,
+	float p_range )
+{
+	LightsComponent* lights = new LightsComponent();
+	Light light;
+	light.instanceData.type = LightTypes::E_LightTypes_POINT;
+	light.instanceData.enabled = true;
+	light.instanceData.ambient[0] = 0.0f;
+	light.instanceData.ambient[1] = 0.0f;
+	light.instanceData.ambient[2] = 0.0f;
+	light.instanceData.diffuse[0] = 1.0f;
+	light.instanceData.diffuse[1] = 0.2f;
+	light.instanceData.diffuse[2] = 0.2f;
+	light.instanceData.specular[0] = 0.1f;
+	light.instanceData.specular[1] = 0.1f;
+	light.instanceData.specular[2] = 0.1f;
+	light.instanceData.attenuation[0] = 0.0f;
+	light.instanceData.attenuation[1] = 0.0f;
+	light.instanceData.attenuation[2] = 0.0001f;
+	light.instanceData.range = p_range;
+	TransformComponents transformComp;
+	transformComp.translation = p_position;
+	transformComp.scale = AglVector3::one() * p_range;
+	transformComp.rotation = AglQuaternion::identity();
+	light.instanceData.setWorldTransform(transformComp.toMatrix());
+	lights->addLight(light);
+	p_entity->addComponent(lights);
+
+	p_entity->addComponent(new Transform(p_position, AglQuaternion::identity(),
+		AglVector3::one()));
 }

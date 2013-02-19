@@ -384,9 +384,6 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="LightSources.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="EntityParent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -869,9 +866,6 @@
     </ClCompile>
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="LightSources.cpp">
-      <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="TransformParentHandlerSystem.cpp">
       <Filter>Systems</Filter>
