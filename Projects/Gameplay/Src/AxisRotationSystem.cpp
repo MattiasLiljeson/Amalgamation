@@ -19,7 +19,7 @@ void AxisRotationSystem::processEntities( const vector<Entity*>& p_entities )
 		axisRotate->angle += axisRotate->angularVelocity * m_world->getDelta();
 		AglVector3 rotated = AglVector3::rotateAroundAxis(axisRotate->startVector,
 			axisRotate->axis, axisRotate->angle);
-		AglQuaternion quaternion = AglQuaternion::constructFromAxisAndAngle(AglVector3::up(), axisRotate->angle);
+		AglQuaternion quaternion = AglQuaternion::constructFromAxisAndAngle(axisRotate->axis, axisRotate->angle);
 		transform->setRotation( quaternion * axisRotate->originRotation );
 	}
 }

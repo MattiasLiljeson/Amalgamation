@@ -107,9 +107,10 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 		entity->addComponent(new LoadMesh(p_meshName));
 		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
 		AglVector3 randomAxis;
-//		RandomUtil::randomEvenlyDistributedSphere(&randomAxis.x, &randomAxis.y,
-//			&randomAxis.z);
-		//entity->addComponent(new AxisRotate(
+		RandomUtil::randomEvenlyDistributedSphere(&randomAxis.x, &randomAxis.y,
+			&randomAxis.z);
+		entity->addComponent(new AxisRotate(randomAxis, randomDirection * p_radius,
+			AglQuaternion::identity(), RandomUtil::randomInterval(0.05, 0.2f)));
 		m_world->addEntity(entity);
 		m_rocks[i] = entity;
 	}
