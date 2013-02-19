@@ -32,8 +32,8 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 		circular->angle += m_world->getDelta() * circular->angularVelocity;
 		AglVector3 position(
 				circular->centerPosition.x + cos(circular->angle) * circular->radius,
-				circular->centerPosition.y + sin(circular->angle) * circular->radius,
-				circular->centerPosition.z);
+				circular->centerPosition.y,
+				circular->centerPosition.z + sin(circular->angle) * circular->radius);
 		transform->setTranslation(position);
 	}
 }

@@ -638,10 +638,15 @@ void ClientApplication::initInstanceSphereByJohan( string p_meshName, AglVector3
 		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
 			&randomDirection.z);
 		AglVector3 position = p_origin + randomDirection * p_radius;
+
+		//AglQuaternion rotation = AglQuaternion::identity();
 		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0.0f, 1.0f, 0.0f), p_origin-position);
+
 		AglVector3 scale(1.0f, 1.0f, 1.0f);
 		entity->addComponent(new Transform(position, rotation, scale));
 		entity->addComponent(new LoadMesh(p_meshName));
+		AglVector3 center(p_origin.x, position.y, p_origin.z);
+		entity->addComponent(new CircularMovement(center, p_radius, 0, 1.0f));
 		m_world->addEntity(entity);
 	}
 }
