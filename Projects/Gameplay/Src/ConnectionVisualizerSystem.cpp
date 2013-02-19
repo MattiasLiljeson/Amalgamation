@@ -77,7 +77,7 @@ void ConnectionVisualizerSystem::process()
 		AglParticleSystem* ps = psc->getParticleSystemPtr(0);
 		if (ps)
 		{
-			ps->setSpawnPoint(chilMatrix.GetTranslation()+childForward*0.85f);
+			ps->setSpawnPoint(chilMatrix.GetTranslation()+childForward*0.55f);
 
 			if (m_createdEffects[i].disabled)
 				ps->setSpawnFrequency(0);
@@ -114,7 +114,7 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setSpawnSpeed(0.0f);
-	particleSystem.setParticleSize(AglVector2(1.5f, 1.5f));
+	particleSystem.setParticleSize(AglVector2(1.0f, 1.0f));
 	particleSystem.setParticleAge(0.5f);
 	particleSystem.setFadeOutStart(0.0f);
 

@@ -607,6 +607,15 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			}
 		}
 
+		//Remove the parent slot
+		SlotParticleEffectPacket slotPacket;
+		slotPacket.translationOffset = AglVector3(0, 0, 0);
+		slotPacket.forwardDirection = AglVector3(0, 0, 0);
+		slotPacket.slot = p_ray.m_targetSlot;
+		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+		slotPacket.active = false;
+		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+
 		//Add parent change event to get correct gradient colors
 		ModuleStateChangePacket moduleChanged;
 		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
@@ -706,6 +715,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 
 			NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 				module->getComponent(ComponentType::NetworkSynced));
+			NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
+				parent->getComponent(ComponentType::NetworkSynced));
 			NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
 				parentShip->getComponent(ComponentType::NetworkSynced));
 
@@ -723,6 +734,15 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 					m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 				}
 			}
+
+			//Add back the parent slot
+			SlotParticleEffectPacket slotPacket;
+			slotPacket.translationOffset = cpsParent->m_connectionPoints[slot].cpTransform.GetTranslation();
+			slotPacket.forwardDirection = cpsParent->m_connectionPoints[slot].cpTransform.GetForward();
+			slotPacket.slot = slot;
+			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+			slotPacket.active = true;
+			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 		}
 	}
 	return true;
