@@ -29,11 +29,16 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 			ComponentType::Transform));
 		CircularMovement* circular = static_cast<CircularMovement*>(p_entities[i]->
 			getComponent(ComponentType::CircularMovement));
-		circular->angle += m_world->getDelta() * circular->angularVelocity;
-		AglVector3 position(
-				circular->centerPosition.x + cos(circular->angle) * circular->radius,
-				circular->centerPosition.y,
-				circular->centerPosition.z + sin(circular->angle) * circular->radius);
+		AglVector3 v = circular->vectorFromCenter;
+		AglVector3 k = circular->axis;
+		AglVector3::normalize(k);
+		circular->angle += circular->angularVelocity * m_world->getDelta();
+		AglVector3 vRot = v * cosf(circular->angle) + AglVector3::crossProduct(k, v) * 
+			sinf(circular->angle) + k * AglVector3::dotProduct(k, v) *
+			(1 - cosf(circular->angle));
+		AglVector3 position = circular->centerPosition + vRot;
 		transform->setTranslation(position);
+		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
+		transform->setRotation(rotation);
 	}
 }

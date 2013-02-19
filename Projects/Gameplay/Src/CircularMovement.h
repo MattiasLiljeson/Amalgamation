@@ -15,19 +15,22 @@
 class CircularMovement: public Component
 {
 public:
-	CircularMovement(AglVector3 p_center, float p_radius, float p_initialAngle,
+	CircularMovement(AglVector3 p_center, AglVector3 p_axis, AglVector3 p_vecFromCenter,
 		float p_angularVelocity)
 		: Component(ComponentType::CircularMovement)
 	{
 		centerPosition = p_center;
-		radius = p_radius;
-		angle = p_initialAngle;
+		axis = p_axis;
+		axis.normalize();
+		vectorFromCenter = p_vecFromCenter;
 		angularVelocity = p_angularVelocity;
+		angle = 0.0f;
 	}
 
 public:
 	AglVector3 centerPosition;
-	float radius;
-	float angle;
+	AglVector3 axis;
+	AglVector3 vectorFromCenter;
 	float angularVelocity;
+	float angle;
 };

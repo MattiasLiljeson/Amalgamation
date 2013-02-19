@@ -563,7 +563,8 @@ void ClientApplication::initEntities()
 //	initInstanceFieldsByJohan("RockC.agl",			50, 50, 20.0f, 0.3f);
 //	initInstanceFieldsByJohan("SpeedBooster.agl",	50, 50, 25.0f, 0.5f);
 //	initInstanceAsteroidFieldByJohan("RockA.agl", AglVector3(100.0f, 0.0f, 0.0f), 400, 50, 5.0f, 0.5f, 5.0f, 0.3f);
-	initInstanceSphereByJohan("RockA.agl", AglVector3(0.0f, 0.0f, 100.0f), 50.0f, 7500);
+	initInstanceSphereByJohan("RockA.agl", AglVector3(0.0f, 0.0f, 100.0f),
+		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 7500);
 }
 
 void ClientApplication::initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
@@ -615,8 +616,8 @@ void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
 			entity->addComponent(ComponentType::Transform, t);
 			entity->addComponent(ComponentType::LoadMesh, new LoadMesh(p_meshName));
 			float angularVelocity = 0.2f + 0.2f * (float)rand()/(float)RAND_MAX;
-			entity->addComponent(ComponentType::CircularMovement, new CircularMovement(AglVector3(
-				-50.0f, -50.0f, z), currentRadius, circleRandom, angularVelocity));
+//			entity->addComponent(ComponentType::CircularMovement, new CircularMovement(AglVector3(
+//				-50.0f, -50.0f, z), currentRadius, circleRandom, angularVelocity));
 			float rX = (float)rand()/(float)RAND_MAX - 0.5f;
 			float rY = (float)rand()/(float)RAND_MAX - 0.5f;
 			float rZ = (float)rand()/(float)RAND_MAX - 0.5f;
@@ -629,7 +630,7 @@ void ClientApplication::initInstanceAsteroidFieldByJohan(string p_meshName,
 }
 
 void ClientApplication::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
-	float p_radius, unsigned int p_numberInstances )
+	AglVector3 p_axis, float p_radius, unsigned int p_numberInstances )
 {
 	for(unsigned int i=0; i<p_numberInstances; i++)
 	{
@@ -638,15 +639,11 @@ void ClientApplication::initInstanceSphereByJohan( string p_meshName, AglVector3
 		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
 			&randomDirection.z);
 		AglVector3 position = p_origin + randomDirection * p_radius;
-
-		//AglQuaternion rotation = AglQuaternion::identity();
 		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0.0f, 1.0f, 0.0f), p_origin-position);
-
 		AglVector3 scale(1.0f, 1.0f, 1.0f);
 		entity->addComponent(new Transform(position, rotation, scale));
 		entity->addComponent(new LoadMesh(p_meshName));
-		AglVector3 center(p_origin.x, position.y, p_origin.z);
-		entity->addComponent(new CircularMovement(center, p_radius, 0, 1.0f));
+		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.01f));
 		m_world->addEntity(entity);
 	}
 }
