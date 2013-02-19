@@ -106,7 +106,7 @@
 #include <CullingSystem.h>
 #include <ConnectionVisualizerSystem.h>
 #include <SpeedFovAdjustSystem.h>
-
+#include <LevelInfoLoader.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -233,7 +233,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	LevelHandlerSystem* levelHandler = new LevelHandlerSystem();
 	m_world->setSystem( levelHandler, true);
-
+	m_world->setSystem( new LevelInfoLoader(), true );
 
 	/************************************************************************/
 	/* Mesh loading															*/
@@ -450,8 +450,8 @@ void ClientApplication::initEntities()
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
 	// Create rocks
-	status = factory->readAssemblageFile( "Assemblages/rocksClient.asd" );
-	entity = factory->entityFromRecipe( "rocksClient" );	
+	status = factory->readAssemblageFile(LEVELPIECESPATH + "prisonChamberClient.asd" );
+	entity = factory->entityFromRecipe( "prisonChamberClient" );	
 
 	m_world->addEntity( entity );
 

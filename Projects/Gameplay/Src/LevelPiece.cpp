@@ -6,11 +6,12 @@
 #include <AglMesh.h>
 #include <ModelResource.h>
 
-LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform )
+LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* p_transform, int p_generation )
 {
 	m_modelResource = p_modelResource;
 	m_transform		= p_transform;
 	m_typeId		= p_typeId;
+	m_generation	= p_generation;
 
 	int maxChildCount = p_modelResource->connectionPoints.m_collection.size();
 	m_childSlotsOccupied.resize(maxChildCount);
@@ -69,12 +70,12 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	// To prevent issues with scale, fetch this scale temporarily
 	AglVector3 tempScale = m_transform->getScale();
 
-	// Rotate the connection point arbitrarily around its forward!
-	// NOTE: Should be enabled again shortly.
-	//Transform transform = m_connectionPoints[0];
-	//transform.setRotation(transform.getRotation() 
-	//	* AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(), (rand() % 360) * 3.1415f / 180.0f));
-	//m_connectionPoints[0] = transform;
+	 //Rotate the connection point arbitrarily around its forward!
+	 //NOTE: Should be enabled again shortly.
+	Transform transform = m_connectionPoints[0];
+	transform.setRotation(transform.getRotation() 
+		* AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(), (rand() % 360) * 3.1415f / 180.0f));
+	m_connectionPoints[0] = transform;
 
 	// 1) Transform this piece and all its connection points with the inverse matrix of the
 	// used this-connector.

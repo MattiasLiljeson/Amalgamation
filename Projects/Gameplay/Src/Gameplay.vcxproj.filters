@@ -636,6 +636,12 @@
     <ClInclude Include="SpeedFovAdjustSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="LevelInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfoLoader.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1060,6 +1066,12 @@
     </ClCompile>
     <ClCompile Include="SpeedFovAdjustSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfoLoader.cpp">
+      <Filter>Systems\Level Gen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
