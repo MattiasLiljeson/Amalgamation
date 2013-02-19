@@ -154,6 +154,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						entity->applyComponentChanges();
 
 						//Send a packet back to the client telling him where connection points are
+
+						ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+						smcs->setEditMode(true);
+
 						ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
 						vector<FreeSlotData> slots = sms->findFreeConnectionPoints(packet.getSenderId());
 
@@ -181,6 +185,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 							entity->applyComponentChanges();
 
 							//Send a packet back to the client telling him no connection points should be drawn
+
+							ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+							smcs->setEditMode(false);
+
 							SlotParticleEffectPacket slotPacket;
 							slotPacket.translationOffset = AglVector3::zero();
 							slotPacket.slot = -1;

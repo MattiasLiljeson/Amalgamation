@@ -82,7 +82,7 @@ void ConnectionVisualizerSystem::process()
 			if (m_createdEffects[i].disabled)
 				ps->setSpawnFrequency(0);
 			else
-				ps->setSpawnFrequency(1.0f);
+				ps->setSpawnFrequency(3.0f);
 		}
 	}
 }
@@ -110,12 +110,12 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	AglParticleSystem particleSystem;
 	particleSystem.setSpawnPoint(chilMatrix.GetTranslation());
 	particleSystem.setSpawnDirection(AglVector3(0, 1, 0));
-	particleSystem.setSpawnFrequency(1.0f);
+	particleSystem.setSpawnFrequency(3.0f);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
 	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setSpawnSpeed(0.0f);
 	particleSystem.setParticleSize(AglVector2(1.0f, 1.0f));
-	particleSystem.setParticleAge(0.5f);
+	particleSystem.setParticleAge(0.25f);
 	particleSystem.setFadeOutStart(0.0f);
 
 	ParticleSystemInstruction particleInstruction;
