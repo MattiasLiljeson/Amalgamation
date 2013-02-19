@@ -38,6 +38,15 @@ float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 	return -1;
 }
 
+//Projects a point on a ray
+AglVector3 ServerPickingSystem::project(AglVector3 p_o, AglVector3 p_d, AglVector3 p_point)
+{
+	p_d.normalize();
+	float t = AglVector3::dotProduct(p_d, p_point-p_o) / AglVector3::dotProduct(p_d, p_d);
+	t = max(t, 0);
+	return p_o + p_d*t;
+}
+
 ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
 										 OnHitEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
@@ -302,7 +311,11 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	}
 	else
 	{
-		body->AddImpulse(-vel);
+		AglVector3 dest = project(origin, dir, bs.position);
+		AglVector3 dir = dest - bs.position;
+		dir.normalize();
+		dest = bs.position + dir * bs.radius;
+		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
 	}
 
 	//Fix selection sphere
