@@ -158,11 +158,14 @@ void TW_CALL SceneDialog::AddPE(void* clientData)
 }
 void SceneDialog::AddPE(AglParticleSystem* pParticleSystem, int p_index)
 {
+	int index = p_index;
 	if (Scene::GetInstance()->GetIndex(pParticleSystem) < 0)
+	{
 		Scene::GetInstance()->AddParticleSystem(pParticleSystem);
+		index = Scene::GetInstance()->GetIndex(pParticleSystem);
+	}
 	string s = "NoName";
 	string info = " label='" + s + "' group='Particle Effects'";
-	int index = p_index;
 	TwAddButton(m_dialog, ("Particle Effect" + toString(index)).c_str(), OpenParticleSystemDialog, (void*)index, info.c_str());
 }
 void SceneDialog::ClonePE(AglParticleSystemHeader pHeader)
