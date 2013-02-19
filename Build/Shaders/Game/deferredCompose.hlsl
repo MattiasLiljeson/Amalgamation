@@ -15,7 +15,6 @@ Texture2D gLightPass 		: register(t0);
 Texture2D gNormalBuffer		: register(t1);
 Texture2D depthBuffer		: register(t2);
 Texture2D gDiffuseBuffer	: register(t3);
-Texture2D gRandomNormals 	: register(t4);
 
 SamplerState pointSampler : register(s0);
 
@@ -46,21 +45,6 @@ float3 getPosition(float2 uv)
 	return getWorldPosFromTexCoord( uv, depthValue, gViewProjInverse);
 }
 
-float2 getRandomVector( float2 uv)
-{
-	return gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f;
-}
-
-float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
-{
-	float3 diff = getPosition( texCoordOrig + uvOffset) - position;
-	
-	float3 v = normalize(diff);
-	float d = length(diff)*scale;
-	
-	return max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity;
-}
-
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
@@ -78,30 +62,32 @@ float4 PS(VertexOut input) : SV_TARGET
 	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	
 	float3 position = getPosition(input.texCoord);
-	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
-	float2 rand 	= getRandomVector(input.texCoord);
 	
 	uint3 index;
 	index.xy = input.position.xy;
 	index.z = 0;
-	float ao = 0.0f;
+	float finalAO = 0.0f;
 
-	//ao = lightColor.a;
-	float aoMult = 1.0f;
+	float3 finalEmissiveValue = float4(0,0,0,0);
+		
+	float4 sampledColor;
+	[unroll]
 	for(int x=-2;x<3;x++)
 	{
+		[unroll]
 		for(int y=-2;y<3;y++)
 		{
-			ao += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+			finalAO += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+			
+			sampledColor = gDiffuseBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
+			sampledColor.rgb *= sampledColor.a;
+			finalEmissiveValue += sampledColor.rgb * blurFilter5[x+2][y+2];
 		}
 	}
 
-	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
+	lightColor = float4(lightColor.r*finalAO, lightColor.g*finalAO, lightColor.b*finalAO, 1.0f );
 	float linDepth = length(position-gCameraPos) / ((1000.0f)-(300.0f));
 	float4 fog = linDepth*float4(0.2f,0.1f,0.05f,0.0f);
-	float4 emissiveValue = gDiffuseBuffer.Sample(pointSampler, input.texCoord).rgba;
 	
-	emissiveValue.rgb *= emissiveValue.a;
-	
-	return float4(lightColor.rgb+fog.rgb+emissiveValue.rgb,1.0f);
+	return float4(lightColor.rgb+fog.rgb+finalEmissiveValue.rgb,1.0f);
 }
