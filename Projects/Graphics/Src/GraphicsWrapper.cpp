@@ -635,7 +635,7 @@ void GraphicsWrapper::renderParticleSystem( ParticleSystemAndTexture* p_system,
 {
 	Texture* texture = m_textureManager->getResource( p_system->textureIdx );
 	m_particleRenderer->renderParticleSystem( &p_system->particleSystem,
-		&m_renderSceneInfo, p_transform, texture,p_system->uvRect );
+	 p_transform, texture,p_system->uvRect );
 }
 
 void GraphicsWrapper::setParticleRenderState()
@@ -701,10 +701,17 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 		{
 			if(p_textureArray[i] != NULL)
 			{
+				if(static_cast<MaterialInfo::TextureTypes>(i) != MaterialInfo::DISPLACEMENTMAP){
 				// set textures
-				m_deviceContext->PSSetShaderResources(startSlot , numViews, 
-					&p_textureArray[i]->data );
+					m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+						&p_textureArray[i]->data );
+				}
+				else{
+					m_deviceContext->DSSetShaderResources(startSlot , numViews, 
+						&p_textureArray[i]->data );
+				}
 				startSlot++;
+
 			}
 		}
 	}

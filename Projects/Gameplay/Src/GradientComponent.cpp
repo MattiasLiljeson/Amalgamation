@@ -3,6 +3,6 @@
 GradientComponent::GradientComponent( AglVector4 p_small, AglVector4 p_big ) 
 	: Component(ComponentType::Gradient)
 {
-	m_color.playerSmall = p_small;
-	m_color.playerBig = p_big;
+	m_color.layerOne = p_small;
+	m_color.layerTwo = p_big;
 }

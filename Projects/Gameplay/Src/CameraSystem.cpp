@@ -72,15 +72,26 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	AglMatrix viewProjInv = AglMatrix::inverse(viewProj);
 	viewProj = AglMatrix::transpose( viewProj );
 	viewProjInv = AglMatrix::transpose(viewProjInv);
-	AglVector3::normalize(lookTarget);
-	AglVector3::normalize(up);
+	
+	//AglVector3::normalize(lookTarget);
+	//AglVector3::normalize(up);
+	
+	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+	if (input->getDeltaByEnum(InputHelper::KeyboardKeys_NUMPAD_1))
+		viewProjInv = viewProjInv;
+	AglVector3 w = lookTarget-position;
+	w.normalize();
+	AglVector3 u = AglVector3::crossProduct(up, w);
+	u.normalize();
+	AglVector3 v = AglVector3::crossProduct(w, u);
+	v.normalize();
 
 	RendererSceneInfo sceneInfo;
 	sceneInfo.view		= view;
 	sceneInfo.viewProj	= viewProj;
 	sceneInfo.cameraPos = position;
-	sceneInfo.cameraForward = lookTarget;
-	sceneInfo.cameraUp = up;
+	sceneInfo.cameraForward = w;
+	sceneInfo.cameraUp = v;
 	sceneInfo.viewProjInv = viewProjInv;
 	sceneInfo.renderTargetDimensions = m_gfxBackend->getWindowSize();
 	sceneInfo.farPlane = camInfo->m_farPlane;

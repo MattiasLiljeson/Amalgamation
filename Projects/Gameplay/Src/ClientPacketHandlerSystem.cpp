@@ -60,6 +60,7 @@
 #include "UpdateClientStatsPacket.h"
 #include "ParticleUpdatePacket.h"
 #include "ModuleTriggerPacket.h"
+#include "ModuleStateChangePacket.h"
 
 // Debug
 #include "EntityFactory.h"
@@ -72,6 +73,8 @@
 #include <DebugUtil.h>
 #include <ParticleSystemAndTexture.h>
 #include <ToString.h>
+#include "SlotParticleEffectPacket.h"
+#include "ConnectionVisualizerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -117,7 +120,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		
 		packetType = packet.getPacketType();
 
-#pragma region EntityUpdate
 		if (packetType == (char)PacketType::EntityUpdate)
 		{
 			EntityUpdatePacket data;
@@ -131,7 +133,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				m_batch.push_back(data);
 			}
 		}
-#pragma endregion
 
 		else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
 		{
@@ -147,8 +148,28 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			handleParticleSystemUpdate( particleData );
 			
 		}
+		else if (packetType == (char)PacketType::SlotParticleEffectPacket)
+		{
+			SlotParticleEffectPacket data;
+			data.unpack(packet);
 
-#pragma region Shitsk
+			if (data.networkIdentity < 0)
+			{
+				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+				conVis->disableAll();
+			}
+			else
+			{
+				NetsyncDirectMapperSystem* directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				Entity* parent = directMapper->getEntity(data.networkIdentity);
+
+				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+			}
+		}
+
 		else if(packetType == (char)PacketType::SpawnSoundEffect)
 		{
 			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
@@ -343,6 +364,29 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::ModuleStateChangePacket){
+			ModuleStateChangePacket data;
+			data.unpack(packet);
+
+			Entity* affectedModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.affectedModule);
+
+			if(affectedModule != NULL){
+				ShipModule* shipModule = static_cast<ShipModule*>(
+					affectedModule->getComponent(ComponentType::ShipModule));
+
+				Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.currentParrent);
+
+				shipModule->m_parentEntity = parrentObjec->getIndex();
+			}
+			else{
+				DEBUGWARNING(( "Unhandled module has changed!" ));
+			}
+			
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -356,6 +400,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 	WelcomePacket data;
 	data.unpack(p_packet);
 	m_tcpClient->setId( data.clientNetworkIdentity );
+	m_tcpClient->setPlayerID( data.playerID );
 
 	/************************************************************************/
 	/* Debug info!															*/

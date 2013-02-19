@@ -6,7 +6,7 @@
 void ModuleHelper::FindParentShip( EntityWorld* p_world,
 								  Entity** p_inoutShip, ShipModule** p_inoutModule )
 {
-	while (*p_inoutModule && (*p_inoutModule)->m_parentEntity>-1)
+	while (*p_inoutModule && (*p_inoutModule)->m_parentEntity > -1)
 	{
 		*p_inoutShip = p_world->getEntity((*p_inoutModule)->m_parentEntity);
 		*p_inoutModule = static_cast<ShipModule*>((*p_inoutShip)->getComponent(

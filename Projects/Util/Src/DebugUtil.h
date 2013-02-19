@@ -38,8 +38,8 @@ static void debugWarn(const char* msg);
 #include <Windows.h>
 void debugWarn(const char* msg)
 {
-	OutputDebugStringA(msg);
-	MessageBoxA(NULL, msg, "Warning!", MB_ICONWARNING);
+	OutputDebugStringA((msg));
+	MessageBoxA(NULL, (msg), "Warning!", MB_ICONWARNING);
 }
 // #else
 // #define DEBUGWARNING(x)

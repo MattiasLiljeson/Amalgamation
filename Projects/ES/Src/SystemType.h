@@ -92,6 +92,9 @@ public:	//Enums
 		ClientEntityCountSystem,
 		ParticleSystemInstructionTranslatorSystem,
 		SkeletalAnimationSystem,
+		CullingSystem,
+		ConnectionVisualizerSystem,
+		SpeedFovAdjustSystem,
 		NUM_SYSTEM_TYPES
 	};
 

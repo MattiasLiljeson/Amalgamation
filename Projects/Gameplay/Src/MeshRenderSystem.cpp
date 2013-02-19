@@ -18,16 +18,14 @@
 #include "GradientComponent.h"
 #include "BoundingBox.h"
 #include "InputBackendSystem.h"
+#include "ModuleHelper.h"
+#include "ShipModule.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
 		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
-	
-	m_rendered = 0;
-	m_culled = 0;
-	m_culledFraction = 0.0f;
 }
 
 MeshRenderSystem::~MeshRenderSystem()
@@ -41,10 +39,6 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	m_culled = 0;
-	m_rendered = 0;
-	calcCameraPlanes();
-
 	// Cleanup
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();
@@ -57,8 +51,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
-		RenderInfo* renderInfo = static_cast<RenderInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
+		RenderInfo* renderInfo = getRenderInfo(p_entities[i]);
 
 		// Don't render instances that hasn't got a mesh...
 		// NOTE: (Johan) ...or if it's not supposed to render!
@@ -82,37 +75,15 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_instanceLists.resize( renderInfo->m_meshId + 1 );
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
-
-		//Check if the object should be drawn
-		RenderInfo* ri = static_cast<RenderInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::RenderInfo) );
-
-		if (!ri->m_shouldBeRendered)
+		
+		if (!renderInfo->m_shouldBeRendered)
 			continue;
 
-		//Perform some culling checks
-		if (shouldCull(p_entities[i]))
-		{
-			m_culled++;
+		if (renderInfo->m_shouldBeCulled)
 			continue;
-		}
-		else
-		{
-			m_rendered++;
-		}
-
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
-		MaterialInfo matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
-			renderInfo->m_meshId);
-		auto gradient = static_cast<GradientComponent*>(p_entities[i]->getComponent(ComponentType::Gradient));
-		if(gradient != NULL){ 
-			matInfo.setGradientLayer(1,gradient->m_color.playerSmall);
-			matInfo.setGradientLayer(2,gradient->m_color.playerBig);
-		}
-		instanceData.setGradientColor( matInfo.getGradientColors() );
-		instanceData.setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
-		
+		fillInstanceData(&instanceData,p_entities[i],renderInfo);
 		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
@@ -134,7 +105,56 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 		}
 	}
-	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
+}
+
+void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity, 
+										RenderInfo* p_renderInfo){
+	MaterialInfo matInfo;
+	// Try and get the gradient component
+	auto gradient = static_cast<GradientComponent*>(p_entity->getComponent(
+		ComponentType::Gradient));
+	if(gradient != NULL){ 
+
+		// Set all the values needed
+		matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+			p_renderInfo->m_meshId);
+		matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+		matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+		p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+	}
+	// If none was found check why
+	else{
+		// Assume its a valid Ship Module
+		ShipModule* shipModule = static_cast<ShipModule*>(m_world->
+			getComponentManager()->getComponent(p_entity,ComponentType::ShipModule));
+
+		if(shipModule != NULL && shipModule->m_parentEntity > -1){
+			
+			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
+			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+
+			if(parentShip != NULL){
+				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);
+				matInfo = m_gfxBackend->getGfxWrapper()->getMaterialInfoFromMeshID(
+					parentShipRenderInfo->m_meshId);
+
+				auto gradient = static_cast<GradientComponent*>(parentShip->getComponent(
+					ComponentType::Gradient));
+
+				matInfo.setGradientLayer(1,gradient->m_color.layerOne);
+				matInfo.setGradientLayer(2,gradient->m_color.layerTwo);
+				p_data->setNumberOfActiveGradientLayers( matInfo.numberOfLayers );
+			}
+		}
+		// If not a Ship Module set values to default
+		else{
+			matInfo.setGradientLayer(1, AglVector4(1,1,1,1));
+			matInfo.setGradientLayer(2, AglVector4(1,1,1,1));
+			p_data->setNumberOfActiveGradientLayers( 1 );
+		}
+	}	
+
+	p_data->setGradientColor( matInfo.getGradientColors() );
 }
 
 void MeshRenderSystem::render()
@@ -149,127 +169,8 @@ void MeshRenderSystem::render()
 	}
 }
 
-bool MeshRenderSystem::shouldCull(Entity* p_entity)
+RenderInfo* MeshRenderSystem::getRenderInfo( Entity* p_entity )
 {
-	Transform* transform = static_cast<Transform*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
-	//Bounding Box check
-	BoundingBox* bb = static_cast<BoundingBox*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingBox ) );
-
-	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
-	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
-
-	if (!bb)
-		return false;
-
-	AglMatrix rbtransform;
-	AglMatrix::componentsToMatrix(rbtransform, AglVector3(1, 1, 1), transform->getRotation(), transform->getTranslation());
-	
-	AglOBB box = bb->box;
-	AglVector3 pos = box.world.GetTranslation();
-	
-	pos.transform(transform->getMatrix());
-	box.world *= rbtransform;
-	box.world.SetTranslation(pos);
-	box.size *= transform->getScale();
-
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		if (BoxPlane(box, m_cameraPlanes[i]))
-		{
-			return true;
-		}
-
-	}
-
-
-	//Bounding Sphere check
-	/*BoundingSphere* bs = static_cast<BoundingSphere*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingSphere ) );
-
-	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
-	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
-		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
-
-	if (!bs)
-		return false;
-
-	AglBoundingSphere sphere = bs->sphere;
-	sphere.position.transform(transform->getMatrix());
-	AglVector3 scale = transform->getScale();
-
-	sphere.radius *= max(scale.x, max(scale.y, scale.z));
-
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		float val = m_cameraPlanes[i].x * sphere.position.x + 
-					m_cameraPlanes[i].y * sphere.position.y +
-					m_cameraPlanes[i].z * sphere.position.z +
-					m_cameraPlanes[i].w * 1;
-		if (val + sphere.radius < 0 )
-		{
-			return true;
-		}
-
-	}*/
-
-	return false;
-}
-void MeshRenderSystem::calcCameraPlanes()
-{
-	EntityManager* entitymanager = m_world->getEntityManager();
-	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
-
-	CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
-
-	Transform* transform = static_cast<Transform*>(
-		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
-	AglVector3 position = transform->getTranslation();
-	AglQuaternion rotation = transform->getRotation();
-	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
-	AglVector3 up = transform->getMatrix().GetUp();
-
-	AglMatrix view = AglMatrix::createViewMatrix(position,
-		lookTarget,
-		up);
-
-	AglMatrix viewProj = view * info->m_projMat;
-
-	m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
-	m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
-	m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
-	m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
-	m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
-	m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
-
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
-			m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
-			m_cameraPlanes[i].z * m_cameraPlanes[i].z);
-
-		m_cameraPlanes[i].x /= l;
-		m_cameraPlanes[i].y /= l;
-		m_cameraPlanes[i].z /= l;
-		m_cameraPlanes[i].w /= l;
-	}
-}
-
-//Returns true if the box is completely outside the plane
-bool MeshRenderSystem::BoxPlane(const AglOBB& p_box, const AglVector4& p_plane)
-{
-	AglVector3 h = p_box.size * 0.5f;
-	AglVector3 n = AglVector3(p_plane.x, p_plane.y, p_plane.z);
-	float ex = h.x*abs(AglVector3::dotProduct(n, p_box.world.GetRight())); 
-	float ey = h.y*abs(AglVector3::dotProduct(n, p_box.world.GetUp())); 
-	float ez = h.z*abs(AglVector3::dotProduct(n, p_box.world.GetForward())); 
-	
-	float e = ex + ey + ez;
-	float s = AglVector3::dotProduct(p_box.world.GetTranslation(), n)+p_plane.w;
-	
-	return s + e < 0;
+	return static_cast<RenderInfo*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::RenderInfo ) );
 }

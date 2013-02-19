@@ -68,6 +68,20 @@ private:
 	static void TW_CALL SetSpawnAngularVelocity(const void *value, void *clientData);
 	static void TW_CALL GetSpawnAngularVelocity(void *value, void *clientData);
 
+	//Blend mode
+	static void TW_CALL SetBlendAlpha(void* clientData);
+	static void TW_CALL SetBlendAdditive(void* clientData);
+	static void TW_CALL SetBlendMultiply(void* clientData);
+
+	//Cull mode
+	static void TW_CALL SetCullNone(void* clientData);
+	static void TW_CALL SetCullZ(void* clientData);
+
+	//Particle space
+	static void TW_CALL SetGlobalSpace(void* clientData);
+	static void TW_CALL SetLocalSpawn(void* clientData);
+	static void TW_CALL SetLocalLife(void* clientData);
+
 	//Clone
 	static void TW_CALL Clone(void* clientData);
 	

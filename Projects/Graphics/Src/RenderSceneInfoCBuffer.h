@@ -22,8 +22,8 @@ struct RenderSceneInfoCBuffer
 	float viewProj[16];
 	float viewProjInv[16];
 	float cameraPos[4];
-	float cameraUp[4];
 	float cameraForward[4];
+	float cameraUp[4];
 	float renderTargetSize[2];
 	float farPlane;
 	float nearPlane;

@@ -39,8 +39,10 @@ AglParticleSystem::AglParticleSystem()
 	m_age = 0;
 	m_timeSinceSpawn = 0;
 
-	m_header.particleSpace = AglParticleSystemHeader::AglSpace::AglSpace_GLOBAL;
-	m_header.spawnSpace = AglParticleSystemHeader::AglSpace::AglSpace_LOCAL;
+	m_header.blendMode = AglParticleSystemHeader::AglBlendMode_ALPHA;
+	m_header.rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_Z_CULLED;
+	m_header.particleSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
+	m_header.spawnSpace = AglParticleSystemHeader::AglSpace_LOCAL;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
@@ -201,13 +203,31 @@ void AglParticleSystem::setAlignmentType(AglParticleSystemHeader::AglAlignmentTy
 	m_header.alignmentType = p_alignment;
 }
 
-AglParticleSystemHeader::AglSpace AglParticleSystem::getSpace()
+AglParticleSystemHeader::AglSpace AglParticleSystem::getSpawnSpace()
 {
 	return (AglParticleSystemHeader::AglSpace)m_header.spawnSpace;
 }
-void AglParticleSystem::setSpace( AglParticleSystemHeader::AglSpace p_space )
+
+void AglParticleSystem::setSpawnSpace( AglParticleSystemHeader::AglSpace p_space )
 {
 	m_header.spawnSpace = p_space;
+}
+
+AglParticleSystemHeader::AglSpace AglParticleSystem::getParticleSpace()
+{
+	return (AglParticleSystemHeader::AglSpace)m_header.particleSpace;
+}
+
+void AglParticleSystem::setParticleSpace( AglParticleSystemHeader::AglSpace p_space )
+{
+	m_header.particleSpace = p_space;
+}
+
+void AglParticleSystem::setModes( AglParticleSystemHeader::AglBlendMode p_blendMode,
+	AglParticleSystemHeader::AglRasterizerMode p_rasterizerMode )
+{
+	m_header.blendMode = p_blendMode;
+	m_header.rasterizerMode = p_rasterizerMode;
 }
 
 float AglParticleSystem::getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir)

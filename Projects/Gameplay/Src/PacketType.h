@@ -34,6 +34,7 @@ public:
 		TransformPacket,
 		RemoveSoundEffect,
 		OnHitScoreEffectPacket,
+		ModuleStateChangePacket,
 
 		// Client -> Server:
 		/************************************************************************/
@@ -48,6 +49,7 @@ public:
 		ParticleSystemCreationInfo,
 		CameraControlPacket,
 		AnimationUpdatePacket,
+		SlotParticleEffectPacket,
 	};
 
 };

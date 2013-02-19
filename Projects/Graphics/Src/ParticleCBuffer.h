@@ -28,8 +28,8 @@ struct ParticleCBuffer
 	float particleMaxAge;
 	float maxOpacity;
 	int alignment;
-	int relative;
-	int space;
+	int spawnSpace;
+	int particleSpace;
 	float pad; //padding
 
 	void setWorldMat( const float p_worldMat[16] )
@@ -47,8 +47,8 @@ struct ParticleCBuffer
 		setParticleMaxAge( p_header.particleAge );
 		setMaxOpacity( p_header.maxOpacity );
 		setAlignment( p_header.alignmentType );
-		setRelative( p_header.particleSpace );
-		setSpace( p_header.spawnSpace );
+		setSpawnSpace( p_header.spawnSpace );
+		setParticleSpace( p_header.particleSpace );
 	}
 
 	void setRect(const AglVector4& p_normalizedRect){
@@ -75,14 +75,22 @@ struct ParticleCBuffer
 	void setMaxOpacity(const float& p_maxOpacity){
 		maxOpacity = p_maxOpacity;
 	}
-	void setAlignment(const int& p_alignment){
-		alignment = static_cast<float>(p_alignment);
+	void setAlignment(const int& p_alignment)
+	{
+		if (p_alignment == AglParticleSystemHeader::OBSERVER)
+			alignment = 0;
+		else if (p_alignment == AglParticleSystemHeader::SCREEN)
+			alignment = 1;
+		else if (p_alignment == AglParticleSystemHeader::WORLD)
+			alignment = 2;
+		else 
+			alignment = 3;
 	}
-	void setRelative( int p_relative ) {
-		relative = p_relative;
+	void setSpawnSpace( int p_relative ) {
+		spawnSpace = p_relative;
 	}
-	void setSpace( int p_space ) {
-		space = p_space;
+	void setParticleSpace( int p_space ) {
+		particleSpace = p_space;
 	}
 
 };

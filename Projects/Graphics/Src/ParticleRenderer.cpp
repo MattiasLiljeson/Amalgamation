@@ -32,8 +32,7 @@ ParticleRenderer::~ParticleRenderer(){
 	delete m_stdTexture;
 }
 
-void ParticleRenderer::renderParticleSystem( AglParticleSystem* p_system, 
-											RendererSceneInfo* p_info, 
+void ParticleRenderer::renderParticleSystem( AglParticleSystem* p_system,
 											const InstanceData& p_transform, 
 											Texture* p_texture, 
 											const AglVector4& p_uvRect )

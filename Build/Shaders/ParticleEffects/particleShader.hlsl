@@ -10,9 +10,9 @@ cbuffer cbPerObject: register(b1)
 	float particleMaxAge;
 	float maxOpacity;
 	int alignment;
+	int spawnSpace;	   
 	int particleSpace;
-	int spawnSpace;
-	float pad; // Padding
+	float padding2; // Padding
 };
 
 Texture2D Texture : register(t0);
@@ -50,12 +50,12 @@ void GS(point Particle gIn[1],
 			inout TriangleStream<GS_OUT> triStream)
 {		
 	float4 position = float4( gIn[0].Position.xyz, 1.0 );
-	if( particleSpace == 1 ) { // GLOBAL
+	if( particleSpace == 1 ) { // 1 = LOCAL
 		position = mul( position, worldMat );
 	}
 
 	float4x4 W;
-	if (alignment.x < 0.5f) //Observer
+	if( alignment.x == 0 ) //Observer
 	{
 		float3 look  = normalize(gCameraPos.xyz - position.xyz);
 		float3 right = normalize(cross(float3(0,1,0), look));
@@ -65,7 +65,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(position.xyz, 1.0f);
 	}
-	else if (alignment.x < 1.5f) //Screen
+	else if( alignment.x == 1 ) //Screen
 	{
 		float3 look  = -gCameraForward.xyz;
 		float3 up    = gCameraUp.xyz;
@@ -75,7 +75,7 @@ void GS(point Particle gIn[1],
 		W[2] = float4(look,        0.0f);
 		W[3] = float4(position.xyz, 1.0f);
 	}
-	else if (alignment.x < 2.5) //World Up
+	else if( alignment.x == 2 ) //World Up
 	{
 		float3 up 	 = float3(0, 1, 0);
 		float3 right = normalize(cross(up, gCameraPos.xyz - position.xyz));
@@ -102,7 +102,6 @@ void GS(point Particle gIn[1],
 						0, 0, 0, 1);
 
 	W = mul( rot, W );
-
 	float4x4 WVP = mul(W, gViewProj);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;

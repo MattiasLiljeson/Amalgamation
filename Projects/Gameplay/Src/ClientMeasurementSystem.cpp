@@ -1,6 +1,7 @@
 #include "ClientMeasurementSystem.h"
 #include <AntTweakBarWrapper.h>
 #include "MeshRenderSystem.h"
+#include "CullingSystem.h"
 
 ClientMeasurementSystem::ClientMeasurementSystem()
 	: EntitySystem( SystemType::ClientMeasurementSystem )
@@ -38,21 +39,21 @@ void ClientMeasurementSystem::initialize()
 	}
 
 	//Culling
-	MeshRenderSystem* mrs = static_cast<MeshRenderSystem*>(m_world->getSystem(SystemType::RenderPrepSystem));
+	CullingSystem* cull = static_cast<CullingSystem*>(m_world->getSystem(SystemType::CullingSystem));
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::MEASUREMENT, "Rendered: ",
-		TwType::TW_TYPE_UINT32, mrs->getRenderedCountPtr(),
+		AntTweakBarWrapper::MEASUREMENT, "Rendered",
+		TwType::TW_TYPE_UINT32, cull->getRenderedCountPtr(),
 		"group='Culling'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::MEASUREMENT, "Culled: ",
-		TwType::TW_TYPE_UINT32, mrs->getCulledCountPtr(),
+		AntTweakBarWrapper::MEASUREMENT, "Culled",
+		TwType::TW_TYPE_UINT32, cull->getCulledCountPtr(),
 		"group='Culling'" );
 	 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::MEASUREMENT, "Culled Frac: ",
-		TwType::TW_TYPE_FLOAT, mrs->getCulledFractionPtr(),
+		AntTweakBarWrapper::MEASUREMENT, "Culled Fraction",
+		TwType::TW_TYPE_FLOAT, cull->getCulledFractionPtr(),
 		"group='Culling'" );
 }
 
@@ -73,4 +74,8 @@ void ClientMeasurementSystem::initMeasuredSystems()
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::TransformParentHandlerSystem),
 		"TransformHierarchy"));
+
+	m_measuredSystems.push_back(pair<EntitySystem*, string>(
+		m_world->getSystem(SystemType::CullingSystem),
+		"Cull"));
 }

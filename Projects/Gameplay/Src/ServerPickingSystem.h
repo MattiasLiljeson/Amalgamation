@@ -58,6 +58,8 @@ private:
 	//Rotation of modules
 	void rotateModule(Entity* p_ship, int p_dir);
 
+	AglVector3 project(AglVector3 p_o, AglVector3 p_d, AglVector3 p_point);
+
 	// Effects
 	OnHitEffectBufferSystem* m_effectbuffer;
 };

@@ -6,6 +6,7 @@
 #include "ShadowSystem.h"
 #include <GPUTimer.h>
 #include <AntTweakBarWrapper.h>
+#include "ParticleRenderSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -133,7 +134,7 @@ void GraphicsRendererSystem::process(){
 	//Particles
 	m_wrapper->getGPUTimer()->Start(m_particleProfile, m_currentFrame);
 	initParticlePass();
-	m_particleRenderSystem->render();
+	renderParticles();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_particleProfile, m_currentFrame);
 	
@@ -229,8 +230,27 @@ void GraphicsRendererSystem::endComposePass()
 
 void GraphicsRendererSystem::initParticlePass(){
 	m_wrapper->setParticleRenderState();
-	m_wrapper->setBlendStateSettings(BlendState::PARTICLE);
+	//m_wrapper->setBlendStateSettings(BlendState::PARTICLE);
+	m_wrapper->setBlendStateSettings(BlendState::ADDITIVE);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::POINTLIST);
+}
+
+void GraphicsRendererSystem::renderParticles()
+{
+	// A ugly way to be able to call the different rendering functions. Needs refactoring /ML.
+	ParticleRenderSystem* psRender = static_cast<ParticleRenderSystem*>( m_particleRenderSystem );
+
+	for( int i=0; i<AglParticleSystemHeader::AglBlendMode_CNT; i++ ) {
+		for( int j=0; j<AglParticleSystemHeader::AglRasterizerMode_CNT; j++ ) 
+		{
+			AglParticleSystemHeader::AglBlendMode blend = (AglParticleSystemHeader::AglBlendMode)i;
+			AglParticleSystemHeader::AglRasterizerMode rast = (AglParticleSystemHeader::AglRasterizerMode)j;
+
+			m_wrapper->setRasterizerStateSettings( psRender->rasterizerStateFromAglRasterizerMode(rast) );
+			m_wrapper->setBlendStateSettings( psRender->blendStateFromAglBlendMode(blend) );
+			psRender->render( blend, rast );
+		}
+	}
 }
 
 void GraphicsRendererSystem::endParticlePass(){

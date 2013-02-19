@@ -1,4 +1,4 @@
-#include <vld.h>
+//#include <vld.h>
 #include "ClientApplication.h"
 #include <DebugUtil.h>
 
@@ -18,7 +18,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 
 	delete application;
 
-	UINT32 numLeaks = VLDGetLeaksCount();
+	//UINT32 numLeaks = VLDGetLeaksCount();
 
 	/*if(numLeaks > 1233){
 		MessageBoxA(NULL, "MEMORY LEAK DETECTED!!", "Warning!", MB_ICONWARNING);

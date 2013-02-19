@@ -63,8 +63,12 @@ public:
 	void setTextureNameIndex(int p_textureNameIndex);
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
 
-	AglParticleSystemHeader::AglSpace getSpace();
-	void setSpace( AglParticleSystemHeader::AglSpace p_space );
+	AglParticleSystemHeader::AglSpace getSpawnSpace();
+	void setSpawnSpace( AglParticleSystemHeader::AglSpace p_space );
+	AglParticleSystemHeader::AglSpace getParticleSpace();
+	void setParticleSpace( AglParticleSystemHeader::AglSpace p_space );
+	void setModes( AglParticleSystemHeader::AglBlendMode p_blendMode,
+		AglParticleSystemHeader::AglRasterizerMode p_rasterizerMode );
 
 	float getCameraDistance(AglVector3 p_cameraPos, AglVector3 p_cameraDir);
 

@@ -21,4 +21,5 @@ public:
 	int m_instanceId;
 	int m_meshId;
 	bool m_shouldBeRendered;
+	bool m_shouldBeCulled;
 };
