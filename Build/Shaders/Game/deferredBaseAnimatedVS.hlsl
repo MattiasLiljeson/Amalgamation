@@ -18,8 +18,8 @@ struct VertexIn
 	int4 indices1 	: AINDICES;
 	int4 indices2 	: BINDICES;
 	
-	//Vertex Buffer 3
-	float4x4 instanceTransform : INSTANCETRANSFORM;
+	//Per instance
+	float4x4 instanceTransform 	: INSTANCETRANSFORM;
 	uint instanceId : SV_InstanceID;
 };
 
@@ -66,6 +66,12 @@ PixelIn VS(VertexIn p_input)
 	vout.normal = mul(n, p_input.instanceTransform).xyz;
 	vout.tangent = mul(t,p_input.instanceTransform).xyz;
 	vout.texCoord = p_input.texCoord;
-	    
+	
+	vout.gradientColor = float4x4(1,1,1,1,
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1);
+	vout.flags = 1;
+	
 	return vout;
 }

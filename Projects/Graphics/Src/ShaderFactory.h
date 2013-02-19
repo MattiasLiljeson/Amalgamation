@@ -41,7 +41,7 @@ public:
 	
 	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
-	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
+	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
 	DeferredTessBaseShader* createDeferredTessBaseShader(const LPCWSTR& p_filePath);
 
