@@ -31,4 +31,6 @@ private:
 	void initInstanceAsteroidFieldByJohan(string p_meshName, AglVector3 p_origin, unsigned int p_width,
 		unsigned int p_numbersInCircle, float p_radius, float p_spacing, float p_diffY, float p_scale);
 
+private:
+	Entity* m_ship;
 };

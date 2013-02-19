@@ -18,8 +18,15 @@ CircularMovementSystem::~CircularMovementSystem()
 
 void CircularMovementSystem::initialize()
 {
-	initInstanceSphereByJohan("RockA.agl", AglVector3(0.0f, 0.0f, 100.0f),
+	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 7500);
+
+	m_ship = m_world->createEntity();
+	m_ship->addComponent(new LoadMesh("Ship.agl"));
+	AglVector3 position(-20.0f, 0, 50.0f);
+	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), -position);
+	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
+	m_world->addEntity(m_ship);
 }
 
 void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities )
@@ -42,9 +49,6 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 		AglVector3::normalize(k);
 		circular->angle += circular->angularVelocity * m_world->getDelta();
 		AglVector3 vRot = AglVector3::rotateAroundAxis(v, k, circular->angle);
-		//AglVector3 vRot = v * cosf(circular->angle) + AglVector3::crossProduct(k, v) * 
-		//	sinf(circular->angle) + k * AglVector3::dotProduct(k, v) *
-		//	(1 - cosf(circular->angle));
 		AglVector3 position = circular->centerPosition + vRot;
 		transform->setTranslation(position);
 		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
@@ -78,4 +82,5 @@ void CircularMovementSystem::sysDisabled()
 	{
 		m_world->deleteEntity(entities[i]);
 	}
+	m_world->deleteEntity(m_ship);
 }
