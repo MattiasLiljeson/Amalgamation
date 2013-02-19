@@ -38,20 +38,20 @@ public:
 	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 		D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
+	
+	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
-	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitives to 
-	/// various render targets.
-	/// \param p_filePath
-	/// \return DeferredBaseShader*
-	///-----------------------------------------------------------------------------------
-	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
-
-	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
+	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
 	DeferredTessBaseShader* createDeferredTessBaseShader(const LPCWSTR& p_filePath);
 
+	DeferredTessBaseShader* createDeferredTesselationBaseShader(const LPCWSTR& p_vertexPath, 
+		const LPCWSTR& p_hullPath, const LPCWSTR& p_domainPath, const LPCWSTR& p_pixelPath);
+
 	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_filePath);
+
+	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_vertexPath,
+		const LPCWSTR& p_hullPath, const LPCWSTR& p_dominPath, const LPCWSTR& p_pixelPath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 

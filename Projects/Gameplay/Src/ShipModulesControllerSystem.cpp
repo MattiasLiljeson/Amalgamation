@@ -11,6 +11,7 @@
 #include "OnHitEffectBufferSystem.h"
 #include "Transform.h"
 #include "ModuleHelper.h"
+#include "SlotParticleEffectPacket.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
@@ -19,8 +20,12 @@ ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 {
 	m_server = p_server;
 	m_effectbuffer = p_effectBuffer;
+	m_editMode = false;
 }
-
+void ShipModulesControllerSystem::setEditMode(bool p_editMode)
+{
+	m_editMode = p_editMode;
+}
 
 ShipModulesControllerSystem::~ShipModulesControllerSystem()
 {
@@ -198,6 +203,50 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	m->m_health = 100.0f;
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
+
+
+	//Change particle effects on slots
+	if (m_editMode)
+	{
+		Entity* parentShip = p_parent;
+		ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(ComponentType::ShipModule));
+		while (parentModule)
+		{
+			parentShip = m_world->getEntity(parentModule->m_parentEntity);
+			parentModule = static_cast<ShipModule*>(parentShip->getComponent(ComponentType::ShipModule));
+		}
+
+		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+			toDrop->getComponent(ComponentType::NetworkSynced));
+		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
+			p_parent->getComponent(ComponentType::NetworkSynced));
+		NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
+			parentShip->getComponent(ComponentType::NetworkSynced));
+
+		//Remove particle effects from the slot
+		for (unsigned int i = 0; i < toDropConnected->m_connectionPoints.size(); i++)
+		{
+			if (toDropConnected->m_connectionPoints[i].cpConnectedEntity < 0)
+			{
+				SlotParticleEffectPacket slotPacket;
+				slotPacket.translationOffset = AglVector3(0, 0, 0);
+				slotPacket.forwardDirection = AglVector3(0, 0, 0);
+				slotPacket.slot = i;
+				slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
+				slotPacket.active = false;
+				m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+			}
+		}
+
+		//Add back the parent slot
+		SlotParticleEffectPacket slotPacket;
+		slotPacket.translationOffset = connected->m_connectionPoints[p_slot].cpTransform.GetTranslation();
+		slotPacket.forwardDirection = connected->m_connectionPoints[p_slot].cpTransform.GetForward();
+		slotPacket.slot = p_slot;
+		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+		slotPacket.active = true;
+		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+	}
 }
 void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_status)
 {

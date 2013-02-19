@@ -43,6 +43,7 @@
 #include "LevelPieceRoot.h"
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
+#include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -262,6 +263,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 				}
 			}
 		}
+
 		return e;
 	}
 	else
@@ -839,8 +841,8 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleSystem.setFadeInStop(0.0f);
 	particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
-	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_SPAWN_LOCAL);
-	particleSystem.getHeaderPtr()->modes = false;
+	particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_LOCAL );
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;

@@ -191,10 +191,10 @@ public:
 	 * @return The added system.
 	 */
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
-		bool p_enabled = false );
+		bool p_enabled = true );
 
 	EntitySystem* setSystem( EntitySystem* p_system,
-		bool p_enabled = false );
+		bool p_enabled = true );
 
 	/**
 	 * Remove the specified system from the manager.

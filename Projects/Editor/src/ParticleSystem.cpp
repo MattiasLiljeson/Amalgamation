@@ -4,6 +4,7 @@
 #include "ShaderManager.h"
 #include "ParticleShader.h"
 #include "Camera.h"
+#include "ParticleStates.h"
 
 ParticleSystem::ParticleSystem(AglParticleSystem* pSystem, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext)
 {
@@ -91,8 +92,18 @@ void ParticleSystem::Draw(float p_scale)
 		ID3D11DepthStencilState* old;
 		UINT stencil;
 		mDeviceContext->OMGetDepthStencilState(&old, &stencil);
-		mDeviceContext->OMSetBlendState(mBlendState, NULL, 0xFFFFFF);
-		mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
+
+		if (mSystem->getHeader().rasterizerMode == AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP)
+			mDeviceContext->OMSetDepthStencilState(ParticleStates::CullNone, 1);
+		else
+			mDeviceContext->OMSetDepthStencilState(ParticleStates::CullZ, 1);
+
+		if (mSystem->getHeader().blendMode == AglParticleSystemHeader::AglBlendMode_ADDITIVE)
+			mDeviceContext->OMSetBlendState(ParticleStates::AdditiveBlending, NULL, 0xFFFFFF);
+		else if (mSystem->getHeader().blendMode == AglParticleSystemHeader::AglBlendMode_ALPHA)
+			mDeviceContext->OMSetBlendState(ParticleStates::AlphaBlending, NULL, 0xFFFFFF);
+		else
+			mDeviceContext->OMSetBlendState(ParticleStates::MultiplyBlending, NULL, 0xFFFFFF);
 
 		ParticleShader* ps = ShaderManager::GetInstance()->GetParticleShader();
 		ps->SetBuffer(this);

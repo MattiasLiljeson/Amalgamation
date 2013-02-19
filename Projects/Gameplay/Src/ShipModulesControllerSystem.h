@@ -35,6 +35,7 @@ public:
 	void addHighlightEvent(int p_slot, int p_id,int p_status=1);
 	void addActivateEvent(int p_index);
 	void addDeactivateEvent(int p_index);
+	void setEditMode(bool p_editMode);
 
 private:
 	void checkDrop(Entity* p_parent);
@@ -59,5 +60,7 @@ private:
 	// system dependencies
 	TcpServer* m_server;
 	OnHitEffectBufferSystem* m_effectbuffer;
+
+	bool m_editMode;
 
 };

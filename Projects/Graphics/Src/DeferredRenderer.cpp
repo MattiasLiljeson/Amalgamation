@@ -134,6 +134,8 @@ void DeferredRenderer::mapVariousPassesToComposeStage(){
 			RenderTargets::NORMAL] );
 	m_deviceContext->PSSetShaderResources(2, 1, &m_gBuffersShaderResource[
 		RenderTargets::DEPTH] );
+	m_deviceContext->PSSetShaderResources(3, 1, &m_gBuffersShaderResource[
+		RenderTargets::DIFFUSE] );
 }
 
 void DeferredRenderer::unmapVariousPassesFromComposeStage(){
@@ -141,6 +143,7 @@ void DeferredRenderer::unmapVariousPassesFromComposeStage(){
 	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 2, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
 }
 void DeferredRenderer::unMapGBuffers()
 {
@@ -256,19 +259,22 @@ void DeferredRenderer::initGeometryBuffers()
 void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
-		L"Shaders/Game/deferredBase.hlsl");
+		L"Shaders/Game/deferredBaseVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_tessBaseShader = m_shaderFactory->createDeferredTessBaseShader(
-		L"Shaders/Game/deferredBaseTess.hlsl");
+	m_tessBaseShader = m_shaderFactory->createDeferredTesselationBaseShader(
+		L"Shaders/Game/deferredBaseTessleationVS.hlsl", L"Shaders/Game/deferredBaseTessleationHS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/ssaoGenerate.hlsl");
 		
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
-		L"Shaders/Game/deferredAnimatedBase.hlsl");
+		L"Shaders/Game/deferredBaseAnimatedVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_tessAnimatedBaseShader = m_shaderFactory->createDeferredTessAnimatedShader(
-		L"Shaders/Game/deferredAnimatedBaseTess.hlsl");
+		L"Shaders/Game/deferredAnimatedTesselationVS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationHS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_composeShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/deferredCompose.hlsl");

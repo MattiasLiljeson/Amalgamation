@@ -104,6 +104,8 @@
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
 #include <CullingSystem.h>
+#include <ConnectionVisualizerSystem.h>
+#include <SpeedFovAdjustSystem.h>
 
 
 // Helpers
@@ -118,7 +120,6 @@ using namespace std;
 #include <LightInstanceData.h>
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
-
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -186,6 +187,9 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
+
+			if(dt > 0.5f)
+				dt = 0.5f;
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -293,6 +297,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
 	m_world->setSystem( scoreVisSystem, true );
+	ConnectionVisualizerSystem* cvs = new ConnectionVisualizerSystem();
+	m_world->setSystem(cvs, true);
 
 	/************************************************************************/
 	/* Player    															*/
@@ -323,13 +329,11 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 
 	// Controller logic for camera
-	PlayerCameraControllerSystem* cameraControl = new PlayerCameraControllerSystem( shipInputProc,
-		m_client);
-	m_world->setSystem( cameraControl , true );
+	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
 	// Camera system sets its viewport info to the graphics backend for render
-	CameraSystem* camera = new CameraSystem( graphicsBackend );
-	m_world->setSystem( camera , true );
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 
+	m_world->setSystem( new SpeedFovAdjustSystem(), true );
 
 
 	/************************************************************************/
