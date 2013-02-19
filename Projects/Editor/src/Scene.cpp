@@ -832,3 +832,10 @@ void Scene::createScenePlane()
 
 	planeBack->Init(mesh);
 }
+void Scene::RestartAllParticleSystems()
+{
+	for (unsigned int i = 0; i < mParticleSystems.size(); i++)
+	{
+		mParticleSystems[i]->restart();
+	}
+}

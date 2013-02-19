@@ -75,6 +75,7 @@
 #include <ToString.h>
 #include "SlotParticleEffectPacket.h"
 #include "ConnectionVisualizerSystem.h"
+#include "SpawnExplosionPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -386,6 +387,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				DEBUGWARNING(( "Unhandled module has changed!" ));
 			}
 			
+		}
+		else if (packetType == (char)PacketType::SpawnExplosionPacket)
+		{
+			SpawnExplosionPacket data;
+			data.unpack(packet);
+			EntityFactory* factory = static_cast<EntityFactory*>
+				(m_world->getSystem(SystemType::EntityFactory));
+			factory->createExplosion(data);
 		}
 		else
 		{
