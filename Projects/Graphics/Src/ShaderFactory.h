@@ -38,14 +38,8 @@ public:
 	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 		D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
-
-	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitives to 
-	/// various render targets.
-	/// \param p_filePath
-	/// \return DeferredBaseShader*
-	///-----------------------------------------------------------------------------------
-	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
+	
+	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
 	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_filePath);
 

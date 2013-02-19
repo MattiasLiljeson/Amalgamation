@@ -256,7 +256,7 @@ void DeferredRenderer::initGeometryBuffers()
 void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
-		L"Shaders/Game/deferredBase.hlsl");
+		L"Shaders/Game/deferredBaseVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_tessBaseShader = m_shaderFactory->createDeferredTessBaseShader(
 		L"Shaders/Game/deferredBaseTess.hlsl");

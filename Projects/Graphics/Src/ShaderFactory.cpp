@@ -52,30 +52,24 @@ ShaderFactory::~ShaderFactory()
 	delete m_bufferFactory;
 }
 
-
-DeferredBaseShader* ShaderFactory::createDeferredBaseShader(const LPCWSTR& p_filePath)
+DeferredBaseShader* ShaderFactory::createDeferredBaseShader( const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath )
 {
 	DeferredBaseShader* newDeferredBaseShader = NULL;
 	ID3D11SamplerState* samplerState = NULL;
 	ID3D11InputLayout* inputLayout = NULL;
 
 	VSData* vertexData = new VSData();
-	//HSData* hullData	= new HSData();
-	//DSData* domainData	= new DSData();
 	PSData* pixelData = new PSData();
 
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
-	//hullData->stageConfig = new ShaderStageConfig(p_filePath,"HS",m_shaderModelVersion);
-	//domainData->stageConfig = new ShaderStageConfig(p_filePath,"DS",m_shaderModelVersion);
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS",m_shaderModelVersion);
+	vertexData->stageConfig = new ShaderStageConfig(p_vertexPath,"VS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_pixelPath,"PS",m_shaderModelVersion);
 
-	createAllShaderStages(vertexData,pixelData, NULL, NULL, NULL);
+	createAllShaderStages(vertexData,pixelData);
 	createSamplerState(&samplerState);
 	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
 
 	ShaderVariableContainer shaderInitData;
-	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState,
-		NULL, NULL, NULL);
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState);
 
 	return new DeferredBaseShader(shaderInitData);
 }
@@ -723,8 +717,3 @@ void ShaderFactory::constructInputLayout(const D3D11_INPUT_ELEMENT_DESC* p_input
 	if ( FAILED(hr) )
 		throw D3DException(hr, __FILE__, __FUNCTION__, __LINE__);
 }
-
-
-
-
-

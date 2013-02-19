@@ -135,7 +135,7 @@ patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, uint patchID: SV_
 	
 	int factor = 1;
 	
-	float maxTess = 0.0f;
+	float maxTess = 2.0f;
 	if (len < 200)
 	{
 		factor += 0.005*len*maxTess;

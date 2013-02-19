@@ -35,8 +35,8 @@ struct VertexOut
 {
     float3 position	: POSITION;
 	float2 texCoord	: TEXCOORD;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
+	float3 normal 	: NORMAL;
+	float3 tangent 	: TANGENT;
 	float4x4 gradientColor : GRADIENTCOLOR;
 	float4 flags	: FLAGS;
 };
@@ -52,9 +52,9 @@ struct patchConstantOut
 struct HullOut
 {
     float3 position     : POSITION;
+	float2 texCoord     : TEXCOORD;
 	float3 normal	    : NORMAL;
     float3 tangent      : TANGENT;
-	float2 texCoord     : TEXCOORD;
 	float4x4 gradientColor : GRADIENTCOLOR;
 	float4 flags	: FLAGS;
 };
@@ -105,7 +105,7 @@ patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, uint patchID: SV_
 	
 	int factor = 1;
 	
-	float maxTess = 0.0f;
+	float maxTess = 2.0f;
 	if (len < 200)
 	{
 		factor += 0.005*len*maxTess;
