@@ -56,10 +56,6 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 5000);
 
-	Entity* entity = m_world->createEntity();
-	initPointLight(entity, AglVector3(0.0f, 0.0f, 50.0f), 1000.0f);
-	m_world->addEntity(entity);
-
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
@@ -68,6 +64,11 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
 	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
 	m_world->addEntity(m_ship);
+
+	Entity* entity = m_world->createEntity();
+	initPointLight(entity, position + AglVector3(0.0f, 0.0f, 0.0f), 50.0f);
+	m_world->addEntity(entity);
+	m_lights.push_back(entity);
 }
 
 void MenuBackgroundSceneSystem::sysDisabled()
@@ -77,6 +78,13 @@ void MenuBackgroundSceneSystem::sysDisabled()
 		if(m_rocks[i] != NULL)
 		{
 			m_world->deleteEntity(m_rocks[i]);
+		}
+	}
+	for(unsigned int i=0; i<m_lights.size(); i++)
+	{
+		if(m_lights[i] != NULL)
+		{
+			m_world->deleteEntity(m_lights[i]);
 		}
 	}
 	m_world->deleteEntity(m_ship);
@@ -98,6 +106,10 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 		entity->addComponent(new Transform(position, rotation, scale));
 		entity->addComponent(new LoadMesh(p_meshName));
 		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
+		AglVector3 randomAxis;
+//		RandomUtil::randomEvenlyDistributedSphere(&randomAxis.x, &randomAxis.y,
+//			&randomAxis.z);
+		//entity->addComponent(new AxisRotate(
 		m_world->addEntity(entity);
 		m_rocks[i] = entity;
 	}
@@ -114,8 +126,8 @@ void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_p
 	light.instanceData.ambient[1] = 0.0f;
 	light.instanceData.ambient[2] = 0.0f;
 	light.instanceData.diffuse[0] = 1.0f;
-	light.instanceData.diffuse[1] = 0.2f;
-	light.instanceData.diffuse[2] = 0.2f;
+	light.instanceData.diffuse[1] = 1.0f;
+	light.instanceData.diffuse[2] = 1.0f;
 	light.instanceData.specular[0] = 0.1f;
 	light.instanceData.specular[1] = 0.1f;
 	light.instanceData.specular[2] = 0.1f;
@@ -123,11 +135,13 @@ void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_p
 	light.instanceData.attenuation[1] = 0.0f;
 	light.instanceData.attenuation[2] = 0.0001f;
 	light.instanceData.range = p_range;
+	light.instanceData.spotPower = 5.0f;
 	TransformComponents transformComp;
 	transformComp.translation = p_position;
-	transformComp.scale = AglVector3::one() * p_range;
+	transformComp.scale = AglVector3(p_range, p_range, p_range);
 	transformComp.rotation = AglQuaternion::identity();
 	light.instanceData.setWorldTransform(transformComp.toMatrix());
+	light.offsetMat = transformComp.toMatrix();
 	lights->addLight(light);
 	p_entity->addComponent(lights);
 
