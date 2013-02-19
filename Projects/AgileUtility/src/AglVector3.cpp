@@ -207,6 +207,14 @@ AglVector3 AglVector3::maxOf( const AglVector3& p_v1, const AglVector3& p_v2 )
 	return maxV;
 }
 
+AglVector3 AglVector3::rotateAroundAxis( const AglVector3& p_toRotate,
+	const AglVector3& p_axis, const float& p_radians )
+{
+	AglVector3 rotated = p_toRotate * cosf(p_radians) + crossProduct(p_axis, p_toRotate) * sinf(p_radians) +
+		p_axis * dotProduct(p_axis, p_toRotate) * (1.0f - cosf(p_radians));
+	return rotated;
+}
+
 AglVector3 AglVector3::right()
 {
 	return AglVector3(1, 0, 0);

@@ -41,9 +41,10 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 		AglVector3 k = circular->axis;
 		AglVector3::normalize(k);
 		circular->angle += circular->angularVelocity * m_world->getDelta();
-		AglVector3 vRot = v * cosf(circular->angle) + AglVector3::crossProduct(k, v) * 
-			sinf(circular->angle) + k * AglVector3::dotProduct(k, v) *
-			(1 - cosf(circular->angle));
+		AglVector3 vRot = AglVector3::rotateAroundAxis(v, k, circular->angle);
+		//AglVector3 vRot = v * cosf(circular->angle) + AglVector3::crossProduct(k, v) * 
+		//	sinf(circular->angle) + k * AglVector3::dotProduct(k, v) *
+		//	(1 - cosf(circular->angle));
 		AglVector3 position = circular->centerPosition + vRot;
 		transform->setTranslation(position);
 		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
