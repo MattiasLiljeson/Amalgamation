@@ -75,8 +75,16 @@ struct ParticleCBuffer
 	void setMaxOpacity(const float& p_maxOpacity){
 		maxOpacity = p_maxOpacity;
 	}
-	void setAlignment(const int& p_alignment){
-		alignment = p_alignment;
+	void setAlignment(const int& p_alignment)
+	{
+		if (p_alignment == AglParticleSystemHeader::OBSERVER)
+			alignment = 0;
+		else if (p_alignment == AglParticleSystemHeader::SCREEN)
+			alignment = 1;
+		else if (p_alignment == AglParticleSystemHeader::WORLD)
+			alignment = 2;
+		else 
+			alignment = 3;
 	}
 	void setSpawnSpace( int p_relative ) {
 		spawnSpace = p_relative;

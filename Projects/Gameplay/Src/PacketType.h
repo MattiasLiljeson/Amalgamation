@@ -49,6 +49,7 @@ public:
 		ParticleSystemCreationInfo,
 		CameraControlPacket,
 		AnimationUpdatePacket,
+		SlotParticleEffectPacket,
 	};
 
 };
