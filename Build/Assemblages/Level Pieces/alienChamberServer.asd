@@ -1,4 +1,4 @@
-e rocksServer
+e alienChamberServer
 
 c LoadMesh
 d s m_filename BlueAlienChamber2.agl

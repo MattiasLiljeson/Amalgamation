@@ -22,7 +22,7 @@ void LevelInfoLoader::initialize()
 		m_world->getSystem(SystemType::EntityFactory));
 
 	string recipeName;
-	entityFactory->readAssemblageFile("Assemblages/LevelGenClient.asd", &recipeName);
+	entityFactory->readAssemblageFile(LEVELPIECESPATH + "LevelGenClient.asd", &recipeName);
 	Entity* e = entityFactory->entityFromRecipe(recipeName);
 	m_levelInfo = static_cast<LevelInfo*>(e->getComponent(ComponentType::LevelInfo));
 
@@ -30,7 +30,7 @@ void LevelInfoLoader::initialize()
 	for (int i = 0; i < fileData.size(); i++)
 	{
 		// Preload the chamber assemblages.
-		entityFactory->readAssemblageFile("Assemblages/"+fileData[i]->assemblageFileName,
+		entityFactory->readAssemblageFile(LEVELPIECESPATH + fileData[i]->assemblageFileName,
 			&fileData[i]->assemblageName);
 	}
 	m_world->addEntity(e); 

@@ -38,6 +38,7 @@ private:
 	int		m_branchCount;
 	bool	m_randomStartRotation;
 	int		m_startPieceId;
+	string	m_plugPiece;
 
 	static ComponentRegister<LevelInfo> s_reg;
 };

@@ -1,4 +1,4 @@
-e rocksClient
+e vegetationChamberClient
 
 c LoadMesh
 d s m_filename vegetationchamber.agl

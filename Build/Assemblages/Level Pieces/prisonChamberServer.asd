@@ -1,4 +1,4 @@
-e rocksServer
+e prisonChamberServer
 
 c LoadMesh
 d s m_filename WorldPrison_FinalWork_9_exporting.agl

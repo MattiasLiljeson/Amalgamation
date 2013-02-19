@@ -64,6 +64,10 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&m_startPieceId);
 		}
+		else if (p_initData[i].dataName == "m_plugPiece")
+		{
+			p_initData[i].getDataAsString(&m_plugPiece);
+		}
 	}
 }
 

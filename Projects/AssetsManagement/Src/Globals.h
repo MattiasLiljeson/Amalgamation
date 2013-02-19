@@ -20,7 +20,6 @@ static const string& SOUNDEFFECTPATH = "Assets/Sound/SoundEffect/";
 static const string& MUSICPATH = "Assets/Sound/Music/";
 static const string& MODELPATH = "Assets/Models/";
 static const string& TEXTUREPATH = "Assets/Textures/";
-static const string& ASSEMBLAGESPATH = "Assemblages/";
 
 /************************************************************************/
 /* LIBROCKET PATHS!														*/
@@ -41,6 +40,8 @@ static const string& TESTMODELPATH = "Assets/Models/Test/";
 static const string& TESTTEXTUREPATH = "Assets/Textures/Test/";
 
 static const string& SETTINGSPATH = "Assets/Settings/"; 
+static const string& ASSEMBLAGESPATH = "Assemblages/";
+static const string& LEVELPIECESPATH = ASSEMBLAGESPATH + "Level Pieces/";
 /************************************************************************/
 /* MISC														*/
 /************************************************************************/

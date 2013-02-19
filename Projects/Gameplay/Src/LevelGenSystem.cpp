@@ -52,7 +52,7 @@ void LevelGenSystem::initialize()
 	//status = 
 	//	m_entityFactory->readAssemblageFile( "Assemblages/tunnelServer.asd" );
 
-	preloadLevelGenRecipeEntity("Assemblages/LevelGenServer.asd");
+	preloadLevelGenRecipeEntity( LEVELPIECESPATH + "LevelGenServer.asd");
 
 
 }
@@ -63,10 +63,19 @@ void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMes
 	if (p_pieceMesh->size() > 0)
 	{
 		AglBoundingSphere boundingSphere = p_pieceMesh->at(1)->meshHeader.boundingSphere;
+		AglMatrix mat ;
+
 		for (unsigned int i = 2; i < p_pieceMesh->size(); i++)
 		{
+			ModelResource* resource = p_pieceMesh->at(i);
+			AglBoundingSphere nextBoundingSphere = resource->meshHeader.boundingSphere;
+			
+			AglVector3 pos = (resource->meshHeader.transform * resource->transform).GetTranslation();
+			nextBoundingSphere.position = pos;
+
+			nextBoundingSphere.radius = abs(nextBoundingSphere.radius);
 			boundingSphere = AglBoundingSphere::mergeSpheres(boundingSphere, 
-				p_pieceMesh->at(i)->meshHeader.boundingSphere);
+				nextBoundingSphere);
 		}
 		boundingSphere.radius;
 		p_pieceMesh->at(0)->meshHeader.boundingSphere = boundingSphere;
@@ -129,7 +138,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		ModelResource* rootResource = resourcesFromModel->at(0);
 
 		// Preload the chamber assemblages.
-		m_entityFactory->readAssemblageFile("Assemblages/"+fileData[i]->assemblageFileName,
+		m_entityFactory->readAssemblageFile(LEVELPIECESPATH + fileData[i]->assemblageFileName,
 											&fileData[i]->assemblageName);
 
 		// Calculate the entire chamber's collision sphere.
@@ -171,9 +180,9 @@ void LevelGenSystem::clearGeneratedData()
 
 void LevelGenSystem::run()
 {
-	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(1);
-	createLevelEntities();
+	//srand(static_cast<unsigned int>(time(NULL)));
+	//generateLevelPieces(1);
+	//createLevelEntities();
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth )
@@ -258,17 +267,18 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId
 Entity* LevelGenSystem::createDebugSphereEntity( LevelPiece* p_piece )
 {
 	/* DEBUG */
-	AglBoundingSphere boundingSphere = p_piece->getBoundingSphere();
-	AglVector3 scale(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius);
-	scale *= 2;
+	//AglBoundingSphere boundingSphere = p_piece->getBoundingSphere();
+	//AglVector3 scale(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius);
+	////scale *= 2;
 
-	Entity* e = m_world->createEntity();
-	e->addComponent(new Transform(boundingSphere.position, AglQuaternion::identity(),
-		scale));
-	e->addComponent(new StaticProp(1));
-	m_world->addEntity(e);
-	return e;
+	//Entity* e = m_world->createEntity();
+	//e->addComponent(new Transform(boundingSphere.position, AglQuaternion::identity(),
+	//	scale));
+	//e->addComponent(new StaticProp(1));
+	//m_world->addEntity(e);
+	//return e;
 	/* END OF DEBUG */
+	return NULL;
 }
 
 void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece, 
@@ -290,7 +300,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			// setting the target connector to be occupied.
 
 			// Find a random piece type to use
-			int pieceType = m_modelFileMapping.getRandomPieceId();
+			int pieceType = m_levelInfo->getRandomFileData()->id;
 			
 			// Create a level piece
 			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
@@ -315,7 +325,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 					m_generatedPieces[i]->getBoundingSphere()) && 
 					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
 				{
-					DEBUGWARNING(("Collision between chambers detected. Failed to generate!"));
+					DEBUGPRINT(("Collision between chambers detected. Failed to generate!"));
 					colliding = true;
 					break;
 				}
@@ -378,7 +388,7 @@ void LevelGenSystem::createLevelEntities()
 	{
 		Entity* e = createEntity(m_generatedPieces[i], i);
 		m_world->addEntity(e);
-		//e = createDebugSphereEntity(m_generatedPieces[i]);
+		e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
 }
