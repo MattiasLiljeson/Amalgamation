@@ -627,6 +627,9 @@
     <ClInclude Include="CullingSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1042,6 +1045,9 @@
     </ClCompile>
     <ClCompile Include="CullingSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp">
+      <Filter>Systems\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

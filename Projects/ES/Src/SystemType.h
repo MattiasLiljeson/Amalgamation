@@ -18,6 +18,7 @@ public:	//Enums
 		NetworkListenerSystem,
 		ServerPacketHandlerSystem,
 		CircularMovementSystem,
+		MenuBackgroundSceneSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,

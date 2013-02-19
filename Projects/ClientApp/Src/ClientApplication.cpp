@@ -104,6 +104,7 @@
 #include <SkeletalAnimationSystem.h>
 #include <LevelHandlerSystem.h>
 #include <CullingSystem.h>
+#include <MenuBackgroundSceneSystem.h>
 
 
 // Helpers
@@ -412,6 +413,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
+	m_world->setSystem( new MenuBackgroundSceneSystem(), true );
 	m_world->setSystem( new CircularMovementSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
 	m_world->setSystem( new ClientMeasurementSystem(), true );
