@@ -19,10 +19,15 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 void MenuBackgroundSceneSystem::process()
 {
 	m_deltaRotation = 0.0f;
-	if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0)
+	double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
+	double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
+	if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
+		rtPositive > 0.0 || rtNegative > 0.0)
 	{
-		double deltaPositive = m_inputBackend->getDeltaByEnum(InputHelper::MouseAxes_X_POSITIVE);
-		double deltaNegative = m_inputBackend->getDeltaByEnum(InputHelper::MouseAxes_X_NEGATIVE);
+		double deltaPositive = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_POSITIVE)
+			+ rtPositive;
+		double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
+			+ rtNegative;
 		if(deltaPositive > 0.0)
 		{
 			m_deltaRotation -= (float)deltaPositive;
@@ -35,7 +40,7 @@ void MenuBackgroundSceneSystem::process()
 	AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
 	if(rotate != NULL)
 	{
-		rotate->angularVelocity = m_deltaRotation * 10.0f;
+		rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
 	}
 }
 
@@ -52,10 +57,11 @@ void MenuBackgroundSceneSystem::sysEnabled()
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
-	AglVector3 position(-20.0f, 0, 50.0f);
-	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), AglVector3::backward());
+	AglVector3 position(-7.5f, -2.0f, 30.0f);
+	AglVector3 toVector(0.0f, -0.2f, -1.0f);
+	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	m_ship->addComponent(new AxisRotate(AglVector3::up(), AglVector3::backward(), rotation, 0.0f));
+	m_ship->addComponent(new AxisRotate(AglVector3::up(), toVector, rotation, 0.0f));
 	m_world->addEntity(m_ship);
 }
 
@@ -86,7 +92,7 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 		AglVector3 scale(1.0f, 1.0f, 1.0f);
 		entity->addComponent(new Transform(position, rotation, scale));
 		entity->addComponent(new LoadMesh(p_meshName));
-		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.01f));
+		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
 		m_world->addEntity(entity);
 		m_rocks[i] = entity;
 	}

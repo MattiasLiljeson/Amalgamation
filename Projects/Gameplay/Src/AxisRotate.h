@@ -19,6 +19,7 @@ public:
 		: Component(ComponentType::AxisRotate)
 	{
 		axis = p_axis;
+		axis.normalize();
 		startVector = p_startRotation;
 		originRotation = p_originRotation;
 		angularVelocity = p_angularVelocity;
