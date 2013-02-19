@@ -112,7 +112,7 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	particleSystem.setSpawnDirection(AglVector3(0, 1, 0));
 	particleSystem.setSpawnFrequency(3.0f);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
-	particleSystem.setSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setSpawnSpeed(0.0f);
 	particleSystem.setParticleSize(AglVector2(1.0f, 1.0f));
 	particleSystem.setParticleAge(0.25f);

@@ -3,6 +3,7 @@
 #include <RenderInterface.h>
 #include <vector>
 #include <ParticleSystemInstructionCollection.h>
+#include <RenderStateEnums.h>
 
 using namespace std;
 
@@ -24,6 +25,17 @@ struct ParticleSystemAndTexture;
 
 class Transform;
 
+struct PsRenderInfo
+{
+	// Pointers to save performance. No ownership
+	ParticleSystemAndTexture* psAndTex;
+	Transform* transform;
+	AglParticleSystemHeader::AglBlendMode blendMode;
+	AglParticleSystemHeader::AglRasterizerMode rasterizerMode;
+
+	PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, Transform* p_transform );
+};
+
 class ParticleRenderSystem : public EntitySystem, public RenderInterface
 {
 public:
@@ -33,21 +45,25 @@ public:
 	void processEntities( const vector<Entity*>& p_entities );
 
 	virtual void render();
-	virtual void renderAdditiveParticles();
-	virtual void renderAlphaParticles();
-	virtual void renderMultiplyParticles();
+	virtual void render( AglParticleSystemHeader::AglBlendMode p_blendMode,
+		AglParticleSystemHeader::AglRasterizerMode p_rasterizerMode );
+
+	virtual BlendState::Mode blendStateFromAglBlendMode(
+		AglParticleSystemHeader::AglBlendMode p_blend );
+	virtual RasterizerState::Mode rasterizerStateFromAglRasterizerMode(
+		AglParticleSystemHeader::AglRasterizerMode p_rast);
 
 private:
 	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
-	void rebuildVertexBuffer(AglParticleSystem* p_particleSystem);
+	//void rebuildVertexBuffer( AglParticleSystem* p_particleSystem );
+	bool insertToRenderQue( PsRenderInfo p_renderInfo );
+	void clearRenderQues();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	//vector<pair<AglParticleSystem*, int>> m_particleSystems;
-
-	// pointer to save performance. No ownership
-	vector< pair< ParticleSystemAndTexture*, Transform* > > m_additiveCollection;
-	vector< pair< ParticleSystemAndTexture*, Transform* > > m_alphaCollection;
-	vector< pair< ParticleSystemAndTexture*, Transform* > > m_multiplyCollection;
+	
+	vector< PsRenderInfo > m_renderQues
+		[AglParticleSystemHeader::AglBlendMode_CNT]
+		[AglParticleSystemHeader::AglRasterizerMode_CNT];
 };
 
