@@ -33,30 +33,30 @@ struct AglParticleSystemHeader{
 	enum AglBlendMode {
 		AglBlendMode_NON_EXISTING = -1,
 
-		AglBlendMode_ADDITIVE = 1,
-		AglBlendMode_ALPHA = 2,
-		AglBlendMode_MULTIPLY = 4,
+		AglBlendMode_ALPHA,
+		AglBlendMode_ADDITIVE,
+		AglBlendMode_MULTIPLY,
 
-		AglBlendMode_CNT = 3 // Update manually
+		AglBlendMode_CNT
 	};
 
 	enum AglRasterizerMode {
 		AglRasterizerMode_NON_EXISTING = -1,
-		AglRasterizerMode_FIRST = 8,
+		AglRasterizerMode_FIRST = 0,
 
-		AglRasterizerMode_ALWAYS_ON_TOP = AglRasterizerMode_FIRST,
-		AglRasterizerMode_Z_CULLED = 16,
+		AglRasterizerMode_Z_CULLED = AglRasterizerMode_FIRST,
+		AglRasterizerMode_ALWAYS_ON_TOP,
 
-		AglRasterizerMode_LAST = AglRasterizerMode_Z_CULLED,
-		AglRasterizerMode_CNT = 2 // Update manually
+		AglRasterizerMode_LAST = AglRasterizerMode_ALWAYS_ON_TOP,
+		AglRasterizerMode_CNT
 	};
 
 	enum AglSpace {
 		AglSpace_NON_EXISTING = -1,
 
-		AglSpace_GLOBAL = 1,
-		AglSpace_SPAWN_LOCAL = 2,
-		AglSpace_PARTICLES_LOCAL = 4,
+		AglSpace_GLOBAL,
+		AglSpace_LOCAL,
+		//AglSpace_PARTICLES_LOCAL = 4,
 
 		AglSpace_CNT
 	};
@@ -84,8 +84,12 @@ struct AglParticleSystemHeader{
 	AglAlignmentType	alignmentType;
 	float				spawnRotation;
 	float				spawnRotationOffset;
-	int					modes; // used together with blend and rasterizer modes
-	int					space; // used together with AglSpace 
+
+	char				blendMode;		// used together with AglBlendMode
+	char				rasterizerMode;	// used together with AglRasterizerMode
+	char				spawnSpace;		// used together with AglSpace 
+	char				particleSpace;	// used together with AglSpace 
+	int					padding; // unused
 
 	AglParticleSystemHeader()
 	{
@@ -112,7 +116,9 @@ struct AglParticleSystemHeader{
 		spawnRotation = 0;
 		spawnRotationOffset = 0;
 
-		modes = AglSpace_GLOBAL;
-		space = AglSpace_SPAWN_LOCAL;
+		blendMode = AglBlendMode_ALPHA;
+		rasterizerMode = AglRasterizerMode_Z_CULLED;
+		particleSpace = AglSpace_GLOBAL;
+		spawnSpace = AglSpace_LOCAL;
 	}
 };

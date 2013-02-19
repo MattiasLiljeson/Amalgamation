@@ -9,6 +9,17 @@
 #include <ParticleSystemAndTexture.h>
 #include "MeshOffsetTransform.h"
 
+PsRenderInfo::PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, Transform* p_transform )
+{
+	psAndTex = p_psAndTex;
+	transform = p_transform;
+	int tmpBlendMode = psAndTex->particleSystem.getHeader().blendMode;
+	blendMode = (AglParticleSystemHeader::AglBlendMode)tmpBlendMode;
+	int tmpRastMode = psAndTex->particleSystem.getHeader().rasterizerMode;
+	rasterizerMode = (AglParticleSystemHeader::AglRasterizerMode)tmpRastMode;
+}
+
+
 ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::ParticleRenderSystem, 2,
 	ComponentType::ParticleSystemsComponent, ComponentType::Transform )
@@ -19,17 +30,12 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 
 ParticleRenderSystem::~ParticleRenderSystem()
 {
-	m_additiveCollection.clear();
-	m_alphaCollection.clear();
-	m_multiplyCollection.clear();
+	clearRenderQues();
 }
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	// Clear the old particle systems
-	m_additiveCollection.clear();
-	m_alphaCollection.clear();
-	m_multiplyCollection.clear();
+	clearRenderQues();
 
 
 	// get camera pos, for sorting
@@ -68,7 +74,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 					AglMatrix transMat = transform->getMatrix();
 
-					// Offset agl-loaded meshes by their offset matrix
+					// Offset Agl-loaded meshes by their offset matrix
 					if( offset != NULL ) {
 						transMat = offset->offset.inverse() * transMat;
 					}
@@ -76,26 +82,12 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 					// Update only local particle systems (PS) as the PS's otherwise will get a 
 					// double transform
 					// HACK: always transform spawn until support has been added to the editor. /ML 
-					if( header.space == AglParticleSystemHeader::AglSpace_SPAWN_LOCAL || true ) {
+					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL || true ) {
 						particlesComp->setSpawn( transMat );
 					}
 
-					pair< ParticleSystemAndTexture*, Transform* > ps( psAndTex, transform );
-					switch( header.modes )
-					{
-						case AglParticleSystemHeader::AglBlendMode_ADDITIVE:
-							m_additiveCollection.push_back( ps );
-							break;
-						case AglParticleSystemHeader::AglBlendMode_ALPHA:
-							m_alphaCollection.push_back( ps );
-							break;
-						case AglParticleSystemHeader::AglBlendMode_MULTIPLY:
-							m_multiplyCollection.push_back( ps );
-							break;
-						default :
-							m_alphaCollection.push_back( ps );
-							break;
-					}
+					PsRenderInfo info( psAndTex, transform );
+					insertToRenderQue( info );
 				}
 			}
 		}
@@ -107,39 +99,71 @@ void ParticleRenderSystem::render()
 
 }
 
-void ParticleRenderSystem::renderAdditiveParticles()
+void ParticleRenderSystem::render( AglParticleSystemHeader::AglBlendMode p_blend,
+			AglParticleSystemHeader::AglRasterizerMode p_rast )
 {
-	for( unsigned int collectionIdx=0;
-		collectionIdx<m_additiveCollection.size();
-		collectionIdx++ )
-	{
-		ParticleSystemAndTexture* psAndTex = m_additiveCollection[collectionIdx].first;
-		Transform* transform = m_additiveCollection[collectionIdx].second;
-		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	if( -1<p_blend && p_blend<AglParticleSystemHeader::AglBlendMode_CNT ) {
+		if( -1<p_rast && p_rast<AglParticleSystemHeader::AglRasterizerMode_CNT ) {
+			for( unsigned int psIdx=0;
+				psIdx<m_renderQues[p_blend][p_rast].size();
+				psIdx++ )
+			{
+				ParticleSystemAndTexture* psAndTex = m_renderQues[p_blend][p_rast][psIdx].psAndTex;
+				Transform* transform = m_renderQues[p_blend][p_rast][psIdx].transform;
+				m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+			}
+		}
 	}
 }
 
-void ParticleRenderSystem::renderAlphaParticles()
+BlendState::Mode ParticleRenderSystem::blendStateFromAglBlendMode
+	( AglParticleSystemHeader::AglBlendMode p_blend )
 {
-	for( unsigned int collectionIdx=0;
-		collectionIdx<m_alphaCollection.size();
-		collectionIdx++ )
+	switch( p_blend )
 	{
-		ParticleSystemAndTexture* psAndTex = m_alphaCollection[collectionIdx].first;
-		Transform* transform = m_alphaCollection[collectionIdx].second;
-		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	case AglParticleSystemHeader::AglBlendMode_ALPHA:
+		return BlendState::PARTICLE;
+	case AglParticleSystemHeader::AglBlendMode_ADDITIVE:
+		return BlendState::ADDITIVE;
+	case AglParticleSystemHeader::AglBlendMode_MULTIPLY:
+		return BlendState::MULTIPLY;
+	default:
+		return BlendState::PARTICLE;
 	}
-	
 }
 
-void ParticleRenderSystem::renderMultiplyParticles()
+RasterizerState::Mode ParticleRenderSystem::rasterizerStateFromAglRasterizerMode(
+	AglParticleSystemHeader::AglRasterizerMode p_rast )
 {
-	for( unsigned int collectionIdx=0;
-		collectionIdx<m_multiplyCollection.size();
-		collectionIdx++ )
+	switch( p_rast )
 	{
-		ParticleSystemAndTexture* psAndTex = m_multiplyCollection[collectionIdx].first;
-		Transform* transform = m_multiplyCollection[collectionIdx].second;
-		m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+	case AglParticleSystemHeader::AglRasterizerMode_Z_CULLED:
+		return RasterizerState::DEFAULT;
+	case AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP:
+		return RasterizerState::FILLED_NOCULL_NOCLIP;
+	default:
+		return RasterizerState::DEFAULT;
+	}
+}
+
+bool ParticleRenderSystem::insertToRenderQue( PsRenderInfo p_renderInfo )
+{
+	int blend = p_renderInfo.blendMode;
+	int rast = p_renderInfo.rasterizerMode;
+	if( -1<blend && blend<AglParticleSystemHeader::AglBlendMode_CNT ) {
+		if( -1<rast && rast<AglParticleSystemHeader::AglRasterizerMode_CNT ) {
+			m_renderQues[blend][rast].push_back( p_renderInfo );
+			return true;
+		}
+	}
+	return false; 
+}
+
+void ParticleRenderSystem::clearRenderQues()
+{
+	for( int i=0; i<AglParticleSystemHeader::AglBlendMode_CNT; i++ ) {
+		for( int j=0; j<AglParticleSystemHeader::AglRasterizerMode_CNT; j++ ) {
+			m_renderQues[i][j].clear();
+		}
 	}
 }

@@ -41,6 +41,7 @@ public:
 	void endMeshPass();
 
 	void initParticlePass();
+	void renderParticles();
 	void endParticlePass();
 
 	void initLightPass();
