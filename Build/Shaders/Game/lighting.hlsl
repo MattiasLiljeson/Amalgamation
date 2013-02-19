@@ -79,7 +79,6 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float3 normalVec = convertSampledNormal( normalColor.xyz );
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
-
 	
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;

@@ -514,11 +514,11 @@ void ClientApplication::initEntities()
 	//			&TESTMODELPATH);
 	//}
 
-
+/*
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
 	m_world->addEntity( entity );
-
+	
 	factory->readAssemblageFile("Assemblages/GreenLight.asd");
 	entity = factory->entityFromRecipe( "GreenLight" );									 
 	m_world->addEntity( entity );
@@ -538,7 +538,7 @@ void ClientApplication::initEntities()
 	factory->readAssemblageFile("Assemblages/RedLight.asd");
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
-
+	*/
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::GameState,new GameState(MENU));
 	m_world->addEntity(entity);

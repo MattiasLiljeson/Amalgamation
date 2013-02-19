@@ -11,9 +11,9 @@ d f 0:attenuationZ 0.00000001
 d f 0:ambientR 0.0
 d f 0:ambientG 0.0
 d f 0:ambientB 0.0
-d f 0:diffuseR 1.0
-d f 0:diffuseG 1.0
-d f 0:diffuseB 1.0
+d f 0:diffuseR 0.05497
+d f 0:diffuseG 0.02379
+d f 0:diffuseB 0.02160
 d f 0:specularR 0.000000001
 d f 0:specularG 0.000000001
 d f 0:specularB 0.000000001
