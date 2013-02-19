@@ -1,14 +1,20 @@
 #include "SpeedFovAdjustSystem.h"
 #include "CameraInfo.h"
 #include "Transform.h"
+#include <AntTweakBarWrapper.h>
 
 const float SpeedFovAdjustSystem::PI = 3.1415926536f;
 
-ValBuffer::ValBuffer()
+ValBuffer::ValBuffer( float p_initVal )
 {
 	m_currIdx = 0;
+	setAllVals( p_initVal );
+}
+
+void ValBuffer::setAllVals( float p_val )
+{
 	for( int i=0; i<VAL_CNT; i++ ) {
-		m_vals[i] = 0.0f;
+		m_vals[i] = p_val;
 	}
 }
 
@@ -60,6 +66,15 @@ SpeedFovAdjustSystem::~SpeedFovAdjustSystem()
 {
 }
 
+void SpeedFovAdjustSystem::initialize()
+{
+	m_buffer.setAllVals( 0.0f );
+	m_speedFovMult = 0.5;
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable(AntTweakBarWrapper::GRAPHICS, "Fov speed mult",
+		TwType::TW_TYPE_FLOAT, &m_speedFovMult, "");
+}
+
 void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if( !p_entities.empty() )
@@ -79,10 +94,10 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 			AglVector3 newPos = shipTransform->getTranslation();
 			float speed = AglVector3::length( newPos - m_oldPos );
 			m_oldPos = newPos;
-			speed *= m_world->getDelta();
+			//speed *= m_world->getDelta();
 			m_buffer.addVal(speed);
 
-			float fov = m_stdFov + m_buffer.getAvg()*50;
+			float fov = m_stdFov + m_buffer.getAvg() * m_speedFovMult;
 			float fovasRadians = (fov/360.0f) * 2.0f*PI;
 			cam->m_fieldOfViewAsRadians = fovasRadians;
 			cam->createPerspectiveMatrix();
