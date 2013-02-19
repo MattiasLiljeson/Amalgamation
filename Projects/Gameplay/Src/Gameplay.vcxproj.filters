@@ -630,6 +630,12 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="AxisRotate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotationSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1048,6 +1054,9 @@
     </ClCompile>
     <ClCompile Include="MenuBackgroundSceneSystem.cpp">
       <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotationSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

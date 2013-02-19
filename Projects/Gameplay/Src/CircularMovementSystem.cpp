@@ -16,15 +16,6 @@ CircularMovementSystem::~CircularMovementSystem()
 
 void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	// NOTE: (Johan) Some ugly debug tool.
-	if(static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem))->
-		getControlByEnum(InputHelper::KeyboardKeys_0)->getDelta() > 0.0)
-	{
-		m_world->getSystem(SystemType::DebugMovementSystem)->setEnabled( true );
-		this->setEnabled( false );
-	}
-	//<-NOTE
-
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
 		Transform* transform = static_cast<Transform*>(p_entities[i]->getComponent(

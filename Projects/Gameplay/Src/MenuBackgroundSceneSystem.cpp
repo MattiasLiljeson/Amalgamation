@@ -2,6 +2,7 @@
 #include "LoadMesh.h"
 #include "Transform.h"
 #include "CircularMovement.h"
+#include "AxisRotate.h"
 #include <RandomUtil.h>
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
@@ -13,7 +14,7 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 {
 }
 
-void MenuBackgroundSceneSystem::initialize()
+void MenuBackgroundSceneSystem::sysEnabled()
 {
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 7500);
@@ -21,8 +22,9 @@ void MenuBackgroundSceneSystem::initialize()
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-20.0f, 0, 50.0f);
-	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), -position);
+	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), AglVector3::backward());
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
+	m_ship->addComponent(new AxisRotate(AglVector3::up(), AglVector3::backward(), rotation, 0.5f));
 	m_world->addEntity(m_ship);
 }
 

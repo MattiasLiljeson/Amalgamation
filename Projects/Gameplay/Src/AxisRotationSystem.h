@@ -1,30 +1,20 @@
 #pragma once
 #include <EntitySystem.h>
-#include <AglVector3.h>
 // =======================================================================================
-// MenuBackgroundSceneSystem
+// AxisRotationSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # MenuBackgroundSceneSystem
+/// # AxisRotationSystem
 /// Detailed description...
 /// Created on: 19-2-2013 
 ///---------------------------------------------------------------------------------------
-class MenuBackgroundSceneSystem: public EntitySystem
+class AxisRotationSystem: public EntitySystem
 {
 public:
-	MenuBackgroundSceneSystem();
-	~MenuBackgroundSceneSystem();
-	virtual void sysEnabled() final;
-	virtual void sysDisabled() final;
+	AxisRotationSystem();
+	virtual void processEntities(const vector<Entity*>& p_entities) final;
 
-private:
-	void initInstanceSphereByJohan(string p_meshName, AglVector3 p_origin,
-		AglVector3 p_axis, float p_radius, unsigned int p_numberInstances);
-
-private:
-	Entity* m_ship;
-	vector<Entity*> m_rocks;
 };
