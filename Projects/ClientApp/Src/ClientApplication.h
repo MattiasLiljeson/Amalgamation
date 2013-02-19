@@ -69,12 +69,6 @@ private:
 	void initEntities();
 
 	void InitModulesTestByAnton();
-	void initInstanceFieldsByJohan(string p_meshName, unsigned int p_sizeX,
-		unsigned int p_sizeY, float p_z, float p_scale);
-	void initInstanceAsteroidFieldByJohan(string p_meshName, AglVector3 p_origin, unsigned int p_width,
-		unsigned int p_numbersInCircle, float p_radius, float p_spacing, float p_diffY, float p_scale);
-	void initInstanceSphereByJohan(string p_meshName, AglVector3 p_origin,
-		AglVector3 p_axis, float p_radius, unsigned int p_numberInstances);
 
 private:
 	HINSTANCE m_hInstance;

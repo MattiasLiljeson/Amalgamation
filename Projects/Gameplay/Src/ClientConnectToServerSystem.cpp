@@ -68,6 +68,7 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 			|| state->getStateDelta(INGAME)!= 0){
 			connectToNetworkAddress();
 			state->setStatesDelta(INGAME,1);
+			m_world->getSystem(SystemType::CircularMovementSystem)->setEnabled(false);
 		}
 
 	}

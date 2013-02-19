@@ -3,6 +3,8 @@
 #include "CircularMovement.h"
 #include "InputBackendSystem.h"
 #include <Control.h>
+#include <RandomUtil.h>
+#include "LoadMesh.h"
 
 CircularMovementSystem::CircularMovementSystem()
 	: EntitySystem( SystemType::CircularMovementSystem, 2, ComponentType::Transform,
@@ -12,6 +14,12 @@ CircularMovementSystem::CircularMovementSystem()
 
 CircularMovementSystem::~CircularMovementSystem()
 {
+}
+
+void CircularMovementSystem::initialize()
+{
+	initInstanceSphereByJohan("RockA.agl", AglVector3(0.0f, 0.0f, 100.0f),
+		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 7500);
 }
 
 void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities )
@@ -40,5 +48,33 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 		transform->setTranslation(position);
 		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
 		transform->setRotation(rotation);
+	}
+}
+
+void CircularMovementSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
+	AglVector3 p_axis, float p_radius, unsigned int p_numberInstances )
+{
+	for(unsigned int i=0; i<p_numberInstances; i++)
+	{
+		Entity* entity = m_world->createEntity();
+		AglVector3 randomDirection;
+		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
+			&randomDirection.z);
+		AglVector3 position = p_origin + randomDirection * p_radius;
+		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0.0f, 1.0f, 0.0f), p_origin-position);
+		AglVector3 scale(1.0f, 1.0f, 1.0f);
+		entity->addComponent(new Transform(position, rotation, scale));
+		entity->addComponent(new LoadMesh(p_meshName));
+		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.01f));
+		m_world->addEntity(entity);
+	}
+}
+
+void CircularMovementSystem::sysDisabled()
+{
+	vector<Entity*> entities = getActiveEntities();
+	for(unsigned int i=0; i<entities.size(); i++)
+	{
+		m_world->deleteEntity(entities[i]);
 	}
 }
