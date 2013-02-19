@@ -24,6 +24,8 @@ struct FreeSlotData
 
 class ShipManagerSystem : public EntitySystem
 {
+private:
+	vector<FreeSlotData> findFreeConnectionPoints(Entity* p_entity, int p_parent);
 public:
 	ShipManagerSystem();
 	const vector<Entity*>& getShips() const;

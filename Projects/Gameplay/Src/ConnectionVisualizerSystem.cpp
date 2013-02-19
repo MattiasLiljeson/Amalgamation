@@ -26,8 +26,38 @@ void ConnectionVisualizerSystem::process()
 	while(!m_effectsToCreate.empty())
 	{
 		ConnectionEffectData data = m_effectsToCreate.back();
-		data.data = createConnectionEffectEntity(data);
-		m_createdEffects.push_back(data);
+		if (data.disabled)
+		{
+			for (unsigned int i = 0; i < m_createdEffects.size(); i++)
+			{
+				if (m_createdEffects[i].parent == data.parent &&
+					m_createdEffects[i].slot == data.slot)
+				{
+					m_createdEffects[i].disabled = true;
+				}
+			}
+		}
+		else
+		{
+			int toReplace = -1;
+			for (unsigned int i = 0; i < m_createdEffects.size(); i++)
+			{
+				if (m_createdEffects[i].disabled)
+				{
+					toReplace = i;
+					break;
+				}
+			}
+			if (toReplace >= 0)
+			{
+				replaceConnectionEffectEntity(data, toReplace);
+			}
+			else
+			{
+				data.data = createConnectionEffectEntity(data);
+				m_createdEffects.push_back(data);
+			}
+		}
 		m_effectsToCreate.pop_back();
 	}
 	for (unsigned int i = 0; i < m_createdEffects.size(); i++)
@@ -46,10 +76,14 @@ void ConnectionVisualizerSystem::process()
 
 		AglParticleSystem* ps = psc->getParticleSystemPtr(0);
 		if (ps)
+		{
 			ps->setSpawnPoint(chilMatrix.GetTranslation()+childForward*0.85f);
 
-		if (m_createdEffects[i].disabled)
-			ps->setSpawnFrequency(0);
+			if (m_createdEffects[i].disabled)
+				ps->setSpawnFrequency(0);
+			else
+				ps->setSpawnFrequency(1.0f);
+		}
 	}
 }
 
@@ -92,6 +126,11 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
 	m_world->addEntity(effect);
 	return effect;
+}
+void ConnectionVisualizerSystem::replaceConnectionEffectEntity(ConnectionEffectData& p_data, int p_index)
+{
+	p_data.data = m_createdEffects[p_index].data;
+	m_createdEffects[p_index] = p_data;
 }
 void ConnectionVisualizerSystem::disableAll()
 {
