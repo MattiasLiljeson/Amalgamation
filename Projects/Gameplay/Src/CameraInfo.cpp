@@ -12,6 +12,8 @@ CameraInfo::CameraInfo(float p_aspectRatio,
 	m_nearPlane		= p_nearPlane;
 	m_farPlane		= p_farPlane;
 	m_shadowMapIdx	= -1;
+	m_ambientColor	= AglVector4(0.259f,0.169f,0.157f,0.0f);
+	m_fogColor		= AglVector4(0.38f,0.58f,0.3764f,0.0f);
 	createPerspectiveMatrix();
 }
 

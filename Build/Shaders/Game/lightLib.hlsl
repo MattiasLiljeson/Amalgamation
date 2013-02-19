@@ -105,7 +105,7 @@ float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 n
 
 	float3 diffuse = surface.diffuse.rgb*attenuation*saturate(surface.diffuse.rgb+light.diffuse.rgb)*diffuseIntensity*0.8;
 	float3 specularity = surface.specular.rgb*specLighting*attenuation*light.diffuse.rgb*0.8;
-	return (diffuse+specularity);
+	return max(0.0f,(diffuse+specularity));
 }
 
 float3 spotLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )

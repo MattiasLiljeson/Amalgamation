@@ -12,9 +12,10 @@ static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
 										{0.01f,0.02f,0.04f,0.02f,0.01f}};
 
 Texture2D gLightPass 		: register(t0);
-Texture2D gNormalBuffer		: register(t1);
-Texture2D depthBuffer		: register(t2);
-Texture2D gRandomNormals 	: register(t3);
+Texture2D gDiffuseMap 		: register(t1);
+Texture2D gNormalBuffer		: register(t2);
+Texture2D depthBuffer		: register(t3);
+Texture2D gRandomNormals 	: register(t4);
 
 SamplerState pointSampler : register(s0);
 
@@ -71,6 +72,7 @@ VertexOut VS(VertexIn p_input)
 
 float4 PS(VertexOut input) : SV_TARGET
 {
+	float4 diffuseColor = gDiffuseMap.Sample(pointSampler,input.texCoord);
 	float4 lightColor = gLightPass.Sample(pointSampler,input.texCoord);
 	float depth = depthBuffer.Sample(pointSampler, input.texCoord).r;
 	float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
@@ -98,10 +100,16 @@ float4 PS(VertexOut input) : SV_TARGET
 	//return float4( ao, ao, ao, 1.0f );
 	//lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
 	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
-	float linDepth = length(position-gCameraPos) / ((1000.0f)-(300.0f));
-	float4 fog = linDepth*float4(0.2f,0.1f,0.05f,0.0f);
+	float linDepth = length(position-gCameraPos) / ((gFarPlane-800.0f)-(gNearPlane));
+	// float4 fog = linDepth*float4(0.2f,0.1f,0.05f,0.0f);
 	//float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)));
-	//float4 fog = float4(0.2f,0.0745f,0.0f,0.0f);
-	//return lerp(lightColor,fog,saturate(fogDepth)); // can do this when light is separate from diffuse
-	return lightColor+fog;
+	// lightColor = diffuseColor;
+	float4 fog = gFogColor;
+	// float4(0.38f,0.58f,0.3764f,0.0f);
+	float4 ambient = gAmbientColor;
+	// float4(0.259f,0.169f,0.157f,0.0f);
+	lightColor += ambient;
+	// lightColor = lerp(saturate(lightColor),ambient,1.0f-length(saturate(lightColor)));
+	return lerp(lightColor,fog,saturate(linDepth)); // can do this when light is separate from diffuse
+	// return saturate(lightColor)+fog+float4(0.05448f,0.02416f,0.02122f,0.0f);
 }
