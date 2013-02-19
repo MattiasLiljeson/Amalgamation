@@ -30,7 +30,7 @@ class ParticleRenderer
 public:
 	ParticleRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~ParticleRenderer();
-	void renderParticleSystem( AglParticleSystem* p_system, RendererSceneInfo* p_info, 
+	void renderParticleSystem( AglParticleSystem* p_system, 
 		const InstanceData& p_transform, Texture* p_texture, const AglVector4& p_uvRect);
 private:
 	void initShaders();

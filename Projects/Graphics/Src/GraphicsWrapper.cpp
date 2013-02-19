@@ -635,7 +635,7 @@ void GraphicsWrapper::renderParticleSystem( ParticleSystemAndTexture* p_system,
 {
 	Texture* texture = m_textureManager->getResource( p_system->textureIdx );
 	m_particleRenderer->renderParticleSystem( &p_system->particleSystem,
-		&m_renderSceneInfo, p_transform, texture,p_system->uvRect );
+	 p_transform, texture,p_system->uvRect );
 }
 
 void GraphicsWrapper::setParticleRenderState()

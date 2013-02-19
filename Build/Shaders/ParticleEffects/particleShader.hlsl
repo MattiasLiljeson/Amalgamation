@@ -102,7 +102,6 @@ void GS(point Particle gIn[1],
 						0, 0, 0, 1);
 
 	W = mul( rot, W );
-
 	float4x4 WVP = mul(W, gViewProj);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;
