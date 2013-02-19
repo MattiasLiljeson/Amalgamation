@@ -155,7 +155,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 
 	// Temp: This is to make sure the system works.
 	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(m_levelInfo->getBranchCount());
+	generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
 	createLevelEntities();
 
 	m_world->deleteEntity(p_entity);
@@ -187,11 +187,16 @@ void LevelGenSystem::run()
 	//createLevelEntities();
 }
 
-void LevelGenSystem::generateLevelPieces( int p_maxDepth )
+void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRotation)
 {
 	// Creates the first entity.
-	auto quart = AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(),
+	AglQuaternion quart;
+	if (p_doRandomStartRotation)
+		quart = AglQuaternion::constructFromAxisAndAngle(AglVector3::forward(),
 														(rand() % 360) * 3.1415f / 180.0f);
+	else
+		quart = AglQuaternion::identity();
+
 	// Create a initial piece.
 	Transform* transform = new Transform(AglVector3(20, -20, 10), 
 										quart, 

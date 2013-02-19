@@ -58,7 +58,7 @@ private:
 	 // Used to generate a bounding sphere around the chamber.
 	Entity* createDebugSphereEntity(LevelPiece* p_piece);
 
-	void generateLevelPieces(int p_maxDepth);
+	void generateLevelPieces(int p_maxDepth, bool p_doRandomStartRotation);
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
 								vector<LevelPiece*>& out_pieces, int p_generation);
 

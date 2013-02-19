@@ -27,7 +27,8 @@ public:
 	LevelPieceFileData* getRandomFileData() const; // NOTE: Uses weight
 	LevelPieceFileData* getStartFileData() const;
 	LevelPieceFileData* getFileDataFromId(int p_id) const;
-	int getBranchCount() const;
+	int		getBranchCount() const;
+	bool	doRandomStartRotation() const;
 
 private:
 	void addWeightData(LevelPieceFileData* p_fromFileData);

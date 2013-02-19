@@ -102,4 +102,10 @@ void LevelInfo::addWeightData( LevelPieceFileData* p_fromFileData )
 		m_weightData.push_back(p_fromFileData->id); // Pushes back the pieceFileId w times.
 }
 
+bool LevelInfo::doRandomStartRotation() const
+{
+	return m_randomStartRotation;
+}
+
+
 
