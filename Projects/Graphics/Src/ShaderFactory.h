@@ -45,6 +45,9 @@ public:
 
 	DeferredTessBaseShader* createDeferredTessBaseShader(const LPCWSTR& p_filePath);
 
+	DeferredTessBaseShader* createDeferredTesselationBaseShader(const LPCWSTR& p_vertexPath, 
+		const LPCWSTR& p_hullPath, const LPCWSTR& p_domainPath, const LPCWSTR& p_pixelPath);
+
 	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_filePath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);

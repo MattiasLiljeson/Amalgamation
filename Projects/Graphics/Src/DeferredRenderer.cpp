@@ -258,8 +258,9 @@ void DeferredRenderer::initShaders()
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
 		L"Shaders/Game/deferredBaseVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_tessBaseShader = m_shaderFactory->createDeferredTessBaseShader(
-		L"Shaders/Game/deferredBaseTess.hlsl");
+	m_tessBaseShader = m_shaderFactory->createDeferredTesselationBaseShader(
+		L"Shaders/Game/deferredBaseTessleationVS.hlsl", L"Shaders/Game/deferredBaseTessleationHS.hlsl",
+		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/ssaoGenerate.hlsl");

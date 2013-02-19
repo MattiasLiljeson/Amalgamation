@@ -93,7 +93,8 @@ VertexOut VS(VertexIn p_input)
 
 //PATCH CONSTANT FUNCTION:
 //Determines tesselation factors.
-patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, uint patchID: SV_PrimitiveID)
+patchConstantOut PatchConstant(InputPatch<VertexOut, 3> input, 
+uint patchID: SV_PrimitiveID)
 {
 	patchConstantOut output;
 	
@@ -140,7 +141,8 @@ HullOut HS(InputPatch<VertexOut, 3> patch, uint pointID : SV_OutputControlPointI
 }
 
 [domain("tri")] //We are working with triangles
-DomainOut DS(patchConstantOut input, float3 uvw : SV_DomainLocation, const OutputPatch<HullOut, 3> patch)
+DomainOut DS(patchConstantOut input, float3 uvw : SV_DomainLocation, 
+	const OutputPatch<HullOut, 3> patch)
 {
 	//Compute output data based on interpolation
 	//over the triangle domain

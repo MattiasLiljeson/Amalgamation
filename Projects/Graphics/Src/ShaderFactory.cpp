@@ -122,6 +122,37 @@ DeferredTessBaseShader* ShaderFactory::createDeferredTessBaseShader(const LPCWST
 	return new DeferredTessBaseShader(shaderInitData);
 }
 
+DeferredTessBaseShader* ShaderFactory::createDeferredTesselationBaseShader( const LPCWSTR& p_vertexPath, 
+																		   const LPCWSTR& p_hullPath, 
+																		   const LPCWSTR& p_domainPath, 
+																		   const LPCWSTR& p_pixelPath )
+{
+	DeferredBaseShader* newDeferredBaseShader = NULL;
+	ID3D11SamplerState* samplerState = NULL;
+	ID3D11InputLayout* inputLayout = NULL;
+
+	VSData* vertexData = new VSData();
+	HSData* hullData	= new HSData();
+	DSData* domainData	= new DSData();
+	PSData* pixelData = new PSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_vertexPath,"VS",m_shaderModelVersion);
+	hullData->stageConfig = new ShaderStageConfig(p_hullPath,"HS",m_shaderModelVersion);
+	domainData->stageConfig = new ShaderStageConfig(p_domainPath,"DS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_pixelPath,"PS",m_shaderModelVersion);
+
+	createAllShaderStages(vertexData,pixelData, NULL, hullData, domainData);
+	createSamplerState(&samplerState);
+	createInstancedPNTTBVertexInputLayout(vertexData,&inputLayout);
+
+	ShaderVariableContainer shaderInitData;
+	createShaderInitData(&shaderInitData,inputLayout,vertexData,pixelData,samplerState,
+		NULL, hullData, domainData);
+
+	return new DeferredTessBaseShader(shaderInitData);
+}
+
+
 DeferredTessAnimatedBaseShader* ShaderFactory::createDeferredTessAnimatedShader(const LPCWSTR& p_filePath)
 {
 	ID3D11SamplerState* samplerState = NULL;
