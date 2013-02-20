@@ -310,6 +310,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addComponent( new ShipFlyController(3.0f, 100.0f) );
 		entity->addComponent( new ShipEditController() );
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
+		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
 		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
 			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
@@ -331,7 +332,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
-		entity->addComponent( new MyShip_TAG() );
 	}
 	entity->addComponent( new PlayerScore() );
 	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
