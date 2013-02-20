@@ -2,8 +2,8 @@
 
 class ParticleShader;
 class AglParticleSystem;
-class AglVector4;
 class ShaderFactory;
+struct AglVector4;
 struct ID3D11Buffer;
 struct ID3D11Device;
 struct ID3D11DeviceContext;

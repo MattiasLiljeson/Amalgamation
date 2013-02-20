@@ -17,7 +17,6 @@ const string& ModelExtendedFactory::mesherrorTextureName="mesherror.png";
 const string& ModelExtendedFactory::defaultDiffuseTextureName="defaultdiffuse.png";
 const string& ModelExtendedFactory::defaultSpecularTextureName="defaultspecular.png";
 const string& ModelExtendedFactory::defaultNormalTextureName="defaultnormal.png";
-const string& ModelExtendedFactory::defaultDisplacementTextureName="defaultdisplacement.png";
 const string& ModelExtendedFactory::defaultGradientTextureName="defaultgradient.png";
 
 ModelExtendedFactory::ModelExtendedFactory(ID3D11Device* p_device,BufferFactory* p_bufferFactory, 
@@ -148,14 +147,12 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 		specularName = p_source.scene->getName(mat->specularTextureNameIndex,true);
 	// normal
 	string normalName = defaultNormalTextureName;
-	bool hasNormalMap=false;
 	if (mat->normalTextureNameIndex!=-1)
 	{
-		hasNormalMap=true;
 		normalName = p_source.scene->getName(mat->normalTextureNameIndex,true);
 	}
 	// displacement
-	string dispName = defaultDisplacementTextureName;
+	string dispName = "";
 	bool hasDisplacementMap=false;
 	if (mat->displacementTextureNameIndex!=-1)
 	{
@@ -176,16 +173,19 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 
 	// Create material
 	MaterialInfo materialInfo;
-	materialInfo.hasNormalMap = hasNormalMap;
-	materialInfo.hasDisplacementMap = hasDisplacementMap;
 	materialInfo.setTextureId(MaterialInfo::DIFFUSEMAP, 
 		m_textureFactory->createTexture(diffuseName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::SPECULARMAP,
 		m_textureFactory->createTexture(specularName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::NORMALMAP,
 		m_textureFactory->createTexture(normalName,TEXTUREPATH));
-	materialInfo.setTextureId(MaterialInfo::DISPLACEMENTMAP,
-		m_textureFactory->createTexture(dispName,TEXTUREPATH));
+
+	materialInfo.hasDisplacementMap = hasDisplacementMap;
+	if(hasDisplacementMap){
+		materialInfo.setTextureId(MaterialInfo::DISPLACEMENTMAP,
+			m_textureFactory->createTexture(dispName,TEXTUREPATH));
+	}
+
 	materialInfo.setTextureId(MaterialInfo::GLOWMAP,
 		m_textureFactory->createTexture(glowName,TEXTUREPATH));
 	materialInfo.setTextureId(MaterialInfo::GRADIENTMAP,

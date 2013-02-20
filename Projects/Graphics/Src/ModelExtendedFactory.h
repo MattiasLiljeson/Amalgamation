@@ -92,7 +92,6 @@ private:
 	static const string& defaultDiffuseTextureName;
 	static const string& defaultSpecularTextureName;
 	static const string& defaultNormalTextureName;
-	static const string& defaultDisplacementTextureName;
 	static const string& defaultGradientTextureName;
 private:
 	// bool isMirrorMatrix(const AglMatrix& p_matrix);
