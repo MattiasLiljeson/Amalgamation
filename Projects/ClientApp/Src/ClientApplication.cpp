@@ -438,23 +438,16 @@ void ClientApplication::initEntities()
 	Entity* entity = NULL;
 	Component* component = NULL;
 
-	// HACK: (Johan) This temporarily fixes the weird "hierarchy" bug.
-	//entity = m_world->createEntity();
-	//entity->addComponent(new Transform());
-	//entity->addComponent(new LoadMesh("RockA.agl"));
-	//m_world->addEntity(entity);
-	// End hack.
-
 	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
-	// Create rocks
-	status = factory->readAssemblageFile(LEVELPIECESPATH + "prisonChamberClient.asd" );
-	entity = factory->entityFromRecipe( "prisonChamberClient" );	
-
-	m_world->addEntity( entity );
+	// Create Local rocks
+//	status = factory->readAssemblageFile(LEVELPIECESPATH + "prisonChamberClient.asd" );
+//	entity = factory->entityFromRecipe( "prisonChamberClient" );	
+//
+//	m_world->addEntity( entity );
 
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
