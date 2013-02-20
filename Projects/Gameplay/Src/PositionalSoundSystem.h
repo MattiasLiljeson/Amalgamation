@@ -26,8 +26,9 @@ public:
 
 	void inserted( Entity* p_entity );
 	void removed( Entity* p_entity );
+
 private:
-	void updateSoundPositions( const vector<Entity*>& p_entities );
+	void updateSoundPositions( Entity* p_entity );
 
 private:
 	AudioBackendSystem* m_audioBackendSystem;

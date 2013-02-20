@@ -16,5 +16,6 @@ class CircularMovementSystem: public EntitySystem
 public:
 	CircularMovementSystem();
 	~CircularMovementSystem();
-	void processEntities( const vector<Entity*>& p_entities );
+	virtual void processEntities(const vector<Entity*>& p_entities) final;
+
 };

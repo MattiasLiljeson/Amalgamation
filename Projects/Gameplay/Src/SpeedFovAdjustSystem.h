@@ -8,7 +8,8 @@ class ValBuffer
 {
 public:
 	static const int VAL_CNT = 25;
-	ValBuffer();
+	ValBuffer( float p_initVal = 0.0f );
+	void setAllVals( float p_val );
 	float getAvg(); ///< Works well over the network. Long falloff
 	float getLog(); ///< Small falloff. Works bad over the network.
 	void addVal( float p_val );
@@ -24,8 +25,9 @@ class SpeedFovAdjustSystem :
 	public EntitySystem
 {
 public:
-	SpeedFovAdjustSystem( float p_fov = 80.0f );
+	SpeedFovAdjustSystem( float p_fov = 70.0f );
 	virtual ~SpeedFovAdjustSystem();
+	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 private:
@@ -33,5 +35,6 @@ private:
 	float m_stdFov;
 	AglVector3 m_oldPos;
 	ValBuffer m_buffer;
+	float m_speedFovMult;
 };
 

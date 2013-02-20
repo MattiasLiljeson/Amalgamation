@@ -43,6 +43,8 @@
 #include "LevelPieceRoot.h"
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
+#include "LevelInfoLoader.h"
+#include "LevelPieceFileMapping.h"
 #include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
@@ -107,7 +109,8 @@ EntityFactory::~EntityFactory()
 	m_entityRecipes.clear();
 }
 
-AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_filePath )
+AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_filePath,
+															string* out_recipeName/*=NULL*/)
 {
 	Recipe* newRecipe = NULL;
 	AssemblageReader reader;
@@ -122,6 +125,10 @@ AssemblageHelper::E_FileStatus EntityFactory::readAssemblageFile( string p_fileP
 			// Delete previous recipe with the same name, it existing.
 			delete m_entityRecipes[newRecipe->getName()];
 			m_entityRecipes[newRecipe->getName()] = newRecipe;
+
+			// Set the out parameter if it has been desired.
+			if (out_recipeName)
+				(*out_recipeName) = newRecipe->getName();
 		}
 	}
 	else if (status==AssemblageHelper::FileStatus_FILE_NOT_FOUND)
@@ -291,9 +298,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 	//m_playerCounter++;
 
-	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, EntityType::Ship));
-
+	entity->addComponent( new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		EntityType::Ship));
 	Component* component = NULL;
 
 	/************************************************************************/
@@ -301,10 +307,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	/************************************************************************/
 	if(m_client->getId() == p_packet.owner)
 	{
-		component = new ShipFlyController(3.0f, 100.0f);
-		entity->addComponent( ComponentType::ShipFlyController, component );
-		component = new ShipEditController();
-		entity->addComponent( ComponentType::ShipEditController, component);
+		entity->addComponent( new ShipFlyController(3.0f, 100.0f) );
+		entity->addComponent( new ShipEditController() );
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		
 		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
@@ -314,20 +318,22 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			emitters = new ParticleSystemsComponent();
 			entity->addComponent( emitters );
 		}
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
+			AglVector3(0.0f, 0.0f, -1.0f), 0);
+		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
+			AglVector3(0.0f, 1.0f, 1.0f), 1);
+		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
+			AglVector3(-1.0f, 0.0f, 0.0f), 2);
+		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
+			AglVector3(1.0f, 0.0f, 0.0f), 3);
 
+		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
+			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 7.0f, 2.0f), 
-			AglVector3(0.0f, 1.0f, 1.0f)); // Forward
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, 2.0f, -5.0f), 
-			AglVector3(0.0f, 0.0f, -1.0f)); // Down
-		createHighlightParticleEmitter(emitters, AglVector3(4.5f, 2.0f, -0.5f), 
-			AglVector3(1.0f, 0.0f, 0.0f)); // Left
-		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, 2.0f, -0.5f), 
-			AglVector3(-1.0f, 0.0f, 0.0f)); // Right
+		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
+		entity->addComponent( new MyShip_TAG() );
 	}
-
-	component = new PlayerScore();
-	entity->addComponent( ComponentType::PlayerScore, component );
+	entity->addComponent( new PlayerScore() );
 	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
 
 	m_world->addEntity(entity);
@@ -339,13 +345,17 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
-		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
-		entity->addComponent( ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
-		entity->addComponent( ComponentType::NetworkSynced,
-			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
-		entity->addComponent( ComponentType::PlayerState, new PlayerState );
+		if(entity->getComponent(ComponentType::AudioListener))
+		{
+			entity->removeComponent(ComponentType::AudioListener); // This is "moved" from the camera to the ship.
+		}
+		entity->addComponent( new PlayerCameraController(90.0f) );
+		entity->addComponent( new NetworkSynced(p_packet.miscData, p_packet.owner,
+			EntityType::PlayerCamera) );
+		entity->addComponent( new PlayerState );
 		//Add a picking ray to the camera so that edit mode can be performed
-		entity->addComponent( ComponentType::PickComponent, new PickComponent());
+		entity->addComponent( new PickComponent() );
+		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 		entity->applyComponentChanges();
 	}
 	return entity;
@@ -690,7 +700,9 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}
-	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities));
+	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities,
+		shieldEntity, static_cast<AudioBackendSystem*>(
+		m_world->getSystem(SystemType::AudioBackendSystem))));
 
 	return shieldEntity;
 }
@@ -726,7 +738,10 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		// changed during refactoring by Jarl 30-1-2013
 		// use an assemblage, like this:
 		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
-		string asdName = m_levelPieceMapping.getClientAssemblageFileName( p_packet.meshInfo );
+		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
+			m_world->getSystem(SystemType::LevelInfoLoader));
+		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo );
+		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
 		entity = entityFromRecipe( asdName );
 	}
 	else	
@@ -821,7 +836,7 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 }
 
 void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
-	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection )
+	AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex )
 {
 	AglParticleSystem particleSystem;
 	particleSystem.setSpawnPoint(p_spawnPosition);
@@ -841,5 +856,5 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	ParticleSystemInstruction particleInstruction;
 	particleInstruction.textureFileName = "red-spot.png";
 	particleInstruction.particleSystem = particleSystem;
-	p_emitters->addParticleSystemInstruction(particleInstruction, 0);
+	p_emitters->addParticleSystemInstruction(particleInstruction, p_desiredIndex);
 }

@@ -1,5 +1,4 @@
 #include "SoundFactory.h"
-#include "SoundDeleteAfterPlayback.h"
 #include <Globals.h>
 #include <DebugUtil.h>
 
@@ -109,12 +108,9 @@ Sound* SoundFactory::createAmbientSoundEffect( BasicSoundCreationInfo* p_info,
 			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
 		}
 	}
-	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
-		p_soundIndex, p_sounds, &m_addedCallbacks);
-	m_addedCallbacks.push_back(callback);
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
 		*bufferAndHeader->waveFormatEx,
-		callback);
+		NULL);
 	return new Sound(soundVoice, bufferAndHeader->buffer, p_info->volume);
 }
 
@@ -151,11 +147,8 @@ PositionalSound* SoundFactory::createPositionalSoundEffect(
 	info.emitter = emitter;
 	info.settings = dspSettings; 
 	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
-	IXAudio2VoiceCallback* callback = new SoundDeleteAfterPlayback(
-		p_soundIndex, p_positionalSounds, &m_addedCallbacks);
-	m_addedCallbacks.push_back(callback);
 	IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
-		*bufferAndHeader->waveFormatEx, callback);
+		*bufferAndHeader->waveFormatEx, NULL);
 	return new PositionalSound(soundVoice, bufferAndHeader->buffer, info,
 		p_basicSoundInfo->volume);
 }

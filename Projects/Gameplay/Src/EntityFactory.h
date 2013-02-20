@@ -8,13 +8,13 @@
 #include "EntityCreationPacket.h"
 #include <TcpClient.h>
 #include <TcpServer.h>
-#include "LevelPieceFileMapping.h"
 #include "ParticleSystemsComponent.h"
 #include "GradientMapping.h"
 
 class Entity;
 class EntityWorld;
 class AssemblageReader;
+class LevelInfo;
 
 using namespace std;
 
@@ -42,10 +42,12 @@ public:
 	/// locally and used when queried for an Entity. If a recipe already exists it will be
 	/// replaced by this new one.
 	/// \param p_filePath Path to the assemblage definition file.
+	/// \param out_recipeName Name of the created recipe, if the parameter is not NULL.
 	/// \return AssemblageHelper::E_FileStatus Status of the operation. If the assemblage
 	/// was loaded successfully this function will return
 	///-----------------------------------------------------------------------------------
-	AssemblageHelper::E_FileStatus readAssemblageFile( string p_filePath );
+	AssemblageHelper::E_FileStatus readAssemblageFile( string p_filePath, 
+													string* out_recipeName=NULL );
 
 	///-----------------------------------------------------------------------------------
 	/// Create an entity by supplying recipe/entity name.
@@ -119,14 +121,12 @@ private:
 
 	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
-		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection );
+		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
 private:
 	map<string, Recipe*> m_entityRecipes;
 
 	TcpClient* m_client;
 	TcpServer* m_server;
-
-	LevelPieceFileMapping m_levelPieceMapping;
 
 private:
 	vector<GradientMapping> m_gradientColors;

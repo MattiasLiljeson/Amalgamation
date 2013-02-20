@@ -23,5 +23,6 @@ public:
 	void initMeasuredSystems();
 private:
 	vector< pair<EntitySystem*, string> > m_measuredSystems;
-
+	double m_ESTime;
+	double m_deltaTime;
 };

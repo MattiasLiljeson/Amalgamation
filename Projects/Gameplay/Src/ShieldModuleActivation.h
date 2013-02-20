@@ -37,12 +37,6 @@ public:
 			data.moduleNetsyncIdentity = m_shipEntity->getIndex();
 			data.moduleTrigger = true;
 			m_server->broadcastPacket(data.pack());
-//			SpawnSoundEffectPacket data;
-//			data.attachedToNetsyncEntity = m_shipEntity->getIndex();
-//			data.positional = true;
-//			data.position = transform->getTranslation();
-//			data.soundIdentifier = SpawnSoundEffectPacket::ShieldActive;
-//			m_server->broadcastPacket(data.pack());
 		}
 	}
 
@@ -56,9 +50,6 @@ public:
 			data.moduleNetsyncIdentity = m_shipEntity->getIndex();
 			data.moduleTrigger = false;
 			m_server->broadcastPacket(data.pack());
-//			RemoveSoundEffectPacket data;
-//			data.attachedNetsyncIdentity = m_shipEntity->getIndex();
-//			m_server->broadcastPacket(data.pack());
 		}
 	}
 

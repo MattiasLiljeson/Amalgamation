@@ -5,8 +5,9 @@ SystemManager::SystemManager( EntityWorld* p_world )
 {
 	m_world = p_world;
 	m_executionTimer = new PreciseTimer();
-	m_secondTimer = 0;
+	m_secondTimer = 0.0;
 	m_tickCounter = 0;
+	m_totalSystemsExecutionTime = 0.0;
 }
 
 SystemManager::~SystemManager()
@@ -113,6 +114,7 @@ void SystemManager::updateSynchronous()
 	m_secondTimer += static_cast<double>(m_world->getDelta());
 	m_tickCounter += 1;
 	bool reset = m_secondTimer > 1.0;
+	double executionTimeSum = 0.0;
 	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		EntitySystem* system = m_systemList[i];
@@ -124,6 +126,7 @@ void SystemManager::updateSynchronous()
 			double elapsedTime = m_executionTimer->stop();
 			m_systemsExecutionTimeMeasurements[i] += elapsedTime;
 			m_systemList[i]->setLastExecutionTime(elapsedTime);
+			executionTimeSum += elapsedTime;
 			if(reset)
 			{
 				m_systemList[i]->setAverageExecutionTime(
@@ -146,6 +149,7 @@ void SystemManager::updateSynchronous()
 		m_secondTimer = 0.0;
 		m_tickCounter = 0;
 	}
+	m_totalSystemsExecutionTime = executionTimeSum;
 }
 
 void SystemManager::notifySystems( IPerformer* p_performer, Entity* p_entity )
@@ -154,4 +158,9 @@ void SystemManager::notifySystems( IPerformer* p_performer, Entity* p_entity )
 	{
 		p_performer->perform(m_systemList[i], p_entity);
 	}
+}
+
+const double& SystemManager::getTotalSystemExecutionTime() const
+{
+	return m_totalSystemsExecutionTime;
 }

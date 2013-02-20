@@ -243,6 +243,8 @@ public:
 
 	bool shouldShutDown();
 
+	const double& getTotalSystemsTime() const;
+
 private:
 	void prePerformManagers();
 	void postPerformManagers();

@@ -47,7 +47,8 @@ struct LightTypes
 
 struct LightInstanceData
 {
-	float worldTransform[16];
+	float worldTransform[16]; /* Used internally to set the correct matrix.
+								 Will be overwritten every frame.*/
 
 	float lightDir[3];
 	float range;
@@ -92,6 +93,12 @@ struct LightInstanceData
 		}
 
 	}
+
+	///-----------------------------------------------------------------------------------
+	/// Used internally to set the correct matrix. Will be overwritten every frame.
+	/// \param p_transform
+	/// \return void
+	///-----------------------------------------------------------------------------------
 	void setWorldTransform( AglMatrix p_transform )
 	{
 		p_transform = AglMatrix::transpose( p_transform );

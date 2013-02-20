@@ -293,6 +293,14 @@ bool EntitySystem::getEnabled() const
 void EntitySystem::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
+	if(p_enabled)
+	{
+		sysEnabled();
+	}
+	else
+	{
+		sysDisabled();
+	}
 }
 
 bitset<ComponentType::NUM_COMPONENT_TYPES> EntitySystem::getComponentBits()
