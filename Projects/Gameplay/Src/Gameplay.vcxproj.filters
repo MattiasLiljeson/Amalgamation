@@ -1073,7 +1073,6 @@
     <ClCompile Include="SpeedFovAdjustSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="LevelInfo.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -1085,10 +1084,9 @@
     </ClCompile>
     <ClCompile Include="MenuBackgroundSceneSystem.cpp">
       <Filter>Systems</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="SpawnExplosionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
->>>>>>> s7x10explosionsandsmoke
     </ClCompile>
   </ItemGroup>
 </Project>
