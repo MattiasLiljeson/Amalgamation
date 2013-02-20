@@ -736,8 +736,8 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
 			m_world->getSystem(SystemType::LevelInfoLoader));
 		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo );
-//		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
-//		entity = entityFromRecipe( asdName );
+		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
+		entity = entityFromRecipe( asdName );
 	}
 	else	
 	{
