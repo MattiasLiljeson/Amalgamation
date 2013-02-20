@@ -25,9 +25,9 @@ public:
 		ShieldModule,
 		RocketLauncherModule,
 		BoosterModule,
-		PlayerCamera,
 		EndModule, //Should never be used. Marks the end of module subsection
 		//End Modules
+		PlayerCamera,
 		ParticleSystem,
 		Mine,
 		LaserSight, //For aiming
