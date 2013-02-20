@@ -633,6 +633,9 @@
     <ClInclude Include="SlotParticleEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="EnvironmentValues.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
