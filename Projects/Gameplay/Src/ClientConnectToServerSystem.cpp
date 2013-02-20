@@ -54,7 +54,7 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		
 		auto levelHandler = static_cast<LevelHandlerSystem*>(
 			m_world->getSystem(SystemType::LevelHandlerSystem));
-		levelHandler->destroyLevel();
+		//levelHandler->destroyLevel();
 	}
 	else if(p_entities.size() > 0)
 	{
