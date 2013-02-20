@@ -25,6 +25,9 @@ public:
 	~LibRocketBackendSystem();
 
 	void initialize();
+	void process();
+
+	void render();
 
 	void loadFontFace( const char* p_fontPath );
 	int loadDocument(const char* p_path, const char* p_windowName);
@@ -43,8 +46,6 @@ public:
 	void showCursor();
 	void hideCursor();
 
-	void process();
-	void render();
 
 	Rocket::Core::Context* getContext() const;
 private:
@@ -53,6 +54,7 @@ private:
 	int loadDocumentP( const char* p_filePath, const char* p_windowName=NULL);
 
 private:
+	bool m_renderGUI;
 	int m_wndHeight;
 	int m_wndWidth;
 
