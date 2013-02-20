@@ -334,7 +334,7 @@ void TW_CALL ParticleSystemDialog::SetLocalLife(void* clientData)
 {
 	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
 	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
-	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_LOCAL;
+	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
 	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_LOCAL;
 }
 

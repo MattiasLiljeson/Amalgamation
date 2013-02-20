@@ -863,11 +863,12 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	flares.setAlignmentType(AglParticleSystemHeader::VELOCITY);
 	flares.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
 	flares.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
-	flares.setSpawnSpeed(60.0f);
+	flares.setSpawnSpeed(30.0f);
 	flares.setParticleSize(AglVector2(3.0f, 0.5f));
 	flares.setParticleAge(0.5f);
 	flares.setFadeOutStart(0.0f);
 	flares.setSpawnOffset(1.0f);
+	//flares.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlares;
 	particleInstructionFlares.textureFileName = "yellow-spot.png";
@@ -942,6 +943,7 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Flash.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
 	Flash.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	Flash.setParticleSize(AglVector2(20.0f, 20.0f));
+	//Flash.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlash;
 	particleInstructionFlash.textureFileName = "yellow-spot.png";

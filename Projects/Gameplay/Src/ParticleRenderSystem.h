@@ -4,6 +4,7 @@
 #include <vector>
 #include <ParticleSystemInstructionCollection.h>
 #include <RenderStateEnums.h>
+#include <InstanceData.h>
 
 using namespace std;
 
@@ -29,11 +30,11 @@ struct PsRenderInfo
 {
 	// Pointers to save performance. No ownership
 	ParticleSystemAndTexture* psAndTex;
-	Transform* transform;
+	InstanceData transform;
 	AglParticleSystemHeader::AglBlendMode blendMode;
 	AglParticleSystemHeader::AglRasterizerMode rasterizerMode;
 
-	PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, Transform* p_transform );
+	PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, InstanceData p_transform );
 };
 
 class ParticleRenderSystem : public EntitySystem, public RenderInterface
