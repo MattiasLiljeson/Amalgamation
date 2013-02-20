@@ -40,6 +40,8 @@ private:
 	void				AddPE(AglParticleSystem* pParticleSystem, int p_index);
 
 	static void TW_CALL SetCOSystem(void *clientData);
+
+	static void TW_CALL RestartParticles(void *clientData);
 public:
 	//Static functions
 	static SceneDialog* GetInstance();

@@ -50,6 +50,7 @@ public:
 		CameraControlPacket,
 		AnimationUpdatePacket,
 		SlotParticleEffectPacket,
+		SpawnExplosionPacket,
 	};
 
 };

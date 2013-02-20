@@ -68,6 +68,10 @@ void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 		Scene::GetInstance()->Transform(mat);
 	}
 }
+void TW_CALL SceneDialog::RestartParticles(void *clientData)
+{
+	Scene::GetInstance()->RestartAllParticleSystems();
+}
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
 {
@@ -128,6 +132,8 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		}
 
 		TwAddVarRW(sceneDialog->m_dialog, "Draw Scene Planes", TW_TYPE_BOOLCPP, Scene::GetInstance()->getDrawPlanes(), "group='Debug'");
+
+		TwAddButton(sceneDialog->m_dialog, "Restart PSystems", RestartParticles, (void*)0, "");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)

@@ -10,6 +10,7 @@
 #include <TcpServer.h>
 #include "ParticleSystemsComponent.h"
 #include "GradientMapping.h"
+#include "SpawnExplosionPacket.h"
 
 class Entity;
 class EntityWorld;
@@ -72,6 +73,8 @@ public:
 
 	Entity* entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint = NULL);
 
+	void createExplosion(const SpawnExplosionPacket& p_packet);
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);
@@ -122,6 +125,7 @@ private:
 	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
 		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
+
 private:
 	map<string, Recipe*> m_entityRecipes;
 
