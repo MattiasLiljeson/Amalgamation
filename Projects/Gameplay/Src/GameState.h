@@ -19,17 +19,17 @@ public:
 	struct State
 	{
 		EnumGameStates	stateEnum;
-		int				delta;
+		EnumGameDelta	delta;
 
 		State(EnumGameStates p_state){
 			stateEnum = p_state;
-			delta  = 0;
+			delta	= NOTCHANGED;
 		}
 	};
 public:
 	GameState(EnumGameStates p_currentState);
 	~GameState();
-	void setStatesDelta(EnumGameStates p_state, int p_value);
+	void setStatesDelta(EnumGameStates p_state, EnumGameDelta p_value);
 	int getStateDelta(EnumGameStates p_state);
 public:
 	vector<State*> m_states;

@@ -6,7 +6,7 @@ GameState::GameState( EnumGameStates p_currentState ) : Component(ComponentType:
 	for(unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
 		m_states.push_back(new State( static_cast<EnumGameStates>(i)));
 	}
-	setStatesDelta(p_currentState,1);
+	setStatesDelta(p_currentState,EnumGameDelta::ENTEREDTHISFRAME);
 }
 
 GameState::~GameState()
@@ -17,7 +17,7 @@ GameState::~GameState()
 	m_states.clear();
 }
 
-void GameState::setStatesDelta( EnumGameStates p_state, int p_value ){
+void GameState::setStatesDelta( EnumGameStates p_state, EnumGameDelta p_value ){
 	m_states[p_state]->delta = p_value;
 }
 

@@ -2,3 +2,8 @@ enum EnumGameStates
 {
 	MENU, LOBBY, INGAME, PAUSE, NUMSTATES
 };
+
+enum EnumGameDelta
+{
+	NOTCHANGED, ENTEREDTHISFRAME
+};

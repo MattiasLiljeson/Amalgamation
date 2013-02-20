@@ -74,6 +74,12 @@ public:
 public:
 	bool wantsToExit;
 private:
+	enum StateChange 
+	{
+		NONE, THISFRAME, VERIFIED, PREVIOUSFRAME
+	};
+	
+private:
 	/// Registers a new event handler with the manager.
 	/// @param[in] p_handlerName The name of the handler; this must be the same as the 
 	/// window it is handling events for.
@@ -102,7 +108,7 @@ private:
 	std::stack<Rocket::Core::String>	m_docIdStack;
 	Entity*								m_stateEntity;
 	GameState*							m_stateComp;
-	int m_stateDelay;
+	StateChange	m_localState;
 };
 
 

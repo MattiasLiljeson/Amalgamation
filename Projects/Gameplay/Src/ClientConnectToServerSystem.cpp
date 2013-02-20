@@ -1,27 +1,19 @@
 #include "ClientConnectToServerSystem.h"
 #include "Control.h"
 #include <TcpClient.h>
-#include <Rocket/Core/Event.h>
-#include "LibRocketEventManagerSystem.h"
 #include "InputBackendSystem.h"
 #include "LevelHandlerSystem.h"
 #include "GameState.h"
+#include "LibRocketEventManagerSystem.h"
 
 ClientConnectToServerSystem::ClientConnectToServerSystem(TcpClient* p_tcpClient,
 														 bool p_connectDirectly/* =false */)
-	: EntitySystem( SystemType::ClientConnectoToServerSystem , 1, ComponentType::GameState), EventHandler("join")
+	: EntitySystem( SystemType::ClientConnectoToServerSystem , 1, ComponentType::GameState)
 {
 	m_tcpClient = p_tcpClient;
 	m_connectStraightAway = p_connectDirectly;
 	
-	
 	m_isLookingForConnection = false;
-	/*m_connectionAddress.octets1 = 127;
-	m_connectionAddress.octets2 = 0;
-	m_connectionAddress.octets3 = 0;
-	m_connectionAddress.octets4 = 1;
-	m_connectionAddress.port =	1337;
-	*/
 
 	m_serverAddress = "127.0.0.1";
 	m_serverPort = "1337";
@@ -67,7 +59,7 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		if( inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 
 			|| state->getStateDelta(INGAME)!= 0){
 			connectToNetworkAddress();
-			state->setStatesDelta(INGAME,1);
+			state->setStatesDelta(INGAME, ENTEREDTHISFRAME);
 			// Disable the menu background scene.
 			m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
 		}
@@ -90,12 +82,6 @@ void ClientConnectToServerSystem::connectToNetworkAddress(
 }
 */
 
-void ClientConnectToServerSystem::processEvent( Rocket::Core::Event& p_event, const Rocket::Core::String& p_value )
-{
-	// Sent from the 'onsubmit' of the play screen, we set the network ip and port here,
-	// and enable the system.
-	
-}
 
 void ClientConnectToServerSystem::setConnectionAddress( const std::string& p_address, 
 													   const std::string& p_port )

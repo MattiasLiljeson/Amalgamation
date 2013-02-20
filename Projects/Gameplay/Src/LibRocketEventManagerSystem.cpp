@@ -49,7 +49,7 @@ LibRocketEventManagerSystem::LibRocketEventManagerSystem()
 	m_currentDocId = "";
 	m_stateEntity	= NULL;
 	m_stateComp		= NULL;
-	m_stateDelay	= -1;
+	m_localState	= NONE;
 }
 
 LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
@@ -186,7 +186,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		{
 			wantsToExit = true;
 		}
-		else
+		else if( m_localState == NOTCHANGED)
 		{
 			if (p_value == "join_server")
 			{
@@ -201,8 +201,8 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 					m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
 				sys->setConnectionAddress(server_address, server_port);
-				m_stateComp->setStatesDelta(INGAME,1);
-				m_stateDelay = 0;
+				m_stateComp->setStatesDelta(INGAME,ENTEREDTHISFRAME);
+				m_localState = THISFRAME;
 			}
 		}
 	}
@@ -245,24 +245,27 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 
 void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	//Check if there is a game state entity
 	if(p_entities.size()>0){
-		if(m_stateDelay != -1){
 
-			m_stateDelay++;
+		//Check if a state has been changed.
+		if(m_localState != NONE ){
 
-			if(m_stateDelay>1){
+			switch (m_localState)
+			{
+			case LibRocketEventManagerSystem::THISFRAME:
+				m_localState = VERIFIED;
+				break;
+			case LibRocketEventManagerSystem::VERIFIED:
+				m_localState = PREVIOUSFRAME;
+				break;
+			case LibRocketEventManagerSystem::PREVIOUSFRAME:
+				//Reset the delta to zero
 				for (unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
-					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),0);
+					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),NOTCHANGED);
 				}
-				m_stateDelay = -1;
-			}
-		}
-		else{
-			for (unsigned int i = 0; i < EnumGameStates::NUMSTATES; i++){
-				if(m_stateComp->getStateDelta(static_cast<EnumGameStates>(i))!= 0){
-					m_stateDelay = 1;
-					break;
-				}
+				m_localState = NONE;
+				break;
 			}
 		}
 	}

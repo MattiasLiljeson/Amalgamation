@@ -31,7 +31,6 @@ void MenuSystem::initialize()
 	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
 		m_world->getSystem(SystemType::GameOptionsSystem));
 
-	rocketEventManager->registerEventHandler(connectToServerSys);
 	rocketEventManager->registerEventHandler(gameOptionsSys);
 
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"main_menu");
