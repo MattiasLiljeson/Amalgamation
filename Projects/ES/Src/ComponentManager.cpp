@@ -126,10 +126,6 @@ Component* ComponentManager::getComponent( int p_entityIdx,
 
 	if(m_componentsByType[p_typeIdx].size() > (unsigned int)p_entityIdx)
 	{
-		if(p_typeIdx == 25 && p_entityIdx == 0)
-		{
-			int a = 0;
-		}
 		return m_componentsByType[p_typeIdx][p_entityIdx];
 	}
 	return NULL;
