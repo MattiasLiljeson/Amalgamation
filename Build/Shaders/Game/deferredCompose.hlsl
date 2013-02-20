@@ -93,9 +93,8 @@ float4 PS(VertexOut input) : SV_TARGET
 	}
 	// apply ao
 	lightColor = float4(lightColor.r*finalAO, lightColor.g*finalAO, lightColor.b*finalAO, 1.0f );
-	
-	
+
 	lightColor += float4(ambient,0.0f);
-	lightColor = float4(lerp(lightColor.rgb,fog,saturate(fogDepth)),0.0f); // can do this when light is separate from diffuse
+	lightColor = float4(lerp(lightColor.rgb,fog,fogDepth),0.0f); // can do this when light is separate from diffuse
 	return float4(lightColor.rgb+finalEmissiveValue.rgb,1.0f); // then all light can be added here like glow is now
 }

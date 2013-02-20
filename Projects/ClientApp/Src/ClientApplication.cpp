@@ -109,6 +109,7 @@
 #include <SpeedFovAdjustSystem.h>
 #include <MenuBackgroundSceneSystem.h>
 #include <LevelInfoLoader.h>
+#include <EnvironmentSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -327,9 +328,12 @@ void ClientApplication::initSystems()
 	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
 	m_world->setSystem( entityParentHandler, true );
 
+
 	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
+	// Chamber fog and ambient
+	m_world->setSystem( new EnvironmentSystem() );
 
 	// Controller logic for camera
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
@@ -466,7 +470,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,2000.0f ) );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,1200.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );

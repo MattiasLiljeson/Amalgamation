@@ -8,7 +8,8 @@ EnvironmentValues::EnvironmentValues()
 {
 	m_fogNearPlaneClosenessPercentage=1.0f;
 	m_fogFarPlaneClosenessPercentage=1.0f;
-	m_radius=500.0f; // the awesomest value
+	m_minRadius=500.0f; // The awesomest value!
+	m_maxRadius=600.0f; // Unlike this value, it's the worst.
 }
 
 EnvironmentValues::~EnvironmentValues()
@@ -37,8 +38,10 @@ void EnvironmentValues::init( vector<ComponentData> p_initData )
 			p_initData[i].getData<float>( &m_fogFarPlaneClosenessPercentage );
 		} else if( data== "m_fogNearPlaneClosenessPercentage"){
 			p_initData[i].getData<float>( &m_fogNearPlaneClosenessPercentage);
-		} else if( data== "m_radius"){
-			p_initData[i].getData<float>( &m_radius);
+		} else if( data== "m_minRadius"){
+			p_initData[i].getData<float>( &m_minRadius);
+		} else if( data== "m_maxRadius"){
+			p_initData[i].getData<float>( &m_maxRadius);
 		} 
 	}
 }
