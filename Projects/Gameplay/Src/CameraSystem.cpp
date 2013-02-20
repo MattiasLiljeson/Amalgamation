@@ -41,8 +41,12 @@ void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 				noValidCameraFound = selectPlayerCamera(p_entities[i]);
 		}
 		if(noValidCameraFound){
-			updateRenderSceneInfo(p_entities[0]);
-			m_playerCamera = p_entities[0];
+			//updateRenderSceneInfo(p_entities[0]);
+			//m_playerCamera = p_entities[0];
+			updateRenderSceneInfo( m_world->getEntityManager()->
+				getFirstEntityByComponentType( ComponentType::TAG_MainCamera ) );
+			m_playerCamera = m_world->getEntityManager()->
+				getFirstEntityByComponentType( ComponentType::TAG_MainCamera );
 		}
 	}
 }
