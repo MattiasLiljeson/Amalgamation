@@ -12,10 +12,9 @@ static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
 										{0.01f,0.02f,0.04f,0.02f,0.01f}};
 
 Texture2D gLightPass 		: register(t0);
-Texture2D gDiffuseMap 		: register(t1);
-Texture2D gNormalBuffer		: register(t2);
-Texture2D depthBuffer		: register(t3);
-Texture2D gRandomNormals 	: register(t4);
+Texture2D gNormalBuffer		: register(t1);
+Texture2D gDepthBuffer		: register(t2);
+Texture2D gDiffuseBuffer	: register(t3);
 
 SamplerState pointSampler : register(s0);
 
@@ -40,25 +39,10 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 };
 
-float3 getPosition(float2 uv)
+// Changed by Jarl: removed additional depth sampling, added depth as param instead
+float3 getPosition(float2 p_uv,float p_depth) 
 {
-	float depthValue = depthBuffer.Sample(pointSampler, uv).r;
-	return getWorldPosFromTexCoord( uv, depthValue, gViewProjInverse);
-}
-
-float2 getRandomVector( float2 uv)
-{
-	return gRandomNormals.Sample(pointSampler, gRenderTargetSize*uv / randSize).xy * 2.0f - 1.0f;
-}
-
-float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
-{
-	float3 diff = getPosition( texCoordOrig + uvOffset) - position;
-	
-	float3 v = normalize(diff);
-	float d = length(diff)*scale;
-	
-	return max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity;
+	return getWorldPosFromTexCoord( p_uv, p_depth, gViewProjInverse);
 }
 
 VertexOut VS(VertexIn p_input)
@@ -72,44 +56,43 @@ VertexOut VS(VertexIn p_input)
 
 float4 PS(VertexOut input) : SV_TARGET
 {
-	float4 diffuseColor = gDiffuseMap.Sample(pointSampler,input.texCoord);
+	float4 diffuseColor = gDiffuseBuffer.Sample(pointSampler,input.texCoord);
 	float4 lightColor = gLightPass.Sample(pointSampler,input.texCoord);
-	float depth = depthBuffer.Sample(pointSampler, input.texCoord).r;
-	float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
+	float depth = gDepthBuffer.Sample(pointSampler, input.texCoord).r;
+	//float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
-	
-	float3 position = getPosition(input.texCoord);
-	float3 normal 	= convertSampledNormal(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb);
-	float2 rand 	= getRandomVector(input.texCoord);
+	float4 fog = gFogColor;
+	float4 ambient = gAmbientColor;
+	float3 position = getPosition(input.texCoord,depth);
 	
 	uint3 index;
 	index.xy = input.position.xy;
 	index.z = 0;
-	float ao = 0.0f;
+	float finalAO = 0.0f;
 
-	//ao = lightColor.a;
-	float aoMult = 1.0f;
+	float3 finalEmissiveValue = float4(0,0,0,0);
+		
+	float4 sampledColor;
+	[unroll]
 	for(int x=-2;x<3;x++)
 	{
+		[unroll]
 		for(int y=-2;y<3;y++)
 		{
-			ao += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+			finalAO += gLightPass.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+			
+			sampledColor = gDiffuseBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
+			sampledColor.rgb *= sampledColor.a;
+			finalEmissiveValue += sampledColor.rgb * blurFilter5[x+2][y+2];
 		}
 	}
-
-	//return float4( ao, ao, ao, 1.0f );
-	//lightColor = float4(lightColor.r, lightColor.g, lightColor.b, 1.0f );
-	lightColor = float4(lightColor.r*ao, lightColor.g*ao, lightColor.b*ao, 1.0f );
+	// apply ao
+	lightColor = float4(lightColor.r*finalAO, lightColor.g*finalAO, lightColor.b*finalAO, 1.0f );
+	
+	// calc linear depth
 	float linDepth = length(position-gCameraPos) / ((gFarPlane-800.0f)-(gNearPlane));
-	// float4 fog = linDepth*float4(0.2f,0.1f,0.05f,0.0f);
-	//float fogDepth = saturate(length(position-gCameraPos) / ((1200.0f)-(300.0f)));
-	// lightColor = diffuseColor;
-	float4 fog = gFogColor;
-	// float4(0.38f,0.58f,0.3764f,0.0f);
-	float4 ambient = gAmbientColor;
-	// float4(0.259f,0.169f,0.157f,0.0f);
+	
 	lightColor += ambient;
-	// lightColor = lerp(saturate(lightColor),ambient,1.0f-length(saturate(lightColor)));
-	return lerp(lightColor,fog,saturate(linDepth)); // can do this when light is separate from diffuse
-	// return saturate(lightColor)+fog+float4(0.05448f,0.02416f,0.02122f,0.0f);
+	lightColor = lerp(lightColor,fog,saturate(linDepth)); // can do this when light is separate from diffuse
+	return float4(lightColor.rgb+finalEmissiveValue.rgb,1.0f); // then all light can be added here like glow is now
 }

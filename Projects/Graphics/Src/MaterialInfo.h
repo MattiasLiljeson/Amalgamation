@@ -20,7 +20,6 @@ struct MaterialInfo
 	AglVector4 gradientLayers[MAX_GRADIENTLAYERS];
 	float numberOfLayers;
 	bool hasDisplacementMap;
-	bool hasNormalMap;
 	enum TextureTypes
 	{
 		DIFFUSEMAP, NORMALMAP, SPECULARMAP, GLOWMAP, DISPLACEMENTMAP, GRADIENTMAP, NUMTEXTURETYPES
@@ -29,7 +28,6 @@ struct MaterialInfo
 	MaterialInfo()
 	{
 		hasDisplacementMap=false;
-		hasNormalMap=false;
 		for (unsigned int i = 0; i<SIZE;i++){
 			indexArray[i] = 0;
 		}

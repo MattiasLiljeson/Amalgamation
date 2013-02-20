@@ -701,10 +701,17 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 		{
 			if(p_textureArray[i] != NULL)
 			{
+				if(static_cast<MaterialInfo::TextureTypes>(i) != MaterialInfo::DISPLACEMENTMAP){
 				// set textures
-				m_deviceContext->PSSetShaderResources(startSlot , numViews, 
-					&p_textureArray[i]->data );
+					m_deviceContext->PSSetShaderResources(startSlot , numViews, 
+						&p_textureArray[i]->data );
+				}
+				else{
+					m_deviceContext->DSSetShaderResources(startSlot , numViews, 
+						&p_textureArray[i]->data );
+				}
 				startSlot++;
+
 			}
 		}
 	}

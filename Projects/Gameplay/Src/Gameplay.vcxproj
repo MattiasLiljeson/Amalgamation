@@ -15,6 +15,9 @@
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="EnvironmentValues.h" />
+    <ClInclude Include="AxisRotate.h" />
+    <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioController.h" />
@@ -61,11 +64,13 @@
     <ClInclude Include="InputActionsBackendSystem.h" />
     <ClInclude Include="InterpolationComponent.h" />
     <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LevelInfoLoader.h" />
     <ClInclude Include="LevelGenSystem.h" />
     <ClInclude Include="HighlightSlotPacket.h" />
     <ClInclude Include="HudSystem.h" />
     <ClInclude Include="HudElement.h" />
     <ClInclude Include="LevelHandlerSystem.h" />
+    <ClInclude Include="LevelInfo.h" />
     <ClInclude Include="LevelPiece.h" />
     <ClInclude Include="LevelPieceFileMapping.h" />
     <ClInclude Include="LevelPieceInfo.h" />
@@ -77,7 +82,6 @@
     <ClInclude Include="LightBlinkerSystem.h" />
     <ClInclude Include="LightRenderSystem.h" />
     <ClInclude Include="LightsComponent.h" />
-    <ClInclude Include="LightSources.h" />
     <ClInclude Include="LoadMesh.h" />
     <ClInclude Include="LoadMeshSystem.h" />
     <ClInclude Include="LoadMeshSystemClient.h" />
@@ -175,6 +179,7 @@
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
+    <ClInclude Include="SpeedFovAdjustSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
     <ClInclude Include="StaticProp.h" />
@@ -197,6 +202,7 @@
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="AxisRotationSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
@@ -218,6 +224,7 @@
     <ClCompile Include="EntityDeletionPacket.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="EnvironmentValues.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
@@ -231,8 +238,10 @@
     <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="LevelInfoLoader.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelHandlerSystem.cpp" />
+    <ClCompile Include="LevelInfo.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
     <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LevelPieceRoot.cpp" />
@@ -243,12 +252,12 @@
     <ClCompile Include="LightBlinkerSystem.cpp" />
     <ClCompile Include="LightRenderSystem.cpp" />
     <ClCompile Include="LightsComponent.cpp" />
-    <ClCompile Include="LightSources.cpp" />
     <ClCompile Include="LoadMesh.cpp" />
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LoadMeshSystemClient.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
     <ClCompile Include="MineControllerSystem.cpp" />
@@ -321,6 +330,7 @@
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
+    <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />

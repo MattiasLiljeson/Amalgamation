@@ -23,7 +23,10 @@ PositionalSoundSystem::~PositionalSoundSystem()
 
 void PositionalSoundSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	updateSoundPositions(p_entities);
+	for(unsigned int i=0; i<p_entities.size(); i++)
+	{
+		updateSoundPositions(p_entities[i]);
+	}
 }
 
 void PositionalSoundSystem::initialize()
@@ -48,6 +51,7 @@ void PositionalSoundSystem::inserted( Entity* p_entity )
 	int soundIndex = m_audioBackendSystem->getSoundWrapper()->createNewPositionalSound(
 		&creationalSoundInfo, &positionCreationalSoundInfo);
 	positionalSoundSource->setSoundIndex(soundIndex);
+	updateSoundPositions(p_entity);
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
 }
 
@@ -59,22 +63,19 @@ void PositionalSoundSystem::removed( Entity* p_entity )
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
 }
 
-void PositionalSoundSystem::updateSoundPositions( const vector<Entity*>& p_entities )
+void PositionalSoundSystem::updateSoundPositions( Entity* p_entity )
 {
 	PositionalSoundSource* positionalSoundEffect = NULL;
 	Transform* transform = NULL;
-	for(unsigned int i=0; i<p_entities.size(); i++)
-	{
-		positionalSoundEffect = static_cast<PositionalSoundSource*>(p_entities[i]->getComponent(
-			ComponentType::PositionalSoundSource));
-		transform = static_cast<Transform*>(p_entities[i]->getComponent(
-			ComponentType::Transform));
+	positionalSoundEffect = static_cast<PositionalSoundSource*>(p_entity->getComponent(
+		ComponentType::PositionalSoundSource));
+	transform = static_cast<Transform*>(p_entity->getComponent(
+		ComponentType::Transform));
 
-		PositionalSound* positionalSound = static_cast<PositionalSound*>(
-			m_audioBackendSystem->getSoundWrapper()->getSound(
-			positionalSoundEffect->getSoundIndex()));
-		positionalSound->setPosition(transform->getTranslation());
+	PositionalSound* positionalSound = static_cast<PositionalSound*>(
+		m_audioBackendSystem->getSoundWrapper()->getSound(
+		positionalSoundEffect->getSoundIndex()));
+	positionalSound->setPosition(transform->getTranslation());
 
-		m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
-	}
+	m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
 }

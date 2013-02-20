@@ -78,6 +78,7 @@
     <ClCompile Include="MergeDialog.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLLoader.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="MergeDialog.h">
       <Filter>Dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleStates.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

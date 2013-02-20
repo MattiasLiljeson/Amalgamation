@@ -29,6 +29,7 @@
 #include "LightsComponent.h"
 #include "LightBlinker.h"
 #include "LevelPieceRoot.h"
+#include "LevelInfo.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -58,4 +59,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<LightsComponent>();
 	handle<LightBlinker>();
 	handle<LevelPieceRoot>();
+	handle<LevelInfo>();
 }

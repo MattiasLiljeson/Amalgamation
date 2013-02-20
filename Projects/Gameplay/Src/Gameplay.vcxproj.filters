@@ -384,9 +384,6 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="LightSources.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="EntityParent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -633,6 +630,24 @@
     <ClInclude Include="SlotParticleEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedFovAdjustSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfoLoader.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotationSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="EnvironmentValues.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -870,9 +885,6 @@
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="LightSources.cpp">
-      <Filter>Components\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="TransformParentHandlerSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -1057,6 +1069,24 @@
     </ClCompile>
     <ClCompile Include="SlotParticleEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedFovAdjustSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfoLoader.cpp">
+      <Filter>Systems\Level Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotationSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentValues.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

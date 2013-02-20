@@ -5,6 +5,7 @@
 #include "SphereMesh.h"
 #include "Globals.h"
 #include "BoxMesh.h"
+#include "ParticleStates.h"
 
 TwBar *bar;
 
@@ -42,6 +43,8 @@ bool Game::Initialize()
 	Camera::GetInstance()->Init(AglVector3(0, 0.0f, -2.25f), AglVector3(0, 0.0f, 0), AglVector3(0, 1, 0), mScreenWidth, mScreenHeight);
 	TextureManager::GetInstance()->Init(mDevice, mDeviceContext);
 	RasterManager::getInstance()->initialize(mDevice, mDeviceContext);
+
+	ParticleStates::Init(mDevice, mDeviceContext);
 	
 	AGLLoader::GetInstance()->Init(mDevice, mDeviceContext);
 

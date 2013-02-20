@@ -1,7 +1,7 @@
-e rocksServer
+e mineChamberServer
 
 c LoadMesh
-d s m_filename vegetationchamber.agl
+d s m_filename World_Mine.agl
 
 c Transform
 d f m_translationX 100.0

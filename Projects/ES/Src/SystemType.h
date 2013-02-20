@@ -18,6 +18,8 @@ public:	//Enums
 		NetworkListenerSystem,
 		ServerPacketHandlerSystem,
 		CircularMovementSystem,
+		AxisRotationSystem,
+		MenuBackgroundSceneSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
 		ExtrapolationSystem,
@@ -55,6 +57,7 @@ public:	//Enums
 		GameStatsSystem,
 		LevelGenSystem,
 		LevelHandlerSystem,
+		LevelInfoLoader,
 		EntityFactory,
 		MinigunModuleControllerSystem,
 		ShieldModuleControllerSystem,
@@ -93,6 +96,7 @@ public:	//Enums
 		SkeletalAnimationSystem,
 		CullingSystem,
 		ConnectionVisualizerSystem,
+		SpeedFovAdjustSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -74,6 +74,8 @@ struct AglVector3
 	static AglVector3 createDirection(const AglVector3& p_from, const AglVector3& p_to);
 	static AglVector3 minOf(const AglVector3& p_v1, const AglVector3& p_v2);
 	static AglVector3 maxOf(const AglVector3& p_v1, const AglVector3& p_v2);
+	static AglVector3 rotateAroundAxis(const AglVector3& p_toRotate,
+		const AglVector3& p_axis, const float& p_radians);
 
 	static AglVector3 right();
 	static AglVector3 left();

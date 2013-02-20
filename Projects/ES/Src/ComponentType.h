@@ -24,6 +24,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		CircularMovement,
+		AxisRotate,
 		Extrapolate,
 		InterpolationComponent,
 		PhysicsBody,
@@ -46,6 +47,7 @@ public:	//Enums
 		LoadMesh,
 		Transform,
 		ShipModule,
+		EnvironmentValues,
 		ConnectionPointSet,
 		ShipConnectionPointHighlights,
 		SpawnPointSet,
@@ -70,6 +72,7 @@ public:	//Enums
 		PlayerState,
 		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
+		LevelInfo,
 		GameState,
 		Gradient,
 

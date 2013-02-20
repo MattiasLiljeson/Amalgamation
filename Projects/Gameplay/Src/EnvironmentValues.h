@@ -24,7 +24,12 @@ public:
 
 	AglVector4 fogColor;
 	AglVector4 ambientColor;
+	float radius; ///< radius range of environment values
+	float fogFarPlaneClosenessPercentage; ///< closeness of fog end-gradient to far plane
+	float fogNearPlaneClosenessPercentage; ///< closeness of fog start-gradient to near plane
+	void init( vector<ComponentData> p_initData );
 
-protected:
 private:
+
+	static ComponentRegister<EnvironmentValues> s_reg;
 };

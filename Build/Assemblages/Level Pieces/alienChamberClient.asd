@@ -1,7 +1,7 @@
-e rocksClient
+e alienChamberClient
 
 c LoadMesh
-d s m_filename vegetationchamber.agl
+d s m_filename BlueAlienChamber2.agl
 
 # Transform data on the client is going to be overrided by the packet that is sent from the server.
 c Transform
