@@ -648,6 +648,9 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="LobbySystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1080,6 +1083,9 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="MenuBackgroundSceneSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbySystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

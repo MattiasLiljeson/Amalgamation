@@ -2,15 +2,25 @@
 	<head>
 		<title>Lobby</title>
 		<link type="text/template" href="window.rml" />
+		<link type="text/rcss" href="lobby.rcss" />
 	</head>
 	<body id="lobby" template="window" onshow="">
-		<div id=lobbyWindow>
-			Lobby - Window
+		<div class="mainPanel">
+			<div id="lobbyWindow">
+				<datagrid source="connectedPlayers.lobbyPanel">
+					<col fields="playerName" width="33%">PlayerName:</col>
+					<col fields="ping" width="33%">Ping:</col>
+					<col fields="ready" width="5%">Ready:</col>
+				</datagrid>
+			</div>
+			<div id="serverWindow">
+				Server - Info
+			</div>
 		</div>
-		<div id=serverWindow>
-			Server - Info
+		<div class="lowerPanel" id="buttons">
+			<button onclick="goto main_menu">Leave</button>
+			<button onclick="">Ready</button>
 		</div>
-		<button onclick="">Ready</button>
-		<button onclick="goto main_menu">Leave</button>
+
 	</body>
 </rml>

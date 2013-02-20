@@ -108,6 +108,7 @@
 #include <ConnectionVisualizerSystem.h>
 #include <SpeedFovAdjustSystem.h>
 #include <MenuBackgroundSceneSystem.h>
+#include <LobbySystem.h>
 #include <LevelInfoLoader.h>
 
 // Helpers
@@ -282,6 +283,8 @@ void ClientApplication::initSystems()
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
+
+	m_world->setSystem( new LobbySystem() );
 
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );

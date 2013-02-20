@@ -16,6 +16,7 @@
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LoadMeshSystemClient.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />

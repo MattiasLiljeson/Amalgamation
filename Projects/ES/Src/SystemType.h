@@ -97,6 +97,7 @@ public:	//Enums
 		CullingSystem,
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
+		LobbySystem,
 		NUM_SYSTEM_TYPES
 	};
 
