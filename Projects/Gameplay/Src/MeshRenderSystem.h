@@ -38,6 +38,8 @@ private:
 	RenderInfo* getRenderInfo(Entity* p_entity);
 private:
 	vector< vector<InstanceData> > m_instanceLists;
+	vector< vector<InstanceData> > m_instanceListsTess;
+
 	vector< vector<AglMatrix> > m_boneMatrices;
 	GraphicsBackendSystem* m_gfxBackend;
 };

@@ -22,4 +22,5 @@ public:
 	int m_meshId;
 	bool m_shouldBeRendered;
 	bool m_shouldBeCulled;
+	bool m_shouldBeTesselated;
 };

@@ -18,9 +18,9 @@ patchConstant PatchConstant(InputPatch<TesselationStruct, 3> input,
 	int factor = 1;
 	
 	float maxTess = 10.0f;
-	if (len < 200)
+	if (len < 100)
 	{
-		factor += 0.005*len*maxTess;
+		factor += 0.01*len*maxTess;
 	}
 	
 	//The amount of points added on each respective edge of the triangle
