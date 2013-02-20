@@ -54,7 +54,7 @@ void MenuBackgroundSceneSystem::initialize()
 void MenuBackgroundSceneSystem::sysEnabled()
 {
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
-		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 5000);
+		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 200);
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
