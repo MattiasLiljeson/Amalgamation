@@ -26,6 +26,7 @@ CullingSystem::CullingSystem()
 	m_rendered = 0;
 	m_culled = 0;
 	m_culledFraction = 0.0f;
+	m_tesselated = 0;
 }
 
 CullingSystem::~CullingSystem()
@@ -41,6 +42,7 @@ void CullingSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	m_culled = 0;
 	m_rendered = 0;
+	m_tesselated = 0;
 	calcCameraPlanes();
 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
@@ -51,28 +53,37 @@ void CullingSystem::processEntities( const vector<Entity*>& p_entities )
 		//Perform some culling checks
 		if (renderInfo->m_shouldBeRendered)
 		{
-			if (shouldCull(p_entities[i]))
+			int cullStatus = shouldCull(p_entities[i]);
+			if (cullStatus == 0) //Culled
 			{
 				renderInfo->m_shouldBeCulled = true;
 				m_culled++;
-				continue;
 			}
-			else
+			else if (cullStatus == 2) //Not tesselated
 			{
 				renderInfo->m_shouldBeCulled = false;
+				renderInfo->m_shouldBeTesselated = false;
 				m_rendered++;
+			}
+			else //Tesselated
+			{
+				renderInfo->m_shouldBeCulled = false;
+				renderInfo->m_shouldBeTesselated = true;
+				m_rendered++;
+				m_tesselated++;
 			}
 		}
 	}
 	m_culledFraction = m_culled / (float)(m_culled+m_rendered);
 }
 
-bool CullingSystem::shouldCull(Entity* p_entity)
+int CullingSystem::shouldCull(Entity* p_entity)
 {
 	Transform* transform = static_cast<Transform*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
-	//Bounding Box check
+#ifdef CULL_MODE_BOX
+	//Bounding Box check - Not very beneficial
 	BoundingBox* bb = static_cast<BoundingBox*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingBox ) );
 
@@ -81,7 +92,7 @@ bool CullingSystem::shouldCull(Entity* p_entity)
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
 
 	if (!bb)
-		return false;
+		return 1;
 
 	AglMatrix rbtransform;
 	AglMatrix::componentsToMatrix(rbtransform, AglVector3(1, 1, 1), transform->getRotation(), transform->getTranslation());
@@ -98,14 +109,17 @@ bool CullingSystem::shouldCull(Entity* p_entity)
 	{
 		if (BoxPlane(box, m_cameraPlanes[i]))
 		{
-			return true;
+			return 0;
 		}
 
 	}
 
-
+	if (BoxPointDistanceSq(box, m_cameraPos) > 100*100)
+		return 2;
+	return 1;
+#else
 	//Bounding Sphere check
-	/*BoundingSphere* bs = static_cast<BoundingSphere*>(
+	BoundingSphere* bs = static_cast<BoundingSphere*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::BoundingSphere ) );
 
 	//Use offset to get correct bounding sphere - NOT USED RIGHT NOW. Might cause artifacts
@@ -113,7 +127,7 @@ bool CullingSystem::shouldCull(Entity* p_entity)
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
 
 	if (!bs)
-		return false;
+		return 1;
 
 	AglBoundingSphere sphere = bs->sphere;
 	sphere.position.transform(transform->getMatrix());
@@ -129,12 +143,17 @@ bool CullingSystem::shouldCull(Entity* p_entity)
 					m_cameraPlanes[i].w * 1;
 		if (val + sphere.radius < 0 )
 		{
-			return true;
+			return 0;
 		}
 
-	}*/
+	}
 
-	return false;
+	float dist = AglVector3::length(sphere.position-m_cameraPos);
+	if (dist - sphere.radius > 100)
+		return 2;
+
+	return 1;
+#endif
 }
 void CullingSystem::calcCameraPlanes()
 {
@@ -145,6 +164,8 @@ void CullingSystem::calcCameraPlanes()
 
 	Transform* transform = static_cast<Transform*>(
 		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	m_cameraPos = transform->getTranslation();
 
 	AglVector3 position = transform->getTranslation();
 	AglQuaternion rotation = transform->getRotation();
@@ -190,4 +211,30 @@ bool CullingSystem::BoxPlane(const AglOBB& p_box, const AglVector4& p_plane)
 	float s = AglVector3::dotProduct(p_box.world.GetTranslation(), n)+p_plane.w;
 	
 	return s + e < 0;
+}
+float CullingSystem::BoxPointDistanceSq(const AglOBB& p_box, const AglVector3& p_point)
+{
+	//Find the closest point on the box to the sphere
+	AglVector3 point = p_box.world.GetTranslation();
+	AglVector3 dir = p_point - point;
+
+	AglVector3 axes[] = { p_box.world.GetRight(), p_box.world.GetUp(), p_box.world.GetForward() };
+	AglVector3 size = p_box.size;
+
+	//Axis 1
+	float proj = AglVector3::dotProduct(dir, axes[0]);
+	proj = max(min(proj, size.x), -size.x);
+	point += axes[0] * proj;
+
+	//Axis 2
+	proj = AglVector3::dotProduct(dir, axes[1]);
+	proj = max(min(proj, size.y), -size.y);
+	point += axes[1] * proj;
+
+	//Axis 3
+	proj = AglVector3::dotProduct(dir, axes[2]);
+	proj = max(min(proj, size.z), -size.z);
+	point += axes[2] * proj;
+
+	return AglVector3::dotProduct(point - p_point, point-p_point);
 }

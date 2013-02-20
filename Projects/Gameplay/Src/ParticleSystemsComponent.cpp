@@ -153,6 +153,19 @@ void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base )
 		}
 	}
 }
+void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base, int p_index )
+{
+	if( m_particleSystems[p_index].second != NULL ) {
+		AglParticleSystem* ps = &m_particleSystems[p_index].second->particleSystem;
+		AglParticleSystemHeader* header = &m_particleSystems[p_index].second->psOriginalSettings;
+
+		AglVector3 newPos = header->spawnPoint;
+		newPos.transform( p_base );
+
+		ps->setSpawnPoint( newPos );
+		ps->setSpawnDirection( -p_base.GetForward() );
+	}
+}
 
 void ParticleSystemsComponent::setScale( const AglVector2& p_scale )
 {

@@ -59,6 +59,11 @@ void ClientMeasurementSystem::initialize()
 		TwType::TW_TYPE_FLOAT, cull->getCulledFractionPtr(),
 		"group='Culling'" );
 
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Tesselated Meshes",
+		TwType::TW_TYPE_UINT32, cull->getTesselatedCountPtr(),
+		"group='Culling'" );
+
 	//ES time
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "ES Time",

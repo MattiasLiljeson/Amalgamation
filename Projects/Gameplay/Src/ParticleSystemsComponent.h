@@ -30,6 +30,7 @@ public:
 
 	void updateParticleSystems( const float p_dt, const AglVector3& p_cameraPosition );
 	void setSpawn( const AglMatrix& p_base );
+	void setSpawn( const AglMatrix& p_base, int p_index );
 	void setScale( const AglVector2& p_scale );
 
 	ParticleSystemInstruction* getParticleSystemInstruction( int p_idx );

@@ -247,7 +247,7 @@ void GraphicsWrapper::unmapPerShadowBuffer()
 
 void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 								 vector<InstanceData>* p_instanceList,
-								 vector<AglMatrix>* p_boneMatrices){
+								 vector<AglMatrix>* p_boneMatrices, bool p_tesselate){
 	Mesh* mesh = m_meshManager->getResource(p_meshId);
 
 	unsigned int arraySize = 0;
@@ -279,7 +279,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	{
 		updateBoneMatrixTexture(p_boneMatrices);
 
-		if (mesh->getMaterialInfo().hasDisplacementMap)
+		if (p_tesselate && mesh->getMaterialInfo().hasDisplacementMap)
 		{
 			setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 			renderMeshInstanced( 
@@ -314,7 +314,7 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 	}
 	else
 	{
-		if (mesh->getMaterialInfo().hasDisplacementMap)
+		if (p_tesselate && mesh->getMaterialInfo().hasDisplacementMap)
 		{
 			setPrimitiveTopology(PrimitiveTopology::TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 			renderMeshInstanced( 

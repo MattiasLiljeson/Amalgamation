@@ -602,9 +602,6 @@
     <ClInclude Include="GradientMapping.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GradientComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="GamepadRumbleSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -647,6 +644,12 @@
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnExplosionPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientComponent.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="EnvironmentValues.h">
       <Filter>Components\GFX</Filter>
@@ -1045,9 +1048,6 @@
     <ClCompile Include="GamepadRumbleSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GradientComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems</Filter>
@@ -1084,6 +1084,12 @@
     </ClCompile>
     <ClCompile Include="MenuBackgroundSceneSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnExplosionPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientComponent.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="EnvironmentValues.cpp">
       <Filter>Components\GFX</Filter>

@@ -116,6 +116,7 @@
     <ClInclude Include="SkeletalAnimation.h" />
     <ClInclude Include="SkeletalAnimationSystem.h" />
     <ClInclude Include="SlotParticleEffectPacket.h" />
+    <ClInclude Include="SpawnExplosionPacket.h" />
     <ClInclude Include="SpawnPointSet.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="ShipSlotControllerSystem.cpp" />
     <ClCompile Include="SkeletalAnimationSystem.cpp" />
     <ClCompile Include="SlotParticleEffectPacket.cpp" />
+    <ClCompile Include="SpawnExplosionPacket.cpp" />
     <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />

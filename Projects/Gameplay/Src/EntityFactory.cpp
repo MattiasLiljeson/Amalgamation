@@ -858,3 +858,113 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleInstruction.particleSystem = particleSystem;
 	p_emitters->addParticleSystemInstruction(particleInstruction, p_desiredIndex);
 }
+
+void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
+{
+	Entity* effect = m_world->createEntity();
+
+	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
+
+	effect->addComponent( ComponentType::Transform, new Transform());
+
+	//Flares spreading
+	AglParticleSystem flares;
+	flares.setSpawnPoint(p_packet.position);
+	flares.setSpawnDirection(AglVector3(0, 1, 0));
+	flares.setSpread(1.0f);
+	flares.setSpawnType(AglParticleSystemHeader::ONCE);
+	flares.setParticlesPerSpawn(200);
+	flares.setSpawnFrequency(3.0f);
+	flares.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	flares.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	flares.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	flares.setSpawnSpeed(30.0f);
+	flares.setParticleSize(AglVector2(3.0f, 0.5f));
+	flares.setParticleAge(0.5f);
+	flares.setFadeOutStart(0.0f);
+	flares.setSpawnOffset(1.0f);
+	//flares.setColor(AglVector4(1, 0, 0, 1));
+
+	ParticleSystemInstruction particleInstructionFlares;
+	particleInstructionFlares.textureFileName = "yellow-spot.png";
+	particleInstructionFlares.particleSystem = flares;
+	particleEmitter->addParticleSystemInstruction(particleInstructionFlares);
+
+	//Shockwave
+	/*AglParticleSystem Shockwave;
+	Shockwave.setSpawnPoint(p_packet.position);
+	Shockwave.setSpawnDirection(AglVector3(0, 1, 0));
+	Shockwave.setSpread(1.0f);
+	Shockwave.setSpawnType(AglParticleSystemHeader::ONCE);
+	Shockwave.setParticlesPerSpawn(200);
+	Shockwave.setSpawnFrequency(3.0f);
+	Shockwave.setAlignmentType(AglParticleSystemHeader::SCREEN);
+	Shockwave.setSpreadType(AglParticleSystemHeader::INPLANE);
+	Shockwave.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	Shockwave.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	Shockwave.setSpawnSpeed(30.0f);
+	Shockwave.setParticleSize(AglVector2(3.0f, 0.5f));
+	Shockwave.setParticleAge(2.0f);
+	Shockwave.setFadeOutStart(0.0f);
+	Shockwave.setSpawnOffset(1.0f);
+	Shockwave.setMaxOpacity(0.25f);
+
+	ParticleSystemInstruction particleInstructionShockwave;
+	particleInstructionShockwave.textureFileName = "yellow-spot.png";
+	particleInstructionShockwave.particleSystem = Shockwave;
+	particleEmitter->addParticleSystemInstruction(particleInstructionShockwave);*/
+
+	//Smoke
+	AglParticleSystem Smoke;
+	Smoke.setSpawnPoint(p_packet.position);
+	Smoke.setParticleAge(1.0f);
+	Smoke.setSpawnSpeed(10.0f);
+	Smoke.setSpawnDirection(AglVector3(0, 1, 0));
+	Smoke.setSpread(1.0f);
+	Smoke.setSpawnFrequency(3.0f);
+
+	Smoke.setFadeInStop(0.25f);
+	Smoke.setFadeOutStart(0.25f);
+	Smoke.setSpawnOffset(3.0f);
+	Smoke.setMaxOpacity(0.25f);
+	Smoke.setSpawnType(AglParticleSystemHeader::ONCE);
+	Smoke.setParticlesPerSpawn(100);
+	Smoke.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	Smoke.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ALPHA;
+	Smoke.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	Smoke.setParticleSize(AglVector2(5.0f, 5.0f));
+
+	ParticleSystemInstruction particleInstructionSmoke;
+	particleInstructionSmoke.textureFileName = "Test/smoke.png";
+	particleInstructionSmoke.particleSystem = Smoke;
+	particleEmitter->addParticleSystemInstruction(particleInstructionSmoke);
+
+	//Flash
+	AglParticleSystem Flash;
+	Flash.setSpawnPoint(p_packet.position);
+	Flash.setParticleAge(0.5f);
+	Flash.setSpawnSpeed(1.0f);
+	Flash.setSpawnDirection(AglVector3(0, 1, 0));
+	Flash.setSpread(1.0f);
+	Flash.setSpawnFrequency(3.0f);
+
+	Flash.setFadeInStop(0.25f);
+	Flash.setFadeOutStart(0.25f);
+	Flash.setSpawnOffset(2.0f);
+	Flash.setMaxOpacity(0.25f);
+	Flash.setSpawnType(AglParticleSystemHeader::ONCE);
+	Flash.setParticlesPerSpawn(5);
+	Flash.setAlignmentType(AglParticleSystemHeader::OBSERVER);
+	Flash.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	Flash.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	Flash.setParticleSize(AglVector2(20.0f, 20.0f));
+	//Flash.setColor(AglVector4(1, 0, 0, 1));
+
+	ParticleSystemInstruction particleInstructionFlash;
+	particleInstructionFlash.textureFileName = "yellow-spot.png";
+	particleInstructionFlash.particleSystem = Flash;
+	particleEmitter->addParticleSystemInstruction(particleInstructionFlash);
+
+	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
+	m_world->addEntity(effect);
+}
