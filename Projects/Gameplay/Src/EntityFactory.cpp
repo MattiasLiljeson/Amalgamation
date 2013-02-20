@@ -313,6 +313,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		component = new ShipEditController();
 		entity->addComponent( ComponentType::ShipEditController, component);
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
+		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
 		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
 			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
@@ -346,7 +347,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
-		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		entity->addComponent( ComponentType::PlayerCameraController, new PlayerCameraController(90.0f) );
 		entity->addComponent( ComponentType::NetworkSynced,
 			new NetworkSynced(p_packet.miscData, p_packet.owner, EntityType::PlayerCamera));
