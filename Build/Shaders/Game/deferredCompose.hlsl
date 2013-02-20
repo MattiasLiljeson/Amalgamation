@@ -61,16 +61,21 @@ float4 PS(VertexOut input) : SV_TARGET
 	float depth = gDepthBuffer.Sample(pointSampler, input.texCoord).r;
 	//float4 randomNormals = float4(gRandomNormals.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
-	float4 fog = gFogColor;
-	float4 ambient = gAmbientColor;
+	float3 fog = gFogColorAndFogFar.rgb;
+	float3 ambient = gAmbientColorAndFogNear.rgb;
+	float2 fogNearFarPercentage = float2(gAmbientColorAndFogNear.a,gFogColorAndFogFar.a);
 	float3 position = getPosition(input.texCoord,depth);
+	// calc linear depths
+	float pixelDepthW = length(position-gCameraPos.xyz);
+	float linDepth = pixelDepthW / (gFarPlane-gNearPlane);
+	float fogDepth = saturate(pixelDepthW / ((gFarPlane*fogNearFarPercentage.x)-(gNearPlane*(2.0f-fogNearFarPercentage.y))));
 	
 	uint3 index;
 	index.xy = input.position.xy;
 	index.z = 0;
 	float finalAO = 0.0f;
 
-	float3 finalEmissiveValue = float4(0,0,0,0);
+	float3 finalEmissiveValue = float3(0,0,0);
 		
 	float4 sampledColor;
 	[unroll]
@@ -89,10 +94,8 @@ float4 PS(VertexOut input) : SV_TARGET
 	// apply ao
 	lightColor = float4(lightColor.r*finalAO, lightColor.g*finalAO, lightColor.b*finalAO, 1.0f );
 	
-	// calc linear depth
-	float linDepth = length(position-gCameraPos) / ((gFarPlane-800.0f)-(gNearPlane));
 	
-	lightColor += ambient;
-	lightColor = lerp(lightColor,fog,saturate(linDepth)); // can do this when light is separate from diffuse
+	lightColor += float4(ambient,0.0f);
+	lightColor = float4(lerp(lightColor.rgb,fog,saturate(fogDepth)),0.0f); // can do this when light is separate from diffuse
 	return float4(lightColor.rgb+finalEmissiveValue.rgb,1.0f); // then all light can be added here like glow is now
 }

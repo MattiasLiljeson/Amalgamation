@@ -17,8 +17,10 @@ public:
 		float p_farClip=10000.0f);
 
 	AglMatrix m_projMat;
-	AglVector4 m_ambientColor;
-	AglVector4 m_fogColor;
+	AglVector3 m_ambientColor;
+	AglVector3 m_fogColor;
+	float	m_fogNearPlaneClosenessPercentage;
+	float	m_fogFarPlaneClosenessPercentage;
 	float	m_farPlane;
 	float	m_nearPlane;
 	float	m_aspectRatio;

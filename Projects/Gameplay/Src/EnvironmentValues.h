@@ -22,11 +22,11 @@ public:
 	EnvironmentValues();
 	virtual ~EnvironmentValues();
 
-	AglVector4 fogColor;
-	AglVector4 ambientColor;
-	float radius; ///< radius range of environment values
-	float fogFarPlaneClosenessPercentage; ///< closeness of fog end-gradient to far plane
-	float fogNearPlaneClosenessPercentage; ///< closeness of fog start-gradient to near plane
+	AglVector4 m_fogColor;
+	AglVector4 m_ambientColor;
+	float m_radius; ///< radius range of environment values
+	float m_fogFarPlaneClosenessPercentage; ///< closeness of fog end-gradient to far plane
+	float m_fogNearPlaneClosenessPercentage; ///< closeness of fog start-gradient to near plane
 	void init( vector<ComponentData> p_initData );
 
 private:
