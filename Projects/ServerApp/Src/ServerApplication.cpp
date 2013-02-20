@@ -145,8 +145,8 @@ namespace Srv
 		/************************************************************************/
 		/* Level Generation														*/
 		/************************************************************************/
-		LevelGenSystem* levelGen = new LevelGenSystem( m_server);
-		m_world->setSystem( levelGen, true);
+		//LevelGenSystem* levelGen = new LevelGenSystem( m_server);
+		//m_world->setSystem( levelGen, true);
 
 		/************************************************************************/
 		/* Effects																*/
@@ -281,44 +281,44 @@ namespace Srv
 		//entity = factory->entityFromRecipe( "rocksServer" );									 
 		//m_world->addEntity( entity );
 
-		EntityCreationPacket cp;
-		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
-		//Rocket Launcher
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::RocketLauncherModule;
-			factory->entityFromPacket(cp, &pos);
-		}
-		//Mine Layer
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::MineLayerModule;
-			factory->entityFromPacket(cp, &pos);
-		}
-		//Shield modules
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::ShieldModule;
-			factory->entityFromPacket(cp, &pos);
-		}
-
-		//Speed Booster
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(60.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::BoosterModule;
-			factory->entityFromPacket(cp, &pos);
-		}
-		//Minigun
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::MinigunModule;
-			factory->entityFromPacket(cp, &pos);
-		}
+//		EntityCreationPacket cp;
+//		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
+//		//Rocket Launcher
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::RocketLauncherModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
+//		//Mine Layer
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(30.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::MineLayerModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
+//		//Shield modules
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::ShieldModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
+//
+//		//Speed Booster
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(60.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::BoosterModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
+//		//Minigun
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::MinigunModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
 	}
 
 

@@ -62,7 +62,10 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
+		if(p_entities[i]->getName() == "DebugSphere")
+		{
+			transform->setScale(AglVector3(1.0f, 1.0f, 1.0f));
+		}
 		// Don't render instances that hasn't got a transformation
 		if( transform == NULL )
 		{
