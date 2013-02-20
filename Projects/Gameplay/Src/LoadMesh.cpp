@@ -12,6 +12,10 @@ LoadMesh::LoadMesh()
 LoadMesh::LoadMesh( const string& p_filename,bool p_isPrimitive )
 	: Component( ComponentType::LoadMesh )
 {
+	if(p_filename == "P_cube")
+	{
+		int a = 0;
+	}
 	m_filename=p_filename;
 	m_isPrimitive=p_isPrimitive;
 }
