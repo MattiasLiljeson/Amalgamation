@@ -1,0 +1,16 @@
+<rml>
+	<head>
+		<title>Lobby</title>
+		<link type="text/template" href="window.rml" />
+	</head>
+	<body id="lobby" template="window" onshow="">
+		<div id=lobbyWindow>
+			Lobby - Window
+		</div>
+		<div id=serverWindow>
+			Server - Info
+		</div>
+		<button onclick="">Ready</button>
+		<button onclick="goto main_menu">Leave</button>
+	</body>
+</rml>

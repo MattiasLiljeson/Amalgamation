@@ -30,7 +30,7 @@ public:
 	GameState(EnumGameStates p_currentState);
 	~GameState();
 	void setStatesDelta(EnumGameStates p_state, EnumGameDelta p_value);
-	int getStateDelta(EnumGameStates p_state);
+	EnumGameDelta getStateDelta(EnumGameStates p_state);
 public:
 	vector<State*> m_states;
 };

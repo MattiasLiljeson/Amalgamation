@@ -56,8 +56,13 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
 			(m_world->getSystem(SystemType::InputBackendSystem));
 
-		if( inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 
-			|| state->getStateDelta(INGAME)!= 0){
+		if( state->getStateDelta(INGAME) == ENTEREDTHISFRAME){
+			connectToNetworkAddress();
+			// Disable the menu background scene.
+			m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
+		}
+
+		if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){
 			connectToNetworkAddress();
 			state->setStatesDelta(INGAME, ENTEREDTHISFRAME);
 			// Disable the menu background scene.

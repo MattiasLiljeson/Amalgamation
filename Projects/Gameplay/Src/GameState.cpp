@@ -21,6 +21,6 @@ void GameState::setStatesDelta( EnumGameStates p_state, EnumGameDelta p_value ){
 	m_states[p_state]->delta = p_value;
 }
 
-int GameState::getStateDelta( EnumGameStates p_state ){
+EnumGameDelta GameState::getStateDelta( EnumGameStates p_state ){
 	return m_states[p_state]->delta;
 }

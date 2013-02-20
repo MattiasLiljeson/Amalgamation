@@ -39,6 +39,7 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"host");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
+	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
 
 	rocketEventManager->loadWindow("main_menu");
 

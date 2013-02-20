@@ -11,6 +11,8 @@ MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
 {
 	m_deltaRotation = 0.0f;
+	m_ship = NULL;
+	m_inputBackend = NULL;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
@@ -87,7 +89,11 @@ void MenuBackgroundSceneSystem::sysDisabled()
 			m_world->deleteEntity(m_lights[i]);
 		}
 	}
+	m_rocks.clear();
+	m_lights.clear();
+
 	m_world->deleteEntity(m_ship);
+	m_ship = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,

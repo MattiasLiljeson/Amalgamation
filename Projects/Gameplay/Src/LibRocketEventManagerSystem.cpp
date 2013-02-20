@@ -204,7 +204,42 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 				m_stateComp->setStatesDelta(INGAME,ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}
+			/*else if(p_value == "join_lobby"){
+				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
+				m_localState = THISFRAME;
+			}*/
 		}
+	}
+}
+
+void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
+{
+	//Check if there is a game state entity
+	if(p_entities.size()>0){
+
+		//Check if a state has been changed.
+		if(m_localState != NONE ){
+
+			switch (m_localState)
+			{
+			case LibRocketEventManagerSystem::THISFRAME:
+				m_localState = VERIFIED;
+				break;
+			case LibRocketEventManagerSystem::VERIFIED:
+				m_localState = PREVIOUSFRAME;
+				break;
+			case LibRocketEventManagerSystem::PREVIOUSFRAME:
+				//Reset the delta to zero
+				for (unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
+					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),NOTCHANGED);
+				}
+				m_localState = NONE;
+				break;
+			}
+		}
+	}
+	if (wantsToExit){
+		m_world->requestToShutDown();
 	}
 }
 
@@ -241,39 +276,6 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 	//document->RemoveReference();
 	return true;
 }
-
-
-void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
-{
-	//Check if there is a game state entity
-	if(p_entities.size()>0){
-
-		//Check if a state has been changed.
-		if(m_localState != NONE ){
-
-			switch (m_localState)
-			{
-			case LibRocketEventManagerSystem::THISFRAME:
-				m_localState = VERIFIED;
-				break;
-			case LibRocketEventManagerSystem::VERIFIED:
-				m_localState = PREVIOUSFRAME;
-				break;
-			case LibRocketEventManagerSystem::PREVIOUSFRAME:
-				//Reset the delta to zero
-				for (unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
-					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),NOTCHANGED);
-				}
-				m_localState = NONE;
-				break;
-			}
-		}
-	}
-	if (wantsToExit){
-		m_world->requestToShutDown();
-	}
-}
-
 
 void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core::String&  p_docId )
 {
