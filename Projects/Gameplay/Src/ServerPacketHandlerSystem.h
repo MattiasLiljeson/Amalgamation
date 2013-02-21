@@ -4,6 +4,7 @@
 #include <EntitySystem.h>
 #include "ClientInfo.h"
 
+
 class TcpServer;
 class PhysicsSystem;
 
@@ -30,6 +31,10 @@ public:
 	void initialize();
 
 	void processEntities( const vector<Entity*>& p_entities );
+	void createAndBroadCastShip( int p_clientIdentity, int p_playerID );
+
+private:
+	Entity* createTheShipEntity(int p_newlyConnectedClientId, int p_playerID);
 
 private:
 	TcpServer*		m_server;

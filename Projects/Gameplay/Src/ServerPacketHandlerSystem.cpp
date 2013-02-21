@@ -34,7 +34,11 @@
 #include "SlotParticleEffectPacket.h"
 #include "ServerGameState.h"
 #include "ServerStateSystem.h"
-
+#include "EntityCreationPacket.h"
+#include "ServerStaticObjectsSystem.h"
+#include "StaticProp.h"
+#include <vector>
+#include "EntityFactory.h"
 
 
 
@@ -318,19 +322,91 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				else if (sep.type == SimpleEventType::RELEASE_PICK)
 					pickSystem->setReleased(packet.getSenderId());
 			}
-		break;
-		case ServerStates::LOADING:
-			stateSystem->setQueuedState(ServerStates::INGAME);
 			break;
 		case ServerStates::LOBBY:
 			if(packetType == (char)PacketType::LetsRoll){
 				stateSystem->setQueuedState(ServerStates::LOADING);
 			}
 			break;
+		case ServerStates::LOADING:
+			{
+				stateSystem->setQueuedState(ServerStates::INGAME);
+				/************************************************************************/
+				/* Send the already networkSynced objects located on the server to the	*/
+				/* newly connected client.												*/
+				/************************************************************************/ 
+				NetworkSynced* netSync;
+				Transform* transform;
+				for( unsigned int i=0; i<p_entities.size(); i++ )
+				{
+					int entityId = p_entities[i]->getIndex();
+					netSync = (NetworkSynced*)m_world->getComponentManager()->
+						getComponent( entityId, ComponentType::NetworkSynced );
+
+					transform = (Transform*)m_world->getComponentManager()->
+						getComponent( entityId, ComponentType::Transform );
+
+					EntityCreationPacket data;
+					data.entityType		= static_cast<char>(netSync->getNetworkType());
+					data.owner			= netSync->getNetworkOwner();
+					data.playerID		= netSync->getPlayerID();
+					data.networkIdentity = netSync->getNetworkIdentity();
+
+					data.meshInfo		 = 0; //Temp
+					if (transform)
+					{
+						data.translation	= transform->getTranslation();
+						data.rotation		= transform->getRotation();
+						data.scale			= transform->getScale();
+					}
+
+					///MESH INFO MUST BE MADE INTO A COMPONENT
+					//data.meshInfo		= 1;
+
+					m_server->broadcastPacket( data.pack() );
+				}
+
+				/************************************************************************/
+				/* Send static objects to the newly connected client.					*/
+				/************************************************************************/
+				vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
+					getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
+
+				for (unsigned int i= 0; i < entities.size(); i++)
+				{
+					transform = static_cast<Transform*>(entities[i]->
+						getComponent(ComponentType::Transform));
+
+					StaticProp* prop = static_cast<StaticProp*>(entities[i]->
+						getComponent(ComponentType::StaticProp));
+
+					EntityCreationPacket data;
+					data.entityType = static_cast<char>(EntityType::Other);
+					data.owner = -1; //NO OWNER
+					data.networkIdentity = entities[i]->getIndex();
+					data.translation = transform->getTranslation();
+					data.rotation = transform->getRotation();
+					data.scale = transform->getScale();
+					data.isLevelProp = prop->isLevelPiece;
+					data.meshInfo = prop->meshInfo;  
+
+					//				packets.push( packet );
+					m_server->broadcastPacket( data.pack() );
+				}
+
+				/************************************************************************/
+				/* Create and send the ship entities.									*/
+				/************************************************************************/
+				for(unsigned int i=0; i<m_server->getActiveConnections().size(); i++)
+				{
+					createAndBroadCastShip(m_server->getActiveConnections().at(i), (int)i);
+				}
+				break;
+			}
 		default:
 			break;
 		}
-		
+
 	}
 	
 	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
@@ -343,4 +419,68 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		m_server->broadcastPacket( pingPacket.pack() );
 	}
+}
+
+void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity,
+													   int p_playerID)
+{
+
+	Entity* newShip = createTheShipEntity(p_clientIdentity, p_playerID);
+	m_world->addEntity(newShip);
+	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
+		ComponentType::Transform));
+
+	// also create a camera
+	Entity* playerCam = m_world->createEntity();
+	Component* component = new LookAtEntity(newShip->getIndex(),
+		AglVector3(0,7,-38),
+		13.0f,
+		10.0f,
+		3.0f,
+		40.0f);
+	playerCam->addComponent( ComponentType::LookAtEntity, component );
+	playerCam->addComponent( ComponentType::Transform, new Transform( 
+		transformComp->getMatrix() ) );
+	// default tag is follow
+	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	playerCam->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( playerCam->getIndex(), p_clientIdentity, EntityType::PlayerCamera ));
+	m_world->addEntity(playerCam);
+
+	/************************************************************************/
+	/* Send the information about the new clients ship to all other players */
+	/************************************************************************/
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::Ship);
+	data.owner			= p_clientIdentity;
+	data.playerID		= p_playerID;
+	data.networkIdentity= newShip->getIndex();
+	data.translation	= transformComp->getTranslation();
+	data.rotation		= transformComp->getRotation();
+	data.scale			= transformComp->getScale();
+	data.miscData		= playerCam->getIndex();
+
+	m_server->broadcastPacket(data.pack());
+}
+
+Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)
+{
+	/************************************************************************/
+	/* Creating the ship entity.											*/
+	/************************************************************************/
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+
+	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
+
+	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
+		new ShipConnectionPointHighlights());
+
+	e->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, p_playerID, EntityType::Ship ));
+
+	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
+
+	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
+
+	return e;
 }
