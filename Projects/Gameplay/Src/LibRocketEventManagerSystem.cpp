@@ -181,14 +181,16 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			loadWindow(values[1]);
 			ownerDocument->Show(Rocket::Core::ElementDocument::NONE);
 		}
-
+		else if (values[0] == "clearStack"){
+			clearDocumentStack();
+		}
 		else if (values[0] == "exit")
 		{
 			wantsToExit = true;
 		}
 		else if( m_localState == NOTCHANGED)
 		{
-			if (p_value == "join_server")
+			if (values[0] == "connectToServer")
 			{
 				// "server_host" is the name attribute specified in the input element in the rml file.
 				// "localhost" simply is provided as a default value, if the host isn't set. This could be left as "" as well.
@@ -201,13 +203,17 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 					m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
 				sys->setConnectionAddress(server_address, server_port);
-				m_stateComp->setStatesDelta(INGAME,ENTEREDTHISFRAME);
+				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}
 			/*else if(p_value == "join_lobby"){
 				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}*/
+			else if(values[0] == "join_game"){
+				m_stateComp->setStatesDelta(INGAME,ENTEREDTHISFRAME);
+				m_localState = THISFRAME;
+			}
 		}
 	}
 }
@@ -279,14 +285,16 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 
 void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core::String&  p_docId )
 {
-	while (m_docIdStack.top() != p_docId)
-	{	
-		auto document = m_context->GetDocument(m_docIdStack.top());
-		m_docIdStack.pop();
-		if (document->IsVisible())
-		{
-			document->Show(Rocket::Core::ElementDocument::NONE);
-			document->Hide();
+	if(m_docIdStack.size()){
+		while (m_docIdStack.top() != p_docId)
+		{	
+			auto document = m_context->GetDocument(m_docIdStack.top());
+			m_docIdStack.pop();
+			if (document->IsVisible())
+			{
+				document->Show(Rocket::Core::ElementDocument::NONE);
+				document->Hide();
+			}
 		}
 	}
 }
