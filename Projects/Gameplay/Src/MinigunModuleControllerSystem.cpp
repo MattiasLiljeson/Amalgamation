@@ -332,7 +332,7 @@ void MinigunModuleControllerSystem::updateRays(Entity* p_entity)
 }
 void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 {
-	MinigunModule* gun = static_cast<MinigunModule*>
+	/*MinigunModule* gun = static_cast<MinigunModule*>
 		( p_entity->getComponent( ComponentType::MinigunModule) );
 
 	ParticleSystemServerComponent* particleComp = static_cast<ParticleSystemServerComponent*>
@@ -406,7 +406,7 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 			data->updateData.direction = vel;
 			data->updateData.spawnFrequency = ( (float)module->getActive() ) * 10;//200; // Why 10? /ML
 		}
-	}
+	}*/
 
 }
 

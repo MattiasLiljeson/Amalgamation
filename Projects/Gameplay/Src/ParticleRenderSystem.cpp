@@ -62,7 +62,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		ParticleSystemsComponent* particlesComp = static_cast<ParticleSystemsComponent*>(
 			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
-		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
+
 		
 		if( particlesComp->getParticleSystemCnt() > 0 )
 		{
@@ -95,6 +95,8 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 				}
 			}
 		}
+		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
+
 	}
 }
 

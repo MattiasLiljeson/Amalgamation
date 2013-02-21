@@ -86,7 +86,7 @@ protected:
 		AglScene* scene;
 		AglMesh* aglMesh;
 		AglMeshHeader* meshHeader;
-		unsigned int modelNumber;
+		int modelNumber;
 		string& nameSuffix;
 	};
 protected:
