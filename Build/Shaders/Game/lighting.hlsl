@@ -20,20 +20,21 @@ SamplerState shadowSampler : register(s1);
 struct VertexIn
 {
 	//PerVertex
-	float3 position : POSITION;						//12 bytes
+	float3 position 				: POSITION;					//12 bytes
 	
 	//PerInstance
-	float4x4 instanceTransform : INSTANCETRANSFORM;	//64 bytes
-	float3 	lightDir	: LIGHTDIR;					//12 bytes
-	float 	range		: RANGE;					//4 bytes	
-	float3 	attenuation	: ATTENUATION;				//12 bytes
-	float 	spotPower	: SPOTPOWER;				//4 bytes
-	float4 	ambient		: AMBIENT;					//16 bytes
-	float4 	diffuse		: DIFFUSE;					//16 bytes
-	float4 	specular	: SPECULAR;					//16 bytes
-	int 	enabled 	: ENABLED;					//4 bytes
-	int 	type 		: TYPE;						//4 bytes
-	int		shadowIdx	: SHADOWIDX;				//4 bytes
+	float4x4 instanceTransform 		: INSTANCETRANSFORM;		//64 bytes
+	float3 	lightDir				: LIGHTDIR;					//12 bytes
+	float 	range					: RANGE;					//4 bytes	
+	float3 	attenuation				: ATTENUATION;				//12 bytes
+	float 	spotLightConeSizeAsPow	: SPOTLIGHTCONESIZEASPOW;	//4 bytes
+	//float4 	ambient					: AMBIENT;					//16 bytes
+	float3 	color					: COLOR;					//16 bytes
+	//float4 	specular				: SPECULAR;					//16 bytes
+	float 	lightEnergy				: LIGHTENERGY;
+	int 	enabled 				: ENABLED;					//4 bytes
+	int 	type 					: TYPE;						//4 bytes
+	int		shadowIdx				: SHADOWIDX;				//4 bytes
 };
 struct VertexOut
 {
@@ -48,20 +49,19 @@ VertexOut VS( VertexIn p_input )
 	float4x4 wvp = mul(p_input.instanceTransform, gViewProj);
 	vout.position = mul( float4(p_input.position, 1.0f), wvp );
 	
-	vout.light.pos			= float3( 
-								p_input.instanceTransform[3][0],
-								p_input.instanceTransform[3][1],
-								p_input.instanceTransform[3][2] );
-	vout.light.type 		= p_input.type; //1; // Should be set by instance/mesh
-	vout.light.lightDir 	= p_input.lightDir ;//float3( 1.0f, 0.0f, 0.0f ); // Only used by point lights
-	vout.light.range 		= p_input.range; //1000.0f;
-	vout.light.attenuation 	= p_input.attenuation; //0.01f;
-	vout.light.spotPower 	= p_input.spotPower; //10.0f; //Not used;
-	vout.light.ambient 		= p_input.ambient; //float4( 0.0f, 0.0f, 0.1f, 0.1f );
-	vout.light.diffuse 		= p_input.diffuse; //float4( .0f, .5f, .0f, 0.1f );
-	vout.light.specular 	= p_input.specular; //float4( .5f, .0f, .0f, .1f );
-	vout.light.enabled 		= p_input.enabled; //true;
-	vout.light.shadowIdx	= p_input.shadowIdx;
+	vout.light.pos						= float3( 
+											p_input.instanceTransform[3][0],
+											p_input.instanceTransform[3][1],
+											p_input.instanceTransform[3][2] );
+	vout.light.lightDir 				= p_input.lightDir; // Only used by point lights
+	vout.light.range 					= p_input.range;
+	vout.light.attenuation 				= p_input.attenuation;
+	vout.light.spotLightConeSizeAsPow 	= p_input.spotLightConeSizeAsPow;
+	vout.light.color 					= p_input.color;
+	vout.light.lightEnergy 				= p_input.lightEnergy;
+	vout.light.enabled 					= p_input.enabled;
+	vout.light.type 					= p_input.type; // Should be set by instance/mesh
+	vout.light.shadowIdx				= p_input.shadowIdx;
 	
 	return vout;
 }
@@ -80,12 +80,9 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
 
-	
 	SurfaceInfo surface;
 	surface.diffuse = diffuseColor;
-	//surface.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
 	surface.specular = specular;
-	//surface.specular = float4( 1.0f, 1.0f, 1.0f, 1.0f );
 	
 	// lulz tonemapping
 	//surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
@@ -132,7 +129,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	}
 	lightCol *= shadowCoeff;
 	
-	//return float4( 0, 0, 0, 0 );
 	return float4( lightCol, 0.1f );
+	//return diffuseColor;
 }
 

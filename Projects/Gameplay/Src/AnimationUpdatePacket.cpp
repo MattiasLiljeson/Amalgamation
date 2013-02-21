@@ -4,17 +4,23 @@
 AnimationUpdatePacket::AnimationUpdatePacket()
 {
 	networkIdentity = -1;
+	shouldPlay = false;
+	float playSpeed = 1.0f;
 }
 
 Packet AnimationUpdatePacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::AnimationUpdatePacket));	
-	packet << networkIdentity;
+	packet << networkIdentity
+		   << shouldPlay
+		   << playSpeed;
 
 	return packet;
 }
 
 void AnimationUpdatePacket::unpack( Packet& p_packet )
 {
-	p_packet >> networkIdentity;
+	p_packet >> networkIdentity
+			 >> shouldPlay
+			 >> playSpeed;
 }

@@ -58,16 +58,21 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.range );
 		} else if( lightInfoStr == "enabled"){ 
 			p_initData[i].getData<int>( &m_lights[lightIdx].instanceData.enabled );
+		} else if( lightInfoStr == "energy" || lightInfoStr == "lightEnergy" ) { 
+			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightEnergy );
 		}
 		
 		// Spot settings
-		else if( lightInfoStr == "spotPower"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.spotPower );
-		} else if( lightInfoStr == "lightDirX"){ 
+		else if( lightInfoStr == "spotPower" ||
+			lightInfoStr == "spotLightConeSizeAsPow" ||
+			lightInfoStr == "spotLightConeSize" ||
+			lightInfoStr == "spotLightCone") {
+			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.spotLightConeSizeAsPow );
+		} else if( lightInfoStr == "lightDirX" ) { 
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[0] );
-		} else if( lightInfoStr == "lightDirY"){ 
+		} else if( lightInfoStr == "lightDirY" ) { 
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[1] );
-		} else if( lightInfoStr == "lightDirZ"){ 
+		} else if( lightInfoStr == "lightDirZ" ) { 
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[2] );
 		}
 
@@ -110,43 +115,47 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 		} 
 		
 		// Light colors
-		else if( lightInfoStr == "ambient"){
-			float ambient = 0.0f;
-			p_initData[i].getData<float>( &ambient );
-			m_lights[lightIdx].instanceData.ambient[0] = ambient;
-			m_lights[lightIdx].instanceData.ambient[1] = ambient;
-			m_lights[lightIdx].instanceData.ambient[2] = ambient;
-		} else if( lightInfoStr == "ambientR"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[0] );
-		} else if( lightInfoStr == "ambientG"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[1] );
-		} else if( lightInfoStr == "ambientB"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[2] );
-		} else if( lightInfoStr == "diffuse"){
-			float diffuse = 0.0f;
-			p_initData[i].getData<float>( &diffuse );
-			m_lights[lightIdx].instanceData.diffuse[0] = diffuse;
-			m_lights[lightIdx].instanceData.diffuse[1] = diffuse;
-			m_lights[lightIdx].instanceData.diffuse[2] = diffuse;
-		} else if( lightInfoStr == "diffuseR"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.diffuse[0] );
-		} else if( lightInfoStr == "diffuseG"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.diffuse[1] );
-		} else if( lightInfoStr == "diffuseB"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.diffuse[2] );
-		} else if( lightInfoStr == "specular"){
-			float specular = 0.0f;
-			p_initData[i].getData<float>( &specular );
-			m_lights[lightIdx].instanceData.specular[0] = specular;
-			m_lights[lightIdx].instanceData.specular[1] = specular;
-			m_lights[lightIdx].instanceData.specular[2] = specular;
-		} else if( lightInfoStr == "specularR"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[0] );
-		} else if( lightInfoStr == "specularG"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[1] );
-		} else if( lightInfoStr == "specularB"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[2] );
+		//else if( lightInfoStr == "ambient"){
+		//	float ambient = 0.0f;
+		//	p_initData[i].getData<float>( &ambient );
+		//	m_lights[lightIdx].instanceData.ambient[0] = ambient;
+		//	m_lights[lightIdx].instanceData.ambient[1] = ambient;
+		//	m_lights[lightIdx].instanceData.ambient[2] = ambient;
+		//} else if( lightInfoStr == "ambientR"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[0] );
+		//} else if( lightInfoStr == "ambientG"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[1] );
+		//} else if( lightInfoStr == "ambientB"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[2] );
+		//} 
+		
+		else if( lightInfoStr == "color"){
+			float color = 0.0f;
+			p_initData[i].getData<float>( &color );
+			m_lights[lightIdx].instanceData.color[0] = color;
+			m_lights[lightIdx].instanceData.color[1] = color;
+			m_lights[lightIdx].instanceData.color[2] = color;
+		} else if( lightInfoStr == "colorR"){ 
+			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[0] );
+		} else if( lightInfoStr == "colorG"){ 
+			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[1] );
+		} else if( lightInfoStr == "colorB"){ 
+			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[2] );
 		} 
+		
+		//else if( lightInfoStr == "specular"){
+		//	float specular = 0.0f;
+		//	p_initData[i].getData<float>( &specular );
+		//	m_lights[lightIdx].instanceData.specular[0] = specular;
+		//	m_lights[lightIdx].instanceData.specular[1] = specular;
+		//	m_lights[lightIdx].instanceData.specular[2] = specular;
+		//} else if( lightInfoStr == "specularR"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[0] );
+		//} else if( lightInfoStr == "specularG"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[1] );
+		//} else if( lightInfoStr == "specularB"){ 
+		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[2] );
+		//} 
 		
 		// Light type
 		else if( lightInfoStr == "typeAsNum"){ 

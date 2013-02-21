@@ -20,6 +20,7 @@
 #include "ModuleHelper.h"
 #include "SpawnPointSet.h"
 #include "MeshOffsetTransform.h"
+#include "AnimationUpdatePacket.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -46,11 +47,10 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
 		ShipModule* module = static_cast<ShipModule*>(
-			m_world->getComponentManager()->getComponent(p_entities[i],
-			ComponentType::getTypeFor(ComponentType::ShipModule)));
+			p_entities[i]->getComponent(ComponentType::ShipModule));
 
 		// get owner for damage set
-		int ownerId = ModuleHelper::FindParentShipClientId(m_world, &module);
+		int ownerId = ModuleHelper::FindParentShipClientId(m_world, module);
 
 		handleParticleSystem(p_entities[i]);
 		handleLaserSight(p_entities[i]);
@@ -98,6 +98,24 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			if (gun->coolDown == 0 && module->getActive())
 			{
 				spawnRay(p_entities[i]);
+
+				if (!gun->animationPlaying)
+				{
+					//Start playing animation
+					startAnimation(p_entities[i]);
+					gun->animationPlaying = true;
+
+				}
+
+			}
+			else if (!module->getActive())
+			{
+				if (gun->animationPlaying)
+				{
+					//Stop playing animation
+					stopAnimation(p_entities[i]);
+					gun->animationPlaying = false;
+				}
 			}
 			updateRays(p_entities[i]);
 		}
@@ -390,4 +408,20 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 		}
 	}
 
+}
+
+void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_gun->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 15.0f;
+	m_server->broadcastPacket( packet.pack() );
+}
+void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_gun->getIndex();
+	packet.shouldPlay = false;
+	m_server->broadcastPacket( packet.pack() );
 }

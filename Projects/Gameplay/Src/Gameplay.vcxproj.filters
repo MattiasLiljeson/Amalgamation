@@ -596,9 +596,6 @@
     <ClInclude Include="GradientMapping.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GradientComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="GamepadRumbleSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -645,10 +642,24 @@
     <ClInclude Include="SpawnExplosionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="GradientComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentValues.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
     <ClInclude Include="LevelPieceFileData.h">
       <Filter>Systems\Level Gen</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -1039,9 +1050,6 @@
     <ClCompile Include="GamepadRumbleSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GradientComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems</Filter>
@@ -1080,6 +1088,21 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="SpawnExplosionPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentValues.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

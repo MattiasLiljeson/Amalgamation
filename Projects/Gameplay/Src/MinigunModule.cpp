@@ -7,6 +7,7 @@ MinigunModule::MinigunModule()
 {
 	coolDown=0.0f;
 	laserSightEntity=-1;
+	animationPlaying = false;
 }
 
 MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirection )
@@ -21,6 +22,7 @@ MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirect
 	currentRay = 0;
 	range = 300;
 	particleSystemEntity = -1;
+	animationPlaying = false;
 }
 MinigunModule::~MinigunModule()
 {
@@ -36,6 +38,7 @@ void MinigunModule::init( vector<ComponentData> p_initData )
 	currentRay = 0;
 	range = 300;
 	particleSystemEntity = -1;
+	animationPlaying = false;
 
 	for(unsigned int i=0; i<p_initData.size(); i++)
 	{

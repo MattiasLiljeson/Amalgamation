@@ -33,7 +33,7 @@ public:
 	virtual void render();
 
 private:
-	void fillInstanceData(InstanceData* p_data, Entity* p_entity, RenderInfo* p_renderInfo);
+	void fillInstanceData(InstanceData* p_data, Entity* p_entity, RenderInfo* p_renderInfo, int p_boneCount);
 
 	RenderInfo* getRenderInfo(Entity* p_entity);
 private:

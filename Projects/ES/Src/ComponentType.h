@@ -47,6 +47,7 @@ public:	//Enums
 		LoadMesh,
 		Transform,
 		ShipModule,
+		EnvironmentValues,
 		ConnectionPointSet,
 		ShipConnectionPointHighlights,
 		SpawnPointSet,

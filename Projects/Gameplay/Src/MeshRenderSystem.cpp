@@ -86,9 +86,21 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if (renderInfo->m_shouldBeCulled)
 			continue;
+
+
+		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
+			(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
+		AglSkeleton* skeleton = NULL;
+		unsigned int jointCount = -1;
+		if (skelAnim)
+		{
+			skeleton = skelAnim->m_scene->getSkeleton(0);
+			jointCount = skeleton->getHeader().jointCount;
+		}
+
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
-		fillInstanceData(&instanceData,p_entities[i],renderInfo);
+		fillInstanceData(&instanceData,p_entities[i],renderInfo, jointCount);
 
 		if (renderInfo->m_shouldBeTesselated)
 			m_instanceListsTess[renderInfo->m_meshId].push_back( instanceData );
@@ -96,13 +108,8 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
-		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
-			(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
-
 		if (skelAnim)
 		{
-			AglSkeleton* skeleton = skelAnim->m_scene->getSkeleton(0);
-			unsigned int jointCount = skeleton->getHeader().jointCount;
 			for (unsigned int i = 0; i < jointCount; i++)
 			{
 				skelAnim->m_scene->setTime(skelAnim->m_time);
@@ -117,8 +124,11 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 }
 
 void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity, 
-										RenderInfo* p_renderInfo){
+										RenderInfo* p_renderInfo, int p_boneCount){
 	MaterialInfo matInfo;
+
+	p_data->setNumberOfActiveBones(p_boneCount);
+
 	// Try and get the gradient component
 	auto gradient = static_cast<GradientComponent*>(p_entity->getComponent(
 		ComponentType::Gradient));
@@ -140,7 +150,7 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 		if(shipModule != NULL && shipModule->m_parentEntity > -1){
 			
 			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
-			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+			ModuleHelper::FindParentShip(m_world,&parentShip, shipModule);
 
 			if(parentShip != NULL){
 				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);

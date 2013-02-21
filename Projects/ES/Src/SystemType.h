@@ -22,6 +22,7 @@ public:	//Enums
 		MenuBackgroundSceneSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
+		EnvironmentSystem,
 		ExtrapolationSystem,
 		DebugMovementSystem,
 		MoveShipLightsSystem,
@@ -97,6 +98,7 @@ public:	//Enums
 		CullingSystem,
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
+		EditSphereSystem,
 		NUM_SYSTEM_TYPES
 	};
 
