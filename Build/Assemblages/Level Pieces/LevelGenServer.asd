@@ -13,7 +13,7 @@ c LevelInfo
 d i m_randomStartRotation 0
 # Branching count - Specifies how many times the level generator system should
 # branch outwards.
-d i m_branchCount 0
+d i m_branchCount 2
 # The info will store all chambers and tunnel types, reusing the variables.
 # These are stored as array data in the component when parsed.
 # piece begin starts a new piece block section to be read.
