@@ -15,6 +15,7 @@ LevelInfo::LevelInfo()
 
 LevelInfo::~LevelInfo()
 {
+	delete m_endPlug;
 	for (unsigned int i = 0; i < m_fileData.size(); i++)
 	{
 		delete m_fileData[i];
