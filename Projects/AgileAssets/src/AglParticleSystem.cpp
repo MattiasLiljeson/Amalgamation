@@ -328,3 +328,8 @@ void AglParticleSystem::setFadeInStop(float p_fadeInStop)
 {
 	m_header.fadeInStop = p_fadeInStop;
 }
+
+const float AglParticleSystem::getAge() const
+{
+	return m_age;
+}

@@ -27,6 +27,7 @@ public:	//Enums
 		DebugMovementSystem,
 		MoveShipLightsSystem,
 		NetworkUpdateSystem,
+		DestroyOnParticlesDeathSystem,
 		InputSystem,
 		PhysicsSystem,
 		RenderPrepSystem,

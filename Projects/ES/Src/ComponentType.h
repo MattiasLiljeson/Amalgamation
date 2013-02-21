@@ -29,6 +29,7 @@ public:	//Enums
 		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
+		DestroyOnParticlesDeath,
 		CameraInfo,
 		AudioInfo,
 		AudioListener,

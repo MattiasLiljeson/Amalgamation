@@ -659,7 +659,14 @@
     </ClInclude>
     <ClInclude Include="LevelPieceFileData.h">
       <Filter>Systems\Level Gen</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeath.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -1104,6 +1111,12 @@
     </ClCompile>
     <ClCompile Include="EditSphereUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeath.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
