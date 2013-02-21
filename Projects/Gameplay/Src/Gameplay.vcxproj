@@ -113,6 +113,7 @@
     <ClInclude Include="ServerGameState.h" />
     <ClInclude Include="ServerLobbySystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
+    <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
     <ClInclude Include="ShieldPlate.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />

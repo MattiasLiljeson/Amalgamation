@@ -32,6 +32,8 @@
 #include "ShipConnectionPointHighlights.h"
 #include "ShipManagerSystem.h"
 #include "SlotParticleEffectPacket.h"
+#include "ServerGameState.h"
+#include "ServerStateSystem.h"
 
 
 
@@ -66,7 +68,22 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 		char packetType;
 		packetType = packet.getPacketType();
-		
+
+		ServerStateSystem* stateSystem  = static_cast<ServerStateSystem*>(
+			m_world->getSystem(SystemType::ServerStateSystem));
+
+		switch (stateSystem->getCurrentState())
+		{
+		case ServerStates::INGAME:
+		break;
+		case ServerStates::LOADING:
+			break;
+		case ServerStates::LOBBY:
+			break;
+		default:
+			break;
+		}
+		(stateSystem->getCurrentState() == ServerStates::INGAME){
 		if(packetType == (char)PacketType::ThrustPacket)
 		{
 			// =========================================

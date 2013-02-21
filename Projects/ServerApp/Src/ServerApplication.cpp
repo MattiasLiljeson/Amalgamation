@@ -238,9 +238,7 @@ namespace Srv
 	void ServerApplication::initEntities()
 	{
 		InitModulesTestByAnton();
-		Entity* serverState = m_world->createEntity();
-		serverState->addComponent(new ServerGameState(ServerStates::LOBBY));
-		m_world->addEntity(serverState);
+
 	}
 
 	

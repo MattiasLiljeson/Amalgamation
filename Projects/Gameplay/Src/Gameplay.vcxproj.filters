@@ -657,6 +657,13 @@
     <ClInclude Include="EnvironmentSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ServerGameState.h" />
+    <ClInclude Include="ServerLobbySystem.h" />
+    <ClInclude Include="ServerStateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1099,6 +1106,11 @@
     </ClCompile>
     <ClCompile Include="EnvironmentSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

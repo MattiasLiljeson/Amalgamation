@@ -99,6 +99,7 @@ public:	//Enums
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
 		LobbySystem,
+		ServerStateSystem,
 		NUM_SYSTEM_TYPES
 	};
 
