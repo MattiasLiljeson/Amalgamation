@@ -54,6 +54,9 @@ public:
 	int		   laserSightEntity;
 	int		   particleSystemEntity;
 
+	//Animation status
+	bool animationPlaying;
+
 	static ComponentRegister<MinigunModule> s_reg;
 
 };

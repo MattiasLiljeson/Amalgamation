@@ -98,6 +98,22 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			if (gun->coolDown == 0 && module->getActive())
 			{
 				spawnRay(p_entities[i]);
+
+				if (!gun->animationPlaying)
+				{
+					//Start playing animation
+					startAnimation(p_entities[i]);
+
+				}
+
+			}
+			else if (!module->getActive())
+			{
+				if (gun->animationPlaying)
+				{
+					//Stop playing animation
+					stopAnimation(p_entities[i]);
+				}
 			}
 			updateRays(p_entities[i]);
 		}
@@ -389,5 +405,14 @@ void MinigunModuleControllerSystem::handleParticleSystem(Entity* p_entity)
 			data->updateData.spawnFrequency = ( (float)module->getActive() ) * 10;//200; // Why 10? /ML
 		}
 	}
+
+}
+
+void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
+{
+
+}
+void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
+{
 
 }

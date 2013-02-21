@@ -28,4 +28,5 @@ public:
 
 public:
 	int networkIdentity;
+	bool shouldPlay;
 };
