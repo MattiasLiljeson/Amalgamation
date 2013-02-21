@@ -125,6 +125,7 @@ using namespace std;
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
+#include <DestroyOnParticlesDeathSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -413,6 +414,11 @@ void ClientApplication::initSystems()
 	/* Animation															*/
 	/************************************************************************/
 	m_world->setSystem( new SkeletalAnimationSystem(), true );
+
+	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/

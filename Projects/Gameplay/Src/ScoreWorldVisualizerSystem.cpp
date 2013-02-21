@@ -5,6 +5,7 @@
 #include "ParticleSystemsComponent.h"
 #include "LoadMesh.h"
 #include "LookAtEntity.h"
+#include "DestroyOnParticlesDeath.h"
 
 ScoreWorldVisualizerSystem::ScoreWorldVisualizerSystem() : 
 	EntitySystem( SystemType::ScoreWorldVisualizerSystem)
@@ -70,6 +71,10 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 
 
 	ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
+
+	effect->addComponent(ComponentType::DestroyOnParticlesDeath,
+						 new DestroyOnParticlesDeath());
+
 	// add an emitter for each number in data
 	string scorestr = toString(p_data.score);
 	unsigned int size = scorestr.size();

@@ -663,6 +663,12 @@
     <ClInclude Include="EditSphereUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeath.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1111,6 +1117,12 @@
     </ClCompile>
     <ClCompile Include="EditSphereUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeath.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
