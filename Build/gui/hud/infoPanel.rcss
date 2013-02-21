@@ -8,16 +8,14 @@ body{
 	
 	width: 400px;
 	height: 300px;
-
+	
 	margin: auto;
 	border-style: solid;
 	border-width: 1px;
 	border-color: white;
 	background: rgba(20,20,20,40);
-}
-
-div#context{
-	text-align: left;
+	
+	padding: 5px;
 }
 
 datagrid datagridrow:nth-child(even)

@@ -4,12 +4,10 @@
 		<title>Datagrid</title>
 	</head>
 	<body id="infoPanel">
-		<div id="context">
-			<datagrid source="playerstats.infopanel">
-				<col fields="playerName" width="50%">Player:</col>
-				<col fields="score" width="30%">Score:</col>
-				<col fields="ping" width="20%">Ping:</col>
-			</datagrid>
-		</div>
+		<datagrid source="playerstats.infopanel">
+			<col fields="playerName" width="60%">Player:</col>
+			<col fields="score" width="30%">Score:</col>
+			<col fields="ping" width="10%">Ping:</col>
+		</datagrid>
 	</body>
 </rml>
