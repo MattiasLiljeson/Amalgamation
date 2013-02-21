@@ -44,7 +44,7 @@
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
 #include "LevelInfoLoader.h"
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT

@@ -14,6 +14,8 @@
 #include "SlotParticleEffectPacket.h"
 #include "EditSphereUpdatePacket.h"
 #include "ShipManagerSystem.h"
+#include <ToString.h>
+#include <DebugUtil.h>
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
@@ -113,12 +115,16 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 						int me = ModuleHelper::FindParentShipClientId(m_world,m);
 
 						// score effect
-						if (moduleTransform && m &&
-							m->getLatestPerpetratorClient()!=me)
+						if (moduleTransform && m)
 						{
 							// set a positive effect to perp, if not yourself
-							setScoreEffect( m->getLatestPerpetratorClient(), 
-								moduleTransform, m->m_value/2);
+							if (m->getLatestPerpetratorClient()!=me)
+							{
+								setScoreEffect( m->getLatestPerpetratorClient(), 
+									moduleTransform, m->m_value/2);
+							}
+							// set negative effect to victim
+							setScoreEffect( me, moduleTransform, -m->m_value/2);
 						}
 						drop(p_parent, i);
 					}

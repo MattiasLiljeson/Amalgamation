@@ -115,14 +115,14 @@ void GS(point Particle gIn[1],
 	v[2] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
 	v[3] = float4(+halfWidth, +halfHeight, 0.0f, 1.0f);
 	float2 t[4];
-//	t[0] = float2(0.0f, 1.0f);
-//	t[1] = float2(0.0f, 0.0f);
-//	t[2] = float2(1.0f, 1.0f);
-//	t[3] = float2(1.0f, 0.0f);
-	t[0] = float2(uvCropRect.x, uvCropRect.w);
-	t[1] = float2(uvCropRect.x, uvCropRect.y);
-	t[2] = float2(uvCropRect.z, uvCropRect.w);
-	t[3] = float2(uvCropRect.z, uvCropRect.y);
+//	t[0] = float2(1.0f, 1.0f);
+//	t[1] = float2(0.0f, 1.0f);
+//	t[2] = float2(1.0f, 0.0f);
+//	t[3] = float2(0.0f, 0.0f);
+	t[0] = float2(uvCropRect.z, uvCropRect.w);
+	t[1] = float2(uvCropRect.x, uvCropRect.w);
+	t[2] = float2(uvCropRect.z, uvCropRect.y);
+	t[3] = float2(uvCropRect.x, uvCropRect.y);
 	
 	float opacity;
 	if (gIn[0].Age < fadeIn) //Fade in

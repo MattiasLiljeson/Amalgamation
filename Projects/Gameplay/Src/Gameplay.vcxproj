@@ -75,8 +75,7 @@
     <ClInclude Include="LevelHandlerSystem.h" />
     <ClInclude Include="LevelInfo.h" />
     <ClInclude Include="LevelPiece.h" />
-    <ClInclude Include="LevelPieceFileMapping.h" />
-    <ClInclude Include="LevelPieceInfo.h" />
+    <ClInclude Include="LevelPieceFileData.h" />
     <ClInclude Include="LevelPieceRoot.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
     <ClInclude Include="LibRocketEventManagerSystem.h" />
@@ -250,7 +249,6 @@
     <ClCompile Include="LevelHandlerSystem.cpp" />
     <ClCompile Include="LevelInfo.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
-    <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LevelPieceRoot.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="LibRocketEventManagerSystem.cpp" />

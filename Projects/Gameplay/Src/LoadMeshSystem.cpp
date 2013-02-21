@@ -51,9 +51,11 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 		vector<ModelResource*>* models = createModels( jobInfo->getFileName(), 
 			MODELPATH,
 			jobInfo->isPrimitive());
+
 		// Root
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);
+
 		if (models->size()==1)
 			setUpRootCollision(entity, (*models)[0]);
 

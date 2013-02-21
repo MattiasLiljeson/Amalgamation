@@ -50,6 +50,8 @@ public:
 	Transform*  getTransform() const;
 	int			getTypeId() const;
 	const Transform* getChild(int p_inSlot) const;
+	bool		isChildSlotOccupied(int p_inSlot) const;
+	int			getMaxChildCount() const;
 	void		setChild(int p_inSlot, Transform* p_transform);
 	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
 	const AglOBB& getBoundingBox() const;
