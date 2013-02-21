@@ -292,16 +292,16 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			light.instanceData.lightDir[0] = forward.x;
 			light.instanceData.lightDir[1] = forward.y;
 			light.instanceData.lightDir[2] = forward.z;
-			light.instanceData.diffuse[0] = source->diffuse.x;
-			light.instanceData.diffuse[1] = source->diffuse.y;
-			light.instanceData.diffuse[2] = source->diffuse.z;
-			light.instanceData.specular[0] = source->specular.x;
-			light.instanceData.specular[1] = source->specular.y;
-			light.instanceData.specular[2] = source->specular.z;
-			light.instanceData.specular[3] = source->gloss;
-			light.instanceData.ambient[0] = source->ambient.x;
-			light.instanceData.ambient[1] = source->ambient.y;
-			light.instanceData.ambient[2] = source->ambient.z;
+			light.instanceData.color[0] = source->diffuse.x;
+			light.instanceData.color[1] = source->diffuse.y;
+			light.instanceData.color[2] = source->diffuse.z;
+			//light.instanceData.specular[0] = source->specular.x;
+			//light.instanceData.specular[1] = source->specular.y;
+			//light.instanceData.specular[2] = source->specular.z;
+			//light.instanceData.specular[3] = source->gloss;
+			//light.instanceData.ambient[0] = source->ambient.x;
+			//light.instanceData.ambient[1] = source->ambient.y;
+			//light.instanceData.ambient[2] = source->ambient.z;
 			if (source->type==LightCreationData::POINT)
 				light.instanceData.type = LightTypes::E_LightTypes_POINT;
 			else if (source->type==LightCreationData::SPOT)
@@ -312,7 +312,7 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			light.instanceData.attenuation[0] = source->attenuation.x;
 			light.instanceData.attenuation[1] = source->attenuation.y;
 			light.instanceData.attenuation[2] = source->attenuation.z;
-			light.instanceData.spotPower = source->power;	
+			light.instanceData.lightEnergy = source->power;
 			component->addLight(light);
 		}
 		p_entity->addComponent( ComponentType::LightsComponent, component );
