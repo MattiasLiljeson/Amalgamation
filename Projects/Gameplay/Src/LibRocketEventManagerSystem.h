@@ -40,6 +40,7 @@ namespace Rocket
 }
 class EventHandler;
 class GameState;
+class TcpClient;
 
 /**
 	@author		Peter Curry
@@ -49,7 +50,7 @@ class GameState;
 class LibRocketEventManagerSystem : public EntitySystem, public EventManager
 {
 public:
-	LibRocketEventManagerSystem();
+	LibRocketEventManagerSystem(TcpClient* p_client);
 	~LibRocketEventManagerSystem();
 
 	void initialize();
@@ -109,6 +110,7 @@ private:
 	Entity*								m_stateEntity;
 	GameState*							m_stateComp;
 	StateChange	m_localState;
+	TcpClient* m_client;
 };
 
 

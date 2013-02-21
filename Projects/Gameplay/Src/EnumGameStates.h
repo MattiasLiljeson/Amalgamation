@@ -1,6 +1,6 @@
 enum EnumGameStates
 {
-	MENU, LOBBY, INGAME, PAUSE, NUMSTATES
+	MENU, LOBBY, LOADING, INGAME, PAUSE, NUMSTATES
 };
 
 enum EnumGameDelta

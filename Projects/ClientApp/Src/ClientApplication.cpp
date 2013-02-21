@@ -289,7 +289,7 @@ void ClientApplication::initSystems()
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
-	m_world->setSystem( new LibRocketEventManagerSystem(), true );
+	m_world->setSystem( new LibRocketEventManagerSystem(m_client), true );
 	m_world->setSystem( new GameOptionsSystem() );
 
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so

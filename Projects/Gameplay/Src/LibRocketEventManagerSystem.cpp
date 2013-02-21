@@ -39,8 +39,11 @@
 #include "libRocketBackendSystem.h"
 #include "ClientConnectToServerSystem.h"
 #include "GameState.h"
+#include <TcpClient.h>
+#include <Packet.h>
+#include "PacketType.h"
 
-LibRocketEventManagerSystem::LibRocketEventManagerSystem()
+LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
 {
 	m_context = NULL;
@@ -50,6 +53,7 @@ LibRocketEventManagerSystem::LibRocketEventManagerSystem()
 	m_stateEntity	= NULL;
 	m_stateComp		= NULL;
 	m_localState	= NONE;
+	m_client = p_client;
 }
 
 LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
@@ -210,8 +214,10 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}*/
-			else if(values[0] == "join_game"){
-				m_stateComp->setStatesDelta(INGAME,ENTEREDTHISFRAME);
+			else if(values[0] == "start_game"){
+				Packet letsRollPacket((char)PacketType::LetsRoll);
+				m_client->sendPacket(letsRollPacket);
+				m_stateComp->setStatesDelta(LOADING,ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}
 		}

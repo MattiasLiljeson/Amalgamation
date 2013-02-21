@@ -42,7 +42,7 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
 		// Clears and hides all currently visible documents.
-		eventManagerSys->clearDocumentStack();
+		//eventManagerSys->clearDocumentStack();
 		
 		auto levelHandler = static_cast<LevelHandlerSystem*>(
 			m_world->getSystem(SystemType::LevelHandlerSystem));
@@ -56,10 +56,10 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 		InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
 			(m_world->getSystem(SystemType::InputBackendSystem));
 
-		if( state->getStateDelta(INGAME) == ENTEREDTHISFRAME){
+		if( state->getStateDelta(LOBBY) == ENTEREDTHISFRAME){
 			connectToNetworkAddress();
 			// Disable the menu background scene.
-			m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
+			//m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
 		}
 
 		if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){

@@ -651,6 +651,12 @@
     <ClInclude Include="LobbySystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ServerLobbySystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="NewlyConnectedPlayerPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1087,6 +1093,9 @@
     </ClCompile>
     <ClCompile Include="LobbySystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

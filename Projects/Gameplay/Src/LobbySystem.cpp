@@ -13,8 +13,8 @@ LobbySystem::LobbySystem() : EntitySystem (SystemType::LobbySystem),
 		m_players[i].ready = false;
 
 	}
-
-	NotifyRowAdd(m_tableName,0,MAXPLAYERS);
+	m_connectPlayers = 0;
+	//NotifyRowAdd(m_tableName,0,MAXPLAYERS);
 }
 
 LobbySystem::~LobbySystem()
@@ -51,7 +51,7 @@ int LobbySystem::GetNumRows( const Rocket::Core::String& table )
 {
 	if (table == m_tableName)
 	{
-		return MAXPLAYERS;
+		return m_connectPlayers;
 	}
 	return 0;
 }
@@ -69,4 +69,14 @@ void LobbySystem::initialize()
 void LobbySystem::updateRow( int p_row, const LobbyStats& p_stats )
 {
 
+}
+
+void LobbySystem::addNewPlayer( const NewlyConnectedPlayerPacket& p_packet )
+{
+	m_connectPlayers++;
+	m_players[p_packet.playerID].playerName = p_packet.playerName;
+	m_players[p_packet.playerID].ping = p_packet.playerID;
+	m_players[p_packet.playerID].ready = false;
+
+	NotifyRowAdd(m_tableName,p_packet.playerID,1);
 }

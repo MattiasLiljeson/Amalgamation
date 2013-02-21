@@ -102,11 +102,13 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="OnHitEffectBufferSystem.h" />
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
+    <ClInclude Include="ServerLobbySystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
@@ -271,6 +273,7 @@
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="OnHitEffectBufferSystem.cpp" />
     <ClCompile Include="OnHitScoreEffectPacket.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />

@@ -19,7 +19,7 @@
 		</div>
 		<div class="lowerPanel" id="buttons">
 			<button onclick="goto main_menu">Leave</button>
-			<button onclick="join_game">Ready</button>
+			<button onclick="start_game">Ready</button>
 		</div>
 
 	</body>

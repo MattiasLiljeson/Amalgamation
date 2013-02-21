@@ -17,6 +17,7 @@
 #include <AglQuaternion.h>
 #include <AglMatrix.h>
 #include <Windows.h>
+#include <string>
 
 using namespace std;
 
@@ -101,6 +102,7 @@ public:
 	Packet& operator << (AglMatrix& p_data);
 	Packet& operator << (AglQuaternion& p_data);
 	Packet& operator << (SYSTEMTIME p_data);
+	Packet& operator << (string p_data);
 	
 	Packet& operator >> (bool&	p_data);
 	Packet& operator >> (char&	 p_data);
@@ -114,6 +116,7 @@ public:
 	Packet& operator >> (AglVector3& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
 	Packet& operator >> (SYSTEMTIME& p_data);
+	Packet& operator >> (string& p_data);
 
 	///-----------------------------------------------------------------------------------
 	/// Provide a way to set the raw byte data from the outside. Needed for testing!

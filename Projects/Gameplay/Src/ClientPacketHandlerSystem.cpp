@@ -11,6 +11,7 @@
 #include <Packet.h>
 #include <SystemType.h>
 #include <TcpClient.h>
+#include "LobbySystem.h"
 
 // Components
 #include "AudioBackendSystem.h"
@@ -61,6 +62,7 @@
 #include "ParticleUpdatePacket.h"
 #include "ModuleTriggerPacket.h"
 #include "ModuleStateChangePacket.h"
+#include "NewlyConnectedPlayerPacket.h"
 
 // Debug
 #include "EntityFactory.h"
@@ -385,6 +387,13 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				DEBUGWARNING(( "Unhandled module has changed!" ));
 			}
 			
+		}
+		else if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
+		{
+			NewlyConnectedPlayerPacket newlyConnected;
+			newlyConnected.unpack(packet);
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+				addNewPlayer(newlyConnected);
 		}
 		else
 		{

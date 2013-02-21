@@ -35,6 +35,7 @@
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
+#include "NewlyConnectedPlayerPacket.h"
 
 #include <Globals.h>
 #include "EntityFactory.h"
@@ -64,25 +65,11 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		int id = m_server->popNewDisconnection();
 
-		// When a client is disconnecting, then all other clients must know this.
-		// At this point, the disconnecting client is not in the active connections list.
-//		Packet dcPacket;
-//		dcPacket 
-//			<< (char)PacketType::ClientDisconnect
-//			<< (char)id; 
-//			
-//		m_server->broadcastPacket( Packet() );
-
 		for (unsigned int index = 0; index < p_entities.size(); index++)
 		{
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent( p_entities[index],
 					ComponentType::NetworkSynced ) );
-
-			// HACK: This deletion is what caused the magical crashes all the time.
-			// This should be solved as soon as possible.
-			//if (netSync->getNetworkIdentity() == id)
-			//	m_world->deleteEntity(p_entities[index]);
 		}
 
 		// If a client has disconnected, then the clientinfo should be removed?
@@ -199,42 +186,47 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.playerID = m_numOfConnectedPlayers;
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, m_numOfConnectedPlayers);
-	m_world->addEntity(newShip);
-	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
-		ComponentType::Transform));
+	NewlyConnectedPlayerPacket connectedPacket;
+	connectedPacket.playerID = m_numOfConnectedPlayers;
+	connectedPacket.playerName = "Player" + toString(m_numOfConnectedPlayers);
+	m_server->broadcastPacket( connectedPacket.pack() );
 
-	// also create a camera
-	Entity* playerCam = m_world->createEntity();
-	Component* component = new LookAtEntity(newShip->getIndex(),
-		AglVector3(0,7,-38),
-		13.0f,
-		10.0f,
-		3.0f,
-		40.0f);
-	playerCam->addComponent( ComponentType::LookAtEntity, component );
-	playerCam->addComponent( ComponentType::Transform, new Transform( 
-		transformComp->getMatrix() ) );
-	// default tag is follow
-	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-	playerCam->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
-	m_world->addEntity(playerCam);
-
-	/************************************************************************/
-	/* Send the information about the new clients ship to all other players */
-	/************************************************************************/
-	EntityCreationPacket data;
-	data.entityType		= static_cast<char>(EntityType::Ship);
-	data.owner			= p_newlyConnectedClientId;
-	data.playerID		= m_numOfConnectedPlayers;
-	data.networkIdentity= newShip->getIndex();
-	data.translation	= transformComp->getTranslation();
-	data.rotation		= transformComp->getRotation();
-	data.scale			= transformComp->getScale();
-	data.miscData		= playerCam->getIndex();
-
-	m_server->broadcastPacket(data.pack());
+//	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, m_numOfConnectedPlayers);
+//	m_world->addEntity(newShip);
+//	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
+//		ComponentType::Transform));
+//
+//	// also create a camera
+//	Entity* playerCam = m_world->createEntity();
+//	Component* component = new LookAtEntity(newShip->getIndex(),
+//		AglVector3(0,7,-38),
+//		13.0f,
+//		10.0f,
+//		3.0f,
+//		40.0f);
+//	playerCam->addComponent( ComponentType::LookAtEntity, component );
+//	playerCam->addComponent( ComponentType::Transform, new Transform( 
+//		transformComp->getMatrix() ) );
+//	// default tag is follow
+//	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+//	playerCam->addComponent( ComponentType::NetworkSynced, 
+//		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
+//	m_world->addEntity(playerCam);
+//
+//	/************************************************************************/
+//	/* Send the information about the new clients ship to all other players */
+//	/************************************************************************/
+//	EntityCreationPacket data;
+//	data.entityType		= static_cast<char>(EntityType::Ship);
+//	data.owner			= p_newlyConnectedClientId;
+//	data.playerID		= m_numOfConnectedPlayers;
+//	data.networkIdentity= newShip->getIndex();
+//	data.translation	= transformComp->getTranslation();
+//	data.rotation		= transformComp->getRotation();
+//	data.scale			= transformComp->getScale();
+//	data.miscData		= playerCam->getIndex();
+//
+//	m_server->broadcastPacket(data.pack());
 }
 
 Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)

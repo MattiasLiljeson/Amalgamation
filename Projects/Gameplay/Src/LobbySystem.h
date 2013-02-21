@@ -3,6 +3,7 @@
 #include <Rocket/Controls/DataSource.h>
 #include <string>
 #include <Globals.h>
+#include "NewlyConnectedPlayerPacket.h"
 
 using namespace Rocket::Controls;
 
@@ -40,8 +41,10 @@ public:
 
 	void initialize();
 	void updateRow(int p_row, const LobbyStats& p_stats);
+	void addNewPlayer(const NewlyConnectedPlayerPacket& p_packet);
 
 private:
 	const char* m_tableName;
+	int m_connectPlayers;
 	LobbyStats m_players[MAXPLAYERS];
 };

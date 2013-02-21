@@ -27,6 +27,7 @@ public:
 		EntityDeletion,
 		ClientDisconnect,
 		WelcomePacket,
+		NewlyConnectedPlayerPacket,
 		UpdateClientStats,
 		PlayerWinLose,
 		SpawnSoundEffect, // NOTE: (Johan) Should rather be replaced than be used more. (Move sound to client only)
@@ -50,6 +51,7 @@ public:
 		CameraControlPacket,
 		AnimationUpdatePacket,
 		SlotParticleEffectPacket,
+		LetsRoll, // Tells the server to start loading state.
 	};
 
 };
