@@ -12,6 +12,9 @@ d s piece begin
 d s m_pieceAssemblageFileName alienChamberClient.asd
 d s piece end
 d s piece begin
-d s m_pieceAssemblageFileName mineChamberServer.asd
+d s m_pieceAssemblageFileName mineChamberClient.asd
+d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName ancientChamberClient.asd
 d s piece end
 d s m_plugPiece plugPieceClient.asd
