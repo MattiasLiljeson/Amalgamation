@@ -179,3 +179,13 @@ void LevelPiece::deleteMainTransform()
 	delete m_transform;
 	m_transform = NULL;
 }
+
+int LevelPiece::getMaxChildCount() const
+{
+	return m_children.size();
+}
+
+bool LevelPiece::isChildSlotOccupied( int p_inSlot ) const
+{
+	return m_childSlotsOccupied[p_inSlot];
+}

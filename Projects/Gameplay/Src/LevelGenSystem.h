@@ -54,7 +54,7 @@ private:
 	int popIntVector(vector<int>& p_vector);
 	
 	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
-	Entity* createEntity(LevelPiece* p_piece, int p_pieceInstanceId);
+	Entity* createEntity(LevelPiece* p_piece);
 	 // Used to generate a bounding sphere around the chamber.
 	Entity* createDebugSphereEntity(LevelPiece* p_piece);
 
@@ -64,7 +64,9 @@ private:
 
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
-	void addEndPlug(Transform* p_atConnector);
+	void finalizeLevelPiece(LevelPiece* p_piece);
+	void addEndPlugs(LevelPiece* p_atPiece);
+	Entity* addEndPlug(Transform* p_atConnector);
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 

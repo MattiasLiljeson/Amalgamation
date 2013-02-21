@@ -152,6 +152,9 @@ void LevelGenSystem::inserted( Entity* p_entity )
 
 		//delete resourcesFromModel;
 	}
+	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
+	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
+		&endPlug->assemblageName);
 
 	// Temp: This is to make sure the system works.
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -236,7 +239,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	}
 }
 
-Entity* LevelGenSystem::createEntity( LevelPiece* p_piece, int p_pieceInstanceId )
+Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 {
 	Entity* entity = m_entityFactory->entityFromRecipe( 
 		m_levelInfo->getFileDataFromId( p_piece->getTypeId() )->assemblageName );
@@ -310,19 +313,11 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			int pieceType = m_levelInfo->getRandomFileData()->id;
 			
 			// Create a level piece
-			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
-			//									 &m_meshHeaders[pieceType], 
-			//									 new Transform() );
-			// Debug: Create all pieces in order using second piece type!
-			//LevelPiece* piece = new LevelPiece( &m_pieceTypes[pieceType], 
-			//									&m_meshHeaders[pieceType],
-			//									new Transform() );
 			LevelPiece* piece = new LevelPiece( pieceType, m_modelResources[pieceType],
 												new Transform(), p_generation);
 
 			int slot = popIntVector(freeConnectSlots);
 			piece->connectTo(p_targetPiece, slot);
-			//piece->connectTo(p_targetPiece, i);
 
 			// Verify that it isn't colliding with previous level pieces.
 			bool colliding = false;
@@ -369,15 +364,6 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 
 }
 
-void LevelGenSystem::addEndPlug( Transform* p_atConnector )
-{
-	// Connector is assumed to be in world space!
-	//int cubeId = m_graphicsBackend->getMeshId("P_cube");
-
-	//createAndAddEntity( m_modelFileMapping.getEndPlugId(), p_atConnector, 
-	//	p_atConnector->getScale() * AglVector3::one());
-}
-
 int LevelGenSystem::popIntVector( vector<int>& p_vector )
 {
 	int i = -1;
@@ -393,9 +379,11 @@ void LevelGenSystem::createLevelEntities()
 {
 	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
-		Entity* e = createEntity(m_generatedPieces[i], i);
+		addEndPlugs(m_generatedPieces[i]);
+
+		Entity* e = createEntity(m_generatedPieces[i]);
 		m_world->addEntity(e);
-		e = createDebugSphereEntity(m_generatedPieces[i]);
+		//e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
 }
@@ -424,5 +412,55 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 		m_worldMax = AglVector3::maxOf(m_worldMax, corners[i]);
 	}
 }
+
+Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
+{
+	Entity* entity = m_entityFactory->entityFromRecipe( 
+		m_levelInfo->getEndPlugFileData()->assemblageName );
+
+	auto transform = static_cast<Transform*>(
+		entity->getComponent(ComponentType::Transform));
+
+	AglVector3 tempScale = AglVector3::one();
+	if (!transform)
+	{
+		transform = new Transform();
+		entity->addComponent( transform );
+	}
+	else
+	{
+		tempScale = transform->getScale();
+	}
+
+	// Set proper rotation and scale of the plug piece
+	transform->setMatrix(p_atConnector->getMatrix());
+	transform->setForwardDirection( -transform->getForward() );
+	transform->setScale(tempScale);
+
+	entity->addComponent(new StaticProp(m_levelInfo->getEndPlugFileData()->id, true));
+
+	return entity;
+}
+
+void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
+{
+	for (unsigned int i = 0; i < p_atPiece->getMaxChildCount(); i++)
+	{
+		if (!p_atPiece->isChildSlotOccupied(i))
+		{
+			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i));
+			m_world->addEntity(plug);
+		}
+	}
+}
+
+void LevelGenSystem::finalizeLevelPiece( LevelPiece* p_piece )
+{
+	Entity* e = createEntity(p_piece);
+	m_world->addEntity(e);
+	addEndPlugs(p_piece);
+}
+
+
 
 

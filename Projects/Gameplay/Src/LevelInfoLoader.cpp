@@ -33,6 +33,10 @@ void LevelInfoLoader::initialize()
 		entityFactory->readAssemblageFile(LEVELPIECESPATH + fileData[i]->assemblageFileName,
 			&fileData[i]->assemblageName);
 	}
+	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
+	entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
+		&endPlug->assemblageName);
+
 	m_world->addEntity(e); 
 }
 

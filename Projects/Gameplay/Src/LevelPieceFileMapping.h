@@ -24,7 +24,7 @@ struct LevelPieceFileData
 	string	modelFileName;
 	string	assemblageName;
 	string	assemblageFileName;
-	int		weight; // Weight not yet implemented
+	int		weight;
 };
 
 class LevelPieceFileMapping
