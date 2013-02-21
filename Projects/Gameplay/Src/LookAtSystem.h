@@ -25,4 +25,7 @@ public:
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
+private:
+	void adaptDistanceBasedOnModules(Entity* p_entity);
+
 };
