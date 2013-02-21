@@ -48,7 +48,7 @@ void OnHitEffectBufferSystem::process()
 			}
 
 
-			m_queue_entity.pop();
+			m_queue_netowner.pop();
 		}
 	}
 }
