@@ -407,7 +407,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				data.networkIdentity);
 
 			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
-			anim->m_time = 0;
+			anim->m_isPlaying = data.shouldPlay;
 		}
 		else
 		{

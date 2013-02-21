@@ -103,6 +103,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 				{
 					//Start playing animation
 					startAnimation(p_entities[i]);
+					gun->animationPlaying = true;
 
 				}
 
@@ -113,6 +114,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 				{
 					//Stop playing animation
 					stopAnimation(p_entities[i]);
+					gun->animationPlaying = false;
 				}
 			}
 			updateRays(p_entities[i]);

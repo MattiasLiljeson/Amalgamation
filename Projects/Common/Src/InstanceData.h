@@ -44,4 +44,7 @@ struct InstanceData
 	void setNumberOfActiveGradientLayers(float p_value){
 		flags[0] = p_value;
 	}
+	void setNumberOfActiveBones(float p_value){
+		flags[1] = p_value;
+	}
 };
