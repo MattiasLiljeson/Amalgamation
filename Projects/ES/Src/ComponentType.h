@@ -75,6 +75,7 @@ public:	//Enums
 		LevelInfo,
 		GameState,
 		Gradient,
+		SpeedBuffer,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

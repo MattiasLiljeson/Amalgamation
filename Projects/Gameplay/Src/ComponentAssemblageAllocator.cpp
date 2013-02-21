@@ -31,6 +31,7 @@
 #include "LevelPieceRoot.h"
 #include "LevelInfo.h"
 #include "EnvironmentValues.h"
+#include "SpeedBuffer.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -62,4 +63,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<LevelPieceRoot>();
 	handle<LevelInfo>();
 	handle<EnvironmentValues>();
+	handle<SpeedBuffer>();
 }

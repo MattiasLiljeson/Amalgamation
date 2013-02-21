@@ -114,6 +114,7 @@
     <ClInclude Include="ShieldPlate.h" />
     <ClInclude Include="ShieldPlatingSystem.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
+    <ClInclude Include="ShipParticleSystemUpdater.h" />
     <ClInclude Include="SkeletalAnimation.h" />
     <ClInclude Include="SkeletalAnimationSystem.h" />
     <ClInclude Include="SlotParticleEffectPacket.h" />
@@ -181,6 +182,8 @@
     <ClInclude Include="SpawnSoundEffectPacket.h" />
     <ClInclude Include="SpeedBoosterModule.h" />
     <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
+    <ClInclude Include="SpeedBuffer.h" />
+    <ClInclude Include="SpeedBufferUpdaterSystem.h" />
     <ClInclude Include="SpeedFovAdjustSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
@@ -323,6 +326,7 @@
     <ClCompile Include="LibRocketSystemInterface.cpp" />
     <ClCompile Include="ShipModulesControllerSystem.cpp" />
     <ClCompile Include="ShipModulesTrackerSystem.cpp" />
+    <ClCompile Include="ShipParticleSystemUpdater.cpp" />
     <ClCompile Include="SimpleEventPacket.cpp" />
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
@@ -334,6 +338,8 @@
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />
     <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
     <ClCompile Include="SpeedBoosterModule.cpp" />
+    <ClCompile Include="SpeedBuffer.cpp" />
+    <ClCompile Include="SpeedBufferUpdaterSystem.cpp" />
     <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
