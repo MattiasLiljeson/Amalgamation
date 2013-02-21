@@ -39,6 +39,7 @@
 #include "StaticProp.h"
 #include <vector>
 #include "EntityFactory.h"
+#include "ServerDynamicObjectsSystem.h"
 
 
 
@@ -326,6 +327,8 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		case ServerStates::LOBBY:
 			if(packetType == (char)PacketType::LetsRoll){
 				stateSystem->setQueuedState(ServerStates::LOADING);
+
+
 			}
 			break;
 		case ServerStates::LOADING:
@@ -337,9 +340,11 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				/************************************************************************/ 
 				NetworkSynced* netSync;
 				Transform* transform;
-				for( unsigned int i=0; i<p_entities.size(); i++ )
+				vector<Entity*> dynamicEntities = static_cast<ServerDynamicObjectsSystem*>(
+					m_world->getSystem(SystemType::ServerDynamicObjectsSystem))->getActiveEntities();
+				for( unsigned int i=0; i<dynamicEntities.size(); i++ )
 				{
-					int entityId = p_entities[i]->getIndex();
+					int entityId = dynamicEntities[i]->getIndex();
 					netSync = (NetworkSynced*)m_world->getComponentManager()->
 						getComponent( entityId, ComponentType::NetworkSynced );
 
