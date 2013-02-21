@@ -14,7 +14,7 @@
 GameStatsSystem::GameStatsSystem()
 	: EntitySystem(SystemType::GameStatsSystem)
 {
-	m_displayInfoPanel = false;
+	m_infoPanelVisible = false;
 	m_infoPanel = NULL;
 	m_infoPanelDoc = -1;
 }
@@ -80,22 +80,23 @@ void GameStatsSystem::process()
 
 	if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
 	{
-		if (!m_displayInfoPanel)
+		if (!m_infoPanelVisible)
 		{
-			m_displayInfoPanel = !m_displayInfoPanel;
+			m_infoPanelVisible = !m_infoPanelVisible;
 			rocketBackend->showDocument(m_infoPanelDoc);
+			m_infoPanel->updateTheVisualInfoPanel();
 		}
 	}
 	else
 	{
-		if (m_displayInfoPanel)
+		if (m_infoPanelVisible)
 		{
-			m_displayInfoPanel = !m_displayInfoPanel;
+			m_infoPanelVisible = !m_infoPanelVisible;
 			rocketBackend->hideDocument(m_infoPanelDoc);
 		}
 	}
 
-	if (m_displayInfoPanel)
+	if (m_infoPanelVisible)
 	{
 		auto timerSystem = static_cast<TimerSystem*>(
 			m_world->getSystem(SystemType::TimerSystem));
