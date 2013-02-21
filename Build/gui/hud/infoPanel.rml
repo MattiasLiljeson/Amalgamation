@@ -1,13 +1,15 @@
 <rml>
 	<head>
-		<link type="text/template" href="template.rml"/>
+		<link type="text/rcss" href="infoPanel.rcss"/>
 		<title>Datagrid</title>
 	</head>
-	<body template="window">
+	<body id="infoPanel">
+		<div id="context">
 			<datagrid source="playerstats.infopanel">
 				<col fields="playerName" width="50%">Player:</col>
 				<col fields="score" width="30%">Score:</col>
 				<col fields="ping" width="20%">Ping:</col>
 			</datagrid>
+		</div>
 	</body>
 </rml>
