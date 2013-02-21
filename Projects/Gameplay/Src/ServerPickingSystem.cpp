@@ -680,7 +680,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(
 				ComponentType::ShipModule));
 
-			ModuleHelper::FindParentShip(m_world,&parentShip,&parentModule);
+			ModuleHelper::FindParentShip(m_world,&parentShip,parentModule);
 
 			if (parentShip != rayShip)
 				return false;

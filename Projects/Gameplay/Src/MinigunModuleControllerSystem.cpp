@@ -50,7 +50,7 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			p_entities[i]->getComponent(ComponentType::ShipModule));
 
 		// get owner for damage set
-		int ownerId = ModuleHelper::FindParentShipClientId(m_world, &module);
+		int ownerId = ModuleHelper::FindParentShipClientId(m_world, module);
 
 		handleParticleSystem(p_entities[i]);
 		handleLaserSight(p_entities[i]);
