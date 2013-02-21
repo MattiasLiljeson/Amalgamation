@@ -452,9 +452,9 @@ Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
 	Entity* entity = entityFromRecipe( "ServerMinigun" );
 
-	ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
-	psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
-	entity->addComponent( psServerComp );
+	//ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+	//psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+	//entity->addComponent( psServerComp );
 
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 
