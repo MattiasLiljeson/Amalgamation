@@ -140,7 +140,7 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 		if(shipModule != NULL && shipModule->m_parentEntity > -1){
 			
 			Entity* parentShip = m_world->getEntity(shipModule->m_parentEntity);
-			ModuleHelper::FindParentShip(m_world,&parentShip, &shipModule);
+			ModuleHelper::FindParentShip(m_world,&parentShip, shipModule);
 
 			if(parentShip != NULL){
 				RenderInfo* parentShipRenderInfo = getRenderInfo(parentShip);

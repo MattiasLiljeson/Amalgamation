@@ -202,7 +202,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 
 	// store owner data
 	StandardRocket* rocketModule = new StandardRocket();
-	rocketModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, &p_module);
+	rocketModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, p_module);
 
 	entity->addComponent(ComponentType::StandardRocket, rocketModule);
 
