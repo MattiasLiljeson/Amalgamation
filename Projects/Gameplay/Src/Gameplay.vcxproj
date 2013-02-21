@@ -108,6 +108,7 @@
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
+    <ClInclude Include="ServerGameState.h" />
     <ClInclude Include="ServerLobbySystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />

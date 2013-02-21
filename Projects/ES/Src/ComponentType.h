@@ -94,6 +94,7 @@ public:	//Enums
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		ServerGameState,
 		LightsComponent,
 		MeshOffsetTransform,
 		SkeletalAnimation,
