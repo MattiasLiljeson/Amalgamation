@@ -29,4 +29,5 @@ public:
 public:
 	int networkIdentity;
 	bool shouldPlay;
+	float playSpeed;
 };

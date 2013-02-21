@@ -408,6 +408,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
 			anim->m_isPlaying = data.shouldPlay;
+			anim->m_playSpeed = data.playSpeed;
 		}
 		else
 		{

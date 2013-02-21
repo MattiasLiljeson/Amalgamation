@@ -19,7 +19,7 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 	{
 		SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
 		if (anim->m_isPlaying)
-			anim->m_time += dt;
+			anim->m_time += dt*anim->m_playSpeed;
 
 		float maxTime = anim->m_scene->getAnimation(0)->getMaxTime();
 		float minTime = anim->m_scene->getAnimation(0)->getMinTime();
