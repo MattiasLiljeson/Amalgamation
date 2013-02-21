@@ -29,6 +29,7 @@ public:	//Enums
 		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
+		DestroyOnParticlesDeath,
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
@@ -70,7 +71,6 @@ public:	//Enums
 		DebugMove,
 		uvRectCrop,
 		PlayerState,
-		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
 		LevelInfo,
 		GameState,

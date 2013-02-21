@@ -112,6 +112,7 @@
 #include <EnvironmentSystem.h>
 #include <SpeedBufferUpdaterSystem.h>
 #include <ShipParticleSystemUpdater.h>
+#include <EditSphereSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -126,6 +127,7 @@ using namespace std;
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
+#include <DestroyOnParticlesDeathSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -304,6 +306,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
+	m_world->setSystem( new EditSphereSystem() );
 
 	/************************************************************************/
 	/* Player    															*/
@@ -412,6 +415,11 @@ void ClientApplication::initSystems()
 	/* Animation															*/
 	/************************************************************************/
 	m_world->setSystem( new SkeletalAnimationSystem(), true );
+
+	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem(), true );
 
 	/************************************************************************/
 	/* Graphics representer													*/

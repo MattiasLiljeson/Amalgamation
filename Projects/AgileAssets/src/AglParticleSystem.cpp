@@ -303,7 +303,7 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			for (unsigned int i = 0; i < m_header.particlesPerSpawn; i++)
 			{
 				AglStandardParticle p(requestSpawnPoint(), requestSpawnVelocity(), m_header.particleSize,
-										0, 0);
+										m_header.spawnAngularVelocity, 0);
 				m_particles.push_back(p);
 			}
 			m_timeSinceSpawn -= (1.0f / m_header.spawnFrequency);
@@ -327,4 +327,9 @@ void AglParticleSystem::setFadeOutStart(float p_fadeOutStart)
 void AglParticleSystem::setFadeInStop(float p_fadeInStop)
 {
 	m_header.fadeInStop = p_fadeInStop;
+}
+
+const float AglParticleSystem::getAge() const
+{
+	return m_age;
 }

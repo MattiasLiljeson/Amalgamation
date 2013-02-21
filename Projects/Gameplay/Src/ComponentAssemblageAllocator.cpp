@@ -32,6 +32,7 @@
 #include "LevelInfo.h"
 #include "EnvironmentValues.h"
 #include "SpeedBuffer.h"
+#include "DestroyOnParticlesDeath.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -64,4 +65,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<LevelInfo>();
 	handle<EnvironmentValues>();
 	handle<SpeedBuffer>();
+	handle<DestroyOnParticlesDeath>();
 }

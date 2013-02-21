@@ -67,6 +67,7 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 						SourceData source={scene,NULL,NULL,-1,string("")};
 						readAndStoreEmpties(source,model,currentInstance.transform,
 							&currentInstance,instanceInstructions); 
+						readAndStoreParticleSystems(source,model);
 					}
 				}
 				else
@@ -84,6 +85,7 @@ vector<ModelResource*>* ModelBaseFactory::createModelResources( const string& p_
 						SourceData source={scene,NULL,NULL,-1,string("")};
 						readAndStoreEmpties(source,root,currentInstance.transform,
 											&currentInstance,instanceInstructions); 
+						readAndStoreParticleSystems(source,root);
 					}
 					//
 					ModelResourceCollection* modelresourceCollection = m_modelResourceCache->getResource(currentInstance.filename);
@@ -278,7 +280,7 @@ void ModelBaseFactory::createAndAddModel( ModelResourceCollection* p_modelCollec
 		model->transform,
 		p_instanceData,
 		p_outInstanceInstructions);
-	readAndStoreParticleSystems(p_source,model);
+	// readAndStoreParticleSystems(p_source,model); no support for particle parents yet
 
 
 	//Store bsp tree
@@ -427,11 +429,8 @@ void ModelBaseFactory::readAndStoreParticleSystems( SourceData& p_source,
 			ParticleSystemInstruction psIntr;
 			psIntr.particleSystem = *ps;
 			psIntr.textureFileName = p_source.scene->getName(ps->getHeader().textureNameIndex,
-															 true);
-			if (p_source.modelNumber==0) // add support for particle parent?
-			{
-				p_model->particleSystems.m_collection.push_back(psIntr);
-			}
+																true);
+			p_model->particleSystems.m_collection.push_back(psIntr);
 		}
 	}
 }

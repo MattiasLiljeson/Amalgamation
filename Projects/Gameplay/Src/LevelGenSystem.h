@@ -2,7 +2,7 @@
 
 #include <EntitySystem.h>
 #include <vector>
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include <ModelBaseFactory.h>
 #include <string>
 
@@ -36,8 +36,6 @@ public:
 
 	void initialize();
 
-	void processEntities( const vector<Entity*>& p_entities );
-
 	void clearGeneratedData();
 
 	void run();
@@ -54,7 +52,7 @@ private:
 	int popIntVector(vector<int>& p_vector);
 	
 	//void createAndAddEntity(int p_type, Transform* p_transform, const AglOBB& p_obb);
-	Entity* createEntity(LevelPiece* p_piece, int p_pieceInstanceId);
+	Entity* createEntity(LevelPiece* p_piece);
 	 // Used to generate a bounding sphere around the chamber.
 	Entity* createDebugSphereEntity(LevelPiece* p_piece);
 
@@ -64,19 +62,19 @@ private:
 
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
-	void addEndPlug(Transform* p_atConnector);
+	void addEndPlugs(LevelPiece* p_atPiece);
+	Entity* addEndPlug(Transform* p_atConnector);
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
 	virtual void inserted( Entity* p_entity );
 	virtual void removed( Entity* p_entity );
 
-	//ModelBaseFactory m_unmanagedModelFactory;
 	EntityFactory*	m_entityFactory;
 	LevelInfo* m_levelInfo; // This is a component, be cautious!
 
 	vector<ModelResource*>	m_modelResources;
-	LevelPieceFileMapping	m_modelFileMapping;
+	ModelResource*			m_endPlugModelResource;
 
 	vector<LevelPiece*> m_generatedPieces;
 

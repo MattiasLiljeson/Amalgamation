@@ -33,7 +33,8 @@ PixelIn VS(VertexIn p_input)
     [unroll]
 	for (int i = 0; i < 4; i++)
 	{
-		float4x4 bonemat = getMatrix(p_input.indices1[i]);
+		int index = p_input.indices1[i] + p_input.flags[1]*p_input.instanceId;
+		float4x4 bonemat = getMatrix(index);
 	
 		p1 += (p_input.weights1[i] * mul(pos, bonemat)).xyz;
 		n += p_input.weights1[i] * mul(norm, bonemat);

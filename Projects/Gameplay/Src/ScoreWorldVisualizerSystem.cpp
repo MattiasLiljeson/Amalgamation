@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "ParticleSystemsComponent.h"
 #include "LoadMesh.h"
+#include "LookAtEntity.h"
+#include "DestroyOnParticlesDeath.h"
 
 ScoreWorldVisualizerSystem::ScoreWorldVisualizerSystem() : 
 	EntitySystem( SystemType::ScoreWorldVisualizerSystem)
@@ -55,7 +57,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 			cam->getComponent( ComponentType::Transform ) );
 		if (camTransform)
 		{
-			cameraUp = camTransform->getUp();
+			//cameraUp = camTransform->getUp();
 			cameraRot = camTransform->getRotation();
 		}
 	}
@@ -64,43 +66,64 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		cameraRot,p_data.transform.GetTranslation());
 	Transform* transform = new Transform( p_data.transform );
 	effect->addComponent( ComponentType::Transform, transform );
+	LookAtEntity* lookat = new LookAtEntity(cam->getIndex());
+	effect->addComponent(lookat);
 
 
 	ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
+
+	effect->addComponent(ComponentType::DestroyOnParticlesDeath,
+						 new DestroyOnParticlesDeath());
+
 	// add an emitter for each number in data
 	string scorestr = toString(p_data.score);
 	unsigned int size = scorestr.size();
 
 	float w = 616.0f;
-	float h = 8.0f;
+	float h = 16.0f;
 	float ww = 8.0f;
 	int no = w/ww;
 	int offset = 16;
 
-	float oN=offset/w;
+	float offsetN=(offset*ww)/w;
+	float pixel=1.0f/w;
 	float hN=h/h;
 	float wwN=ww/w;
 
 	for (unsigned int i=0;i<size;i++)
 	{
+		float numberoffset = (float)i*0.1f;
 		AglParticleSystem particleSystem;
-		AglVector3 offset = AglVector3( 5.0f*((float)size/2.0f-(float)i),0.0f,0.0f);
+		AglVector3 offset = AglVector3( 5.0f*(-(float)size+(float)i),-30*numberoffset,0.0f);
+		particleSystem.setParticleSize(AglVector2(5.0f,5.0f));
 		// offset.transform(cameraRot);
 		particleSystem.setSpawnPoint(offset);
-		particleSystem.setSpawnDirection(cameraUp);
-		particleSystem.setSpawnFrequency(3.0f);
-		particleSystem.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+		particleSystem.setSpawnDirection(AglVector3::up());
+		particleSystem.setSpawnFrequency(10.0f);
+		particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
 		// particleSystem.set
-		particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_LOCAL);
-		particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_GLOBAL );
-		//particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
-		particleSystem.setSpawnSpeed(3.0f);
+		particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+		particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_LOCAL );
+		particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
+		particleSystem.setParticleAge(0.5f+numberoffset);
+		particleSystem.setSpawnSpeed(15.0f+60*numberoffset);
+		particleSystem.setFadeInStop(0.15f+numberoffset);
+		particleSystem.setFadeOutStart(0.18f+numberoffset);
+		if (p_data.score<0)
+			particleSystem.setColor(AglVector4(1.0f,0.0f,0.0f,0.0f));
 		// Create an instruction for creation
 		ParticleSystemInstruction particleInstruction;
 		particleInstruction.textureFileName = "text.png";
 		particleInstruction.particleSystem = particleSystem;
-		unsigned int idx = min((unsigned int)9,(unsigned int)atoi(scorestr.substr(i,1).c_str()));
-		particleInstruction.uvRect = AglVector4(oN+idx*wwN,0.0f,oN+wwN+idx*wwN,hN);
+		int idx = 0;
+		string character = scorestr.substr(i,1);
+		// get the index for the character
+		if (character=="-")
+			idx=-3; // the minus sign lies before the numbers
+		else
+			idx = min(9,atoi(character.c_str()));
+		// calculate rect for character
+		particleInstruction.uvRect = AglVector4(offsetN+idx*wwN,0.0f,offsetN-pixel+wwN+idx*wwN,hN);
 		// add instruction
 		particleEmitters->addParticleSystemInstruction(particleInstruction);
 	}

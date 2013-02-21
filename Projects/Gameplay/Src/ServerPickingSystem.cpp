@@ -15,6 +15,7 @@
 #include "ModuleHelper.h"
 #include "ModuleStateChangePacket.h"
 #include "SlotParticleEffectPacket.h"
+#include "EditSphereUpdatePacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -177,8 +178,8 @@ void ServerPickingSystem::setReleased(int p_index)
 				if (shipModule)
 				{
 					// get parent
-					if (shipModule->m_lastParentWhenAttached!=-1)
-						parentShip = m_world->getEntity(shipModule->m_lastParentWhenAttached);
+					if (shipModule->m_lastShipEntityWhenAttached!=-1)
+						parentShip = m_world->getEntity(shipModule->m_lastShipEntityWhenAttached);
 
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
@@ -189,7 +190,7 @@ void ServerPickingSystem::setReleased(int p_index)
 			//Release the picked module
 			m_pickComponents[i].setLatestPick(-1);
 			m_pickComponents[i].m_active = false;
-			if (shipModule) shipModule->m_lastParentWhenAttached = -1; // module is now totally detached from parent ship
+			if (shipModule) shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
 
 			// set an effect
 			if (moduleTransform && parentShip && shipModule)
@@ -582,22 +583,19 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		
 
 		// set an effect
-		if (shipModule->m_lastParentWhenAttached == -1) // only if not attached/moved before
+		if (shipModule->m_lastShipEntityWhenAttached == -1) // only if not attached/moved before
 			setScoreEffect( ship, moduleTransform, shipModule->m_value);
 
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
 
 		shipModule->m_parentEntity = target->getIndex();
-		shipModule->m_lastParentWhenAttached = target->getIndex();
+		shipModule->m_lastShipEntityWhenAttached = ship->getIndex();
 
 		moduleBody->setParentId(shipBody->m_id);
 
 		p_ray.m_latestAttached = module->getIndex();
 
-		/************************************************************************/
-		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
-		/************************************************************************/
 		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 			module->getComponent(ComponentType::NetworkSynced));
 		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
@@ -629,10 +627,22 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.active = false;
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
-		//Add parent change event to get correct gradient colors
+
+		//Send a packet back to the client telling him how the edit sphere should be oriented
+		ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+		EditSphereUpdatePacket editSphereUpdate;
+		AglBoundingSphere bs = sms->findEditSphere(shipNetworkSynced->getNetworkOwner());
+		editSphereUpdate.m_offset = bs.position;
+		editSphereUpdate.m_radius = bs.radius;
+		m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
+
+
+		/************************************************************************/
+		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+		/************************************************************************/
 		ModuleStateChangePacket moduleChanged;
 		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
-		moduleChanged.currentParrent = parentNetworkSynced->getNetworkIdentity();
+		moduleChanged.currentParrent = shipNetworkSynced->getNetworkIdentity();
 
 		m_server->broadcastPacket(moduleChanged.pack());
 	}
@@ -756,6 +766,13 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 			slotPacket.active = true;
 			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+
+			//Send a packet back to the client telling him how the edit sphere should be oriented
+			EditSphereUpdatePacket editSphereUpdate;
+			AglBoundingSphere bs = sms->findEditSphere(shipNetworkSynced->getNetworkOwner());
+			editSphereUpdate.m_offset = bs.position;
+			editSphereUpdate.m_radius = bs.radius;
+			m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
 		}
 	}
 	return true;

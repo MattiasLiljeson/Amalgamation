@@ -4,7 +4,7 @@
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include <queue>
 #include "EntityUpdatePacket.h"
 #include "ParticleSystemCreationInfo.h"
@@ -66,7 +66,6 @@ private:
 
 private:
 	TcpClient* m_tcpClient;
-	LevelPieceFileMapping m_levelPieceMapping;
 	float m_currentPing;
 
 	unsigned int m_totalNetworkSynced;

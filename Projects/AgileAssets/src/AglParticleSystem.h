@@ -39,6 +39,7 @@ public:
 	const AglParticleSystemHeader& getHeader();
 	vector<AglStandardParticle>* getParticlesPtr();
 	const vector<AglStandardParticle>& getParticles();
+	const float getAge() const;
 
 	void setSpawnPoint(AglVector3 p_spawnPoint);
 	void setParticleAge(float p_age);

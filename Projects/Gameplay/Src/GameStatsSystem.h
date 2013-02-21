@@ -29,9 +29,9 @@ public:
 	void updateStats(const UpdateClientStatsPacket* p_packet);
 
 	virtual void process();
-protected:
+
 private:
 	int						m_infoPanelDoc;
-	bool					m_displayInfoPanel;
+	bool					m_infoPanelVisible;
 	DisplayGameStats*		m_infoPanel;
 };

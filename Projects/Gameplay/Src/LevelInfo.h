@@ -27,6 +27,9 @@ public:
 	LevelPieceFileData* getRandomFileData() const; // NOTE: Uses weight
 	LevelPieceFileData* getStartFileData() const;
 	LevelPieceFileData* getFileDataFromId(int p_id) const;
+	
+	LevelPieceFileData* getEndPlugFileData() const;
+
 	int		getBranchCount() const;
 	bool	doRandomStartRotation() const;
 
@@ -36,10 +39,11 @@ private:
 private:
 	vector<LevelPieceFileData*> m_fileData;
 	vector<int>					m_weightData;
+	LevelPieceFileData*			m_endPlug;
+
 	int		m_branchCount;
 	bool	m_randomStartRotation;
 	int		m_startPieceId;
-	string	m_plugPiece;
 
 	static ComponentRegister<LevelInfo> s_reg;
 };

@@ -17,17 +17,16 @@
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-struct AnimationUpdatePacket : public Packetizer
+struct EditSphereUpdatePacket : public Packetizer
 {
 public:
-	AnimationUpdatePacket();
+	EditSphereUpdatePacket();
 
 	Packet pack();
 
 	void unpack( Packet& p_packet );
 
 public:
-	int networkIdentity;
-	bool shouldPlay;
-	float playSpeed;
+	AglVector3 m_offset;
+	float m_radius;
 };

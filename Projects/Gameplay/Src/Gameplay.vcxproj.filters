@@ -584,12 +584,6 @@
     <ClInclude Include="OnHitEffectBufferSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="LevelPieceInfo.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelPieceFileMapping.h">
-      <Filter>Systems\Level Gen</Filter>
-    </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
@@ -665,6 +659,21 @@
     </ClInclude>
     <ClInclude Include="ShipParticleSystemUpdater.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceFileData.h">
+      <Filter>Systems\Level Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeath.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1048,9 +1057,6 @@
     <ClCompile Include="OnHitEffectBufferSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="LevelPieceFileMapping.cpp">
-      <Filter>Systems\Level Gen</Filter>
-    </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level Gen</Filter>
     </ClCompile>
@@ -1117,6 +1123,18 @@
     </ClCompile>
     <ClCompile Include="ShipParticleSystemUpdater.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeath.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

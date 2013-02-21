@@ -180,8 +180,8 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			offset = transform;
 		}
 		else // repoint id storage; only add shape id to body component if not compound
-			bodyId = &(body->m_id); 
-		
+			bodyId = &(body->m_id);
+
 		// Add shape
 		if (init->m_type == BodyInitData::BOX)
 		{
@@ -269,6 +269,16 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 		else
 		{
 			//Not Supported - Remove the body
+			string err = "Warning: PhysicsSystem::initializeEntity\nInvalid BodyInitData type["
+				+ toString(init->m_type)
+				+ "] OR invalid modelResource(address)["
+				+ toString(init->m_modelResource)
+				+ "] at entity with this name["
+				+ p_entity->getName()
+				+ "]. If this is a chamber, it is OK!\n";
+
+			DEBUGPRINT((err.c_str()));
+
 			p_entity->removeComponent(ComponentType::PhysicsBody);
 			p_entity->removeComponent(ComponentType::BodyInitData);
 			p_entity->applyComponentChanges();

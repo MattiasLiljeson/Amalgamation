@@ -27,6 +27,7 @@ public:	//Enums
 		DebugMovementSystem,
 		MoveShipLightsSystem,
 		NetworkUpdateSystem,
+		DestroyOnParticlesDeathSystem,
 		InputSystem,
 		PhysicsSystem,
 		RenderPrepSystem,
@@ -100,7 +101,7 @@ public:	//Enums
 		SpeedFovAdjustSystem,
 		ShipParticleSystem,
 		SpeedBufferUpdaterSystem,
-
+		EditSphereSystem,
 		NUM_SYSTEM_TYPES
 	};
 

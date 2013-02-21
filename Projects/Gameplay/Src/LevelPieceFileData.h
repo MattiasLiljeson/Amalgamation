@@ -1,31 +1,27 @@
 #pragma once
 
-#include <Component.h>
+#include <vector>
+#include <string>
+#include <Globals.h>
+using namespace std;
 
 // =======================================================================================
-//                                      LevelPieceInfo
+//                                      LevelPieceFileData
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # LevelPieceInfo
+/// # LevelPieceFileData
 /// Detailed description.....
-/// Created on: 13-2-2013 
+/// Created on: 18-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class LevelPieceInfo : public Component
+struct LevelPieceFileData
 {
-public:
-	LevelPieceInfo(int p_pieceInstanceId)
-		: Component(ComponentType::LevelPieceInfo)
-	{
-		m_pieceInstanceId = p_pieceInstanceId;
-	}
-	int getPieceInstanceId() const
-	{
-		return m_pieceInstanceId;
-	}
-private:
-	int m_pieceInstanceId;
+	int		id;
+	string	modelFileName;
+	string	assemblageName;
+	string	assemblageFileName;
+	int		weight;
 };

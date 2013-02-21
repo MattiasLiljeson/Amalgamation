@@ -44,7 +44,7 @@
 #include "ParticleSystemEmitter.h"
 #include "GradientComponent.h"
 #include "LevelInfoLoader.h"
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
@@ -358,6 +358,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 		entity->applyComponentChanges();
 	}
+
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
@@ -451,9 +452,9 @@ Entity* EntityFactory::createMinigunServer(EntityCreationPacket p_packet)
 	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Minigun/ServerMinigun.asd" );
 	Entity* entity = entityFromRecipe( "ServerMinigun" );
 
-	ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
-	psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
-	entity->addComponent( psServerComp );
+	//ParticleSystemServerComponent* psServerComp = new ParticleSystemServerComponent();
+	//psServerComp->addParticleSystem( ParticleSystemData( "minigun" ) );
+	//entity->addComponent( psServerComp );
 
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(entity->getIndex(), -1, EntityType::MinigunModule));
 

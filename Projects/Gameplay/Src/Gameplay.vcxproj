@@ -14,6 +14,10 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="DestroyOnParticlesDeath.h" />
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
+    <ClInclude Include="EditSphereSystem.h" />
+    <ClInclude Include="EditSphereUpdatePacket.h" />
     <ClInclude Include="EnvironmentSystem.h" />
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
@@ -73,8 +77,7 @@
     <ClInclude Include="LevelHandlerSystem.h" />
     <ClInclude Include="LevelInfo.h" />
     <ClInclude Include="LevelPiece.h" />
-    <ClInclude Include="LevelPieceFileMapping.h" />
-    <ClInclude Include="LevelPieceInfo.h" />
+    <ClInclude Include="LevelPieceFileData.h" />
     <ClInclude Include="LevelPieceRoot.h" />
     <ClInclude Include="LibRocketBackendSystem.h" />
     <ClInclude Include="LibRocketEventManagerSystem.h" />
@@ -223,8 +226,12 @@
     <ClCompile Include="ConnectionVisualizerSystem.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="CullingSystem.cpp" />
+    <ClCompile Include="DestroyOnParticlesDeath.cpp" />
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EditSphereSystem.cpp" />
+    <ClCompile Include="EditSphereUpdatePacket.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityDeletionPacket.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
@@ -249,7 +256,6 @@
     <ClCompile Include="LevelHandlerSystem.cpp" />
     <ClCompile Include="LevelInfo.cpp" />
     <ClCompile Include="LevelPiece.cpp" />
-    <ClCompile Include="LevelPieceFileMapping.cpp" />
     <ClCompile Include="LevelPieceRoot.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
     <ClCompile Include="LibRocketEventManagerSystem.cpp" />
