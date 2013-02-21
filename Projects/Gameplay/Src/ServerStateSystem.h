@@ -36,7 +36,7 @@ public:
 
 	void initialize();
 
-	void setStatesDelta( ServerStates p_state );
+	void setQueuedState( ServerStates p_state );
 	EnumGameDelta getStateDelta( ServerStates p_state );
 	ServerStates getCurrentState();
 

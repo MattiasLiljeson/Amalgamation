@@ -6,7 +6,7 @@ ServerStateSystem::ServerStateSystem(ServerStates p_firstState) : EntitySystem(S
 		m_states.push_back(new State( static_cast<ServerStates>(i)));
 	}
 	m_currentState = (int)ServerStates::INIT;
-	setStatesDelta(p_firstState);
+	setQueuedState(p_firstState);
 }
 
 ServerStateSystem::~ServerStateSystem()
@@ -36,7 +36,7 @@ void ServerStateSystem::initialize()
 {
 
 }
-void ServerStateSystem::setStatesDelta( ServerStates p_state){
+void ServerStateSystem::setQueuedState( ServerStates p_state){
 	m_queued.stateEnum = p_state;
 }
 
