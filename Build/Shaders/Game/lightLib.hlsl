@@ -120,7 +120,7 @@ float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 n
 	float quad = rangeSqr / (rangeSqr + quadAtt * d*d); 
 
 
-	// Quadratic falloff near edge of light
+	// Log falloff near edge of light
 	float rangeClamped = (d / light.range);
 	float falloff = 1 - (rangeClamped * rangeClamped * rangeClamped);
 	falloff = saturate(falloff);

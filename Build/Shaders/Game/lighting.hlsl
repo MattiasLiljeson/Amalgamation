@@ -129,7 +129,7 @@ float4 PS( VertexOut p_input ) : SV_TARGET
 	}
 	lightCol *= shadowCoeff;
 	
-	//return float4( 0, 0, 0, 0 );
 	return float4( lightCol, 0.1f );
+	//return diffuseColor;
 }
 

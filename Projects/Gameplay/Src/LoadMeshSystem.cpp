@@ -54,6 +54,9 @@ void LoadMeshSystem::processEntities( const vector<Entity*>& p_entities )
 		// Root
 		Transform* rootTransformData=NULL;
 		setRootData(entity,(*models)[0],rootTransformData);
+		if (models->size()==1)
+			setUpRootCollision(entity, (*models)[0]);
+
 		// Children
 		if (models->size()>1)
 			createChildrenEntities(models,entity);

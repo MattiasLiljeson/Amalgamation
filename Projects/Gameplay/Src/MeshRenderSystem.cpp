@@ -43,6 +43,10 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();
 	}
+	for(unsigned int i=0; i<m_instanceListsTess.size(); i++ ){
+		m_instanceListsTess[i].clear();
+	}
+
 	for(unsigned int i=0; i<m_boneMatrices.size(); i++ ){
 		m_boneMatrices[i].clear();
 	}
@@ -73,6 +77,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		if( m_instanceLists.size() <= static_cast<unsigned int>(renderInfo->m_meshId) )
 		{
 			m_instanceLists.resize( renderInfo->m_meshId + 1 );
+			m_instanceListsTess.resize(renderInfo->m_meshId + 1);
 			m_boneMatrices.resize( renderInfo->m_meshId + 1 );
 		}
 		
@@ -84,7 +89,11 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		// Finally, add the entity to the instance vector
 		InstanceData instanceData = transform->getInstanceDataRef();
 		fillInstanceData(&instanceData,p_entities[i],renderInfo);
-		m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
+
+		if (renderInfo->m_shouldBeTesselated)
+			m_instanceListsTess[renderInfo->m_meshId].push_back( instanceData );
+		else
+			m_instanceLists[renderInfo->m_meshId].push_back( instanceData );
 
 		//Find animation transforms
 		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>
@@ -164,7 +173,12 @@ void MeshRenderSystem::render()
 		if (!m_instanceLists[meshIdx].empty())
 		{
 			m_gfxBackend->getGfxWrapper()->renderMesh( meshIdx, 
-				&m_instanceLists[meshIdx], &m_boneMatrices[meshIdx]); // process a mesh
+				&m_instanceLists[meshIdx], &m_boneMatrices[meshIdx], false); // process a mesh
+		}
+		if (!m_instanceListsTess[meshIdx].empty())
+		{
+			m_gfxBackend->getGfxWrapper()->renderMesh( meshIdx, 
+				&m_instanceListsTess[meshIdx], &m_boneMatrices[meshIdx], true); // process a tesselated mesh
 		}
 	}
 }

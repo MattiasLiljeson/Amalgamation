@@ -17,7 +17,7 @@ void NetsyncDirectMapperSystem::inserted( Entity* p_entity )
 	int networkIdentity = netSync->getNetworkIdentity();
 	if(networkIdentity >= (int)m_networkEntityIndices.size())
 	{
-		m_networkEntityIndices.resize((unsigned int)networkIdentity + 1);
+		m_networkEntityIndices.resize((unsigned int)networkIdentity + 1, -1);
 	}
 	m_networkEntityIndices[networkIdentity] = p_entity->getIndex();
 }
@@ -42,7 +42,11 @@ bool NetsyncDirectMapperSystem::checkProcessing()
 
 Entity* NetsyncDirectMapperSystem::getEntity( int p_networkIdentity )
 {
-	if(p_networkIdentity < (int)m_networkEntityIndices.size() && p_networkIdentity > -1)
+	if(p_networkIdentity > -1 &&
+		p_networkIdentity < (int)m_networkEntityIndices.size() &&
+		m_networkEntityIndices.at(p_networkIdentity) > -1)
+	{
 		return m_world->getEntity(m_networkEntityIndices.at(p_networkIdentity));
+	}
 	return NULL;
 }

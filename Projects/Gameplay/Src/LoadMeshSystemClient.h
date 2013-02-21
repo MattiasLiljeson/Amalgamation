@@ -36,6 +36,7 @@ private:
 		const string& p_filePath,
 		bool p_isPrimitive);
 
+	virtual void setUpRootCollision(Entity* p_entity, ModelResource* p_modelResource);
 
 	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 
 		BodyInitData* p_rootRigidBodyData,

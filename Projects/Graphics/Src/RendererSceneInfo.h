@@ -1,6 +1,7 @@
 #pragma once
 #include <AglVector2.h>
 #include <AglVector3.h>
+#include <AglVector4.h>
 #include <AglMatrix.h>
 
 // =======================================================================================
@@ -22,6 +23,10 @@ struct RendererSceneInfo
 	AglVector3 cameraPos;
 	AglVector3 cameraForward;
 	AglVector3 cameraUp;
+	AglVector3 ambientColor;
+	AglVector3 fogColor;
+	float fogNearPlaneClosenessPercentage;
+	float fogFarPlaneClosenessPercentage;
 	AglMatrix viewProjInv;
 	AglVector2 renderTargetDimensions;
 	float farPlane;

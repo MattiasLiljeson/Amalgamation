@@ -37,6 +37,28 @@ vector<ModelResource*>* LoadMeshSystemClient::createModels( const string& p_file
 	return m_gfxBackend->getGfxWrapper()->createModelsFromFile(p_filename,&p_filePath,p_isPrimitive);
 }
 
+void LoadMeshSystemClient::setUpRootCollision(Entity* p_entity, ModelResource* p_modelResource)
+{
+	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(p_entity->getComponent(ComponentType::MeshOffsetTransform));
+	if (!offset)
+	{
+		offset = new MeshOffsetTransform(p_modelResource->meshHeader.transform);
+		p_entity->addComponent(ComponentType::MeshOffsetTransform, offset);
+	}
+
+	//Setup bounding sphere for frustum culling
+	AglBoundingSphere sphere = p_modelResource->meshHeader.boundingSphere;
+
+	//Correct? No? Seems like this should not be done
+	//sphere.position.transform(offset->offset.inverse());
+
+	BoundingSphere* bs = new BoundingSphere(sphere);
+	p_entity->addComponent(ComponentType::BoundingSphere, bs);
+
+	BoundingBox* bb = new BoundingBox(p_modelResource->meshHeader.minimumOBB);
+	p_entity->addComponent(ComponentType::BoundingBox, bb);
+}
+
 void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity, 
 											   ModelResource* p_modelResource, 
 											   BodyInitData* p_rootRigidBodyData, 
