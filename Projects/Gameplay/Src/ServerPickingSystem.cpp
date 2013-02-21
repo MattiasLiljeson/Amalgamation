@@ -15,6 +15,7 @@
 #include "ModuleHelper.h"
 #include "ModuleStateChangePacket.h"
 #include "SlotParticleEffectPacket.h"
+#include "EditSphereUpdatePacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -626,6 +627,16 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.active = false;
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
+
+		//Send a packet back to the client telling him how the edit sphere should be oriented
+		ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+		EditSphereUpdatePacket editSphereUpdate;
+		AglBoundingSphere bs = sms->findEditSphere(shipNetworkSynced->getNetworkOwner());
+		editSphereUpdate.m_offset = bs.position;
+		editSphereUpdate.m_radius = bs.radius;
+		m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
+
+
 		/************************************************************************/
 		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
 		/************************************************************************/
@@ -755,6 +766,13 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 			slotPacket.active = true;
 			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+
+			//Send a packet back to the client telling him how the edit sphere should be oriented
+			EditSphereUpdatePacket editSphereUpdate;
+			AglBoundingSphere bs = sms->findEditSphere(shipNetworkSynced->getNetworkOwner());
+			editSphereUpdate.m_offset = bs.position;
+			editSphereUpdate.m_radius = bs.radius;
+			m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
 		}
 	}
 	return true;

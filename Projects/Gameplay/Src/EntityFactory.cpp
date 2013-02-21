@@ -358,6 +358,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 		entity->applyComponentChanges();
 	}
+
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)

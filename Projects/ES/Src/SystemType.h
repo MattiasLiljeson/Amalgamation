@@ -98,6 +98,7 @@ public:	//Enums
 		CullingSystem,
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
+		EditSphereSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -77,6 +77,8 @@
 #include "SpawnExplosionPacket.h"
 #include "AnimationUpdatePacket.h"
 #include "SkeletalAnimation.h"
+#include "EditSphereUpdatePacket.h"
+#include "EditSphereSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -409,6 +411,14 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
 			anim->m_isPlaying = data.shouldPlay;
 			anim->m_playSpeed = data.playSpeed;
+		}
+		else if (packetType == (char)PacketType::EditSphereUpdatePacket)
+		{
+			EditSphereUpdatePacket update;
+			update.unpack(packet);
+			EditSphereSystem* editsystem = static_cast<EditSphereSystem*>
+				(m_world->getSystem(SystemType::EditSphereSystem));
+			editsystem->setSphere(update.m_offset, update.m_radius);
 		}
 		else
 		{

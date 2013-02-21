@@ -12,6 +12,8 @@
 #include "Transform.h"
 #include "ModuleHelper.h"
 #include "SlotParticleEffectPacket.h"
+#include "EditSphereUpdatePacket.h"
+#include "ShipManagerSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
@@ -246,6 +248,14 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 		slotPacket.active = true;
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
+
+		//Send a packet back to the client telling him how the edit sphere should be oriented
+		ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+		EditSphereUpdatePacket editSphereUpdate;
+		AglBoundingSphere bs = sms->findEditSphere(shipNetworkSynced->getNetworkOwner());
+		editSphereUpdate.m_offset = bs.position;
+		editSphereUpdate.m_radius = bs.radius;
+		m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
 	}
 }
 void ShipModulesControllerSystem::addHighlightEvent(int p_slot, int p_id, int p_status)

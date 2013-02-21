@@ -110,6 +110,7 @@
 #include <MenuBackgroundSceneSystem.h>
 #include <LevelInfoLoader.h>
 #include <EnvironmentSystem.h>
+#include <EditSphereSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -303,6 +304,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( scoreVisSystem, true );
 	ConnectionVisualizerSystem* cvs = new ConnectionVisualizerSystem();
 	m_world->setSystem(cvs, true);
+	EditSphereSystem* ess = new EditSphereSystem();
+	m_world->setSystem(ess, true);
 
 	/************************************************************************/
 	/* Player    															*/

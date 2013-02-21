@@ -14,6 +14,8 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="EditSphereSystem.h" />
+    <ClInclude Include="EditSphereUpdatePacket.h" />
     <ClInclude Include="EnvironmentSystem.h" />
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
@@ -222,6 +224,8 @@
     <ClCompile Include="CullingSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EditSphereSystem.cpp" />
+    <ClCompile Include="EditSphereUpdatePacket.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityDeletionPacket.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
