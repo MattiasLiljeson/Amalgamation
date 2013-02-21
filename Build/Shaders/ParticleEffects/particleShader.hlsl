@@ -50,8 +50,10 @@ void GS(point Particle gIn[1],
 			inout TriangleStream<GS_OUT> triStream)
 {		
 	float4 position = float4( gIn[0].Position.xyz, 1.0 );
-	if( particleSpace == 1 ) { // 1 = LOCAL
+	if( particleSpace == 1 ) // 1 = LOCAL
+	{ 
 		position = mul( position, worldMat );
+		gIn[0].Velocity = mul(float4(gIn[0].Velocity, 0.0f), worldMat).xyz;
 	}
 
 	float4x4 W;

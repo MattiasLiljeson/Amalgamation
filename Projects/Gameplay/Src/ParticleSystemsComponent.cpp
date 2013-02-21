@@ -149,7 +149,7 @@ void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base )
 			newPos.transform( p_base );
 
 			ps->setSpawnPoint( newPos );
-			ps->setSpawnDirection( -p_base.GetForward() );
+			ps->setSpawnDirection( p_base.GetForward() );
 		}
 	}
 }
@@ -163,7 +163,7 @@ void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base, int p_index )
 		newPos.transform( p_base );
 
 		ps->setSpawnPoint( newPos );
-		ps->setSpawnDirection( -p_base.GetForward() );
+		ps->setSpawnDirection( p_base.GetForward() );
 	}
 }
 
