@@ -1,5 +1,5 @@
 #include "LevelInfo.h"
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include <random>
 
 ComponentRegister<LevelInfo> LevelInfo::s_reg("LevelInfo");
@@ -72,9 +72,16 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 			m_endPlug = new LevelPieceFileData();
 			p_initData[i].getDataAsString(&m_endPlug->assemblageFileName);
 		}
+		else if (p_initData[i].dataName == "m_plugModel")
+		{
+			p_initData[i].getDataAsString(&m_endPlug->modelFileName);
+		}
 	}
 	if (m_endPlug)
-		m_endPlug->id = m_fileData.size();
+	{
+		m_endPlug->id		= m_fileData.size();
+		m_endPlug->weight	= 0;
+	}
 }
 
 const vector<LevelPieceFileData*>& LevelInfo::getFileData() const

@@ -2,7 +2,7 @@
 
 #include <EntitySystem.h>
 #include <vector>
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include <ModelBaseFactory.h>
 #include <string>
 
@@ -36,8 +36,6 @@ public:
 
 	void initialize();
 
-	void processEntities( const vector<Entity*>& p_entities );
-
 	void clearGeneratedData();
 
 	void run();
@@ -64,7 +62,6 @@ private:
 
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
-	void finalizeLevelPiece(LevelPiece* p_piece);
 	void addEndPlugs(LevelPiece* p_atPiece);
 	Entity* addEndPlug(Transform* p_atConnector);
 
@@ -73,12 +70,11 @@ private:
 	virtual void inserted( Entity* p_entity );
 	virtual void removed( Entity* p_entity );
 
-	//ModelBaseFactory m_unmanagedModelFactory;
 	EntityFactory*	m_entityFactory;
 	LevelInfo* m_levelInfo; // This is a component, be cautious!
 
 	vector<ModelResource*>	m_modelResources;
-	LevelPieceFileMapping	m_modelFileMapping;
+	ModelResource*			m_endPlugModelResource;
 
 	vector<LevelPiece*> m_generatedPieces;
 

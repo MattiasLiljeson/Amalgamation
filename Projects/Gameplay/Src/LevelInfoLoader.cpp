@@ -1,6 +1,6 @@
 #include "LevelInfoLoader.h"
 #include "LevelInfo.h"
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include "EntityFactory.h"
 #include <string>
 using namespace std;
