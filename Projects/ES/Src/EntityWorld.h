@@ -172,6 +172,17 @@ public:
 	/**
 	 * Will add a system to this world.
 	 *  
+	 * @param p_system The system to add.
+	 * @param p_enabled Wether or not this system will be processed by World.process().
+	 * Defaults to true.
+	 * @return The added system.
+	 */
+	EntitySystem* setSystem( EntitySystem* p_system,
+		bool p_enabled = true );
+
+	/**
+	 * Will add a system to this world.
+	 *  
 	 * @param p_type Type of system.
 	 * @param p_system The system to add.
 	 * @param p_enabled Wether or not this system will be processed by World.process().
@@ -193,8 +204,6 @@ public:
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
 		bool p_enabled = true );
 
-	EntitySystem* setSystem( EntitySystem* p_system,
-		bool p_enabled = true );
 
 	/**
 	 * Remove the specified system from the manager.

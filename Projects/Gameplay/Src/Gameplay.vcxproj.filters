@@ -651,6 +651,15 @@
     <ClInclude Include="EnvironmentSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedBufferUpdaterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBuffer.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipParticleSystemUpdater.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
     <ClInclude Include="EditSphereSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
@@ -1105,6 +1114,15 @@
     </ClCompile>
     <ClCompile Include="EnvironmentSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBufferUpdaterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBuffer.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipParticleSystemUpdater.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
     <ClCompile Include="EditSphereSystem.cpp">
       <Filter>Systems\Gameplay</Filter>

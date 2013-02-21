@@ -207,6 +207,12 @@ SystemManager* EntityWorld::getSystems()
 	return m_systemManager;
 }
 
+EntitySystem* EntityWorld::setSystem( EntitySystem* p_system,
+									 bool p_enabled )
+{
+	return setSystem( p_system->getSystemType(), p_system, p_enabled );
+}
+
 EntitySystem* EntityWorld::setSystem( SystemType p_type, EntitySystem* p_system,
 		bool p_enabled )
 {
@@ -219,12 +225,6 @@ EntitySystem* EntityWorld::setSystem( SystemType::SystemTypeIdx p_typeIdx, Entit
 	p_system->setWorld( this );
 	//m_systemsBag.push_back( p_system );
 	return m_systemManager->setSystem( p_typeIdx, p_system, p_enabled );
-}
-
-EntitySystem* EntityWorld::setSystem( EntitySystem* p_system,
-									 bool p_enabled )
-{
-	return setSystem( p_system->getSystemType(), p_system, p_enabled );
 }
 
 void EntityWorld::deleteSystem( SystemType p_type )

@@ -15,6 +15,7 @@
     <ClInclude Include="RandomUtil.h">
       <Filter>RandomUtil</Filter>
     </ClInclude>
+    <ClInclude Include="NumericBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />

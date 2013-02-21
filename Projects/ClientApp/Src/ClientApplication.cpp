@@ -110,6 +110,8 @@
 #include <MenuBackgroundSceneSystem.h>
 #include <LevelInfoLoader.h>
 #include <EnvironmentSystem.h>
+#include <SpeedBufferUpdaterSystem.h>
+#include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
 
 // Helpers
@@ -258,8 +260,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* General controlling													*/
 	/************************************************************************/
-	LookAtSystem* lookAtSystem = new LookAtSystem();
-	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+	m_world->setSystem( new LookAtSystem() );
+	m_world->setSystem( new SpeedBufferUpdaterSystem() );
 	
 	/************************************************************************/
 	/* Input																*/
@@ -301,12 +303,10 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
-	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
-	m_world->setSystem( scoreVisSystem, true );
-	ConnectionVisualizerSystem* cvs = new ConnectionVisualizerSystem();
-	m_world->setSystem(cvs, true);
-	EditSphereSystem* ess = new EditSphereSystem();
-	m_world->setSystem(ess, true);
+	m_world->setSystem( new ScoreWorldVisualizerSystem() );
+	m_world->setSystem( new ConnectionVisualizerSystem() );
+	m_world->setSystem( new ShipParticleSystemUpdater() );
+	m_world->setSystem( new EditSphereSystem() );
 
 	/************************************************************************/
 	/* Player    															*/
@@ -325,6 +325,7 @@ void ClientApplication::initSystems()
 	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics,
 		slotInput);
 	m_world->setSystem( shipEditController, true);
+
 
 	/************************************************************************/
 	/* Hierarchy															*/

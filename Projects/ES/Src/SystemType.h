@@ -99,6 +99,8 @@ public:	//Enums
 		CullingSystem,
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
+		ShipParticleSystem,
+		SpeedBufferUpdaterSystem,
 		EditSphereSystem,
 		NUM_SYSTEM_TYPES
 	};
