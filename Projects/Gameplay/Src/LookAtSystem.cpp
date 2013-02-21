@@ -7,6 +7,7 @@
 #include "ValueClamp.h"
 #include "PhysicsBody.h"
 #include "MeshOffsetTransform.h"
+#include "ShipManagerSystem.h"
 
 LookAtSystem::LookAtSystem() : 
 EntitySystem( SystemType::LookAtSystem, 2,
@@ -32,6 +33,14 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 
 	for(unsigned int i=0; i<p_entities.size(); i++ )
 	{
+		LookAtMainCamera_TAG* lookAtMainCamera = static_cast<LookAtMainCamera_TAG*>(
+			p_entities[i]->getComponent( ComponentType::TAG_LookAtMainCamera) );
+
+		if (lookAtMainCamera)
+		{
+			adaptDistanceBasedOnModules(p_entities[i]);
+		}
+
 
 		Transform* transform = static_cast<Transform*>(
 			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
@@ -155,4 +164,26 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 		delete targetTransform;
 	}
+}
+
+void LookAtSystem::adaptDistanceBasedOnModules(Entity* p_entity)
+{
+	LookAtEntity* lookAt= static_cast<LookAtEntity*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity) );
+
+	ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+
+	AglBoundingSphere bs = sms->findEditSphere(m_world->getEntity(lookAt->getEntityId()));
+
+	float dt = m_world->getDelta();
+
+	float orbitdist = (1-dt) * lookAt->getOrbitDistance() + dt*bs.radius*3;
+	lookAt->setOrbitDistance(orbitdist);
+
+	AglVector3 followdir = lookAt->getFollowPositionOffset();
+	float followdist = followdir.length();
+	followdir.normalize();
+
+	followdist = (1-dt) * followdist + dt*bs.radius*3;
+	lookAt->setFollowPositionOffset(followdir*followdist);
 }

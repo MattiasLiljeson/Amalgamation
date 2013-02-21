@@ -87,6 +87,7 @@ public:	//Enums
 		TAG_MyShip,
 		TAG_MainCamera,
 		TAG_ShadowCamera,
+		TAG_LookAtMainCamera,
 		// -------------------
 	
 		/************************************************************************/
