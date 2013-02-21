@@ -75,6 +75,8 @@
 #include "SlotParticleEffectPacket.h"
 #include "ConnectionVisualizerSystem.h"
 #include "SpawnExplosionPacket.h"
+#include "AnimationUpdatePacket.h"
+#include "SkeletalAnimation.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -394,6 +396,18 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EntityFactory* factory = static_cast<EntityFactory*>
 				(m_world->getSystem(SystemType::EntityFactory));
 			factory->createExplosion(data);
+		}
+		else if (packetType == (char)PacketType::AnimationUpdatePacket)
+		{
+			AnimationUpdatePacket data;
+			data.unpack(packet);
+
+			Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.networkIdentity);
+
+			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
+			anim->m_time = 0;
 		}
 		else
 		{
