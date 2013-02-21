@@ -192,7 +192,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		{
 			wantsToExit = true;
 		}
-		else if( m_localState == NOTCHANGED)
+		else if( m_localState == (int)EnumGameDelta::NOTCHANGED)
 		{
 			if (values[0] == "connectToServer")
 			{
@@ -207,7 +207,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 					m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
 				sys->setConnectionAddress(server_address, server_port);
-				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
+				m_stateComp->setStatesDelta(GameStates::LOBBY,EnumGameDelta::ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}
 			/*else if(p_value == "join_lobby"){
@@ -217,7 +217,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			else if(values[0] == "start_game"){
 				Packet letsRollPacket((char)PacketType::LetsRoll);
 				m_client->sendPacket(letsRollPacket);
-				m_stateComp->setStatesDelta(LOADING,ENTEREDTHISFRAME);
+				m_stateComp->setStatesDelta(GameStates::LOADING,EnumGameDelta::ENTEREDTHISFRAME);
 				m_localState = THISFRAME;
 			}
 		}
@@ -242,8 +242,8 @@ void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_enti
 				break;
 			case LibRocketEventManagerSystem::PREVIOUSFRAME:
 				//Reset the delta to zero
-				for (unsigned int i = 0 ; i < EnumGameStates::NUMSTATES; i++){
-					m_stateComp->setStatesDelta(static_cast<EnumGameStates>(i),NOTCHANGED);
+				for (int i = 0 ; i < static_cast<int>(GameStates::NUMSTATES); i++){
+					m_stateComp->setStatesDelta(static_cast<GameStates>(i),EnumGameDelta::NOTCHANGED);
 				}
 				m_localState = NONE;
 				break;

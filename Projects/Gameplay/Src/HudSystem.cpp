@@ -30,7 +30,7 @@ void HudSystem::processEntities( const vector<Entity*>& p_entities )
 		auto comp = static_cast<GameState*>(p_entities[0]->getComponent(
 			ComponentType::GameState));
 
-		if(comp->getStateDelta(INGAME) != 0){
+		if(comp->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME){
 			m_backend->showDocument(m_hudIndex);
 
 			setHUDData(SCORE,"-1");

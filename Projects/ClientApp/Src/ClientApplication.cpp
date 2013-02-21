@@ -535,7 +535,7 @@ void ClientApplication::initEntities()
 	m_world->addEntity( entity );
 
 	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::GameState,new GameState(MENU));
+	entity->addComponent(ComponentType::GameState,new GameState(GameStates::MENU));
 	m_world->addEntity(entity);
 
 	//ParticleEmitters* ps = new ParticleEmitters();
