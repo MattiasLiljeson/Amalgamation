@@ -595,9 +595,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		p_ray.m_latestAttached = module->getIndex();
 
-		/************************************************************************/
-		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
-		/************************************************************************/
 		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 			module->getComponent(ComponentType::NetworkSynced));
 		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
@@ -629,10 +626,12 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.active = false;
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
-		//Add parent change event to get correct gradient colors
+		/************************************************************************/
+		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+		/************************************************************************/
 		ModuleStateChangePacket moduleChanged;
 		moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
-		moduleChanged.currentParrent = parentNetworkSynced->getNetworkIdentity();
+		moduleChanged.currentParrent = shipNetworkSynced->getNetworkIdentity();
 
 		m_server->broadcastPacket(moduleChanged.pack());
 	}
