@@ -65,7 +65,7 @@ public:
 	void mapSceneInfo();
 
 	void renderMesh(unsigned int p_meshId,vector<InstanceData>* p_instanceList,
-		vector<AglMatrix>* p_boneMatrices);
+		vector<AglMatrix>* p_boneMatrices, bool p_tesselate);
 
 	///-----------------------------------------------------------------------------------
 	/// Set the current rasterizer state. By default it will allow to be overriden by the 

@@ -52,6 +52,7 @@ public:
 		AnimationUpdatePacket,
 		SlotParticleEffectPacket,
 		LetsRoll, // Tells the server to start loading state.
+		SpawnExplosionPacket,
 	};
 
 };

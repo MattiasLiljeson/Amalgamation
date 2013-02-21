@@ -142,6 +142,7 @@ public:
 	{
 		 return &conpointLength;
 	}
+	void RestartAllParticleSystems();
 };
 
 #endif

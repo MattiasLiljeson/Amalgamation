@@ -42,6 +42,12 @@ d s m_pieceAssemblageFileName mineChamberServer.asd
 d s m_pieceModelName World_Mine.agl
 d i m_pieceWeight 10
 d s piece end
+# Piece 5
+d s piece begin
+d s m_pieceAssemblageFileName ancientChamberServer.asd
+d s m_pieceModelName ancientchamber.agl
+d i m_pieceWeight 10
+d s piece end
 # Starting piece of this generator [0..N] where N is the amount of pieces above that will be loaded.
 d i m_startPieceId 0
 # End piece to plug connection points with.

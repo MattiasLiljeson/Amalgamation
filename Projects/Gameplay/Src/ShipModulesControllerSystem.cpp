@@ -108,7 +108,7 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 					m->applyDamage();
 					if (m->m_health <= 0)
 					{
-						int me = ModuleHelper::FindParentShipClientId(m_world,&m);
+						int me = ModuleHelper::FindParentShipClientId(m_world,m);
 
 						// score effect
 						if (moduleTransform && m &&

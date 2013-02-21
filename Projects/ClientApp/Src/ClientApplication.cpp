@@ -110,6 +110,7 @@
 #include <MenuBackgroundSceneSystem.h>
 #include <LobbySystem.h>
 #include <LevelInfoLoader.h>
+#include <EnvironmentSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -330,9 +331,12 @@ void ClientApplication::initSystems()
 	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
 	m_world->setSystem( entityParentHandler, true );
 
+
 	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
+	// Chamber fog and ambient
+	m_world->setSystem( new EnvironmentSystem() );
 
 	// Controller logic for camera
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
@@ -441,22 +445,16 @@ void ClientApplication::initEntities()
 	Entity* entity = NULL;
 	Component* component = NULL;
 
-	// HACK: (Johan) This temporarily fixes the weird "hierarchy" bug.
-	entity = m_world->createEntity();
-	entity->addComponent(new Transform());
-	m_world->addEntity(entity);
-	// End hack.
-
 	// Read from assemblage
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	EntityFactory* factory = static_cast<EntityFactory*>
 		( m_world->getSystem( SystemType::EntityFactory ) );
 
-	// Create rocks
-	status = factory->readAssemblageFile(LEVELPIECESPATH + "prisonChamberClient.asd" );
-	entity = factory->entityFromRecipe( "prisonChamberClient" );	
-
-	m_world->addEntity( entity );
+	// Create Local rocks
+//	status = factory->readAssemblageFile(LEVELPIECESPATH + "prisonChamberClient.asd" );
+//	entity = factory->entityFromRecipe( "prisonChamberClient" );	
+//
+//	m_world->addEntity( entity );
 
 	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
@@ -469,7 +467,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,1200.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );
@@ -509,7 +507,7 @@ void ClientApplication::initEntities()
 
 		rotation -= 0.78;
 	}
-
+	/*
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
 	m_world->addEntity( entity );
@@ -533,6 +531,7 @@ void ClientApplication::initEntities()
 	factory->readAssemblageFile("Assemblages/RedLight.asd");
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
+	*/
 
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::GameState,new GameState(GameStates::MENU));

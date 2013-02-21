@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "ParticleSystemsComponent.h"
 #include "LoadMesh.h"
+#include "MeshOffsetTransform.h"
 
 ConnectionVisualizerSystem::ConnectionVisualizerSystem() : 
 	EntitySystem( SystemType::ConnectionVisualizerSystem)
@@ -113,6 +114,7 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	particleSystem.setSpawnFrequency(3.0f);
 	particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
 	particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	particleSystem.setParticleSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setSpawnSpeed(0.0f);
 	particleSystem.setParticleSize(AglVector2(1.0f, 1.0f));
 	particleSystem.setParticleAge(0.25f);

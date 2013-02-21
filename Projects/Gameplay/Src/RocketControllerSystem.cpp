@@ -6,6 +6,8 @@
 #include <PhysicsController.h>
 #include "SpawnSoundEffectPacket.h"
 #include "ShipModule.h"
+#include "ParticleSystemCreationInfo.h"
+#include "SpawnExplosionPacket.h"
 
 RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
@@ -118,6 +120,7 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 	// Remove the rocket...
 	p_physicsSystem->getController()->ApplyExternalImpulse(p_rigidBody->GetWorld().GetTranslation(), 20, 20);
 	p_physicsSystem->getController()->InactivateBody(p_physicsBody->m_id);
+	
 	m_world->deleteEntity(p_entity);
 	// ...and play an explosion sound effect.
 	Transform* t = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
@@ -127,6 +130,11 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 	soundEffectPacket.position = t->getTranslation();
 	soundEffectPacket.attachedToNetsyncEntity = -1;
 	m_server->broadcastPacket(soundEffectPacket.pack());
+
+
+	SpawnExplosionPacket explosion;
+	explosion.position = t->getTranslation();
+	m_server->broadcastPacket(explosion.pack());
 }
 
 

@@ -19,8 +19,8 @@ class ModuleHelper
 {
 public:
 	static void FindParentShip(EntityWorld* p_world,
-		Entity** p_inoutShip, ShipModule** p_inoutModule);
-	static int FindParentShipClientId(EntityWorld* p_world, ShipModule** p_inoutModule);
+		Entity** p_inoutShip, ShipModule* p_module);
+	static int FindParentShipClientId(EntityWorld* p_world, ShipModule* p_module);
 protected:
 private:
 };

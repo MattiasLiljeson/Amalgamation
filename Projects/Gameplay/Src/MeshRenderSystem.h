@@ -33,11 +33,13 @@ public:
 	virtual void render();
 
 private:
-	void fillInstanceData(InstanceData* p_data, Entity* p_entity, RenderInfo* p_renderInfo);
+	void fillInstanceData(InstanceData* p_data, Entity* p_entity, RenderInfo* p_renderInfo, int p_boneCount);
 
 	RenderInfo* getRenderInfo(Entity* p_entity);
 private:
 	vector< vector<InstanceData> > m_instanceLists;
+	vector< vector<InstanceData> > m_instanceListsTess;
+
 	vector< vector<AglMatrix> > m_boneMatrices;
 	GraphicsBackendSystem* m_gfxBackend;
 };

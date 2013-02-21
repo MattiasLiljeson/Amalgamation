@@ -602,9 +602,6 @@
     <ClInclude Include="GradientMapping.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GradientComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="GamepadRumbleSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -648,17 +645,17 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="LobbySystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerLobbySystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
-    <ClInclude Include="NewlyConnectedPlayerPacket.h">
+    <ClInclude Include="SpawnExplosionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="ServerGameState.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="GradientComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentValues.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentSystem.h">
+      <Filter>Systems\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1054,9 +1051,6 @@
     <ClCompile Include="GamepadRumbleSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="GradientComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems</Filter>
@@ -1094,11 +1088,17 @@
     <ClCompile Include="MenuBackgroundSceneSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="LobbySystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="NewlyConnectedPlayerPacket.cpp">
+    <ClCompile Include="SpawnExplosionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentValues.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

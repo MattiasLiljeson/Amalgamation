@@ -9,7 +9,7 @@
 #include <ParticleSystemAndTexture.h>
 #include "MeshOffsetTransform.h"
 
-PsRenderInfo::PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, Transform* p_transform )
+PsRenderInfo::PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, InstanceData p_transform )
 {
 	psAndTex = p_psAndTex;
 	transform = p_transform;
@@ -74,20 +74,24 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 					AglMatrix transMat = transform->getMatrix();
 
+					Transform* newTrans = new Transform(transform->getMatrix());
+
+
 					// Offset Agl-loaded meshes by their offset matrix
 					if( offset != NULL ) {
 						transMat = offset->offset.inverse() * transMat;
 					}
+					newTrans->setMatrix(transMat);
 
-					// Update only local particle systems (PS) as the PS's otherwise will get a 
-					// double transform
-					// HACK: always transform spawn until support has been added to the editor. /ML 
-					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL || true ) {
-						particlesComp->setSpawn( transMat );
+					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL &&
+						header.particleSpace == AglParticleSystemHeader::AglSpace_GLOBAL) 
+					{
+						particlesComp->setSpawn( transMat, i );
 					}
 
-					PsRenderInfo info( psAndTex, transform );
+					PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
 					insertToRenderQue( info );
+					delete newTrans;
 				}
 			}
 		}
@@ -109,8 +113,8 @@ void ParticleRenderSystem::render( AglParticleSystemHeader::AglBlendMode p_blend
 				psIdx++ )
 			{
 				ParticleSystemAndTexture* psAndTex = m_renderQues[p_blend][p_rast][psIdx].psAndTex;
-				Transform* transform = m_renderQues[p_blend][p_rast][psIdx].transform;
-				m_gfxBackend->renderParticleSystem( psAndTex, transform->getInstanceDataRef() );
+				InstanceData transform = m_renderQues[p_blend][p_rast][psIdx].transform;
+				m_gfxBackend->renderParticleSystem( psAndTex, transform );
 			}
 		}
 	}

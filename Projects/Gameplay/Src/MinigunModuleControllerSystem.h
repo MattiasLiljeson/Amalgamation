@@ -28,6 +28,8 @@ private:
 	void spawnRay(Entity* p_entity);
 	void updateRays(Entity* p_entity);
 	void handleParticleSystem(Entity* p_entity);
+	void startAnimation(Entity* p_gun);
+	void stopAnimation(Entity* p_gun);
 private:
 	TcpServer* m_server;
 };

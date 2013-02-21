@@ -22,7 +22,7 @@ LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphic
 {
 	m_graphicsBackend = p_graphicsBackend;
 	m_inputBackend = p_inputBackend;
-
+	m_renderGUI = true;
 }
 
 
@@ -237,6 +237,17 @@ void LibRocketBackendSystem::process()
 		m_renderInterface->updateOnWindowResize();
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
+
+	if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
+		m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) > 0.0)
+	{
+		m_renderGUI = false;
+	}
+	else if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) < 0.0 ||
+		m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) < 0.0)
+	{
+		m_renderGUI = true;
+	}
 	
 	processMouseMove();
 	processKeyStates();
@@ -246,7 +257,10 @@ void LibRocketBackendSystem::process()
 
 void LibRocketBackendSystem::render()
 {
-	m_rocketContext->Render();
+	if(m_renderGUI)
+	{
+		m_rocketContext->Render();
+	}
 }
 
 Rocket::Core::Context* LibRocketBackendSystem::getContext() const
@@ -285,9 +299,9 @@ void LibRocketBackendSystem::processKeyStates()
 		{
 			if (control->getStatus() > 0.5f)
 			{
-				DEBUGPRINT(((toString("Key ") +
+				/*DEBUGPRINT(((toString("Key ") +
 							toString(keyCode) + 
-							toString(" was pressed\n")).c_str()));
+							toString(" was pressed\n")).c_str()));*/
 				m_rocketContext->ProcessKeyDown(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
 
@@ -299,9 +313,9 @@ void LibRocketBackendSystem::processKeyStates()
 			}
 			else
 			{
-				DEBUGPRINT(((toString("Key ") +
+				/*DEBUGPRINT(((toString("Key ") +
 							toString(keyCode) + 
-							toString(" was released\n")).c_str()));
+							toString(" was released\n")).c_str()));*/
 				m_rocketContext->ProcessKeyUp(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
 			}

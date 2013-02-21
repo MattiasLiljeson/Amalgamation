@@ -23,6 +23,8 @@ public:
 		m_time = p_time;
 		m_scene = p_scene;
 		m_offset = p_offset;
+		m_isPlaying = false;
+		m_playSpeed = 1.0f;
 	}
 	virtual ~SkeletalAnimation()
 	{
@@ -32,4 +34,6 @@ public:
 	float m_time;
 	AglScene* m_scene;
 	AglMatrix m_offset;
+	bool m_isPlaying;
+	float m_playSpeed;
 };

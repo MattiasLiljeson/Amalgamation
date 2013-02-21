@@ -24,13 +24,13 @@ PixelIn DS(patchConstant input, float3 uvw : SV_DomainLocation,
 	tex = uvw.x * patch[0].texCoord + uvw.y * patch[1].texCoord + uvw.z * patch[2].texCoord;
 	
 	//Normalize tangent base
-	tan    = normalize(tan);
-	bin    = normalize(bin);
+	//tan    = normalize(tan);
+	//bin    = normalize(bin);
 	
 	
 	float disp;
 	disp = displaceTexture.SampleLevel(pointSampler, tex, 0).r;
-	disp = (disp - 0.5f) * 2 * 0.5f;
+	disp = (disp - 0.5f) * 2 * 0.05f;
 	pos = pos + disp * norm;
 	
 	//Map output data
