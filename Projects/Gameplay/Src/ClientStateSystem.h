@@ -2,41 +2,41 @@
 #include <EntitySystem.h>
 #include "EnumGameStates.h"
 // =======================================================================================
-//                                      ServerStateSystem
+//                                      ClientStateSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles state changes
+/// \brief	Handles the game states on client side.
 ///        
-/// # ServerStateSystem
+/// # ClientStateSystem
 /// Detailed description.....
 /// Created on: 21-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ServerStateSystem : public EntitySystem
+class ClientStateSystem: public EntitySystem
 {
 public:
 	struct State
 	{
-		ServerStates	stateEnum;
-		EnumGameDelta	delta;
+		GameStates stateEnum;
+		EnumGameDelta delta;
 
 		State(){
-			stateEnum = ServerStates::INIT;
+			stateEnum = GameStates::INIT;
 			delta = EnumGameDelta::NOTCHANGED;
 		}
-		State(ServerStates p_state){
+		State(GameStates p_state){
 			stateEnum = p_state;
-			delta	= EnumGameDelta::NOTCHANGED;
+			delta = EnumGameDelta::NOTCHANGED;
 		}
 	};
-public:
-	ServerStateSystem(ServerStates p_firstState);
-	virtual ~ServerStateSystem();
 
-	void setQueuedState( ServerStates p_state );
-	EnumGameDelta getStateDelta( ServerStates p_state );
-	ServerStates getCurrentState();
+public:
+	ClientStateSystem(GameStates p_firstState);
+	~ClientStateSystem();
+	void setQueuedState( GameStates p_state );
+	EnumGameDelta getStateDelta( GameStates p_state );
+	GameStates getCurrentState();
 
 	virtual void process() final;
 
@@ -44,4 +44,5 @@ private:
 	vector<State*> m_states;
 	State m_queued;
 	int m_currentState;
+
 };

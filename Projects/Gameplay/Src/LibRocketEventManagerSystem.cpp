@@ -42,6 +42,7 @@
 #include <TcpClient.h>
 #include <Packet.h>
 #include "PacketType.h"
+#include "ClientStateSystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -50,9 +51,6 @@ LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	wantsToExit = false;
 	m_eventHandler = NULL;
 	m_currentDocId = "";
-	m_stateEntity	= NULL;
-	m_stateComp		= NULL;
-	m_localState	= NONE;
 	m_client = p_client;
 }
 
@@ -63,6 +61,8 @@ LibRocketEventManagerSystem::~LibRocketEventManagerSystem()
 
 void LibRocketEventManagerSystem::initialize()
 {
+	m_stateSystem = static_cast<ClientStateSystem*>(m_world->getSystem(
+		SystemType::ClientStateSystem));
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
@@ -192,64 +192,32 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		{
 			wantsToExit = true;
 		}
-		else if( m_localState == (int)EnumGameDelta::NOTCHANGED)
+		else if (values[0] == "connectToServer")
 		{
-			if (values[0] == "connectToServer")
-			{
-				// "server_host" is the name attribute specified in the input element in the rml file.
-				// "localhost" simply is provided as a default value, if the host isn't set. This could be left as "" as well.
-				string server_address = p_event.GetParameter<Rocket::Core::String>
-					("server_host", "localhost").CString();
-				string server_port = p_event.GetParameter<Rocket::Core::String>
-					("server_port", "1337").CString();
+			// "server_host" is the name attribute specified in the input element in the rml file.
+			// "localhost" simply is provided as a default value, if the host isn't set. This could be left as "" as well.
+			string server_address = p_event.GetParameter<Rocket::Core::String>
+				("server_host", "localhost").CString();
+			string server_port = p_event.GetParameter<Rocket::Core::String>
+				("server_port", "1337").CString();
 				
-				auto sys = static_cast<ClientConnectToServerSystem*>(
-					m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+			auto sys = static_cast<ClientConnectToServerSystem*>(
+				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-				sys->setConnectionAddress(server_address, server_port);
-				m_stateComp->setStatesDelta(GameStates::LOBBY,EnumGameDelta::ENTEREDTHISFRAME);
-				m_localState = THISFRAME;
-			}
-			/*else if(p_value == "join_lobby"){
-				m_stateComp->setStatesDelta(LOBBY,ENTEREDTHISFRAME);
-				m_localState = THISFRAME;
-			}*/
-			else if(values[0] == "start_game"){
-				Packet letsRollPacket((char)PacketType::LetsRoll);
-				m_client->sendPacket(letsRollPacket);
-				m_stateComp->setStatesDelta(GameStates::LOADING,EnumGameDelta::ENTEREDTHISFRAME);
-				m_localState = THISFRAME;
-			}
+			sys->setConnectionAddress(server_address, server_port);
+			m_stateSystem->setQueuedState(GameStates::LOBBY);
+		}
+		else if(values[0] == "start_game")
+		{
+			Packet letsRollPacket((char)PacketType::LetsRoll);
+			m_client->sendPacket(letsRollPacket);
+			m_stateSystem->setQueuedState(GameStates::LOADING);
 		}
 	}
 }
 
 void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	//Check if there is a game state entity
-	if(p_entities.size()>0){
-
-		//Check if a state has been changed.
-		if(m_localState != NONE ){
-
-			switch (m_localState)
-			{
-			case LibRocketEventManagerSystem::THISFRAME:
-				m_localState = VERIFIED;
-				break;
-			case LibRocketEventManagerSystem::VERIFIED:
-				m_localState = PREVIOUSFRAME;
-				break;
-			case LibRocketEventManagerSystem::PREVIOUSFRAME:
-				//Reset the delta to zero
-				for (int i = 0 ; i < static_cast<int>(GameStates::NUMSTATES); i++){
-					m_stateComp->setStatesDelta(static_cast<GameStates>(i),EnumGameDelta::NOTCHANGED);
-				}
-				m_localState = NONE;
-				break;
-			}
-		}
-	}
 	if (wantsToExit){
 		m_world->requestToShutDown();
 	}
@@ -302,22 +270,5 @@ void LibRocketEventManagerSystem::clearStackUntilFoundDocId( const Rocket::Core:
 				document->Hide();
 			}
 		}
-	}
-}
-
-void LibRocketEventManagerSystem::inserted( Entity* p_entity )
-{
-	if(m_stateEntity == NULL){
-		m_stateEntity = p_entity;
-		m_stateComp = static_cast<GameState*>(m_stateEntity->getComponent(
-			ComponentType::GameState));
-	}
-}
-
-void LibRocketEventManagerSystem::removed( Entity* p_entity )
-{
-	if(m_stateEntity){
-		m_stateEntity = NULL;
-		m_stateComp = NULL;
 	}
 }

@@ -1,6 +1,7 @@
 #include "ServerStateSystem.h"
 
-ServerStateSystem::ServerStateSystem(ServerStates p_firstState) : EntitySystem(SystemType::ServerStateSystem)
+ServerStateSystem::ServerStateSystem(ServerStates p_firstState)
+	: EntitySystem(SystemType::ServerStateSystem)
 {
 	for(unsigned int i = 0 ; i < (unsigned int)ServerStates::NUMSTATES; i++){
 		m_states.push_back(new State( static_cast<ServerStates>(i)));
@@ -32,10 +33,6 @@ void ServerStateSystem::process()
 	}
 }
 
-void ServerStateSystem::initialize()
-{
-
-}
 void ServerStateSystem::setQueuedState( ServerStates p_state){
 	m_queued.stateEnum = p_state;
 }

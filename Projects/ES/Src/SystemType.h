@@ -100,6 +100,7 @@ public:	//Enums
 		SpeedFovAdjustSystem,
 		LobbySystem,
 		ServerStateSystem,
+		ClientStateSystem,
 		NUM_SYSTEM_TYPES
 	};
 

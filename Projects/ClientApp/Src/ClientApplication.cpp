@@ -55,6 +55,7 @@
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
+#include <ClientStateSystem.h>
 #include <DebugMovementSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <EntityFactory.h>
@@ -215,9 +216,14 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
+	/* Game State system.													*/
+	/************************************************************************/
+	m_world->setSystem(new ClientStateSystem(GameStates::MENU), true);
+
+	/************************************************************************/
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
-	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+	m_world->setSystem(new TimerSystem(), true);
 
 	/************************************************************************/
 	/* Graphics																*/
@@ -532,10 +538,6 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
 	*/
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::GameState,new GameState(GameStates::MENU));
-	m_world->addEntity(entity);
 
 	//ParticleEmitters* ps = new ParticleEmitters();
 	//AglParticleSystemHeader header;

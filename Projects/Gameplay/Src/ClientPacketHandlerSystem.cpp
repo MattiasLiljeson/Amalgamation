@@ -79,6 +79,7 @@
 #include "SpawnExplosionPacket.h"
 #include "AnimationUpdatePacket.h"
 #include "SkeletalAnimation.h"
+#include "ClientStateSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -418,6 +419,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
 			anim->m_isPlaying = data.shouldPlay;
 			anim->m_playSpeed = data.playSpeed;
+		}
+		else if(packetType == (char)PacketType::LetsRoll)
+		{
+			static_cast<ClientStateSystem*>(m_world->getSystem(
+				SystemType::ClientStateSystem))->setQueuedState(GameStates::LOADING);
 		}
 		else
 		{

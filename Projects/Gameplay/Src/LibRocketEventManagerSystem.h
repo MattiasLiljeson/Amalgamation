@@ -41,6 +41,7 @@ namespace Rocket
 class EventHandler;
 class GameState;
 class TcpClient;
+class ClientStateSystem;
 
 /**
 	@author		Peter Curry
@@ -74,11 +75,6 @@ public:
 	bool loadWindow(const Rocket::Core::String& p_windowName);
 public:
 	bool wantsToExit;
-private:
-	enum StateChange 
-	{
-		NONE, THISFRAME, VERIFIED, PREVIOUSFRAME
-	};
 	
 private:
 	/// Registers a new event handler with the manager.
@@ -89,11 +85,6 @@ private:
 
 	/// Pops all docIds and hides them until the parameter doc id is the top one.
 	void clearStackUntilFoundDocId(const Rocket::Core::String&  p_docId);
-
-	virtual void inserted( Entity* p_entity );
-
-	virtual void removed( Entity* p_entity );
-
 
 private:
 	// The game's element context (retrieved from the rocket backend system).
@@ -107,9 +98,7 @@ private:
 
 	Rocket::Core::String				m_currentDocId;
 	std::stack<Rocket::Core::String>	m_docIdStack;
-	Entity*								m_stateEntity;
-	GameState*							m_stateComp;
-	StateChange	m_localState;
+	ClientStateSystem*					m_stateSystem;
 	TcpClient* m_client;
 };
 

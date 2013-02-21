@@ -6,6 +6,7 @@
 #include <RandomUtil.h>
 #include "InputBackendSystem.h"
 #include "LightsComponent.h"
+#include "ClientStateSystem.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -21,29 +22,38 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 
 void MenuBackgroundSceneSystem::process()
 {
-	m_deltaRotation = 0.0f;
-	double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-	double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
-	if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
-		rtPositive > 0.0 || rtNegative > 0.0)
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
+		getSystem(SystemType::ClientStateSystem));
+	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME)
 	{
-		double deltaPositive = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_POSITIVE)
-			+ rtPositive;
-		double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
-			+ rtNegative;
-		if(deltaPositive > 0.0)
-		{
-			m_deltaRotation -= (float)deltaPositive;
-		}
-		if(deltaNegative > 0.0)
-		{
-			m_deltaRotation += (float)deltaNegative;
-		}
+		this->setEnabled(false);
 	}
-	AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
-	if(rotate != NULL)
+	else
 	{
-		rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
+		m_deltaRotation = 0.0f;
+		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
+		double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
+		if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
+			rtPositive > 0.0 || rtNegative > 0.0)
+		{
+			double deltaPositive = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_POSITIVE)
+				+ rtPositive;
+			double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
+				+ rtNegative;
+			if(deltaPositive > 0.0)
+			{
+				m_deltaRotation -= (float)deltaPositive;
+			}
+			if(deltaNegative > 0.0)
+			{
+				m_deltaRotation += (float)deltaNegative;
+			}
+		}
+		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
+		if(rotate != NULL)
+		{
+			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
+		}
 	}
 }
 

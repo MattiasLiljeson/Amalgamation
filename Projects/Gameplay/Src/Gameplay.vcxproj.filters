@@ -664,6 +664,9 @@
     <ClInclude Include="ServerStateSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="ClientStateSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1111,6 +1114,9 @@
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="ServerStateSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

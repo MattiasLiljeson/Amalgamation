@@ -27,7 +27,7 @@ public:
 
 	~ClientConnectToServerSystem();
 
-	virtual void processEntities( const vector<Entity*>& p_entities );
+	virtual void process();
 
 	virtual void initialize();
 

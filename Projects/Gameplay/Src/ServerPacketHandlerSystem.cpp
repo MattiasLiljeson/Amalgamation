@@ -327,8 +327,7 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		case ServerStates::LOBBY:
 			if(packetType == (char)PacketType::LetsRoll){
 				stateSystem->setQueuedState(ServerStates::LOADING);
-
-
+				m_server->broadcastPacket(packet);
 			}
 			break;
 		case ServerStates::LOADING:

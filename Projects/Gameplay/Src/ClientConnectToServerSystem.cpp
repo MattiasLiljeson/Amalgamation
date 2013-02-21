@@ -4,11 +4,11 @@
 #include "InputBackendSystem.h"
 #include "LevelHandlerSystem.h"
 #include "GameState.h"
-#include "LibRocketEventManagerSystem.h"
+#include "ClientStateSystem.h"
 
 ClientConnectToServerSystem::ClientConnectToServerSystem(TcpClient* p_tcpClient,
 														 bool p_connectDirectly/* =false */)
-	: EntitySystem( SystemType::ClientConnectoToServerSystem , 1, ComponentType::GameState)
+	: EntitySystem( SystemType::ClientConnectoToServerSystem )
 {
 	m_tcpClient = p_tcpClient;
 	m_connectStraightAway = p_connectDirectly;
@@ -30,16 +30,13 @@ void ClientConnectToServerSystem::initialize()
 	}
 }
 
-void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_entities )
+void ClientConnectToServerSystem::process()
 {
 	if( m_tcpClient->hasActiveConnection() )
 	{
 		m_isLookingForConnection = false;
 		m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
 		setEnabled(false);
-
-		auto eventManagerSys = static_cast<LibRocketEventManagerSystem*>(
-			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
 		// Clears and hides all currently visible documents.
 		//eventManagerSys->clearDocumentStack();
@@ -48,27 +45,23 @@ void ClientConnectToServerSystem::processEntities( const vector<Entity*>& p_enti
 			m_world->getSystem(SystemType::LevelHandlerSystem));
 		levelHandler->destroyLevel();
 	}
-	else if(p_entities.size() > 0)
-	{
-		auto state = static_cast<GameState*>(p_entities[0]->getComponent(
-			ComponentType::GameState));
 
-		InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
-			(m_world->getSystem(SystemType::InputBackendSystem));
-
-		if( state->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
-			connectToNetworkAddress();
-			// Disable the menu background scene.
-			//m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
-		}
-
-		if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){
-			connectToNetworkAddress();
-			state->setStatesDelta(GameStates::INGAME, EnumGameDelta::ENTEREDTHISFRAME);
-			// Disable the menu background scene.
-			m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
-		}
+	InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
+		(m_world->getSystem(SystemType::InputBackendSystem));
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
+		getSystem(SystemType::ClientStateSystem));
+	if( stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
+		connectToNetworkAddress();
+		// Disable the menu background scene.
+		//m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
 	}
+
+//	if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){
+//		connectToNetworkAddress();
+//		state->setStatesDelta(GameStates::INGAME, EnumGameDelta::ENTEREDTHISFRAME);
+//		// Disable the menu background scene.
+//		m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
+//	}
 }
 
 void ClientConnectToServerSystem::connectToNetworkAddress()

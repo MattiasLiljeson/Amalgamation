@@ -15,6 +15,7 @@
 #include "LibRocketInputHelper.h"
 #include "ClientConnectToServerSystem.h"
 #include "LibRocketEventManagerSystem.h"
+#include "ClientStateSystem.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
 											   , InputBackendSystem* p_inputBackend )
@@ -237,14 +238,23 @@ void LibRocketBackendSystem::process()
 		m_renderInterface->updateOnWindowResize();
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
-
-	if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
-		m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) > 0.0)
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
+		getSystem(SystemType::ClientStateSystem));
+	if(stateSystem->getCurrentState() == GameStates::MENU ||
+		stateSystem->getCurrentState() == GameStates::LOBBY)
 	{
-		m_renderGUI = false;
+		if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
+			m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) > 0.0)
+		{
+			m_renderGUI = false;
+		}
+		else if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) < 0.0 ||
+			m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) < 0.0)
+		{
+			m_renderGUI = true;
+		}
 	}
-	else if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) < 0.0 ||
-		m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) < 0.0)
+	else
 	{
 		m_renderGUI = true;
 	}
