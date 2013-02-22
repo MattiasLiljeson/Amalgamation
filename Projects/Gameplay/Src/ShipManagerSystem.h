@@ -33,5 +33,6 @@ public:
 	Entity* findShip(int p_ownerId);
 	vector<FreeSlotData> findFreeConnectionPoints(int p_ownerId);
 	AglBoundingSphere findEditSphere(int p_ownerId);
+	AglBoundingSphere findEditSphere(Entity* p_ship);
 
 };

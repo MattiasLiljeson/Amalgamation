@@ -55,6 +55,8 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 	//NOTE: continues in loop below 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
+		vector<ComponentType::ComponentTypeIdx> types = p_entities[i]->getComponentEnums();
+		
 		RenderInfo* renderInfo = getRenderInfo(p_entities[i]);
 
 		// Don't render instances that hasn't got a mesh...

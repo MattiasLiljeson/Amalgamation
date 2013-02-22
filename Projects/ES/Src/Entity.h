@@ -44,6 +44,9 @@ public:
 	 */
 	EntityWorld* getWorld();
 
+	vector<ComponentType::ComponentTypeIdx> getComponentEnums();
+	vector<SystemType::SystemTypeIdx> getSystemEnums();
+
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
 	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void setComponentBit( int p_idx, bool p_value );

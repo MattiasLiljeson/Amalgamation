@@ -1,23 +1,22 @@
 #include "LoadMeshSystem.h"
 
-#include "LoadMesh.h"
-#include <ModelResource.h>
-#include "Transform.h"
-#include "EntityParent.h"
-#include "ConnectionPointSet.h"
-#include "LightsComponent.h"
 #include "BodyInitData.h"
 #include "ConnectionPointSet.h"
+#include "ConnectionPointSet.h"
 #include "EntityParent.h"
+#include "EntityParent.h"
+#include "LightsComponent.h"
+#include "LoadMesh.h"
 #include "LoadMesh.h"
 #include "MeshOffsetTransform.h"
-#include "ParticleSystemsComponent.h"
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
+#include "SpawnPointSet.h"
+#include "Transform.h"
 #include "Transform.h"
 #include <Globals.h>
 #include <ModelResource.h>
-#include "SpawnPointSet.h"
+#include <ModelResource.h>
 
 LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -300,13 +299,7 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			light.instanceData.color[0] = source->diffuse.x;
 			light.instanceData.color[1] = source->diffuse.y;
 			light.instanceData.color[2] = source->diffuse.z;
-			//light.instanceData.specular[0] = source->specular.x;
-			//light.instanceData.specular[1] = source->specular.y;
-			//light.instanceData.specular[2] = source->specular.z;
 			//light.instanceData.specular[3] = source->gloss;
-			//light.instanceData.ambient[0] = source->ambient.x;
-			//light.instanceData.ambient[1] = source->ambient.y;
-			//light.instanceData.ambient[2] = source->ambient.z;
 			if (source->type==LightCreationData::POINT)
 				light.instanceData.type = LightTypes::E_LightTypes_POINT;
 			else if (source->type==LightCreationData::SPOT)
@@ -321,22 +314,6 @@ void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResour
 			component->addLight(light);
 		}
 		p_entity->addComponent( ComponentType::LightsComponent, component );
-	}
-}
-
-void LoadMeshSystem::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
-{
-	if (!p_modelResource->particleSystems.m_collection.empty())
-	{
-		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
-			p_entity->getComponent( ComponentType::ParticleSystemsComponent ) );
-
-		if( particleComp == NULL ) {
-			particleComp = new ParticleSystemsComponent();
-			p_entity->addComponent( particleComp );
-		}
-
-		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
 	}
 }
 
