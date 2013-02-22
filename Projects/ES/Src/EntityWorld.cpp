@@ -47,6 +47,11 @@ ComponentManager* EntityWorld::getComponentManager()
 	return m_componentManager;
 }
 
+SystemManager* EntityWorld::getSystemManager()
+{
+	return m_systemManager;
+}
+
 Manager* EntityWorld::setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager )
 {
 	int reqSize = p_managerType+1;  // index+1 = required size 

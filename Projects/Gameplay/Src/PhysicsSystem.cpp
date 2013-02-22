@@ -106,8 +106,7 @@ void PhysicsSystem::processEntities(const vector<Entity*>& p_entities)
 					debugT->setRotation(rot);
 
 				}
-				
-				
+
 				//Offset the transform in relation to the physics representation
 				world = body->getOffset().inverse()*world;
 				
