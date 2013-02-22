@@ -9,5 +9,3 @@ c LoadMesh
 d s m_filename MinigunAnim.agl
 
 c ShipModule
-
-c SkeletalAnimation
