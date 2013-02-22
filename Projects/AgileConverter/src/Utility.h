@@ -54,8 +54,11 @@ struct JointData
 	int ID;
 	int NodeID;
 	FbxNode* FbxParent;
+	FbxNode* node;
 	FbxSkeleton::EType Type;
 	int Parent;
+	bool affectsVertices;
+	FbxMatrix offset;
 };
 
 struct SkeletonData

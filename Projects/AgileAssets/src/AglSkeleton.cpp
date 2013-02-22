@@ -20,20 +20,30 @@ AglJoint* AglSkeleton::getJoints()
 {
 	return m_joints;
 }
-AglJoint* AglSkeleton::getRoot()
+AglJoint AglSkeleton::getRoot()
 {
-	AglJoint* j = NULL;
+	AglJoint j;
 	int ind = -1;
 	for (int i = 0; i < m_header.jointCount; i++)
 	{
 		if (m_joints[i].parentIndex < 0)
 		{
-			j = &m_joints[i];
+			j = m_joints[i];
 			ind = i;
 			break;
 		}
 	}
 	return j;
+}
+vector<AglJoint> AglSkeleton::getChildren(int p_parent)
+{
+	vector<AglJoint> children;
+	for (unsigned int i = 0; i < m_header.jointCount; i++)
+	{
+		if (m_joints[i].parentIndex == p_parent)
+			children.push_back(m_joints[i]);
+	}
+	return children;
 }
 
 AglMatrix AglSkeleton::getGlobalTransform(int p_joint)

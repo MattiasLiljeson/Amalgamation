@@ -49,6 +49,22 @@ const vector<EntitySystem*>& SystemManager::getSystemList() const
 	return m_systemList;
 }
 
+vector<SystemType::SystemTypeIdx> SystemManager::getSystemEnumList( Entity* p_entity )
+{
+	bitset<SystemType::NUM_SYSTEM_TYPES> systemBits =
+		p_entity->getSystemBits();
+	vector<SystemType::SystemTypeIdx> systemList;
+
+	for(unsigned int i=0; i<systemBits.size(); i++ )
+	{
+		if( systemBits[i] == true)
+		{
+			systemList.push_back((SystemType::SystemTypeIdx)i);
+		}
+	}
+	return systemList;
+}
+
 void SystemManager::deleteSystem( SystemType p_type )
 {
 	deleteSystem( (SystemType::SystemTypeIdx)p_type.getIndex() );

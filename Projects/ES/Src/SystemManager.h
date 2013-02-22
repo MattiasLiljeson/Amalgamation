@@ -32,6 +32,8 @@ public:
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
 		bool p_enabled = true );
 
+	vector<SystemType::SystemTypeIdx> getSystemEnumList( Entity* p_entity );
+
 	///-----------------------------------------------------------------------------------
 	/// Get a reference to the system list, to be iterated over.
 	/// \return const vector<EntitySystem*>&

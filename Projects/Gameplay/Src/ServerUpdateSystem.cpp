@@ -117,14 +117,14 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				{
 					for( unsigned int psIdx=0; psIdx<psServerComp->particleSystems.size(); psIdx++ )
 					{
-						ParticleSystemUpdateData* updateData =
+						AglParticleSystemHeader* updateData =
 							&psServerComp->particleSystems[psIdx].updateData;
 						ParticleUpdatePacket updatePacket;
 						updatePacket.networkIdentity	= netSync->getNetworkIdentity();
 						updatePacket.particleSystemIdx	= psIdx;
 						updatePacket.position			= updateData->spawnPoint;
-						updatePacket.direction			= updateData->direction;
-						updatePacket.speed				= updateData->speed;
+						updatePacket.direction			= updateData->spawnDirection;
+						updatePacket.speed				= updateData->spawnSpeed;
 						updatePacket.spawnFrequency		= updateData->spawnFrequency;
 						m_server->broadcastPacket( updatePacket.pack() );
 					}

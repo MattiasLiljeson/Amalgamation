@@ -1,5 +1,5 @@
 #include "ComponentManager.h"
-#include "..\..\Util\Src\DebugUtil.h"
+#include <DebugUtil.h>
 
 
 ComponentManager::ComponentManager()
@@ -25,20 +25,20 @@ ComponentManager::~ComponentManager()
 	}
 }
 
-vector<Component*>& ComponentManager::getComponentsFor(Entity* p_entity,
-													   vector<Component*>& p_fillBag)
+vector<ComponentType::ComponentTypeIdx> ComponentManager::getComponentEnumList( Entity* p_entity )
 {
 	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits =
 		p_entity->getComponentBits();
+	vector<ComponentType::ComponentTypeIdx> componentList;
 
 	for(unsigned int i=0; i<componentBits.size(); i++ )
 	{
 		if( componentBits[i] == true)
 		{
-			p_fillBag.push_back(m_componentsByType[i][p_entity->getIndex()]);
+			componentList.push_back(m_componentsByType[i][p_entity->getIndex()]->getComponentTypeId());
 		}
 	}
-	return p_fillBag;
+	return componentList;
 }
 
 void ComponentManager::deleted( Entity* p_entity )

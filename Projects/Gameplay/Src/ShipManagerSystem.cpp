@@ -82,3 +82,25 @@ AglBoundingSphere ShipManagerSystem::findEditSphere(int p_ownerId)
 
 	return bs;
 }
+AglBoundingSphere ShipManagerSystem::findEditSphere(Entity* p_ship)
+{
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	PhysicsBody* shipBody = static_cast<PhysicsBody*>(p_ship->getComponent(
+		ComponentType::PhysicsBody));
+	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
+
+	//Ship should always be a compound body
+	CompoundBody* physicalShipCompoundBody = static_cast<CompoundBody*>(physicalShipBody);
+
+	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
+
+	//Put the sphere in local space
+	Transform* transform = static_cast<Transform*>(p_ship->getComponent(
+		ComponentType::Transform));
+
+	bs.position.transform(transform->getMatrix().inverse());
+
+	return bs;
+}

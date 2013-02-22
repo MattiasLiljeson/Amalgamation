@@ -371,6 +371,8 @@ public:
 	AglOBB getSceneOBB();
 
 	void setTime(float p_time);
+
+	void calculateOBB();
 };
 
 #endif

@@ -36,7 +36,7 @@ public:
 	virtual ~AglParticleSystem();
 
 	AglParticleSystemHeader* getHeaderPtr();
-	const AglParticleSystemHeader& getHeader();
+	const AglParticleSystemHeader& getHeader() const;
 	vector<AglStandardParticle>* getParticlesPtr();
 	const vector<AglStandardParticle>& getParticles();
 	const float getAge() const;

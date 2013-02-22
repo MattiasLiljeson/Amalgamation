@@ -22,7 +22,7 @@ public:
 
 	void initialize(){};
 	void deleted( Entity* p_entity );
-	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
+	vector<ComponentType::ComponentTypeIdx> getComponentEnumList( Entity* p_entity );
 	void clean();
 	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
 

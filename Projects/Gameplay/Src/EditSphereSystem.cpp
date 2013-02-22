@@ -7,6 +7,7 @@
 #include "ShipSlotControllerSystem.h"
 #include "ParticleSystemsComponent.h"
 #include "..\..\AgileAssets\src\AglParticleSystem.h"
+#include "LookAtEntity.h"
 
 EditSphereSystem::EditSphereSystem() : 
 EntitySystem( SystemType::EditSphereSystem, 1,

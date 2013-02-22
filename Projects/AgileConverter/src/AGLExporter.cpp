@@ -196,21 +196,19 @@ void AGLExporter::Write()
 	}
 
 	//Update mesh transforms if the mesh has a skeleton
-
-	//Blir fel för mesh walker
-	for (unsigned int i = 0; i < mMeshSkeletonMappings.size(); i++)
+	/*for (unsigned int i = 0; i < mMeshSkeletonMappings.size(); i++)
 	{
 		int m = mMeshSkeletonMappings[i]->getHeader().meshID;
 		int s = mMeshSkeletonMappings[i]->getHeader().skeletonID;
 
-		if (mMeshes[m]->getHeader().transform == AglMatrix::identityMatrix())
+		if (true)//mMeshes[m]->getHeader().transform == AglMatrix::identityMatrix())
 		{
 			AglJoint* root = mSkeletons[s]->getRoot();
 			AglMatrix invBind = mSkeletons[s]->getInverseBindMatrix(root->id);
 			AglMatrix trans = mSkeletons[s]->getGlobalTransform(root->id);
 			mMeshes[m]->setTransform(invBind*trans);
 		}
-	}
+	}*/
 
 
 

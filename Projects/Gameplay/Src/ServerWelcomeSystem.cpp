@@ -217,6 +217,8 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 		transformComp->getMatrix() ) );
 	// default tag is follow
 	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	playerCam->addTag(ComponentType::TAG_LookAtMainCamera, new LookAtMainCamera_TAG() );
+
 	playerCam->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
 	m_world->addEntity(playerCam);
