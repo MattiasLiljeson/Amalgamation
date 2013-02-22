@@ -325,6 +325,17 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					else if (sep.type == SimpleEventType::RELEASE_PICK)
 						pickSystem->setReleased(packet.getSenderId());
 				}
+
+				if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+					checkTimeInterval(TimerIntervals::HalfSecond))
+				{
+					float timeStamp = m_world->getElapsedTime();
+
+					PingPacket pingPacket;
+					pingPacket.timeStamp = timeStamp;
+
+					m_server->broadcastPacket( pingPacket.pack() );
+				}
 				break;
 			}
 	case ServerStates::LOBBY:
@@ -460,17 +471,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		break;
 		}
 
-	}
-
-	if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::HalfSecond))
-	{
-		float timeStamp = m_world->getElapsedTime();
-
-		PingPacket pingPacket;
-		pingPacket.timeStamp = timeStamp;
-
-		m_server->broadcastPacket( pingPacket.pack() );
 	}
 }
 
