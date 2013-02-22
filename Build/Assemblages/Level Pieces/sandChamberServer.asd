@@ -1,4 +1,4 @@
-e mineChamberServer
+e sandChamberServer
 
 c LoadMesh
 d s m_filename World_Sand.agl
