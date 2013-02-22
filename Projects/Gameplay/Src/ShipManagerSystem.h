@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include <AglMatrix.h>
+#include <AglBoundingSphere.h>
 
 // =======================================================================================
 //                                   ShipManagerSystem
@@ -31,5 +32,7 @@ public:
 	const vector<Entity*>& getShips() const;
 	Entity* findShip(int p_ownerId);
 	vector<FreeSlotData> findFreeConnectionPoints(int p_ownerId);
+	AglBoundingSphere findEditSphere(int p_ownerId);
+	AglBoundingSphere findEditSphere(Entity* p_ship);
 
 };

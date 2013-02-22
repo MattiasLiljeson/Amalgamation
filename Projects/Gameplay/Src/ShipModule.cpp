@@ -6,7 +6,7 @@ ShipModule::ShipModule()
 	: Component( ComponentType::ShipModule )
 {
 	m_parentEntity = -1;
-	m_lastParentWhenAttached = -1;
+	m_lastShipEntityWhenAttached = -1;
 	m_active = false;
 	m_value = 100;
 	m_health = 100.0f;

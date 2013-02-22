@@ -146,10 +146,12 @@ void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base )
 			AglParticleSystemHeader* header = &m_particleSystems[i].second->psOriginalSettings;
 
 			AglVector3 newPos = header->spawnPoint;
+			AglVector3 newDir = header->spawnDirection;
 			newPos.transform( p_base );
+			newDir.transformNormal(p_base);
 
 			ps->setSpawnPoint( newPos );
-			ps->setSpawnDirection( -p_base.GetForward() );
+			ps->setSpawnDirection(newDir);
 		}
 	}
 }
@@ -160,10 +162,12 @@ void ParticleSystemsComponent::setSpawn( const AglMatrix& p_base, int p_index )
 		AglParticleSystemHeader* header = &m_particleSystems[p_index].second->psOriginalSettings;
 
 		AglVector3 newPos = header->spawnPoint;
+		AglVector3 newDir = header->spawnDirection;
 		newPos.transform( p_base );
+		newDir.transformNormal(p_base);
 
 		ps->setSpawnPoint( newPos );
-		ps->setSpawnDirection( -p_base.GetForward() );
+		ps->setSpawnDirection(newDir);
 	}
 }
 

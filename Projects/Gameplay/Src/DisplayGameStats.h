@@ -39,6 +39,7 @@ public:
 	void setActivePlayers(int p_players);
 protected:
 private:
+	bool m_dirty;
 	const char* m_tableName;
 	int m_activePlayers;
 	PlayerStats m_players[MAXPLAYERS];

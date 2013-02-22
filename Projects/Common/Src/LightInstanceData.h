@@ -53,12 +53,11 @@ struct LightInstanceData
 	float lightDir[3];
 	float range;
 
-	float attenuation[3];	// Used in the formula: x, x^2, x^3
-	float spotPower;		// Spot cone width. Power of 10.
+	float attenuation[3];			// Used in the formula: x, x^2, x^3
+	float spotLightConeSizeAsPow;		// Spot cone width. Power of 10.
 
-	float ambient[4];		// alpha not used
-	float diffuse[4];		// alpha not used
-	float specular[4];		// alpha is spec power
+	float color[3];
+	float lightEnergy;
 
 	int enabled;
 	int type;				// Use E_LightTypes
@@ -72,7 +71,7 @@ struct LightInstanceData
 		shadowIdx = -1;
 		type = LightTypes::E_LightTypes_DIRECTIONAL;
 		range = 0.0f;
-		spotPower = 0.0f;
+		spotLightConeSizeAsPow = 0.0f;
 		
 		//Identity
 		for( int i=0; i<16; i++) {
@@ -86,10 +85,10 @@ struct LightInstanceData
 			attenuation[i] = 0.0f;
 		}
 
-		for( int i=0; i<4; i++) {
-			ambient[i] = 0.0f;
-			diffuse[i] = 0.0f;
-			specular[i] = 0.0f;
+		for( int i=0; i<3; i++) {
+			//ambient[i] = 0.0f;
+			color[i] = 0.0f;
+			//specular[i] = 0.0f;
 		}
 
 	}

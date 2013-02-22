@@ -1,6 +1,11 @@
 #include "ShipManagerSystem.h"
 #include "NetworkSynced.h"
 #include "ConnectionPointSet.h"
+#include "PhysicsBody.h"
+#include "PhysicsSystem.h"
+#include <CompoundBody.h>
+#include <PhysicsController.h>
+#include "Transform.h"
 
 ShipManagerSystem::ShipManagerSystem() : 
 	EntitySystem( SystemType::ShipManagerSystem, 1,
@@ -52,4 +57,50 @@ vector<FreeSlotData> ShipManagerSystem::findFreeConnectionPoints(Entity* p_entit
 		}
 	}
 	return conPoints;
+}
+AglBoundingSphere ShipManagerSystem::findEditSphere(int p_ownerId)
+{
+	Entity* ship = findShip(p_ownerId);
+
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
+		ComponentType::PhysicsBody));
+	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
+
+	//Ship should always be a compound body
+	CompoundBody* physicalShipCompoundBody = static_cast<CompoundBody*>(physicalShipBody);
+
+	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
+
+	//Put the sphere in local space
+	Transform* transform = static_cast<Transform*>(ship->getComponent(
+		ComponentType::Transform));
+
+	bs.position.transform(transform->getMatrix().inverse());
+
+	return bs;
+}
+AglBoundingSphere ShipManagerSystem::findEditSphere(Entity* p_ship)
+{
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	PhysicsBody* shipBody = static_cast<PhysicsBody*>(p_ship->getComponent(
+		ComponentType::PhysicsBody));
+	Body* physicalShipBody = physX->getController()->getBody(shipBody->m_id);
+
+	//Ship should always be a compound body
+	CompoundBody* physicalShipCompoundBody = static_cast<CompoundBody*>(physicalShipBody);
+
+	AglBoundingSphere bs = physicalShipCompoundBody->GetBoundingSphere();
+
+	//Put the sphere in local space
+	Transform* transform = static_cast<Transform*>(p_ship->getComponent(
+		ComponentType::Transform));
+
+	bs.position.transform(transform->getMatrix().inverse());
+
+	return bs;
 }

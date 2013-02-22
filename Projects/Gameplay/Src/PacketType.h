@@ -51,6 +51,7 @@ public:
 		AnimationUpdatePacket,
 		SlotParticleEffectPacket,
 		SpawnExplosionPacket,
+		EditSphereUpdatePacket
 	};
 
 };

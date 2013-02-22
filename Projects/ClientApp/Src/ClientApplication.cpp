@@ -109,6 +109,10 @@
 #include <SpeedFovAdjustSystem.h>
 #include <MenuBackgroundSceneSystem.h>
 #include <LevelInfoLoader.h>
+#include <EnvironmentSystem.h>
+#include <SpeedBufferUpdaterSystem.h>
+#include <ShipParticleSystemUpdater.h>
+#include <EditSphereSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -123,6 +127,7 @@ using namespace std;
 #include <ShipSlotControllerSystem.h>
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
+#include <DestroyOnParticlesDeathSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -255,8 +260,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* General controlling													*/
 	/************************************************************************/
-	LookAtSystem* lookAtSystem = new LookAtSystem();
-	m_world->setSystem(SystemType::LookAtSystem, lookAtSystem, true);
+	m_world->setSystem( new LookAtSystem() );
+	m_world->setSystem( new SpeedBufferUpdaterSystem() );
 	
 	/************************************************************************/
 	/* Input																*/
@@ -298,10 +303,10 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
-	ScoreWorldVisualizerSystem* scoreVisSystem = new ScoreWorldVisualizerSystem( );
-	m_world->setSystem( scoreVisSystem, true );
-	ConnectionVisualizerSystem* cvs = new ConnectionVisualizerSystem();
-	m_world->setSystem(cvs, true);
+	m_world->setSystem( new ScoreWorldVisualizerSystem() );
+	m_world->setSystem( new ConnectionVisualizerSystem() );
+	m_world->setSystem( new ShipParticleSystemUpdater() );
+	m_world->setSystem( new EditSphereSystem() );
 
 	/************************************************************************/
 	/* Player    															*/
@@ -321,15 +326,19 @@ void ClientApplication::initSystems()
 		slotInput);
 	m_world->setSystem( shipEditController, true);
 
+
 	/************************************************************************/
 	/* Hierarchy															*/
 	/************************************************************************/
 	EntityParentHandlerSystem* entityParentHandler = new EntityParentHandlerSystem();
 	m_world->setSystem( entityParentHandler, true );
 
+
 	/************************************************************************/
 	/* Camera																*/
 	/************************************************************************/
+	// Chamber fog and ambient
+	m_world->setSystem( new EnvironmentSystem() );
 
 	// Controller logic for camera
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
@@ -408,6 +417,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem(), true );
+
+	/************************************************************************/
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
@@ -460,7 +474,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),0.78f,1.0f,2000.0f ) );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,1200.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );
@@ -500,7 +514,7 @@ void ClientApplication::initEntities()
 
 		rotation -= 0.78;
 	}
-
+	/*
 	factory->readAssemblageFile("Assemblages/GlobalLight.asd");
 	entity = factory->entityFromRecipe( "GlobalLight" );									 
 	m_world->addEntity( entity );
@@ -524,6 +538,7 @@ void ClientApplication::initEntities()
 	factory->readAssemblageFile("Assemblages/RedLight.asd");
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
+	*/
 
 	entity = m_world->createEntity();
 	entity->addComponent(ComponentType::GameState,new GameState(MENU));

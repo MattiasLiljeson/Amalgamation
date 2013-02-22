@@ -29,6 +29,7 @@ public:	//Enums
 		InterpolationComponent,
 		PhysicsBody,
 		PhysUnknown,
+		DestroyOnParticlesDeath,
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
@@ -47,6 +48,7 @@ public:	//Enums
 		LoadMesh,
 		Transform,
 		ShipModule,
+		EnvironmentValues,
 		ConnectionPointSet,
 		ShipConnectionPointHighlights,
 		SpawnPointSet,
@@ -69,11 +71,11 @@ public:	//Enums
 		DebugMove,
 		uvRectCrop,
 		PlayerState,
-		LevelPieceInfo, // Used on the server only
 		LevelPieceRoot,
 		LevelInfo,
 		GameState,
 		Gradient,
+		SpeedBuffer,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -87,6 +89,7 @@ public:	//Enums
 		TAG_MyShip,
 		TAG_MainCamera,
 		TAG_ShadowCamera,
+		TAG_LookAtMainCamera,
 		// -------------------
 	
 		/************************************************************************/

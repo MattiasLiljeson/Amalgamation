@@ -12,6 +12,7 @@ DisplayGameStats::DisplayGameStats(const char* p_name, const char* p_tableName)
 		m_players[i].ping	= -1;
 	}
 	m_activePlayers = 0;
+	m_dirty = false;
 	//NotifyRowAdd("infopanel", 0, MAXPLAYERS);
 }
 
@@ -62,11 +63,16 @@ void DisplayGameStats::updateRow( int p_row, const PlayerStats& p_stats )
 	m_players[p_row].name	= p_stats.name;
 	m_players[p_row].ping	= p_stats.ping;
 	m_players[p_row].score	= p_stats.score;
+	m_dirty = true;
 }
 
 void DisplayGameStats::updateTheVisualInfoPanel()
 {
-	NotifyRowChange(m_tableName, 0, m_activePlayers);
+	if (m_dirty)
+	{
+		NotifyRowChange(m_tableName, 0, m_activePlayers);
+		m_dirty = false;
+	}
 }
 
 void DisplayGameStats::setActivePlayers( int p_players )

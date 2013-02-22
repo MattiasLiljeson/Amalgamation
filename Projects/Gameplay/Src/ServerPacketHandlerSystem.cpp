@@ -32,6 +32,7 @@
 #include "ShipConnectionPointHighlights.h"
 #include "ShipManagerSystem.h"
 #include "SlotParticleEffectPacket.h"
+#include "EditSphereUpdatePacket.h"
 
 
 
@@ -154,7 +155,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						entity->applyComponentChanges();
 
 						//Send a packet back to the client telling him where connection points are
-
 						ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
 						smcs->setEditMode(true);
 
@@ -175,6 +175,13 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
 						}
 
+						//Send a packet back to the client telling him how the edit sphere should be oriented
+						EditSphereUpdatePacket editSphereUpdate;
+						AglBoundingSphere bs = sms->findEditSphere(packet.getSenderId());
+						editSphereUpdate.m_offset = bs.position;
+						editSphereUpdate.m_radius = bs.radius;
+						
+						m_server->unicastPacket(editSphereUpdate.pack(), packet.getSenderId());
 					}
 					else if (lookAtOrbit && !lookAtFollow && 
 						cameraControlPacket.state==PlayerStates::steeringState)				

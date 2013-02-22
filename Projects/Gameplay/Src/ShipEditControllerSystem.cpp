@@ -6,6 +6,8 @@
 #include "ShipInputProcessingSystem.h"
 #include "GameplayTags.h"
 #include "ShipSlotControllerSystem.h"
+#include "ParticleSystemsComponent.h"
+#include "..\..\AgileAssets\src\AglParticleSystem.h"
 
 ShipEditControllerSystem::ShipEditControllerSystem( ShipInputProcessingSystem* p_shipInput, 
 									   PhysicsSystem* p_physicsSystem,

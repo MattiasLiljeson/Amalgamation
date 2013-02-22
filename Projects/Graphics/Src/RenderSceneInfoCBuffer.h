@@ -24,16 +24,22 @@ struct RenderSceneInfoCBuffer
 	float cameraPos[4];
 	float cameraForward[4];
 	float cameraUp[4];
+	float ambientColorAndFogNear[4];
+	float fogColorAndFogFar[4];
 	float renderTargetSize[2];
 	float farPlane;
 	float nearPlane;
 
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo){
+		ambientColorAndFogNear[3] = p_sceneInfo.fogNearPlaneClosenessPercentage; // fog near
+		fogColorAndFogFar[3] = p_sceneInfo.fogFarPlaneClosenessPercentage;		 // fog far
 		setViewProjection(p_sceneInfo.viewProj);
 		setViewProjectionInverse(p_sceneInfo.viewProjInv);
 		setCameraPos(p_sceneInfo.cameraPos);
 		setCameraForward(p_sceneInfo.cameraForward);
 		setCameraUp(p_sceneInfo.cameraUp);
+		setAmbientColor(p_sceneInfo.ambientColor);
+		setFogColor(p_sceneInfo.fogColor);
 		setRenderTargetSize(p_sceneInfo.renderTargetDimensions);
 		setFarPlane(p_sceneInfo.farPlane);
 		setNearPlane(p_sceneInfo.nearPlane);
@@ -65,6 +71,14 @@ struct RenderSceneInfoCBuffer
 		cameraUp[1] = p_up[1];
 		cameraUp[2] = p_up[2];
 		cameraUp[3] = 0;
+	}
+	void setAmbientColor(const AglVector3& p_ambientColor){
+		for (unsigned int i=0;i<3;i++)
+			ambientColorAndFogNear[i] = p_ambientColor[i];
+	}
+	void setFogColor(const AglVector3& p_fogColor){
+		for (unsigned int i=0;i<3;i++)
+			fogColorAndFogFar[i] = p_fogColor[i];
 	}
 	void setRenderTargetSize(const AglVector2& p_dimensions){
 		renderTargetSize[0] = p_dimensions[0];

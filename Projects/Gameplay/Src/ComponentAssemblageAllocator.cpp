@@ -30,6 +30,9 @@
 #include "LightBlinker.h"
 #include "LevelPieceRoot.h"
 #include "LevelInfo.h"
+#include "EnvironmentValues.h"
+#include "SpeedBuffer.h"
+#include "DestroyOnParticlesDeath.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -60,4 +63,7 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<LightBlinker>();
 	handle<LevelPieceRoot>();
 	handle<LevelInfo>();
+	handle<EnvironmentValues>();
+	handle<SpeedBuffer>();
+	handle<DestroyOnParticlesDeath>();
 }

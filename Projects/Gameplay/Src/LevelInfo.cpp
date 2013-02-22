@@ -1,5 +1,5 @@
 #include "LevelInfo.h"
-#include "LevelPieceFileMapping.h"
+#include "LevelPieceFileData.h"
 #include <random>
 
 ComponentRegister<LevelInfo> LevelInfo::s_reg("LevelInfo");
@@ -7,11 +7,15 @@ ComponentRegister<LevelInfo> LevelInfo::s_reg("LevelInfo");
 LevelInfo::LevelInfo()
 	: Component(ComponentType::LevelInfo)
 {
-
+	m_branchCount			= -1;
+	m_startPieceId			= -1;
+	m_randomStartRotation	= false;
+	m_endPlug				= NULL;
 }
 
 LevelInfo::~LevelInfo()
 {
+	delete m_endPlug;
 	for (unsigned int i = 0; i < m_fileData.size(); i++)
 	{
 		delete m_fileData[i];
@@ -66,8 +70,18 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		}
 		else if (p_initData[i].dataName == "m_plugPiece")
 		{
-			p_initData[i].getDataAsString(&m_plugPiece);
+			m_endPlug = new LevelPieceFileData();
+			p_initData[i].getDataAsString(&m_endPlug->assemblageFileName);
 		}
+		else if (p_initData[i].dataName == "m_plugModel")
+		{
+			p_initData[i].getDataAsString(&m_endPlug->modelFileName);
+		}
+	}
+	if (m_endPlug)
+	{
+		m_endPlug->id		= m_fileData.size();
+		m_endPlug->weight	= 0;
 	}
 }
 
@@ -83,7 +97,10 @@ LevelPieceFileData* LevelInfo::getRandomFileData() const
 
 LevelPieceFileData* LevelInfo::getFileDataFromId( int p_id ) const
 {
-	return m_fileData[p_id];
+	if (p_id < m_fileData.size())
+		return m_fileData[p_id];
+	else // Else, assume the end plug is the one desired.
+		return m_endPlug;
 }
 
 LevelPieceFileData* LevelInfo::getStartFileData() const
@@ -106,6 +123,13 @@ bool LevelInfo::doRandomStartRotation() const
 {
 	return m_randomStartRotation;
 }
+
+LevelPieceFileData* LevelInfo::getEndPlugFileData() const
+{
+	return m_endPlug;
+}
+
+
 
 
 

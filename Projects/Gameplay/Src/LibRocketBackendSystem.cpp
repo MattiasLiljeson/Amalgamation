@@ -299,9 +299,9 @@ void LibRocketBackendSystem::processKeyStates()
 		{
 			if (control->getStatus() > 0.5f)
 			{
-				DEBUGPRINT(((toString("Key ") +
+				/*DEBUGPRINT(((toString("Key ") +
 							toString(keyCode) + 
-							toString(" was pressed\n")).c_str()));
+							toString(" was pressed\n")).c_str()));*/
 				m_rocketContext->ProcessKeyDown(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
 
@@ -313,9 +313,9 @@ void LibRocketBackendSystem::processKeyStates()
 			}
 			else
 			{
-				DEBUGPRINT(((toString("Key ") +
+				/*DEBUGPRINT(((toString("Key ") +
 							toString(keyCode) + 
-							toString(" was released\n")).c_str()));
+							toString(" was released\n")).c_str()));*/
 				m_rocketContext->ProcessKeyUp(
 					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
 			}

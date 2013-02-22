@@ -78,7 +78,7 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 
 	// store owner data
 	StandardMine* mineModule = new StandardMine();
-	mineModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, &p_module);
+	mineModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, p_module);
 	entity->addComponent(ComponentType::StandardMine, mineModule);
 
 
