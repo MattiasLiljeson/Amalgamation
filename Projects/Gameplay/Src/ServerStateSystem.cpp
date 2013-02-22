@@ -6,7 +6,7 @@ ServerStateSystem::ServerStateSystem(ServerStates p_firstState)
 	for(unsigned int i = 0 ; i < (unsigned int)ServerStates::NUMSTATES; i++){
 		m_states.push_back(new State( static_cast<ServerStates>(i)));
 	}
-	m_currentState = (int)ServerStates::INIT;
+	m_currentState = (int)ServerStates::NONE;
 	setQueuedState(p_firstState);
 }
 

@@ -831,7 +831,7 @@ Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, strin
 		entity = entityFromRecipe( p_entityName );
 	}
 	final=clock()-init;
-	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
+//	DEBUGPRINT(( ("\n"+p_entityName+" constructed in "+toString((double)final / ((double)CLOCKS_PER_SEC))+" seconds.\n").c_str() ));
 	return entity;
 }
 

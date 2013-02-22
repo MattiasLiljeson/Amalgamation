@@ -1,4 +1,7 @@
 #include "ClientStateSystem.h"
+#define FORCE_VS_DBG_OUTPUT
+#include <DebugUtil.h>
+
 
 ClientStateSystem::ClientStateSystem( GameStates p_firstState )
 	: EntitySystem(SystemType::ClientStateSystem)
@@ -6,7 +9,7 @@ ClientStateSystem::ClientStateSystem( GameStates p_firstState )
 	for(unsigned int i = 0 ; i < (unsigned int)GameStates::NUMSTATES; i++){
 		m_states.push_back(new State( static_cast<GameStates>(i)));
 	}
-	m_currentState = (int)GameStates::INIT;
+	m_currentState = (int)GameStates::NONE;
 	setQueuedState(p_firstState);
 }
 
@@ -25,6 +28,33 @@ void ClientStateSystem::process()
 		m_states[m_currentState]->delta = EnumGameDelta::EXITTHISFRAME;
 		m_currentState = (int)m_queued.stateEnum;
 		m_states[m_currentState]->delta = EnumGameDelta::ENTEREDTHISFRAME;
+
+		switch (m_states[m_currentState]->stateEnum)
+		{
+		case GameStates::INGAME:
+			DEBUGPRINT(("Changed to ingame state!\n"));
+			break;
+		case GameStates::MENU:
+			DEBUGPRINT(("Changed to menu state!\n"));
+			break;
+		case GameStates::INITGAME:
+			DEBUGPRINT(("Changed to init game state!\n"));
+			break;
+		case GameStates::LOBBY:
+			DEBUGPRINT(("Changed to lobby state!\n"));
+			break;
+		case GameStates::LOADING:
+			DEBUGPRINT(("Changed to loading state!\n"));
+			break;
+		case GameStates::FINISHEDLOADING:
+			DEBUGPRINT(("Changed to finished loading state!\n"));
+			break;
+		case GameStates::PAUSE:
+			DEBUGPRINT(("Changed to pause state!\n"));
+			break;
+		default:
+			break;
+		}
 	}
 	else{
 		for (unsigned int i = 0; i < (unsigned int)GameStates::NUMSTATES; i++){

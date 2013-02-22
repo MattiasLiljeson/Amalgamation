@@ -22,7 +22,7 @@ public:
 		EnumGameDelta	delta;
 
 		State(){
-			stateEnum = ServerStates::INIT;
+			stateEnum = ServerStates::NONE;
 			delta = EnumGameDelta::NOTCHANGED;
 		}
 		State(ServerStates p_state){
