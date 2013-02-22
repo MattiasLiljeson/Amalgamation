@@ -18,6 +18,7 @@
 #include "EditSphereUpdatePacket.h"
 #include "ScoreRuleHelper.h"
 #include "PlayerScore.h"
+#include "SelectionMarkerUpdatePacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -184,7 +185,8 @@ void ServerPickingSystem::setReleased(int p_index)
 					if (shipModule->m_lastShipEntityWhenAttached!=-1)
 						parentShip = m_world->getEntity(shipModule->m_lastShipEntityWhenAttached);
 
-					scoreComponent = static_cast<PlayerScore*>(parentShip->getComponent(ComponentType::PlayerScore));
+					if (parentShip)
+						scoreComponent = static_cast<PlayerScore*>(parentShip->getComponent(ComponentType::PlayerScore));
 
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
@@ -343,6 +345,8 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	}
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
+
+	updateSelectionMarker(toProject, ship);
 }
 AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, 
 													   Entity* p_entity, PickComponent& p_pc)
@@ -890,4 +894,19 @@ void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 	PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
 	Body* body = ps->getController()->getBody(moduleBody->m_id);
 	body->setTransform(transform);
+}
+
+//Send information about the Selection marker
+void ServerPickingSystem::updateSelectionMarker(Entity* p_module, Entity* p_ship)
+{
+	NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
+		p_ship->getComponent(ComponentType::NetworkSynced));
+
+	Transform* trans = static_cast<Transform*>(
+		p_ship->getComponent(ComponentType::Transform));
+
+	SelectionMarkerUpdatePacket smup;
+	smup.targetNetworkIdentity = p_module->getIndex();
+	smup.transform = trans->getMatrix();
+	m_server->unicastPacket(smup.pack(), shipNetworkSynced->getNetworkOwner());
 }

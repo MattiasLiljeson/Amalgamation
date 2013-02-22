@@ -113,6 +113,7 @@
 #include <SpeedBufferUpdaterSystem.h>
 #include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
+#include <SelectionMarkerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -307,6 +308,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
 	m_world->setSystem( new EditSphereSystem() );
+	m_world->setSystem( new SelectionMarkerSystem());
 
 	/************************************************************************/
 	/* Player    															*/

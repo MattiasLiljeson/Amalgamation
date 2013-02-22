@@ -112,6 +112,9 @@
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
     <ClInclude Include="ScoreRuleHelper.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
+    <ClInclude Include="SelectionMarker.h" />
+    <ClInclude Include="SelectionMarkerSystem.h" />
+    <ClInclude Include="SelectionMarkerUpdatePacket.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
@@ -305,6 +308,8 @@
     <ClCompile Include="GameStatsSystem.cpp" />
     <ClCompile Include="ScoreRuleHelper.cpp" />
     <ClCompile Include="ScoreWorldVisualizerSystem.cpp" />
+    <ClCompile Include="SelectionMarkerSystem.cpp" />
+    <ClCompile Include="SelectionMarkerUpdatePacket.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
     <ClCompile Include="ServerMeasurementSystem.cpp" />
