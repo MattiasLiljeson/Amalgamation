@@ -145,3 +145,13 @@ const string& Entity::getName() const
 {
 	return m_name;
 }
+
+vector<ComponentType::ComponentTypeIdx> Entity::getComponentEnums()
+{
+	return m_world->getComponentManager()->getComponentEnumList(this);
+}
+
+vector<SystemType::SystemTypeIdx> Entity::getSystemEnums()
+{
+	return m_world->getSystemManager()->getSystemEnumList(this);
+}
