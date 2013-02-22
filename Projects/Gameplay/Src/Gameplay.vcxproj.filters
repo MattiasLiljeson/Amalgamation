@@ -1136,5 +1136,8 @@
     <ClCompile Include="DestroyOnParticlesDeath.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletalAnimation.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

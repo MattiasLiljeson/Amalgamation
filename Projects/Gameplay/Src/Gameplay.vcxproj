@@ -337,6 +337,7 @@
     <ClCompile Include="DebugMovementSystem.cpp" />
     <ClCompile Include="RemoveSoundEffectPacket.cpp" />
     <ClCompile Include="ShipSlotControllerSystem.cpp" />
+    <ClCompile Include="SkeletalAnimation.cpp" />
     <ClCompile Include="SkeletalAnimationSystem.cpp" />
     <ClCompile Include="SlotParticleEffectPacket.cpp" />
     <ClCompile Include="SpawnExplosionPacket.cpp" />
