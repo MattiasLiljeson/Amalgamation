@@ -417,16 +417,16 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new SkeletalAnimationSystem(), true );
 
 	/************************************************************************/
-	/* Destroyers															*/
-	/************************************************************************/
-	m_world->setSystem( new DestroyOnParticlesDeathSystem(), true );
-
-	/************************************************************************/
 	/* Graphics representer													*/
 	/************************************************************************/
 	GraphicsRendererSystem* graphicsRender = new GraphicsRendererSystem(graphicsBackend,
 		shadowSystem, renderer, rocketBackend, particleRender, antTweakBar, lightRender);
 	m_world->setSystem( graphicsRender, true );
+
+	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem(), true );
 
 	/************************************************************************/
 	/* Debugging															*/
