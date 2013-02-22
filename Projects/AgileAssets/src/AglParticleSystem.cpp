@@ -59,7 +59,7 @@ AglParticleSystemHeader* AglParticleSystem::getHeaderPtr()
 	return &m_header;
 }
 
-const AglParticleSystemHeader& AglParticleSystem::getHeader()
+const AglParticleSystemHeader& AglParticleSystem::getHeader() const
 {
 	return m_header;
 }

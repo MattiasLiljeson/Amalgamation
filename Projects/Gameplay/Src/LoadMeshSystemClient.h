@@ -43,6 +43,7 @@ private:
 		PhysicsBody* p_rootPhysicsBody,
 		AglMatrix& baseTransform);
 
+	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpAnimation(Entity* p_entity, ModelResource* p_modelResource);
 
 	GraphicsBackendSystem* m_gfxBackend;

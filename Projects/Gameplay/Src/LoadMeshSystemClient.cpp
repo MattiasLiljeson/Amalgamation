@@ -1,20 +1,21 @@
 #include "LoadMeshSystemClient.h"
 
+#include "BodyInitData.h"
+#include "BoundingBox.h"
+#include "BoundingSphere.h"
+#include "ConnectionPointSet.h"
+#include "EntityParent.h"
 #include "GraphicsBackendSystem.h"
 #include "LoadMesh.h"
-#include <ModelResource.h>
-#include <GraphicsWrapper.h>
-#include "Transform.h"
-#include "RenderInfo.h"
-#include "EntityParent.h"
-#include "ConnectionPointSet.h"
-#include "BodyInitData.h"
-#include "PhysicsBody.h"
-#include <AglSkeletonMapping.h>
-#include "SkeletalAnimation.h"
-#include "BoundingSphere.h"
 #include "MeshOffsetTransform.h"
-#include "BoundingBox.h"
+#include "ParticleSystemsComponent.h"
+#include "PhysicsBody.h"
+#include "RenderInfo.h"
+#include "SkeletalAnimation.h"
+#include "Transform.h"
+#include <AglSkeletonMapping.h>
+#include <GraphicsWrapper.h>
+#include <ModelResource.h>
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -83,6 +84,22 @@ void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity,
 
 	BoundingBox* bb = new BoundingBox(p_modelResource->meshHeader.minimumOBB);
 	p_entity->addComponent(ComponentType::BoundingBox, bb);
+}
+
+void LoadMeshSystemClient::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
+{
+	if (!p_modelResource->particleSystems.m_collection.empty())
+	{
+		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
+			p_entity->getComponent( ComponentType::ParticleSystemsComponent ) );
+
+		if( particleComp == NULL ) {
+			particleComp = new ParticleSystemsComponent();
+			p_entity->addComponent( particleComp );
+		}
+
+		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
+	}
 }
 
 void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)
