@@ -41,6 +41,7 @@
 #include "EntityFactory.h"
 #include "ServerDynamicObjectsSystem.h"
 #include "ChangeStatePacket.h"
+#include <DebugUtil.h>
 
 
 
@@ -325,6 +326,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					else if (sep.type == SimpleEventType::RELEASE_PICK)
 						pickSystem->setReleased(packet.getSenderId());
 				}
+				else
+				{
+					printPacketTypeNotHandled("Ingame", (int)packetType);
+				}
 
 				if( static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 					checkTimeInterval(TimerIntervals::HalfSecond))
@@ -358,6 +363,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						stateSystem->setQueuedState(ServerStates::LOADING);
 						m_server->broadcastPacket(newState.pack());
 					}
+				}
+				else
+				{
+					printPacketTypeNotHandled("Lobby", (int)packetType);
 				}
 			}
 			break; 
@@ -464,6 +473,10 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 						m_server->broadcastPacket(statePacket.pack());
 					}
 				}
+				else
+				{
+					printPacketTypeNotHandled("Sent All Packet", (int)packetType);
+				}
 			}
 			break;
 		}
@@ -536,4 +549,10 @@ Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClien
 	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
 
 	return e;
+}
+
+void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p_packetType )
+{
+	DEBUGPRINT((("SERVER: Not handled("+p_state+"): " +
+		toString(p_packetType) + "\n").c_str()));
 }

@@ -529,7 +529,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 				else
 				{
-					printPacketTypeNotHandled("Finished", (int)packetType);
+					printPacketTypeNotHandled("Finished Loading", (int)packetType);
 				}
 			}
 
