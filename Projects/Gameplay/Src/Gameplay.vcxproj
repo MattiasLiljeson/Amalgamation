@@ -110,6 +110,7 @@
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
+    <ClInclude Include="ScoreRuleHelper.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
@@ -302,6 +303,7 @@
     <ClCompile Include="RocketControllerSystem.cpp" />
     <ClCompile Include="RocketLauncherModule.cpp" />
     <ClCompile Include="GameStatsSystem.cpp" />
+    <ClCompile Include="ScoreRuleHelper.cpp" />
     <ClCompile Include="ScoreWorldVisualizerSystem.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />

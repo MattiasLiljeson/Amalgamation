@@ -38,12 +38,12 @@ public:
 	void setEditMode(bool p_editMode);
 
 private:
-	void checkDrop(Entity* p_parent);
+	void checkDrop_ApplyScoreAndDamage(Entity* p_parent);
 	void drop(Entity* p_parent, unsigned int p_slot);
 	void changeHighlight(Entity* p_entity, int p_new, int p_status);
 	void setActivation(Entity* p_entity, bool p_value);
 	void setActivationChildren(Entity* p_entity, bool p_value);
-	float calculateScore(Entity* p_entity);
+	// float calculateScore(Entity* p_entity);
 	void setScoreEffect(int p_networkOwner, Transform* p_moduleTransform, int p_score);
 private:
 	struct HighlightEvent
