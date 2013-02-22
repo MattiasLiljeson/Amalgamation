@@ -93,39 +93,16 @@ AssemblageHelper::E_FileStatus ComponentReader::parseComponentDataLine(
 	ComponentData* out_data,  const string& p_dataLine )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	stringstream ss( p_dataLine );
+	//stringstream ss( p_dataLine );
 
-	char dataType = ss.peek();
+	deque<string> rowElements = AssemblageHelper::splitString( p_dataLine, ' ' );
+
+	//char dataType = ss.peek();
+
+	int type = AssemblageHelper::typeFromString( rowElements[0] );
 
 	ComponentData data;
-
-	switch( dataType )
-	{
-	case 'b':
-		data.setData<bool>( &ss );
-	case 'i':
-		data.setData<int>( &ss );
-		break;
-	case 'u':
-		data.setData<unsigned int>( &ss );
-		break;
-	case 'f':
-		data.setData<float>( &ss );
-		break;
-	case 'd':
-		data.setData<double>( &ss );
-		break;
-	case 'c':
-		data.setData<char>( &ss );
-		break;
-	case 's':
-		data.setDataAsString( &ss );
-		break;
-	default:
-		status = AssemblageHelper::FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED;
-		break;
-	}
-
+	data.setData( rowElements );
 	if( status == AssemblageHelper::FileStatus_OK ||
 		status == AssemblageHelper::FileStatus_END_OF_FILE )
 	{

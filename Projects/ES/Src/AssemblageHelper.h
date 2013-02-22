@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <deque>
 
 using namespace std;
 
@@ -46,8 +47,24 @@ public:
 	};
 
 	// Not used yet
-	enum E_AssemblageDataTypes
+	enum AssemblageDataTypes
 	{
+		AssemblageDataTypes_NON_EXISTING = -1,
+		AssemblageDataTypes_FIRST,
+
+		AssemblageDataTypes_BOOL = AssemblageDataTypes_FIRST,
+		AssemblageDataTypes_INT,
+		AssemblageDataTypes_UINT,
+		AssemblageDataTypes_FLOAT,
+		AssemblageDataTypes_DOUBLE,
+		AssemblageDataTypes_CHAR,
+		AssemblageDataTypes_STRING,
+		AssemblageDataTypes_VEC2,
+		AssemblageDataTypes_VEC3,
+		AssemblageDataTypes_VEC4,
+
+		AssemblageDataTypes_LAST = AssemblageDataTypes_VEC4, 
+		AssemblageDataTypes_CNT
 	};
 
 public:
@@ -95,5 +112,9 @@ public:
 	/// \return AssemblageHelper::E_FileStatus
 	///-----------------------------------------------------------------------------------
 	static E_FileStatus controlStream( ifstream* p_file );
+
+	static AssemblageDataTypes typeFromString( const string& p_typeAsStr );
+
+	static deque<string> splitString( const string& p_string, char p_denominator );
 };
 

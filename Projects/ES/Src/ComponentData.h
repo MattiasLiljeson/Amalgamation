@@ -30,13 +30,15 @@ using namespace std;
 ///---------------------------------------------------------------------------------------
 struct ComponentData
 {
-	char dataType;
+	AssemblageHelper::AssemblageDataTypes type;
 	string dataName;  
 	void** data;
 	int dataSize;
 
 	ComponentData();
 	void release();
+
+	AssemblageHelper::E_FileStatus setData( deque<string> p_elementList );
 
 	///-----------------------------------------------------------------------------------
 	/// Setter for basic data types. No error checking for faulty lines etc done. The type
@@ -45,8 +47,11 @@ struct ComponentData
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	template<typename T>
-	void setData( stringstream* p_ss );
+	void setBasicDataTypes( deque<string> p_elementList );
 	
+	template<typename T>
+	AssemblageHelper::E_FileStatus getBasicDataTypes( T* out_value );
+
 	///-----------------------------------------------------------------------------------
 	/// Get the data as the supplied type. Does no type checking whatsoever as 
 	/// reinterpret_cast is used.
@@ -69,7 +74,7 @@ struct ComponentData
 	/// fine. Returns FileStatus_COMPONENT_DATA_CONVERSION_FAILED if the variable wasn't 
 	///defined in the assemblage.
 	///-----------------------------------------------------------------------------------
-	AssemblageHelper::E_FileStatus setDataAsString( stringstream* p_ss );
+	AssemblageHelper::E_FileStatus setDataAsString( deque<string> p_elementList );
 
 
 	///-----------------------------------------------------------------------------------
@@ -92,7 +97,7 @@ struct ComponentData
 	/// \param p_size size of c string / number of bytes to copy.
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setDataAsCharArray( char p_dataType, string p_dataName, const char* p_src, int p_size );
+	void setDataAsCharArray( const char* p_src, int p_size );
 
 	///-----------------------------------------------------------------------------------
 	/// Fetch data as a c string.
@@ -101,19 +106,30 @@ struct ComponentData
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void getDataAsCharArray( char** out_data);
+
+
+	AssemblageHelper::E_FileStatus setDataAsVec2( deque<string> p_elementList );
+	AssemblageHelper::E_FileStatus setDataAsVec3( deque<string> p_elementList );
+	AssemblageHelper::E_FileStatus setDataAsVec4( deque<string> p_elementList );
+	AssemblageHelper::E_FileStatus getDataAsVec2( float* out_x, float* out_y );
+	AssemblageHelper::E_FileStatus getDataAsVec3( float* out_x, float* out_y, float* out_z );
+	AssemblageHelper::E_FileStatus getDataAsVec4( float* out_x, float* out_y, float* out_z,
+		float* out_w );
+
+	template<typename T>
+	void operator<<( const T& p_rhs );
+
+	template<typename T>
+	void operator>>( T& p_rhs );
 };
 
 template<typename T>
-void ComponentData::setData( stringstream* p_ss )
+void ComponentData::setBasicDataTypes( deque<string> p_elementList )
 {
-	// Make sure no memory leaks 
-	release();
-
-	// Read line from stream
 	T rawData;
-	(*p_ss)>>dataType;
-	(*p_ss)>>dataName;
-	(*p_ss)>>rawData;
+	stringstream ss (p_elementList.front() );
+	ss>>rawData;
+
 	dataSize = sizeof(rawData);
 
 	// Convert data to void* and save it.
@@ -123,6 +139,21 @@ void ComponentData::setData( stringstream* p_ss )
 
 template<typename T>
 AssemblageHelper::E_FileStatus ComponentData::getData( T* out_value )
+{
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
+	T* value;
+
+	if( typeid(T) != typeid(string) ) {
+		status = getBasicDataTypes<T>( out_value );
+	} else {
+		status = getDataAsString( *out_value );
+	}
+
+	return status;
+}
+
+template<typename T>
+AssemblageHelper::E_FileStatus ComponentData::getBasicDataTypes( T* out_value )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	T* value;

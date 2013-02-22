@@ -1,4 +1,5 @@
 #include "AssemblageHelper.h"
+#include <algorithm>
 
 AssemblageHelper::AssemblageHelper(void)
 {
@@ -113,9 +114,6 @@ bool AssemblageHelper::skipChar( char p_prefix )
 	{
 	case '\t':
 	case ' ':
-	
-	// Should probably not be here as tehre is a risk of reading outside of a variable
-	//case '\0':
 		skip = true;
 		break;
 	default:
@@ -149,3 +147,54 @@ AssemblageHelper::E_FileStatus AssemblageHelper::controlStream( ifstream* p_file
 
 	return status;
 }
+
+AssemblageHelper::AssemblageDataTypes AssemblageHelper::typeFromString( const string& p_typeAsStr )
+{
+	string typeAsStr = "";
+	std::transform(p_typeAsStr.begin(), p_typeAsStr.end(), p_typeAsStr.begin(), ::tolower);
+
+	if( typeAsStr == "b" || typeAsStr == "bool" ) {
+		return AssemblageDataTypes_BOOL;
+	} else if( typeAsStr == "i" || typeAsStr == "int" ) {
+		return AssemblageDataTypes_INT;
+	} else if( typeAsStr == "u" || typeAsStr == "unsigned" || typeAsStr == "unsignedint" ) {
+		return AssemblageDataTypes_UINT;
+	} else if( typeAsStr == "f" || typeAsStr == "float" ) {
+		return AssemblageDataTypes_FLOAT;
+	} else if( typeAsStr == "d" || typeAsStr == "double" ) {
+		return AssemblageDataTypes_DOUBLE;
+	} else if( typeAsStr == "c" || typeAsStr == "char" ) {
+		return AssemblageDataTypes_CHAR;
+	} else if( typeAsStr == "s" || typeAsStr == "string" ) {
+		return AssemblageDataTypes_STRING;
+	} else if( typeAsStr == "vec2" || typeAsStr == "vector2" || typeAsStr == "float2" ) {
+		return AssemblageDataTypes_VEC2;
+	} else if( typeAsStr == "vec3" || typeAsStr == "vector3" || typeAsStr == "float3" ) {
+		return AssemblageDataTypes_VEC3;
+	} else if( typeAsStr == "vec4" || typeAsStr == "vector4" || typeAsStr == "float5" ) {
+		return AssemblageDataTypes_VEC4;
+	} else {
+		return AssemblageDataTypes_NON_EXISTING;
+	}
+}
+
+deque<string> AssemblageHelper::splitString( const string& p_string, char p_denominator )
+{
+	deque<string> splitted;
+	string buf = "";
+
+	int length = p_string.length();
+	for( int i=0; i<length; i++ )
+	{
+		if( p_string[i] != p_denominator ) {
+			buf += p_string[i];
+		} else if( buf != "") {
+			splitted.push_back( buf );
+			buf = "";
+		} else {
+			// skip the char if there a more denominators in a row
+		}
+	}
+}
+
+
