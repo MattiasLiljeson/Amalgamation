@@ -53,8 +53,8 @@ void MenuBackgroundSceneSystem::initialize()
 
 void MenuBackgroundSceneSystem::sysEnabled()
 {
-	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
-		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 5000);
+	initInstanceSphereByJohan("RockA.agl", AglVector3(20.0f, 0.0f, 50.0f),
+		AglVector3(1.0f, 1.0f, 0.0f), 10.0f, 100);
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
@@ -66,7 +66,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
-	initPointLight(entity, position + AglVector3(0.0f, 0.0f, 0.0f), 50.0f);
+	initPointLight(entity, position + AglVector3(0.0f, 0.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 }
@@ -123,20 +123,15 @@ void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_p
 	Light light;
 	light.instanceData.type = LightTypes::E_LightTypes_POINT;
 	light.instanceData.enabled = true;
-	//light.instanceData.ambient[0] = 0.0f;
-	//light.instanceData.ambient[1] = 0.0f;
-	//light.instanceData.ambient[2] = 0.0f;
 	light.instanceData.color[0] = 1.0f;
 	light.instanceData.color[1] = 1.0f;
 	light.instanceData.color[2] = 1.0f;
-	//light.instanceData.specular[0] = 0.1f;
-	//light.instanceData.specular[1] = 0.1f;
-	//light.instanceData.specular[2] = 0.1f;
 	light.instanceData.attenuation[0] = 0.0f;
 	light.instanceData.attenuation[1] = 0.0f;
 	light.instanceData.attenuation[2] = 0.0001f;
 	light.instanceData.range = p_range;
-	light.instanceData.spotLightConeSizeAsPow = 5.0f;
+	light.instanceData.spotLightConeSizeAsPow = 1.0f;
+	light.instanceData.lightEnergy = 2.0f;
 	TransformComponents transformComp;
 	transformComp.translation = p_position;
 	transformComp.scale = AglVector3(p_range, p_range, p_range);
