@@ -1,4 +1,6 @@
 #include "ServerStateSystem.h"
+#define FORCE_VS_DBG_OUTPUT
+#include <DebugUtil.h>
 
 ServerStateSystem::ServerStateSystem(ServerStates p_firstState)
 	: EntitySystem(SystemType::ServerStateSystem)
@@ -25,6 +27,27 @@ void ServerStateSystem::process()
 		m_states[m_currentState]->delta = EnumGameDelta::EXITTHISFRAME;
 		m_currentState = (int)m_queued.stateEnum;
 		m_states[m_currentState]->delta = EnumGameDelta::ENTEREDTHISFRAME;
+
+		switch (m_states[m_currentState]->stateEnum)
+		{
+		case ServerStates::INGAME:
+			DEBUGPRINT(("SERVER:Changed to ingame state!\n"));
+			break;
+		case ServerStates::LOADING:
+			DEBUGPRINT(("SERVER:Changed to loading state!\n"));
+			break;
+		case ServerStates::LOBBY:
+			DEBUGPRINT(("SERVER:Changed to lobby state!\n"));
+			break;
+		case ServerStates::RESULT:
+			DEBUGPRINT(("SERVER:Changed to result state!\n"));
+			break;
+		case ServerStates::SENTALLPACKETS:
+			DEBUGPRINT(("SERVER:Changed to sent all packet state!\n"));
+			break;
+		default:
+			break;
+		}
 	}
 	else{
 		for (unsigned int i = 0; i < (unsigned int)ServerStates::NUMSTATES; i++){

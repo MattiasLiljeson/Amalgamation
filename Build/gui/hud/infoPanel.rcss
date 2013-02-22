@@ -1,0 +1,29 @@
+body{
+	font-family: Armorhide;
+	font-charset: U+00??;
+	font-style: normal;
+	font-size: 15;
+	font-weight: normal;
+	color: white;
+	
+	width: 400px;
+	height: 300px;
+	
+	margin: auto;
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
+	background: rgba(20,20,20,40);
+	
+	padding: 5px;
+}
+
+datagrid datagridrow:nth-child(even)
+{
+	background: rgba(20,20,20,40);
+}
+
+datagrid datagridrow:nth-child(odd)
+{
+	background: rgba(40,40,40,40);
+}
