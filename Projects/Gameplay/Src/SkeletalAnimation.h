@@ -12,28 +12,34 @@
 #pragma once
 #include <Component.h>
 #include <AglMatrix.h>
+#include <ComponentFactory.h>
+#include <vector>
+
+using namespace std;
 
 class AglScene;
+
+struct AnimationTake
+{
+	float speed;
+	int startFrame;
+	int endFrame;
+};
 
 class SkeletalAnimation : public Component
 {
 public:
-	SkeletalAnimation(float p_time, AglScene* p_scene, AglMatrix p_offset) : Component(ComponentType::SkeletalAnimation)
-	{
-		m_time = p_time;
-		m_scene = p_scene;
-		m_offset = p_offset;
-		m_isPlaying = false;
-		m_playSpeed = 1.0f;
-	}
-	virtual ~SkeletalAnimation()
-	{
-
-	}
+	SkeletalAnimation();
+	SkeletalAnimation(float p_time, AglScene* p_scene, AglMatrix p_offset);
+	virtual ~SkeletalAnimation();
+	void init( vector<ComponentData> p_initData );
 
 	float m_time;
 	AglScene* m_scene;
 	AglMatrix m_offset;
 	bool m_isPlaying;
 	float m_playSpeed;
+
+	vector<AnimationTake> m_takes;
+	static ComponentRegister<SkeletalAnimation> s_reg;
 };

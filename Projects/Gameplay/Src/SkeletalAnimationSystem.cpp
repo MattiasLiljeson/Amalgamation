@@ -18,7 +18,7 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
-		if (anim->m_isPlaying)
+		if (true)//anim->m_isPlaying)
 			anim->m_time += dt*anim->m_playSpeed;
 
 		float maxTime = anim->m_scene->getAnimation(0)->getMaxTime();
