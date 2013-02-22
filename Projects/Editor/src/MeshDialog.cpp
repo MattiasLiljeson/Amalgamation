@@ -64,6 +64,43 @@ void TW_CALL MeshDialog::CreateBspTree(void *clientData)
 	m->createBspTree();
 }
 
+void TW_CALL MeshDialog::meshTransformFix(void* clientData)
+{
+	int id = (int)clientData;
+	Mesh* m = Scene::GetInstance()->GetMesh(id);
+	AglSkeleton* skeleton = m->getPrimarySkeleton();
+	if (skeleton)
+	{
+		AglJoint root = skeleton->getRoot();
+		AglMatrix invBind = skeleton->getInverseBindMatrix(root.id);
+		AglMatrix trans = skeleton->getGlobalTransform(root.id);
+		m->setTransform(invBind*trans);
+		Scene::GetInstance()->getAglScene()->calculateOBB();
+		Scene::GetInstance()->createScenePlane();
+	}
+}
+
+void TW_CALL MeshDialog::meshTransformFix2(void* clientData)
+{
+	int id = (int)clientData;
+	Mesh* m = Scene::GetInstance()->GetMesh(id);
+	AglSkeleton* skeleton = m->getPrimarySkeleton();
+	if (skeleton)
+	{
+		AglJoint root = skeleton->getRoot();
+		vector<AglJoint> children = skeleton->getChildren(root.id);
+		if (children.size() > 0)
+		{
+			root = skeleton->getChildren(root.id)[0];
+			AglMatrix invBind = skeleton->getInverseBindMatrix(root.id);
+			AglMatrix trans = skeleton->getGlobalTransform(root.id);
+			m->setTransform(invBind*trans);
+			Scene::GetInstance()->getAglScene()->calculateOBB();
+			Scene::GetInstance()->createScenePlane();
+		}
+	}
+}
+
 MeshDialog::MeshDialog()
 {
 	// Create a tweak bar
@@ -100,6 +137,9 @@ void MeshDialog::show()
 	TwAddButton(m_dialog, "CreateBspTree", CreateBspTree, (void*)m_meshIndex, " label='Create' group='Bsp Tree'");
 	TwAddVarRW(m_dialog, "DrawBspTree", TW_TYPE_BOOLCPP, (void*)m->getDrawTree(), "group='Bsp Tree'");
 	TwAddVarRW(m_dialog, "BspTreeLevel", TW_TYPE_UINT32, (void*)m->getTreeLevel(), "group='Bsp Tree'");
+
+	TwAddButton(m_dialog, "Transform Fix", meshTransformFix, (void*)m_meshIndex, " label='Transform Fix' group='Fixes'");
+	TwAddButton(m_dialog, "Transform Fix 2", meshTransformFix2, (void*)m_meshIndex, " label='Transform Fix 2' group='Fixes'");
 
 	TwDefine(" Mesh visible=true ");
 }

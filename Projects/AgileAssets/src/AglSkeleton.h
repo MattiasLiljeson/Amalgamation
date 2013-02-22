@@ -2,6 +2,10 @@
 #define AGLSKELETON_H
 
 #include "Agl.h"
+#include <vector>
+
+using namespace std;
+
 
 class AglScene;
 
@@ -93,7 +97,9 @@ public:
 	/// Gets the root joint.
 	/// \return The root joint.
 	///
-	AglJoint*	 getRoot();
+	AglJoint	 getRoot();
+
+	vector<AglJoint> getChildren(int p_parent);
 
 	///
 	/// Gets the global transform of a joint.

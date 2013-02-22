@@ -67,8 +67,6 @@ private:
 	Scene();
 	~Scene();
 
-	void createScenePlane();
-
 public:
 	static Scene* GetInstance();
 	static void Release();
@@ -143,6 +141,8 @@ public:
 		 return &conpointLength;
 	}
 	void RestartAllParticleSystems();
+
+	void createScenePlane();
 };
 
 #endif

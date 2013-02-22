@@ -74,6 +74,8 @@ public:
 	unsigned int FindIndex(FbxAnimLayer* pAnimLayer);
 
 	AGLData GetData(){ return mData; }
+
+	void offsetNodeTransform(int p_node, int p_parent);
 };
 
 #endif
