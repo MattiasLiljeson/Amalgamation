@@ -17,4 +17,7 @@ d s piece end
 d s piece begin
 d s m_pieceAssemblageFileName ancientChamberClient.asd
 d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName sandChamberClient.asd
+d s piece end
 d s m_plugPiece plugPieceClient.asd
