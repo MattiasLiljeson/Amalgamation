@@ -33,7 +33,7 @@ void HudSystem::processEntities( const vector<Entity*>& p_entities )
 		if(comp->getStateDelta(INGAME) != 0){
 			m_backend->showDocument(m_hudIndex);
 
-			setHUDData(SCORE,"-1");
+			// setHUDData(SCORE,"-1");
 			setHUDData(MAPPING,"Empty");
 			setHUDData(TIME,"00:00");
 		}

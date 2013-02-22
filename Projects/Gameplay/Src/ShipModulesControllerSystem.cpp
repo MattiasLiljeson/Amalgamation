@@ -87,7 +87,6 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 }
 void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent)
 {
-	PlayerScore* scoreComponent = static_cast<PlayerScore*>(p_parent->getComponent(ComponentType::PlayerScore));
 
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 		p_parent->getComponent(ComponentType::ConnectionPointSet) );
@@ -111,31 +110,35 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 					m->applyDamage();
 					if (m->m_health <= 0)
 					{
-						int me = ModuleHelper::FindParentShipClientId(m_world,m);
-
-						// score effect
-						if (moduleTransform && m)
+						Entity* myShip=NULL;
+						int me = ModuleHelper::FindParentShipClientId(m_world,m,&myShip);
+						if (myShip)
 						{
-							// set a positive effect to perp, if not yourself
-							int perpId = m->getLatestPerpetratorClient();
-							if (perpId!=me)
+							PlayerScore* scoreComponent = static_cast<PlayerScore*>(myShip->getComponent(ComponentType::PlayerScore));
+							// score effect
+							if (moduleTransform && m)
 							{
-								auto ships = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
-								Entity* perpShip = ships->findShip(perpId);
-								if (perpShip)
+								// set a positive effect to perp, if not yourself
+								int perpId = m->getLatestPerpetratorClient();
+								if (perpId!=me)
 								{
-									PlayerScore* perpScoreComponent = static_cast<PlayerScore*>(perpShip->getComponent(ComponentType::PlayerScore));
-									float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
-									// add score and send effect
-									perpScoreComponent->addRelativeScore(score);
-									setScoreEffect( perpId, moduleTransform, (int)score);
-								}
+									auto ships = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+									Entity* perpShip = ships->findShip(perpId);
+									if (perpShip)
+									{
+										PlayerScore* perpScoreComponent = static_cast<PlayerScore*>(perpShip->getComponent(ComponentType::PlayerScore));
+										float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
+										// add score and send effect
+										perpScoreComponent->addRelativeScore(score);
+										setScoreEffect( perpId, moduleTransform, (int)score);
+									}
 
+								}
+								// set negative effect to victim
+								float score = ScoreRuleHelper::scoreFromLoseModuleOnEnemyHit(m->m_value);
+								scoreComponent->addRelativeScore(score);
+								setScoreEffect( me, moduleTransform, (int)score);
 							}
-							// set negative effect to victim
-							float score = ScoreRuleHelper::scoreFromLoseModuleOnEnemyHit(m->m_value);
-							scoreComponent->addRelativeScore(score);
-							setScoreEffect( me, moduleTransform, (int)score);
 						}
 						drop(p_parent, i);
 					}
@@ -191,10 +194,13 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	ps->getController()->DetachBodyFromCompound((RigidBody*)body);
 	b->setParentId(-1);
 
-	//Update module data
+	// ===========================
+	//     Update module data
+	// ===========================
 	m->m_health = 100.0f;
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
+	m->m_lastShipEntityWhenAttached = -1; 
 
 
 	//Change particle effects on slots
