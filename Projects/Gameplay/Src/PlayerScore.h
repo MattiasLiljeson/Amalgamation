@@ -21,14 +21,23 @@ public:
 
 	~PlayerScore();
 
-	float getTotalScore();
-	float* getTotalScorePointer();
-	void setModuleScore(float p_score);
-	void addBaseScore(float p_score);
+	float getScore();
+	const float* getScorePointer();
+
+	///-----------------------------------------------------------------------------------
+	/// Add a relative score.
+	/// \param p_relativeScore
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addRelativeScore(float p_relativeScore);
+
+	///-----------------------------------------------------------------------------------
+	/// Reset the score to an absolute value. NOTE! This will reset the current score!
+	/// \param p_absoluteScore
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setAbsoluteScore(float p_absoluteScore);
 
 private:
-	float m_moduleScore; ///< Variable score based on modules
-	float m_baseScore; ///< Base Score. Cannot be lost. Only gained 
-	float m_totalScore; ///< Total Score
-
+	float m_score; // The accumulated score of the player
 };

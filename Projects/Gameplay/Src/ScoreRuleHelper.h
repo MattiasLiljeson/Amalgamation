@@ -24,7 +24,7 @@ public:
 	/// \param p_moduleValue
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	static int myscore_AttachModule(int p_moduleValue, bool p_moduleIsUnused);
+	static float scoreFromAttachModule(float p_moduleValue, bool p_moduleIsUnused);
 
 
 	///-----------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ public:
 	/// \param p_opponentHitModuleValue
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	static int myscore_HittingOpponent(int p_opponentHitModuleValue);
+	static float scoreFromHittingOpponent(float p_opponentHitModuleValue);
 
 
 	///-----------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public:
 	/// \param p_moduleValue
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	static int myscore_LoseModuleOnDetach(int p_moduleValue);
+	static float scoreFromLoseModuleOnDetach(float p_moduleValue);
 
 
 	///-----------------------------------------------------------------------------------
@@ -48,5 +48,5 @@ public:
 	/// \param p_myHitModuleValue
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	static int myscore_LoseModuleOnEnemyHit(int p_myHitModuleValue);
+	static float scoreFromLoseModuleOnEnemyHit(float p_myHitModuleValue);
 };

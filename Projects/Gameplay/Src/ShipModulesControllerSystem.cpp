@@ -16,6 +16,7 @@
 #include "ShipManagerSystem.h"
 #include <ToString.h>
 #include <DebugUtil.h>
+#include "ScoreRuleHelper.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
@@ -78,18 +79,16 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				m_toDeactivate.pop_back();
 				j--;
 			}
-		}
-
-		PlayerScore* score = static_cast<PlayerScore*>(p_entities[i]->getComponent(ComponentType::PlayerScore));
-		//Calculate score
-		score->setModuleScore(calculateScore(p_entities[i]));
+		}	
 
 		//Check to see if modules should be dropped
-		checkDrop(p_entities[i]);
+		checkDrop_ApplyScoreAndDamage(p_entities[i]);
 	}
 }
-void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
+void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent)
 {
+	PlayerScore* scoreComponent = static_cast<PlayerScore*>(p_parent->getComponent(ComponentType::PlayerScore));
+
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
@@ -118,54 +117,39 @@ void ShipModulesControllerSystem::checkDrop(Entity* p_parent)
 						if (moduleTransform && m)
 						{
 							// set a positive effect to perp, if not yourself
-							if (m->getLatestPerpetratorClient()!=me)
+							int perpId = m->getLatestPerpetratorClient();
+							if (perpId!=me)
 							{
-								setScoreEffect( m->getLatestPerpetratorClient(), 
-									moduleTransform, m->m_value/2);
+								auto ships = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+								Entity* perpShip = ships->findShip(perpId);
+								if (perpShip)
+								{
+									PlayerScore* perpScoreComponent = static_cast<PlayerScore*>(perpShip->getComponent(ComponentType::PlayerScore));
+									float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
+									// add score and send effect
+									perpScoreComponent->addRelativeScore(score);
+									setScoreEffect( perpId, moduleTransform, (int)score);
+								}
+
 							}
 							// set negative effect to victim
-							setScoreEffect( me, moduleTransform, -m->m_value/2);
+							float score = ScoreRuleHelper::scoreFromLoseModuleOnEnemyHit(m->m_value);
+							scoreComponent->addRelativeScore(score);
+							setScoreEffect( me, moduleTransform, (int)score);
 						}
 						drop(p_parent, i);
 					}
 					else
 					{
-						checkDrop(entity);
+						checkDrop_ApplyScoreAndDamage(entity);
 					}
 
-					//Do some hardcoded rotation shit - WORKS!
-					if (m)
-					{
-						/*PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_parent->getComponent(ComponentType::PhysicsBody));
-
-						ConnectionPointSet* conPoints =
-							static_cast<ConnectionPointSet*>(
-							m_world->getComponentManager()->getComponent(entity,
-							ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-
-						int sel = 0;
-						for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
-						{
-							if (conPoints->m_connectionPoints[i].cpConnectedEntity == p_parent->getIndex())
-							{
-								sel = i;
-								break;
-							}
-						}
-						PhysicsBody* moduleBody = static_cast<PhysicsBody*>(entity->getComponent(ComponentType::PhysicsBody));
-
-						AglMatrix transform = offsetTemp(p_parent, connected->m_connectionPoints[i].cpTransform*targetBody->getOffset().inverse(), 
-							conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), 0);
-
-						PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
-						Body* body = ps->getController()->getBody(moduleBody->m_id);
-						body->setTransform(transform);*/
-					}
 				}
 			}
 		}
 	}
 }
+
 void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 {
 	if (p_slot < 0)
@@ -409,36 +393,36 @@ void ShipModulesControllerSystem::addDeactivateEvent(int p_index)
 {
 	m_toDeactivate.push_back(p_index);
 }
-float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
-{
-	float score = 0;
-
-	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
-		p_entity->getComponent(ComponentType::ConnectionPointSet) );
-
-	ShipModule* module = static_cast<ShipModule*>(
-		p_entity->getComponent(ComponentType::ShipModule) );
-
-	if (connected)
-	{
-		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
-		{
-			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
-			{
-				Entity* e = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
-				if (module && e->getIndex() == module->m_parentEntity)
-				{
-					//Do nothing
-				}
-				else
-					score += calculateScore(e);
-			}
-		}
-	}
-	if (module)
-		score += module->m_value;
-	return score;
-}
+// float ShipModulesControllerSystem::calculateScore(Entity* p_entity)
+// {
+// 	float score = 0;
+// 
+// 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+// 		p_entity->getComponent(ComponentType::ConnectionPointSet) );
+// 
+// 	ShipModule* module = static_cast<ShipModule*>(
+// 		p_entity->getComponent(ComponentType::ShipModule) );
+// 
+// 	if (connected)
+// 	{
+// 		for (unsigned int i = 0; i < connected->m_connectionPoints.size(); i++)
+// 		{
+// 			if (connected->m_connectionPoints[i].cpConnectedEntity >= 0)
+// 			{
+// 				Entity* e = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
+// 				if (module && e->getIndex() == module->m_parentEntity)
+// 				{
+// 					//Do nothing
+// 				}
+// 				else
+// 					score += calculateScore(e);
+// 			}
+// 		}
+// 	}
+// 	if (module)
+// 		score += module->m_value;
+// 	return score;
+// }
 void ShipModulesControllerSystem::setScoreEffect( int p_networkOwner, Transform* p_moduleTransform, 
 										 int p_score )
 {

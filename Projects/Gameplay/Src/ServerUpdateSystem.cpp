@@ -79,38 +79,14 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 				if (clientInfo->id == netSync->getNetworkOwner())
 				{
-					updatedClientPacket.scores[i] = playerScore->getTotalScore();
+					// receive the total score from the player
+					updatedClientPacket.scores[i] = playerScore->getScore();
 					break; // NOTE: A break here, for the inner loop.
 				}
 			}
 		}
 		
 		updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
-		// Also add the players' score to the packet.
-		//NetSyncedPlayerScoreTrackerSystem* netSyncedScoreSystem =
-		//	static_cast<NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
-		//	SystemType::NetSyncedPlayerScoreTrackerSystem));
-
-		//vector<Entity*> netSyncedScoreEntities =
-		//	netSyncedScoreSystem->getNetScoreEntities();
-
-		//int playerCount = 0;
-		//for(unsigned int i=0; i<netSyncedScoreEntities.size(); i++)
-		//{
-		//	PlayerScore* playerScore = static_cast<PlayerScore*>(
-		//		netSyncedScoreEntities[i]->getComponent(ComponentType::PlayerScore));
-		//	NetworkSynced* netSync = static_cast<NetworkSynced*>(
-		//		netSyncedScoreEntities[i]->getComponent(ComponentType::NetworkSynced));
-		//	if(playerScore && netSync)
-		//	{
-		//		updatedClientPacket.playerIdentities[playerCount] =
-		//			netSync->getNetworkOwner();
-		//		// TODO: (Johan) Change score into whatever Anton sees fit, but for
-		//		// now the score is an integer!
-		//		updatedClientPacket.scores[playerCount] = playerScore->getTotalScore();
-		//		playerCount += 1;
-		//	}
-		//}
 
 		m_server->broadcastPacket(updatedClientPacket.pack());
 		//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());

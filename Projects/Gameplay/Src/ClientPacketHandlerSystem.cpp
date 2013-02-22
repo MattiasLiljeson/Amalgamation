@@ -284,7 +284,10 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					if(netSync->getNetworkOwner() ==
 						updateClientPacket.playerIdentities[playerId])
 					{
-						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
+						// Update the absolute score of the players 
+						// on client side
+						// IS THIS EVEN USED??????????? -Jarl
+						// playerScore->setAbsoluteScore(updateClientPacket.scores[playerId]);
 					}
 				}
 			}
