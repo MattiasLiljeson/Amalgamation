@@ -12,6 +12,7 @@ ShipModule::ShipModule()
 	m_health = 100.0f;
 	m_rotationDirection = 0;
 	m_rotation = 0;
+	m_unused = true;
 }
 
 ShipModule::~ShipModule()
@@ -88,4 +89,14 @@ void ShipModule::addActivationEvent( ModuleEvent* p_event )
 int ShipModule::getLatestPerpetratorClient()
 {
 	return m_damageAcc.latestPerp;
+}
+
+void ShipModule::setToUsed()
+{
+	m_unused=false;
+}
+
+bool ShipModule::isUnused()
+{
+	return m_unused;
 }

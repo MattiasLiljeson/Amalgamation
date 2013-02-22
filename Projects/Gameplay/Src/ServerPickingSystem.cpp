@@ -16,6 +16,8 @@
 #include "ModuleStateChangePacket.h"
 #include "SlotParticleEffectPacket.h"
 #include "EditSphereUpdatePacket.h"
+#include "ScoreRuleHelper.h"
+#include "PlayerScore.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -164,6 +166,7 @@ void ServerPickingSystem::setReleased(int p_index)
 			Entity* parentShip = NULL;
 			ShipModule* shipModule = NULL;
 			Transform* moduleTransform = NULL;
+			PlayerScore* scoreComponent = NULL;
 
 			// Get data for current module
 			if (m_pickComponents[i].getLatestPick()>-1)
@@ -181,6 +184,8 @@ void ServerPickingSystem::setReleased(int p_index)
 					if (shipModule->m_lastShipEntityWhenAttached!=-1)
 						parentShip = m_world->getEntity(shipModule->m_lastShipEntityWhenAttached);
 
+					scoreComponent = static_cast<PlayerScore*>(parentShip->getComponent(ComponentType::PlayerScore));
+
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
 					if (transformComp) moduleTransform = static_cast<Transform*>(transformComp);
@@ -193,8 +198,12 @@ void ServerPickingSystem::setReleased(int p_index)
 			if (shipModule) shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
 
 			// set an effect
-			if (moduleTransform && parentShip && shipModule)
-				setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
+			if (moduleTransform && parentShip && shipModule && scoreComponent)
+			{
+				float score = ScoreRuleHelper::scoreFromLoseModuleOnDetach(shipModule->m_value);
+				scoreComponent->addRelativeScore(score);
+				setScoreEffect( parentShip, moduleTransform, (int)score);
+			}
 
 
 			return;
@@ -565,6 +574,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
+		PlayerScore* scoreComponent = static_cast<PlayerScore*>(ship->getComponent(ComponentType::PlayerScore));
+
 
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
@@ -584,7 +595,16 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		// set an effect
 		if (shipModule->m_lastShipEntityWhenAttached == -1) // only if not attached/moved before
-			setScoreEffect( ship, moduleTransform, shipModule->m_value);
+		{
+			float score = ScoreRuleHelper::scoreFromAttachModule(shipModule->m_value, 
+															   shipModule->isUnused());
+			scoreComponent->addRelativeScore(score);
+			setScoreEffect( ship, moduleTransform, (int)score);
+		}
+
+		// Set the shipmodule to used status!
+		// Must be done after score has been set.
+		shipModule->setToUsed();
 
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
@@ -778,8 +798,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 	return true;
 }
 
-void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, 
-										  int p_score )
+void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, int p_score )
 {
 	OnHitScoreEffectPacket fxPacket;
 	fxPacket.score = p_score;
