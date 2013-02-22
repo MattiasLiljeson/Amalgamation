@@ -57,6 +57,14 @@ public:
 	ComponentManager* getComponentManager();
 	
 	/**
+	 * Returns a manager that takes care of all the systems in the world.
+	 * 
+	 * @return system manager.
+	 */
+	SystemManager* getSystemManager();
+	
+
+	/**
 	 * Add a manager into this world. It can be retrieved later.
 	 * World will notify this manager of changes to entity.
 	 * 

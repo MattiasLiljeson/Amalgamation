@@ -1,9 +1,11 @@
 #include "LoadMeshSystemServer.h"
 
-#include <ModelBaseFactory.h>
-#include "PhysicsBody.h"
 #include "BodyInitData.h"
+#include "ParticleSystemServerComponent.h"
+#include "PhysicsBody.h"
 #include "PhysicsSystem.h"
+#include <ModelBaseFactory.h>
+#include <ParticleSystemInstruction.h>
 
 LoadMeshSystemServer::LoadMeshSystemServer() : 
 	LoadMeshSystem()
@@ -92,6 +94,28 @@ void LoadMeshSystemServer::setUpChildCollision( Entity* p_entity,
 		p_entity->addComponent( ComponentType::BodyInitData, b);
 	}
 }
+
+void LoadMeshSystemServer::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
+{
+	if (!p_modelResource->particleSystems.m_collection.empty())
+	{
+		ParticleSystemServerComponent* psComp = static_cast<ParticleSystemServerComponent*>(
+			p_entity->getComponent( ComponentType::ParticleSystemServerComponent ) );
+
+		if( psComp == NULL ) {
+			psComp = new ParticleSystemServerComponent();
+			p_entity->addComponent( psComp );
+		}
+
+		vector<ParticleSystemInstruction>* psCollection = &(p_modelResource->particleSystems.m_collection);
+		for( unsigned int i=0; i<psCollection->size(); i++ )
+		{
+			ParticleSystemData data( psCollection->at(i), "Particle system name, from AGL file" );
+			psComp->addParticleSystem( data );
+		}
+	}
+}
+
 void LoadMeshSystemServer::setUpAnimation(Entity* p_entity, ModelResource* p_modelResource)
 {
 	//Do nothing. No animation on server

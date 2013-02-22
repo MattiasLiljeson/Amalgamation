@@ -5,29 +5,23 @@
 #include <utility>
 #include <vector>
 #include <AglParticleSystemHeader.h>
-
-struct ParticleSystemUpdateData
-{
-	AglVector3 spawnPoint;
-	AglVector3 direction;
-	float	   speed;
-	float	   spawnFrequency;
-};
+#include <ParticleSystemInstruction.h>
 
 struct ParticleSystemData
 {
-	ParticleSystemData( const string& p_name )
-	{
-		name = p_name;
-	}
-
-	ParticleSystemData( const ParticleSystemUpdateData& p_updateData, const string& p_name )
+	ParticleSystemData( const AglParticleSystemHeader& p_updateData, const string& p_name )
 	{
 		updateData = p_updateData;
 		name = p_name;
 	}
 
-	ParticleSystemUpdateData updateData;
+	ParticleSystemData( const ParticleSystemInstruction& p_instruction, const string& p_name )
+	{
+		updateData = AglParticleSystemHeader( p_instruction.particleSystem.getHeader() );
+		name = p_name;
+	}
+
+	AglParticleSystemHeader updateData;
 	string name; // Used to fetch a PS by name, expensive!
 };
 
