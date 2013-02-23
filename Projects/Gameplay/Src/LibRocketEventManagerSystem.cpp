@@ -43,6 +43,7 @@
 #include <Packet.h>
 #include "PacketType.h"
 #include "ClientStateSystem.h"
+#include "ChangeStatePacket.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -209,9 +210,9 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if(values[0] == "start_game")
 		{
-			Packet letsRollPacket((char)PacketType::LetsRoll);
-			m_client->sendPacket(letsRollPacket);
-			m_stateSystem->setQueuedState(GameStates::LOADING);
+			ChangeStatePacket letsRollPacket;
+			letsRollPacket.m_gameState = GameStates::INITGAME;
+			m_client->sendPacket(letsRollPacket.pack());
 		}
 	}
 }

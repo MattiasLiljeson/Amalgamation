@@ -80,10 +80,12 @@
 #include "AnimationUpdatePacket.h"
 #include "SkeletalAnimation.h"
 #include "ClientStateSystem.h"
+#include "GameState.h"
+#include "ChangeStatePacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
-					ComponentType::NetworkSynced)
+	ComponentType::NetworkSynced)
 {
 	m_tcpClient = p_tcpClient;
 
@@ -115,322 +117,426 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	updateCounters();
 	m_totalNetworkSynced = p_entities.size();
 
-	while (m_tcpClient->hasNewPackets())
+
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	switch (gameState->getCurrentState())
 	{
-		Packet packet = m_tcpClient->popNewPacket();
-
-		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
-
-		char packetType;
-		
-		packetType = packet.getPacketType();
-
-		if (packetType == (char)PacketType::EntityUpdate)
+	case GameStates::INGAME:
 		{
-			EntityUpdatePacket data;
-			packet.ReadData(&data, sizeof(EntityUpdatePacket));
-
-			if (data.entityType == (char)EntityType::EndBatch){
-				handleBatch();
-			}
-			else
+			while (m_tcpClient->hasNewPackets())
 			{
-				m_batch.push_back(data);
-			}
-		}
+				Packet packet = m_tcpClient->popNewPacket();
+				//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+				char packetType;
+				packetType = packet.getPacketType();
 
-		else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
-		{
-			ParticleSystemCreationInfo info;
-			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
-			handleParticleSystemCreation( info );
-		}
-
-		else if (packetType == (char)PacketType::ParticleUpdate)
-		{
-			ParticleUpdatePacket particleData;
-			particleData.unpack( packet );
-			handleParticleSystemUpdate( particleData );
-			
-		}
-		else if (packetType == (char)PacketType::SlotParticleEffectPacket)
-		{
-			SlotParticleEffectPacket data;
-			data.unpack(packet);
-
-			if (data.networkIdentity < 0)
-			{
-				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
-				conVis->disableAll();
-			}
-			else
-			{
-				NetsyncDirectMapperSystem* directMapper =
-					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-					SystemType::NetsyncDirectMapperSystem));
-				Entity* parent = directMapper->getEntity(data.networkIdentity);
-
-				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
-				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
-			}
-		}
-
-		else if(packetType == (char)PacketType::SpawnSoundEffect)
-		{
-			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-				m_world->getSystem(SystemType::AudioBackendSystem));
-			SpawnSoundEffectPacket spawnSoundPacket;
-			spawnSoundPacket.unpack( packet );
-			if( spawnSoundPacket.positional &&
-				spawnSoundPacket.attachedToNetsyncEntity == -1 )
-			{
-				// Short positional sound effect.
-				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-					spawnSoundPacket.position);
-			}
-			else if( spawnSoundPacket.positional &&
-				spawnSoundPacket.attachedToNetsyncEntity != -1 )
-			{
-				// Attached positional sound source.
-				NetsyncDirectMapperSystem* directMapper =
-					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-					SystemType::NetsyncDirectMapperSystem));
-				Entity* entity = directMapper->getEntity(
-					spawnSoundPacket.attachedToNetsyncEntity );
-				if( entity != NULL )
+				if (packetType == (char)PacketType::EntityUpdate)
 				{
-					entity->addComponent(ComponentType::PositionalSoundSource,
-						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-						true, 1.0f));
-					entity->applyComponentChanges();
-				}
-			}
-			else if( !spawnSoundPacket.positional &&
-				spawnSoundPacket.attachedToNetsyncEntity == -1 )
-			{
-				// Short ambient sound effect.
-				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
-				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
-			}
-		}
-		else if(packetType == (char)PacketType::RemoveSoundEffect)
-		{
-			RemoveSoundEffectPacket data;
-			data.unpack( packet );
-			NetsyncDirectMapperSystem* directMapper =
-				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-				SystemType::NetsyncDirectMapperSystem));
-			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
-			if( entity != NULL )
-			{
-				entity->removeComponent(ComponentType::PositionalSoundSource);
-				entity->applyComponentChanges();
-			}
-		}
-		else if(packetType == (char)PacketType::Ping)
-		{
-			PingPacket pingPacket;
-			pingPacket.unpack( packet );
+					EntityUpdatePacket data;
+					packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
-			PongPacket pongPacket;
-			pongPacket.timeStamp = pingPacket.timeStamp;
-			m_tcpClient->sendPacket( pongPacket.pack() );
-		}
-		else if(packetType == (char)PacketType::Pong)
-		{
-			PongPacket pongPacket;
-			pongPacket.unpack(packet);
-			float totalElapsedTime = m_world->getElapsedTime();
-
-			/************************************************************************/
-			/* Convert from seconds to milliseconds.								*/
-			/************************************************************************/
-			m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
-		}
-		else if(packetType == (char)PacketType::UpdateClientStats)
-		{
-			UpdateClientStatsPacket updateClientPacket;
-			updateClientPacket.unpack(packet);
-
-			// Update the game stats panel with name, ping, score.
-			auto gameStats = static_cast<GameStatsSystem*>
-								(m_world->getSystem(SystemType::GameStatsSystem));
-			gameStats->updateStats(&updateClientPacket);
-
-			// Client ping
-			m_currentPing = updateClientPacket.ping[0];
-			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
-				m_world->getElapsedTime() + m_currentPing / 2.0f;
-			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-			m_tcpClient->setPingToServer( m_currentPing );
-
-			// Clients score
-			NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
-				NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
-				SystemType::NetSyncedPlayerScoreTrackerSystem));
-			vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
-			for(int playerId=0; playerId<MAXPLAYERS; playerId++)
-			{
-				for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
-				{
-					NetworkSynced* netSync = static_cast<NetworkSynced*>(
-						netSyncScoreEntities[i]->getComponent(
-						ComponentType::NetworkSynced));
-					PlayerScore* playerScore = static_cast<PlayerScore*>(
-						netSyncScoreEntities[i]->getComponent(
-						ComponentType::PlayerScore));
-					if(netSync->getNetworkOwner() ==
-						updateClientPacket.playerIdentities[playerId])
-					{
-						playerScore->setModuleScore(updateClientPacket.scores[playerId]);
-					}
-				}
-			}
-		}
-		else if(packetType == (char)PacketType::PlayerWinLose)
-		{
-			PlayersWinLosePacket winLose;
-			winLose.unpack( packet );
-			NetsyncDirectMapperSystem* directMapper =
-				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-				SystemType::NetsyncDirectMapperSystem));
-			for(int i=0; i<winLose.activePlayers; i++)
-			{
-				if(m_tcpClient->getId() == winLose.playerIdentities[i])
-				{
-					// NOTE: (Johan) This is where the winning/losing condition is read.
-					// Use this later to print a nice text saying "Winner" or "Loser".
-					if(winLose.winner[i])
-					{
-						MessageBoxA(NULL, "Winner!", "Warning!", MB_ICONWARNING);
+					if (data.entityType == (char)EntityType::EndBatch){
+						handleBatch();
 					}
 					else
 					{
-						MessageBoxA(NULL, "Loser!", "Warning!", MB_ICONWARNING);
+						m_batch.push_back(data);
 					}
 				}
-			}
-		}
-		else if (packetType == (char)PacketType::OnHitScoreEffectPacket)
-		{
-			// number effect for score
-			auto scoreVis = static_cast<ScoreWorldVisualizerSystem*>(
-				m_world->getSystem(SystemType::ScoreWorldVisualizerSystem));
 
-			if (scoreVis)
-			{
-				OnHitScoreEffectPacket scoreFx;
-				scoreFx.unpack(packet);
-				ScoreWorldVisualizerSystem::ScoreEffectCreationData inst;
-				inst.score = scoreFx.score;
-				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
-
-				scoreVis->addEffect(inst);
-			}
-		}
-		else if(packetType == (char)PacketType::EntityCreation)
-		{
-			EntityCreationPacket data;
-			data.unpack(packet);
-			handleEntityCreationPacket(data);
-		}
-		else if (packetType == (char)PacketType::EntityDeletion)
-		{
-			EntityDeletionPacket data;
-			data.unpack(packet);
-			handleEntityDeletionPacket(data);
-		}
-		else if(packetType == (char)PacketType::WelcomePacket)
-		{
-			handleWelcomePacket(packet);
-		}
-		else if(packetType == (char)PacketType::ModuleTriggerPacket)
-		{
-			ModuleTriggerPacket data;
-			data.unpack(packet);
-			Entity* moduleEntity = static_cast<NetsyncDirectMapperSystem*>(
-				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-				data.moduleNetsyncIdentity);
-			ShipModule* shipModule = static_cast<ShipModule*>(moduleEntity->getComponent(
-				ComponentType::ShipModule));
-			if(shipModule)
-			{
-				// Call client side activation/deactivation event.
-				if(data.moduleTrigger)
+				else if( packetType == (char)PacketType::ParticleSystemCreationInfo)
 				{
-					shipModule->activate();
+					ParticleSystemCreationInfo info;
+					packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
+					handleParticleSystemCreation( info );
+				}
+
+				else if (packetType == (char)PacketType::ParticleUpdate)
+				{
+					ParticleUpdatePacket particleData;
+					particleData.unpack( packet );
+					handleParticleSystemUpdate( particleData );
+
+				}
+				else if (packetType == (char)PacketType::SlotParticleEffectPacket)
+				{
+					SlotParticleEffectPacket data;
+					data.unpack(packet);
+
+					if (data.networkIdentity < 0)
+					{
+						ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+						conVis->disableAll();
+					}
+					else
+					{
+						NetsyncDirectMapperSystem* directMapper =
+							static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+							SystemType::NetsyncDirectMapperSystem));
+						Entity* parent = directMapper->getEntity(data.networkIdentity);
+
+						ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+						conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+					}
+				}
+
+				else if(packetType == (char)PacketType::SpawnSoundEffect)
+				{
+					AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
+						m_world->getSystem(SystemType::AudioBackendSystem));
+					SpawnSoundEffectPacket spawnSoundPacket;
+					spawnSoundPacket.unpack( packet );
+					if( spawnSoundPacket.positional &&
+						spawnSoundPacket.attachedToNetsyncEntity == -1 )
+					{
+						// Short positional sound effect.
+						audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+							spawnSoundPacket.position);
+					}
+					else if( spawnSoundPacket.positional &&
+						spawnSoundPacket.attachedToNetsyncEntity != -1 )
+					{
+						// Attached positional sound source.
+						NetsyncDirectMapperSystem* directMapper =
+							static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+							SystemType::NetsyncDirectMapperSystem));
+						Entity* entity = directMapper->getEntity(
+							spawnSoundPacket.attachedToNetsyncEntity );
+						if( entity != NULL )
+						{
+							entity->addComponent(ComponentType::PositionalSoundSource,
+								new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+								SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+								true, 1.0f));
+							entity->applyComponentChanges();
+						}
+					}
+					else if( !spawnSoundPacket.positional &&
+						spawnSoundPacket.attachedToNetsyncEntity == -1 )
+					{
+						// Short ambient sound effect.
+						// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
+						audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+					}
+				}
+				else if(packetType == (char)PacketType::RemoveSoundEffect)
+				{
+					RemoveSoundEffectPacket data;
+					data.unpack( packet );
+					NetsyncDirectMapperSystem* directMapper =
+						static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+						SystemType::NetsyncDirectMapperSystem));
+					Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
+					if( entity != NULL )
+					{
+						entity->removeComponent(ComponentType::PositionalSoundSource);
+						entity->applyComponentChanges();
+					}
+				}
+				else if(packetType == (char)PacketType::Ping)
+				{
+					PingPacket pingPacket;
+					pingPacket.unpack( packet );
+
+					PongPacket pongPacket;
+					pongPacket.timeStamp = pingPacket.timeStamp;
+					m_tcpClient->sendPacket( pongPacket.pack() );
+				}
+				else if(packetType == (char)PacketType::Pong)
+				{
+					PongPacket pongPacket;
+					pongPacket.unpack(packet);
+					float totalElapsedTime = m_world->getElapsedTime();
+
+					/************************************************************************/
+					/* Convert from seconds to milliseconds.								*/
+					/************************************************************************/
+					m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
+				}
+				else if(packetType == (char)PacketType::UpdateClientStats)
+				{
+					UpdateClientStatsPacket updateClientPacket;
+					updateClientPacket.unpack(packet);
+
+					// Update the game stats panel with name, ping, score.
+					auto gameStats = static_cast<GameStatsSystem*>
+						(m_world->getSystem(SystemType::GameStatsSystem));
+					gameStats->updateStats(&updateClientPacket);
+
+					// Client ping
+					m_currentPing = updateClientPacket.ping[0];
+					float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+						m_world->getElapsedTime() + m_currentPing / 2.0f;
+					m_tcpClient->setServerTimeAhead( serverTimeAhead );
+					m_tcpClient->setPingToServer( m_currentPing );
+
+					// Clients score
+					NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
+						NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
+						SystemType::NetSyncedPlayerScoreTrackerSystem));
+					vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
+					for(int playerId=0; playerId<MAXPLAYERS; playerId++)
+					{
+						for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
+						{
+							NetworkSynced* netSync = static_cast<NetworkSynced*>(
+								netSyncScoreEntities[i]->getComponent(
+								ComponentType::NetworkSynced));
+							PlayerScore* playerScore = static_cast<PlayerScore*>(
+								netSyncScoreEntities[i]->getComponent(
+								ComponentType::PlayerScore));
+							if(netSync->getNetworkOwner() ==
+								updateClientPacket.playerIdentities[playerId])
+							{
+								playerScore->setModuleScore(updateClientPacket.scores[playerId]);
+							}
+						}
+					}
+				}
+				else if(packetType == (char)PacketType::PlayerWinLose)
+				{
+					PlayersWinLosePacket winLose;
+					winLose.unpack( packet );
+					NetsyncDirectMapperSystem* directMapper =
+						static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+						SystemType::NetsyncDirectMapperSystem));
+					for(int i=0; i<winLose.activePlayers; i++)
+					{
+						if(m_tcpClient->getId() == winLose.playerIdentities[i])
+						{
+							// NOTE: (Johan) This is where the winning/losing condition is read.
+							// Use this later to print a nice text saying "Winner" or "Loser".
+							if(winLose.winner[i])
+							{
+								MessageBoxA(NULL, "Winner!", "Warning!", MB_ICONWARNING);
+							}
+							else
+							{
+								MessageBoxA(NULL, "Loser!", "Warning!", MB_ICONWARNING);
+							}
+						}
+					}
+				}
+				else if (packetType == (char)PacketType::OnHitScoreEffectPacket)
+				{
+					// number effect for score
+					auto scoreVis = static_cast<ScoreWorldVisualizerSystem*>(
+						m_world->getSystem(SystemType::ScoreWorldVisualizerSystem));
+
+					if (scoreVis)
+					{
+						OnHitScoreEffectPacket scoreFx;
+						scoreFx.unpack(packet);
+						ScoreWorldVisualizerSystem::ScoreEffectCreationData inst;
+						inst.score = scoreFx.score;
+						inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
+
+						scoreVis->addEffect(inst);
+					}
+				}
+				else if(packetType == (char)PacketType::EntityCreation)
+				{
+					EntityCreationPacket data;
+					data.unpack(packet);
+					handleEntityCreationPacket(data);
+				}
+				else if (packetType == (char)PacketType::EntityDeletion)
+				{
+					EntityDeletionPacket data;
+					data.unpack(packet);
+					handleEntityDeletionPacket(data);
+				}
+				else if(packetType == (char)PacketType::ModuleTriggerPacket)
+				{
+					ModuleTriggerPacket data;
+					data.unpack(packet);
+					Entity* moduleEntity = static_cast<NetsyncDirectMapperSystem*>(
+						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+						data.moduleNetsyncIdentity);
+					ShipModule* shipModule = static_cast<ShipModule*>(moduleEntity->getComponent(
+						ComponentType::ShipModule));
+					if(shipModule)
+					{
+						// Call client side activation/deactivation event.
+						if(data.moduleTrigger)
+						{
+							shipModule->activate();
+						}
+						else
+						{
+							shipModule->deactivate();
+						}
+					}
+				}
+				else if(packetType == (char)PacketType::ModuleStateChangePacket){
+					ModuleStateChangePacket data;
+					data.unpack(packet);
+
+					Entity* affectedModule = static_cast<NetsyncDirectMapperSystem*>(
+						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+						data.affectedModule);
+
+					if(affectedModule != NULL){
+						ShipModule* shipModule = static_cast<ShipModule*>(
+							affectedModule->getComponent(ComponentType::ShipModule));
+
+						Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+							m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+							data.currentParrent);
+
+						shipModule->m_parentEntity = parrentObjec->getIndex();
+					}
+					else{
+						DEBUGWARNING(( "Unhandled module has changed!" ));
+					}
+
+				}
+				else if (packetType == (char)PacketType::SpawnExplosionPacket)
+				{
+					SpawnExplosionPacket data;
+					data.unpack(packet);
+					EntityFactory* factory = static_cast<EntityFactory*>
+						(m_world->getSystem(SystemType::EntityFactory));
+					factory->createExplosion(data);
+				}
+				else if (packetType == (char)PacketType::AnimationUpdatePacket)
+				{
+					AnimationUpdatePacket data;
+					data.unpack(packet);
+
+					Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+						data.networkIdentity);
+
+					SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(
+						entity->getComponent(ComponentType::SkeletalAnimation));
+					anim->m_isPlaying = data.shouldPlay;
+					anim->m_playSpeed = data.playSpeed;
+				}
+				else if(packetType == (char)PacketType::ChangeStatePacket)
+				{
+					ChangeStatePacket changeState;
+					changeState.unpack(packet);
+					DEBUGWARNING(( "Client cannot handle changes from ingame to other states" ));
 				}
 				else
 				{
-					shipModule->deactivate();
+					printPacketTypeNotHandled("InGame", (int)packetType);
 				}
 			}
+			break;
 		}
-		else if(packetType == (char)PacketType::ModuleStateChangePacket){
-			ModuleStateChangePacket data;
-			data.unpack(packet);
+	case GameStates::LOBBY:
+		{
+			while (m_tcpClient->hasNewPackets())
+			{
 
-			Entity* affectedModule = static_cast<NetsyncDirectMapperSystem*>(
-				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-				data.affectedModule);
+				Packet packet = m_tcpClient->popNewPacket();
+				//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+				char packetType;
+				packetType = packet.getPacketType();
 
-			if(affectedModule != NULL){
-				ShipModule* shipModule = static_cast<ShipModule*>(
-					affectedModule->getComponent(ComponentType::ShipModule));
+				if(packetType == (char)PacketType::WelcomePacket)
+				{
+					handleWelcomePacket(packet);
+				}
+				else if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
+				{
+					NewlyConnectedPlayerPacket newlyConnected;
+					newlyConnected.unpack(packet);
+					static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+						addNewPlayer(newlyConnected);
+				}
+				else if(packetType == (char)PacketType::ChangeStatePacket){
+					ChangeStatePacket changeState;
+					changeState.unpack(packet);
 
-				Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
-					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-					data.currentParrent);
+					if(changeState.m_serverState == ServerStates::LOADING){
+						gameState->setQueuedState(GameStates::LOADING);
+					}
+				}
+				else if(packetType == (char)PacketType::EntityCreation){
+					DEBUGWARNING(( "Server sent packets too fast and too furious!" ));
+				}
+				else
+				{
+					printPacketTypeNotHandled("Lobby", (int)packetType);
+				}
 
-				shipModule->m_parentEntity = parrentObjec->getIndex();
 			}
-			else{
-				DEBUGWARNING(( "Unhandled module has changed!" ));
+			break;
+		}
+	case GameStates::LOADING:
+		{
+			while (m_tcpClient->hasNewPackets())
+			{
+
+				Packet packet = m_tcpClient->popNewPacket();
+				//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+				char packetType;
+				packetType = packet.getPacketType();
+				if(packetType == (char)PacketType::EntityCreation){
+					EntityCreationPacket creation;
+					creation.unpack(packet);
+
+					handleEntityCreationPacket(creation);
+				}
+
+				else if(packetType == (char)PacketType::ChangeStatePacket){
+					ChangeStatePacket changeState;
+					changeState.unpack(packet);
+
+					if(changeState.m_serverState == ServerStates::SENTALLPACKETS){
+						gameState->setQueuedState(GameStates::FINISHEDLOADING);
+					}
+				}
+				else
+				{
+					printPacketTypeNotHandled("Loading", (int)packetType);
+				}
 			}
-			
+			break;
 		}
-		else if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
+	case GameStates::FINISHEDLOADING:
 		{
-			NewlyConnectedPlayerPacket newlyConnected;
-			newlyConnected.unpack(packet);
-			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-				addNewPlayer(newlyConnected);
-		}
-		else if (packetType == (char)PacketType::SpawnExplosionPacket)
-		{
-			SpawnExplosionPacket data;
-			data.unpack(packet);
-			EntityFactory* factory = static_cast<EntityFactory*>
-				(m_world->getSystem(SystemType::EntityFactory));
-			factory->createExplosion(data);
-		}
-		else if (packetType == (char)PacketType::AnimationUpdatePacket)
-		{
-			AnimationUpdatePacket data;
-			data.unpack(packet);
+			if(gameState->getStateDelta(GameStates::FINISHEDLOADING) ==
+			EnumGameDelta::ENTEREDTHISFRAME)
+			{
+				ChangeStatePacket changeState;
+				changeState.m_gameState = GameStates::FINISHEDLOADING;
+				m_tcpClient->sendPacket(changeState.pack());
+			}
+			while (m_tcpClient->hasNewPackets())
+			{
 
-			Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
-				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-				data.networkIdentity);
+				Packet packet = m_tcpClient->popNewPacket();
+				//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+				char packetType;
+				packetType = packet.getPacketType();
+				
+				if(packetType == (char)PacketType::ChangeStatePacket){
+					ChangeStatePacket changeState;
+					changeState.unpack(packet);
 
-			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
-			anim->m_isPlaying = data.shouldPlay;
-			anim->m_playSpeed = data.playSpeed;
+					if(changeState.m_serverState == ServerStates::INGAME){
+						gameState->setQueuedState( GameStates::INGAME );
+					}
+				}
+				else
+				{
+					//printPacketTypeNotHandled("Finished Loading", (int)packetType);
+				}
+			}
+
+			break;
 		}
-		else if(packetType == (char)PacketType::LetsRoll)
-		{
-			static_cast<ClientStateSystem*>(m_world->getSystem(
-				SystemType::ClientStateSystem))->setQueuedState(GameStates::LOADING);
+	default:
+		break;
 		}
-		else
-		{
-			DEBUGWARNING(( "Unhandled packet type!" ));
-		}
-	}
-#pragma endregion
 }
 
 void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
@@ -452,7 +558,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
 	EntityFactory* factory = static_cast<EntityFactory*>
-	(m_world->getSystem(SystemType::EntityFactory));
+		(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		factory->entityFromPacket(p_packet);
@@ -529,7 +635,7 @@ void ClientPacketHandlerSystem::initialize()
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Total network synced", TwType::TW_TYPE_UINT32,
 		&m_totalNetworkSynced, "group='network bug'" );
-	
+
 
 	/************************************************************************/
 	/* Per second data.														*/
@@ -603,8 +709,8 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 				/* end */
 				"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, 511));
+			m_staticPropIdentitiesForAntTweakBar.push_back(
+				pair<int, int>(0, 511));
 		}
 
 		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
@@ -619,9 +725,9 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
-			
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, m_staticPropIdentities.front()));
+
+			m_staticPropIdentitiesForAntTweakBar.push_back(
+				pair<int, int>(0, m_staticPropIdentities.front()));
 		}
 
 		while( m_staticPropIdentities.size() >= 2 )
@@ -666,7 +772,7 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 				m_staticPropIdentitiesForAntTweakBar.push_back(
 					pair<int, int>(m_staticPropIdentities.front(), 511));
 
-					m_staticPropIdentities.pop();
+				m_staticPropIdentities.pop();
 			}
 		}
 
@@ -724,19 +830,19 @@ void ClientPacketHandlerSystem::handleBatch()
 			{
 				/*InterpolationComponent* interpolation = NULL;
 				Component* intcomp = m_world->getComponentManager()->getComponent(
-					entity->getIndex(), ComponentType::InterpolationComponent );
+				entity->getIndex(), ComponentType::InterpolationComponent );
 				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
 				if (interpolation )
 				{
-					// set up goal for queuing
-					float handledTime = data.timestamp;
-					InterpolationComponent::TransformGoal transformGoal;
-					transformGoal.timestamp = handledTime;
-					transformGoal.translation = data.translation;
-					transformGoal.rotation = data.rotation;
-					transformGoal.scale = data.scale;
-					// enqueue data
-					interpolation ->m_transformBuffer.push(transformGoal);
+				// set up goal for queuing
+				float handledTime = data.timestamp;
+				InterpolationComponent::TransformGoal transformGoal;
+				transformGoal.timestamp = handledTime;
+				transformGoal.translation = data.translation;
+				transformGoal.rotation = data.rotation;
+				transformGoal.scale = data.scale;
+				// enqueue data
+				interpolation ->m_transformBuffer.push(transformGoal);
 				}
 				else*/
 				{
@@ -818,4 +924,10 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	{
 		// PARTICLE SYSTEMS NOT IN SYNC!
 	}
+}
+
+void ClientPacketHandlerSystem::printPacketTypeNotHandled( string p_stateName, int p_packetType )
+{
+	DEBUGPRINT((("Packet type not handled("+p_stateName+"): " +
+		toString(p_packetType) + "\n").c_str()));
 }

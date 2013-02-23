@@ -1,10 +1,8 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "Transform.h"
-#include "PickComponent.h"
-#include "TcpClient.h"
 class InputActionsBackendSystem;
+class TcpClient;
 
 // =======================================================================================
 //                                      ClientPickingSystem

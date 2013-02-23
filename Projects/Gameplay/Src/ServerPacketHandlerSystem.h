@@ -1,9 +1,11 @@
 #pragma once
 
+#define FORCE_VS_DBG_OUTPUT
+
 #include <map>
 #include <EntitySystem.h>
 #include "ClientInfo.h"
-
+#include <string>
 
 class TcpServer;
 class PhysicsSystem;
@@ -32,6 +34,8 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 	void createAndBroadCastShip( int p_clientIdentity, int p_playerID );
+
+	void printPacketTypeNotHandled(string p_state, int p_packetType);
 
 private:
 	Entity* createTheShipEntity(int p_newlyConnectedClientId, int p_playerID);

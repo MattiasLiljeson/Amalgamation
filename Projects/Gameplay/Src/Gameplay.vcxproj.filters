@@ -667,6 +667,9 @@
     <ClInclude Include="ClientStateSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
+    <ClInclude Include="ChangeStatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

@@ -20,6 +20,7 @@ public:
 		// Server <--> Client:
 		Ping,
 		Pong,
+		ChangeStatePacket, 
 
 		// Server -> Client:
 		EntityCreation,
@@ -51,7 +52,6 @@ public:
 		CameraControlPacket,
 		AnimationUpdatePacket,
 		SlotParticleEffectPacket,
-		LetsRoll, // Tells the server to start loading state.
 		SpawnExplosionPacket,
 	};
 
