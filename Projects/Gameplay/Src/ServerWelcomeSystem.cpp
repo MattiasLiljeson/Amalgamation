@@ -122,10 +122,16 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.playerID = m_numOfConnectedPlayers;
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	NewlyConnectedPlayerPacket connectedPacket;
-	connectedPacket.playerID = m_numOfConnectedPlayers;
-	connectedPacket.playerName = "Player" + toString(m_numOfConnectedPlayers);
-	m_server->broadcastPacket( connectedPacket.pack() );
+	m_connectedPlayers.push_back(
+		PlayerInfo("Player" + toString(m_connectedPlayers.size()),m_connectedPlayers.size())
+		);
+
+	for(unsigned int i = 0; i < m_connectedPlayers.size(); i++){
+		NewlyConnectedPlayerPacket connectedPacket;
+		connectedPacket.playerID = m_connectedPlayers[i].ID;
+		connectedPacket.playerName = m_connectedPlayers[i].name;
+		m_server->broadcastPacket( connectedPacket.pack() );
+	}
 }
 
 void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
