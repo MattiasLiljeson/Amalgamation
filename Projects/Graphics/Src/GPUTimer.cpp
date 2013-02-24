@@ -5,7 +5,8 @@ GPUTimer::GPUTimer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 
 	m_device = p_device;
 	m_deviceContext = p_deviceContext;
-	
+	m_currentFrame = 0;
+	m_measureFrame = QUREY_LATENCY-1;
 }
 
 GPUTimer::~GPUTimer()
@@ -26,44 +27,44 @@ void GPUTimer::addProfile( string p_profile ){
 	m_profileMap.insert( pair<string,Profile*>(p_profile,newProfile));
 }
 
-void GPUTimer::Start(string p_profile, int p_frame){
+void GPUTimer::Start(string p_profile){
 
 	Profile* currentProfile = m_profileMap[p_profile];
 
-	if(currentProfile->timers[p_frame]->queryStarted == true)
+	if(currentProfile->timers[m_measureFrame]->queryStarted == true)
 		return;
 
-	m_deviceContext->Begin(currentProfile->timers[p_frame]->disjoint);
-	m_deviceContext->End(currentProfile->timers[p_frame]->start);
-	currentProfile->timers[p_frame]->queryStarted = true;
+	m_deviceContext->Begin(currentProfile->timers[m_measureFrame]->disjoint);
+	m_deviceContext->End(currentProfile->timers[m_measureFrame]->start);
+	currentProfile->timers[m_measureFrame]->queryStarted = true;
 }
 
-void GPUTimer::Stop(string p_profile, int p_frame){
+void GPUTimer::Stop(string p_profile){
 	Profile* currentProfile = m_profileMap[p_profile];
 
-	if(currentProfile->timers[p_frame]->queryStoped == true)
+	if(currentProfile->timers[m_measureFrame]->queryStoped == true)
 		return;
 
-	m_deviceContext->End(currentProfile->timers[p_frame]->stop);
-	m_deviceContext->End(currentProfile->timers[p_frame]->disjoint);
-	currentProfile->timers[p_frame]->queryStoped = true;
+	m_deviceContext->End(currentProfile->timers[m_measureFrame]->stop);
+	m_deviceContext->End(currentProfile->timers[m_measureFrame]->disjoint);
+	currentProfile->timers[m_measureFrame]->queryStoped = true;
 }
 
-double GPUTimer::getTheTimeAndReset(string p_profile, int p_frame){
+double GPUTimer::getTheTimeAndReset(string p_profile){
 
 	Profile* currentProfile = m_profileMap[p_profile];
 
-	if(currentProfile->timers[p_frame]->queryStoped == true ){
-		currentProfile->timers[p_frame]->queryStarted = false;
-		currentProfile->timers[p_frame]->queryStoped = false;
+	if(currentProfile->timers[m_currentFrame]->queryStoped == true ){
+		currentProfile->timers[m_currentFrame]->queryStarted = false;
+		currentProfile->timers[m_currentFrame]->queryStoped = false;
 		UINT64 startTime = 0;
-		while(m_deviceContext->GetData(currentProfile->timers[p_frame]->start, &startTime, sizeof(startTime), 0) != S_OK);
+		while(m_deviceContext->GetData(currentProfile->timers[m_currentFrame]->start, &startTime, sizeof(startTime), 0) != S_OK);
 
 		UINT64 endTime = 0;
-		while(m_deviceContext->GetData(currentProfile->timers[p_frame]->stop, &endTime, sizeof(endTime), 0) != S_OK);
+		while(m_deviceContext->GetData(currentProfile->timers[m_currentFrame]->stop, &endTime, sizeof(endTime), 0) != S_OK);
 
 		D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjointData;
-		while(m_deviceContext->GetData(currentProfile->timers[p_frame]->disjoint, &disjointData, sizeof(disjointData), 0) != S_OK);
+		while(m_deviceContext->GetData(currentProfile->timers[m_currentFrame]->disjoint, &disjointData, sizeof(disjointData), 0) != S_OK);
 
 		double time = -1.0f;
 		if(disjointData.Disjoint == FALSE)
@@ -75,4 +76,10 @@ double GPUTimer::getTheTimeAndReset(string p_profile, int p_frame){
 		return time;
 	}
 	return 0;
+}
+
+void GPUTimer::tick()
+{
+	m_currentFrame = (m_currentFrame+1 >= QUREY_LATENCY) ? 0 : m_currentFrame+=1;
+	m_measureFrame = (m_measureFrame+1 >= QUREY_LATENCY) ? 0 : m_measureFrame+=1;
 }

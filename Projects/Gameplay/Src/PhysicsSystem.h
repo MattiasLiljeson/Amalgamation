@@ -37,7 +37,7 @@ public:
 
 	PhysicsController* getController(){ return m_physicsController; }
 
-	Entity* getEntity(int p_bodyID)
+	Entity* getEntity(unsigned int p_bodyID)
 	{
 		if (m_entityMap.size() <= p_bodyID || m_entityMap[p_bodyID] < 0)
 			return NULL;
