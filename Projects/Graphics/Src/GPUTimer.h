@@ -25,12 +25,13 @@ public:
 	GPUTimer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~GPUTimer();
 	void addProfile(string p_profile);
-	void Start(string p_profile, int p_frame);
-	void Stop(string p_profile, int p_frame);
+	void Start(string p_profile);
+	void Stop(string p_profile);
 
-	double getTheTimeAndReset(string p_profile, int p_frame);
+	void tick();
+	double getTheTimeAndReset(string p_profile);
 public:
-	static const UINT64 QUREY_LATENCY = 5;
+	static const unsigned int QUREY_LATENCY = 5;
 private:
 
 	struct Timer{
@@ -80,4 +81,6 @@ private:
 
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
+	unsigned int	m_currentFrame;
+	unsigned int	m_measureFrame;
 };
