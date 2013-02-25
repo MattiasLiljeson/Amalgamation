@@ -56,6 +56,7 @@ void FBXParser::Parse()
 	for (int i = 0; i < mScene->GetNodeCount(); i++)
 	{
 		FbxNode* node = mScene->GetNode(i);
+		nodeNames.push_back(node->GetName()); 
 		const char* n = node->GetName();
 		FbxNodeAttribute* attr = node->GetNodeAttribute();
 		if (attr)
@@ -75,7 +76,6 @@ void FBXParser::Parse()
 					}
 				}
 
-				nodeNames.push_back(node->GetName()); 
 				string name = node->GetName();
 				FbxMatrix transform = node->EvaluateLocalTransform();
 				for (int row = 0; row < 4; row++)
@@ -351,4 +351,7 @@ MaterialData* FBXParser::GetMaterial(FbxSurfaceMaterial* pMaterial)
 vector<pair<AglConnectionPoint, string>> FBXParser::GetConnectionPoints()
 {
 	return mData.CP;
+}
+void FBXParser::offsetNodeTransform(int p_node, int p_parent)
+{
 }

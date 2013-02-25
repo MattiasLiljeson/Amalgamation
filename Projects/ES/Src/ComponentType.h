@@ -102,6 +102,7 @@ public:	//Enums
 		SkeletalAnimation,
 		BoundingSphere,
 		BoundingBox,
+		SelectionMarker,
 		NUM_COMPONENT_TYPES
 	};
 

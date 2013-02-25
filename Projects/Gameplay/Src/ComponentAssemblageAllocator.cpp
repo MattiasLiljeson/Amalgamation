@@ -33,6 +33,7 @@
 #include "EnvironmentValues.h"
 #include "SpeedBuffer.h"
 #include "DestroyOnParticlesDeath.h"
+#include "SkeletalAnimation.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -66,4 +67,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<EnvironmentValues>();
 	handle<SpeedBuffer>();
 	handle<DestroyOnParticlesDeath>();
+	handle<SkeletalAnimation>();
 }

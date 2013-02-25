@@ -16,6 +16,10 @@
 #include "ModuleStateChangePacket.h"
 #include "SlotParticleEffectPacket.h"
 #include "EditSphereUpdatePacket.h"
+#include "ScoreRuleHelper.h"
+#include "PlayerScore.h"
+#include "SelectionMarkerUpdatePacket.h"
+#include "MeshOffsetTransform.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -164,6 +168,7 @@ void ServerPickingSystem::setReleased(int p_index)
 			Entity* parentShip = NULL;
 			ShipModule* shipModule = NULL;
 			Transform* moduleTransform = NULL;
+			PlayerScore* scoreComponent = NULL;
 
 			// Get data for current module
 			if (m_pickComponents[i].getLatestPick()>-1)
@@ -181,6 +186,9 @@ void ServerPickingSystem::setReleased(int p_index)
 					if (shipModule->m_lastShipEntityWhenAttached!=-1)
 						parentShip = m_world->getEntity(shipModule->m_lastShipEntityWhenAttached);
 
+					if (parentShip)
+						scoreComponent = static_cast<PlayerScore*>(parentShip->getComponent(ComponentType::PlayerScore));
+
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
 					if (transformComp) moduleTransform = static_cast<Transform*>(transformComp);
@@ -193,8 +201,12 @@ void ServerPickingSystem::setReleased(int p_index)
 			if (shipModule) shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
 
 			// set an effect
-			if (moduleTransform && parentShip && shipModule)
-				setScoreEffect( parentShip, moduleTransform, -shipModule->m_value);
+			if (moduleTransform && parentShip && shipModule && scoreComponent)
+			{
+				float score = ScoreRuleHelper::scoreFromLoseModuleOnDetach(shipModule->m_value);
+				scoreComponent->addRelativeScore(score);
+				setScoreEffect( parentShip, moduleTransform, (int)score);
+			}
 
 
 			return;
@@ -334,6 +346,8 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 	}
 	else
 		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
+
+	updateSelectionMarker(p_ray);
 }
 AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, 
 													   Entity* p_entity, PickComponent& p_pc)
@@ -565,6 +579,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
+		PlayerScore* scoreComponent = static_cast<PlayerScore*>(ship->getComponent(ComponentType::PlayerScore));
+
 
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
@@ -584,7 +600,16 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 
 		// set an effect
 		if (shipModule->m_lastShipEntityWhenAttached == -1) // only if not attached/moved before
-			setScoreEffect( ship, moduleTransform, shipModule->m_value);
+		{
+			float score = ScoreRuleHelper::scoreFromAttachModule(shipModule->m_value, 
+															   shipModule->isUnused());
+			scoreComponent->addRelativeScore(score);
+			setScoreEffect( ship, moduleTransform, (int)score);
+		}
+
+		// Set the shipmodule to used status!
+		// Must be done after score has been set.
+		shipModule->setToUsed();
 
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
@@ -778,8 +803,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 	return true;
 }
 
-void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, 
-										  int p_score )
+void ServerPickingSystem::setScoreEffect( Entity* p_player, Transform* p_moduleTransform, int p_score )
 {
 	OnHitScoreEffectPacket fxPacket;
 	fxPacket.score = p_score;
@@ -871,4 +895,89 @@ void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 	PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
 	Body* body = ps->getController()->getBody(moduleBody->m_id);
 	body->setTransform(transform);
+}
+
+//Send information about the Selection marker
+void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
+{
+	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0)
+	{
+		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+			SystemType::PhysicsSystem));
+
+		//Module
+		Entity* module = m_world->getEntity(p_ray.getLatestPick());
+		Transform* moduleTransform = static_cast<Transform*>(module->getComponent(
+			ComponentType::Transform));
+		ShipModule* shipModule = static_cast<ShipModule*>(module->getComponent(
+			ComponentType::ShipModule));
+		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
+			ComponentType::PhysicsBody));
+
+		//Find module connection point
+		ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(module->getComponent(ComponentType::ConnectionPointSet));
+
+		//Don't allow connection if the module has no connection points
+		if (!conPoints)
+			return;
+
+		int sel = -1;
+		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
+		{
+			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
+			{
+				sel = i;
+				break;
+			}
+		}
+
+		//Don't allow connection if the module doesn't have any free connection points
+		if (sel < 0)
+			return;
+
+		//Target
+		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
+		Entity* ship = target;
+		while (ship->getComponent(ComponentType::ShipModule))
+		{
+			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
+				ComponentType::ShipModule));
+			ship = m_world->getEntity(intermediate->m_parentEntity);
+		}
+		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
+			ComponentType::PhysicsBody));
+
+		PhysicsBody* targetBody = static_cast<PhysicsBody*>(target->getComponent(
+			ComponentType::PhysicsBody));
+
+		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
+			m_world->getComponentManager()->getComponent(target,
+			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+
+		PlayerScore* scoreComponent = static_cast<PlayerScore*>(ship->getComponent(ComponentType::PlayerScore));
+
+
+		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
+		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
+
+		AglMatrix transform = offsetTemp(target, cps->m_connectionPoints[p_ray.m_targetSlot].cpTransform*targetBody->getOffset().inverse(), 
+			conPoints->m_connectionPoints[sel].cpTransform*moduleBody->getOffset().inverse(), shipModule->m_rotation);
+
+		MeshOffsetTransform* moff = static_cast<MeshOffsetTransform*>(module->getComponent(ComponentType::MeshOffsetTransform));
+
+		transform = transform * comp->GetWorld();
+		transform = moduleBody->getOffset().inverse()*transform;
+
+		///Send the update packet 
+		NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
+			ship->getComponent(ComponentType::NetworkSynced));
+
+		Transform* trans = static_cast<Transform*>(
+			ship->getComponent(ComponentType::Transform));
+
+		SelectionMarkerUpdatePacket smup;
+		smup.targetNetworkIdentity = module->getIndex();
+		smup.transform = transform;//trans->getMatrix();
+		m_server->unicastPacket(smup.pack(), shipNetworkSynced->getNetworkOwner());
+	}
 }

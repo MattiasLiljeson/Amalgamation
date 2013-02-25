@@ -358,3 +358,9 @@ void Mesh::createBspTree()
 		mScene->getAglScene()->addBspTree(bsptree);
 	}
 }
+AglSkeleton* Mesh::getPrimarySkeleton()
+{
+	if (mSkeletonMappings.size() > 0)
+		return Scene::GetInstance()->GetSkeleton(mSkeletonMappings[0]->GetSkeleton());
+	return NULL;
+}

@@ -49,7 +49,7 @@ vector< pair<float, Entity*> > WinningConditionSystem::createSortedScoreEntityMa
 	{
 		PlayerScore* score = static_cast<PlayerScore*>(scoreEntities[i]->getComponent(
 			ComponentType::PlayerScore));
-		scoreEntityMapping.push_back(pair<float, Entity*>(score->getTotalScore(),
+		scoreEntityMapping.push_back(pair<float, Entity*>(score->getScore(),
 			scoreEntities[i]));
 	}
 	// Sort score with the highest first.

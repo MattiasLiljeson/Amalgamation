@@ -4,7 +4,7 @@
 #include "NetworkSynced.h"
 
 void ModuleHelper::FindParentShip( EntityWorld* p_world,
-								  Entity** p_inoutShip, ShipModule* p_module )
+								   Entity** p_inoutShip, ShipModule* p_module )
 {
 	ShipModule* module = p_module;
 	while (module && module->m_parentEntity > -1)
@@ -15,10 +15,12 @@ void ModuleHelper::FindParentShip( EntityWorld* p_world,
 	}
 }
 
-int ModuleHelper::FindParentShipClientId( EntityWorld* p_world, ShipModule* p_module )
+int ModuleHelper::FindParentShipClientId( EntityWorld* p_world, ShipModule* p_module, 
+										  Entity** p_outShipEntity )
 {
 	Entity* ship = NULL;
 	ModuleHelper::FindParentShip(p_world,&ship,p_module);
+	if (p_outShipEntity) *p_outShipEntity = ship;
 	int ownerId = -1;
 
 	if (ship)

@@ -70,7 +70,7 @@ void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 	stringstream ss;
 	ss << "score(" << netSync->getNetworkOwner() << ")";
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable( AntTweakBarWrapper::OVERALL,
-		ss.str().c_str(), TwType::TW_TYPE_FLOAT, score->getTotalScorePointer(), "" );
+		ss.str().c_str(), TwType::TW_TYPE_FLOAT, score->getScorePointer(), "" );
 
 	if (netSync->getNetworkOwner() == m_client->getId())
 	{

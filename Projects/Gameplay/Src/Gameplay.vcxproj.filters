@@ -599,7 +599,6 @@
     <ClInclude Include="GamepadRumbleSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleHelper.h" />
     <ClInclude Include="LoadMeshSystemServer.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -674,6 +673,21 @@
     </ClInclude>
     <ClInclude Include="DestroyOnParticlesDeath.h">
       <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreRuleHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarker.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1066,7 +1080,6 @@
     <ClCompile Include="GamepadRumbleSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -1135,6 +1148,21 @@
     </ClCompile>
     <ClCompile Include="DestroyOnParticlesDeath.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimation.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreRuleHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

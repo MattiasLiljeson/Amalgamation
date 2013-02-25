@@ -52,6 +52,8 @@ public:
 	void activate();
 	void deactivate();
 	void addActivationEvent(ModuleEvent* p_event);
+	void setToUsed(); ///< Tell module that it has been used
+	bool isUnused(); ///< Has the module been used?
 private:
 	struct DamageAccumulator
 	{
@@ -60,7 +62,7 @@ private:
 		float accumulatedDamage;
 		int latestPerp;
 	};
-
+	bool m_unused; ///< Module is in pristine condition and has never been used.
 	bool m_active;
 	DamageAccumulator m_damageAcc;
 	static ComponentRegister<ShipModule> s_reg;
