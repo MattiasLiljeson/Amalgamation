@@ -62,7 +62,7 @@ private:
 
 
 	//Send information about the Selection marker
-	void updateSelectionMarker(Entity* p_module, Entity* p_ship);
+	void updateSelectionMarker(PickComponent& p_ray);
 
 	// Effects
 	OnHitEffectBufferSystem* m_effectbuffer;

@@ -50,6 +50,6 @@ void SelectionMarkerSystem::setMarkerTarget(int p_target, AglMatrix p_transform)
 {
 	SelectionMarker* marker = static_cast<SelectionMarker*>(m_marker->getComponent(ComponentType::SelectionMarker));
 	Transform* trans = static_cast<Transform*>(m_marker->getComponent(ComponentType::Transform));
-	trans->setMatrix(AglMatrix::createScaleMatrix(AglVector3(2, 2, 2)) * p_transform);
+	trans->setMatrix(p_transform);
 	marker->m_targetEntity = p_target;
 }
