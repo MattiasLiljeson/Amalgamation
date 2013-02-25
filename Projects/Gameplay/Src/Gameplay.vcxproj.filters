@@ -689,6 +689,8 @@
     <ClInclude Include="SelectionMarkerUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1164,5 +1166,7 @@
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
   </ItemGroup>
 </Project>

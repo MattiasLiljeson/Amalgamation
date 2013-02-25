@@ -73,7 +73,7 @@
       <Filter>Shader\Shader types</Filter>
     </ClCompile>
     <ClCompile Include="GPUTimer.cpp">
-      <Filter>Timer</Filter>
+      <Filter>Graphics Utilities\Timer</Filter>
     </ClCompile>
     <ClCompile Include="DeferredAnimatedBaseShader.cpp">
       <Filter>Shader\Shader types</Filter>
@@ -235,7 +235,7 @@
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="GPUTimer.h">
-      <Filter>Timer</Filter>
+      <Filter>Graphics Utilities\Timer</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystemAndTexture.h">
       <Filter>Renderer\Particle</Filter>
@@ -251,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="DeferredTessBaseShader.h">
       <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUTimerProfile.h">
+      <Filter>Graphics Utilities\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,7 +302,7 @@
     <Filter Include="LibRocket">
       <UniqueIdentifier>{bef9cad0-8125-4166-a98f-3c94a356fbf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Timer">
+    <Filter Include="Graphics Utilities\Timer">
       <UniqueIdentifier>{808aff3b-a208-4dea-8004-bb3f53ec3b57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

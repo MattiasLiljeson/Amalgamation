@@ -9,6 +9,7 @@
 
 class TcpServer;
 class PhysicsSystem;
+class ServerStateSystem;
 
 using namespace std;
 
@@ -39,8 +40,12 @@ public:
 
 private:
 	Entity* createTheShipEntity(int p_newlyConnectedClientId, int p_playerID);
-
+	void handleIngame();
+	void handleLobby();
+	void handleLoading();
+	void handleSentAllPackets();
 private:
+	ServerStateSystem* m_stateSystem;
 	TcpServer*		m_server;
 	PhysicsSystem*	m_physics;
 	map<int,ClientInfo> m_clients; ///< The key is the clientID
