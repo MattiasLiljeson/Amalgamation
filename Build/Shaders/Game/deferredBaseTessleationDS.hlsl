@@ -42,5 +42,6 @@ PixelIn DS(patchConstant input, float3 uvw : SV_DomainLocation,
 	output.texCoord = tex;
 	output.gradientColor = patch[0].gradientColor;
 	output.flags = patch[0].flags;
+	output.colorOverlay = patch[0].colorOverlay;
 	return output;
 }

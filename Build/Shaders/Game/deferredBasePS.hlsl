@@ -27,12 +27,13 @@ PixelOut PS(PixelIn p_input)
 	index = min(index, layerCount-1);
 	pixelOut.diffuse = p_input.gradientColor[index];
 	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
+	pixelOut.diffuse.rgb *= p_input.colorOverlay.xyz;
 
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);
 
 	pixelOut.specular.rgb = specularTexture.Sample(pointSampler, p_input.texCoord).rgb;
-	pixelOut.diffuse.a = glowTexture.Sample(pointSampler, p_input.texCoord).r;
+	pixelOut.diffuse.a = glowTexture.Sample(pointSampler, p_input.texCoord).r + p_input.colorOverlay.w;
 	
 	return pixelOut;
 }
