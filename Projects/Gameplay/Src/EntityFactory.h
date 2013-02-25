@@ -75,6 +75,8 @@ public:
 
 	void createExplosion(const SpawnExplosionPacket& p_packet);
 
+	Entity* createGravityMine();
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);

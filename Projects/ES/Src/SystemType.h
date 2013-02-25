@@ -103,6 +103,7 @@ public:	//Enums
 		SpeedBufferUpdaterSystem,
 		EditSphereSystem,
 		SelectionMarkerSystem,
+		GravityMineEffectSystem,
 		NUM_SYSTEM_TYPES
 	};
 

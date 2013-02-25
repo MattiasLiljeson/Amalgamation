@@ -46,6 +46,9 @@
 #include "LevelInfoLoader.h"
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
+#include "GravityMineEffectPiece.h"
+#include "CircularMovement.h"
+#include <RandomUtil.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -659,6 +662,32 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 	//Not moved here yet!
 	return NULL;
 }
+
+Entity* EntityFactory::createGravityMine()
+{
+	Entity* mineEntity = m_world->createEntity();
+	mineEntity->addComponent(new Transform());
+	mineEntity->addComponent(new LoadMesh("MineFinal.agl"));
+	mineEntity->addComponent(new CircularMovement(AglVector3::zero(), AglVector3::up(),
+		AglVector3::forward() * 10.0f, 0.0f));
+	m_world->addEntity(mineEntity);
+
+	for(unsigned int i=0; i<1000; i++)
+	{
+		Entity* pieceEntity = m_world->createEntity();
+		Transform* pieceTransform = new Transform();
+		pieceEntity->addComponent(pieceTransform);
+		pieceEntity->addComponent(new LoadMesh("shield_plate.agl"));
+		pieceEntity->addComponent(new GravityMineEffectPiece(20.0f, 10.0f,
+			RandomUtil::randomSingle()));
+		pieceEntity->addComponent(new EntityParent(mineEntity->getIndex(),
+			pieceTransform->getMatrix()));
+		m_world->addEntity(pieceEntity);
+	}
+
+	return mineEntity;
+}
+
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
 	Entity* shieldEntity = m_world->createEntity();

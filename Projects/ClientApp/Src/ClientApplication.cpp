@@ -114,6 +114,7 @@
 #include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
 #include <SelectionMarkerSystem.h>
+#include <GravityMineEffectSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -437,6 +438,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new MenuBackgroundSceneSystem(), true );
 	m_world->setSystem( new CircularMovementSystem(), true );
 	m_world->setSystem( new AxisRotationSystem(), true );
+	m_world->setSystem( new GravityMineEffectSystem(), true );
 	m_world->setSystem( new MoveShipLightsSystem(), true );
 	m_world->setSystem( new ClientMeasurementSystem(), true );
 	m_world->setSystem( new ClientEntityCountSystem(), true );

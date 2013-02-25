@@ -689,6 +689,12 @@
     <ClInclude Include="SelectionMarkerUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="GravityMineEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityMineEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1163,6 +1169,9 @@
     </ClCompile>
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityMineEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
