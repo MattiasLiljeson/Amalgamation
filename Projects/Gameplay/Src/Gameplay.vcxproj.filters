@@ -986,9 +986,6 @@
     <ClCompile Include="LibRocketInputHelper.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="GameOptionsSystem.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="LibRocketEventManagerSystem.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
@@ -1120,6 +1117,9 @@
     </ClCompile>
     <ClCompile Include="ClientStateSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOptionsSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

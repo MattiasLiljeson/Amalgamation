@@ -6,9 +6,10 @@
 #include <Globals.h>
 #include <ToString.h>
 #include "MenuItem.h"
+#include "ClientStateSystem.h"
 
 MenuSystem::MenuSystem()
-	: EntitySystem( SystemType::MenuSystem, 1, ComponentType::MenuItem )
+	: EntitySystem( SystemType::MenuSystem)
 {
 }
 
@@ -45,9 +46,17 @@ void MenuSystem::initialize()
 
 }
 
-void MenuSystem::processEntities( const vector<Entity*>& p_entities )
-{
+void MenuSystem::process()
+{	
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
 
+	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+		rocketEventManager->clearDocumentStack();
+	}
 }
 
 void MenuSystem::inserted( Entity* p_entity )
