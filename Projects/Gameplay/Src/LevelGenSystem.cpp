@@ -281,7 +281,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 					m_generatedPieces[i]->getBoundingSphere()) && 
 					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
 				{
-					DEBUGPRINT(("Collision between chambers detected. Failed to generate!"));
+					DEBUGPRINT(("Collision between chambers detected. This means a level plug has been created instead.\n"));
 					colliding = true;
 					break;
 				}

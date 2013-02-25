@@ -1,6 +1,7 @@
 #include "LevelHandlerSystem.h"
 #include "LevelPieceRoot.h"
 #include "Transform.h"
+#include "SpawnPointSystem.h"
 
 LevelHandlerSystem::LevelHandlerSystem()
 	: EntitySystem(SystemType::LevelHandlerSystem, 2, ComponentType::LevelPieceRoot, ComponentType::Transform)

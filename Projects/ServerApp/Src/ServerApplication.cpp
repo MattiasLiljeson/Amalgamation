@@ -36,6 +36,7 @@
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
 #include <OnHitEffectBufferSystem.h>
+#include <SpawnPointSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -210,6 +211,8 @@ namespace Srv
 		m_world->setSystem(new ShipModulesControllerSystem(m_server,onhiteffect), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
+		m_world->setSystem(new SpawnPointSystem(), true);
+
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
@@ -228,9 +231,6 @@ namespace Srv
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 		delete allocator; // NOTE: (Johan) Why u keep deleting it then?
 
-		// TEMP: (Alex) This is only to test and make sure the level gen works.
-		// This should be ran when starting a game session later.
-		// levelGen->run();
 	}
 
 	void ServerApplication::initEntities()
