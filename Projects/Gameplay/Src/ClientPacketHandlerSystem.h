@@ -63,9 +63,11 @@ private:
 
 	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
+	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
 private:
 	TcpClient* m_tcpClient;
+
 	float m_currentPing;
 
 	unsigned int m_totalNetworkSynced;
