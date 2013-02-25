@@ -94,7 +94,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseComponentDataLine(
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 
-	deque<string> rowElements = AssemblageHelper::splitString( p_dataLine, ' ' );
+	deque<string> rowElements = AssemblageHelper::splitString( p_dataLine, ',' );
 	int type = AssemblageHelper::typeFromString( rowElements[0] );
 
 	ComponentData data;

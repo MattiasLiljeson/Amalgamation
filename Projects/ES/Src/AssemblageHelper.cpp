@@ -112,6 +112,7 @@ bool AssemblageHelper::isCharToSkip( char p_prefix )
 	{
 	case '\t':
 	case ' ':
+	case '\"':
 		skip = true;
 		break;
 	default:
@@ -199,7 +200,7 @@ deque<string> AssemblageHelper::splitString( const string& p_string, char p_deno
 	int length = p_string.length();
 	for( int i=0; i<length; i++ )
 	{
-		if( p_string[i] != p_denominator ) {
+		if( p_string[i] != p_denominator && !isCharToSkip( p_string[i] ) ) {
 			buf += p_string[i];
 		} else if( buf != "" ) {
 			splitted.push_back( buf );

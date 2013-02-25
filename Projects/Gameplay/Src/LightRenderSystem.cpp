@@ -65,10 +65,10 @@ void LightRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 			AglQuaternion rot = finalMat.GetRotation();
 			AglMatrix rotMat = AglMatrix::createRotationMatrix(rot);
-			AglVector3 dir( 0.0f, 0.0f, 1.0f);
-			dir.transform( rotMat );
 
 			LightInstanceData inst = lights->at(j).instanceData;
+			AglVector3 dir( inst.lightDir[0], inst.lightDir[1], inst.lightDir[2] );
+			dir.transform( rotMat );
 			inst.lightDir[0] = dir.x;
 			inst.lightDir[1] = dir.y;
 			inst.lightDir[2] = dir.z;

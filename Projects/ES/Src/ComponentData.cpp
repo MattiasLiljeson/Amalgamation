@@ -54,13 +54,13 @@ AssemblageHelper::E_FileStatus ComponentData::setData( deque<string> p_elementLi
 		setDataAsString( p_elementList );
 		break;
 	case AssemblageHelper::AssemblageDataTypes_VEC2:
-		setDataAsString( p_elementList );
+		setDataAsVec2( p_elementList );
 		break;
 	case AssemblageHelper::AssemblageDataTypes_VEC3:
-		setDataAsString( p_elementList );
+		setDataAsVec3( p_elementList );
 		break;
 	case AssemblageHelper::AssemblageDataTypes_VEC4:
-		setDataAsString( p_elementList );
+		setDataAsVec4( p_elementList );
 		break;
 	default:
 		status = AssemblageHelper::FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED;
@@ -179,8 +179,8 @@ AssemblageHelper::E_FileStatus ComponentData::setDataAsVec4( deque<string> p_ele
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec2( float* out_x, float* out_y )
 {
 	if( out_x != NULL && out_y != NULL ) {
-		memcpy( out_x, &data, 4 );
-		memcpy( out_y, &data+4, 4 );
+		memcpy( out_x, data, 4 );
+		memcpy( out_y, data+4, 4 );
 	} else {
 		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
@@ -189,9 +189,9 @@ AssemblageHelper::E_FileStatus ComponentData::getDataAsVec2( float* out_x, float
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec3( float* out_x, float* out_y, float* out_z )
 {
 	if( out_x != NULL && out_y != NULL && out_z != NULL ) {
-		memcpy( out_x, &data, 4 );
-		memcpy( out_y, &data+4, 4 );
-		memcpy( out_y, &data+8, 4 );
+		memcpy( out_x, data, 4 );
+		memcpy( out_y, data+4, 4 );
+		memcpy( out_z, data+8, 4 );
 	} else {
 		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
@@ -200,10 +200,10 @@ AssemblageHelper::E_FileStatus ComponentData::getDataAsVec3( float* out_x, float
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec4( float* out_x, float* out_y, float* out_z, float* out_w )
 {
 	if( out_x != NULL && out_y != NULL && out_z != NULL && out_w != NULL ) {
-		memcpy( out_x, &data, 4 );
-		memcpy( out_y, &data+4, 4 );
-		memcpy( out_y, &data+8, 4 );
-		memcpy( out_y, &data+12, 4 );
+		memcpy( out_x, data, 4 );
+		memcpy( out_y, data+4, 4 );
+		memcpy( out_y, data+8, 4 );
+		memcpy( out_y, data+12, 4 );
 	} else {
 		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
