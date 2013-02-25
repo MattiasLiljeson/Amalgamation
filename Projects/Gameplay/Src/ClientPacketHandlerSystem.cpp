@@ -80,6 +80,8 @@
 #include "EditSphereUpdatePacket.h"
 #include "EditSphereSystem.h"
 #include "HudSystem.h"
+#include "SelectionMarkerUpdatePacket.h"
+#include "SelectionMarkerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -430,6 +432,18 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			EditSphereSystem* editsystem = static_cast<EditSphereSystem*>
 				(m_world->getSystem(SystemType::EditSphereSystem));
 			editsystem->setSphere(update.m_offset, update.m_radius);
+		}
+		else if (packetType == (char)PacketType::SelectionMarkerUpdatePacket)
+		{
+			SelectionMarkerUpdatePacket update;
+			update.unpack(packet);
+			Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				update.targetNetworkIdentity);
+
+			SelectionMarkerSystem* sys = static_cast<SelectionMarkerSystem*>
+				(m_world->getSystem(SystemType::SelectionMarkerSystem));
+			sys->setMarkerTarget(entity->getIndex(), update.transform);
 		}
 		else
 		{
