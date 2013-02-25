@@ -26,9 +26,10 @@ PixelOut PS(PixelIn p_input)
 	int index = value * layerCount;
 	index = min(index, layerCount-1);
 	pixelOut.diffuse = p_input.gradientColor[index];
+	
 	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
 	pixelOut.diffuse.rgb *= p_input.colorOverlay.xyz;
-
+	
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);
 
