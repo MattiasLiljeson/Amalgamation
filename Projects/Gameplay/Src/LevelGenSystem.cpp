@@ -1,3 +1,5 @@
+#define FORCE_VS_DBG_OUTPUT
+
 #include "LevelGenSystem.h"
 #include "Transform.h"
 #include "RenderInfo.h"
@@ -22,8 +24,6 @@
 #include "LoadMeshSystemServer.h"
 #include "EntityFactory.h"
 #include "LevelInfo.h"
-
-#define FORCE_VS_DBG_OUTPUT
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -321,13 +321,13 @@ void LevelGenSystem::createLevelEntities()
 {
 	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
-		addEndPlugs(m_generatedPieces[i]);
-
 		Entity* e = createEntity(m_generatedPieces[i]);
 		m_world->addEntity(e);
+		addEndPlugs(m_generatedPieces[i]);
 		//e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
+	DEBUGPRINT(((toString(m_generatedPieces.size()) + " chambers generated.\n").c_str()));
 }
 
 const AglVector3&  LevelGenSystem::getWorldMin() const
