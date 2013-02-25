@@ -54,6 +54,30 @@ d s m_pieceAssemblageFileName sandChamberServer.asd
 d s m_pieceModelName World_Sand.agl
 d i m_pieceWeight 10
 d s piece end
+# Piece 7
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber1Server.asd
+d s m_pieceModelName small_chamber1.agl
+d i m_pieceWeight 20
+d s piece end
+# Piece 8
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber2Server.asd
+d s m_pieceModelName small_chamber2.agl
+d i m_pieceWeight 20
+d s piece end
+# Piece 9
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber3Server.asd
+d s m_pieceModelName small_chamber3.agl
+d i m_pieceWeight 20
+d s piece end
+# Piece 10
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber4Server.asd
+d s m_pieceModelName small_chamber4.agl
+d i m_pieceWeight 20
+d s piece end
 # Starting piece of this generator [0 to N-1] where N is the amount of pieces above that will be loaded.
 d i m_startPieceId 0
 # End piece to plug connection points with.
