@@ -11,6 +11,7 @@
 #include <Packet.h>
 #include <SystemType.h>
 #include <TcpClient.h>
+#include "LobbySystem.h"
 
 // Components
 #include "AudioBackendSystem.h"
@@ -61,6 +62,7 @@
 #include "ParticleUpdatePacket.h"
 #include "ModuleTriggerPacket.h"
 #include "ModuleStateChangePacket.h"
+#include "NewlyConnectedPlayerPacket.h"
 
 // Debug
 #include "EntityFactory.h"
@@ -82,10 +84,13 @@
 #include "HudSystem.h"
 #include "SelectionMarkerUpdatePacket.h"
 #include "SelectionMarkerSystem.h"
+#include "ClientStateSystem.h"
+#include "GameState.h"
+#include "ChangeStatePacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
-					ComponentType::NetworkSynced)
+	ComponentType::NetworkSynced)
 {
 	m_tcpClient = p_tcpClient;
 
@@ -472,7 +477,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket p_packet)
 {
 	EntityFactory* factory = static_cast<EntityFactory*>
-	(m_world->getSystem(SystemType::EntityFactory));
+		(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		factory->entityFromPacket(p_packet);
@@ -549,7 +554,7 @@ void ClientPacketHandlerSystem::initialize()
 		AntTweakBarWrapper::getInstance()->BarType::NETWORK,
 		"Total network synced", TwType::TW_TYPE_UINT32,
 		&m_totalNetworkSynced, "group='network bug'" );
-	
+
 
 	/************************************************************************/
 	/* Per second data.														*/
@@ -639,7 +644,7 @@ void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 				" bytes" +
 				/* end */
 				"\n").c_str() ));
-			
+
 				m_staticPropIdentitiesForAntTweakBar.push_back(
 					pair<int, int>(0, m_staticPropIdentities.front()));
 		}
@@ -744,19 +749,19 @@ void ClientPacketHandlerSystem::handleBatch()
 			{
 				/*InterpolationComponent* interpolation = NULL;
 				Component* intcomp = m_world->getComponentManager()->getComponent(
-					entity->getIndex(), ComponentType::InterpolationComponent );
+				entity->getIndex(), ComponentType::InterpolationComponent );
 				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
 				if (interpolation )
 				{
-					// set up goal for queuing
-					float handledTime = data.timestamp;
-					InterpolationComponent::TransformGoal transformGoal;
-					transformGoal.timestamp = handledTime;
-					transformGoal.translation = data.translation;
-					transformGoal.rotation = data.rotation;
-					transformGoal.scale = data.scale;
-					// enqueue data
-					interpolation ->m_transformBuffer.push(transformGoal);
+				// set up goal for queuing
+				float handledTime = data.timestamp;
+				InterpolationComponent::TransformGoal transformGoal;
+				transformGoal.timestamp = handledTime;
+				transformGoal.translation = data.translation;
+				transformGoal.rotation = data.rotation;
+				transformGoal.scale = data.scale;
+				// enqueue data
+				interpolation ->m_transformBuffer.push(transformGoal);
 				}
 				else*/
 				{
@@ -838,4 +843,10 @@ void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSyst
 	{
 		// PARTICLE SYSTEMS NOT IN SYNC!
 	}
+}
+
+void ClientPacketHandlerSystem::printPacketTypeNotHandled( string p_stateName, int p_packetType )
+{
+	DEBUGPRINT((("Packet type not handled("+p_stateName+"): " +
+		toString(p_packetType) + "\n").c_str()));
 }
