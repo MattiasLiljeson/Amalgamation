@@ -44,7 +44,7 @@
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
-	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
+	: EntitySystem( SystemType::ServerWelcomeSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;
 	m_activePort = p_activePort;
@@ -139,4 +139,9 @@ void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
 	Entity* e = m_world->createEntity();
 	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
 	m_world->addEntity(e);
+}
+
+unsigned int ServerWelcomeSystem::getTotalOfConnectedPlayers()
+{
+	return m_connectedPlayers.size();
 }

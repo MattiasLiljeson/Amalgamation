@@ -44,4 +44,5 @@ private:
 	TcpServer*		m_server;
 	PhysicsSystem*	m_physics;
 	map<int,ClientInfo> m_clients; ///< The key is the clientID
+	int m_finishedLoadingPlayers;
 };

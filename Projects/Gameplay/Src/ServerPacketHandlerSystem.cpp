@@ -42,6 +42,7 @@
 #include "ServerDynamicObjectsSystem.h"
 #include "ChangeStatePacket.h"
 #include <DebugUtil.h>
+#include "ServerWelcomeSystem.h"
 
 
 
@@ -51,6 +52,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	ComponentType::PhysicsBody )
 {
 	m_server = p_server;
+	m_finishedLoadingPlayers = 0;
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -469,10 +471,18 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 					statePacket.unpack(packet);
 
 					if(statePacket.m_gameState == GameStates::FINISHEDLOADING){
-						stateSystem->setQueuedState(ServerStates::INGAME);
-						statePacket.m_gameState = GameStates::NONE;
-						statePacket.m_serverState = ServerStates::INGAME;
-						m_server->broadcastPacket(statePacket.pack());
+
+						m_finishedLoadingPlayers++;
+
+						ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
+							m_world->getSystem(SystemType::ServerWelcomeSystem));
+
+						if(m_finishedLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+							stateSystem->setQueuedState(ServerStates::INGAME);
+							statePacket.m_gameState = GameStates::NONE;
+							statePacket.m_serverState = ServerStates::INGAME;
+							m_server->broadcastPacket(statePacket.pack());
+						}
 					}
 				}
 				else{

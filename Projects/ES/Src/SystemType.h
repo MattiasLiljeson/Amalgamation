@@ -15,7 +15,7 @@ public:	//Enums
 		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
-		NetworkListenerSystem,
+		ServerWelcomeSystem,
 		ServerPacketHandlerSystem,
 		CircularMovementSystem,
 		AxisRotationSystem,

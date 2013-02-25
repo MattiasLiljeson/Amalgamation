@@ -32,7 +32,7 @@ public:
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
-
+	unsigned int getTotalOfConnectedPlayers();
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
 	void createClientInfoEntity(int p_newlyConnectedClientId);
