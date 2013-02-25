@@ -437,13 +437,18 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			SelectionMarkerUpdatePacket update;
 			update.unpack(packet);
-			Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
-				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-				update.targetNetworkIdentity);
+			int ind = -1;
+			if (update.targetNetworkIdentity >= 0)
+			{
+				Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					update.targetNetworkIdentity);
+				ind = entity->getIndex();
+			}
 
 			SelectionMarkerSystem* sys = static_cast<SelectionMarkerSystem*>
 				(m_world->getSystem(SystemType::SelectionMarkerSystem));
-			sys->setMarkerTarget(entity->getIndex(), update.transform);
+			sys->setMarkerTarget(ind, update.transform);
 		}
 		else
 		{

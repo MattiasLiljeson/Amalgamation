@@ -84,43 +84,19 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		{
 			if (m_pickComponents[i].m_active)
 				handleRay(m_pickComponents[i], p_entities);
-			else if (m_pickComponents[i].m_selection >= 0)
-			{
-				Entity* SelectionSphere = m_world->getEntity(m_pickComponents[i].m_selection);
-				Transform* SelectionSphereTransform = static_cast<Transform*>
-					(SelectionSphere->getComponent(ComponentType::Transform));
-				SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
-			}
-		}
-		if (m_pickComponents[i].m_selection < 0)
-		{
-			//Create the selection highlighter sphere
-			Entity* entity = m_world->createEntity();
-
-			Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::identity(), 
-				AglVector3(1, 1, 1));
-			entity->addComponent( ComponentType::Transform, t);
-			m_world->addEntity(entity);
-			m_pickComponents[i].m_selection = entity->getIndex();
-
-			EntityCreationPacket data;
-			data.entityType		= static_cast<char>(EntityType::SelectionSphere);
-			data.owner			= -1;
-			data.networkIdentity = entity->getIndex();
-			data.translation	= t->getTranslation();
-			data.rotation		= t->getRotation();
-			data.scale			= t->getScale();
-			data.meshInfo		= 1;
-
-			entity->addComponent(ComponentType::NetworkSynced, 
-				new NetworkSynced( entity->getIndex(), -1, EntityType::SelectionSphere));
-
-			m_server->broadcastPacket(data.pack());
 		}
 
 		//Rotate relevant modules
-		if (m_pickComponents[i].m_latestAttached >= 0 && m_pickComponents[i].m_rotationDirection != 0)
-		rotateModule(m_world->getEntity(m_pickComponents[i].m_latestAttached), m_pickComponents[i].m_rotationDirection);
+		if (m_pickComponents[i].getLatestPick() >= 0 && m_pickComponents[i].m_rotationDirection != 0)
+		{
+			Entity* moduleEntity = m_world->getEntity(m_pickComponents[i].getLatestPick());
+			ShipModule*  module = static_cast<ShipModule*>(moduleEntity->getComponent(ComponentType::ShipModule));
+			module->m_rotation += m_world->getDelta()*m_pickComponents[i].m_rotationDirection;
+		}
+		else if (m_pickComponents[i].m_latestAttached >= 0 && m_pickComponents[i].m_rotationDirection != 0)
+			rotateModule(m_world->getEntity(m_pickComponents[i].m_latestAttached), m_pickComponents[i].m_rotationDirection);
+
+		updateSelectionMarker(m_pickComponents[i]);
 	}
 }
 void ServerPickingSystem::setRay(int p_index, AglVector3 p_o, AglVector3 p_d)
@@ -331,23 +307,10 @@ void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
 		body->AddImpulse(-vel + (dest - body->GetWorld().GetTranslation())*10 * body->GetMass());
 	}
 
-	//Fix selection sphere
-	Entity* SelectionSphere = m_world->getEntity(p_ray.m_selection);
-	Transform* SelectionSphereTransform = static_cast<Transform*>
-		(SelectionSphere->getComponent(ComponentType::Transform));
-
 	Transform* toProjectTransform = static_cast<Transform*>
 		(toProject->getComponent(ComponentType::Transform));
 
-	SelectionSphereTransform->setTranslation(closestConnectionPoint(toProjectTransform->getTranslation(), ship, p_ray));
-	if (p_ray.m_targetEntity >= 0)
-	{
-		SelectionSphereTransform->setScale(AglVector3(2, 2, 2));
-	}
-	else
-		SelectionSphereTransform->setScale(AglVector3(0, 0, 0));
-
-	updateSelectionMarker(p_ray);
+	closestConnectionPoint(toProjectTransform->getTranslation(), ship, p_ray);
 }
 AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position, 
 													   Entity* p_entity, PickComponent& p_pc)
@@ -829,7 +792,20 @@ void ServerPickingSystem::add90RotationEvent(int direction, int client)
 	{
 		if (client == m_pickComponents[i].m_clientIndex)
 		{
-			if (m_pickComponents[i].m_latestAttached >= 0)
+			if (m_pickComponents[i].getLatestPick() >= 0)
+			{
+				Entity* e = m_world->getEntity(m_pickComponents[i].getLatestPick());
+				if (e)
+				{
+					ShipModule*  module = static_cast<ShipModule*>(e->getComponent(ComponentType::ShipModule));
+					if (module)
+					{
+						module->m_rotation += direction * 3.14159f / 2.0f;
+					}
+				}
+
+			}
+			else if (m_pickComponents[i].m_latestAttached >= 0)
 			{
 				Entity* e = m_world->getEntity(m_pickComponents[i].m_latestAttached);
 				if (e)
@@ -979,5 +955,12 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		smup.targetNetworkIdentity = module->getIndex();
 		smup.transform = transform;//trans->getMatrix();
 		m_server->unicastPacket(smup.pack(), shipNetworkSynced->getNetworkOwner());
+	}
+	else
+	{
+		SelectionMarkerUpdatePacket smup;
+		smup.targetNetworkIdentity = -1;
+		smup.transform = AglMatrix::identityMatrix();
+		m_server->unicastPacket(smup.pack(), p_ray.m_clientIndex);
 	}
 }

@@ -14,7 +14,6 @@ public:
 		m_clientIndex = -1;
 		m_active = false;
 		m_preferredDistance = 0;
-		m_selection = -1;
 		m_targetEntity = -1;
 		m_targetSlot = -1;
 		m_latestAttached = -1;
