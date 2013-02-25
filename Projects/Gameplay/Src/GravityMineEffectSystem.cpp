@@ -25,7 +25,7 @@ void GravityMineEffectSystem::processEntities( const vector<Entity*>& p_entities
 			}
 			RandomUtil::randomEvenlyDistributedSphere(&piece->offsetVector.x,
 				&piece->offsetVector.y, &piece->offsetVector.z);
-			piece->offsetVector *= piece->radius;
+			piece->offsetVector *= piece->maxRadius;
 			AglMatrix localTransform;
 			AglMatrix::componentsToMatrix(localTransform, AglVector3(1.0f, 1.0f, 1.0f),
 				AglQuaternion::rotateToFrom(AglVector3::forward(), piece->offsetVector),
@@ -37,11 +37,11 @@ void GravityMineEffectSystem::processEntities( const vector<Entity*>& p_entities
 
 		float lifeTimeFraction = piece->lifeTime / piece->maxLifeTime;
 		AglMatrix localTransform;
-		AglVector3 scale = AglVector3::one() - AglVector3(lifeTimeFraction, lifeTimeFraction, lifeTimeFraction);
+		AglVector3 scale = AglVector3::one() - AglVector3(lifeTimeFraction, lifeTimeFraction, lifeTimeFraction) * 0.75f;
 		//AglVector3 scale = AglVector3(lifeTimeFraction, lifeTimeFraction, lifeTimeFraction);
 		AglMatrix::componentsToMatrix(localTransform, scale,
 			AglQuaternion::rotateToFrom(AglVector3::up(), -piece->offsetVector),
-			piece->offsetVector * sqrt(lifeTimeFraction));
+			piece->offsetVector * lifeTimeFraction * lifeTimeFraction);//sqrt(lifeTimeFraction));
 		EntityParent* parent = static_cast<EntityParent*>(p_entities[i]->
 			getComponent(ComponentType::EntityParent));
 		parent->setLocalTransform(localTransform);
