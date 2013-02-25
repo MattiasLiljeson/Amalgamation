@@ -2,6 +2,7 @@
 #include "SelectionMarker.h"
 #include "RenderInfo.h"
 #include "Transform.h"
+#include "SkeletalAnimation.h"
 
 
 SelectionMarkerSystem::SelectionMarkerSystem() : 
@@ -52,4 +53,27 @@ void SelectionMarkerSystem::setMarkerTarget(int p_target, AglMatrix p_transform)
 	Transform* trans = static_cast<Transform*>(m_marker->getComponent(ComponentType::Transform));
 	trans->setMatrix(p_transform);
 	marker->m_targetEntity = p_target;
+
+	Entity* t = m_world->getEntity(p_target);
+	SkeletalAnimation* skelAnimTarget = static_cast<SkeletalAnimation*>(t->getComponent(ComponentType::SkeletalAnimation));
+	if (skelAnimTarget)
+	{
+		SkeletalAnimation* skelAnim = static_cast<SkeletalAnimation*>(m_marker->getComponent(ComponentType::SkeletalAnimation));
+		if (!skelAnim)
+		{
+			skelAnim = new SkeletalAnimation(0, skelAnimTarget->m_scene, skelAnimTarget->m_offset);
+			skelAnim->m_playSpeed = 0;
+			m_marker->addComponent(ComponentType::SkeletalAnimation, skelAnim);
+		}
+		else
+		{
+			skelAnim->m_offset = skelAnimTarget->m_offset;
+			skelAnim->m_scene = skelAnimTarget->m_scene;
+		}
+	}
+	else
+	{
+		m_marker->removeComponent(ComponentType::SkeletalAnimation);
+		m_marker->applyComponentChanges();
+	}
 }
