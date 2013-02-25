@@ -35,6 +35,7 @@
 // Packets
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
+#include "NewlyConnectedPlayerPacket.h"
 
 #include <Globals.h>
 #include "EntityFactory.h"
@@ -43,7 +44,7 @@
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
 										 int p_activePort/* =1337 */ )
-	: EntitySystem( SystemType::NetworkListenerSystem, 1, ComponentType::NetworkSynced)
+	: EntitySystem( SystemType::ServerWelcomeSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;
 	m_activePort = p_activePort;
@@ -64,25 +65,11 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		int id = m_server->popNewDisconnection();
 
-		// When a client is disconnecting, then all other clients must know this.
-		// At this point, the disconnecting client is not in the active connections list.
-//		Packet dcPacket;
-//		dcPacket 
-//			<< (char)PacketType::ClientDisconnect
-//			<< (char)id; 
-//			
-//		m_server->broadcastPacket( Packet() );
-
 		for (unsigned int index = 0; index < p_entities.size(); index++)
 		{
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				m_world->getComponentManager()->getComponent( p_entities[index],
 					ComponentType::NetworkSynced ) );
-
-			// HACK: This deletion is what caused the magical crashes all the time.
-			// This should be solved as soon as possible.
-			//if (netSync->getNetworkIdentity() == id)
-			//	m_world->deleteEntity(p_entities[index]);
 		}
 
 		// If a client has disconnected, then the clientinfo should be removed?
@@ -117,70 +104,6 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			/************************************************************************/
 			sendWelcomePacket(id);
 
-			/************************************************************************/
-			/* Send the already networkSynced objects located on the server to the	*/
-			/* newly connected client.												*/
-			/************************************************************************/ 
-			NetworkSynced* netSync;
-			Transform* transform;
-			for( unsigned int i=0; i<p_entities.size(); i++ )
-			{
-				int entityId = p_entities[i]->getIndex();
-				netSync = (NetworkSynced*)m_world->getComponentManager()->
-					getComponent( entityId, ComponentType::NetworkSynced );
-
-				transform = (Transform*)m_world->getComponentManager()->
-					getComponent( entityId, ComponentType::Transform );
-
-				EntityCreationPacket data;
-				data.entityType		= static_cast<char>(netSync->getNetworkType());
-				data.owner			= netSync->getNetworkOwner();
-				data.playerID		= netSync->getPlayerID();
-				data.networkIdentity = netSync->getNetworkIdentity();
-				
-				data.meshInfo		 = 0; //Temp
-				if (transform)
-				{
-					data.translation	= transform->getTranslation();
-					data.rotation		= transform->getRotation();
-					data.scale			= transform->getScale();
-				}
-
-				///MESH INFO MUST BE MADE INTO A COMPONENT
-				//data.meshInfo		= 1;
-
-				m_server->unicastPacket( data.pack(), id );
-			}
-
-			/************************************************************************/
-			/* Send static objects to the newly connected client.					*/
-			/************************************************************************/
-			vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
-				getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
-
-//			queue< Packet > packets;
-
-			for (unsigned int i= 0; i < entities.size(); i++)
-			{
-				transform = static_cast<Transform*>(entities[i]->
-					getComponent(ComponentType::Transform));
-
-				StaticProp* prop = static_cast<StaticProp*>(entities[i]->
-					getComponent(ComponentType::StaticProp));
-
-				EntityCreationPacket data;
-				data.entityType = static_cast<char>(EntityType::Other);
-				data.owner = -1; //NO OWNER
-				data.networkIdentity = entities[i]->getIndex();
-				data.translation = transform->getTranslation();
-				data.rotation = transform->getRotation();
-				data.scale = transform->getScale();
-				data.isLevelProp = prop->isLevelPiece;
-				data.meshInfo = prop->meshInfo;  
-
-//				packets.push( packet );
-				m_server->unicastPacket( data.pack(), id );
-			}
 			m_numOfConnectedPlayers++;
 		}
 	}
@@ -199,66 +122,16 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.playerID = m_numOfConnectedPlayers;
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	Entity* newShip = createTheShipEntity(p_newlyConnectedClientId, m_numOfConnectedPlayers);
-	m_world->addEntity(newShip);
-	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
-		ComponentType::Transform));
+	m_connectedPlayers.push_back(
+		PlayerInfo("Player" + toString(m_connectedPlayers.size()),m_connectedPlayers.size())
+		);
 
-	// also create a camera
-	Entity* playerCam = m_world->createEntity();
-	Component* component = new LookAtEntity(newShip->getIndex(),
-		AglVector3(0,7,-38),
-		13.0f,
-		10.0f,
-		3.0f,
-		40.0f);
-	playerCam->addComponent( ComponentType::LookAtEntity, component );
-	playerCam->addComponent( ComponentType::Transform, new Transform( 
-		transformComp->getMatrix() ) );
-	// default tag is follow
-	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-	playerCam->addTag(ComponentType::TAG_LookAtMainCamera, new LookAtMainCamera_TAG() );
-
-	playerCam->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( playerCam->getIndex(), p_newlyConnectedClientId, EntityType::PlayerCamera ));
-	m_world->addEntity(playerCam);
-
-	/************************************************************************/
-	/* Send the information about the new clients ship to all other players */
-	/************************************************************************/
-	EntityCreationPacket data;
-	data.entityType		= static_cast<char>(EntityType::Ship);
-	data.owner			= p_newlyConnectedClientId;
-	data.playerID		= m_numOfConnectedPlayers;
-	data.networkIdentity= newShip->getIndex();
-	data.translation	= transformComp->getTranslation();
-	data.rotation		= transformComp->getRotation();
-	data.scale			= transformComp->getScale();
-	data.miscData		= playerCam->getIndex();
-
-	m_server->broadcastPacket(data.pack());
-}
-
-Entity* ServerWelcomeSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)
-{
-	/************************************************************************/
-	/* Creating the ship entity.											*/
-	/************************************************************************/
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
-
-	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
-
-	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
-		new ShipConnectionPointHighlights());
-
-	e->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, p_playerID, EntityType::Ship ));
-	
-	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
-
-	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
-
-	return e;
+	for(unsigned int i = 0; i < m_connectedPlayers.size(); i++){
+		NewlyConnectedPlayerPacket connectedPacket;
+		connectedPacket.playerID = m_connectedPlayers[i].ID;
+		connectedPacket.playerName = m_connectedPlayers[i].name;
+		m_server->broadcastPacket( connectedPacket.pack() );
+	}
 }
 
 void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
@@ -266,4 +139,9 @@ void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
 	Entity* e = m_world->createEntity();
 	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
 	m_world->addEntity(e);
+}
+
+unsigned int ServerWelcomeSystem::getTotalOfConnectedPlayers()
+{
+	return m_connectedPlayers.size();
 }
