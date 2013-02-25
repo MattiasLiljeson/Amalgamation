@@ -127,7 +127,6 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		{
 			while (m_tcpClient->hasNewPackets())
 			{
-
 				Packet packet = m_tcpClient->popNewPacket();
 				//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 				char packetType;
@@ -529,7 +528,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 				}
 				else
 				{
-					printPacketTypeNotHandled("Finished Loading", (int)packetType);
+					//printPacketTypeNotHandled("Finished Loading", (int)packetType);
 				}
 			}
 

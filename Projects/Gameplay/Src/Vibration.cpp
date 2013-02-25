@@ -29,7 +29,6 @@ Vibration::Vibration(float p_power, float p_minRadius, float p_maxRadius)
 }
 void Vibration::init( vector<ComponentData> p_initData )
 {
-	char* cStr;
 	int temp=0;
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{

@@ -1,5 +1,7 @@
 #pragma once
 
+#define FORCE_VS_DBG_OUTPUT
+
 #include <map>
 #include <EntitySystem.h>
 #include "ClientInfo.h"
@@ -42,4 +44,5 @@ private:
 	TcpServer*		m_server;
 	PhysicsSystem*	m_physics;
 	map<int,ClientInfo> m_clients; ///< The key is the clientID
+	int m_finishedLoadingPlayers;
 };

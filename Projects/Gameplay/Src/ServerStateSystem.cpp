@@ -31,19 +31,19 @@ void ServerStateSystem::process()
 		switch (m_states[m_currentState]->stateEnum)
 		{
 		case ServerStates::INGAME:
-			DEBUGPRINT(("SERVER:Changed to ingame state!\n"));
+			DEBUGPRINT(("SERVER: Changed to ingame state!\n"));
 			break;
 		case ServerStates::LOADING:
-			DEBUGPRINT(("SERVER:Changed to loading state!\n"));
+			DEBUGPRINT(("SERVER: Changed to loading state!\n"));
 			break;
 		case ServerStates::LOBBY:
-			DEBUGPRINT(("SERVER:Changed to lobby state!\n"));
+			DEBUGPRINT(("SERVER: Changed to lobby state!\n"));
 			break;
 		case ServerStates::RESULT:
-			DEBUGPRINT(("SERVER:Changed to result state!\n"));
+			DEBUGPRINT(("SERVER: Changed to result state!\n"));
 			break;
 		case ServerStates::SENTALLPACKETS:
-			DEBUGPRINT(("SERVER:Changed to sent all packet state!\n"));
+			DEBUGPRINT(("SERVER: Changed to sent all packet state!\n"));
 			break;
 		default:
 			break;

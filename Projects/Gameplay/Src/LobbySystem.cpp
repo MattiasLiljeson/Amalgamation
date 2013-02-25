@@ -8,13 +8,13 @@ LobbySystem::LobbySystem() : EntitySystem (SystemType::LobbySystem),
 
 	for(int i = 0; i < MAXPLAYERS; i++)
 	{
-		m_players[i].playerName = "Roffeltord";
-		m_players[i].ping = i;
+		m_players[i].playerName = "open";
+		m_players[i].ping = -1;
 		m_players[i].ready = false;
 
 	}
 	m_connectPlayers = 0;
-	//NotifyRowAdd(m_tableName,0,MAXPLAYERS);
+	NotifyRowAdd(m_tableName,0,MAXPLAYERS);
 }
 
 LobbySystem::~LobbySystem()
@@ -49,11 +49,18 @@ void LobbySystem::GetRow( Rocket::Core::StringList& row, const Rocket::Core::Str
 
 int LobbySystem::GetNumRows( const Rocket::Core::String& table )
 {
+		/*
 	if (table == m_tableName)
 	{
-		return m_connectPlayers;
-	}
-	return 0;
+		
+		int numberOfPlayers = 0;
+		for(unsigned int i=0;i < MAXPLAYERS;i++){
+			if(m_players[i].playerName != "")
+				numberOfPlayers++;
+		}
+		return numberOfPlayers;
+	}*/
+	return MAXPLAYERS;
 }
 
 void LobbySystem::process()
@@ -73,10 +80,9 @@ void LobbySystem::updateRow( int p_row, const LobbyStats& p_stats )
 
 void LobbySystem::addNewPlayer( const NewlyConnectedPlayerPacket& p_packet )
 {
-	m_connectPlayers++;
 	m_players[p_packet.playerID].playerName = p_packet.playerName;
 	m_players[p_packet.playerID].ping = p_packet.playerID;
 	m_players[p_packet.playerID].ready = false;
 
-	NotifyRowAdd(m_tableName,p_packet.playerID,1);
+	NotifyRowChange(m_tableName,p_packet.playerID,1);
 }

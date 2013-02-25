@@ -32,27 +32,28 @@ void ClientStateSystem::process()
 		switch (m_states[m_currentState]->stateEnum)
 		{
 		case GameStates::INGAME:
-			DEBUGPRINT(("Changed to ingame state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to ingame state!\n"));
 			break;
 		case GameStates::MENU:
-			DEBUGPRINT(("Changed to menu state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to menu state!\n"));
 			break;
 		case GameStates::INITGAME:
-			DEBUGPRINT(("Changed to init game state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to init game state!\n"));
 			break;
 		case GameStates::LOBBY:
-			DEBUGPRINT(("Changed to lobby state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to lobby state!\n"));
 			break;
 		case GameStates::LOADING:
-			DEBUGPRINT(("Changed to loading state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to loading state!\n"));
 			break;
 		case GameStates::FINISHEDLOADING:
-			DEBUGPRINT(("Changed to finished loading state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to finished loading state!\n"));
 			break;
 		case GameStates::PAUSE:
-			DEBUGPRINT(("Changed to pause state!\n"));
+			DEBUGPRINT(("CLIENT: Changed to pause state!\n"));
 			break;
 		default:
+			DEBUGPRINT(("CLIENT: Changed to a unkown state!\n"));
 			break;
 		}
 	}
