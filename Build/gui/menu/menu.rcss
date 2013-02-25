@@ -40,6 +40,7 @@ body.Pop-up
 	margin:		 	auto;
 	width:			350px;
 	height: 		42%;
+	max-height: 	350px;
 	min-height:		205px;
 	background: 	rgba(0,60,0,80);
 }
@@ -324,12 +325,25 @@ dataselect selectbox option
 	padding-left: 3px;
 }
 
+datagridrow{
+	margin-top: 10px;
+	color: rgb(230,230,230);
+	font-weight: normal;
+}
+
 select selectbox option:nth-child(even),
 dataselect selectbox option:nth-child(even),
 datagrid datagridrow:nth-child(even)
 {
-	background: #FFFFFFA0;
+	background: rgba(0,0,0,255);
 }
+select selectbox option:nth-child(odd),
+dataselect selectbox option:nth-child(odd),
+datagrid datagridrow:nth-child(odd)
+{
+	background: rgba(23,23,23,255);
+}
+
 
 select selectbox option:hover,
 dataselect selectbox option:hover
