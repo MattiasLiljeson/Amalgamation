@@ -55,6 +55,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	m_server = p_server;
 	m_stateSystem = NULL;
 	m_finishedLoadingPlayers = 0;
+	m_readyLoadingPlayers = 0;
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -474,84 +475,105 @@ void ServerPacketHandlerSystem::handleLobby()
 
 void ServerPacketHandlerSystem::handleLoading()
 {
-	//stateSystem->setQueuedState(ServerStates::INGAME);
-	/************************************************************************/
-	/* Send the already networkSynced objects located on the server to the	*/
-	/* newly connected client.												*/
-	/************************************************************************/ 
-	NetworkSynced* netSync;
-	Transform* transform;
-	vector<Entity*> dynamicEntities = static_cast<ServerDynamicObjectsSystem*>(
-		m_world->getSystem(SystemType::ServerDynamicObjectsSystem))->getActiveEntities();
-	for( unsigned int i=0; i<dynamicEntities.size(); i++ )
+	while( m_server->hasNewPackets() )
 	{
-		int entityId = dynamicEntities[i]->getIndex();
-		netSync = (NetworkSynced*)m_world->getComponentManager()->
-			getComponent( entityId, ComponentType::NetworkSynced );
+		Packet packet = m_server->popNewPacket();
 
-		transform = (Transform*)m_world->getComponentManager()->
-			getComponent( entityId, ComponentType::Transform );
+		char packetType;
+		packetType = packet.getPacketType();
 
-		EntityCreationPacket data;
-		data.entityType		= static_cast<char>(netSync->getNetworkType());
-		data.owner			= netSync->getNetworkOwner();
-		data.playerID		= netSync->getPlayerID();
-		data.networkIdentity = netSync->getNetworkIdentity();
+		if(packetType == (char)PacketType::ChangeStatePacket){
+			ChangeStatePacket statePacket;
+			statePacket.unpack(packet);
 
-		data.meshInfo		 = 0; //Temp
-		if (transform)
+			if(statePacket.m_gameState == GameStates::LOADING){
+				m_readyLoadingPlayers++;
+			}
+		}
+	}
+
+	ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
+		m_world->getSystem(SystemType::ServerWelcomeSystem));
+
+	if(m_readyLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+		/************************************************************************/
+		/* Send the already networkSynced objects located on the server to the	*/
+		/* newly connected client.												*/
+		/************************************************************************/ 
+		NetworkSynced* netSync;
+		Transform* transform;
+		vector<Entity*> dynamicEntities = static_cast<ServerDynamicObjectsSystem*>(
+			m_world->getSystem(SystemType::ServerDynamicObjectsSystem))->getActiveEntities();
+		for( unsigned int i=0; i<dynamicEntities.size(); i++ )
 		{
-			data.translation	= transform->getTranslation();
-			data.rotation		= transform->getRotation();
-			data.scale			= transform->getScale();
+			int entityId = dynamicEntities[i]->getIndex();
+			netSync = (NetworkSynced*)m_world->getComponentManager()->
+				getComponent( entityId, ComponentType::NetworkSynced );
+
+			transform = (Transform*)m_world->getComponentManager()->
+				getComponent( entityId, ComponentType::Transform );
+
+			EntityCreationPacket data;
+			data.entityType		= static_cast<char>(netSync->getNetworkType());
+			data.owner			= netSync->getNetworkOwner();
+			data.playerID		= netSync->getPlayerID();
+			data.networkIdentity = netSync->getNetworkIdentity();
+
+			data.meshInfo		 = 0; //Temp
+			if (transform)
+			{
+				data.translation	= transform->getTranslation();
+				data.rotation		= transform->getRotation();
+				data.scale			= transform->getScale();
+			}
+
+			///MESH INFO MUST BE MADE INTO A COMPONENT
+			//data.meshInfo		= 1;
+
+			m_server->broadcastPacket( data.pack() );
 		}
 
-		///MESH INFO MUST BE MADE INTO A COMPONENT
-		//data.meshInfo		= 1;
+		/************************************************************************/
+		/* Send static objects to the newly connected client.					*/
+		/************************************************************************/
+		vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
+			getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
 
-		m_server->broadcastPacket( data.pack() );
+		for (unsigned int i= 0; i < entities.size(); i++)
+		{
+			transform = static_cast<Transform*>(entities[i]->
+				getComponent(ComponentType::Transform));
+
+			StaticProp* prop = static_cast<StaticProp*>(entities[i]->
+				getComponent(ComponentType::StaticProp));
+
+			EntityCreationPacket data;
+			data.entityType = static_cast<char>(EntityType::Other);
+			data.owner = -1; //NO OWNER
+			data.networkIdentity = entities[i]->getIndex();
+			data.translation = transform->getTranslation();
+			data.rotation = transform->getRotation();
+			data.scale = transform->getScale();
+			data.isLevelProp = prop->isLevelPiece;
+			data.meshInfo = prop->meshInfo;  
+
+			//				packets.push( packet );
+			m_server->broadcastPacket( data.pack() );
+		}
+
+		/************************************************************************/
+		/* Create and send the ship entities.									*/
+		/************************************************************************/
+		for(unsigned int i=0; i<m_server->getActiveConnections().size(); i++)
+		{
+			createAndBroadCastShip(m_server->getActiveConnections().at(i), (int)i);
+		}
+
+		ChangeStatePacket changeState;
+		changeState.m_serverState = ServerStates::SENTALLPACKETS;
+		m_server->broadcastPacket(changeState.pack());
+		m_stateSystem->setQueuedState(ServerStates::SENTALLPACKETS);
 	}
-
-	/************************************************************************/
-	/* Send static objects to the newly connected client.					*/
-	/************************************************************************/
-	vector<Entity*> entities = static_cast<ServerStaticObjectsSystem*>(m_world->
-		getSystem(SystemType::ServerStaticObjectsSystem))->getStaticObjects();
-
-	for (unsigned int i= 0; i < entities.size(); i++)
-	{
-		transform = static_cast<Transform*>(entities[i]->
-			getComponent(ComponentType::Transform));
-
-		StaticProp* prop = static_cast<StaticProp*>(entities[i]->
-			getComponent(ComponentType::StaticProp));
-
-		EntityCreationPacket data;
-		data.entityType = static_cast<char>(EntityType::Other);
-		data.owner = -1; //NO OWNER
-		data.networkIdentity = entities[i]->getIndex();
-		data.translation = transform->getTranslation();
-		data.rotation = transform->getRotation();
-		data.scale = transform->getScale();
-		data.isLevelProp = prop->isLevelPiece;
-		data.meshInfo = prop->meshInfo;  
-
-		//				packets.push( packet );
-		m_server->broadcastPacket( data.pack() );
-	}
-
-	/************************************************************************/
-	/* Create and send the ship entities.									*/
-	/************************************************************************/
-	for(unsigned int i=0; i<m_server->getActiveConnections().size(); i++)
-	{
-		createAndBroadCastShip(m_server->getActiveConnections().at(i), (int)i);
-	}
-
-	ChangeStatePacket changeState;
-	changeState.m_serverState = ServerStates::SENTALLPACKETS;
-	m_server->broadcastPacket(changeState.pack());
-	m_stateSystem->setQueuedState(ServerStates::SENTALLPACKETS);
 }
 
 void ServerPacketHandlerSystem::handleSentAllPackets()

@@ -925,6 +925,11 @@ void ClientPacketHandlerSystem::handleLobby()
 
 void ClientPacketHandlerSystem::handleLoading()
 {
+	if(m_gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
+		ChangeStatePacket changeState;
+		changeState.m_gameState = GameStates::LOADING;
+		m_tcpClient->sendPacket(changeState.pack());
+	}
 	while (m_tcpClient->hasNewPackets())
 	{
 		Packet packet = m_tcpClient->popNewPacket();

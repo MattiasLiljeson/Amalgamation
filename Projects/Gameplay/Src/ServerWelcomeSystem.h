@@ -55,6 +55,5 @@ private:
 	vector<PlayerInfo> m_connectedPlayers;
 	TcpServer* m_server;
 	int		m_activePort;
-	int		m_numOfConnectedPlayers;
 	ModelBaseFactory m_modelFactory;
 };

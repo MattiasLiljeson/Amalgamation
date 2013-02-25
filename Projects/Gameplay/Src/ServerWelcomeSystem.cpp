@@ -48,7 +48,6 @@ ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server,
 {
 	m_server = p_server;
 	m_activePort = p_activePort;
-	m_numOfConnectedPlayers = 0;
 }
 
 ServerWelcomeSystem::~ServerWelcomeSystem()
@@ -90,7 +89,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	/* It goes here if there are new clients that has connected to the		*/
 	/* server.																*/
 	/************************************************************************/
-	if ( m_server->isListening() && m_numOfConnectedPlayers < 7)
+	if ( m_server->isListening() && m_connectedPlayers.size() < 7)
 	{
 		while( m_server->hasNewConnections() )
 		{
@@ -104,7 +103,6 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			/************************************************************************/
 			sendWelcomePacket(id);
 
-			m_numOfConnectedPlayers++;
 		}
 	}
 }
@@ -119,7 +117,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
-	welcomePacket.playerID = m_numOfConnectedPlayers;
+	welcomePacket.playerID = m_connectedPlayers.size();
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
 	m_connectedPlayers.push_back(
