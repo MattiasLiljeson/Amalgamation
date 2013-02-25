@@ -112,6 +112,21 @@ Describe(a_packet)
 		Assert::That(quaternion_dst.v, Equals(quaternion_src.v));
 	}
 
+	It(can_contain_variable_string_data)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		string text_src = "Hello world!";
+		packet << text_src;
+		string text_dst;
+		packet >> text_dst;
+		Assert::That(text_dst, Equals(text_src)); // data is the same
+		Assert::That(packet.getDataSize(), Equals(
+			1						// Size byte for the string length
+			+ text_src.size()		// Size of the string itself.
+			+ Packet::HEADER_SIZE	// Packet's header size.
+			));
+	}
+
 	It(can_contain_multiple_int_data)
 	{
 		Packet packet(TEST_PACKET_TYPE);
