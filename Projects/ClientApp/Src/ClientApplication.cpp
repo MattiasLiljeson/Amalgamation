@@ -55,6 +55,7 @@
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
+#include <ClientStateSystem.h>
 #include <DebugMovementSystem.h>
 #include <DisplayPlayerScoreSystem.h>
 #include <EntityFactory.h>
@@ -108,6 +109,7 @@
 #include <ConnectionVisualizerSystem.h>
 #include <SpeedFovAdjustSystem.h>
 #include <MenuBackgroundSceneSystem.h>
+#include <LobbySystem.h>
 #include <LevelInfoLoader.h>
 #include <EnvironmentSystem.h>
 #include <SpeedBufferUpdaterSystem.h>
@@ -219,6 +221,11 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
+	/* Game State system.													*/
+	/************************************************************************/
+	m_world->setSystem(new ClientStateSystem(GameStates::MENU), true);
+
+	/************************************************************************/
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
 	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
@@ -289,10 +296,12 @@ void ClientApplication::initSystems()
 		inputBackend );
 	m_world->setSystem( rocketBackend, true );
 
+	m_world->setSystem( new LobbySystem() );
+
 	HudSystem* hud = new HudSystem( rocketBackend );
 	m_world->setSystem( hud, true );
 
-	m_world->setSystem( new LibRocketEventManagerSystem(), true );
+	m_world->setSystem( new LibRocketEventManagerSystem(m_client), true );
 	m_world->setSystem( new GameOptionsSystem() );
 
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
@@ -327,7 +336,6 @@ void ClientApplication::initSystems()
 	ShipEditControllerSystem* shipEditController = new ShipEditControllerSystem(shipInputProc, physics,
 		slotInput);
 	m_world->setSystem( shipEditController, true);
-
 
 	/************************************************************************/
 	/* Hierarchy															*/
@@ -541,10 +549,6 @@ void ClientApplication::initEntities()
 	entity = factory->entityFromRecipe( "RedLight" );									 
 	m_world->addEntity( entity );
 	*/
-
-	entity = m_world->createEntity();
-	entity->addComponent(ComponentType::GameState,new GameState(MENU));
-	m_world->addEntity(entity);
 
 	//ParticleEmitters* ps = new ParticleEmitters();
 	//AglParticleSystemHeader header;
