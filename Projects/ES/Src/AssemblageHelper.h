@@ -77,7 +77,7 @@ public:
 	/// \param p_file which stream to use
 	/// \return AssemblageHelper::E_FileStatus Status of the file stream
 	///-----------------------------------------------------------------------------------
-	static E_FileStatus peekCharFromStream( char* out_prefix, ifstream* p_file );
+	static E_FileStatus peekNextCharFromStream( char* out_prefix, ifstream* p_file );
 
 	///-----------------------------------------------------------------------------------
 	/// Returns the next line which is not a newline
@@ -93,17 +93,16 @@ public:
 	/// Helper function used to check whether to skip the next line due to newlines, 
 	/// comments etc
 	/// \param p_prefix The prefix used to check the line with.
-	/// \return bool
+	/// \return bool tru if next line should be skipped
 	///-----------------------------------------------------------------------------------
-	static bool skipLine( char p_prefix );
+	static bool isLineToSkip( char p_prefix );
 
 	///-----------------------------------------------------------------------------------
-	/// Helper function used to check whether to skip the next char due to comments,
-	/// white spaces etc
+	/// Helper function used to check whether to skip the next char due to white spaces
 	/// \param p_prefix The prefix to check.
-	/// \return bool
+	/// \return bool true if char is to skip
 	///-----------------------------------------------------------------------------------
-	static bool skipChar( char p_prefix );
+	static bool isCharToSkip( char p_prefix );
 
 	///-----------------------------------------------------------------------------------
 	/// Helper function which controls the stream for errors and reports them by with the 
@@ -112,6 +111,8 @@ public:
 	/// \return AssemblageHelper::E_FileStatus
 	///-----------------------------------------------------------------------------------
 	static E_FileStatus controlStream( ifstream* p_file );
+
+	static E_FileStatus peekNextCharFromLine( char* out_prefix, ifstream* p_line );
 
 	static AssemblageDataTypes typeFromString( const string& p_typeAsStr );
 

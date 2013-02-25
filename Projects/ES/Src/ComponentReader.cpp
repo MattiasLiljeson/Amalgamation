@@ -25,7 +25,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 	Ingredient* ingredient = NULL;
 
 	char componentPrefix = ' ';
-	status = AssemblageHelper::peekCharFromStream( &componentPrefix, p_file );
+	status = AssemblageHelper::peekNextCharFromStream( &componentPrefix, p_file );
 	// If there's no error and componentName defines a component
 	if( status == AssemblageHelper::FileStatus_OK && componentPrefix == 'c' )
 	{
@@ -52,7 +52,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 				char nextPrefix = ' ';
 				// As long as the file is ok and the next line defines data. Create ComponentData
 				do {
-					status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
+					status = AssemblageHelper::peekNextCharFromStream( &nextPrefix, p_file );
 					string dataLine = "";
 
 					if( nextPrefix == 'd')
@@ -93,12 +93,8 @@ AssemblageHelper::E_FileStatus ComponentReader::parseComponentDataLine(
 	ComponentData* out_data,  const string& p_dataLine )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	//stringstream ss( p_dataLine );
 
 	deque<string> rowElements = AssemblageHelper::splitString( p_dataLine, ' ' );
-
-	//char dataType = ss.peek();
-
 	int type = AssemblageHelper::typeFromString( rowElements[0] );
 
 	ComponentData data;

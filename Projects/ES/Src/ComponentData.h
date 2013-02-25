@@ -146,7 +146,7 @@ AssemblageHelper::E_FileStatus ComponentData::getData( T* out_value )
 	if( typeid(T) != typeid(string) ) {
 		status = getBasicDataTypes<T>( out_value );
 	} else {
-		status = getDataAsString( *out_value );
+		//status = getDataAsString( *out_value );
 	}
 
 	return status;

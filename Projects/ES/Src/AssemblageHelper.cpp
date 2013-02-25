@@ -10,21 +10,20 @@ AssemblageHelper::~AssemblageHelper(void)
 {
 }
 
-AssemblageHelper::E_FileStatus AssemblageHelper::peekCharFromStream( char* out_prefix,
+AssemblageHelper::E_FileStatus AssemblageHelper::peekNextCharFromStream( char* out_prefix,
 																	ifstream* p_file )
 {
-	char nextPrefix = '\0';
-	E_FileStatus status = controlStream( p_file);
+	char nextPrefix = ' ';
+	E_FileStatus status = controlStream( p_file );
 	if( status == FileStatus_OK )
 	{
-		nextPrefix = p_file->peek();
-		while( status == FileStatus_OK && skipLine( nextPrefix ) )
+		status = peekNextCharFromLine( &nextPrefix, p_file );
+		while( status == FileStatus_OK && isLineToSkip( nextPrefix ) )
 		{
 			string discard = "";
 			getline( *p_file, discard );
-			nextPrefix = p_file->peek();
-			status = controlStream( p_file );
-		};
+			status = peekNextCharFromLine( &nextPrefix, p_file );
+		}
 	}
 	
 	if( out_prefix != NULL )
@@ -54,8 +53,8 @@ AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_p
 			do {
 				prefixPos++;
 				prefix = line[prefixPos];
-			} while( skipChar(prefix) );
-		} while( skipLine(prefix) && p_file->good() );
+			} while( isCharToSkip( prefix ) );
+		} while( isLineToSkip( prefix ) && p_file->good() );
 	}
 	
 	string subLine = "";
@@ -65,12 +64,11 @@ AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_p
 		subLine = line.substr( prefixPos+2, string::npos );
 	}
 
-	if( out_line != NULL )
-	{
+	if( out_line != NULL ) {
 		*out_line = subLine;
 	}
-	if( out_prefix != NULL )
-	{
+
+	if( out_prefix != NULL ) {
 		*out_prefix = prefix;
 	}
 
@@ -80,7 +78,7 @@ AssemblageHelper::E_FileStatus AssemblageHelper::readLineFromStream( char* out_p
 }
 
 
-bool AssemblageHelper::skipLine( char p_prefix )
+bool AssemblageHelper::isLineToSkip( char p_prefix )
 {
 	bool skip = false;
 
@@ -104,12 +102,12 @@ bool AssemblageHelper::skipLine( char p_prefix )
 	return skip;
 }
 
-bool AssemblageHelper::skipChar( char p_prefix )
+bool AssemblageHelper::isCharToSkip( char p_prefix )
 {
 	bool skip = false;
 
 	// Warning: multiple fall-throughs
-	// Add comments for whitespace and other skipable chars here
+	// Add comments for whitespace and other skip-able chars here
 	switch( p_prefix )
 	{
 	case '\t':
@@ -128,30 +126,45 @@ AssemblageHelper::E_FileStatus AssemblageHelper::controlStream( ifstream* p_file
 {
 	E_FileStatus status = FileStatus_OK;
 
-	if( !p_file->is_open() )
-	{
+	if( !p_file->is_open() ) {
 		status = FileStatus_FILE_NOT_FOUND;
-	}
-	else if( p_file->bad() )
-	{
-		status = FileStatus_FILE_STREAM_CRASHED; 
-	}
-	else if( p_file->fail() )
-	{
-		status = FileStatus_READING_FILE_FAILED;
-	}
-	else if( p_file->eof() )
-	{
+	} else if( p_file->eof() ) {
 		status = FileStatus_END_OF_FILE;
+	} else if( p_file->bad() ) {
+		status = FileStatus_FILE_STREAM_CRASHED; 
+	} else if( p_file->fail() ) {
+		status = FileStatus_READING_FILE_FAILED;
 	}
 
 	return status;
 }
 
+AssemblageHelper::E_FileStatus AssemblageHelper::peekNextCharFromLine( char* out_prefix, ifstream* p_line )
+{
+	char nextPrefix = ' ';
+	E_FileStatus status = controlStream( p_line );
+	if( status == FileStatus_OK )
+	{
+		do {
+			p_line->get( nextPrefix );
+			status = controlStream( p_line );
+		} while( status == FileStatus_OK && isCharToSkip( nextPrefix ) );
+	}
+	p_line->putback( nextPrefix );
+
+	if( out_prefix != NULL ) {
+		*out_prefix = nextPrefix;
+	}
+
+	return status;
+}
+
+
 AssemblageHelper::AssemblageDataTypes AssemblageHelper::typeFromString( const string& p_typeAsStr )
 {
-	string typeAsStr = "";
-	std::transform(p_typeAsStr.begin(), p_typeAsStr.end(), p_typeAsStr.begin(), ::tolower);
+	string typeAsStr;
+	typeAsStr.resize( p_typeAsStr.size() );
+	std::transform( p_typeAsStr.begin(), p_typeAsStr.end(), typeAsStr.begin(), ::tolower );
 
 	if( typeAsStr == "b" || typeAsStr == "bool" ) {
 		return AssemblageDataTypes_BOOL;
@@ -188,13 +201,19 @@ deque<string> AssemblageHelper::splitString( const string& p_string, char p_deno
 	{
 		if( p_string[i] != p_denominator ) {
 			buf += p_string[i];
-		} else if( buf != "") {
+		} else if( buf != "" ) {
 			splitted.push_back( buf );
 			buf = "";
 		} else {
 			// skip the char if there a more denominators in a row
 		}
 	}
-}
 
+	// If there's a last word, push it to the deck
+	if( buf != "" ) {
+		splitted.push_back( buf );
+	}
+
+	return splitted;
+}
 
