@@ -127,7 +127,7 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 		else if( lightInfoStr == "typeAsStr" || lightInfoStr == "typeAsString" ) 
 		{
 			string lightType;
-			p_initData[i].getDataAsString(&lightType);
+			p_initData[i]>>lightType;
 			std::transform( lightType.begin(), lightType.end(), lightType.begin(), ::tolower );
 
 			if( lightType == "dir" || 

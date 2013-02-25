@@ -178,33 +178,75 @@ AssemblageHelper::E_FileStatus ComponentData::setDataAsVec4( deque<string> p_ele
 
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec2( float* out_x, float* out_y )
 {
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	if( out_x != NULL && out_y != NULL ) {
 		memcpy( out_x, data, 4 );
 		memcpy( out_y, data+4, 4 );
 	} else {
-		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
+		status = AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
+	return status;
 }
 
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec3( float* out_x, float* out_y, float* out_z )
 {
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	if( out_x != NULL && out_y != NULL && out_z != NULL ) {
 		memcpy( out_x, data, 4 );
 		memcpy( out_y, data+4, 4 );
 		memcpy( out_z, data+8, 4 );
 	} else {
-		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
+		status = AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
+	return status;
 }
 
 AssemblageHelper::E_FileStatus ComponentData::getDataAsVec4( float* out_x, float* out_y, float* out_z, float* out_w )
 {
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
 	if( out_x != NULL && out_y != NULL && out_z != NULL && out_w != NULL ) {
 		memcpy( out_x, data, 4 );
 		memcpy( out_y, data+4, 4 );
 		memcpy( out_y, data+8, 4 );
 		memcpy( out_y, data+12, 4 );
 	} else {
-		return AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
+		status = AssemblageHelper::FileStatus_COMPONENT_DATA_CONVERSION_FAILED;
 	}
+	return status;
+}
+
+void ComponentData::operator>>( bool& p_rhs )
+{
+	getBasicDataTypes<bool>( &p_rhs );
+}
+
+void ComponentData::operator>>( int& p_rhs )
+{
+	getBasicDataTypes<int>( &p_rhs );
+}
+
+void ComponentData::operator>>( unsigned int& p_rhs )
+{
+	getBasicDataTypes<unsigned int>( &p_rhs );
+}
+
+void ComponentData::operator>>( float& p_rhs )
+{
+	getBasicDataTypes<float>( &p_rhs );
+}
+
+void ComponentData::operator>>( double& p_rhs )
+{
+	getBasicDataTypes<double>( &p_rhs );
+}
+
+void ComponentData::operator>>( char& p_rhs )
+{
+	getBasicDataTypes<char>( &p_rhs );
+
+}
+
+void ComponentData::operator>>( string& p_rhs )
+{
+	getDataAsString( &p_rhs );
 }

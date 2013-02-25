@@ -107,20 +107,39 @@ struct ComponentData
 	///-----------------------------------------------------------------------------------
 	void getDataAsCharArray( char** out_data);
 
-
+	///-----------------------------------------------------------------------------------
+	/// Save data as a vector / array of floats
+	/// \param List of elements. Must be of correct size.
+	/// \return Status. Returns FileStatus_COMPONENT_DATA_NOT_SPECIFIED if there are to
+	/// few elements in the list.
+	///-----------------------------------------------------------------------------------
 	AssemblageHelper::E_FileStatus setDataAsVec2( deque<string> p_elementList );
 	AssemblageHelper::E_FileStatus setDataAsVec3( deque<string> p_elementList );
 	AssemblageHelper::E_FileStatus setDataAsVec4( deque<string> p_elementList );
+
+	///-----------------------------------------------------------------------------------
+	/// Fetch data as a vector / array of floats.
+	/// \param pointers to floats that will be set.
+	/// \return Status. Returns FileStatus_COMPONENT_DATA_CONVERSION_FAILED if any
+	/// argument is set to NULL.
+	///-----------------------------------------------------------------------------------
 	AssemblageHelper::E_FileStatus getDataAsVec2( float* out_x, float* out_y );
 	AssemblageHelper::E_FileStatus getDataAsVec3( float* out_x, float* out_y, float* out_z );
 	AssemblageHelper::E_FileStatus getDataAsVec4( float* out_x, float* out_y, float* out_z,
 		float* out_w );
 
-	template<typename T>
-	void operator<<( const T& p_rhs );
-
-	template<typename T>
-	void operator>>( T& p_rhs );
+	///-----------------------------------------------------------------------------------
+	/// Fetch data as using stream operator. This can be used to fetch all formats except
+	/// vectors.
+	/// \param The variable to be set 
+	///-----------------------------------------------------------------------------------
+	void operator>>( bool& p_rhs );
+	void operator>>( int& p_rhs );
+	void operator>>( unsigned int& p_rhs );
+	void operator>>( float& p_rhs );
+	void operator>>( double& p_rhs );
+	void operator>>( char& p_rhs );
+	void operator>>( string& p_rhs );
 };
 
 template<typename T>
