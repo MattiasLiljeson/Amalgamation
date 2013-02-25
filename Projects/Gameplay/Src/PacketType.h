@@ -20,6 +20,7 @@ public:
 		// Server <--> Client:
 		Ping,
 		Pong,
+		ChangeStatePacket, 
 
 		// Server -> Client:
 		EntityCreation,
@@ -27,6 +28,7 @@ public:
 		EntityDeletion,
 		ClientDisconnect,
 		WelcomePacket,
+		NewlyConnectedPlayerPacket,
 		UpdateClientStats,
 		PlayerWinLose,
 		SpawnSoundEffect, // NOTE: (Johan) Should rather be replaced than be used more. (Move sound to client only)
