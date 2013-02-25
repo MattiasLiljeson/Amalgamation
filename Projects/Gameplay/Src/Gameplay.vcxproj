@@ -108,6 +108,7 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="OnHitEffectBufferSystem.h" />
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="SelectionMarkerSystem.h" />
     <ClInclude Include="SelectionMarkerUpdatePacket.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
+    <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
     <ClInclude Include="ShieldPlate.h" />
@@ -291,6 +293,7 @@
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="OnHitEffectBufferSystem.cpp" />
     <ClCompile Include="OnHitScoreEffectPacket.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
@@ -320,6 +323,7 @@
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />

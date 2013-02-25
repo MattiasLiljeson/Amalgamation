@@ -927,11 +927,11 @@ void ClientPacketHandlerSystem::handleLoading()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
-
 		Packet packet = m_tcpClient->popNewPacket();
 		//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 		char packetType;
 		packetType = packet.getPacketType();
+
 		if(packetType == (char)PacketType::EntityCreation){
 			EntityCreationPacket creation;
 			creation.unpack(packet);

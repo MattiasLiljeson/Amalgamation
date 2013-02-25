@@ -691,6 +691,8 @@
     </ClInclude>
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ServerStateSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1168,5 +1170,7 @@
     </ClCompile>
     <ClCompile Include="ClientStateSystem.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
   </ItemGroup>
 </Project>
