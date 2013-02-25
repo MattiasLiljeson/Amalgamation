@@ -90,6 +90,7 @@ public:	//Enums
 		TAG_MainCamera,
 		TAG_ShadowCamera,
 		TAG_LookAtMainCamera,
+		TAG_Highlight,
 		// -------------------
 	
 		/************************************************************************/

@@ -177,6 +177,8 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 
 	if (p_entity->getComponent(ComponentType::SelectionMarker))
 		p_data->setColorTone(AglVector4(0, 1, 0, 1));
+	else if (p_entity->getComponent(ComponentType::TAG_Highlight))
+		p_data->setColorTone(AglVector4(0.5f, 1, 1, 1));
 
 	p_data->setGradientColor( matInfo.getGradientColors() );
 }

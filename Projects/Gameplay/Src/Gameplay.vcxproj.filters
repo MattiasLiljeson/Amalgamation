@@ -689,6 +689,9 @@
     <ClInclude Include="SelectionMarkerUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="HighlightEntityPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1162,6 +1165,9 @@
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightEntityPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

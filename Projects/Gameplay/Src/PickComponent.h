@@ -18,6 +18,7 @@ public:
 		m_targetSlot = -1;
 		m_latestAttached = -1;
 		m_rotationDirection = 0;
+		m_lastHovered = -1;
 	}
 
 	~PickComponent() {}
@@ -33,6 +34,7 @@ public:
 		return m_latestPick;
 	}
 
+
 	int m_rayIndex;
 	int m_clientIndex; ///< owner client index
 	bool m_active;
@@ -45,6 +47,8 @@ public:
 	//Used for rotation
 	int m_latestAttached;
 	int m_rotationDirection;
+
+	int m_lastHovered; ///< Latest entity the pick component hovered over
 
 private:
 	int m_latestPick; ///< the current picked entity

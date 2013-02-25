@@ -20,6 +20,7 @@
 #include "PlayerScore.h"
 #include "SelectionMarkerUpdatePacket.h"
 #include "MeshOffsetTransform.h"
+#include "HighlightEntityPacket.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -82,8 +83,7 @@ void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
 		}
 		else
 		{
-			if (m_pickComponents[i].m_active)
-				handleRay(m_pickComponents[i], p_entities);
+			handleRay(m_pickComponents[i], p_entities);
 		}
 
 		//Rotate relevant modules
@@ -129,7 +129,7 @@ void ServerPickingSystem::setEnabled(int p_index, bool p_value)
 			if (!p_value)
 			{
 				attemptConnect(m_pickComponents[i]);
-				m_pickComponents[i].setLatestPick(-1);
+				unsetPick(m_pickComponents[i]);
 			}
 			return;
 		}
@@ -172,7 +172,8 @@ void ServerPickingSystem::setReleased(int p_index)
 			}
 
 			//Release the picked module
-			m_pickComponents[i].setLatestPick(-1);
+			unsetPick(m_pickComponents[i]);
+
 			m_pickComponents[i].m_active = false;
 			if (shipModule) shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
 
@@ -191,29 +192,30 @@ void ServerPickingSystem::setReleased(int p_index)
 }
 void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& p_entities)
 {
-	if (p_pc.m_active)
+	int previous = p_pc.m_lastHovered;
+	p_pc.m_lastHovered = -1;
+
+
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
+	if (cols.size() > 0)
 	{
-		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
-			SystemType::PhysicsSystem));
-
-		vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
-		if (cols.size() > 0)
+		//Find closest module
+		int col = -1;
+		for (unsigned int i = 0; i < cols.size(); i++)
 		{
-			//Find closest module
-			int col = -1;
-			for (unsigned int i = 0; i < cols.size(); i++)
+			Entity* e = physX->getEntity(cols[i].bodyID);
+			if (e && e->getComponent(ComponentType::ShipModule))
 			{
-				Entity* e = physX->getEntity(cols[i].bodyID);
-				if (e && e->getComponent(ComponentType::ShipModule))
-				{
-					col = cols[i].bodyID;
-					break;
-				}
+				col = cols[i].bodyID;
+				break;
 			}
+		}
 
-			if (col < 0)
-				return;
-
+		if (col >= 0)
+		{
 			for (unsigned int i = 0; i < p_entities.size(); i++)
 			{
 				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
@@ -223,21 +225,37 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 					//Found a pick
 
 					//Verify that the pick is not already picked
+					bool alreadypicked = false;
 					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
 					{
 						if (m_pickComponents[pcs].getLatestPick() == p_entities[i]->getIndex())
-							return;
+							alreadypicked = true;
 					}
+					if (alreadypicked)
+						break;
 
 					//Only allow picking a certain distance
 					ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
 					Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
-					
+
 					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
 					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
-						return;
+						break;
 
+					//Send a message to the client showing the highlight of the object
+					if (p_entities[i]->getIndex() != previous)
+					{
+						HighlightEntityPacket high;
+						high.target = p_entities[i]->getIndex();
+						high.on = true;
+						m_server->unicastPacket(high.pack(), p_pc.m_clientIndex);
+					}
+					p_pc.m_lastHovered = p_entities[i]->getIndex();
+
+					//Do not pick up the module if the ray is not active
+					if (!p_pc.m_active)
+						break;
 
 					p_pc.setLatestPick(p_entities[i]->getIndex());
 
@@ -253,12 +271,20 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 					}
 					else
 					{
-						p_pc.setLatestPick(-1);
+						unsetPick(p_pc);
 					}
 					break;
 				}
 			}
 		}
+	}
+	if (previous != p_pc.m_lastHovered && previous != -1)
+	{
+		//Unhighlight previous
+		HighlightEntityPacket unhigh;
+		unhigh.target = previous;
+		unhigh.on = false;
+		m_server->unicastPacket(unhigh.pack(), p_pc.m_clientIndex);
 	}
 }
 void ServerPickingSystem::project(Entity* toProject, PickComponent& p_ray)
@@ -963,4 +989,13 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		smup.transform = AglMatrix::identityMatrix();
 		m_server->unicastPacket(smup.pack(), p_ray.m_clientIndex);
 	}
+}
+
+void ServerPickingSystem::unsetPick(PickComponent& p_ray)
+{
+	HighlightEntityPacket high;
+	high.target = p_ray.getLatestPick();
+	high.on = false;
+	m_server->unicastPacket(high.pack(), p_ray.m_clientIndex);
+	p_ray.setLatestPick(-1);
 }

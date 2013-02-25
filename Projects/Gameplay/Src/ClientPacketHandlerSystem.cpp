@@ -82,6 +82,7 @@
 #include "HudSystem.h"
 #include "SelectionMarkerUpdatePacket.h"
 #include "SelectionMarkerSystem.h"
+#include "HighlightEntityPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -449,6 +450,27 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			SelectionMarkerSystem* sys = static_cast<SelectionMarkerSystem*>
 				(m_world->getSystem(SystemType::SelectionMarkerSystem));
 			sys->setMarkerTarget(ind, update.transform);
+		}
+		else if (packetType == (char)PacketType::HighlightEntityPacket)
+		{
+			HighlightEntityPacket highlight;
+			highlight.unpack(packet);
+			if (highlight.target >= 0)
+			{
+				Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					highlight.target);
+				if (highlight.on)
+				{
+					if (!entity->getComponent(ComponentType::TAG_Highlight))
+						entity->addComponent(ComponentType::TAG_Highlight, new Highlight_TAG());
+				}
+				else
+				{
+					entity->removeComponent(ComponentType::TAG_Highlight);
+					entity->applyComponentChanges();
+				}
+			}
 		}
 		else
 		{
