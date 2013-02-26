@@ -689,10 +689,13 @@
     <ClInclude Include="SelectionMarkerUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -1167,8 +1170,11 @@
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
-  </ItemGroup>
+    </ClCompile>  </ItemGroup>
 </Project>

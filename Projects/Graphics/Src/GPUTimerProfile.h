@@ -1,21 +1,25 @@
 #pragma once
-
-#include <EntitySystem.h>
+#include <string>
 
 // =======================================================================================
-//                                      ServerDynamicObjectsSystem
+//                                      GPUTimerProfile
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles all the dynamic entities
+/// \brief	
 ///        
-/// # ServerDynamicObjectsSystem
+/// # GPUTimerProfile
 /// Detailed description.....
-/// Created on: 11-1-2013 
+/// Created on: 24-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ServerDynamicObjectsSystem : public EntitySystem
+struct GPUTimerProfile
 {
-public:
-	ServerDynamicObjectsSystem();
+	std::string profile;
+	double renderingTime;
+
+	GPUTimerProfile(std::string p_profile){
+		profile = p_profile;
+		renderingTime = 0;
+	}
 };

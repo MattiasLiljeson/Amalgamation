@@ -3,8 +3,11 @@ e LevelGenServer
 
 # The transform specifies the first chamber's start transformation data.
 c Transform
-d f m_translationX 10.0
-d f m_translationY 10.0
+#	d f m_translationX 10.0
+ #	d f m_translationX 10.0
+
+	d f m_translationX 10.0
+ d f m_translationY 10.0
 d f m_translationZ 10.0
 
 c LevelInfo

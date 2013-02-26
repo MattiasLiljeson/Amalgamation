@@ -1,8 +1,5 @@
 #pragma once
 #include <EntitySystem.h>
-#include <vector>
-
-using namespace std;
 
 class LibRocketBackendSystem;
 
@@ -17,7 +14,7 @@ public:
 	HudSystem( LibRocketBackendSystem* p_backend );
 	~HudSystem();
 	void initialize();
-	void processEntities( const vector<Entity*>& p_entities );
+	void process();
 	void setHUDVisebilty(bool p_setVisibility);
 	void setHUDData(HUD_TYPES p_type, const char* p_value);
 private:

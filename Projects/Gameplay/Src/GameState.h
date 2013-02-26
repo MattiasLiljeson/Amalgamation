@@ -18,19 +18,19 @@ class GameState : public Component
 public:
 	struct State
 	{
-		EnumGameStates	stateEnum;
-		int				delta;
+		GameStates	stateEnum;
+		EnumGameDelta	delta;
 
-		State(EnumGameStates p_state){
+		State(GameStates p_state){
 			stateEnum = p_state;
-			delta  = 0;
+			delta	= EnumGameDelta::NOTCHANGED;
 		}
 	};
 public:
-	GameState(EnumGameStates p_currentState);
+	GameState(GameStates p_currentState);
 	~GameState();
-	void setStatesDelta(EnumGameStates p_state, int p_value);
-	int getStateDelta(EnumGameStates p_state);
+	void setStatesDelta(GameStates p_state, EnumGameDelta p_value);
+	EnumGameDelta getStateDelta(GameStates p_state);
 public:
 	vector<State*> m_states;
 };

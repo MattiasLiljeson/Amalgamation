@@ -14,6 +14,7 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
     <ClInclude Include="EditSphereSystem.h" />
@@ -22,6 +23,7 @@
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -106,6 +108,7 @@
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="OnHitEffectBufferSystem.h" />
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
@@ -116,6 +119,7 @@
     <ClInclude Include="SelectionMarkerSystem.h" />
     <ClInclude Include="SelectionMarkerUpdatePacket.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
+    <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
     <ClInclude Include="ShieldPlate.h" />
@@ -226,6 +230,7 @@
     <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientMeasurementSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
+    <ClCompile Include="ClientStateSystem.cpp" />
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="ConnectionVisualizerSystem.cpp" />
@@ -273,6 +278,7 @@
     <ClCompile Include="LoadMeshSystem.cpp" />
     <ClCompile Include="LoadMeshSystemClient.cpp" />
     <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
@@ -288,6 +294,7 @@
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="OnHitEffectBufferSystem.cpp" />
     <ClCompile Include="OnHitScoreEffectPacket.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
@@ -317,6 +324,7 @@
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
     <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="ServerStaticObjectsSystem.cpp" />
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />

@@ -15,7 +15,7 @@ public:	//Enums
 		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
-		NetworkListenerSystem,
+		ServerWelcomeSystem,
 		ServerPacketHandlerSystem,
 		CircularMovementSystem,
 		AxisRotationSystem,
@@ -103,8 +103,10 @@ public:	//Enums
 		SpeedBufferUpdaterSystem,
 		EditSphereSystem,
 		SelectionMarkerSystem,
-		SpawnPointSystem,
-		NUM_SYSTEM_TYPES
+		LobbySystem,
+		ServerStateSystem,
+		ClientStateSystem,
+		SpawnPointSystem,		NUM_SYSTEM_TYPES
 	};
 
 public:

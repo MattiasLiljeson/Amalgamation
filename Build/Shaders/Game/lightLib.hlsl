@@ -134,17 +134,20 @@ float3 pointLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 n
 
 float3 spotLight( SurfaceInfo surface, LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
 {
+	//return float3( 0, 0.5, 0 );
 	//return surface.diffuse.xyz * 0.5f;
 	float3 litColor = pointLight(surface, light, eyePos, normal, pixelPos);
 
 	//litColor = surface.diffuse.xyz;
-	
 	// The vector from the surface to the light.
 	float3 lightVec = normalize(light.pos - pixelPos);
+	//lightVec = float3( 0, 0, -1 );
+	//litColor = float3( 0, 0.5, 0 );
+	//light.spotLightConeSizeAsPow = 8.0;
 
 	float s = pow( max( dot(-lightVec, light.lightDir), 0.0f ), light.spotLightConeSizeAsPow );
 
 	// Scale color by spotlight factor.
-	return float3(0,0,0);
+	//return float3(0,0,0);
 	return litColor*s;
 }

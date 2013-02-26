@@ -1,21 +1,26 @@
 #pragma once
-
-#include <EntitySystem.h>
-
+#include "Packetizer.h"
 // =======================================================================================
-//                                      ServerDynamicObjectsSystem
+//                                      NewlyConnectedPlayerPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles all the dynamic entities
+/// \brief	Brief
 ///        
-/// # ServerDynamicObjectsSystem
+/// # NewlyConnectedPlayerPacket
 /// Detailed description.....
-/// Created on: 11-1-2013 
+/// Created on: 21-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ServerDynamicObjectsSystem : public EntitySystem
+class NewlyConnectedPlayerPacket: public Packetizer
 {
 public:
-	ServerDynamicObjectsSystem();
+	NewlyConnectedPlayerPacket();
+	Packet pack();
+	void unpack( Packet& p_packet );
+	
+public:
+	int		playerID;
+	string	playerName;
+
 };

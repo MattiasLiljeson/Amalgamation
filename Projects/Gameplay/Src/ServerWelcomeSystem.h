@@ -32,14 +32,28 @@ public:
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
-
+	unsigned int getTotalOfConnectedPlayers();
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
-	Entity* createTheShipEntity(int p_newlyConnectedClientId, int p_playerID);
 	void createClientInfoEntity(int p_newlyConnectedClientId);
 private:
+	struct PlayerInfo
+	{
+		int score;
+		int ping;
+		int ID;
+		string name;
+
+		PlayerInfo(string p_name, int p_ID){
+			name = p_name;
+			score = 0;
+			ping = 0;
+			ID = p_ID;
+		}
+	};
+private:
+	vector<PlayerInfo> m_connectedPlayers;
 	TcpServer* m_server;
 	int		m_activePort;
-	int		m_numOfConnectedPlayers;
 	ModelBaseFactory m_modelFactory;
 };

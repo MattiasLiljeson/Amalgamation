@@ -6,9 +6,10 @@
 #include <Globals.h>
 #include <ToString.h>
 #include "MenuItem.h"
+#include "ClientStateSystem.h"
 
 MenuSystem::MenuSystem()
-	: EntitySystem( SystemType::MenuSystem, 1, ComponentType::MenuItem )
+	: EntitySystem( SystemType::MenuSystem)
 {
 }
 
@@ -31,7 +32,6 @@ void MenuSystem::initialize()
 	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
 		m_world->getSystem(SystemType::GameOptionsSystem));
 
-	rocketEventManager->registerEventHandler(connectToServerSys);
 	rocketEventManager->registerEventHandler(gameOptionsSys);
 
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"main_menu");
@@ -40,14 +40,23 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"host");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
+	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
 
 	rocketEventManager->loadWindow("main_menu");
 
 }
 
-void MenuSystem::processEntities( const vector<Entity*>& p_entities )
-{
+void MenuSystem::process()
+{	
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
 
+	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+		rocketEventManager->clearDocumentStack();
+	}
 }
 
 void MenuSystem::inserted( Entity* p_entity )

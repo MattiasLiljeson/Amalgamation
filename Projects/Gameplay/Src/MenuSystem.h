@@ -19,10 +19,10 @@ class MenuSystem : public EntitySystem
 public:
 	MenuSystem();
 	~MenuSystem();
-	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
+	void initialize();
+	void process( );
 
-	virtual void inserted( Entity* p_entity );
+	void inserted( Entity* p_entity );
 
 };
 

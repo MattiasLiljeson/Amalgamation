@@ -49,6 +49,9 @@
 #include <SpeedBoostModuleControllerSystem.h>
 #include <SpeedBoosterModule.h>
 #include <SpawnPointSet.h>
+#include <EnumGameStates.h>
+#include <ServerGameState.h>
+#include <ServerStateSystem.h>
 
 
 namespace Srv
@@ -120,6 +123,11 @@ namespace Srv
 
 	void ServerApplication::initSystems()
 	{
+		/************************************************************************/
+		/* States																*/
+		/************************************************************************/
+		m_world->setSystem(new ServerStateSystem(ServerStates::LOBBY),true);
+
 		/************************************************************************/
 		/* Entity creation														*/
 		/************************************************************************/
@@ -236,6 +244,7 @@ namespace Srv
 	void ServerApplication::initEntities()
 	{
 		InitModulesTestByAnton();
+
 	}
 
 	

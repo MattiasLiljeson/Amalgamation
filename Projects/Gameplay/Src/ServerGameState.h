@@ -1,21 +1,20 @@
 #pragma once
-
-#include <EntitySystem.h>
-
+#include "EnumGameStates.h"
 // =======================================================================================
-//                                      ServerDynamicObjectsSystem
+//                                      ServerGameState
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Handles all the dynamic entities
+/// \brief	The current state on the server side.
 ///        
-/// # ServerDynamicObjectsSystem
+/// # ServerGameState
 /// Detailed description.....
-/// Created on: 11-1-2013 
+/// Created on: 21-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ServerDynamicObjectsSystem : public EntitySystem
+class ServerGameState
 {
 public:
-	ServerDynamicObjectsSystem();
+	
+
 };
