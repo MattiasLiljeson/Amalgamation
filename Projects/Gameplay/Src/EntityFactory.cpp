@@ -740,12 +740,9 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyClient(EntityCreationPacket p_packet)
 {
-	Entity* entity = m_world->createEntity();
-	Transform* transform = new Transform(p_packet.translation, p_packet.rotation,
-		p_packet.scale);
-	entity->addComponent(transform);
-	entity->addComponent(new LoadMesh("shield_module.agl"));
-	entity->addComponent(new ShipModule());
+	AssemblageHelper::E_FileStatus status = readAssemblageFile(
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd" );
+	Entity* entity = entityFromRecipe( "ClientAnomalyAccelerator" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -754,20 +751,9 @@ Entity* EntityFactory::createAnomalyClient(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyServer(EntityCreationPacket p_packet)
 {
-	Entity* entity = m_world->createEntity();
-	Transform* transform = new Transform(p_packet.translation, p_packet.rotation,
-		p_packet.scale);
-	entity->addComponent(transform);
-	entity->addComponent(new PhysicsBody());
-	entity->addComponent(new BodyInitData(p_packet.translation,
-		p_packet.rotation,
-		p_packet.scale, AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-	entity->addComponent(new LoadMesh("shield_module.agl"));
-	entity->addComponent(new ShipModule());
-	entity->addComponent(new AnomalyAcceleratorModule());
+	AssemblageHelper::E_FileStatus status = readAssemblageFile(
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd" );
+	Entity* entity = entityFromRecipe( "ServerAnomalyAccelerator" );
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyModule));
 	m_world->addEntity(entity);

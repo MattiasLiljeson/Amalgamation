@@ -1,5 +1,6 @@
 #pragma once
 #include <Component.h>
+#include <ComponentFactory.h>
 // =======================================================================================
 // AnomalyAcceleratorModule
 // =======================================================================================
@@ -17,4 +18,8 @@ class AnomalyAcceleratorModule: public Component
 {
 public:
 	AnomalyAcceleratorModule();
+	void init( vector<ComponentData> p_initData );
+
+public:
+	static ComponentRegister<AnomalyAcceleratorModule> s_reg;
 };

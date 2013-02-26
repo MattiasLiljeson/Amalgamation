@@ -336,6 +336,4 @@ namespace Srv
 			factory->entityFromPacket(cp, &pos);
 		}
 	}
-
-
 };
