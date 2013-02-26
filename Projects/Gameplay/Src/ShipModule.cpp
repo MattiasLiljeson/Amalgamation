@@ -100,3 +100,8 @@ bool ShipModule::isUnused()
 {
 	return m_unused;
 }
+
+bool ShipModule::isOwned()
+{
+	return m_parentEntity >= 0;
+}

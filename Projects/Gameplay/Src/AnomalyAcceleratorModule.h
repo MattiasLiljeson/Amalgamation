@@ -21,5 +21,8 @@ public:
 	void init( vector<ComponentData> p_initData );
 
 public:
+	float cooldown;
+
+public:
 	static ComponentRegister<AnomalyAcceleratorModule> s_reg;
 };

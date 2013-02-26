@@ -51,6 +51,7 @@
 #include <EnumGameStates.h>
 #include <ServerGameState.h>
 #include <ServerStateSystem.h>
+#include <AnomalyAcceleratorModuleControllerSystem.h>
 
 
 namespace Srv
@@ -210,6 +211,7 @@ namespace Srv
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineControllerSystem(m_server), true);
+		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
