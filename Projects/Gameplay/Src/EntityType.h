@@ -31,6 +31,7 @@ public:
 		PlayerCamera,
 		ParticleSystem,
 		Mine,
+		AnomalyBomb,
 		LaserSight, //For aiming
 		Rocket,
 		Shield,
