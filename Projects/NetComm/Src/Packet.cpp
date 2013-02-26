@@ -165,6 +165,16 @@ Packet& Packet::operator<<( SYSTEMTIME p_data )
 	return *this;
 }
 
+Packet& Packet::operator<<( string p_data )
+{
+	vector<unsigned char> buffer;
+	buffer.resize(p_data.size() + 1);
+	buffer[0] = static_cast<unsigned char>(p_data.size());
+	memcpy(&buffer[1], p_data.c_str(), p_data.size());
+	WriteData(buffer.data(), buffer.size());
+	return *this;
+}
+
 Packet& Packet::operator>>( bool& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -247,6 +257,15 @@ Packet& Packet::operator>>( SYSTEMTIME& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
 	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator>>( string& p_data )
+{
+	unsigned char stringSize = 0;
+	ReadData(&stringSize, 1); // Read first byte as a string size.
+	p_data.resize(static_cast<unsigned int>(stringSize));
+	ReadData(&p_data[0], static_cast<unsigned int>(stringSize));
 	return *this;
 }
 

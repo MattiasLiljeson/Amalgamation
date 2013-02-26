@@ -3,7 +3,6 @@
 RenderInfo::RenderInfo(bool p_shouldBeRendered/* =true */)
 	: Component( ComponentType::RenderInfo )
 {
-	m_instanceId = -1;
 	m_meshId = -1;
 	m_shouldBeRendered = p_shouldBeRendered;
 	m_shouldBeCulled = false;

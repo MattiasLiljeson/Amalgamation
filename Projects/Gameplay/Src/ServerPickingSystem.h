@@ -60,6 +60,10 @@ private:
 
 	AglVector3 project(AglVector3 p_o, AglVector3 p_d, AglVector3 p_point);
 
+
+	//Send information about the Selection marker
+	void updateSelectionMarker(PickComponent& p_ray);
+
 	// Effects
 	OnHitEffectBufferSystem* m_effectbuffer;
 };

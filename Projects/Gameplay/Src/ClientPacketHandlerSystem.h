@@ -15,6 +15,8 @@ using namespace std;
 class TcpClient;
 class EntityCreationPacket;
 class EntityDeletionPacket;
+class GameStateSystem;
+class ClientStateSystem;
 
 struct NetworkScoreUpdatePacket
 {
@@ -63,9 +65,16 @@ private:
 
 	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
+	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
+	void handleIngameState();
+	void handleLobby();
+	void handleLoading();
+	void handleFinishedLoading();
 private:
+	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;
+
 	float m_currentPing;
 
 	unsigned int m_totalNetworkSynced;

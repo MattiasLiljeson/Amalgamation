@@ -1,7 +1,6 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <vector>
 
 // =======================================================================================
 //                                      ServerDynamicObjectsSystem
@@ -19,17 +18,4 @@ class ServerDynamicObjectsSystem : public EntitySystem
 {
 public:
 	ServerDynamicObjectsSystem();
-	~ServerDynamicObjectsSystem();
-
-	void processEntities(const vector<Entity*>& p_entities );
-
-	void initialize();
-
-	void added( Entity* p_entity );
-	vector<Entity*> getDynamicObjects();
-
-	void deleted( Entity* p_entity );
-
-private:
-	vector<Entity*> m_objects;
 };

@@ -680,6 +680,19 @@
     <ClInclude Include="ScoreRuleHelper.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="SelectionMarker.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ServerStateSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1142,12 +1155,22 @@
     </ClCompile>
     <ClCompile Include="SkeletalAnimation.cpp">
       <Filter>Components\GFX</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="ModuleHelper.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="ScoreRuleHelper.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="SelectionMarkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
   </ItemGroup>
 </Project>

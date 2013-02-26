@@ -1,6 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 #include <string>
+#include <GPUTimerProfile.h>
 
 class RenderInterface;
 class GraphicsBackendSystem;
@@ -62,6 +63,10 @@ public:
 
 	void updateTimers();
 private:
+	enum {
+		SHADOW, MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
+	};
+private:
 	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
 	ShadowSystem*	 m_shadowSystem;
@@ -74,19 +79,7 @@ private:
 	int* m_activeShadows;
 	AglMatrix* m_shadowViewProjections;
 
-	std::string m_shadowProfile;
-	std::string m_meshProfile;
-	std::string m_lightProfile;
-	std::string m_composeProfile;
-	std::string m_particleProfile;
-	std::string m_guiProfile;
-
-	double	m_shadowPassTime;
-	double	m_meshPassTime;
-	double	m_lightPassTime;
-	double	m_composePassTime;
-	double	m_particlePassTime;
-	double	m_guiPassTime;
+	vector<GPUTimerProfile> m_profiles;
 	double	m_totalTime;
 
 	int		m_currentFrame;

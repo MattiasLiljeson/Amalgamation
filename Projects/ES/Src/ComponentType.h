@@ -97,11 +97,13 @@ public:	//Enums
 		/* afterwards.															*/
 		/************************************************************************/
 		StaticProp,
+		ServerGameState,
 		LightsComponent,
 		MeshOffsetTransform,
 		SkeletalAnimation,
 		BoundingSphere,
 		BoundingBox,
+		SelectionMarker,
 		NUM_COMPONENT_TYPES
 	};
 

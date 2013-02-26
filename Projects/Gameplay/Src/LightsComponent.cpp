@@ -68,102 +68,66 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 			lightInfoStr == "spotLightConeSize" ||
 			lightInfoStr == "spotLightCone") {
 			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.spotLightConeSizeAsPow );
-		} else if( lightInfoStr == "lightDirX" ) { 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[0] );
-		} else if( lightInfoStr == "lightDirY" ) { 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[1] );
-		} else if( lightInfoStr == "lightDirZ" ) { 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.lightDir[2] );
+		} 
+		else if( lightInfoStr == "lightDir" ) { 
+			float x, y, z;
+			p_initData[i].getDataAsVec3( &x, &y, &z );
+			m_lights[lightIdx].instanceData.lightDir[0] = x;
+			m_lights[lightIdx].instanceData.lightDir[1] = y;
+			m_lights[lightIdx].instanceData.lightDir[2] = z;
 		}
 
 		// Transformation of the light volumes
-		else if( lightInfoStr == "scaleX"){
-			p_initData[i].getData<float>( &transforms[lightIdx].scale.x );
-		} else if( lightInfoStr == "scaleY"){
-			p_initData[i].getData<float>( &transforms[lightIdx].scale.y );
-		} else if( lightInfoStr == "scaleZ"){
-			p_initData[i].getData<float>( &transforms[lightIdx].scale.z );
-		} else if( lightInfoStr == "rotationUX"){
-			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.x );
-		} else if( lightInfoStr == "rotationUY"){
-			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.y );
-		} else if( lightInfoStr == "rotationUZ"){ 
-			p_initData[i].getData<float>( &transforms[lightIdx].rotation.u.z );
-		} else if( lightInfoStr == "rotationV"){
-			p_initData[i].getData<float>( &transforms[lightIdx].rotation.v );
-		} else if( lightInfoStr == "translationX"){
-			p_initData[i].getData<float>( &transforms[lightIdx].translation.x );
-		} else if( lightInfoStr == "translationY"){
-			p_initData[i].getData<float>( &transforms[lightIdx].translation.y );
-		} else if( lightInfoStr == "translationZ"){ 
-			p_initData[i].getData<float>( &transforms[lightIdx].translation.z );
+		else if( lightInfoStr == "scale"){
+						float x, y, z;
+			p_initData[i].getDataAsVec3( &x ,&y, &z );
+			transforms[lightIdx].scale.x = x;
+			transforms[lightIdx].scale.y = y;
+			transforms[lightIdx].scale.z = z;
+		} 
+		else if( lightInfoStr == "rotation"){
+			float x, y, z, w;
+			p_initData[i].getDataAsVec4( &x ,&y, &z, &w );
+			transforms[lightIdx].rotation.u.x = x;
+			transforms[lightIdx].rotation.u.y = y;
+			transforms[lightIdx].rotation.u.z = z;
+			transforms[lightIdx].rotation.v = w;
+		} 
+		else if( lightInfoStr == "translation"){
+			float x, y, z;
+			p_initData[i].getDataAsVec3( &x ,&y, &z );
+			transforms[lightIdx].translation.x = x;
+			transforms[lightIdx].translation.y = y;
+			transforms[lightIdx].translation.z = z;
 		} 
 		
 		// Attenuation
 		else if( lightInfoStr == "attenuation"){
-			float attenuation = 0.0f;
-			p_initData[i].getData<float>( &attenuation );
-			m_lights[lightIdx].instanceData.attenuation[0] = attenuation;
-			m_lights[lightIdx].instanceData.attenuation[1] = attenuation;
-			m_lights[lightIdx].instanceData.attenuation[2] = attenuation;
-		} else if( lightInfoStr == "attenuationX"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.attenuation[0] );
-		} else if( lightInfoStr == "attenuationY"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.attenuation[1] );
-		} else if( lightInfoStr == "attenuationZ"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.attenuation[2] );
+			float lin, quad, cube;
+			p_initData[i].getDataAsVec3( &lin ,&quad ,&cube );
+			m_lights[lightIdx].instanceData.attenuation[0] = lin;
+			m_lights[lightIdx].instanceData.attenuation[1] = quad;
+			m_lights[lightIdx].instanceData.attenuation[2] = cube;
 		} 
-		
-		// Light colors
-		//else if( lightInfoStr == "ambient"){
-		//	float ambient = 0.0f;
-		//	p_initData[i].getData<float>( &ambient );
-		//	m_lights[lightIdx].instanceData.ambient[0] = ambient;
-		//	m_lights[lightIdx].instanceData.ambient[1] = ambient;
-		//	m_lights[lightIdx].instanceData.ambient[2] = ambient;
-		//} else if( lightInfoStr == "ambientR"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[0] );
-		//} else if( lightInfoStr == "ambientG"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[1] );
-		//} else if( lightInfoStr == "ambientB"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.ambient[2] );
-		//} 
 		
 		else if( lightInfoStr == "color"){
-			float color = 0.0f;
-			p_initData[i].getData<float>( &color );
-			m_lights[lightIdx].instanceData.color[0] = color;
-			m_lights[lightIdx].instanceData.color[1] = color;
-			m_lights[lightIdx].instanceData.color[2] = color;
-		} else if( lightInfoStr == "colorR"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[0] );
-		} else if( lightInfoStr == "colorG"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[1] );
-		} else if( lightInfoStr == "colorB"){ 
-			p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.color[2] );
+			float r, g, b;
+			p_initData[i].getDataAsVec3( &r, &g, &b );
+			m_lights[lightIdx].instanceData.color[0] = r;
+			m_lights[lightIdx].instanceData.color[1] = g;
+			m_lights[lightIdx].instanceData.color[2] = b;
 		} 
-		
-		//else if( lightInfoStr == "specular"){
-		//	float specular = 0.0f;
-		//	p_initData[i].getData<float>( &specular );
-		//	m_lights[lightIdx].instanceData.specular[0] = specular;
-		//	m_lights[lightIdx].instanceData.specular[1] = specular;
-		//	m_lights[lightIdx].instanceData.specular[2] = specular;
-		//} else if( lightInfoStr == "specularR"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[0] );
-		//} else if( lightInfoStr == "specularG"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[1] );
-		//} else if( lightInfoStr == "specularB"){ 
-		//	p_initData[i].getData<float>( &m_lights[lightIdx].instanceData.specular[2] );
-		//} 
 		
 		// Light type
 		else if( lightInfoStr == "typeAsNum"){ 
 			p_initData[i].getData<int>( &m_lights[lightIdx].instanceData.type );
-		} else if( lightInfoStr == "typeAsStr" || lightInfoStr == "typeAsString" ) {
-			// special case when type is given as a string and not int
+		}
+
+		// special case when type is given as a string and not int
+		else if( lightInfoStr == "typeAsStr" || lightInfoStr == "typeAsString" ) 
+		{
 			string lightType;
-			p_initData[i].getDataAsString(&lightType);
+			p_initData[i]>>lightType;
 			std::transform( lightType.begin(), lightType.end(), lightType.begin(), ::tolower );
 
 			if( lightType == "dir" || 
@@ -186,6 +150,7 @@ void LightsComponent::init( vector<ComponentData> p_initData )
 				m_lights[lightIdx].instanceData.type = LightTypes::E_LightTypes_SPOT;
 			}
 		}
+
 		else if( lightInfoStr == "hasShadow"){
 			p_initData[i].getData<int>( &m_lights[lightIdx].instanceData.shadowIdx );
 		}

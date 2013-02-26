@@ -1,4 +1,19 @@
-enum EnumGameStates
+#pragma once
+
+
+enum class GameStates
 {
-	MENU, LOBBY, INGAME, PAUSE, NUMSTATES
+	NONE=0, MENU, LOBBY, INITGAME, LOADING, FINISHEDLOADING, INGAME, PAUSE, NUMSTATES
+};
+
+
+enum class EnumGameDelta
+{
+	NOTCHANGED=0, ENTEREDTHISFRAME, EXITTHISFRAME,
+};
+
+
+enum class ServerStates
+{
+	NONE=0, LOBBY, SENTALLPACKETS, LOADING, INGAME, RESULT, NUMSTATES
 };

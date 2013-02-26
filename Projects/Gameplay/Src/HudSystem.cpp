@@ -3,10 +3,10 @@
 #include "HudElement.h"
 #include "LibRocketBackendSystem.h"
 #include <Globals.h>
-#include "GameState.h"
+#include "ClientStateSystem.h"
 
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
-	: EntitySystem( SystemType::HudSystem, 1, ComponentType::GameState )
+	: EntitySystem( SystemType::HudSystem )
 {
 	m_backend = p_backend;
 	m_hudVisible = false;
@@ -24,19 +24,18 @@ void HudSystem::initialize()
 
 }
 
-void HudSystem::processEntities( const vector<Entity*>& p_entities )
+void HudSystem::process()
 {
-	if(p_entities.size()>0){
-		auto comp = static_cast<GameState*>(p_entities[0]->getComponent(
-			ComponentType::GameState));
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
+		getSystem(SystemType::ClientStateSystem));
+	
+	if(stateSystem->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
+	{
+		m_backend->showDocument(m_hudIndex);
 
-		if(comp->getStateDelta(INGAME) != 0){
-			m_backend->showDocument(m_hudIndex);
-
-			// setHUDData(SCORE,"-1");
-			setHUDData(MAPPING,"Empty");
-			setHUDData(TIME,"00:00");
-		}
+		setHUDData(SCORE,"-1");
+		setHUDData(MAPPING,"Empty");
+		setHUDData(TIME,"00:00");
 	}
 }
 
