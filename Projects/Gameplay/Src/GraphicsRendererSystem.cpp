@@ -64,7 +64,7 @@ void GraphicsRendererSystem::process(){
 	m_wrapper = m_backend->getGfxWrapper();
 
 	//Shadows
-	m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
 	clearShadowStuf();
 	//Fill the shadow view projections
 	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
@@ -84,7 +84,7 @@ void GraphicsRendererSystem::process(){
 	}
 	endShadowPass();
 	*/
-	m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
 
 	// Meshes
 	m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
