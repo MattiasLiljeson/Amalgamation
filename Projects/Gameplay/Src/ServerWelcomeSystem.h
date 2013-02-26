@@ -4,6 +4,9 @@
 #include <ModelBaseFactory.h>
 #include <AglVector3.h>
 #include <EntitySystem.h>
+#include <string>
+
+using namespace std;
 
 class Transform;
 class TcpServer;
@@ -33,6 +36,9 @@ public:
 
 	virtual void initialize();
 	unsigned int getTotalOfConnectedPlayers();
+
+	void addPlayer(int p_playerId, const string& p_playerName);
+	void sendBrodcastAllPlayers();
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
 	void createClientInfoEntity(int p_newlyConnectedClientId);

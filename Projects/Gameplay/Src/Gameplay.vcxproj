@@ -113,6 +113,7 @@
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
+    <ClInclude Include="PlayerInfo.h" />
     <ClInclude Include="ScoreRuleHelper.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
     <ClInclude Include="SelectionMarker.h" />
@@ -304,6 +305,7 @@
     <ClCompile Include="ParticleUpdatePacket.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PlayerInfo.cpp" />
     <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="PositionalSoundSource.cpp" />

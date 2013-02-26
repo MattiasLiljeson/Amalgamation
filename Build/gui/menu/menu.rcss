@@ -39,9 +39,7 @@ body.Pop-up
 	margin-right: 	5%;
 	margin:		 	auto;
 	width:			350px;
-	height: 		42%;
-	max-height: 	350px;
-	min-height:		205px;
+	height: 		350px;
 	background: 	rgba(0,60,0,80);
 }
 
