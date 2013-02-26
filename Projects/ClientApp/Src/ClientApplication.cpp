@@ -484,7 +484,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,1200.0f ) );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,3000.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );

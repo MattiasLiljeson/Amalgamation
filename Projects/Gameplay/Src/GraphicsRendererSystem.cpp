@@ -162,7 +162,8 @@ void GraphicsRendererSystem::endMeshPass(){
 
 void GraphicsRendererSystem::initLightPass(){
 	m_wrapper->setRasterizerStateSettings(
-		RasterizerState::FILLED_CW_FRONTCULL, false);
+	//RasterizerState::WIREFRAME_NOCULL, false);
+	RasterizerState::FILLED_CW_FRONTCULL, false);
 	m_wrapper->setBlendStateSettings(BlendState::LIGHT);
 	m_wrapper->setLightPassRenderTarget();
 	//m_wrapper->mapDeferredBaseToShader();
