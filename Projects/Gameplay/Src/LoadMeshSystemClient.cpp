@@ -16,6 +16,8 @@
 #include <AglSkeletonMapping.h>
 #include <GraphicsWrapper.h>
 #include <ModelResource.h>
+#include "LightsComponent.h"
+#include <ColourSpaceConverter.h>
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -120,5 +122,47 @@ void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_mod
 			SkeletalAnimation* anim = new SkeletalAnimation(0, p_modelResource->scene, p_modelResource->meshHeader.transform);
 			p_entity->addComponent(anim);
 		}
+	}
+}
+
+void LoadMeshSystemClient::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
+{
+	vector<LightCreationData>* lights= &(p_modelResource->lightCollection.m_collection);
+	if (!lights->empty())
+	{
+		LightsComponent* component = new LightsComponent();
+		for (unsigned int i=0;i<lights->size();i++)
+		{
+			// This'll be fun		
+			LightCreationData* source = &(*lights)[i];
+			Light light;
+			TransformComponents transformHelper;			
+			ColourSpaceConverter::applyGammaCorrection( source->diffuse ); // gamma correct the colour
+			transformHelper.scale = AglVector3(source->range,source->range,source->range);
+			transformHelper.rotation = source->transform.GetRotation();
+			transformHelper.translation = source->transform.GetTranslation();
+			light.offsetMat = transformHelper.toMatrix();
+			AglVector3 forward = source->transform.GetForward();
+			light.instanceData.lightDir[0] = forward.x;
+			light.instanceData.lightDir[1] = forward.y;
+			light.instanceData.lightDir[2] = forward.z;
+			light.instanceData.color[0] = source->diffuse.x;
+			light.instanceData.color[1] = source->diffuse.y;
+			light.instanceData.color[2] = source->diffuse.z;
+			//light.instanceData.specular[3] = source->gloss;
+			if (source->type==LightCreationData::POINT)
+				light.instanceData.type = LightTypes::E_LightTypes_POINT;
+			else if (source->type==LightCreationData::SPOT)
+				light.instanceData.type = LightTypes::E_LightTypes_SPOT;
+			else
+				light.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
+			light.instanceData.range = source->range;
+			light.instanceData.attenuation[0] = source->attenuation.x;
+			light.instanceData.attenuation[1] = source->attenuation.y;
+			light.instanceData.attenuation[2] = source->attenuation.z;
+			light.instanceData.lightEnergy = source->power;
+			component->addLight(light);
+		}
+		p_entity->addComponent( ComponentType::LightsComponent, component );
 	}
 }

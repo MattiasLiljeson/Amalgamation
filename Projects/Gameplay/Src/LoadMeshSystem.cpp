@@ -5,7 +5,6 @@
 #include "ConnectionPointSet.h"
 #include "EntityParent.h"
 #include "EntityParent.h"
-#include "LightsComponent.h"
 #include "LoadMesh.h"
 #include "LoadMesh.h"
 #include "MeshOffsetTransform.h"
@@ -278,42 +277,6 @@ void LoadMeshSystem::setUpSpawnPoints( Entity* p_entity, ModelResource* p_modelR
 
 void LoadMeshSystem::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
 {
-	vector<LightCreationData>* lights= &(p_modelResource->lightCollection.m_collection);
-	if (!lights->empty())
-	{
-		LightsComponent* component = new LightsComponent();
-		for (unsigned int i=0;i<lights->size();i++)
-		{
-			// This'll be fun		
-			LightCreationData* source = &(*lights)[i];
-			Light light;
-			TransformComponents transformHelper;
-			transformHelper.scale = AglVector3(source->range,source->range,source->range);
-			transformHelper.rotation = source->transform.GetRotation();
-			transformHelper.translation = source->transform.GetTranslation();
-			light.offsetMat = transformHelper.toMatrix();
-			AglVector3 forward = source->transform.GetForward();
-			light.instanceData.lightDir[0] = forward.x;
-			light.instanceData.lightDir[1] = forward.y;
-			light.instanceData.lightDir[2] = forward.z;
-			light.instanceData.color[0] = source->diffuse.x;
-			light.instanceData.color[1] = source->diffuse.y;
-			light.instanceData.color[2] = source->diffuse.z;
-			//light.instanceData.specular[3] = source->gloss;
-			if (source->type==LightCreationData::POINT)
-				light.instanceData.type = LightTypes::E_LightTypes_POINT;
-			else if (source->type==LightCreationData::SPOT)
-				light.instanceData.type = LightTypes::E_LightTypes_SPOT;
-			else
-				light.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
-			light.instanceData.range = source->range;
-			light.instanceData.attenuation[0] = source->attenuation.x;
-			light.instanceData.attenuation[1] = source->attenuation.y;
-			light.instanceData.attenuation[2] = source->attenuation.z;
-			light.instanceData.lightEnergy = source->power;
-			component->addLight(light);
-		}
-		p_entity->addComponent( ComponentType::LightsComponent, component );
-	}
+
 }
 

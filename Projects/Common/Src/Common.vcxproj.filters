@@ -5,8 +5,10 @@
     <ClInclude Include="RawTransformData.h" />
     <ClInclude Include="LightInstanceData.h" />
     <ClInclude Include="PlayerStates.h" />
+    <ClInclude Include="ColourSpaceConverter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InstanceData.cpp" />
+    <ClCompile Include="ColourSpaceConverter.cpp" />
   </ItemGroup>
 </Project>

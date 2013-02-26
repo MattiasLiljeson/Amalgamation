@@ -100,12 +100,14 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ColourSpaceConverter.h" />
     <ClInclude Include="InstanceData.h" />
     <ClInclude Include="LightInstanceData.h" />
     <ClInclude Include="PlayerStates.h" />
     <ClInclude Include="RawTransformData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ColourSpaceConverter.cpp" />
     <ClCompile Include="InstanceData.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
