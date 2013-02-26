@@ -20,4 +20,16 @@ d s piece end
 d s piece begin
 d s m_pieceAssemblageFileName sandChamberClient.asd
 d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber1Client.asd
+d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber2Client.asd
+d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber3Client.asd
+d s piece end
+d s piece begin
+d s m_pieceAssemblageFileName smallchamber4Client.asd
+d s piece end
 d s m_plugPiece plugPieceClient.asd
