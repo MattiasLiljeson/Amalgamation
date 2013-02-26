@@ -25,7 +25,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 	Ingredient* ingredient = NULL;
 
 	char componentPrefix = ' ';
-	status = AssemblageHelper::peekCharFromStream( &componentPrefix, p_file );
+	status = AssemblageHelper::peekNextCharFromStream( &componentPrefix, p_file );
 	// If there's no error and componentName defines a component
 	if( status == AssemblageHelper::FileStatus_OK && componentPrefix == 'c' )
 	{
@@ -52,7 +52,7 @@ AssemblageHelper::E_FileStatus ComponentReader::parseIngredient(
 				char nextPrefix = ' ';
 				// As long as the file is ok and the next line defines data. Create ComponentData
 				do {
-					status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
+					status = AssemblageHelper::peekNextCharFromStream( &nextPrefix, p_file );
 					string dataLine = "";
 
 					if( nextPrefix == 'd')
@@ -93,39 +93,12 @@ AssemblageHelper::E_FileStatus ComponentReader::parseComponentDataLine(
 	ComponentData* out_data,  const string& p_dataLine )
 {
 	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
-	stringstream ss( p_dataLine );
 
-	char dataType = ss.peek();
+	deque<string> rowElements = AssemblageHelper::splitString( p_dataLine, ',' );
+	int type = AssemblageHelper::typeFromString( rowElements[0] );
 
 	ComponentData data;
-
-	switch( dataType )
-	{
-	case 'b':
-		data.setData<bool>( &ss );
-	case 'i':
-		data.setData<int>( &ss );
-		break;
-	case 'u':
-		data.setData<unsigned int>( &ss );
-		break;
-	case 'f':
-		data.setData<float>( &ss );
-		break;
-	case 'd':
-		data.setData<double>( &ss );
-		break;
-	case 'c':
-		data.setData<char>( &ss );
-		break;
-	case 's':
-		data.setDataAsString( &ss );
-		break;
-	default:
-		status = AssemblageHelper::FileStatus_COMPONENT_DATA_TYPE_NOT_SUPPORTED;
-		break;
-	}
-
+	data.setData( rowElements );
 	if( status == AssemblageHelper::FileStatus_OK ||
 		status == AssemblageHelper::FileStatus_END_OF_FILE )
 	{

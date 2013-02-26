@@ -75,7 +75,7 @@ AssemblageHelper::E_FileStatus AssemblageReader::parseRecipe( Recipe* out_recipe
 	// Read components
 	while( status == AssemblageHelper::FileStatus_OK )
 	{
-		status = AssemblageHelper::peekCharFromStream( &nextPrefix, p_file );
+		status = AssemblageHelper::peekNextCharFromStream( &nextPrefix, p_file );
 		if( nextPrefix != 'c' )
 		{
 			// Swallow next line and look for next component
