@@ -46,6 +46,7 @@
 #include "LevelInfoLoader.h"
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
+#include "AnomalyAcceleratorModule.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -201,6 +202,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 			e = createShieldClient(p_packet);
 		else
 			e = createShieldServer(p_packet);
+	}
+	else if (type == EntityType::AnomalyModule)
+	{
+		if (m_client)
+			e = createAnomalyClient(p_packet);
+		else
+			e = createAnomalyServer(p_packet);
 	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
@@ -729,6 +737,43 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 	m_world->addEntity(entity);
 	return entity;
 }
+
+Entity* EntityFactory::createAnomalyClient(EntityCreationPacket p_packet)
+{
+	Entity* entity = m_world->createEntity();
+	Transform* transform = new Transform(p_packet.translation, p_packet.rotation,
+		p_packet.scale);
+	entity->addComponent(transform);
+	entity->addComponent(new LoadMesh("shield_module.agl"));
+	entity->addComponent(new ShipModule());
+	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createAnomalyServer(EntityCreationPacket p_packet)
+{
+	Entity* entity = m_world->createEntity();
+	Transform* transform = new Transform(p_packet.translation, p_packet.rotation,
+		p_packet.scale);
+	entity->addComponent(transform);
+	entity->addComponent(new PhysicsBody());
+	entity->addComponent(new BodyInitData(p_packet.translation,
+		p_packet.rotation,
+		p_packet.scale, AglVector3(0, 0, 0), 
+		AglVector3(0, 0, 0), 0, 
+		BodyInitData::DYNAMIC, 
+		BodyInitData::SINGLE, false));
+	entity->addComponent(new LoadMesh("shield_module.agl"));
+	entity->addComponent(new ShipModule());
+	entity->addComponent(new AnomalyAcceleratorModule());
+	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
+		EntityType::AnomalyModule));
+	m_world->addEntity(entity);
+	return entity;
+}
+
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;

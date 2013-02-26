@@ -693,6 +693,9 @@
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="ServerStateSystem.h" />
+    <ClInclude Include="AnomalyAcceleratorModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1172,5 +1175,8 @@
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="ServerStateSystem.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -118,6 +118,10 @@ private:
 	Entity* createShieldClient(EntityCreationPacket p_packet);
 	Entity* createShieldServer(EntityCreationPacket p_packet);
 
+	// Anomaly accelerator
+	Entity* createAnomalyClient(EntityCreationPacket p_packet);
+	Entity* createAnomalyServer(EntityCreationPacket p_packet);
+
 	//Other - Level generation goes here for now.
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);

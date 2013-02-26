@@ -76,6 +76,7 @@ public:	//Enums
 		GameState,
 		Gradient,
 		SpeedBuffer,
+		AnomalyAcceleratorModule,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
