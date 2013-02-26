@@ -692,6 +692,18 @@
     <ClInclude Include="HighlightEntityPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="TeslaModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityBombModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="FlareGunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1169,6 +1181,18 @@
     </ClCompile>
     <ClCompile Include="HighlightEntityPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityBombModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="FlareGunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaModule.cpp">
+      <Filter>Components\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

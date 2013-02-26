@@ -34,6 +34,10 @@
 #include "SpeedBuffer.h"
 #include "DestroyOnParticlesDeath.h"
 #include "SkeletalAnimation.h"
+#include "TeslaModule.h"
+#include "FlareGunModule.h"
+#include "GravityBombModule.h"
+#include "EmpModule.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -68,4 +72,8 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<SpeedBuffer>();
 	handle<DestroyOnParticlesDeath>();
 	handle<SkeletalAnimation>();
+	handle<TeslaModule>();
+	handle<FlareGunModule>();
+	handle<GravityBombModule>();
+	handle<EmpModule>();
 }

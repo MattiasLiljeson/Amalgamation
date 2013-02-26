@@ -106,7 +106,7 @@ namespace Srv
 			}
 			processMessages();
 			
-			sleep(20);
+			sleep(2);
 		}
 	}
 
