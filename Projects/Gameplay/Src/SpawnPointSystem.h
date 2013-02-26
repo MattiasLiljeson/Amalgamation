@@ -3,7 +3,17 @@
 #include <EntitySystem.h>
 #include <AglMatrix.h>
 #include <vector>
+#include "EntityType.h"
 using namespace std;
+
+class EntityFactory;
+class LevelHandlerSystem;
+
+enum SpawnPointState
+{
+	SPAWNPOINTSTATE_FREE,
+	SPAWNPOINTSTATE_OCCUPIED,
+};
 
 // =======================================================================================
 //                                      SpawnPointSystem
@@ -25,7 +35,15 @@ public:
 	SpawnPointSystem();
 	virtual ~SpawnPointSystem();
 
+	void initialize();
 	void clearSpawnPoints();
+
+	/// Creates the desired module type at a random module spawnpoint location.
+	Entity* createModuleAtRandomSpawnPoint(EntityType::EntityEnums p_module);
+	Entity* createShipAtRandomSpawnPoint();
+
+	const AglMatrix& getRandomFreeShipSpawnPoint();
+	const AglMatrix& getRandomFreeModuleSpawnPoint();
 
 	virtual void inserted( Entity* p_entity );
 
@@ -33,6 +51,19 @@ public:
 
 	
 private:
-	vector<vector<AglMatrix>> m_shipSpawnPoints;
-	vector<vector<AglMatrix>> m_moduleSpawnPoints;
+	pair<int, int> getRandomFreeSpawnPoint(
+		const vector<vector<pair<AglMatrix, SpawnPointState>>>& p_fromSpawnPoints) const;
+	void setSpawnPointState(
+		vector<vector<pair<AglMatrix, SpawnPointState>>>& p_inSpawnPoints,
+		int p_inChamber, int p_inPoint, SpawnPointState p_newState);
+
+	// Stores ship spawn points and module spawn points. The bool defines whether or not
+	// the spawn point is free (free = true, occupied = false)
+	vector<vector<pair<AglMatrix, SpawnPointState>>> m_shipSpawnPoints;
+	vector<vector<pair<AglMatrix, SpawnPointState>>> m_moduleSpawnPoints;
+
+	vector<int> freeSlots;
+
+	EntityFactory*		m_entityFactory;
+	LevelHandlerSystem* m_levelHandler;
 };

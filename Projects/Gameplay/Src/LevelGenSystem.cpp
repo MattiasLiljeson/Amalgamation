@@ -24,6 +24,7 @@
 #include "LoadMeshSystemServer.h"
 #include "EntityFactory.h"
 #include "LevelInfo.h"
+#include "LevelPieceRoot.h"
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -223,6 +224,11 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		transform->setRotation( p_piece->getTransform()->getRotation() );
 
 		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
+
+		auto pieceRoot = static_cast<LevelPieceRoot*>(
+			entity->getComponent(ComponentType::LevelPieceRoot));
+
+		pieceRoot->pieceId = p_piece->getTypeId();
 	}
 
 	return entity;

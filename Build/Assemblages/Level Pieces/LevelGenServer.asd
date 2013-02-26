@@ -16,7 +16,7 @@ c LevelInfo
 d i m_randomStartRotation 0
 # Branching count - Specifies how many times the level generator system should
 # branch outwards.
-d i m_branchCount 2
+d i m_branchCount 3
 # The info will store all chambers and tunnel types, reusing the variables.
 # These are stored as array data in the component when parsed.
 # piece begin starts a new piece block section to be read.
@@ -55,7 +55,7 @@ d s piece end
 d s piece begin
 d s m_pieceAssemblageFileName sandChamberServer.asd
 d s m_pieceModelName World_Sand.agl
-d i m_pieceWeight 10
+d i m_pieceWeight 0
 d s piece end
 # Piece 7
 d s piece begin

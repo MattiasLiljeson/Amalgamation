@@ -20,10 +20,8 @@ class LevelPieceRoot : public Component
 {
 public:
 	LevelPieceRoot();
-	LevelPieceRoot(const AglMatrix& p_initTransformMatrix);
-
-	AglMatrix initTransformMatrix;
-
+	
+	int pieceId;
 private:
 	static ComponentRegister<LevelPieceRoot> s_reg;
 };
