@@ -32,6 +32,7 @@ TcpClient::TcpClient()
 	m_totalPacketsSentInCommProcess = 0;
 
 	m_playerId = -1;
+	m_playerName = "Unknown";
 
 }
 
@@ -252,6 +253,16 @@ void TcpClient::setId( int p_id )
 	m_id = p_id;
 }
 
+
+string TcpClient::getPlayerName()
+{
+	return m_playerName;
+}
+
+void TcpClient::setPlayerName( const string& p_playerName )
+{
+	m_playerName = p_playerName;
+}
 unsigned int TcpClient::getNumberOfSentPackets()
 {
 	return m_numberOfSentPackets;

@@ -44,6 +44,7 @@
 #include "ChangeStatePacket.h"
 #include <DebugUtil.h>
 #include "ServerWelcomeSystem.h"
+#include "PlayerInfo.h"
 
 
 
@@ -465,6 +466,15 @@ void ServerPacketHandlerSystem::handleLobby()
 				m_stateSystem->setQueuedState(ServerStates::LOADING);
 				m_server->broadcastPacket(newState.pack());
 			}
+		}
+		else if(packetType == (char)PacketType::PlayerInfo){
+			PlayerInfo playerInfo;
+			playerInfo.unpack(packet);
+			ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
+				m_world->getSystem(SystemType::ServerWelcomeSystem));
+			
+			welcomeSystem->addPlayer(playerInfo.playerID, playerInfo.playerName);
+			welcomeSystem->sendBrodcastAllPlayers();
 		}
 		else
 		{
