@@ -114,6 +114,7 @@
 #include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
 #include <SelectionMarkerSystem.h>
+#include <InterpolationSystem2.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -389,6 +390,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
+	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem(inter, true);
 
 
 	/************************************************************************/

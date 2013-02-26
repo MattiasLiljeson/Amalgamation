@@ -83,6 +83,7 @@
 #include "SelectionMarkerUpdatePacket.h"
 #include "SelectionMarkerSystem.h"
 #include "HighlightEntityPacket.h"
+#include "InterpolationComponent2.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -754,6 +755,10 @@ void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 }
 void ClientPacketHandlerSystem::handleBatch()
 {
+	float time = m_world->getElapsedTime();
+
+	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+
 	for (unsigned int i = 0; i < m_batch.size(); i++)
 	{
 		EntityUpdatePacket data = m_batch[i];
@@ -766,6 +771,36 @@ void ClientPacketHandlerSystem::handleBatch()
 			Transform* transform = NULL;
 			transform = static_cast<Transform*>(
 				entity->getComponent( ComponentType::Transform ) );
+
+				InterpolationComponent2* inter = static_cast<InterpolationComponent2*>(
+					entity->getComponent( ComponentType::InterpolationComponent2 ) );
+
+				CameraInfo* cam = static_cast<CameraInfo*>(
+					entity->getComponent( ComponentType::CameraInfo ) );
+
+					if (!inter)
+					{
+						inter = new InterpolationComponent2();
+						entity->addComponent(ComponentType::InterpolationComponent2, inter);
+						transform->setScale( data.scale );
+						transform->setRotation( data.rotation );
+						transform->setTranslation( data.translation );
+						inter->source = transform->getMatrix();
+						inter->target = transform->getMatrix();
+						inter->start = time;
+						inter->end = time;
+						inter->t = time;
+
+						entity->applyComponentChanges();
+					}
+					else
+					{
+						inter->source = inter->target;
+						AglMatrix::componentsToMatrix(inter->target, data.scale, data.rotation, data.translation);
+						inter->t = inter->end;
+						inter->start = inter->end;
+						inter->end = time;
+					}
 
 			if( transform != NULL ) // Throw exception? /ML
 			{
@@ -787,9 +822,9 @@ void ClientPacketHandlerSystem::handleBatch()
 				}
 				else*/
 				{
-					transform->setScale( data.scale );
+					/*transform->setScale( data.scale );
 					transform->setRotation( data.rotation );
-					transform->setTranslation( data.translation );
+					transform->setTranslation( data.translation );*/
 				}
 			}
 

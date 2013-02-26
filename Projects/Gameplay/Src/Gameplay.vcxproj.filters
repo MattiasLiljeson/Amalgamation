@@ -704,6 +704,12 @@
     <ClInclude Include="FlareGunModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="InterpolationComponent2.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem2.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1193,6 +1199,9 @@
     </ClCompile>
     <ClCompile Include="TeslaModule.cpp">
       <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem2.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

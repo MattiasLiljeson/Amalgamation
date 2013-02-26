@@ -46,6 +46,7 @@
 #include "LevelInfoLoader.h"
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
+#include "InterpolationComponent2.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -356,6 +357,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent( new PickComponent() );
 		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+
 		entity->applyComponentChanges();
 	}
 

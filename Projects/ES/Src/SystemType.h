@@ -103,6 +103,7 @@ public:	//Enums
 		SpeedBufferUpdaterSystem,
 		EditSphereSystem,
 		SelectionMarkerSystem,
+		InterpolationSystem2,
 		NUM_SYSTEM_TYPES
 	};
 

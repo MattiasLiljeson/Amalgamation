@@ -26,6 +26,8 @@
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="GravityBombModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />
+    <ClInclude Include="InterpolationComponent2.h" />
+    <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -264,6 +266,7 @@
     <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
     <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="InterpolationSystem2.cpp" />
     <ClCompile Include="LevelInfoLoader.cpp" />
     <ClCompile Include="LevelGenSystem.cpp" />
     <ClCompile Include="LevelHandlerSystem.cpp" />

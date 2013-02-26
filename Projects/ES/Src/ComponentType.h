@@ -80,6 +80,7 @@ public:	//Enums
 		GameState,
 		Gradient,
 		SpeedBuffer,
+		InterpolationComponent2,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
