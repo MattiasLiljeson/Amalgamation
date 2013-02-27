@@ -30,13 +30,13 @@ public:
 	struct ModuleValueStatEffect
 	{
 		Entity* moduleEntity;
-		int value;
+		float value;
 	};
 
 	struct ModuleHealthStatEffect
 	{
 		Entity* moduleEntity;
-		int health;
+		float health;
 	};
 	ModuleStatusEffectSystem();
 	virtual ~ModuleStatusEffectSystem();

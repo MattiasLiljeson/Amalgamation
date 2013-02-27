@@ -32,6 +32,7 @@ public:
 	};
 	ModuleStatusEffectPacket();
 	ModuleStatusEffectPacket(StatusType p_statusType, Mode p_mode, int p_networkId);
+	ModuleStatusEffectPacket(StatusType p_statusType, float p_value, int p_networkId);
 	~ModuleStatusEffectPacket();
 	Packet pack();
 	void unpack( Packet& p_packet );
@@ -39,5 +40,5 @@ public:
 	int m_statusType;
 	int m_mode;
 	int m_moduleNetworkId;
-	int m_value; ///< generic value for various effects.
+	float m_value; ///< generic value for various effects.
 };

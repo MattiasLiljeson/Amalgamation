@@ -17,6 +17,7 @@
 #include <ToString.h>
 #include <DebugUtil.h>
 #include "ScoreRuleHelper.h"
+#include "ModuleStatusEffectPacket.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 ModuleVisualEffectBufferSystem* p_effectBuffer)
@@ -439,3 +440,42 @@ void ShipModulesControllerSystem::setScoreEffect( int p_networkOwner, Transform*
 
 	m_effectbuffer->enqueueEffect(p_networkOwner,fxPacket);
 }
+
+void ShipModulesControllerSystem::enableModuleUnusuedEffect( int p_moduleNetworkOwner )
+{
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
+									  ModuleStatusEffectPacket::ON,
+									  p_moduleNetworkOwner);
+	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+void ShipModulesControllerSystem::disableModuleUnusuedEffect( int p_moduleNetworkOwner )
+{
+		ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
+									  ModuleStatusEffectPacket::OFF,
+									  p_moduleNetworkOwner);
+	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+void ShipModulesControllerSystem::updateModuleHealthEffect( int p_moduleNetworkOwner, 
+														   float p_healthPercent )
+{
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::HEALTH_STATUS,
+		p_healthPercent,
+		p_moduleNetworkOwner);
+	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+void ShipModulesControllerSystem::updateModuleValueEffect( int p_moduleNetworkOwner, 
+														  float p_valuePercent )
+{
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::VALUE_STATUS,
+		p_valuePercent,
+		p_moduleNetworkOwner);
+	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+
+
+
+

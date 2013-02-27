@@ -44,7 +44,13 @@ private:
 	void setActivation(Entity* p_entity, bool p_value);
 	void setActivationChildren(Entity* p_entity, bool p_value);
 	// float calculateScore(Entity* p_entity);
+
+	// effect visualization for client
 	void setScoreEffect(int p_networkOwner, Transform* p_moduleTransform, int p_score);
+	void enableModuleUnusuedEffect(int p_moduleNetworkOwner);
+	void disableModuleUnusuedEffect(int p_moduleNetworkOwner);
+	void updateModuleHealthEffect(int p_moduleNetworkOwner, float p_healthPercent);
+	void updateModuleValueEffect(int p_moduleNetworkOwner, float p_valuePercent);
 private:
 	struct HighlightEvent
 	{		
