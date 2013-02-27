@@ -86,6 +86,7 @@
 #include "SelectionMarkerSystem.h"
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
+#include "PlayerInfo.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -896,6 +897,11 @@ void ClientPacketHandlerSystem::handleLobby()
 		if(packetType == (char)PacketType::WelcomePacket)
 		{
 			handleWelcomePacket(packet);
+
+			PlayerInfo playerInfoPacket;
+			playerInfoPacket.playerName = m_tcpClient->getPlayerName();
+			playerInfoPacket.playerID = m_tcpClient->getPlayerID();
+			m_tcpClient->sendPacket(playerInfoPacket.pack());
 		}
 		else if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
 		{

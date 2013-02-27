@@ -120,16 +120,9 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.playerID = m_connectedPlayers.size();
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 
-	m_connectedPlayers.push_back(
-		PlayerInfo("Player" + toString(m_connectedPlayers.size()),m_connectedPlayers.size())
-		);
+	
 
-	for(unsigned int i = 0; i < m_connectedPlayers.size(); i++){
-		NewlyConnectedPlayerPacket connectedPacket;
-		connectedPacket.playerID = m_connectedPlayers[i].ID;
-		connectedPacket.playerName = m_connectedPlayers[i].name;
-		m_server->broadcastPacket( connectedPacket.pack() );
-	}
+
 }
 
 void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
@@ -137,6 +130,21 @@ void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
 	Entity* e = m_world->createEntity();
 	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
 	m_world->addEntity(e);
+}
+
+void ServerWelcomeSystem::addPlayer(int p_playerId, const string& p_playerName)
+{
+	m_connectedPlayers.push_back( PlayerInfo(p_playerName, p_playerId) );
+}
+
+void ServerWelcomeSystem::sendBrodcastAllPlayers()
+{
+	for(unsigned int i = 0; i < m_connectedPlayers.size(); i++){
+		NewlyConnectedPlayerPacket connectedPacket;
+		connectedPacket.playerID = m_connectedPlayers[i].ID;
+		connectedPacket.playerName = m_connectedPlayers[i].name;
+		m_server->broadcastPacket( connectedPacket.pack() );
+	}
 }
 
 unsigned int ServerWelcomeSystem::getTotalOfConnectedPlayers()

@@ -25,11 +25,13 @@ public:
 		ShieldModule,
 		RocketLauncherModule,
 		BoosterModule,
+		AnomalyModule,
 		EndModule, //Should never be used. Marks the end of module subsection
 		//End Modules
 		PlayerCamera,
 		ParticleSystem,
 		Mine,
+		AnomalyBomb,
 		LaserSight, //For aiming
 		Rocket,
 		Shield,

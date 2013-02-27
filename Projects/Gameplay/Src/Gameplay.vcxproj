@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnomalyAcceleratorModule.h" />
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
+    <ClInclude Include="AnomalyBomb.h" />
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
@@ -113,6 +116,7 @@
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
+    <ClInclude Include="PlayerInfo.h" />
     <ClInclude Include="ScoreRuleHelper.h" />
     <ClInclude Include="ScoreWorldVisualizerSystem.h" />
     <ClInclude Include="SelectionMarker.h" />
@@ -210,6 +214,9 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
+    <ClCompile Include="AnomalyBomb.cpp" />
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -304,6 +311,7 @@
     <ClCompile Include="ParticleUpdatePacket.cpp" />
     <ClCompile Include="PingPacket.cpp" />
     <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PlayerInfo.cpp" />
     <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PongPacket.cpp" />
     <ClCompile Include="PositionalSoundSource.cpp" />
