@@ -160,7 +160,7 @@ namespace Srv
 		/************************************************************************/
 		/* Effects																*/
 		/************************************************************************/
-		OnHitEffectBufferSystem* onhiteffect = new OnHitEffectBufferSystem(m_server);
+		ModuleVisualEffectBufferSystem* onhiteffect = new ModuleVisualEffectBufferSystem(m_server);
 		m_world->setSystem(onhiteffect, true);
 
 		/************************************************************************/

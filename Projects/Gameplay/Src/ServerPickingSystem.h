@@ -25,7 +25,7 @@ class ServerPickingSystem: public EntitySystem
 {
 public:
 	ServerPickingSystem(TcpServer* p_server,
-		OnHitEffectBufferSystem* p_effectBuffer);
+		ModuleVisualEffectBufferSystem* p_effectBuffer);
 	~ServerPickingSystem();
 
 	virtual void initialize();
@@ -65,5 +65,5 @@ private:
 	void updateSelectionMarker(PickComponent& p_ray);
 
 	// Effects
-	OnHitEffectBufferSystem* m_effectbuffer;
+	ModuleVisualEffectBufferSystem* m_effectbuffer;
 };

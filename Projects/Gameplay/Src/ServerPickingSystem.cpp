@@ -53,7 +53,7 @@ AglVector3 ServerPickingSystem::project(AglVector3 p_o, AglVector3 p_d, AglVecto
 }
 
 ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
-										 OnHitEffectBufferSystem* p_effectBuffer)
+										 ModuleVisualEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;

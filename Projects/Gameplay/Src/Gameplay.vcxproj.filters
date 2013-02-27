@@ -701,6 +701,9 @@
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleStatusEffectPacket.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1187,6 +1190,9 @@
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

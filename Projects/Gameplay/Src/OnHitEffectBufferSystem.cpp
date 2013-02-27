@@ -3,31 +3,31 @@
 #include <TcpServer.h>
 #include "NetworkSynced.h"
 
-OnHitEffectBufferSystem::OnHitEffectBufferSystem(TcpServer* p_server) :
+ModuleVisualEffectBufferSystem::ModuleVisualEffectBufferSystem(TcpServer* p_server) :
 	EntitySystem(SystemType::OnHitEffectBufferSystem)
 {
 	m_server = p_server;
 }
 
-OnHitEffectBufferSystem::~OnHitEffectBufferSystem()
+ModuleVisualEffectBufferSystem::~ModuleVisualEffectBufferSystem()
 {
 
 }
 
-void OnHitEffectBufferSystem::initialize()
+void ModuleVisualEffectBufferSystem::initialize()
 {
 
 }
 
-void OnHitEffectBufferSystem::process()
+void ModuleVisualEffectBufferSystem::process()
 {
 	// Dequeue all packets and send to their clients
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 		checkTimeInterval(TimerIntervals::Every8Millisecond))
 	{
-		while(!m_queue_entity.empty())
+		while(!m_scoreFXqueue_entity.empty())
 		{
-			auto infoPair = m_queue_entity.front();
+			auto infoPair = m_scoreFXqueue_entity.front();
 
 			auto netSync = static_cast<NetworkSynced*>(
 				infoPair.first->getComponent(ComponentType::NetworkSynced));
@@ -35,11 +35,11 @@ void OnHitEffectBufferSystem::process()
 			m_server->unicastPacket(infoPair.second.pack(), 
 				netSync->getNetworkOwner());
 
-			m_queue_entity.pop();
+			m_scoreFXqueue_entity.pop();
 		}
-		while(!m_queue_netowner.empty())
+		while(!m_scoreFXqueue_netowner.empty())
 		{
-			auto infoPair = m_queue_netowner.front();
+			auto infoPair = m_scoreFXqueue_netowner.front();
 
 			if (infoPair.first!=-1)
 			{
@@ -48,20 +48,20 @@ void OnHitEffectBufferSystem::process()
 			}
 
 
-			m_queue_netowner.pop();
+			m_scoreFXqueue_netowner.pop();
 		}
 	}
 }
 
 
-void OnHitEffectBufferSystem::enqueueEffect( Entity* p_entity, 
+void ModuleVisualEffectBufferSystem::enqueueEffect( Entity* p_entity, 
 											OnHitScoreEffectPacket& p_packet )
 {
-	m_queue_entity.push(pair<Entity*,OnHitScoreEffectPacket>(p_entity,p_packet));
+	m_scoreFXqueue_entity.push(pair<Entity*,OnHitScoreEffectPacket>(p_entity,p_packet));
 }
 
-void OnHitEffectBufferSystem::enqueueEffect(int p_networkOwnerId, 
+void ModuleVisualEffectBufferSystem::enqueueEffect(int p_networkOwnerId, 
 											OnHitScoreEffectPacket& p_packet)
 {
-	m_queue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
+	m_scoreFXqueue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
 }

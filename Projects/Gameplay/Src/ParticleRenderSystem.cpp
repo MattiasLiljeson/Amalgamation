@@ -146,7 +146,7 @@ RasterizerState::Mode ParticleRenderSystem::rasterizerStateFromAglRasterizerMode
 	case AglParticleSystemHeader::AglRasterizerMode_Z_CULLED:
 		return RasterizerState::DEFAULT;
 	case AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP:
-		return RasterizerState::FILLED_NOCULL_NOCLIP;
+		return RasterizerState::FILLED_CW_ALWAYSONTOP;
 	default:
 		return RasterizerState::DEFAULT;
 	}

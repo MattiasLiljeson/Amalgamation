@@ -775,6 +775,23 @@ void ClientPacketHandlerSystem::handleIngameState()
 				scoreVis->addEffect(inst);
 			}
 		}
+		else if (packetType == (char)PacketType::ModuleStatusEffectPacket)
+		{
+			// number effect for score
+			auto scoreVis = static_cast<ScoreWorldVisualizerSystem*>(
+				m_world->getSystem(SystemType::ScoreWorldVisualizerSystem));
+
+			if (scoreVis)
+			{
+				OnHitScoreEffectPacket scoreFx;
+				scoreFx.unpack(packet);
+				ScoreWorldVisualizerSystem::ScoreEffectCreationData inst;
+				inst.score = scoreFx.score;
+				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
+
+				scoreVis->addEffect(inst);
+			}
+		}
 		else if(packetType == (char)PacketType::EntityCreation)
 		{
 			EntityCreationPacket data;

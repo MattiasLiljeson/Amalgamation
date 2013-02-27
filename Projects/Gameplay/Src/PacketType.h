@@ -37,6 +37,7 @@ public:
 		RemoveSoundEffect,
 		OnHitScoreEffectPacket,
 		ModuleStateChangePacket,
+		ModuleStatusEffectPacket,
 
 		// Client -> Server:
 		/************************************************************************/

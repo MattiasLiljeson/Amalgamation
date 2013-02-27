@@ -19,7 +19,7 @@
 #include "ScoreRuleHelper.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
-														 OnHitEffectBufferSystem* p_effectBuffer)
+														 ModuleVisualEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
 	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {

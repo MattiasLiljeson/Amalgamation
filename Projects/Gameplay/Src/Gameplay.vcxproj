@@ -107,6 +107,7 @@
     <ClInclude Include="MinigunModule.h" />
     <ClInclude Include="ModuleEvent.h" />
     <ClInclude Include="ModuleHelper.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
     <ClInclude Include="ModuleTriggerPacket.h" />
     <ClInclude Include="MoveShipLightsSystem.h" />
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="MinigunModuleControllerSystem.cpp" />
     <ClCompile Include="ModuleHelper.cpp" />
     <ClCompile Include="ModuleStateChangePacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
     <ClCompile Include="ModuleTriggerPacket.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp" />
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
