@@ -39,7 +39,7 @@ void AnomalyAcceleratorModuleControllerSystem::processEntities(
 			anomalyAccelerator->cooldown -= dt;
 			if(anomalyAccelerator->cooldown <= 0.0f && module->getActive())
 			{
-				anomalyAccelerator->cooldown = 1.0f;
+				anomalyAccelerator->cooldown = anomalyAccelerator->cooldownTime;
 				Transform* transform = static_cast<Transform*>(
 					m_world->getComponentManager()->getComponent(p_entities[i],
 					ComponentType::getTypeFor(ComponentType::Transform)));

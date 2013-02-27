@@ -678,20 +678,24 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
 {
-	//Entity* mineEntity = m_world->createEntity();
-	//mineEntity->addComponent(new Transform());
-	//mineEntity->addComponent(new LoadMesh("MineFinal.agl"));
-	//mineEntity->addComponent(new CircularMovement(AglVector3::zero(), AglVector3::up(),
-	//	AglVector3::forward() * 10.0f, 0.0f));
-	//m_world->addEntity(mineEntity);
-
+	float effectRadius = 30.0f;
+	Entity* parent = m_world->getEntity(p_parentIndex);
+	if(parent != NULL)
+	{
+		AnomalyBomb* bomb = static_cast<AnomalyBomb*>(parent->getComponent(
+			ComponentType::AnomalyBomb));
+		if(bomb != NULL)
+		{
+			effectRadius = bomb->radius * 0.75f;
+		}
+	}
 	for(unsigned int i=0; i<500; i++)
 	{
 		Entity* pieceEntity = m_world->createEntity();
 		Transform* pieceTransform = new Transform();
 		pieceEntity->addComponent(pieceTransform);
 		pieceEntity->addComponent(new LoadMesh("shield_plate.agl"));
-		pieceEntity->addComponent(new AnomalyBombEffectPiece(5.0f, 30.0f, 10.0f,
+		pieceEntity->addComponent(new AnomalyBombEffectPiece(5.0f, effectRadius, 2.0f,
 			RandomUtil::randomSingle()));
 		pieceEntity->addComponent(new EntityParent(p_parentIndex,
 			pieceTransform->getMatrix()));
