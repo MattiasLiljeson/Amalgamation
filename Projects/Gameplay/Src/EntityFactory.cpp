@@ -792,7 +792,6 @@ Entity* EntityFactory::createAnomalyBombServer( Transform* p_transform,
 		p_transform->getRotation(), scale, p_moduleVelocity,
 		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
 		false, true));
-	entity->addComponent(new AnomalyBomb(7.0f, 5.0f, 125.0f, 20.0f, 5.0f, 80.0f));		// Move to assemblage
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyBomb));
 	m_world->addEntity(entity);
