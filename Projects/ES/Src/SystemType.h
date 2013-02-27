@@ -108,6 +108,7 @@ public:	//Enums
 		ClientStateSystem,
 		AnomalyAcceleratorModuleControllerSystem,
 		EmpRocketLancherModuleSystem,
+		InterpolationSystem2,
 		NUM_SYSTEM_TYPES
 	};
 

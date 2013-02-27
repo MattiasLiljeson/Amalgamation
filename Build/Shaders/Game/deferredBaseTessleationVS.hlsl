@@ -12,6 +12,7 @@ TesselationStruct VS(VertexIn p_input)
 	vout.texCoord = p_input.texCoord;
     vout.gradientColor = p_input.gradientColor;
 	vout.flags = p_input.flags;
+	vout.colorOverlay = p_input.colorOverlay;
 	
 	return vout;
 }

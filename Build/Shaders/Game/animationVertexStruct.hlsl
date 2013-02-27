@@ -16,6 +16,8 @@ struct VertexIn
 	//Per instance
 	float4x4 instanceTransform 	: INSTANCETRANSFORM;
 	float4x4 gradientColor : GRADIENTCOLOR;
-	float4 flags : FLAGS; //1: Number of gradient levels 		2: Number of bones   	3-4: Empty
+	float4 flags : FLAGS; 							//1: Number of gradient levels 		2: Number of bones   	3-4: Empty
+	float4 colorOverlay : OVERLAY;
+	
 	uint instanceId : SV_InstanceID;
 };

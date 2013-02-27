@@ -10,4 +10,5 @@ struct VertexIn
 	float4x4 instanceTransform  : INSTANCETRANSFORM;
 	float4x4 gradientColor 		: GRADIENTCOLOR;
 	float4 flags 	: FLAGS;
+	float4 colorOverlay : OVERLAY;
 };
