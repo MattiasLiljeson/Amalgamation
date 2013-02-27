@@ -4,6 +4,7 @@
 #include <queue>
 #include <Entity.h>
 #include <EntitySystem.h>
+#include "ModuleStatusEffectPacket.h"
 
 using namespace std;
 
@@ -36,6 +37,6 @@ protected:
 private:
 	queue<pair<Entity*,OnHitScoreEffectPacket>> m_scoreFXqueue_entity;
 	queue<pair<int,OnHitScoreEffectPacket>> m_scoreFXqueue_netowner;
-	queue<pair<int,OnHitScoreEffectPacket>> m_scoreFXqueue_netowner;
+	queue<pair<int,ModuleStatusEffectPacket>> m_statusFXqueue_netowner;
 	TcpServer* m_server;
 };

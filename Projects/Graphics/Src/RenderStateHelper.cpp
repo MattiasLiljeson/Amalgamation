@@ -319,8 +319,8 @@ void RenderStateHelper::fillRasterizerStateList(ID3D11Device* p_device,
 				rasterizerStateDesc.DepthClipEnable = FALSE;
 				rasterizerStateDesc.AntialiasedLineEnable = FALSE;
 				rasterizerStateDesc.MultisampleEnable = FALSE;
-				rasterizerStateDesc.DepthBias = 2.0f;
-				rasterizerStateDesc.DepthBiasClamp = 1.0f;
+				rasterizerStateDesc.DepthBias = FLT_MAX;
+				rasterizerStateDesc.DepthBiasClamp = 0.0f;
 				rasterizerStateDesc.SlopeScaledDepthBias = 0.0f;
 				rasterizerStateDesc.ScissorEnable = false;
 
