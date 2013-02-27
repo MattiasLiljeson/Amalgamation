@@ -30,6 +30,7 @@ public:
 	int	  m_rotationDirection; ///< Current Rotation direction of the module {-1 = Negative, 0 = None, 1 = Positive }
 
 	ShipModule();
+	ShipModule(float p_maxhealth, float p_maxvalue);
 	~ShipModule();
 	void init( vector<ComponentData> p_initData );
 	///-----------------------------------------------------------------------------------
@@ -52,10 +53,14 @@ public:
 	void activate();
 	void deactivate();
 	void addActivationEvent(ModuleEvent* p_event);
+	float getMaxHealth();
+	float getMaxValue();
 	void setToUsed(); ///< Tell module that it has been used
 	bool isUnused(); ///< Has the module been used?
 	bool isOwned(); ///< Is the module attached to a ship?
 private:
+	float m_maxhealth; ///< Max health for this module
+	float m_maxvalue; ///< Max value
 	struct DamageAccumulator
 	{
 		DamageAccumulator(){reset();latestPerp=-1;}

@@ -675,16 +675,20 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* shieldEntity = m_world->createEntity();
+	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",
+		"Assemblages/Modules/Shield/ClientShield.asd");
 	shieldEntity->setName("shieldModuleClient");
+	// set transform from packet directly
+	auto transform = static_cast<Transform*>(
+		shieldEntity->getComponent(ComponentType::Transform));
+	transform->setTranslation(p_packet.translation);
+	transform->setRotation(p_packet.rotation);	
+	transform->setScale(p_packet.scale);	
 	// Add network dependent components
-	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	shieldEntity->addComponent(transform );
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-	shieldEntity->addComponent(new LoadMesh("shield_module.agl"));
-	ShipModule* shipModule = new ShipModule();
-	shieldEntity->addComponent(shipModule);
+	auto shipModule = static_cast<ShipModule*>(
+		shieldEntity->getComponent(ComponentType::ShipModule));
 	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
@@ -723,20 +727,17 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	Entity* entity = m_world->createEntity();
-	Component* component = new Transform(p_packet.translation, p_packet.rotation,
-		p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	entity->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(p_packet.translation,
-		p_packet.rotation,
-		p_packet.scale, AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	Entity* entity = entityFromRecipeOrFile( "Shield",
+		"Assemblages/Modules/Shield/ServerShield.asd");
+	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+	transform->setTranslation(p_packet.translation);
+	transform->setRotation(p_packet.rotation);
+	transform->setScale(p_packet.scale);
+	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
+	bodyInitData->m_position = p_packet.translation;
+	bodyInitData->m_orientation = p_packet.rotation;
+	bodyInitData->m_scale = p_packet.scale;
+	// 
 	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));
@@ -746,9 +747,8 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd" );
-	Entity* entity = entityFromRecipe( "ClientAnomalyAccelerator" );
+	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyAccelerator",
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd");
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -757,9 +757,8 @@ Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd" );
-	Entity* entity = entityFromRecipe( "ServerAnomalyAccelerator" );
+	Entity* entity = entityFromRecipeOrFile( "ServerAnomalyAccelerator",
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd");
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyModule));
 	m_world->addEntity(entity);
@@ -768,9 +767,8 @@ Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd" );
-	Entity* entity = entityFromRecipe( "ClientAnomalyBomb" );
+	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyBomb",
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd");
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
