@@ -87,6 +87,8 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "PlayerInfo.h"
+#include "BombActivationPacket.h"
+#include "AnomalyBomb.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -662,6 +664,24 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				entity->removeComponent(ComponentType::PositionalSoundSource);
 				entity->applyComponentChanges();
+			}
+		}
+		else if(packetType == (char)PacketType::BombActivationPacket)
+		{
+			BombActivationPacket bombPacket;
+			bombPacket.unpack(packet);
+			NetsyncDirectMapperSystem* netsyncMapper = static_cast<
+				NetsyncDirectMapperSystem*>(m_world->getSystem(
+				SystemType::NetsyncDirectMapperSystem));
+			Entity* bombEntity = netsyncMapper->getEntity(bombPacket.netsyncId);
+			if(bombEntity != NULL)
+			{
+				AnomalyBomb* anomalyBomb = static_cast<AnomalyBomb*>(
+					bombEntity->getComponent(ComponentType::AnomalyBomb));
+				if(anomalyBomb != NULL)
+				{
+					anomalyBomb->activated = true;
+				}
 			}
 		}
 		else if(packetType == (char)PacketType::Ping)

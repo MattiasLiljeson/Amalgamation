@@ -1,24 +1,24 @@
 #pragma once
-#include <EntitySystem.h>
-class TcpServer;
+#include "Packetizer.h"
 // =======================================================================================
-// AnomalyBombControllerSystem
+// BombActivationPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # AnomalyBombControllerSystem
+/// # BombActivationPacket
 /// Detailed description...
 /// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-class AnomalyBombControllerSystem: public EntitySystem
+class BombActivationPacket: public Packetizer
 {
 public:
-	AnomalyBombControllerSystem(TcpServer* p_server);
-	virtual void processEntities( const vector<Entity*>& p_entities ) final;
+	BombActivationPacket();
+	virtual Packet pack() final;
+	virtual void unpack( Packet& p_packet ) final;
 
-private:
-	TcpServer* m_server;
+public:
+	int netsyncId;
 
 };

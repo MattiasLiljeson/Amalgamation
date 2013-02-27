@@ -27,6 +27,7 @@ public:
 	float arriveRadius;
 	float eventHorizonRadius;
 	float impulse;
+	bool activated;
 
 public:
 	static ComponentRegister<AnomalyBomb> s_reg;

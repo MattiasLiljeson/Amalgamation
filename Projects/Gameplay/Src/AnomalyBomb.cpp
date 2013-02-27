@@ -11,6 +11,7 @@ AnomalyBomb::AnomalyBomb()
 	arriveRadius = 0.0f;
 	eventHorizonRadius = 0.0f;
 	impulse = 0.0f;
+	activated = false;
 }
 
 AnomalyBomb::AnomalyBomb(float p_lifeTime, float p_explodeTime, float p_radius,
@@ -23,6 +24,7 @@ AnomalyBomb::AnomalyBomb(float p_lifeTime, float p_explodeTime, float p_radius,
 	arriveRadius = p_arriveRadius;
 	eventHorizonRadius = p_eventHorizonRadius;
 	impulse = p_impulse;
+	activated = false;
 }
 
 void AnomalyBomb::init( vector<ComponentData> p_initData )

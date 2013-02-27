@@ -696,8 +696,6 @@
     <ClInclude Include="PlayerInfo.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="AnomalyAcceleratorModule.h" />
-    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
@@ -706,6 +704,15 @@
     </ClInclude>
     <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
       <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="BombActivationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1189,8 +1196,6 @@
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
-    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
@@ -1199,6 +1204,15 @@
     </ClCompile>
     <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="BombActivationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,11 +4,14 @@
 #include "AnomalyBomb.h"
 #include "PhysicsSystem.h"
 #include <PhysicsController.h>
+#include <TcpServer.h>
+#include "BombActivationPacket.h"
 
-AnomalyBombControllerSystem::AnomalyBombControllerSystem()
+AnomalyBombControllerSystem::AnomalyBombControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::AnomalyBombControllerSystem, 4, ComponentType::AnomalyBomb,
 	ComponentType::Transform, ComponentType::PhysicsBody, ComponentType::NetworkSynced)
 {
+	m_server = p_server;
 }
 
 void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -29,6 +32,13 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 		}
 		else if(bombBomb->lifeTime <= bombBomb->explodeTime)
 		{
+			if(bombBomb->activated == false)
+			{
+				bombBomb->activated = true;
+				BombActivationPacket packet;
+				packet.netsyncId = p_entities[i]->getIndex();
+				m_server->broadcastPacket(packet.pack());
+			}
 			for(unsigned int netsyncIndex=0; netsyncIndex<dynamicEntities.size(); netsyncIndex++)
 			{
 				Transform* otherTransform = static_cast<Transform*>(
@@ -79,7 +89,6 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 					physSystem->getController()->ApplyExternalImpulse(
 						body->m_id, dir * (1.0f - radiusFactor) * dt * bombBomb->impulse,
 						AglVector3::zero());
-					
 				}
 			}
 		}

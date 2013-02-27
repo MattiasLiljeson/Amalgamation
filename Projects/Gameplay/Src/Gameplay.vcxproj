@@ -18,6 +18,7 @@
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="BombActivationPacket.h" />
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="AxisRotationSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
+    <ClCompile Include="BombActivationPacket.cpp" />
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
