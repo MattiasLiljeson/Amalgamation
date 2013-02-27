@@ -36,6 +36,8 @@
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
 #include <OnHitEffectBufferSystem.h>
+#include <AnomalyBombControllerSystem.h>
+#include <ServerDynamicPhysicalObjectsSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -207,11 +209,13 @@ namespace Srv
 		/************************************************************************/
 		/* Game play															*/
 		/************************************************************************/
+		m_world->setSystem(new ServerDynamicPhysicalObjectsSystem(), true);
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(m_server), true);
+		m_world->setSystem(new AnomalyBombControllerSystem(), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
@@ -228,7 +232,7 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), false);
+		m_world->setSystem(new ServerMeasurementSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.

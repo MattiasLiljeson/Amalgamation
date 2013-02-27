@@ -14,6 +14,7 @@
     <ClInclude Include="AnomalyAcceleratorModule.h" />
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h" />
+    <ClInclude Include="AnomalyBombControllerSystem.h" />
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="SelectionMarker.h" />
     <ClInclude Include="SelectionMarkerSystem.h" />
     <ClInclude Include="SelectionMarkerUpdatePacket.h" />
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
@@ -217,6 +219,7 @@
     <ClCompile Include="AnomalyAcceleratorModule.cpp" />
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp" />
+    <ClCompile Include="AnomalyBombControllerSystem.cpp" />
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -327,6 +330,7 @@
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp" />
     <ClCompile Include="ServerMeasurementSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />

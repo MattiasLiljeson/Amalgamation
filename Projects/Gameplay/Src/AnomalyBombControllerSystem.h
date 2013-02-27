@@ -1,26 +1,20 @@
 #pragma once
-#include <Component.h>
+#include <EntitySystem.h>
 // =======================================================================================
-// AnomalyBomb
+// AnomalyBombControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # AnomalyBomb
+/// # AnomalyBombControllerSystem
 /// Detailed description...
 /// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-class AnomalyBomb: public Component
+class AnomalyBombControllerSystem: public EntitySystem
 {
 public:
-	AnomalyBomb(float p_lifeTime, float p_explodeTime, float p_radius,
-		float p_eventHorizonRadius);
-
-public:
-	float lifeTime;
-	float explodeTime;
-	float radius;
-	float eventHorizonRadius;
+	AnomalyBombControllerSystem();
+	virtual void processEntities( const vector<Entity*>& p_entities ) final;
 
 };

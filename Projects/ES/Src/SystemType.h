@@ -107,6 +107,8 @@ public:	//Enums
 		ServerStateSystem,
 		ClientStateSystem,
 		AnomalyAcceleratorModuleControllerSystem,
+		AnomalyBombControllerSystem,
+		ServerDynamicPhysicalObjectsSystem,
 		NUM_SYSTEM_TYPES
 	};
 

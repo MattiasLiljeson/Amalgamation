@@ -68,7 +68,7 @@ void AnomalyAcceleratorModuleControllerSystem::spawnAnomalyBomb( Transform* p_tr
 		p_transform->getRotation(), scale, p_moduleVelocity,
 		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
 		false, true));
-	bombEntity->addComponent(new AnomalyBomb());
+	bombEntity->addComponent(new AnomalyBomb(7.0f, 5.0f, 75.0f, 10.0f));
 	bombEntity->addComponent(new NetworkSynced(bombEntity->getIndex(), -1,
 		EntityType::AnomalyBomb));
 	m_world->addEntity(bombEntity);
