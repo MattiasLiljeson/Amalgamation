@@ -693,11 +693,13 @@
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="ServerStateSystem.h" />
-    <ClInclude Include="AnomalyAcceleratorModule.h">
-      <Filter>Components\Modules</Filter>
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    <ClInclude Include="AnomalyAcceleratorModule.h" />
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
+    <ClInclude Include="AnomalyBomb.h">
+      <Filter>Components\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1178,11 +1180,13 @@
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="ServerStateSystem.cpp" />
-    <ClCompile Include="AnomalyAcceleratorModule.cpp">
-      <Filter>Components\Modules</Filter>
+    <ClCompile Include="PlayerInfo.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
+    <ClCompile Include="AnomalyBomb.cpp">
+      <Filter>Components\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

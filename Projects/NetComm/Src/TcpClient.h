@@ -58,6 +58,9 @@ public:
 	int getPlayerID();
 	void setPlayerID( int p_playerId );
 
+	string getPlayerName();
+	void setPlayerName( const string& p_playerName );
+
 	unsigned int getNumberOfSentPackets();
 	unsigned int getNumberOfReceivedPackets();
 	unsigned int getTotalDataSent();
@@ -90,6 +93,7 @@ private:
 
 	int m_id;
 	int m_playerId;
+	string m_playerName;
 	unsigned int m_numberOfSentPackets;
 	unsigned int m_totalPacketsPopped;
 	unsigned int m_totalDataSent;

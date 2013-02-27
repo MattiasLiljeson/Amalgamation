@@ -201,7 +201,10 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 				("server_host", "localhost").CString();
 			string server_port = p_event.GetParameter<Rocket::Core::String>
 				("server_port", "1337").CString();
+			string playerName = p_event.GetParameter<Rocket::Core::String>
+				("player_name", "NotFound").CString();
 				
+			m_client->setPlayerName(playerName);
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 

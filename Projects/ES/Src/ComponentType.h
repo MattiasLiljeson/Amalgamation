@@ -20,6 +20,7 @@ public:	//Enums
 		// Regular Components
 		// -------------------
 		RenderInfo,
+		AnomalyBomb,
 		Input,
 		NetworkSynced,
 		ClientInfo,

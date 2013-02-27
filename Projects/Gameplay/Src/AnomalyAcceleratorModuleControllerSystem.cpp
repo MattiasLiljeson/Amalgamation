@@ -11,6 +11,7 @@
 #include "EntityCreationPacket.h"
 #include <TcpServer.h>
 #include "ModuleHelper.h"
+#include "AnomalyBomb.h"
 
 AnomalyAcceleratorModuleControllerSystem::AnomalyAcceleratorModuleControllerSystem(
 	TcpServer* p_server)
@@ -67,6 +68,7 @@ void AnomalyAcceleratorModuleControllerSystem::spawnAnomalyBomb( Transform* p_tr
 		p_transform->getRotation(), scale, p_moduleVelocity,
 		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
 		false, true));
+	bombEntity->addComponent(new AnomalyBomb());
 	bombEntity->addComponent(new NetworkSynced(bombEntity->getIndex(), -1,
 		EntityType::AnomalyBomb));
 	m_world->addEntity(bombEntity);
