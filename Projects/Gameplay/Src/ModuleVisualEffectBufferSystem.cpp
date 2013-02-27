@@ -1,4 +1,4 @@
-#include "OnHitEffectBufferSystem.h"
+#include "ModuleVisualEffectBufferSystem.h"
 #include "TimerSystem.h"
 #include <TcpServer.h>
 #include "NetworkSynced.h"

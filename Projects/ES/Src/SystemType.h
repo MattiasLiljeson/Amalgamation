@@ -22,6 +22,7 @@ public:	//Enums
 		MenuBackgroundSceneSystem,
 		ClientConnectoToServerSystem,
 		ClientPacketHandlerSystem,
+		ShipModuleStatsSystem,
 		EnvironmentSystem,
 		ExtrapolationSystem,
 		ModuleStatusEffectSystem,

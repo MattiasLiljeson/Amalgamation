@@ -8,7 +8,7 @@
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
 #include "OnHitScoreEffectPacket.h"
-#include "OnHitEffectBufferSystem.h"
+#include "ModuleVisualEffectBufferSystem.h"
 #include "Transform.h"
 #include "ModuleHelper.h"
 #include "SlotParticleEffectPacket.h"
@@ -43,6 +43,7 @@ void ShipModulesControllerSystem::initialize()
 
 void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
+	// Process all modules
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(ComponentType::NetworkSynced));
@@ -105,10 +106,17 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 				Transform* moduleTransform = static_cast<Transform*>(
 					entity->getComponent(ComponentType::Transform));
 
+				NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+					entity->getComponent(ComponentType::NetworkSynced));
+
 				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
 				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
 					m->applyDamage();
+					// send status effect update for health
+					updateModuleHealthEffect(networkSynced->getNetworkOwner(),
+						m->m_health/m->getMaxHealth());
+
 					if (m->m_health <= 0)
 					{
 						Entity* myShip=NULL;
@@ -166,6 +174,9 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 
 	ShipModule* m = static_cast<ShipModule*>(toDrop->getComponent(ComponentType::ShipModule));
 
+	NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+		toDrop->getComponent(ComponentType::NetworkSynced));
+
 	ConnectionPointSet* toDropConnected =
 		static_cast<ConnectionPointSet*>(
 		m_world->getComponentManager()->getComponent(toDrop,
@@ -198,11 +209,16 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	// ===========================
 	//     Update module data
 	// ===========================
-	m->m_health = 100.0f;
+	m->m_health = m->getMaxHealth();
 	m->m_value = m->m_value * 0.5f;
 	m->deactivate();
 	m->m_lastShipEntityWhenAttached = -1; 
 
+	// send status effect updates
+	updateModuleHealthEffect(networkSynced->getNetworkOwner(),
+							 m->m_health/m->getMaxHealth());
+	updateModuleValueEffect(networkSynced->getNetworkOwner(),
+							 m->m_value/m->getMaxValue());
 
 	//Change particle effects on slots
 	if (m_editMode)
@@ -214,9 +230,6 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 			parentShip = m_world->getEntity(parentModule->m_parentEntity);
 			parentModule = static_cast<ShipModule*>(parentShip->getComponent(ComponentType::ShipModule));
 		}
-
-		NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
-			toDrop->getComponent(ComponentType::NetworkSynced));
 		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
 			p_parent->getComponent(ComponentType::NetworkSynced));
 		NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
@@ -451,7 +464,7 @@ void ShipModulesControllerSystem::enableModuleUnusuedEffect( int p_moduleNetwork
 
 void ShipModulesControllerSystem::disableModuleUnusuedEffect( int p_moduleNetworkOwner )
 {
-		ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
 									  ModuleStatusEffectPacket::OFF,
 									  p_moduleNetworkOwner);
 	m_effectbuffer->enqueueEffect(fxPacket);

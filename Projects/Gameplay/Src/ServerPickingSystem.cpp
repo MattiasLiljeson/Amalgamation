@@ -610,6 +610,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		// Set the shipmodule to used status!
 		// Must be done after score has been set.
 		shipModule->setToUsed();
+		setModuleUsedStatusEffect( module );
 
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
@@ -980,4 +981,15 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		smup.transform = transform;//trans->getMatrix();
 		m_server->unicastPacket(smup.pack(), shipNetworkSynced->getNetworkOwner());
 	}
+}
+
+void ServerPickingSystem::setModuleUsedStatusEffect( Entity* p_module )
+{
+	NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+		p_module->getComponent(ComponentType::NetworkSynced));
+
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
+		ModuleStatusEffectPacket::OFF,
+		networkSynced->getNetworkOwner());
+	m_effectbuffer->enqueueEffect(fxPacket);
 }

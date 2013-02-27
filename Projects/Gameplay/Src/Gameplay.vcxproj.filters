@@ -581,9 +581,6 @@
     <ClInclude Include="OnHitScoreEffectPacket.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="OnHitEffectBufferSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level Gen</Filter>
     </ClInclude>
@@ -705,6 +702,12 @@
       <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModuleStatsSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleVisualEffectBufferSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1086,9 +1089,6 @@
     <ClCompile Include="OnHitScoreEffectPacket.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="OnHitEffectBufferSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level Gen</Filter>
     </ClCompile>
@@ -1198,6 +1198,12 @@
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModuleStatsSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>

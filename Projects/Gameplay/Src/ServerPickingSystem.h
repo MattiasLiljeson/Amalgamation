@@ -5,7 +5,7 @@
 #include "PickComponent.h"
 #include "TcpServer.h"
 #include "ConnectionPointSet.h"
-#include "OnHitEffectBufferSystem.h"
+#include "ModuleVisualEffectBufferSystem.h"
 
 class ShipModule;
 
@@ -53,6 +53,7 @@ private:
 	bool attemptDetach(PickComponent& p_ray);
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation = 0);
 	void setScoreEffect(Entity* p_player, Transform* p_moduleTransform, int p_score);
+	void setModuleUsedStatusEffect(Entity* p_module);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
 
 	//Rotation of modules
