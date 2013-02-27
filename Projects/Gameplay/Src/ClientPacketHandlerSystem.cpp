@@ -708,36 +708,11 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			// Update score in hud
 			HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
-			if (hud)
-			{
-				// Clients score
-				NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
-					NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
-					SystemType::NetSyncedPlayerScoreTrackerSystem));
-				vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
-				for(int playerId=0; playerId<MAXPLAYERS; playerId++)
-				{
-					for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
-					{
-						NetworkSynced* netSync = static_cast<NetworkSynced*>(
-							netSyncScoreEntities[i]->getComponent(
-							ComponentType::NetworkSynced));
-						//  						PlayerScore* playerScore = static_cast<PlayerScore*>(
-						//  							netSyncScoreEntities[i]->getComponent(
-						//  							ComponentType::PlayerScore));
-						if(netSync->getNetworkOwner() ==
-							updateClientPacket.playerIdentities[playerId])
-						{
-							// Update the absolute score of the players 
-							// on client side (Not used right now, activate if score storage on
-							// client is needed)
-							// playerScore->setAbsoluteScore(updateClientPacket.scores[playerId]);
-							hud->setHUDData( HudSystem::SCORE,toString(updateClientPacket.scores[playerId]).c_str() );
-						}
-					}
-				}
-			}
 
+			if(hud){
+				hud->setHUDData(HudSystem::SCORE,
+					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
+			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)
 		{
@@ -791,10 +766,6 @@ void ClientPacketHandlerSystem::handleIngameState()
 			EntityDeletionPacket data;
 			data.unpack(packet);
 			handleEntityDeletionPacket(data);
-		}
-		else if(packetType == (char)PacketType::WelcomePacket)
-		{
-			handleWelcomePacket(packet);
 		}
 		else if(packetType == (char)PacketType::ModuleTriggerPacket)
 		{
