@@ -34,7 +34,7 @@ void HudSystem::process()
 		m_backend->showDocument(m_hudIndex);
 
 		setHUDData(SCORE,"-1");
-		setHUDData(MAPPING,"Empty");
+		//setHUDData(MAPPING,"Empty");
 		setHUDData(TIME,"00:00");
 	}
 }
