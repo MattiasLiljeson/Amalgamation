@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnomalyAcceleratorModule.h" />
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
@@ -211,6 +213,8 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
