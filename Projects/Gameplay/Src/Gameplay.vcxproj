@@ -29,8 +29,8 @@
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="LobbySystem.h" />
-    <ClInclude Include="GravityMineEffectPiece.h" />
-    <ClInclude Include="GravityMineEffectSystem.h" />
+    <ClInclude Include="AnomalyBombEffectPiece.h" />
+    <ClInclude Include="AnomalyBombEffectSystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -268,7 +268,7 @@
     <ClCompile Include="GradientComponent.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
-    <ClCompile Include="GravityMineEffectSystem.cpp" />
+    <ClCompile Include="AnomalyBombEffectSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />

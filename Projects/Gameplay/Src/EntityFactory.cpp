@@ -48,7 +48,7 @@
 #include "ConnectionVisualizerSystem.h"
 #include "AnomalyAcceleratorModule.h"
 #include "AnomalyBomb.h"
-#include "GravityMineEffectPiece.h"
+#include "AnomalyBombEffectPiece.h"
 #include "CircularMovement.h"
 #include <RandomUtil.h>
 
@@ -691,7 +691,7 @@ Entity* EntityFactory::createGravityMine()
 		Transform* pieceTransform = new Transform();
 		pieceEntity->addComponent(pieceTransform);
 		pieceEntity->addComponent(new LoadMesh("shield_plate.agl"));
-		pieceEntity->addComponent(new GravityMineEffectPiece(5.0f, 30.0f, 10.0f,
+		pieceEntity->addComponent(new AnomalyBombEffectPiece(5.0f, 30.0f, 10.0f,
 			RandomUtil::randomSingle()));
 		pieceEntity->addComponent(new EntityParent(mineEntity->getIndex(),
 			pieceTransform->getMatrix()));

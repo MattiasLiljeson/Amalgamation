@@ -1,20 +1,20 @@
-#include "GravityMineEffectSystem.h"
-#include "GravityMineEffectPiece.h"
+#include "AnomalyBombEffectSystem.h"
+#include "AnomalyBombEffectPiece.h"
 #include <RandomUtil.h>
 #include "EntityParent.h"
 
-GravityMineEffectSystem::GravityMineEffectSystem()
+AnomalyBombEffectSystem::AnomalyBombEffectSystem()
 	: EntitySystem(SystemType::GravityMineEffectSystem, 4,
 	ComponentType::GravityMineEffectPiece, ComponentType::Transform,
 	ComponentType::EntityParent, ComponentType::RenderInfo)
 {
 }
 
-void GravityMineEffectSystem::processEntities( const vector<Entity*>& p_entities )
+void AnomalyBombEffectSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
-		GravityMineEffectPiece* piece = static_cast<GravityMineEffectPiece*>(
+		AnomalyBombEffectPiece* piece = static_cast<AnomalyBombEffectPiece*>(
 			p_entities[i]->getComponent(ComponentType::GravityMineEffectPiece));
 		piece->lifeTime -= m_world->getDelta() * 1.0f;
 		if(piece->lifeTime <= 0.0f)

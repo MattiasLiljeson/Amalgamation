@@ -11,10 +11,10 @@
 /// Detailed description...
 /// Created on: 25-2-2013 
 ///---------------------------------------------------------------------------------------
-class GravityMineEffectSystem: public EntitySystem
+class AnomalyBombEffectSystem: public EntitySystem
 {
 public:
-	GravityMineEffectSystem();
+	AnomalyBombEffectSystem();
 	virtual void processEntities( const vector<Entity*>& p_entities ) final;
 
 };

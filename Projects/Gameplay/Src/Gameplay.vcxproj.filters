@@ -714,6 +714,12 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="AnomalyBombEffectPiece.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombEffectSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1213,6 +1219,9 @@
     </ClCompile>
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBombEffectSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

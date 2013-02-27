@@ -2,10 +2,10 @@
 #include <Component.h>
 #include <AglVector3.h>
 
-class GravityMineEffectPiece: public Component
+class AnomalyBombEffectPiece: public Component
 {
 public:
-	GravityMineEffectPiece(float p_minRadius, float p_maxRadius, float p_maxLifeTime,
+	AnomalyBombEffectPiece(float p_minRadius, float p_maxRadius, float p_maxLifeTime,
 		float p_startFactor = 0.0f)
 		: Component(ComponentType::GravityMineEffectPiece)
 	{
