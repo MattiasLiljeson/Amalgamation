@@ -102,8 +102,8 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 	//lightCol *= shadowCoeff;
 	
 	PixelOut pixelOut;
-	pixelOut.lightDiffuse = float4( light.lightDiffuse, 0.1f );
-	pixelOut.lightSpecular = float4( light.lightSpecular, 0.1f );
+	pixelOut.lightDiffuse = float4( light.lightDiffuse, 0.0f ) * 0.1f;
+	pixelOut.lightSpecular = float4( light.lightSpecular, 0.0f ) * 0.1f;
 	return pixelOut;
 }
 

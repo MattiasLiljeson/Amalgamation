@@ -64,8 +64,8 @@ float4 PS(VertexOut input) : SV_TARGET
 
 	float4 diffColor = gDiffBuffer.Load( index );
 	float4 specColor = gSpecBuffer.Load( index );
-	float4 lightDiff = gLightDiff.Load( index );
-	float4 lightSpec = gLightSpec.Load( index );
+	float4 lightDiff = gLightDiff.Load( index ) * 10.0f;
+	float4 lightSpec = gLightSpec.Load( index ) * 10.0f;
 	float depth = gDepthBuffer.Load( index ).r;
 	float4 finalCol = float4(0,0,0,0);
 	finalCol += specColor * lightSpec;
