@@ -18,7 +18,7 @@ InterpolationSystem2::~InterpolationSystem2()
 
 void InterpolationSystem2::processEntities( const vector<Entity*>& p_entities )
 {
-	float dt = m_world->getDelta();
+	float t = m_world->getDelta();//m_world->getElapsedTime();
 
 	for( unsigned int i=0; i<p_entities.size(); i++ )
 	{
@@ -27,17 +27,29 @@ void InterpolationSystem2::processEntities( const vector<Entity*>& p_entities )
 
 		Transform* trans = static_cast<Transform*>(p_entities[i]->getComponent((ComponentType::Transform)));
 
-		inter->t += dt;
-		float frac = 0.0f;
-		if (inter->end - inter->start > 0)
-			frac = (inter->t - inter->start) / (inter->end - inter->start);
+		inter->t += t*1.0f;
+		while (inter->data.size() > 1 && inter->t > inter->data[1].t)
+		{
+			inter->data.pop_front();
+		}
+		if (inter->data.size() > 10)
+		{
+			inter->data.pop_back();
+		}
 
-		if (inter->t > inter->end)
-			frac = 1.0f;
+		if (inter->data.size() > 1)
+		{
+			inter->diff = inter->data[1].transform - inter->data[0].transform;
+			inter->diffT = inter->data[1].t - inter->data[0].t;
+			float frac = (inter->t - inter->data[0].t) / (inter->data[1].t - inter->data[0].t);
 
-		AglMatrix mat = inter->source*(1-frac) + inter->target*frac;
-
-		trans->setMatrix(mat);
+			AglMatrix transform = inter->data[0].transform * (1.0f - frac) + inter->data[1].transform*frac; 
+			trans->setMatrix(transform);
+		}
+		else if (inter->data.size() == 1)
+		{
+			trans->setMatrix(inter->data[0].transform);
+		}
 	}
 }
 

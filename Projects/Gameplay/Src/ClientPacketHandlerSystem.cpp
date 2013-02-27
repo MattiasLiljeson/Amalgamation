@@ -118,7 +118,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	updateInitialPacketLossDebugData();
 	updateCounters();
 	m_totalNetworkSynced = p_entities.size();
-
+	static int frame = 0;
+	frame++;
 	while (m_tcpClient->hasNewPackets())
 	{
 		Packet packet = m_tcpClient->popNewPacket();
@@ -135,7 +136,7 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
 			if (data.entityType == (char)EntityType::EndBatch){
-				handleBatch();
+				handleBatch(frame);
 			}
 			else
 			{
@@ -753,11 +754,13 @@ void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
 }
-void ClientPacketHandlerSystem::handleBatch()
+void ClientPacketHandlerSystem::handleBatch(int p_frame)
 {
-	float time = m_world->getElapsedTime();
+	float t = m_world->getElapsedTime();
 
 	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+
+	bool down = input->getStatusByEnum(InputHelper::KeyboardKeys_5) > 0;
 
 	for (unsigned int i = 0; i < m_batch.size(); i++)
 	{
@@ -778,29 +781,39 @@ void ClientPacketHandlerSystem::handleBatch()
 				CameraInfo* cam = static_cast<CameraInfo*>(
 					entity->getComponent( ComponentType::CameraInfo ) );
 
-					if (!inter)
-					{
-						inter = new InterpolationComponent2();
-						entity->addComponent(ComponentType::InterpolationComponent2, inter);
-						transform->setScale( data.scale );
-						transform->setRotation( data.rotation );
-						transform->setTranslation( data.translation );
-						inter->source = transform->getMatrix();
-						inter->target = transform->getMatrix();
-						inter->start = time;
-						inter->end = time;
-						inter->t = time;
+				if (!inter)
+				{
+					inter = new InterpolationComponent2();
+					entity->addComponent(ComponentType::InterpolationComponent2, inter);
+					transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );
+					inter->t = t - 0.01f;
+					entity->applyComponentChanges();
+				}
+				if (cam)
+				{
+					/*static float prev = 0;
+					ofstream file;
+					file.open("test.txt", ios::app);
+					file << m_world->getDelta() << '\t' << p_frame;
+					file << '\n';
+					file.close();
 
-						entity->applyComponentChanges();
-					}
-					else
-					{
-						inter->source = inter->target;
-						AglMatrix::componentsToMatrix(inter->target, data.scale, data.rotation, data.translation);
-						inter->t = inter->end;
-						inter->start = inter->end;
-						inter->end = time;
-					}
+					prev = data.timestamp;*/
+				}
+
+				InterData interData;
+				AglMatrix::componentsToMatrix(interData.transform, data.scale, data.rotation, data.translation);
+				if (inter->data.size() > 0 && !down)
+					interData.t = inter->data.back().t + (data.timestamp - inter->data.back().stamp);
+				else
+				{
+					interData.t = t;
+					inter->t = t - 0.01f;
+				}
+				interData.stamp = data.timestamp;
+				inter->data.push_back(interData);
 
 			if( transform != NULL ) // Throw exception? /ML
 			{

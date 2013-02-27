@@ -31,6 +31,8 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if( !p_entities.empty() )
 	{
+		//DISABLED BY ANTON! 
+		return;
 		Entity* ship = m_world->getEntityManager()->
 			getFirstEntityByComponentType( ComponentType::TAG_MyShip );
 

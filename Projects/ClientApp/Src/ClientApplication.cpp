@@ -198,8 +198,8 @@ void ClientApplication::run()
 
 			m_prevTimeStamp = currTimeStamp;
 
-			if(dt > 0.5f)
-				dt = 0.5f;
+			//if(dt > 0.5f)
+				//dt = 0.5f;
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -392,7 +392,6 @@ void ClientApplication::initSystems()
 	// m_world->setSystem( interpolationSystem, true);
 	InterpolationSystem2* inter = new InterpolationSystem2();
 	m_world->setSystem(inter, true);
-
 
 	/************************************************************************/
 	/* Audio																*/

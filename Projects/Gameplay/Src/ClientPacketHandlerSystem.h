@@ -59,7 +59,7 @@ private:
 	void updateBroadcastPacketLossDebugData( unsigned int p_packetIdentifier );
 
 	//Added by Anton
-	void handleBatch();
+	void handleBatch(int p_frame);
 
 	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
