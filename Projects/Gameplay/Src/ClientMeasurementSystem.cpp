@@ -85,6 +85,9 @@ void ClientMeasurementSystem::initMeasuredSystems()
 		m_world->getSystem(SystemType::ShieldPlatingSystem),
 		"ShieldPlating"));
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
+		m_world->getSystem(SystemType::GravityMineEffectSystem),
+		"GravityField"));
+	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::TransformParentHandlerSystem),
 		"TransformHierarchy"));
 
