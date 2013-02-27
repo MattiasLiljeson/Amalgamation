@@ -676,14 +676,14 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 	return NULL;
 }
 
-Entity* EntityFactory::createGravityMine()
+Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
 {
-	Entity* mineEntity = m_world->createEntity();
-	mineEntity->addComponent(new Transform());
-	mineEntity->addComponent(new LoadMesh("MineFinal.agl"));
-	mineEntity->addComponent(new CircularMovement(AglVector3::zero(), AglVector3::up(),
-		AglVector3::forward() * 10.0f, 0.0f));
-	m_world->addEntity(mineEntity);
+	//Entity* mineEntity = m_world->createEntity();
+	//mineEntity->addComponent(new Transform());
+	//mineEntity->addComponent(new LoadMesh("MineFinal.agl"));
+	//mineEntity->addComponent(new CircularMovement(AglVector3::zero(), AglVector3::up(),
+	//	AglVector3::forward() * 10.0f, 0.0f));
+	//m_world->addEntity(mineEntity);
 
 	for(unsigned int i=0; i<500; i++)
 	{
@@ -693,12 +693,12 @@ Entity* EntityFactory::createGravityMine()
 		pieceEntity->addComponent(new LoadMesh("shield_plate.agl"));
 		pieceEntity->addComponent(new AnomalyBombEffectPiece(5.0f, 30.0f, 10.0f,
 			RandomUtil::randomSingle()));
-		pieceEntity->addComponent(new EntityParent(mineEntity->getIndex(),
+		pieceEntity->addComponent(new EntityParent(p_parentIndex,
 			pieceTransform->getMatrix()));
 		m_world->addEntity(pieceEntity);
 	}
 
-	return mineEntity;
+	return NULL;
 }
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)

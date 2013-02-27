@@ -85,7 +85,7 @@ public:
 	Entity* createAnomalyBombServer(Transform* p_transform,
 		AglVector3 p_moduleVelocity, ShipModule* p_module);
 
-	Entity* createGravityMine();
+	Entity* createAnomalyPieces(int p_parentIndex);
 
 private:
 	//Ship

@@ -80,10 +80,6 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	initPointLight(entity, position + AglVector3(0.0f, 0.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
-
-	// Le testing gravity mine effect
-	static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory))->
-		createGravityMine();
 }
 
 void MenuBackgroundSceneSystem::sysDisabled()

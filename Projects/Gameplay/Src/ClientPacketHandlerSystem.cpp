@@ -681,6 +681,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 				if(anomalyBomb != NULL)
 				{
 					anomalyBomb->activated = true;
+					static_cast<EntityFactory*>(m_world->getSystem(
+						SystemType::EntityFactory))->createAnomalyPieces(
+						bombEntity->getIndex());
 				}
 			}
 		}
