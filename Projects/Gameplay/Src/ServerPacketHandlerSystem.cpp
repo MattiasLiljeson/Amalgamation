@@ -506,6 +506,7 @@ void ServerPacketHandlerSystem::handleLoading()
 		m_world->getSystem(SystemType::ServerWelcomeSystem));
 
 	if(m_readyLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+
 		/************************************************************************/
 		/* Send the already networkSynced objects located on the server to the	*/
 		/* newly connected client.												*/
