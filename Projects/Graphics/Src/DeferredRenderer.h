@@ -47,8 +47,16 @@ public:
 	const static int RT2 = 2;
 	const static int RT3 = 3;
 	const static int RT4 = 4;
+	const static int RT5 = 5;
 	enum RenderTargets{
-		DIFFUSE, NORMAL, SPECULAR, LIGHT, DEPTH, NUMTARGETS,
+		RenderTargets_NON_EXISTING	= -1,
+		RenderTargets_DIFFUSE		= RT0,
+		RenderTargets_NORMAL		= RT1,
+		RenderTargets_SPECULAR		= RT2,
+		RenderTargets_LIGHT_DIFFUSE = RT3,
+		RenderTargets_LIGHT_SPEC	= RT4,
+		RenderTargets_DEPTH			= RT5,
+		RenderTargets_CNT,
 	};
 public:
 	// ===================================================================================
@@ -156,8 +164,8 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
-	ID3D11RenderTargetView*		m_gBuffers[NUMTARGETS];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMTARGETS];
+	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_gBuffersShaderResource[RenderTargets_CNT];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*				m_baseShader;
