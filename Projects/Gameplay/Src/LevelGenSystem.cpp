@@ -37,6 +37,8 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 	m_entityFactory			= NULL;
 	m_levelInfo				= NULL;
 	m_endPlugModelResource	= NULL;
+	m_readyToRun			= false;
+	m_hasGeneratedLevel		= false;
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -50,8 +52,6 @@ void LevelGenSystem::initialize()
 		m_world->getSystem(SystemType::EntityFactory));
 
 	preloadLevelGenRecipeEntity( LEVELPIECESPATH + "LevelGenServer.asd");
-
-
 }
 
 void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMesh )
@@ -127,12 +127,11 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		MODELPATH, false);
 	m_endPlugModelResource = resourcesFromModel->at(0);
 
+	m_readyToRun = true;
 	// Temp: This is to make sure the system works.
-	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
-	createLevelEntities();
+	run();
 
-	m_world->deleteEntity(p_entity);
+	//m_world->deleteEntity(p_entity);
 }
 
 void LevelGenSystem::removed( Entity* p_entity )
@@ -156,9 +155,18 @@ void LevelGenSystem::clearGeneratedData()
 
 void LevelGenSystem::run()
 {
-	//srand(static_cast<unsigned int>(time(NULL)));
-	//generateLevelPieces(1);
-	//createLevelEntities();
+	if (m_readyToRun)
+	{
+		m_hasGeneratedLevel = false;
+		srand(static_cast<unsigned int>(time(NULL)));
+		generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
+		createLevelEntities();
+		m_hasGeneratedLevel = true;
+	}
+	else
+	{
+		DEBUGPRINT(("Warning: LevelGenSystem::run was called, but the system is not ready to run yet.\n"));
+	}
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRotation)
@@ -412,6 +420,12 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 		}
 	}
 }
+
+int LevelGenSystem::getGeneratedPiecesCount() const
+{
+	return m_generatedPieces.size();
+}
+
 
 
 

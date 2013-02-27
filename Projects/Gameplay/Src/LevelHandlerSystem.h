@@ -26,5 +26,9 @@ public:
 
 	void inserted( Entity* p_entity );
 
-	void destroyLevel(); // Destroys the level and clears all spawnpoints
+	void destroyLevel(); // Destroys the level
+	bool hasLevel() const;
+
+private:
+	bool m_hasLevel;
 };
