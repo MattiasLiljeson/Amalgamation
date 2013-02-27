@@ -22,6 +22,8 @@
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
     <ClInclude Include="EditSphereSystem.h" />
     <ClInclude Include="EditSphereUpdatePacket.h" />
+    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
+    <ClInclude Include="EmpRocketLauncherModule.h" />
     <ClInclude Include="EnvironmentSystem.h" />
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
@@ -248,6 +250,8 @@
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EditSphereSystem.cpp" />
     <ClCompile Include="EditSphereUpdatePacket.cpp" />
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
+    <ClCompile Include="EmpRocketLauncherModule.cpp" />
     <ClCompile Include="EntityCreationPacket.cpp" />
     <ClCompile Include="EntityDeletionPacket.cpp" />
     <ClCompile Include="EntityFactory.cpp" />

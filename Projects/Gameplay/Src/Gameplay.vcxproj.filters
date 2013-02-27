@@ -701,6 +701,8 @@
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="EmpRocketLauncherModule.h" />
+    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1188,5 +1190,7 @@
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="EmpRocketLauncherModule.cpp" />
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
   </ItemGroup>
 </Project>

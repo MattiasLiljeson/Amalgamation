@@ -78,6 +78,7 @@ public:	//Enums
 		Gradient,
 		SpeedBuffer,
 		AnomalyAcceleratorModule,
+		EmpRocketLauncherModule,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
