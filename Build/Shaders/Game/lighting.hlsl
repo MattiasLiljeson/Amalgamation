@@ -28,9 +28,7 @@ struct VertexIn
 	float 	range					: RANGE;					//4 bytes	
 	float3 	attenuation				: ATTENUATION;				//12 bytes
 	float 	spotLightConeSizeAsPow	: SPOTLIGHTCONESIZEASPOW;	//4 bytes
-	//float4 	ambient					: AMBIENT;					//16 bytes
 	float3 	color					: COLOR;					//16 bytes
-	//float4 	specular				: SPECULAR;					//16 bytes
 	float 	lightEnergy				: LIGHTENERGY;
 	int 	enabled 				: ENABLED;					//4 bytes
 	int 	type 					: TYPE;						//4 bytes
@@ -66,70 +64,46 @@ VertexOut VS( VertexIn p_input )
 	return vout;
 }
 
-float4 PS( VertexOut p_input ) : SV_TARGET
+struct PixelOut
+{
+	float4 lightDiffuse 	: SV_TARGET0;
+	float4 lightSpecular 	: SV_TARGET1;
+};
+
+PixelOut PS( VertexOut p_input ) : SV_TARGET
 {
 	uint3 index;
 	index.xy = p_input.position.xy;
 	index.z = 0;
-	float4 diffuseColor = float4( gDiffuseMap.Load( index ) );
-	float4 normalColor	= float4( gNormalMap.Load( index ) );	
-	float4 specular		= float4( gSpecular.Load( index ) );
+	float4 normalColor	= gNormalMap.Load( index );	
 	float depth = gDepth.Load( index ).x; 
 
 	float3 normalVec = convertSampledNormal( normalColor.xyz );
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
 
-	SurfaceInfo surface;
-	surface.diffuse = diffuseColor;
-	surface.specular = specular;
-	
-	// lulz tonemapping
-	//surface.diffuse *=  float4( 1.1, 0.8, 0.5, 1.0f );
-
-	float3	lightCol;
+	LightOut light;
 	
 	if( p_input.light.type == 0 ) { // Directional light
-		/*DEBUG transform and col: lightCol = p_input.light.diffuse;*/
-		lightCol = parallelLight( surface, p_input.light, gCameraPos.xyz, normalVec,
-		worldPos );
+		light = parallelLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
 	} else if ( p_input.light.type == 1 ) { // Point light
-		/*DEBUG transform and col:lightCol = p_input.light.diffuse;*/
-		lightCol = pointLight( surface, p_input.light, gCameraPos.xyz, normalVec,
-		worldPos );
+		light = pointLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
 	} else if ( p_input.light.type == 2 ) { // Spot light
-		/*DEBUG transform and col:lightCol = p_input.light.diffuse;*/
-		lightCol = spotLight( surface, p_input.light, gCameraPos.xyz, normalVec,
-		worldPos );
+		light = spotLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
 	}
 
 	float shadowCoeff = 1.0f;
 	int shadowIndex = p_input.light.shadowIdx;
 	if( shadowIndex != -1 )
 	{
-		//if( shadowIndex == 0){
-			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow1, shadowSampler, shadowWorldPos);
-		//}
-		/*
-		else if( shadowIndex == 1){
-			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow2, shadowSampler, shadowWorldPos);
-		}
-
-		else if( shadowIndex == 2){
-			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow3, pointSampler, shadowWorldPos);
-		}
-		else{
-			float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-			shadowCoeff = doShadowing(gShadow4, pointSampler, shadowWorldPos);
-		}
-		*/
+		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+		shadowCoeff = doShadowing(gShadow1, shadowSampler, shadowWorldPos);
 	}
-	lightCol *= shadowCoeff;
+	//lightCol *= shadowCoeff;
 	
-	return float4( lightCol, 0.1f );
-	//return diffuseColor;
+	PixelOut pixelOut;
+	pixelOut.lightDiffuse = float4( light.lightDiffuse, 0.0f ) * 0.1f;
+	pixelOut.lightSpecular = float4( light.lightSpecular, 0.0f ) * 0.1f;
+	return pixelOut;
 }
 
