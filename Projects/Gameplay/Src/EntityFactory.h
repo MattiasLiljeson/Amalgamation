@@ -134,7 +134,6 @@ private:
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
 
-	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
 		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
 

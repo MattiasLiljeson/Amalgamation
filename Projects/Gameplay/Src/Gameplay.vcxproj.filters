@@ -740,6 +740,9 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ShieldPlaterSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1260,5 +1263,6 @@
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp" />
   </ItemGroup>
 </Project>

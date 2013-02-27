@@ -118,6 +118,7 @@
 #include <SelectionMarkerSystem.h>
 #include <InterpolationSystem2.h>
 #include <AnomalyBombEffectSystem.h>
+#include <ShieldPlaterSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -435,6 +436,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
 
 	m_world->initialize();
 

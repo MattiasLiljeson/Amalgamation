@@ -3,6 +3,8 @@
 #include <Entity.h>
 #include <vector>
 #include "AudioBackendSystem.h"
+#include "PositionalSoundSource.h"
+#include <Globals.h>
 using namespace std;
 // =======================================================================================
 // ShieldModuleActivationClient

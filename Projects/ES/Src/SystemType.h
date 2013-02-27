@@ -113,6 +113,7 @@ public:	//Enums
 		AnomalyBombControllerSystem,
 		ServerDynamicPhysicalObjectsSystem,
 		GravityMineEffectSystem,
+		ShieldPlaterSystem,
 		NUM_SYSTEM_TYPES
 	};
 
