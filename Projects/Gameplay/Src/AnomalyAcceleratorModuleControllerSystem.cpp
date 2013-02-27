@@ -12,6 +12,7 @@
 #include <TcpServer.h>
 #include "ModuleHelper.h"
 #include "AnomalyBomb.h"
+#include "EntityFactory.h"
 
 AnomalyAcceleratorModuleControllerSystem::AnomalyAcceleratorModuleControllerSystem(
 	TcpServer* p_server)
@@ -57,29 +58,22 @@ void AnomalyAcceleratorModuleControllerSystem::processEntities(
 void AnomalyAcceleratorModuleControllerSystem::spawnAnomalyBomb( Transform* p_transform,
 	AglVector3 p_moduleVelocity, ShipModule* p_module )
 {
-	Entity* bombEntity = m_world->createEntity();
-	bombEntity->setName("AnomalyBomb");
-	AglVector3 scale = AglVector3(1.0f, 1.0f, 1.0f);
-	Transform* bombTransform = new Transform(p_transform->getTranslation(),
-		p_transform->getRotation(), scale);
-	bombEntity->addComponent(bombTransform);
-	bombEntity->addComponent(new PhysicsBody());
-	bombEntity->addComponent(new BodyInitData(p_transform->getTranslation(),
-		p_transform->getRotation(), scale, p_moduleVelocity,
-		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
-		false, true));
-	bombEntity->addComponent(new AnomalyBomb(7.0f, 5.0f, 125.0f, 20.0f, 5.0f, 80.0f));
-	bombEntity->addComponent(new NetworkSynced(bombEntity->getIndex(), -1,
-		EntityType::AnomalyBomb));
-	m_world->addEntity(bombEntity);
+	Entity* bombEntity = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory))->createAnomalyBombServer(p_transform,
+		p_moduleVelocity, p_module);
 
 	EntityCreationPacket data;
+	Transform* bombTransform = static_cast<Transform*>(bombEntity->getComponent(
+		ComponentType::Transform));
+	if(bombTransform != NULL)
+	{
+		data.translation	= bombTransform->getTranslation();
+		data.rotation		= bombTransform->getRotation();
+		data.scale			= bombTransform->getScale();
+	}
 	data.entityType		= static_cast<char>(EntityType::AnomalyBomb);
 	data.owner			= -1;
 	data.networkIdentity = bombEntity->getIndex();
-	data.translation	= bombTransform->getTranslation();
-	data.rotation		= bombTransform->getRotation();
-	data.scale			= bombTransform->getScale();
 	data.meshInfo		= 1;
 	m_server->broadcastPacket(data.pack());
 }

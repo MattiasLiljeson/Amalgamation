@@ -47,6 +47,7 @@
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
 #include "AnomalyAcceleratorModule.h"
+#include "AnomalyBomb.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -249,8 +250,6 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 	{
 		if (m_client)
 			e = createAnomalyBombClient(p_packet);
-		else
-			e = createAnomalyBombServer(p_packet);
 	}
 	else if (type == EntityType::Rocket)
 	{
@@ -777,9 +776,27 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 	return entity;
 }
 
-Entity* EntityFactory::createAnomalyBombServer( EntityCreationPacket p_packet )
+Entity* EntityFactory::createAnomalyBombServer( Transform* p_transform,
+	AglVector3 p_moduleVelocity, ShipModule* p_module )
 {
-	return NULL;
+	Entity* entity = entityFromRecipeOrFile( "ServerAnomalyBomb", 
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyBomb.asd" );
+	entity->setName("AnomalyBomb");
+	// The PhysicsInitData must be created outside because it is
+	// dependent of "parent" velocity and position.
+	AglVector3 scale = AglVector3(1.0f, 1.0f, 1.0f);
+	Transform* transform = new Transform(p_transform->getTranslation(),
+		p_transform->getRotation(), scale);
+	entity->addComponent(transform);
+	entity->addComponent(new BodyInitData(p_transform->getTranslation(),
+		p_transform->getRotation(), scale, p_moduleVelocity,
+		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
+		false, true));
+	entity->addComponent(new AnomalyBomb(7.0f, 5.0f, 125.0f, 20.0f, 5.0f, 80.0f));		// Move to assemblage
+	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
+		EntityType::AnomalyBomb));
+	m_world->addEntity(entity);
+	return entity;
 }
 
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
