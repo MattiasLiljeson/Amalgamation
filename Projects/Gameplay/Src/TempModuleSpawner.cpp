@@ -43,7 +43,7 @@ void TempModuleSpawner::process()
 				AglVector3 posV = pos.GetTranslation();
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 	
-				DEBUGPRINT(((toString("Module spawned at position ") + posAsString).c_str()));
+				//DEBUGPRINT(((toString("Module spawned at position ") + posAsString).c_str()));
 
 				pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
 			}

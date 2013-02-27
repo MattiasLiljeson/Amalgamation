@@ -70,7 +70,7 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 				AglVector3 posV = spawnPoint.spTransform.GetTranslation();
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 
-				DEBUGPRINT(( (toString("Ship spawnpoint found at position ") + posAsString).c_str()) );
+				//DEBUGPRINT(( (toString("Ship spawnpoint found at position ") + posAsString).c_str()) );
 				newShipSpawnPoints.push_back(ShipSpawnPoint(spawnPoint.spTransform));
 			}
 			else if (spawnPoint.spAction == "module")
@@ -78,7 +78,7 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 				AglVector3 posV = spawnPoint.spTransform.GetTranslation();
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 
-				DEBUGPRINT(( (toString("Module spawnpoint found at position ") + posAsString).c_str()) );
+				//DEBUGPRINT(( (toString("Module spawnpoint found at position ") + posAsString).c_str()) );
 
 				newModuleSpawnPoints.push_back(ModuleSpawnPoint(spawnPoint.spTransform));
 			}
@@ -90,7 +90,13 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 		p_entity->removeComponent(ComponentType::SpawnPointSet);
 		p_entity->applyComponentChanges();
 
-		DEBUGPRINT(("Finished reading spawnpoints from chamber.\n"));
+		string debugPrintStr = "Found ";
+		debugPrintStr += toString(newShipSpawnPoints.size());
+		debugPrintStr += " ship spawnpoints.\nFound ";
+		debugPrintStr += toString(newModuleSpawnPoints.size());
+		debugPrintStr += " module spawnpoints.\n";
+
+		DEBUGPRINT((debugPrintStr.c_str()));
 	}
 	else
 	{
