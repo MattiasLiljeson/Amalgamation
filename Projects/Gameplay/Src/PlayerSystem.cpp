@@ -21,3 +21,17 @@ PlayerComponent* PlayerSystem::getPlayerCompFromNetworkComp(NetworkSynced* p_net
 	return static_cast<PlayerComponent*>
 		(player->getComponent(ComponentType::PlayerComponent));
 }
+
+const vector<PlayerComponent*>& PlayerSystem::getPlayerComponents() const
+{
+	return m_playerComponents;
+}
+
+void PlayerSystem::inserted( Entity* p_entity )
+{
+	PlayerComponent* playerComponent = static_cast<PlayerComponent*>
+		(p_entity->getComponent(ComponentType::PlayerComponent));
+
+	if(playerComponent)
+		m_playerComponents.push_back(playerComponent);
+}

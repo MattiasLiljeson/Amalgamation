@@ -19,6 +19,7 @@
 #include "ServerClientInfoSystem.h"
 #include "ClientInfo.h"
 #include "ServerStateSystem.h"
+#include "PlayerSystem.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -47,57 +48,23 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			if( timerSys->checkTimeInterval(TimerIntervals::EverySecond) )
 			{
-				/************************************************************************/
-				/* Send the client info to clients									    */
-				/* TODO: This needs refactoring, as it is now currently uses a mixture  */
-				/* of several components to construct a updateClientPacket and is		*/
-				/* inefficiently made, I guess.											*/
-				/* PlayerScore and NetSynced is never deleted from the server.			*/
-				/* ClientInfo is, when a client is disconnecting. More should be		*/
-				/* happening there.	// Alex												*/
-				/************************************************************************/
-				UpdateClientStatsPacket updatedClientPacket;
+				UpdateClientStatsPacket updatedClientInfo;
 
-				// Add all players' ping to the packet
-				auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
-					m_world->getSystem(SystemType::ServerClientInfoSystem));
-				vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-				// Set currently active players
-				updatedClientPacket.activePlayers = clientInfoEntities.size();
-				for (int i = 0; i < updatedClientPacket.activePlayers; i++)
-				{
-					auto clientInfo = static_cast<ClientInfo*>(
-						clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+					m_world->getSystem(SystemType::PlayerSystem));
 
-					updatedClientPacket.ping[i]				= clientInfo->ping;
-					updatedClientPacket.playerIdentities[i]	= clientInfo->id;
+				vector<PlayerComponent*> players = playerSys->getPlayerComponents();
+				updatedClientInfo.activePlayers = players.size();
 
-					// Also add the players' score to the packet.
-					auto netSyncedScoreSystem = static_cast<NetSyncedPlayerScoreTrackerSystem*>
-						(m_world->getSystem(SystemType::NetSyncedPlayerScoreTrackerSystem));
-					vector<Entity*> netSyncedScoreEntities =
-						netSyncedScoreSystem->getNetScoreEntities();
-
-					for (int j = 0; j < netSyncedScoreEntities.size(); j++)
-					{
-						PlayerComponent* playerScore = static_cast<PlayerComponent*>(
-							netSyncedScoreEntities[j]->getComponent(ComponentType::PlayerComponent));
-						NetworkSynced* netSync = static_cast<NetworkSynced*>(
-							netSyncedScoreEntities[j]->getComponent(ComponentType::NetworkSynced));
-
-						if (clientInfo->id == netSync->getNetworkOwner())
-						{
-							// receive the total score from the player
-							updatedClientPacket.scores[i] = playerScore->getScore();
-							break; // NOTE: A break here, for the inner loop.
-						}
-					}
+				for(unsigned int i = 0; i < updatedClientInfo.activePlayers; i++){
+					updatedClientInfo.scores[i] = players.at(i)->getScore();
+					updatedClientInfo.ping[i] = players.at(i)->m_ping;
+					updatedClientInfo.playerIdentities[i] = i;
 				}
 
-				updatedClientPacket.currentServerTimestamp = m_world->getElapsedTime();
+				updatedClientInfo.currentServerTimestamp = m_world->getElapsedTime();
 
-				m_server->broadcastPacket(updatedClientPacket.pack());
-				//m_server->unicastPacket(updatedClientPacket.pack(), packet.getSenderId());
+				m_server->broadcastPacket(updatedClientInfo.pack());
 			}
 			// NOTE: (Johan) This interval check is currently set to be very high delay because
 			// packet handling is too slow when running Debug build otherwise.
