@@ -4,13 +4,13 @@
 	</head>
 	<body id="hudelements" class="content">
 		<div id="context">
-			<div class="elements" id="mappingElem">
+			<!--<div class="elements" id="mappingElem">
 				MappedKeys
 				<p id="mapping">
 				</p>
-			</div>
+			</div>-->
 			<div class="elements" id="timerElem">
-				Time Elapsed:
+				Time Remaining:
 				<p id="time">
 				</p>
 			</div>
