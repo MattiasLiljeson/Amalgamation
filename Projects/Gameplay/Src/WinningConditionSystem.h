@@ -24,6 +24,9 @@ public:
 
 	void setEndTime(float p_endTime);
 
+	int getRemaningMinutes() const;
+	int getRemaningSeconds() const;
+
 private:
 	vector< pair<float, Entity*> > createSortedScoreEntityMapping();
 	///-----------------------------------------------------------------------------------

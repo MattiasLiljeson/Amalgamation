@@ -17,6 +17,7 @@
 #include <ToString.h>
 #include <DebugUtil.h>
 #include "ScoreRuleHelper.h"
+#include "PlayerSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 OnHitEffectBufferSystem* p_effectBuffer)
@@ -114,7 +115,10 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 						int me = ModuleHelper::FindParentShipClientId(m_world,m,&myShip);
 						if (myShip)
 						{
-							PlayerComponent* scoreComponent = static_cast<PlayerComponent*>(myShip->getComponent(ComponentType::PlayerComponent));
+							PlayerSystem* playerSys = static_cast<PlayerSystem*>
+								(m_world->getSystem(SystemType::PlayerSystem));
+							PlayerComponent* scoreComponent = playerSys->getPlayerCompFromNetworkComp(
+								static_cast<NetworkSynced*>(myShip->getComponent(ComponentType::NetworkSynced)));
 							// score effect
 							if (moduleTransform && m)
 							{
@@ -126,7 +130,8 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 									Entity* perpShip = ships->findShip(perpId);
 									if (perpShip)
 									{
-										PlayerComponent* perpScoreComponent = static_cast<PlayerComponent*>(perpShip->getComponent(ComponentType::PlayerComponent));
+										PlayerComponent* perpScoreComponent = playerSys->getPlayerCompFromNetworkComp(
+											static_cast<NetworkSynced*>(perpShip->getComponent(ComponentType::NetworkSynced)));
 										float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
 										// add score and send effect
 										perpScoreComponent->addRelativeScore(score);

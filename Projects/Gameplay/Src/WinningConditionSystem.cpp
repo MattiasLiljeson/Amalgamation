@@ -47,6 +47,18 @@ void WinningConditionSystem::process()
 	}
 }
 
+int WinningConditionSystem::getRemaningMinutes() const
+{
+	float leftTime = m_endTime - m_elapsedGameSessionTime;
+	return static_cast<int>(leftTime/60.0f);
+}
+
+int WinningConditionSystem::getRemaningSeconds() const
+{
+	float timeLeft = m_endTime - m_elapsedGameSessionTime;
+	return (int)timeLeft - getRemaningMinutes()*60;
+}
+
 vector< pair<float, Entity*> > WinningConditionSystem::createSortedScoreEntityMapping()
 {
 	vector< pair<float, Entity*> > scoreEntityMapping;

@@ -20,6 +20,7 @@
 #include "ClientInfo.h"
 #include "ServerStateSystem.h"
 #include "PlayerSystem.h"
+#include "WinningConditionSystem.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -53,8 +54,13 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
 					m_world->getSystem(SystemType::PlayerSystem));
 
+				WinningConditionSystem* winningSys = static_cast<WinningConditionSystem*>
+					(m_world->getSystem(SystemType::WinningConditionSystem));
+
 				vector<PlayerComponent*> players = playerSys->getPlayerComponents();
 				updatedClientInfo.activePlayers = players.size();
+				updatedClientInfo.minutesUntilEndOfRound = winningSys->getRemaningMinutes();
+				updatedClientInfo.secondsUntilEndOfRound = winningSys->getRemaningSeconds();
 
 				for(unsigned int i = 0; i < updatedClientInfo.activePlayers; i++){
 					updatedClientInfo.scores[i] = players.at(i)->getScore();

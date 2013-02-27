@@ -712,6 +712,11 @@ void ClientPacketHandlerSystem::handleIngameState()
 			if(hud){
 				hud->setHUDData(HudSystem::SCORE,
 					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
+				hud->setHUDData(HudSystem::TIME,
+					toString(
+					toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
+					toString(updateClientPacket.secondsUntilEndOfRound)
+					).c_str());
 			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)

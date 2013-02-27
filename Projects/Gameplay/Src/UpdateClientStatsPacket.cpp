@@ -4,6 +4,8 @@ UpdateClientStatsPacket::UpdateClientStatsPacket()
 {
 	//ping = -1;
 	activePlayers = 0;
+	secondsUntilEndOfRound = 0;
+	minutesUntilEndOfRound = 0;
 
 	for (int i=0; i<MAXPLAYERS; i++)
 	{
@@ -22,6 +24,8 @@ Packet UpdateClientStatsPacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::UpdateClientStats));
 	packet << activePlayers;
+	packet << secondsUntilEndOfRound;
+	packet << minutesUntilEndOfRound;
 	packet << currentServerTimestamp;
 	for (int i=0; i<MAXPLAYERS; i++)
 	{
@@ -36,6 +40,8 @@ Packet UpdateClientStatsPacket::pack()
 void UpdateClientStatsPacket::unpack( Packet& p_packet )
 {
 	p_packet >> activePlayers;
+	p_packet >> secondsUntilEndOfRound;
+	p_packet >> minutesUntilEndOfRound;
 	p_packet >> currentServerTimestamp;
 	for (int i=0; i<MAXPLAYERS; i++)
 	{
