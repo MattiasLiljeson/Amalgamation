@@ -50,6 +50,13 @@ void ModuleVisualEffectBufferSystem::process()
 
 			m_scoreFXqueue_netowner.pop();
 		}
+		// status effects should be broadcasted to all however
+		while(!m_statusFXqueue_netowner.empty())
+		{
+			auto info = m_statusFXqueue_netowner.front();
+			m_server->broadcastPacket(info.pack());
+			m_statusFXqueue_netowner.pop();
+		}
 	}
 }
 
@@ -64,4 +71,9 @@ void ModuleVisualEffectBufferSystem::enqueueEffect(int p_networkOwnerId,
 											OnHitScoreEffectPacket& p_packet)
 {
 	m_scoreFXqueue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
+}
+
+void ModuleVisualEffectBufferSystem::enqueueEffect( ModuleStatusEffectPacket& p_packet )
+{
+	m_statusFXqueue_netowner.push(p_packet);
 }

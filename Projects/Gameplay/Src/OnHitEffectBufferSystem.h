@@ -33,10 +33,11 @@ public:
 
 	void enqueueEffect(Entity* p_entity, OnHitScoreEffectPacket& p_packet);
 	void enqueueEffect(int p_networkOwnerId, OnHitScoreEffectPacket& p_packet);
+	void enqueueEffect(ModuleStatusEffectPacket& p_packet);
 protected:
 private:
 	queue<pair<Entity*,OnHitScoreEffectPacket>> m_scoreFXqueue_entity;
 	queue<pair<int,OnHitScoreEffectPacket>> m_scoreFXqueue_netowner;
-	queue<pair<int,ModuleStatusEffectPacket>> m_statusFXqueue_netowner;
+	queue<ModuleStatusEffectPacket> m_statusFXqueue_netowner;
 	TcpServer* m_server;
 };
