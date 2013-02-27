@@ -5,6 +5,7 @@
 #include "LookAtEntity.h"
 #include "Transform.h"
 #include <control.h>
+#include "ClientPacketHandlerSystem.h"
 
 CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend ) : 
 			  EntitySystem( SystemType::CameraSystem, 2,
@@ -55,11 +56,14 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	Transform* transform = static_cast<Transform*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
 
+
 	// Retrieve initial info
 	AglVector3 position = transform->getTranslation();
 	AglQuaternion rotation = transform->getRotation();
-	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+	AglVector3 lookTarget = position + transform->getMatrix().GetForward();
 	AglVector3 up = transform->getMatrix().GetUp();
+
+	up.normalize();
 
 	// Construct view matrix
 	AglMatrix view = AglMatrix::createViewMatrix(position,

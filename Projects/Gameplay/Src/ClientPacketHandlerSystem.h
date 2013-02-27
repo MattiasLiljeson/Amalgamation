@@ -88,4 +88,7 @@ private:
 
 	//Added by Anton
 	vector<EntityUpdatePacket> m_batch;
+
+public:
+	AglMatrix cameraTransform;
 };

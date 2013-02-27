@@ -262,7 +262,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* General controlling													*/
 	/************************************************************************/
-	m_world->setSystem( new LookAtSystem() );
+	m_world->setSystem( new LookAtSystem(NULL) );
 	m_world->setSystem( new SpeedBufferUpdaterSystem() );
 	
 	/************************************************************************/

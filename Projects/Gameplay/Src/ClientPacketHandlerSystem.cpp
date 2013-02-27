@@ -783,37 +783,30 @@ void ClientPacketHandlerSystem::handleBatch(int p_frame)
 
 				if (!inter)
 				{
-					inter = new InterpolationComponent2();
-					entity->addComponent(ComponentType::InterpolationComponent2, inter);
+					//inter = new InterpolationComponent2();
+					//entity->addComponent(ComponentType::InterpolationComponent2, inter);
 					transform->setScale( data.scale );
 					transform->setRotation( data.rotation );
 					transform->setTranslation( data.translation );
-					inter->t = t - 0.01f;
-					entity->applyComponentChanges();
+					//inter->t = t;
+					//entity->applyComponentChanges();
 				}
-				if (cam)
+				
+				if (inter)
 				{
-					/*static float prev = 0;
-					ofstream file;
-					file.open("test.txt", ios::app);
-					file << m_world->getDelta() << '\t' << p_frame;
-					file << '\n';
-					file.close();
-
-					prev = data.timestamp;*/
+					InterData interData;
+					AglMatrix::componentsToMatrix(interData.transform, data.scale, data.rotation, data.translation);
+					if (inter->data.size() > 0 && !down)
+						interData.t = inter->data.back().t + (data.timestamp - inter->data.back().stamp);
+					else
+					{
+						interData.t = t;
+						inter->t = t;
+					}
+					interData.stamp = data.timestamp;
+					inter->data.push_back(interData);
 				}
 
-				InterData interData;
-				AglMatrix::componentsToMatrix(interData.transform, data.scale, data.rotation, data.translation);
-				if (inter->data.size() > 0 && !down)
-					interData.t = inter->data.back().t + (data.timestamp - inter->data.back().stamp);
-				else
-				{
-					interData.t = t;
-					inter->t = t - 0.01f;
-				}
-				interData.stamp = data.timestamp;
-				inter->data.push_back(interData);
 
 			if( transform != NULL ) // Throw exception? /ML
 			{

@@ -18,6 +18,8 @@
 #include "PlayerScore.h"
 #include "ServerClientInfoSystem.h"
 #include "ClientInfo.h"
+#include "CameraInfo.h"
+#include "LookAtEntity.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -152,6 +154,11 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 					angularVelocity = physicsSystem->getController()->getBody(
 						physicsBody->m_id)->GetAngularVelocity();
 				}
+
+				LookAtEntity* cam = static_cast<LookAtEntity*>(
+					m_world->getComponentManager()->getComponent(
+					p_entities[entityIdx]->getIndex(), ComponentType::LookAtEntity ) );
+
 
 				EntityUpdatePacket updatePacket;
 				updatePacket.networkIdentity = netSync->getNetworkIdentity();

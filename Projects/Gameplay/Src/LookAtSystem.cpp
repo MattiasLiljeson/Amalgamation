@@ -8,13 +8,17 @@
 #include "PhysicsBody.h"
 #include "MeshOffsetTransform.h"
 #include "ShipManagerSystem.h"
+#include "EntityUpdatePacket.h"
+#include "..\..\NetComm\Src\Packet.h"
+#include "PacketType.h"
+#include "NetworkSynced.h"
 
-LookAtSystem::LookAtSystem() : 
+LookAtSystem::LookAtSystem(TcpServer* p_server) : 
 EntitySystem( SystemType::LookAtSystem, 2,
 			 ComponentType::ComponentTypeIdx::LookAtEntity,
 			 ComponentType::ComponentTypeIdx::Transform)
 {
-
+	m_server = p_server;
 }
 
 
@@ -38,7 +42,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if (lookAtMainCamera)
 		{
-			adaptDistanceBasedOnModules(p_entities[i]);
+			//adaptDistanceBasedOnModules(p_entities[i]);
 		}
 
 
@@ -92,7 +96,9 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			lookTargetPos = targetTransform->getTranslation();
 		}
 
-
+		//static AglVector3 m_velocity = AglVector3(0, 0, 0);
+		//float springConstant = 64;
+		//float springDamping = 8;
 
 		// Follow behaviour
 		if (lookAtFollow)
@@ -104,7 +110,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			// update transform
 
 			// lerp
-			if (lookAt->getMoveSpd()*dt<1.0f)
+			if (false)//lookAt->getMoveSpd()*dt<1.0f)
 			{
 				position = AglVector3::lerp(position,lookTargetPos+offset,
 					saturate(lookAt->getMoveSpd()*dt));
@@ -112,10 +118,17 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			else
 			{
 				position = lookTargetPos+offset;
+
+				/*AglVector3 idealPosition = lookTargetPos+offset;
+				AglVector3 displacement = position - idealPosition;
+				AglVector3 springAcceleration = (displacement*(-springConstant)) - (m_velocity*springDamping);
+
+				m_velocity += springAcceleration * dt;
+				position += m_velocity * dt;*/
 			}
 
 			// slerp
-			if (lookAt->getRotationSpeed()*dt<1.0f)
+			if (false)//lookAt->getRotationSpeed()*dt<1.0f)
 			{
 				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
 					saturate(lookAt->getRotationSpeed()*dt),true);

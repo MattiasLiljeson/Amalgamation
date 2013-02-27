@@ -27,14 +27,11 @@ void InterpolationSystem2::processEntities( const vector<Entity*>& p_entities )
 
 		Transform* trans = static_cast<Transform*>(p_entities[i]->getComponent((ComponentType::Transform)));
 
-		inter->t += t*1.0f;
+		inter->t += t;
+
 		while (inter->data.size() > 1 && inter->t > inter->data[1].t)
 		{
 			inter->data.pop_front();
-		}
-		if (inter->data.size() > 10)
-		{
-			inter->data.pop_back();
 		}
 
 		if (inter->data.size() > 1)
