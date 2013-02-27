@@ -3,11 +3,12 @@
 #include <EntitySystem.h>
 #include "Transform.h"
 #include "PickComponent.h"
-#include "TcpServer.h"
 #include "ConnectionPointSet.h"
 #include "OnHitEffectBufferSystem.h"
 
 class ShipModule;
+class PlayerSystem;
+class TcpServer;
 
 // =======================================================================================
 //                                      ServerPickingSystem
@@ -42,6 +43,8 @@ public:
 private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;
+
+	PlayerSystem* m_playerSystem;
 
 	//Temp
 	float mrota;

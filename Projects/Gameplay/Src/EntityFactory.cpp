@@ -18,7 +18,7 @@
 #include "PhysicsBody.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PlayerState.h"
 #include "PositionalSoundSource.h"
 #include "RenderInfo.h"
@@ -349,7 +349,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 	}
-	entity->addComponent( new PlayerScore() );
+//	entity->addComponent( new PlayerComponent() );
 	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
 
 	m_world->addEntity(entity);

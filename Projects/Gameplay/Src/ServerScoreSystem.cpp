@@ -1,5 +1,5 @@
 #include "ServerScoreSystem.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "NetworkSynced.h"
 #include "PacketType.h"
 #include "UpdateClientStatsPacket.h"
@@ -10,7 +10,7 @@
 
 ServerScoreSystem::ServerScoreSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateScoresSystem,
-	2, ComponentType::NetworkSynced, ComponentType::PlayerScore )
+	2, ComponentType::NetworkSynced, ComponentType::PlayerComponent )
 {
 	m_server = p_server;
 
@@ -36,8 +36,8 @@ void ServerScoreSystem::processEntities( const vector<Entity*>& p_entities )
 			NetworkSynced* netSync = static_cast<NetworkSynced*>(
 				p_entities[i]->getComponent(ComponentType::NetworkSynced));
 
-			PlayerScore* score = static_cast<PlayerScore*>(
-				p_entities[i]->getComponent(ComponentType::PlayerScore));
+			PlayerComponent* score = static_cast<PlayerComponent*>(
+				p_entities[i]->getComponent(ComponentType::PlayerComponent));
 			//score->addBaseScore( 1 );
 		}
 	}

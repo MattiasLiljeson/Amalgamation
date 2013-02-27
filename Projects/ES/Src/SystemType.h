@@ -110,8 +110,9 @@ public:	//Enums
 		AnomalyAcceleratorModuleControllerSystem,
 		EmpRocketLancherModuleSystem,
 		InterpolationSystem2,
-		TempModuleSpawner,		NUM_SYSTEM_TYPES
-	};
+		PlayerSystem,
+		TempModuleSpawner,
+		NUM_SYSTEM_TYPES	};
 
 public:
 	/**

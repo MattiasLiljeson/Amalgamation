@@ -42,7 +42,7 @@ public:	//Enums
 		BoundingVolumeInitData,
 		LookAtEntity,
 		PlayerCameraController,
-		PlayerScore,
+		PlayerComponent,
 		MenuItem,
 		HudElement,
 		EntityParent,

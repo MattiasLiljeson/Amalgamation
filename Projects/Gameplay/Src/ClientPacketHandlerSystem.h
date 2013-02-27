@@ -71,6 +71,7 @@ private:
 	void handleLobby();
 	void handleLoading();
 	void handleFinishedLoading();
+	void handleResults();
 private:
 	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;

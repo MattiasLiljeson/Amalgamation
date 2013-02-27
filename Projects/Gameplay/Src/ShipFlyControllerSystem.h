@@ -38,6 +38,7 @@ public:
 private:
 	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3& p_thrust,
 		AglVector3& p_angularVec);
+	void handleIngame( const vector<Entity*>& p_entities );
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;

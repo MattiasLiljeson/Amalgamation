@@ -35,7 +35,7 @@
 #include "PickComponent.h"
 #include "PingPacket.h"
 #include "PlayerCameraController.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PongPacket.h"
 #include "PositionalSoundSource.h"
 #include "RenderInfo.h"
@@ -149,6 +149,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	case GameStates::FINISHEDLOADING:
 		{
 			handleFinishedLoading();
+			break;
+		}
+	case GameStates::RESULTS:
+		{
+			handleResults();
 			break;
 		}
 	default:
@@ -444,7 +449,7 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
-			int idx = p_data.particleSystemIdx;
+			unsigned int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
@@ -659,36 +664,16 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			// Update score in hud
 			HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
-			if (hud)
-			{
-				// Clients score
-				NetSyncedPlayerScoreTrackerSystem* netSyncScoreTracker = static_cast<
-					NetSyncedPlayerScoreTrackerSystem*>(m_world->getSystem(
-					SystemType::NetSyncedPlayerScoreTrackerSystem));
-				vector<Entity*> netSyncScoreEntities = netSyncScoreTracker->getNetScoreEntities();
-				for(int playerId=0; playerId<MAXPLAYERS; playerId++)
-				{
-					for(unsigned int i=0; i<netSyncScoreEntities.size(); i++)
-					{
-						NetworkSynced* netSync = static_cast<NetworkSynced*>(
-							netSyncScoreEntities[i]->getComponent(
-							ComponentType::NetworkSynced));
-						//  						PlayerScore* playerScore = static_cast<PlayerScore*>(
-						//  							netSyncScoreEntities[i]->getComponent(
-						//  							ComponentType::PlayerScore));
-						if(netSync->getNetworkOwner() ==
-							updateClientPacket.playerIdentities[playerId])
-						{
-							// Update the absolute score of the players 
-							// on client side (Not used right now, activate if score storage on
-							// client is needed)
-							// playerScore->setAbsoluteScore(updateClientPacket.scores[playerId]);
-							hud->setHUDData( HudSystem::SCORE,toString(updateClientPacket.scores[playerId]).c_str() );
-						}
-					}
-				}
-			}
 
+			if(hud){
+				hud->setHUDData(HudSystem::SCORE,
+					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
+				hud->setHUDData(HudSystem::TIME,
+					toString(
+					toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
+					toString(updateClientPacket.secondsUntilEndOfRound)
+					).c_str());
+			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)
 		{
@@ -742,10 +727,6 @@ void ClientPacketHandlerSystem::handleIngameState()
 			EntityDeletionPacket data;
 			data.unpack(packet);
 			handleEntityDeletionPacket(data);
-		}
-		else if(packetType == (char)PacketType::WelcomePacket)
-		{
-			handleWelcomePacket(packet);
 		}
 		else if(packetType == (char)PacketType::ModuleTriggerPacket)
 		{
@@ -859,6 +840,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 				}
 			}
 		}
+		else if (packetType == (char)PacketType::ChangeStatePacket){
+			ChangeStatePacket statePacket;
+			statePacket.unpack(packet);
+
+			if(statePacket.m_serverState == ServerStates::RESULTS ){
+				m_gameState->setQueuedState(GameStates::RESULTS);
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -889,6 +878,18 @@ void ClientPacketHandlerSystem::handleLobby()
 		{
 			NewlyConnectedPlayerPacket newlyConnected;
 			newlyConnected.unpack(packet);
+
+			//Add entities here and utilize the player component 
+			Entity* newPlayer = m_world->createEntity();
+			PlayerComponent* newPlayerComp = new PlayerComponent();
+			newPlayerComp->m_networkID = newlyConnected.networkID;
+			newPlayerComp->m_playerID = newlyConnected.playerID;
+			newPlayerComp->m_ping = newlyConnected.ping;
+			newPlayerComp->m_playerName = newlyConnected.playerName;
+			newPlayerComp->setAbsoluteScore(newlyConnected.score);
+			newPlayer->addComponent(newPlayerComp);
+			m_world->addEntity(newPlayer);
+			
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				addNewPlayer(newlyConnected);
 		}
@@ -1069,5 +1070,21 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 		{
 			//printPacketTypeNotHandled("Finished Loading", (int)packetType);
 		}
+	}
+}
+
+void ClientPacketHandlerSystem::handleResults()
+{
+	if(m_gameState->getStateDelta(GameStates::RESULTS) ==
+		EnumGameDelta::ENTEREDTHISFRAME)
+	{
+		//Notify the server that you have now successfully changed to the result state
+		ChangeStatePacket changeState;
+		changeState.m_gameState = GameStates::RESULTS;
+		m_tcpClient->sendPacket(changeState.pack());
+	}
+	else
+	{
+		m_gameState->setQueuedState(GameStates::MENU);
 	}
 }

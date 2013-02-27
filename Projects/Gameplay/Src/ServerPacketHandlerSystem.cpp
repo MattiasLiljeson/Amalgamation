@@ -30,7 +30,7 @@
 #include "UpdateClientStatsPacket.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "CameraControlPacket.h"
 #include "ShipConnectionPointHighlights.h"
 #include "ShipManagerSystem.h"
@@ -48,6 +48,9 @@
 #include <DebugUtil.h>
 #include "ServerWelcomeSystem.h"
 #include "PlayerInfo.h"
+#include "WinningConditionSystem.h"
+#include "PlayerSystem.h"
+#include "NewlyConnectedPlayerPacket.h"
 #include "LevelHandlerSystem.h"
 #include "SpawnPointSystem.h"
 
@@ -61,6 +64,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	m_stateSystem = NULL;
 	m_finishedLoadingPlayers = 0;
 	m_readyLoadingPlayers = 0;
+	m_resultsPlayers = 0;
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -104,6 +108,11 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			handleSentAllPackets();
 			break;
 		}
+	case ServerStates::RESULTS:
+		{
+			handleResult();
+			break;
+		}
 	default:
 		break;
 	}
@@ -119,96 +128,6 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 		m_server->broadcastPacket( pingPacket.pack() );
 	}
 	*/
-}
-void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, int p_playerID)
-{
-
-	Entity* newShip = createTheShipEntity(p_clientIdentity, p_playerID);
-	m_world->addEntity(newShip);
-	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
-		ComponentType::Transform));
-
-	 //Find random spawn points for the player.
-	 //Added by Alex
-	auto spawnPointSys = static_cast<SpawnPointSystem*>(
-		m_world->getSystem(SystemType::SpawnPointSystem));
-	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
-	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
-	{
-		// Update the ship position
-		AglVector3 scale = transformComp->getScale();
-		transformComp->setMatrix(shipSpawnPoint);
-		transformComp->setScale(scale);
-		// Update the body init data
-		auto bodyInitData = static_cast<BodyInitData*>(newShip->getComponent(ComponentType::BodyInitData));
-		bodyInitData->m_position	= transformComp->getTranslation();
-		bodyInitData->m_orientation	= transformComp->getRotation();
-		bodyInitData->m_scale		= transformComp->getScale();
-	}
-	else
-	{
-		DEBUGPRINT(("Warning: No spawnpoint was found for the ship. Fallback of the default position is used.\n"));
-	}
-
-	// also create a camera
-	Entity* playerCam = m_world->createEntity();
-	Component* component = new LookAtEntity(newShip->getIndex(),
-		AglVector3(0,7,-38),
-		13.0f,
-		10.0f,
-		3.0f,
-		40.0f);
-	playerCam->addComponent( ComponentType::LookAtEntity, component );
-	playerCam->addComponent( ComponentType::Transform, new Transform( 
-		transformComp->getMatrix() ) );
-	// default tag is follow
-	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
-	playerCam->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( playerCam->getIndex(), p_clientIdentity, EntityType::PlayerCamera ));
-	m_world->addEntity(playerCam);
-
-	/************************************************************************/
-	/* Send the information about the new clients ship to all other players */
-	/************************************************************************/
-	EntityCreationPacket data;
-	data.entityType		= static_cast<char>(EntityType::Ship);
-	data.owner			= p_clientIdentity;
-	data.playerID		= p_playerID;
-	data.networkIdentity= newShip->getIndex();
-	data.translation	= transformComp->getTranslation();
-	data.rotation		= transformComp->getRotation();
-	data.scale			= transformComp->getScale();
-	data.miscData		= playerCam->getIndex();
-
-	m_server->broadcastPacket(data.pack());
-}
-
-Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)
-{
-	/************************************************************************/
-	/* Creating the ship entity.											*/
-	/************************************************************************/
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
-
-	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
-
-	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
-		new ShipConnectionPointHighlights());
-
-	e->addComponent( ComponentType::NetworkSynced, 
-		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, p_playerID, EntityType::Ship ));
-
-	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
-
-	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
-
-	return e;
-}
-
-void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p_packetType )
-{
-	DEBUGPRINT((("SERVER: Not handled("+p_state+"): " +
-		toString(p_packetType) + "\n").c_str()));
 }
 
 void ServerPacketHandlerSystem::handleIngame()
@@ -496,11 +415,39 @@ void ServerPacketHandlerSystem::handleLobby()
 		else if(packetType == (char)PacketType::PlayerInfo){
 			PlayerInfo playerInfo;
 			playerInfo.unpack(packet);
-			ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-				m_world->getSystem(SystemType::ServerWelcomeSystem));
-			
-			welcomeSystem->addPlayer(playerInfo.playerID, playerInfo.playerName);
-			welcomeSystem->sendBrodcastAllPlayers();
+
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+
+			vector<Entity*> connectedPlayers = playerSystem->getActiveEntities();
+
+			//Add the entity here to be used by other systems
+			Entity* newPlayer = m_world->createEntity();
+			PlayerComponent* newComp = new PlayerComponent();
+			if(playerInfo.playerName == "thebrightestmind"){
+				newComp->setAbsoluteScore(9001);
+			}
+			newComp->m_playerName = playerInfo.playerName;
+			newComp->m_playerID = connectedPlayers.size();
+			newPlayer->addComponent(newComp);
+			m_world->addEntity(newPlayer);
+
+			NewlyConnectedPlayerPacket connectedPlayer;
+			connectedPlayer.playerName = newComp->m_playerName;
+			connectedPlayer.playerID = newComp->m_playerID;
+			connectedPlayer.score = newComp->getScore();
+			m_server->broadcastPacket(connectedPlayer.pack());
+
+			for (unsigned int i = 0; i < connectedPlayers.size(); i++){
+				NewlyConnectedPlayerPacket alreadyConnectedPlayers;
+				PlayerComponent* playerComp;
+				playerComp = static_cast<PlayerComponent*>
+					(connectedPlayers[i]->getComponent(ComponentType::PlayerComponent));
+				alreadyConnectedPlayers.playerID = playerComp->m_playerID;
+				alreadyConnectedPlayers.playerName = playerComp->m_playerName;
+
+				m_server->broadcastPacket(alreadyConnectedPlayers.pack());
+			}			
 		}
 		else
 		{
@@ -528,10 +475,11 @@ void ServerPacketHandlerSystem::handleLoading()
 		}
 	}
 
-	ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-		m_world->getSystem(SystemType::ServerWelcomeSystem));
+	PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem));
 
-	if(m_readyLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+	if(m_readyLoadingPlayers == playerSys->getActiveEntities().size()){
+
 		/************************************************************************/
 		/* Send the already networkSynced objects located on the server to the	*/
 		/* newly connected client.												*/
@@ -629,13 +577,51 @@ void ServerPacketHandlerSystem::handleSentAllPackets()
 
 				m_finishedLoadingPlayers++;
 
-				ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-					m_world->getSystem(SystemType::ServerWelcomeSystem));
+				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+					m_world->getSystem(SystemType::PlayerSystem));
 
-				if(m_finishedLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+				if(m_finishedLoadingPlayers == playerSys->getActiveEntities().size()){
 					m_stateSystem->setQueuedState(ServerStates::INGAME);
 					statePacket.m_gameState = GameStates::NONE;
 					statePacket.m_serverState = ServerStates::INGAME;
+					m_server->broadcastPacket(statePacket.pack());
+
+					// Prepare the winning system to handle the change to ingame
+					WinningConditionSystem* winningSystem = static_cast<WinningConditionSystem*>
+						(m_world->getSystem(SystemType::WinningConditionSystem));
+					winningSystem->setEndTime(roundTime);
+				}
+			}
+		}
+		else{
+			printPacketTypeNotHandled("Sent All Packet", (int)packetType);
+		}
+	}
+}
+
+void ServerPacketHandlerSystem::handleResult()
+{
+	while( m_server->hasNewPackets() )
+	{
+		Packet packet = m_server->popNewPacket();
+
+		char packetType;
+		packetType = packet.getPacketType();
+
+		if(packetType == (char)PacketType::ChangeStatePacket){
+			ChangeStatePacket statePacket;
+			statePacket.unpack(packet);
+
+			if(statePacket.m_gameState == GameStates::RESULTS){
+
+				m_resultsPlayers++;
+
+				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+					m_world->getSystem(SystemType::PlayerSystem));
+
+				if(m_finishedLoadingPlayers == playerSys->getActiveEntities().size()){
+					m_stateSystem->setQueuedState(ServerStates::LOBBY);
+					statePacket.m_serverState = ServerStates::LOBBY;
 					m_server->broadcastPacket(statePacket.pack());
 				}
 			}
@@ -644,4 +630,98 @@ void ServerPacketHandlerSystem::handleSentAllPackets()
 			printPacketTypeNotHandled("Sent All Packet", (int)packetType);
 		}
 	}
+}
+
+
+void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, int p_playerID)
+{
+
+	Entity* newShip = createTheShipEntity(p_clientIdentity, p_playerID);
+	m_world->addEntity(newShip);
+	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
+		ComponentType::Transform));
+
+	//Find random spawn points for the player.
+	//Added by Alex
+	auto spawnPointSys = static_cast<SpawnPointSystem*>(
+		m_world->getSystem(SystemType::SpawnPointSystem));
+	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
+	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
+	{
+		// Update the ship position
+		AglVector3 scale = transformComp->getScale();
+		transformComp->setMatrix(shipSpawnPoint);
+		transformComp->setScale(scale);
+		// Update the body init data
+		auto bodyInitData = static_cast<BodyInitData*>(newShip->getComponent(ComponentType::BodyInitData));
+		bodyInitData->m_position	= transformComp->getTranslation();
+		bodyInitData->m_orientation	= transformComp->getRotation();
+		bodyInitData->m_scale		= transformComp->getScale();
+	}
+	else
+	{
+		DEBUGPRINT(("Warning: No spawnpoint was found for the ship. Fallback of the default position is used.\n"));
+	}
+
+	// also create a camera
+	Entity* playerCam = m_world->createEntity();
+	Component* component = new LookAtEntity(newShip->getIndex(),
+		AglVector3(0,7,-38),
+		13.0f,
+		10.0f,
+		3.0f,
+		40.0f);
+	playerCam->addComponent( ComponentType::LookAtEntity, component );
+	playerCam->addComponent( ComponentType::Transform, new Transform( 
+		transformComp->getMatrix() ) );
+	// default tag is follow
+	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+	playerCam->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( playerCam->getIndex(), p_clientIdentity, EntityType::PlayerCamera ));
+	m_world->addEntity(playerCam);
+
+	/************************************************************************/
+	/* Send the information about the new clients ship to all other players */
+	/************************************************************************/
+	EntityCreationPacket data;
+	data.entityType		= static_cast<char>(EntityType::Ship);
+	data.owner			= p_clientIdentity;
+	data.playerID		= p_playerID;
+	data.networkIdentity= newShip->getIndex();
+	data.translation	= transformComp->getTranslation();
+	data.rotation		= transformComp->getRotation();
+	data.scale			= transformComp->getScale();
+	data.miscData		= playerCam->getIndex();
+
+	m_server->broadcastPacket(data.pack());
+}
+
+Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClientId, 
+													   int p_playerID)
+{
+	/************************************************************************/
+	/* Creating the ship entity.											*/
+	/************************************************************************/
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory));
+
+	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
+
+	e->addComponent(ComponentType::ShipConnectionPointHighlights, 
+		new ShipConnectionPointHighlights());
+
+	e->addComponent( ComponentType::NetworkSynced, 
+		new NetworkSynced( e->getIndex(), p_newlyConnectedClientId, p_playerID, EntityType::Ship ));
+
+	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
+
+//	e->addComponent(ComponentType::PlayerComponent, new PlayerComponent());
+
+	return e;
+}
+
+void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p_packetType )
+{
+	DEBUGPRINT((("SERVER: Not handled("+p_state+"): " +
+		toString(p_packetType) + "\n").c_str()));
 }

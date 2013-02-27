@@ -50,6 +50,8 @@ void TcpConnecterProcess::body()
 	// The client will try to connect until a response from the server has been done, with a timeout.
 	while (m_running)
 	{
+
+		DEBUGPRINT(("Attempting to connect to server...\n"));
 		error = boost::asio::error::host_not_found;
 		endpointIterator = tcpResolver.resolve( tcpQuery );
 
@@ -57,7 +59,6 @@ void TcpConnecterProcess::body()
 		while( error && endpointIterator != end )
 		{
 			activeSocket->close();
-			DEBUGPRINT(("Attempting to connect to server...\n"));
 			activeSocket->connect( *endpointIterator, error );
 
 			*endpointIterator++;
