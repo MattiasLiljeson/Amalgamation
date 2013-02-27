@@ -693,10 +693,18 @@
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="NewlyConnectedPlayerPacket.h" />
     <ClInclude Include="ServerStateSystem.h" />
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModule.h" />
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
+    <ClInclude Include="AnomalyBomb.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+  </ItemGroup>
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Gameplay</Filter>
-    </ClInclude>  </ItemGroup>
-  <ItemGroup>
+    </ClInclude>  <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -1174,7 +1182,16 @@
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
     <ClCompile Include="ServerStateSystem.cpp" />
+    <ClCompile Include="PlayerInfo.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
+    <ClCompile Include="AnomalyBomb.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+  </ItemGroup>
 </Project>

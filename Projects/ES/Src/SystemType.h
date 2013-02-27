@@ -106,7 +106,9 @@ public:	//Enums
 		LobbySystem,
 		ServerStateSystem,
 		ClientStateSystem,
-		SpawnPointSystem,		NUM_SYSTEM_TYPES
+		SpawnPointSystem,
+		AnomalyAcceleratorModuleControllerSystem,
+		NUM_SYSTEM_TYPES
 	};
 
 public:

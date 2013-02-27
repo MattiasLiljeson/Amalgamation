@@ -54,6 +54,7 @@ public:
 	void addActivationEvent(ModuleEvent* p_event);
 	void setToUsed(); ///< Tell module that it has been used
 	bool isUnused(); ///< Has the module been used?
+	bool isOwned(); ///< Is the module attached to a ship?
 private:
 	struct DamageAccumulator
 	{

@@ -46,6 +46,7 @@
 #include "LevelInfoLoader.h"
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
+#include "AnomalyAcceleratorModule.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -202,6 +203,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 		else
 			e = createShieldServer(p_packet);
 	}
+	else if (type == EntityType::AnomalyModule)
+	{
+		if (m_client)
+			e = createAnomalyModuleClient(p_packet);
+		else
+			e = createAnomalyModuleServer(p_packet);
+	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
 		if (m_client)
@@ -236,6 +244,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 			e = createMineClient(p_packet);
 		else
 			e = createMineServer(p_packet);
+	}
+	else if (type == EntityType::AnomalyBomb)
+	{
+		if (m_client)
+			e = createAnomalyBombClient(p_packet);
+		else
+			e = createAnomalyBombServer(p_packet);
 	}
 	else if (type == EntityType::Rocket)
 	{
@@ -642,13 +657,12 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
-	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 
 	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
-	v->enabled = true;
+	v->enabled = false;
 	entity->addComponent( ComponentType::Vibration, v );
 
 	m_world->addEntity(entity);
@@ -729,6 +743,45 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 	m_world->addEntity(entity);
 	return entity;
 }
+
+Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
+{
+	AssemblageHelper::E_FileStatus status = readAssemblageFile(
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd" );
+	Entity* entity = entityFromRecipe( "ClientAnomalyAccelerator" );
+	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
+{
+	AssemblageHelper::E_FileStatus status = readAssemblageFile(
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd" );
+	Entity* entity = entityFromRecipe( "ServerAnomalyAccelerator" );
+	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
+		EntityType::AnomalyModule));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
+{
+	AssemblageHelper::E_FileStatus status = readAssemblageFile(
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd" );
+	Entity* entity = entityFromRecipe( "ClientAnomalyBomb" );
+	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createAnomalyBombServer( EntityCreationPacket p_packet )
+{
+	return NULL;
+}
+
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;

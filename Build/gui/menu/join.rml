@@ -11,6 +11,9 @@
 				<br/>
 				Port:
 				<Input id="port" name="server_port" type="text" size="4" maxlength="5" value="1337" />
+				<br/>
+				Name:
+				<Input id="name" name="player_name" type="text" size="9" maxlength="15" value="Max" />
 			</div>
 			<input type="submit" value="accept">Connect</input>
 			<button onclick="goto previous">Cancel</button>

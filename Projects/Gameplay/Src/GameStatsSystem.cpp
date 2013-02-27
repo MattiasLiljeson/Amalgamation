@@ -10,6 +10,7 @@
 #include "TimerSystem.h"
 #include "InputBackendSystem.h"
 #include <Control.h>
+#include "ClientStateSystem.h"
 
 GameStatsSystem::GameStatsSystem()
 	: EntitySystem(SystemType::GameStatsSystem)
@@ -72,38 +73,45 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 
 void GameStatsSystem::process()
 {
-	auto inputSystem = static_cast<InputBackendSystem*>(
-		m_world->getSystem(SystemType::InputBackendSystem));
-	
-	auto rocketBackend = static_cast<LibRocketBackendSystem*>
-		(m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
-	{
-		if (!m_infoPanelVisible)
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	if(gameState->getCurrentState() == GameStates::INGAME ){
+
+		auto inputSystem = static_cast<InputBackendSystem*>(
+			m_world->getSystem(SystemType::InputBackendSystem));
+	
+		auto rocketBackend = static_cast<LibRocketBackendSystem*>
+			(m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+		if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
 		{
-			m_infoPanelVisible = !m_infoPanelVisible;
-			rocketBackend->showDocument(m_infoPanelDoc);
-			m_infoPanel->updateTheVisualInfoPanel();
+			if (!m_infoPanelVisible)
+			{
+				m_infoPanelVisible = !m_infoPanelVisible;
+				rocketBackend->showDocument(m_infoPanelDoc);
+				m_infoPanel->updateTheVisualInfoPanel();
+			}
 		}
-	}
-	else
-	{
+		else
+		{
+			if (m_infoPanelVisible)
+			{
+				m_infoPanelVisible = !m_infoPanelVisible;
+				rocketBackend->hideDocument(m_infoPanelDoc);
+			}
+		}
+
 		if (m_infoPanelVisible)
 		{
-			m_infoPanelVisible = !m_infoPanelVisible;
-			rocketBackend->hideDocument(m_infoPanelDoc);
-		}
-	}
+			auto timerSystem = static_cast<TimerSystem*>(
+				m_world->getSystem(SystemType::TimerSystem));
 
-	if (m_infoPanelVisible)
-	{
-		auto timerSystem = static_cast<TimerSystem*>(
-			m_world->getSystem(SystemType::TimerSystem));
-
-		if (timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
-		{
-			m_infoPanel->updateTheVisualInfoPanel();
+			if (timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
+			{
+				m_infoPanel->updateTheVisualInfoPanel();
+			}
 		}
 	}
 }

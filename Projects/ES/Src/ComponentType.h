@@ -20,6 +20,7 @@ public:	//Enums
 		// Regular Components
 		// -------------------
 		RenderInfo,
+		AnomalyBomb,
 		Input,
 		NetworkSynced,
 		ClientInfo,
@@ -76,6 +77,7 @@ public:	//Enums
 		GameState,
 		Gradient,
 		SpeedBuffer,
+		AnomalyAcceleratorModule,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
