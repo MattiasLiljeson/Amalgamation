@@ -108,7 +108,7 @@ LightOut pointLight( LightInfo light, float3 eyePos, float3 normal, float3 pixel
 	[branch]
 	if( diffuseFactor > 0.0f )
 	{
-		float specPower = 1.0f; //max( surface.specular.a, 1.0f );
+		float specPower = 10.0f; //max( surface.specular.a, 1.0f );
 		float3 toEye = normalize( eyePos - pixelPos );
 		float3 R = reflect( -lightVec, normal );
 		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
