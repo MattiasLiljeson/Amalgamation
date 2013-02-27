@@ -23,19 +23,19 @@ public:
 	struct ModuleUnusedEffect
 	{
 		bool mode;
-		int moduleNetworkId;
+		Entity* moduleEntity;
 		int value;
 	};
 
 	struct ModuleValueStatEffect
 	{
-		int moduleNetworkId;
+		Entity* moduleEntity;
 		int value;
 	};
 
 	struct ModuleHealthStatEffect
 	{
-		int moduleNetworkId;
+		Entity* moduleEntity;
 		int health;
 	};
 	ModuleStatusEffectSystem();

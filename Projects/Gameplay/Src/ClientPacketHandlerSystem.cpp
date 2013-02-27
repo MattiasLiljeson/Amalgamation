@@ -785,13 +785,41 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			if (moduleFxVis)
 			{
+				auto directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				//
 				ModuleStatusEffectPacket effectPacket;
 				effectPacket.unpack(packet);
-				ModuleStatusEffectSystem::ModuleStatusEffectCreationData inst;
-				inst.score = scoreFx.score;
-				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
-
-				scoreVis->addEffect(inst);
+				Entity* entity = directMapper->getEntity(effectPacket.m_moduleNetworkId);
+				if (entity)
+				{
+					switch (effectPacket.m_statusType)
+					{
+					case ModuleStatusEffectPacket::UNUSEDMODULE_STATUS:
+						{
+							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
+							effectPacket.m_mode==1?fx.mode=true:fx.mode=false;
+							fx.moduleEntity = entity;
+							break;
+						}
+					case ModuleStatusEffectPacket::HEALTH_STATUS:
+						{
+							ModuleStatusEffectSystem::ModuleHealthStatEffect fx;
+							fx.moduleEntity = entity;
+							fx.health = effectPacket.m_value;
+							break;
+						}
+					case ModuleStatusEffectPacket::VALUE_STATUS:
+					default:
+						{
+							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
+							fx.moduleEntity = entity;
+							fx.value = effectPacket.m_value;
+							break;
+						}
+					}
+				}		
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)
