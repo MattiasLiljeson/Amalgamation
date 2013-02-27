@@ -11,6 +11,7 @@
 #include "EntityCreationPacket.h"
 #include <TcpServer.h>
 #include "ModuleHelper.h"
+#include "AnomalyBomb.h"
 
 AnomalyAcceleratorModuleControllerSystem::AnomalyAcceleratorModuleControllerSystem(
 	TcpServer* p_server)
