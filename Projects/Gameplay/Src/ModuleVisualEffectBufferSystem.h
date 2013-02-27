@@ -5,6 +5,7 @@
 #include <Entity.h>
 #include <EntitySystem.h>
 #include "ModuleStatusEffectPacket.h"
+#include "ServerStateSystem.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ class TcpServer;
 ///---------------------------------------------------------------------------------------
 /// \brief	System that buffers effect packets for sendout and visualization to clients 
 ///        
-/// # OnHitEffectBufferSystem
+/// # ModuleVisualEffectBufferSystem
 /// Detailed description.....
 /// Created on: 13-2-2013 
 ///---------------------------------------------------------------------------------------
@@ -25,7 +26,7 @@ class TcpServer;
 class ModuleVisualEffectBufferSystem : public EntitySystem
 {
 public:
-	ModuleVisualEffectBufferSystem(TcpServer* p_server);
+	ModuleVisualEffectBufferSystem(TcpServer* p_server, ServerStateSystem* p_states);
 	virtual ~ModuleVisualEffectBufferSystem();
 
 	virtual void initialize();
@@ -40,4 +41,5 @@ private:
 	queue<pair<int,OnHitScoreEffectPacket>> m_scoreFXqueue_netowner;
 	queue<ModuleStatusEffectPacket> m_statusFXqueue_netowner;
 	TcpServer* m_server;
+	ServerStateSystem* m_serverStates;
 };

@@ -127,7 +127,8 @@ namespace Srv
 		/************************************************************************/
 		/* States																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerStateSystem(ServerStates::LOBBY),true);
+		ServerStateSystem* serverStates = new ServerStateSystem(ServerStates::LOBBY);
+		m_world->setSystem(serverStates,true);
 
 		/************************************************************************/
 		/* Entity creation														*/
@@ -161,7 +162,7 @@ namespace Srv
 		/************************************************************************/
 		/* Effects																*/
 		/************************************************************************/
-		ModuleVisualEffectBufferSystem* moduleeffect = new ModuleVisualEffectBufferSystem(m_server);
+		auto moduleeffect = new ModuleVisualEffectBufferSystem(m_server,serverStates);
 		m_world->setSystem(moduleeffect, true);
 		m_world->setSystem(new ShipModuleStatsSystem(moduleeffect), true);
 

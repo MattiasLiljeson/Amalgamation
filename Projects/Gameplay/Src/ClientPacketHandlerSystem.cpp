@@ -801,6 +801,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
 							effectPacket.m_mode==1?fx.mode=true:fx.mode=false;
 							fx.moduleEntity = entity;
+							moduleFxVis->setUnusedModuleEffect(fx);
 							break;
 						}
 					case ModuleStatusEffectPacket::HEALTH_STATUS:
@@ -808,14 +809,16 @@ void ClientPacketHandlerSystem::handleIngameState()
 							ModuleStatusEffectSystem::ModuleHealthStatEffect fx;
 							fx.moduleEntity = entity;
 							fx.health = effectPacket.m_value;
+							moduleFxVis->setHealthEffect(fx);
 							break;
 						}
 					case ModuleStatusEffectPacket::VALUE_STATUS:
 					default:
 						{
-							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
+							ModuleStatusEffectSystem::ModuleValueStatEffect fx;
 							fx.moduleEntity = entity;
 							fx.value = effectPacket.m_value;
+							moduleFxVis->setValueEffect(fx);
 							break;
 						}
 					}

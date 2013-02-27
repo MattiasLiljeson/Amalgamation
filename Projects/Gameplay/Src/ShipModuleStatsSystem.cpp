@@ -2,14 +2,15 @@
 #include "GameplayTags.h"
 #include "ShipModule.h"
 #include "NetworkSynced.h"
+#include "TimerSystem.h"
 
+unsigned int ShipModuleStatsSystem::m_currentStart = 0;
 
 ShipModuleStatsSystem::ShipModuleStatsSystem( ModuleVisualEffectBufferSystem* p_effectBuffer )
 	: EntitySystem(SystemType::ShipModuleStatsSystem, 1,
-	ComponentType::ShipModule)
+	ComponentType::ComponentTypeIdx::ShipModule)
 {
 	m_effectbuffer = p_effectBuffer;
-	m_currentStart=0;
 }
 
 ShipModuleStatsSystem::~ShipModuleStatsSystem()
@@ -44,23 +45,25 @@ void ShipModuleStatsSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		if (m_currentStart>=p_entities.size())
 			m_currentStart=0;
+		unsigned int end = min(p_entities.size(),m_currentStart+m_batchSz);
 		// check a small batch every second
 		// as it is not super important that visualization data is synced all the time
 		// thus it is more important  to keep the footprint small
-		for (unsigned int i = m_currentStart; i < m_currentStart+m_batchSz; i++)
+		for (unsigned int i = m_currentStart; i < end; i++)
 		{
 			ShipModule* module = static_cast<ShipModule*>(
 				m_world->getComponentManager()->getComponent(p_entities[i],
-				ComponentType::getTypeFor(ComponentType::ShipModule)));		
+				ComponentType::ShipModule));		
 
-			auto isShip = m_world->getComponentManager()->getComponent(p_entities[i],
+			Component* isShip = m_world->getComponentManager()->getComponent(
+				p_entities[i],
 				ComponentType::TAG_Ship);
 
 			if (!isShip && module)
 			{
 				NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 					p_entities[i]->getComponent(ComponentType::NetworkSynced));
-				int id = networkSynced->getNetworkOwner();
+				int id = networkSynced->getNetworkIdentity();
 
 				// send stats updates
 				if (module->isUnused())

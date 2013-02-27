@@ -50,7 +50,7 @@ public:	//Enums
 		ScoreWorldVisualizerSystem,
 		AudioListenerSystem,
 		PositionalSoundSystem,
-		OnHitEffectBufferSystem,
+		ModuleVisualEffectBufferSystem,
 		LibRocketBackendSystem,
 		LibRocketEventManagerSystem,
 		MenuSystem,

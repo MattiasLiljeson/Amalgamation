@@ -1,7 +1,6 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "TimerSystem.h"
 #include "ModuleVisualEffectBufferSystem.h"
 
 // =======================================================================================

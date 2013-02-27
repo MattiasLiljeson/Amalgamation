@@ -36,7 +36,7 @@ void ModuleStatusEffectSystem::process()
 	while(!m_healthEffects.empty())
 	{
 		ModuleHealthStatEffect data = m_healthEffects.back();
-		m_unusedModuleEffects.pop_back();
+		m_healthEffects.pop_back();
 	}
 }
 

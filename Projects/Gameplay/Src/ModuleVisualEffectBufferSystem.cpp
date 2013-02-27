@@ -3,10 +3,12 @@
 #include <TcpServer.h>
 #include "NetworkSynced.h"
 
-ModuleVisualEffectBufferSystem::ModuleVisualEffectBufferSystem(TcpServer* p_server) :
-	EntitySystem(SystemType::OnHitEffectBufferSystem)
+ModuleVisualEffectBufferSystem::ModuleVisualEffectBufferSystem(TcpServer* p_server, 
+															   ServerStateSystem* p_states) :
+	EntitySystem(SystemType::ModuleVisualEffectBufferSystem)
 {
 	m_server = p_server;
+	m_serverStates = p_states;
 }
 
 ModuleVisualEffectBufferSystem::~ModuleVisualEffectBufferSystem()
@@ -64,16 +66,19 @@ void ModuleVisualEffectBufferSystem::process()
 void ModuleVisualEffectBufferSystem::enqueueEffect( Entity* p_entity, 
 											OnHitScoreEffectPacket& p_packet )
 {
-	m_scoreFXqueue_entity.push(pair<Entity*,OnHitScoreEffectPacket>(p_entity,p_packet));
+	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
+		m_scoreFXqueue_entity.push(pair<Entity*,OnHitScoreEffectPacket>(p_entity,p_packet));
 }
 
 void ModuleVisualEffectBufferSystem::enqueueEffect(int p_networkOwnerId, 
 											OnHitScoreEffectPacket& p_packet)
 {
-	m_scoreFXqueue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
+	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
+		m_scoreFXqueue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
 }
 
 void ModuleVisualEffectBufferSystem::enqueueEffect( ModuleStatusEffectPacket& p_packet )
 {
-	m_statusFXqueue_netowner.push(p_packet);
+	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
+		m_statusFXqueue_netowner.push(p_packet);
 }
