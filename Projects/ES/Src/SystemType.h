@@ -24,6 +24,7 @@ public:	//Enums
 		ClientPacketHandlerSystem,
 		EnvironmentSystem,
 		ExtrapolationSystem,
+		ModuleStatusEffectSystem,
 		DebugMovementSystem,
 		MoveShipLightsSystem,
 		NetworkUpdateSystem,

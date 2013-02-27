@@ -704,6 +704,9 @@
     <ClInclude Include="ModuleStatusEffectPacket.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1193,6 +1196,9 @@
     </ClCompile>
     <ClCompile Include="ModuleStatusEffectPacket.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>Systems\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -87,6 +87,8 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "PlayerInfo.h"
+#include "ModuleStatusEffectPacket.h"
+#include "ModuleStatusEffectSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -777,15 +779,15 @@ void ClientPacketHandlerSystem::handleIngameState()
 		}
 		else if (packetType == (char)PacketType::ModuleStatusEffectPacket)
 		{
-			// number effect for score
-			auto scoreVis = static_cast<ScoreWorldVisualizerSystem*>(
-				m_world->getSystem(SystemType::ScoreWorldVisualizerSystem));
+			// get effect system for modules
+			auto moduleFxVis = static_cast<ModuleStatusEffectSystem*>(
+				m_world->getSystem(SystemType::ModuleStatusEffectSystem));
 
-			if (scoreVis)
+			if (moduleFxVis)
 			{
-				OnHitScoreEffectPacket scoreFx;
-				scoreFx.unpack(packet);
-				ScoreWorldVisualizerSystem::ScoreEffectCreationData inst;
+				ModuleStatusEffectPacket effectPacket;
+				effectPacket.unpack(packet);
+				ModuleStatusEffectSystem::ModuleStatusEffectCreationData inst;
 				inst.score = scoreFx.score;
 				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
 

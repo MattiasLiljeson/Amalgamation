@@ -30,7 +30,8 @@ public:
 		ON,
 		OFF
 	};
-	ModuleStatusEffectPacket(StatusType p_statusType, Mode p_mode);
+	ModuleStatusEffectPacket();
+	ModuleStatusEffectPacket(StatusType p_statusType, Mode p_mode, int p_networkId);
 	~ModuleStatusEffectPacket();
 	Packet pack();
 	void unpack( Packet& p_packet );
