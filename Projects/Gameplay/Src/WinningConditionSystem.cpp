@@ -108,6 +108,6 @@ void WinningConditionSystem::calculateWinners(PlayersWinLosePacket* p_packet)
 		} while (index+1 <= p_packet->activePlayers && p_packet->winner[index]);
 	}
 	else{
-		p_packet->winner[0] = true;
+		p_packet->winner[index] = true;
 	}
 }

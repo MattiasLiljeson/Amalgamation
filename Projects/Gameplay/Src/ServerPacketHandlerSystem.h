@@ -53,4 +53,6 @@ private:
 	int m_finishedLoadingPlayers;
 	int m_readyLoadingPlayers;
 	int m_resultsPlayers; //Stupid name for a stupid variable
+
+	const static int roundTime = 600;
 };
