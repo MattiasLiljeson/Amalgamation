@@ -109,9 +109,6 @@
     <Filter Include="Components\Modules\Events\Module Events %28Client%29">
       <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Temporary">
-      <UniqueIdentifier>{56651ff9-e547-4d67-b43c-7ba3a8385ce5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -707,9 +704,7 @@
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="TempModuleSpawner.h">
-      <Filter>Temporary</Filter>
-    </ClInclude>
+    <ClInclude Include="TempModuleSpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1200,8 +1195,6 @@
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="TempModuleSpawner.cpp">
-      <Filter>Temporary</Filter>
-    </ClCompile>
+    <ClCompile Include="TempModuleSpawner.cpp" />
   </ItemGroup>
 </Project>
