@@ -106,6 +106,7 @@ public:	//Enums
 		BoundingSphere,
 		BoundingBox,
 		SelectionMarker,
+		GravityMineEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 

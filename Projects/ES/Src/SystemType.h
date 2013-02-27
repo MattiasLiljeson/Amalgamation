@@ -109,6 +109,7 @@ public:	//Enums
 		AnomalyAcceleratorModuleControllerSystem,
 		AnomalyBombControllerSystem,
 		ServerDynamicPhysicalObjectsSystem,
+		GravityMineEffectSystem,
 		NUM_SYSTEM_TYPES
 	};
 
