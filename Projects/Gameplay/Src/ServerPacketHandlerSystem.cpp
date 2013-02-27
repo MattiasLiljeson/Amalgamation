@@ -27,7 +27,7 @@
 #include "UpdateClientStatsPacket.h"
 #include "HighlightSlotPacket.h"
 #include "SimpleEventPacket.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "CameraControlPacket.h"
 #include "ShipConnectionPointHighlights.h"
 #include "ShipManagerSystem.h"
@@ -46,6 +46,8 @@
 #include "ServerWelcomeSystem.h"
 #include "PlayerInfo.h"
 #include "WinningConditionSystem.h"
+#include "PlayerSystem.h"
+#include "NewlyConnectedPlayerPacket.h"
 
 
 
@@ -409,11 +411,39 @@ void ServerPacketHandlerSystem::handleLobby()
 		else if(packetType == (char)PacketType::PlayerInfo){
 			PlayerInfo playerInfo;
 			playerInfo.unpack(packet);
-			ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-				m_world->getSystem(SystemType::ServerWelcomeSystem));
-			
-			welcomeSystem->addPlayer(playerInfo.playerID, playerInfo.playerName);
-			welcomeSystem->sendBrodcastAllPlayers();
+
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+
+			vector<Entity*> connectedPlayers = playerSystem->getActiveEntities();
+
+			//Add the entity here to be used by other systems
+			Entity* newPlayer = m_world->createEntity();
+			PlayerComponent* newComp = new PlayerComponent();
+			if(playerInfo.playerName == "thebrightestmind"){
+				newComp->setAbsoluteScore(9001);
+			}
+			newComp->m_playerName = playerInfo.playerName;
+			newComp->m_playerID = connectedPlayers.size();
+			newPlayer->addComponent(newComp);
+			m_world->addEntity(newPlayer);
+
+			NewlyConnectedPlayerPacket connectedPlayer;
+			connectedPlayer.playerName = newComp->m_playerName;
+			connectedPlayer.playerID = newComp->m_playerID;
+			connectedPlayer.score = newComp->getScore();
+			m_server->broadcastPacket(connectedPlayer.pack());
+
+			for (unsigned int i = 0; i < connectedPlayers.size(); i++){
+				NewlyConnectedPlayerPacket alreadyConnectedPlayers;
+				PlayerComponent* playerComp;
+				playerComp = static_cast<PlayerComponent*>
+					(connectedPlayers[i]->getComponent(ComponentType::PlayerComponent));
+				alreadyConnectedPlayers.playerID = playerComp->m_playerID;
+				alreadyConnectedPlayers.playerName = playerComp->m_playerName;
+
+				m_server->broadcastPacket(alreadyConnectedPlayers.pack());
+			}			
 		}
 		else
 		{
@@ -441,10 +471,10 @@ void ServerPacketHandlerSystem::handleLoading()
 		}
 	}
 
-	ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-		m_world->getSystem(SystemType::ServerWelcomeSystem));
+	PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem));
 
-	if(m_readyLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+	if(m_readyLoadingPlayers == playerSys->getActiveEntities().size()){
 
 		/************************************************************************/
 		/* Send the already networkSynced objects located on the server to the	*/
@@ -543,10 +573,10 @@ void ServerPacketHandlerSystem::handleSentAllPackets()
 
 				m_finishedLoadingPlayers++;
 
-				ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-					m_world->getSystem(SystemType::ServerWelcomeSystem));
+				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+					m_world->getSystem(SystemType::PlayerSystem));
 
-				if(m_finishedLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+				if(m_finishedLoadingPlayers == playerSys->getActiveEntities().size()){
 					m_stateSystem->setQueuedState(ServerStates::INGAME);
 					statePacket.m_gameState = GameStates::NONE;
 					statePacket.m_serverState = ServerStates::INGAME;
@@ -582,10 +612,10 @@ void ServerPacketHandlerSystem::handleResult()
 
 				m_resultsPlayers++;
 
-				ServerWelcomeSystem* welcomeSystem  = static_cast<ServerWelcomeSystem*>(
-					m_world->getSystem(SystemType::ServerWelcomeSystem));
+				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+					m_world->getSystem(SystemType::PlayerSystem));
 
-				if(m_finishedLoadingPlayers == welcomeSystem->getTotalOfConnectedPlayers()){
+				if(m_finishedLoadingPlayers == playerSys->getActiveEntities().size()){
 					m_stateSystem->setQueuedState(ServerStates::LOBBY);
 					statePacket.m_serverState = ServerStates::LOBBY;
 					m_server->broadcastPacket(statePacket.pack());
@@ -640,12 +670,14 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	m_server->broadcastPacket(data.pack());
 }
 
-Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClientId, int p_playerID)
+Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClientId, 
+													   int p_playerID)
 {
 	/************************************************************************/
 	/* Creating the ship entity.											*/
 	/************************************************************************/
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory));
 
 	Entity* e = factory->entityFromRecipeOrFile( "ServerShip", "Assemblages/ServerShip.asd");
 
@@ -657,7 +689,7 @@ Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClien
 
 	e->addComponent(ComponentType::TAG_Ship, new Ship_TAG());
 
-	e->addComponent(ComponentType::PlayerScore, new PlayerScore());
+//	e->addComponent(ComponentType::PlayerComponent, new PlayerComponent());
 
 	return e;
 }

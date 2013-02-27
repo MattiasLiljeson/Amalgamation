@@ -106,6 +106,7 @@ public:	//Enums
 		LobbySystem,
 		ServerStateSystem,
 		ClientStateSystem,
+		PlayerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

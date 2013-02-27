@@ -131,6 +131,7 @@ using namespace std;
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
+#include <PlayerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -221,14 +222,19 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
 	/* Game State system.													*/
 	/************************************************************************/
 	m_world->setSystem(new ClientStateSystem(GameStates::MENU), true);
 
 	/************************************************************************/
-	/* TimerSystem used by other systems should be first.					*/
+	/* PlayerSystem allows for accessing connected players					*/
 	/************************************************************************/
-	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+	m_world->setSystem( new PlayerSystem(), true);
 
 	/************************************************************************/
 	/* Graphics																*/

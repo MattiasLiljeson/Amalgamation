@@ -1,5 +1,5 @@
 #include "WinningConditionSystem.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include <algorithm>
 #include <boost/bind/bind.hpp>
 #include "NetworkSynced.h"
@@ -9,7 +9,7 @@
 #include "ChangeStatePacket.h"
 
 WinningConditionSystem::WinningConditionSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::WinningConditionSystem, 2, ComponentType::PlayerScore,
+	: EntitySystem(SystemType::WinningConditionSystem, 2, ComponentType::PlayerComponent,
 	ComponentType::NetworkSynced)
 {
 	m_endTime = 0.0f;
@@ -53,8 +53,8 @@ vector< pair<float, Entity*> > WinningConditionSystem::createSortedScoreEntityMa
 	vector<Entity*> scoreEntities = getActiveEntities();
 	for(unsigned int i=0; i<scoreEntities.size(); i++)
 	{
-		PlayerScore* score = static_cast<PlayerScore*>(scoreEntities[i]->getComponent(
-			ComponentType::PlayerScore));
+		PlayerComponent* score = static_cast<PlayerComponent*>(scoreEntities[i]->getComponent(
+			ComponentType::PlayerComponent));
 		scoreEntityMapping.push_back(pair<float, Entity*>(score->getScore(),
 			scoreEntities[i]));
 	}

@@ -4,7 +4,7 @@
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "NetworkSynced.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
 #include "OnHitScoreEffectPacket.h"
@@ -114,7 +114,7 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 						int me = ModuleHelper::FindParentShipClientId(m_world,m,&myShip);
 						if (myShip)
 						{
-							PlayerScore* scoreComponent = static_cast<PlayerScore*>(myShip->getComponent(ComponentType::PlayerScore));
+							PlayerComponent* scoreComponent = static_cast<PlayerComponent*>(myShip->getComponent(ComponentType::PlayerComponent));
 							// score effect
 							if (moduleTransform && m)
 							{
@@ -126,7 +126,7 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 									Entity* perpShip = ships->findShip(perpId);
 									if (perpShip)
 									{
-										PlayerScore* perpScoreComponent = static_cast<PlayerScore*>(perpShip->getComponent(ComponentType::PlayerScore));
+										PlayerComponent* perpScoreComponent = static_cast<PlayerComponent*>(perpShip->getComponent(ComponentType::PlayerComponent));
 										float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
 										// add score and send effect
 										perpScoreComponent->addRelativeScore(score);

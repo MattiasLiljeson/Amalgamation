@@ -1,28 +1,26 @@
 #pragma once
-#include "Packetizer.h"
+#include <EntitySystem.h>
+#include "NetworkSynced.h"
+
+class NetworkSynced;
+class PlayerComponent;
+
 // =======================================================================================
-//                                      NewlyConnectedPlayerPacket
+//                                      PlayerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Handles all the players
 ///        
-/// # NewlyConnectedPlayerPacket
+/// # PlayerSystem
 /// Detailed description.....
-/// Created on: 21-2-2013 
+/// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class NewlyConnectedPlayerPacket: public Packetizer
+class PlayerSystem : public EntitySystem
 {
 public:
-	NewlyConnectedPlayerPacket();
-	Packet pack();
-	void unpack( Packet& p_packet );
-	
-public:
-	int		playerID;
-	string	playerName;
-	int		networkID;
-	float	score;
-	int		ping;
+	PlayerSystem();
+	~PlayerSystem();
+	PlayerComponent* getPlayerCompFromNetworkComp(NetworkSynced* p_netComponent);
 };

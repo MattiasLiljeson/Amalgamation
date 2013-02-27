@@ -15,7 +15,7 @@
 #include "ParticleUpdatePacket.h"
 #include "UpdateClientStatsPacket.h"
 #include "NetSyncedPlayerScoreTrackerSystem.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "ServerClientInfoSystem.h"
 #include "ClientInfo.h"
 #include "ServerStateSystem.h"
@@ -80,8 +80,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 					for (int j = 0; j < netSyncedScoreEntities.size(); j++)
 					{
-						PlayerScore* playerScore = static_cast<PlayerScore*>(
-							netSyncedScoreEntities[j]->getComponent(ComponentType::PlayerScore));
+						PlayerComponent* playerScore = static_cast<PlayerComponent*>(
+							netSyncedScoreEntities[j]->getComponent(ComponentType::PlayerComponent));
 						NetworkSynced* netSync = static_cast<NetworkSynced*>(
 							netSyncedScoreEntities[j]->getComponent(ComponentType::NetworkSynced));
 

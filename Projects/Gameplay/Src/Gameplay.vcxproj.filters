@@ -171,9 +171,6 @@
     <ClInclude Include="HudElement.h">
       <Filter>Components\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerScore.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
@@ -696,6 +693,12 @@
     <ClInclude Include="PlayerInfo.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -745,9 +748,6 @@
     </ClCompile>
     <ClCompile Include="HudElement.cpp">
       <Filter>Components\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScore.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="DisplayPlayerScoreSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
@@ -1177,6 +1177,12 @@
     <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

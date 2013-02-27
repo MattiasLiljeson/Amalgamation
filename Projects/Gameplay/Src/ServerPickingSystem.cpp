@@ -17,9 +17,12 @@
 #include "SlotParticleEffectPacket.h"
 #include "EditSphereUpdatePacket.h"
 #include "ScoreRuleHelper.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "SelectionMarkerUpdatePacket.h"
 #include "MeshOffsetTransform.h"
+#include "PlayerSystem.h"
+#include "TcpServer.h"
+#include "PlayerComponent.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -60,14 +63,15 @@ ServerPickingSystem::ServerPickingSystem(TcpServer* p_server,
 	mrota = 0;
 	m_effectbuffer = p_effectBuffer;
 }
+ServerPickingSystem::~ServerPickingSystem(){
 
-
-ServerPickingSystem::~ServerPickingSystem()
-{
 }
+
 
 void ServerPickingSystem::initialize()
 {
+	m_playerSystem = static_cast<PlayerSystem*>
+		(m_world->getSystem(SystemType::PlayerSystem));
 }
 
 void ServerPickingSystem::processEntities(const vector<Entity*>& p_entities)
@@ -168,7 +172,9 @@ void ServerPickingSystem::setReleased(int p_index)
 			Entity* parentShip = NULL;
 			ShipModule* shipModule = NULL;
 			Transform* moduleTransform = NULL;
-			PlayerScore* scoreComponent = NULL;
+
+			NetworkSynced* networkComp = NULL;
+			PlayerComponent* scoreComponent = NULL;
 
 			// Get data for current module
 			if (m_pickComponents[i].getLatestPick()>-1)
@@ -186,8 +192,12 @@ void ServerPickingSystem::setReleased(int p_index)
 					if (shipModule->m_lastShipEntityWhenAttached!=-1)
 						parentShip = m_world->getEntity(shipModule->m_lastShipEntityWhenAttached);
 
-					if (parentShip)
-						scoreComponent = static_cast<PlayerScore*>(parentShip->getComponent(ComponentType::PlayerScore));
+					if (parentShip){
+						networkComp = static_cast<NetworkSynced*>
+						(parentShip->getComponent(ComponentType::NetworkSynced));
+
+						scoreComponent = m_playerSystem->getPlayerCompFromNetworkComp(networkComp);
+					}
 
 					// also store the current transform
 					auto transformComp = shipModuleEntity->getComponent(ComponentType::Transform);
@@ -579,9 +589,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
 
-		PlayerScore* scoreComponent = static_cast<PlayerScore*>(ship->getComponent(ComponentType::PlayerScore));
-
-
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);
 
@@ -603,6 +610,11 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		{
 			float score = ScoreRuleHelper::scoreFromAttachModule(shipModule->m_value, 
 															   shipModule->isUnused());
+
+			NetworkSynced* networkComp = static_cast<NetworkSynced*>(ship->getComponent(
+				ComponentType::NetworkSynced));
+			PlayerComponent* scoreComponent = m_playerSystem->getPlayerCompFromNetworkComp(networkComp);
+
 			scoreComponent->addRelativeScore(score);
 			setScoreEffect( ship, moduleTransform, (int)score);
 		}
@@ -913,6 +925,9 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 			ComponentType::ShipModule));
 		PhysicsBody* moduleBody = static_cast<PhysicsBody*>(module->getComponent(
 			ComponentType::PhysicsBody));
+		//NetworkSynced* networkComp = static_cast<NetworkSynced*>
+		//	(module->getComponent(ComponentType::NetworkSynced));
+		//PlayerComponent* scoreComponent = m_playerSystem->getPlayerCompFromNetworkComp(networkComp);
 
 		//Find module connection point
 		ConnectionPointSet* conPoints = static_cast<ConnectionPointSet*>(module->getComponent(ComponentType::ConnectionPointSet));
@@ -953,9 +968,6 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(
 			m_world->getComponentManager()->getComponent(target,
 			ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
-
-		PlayerScore* scoreComponent = static_cast<PlayerScore*>(ship->getComponent(ComponentType::PlayerScore));
-
 
 		CompoundBody* comp = (CompoundBody*)physX->getController()->getBody(shipBody->m_id);
 		RigidBody* r = (RigidBody*)physX->getController()->getBody(moduleBody->m_id);

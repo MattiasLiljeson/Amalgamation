@@ -23,7 +23,7 @@
 #include "ShipFlyController.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
 #include "StaticProp.h"

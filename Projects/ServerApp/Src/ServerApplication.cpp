@@ -51,6 +51,7 @@
 #include <EnumGameStates.h>
 #include <ServerGameState.h>
 #include <ServerStateSystem.h>
+#include <PlayerSystem.h>
 
 
 namespace Srv
@@ -217,6 +218,8 @@ namespace Srv
 		// Important for any module-damaging logic to happen before this.
 		m_world->setSystem(new ShipModulesControllerSystem(m_server,onhiteffect), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
+
+		m_world->setSystem(new PlayerSystem(), true);
 
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);

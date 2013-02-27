@@ -35,7 +35,7 @@
 #include "PickComponent.h"
 #include "PingPacket.h"
 #include "PlayerCameraController.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PongPacket.h"
 #include "PositionalSoundSource.h"
 #include "RenderInfo.h"
@@ -493,7 +493,7 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
-			int idx = p_data.particleSystemIdx;
+			unsigned int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
@@ -920,6 +920,18 @@ void ClientPacketHandlerSystem::handleLobby()
 		{
 			NewlyConnectedPlayerPacket newlyConnected;
 			newlyConnected.unpack(packet);
+
+			//Add entities here and utilize the player component 
+			Entity* newPlayer = m_world->createEntity();
+			PlayerComponent* newPlayerComp = new PlayerComponent();
+			newPlayerComp->m_networkID = newlyConnected.networkID;
+			newPlayerComp->m_playerID = newlyConnected.playerID;
+			newPlayerComp->m_ping = newlyConnected.ping;
+			newPlayerComp->m_playerName = newlyConnected.playerName;
+			newPlayerComp->setAbsoluteScore(newlyConnected.score);
+			newPlayer->addComponent(newPlayerComp);
+			m_world->addEntity(newPlayer);
+			
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				addNewPlayer(newlyConnected);
 		}
