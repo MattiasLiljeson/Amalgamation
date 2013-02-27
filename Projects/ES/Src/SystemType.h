@@ -106,6 +106,7 @@ public:	//Enums
 		LobbySystem,
 		ServerStateSystem,
 		ClientStateSystem,
+		SpawnPointSystem,
 		AnomalyAcceleratorModuleControllerSystem,
 		EmpRocketLancherModuleSystem,
 		InterpolationSystem2,
@@ -114,6 +115,7 @@ public:	//Enums
 		ServerDynamicPhysicalObjectsSystem,
 		GravityMineEffectSystem,
 		ShieldPlaterSystem,
+		TempModuleSpawner,
 		NUM_SYSTEM_TYPES
 	};
 

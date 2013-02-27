@@ -1,3 +1,5 @@
+#define FORCE_VS_DBG_OUTPUT
+
 #include "ServerPacketHandlerSystem.h"
 #include "ServerPickingSystem.h"
 #include "ShipModulesControllerSystem.h"
@@ -12,6 +14,7 @@
 #include "SpeedBoosterModule.h"
 #include "LookAtEntity.h"
 #include "GameplayTags.h"
+#include "BodyInitData.h"
 
 // NetComm
 #include <TcpServer.h>
@@ -48,7 +51,8 @@
 #include "WinningConditionSystem.h"
 #include "PlayerSystem.h"
 #include "NewlyConnectedPlayerPacket.h"
-
+#include "LevelHandlerSystem.h"
+#include "SpawnPointSystem.h"
 
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
@@ -636,6 +640,28 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	m_world->addEntity(newShip);
 	Transform* transformComp = static_cast<Transform*>(newShip->getComponent(
 		ComponentType::Transform));
+
+	//Find random spawn points for the player.
+	//Added by Alex
+	auto spawnPointSys = static_cast<SpawnPointSystem*>(
+		m_world->getSystem(SystemType::SpawnPointSystem));
+	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
+	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
+	{
+		// Update the ship position
+		AglVector3 scale = transformComp->getScale();
+		transformComp->setMatrix(shipSpawnPoint);
+		transformComp->setScale(scale);
+		// Update the body init data
+		auto bodyInitData = static_cast<BodyInitData*>(newShip->getComponent(ComponentType::BodyInitData));
+		bodyInitData->m_position	= transformComp->getTranslation();
+		bodyInitData->m_orientation	= transformComp->getRotation();
+		bodyInitData->m_scale		= transformComp->getScale();
+	}
+	else
+	{
+		DEBUGPRINT(("Warning: No spawnpoint was found for the ship. Fallback of the default position is used.\n"));
+	}
 
 	// also create a camera
 	Entity* playerCam = m_world->createEntity();

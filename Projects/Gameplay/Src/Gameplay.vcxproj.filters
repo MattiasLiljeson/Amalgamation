@@ -40,9 +40,6 @@
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Level Gen">
-      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\GUI">
       <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
     </Filter>
@@ -109,6 +106,9 @@
     <Filter Include="Components\Modules\Events\Module Events %28Client%29">
       <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Level">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -160,7 +160,7 @@
       <Filter>Systems\Physics</Filter>
     </ClInclude>
     <ClInclude Include="LevelGenSystem.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="MenuSystem.h">
       <Filter>Systems\GUI</Filter>
@@ -181,7 +181,7 @@
       <Filter>Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="LevelPiece.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoosterModule.h">
       <Filter>Components\Modules</Filter>
@@ -582,7 +582,7 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
@@ -624,7 +624,7 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="LevelInfoLoader.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="AxisRotate.h">
       <Filter>Components</Filter>
@@ -663,7 +663,7 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="LevelPieceFileData.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="DestroyOnParticlesDeathSystem.h">
       <Filter>Systems\GFX</Filter>
@@ -740,8 +740,9 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="ShieldPlaterSystem.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="TempModuleSpawner.h" />
+    <ClInclude Include="SpawnPointSystem.h">
+      <Filter>Systems\Level</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -800,10 +801,10 @@
       <Filter>Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="LevelGenSystem.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="LevelPiece.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="ShipModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -1123,7 +1124,7 @@
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="LevelPieceRoot.cpp">
       <Filter>Components</Filter>
@@ -1159,7 +1160,7 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="LevelInfoLoader.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="AxisRotationSystem.cpp">
       <Filter>Systems</Filter>
@@ -1263,6 +1264,9 @@
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlaterSystem.cpp" />
+    <ClCompile Include="TempModuleSpawner.cpp" />
+    <ClCompile Include="SpawnPointSystem.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

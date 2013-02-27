@@ -59,8 +59,11 @@ const Transform* LevelPiece::getChild( int p_inSlot ) const
 
 void LevelPiece::setChild( int p_inSlot, Transform* p_transform )
 {
-	m_children[p_inSlot]			= p_transform;
-	m_childSlotsOccupied[p_inSlot]	= true;
+	m_children[p_inSlot] = p_transform;
+	if (p_transform)
+		m_childSlotsOccupied[p_inSlot] = true;
+	else
+		m_childSlotsOccupied[p_inSlot] = false;
 }
 
 bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
@@ -188,4 +191,14 @@ int LevelPiece::getMaxChildCount() const
 bool LevelPiece::isChildSlotOccupied( int p_inSlot ) const
 {
 	return m_childSlotsOccupied[p_inSlot];
+}
+
+int LevelPiece::getPieceId() const
+{
+	return m_pieceId;
+}
+
+void LevelPiece::setPieceId( int p_id )
+{
+	m_pieceId = p_id;
 }

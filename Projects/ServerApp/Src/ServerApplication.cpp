@@ -36,6 +36,8 @@
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
 #include <OnHitEffectBufferSystem.h>
+#include <SpawnPointSystem.h>
+#include <TempModuleSpawner.h>
 #include <AnomalyBombControllerSystem.h>
 #include <ServerDynamicPhysicalObjectsSystem.h>
 
@@ -241,6 +243,9 @@ namespace Srv
 
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
+		m_world->setSystem(new SpawnPointSystem(), true);
+		m_world->setSystem(new TempModuleSpawner(), true);
+
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
 
@@ -257,9 +262,6 @@ namespace Srv
 		ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
 		delete allocator; // NOTE: (Johan) Why u keep deleting it then?
 
-		// TEMP: (Alex) This is only to test and make sure the level gen works.
-		// This should be ran when starting a game session later.
-		// levelGen->run();
 	}
 
 	void ServerApplication::initEntities()

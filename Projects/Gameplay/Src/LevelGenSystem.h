@@ -37,8 +37,10 @@ public:
 	void initialize();
 
 	void clearGeneratedData();
+	int getGeneratedPiecesCount() const;
 
-	void run(); // Obsolete!
+	void run();
+
 	void createLevelEntities();
 	const AglVector3& getWorldMin() const;
 	const AglVector3& getWorldMax() const;
@@ -78,7 +80,11 @@ private:
 
 	vector<LevelPiece*> m_generatedPieces;
 
-	TcpServer*				m_server;
+	TcpServer* m_server;
+	bool m_readyToRun;
+	bool m_hasGeneratedLevel;
+
+	AglMatrix m_startTransform;
 
 	AglVector3 m_worldMin;
 	AglVector3 m_worldMax;
