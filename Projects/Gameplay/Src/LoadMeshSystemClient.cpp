@@ -137,7 +137,7 @@ void LoadMeshSystemClient::setUpLights( Entity* p_entity, ModelResource* p_model
 			LightCreationData* source = &(*lights)[i];
 			Light light;
 			TransformComponents transformHelper;			
-			ColourSpaceConverter::applyGammaCorrection( source->diffuse ); // gamma correct the colour
+			// ColourSpaceConverter::applyGammaCorrection( source->diffuse ); // gamma correct the colour
 			transformHelper.scale = AglVector3(source->range,source->range,source->range);
 			transformHelper.rotation = source->transform.GetRotation();
 			transformHelper.translation = source->transform.GetTranslation();
