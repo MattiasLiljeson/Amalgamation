@@ -34,6 +34,7 @@
 #include "SpeedBuffer.h"
 #include "DestroyOnParticlesDeath.h"
 #include "SkeletalAnimation.h"
+#include "AnomalyAcceleratorModule.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -68,4 +69,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<SpeedBuffer>();
 	handle<DestroyOnParticlesDeath>();
 	handle<SkeletalAnimation>();
+	handle<AnomalyAcceleratorModule>();
 }
