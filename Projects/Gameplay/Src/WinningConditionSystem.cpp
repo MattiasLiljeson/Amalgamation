@@ -5,6 +5,8 @@
 #include "NetworkSynced.h"
 #include "PlayersWinLosePacket.h"
 #include <TcpServer.h>
+#include "ServerStateSystem.h"
+#include "ChangeStatePacket.h"
 
 WinningConditionSystem::WinningConditionSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::WinningConditionSystem, 2, ComponentType::PlayerScore,
@@ -21,24 +23,28 @@ WinningConditionSystem::~WinningConditionSystem()
 
 void WinningConditionSystem::process()
 {
-	float dt = m_world->getDelta();
-	m_elapsedGameSessionTime += dt;
-	if(m_elapsedGameSessionTime >= m_endTime)
-	{
-		m_endTime = 0.0f;
+	if(m_stateSystem->getStateDelta(ServerStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME){
 		m_elapsedGameSessionTime = 0.0f;
-		m_enabled = false; // Disable this system.
-		vector< pair<float, Entity*> > sorted =
-			createSortedScoreEntityMapping();
-		signalEndSession(sorted);
 	}
-}
 
-void WinningConditionSystem::startGameSession(float p_endTime)
-{
-	m_endTime = p_endTime;
-	m_elapsedGameSessionTime = 0.0f;
-	m_enabled = true; // Enable this system.
+	if(m_stateSystem->getCurrentState() == ServerStates::INGAME){
+		float dt = m_world->getDelta();
+		m_elapsedGameSessionTime += dt;
+		if(m_elapsedGameSessionTime >= m_endTime)
+		{
+			m_stateSystem->setQueuedState(ServerStates::RESULTS);
+			ChangeStatePacket changeState;
+			changeState.m_serverState = ServerStates::RESULTS;
+			m_server->broadcastPacket(changeState.pack());
+			
+			m_endTime = 0.0f;
+			m_elapsedGameSessionTime = 0.0f;
+			m_enabled = false; // Disable this system.
+			vector< pair<float, Entity*> > sorted =
+				createSortedScoreEntityMapping();
+			signalEndSession(sorted);
+		}
+	}
 }
 
 vector< pair<float, Entity*> > WinningConditionSystem::createSortedScoreEntityMapping()
@@ -77,4 +83,15 @@ void WinningConditionSystem::signalEndSession(
 		winLosePacket.winner[0] = true; // Set first place to winner.
 	}
 	m_server->broadcastPacket(winLosePacket.pack());
+}
+
+void WinningConditionSystem::setEndTime( float p_endTime )
+{
+	m_endTime = p_endTime;
+}
+
+void WinningConditionSystem::initialize()
+{
+	m_stateSystem = static_cast<ServerStateSystem*>(
+		m_world->getSystem(SystemType::ServerStateSystem));
 }

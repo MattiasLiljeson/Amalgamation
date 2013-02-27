@@ -119,10 +119,6 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
 	welcomePacket.playerID = m_connectedPlayers.size();
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
-
-	
-
-
 }
 
 void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )

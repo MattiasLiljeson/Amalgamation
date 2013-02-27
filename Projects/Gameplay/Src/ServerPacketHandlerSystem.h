@@ -44,6 +44,7 @@ private:
 	void handleLobby();
 	void handleLoading();
 	void handleSentAllPackets();
+	void handleResult();
 private:
 	ServerStateSystem* m_stateSystem;
 	TcpServer*		m_server;
@@ -51,4 +52,5 @@ private:
 	map<int,ClientInfo> m_clients; ///< The key is the clientID
 	int m_finishedLoadingPlayers;
 	int m_readyLoadingPlayers;
+	int m_resultsPlayers; //Stupid name for a stupid variable
 };

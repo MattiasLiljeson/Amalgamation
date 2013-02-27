@@ -39,7 +39,7 @@ void ServerStateSystem::process()
 		case ServerStates::LOBBY:
 			DEBUGPRINT(("SERVER: Changed to lobby state!\n"));
 			break;
-		case ServerStates::RESULT:
+		case ServerStates::RESULTS:
 			DEBUGPRINT(("SERVER: Changed to result state!\n"));
 			break;
 		case ServerStates::SENTALLPACKETS:

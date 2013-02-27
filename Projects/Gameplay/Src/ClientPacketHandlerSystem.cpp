@@ -149,6 +149,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			handleFinishedLoading();
 			break;
 		}
+	case GameStates::RESULTS:
+		{
+			handleResults();
+			break;
+		}
 	default:
 		break;
 	}
@@ -877,6 +882,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 				(m_world->getSystem(SystemType::SelectionMarkerSystem));
 			sys->setMarkerTarget(entity->getIndex(), update.transform);
 		}
+		else if (packetType == (char)PacketType::ChangeStatePacket){
+			ChangeStatePacket statePacket;
+			statePacket.unpack(packet);
+
+			if(statePacket.m_serverState == ServerStates::RESULTS ){
+				m_gameState->setQueuedState(GameStates::RESULTS);
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -994,5 +1007,21 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 		{
 			//printPacketTypeNotHandled("Finished Loading", (int)packetType);
 		}
+	}
+}
+
+void ClientPacketHandlerSystem::handleResults()
+{
+	if(m_gameState->getStateDelta(GameStates::RESULTS) ==
+		EnumGameDelta::ENTEREDTHISFRAME)
+	{
+		//Notify the server that you have now successfully changed to the result state
+		ChangeStatePacket changeState;
+		changeState.m_gameState = GameStates::RESULTS;
+		m_tcpClient->sendPacket(changeState.pack());
+	}
+	else
+	{
+		m_gameState->setQueuedState(GameStates::MENU);
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 class TcpServer;
+class ServerStateSystem;
 // =======================================================================================
 //	WinningConditionSystem
 // =======================================================================================
@@ -19,12 +20,8 @@ public:
 	WinningConditionSystem(TcpServer* p_server);
 	~WinningConditionSystem();
 	void process();
-	///-----------------------------------------------------------------------------------
-	/// Enables this system and starts a timer.
-	/// \param p_endTime Decides how long the session is, stated in seconds.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void startGameSession(float p_endTime);
+
+	void setEndTime(float p_endTime);
 
 private:
 	vector< pair<float, Entity*> > createSortedScoreEntityMapping();
@@ -36,9 +33,12 @@ private:
 	///-----------------------------------------------------------------------------------
 	void signalEndSession(vector< pair<float, Entity*> > p_scoreComponentMapping);
 
+	virtual void initialize();
+
+
 private:
 	float m_endTime;
 	float m_elapsedGameSessionTime;
 	TcpServer* m_server;
-
+	ServerStateSystem* m_stateSystem;
 };
