@@ -117,8 +117,19 @@ void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_mod
 
 		if (index >= 0)
 		{
-			SkeletalAnimation* anim = new SkeletalAnimation(0, p_modelResource->scene, p_modelResource->meshHeader.transform);
-			p_entity->addComponent(anim);
+			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(p_entity->getComponent(ComponentType::SkeletalAnimation));
+			if (!anim)
+			{
+				anim = new SkeletalAnimation(0, p_modelResource->scene, p_modelResource->meshHeader.transform);
+				p_entity->addComponent(anim);
+				p_entity->applyComponentChanges();
+			}
+			else
+			{
+				anim->m_time = 0;
+				anim->m_scene = p_modelResource->scene;
+				anim->m_offset = p_modelResource->meshHeader.transform;
+			}
 		}
 	}
 }

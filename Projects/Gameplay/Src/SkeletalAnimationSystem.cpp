@@ -18,16 +18,42 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(p_entities[i]->getComponent(ComponentType::SkeletalAnimation));
-		if (true)//anim->m_isPlaying)
-			anim->m_time += dt*anim->m_playSpeed;
-
-		float maxTime = anim->m_scene->getAnimation(0)->getMaxTime();
-		float minTime = anim->m_scene->getAnimation(0)->getMinTime();
-		while (anim->m_time > maxTime)
+		if (anim->m_currentTake >= 0)
 		{
-			anim->m_time -= maxTime-minTime;
+			AnimationTake take = anim->m_takes[anim->m_currentTake];
+
+			if (take.endFrame == take.startFrame)
+				anim->m_time = take.startFrame * anim->m_fps;
+			else
+			{
+				anim->m_time += dt;
+
+				float maxTime = take.endFrame / anim->m_fps;//anim->m_scene->getAnimation(0)->getMaxTime();
+				float minTime = take.startFrame / anim->m_fps;//anim->m_scene->getAnimation(0)->getMinTime();
+
+				if (anim->m_time > maxTime)
+				{
+					if (anim->queuedTakes.size() > 0)
+					{
+						anim->m_currentTake = anim->queuedTakes.front();
+						anim->queuedTakes.pop_front();
+						anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
+					}
+					else
+					{
+						while (anim->m_time > maxTime)
+						{
+							anim->m_time -= maxTime-minTime;
+						}
+						if (anim->m_time < minTime)
+							anim->m_time = minTime;
+					}
+				}
+			}
 		}
-		if (anim->m_time < minTime)
-			anim->m_time = minTime;
+		else
+		{
+			anim->m_time = 0;
+		}
 	}
 }

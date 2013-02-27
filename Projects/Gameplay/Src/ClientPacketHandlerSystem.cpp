@@ -811,7 +811,21 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
 			anim->m_isPlaying = data.shouldPlay;
-			anim->m_playSpeed = data.playSpeed;
+
+			int take = -1;
+			for (unsigned int i = 0; i < anim->m_takes.size(); i++)
+			{
+				if (data.take == anim->m_takes[i].name)
+					take = i;
+			}
+			if (data.shouldQueue)
+				anim->queuedTakes.push_back(take);
+			else
+			{
+				anim->m_currentTake = take;
+				anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
+			}
+
 		}
 		else if (packetType == (char)PacketType::EditSphereUpdatePacket)
 		{
