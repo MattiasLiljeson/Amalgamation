@@ -89,8 +89,8 @@ void LevelGenSystem::preloadLevelGenRecipeEntity(const string& p_filePath)
 
 void LevelGenSystem::inserted( Entity* p_entity )
 {
-	m_levelInfo = static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
-	// TODO: parse levelInfo and generate!
+	m_levelInfo			= static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
+	m_startTransform	= static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform))->getMatrix();
 
 	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
 		m_world->getSystem(SystemType::LoadMeshSystem));
@@ -180,10 +180,9 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 		quart = AglQuaternion::identity();
 
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(20, -20, 10), 
-										quart, 
-										AglVector3::one());
-	
+	Transform* transform = new Transform(m_startTransform);
+	transform->setRotation(quart);
+
 	// Create the level piece to use later
 	int id = m_levelInfo->getStartFileData()->id;
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
@@ -236,7 +235,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		auto pieceRoot = static_cast<LevelPieceRoot*>(
 			entity->getComponent(ComponentType::LevelPieceRoot));
 
-		pieceRoot->pieceId = p_piece->getTypeId();
+		pieceRoot->pieceId = p_piece->getPieceId();
 	}
 
 	return entity;
@@ -313,6 +312,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				updateWorldMinMax(obb);
 
 				out_pieces.push_back(piece);
+				piece->setPieceId(m_generatedPieces.size());
 				m_generatedPieces.push_back(piece);
 			}
 		}

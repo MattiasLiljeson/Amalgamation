@@ -15,6 +15,21 @@ enum SpawnPointState
 	SPAWNPOINTSTATE_OCCUPIED,
 };
 
+struct ModuleOrShipSpawnPoint
+{
+	ModuleOrShipSpawnPoint(const AglMatrix& p_transform)
+	{
+		transform	= p_transform;
+		state		= SPAWNPOINTSTATE_FREE;
+	}
+
+	AglMatrix		transform;
+	SpawnPointState state;
+};
+
+typedef ModuleOrShipSpawnPoint ShipSpawnPoint;
+typedef ModuleOrShipSpawnPoint ModuleSpawnPoint;
+
 // =======================================================================================
 //                                      SpawnPointSystem
 // =======================================================================================
@@ -49,21 +64,24 @@ public:
 
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
-	
+	bool isSpawnPointsReady() const;
+
+	AglMatrix invalidSpawnPoint() const;
 private:
 	pair<int, int> getRandomFreeSpawnPoint(
-		const vector<vector<pair<AglMatrix, SpawnPointState>>>& p_fromSpawnPoints) const;
+		const vector<vector<ModuleOrShipSpawnPoint>>& p_fromSpawnPoints) const;
 	void setSpawnPointState(
-		vector<vector<pair<AglMatrix, SpawnPointState>>>& p_inSpawnPoints,
+		vector<vector<ModuleOrShipSpawnPoint>>& p_inSpawnPoints,
 		int p_inChamber, int p_inPoint, SpawnPointState p_newState);
 
 	// Stores ship spawn points and module spawn points. The bool defines whether or not
 	// the spawn point is free (free = true, occupied = false)
-	vector<vector<pair<AglMatrix, SpawnPointState>>> m_shipSpawnPoints;
-	vector<vector<pair<AglMatrix, SpawnPointState>>> m_moduleSpawnPoints;
+	vector<vector<ShipSpawnPoint>> m_shipSpawnPoints;
+	vector<vector<ModuleSpawnPoint>> m_moduleSpawnPoints;
 
 	vector<int> freeSlots;
 
 	EntityFactory*		m_entityFactory;
 	LevelHandlerSystem* m_levelHandler;
+
 };

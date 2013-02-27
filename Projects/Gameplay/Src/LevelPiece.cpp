@@ -192,3 +192,13 @@ bool LevelPiece::isChildSlotOccupied( int p_inSlot ) const
 {
 	return m_childSlotsOccupied[p_inSlot];
 }
+
+int LevelPiece::getPieceId() const
+{
+	return m_pieceId;
+}
+
+void LevelPiece::setPieceId( int p_id )
+{
+	m_pieceId = p_id;
+}

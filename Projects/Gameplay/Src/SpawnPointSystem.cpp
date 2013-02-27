@@ -5,14 +5,16 @@
 #include "EntityFactory.h"
 #include "LevelHandlerSystem.h"
 #include "LevelPieceRoot.h"
+#include "Transform.h"
 
+#include <ToString.h>
 #include <DebugUtil.h>
 
 SpawnPointSystem::SpawnPointSystem()
-	: EntitySystem(SystemType::SpawnPointSystem, 2, ComponentType::SpawnPointSet, 
-													ComponentType::LevelPieceRoot)
+	: EntitySystem(SystemType::SpawnPointSystem, 3, ComponentType::SpawnPointSet, 
+													ComponentType::LevelPieceRoot,
+													ComponentType::Transform)
 {
-
 }
 
 SpawnPointSystem::~SpawnPointSystem()
@@ -58,8 +60,12 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 	int pieceId = pieceRoot->pieceId;
 	if (pieceId >= 0)
 	{
-		vector<pair<AglMatrix, SpawnPointState>> newShipSpawnPoints;
-		vector<pair<AglMatrix, SpawnPointState>> newModuleSpawnPoints;
+		vector<ShipSpawnPoint> newShipSpawnPoints;
+		vector<ModuleSpawnPoint> newModuleSpawnPoints;
+
+		DEBUGPRINT(( (toString("Starting to read spawnpoint of chamber ") + toString(pieceId) + " " + p_entity->getName() + "\n").c_str()) );
+		auto rootTransform = static_cast<Transform*>(
+			p_entity->getComponent(ComponentType::Transform));
 
 		// Resize the spawnpoint vectors to make this chamber fit.
 		if (pieceRoot->pieceId >= m_shipSpawnPoints.size())
@@ -71,14 +77,25 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 		for (unsigned int i = 0; i < spawnPointSet->m_spawnPoints.size(); i++)
 		{
 			SpawnPoint spawnPoint = spawnPointSet->m_spawnPoints[i];
+			// Transform spawnPoint to world space.
+			spawnPoint.spTransform *= rootTransform->getMatrix();
 
 			if (spawnPoint.spAction == "ship")
 			{
-				newShipSpawnPoints.push_back(make_pair(spawnPoint.spTransform, SPAWNPOINTSTATE_FREE));
+				AglVector3 posV = spawnPoint.spTransform.GetTranslation();
+				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
+
+				DEBUGPRINT(( (toString("Ship spawnpoint found at position ") + posAsString).c_str()) );
+				newShipSpawnPoints.push_back(ShipSpawnPoint(spawnPoint.spTransform));
 			}
 			else if (spawnPoint.spAction == "module")
 			{
-				newModuleSpawnPoints.push_back(make_pair(spawnPoint.spTransform, SPAWNPOINTSTATE_FREE));
+				AglVector3 posV = spawnPoint.spTransform.GetTranslation();
+				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
+
+				DEBUGPRINT(( (toString("Module spawnpoint found at position ") + posAsString).c_str()) );
+
+				newModuleSpawnPoints.push_back(ModuleSpawnPoint(spawnPoint.spTransform));
 			}
 		}
 		m_shipSpawnPoints[pieceId]		= newShipSpawnPoints;
@@ -87,6 +104,8 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 		// Remove the spawn point set, so that it cannot be used by other systems
 		p_entity->removeComponent(ComponentType::SpawnPointSet);
 		p_entity->applyComponentChanges();
+
+		DEBUGPRINT(("Finished reading spawnpoints from chamber.\n"));
 	}
 	else
 	{
@@ -102,33 +121,37 @@ void SpawnPointSystem::processEntities( const vector<Entity*>& p_entities )
 const AglMatrix& SpawnPointSystem::getRandomFreeShipSpawnPoint()
 {
 	auto selectId = getRandomFreeSpawnPoint(m_shipSpawnPoints);
-	setSpawnPointState(m_shipSpawnPoints, selectId.first, selectId.second, SPAWNPOINTSTATE_OCCUPIED);
-	
+
 	if (selectId.first >= 0 && selectId.second >= 0)
-		return m_shipSpawnPoints[selectId.first][selectId.second].first;
+	{
+		setSpawnPointState(m_shipSpawnPoints, selectId.first, selectId.second, SPAWNPOINTSTATE_OCCUPIED);
+		return m_shipSpawnPoints[selectId.first][selectId.second].transform;
+	}
 	else
 	{
-		DEBUGPRINT(("Warning: Found no available ship spawnpoint. Identity matrix is returned."));
-		return AglMatrix::identityMatrix();
+		//DEBUGPRINT(("Warning: Found no available ship spawnpoint. An invalidSpawnPoint is returned.\n"));
+		return invalidSpawnPoint();
 	}
 }
 
 const AglMatrix& SpawnPointSystem::getRandomFreeModuleSpawnPoint()
 {
 	auto selectId = getRandomFreeSpawnPoint(m_moduleSpawnPoints);
-	setSpawnPointState(m_moduleSpawnPoints, selectId.first, selectId.second, SPAWNPOINTSTATE_OCCUPIED);
-	
+
 	if (selectId.first >= 0 && selectId.second >= 0)
-		return m_moduleSpawnPoints[selectId.first][selectId.second].first;
+	{
+		setSpawnPointState(m_moduleSpawnPoints, selectId.first, selectId.second, SPAWNPOINTSTATE_OCCUPIED);
+		return m_moduleSpawnPoints[selectId.first][selectId.second].transform;
+	}
 	else
 	{
-		DEBUGPRINT(("Warning: Found no available module spawnpoint. Identity matrix is returned."));
-		return AglMatrix::identityMatrix();
+		//DEBUGPRINT(("Warning: Found no available module spawnpoint. An invalidSpawnPoint is returned.\n"));
+		return invalidSpawnPoint();
 	}
 }
 
 pair<int, int> SpawnPointSystem::getRandomFreeSpawnPoint( 
-	const vector<vector<pair<AglMatrix, SpawnPointState>>>& p_fromSpawnPoints ) const
+	const vector<vector<ModuleOrShipSpawnPoint>>& p_fromSpawnPoints ) const
 {
 	vector<pair<int, int>> selection;
 
@@ -136,7 +159,7 @@ pair<int, int> SpawnPointSystem::getRandomFreeSpawnPoint(
 	{
 		for (int point = 0; point < p_fromSpawnPoints[chamber].size(); point++)
 		{
-			if (p_fromSpawnPoints[chamber][point].second == SPAWNPOINTSTATE_FREE)
+			if (p_fromSpawnPoints[chamber][point].state == SPAWNPOINTSTATE_FREE)
 			{
 				selection.push_back(make_pair(chamber, point));
 			}
@@ -153,11 +176,24 @@ pair<int, int> SpawnPointSystem::getRandomFreeSpawnPoint(
 }
 
 void SpawnPointSystem::setSpawnPointState( 
-	vector<vector<pair<AglMatrix, SpawnPointState>>>& p_inSpawnPoints, 
+	vector<vector<ModuleOrShipSpawnPoint>>& p_inSpawnPoints, 
 	int p_inChamber, int p_inPoint, SpawnPointState p_newState )
 {
-	p_inSpawnPoints[p_inChamber][p_inPoint].second = p_newState;
+	p_inSpawnPoints[p_inChamber][p_inPoint].state = p_newState;
 }
+
+bool SpawnPointSystem::isSpawnPointsReady() const
+{
+	return m_levelHandler->hasLevel();
+}
+
+AglMatrix SpawnPointSystem::invalidSpawnPoint() const
+{
+	return AglMatrix(AglVector3::one(), AglQuaternion::identity(), 
+		AglVector3(FLT_MAX, FLT_MAX, FLT_MAX));
+}
+
+
 
 
 

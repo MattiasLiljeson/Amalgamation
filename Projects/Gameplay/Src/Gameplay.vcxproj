@@ -27,6 +27,7 @@
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -287,6 +288,7 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />

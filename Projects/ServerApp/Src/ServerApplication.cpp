@@ -37,6 +37,7 @@
 #include <LevelHandlerSystem.h>
 #include <OnHitEffectBufferSystem.h>
 #include <SpawnPointSystem.h>
+#include <TempModuleSpawner.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -222,6 +223,7 @@ namespace Srv
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
 		m_world->setSystem(new SpawnPointSystem(), true);
+		m_world->setSystem(new TempModuleSpawner(), true);
 
 		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(winningCondition, false);

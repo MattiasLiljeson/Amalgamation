@@ -84,6 +84,8 @@ private:
 	bool m_readyToRun;
 	bool m_hasGeneratedLevel;
 
+	AglMatrix m_startTransform;
+
 	AglVector3 m_worldMin;
 	AglVector3 m_worldMax;
 };
