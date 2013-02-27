@@ -701,10 +701,11 @@
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-  </ItemGroup>
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Gameplay</Filter>
-    </ClInclude>  <ItemGroup>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
