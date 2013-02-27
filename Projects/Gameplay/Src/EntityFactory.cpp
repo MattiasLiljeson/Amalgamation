@@ -47,6 +47,7 @@
 #include "LevelPieceFileData.h"
 #include "ConnectionVisualizerSystem.h"
 #include "AnomalyAcceleratorModule.h"
+#include "InterpolationComponent2.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -371,6 +372,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent( new PickComponent() );
 		// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
+
 		entity->applyComponentChanges();
 	}
 
@@ -675,16 +677,14 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* shieldEntity = m_world->createEntity();
-	shieldEntity->setName("shieldModuleClient");
-	// Add network dependent components
-	Transform* transform = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	shieldEntity->addComponent(transform );
+	// read basic assemblage
+	Entity* shieldEntity = entityFromRecipeOrFile( "shieldModuleClient", "Assemblages/Modules/Shield/ClientShield.asd");
+
+	ShipModule* shipModule = static_cast<ShipModule*>(shieldEntity->getComponent(ComponentType::ShipModule));
+
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-	shieldEntity->addComponent(new LoadMesh("shield_module.agl"));
-	ShipModule* shipModule = new ShipModule();
-	shieldEntity->addComponent(shipModule);
+
 	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
@@ -715,6 +715,12 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}
+
+	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities,
 		shieldEntity, static_cast<AudioBackendSystem*>(
 		m_world->getSystem(SystemType::AudioBackendSystem))));
@@ -723,20 +729,9 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	Entity* entity = m_world->createEntity();
-	Component* component = new Transform(p_packet.translation, p_packet.rotation,
-		p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
-	entity->addComponent( ComponentType::PhysicsBody, new PhysicsBody() );
-	entity->addComponent( ComponentType::BodyInitData, 
-		new BodyInitData(p_packet.translation,
-		p_packet.rotation,
-		p_packet.scale, AglVector3(0, 0, 0), 
-		AglVector3(0, 0, 0), 0, 
-		BodyInitData::DYNAMIC, 
-		BodyInitData::SINGLE, false));
-	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("shield_module.agl"));
-	entity->addComponent(ComponentType::ShipModule, new ShipModule());
+	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Shield/ServerShield.asd" );
+	Entity* entity = entityFromRecipe( "ShieldModule" );
+
 	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));

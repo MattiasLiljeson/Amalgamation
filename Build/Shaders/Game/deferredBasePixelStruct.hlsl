@@ -6,4 +6,5 @@ struct PixelIn
 	float3 tangent 	: TANGENT;
 	float4x4 gradientColor : GRADIENTCOLOR;
 	float4 flags	: FLAGS;
+	float4 colorOverlay	: OVERLAY;
 };

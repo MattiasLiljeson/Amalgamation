@@ -701,11 +701,33 @@
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="EmpRocketLauncherModule.h" />
+    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
+    <ClInclude Include="HighlightEntityPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityBombModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="FlareGunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent2.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem2.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Level</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
@@ -1192,9 +1214,28 @@
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="EmpRocketLauncherModule.cpp" />
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
+    <ClCompile Include="HighlightEntityPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityBombModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="FlareGunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem2.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
     <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
-    </ClCompile>
-  </ItemGroup>
+    </ClCompile>  </ItemGroup>
 </Project>

@@ -59,7 +59,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 
 		// Don't render instances that hasn't got a mesh...
 		// NOTE: (Johan) ...or if it's not supposed to render!
-		if( renderInfo->m_meshId == -1 || renderInfo->m_shouldBeRendered == false )
+		if(renderInfo->m_meshId == -1 || renderInfo->m_shouldBeRendered == false)
 		{
 			continue;
 		}
@@ -172,6 +172,11 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 			p_data->setNumberOfActiveGradientLayers( 1 );
 		}
 	}	
+
+	if (p_entity->getComponent(ComponentType::SelectionMarker))
+		p_data->setColorTone(AglVector4(0, 1, 0, 1));
+	else if (p_entity->getComponent(ComponentType::TAG_Highlight))
+		p_data->setColorTone(AglVector4(0.5f, 1, 1, 1));
 
 	p_data->setGradientColor( matInfo.getGradientColors() );
 }

@@ -112,7 +112,7 @@ namespace Srv
 			}
 			processMessages();
 			
-			sleep(20);
+			sleep(1);
 		}
 	}
 
@@ -186,8 +186,9 @@ namespace Srv
 		/************************************************************************/
 		/* General controlling													*/
 		/************************************************************************/
-		LookAtSystem* lookAtSystem = new LookAtSystem();
+		LookAtSystem* lookAtSystem = new LookAtSystem(m_server);
 		m_world->setSystem(lookAtSystem, true);
+
 
 		/************************************************************************/
 		/* Picking																*/

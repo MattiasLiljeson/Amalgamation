@@ -19,6 +19,8 @@
 #include "ServerClientInfoSystem.h"
 #include "ClientInfo.h"
 #include "ServerStateSystem.h"
+#include "CameraInfo.h"
+#include "LookAtEntity.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )

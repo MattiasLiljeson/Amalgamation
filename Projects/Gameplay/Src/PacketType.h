@@ -56,6 +56,7 @@ public:
 		EditSphereUpdatePacket,
 		SelectionMarkerUpdatePacket,
 		PlayerInfo,
+		HighlightEntityPacket
 	};
 
 };

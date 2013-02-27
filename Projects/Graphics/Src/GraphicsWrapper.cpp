@@ -261,11 +261,12 @@ void GraphicsWrapper::renderMesh(unsigned int p_meshId,
 			unsigned int textureId;
 			textureId = mesh->getMaterialInfo().getTextureType((MaterialInfo::TextureTypes)i);
 
+
 			/************************************************************************/
 			/* Check if the texture ID is active and get the texture resource or	*/
 			/* set the value in the texture array to NULL							*/
 			/************************************************************************/
-			if(textureId > 0)
+			if(textureId >= 0)
 				textureArray[i] = m_textureManager->getResource(textureId);
 			else
 				textureArray[i] = NULL;

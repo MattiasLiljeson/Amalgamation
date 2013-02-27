@@ -87,6 +87,8 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "PlayerInfo.h"
+#include "HighlightEntityPacket.h"
+#include "InterpolationComponent2.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -426,52 +428,6 @@ void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
 		m_lastBroadcastPacketIdentifier = p_packetIdentifier;
 	}
 }
-void ClientPacketHandlerSystem::handleBatch()
-{
-	for (unsigned int i = 0; i < m_batch.size(); i++)
-	{
-		EntityUpdatePacket data = m_batch[i];
-		NetsyncDirectMapperSystem* directMapper =
-			static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
-			SystemType::NetsyncDirectMapperSystem));
-		Entity* entity = directMapper->getEntity( data.networkIdentity );
-		if(entity != NULL)
-		{
-			Transform* transform = NULL;
-			transform = static_cast<Transform*>(
-				entity->getComponent( ComponentType::Transform ) );
-
-			if( transform != NULL ) // Throw exception? /ML
-			{
-				/*InterpolationComponent* interpolation = NULL;
-				Component* intcomp = m_world->getComponentManager()->getComponent(
-				entity->getIndex(), ComponentType::InterpolationComponent );
-				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
-				if (interpolation )
-				{
-				// set up goal for queuing
-				float handledTime = data.timestamp;
-				InterpolationComponent::TransformGoal transformGoal;
-				transformGoal.timestamp = handledTime;
-				transformGoal.translation = data.translation;
-				transformGoal.rotation = data.rotation;
-				transformGoal.scale = data.scale;
-				// enqueue data
-				interpolation ->m_transformBuffer.push(transformGoal);
-				}
-				else*/
-				{
-					transform->setScale( data.scale );
-					transform->setRotation( data.rotation );
-					transform->setTranslation( data.translation );
-				}
-			}
-
-			// Add extrapolation here if deemed necessary
-		}
-	}
-	m_batch.clear();
-}
 
 void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdatePacket& p_data )
 {
@@ -565,7 +521,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 			packet.ReadData(&data, sizeof(EntityUpdatePacket));
 
 			if (data.entityType == (char)EntityType::EndBatch){
-				handleBatch();
+				handleBatch(0);
 			}
 			else
 			{
@@ -869,13 +825,39 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			SelectionMarkerUpdatePacket update;
 			update.unpack(packet);
-			Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
-				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-				update.targetNetworkIdentity);
+			int ind = -1;
+			if (update.targetNetworkIdentity >= 0)
+			{
+				Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					update.targetNetworkIdentity);
+				ind = entity->getIndex();
+			}
 
 			SelectionMarkerSystem* sys = static_cast<SelectionMarkerSystem*>
 				(m_world->getSystem(SystemType::SelectionMarkerSystem));
-			sys->setMarkerTarget(entity->getIndex(), update.transform);
+			sys->setMarkerTarget(ind, update.transform);
+		}
+		else if (packetType == (char)PacketType::HighlightEntityPacket)
+		{
+			HighlightEntityPacket highlight;
+			highlight.unpack(packet);
+			if (highlight.target >= 0)
+			{
+				Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					highlight.target);
+				if (highlight.on)
+				{
+					if (!entity->getComponent(ComponentType::TAG_Highlight))
+						entity->addComponent(ComponentType::TAG_Highlight, new Highlight_TAG());
+				}
+				else
+				{
+					entity->removeComponent(ComponentType::TAG_Highlight);
+					entity->applyComponentChanges();
+				}
+			}
 		}
 		else
 		{
@@ -936,17 +918,14 @@ void ClientPacketHandlerSystem::handleLoading()
 		changeState.m_gameState = GameStates::LOADING;
 		m_tcpClient->sendPacket(changeState.pack());
 	}
-	while (m_tcpClient->hasNewPackets())
-	{
+	while (m_tcpClient->hasNewPackets()){
 		Packet packet = m_tcpClient->popNewPacket();
 		//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 		char packetType;
 		packetType = packet.getPacketType();
-
 		if(packetType == (char)PacketType::EntityCreation){
 			EntityCreationPacket creation;
 			creation.unpack(packet);
-
 			handleEntityCreationPacket(creation);
 		}
 
@@ -964,6 +943,102 @@ void ClientPacketHandlerSystem::handleLoading()
 		}
 	}
 }
+void ClientPacketHandlerSystem::handleBatch(int p_frame)
+{
+	float t = m_world->getElapsedTime();
+
+
+	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+
+
+	bool down = input->getStatusByEnum(InputHelper::KeyboardKeys_5) > 0;
+
+
+	for (unsigned int i = 0; i < m_batch.size(); i++)
+	{
+		EntityUpdatePacket data = m_batch[i];
+		NetsyncDirectMapperSystem* directMapper =
+			static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+			SystemType::NetsyncDirectMapperSystem));
+		Entity* entity = directMapper->getEntity( data.networkIdentity );
+		if(entity != NULL)
+		{
+			Transform* transform = NULL;
+			transform = static_cast<Transform*>(
+				entity->getComponent( ComponentType::Transform ) );
+
+
+				InterpolationComponent2* inter = static_cast<InterpolationComponent2*>(
+					entity->getComponent( ComponentType::InterpolationComponent2 ) );
+
+
+				CameraInfo* cam = static_cast<CameraInfo*>(
+					entity->getComponent( ComponentType::CameraInfo ) );
+
+
+				if (!inter)
+				{
+					//inter = new InterpolationComponent2();
+					//entity->addComponent(ComponentType::InterpolationComponent2, inter);
+					transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );
+					//inter->t = t;
+					//entity->applyComponentChanges();
+				}
+
+
+				if (inter)
+				{
+					InterData interData;
+					AglMatrix::componentsToMatrix(interData.transform, data.scale, data.rotation, data.translation);
+					if (inter->data.size() > 0 && !down)
+						interData.t = inter->data.back().t + (data.timestamp - inter->data.back().stamp);
+					else
+					{
+						interData.t = t;
+						inter->t = t;
+					}
+					interData.stamp = data.timestamp;
+					inter->data.push_back(interData);
+				}
+
+
+
+
+			if( transform != NULL ) // Throw exception? /ML
+			{
+				/*InterpolationComponent* interpolation = NULL;
+				Component* intcomp = m_world->getComponentManager()->getComponent(
+					entity->getIndex(), ComponentType::InterpolationComponent );
+				if (intcomp) interpolation = static_cast<InterpolationComponent*>(intcomp);
+				if (interpolation )
+				{
+					// set up goal for queuing
+					float handledTime = data.timestamp;
+					InterpolationComponent::TransformGoal transformGoal;
+					transformGoal.timestamp = handledTime;
+					transformGoal.translation = data.translation;
+					transformGoal.rotation = data.rotation;
+					transformGoal.scale = data.scale;
+					// enqueue data
+					interpolation ->m_transformBuffer.push(transformGoal);
+				}
+				else*/
+				{
+					/*transform->setScale( data.scale );
+					transform->setRotation( data.rotation );
+					transform->setTranslation( data.translation );*/
+				}
+			}
+
+
+			// Add extrapolation here if deemed necessary
+		}
+	}
+	m_batch.clear();
+}
+
 
 void ClientPacketHandlerSystem::handleFinishedLoading()
 {

@@ -116,6 +116,7 @@
 #include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
 #include <SelectionMarkerSystem.h>
+#include <InterpolationSystem2.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -199,8 +200,8 @@ void ClientApplication::run()
 
 			m_prevTimeStamp = currTimeStamp;
 
-			if(dt > 0.5f)
-				dt = 0.5f;
+			//if(dt > 0.5f)
+				//dt = 0.5f;
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -264,7 +265,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* General controlling													*/
 	/************************************************************************/
-	m_world->setSystem( new LookAtSystem() );
+	m_world->setSystem( new LookAtSystem(NULL) );
 	m_world->setSystem( new SpeedBufferUpdaterSystem() );
 	
 	/************************************************************************/
@@ -376,7 +377,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
-
+	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem(inter, true);
 
 	/************************************************************************/
 	/* Audio																*/

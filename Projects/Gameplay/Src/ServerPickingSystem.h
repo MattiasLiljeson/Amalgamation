@@ -64,6 +64,8 @@ private:
 	//Send information about the Selection marker
 	void updateSelectionMarker(PickComponent& p_ray);
 
+	void unsetPick(PickComponent& p_ray);
+
 	// Effects
 	OnHitEffectBufferSystem* m_effectbuffer;
 };
