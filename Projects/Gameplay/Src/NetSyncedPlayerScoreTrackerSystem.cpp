@@ -3,7 +3,7 @@
 
 NetSyncedPlayerScoreTrackerSystem::NetSyncedPlayerScoreTrackerSystem()
 	: EntitySystem(SystemType::NetSyncedPlayerScoreTrackerSystem, 2,
-	ComponentType::NetworkSynced, ComponentType::PlayerScore )
+	ComponentType::NetworkSynced, ComponentType::PlayerComponent )
 {
 }
 

@@ -52,6 +52,7 @@
 #include <ServerGameState.h>
 #include <ServerStateSystem.h>
 #include <AnomalyAcceleratorModuleControllerSystem.h>
+#include <PlayerSystem.h>
 
 
 namespace Srv
@@ -221,8 +222,10 @@ namespace Srv
 		m_world->setSystem(new ShipModulesControllerSystem(m_server,onhiteffect), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
-		WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
-		m_world->setSystem(winningCondition, false);
+		m_world->setSystem(new PlayerSystem(), true);
+
+		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
+		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
 

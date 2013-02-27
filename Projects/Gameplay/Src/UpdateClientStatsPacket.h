@@ -25,6 +25,8 @@ public:
 	void unpack( Packet& p_packet );
 public:
 	int	activePlayers;
+	int secondsUntilEndOfRound;
+	int minutesUntilEndOfRound;
 	float ping[MAXPLAYERS];
 	float currentServerTimestamp;
 	int playerIdentities[MAXPLAYERS];

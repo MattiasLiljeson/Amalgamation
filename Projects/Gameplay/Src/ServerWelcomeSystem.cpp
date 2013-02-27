@@ -23,7 +23,7 @@
 #include "ShipFlyController.h"
 #include "BodyInitData.h"
 #include "PhysicsBody.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "ConnectionPointSet.h"
 #include "GameplayTags.h"
 #include "StaticProp.h"
@@ -119,10 +119,6 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
 	welcomePacket.playerID = m_connectedPlayers.size();
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
-
-	
-
-
 }
 
 void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )

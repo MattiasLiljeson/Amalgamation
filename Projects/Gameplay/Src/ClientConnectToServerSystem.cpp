@@ -70,17 +70,6 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 	m_isLookingForConnection = true;
 }
 
-/*
-void ClientConnectToServerSystem::connectToNetworkAddress(
-														const std::string& p_serverAddress, 
-														const std::string& p_serverPort)
-{
-	m_tcpClient->connectToServerAsync( p_serverAddress, p_serverPort);
-	m_isLookingForConnection = true;
-}
-*/
-
-
 void ClientConnectToServerSystem::setConnectionAddress( const std::string& p_address, 
 													   const std::string& p_port )
 {

@@ -1,7 +1,7 @@
 #include "DisplayPlayerScoreSystem.h"
 
 #include <AntTweakBarWrapper.h>
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "NetworkSynced.h"
 #include "HudElement.h"
 #include "TcpClient.h"
@@ -15,7 +15,7 @@
 
 DisplayPlayerScoreSystem::DisplayPlayerScoreSystem(TcpClient* p_client)
 	: EntitySystem( SystemType::DisplayPlayerScoreSystem,
-	2, ComponentType::PlayerScore, ComponentType::NetworkSynced )
+	2, ComponentType::PlayerComponent, ComponentType::NetworkSynced )
 {
 	m_client		= p_client;
 	m_playerEntity	= NULL;
@@ -63,8 +63,8 @@ void DisplayPlayerScoreSystem::process()
 
 void DisplayPlayerScoreSystem::inserted( Entity* p_entity )
 {
-	PlayerScore* score =
-		static_cast<PlayerScore*>(p_entity->getComponent( ComponentType::PlayerScore ));
+	PlayerComponent* score =
+		static_cast<PlayerComponent*>(p_entity->getComponent( ComponentType::PlayerComponent ));
 	NetworkSynced* netSync =
 		static_cast<NetworkSynced*>(p_entity->getComponent( ComponentType::NetworkSynced ));
 	stringstream ss;
