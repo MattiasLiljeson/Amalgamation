@@ -6,6 +6,7 @@
 #include "ShipModule.h"
 #include "ShieldModuleActivationClient.h"
 #include "AudioBackendSystem.h"
+#include "SpawnPointSet.h"
 
 ShieldPlaterSystem::ShieldPlaterSystem()
 	: EntitySystem(SystemType::ShieldPlaterSystem, 4, ComponentType::ShieldModule,
@@ -25,9 +26,15 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 		plateEntities[i] = entity;
 		float spawnX, spawnY;
 		circularRandom(&spawnX, &spawnY, true);
-		AglVector3 spawnPoint = AglVector3(0, 6.5f, 0); // Replace with real spawn point.
+		SpawnPointSet* spawnPointSet = static_cast<SpawnPointSet*>(p_entity->
+			getComponent(ComponentType::SpawnPointSet));
+		AglVector3 spawnPoint;
+		AglVector3 scaleBuffer;
+		AglQuaternion quaternionBuffer;
+		spawnPointSet->m_spawnPoints[0].spTransform.toComponents(scaleBuffer,
+			quaternionBuffer, spawnPoint);
 		float radius = 10.0f;
-		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, 0, radius * spawnY);
+		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, radius * spawnY, 0 );
 		position.normalize();
 		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
 		position = position * spawnPoint.length();
