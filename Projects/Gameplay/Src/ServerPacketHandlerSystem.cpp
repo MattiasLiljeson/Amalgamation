@@ -555,7 +555,7 @@ void ServerPacketHandlerSystem::handleSentAllPackets()
 					// Prepare the winning system to handle the change to ingame
 					WinningConditionSystem* winningSystem = static_cast<WinningConditionSystem*>
 						(m_world->getSystem(SystemType::WinningConditionSystem));
-					winningSystem->setEndTime(10);
+					winningSystem->setEndTime(2);
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 #include <EntitySystem.h>
 class TcpServer;
 class ServerStateSystem;
+class PlayersWinLosePacket;
 // =======================================================================================
 //	WinningConditionSystem
 // =======================================================================================
@@ -32,6 +33,8 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void signalEndSession(vector< pair<float, Entity*> > p_scoreComponentMapping);
+
+	void calculateWinners(PlayersWinLosePacket* p_packet);
 
 	virtual void initialize();
 

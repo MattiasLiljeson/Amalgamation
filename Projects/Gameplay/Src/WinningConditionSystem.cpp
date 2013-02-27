@@ -76,12 +76,10 @@ void WinningConditionSystem::signalEndSession(
 			p_scoreComponentMapping[i].second->getComponent(ComponentType::NetworkSynced));
 		winLosePacket.playerIdentities[i] = netSync->getNetworkOwner();
 		winLosePacket.scores[i] = p_scoreComponentMapping[i].first;
-		winLosePacket.winner[i] = false;
 	}
-	if(!p_scoreComponentMapping.empty())
-	{
-		winLosePacket.winner[0] = true; // Set first place to winner.
-	}
+
+	calculateWinners(&winLosePacket);
+
 	m_server->broadcastPacket(winLosePacket.pack());
 }
 
@@ -94,4 +92,22 @@ void WinningConditionSystem::initialize()
 {
 	m_stateSystem = static_cast<ServerStateSystem*>(
 		m_world->getSystem(SystemType::ServerStateSystem));
+}
+
+void WinningConditionSystem::calculateWinners(PlayersWinLosePacket* p_packet)
+{
+	int index = 0;
+	// No need to calculate who is the winner if the number of active players is 1
+	if(p_packet->activePlayers > 1){
+		do 
+		{
+			if(p_packet->scores[index] == p_packet->scores[index+1]){
+				p_packet->winner[index+1] = true;
+			}
+			index++;
+		} while (index+1 <= p_packet->activePlayers && p_packet->winner[index]);
+	}
+	else{
+		p_packet->winner[0] = true;
+	}
 }
