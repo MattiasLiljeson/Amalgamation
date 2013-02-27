@@ -24,23 +24,8 @@ SpawnPointSystem::~SpawnPointSystem()
 
 void SpawnPointSystem::initialize()
 {
-	m_entityFactory = static_cast<EntityFactory*>(
-		m_world->getSystem(SystemType::EntitySystem));
-
 	m_levelHandler = static_cast<LevelHandlerSystem*>(
 		m_world->getSystem(SystemType::LevelHandlerSystem));
-
-
-}
-
-Entity* SpawnPointSystem::createModuleAtRandomSpawnPoint( EntityType::EntityEnums p_module )
-{
-	return NULL;
-}
-
-Entity* SpawnPointSystem::createShipAtRandomSpawnPoint()
-{
-	return NULL;
 }
 
 void SpawnPointSystem::clearSpawnPoints()
@@ -187,11 +172,15 @@ bool SpawnPointSystem::isSpawnPointsReady() const
 	return m_levelHandler->hasLevel();
 }
 
-AglMatrix SpawnPointSystem::invalidSpawnPoint() const
+const AglMatrix& SpawnPointSystem::invalidSpawnPoint()
 {
-	return AglMatrix(AglVector3::one(), AglQuaternion::identity(), 
-		AglVector3(FLT_MAX, FLT_MAX, FLT_MAX));
+	return s_invalidSpawnPoint;
 }
+
+const AglMatrix SpawnPointSystem::s_invalidSpawnPoint(AglVector3::one(), 
+													AglQuaternion::identity(), 
+													AglVector3(FLT_MAX, FLT_MAX, FLT_MAX));
+
 
 
 

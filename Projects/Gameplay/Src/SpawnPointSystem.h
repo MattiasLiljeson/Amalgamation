@@ -53,10 +53,6 @@ public:
 	void initialize();
 	void clearSpawnPoints();
 
-	/// Creates the desired module type at a random module spawnpoint location.
-	Entity* createModuleAtRandomSpawnPoint(EntityType::EntityEnums p_module);
-	Entity* createShipAtRandomSpawnPoint();
-
 	const AglMatrix& getRandomFreeShipSpawnPoint();
 	const AglMatrix& getRandomFreeModuleSpawnPoint();
 
@@ -65,14 +61,15 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	bool isSpawnPointsReady() const;
-
-	AglMatrix invalidSpawnPoint() const;
+	
+	static const AglMatrix& invalidSpawnPoint();
 private:
 	pair<int, int> getRandomFreeSpawnPoint(
 		const vector<vector<ModuleOrShipSpawnPoint>>& p_fromSpawnPoints) const;
 	void setSpawnPointState(
 		vector<vector<ModuleOrShipSpawnPoint>>& p_inSpawnPoints,
 		int p_inChamber, int p_inPoint, SpawnPointState p_newState);
+private:
 
 	// Stores ship spawn points and module spawn points. The bool defines whether or not
 	// the spawn point is free (free = true, occupied = false)
@@ -81,7 +78,6 @@ private:
 
 	vector<int> freeSlots;
 
-	EntityFactory*		m_entityFactory;
 	LevelHandlerSystem* m_levelHandler;
-
+	static const AglMatrix s_invalidSpawnPoint;
 };

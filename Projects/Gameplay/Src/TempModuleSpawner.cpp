@@ -27,11 +27,12 @@ void TempModuleSpawner::process()
 		//DEBUGPRINT(("Request spawning a module at a random position.\n"));
 		if (m_spawnPointSystem->isSpawnPointsReady())
 		{
-			EntityCreationPacket cp;
-
 			AglMatrix pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
-			if (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
+
+			while (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
 			{
+				EntityCreationPacket cp;
+
 				int randModule = rand() % (EntityType::EndModule - EntityType::ShipModuleStart - 1);
 				randModule += EntityType::ShipModuleStart + 1;
 
@@ -43,7 +44,10 @@ void TempModuleSpawner::process()
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 	
 				DEBUGPRINT(((toString("Module spawned at position ") + posAsString).c_str()));
+
+				pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
 			}
+			setEnabled(false);
 		}
 		else
 		{
