@@ -38,6 +38,8 @@
 #include <OnHitEffectBufferSystem.h>
 #include <SpawnPointSystem.h>
 #include <TempModuleSpawner.h>
+#include <AnomalyBombControllerSystem.h>
+#include <ServerDynamicPhysicalObjectsSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -88,6 +90,7 @@ namespace Srv
 		double secsPerCount = 1.0f / (float)countsPerSec;
 
 		double dt = 0.0f;
+		float dtFactor = 1.0f;
 		__int64 m_prevTimeStamp = 0;
 
 		QueryPerformanceCounter((LARGE_INTEGER*)&m_prevTimeStamp);
@@ -101,15 +104,25 @@ namespace Srv
 
 			m_prevTimeStamp = currTimeStamp;
 
-			step( static_cast<float>(dt) );
+			step( static_cast<float>(dt * dtFactor) );
 
 			if( _kbhit() )
 			{
-				if( _getch() == 27 )
+				int key = _getch();
+				if( key == 27 )
 				{
 					m_running = false;
 					_flushall();
 				}
+				else if( key == 'i' )
+				{
+					dtFactor += 0.1f;
+				}
+				else if( key == 'o' )
+				{
+					dtFactor -= 0.1f;
+				}
+				cout << dtFactor << endl;
 			}
 			processMessages();
 			
@@ -211,11 +224,13 @@ namespace Srv
 		/************************************************************************/
 		/* Game play															*/
 		/************************************************************************/
+		m_world->setSystem(new ServerDynamicPhysicalObjectsSystem(), true);
 		m_world->setSystem(new MinigunModuleControllerSystem(m_server), true);
 		m_world->setSystem(new RocketLauncherModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineLayerModuleControllerSystem(m_server), true);
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(m_server), true);
+		m_world->setSystem(new AnomalyBombControllerSystem(m_server), true);
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
@@ -237,7 +252,7 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), false);
+		m_world->setSystem(new ServerMeasurementSystem(), true);
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.

@@ -7,7 +7,7 @@ body{
 	color: white;
 	
 	margin-top: 7%;
-	height: 12.5%;
+	height: 35px;
 	width: 99.8%;
 	margin-bottom: 80.5%;
 	border-style: solid;
@@ -18,7 +18,7 @@ body{
 
 div.elements{
 	float: left;
-	width: 33.3%;
+	width: 50%;
 	height: 100%;
 }
 

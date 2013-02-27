@@ -111,8 +111,12 @@ public:	//Enums
 		EmpRocketLancherModuleSystem,
 		InterpolationSystem2,
 		PlayerSystem,
+		AnomalyBombControllerSystem,
+		ServerDynamicPhysicalObjectsSystem,
+		GravityMineEffectSystem,
 		TempModuleSpawner,
-		NUM_SYSTEM_TYPES	};
+		NUM_SYSTEM_TYPES	
+	};
 
 public:
 	/**
