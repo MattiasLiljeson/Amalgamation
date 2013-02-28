@@ -8,7 +8,7 @@ d s m_filename RockD.agl
 c Transform
 d f m_scaleX 20.0
 d f m_scaleY 20.0
-d f m_scaleZ 20.0
+d f m_scaleZ 10.0
 
 c BodyInitData
 d i m_type 2

@@ -117,6 +117,8 @@
 #include <EditSphereSystem.h>
 #include <SelectionMarkerSystem.h>
 #include <InterpolationSystem2.h>
+#include <AnomalyBombEffectSystem.h>
+#include <ShieldPlaterSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -132,6 +134,7 @@ using namespace std;
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
+#include <PlayerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -222,14 +225,19 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
 	/* Game State system.													*/
 	/************************************************************************/
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
 
 	/************************************************************************/
-	/* TimerSystem used by other systems should be first.					*/
+	/* PlayerSystem allows for accessing connected players					*/
 	/************************************************************************/
-	m_world->setSystem( new TimerSystem() );
+	m_world->setSystem( new PlayerSystem(), true);
 
 	/************************************************************************/
 	/* Graphics																*/
@@ -427,6 +435,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientMeasurementSystem() );
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
 
 	m_world->initialize();
 

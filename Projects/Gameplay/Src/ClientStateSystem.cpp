@@ -52,6 +52,9 @@ void ClientStateSystem::process()
 		case GameStates::PAUSE:
 			DEBUGPRINT(("CLIENT: Changed to pause state!\n"));
 			break;
+		case GameStates::RESULTS:
+			DEBUGPRINT(("CLIENT: Changed to results!\n"));
+			break;
 		default:
 			DEBUGPRINT(("CLIENT: Changed to a unkown state!\n"));
 			break;

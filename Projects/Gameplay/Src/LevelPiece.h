@@ -41,6 +41,8 @@ public:
 	LevelPiece( int p_typeId, ModelResource* p_modelResource, Transform* p_transform,
 				int p_generation);
 
+	void		setPieceId(int p_id);
+
 	void		deleteMainTransform();
 	void		updateConnectionPoints();
 	AglMatrix	getLocalConnectionPointMatrix(int p_vectorIndex, E_Space p_inSpace = Space_LOCAL);
@@ -49,6 +51,7 @@ public:
 	vector<int> findFreeConnectionPointSlots();
 	Transform*  getTransform() const;
 	int			getTypeId() const;
+	int			getPieceId() const;
 	const Transform* getChild(int p_inSlot) const;
 	bool		isChildSlotOccupied(int p_inSlot) const;
 	int			getMaxChildCount() const;
@@ -63,6 +66,7 @@ private:
 
 	ModelResource*				m_modelResource;
 	int							m_typeId;
+	int							m_pieceId;
 	int							m_generation;
 	//ConnectionPointCollection*	m_localSpaceConnectionPoints;
 	//AglMeshHeader*				m_meshHeader;

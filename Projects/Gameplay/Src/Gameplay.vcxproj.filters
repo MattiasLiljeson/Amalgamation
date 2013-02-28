@@ -40,9 +40,6 @@
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Level Gen">
-      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\GUI">
       <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
     </Filter>
@@ -109,6 +106,9 @@
     <Filter Include="Components\Modules\Events\Module Events %28Client%29">
       <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Level">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -160,7 +160,7 @@
       <Filter>Systems\Physics</Filter>
     </ClInclude>
     <ClInclude Include="LevelGenSystem.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="MenuSystem.h">
       <Filter>Systems\GUI</Filter>
@@ -170,9 +170,6 @@
     </ClInclude>
     <ClInclude Include="HudElement.h">
       <Filter>Components\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScore.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
@@ -184,7 +181,7 @@
       <Filter>Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="LevelPiece.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoosterModule.h">
       <Filter>Components\Modules</Filter>
@@ -585,7 +582,7 @@
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="LevelPieceRoot.h">
       <Filter>Components</Filter>
@@ -627,7 +624,7 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="LevelInfoLoader.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="AxisRotate.h">
       <Filter>Components</Filter>
@@ -666,7 +663,7 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="LevelPieceFileData.h">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="DestroyOnParticlesDeathSystem.h">
       <Filter>Systems\GFX</Filter>
@@ -696,13 +693,9 @@
     <ClInclude Include="PlayerInfo.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="AnomalyAcceleratorModule.h" />
-    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="EmpRocketLauncherModule.h" />
-    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
     <ClInclude Include="HighlightEntityPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -723,6 +716,41 @@
     </ClInclude>
     <ClInclude Include="InterpolationSystem2.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSystem.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="AnomalyAcceleratorModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="BombActivationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="TempModuleSpawner.h" />
+    <ClInclude Include="SpawnPointSystem.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ShieldPlaterSystem.h" />
+    <ClInclude Include="EmpRocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpRocketLancherModuleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -774,9 +802,6 @@
     <ClCompile Include="HudElement.cpp">
       <Filter>Components\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerScore.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="DisplayPlayerScoreSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
@@ -784,10 +809,10 @@
       <Filter>Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="LevelGenSystem.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="LevelPiece.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="ShipModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -1107,7 +1132,7 @@
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="LevelPieceRoot.cpp">
       <Filter>Components</Filter>
@@ -1143,7 +1168,7 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="LevelInfoLoader.cpp">
-      <Filter>Systems\Level Gen</Filter>
+      <Filter>Systems\Level</Filter>
     </ClCompile>
     <ClCompile Include="AxisRotationSystem.cpp">
       <Filter>Systems</Filter>
@@ -1206,13 +1231,9 @@
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
-    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="EmpRocketLauncherModule.cpp" />
-    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
     <ClCompile Include="HighlightEntityPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -1230,6 +1251,37 @@
     </ClCompile>
     <ClCompile Include="InterpolationSystem2.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBombControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBombEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="BombActivationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="TempModuleSpawner.cpp" />
+    <ClCompile Include="SpawnPointSystem.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp" />
+    <ClCompile Include="EmpRocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

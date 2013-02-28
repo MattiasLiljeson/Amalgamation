@@ -18,7 +18,7 @@
 #include "PhysicsBody.h"
 #include "PickComponent.h"
 #include "PlayerCameraController.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PlayerState.h"
 #include "PositionalSoundSource.h"
 #include "RenderInfo.h"
@@ -48,6 +48,10 @@
 #include "ConnectionVisualizerSystem.h"
 #include "AnomalyAcceleratorModule.h"
 #include "InterpolationComponent2.h"
+#include "AnomalyBomb.h"
+#include "AnomalyBombEffectPiece.h"
+#include "CircularMovement.h"
+#include <RandomUtil.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -250,8 +254,6 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 	{
 		if (m_client)
 			e = createAnomalyBombClient(p_packet);
-		else
-			e = createAnomalyBombServer(p_packet);
 	}
 	else if (type == EntityType::Rocket)
 	{
@@ -349,7 +351,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 	}
-	entity->addComponent( new PlayerScore() );
+//	entity->addComponent( new PlayerComponent() );
 	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
 
 	m_world->addEntity(entity);
@@ -675,10 +677,41 @@ Entity* EntityFactory::createMineServer(EntityCreationPacket p_packet)
 	//Not moved here yet!
 	return NULL;
 }
+
+Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
+{
+	float effectRadius = 30.0f;
+	Entity* parent = m_world->getEntity(p_parentIndex);
+	if(parent != NULL)
+	{
+		AnomalyBomb* bomb = static_cast<AnomalyBomb*>(parent->getComponent(
+			ComponentType::AnomalyBomb));
+		if(bomb != NULL)
+		{
+			effectRadius = bomb->radius * 0.75f;
+		}
+	}
+	for(unsigned int i=0; i<500; i++)
+	{
+		Entity* pieceEntity = m_world->createEntity();
+		Transform* pieceTransform = new Transform();
+		pieceEntity->addComponent(pieceTransform);
+		pieceEntity->addComponent(new LoadMesh("shield_plate.agl"));
+		pieceEntity->addComponent(new AnomalyBombEffectPiece(5.0f, effectRadius, 2.0f,
+			RandomUtil::randomSingle()));
+		pieceEntity->addComponent(new EntityParent(p_parentIndex,
+			pieceTransform->getMatrix()));
+		m_world->addEntity(pieceEntity);
+	}
+
+	return NULL;
+}
+
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
 	// read basic assemblage
-	Entity* shieldEntity = entityFromRecipeOrFile( "shieldModuleClient", "Assemblages/Modules/Shield/ClientShield.asd");
+	Entity* shieldEntity = entityFromRecipeOrFile( "shieldModuleClient",
+		"Assemblages/Modules/Shield/ClientShield.asd");
 
 	ShipModule* shipModule = static_cast<ShipModule*>(shieldEntity->getComponent(ComponentType::ShipModule));
 
@@ -688,42 +721,11 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
-	const int plateCount = 120;
-	vector<Entity*> plateEntities;
-	plateEntities.resize(120);
-	for(unsigned int i=0; i<plateCount; i++)
-	{
-		Entity* entity = m_world->createEntity();
-		entity->setName("shieldPlateClient");
-		plateEntities[i] = entity;
-		float spawnX, spawnY;
-		circularRandom(&spawnX, &spawnY, true);
-		AglVector3 spawnPoint = AglVector3(0, 6.5f, 0); // Replace with real spawn point.
-		float radius = 10.0f;
-		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, 0, radius * spawnY);
-		position.normalize();
-		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
-		position = position * spawnPoint.length();
-		float plateScale = 1.0f;
-		Transform* plateTransform = new Transform(position, plateRotation,
-			AglVector3(plateScale, plateScale, plateScale));
-		entity->addComponent(plateTransform);
-		entity->addComponent(new LoadMesh("shield_plate.agl"));
-		entity->addComponent(new EntityParent(shieldEntity->getIndex(),
-			plateTransform->getMatrix()));
-		entity->addComponent(new ShieldPlate(0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
-		entity->setEnabled(false);
-		m_world->addEntity(entity);
-	}
 
 	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities,
-		shieldEntity, static_cast<AudioBackendSystem*>(
-		m_world->getSystem(SystemType::AudioBackendSystem))));
 
 	return shieldEntity;
 }
@@ -772,9 +774,26 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 	return entity;
 }
 
-Entity* EntityFactory::createAnomalyBombServer( EntityCreationPacket p_packet )
+Entity* EntityFactory::createAnomalyBombServer( Transform* p_transform,
+	AglVector3 p_moduleVelocity, ShipModule* p_module )
 {
-	return NULL;
+	Entity* entity = entityFromRecipeOrFile( "ServerAnomalyBomb", 
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyBomb.asd" );
+	entity->setName("AnomalyBomb");
+	// The PhysicsInitData must be created outside because it is
+	// dependent of "parent" velocity and position.
+	AglVector3 scale = AglVector3(1.0f, 1.0f, 1.0f);
+	Transform* transform = new Transform(p_transform->getTranslation(),
+		p_transform->getRotation(), scale);
+	entity->addComponent(transform);
+	entity->addComponent(new BodyInitData(p_transform->getTranslation(),
+		p_transform->getRotation(), scale, p_moduleVelocity,
+		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
+		false, true));
+	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
+		EntityType::AnomalyBomb));
+	m_world->addEntity(entity);
+	return entity;
 }
 
 Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
@@ -828,43 +847,6 @@ Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
 {
 	//Not moved here yet!
 	return NULL;
-}
-
-void EntityFactory::circularRandom( float* p_spawnX, float* p_spawnY,
-	bool p_warpCompensation )
-{
-	if(!p_warpCompensation)
-	{
-		float x = 0.0f;
-		float y = 0.0f;
-		do
-		{
-			x = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-			y = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-		} while( x * x + y * y > 1.0f );
-		*p_spawnX = x;
-		*p_spawnY = y;
-	}
-	else
-	{
-		// NOTE: This version of circular random compensates for sphere warping
-		// quite roughly. With not too high of a warp angle it looks nice.
-		// It is much slower than the simple circular random generation.
-		float x = 0.0f;
-		float y = 0.0f;
-		do
-		{
-			float x_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-			float y_rand = 2.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
-			x = x_rand;
-			y = y_rand;
-		} while( x * x + y * y > 1.0f );
-		float len = sqrt(x * x + y * y);
-		x = x * len;
-		y = y * len;
-		*p_spawnX = x;
-		*p_spawnY = y;
-	}
 }
 
 Entity* EntityFactory::entityFromRecipeOrFile( const string& p_entityName, string p_filePath )

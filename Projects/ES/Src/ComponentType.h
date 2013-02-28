@@ -42,7 +42,7 @@ public:	//Enums
 		BoundingVolumeInitData,
 		LookAtEntity,
 		PlayerCameraController,
-		PlayerScore,
+		PlayerComponent,
 		MenuItem,
 		HudElement,
 		EntityParent,
@@ -113,6 +113,7 @@ public:	//Enums
 		BoundingSphere,
 		BoundingBox,
 		SelectionMarker,
+		GravityMineEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 
