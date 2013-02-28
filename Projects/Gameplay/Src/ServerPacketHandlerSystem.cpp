@@ -424,7 +424,7 @@ void ServerPacketHandlerSystem::handleLobby()
 			//Add the entity here to be used by other systems
 			Entity* newPlayer = m_world->createEntity();
 			PlayerComponent* newComp = new PlayerComponent();
-			if(playerInfo.playerName == "thebrightestmind"){
+			if(playerInfo.playerName == "brightestmind"){
 				newComp->setAbsoluteScore(9001);
 			}
 			newComp->m_playerName = playerInfo.playerName;
