@@ -24,10 +24,21 @@ void ModuleStatusEffectSystem::process()
 		ModuleUnusedEffect data = m_unusedModuleEffects.back();
 		// DEBUGWARNING((toString(data.score).c_str()));
 		// createNumberEffectEntity(data);
-		if (!data.mode)
-			addParticleEffectComponent(data.moduleEntity);
-		else
-			removeParticleEffectComponent(data.moduleEntity);
+
+		ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
+										data.moduleEntity->getComponent(ComponentType::ParticleSystemsComponent));
+		int count = 0;
+		if (ps)
+			count = ps->getParticleSystemCnt();
+
+		if (count != 3)
+		{
+			if (!data.mode)
+				addParticleEffectComponent(data.moduleEntity);
+			else
+				removeParticleEffectComponent(data.moduleEntity);
+		}
+
 		m_unusedModuleEffects.pop_back();
 	}
 	//  module value effect
