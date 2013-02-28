@@ -23,6 +23,7 @@ public:
 public:
 	float cooldown;
 	float cooldownTime;
+	float launchSpeed;
 
 public:
 	static ComponentRegister<AnomalyAcceleratorModule> s_reg;
