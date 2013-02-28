@@ -22,5 +22,7 @@ public:
 public:
 	int		playerID;
 	string	playerName;
-
+	int		networkID;
+	float	score;
+	int		ping;
 };

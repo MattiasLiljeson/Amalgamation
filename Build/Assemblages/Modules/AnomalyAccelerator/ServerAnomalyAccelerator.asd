@@ -32,3 +32,5 @@ d f m_maxhealth 100.0f
 d f m_maxvalue 100.0f
 
 c AnomalyAcceleratorModule
+d f cooldownTime 10.0
+d f launchSpeed 100.0

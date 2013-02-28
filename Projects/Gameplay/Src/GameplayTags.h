@@ -37,3 +37,5 @@ class MainCamera_TAG : public Tag{ public: MainCamera_TAG() : Tag( ComponentType
 class ShadowCamera_TAG : public Tag{ public: ShadowCamera_TAG() : Tag( ComponentType::TAG_ShadowCamera ){}};
 
 class LookAtMainCamera_TAG : public Tag{ public: LookAtMainCamera_TAG() : Tag( ComponentType::TAG_LookAtMainCamera ){}};
+
+class Highlight_TAG : public Tag{ public: Highlight_TAG() : Tag( ComponentType::TAG_Highlight ){}};

@@ -34,6 +34,6 @@ private:
 	void updateModuleValueEffect(int p_moduleNetworkOwner, float p_valuePercent);
 
 	static unsigned int m_currentStart;
-	static const unsigned int m_batchSz=5;
+	static const unsigned int m_batchSz=10;
 	ModuleVisualEffectBufferSystem* m_effectbuffer;
 };

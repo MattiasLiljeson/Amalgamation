@@ -4,7 +4,7 @@
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include "NetworkSynced.h"
-#include "PlayerScore.h"
+#include "PlayerComponent.h"
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
 #include "OnHitScoreEffectPacket.h"
@@ -18,6 +18,7 @@
 #include <DebugUtil.h>
 #include "ScoreRuleHelper.h"
 #include "ModuleStatusEffectPacket.h"
+#include "PlayerSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 ModuleVisualEffectBufferSystem* p_effectBuffer)
@@ -123,7 +124,10 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 						int me = ModuleHelper::FindParentShipClientId(m_world,m,&myShip);
 						if (myShip)
 						{
-							PlayerScore* scoreComponent = static_cast<PlayerScore*>(myShip->getComponent(ComponentType::PlayerScore));
+							PlayerSystem* playerSys = static_cast<PlayerSystem*>
+								(m_world->getSystem(SystemType::PlayerSystem));
+							PlayerComponent* scoreComponent = playerSys->getPlayerCompFromNetworkComp(
+								static_cast<NetworkSynced*>(myShip->getComponent(ComponentType::NetworkSynced)));
 							// score effect
 							if (moduleTransform && m)
 							{
@@ -135,7 +139,8 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 									Entity* perpShip = ships->findShip(perpId);
 									if (perpShip)
 									{
-										PlayerScore* perpScoreComponent = static_cast<PlayerScore*>(perpShip->getComponent(ComponentType::PlayerScore));
+										PlayerComponent* perpScoreComponent = playerSys->getPlayerCompFromNetworkComp(
+											static_cast<NetworkSynced*>(perpShip->getComponent(ComponentType::NetworkSynced)));
 										float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
 										// add score and send effect
 										perpScoreComponent->addRelativeScore(score);

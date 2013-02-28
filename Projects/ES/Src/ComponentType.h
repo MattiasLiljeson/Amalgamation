@@ -42,7 +42,7 @@ public:	//Enums
 		BoundingVolumeInitData,
 		LookAtEntity,
 		PlayerCameraController,
-		PlayerScore,
+		PlayerComponent,
 		MenuItem,
 		HudElement,
 		EntityParent,
@@ -62,6 +62,10 @@ public:	//Enums
 		StandardRocket,
 		RocketLauncherModule,
 		Connector1to2Module,
+		EmpModule,
+		FlareGunModule,
+		GravityBombModule,
+		TeslaModule,
 		LightSources,
 		LightBlinker,
 		Vibration,
@@ -78,6 +82,8 @@ public:	//Enums
 		Gradient,
 		SpeedBuffer,
 		AnomalyAcceleratorModule,
+		EmpRocketLauncherModule,
+		InterpolationComponent2,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -92,6 +98,7 @@ public:	//Enums
 		TAG_MainCamera,
 		TAG_ShadowCamera,
 		TAG_LookAtMainCamera,
+		TAG_Highlight,
 		// -------------------
 	
 		/************************************************************************/
@@ -106,6 +113,7 @@ public:	//Enums
 		BoundingSphere,
 		BoundingBox,
 		SelectionMarker,
+		GravityMineEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 

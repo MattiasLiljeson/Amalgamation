@@ -61,7 +61,7 @@ private:
 	void updateBroadcastPacketLossDebugData( unsigned int p_packetIdentifier );
 
 	//Added by Anton
-	void handleBatch();
+	void handleBatch(int p_frame);
 
 	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
@@ -71,6 +71,7 @@ private:
 	void handleLobby();
 	void handleLoading();
 	void handleFinishedLoading();
+	void handleResults();
 private:
 	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;
@@ -97,4 +98,7 @@ private:
 
 	//Added by Anton
 	vector<EntityUpdatePacket> m_batch;
+
+public:
+	AglMatrix cameraTransform;
 };

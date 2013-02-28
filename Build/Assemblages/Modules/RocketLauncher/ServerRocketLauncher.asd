@@ -7,17 +7,17 @@ c Transform
 d f m_translationX 30.0
 d f m_translationY 0.0
 d f m_translationZ 0.0
-d f m_scaleX 2.5f;
-d f m_scaleY 2.5f;
-d f m_scaleZ 2.5f;
+d f m_scaleX 1.0f;
+d f m_scaleY 1.0f;
+d f m_scaleZ 1.0f;
 
 c BodyInitData
 d f m_positionX 30.0
 d f m_positionY 0.0
 d f m_positionZ 0.0
-d f m_scaleX 2.5f;
-d f m_scaleY 2.5f;
-d f m_scaleZ 2.5f;
+d f m_scaleX 1.0f;
+d f m_scaleY 1.0f;
+d f m_scaleZ 1.0f;
 d i m_type 3
 d i m_static 0
 d i m_collisionEnabled 1

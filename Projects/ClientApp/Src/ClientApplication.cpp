@@ -116,6 +116,9 @@
 #include <ShipParticleSystemUpdater.h>
 #include <EditSphereSystem.h>
 #include <SelectionMarkerSystem.h>
+#include <InterpolationSystem2.h>
+#include <AnomalyBombEffectSystem.h>
+#include <ShieldPlaterSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -132,6 +135,7 @@ using namespace std;
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
+#include <PlayerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -200,8 +204,8 @@ void ClientApplication::run()
 
 			m_prevTimeStamp = currTimeStamp;
 
-			if(dt > 0.5f)
-				dt = 0.5f;
+			//if(dt > 0.5f)
+				//dt = 0.5f;
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -222,14 +226,19 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	/************************************************************************/
+	/* TimerSystem used by other systems should be first.					*/
+	/************************************************************************/
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
 	/* Game State system.													*/
 	/************************************************************************/
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
 
 	/************************************************************************/
-	/* TimerSystem used by other systems should be first.					*/
+	/* PlayerSystem allows for accessing connected players					*/
 	/************************************************************************/
-	m_world->setSystem( new TimerSystem() );
+	m_world->setSystem( new PlayerSystem(), true);
 
 	/************************************************************************/
 	/* Graphics																*/
@@ -265,7 +274,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* General controlling													*/
 	/************************************************************************/
-	m_world->setSystem( new LookAtSystem() );
+	m_world->setSystem( new LookAtSystem(NULL) );
 	m_world->setSystem( new SpeedBufferUpdaterSystem() );
 	
 	/************************************************************************/
@@ -378,7 +387,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
-
+	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem(inter, true);
 
 	/************************************************************************/
 	/* Audio																*/
@@ -427,6 +437,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientMeasurementSystem() );
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
 
 	m_world->initialize();
 

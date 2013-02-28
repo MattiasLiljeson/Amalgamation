@@ -3,6 +3,7 @@
 #include <Entity.h>
 #include <EntitySystem.h>
 #include <AglMatrix.h>
+#include "EntityFactory.h"
 
 using namespace std;
 // =======================================================================================
@@ -52,4 +53,7 @@ private:
 	vector<ModuleUnusedEffect> m_unusedModuleEffects;
 	vector<ModuleValueStatEffect> m_valueEffect;
 	vector<ModuleHealthStatEffect> m_healthEffects;
+
+	void addParticleEffectComponent(Entity* p_entity);
+	void removeParticleEffectComponent(Entity* p_entity);
 };

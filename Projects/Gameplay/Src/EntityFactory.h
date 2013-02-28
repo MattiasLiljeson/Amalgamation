@@ -11,6 +11,8 @@
 #include "ParticleSystemsComponent.h"
 #include "GradientMapping.h"
 #include "SpawnExplosionPacket.h"
+#include "Transform.h"
+#include "ShipModule.h"
 
 class Entity;
 class EntityWorld;
@@ -75,6 +77,16 @@ public:
 
 	void createExplosion(const SpawnExplosionPacket& p_packet);
 
+public:
+	// Anomaly accelerator
+	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);
+	Entity* createAnomalyModuleServer(EntityCreationPacket p_packet);
+	Entity* createAnomalyBombClient(EntityCreationPacket p_packet);
+	Entity* createAnomalyBombServer(Transform* p_transform,
+		AglVector3 p_moduleVelocity, ShipModule* p_module);
+
+	Entity* createAnomalyPieces(int p_parentIndex);
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);
@@ -118,19 +130,13 @@ private:
 	Entity* createShieldClient(EntityCreationPacket p_packet);
 	Entity* createShieldServer(EntityCreationPacket p_packet);
 
-	// Anomaly accelerator
-	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);
-	Entity* createAnomalyModuleServer(EntityCreationPacket p_packet);
-	Entity* createAnomalyBombClient(EntityCreationPacket p_packet);
-	Entity* createAnomalyBombServer(EntityCreationPacket p_packet);
-
 	//Other - Level generation goes here for now.
 	Entity* createOtherClient(EntityCreationPacket p_packet);
 	Entity* createOtherServer(EntityCreationPacket p_packet);
 
-	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
 		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
+
 
 private:
 	map<string, Recipe*> m_entityRecipes;

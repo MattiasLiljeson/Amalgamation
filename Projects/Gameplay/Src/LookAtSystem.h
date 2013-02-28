@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include <TcpServer.h>
 
 
 // =======================================================================================
@@ -19,7 +20,7 @@
 class LookAtSystem : public EntitySystem
 {
 public:
-	LookAtSystem();
+	LookAtSystem(TcpServer* p_server);
 	~LookAtSystem();
 
 	virtual void initialize();
@@ -27,5 +28,7 @@ public:
 
 private:
 	void adaptDistanceBasedOnModules(Entity* p_entity);
+private:
+	TcpServer* m_server;
 
 };

@@ -3,11 +3,12 @@
 #include <EntitySystem.h>
 #include "Transform.h"
 #include "PickComponent.h"
-#include "TcpServer.h"
 #include "ConnectionPointSet.h"
 #include "ModuleVisualEffectBufferSystem.h"
 
 class ShipModule;
+class PlayerSystem;
+class TcpServer;
 
 // =======================================================================================
 //                                      ServerPickingSystem
@@ -43,6 +44,8 @@ private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;
 
+	PlayerSystem* m_playerSystem;
+
 	//Temp
 	float mrota;
 private:
@@ -64,6 +67,8 @@ private:
 
 	//Send information about the Selection marker
 	void updateSelectionMarker(PickComponent& p_ray);
+
+	void unsetPick(PickComponent& p_ray);
 
 	// Effects
 	ModuleVisualEffectBufferSystem* m_effectbuffer;

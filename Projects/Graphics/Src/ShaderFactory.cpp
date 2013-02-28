@@ -636,6 +636,9 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 
 		{"FLAGS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,1, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA,1},
+
+		{"OVERLAY", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,1, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA,1},
 	};
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
 }
@@ -694,6 +697,9 @@ void ShaderFactory::createInstancedAnimatedPNTTBVertexInputLayout( VSData* p_vs,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 
 		{"FLAGS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 2, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_INSTANCE_DATA,1},
+
+		{"OVERLAY", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,2, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA,1},
 	};
 	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);

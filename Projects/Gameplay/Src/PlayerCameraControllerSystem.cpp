@@ -9,6 +9,7 @@
 #include "TimerSystem.h"
 #include "NetworkSynced.h"
 #include "TcpClient.h"
+#include "ClientStateSystem.h"
 
 PlayerCameraControllerSystem::PlayerCameraControllerSystem( ShipInputProcessingSystem* p_shipInput,
 														   TcpClient* p_client ) : 
@@ -33,53 +34,60 @@ void PlayerCameraControllerSystem::initialize()
 
 void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	if (p_entities.size()>0)
-	{
-		float dt = m_world->getDelta();
-		// Fetch the status of the various input methods.
-		ShipInputProcessingSystem::ResultingInputForces input = m_shipInput->getProcessedInput();
 
-		for(unsigned int i=0; i<p_entities.size(); i++ )
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	if(stateSystem->getCurrentState() == GameStates::INGAME){
+		if (p_entities.size()>0)
 		{
-			Entity* ship = p_entities[i];
-			PlayerCameraController* controller = static_cast<PlayerCameraController*>(
-				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerCameraController ) );
-			PlayerState* state = static_cast<PlayerState*>(
-				ship->getComponent( ComponentType::ComponentTypeIdx::PlayerState ) );
+			float dt = m_world->getDelta();
+			// Fetch the status of the various input methods.
+			ShipInputProcessingSystem::ResultingInputForces input = 
+				m_shipInput->getProcessedInput();
 
-			// Get current input
-			AglVector3 inputMovement(input.editMoveVerticalInput,
-				-input.editMoveHorizontalInput,0.0f);
-
-			// accumulate movement for transfer
-			controller->accumulatedCameraMovement += inputMovement;
-
-			// State switch handling
-			if (input.stateSwitchInput)
+			for(unsigned int i=0; i<p_entities.size(); i++ )
 			{
-				if (state->state==PlayerStates::steeringState)
-					state->state=PlayerStates::editState;
-				else
-					state->state=PlayerStates::steeringState;
-			}
+				Entity* ship = p_entities[i];
+				PlayerCameraController* controller = static_cast<PlayerCameraController*>(
+					ship->getComponent( ComponentType::ComponentTypeIdx::PlayerCameraController ) );
+				PlayerState* state = static_cast<PlayerState*>(
+					ship->getComponent( ComponentType::ComponentTypeIdx::PlayerState ) );
 
-			// packet handling
-			if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-				checkTimeInterval(TimerIntervals::Every8Millisecond))
-			{
-				/************************************************************************/
-				/* Send the control packet to the server!								*/
-				/************************************************************************/
-				if (controller->accumulatedCameraMovement.length()>0.0f &&
-					controller->accumulatedCameraMovement.length()<1.0f)
-					AglVector3::normalize(controller->accumulatedCameraMovement);
-				NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
-					ComponentType::NetworkSynced));
+				// Get current input
+				AglVector3 inputMovement(input.editMoveVerticalInput,
+					-input.editMoveHorizontalInput,0.0f);
 
-				sendCameraControllerPacketToServer(netSync,
-					controller->accumulatedCameraMovement,state->state);
+				// accumulate movement for transfer
+				controller->accumulatedCameraMovement += inputMovement;
 
-				controller->accumulatedCameraMovement = AglVector3();
+				// State switch handling
+				if (input.stateSwitchInput)
+				{
+					if (state->state==PlayerStates::steeringState)
+						state->state=PlayerStates::editState;
+					else
+						state->state=PlayerStates::steeringState;
+				}
+
+				// packet handling
+				if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+					checkTimeInterval(TimerIntervals::Every8Millisecond))
+				{
+					/************************************************************************/
+					/* Send the control packet to the server!								*/
+					/************************************************************************/
+					if (controller->accumulatedCameraMovement.length()>0.0f &&
+						controller->accumulatedCameraMovement.length()<1.0f)
+						AglVector3::normalize(controller->accumulatedCameraMovement);
+					NetworkSynced* netSync = static_cast<NetworkSynced*>(ship->getComponent(
+						ComponentType::NetworkSynced));
+
+					sendCameraControllerPacketToServer(netSync,
+						controller->accumulatedCameraMovement,state->state);
+
+					controller->accumulatedCameraMovement = AglVector3();
+				}
 			}
 		}
 	}

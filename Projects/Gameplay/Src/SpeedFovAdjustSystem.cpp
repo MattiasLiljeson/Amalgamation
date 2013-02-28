@@ -21,7 +21,7 @@ SpeedFovAdjustSystem::~SpeedFovAdjustSystem()
 
 void SpeedFovAdjustSystem::initialize()
 {
-	m_speedFovMult = 0.05;
+	m_speedFovMult = 0.0;
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::GRAPHICS,
 		"Fov speed mult", TwType::TW_TYPE_FLOAT, &m_speedFovMult, "" );

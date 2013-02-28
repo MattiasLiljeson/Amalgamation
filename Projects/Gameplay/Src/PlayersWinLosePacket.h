@@ -14,7 +14,7 @@
 /// Created on: 30-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class PlayersWinLosePacket: public Packetizer
+class PlayersWinLosePacket : public Packetizer
 {
 public:
 	PlayersWinLosePacket();

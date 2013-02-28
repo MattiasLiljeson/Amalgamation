@@ -11,6 +11,7 @@
 #include "NetworkSynced.h"
 #include "LevelGenSystem.h"
 #include "LevelPiece.h"
+#include "LevelPieceRoot.h"
 #include "EntityCreationPacket.h"
 
 //COMPOUND BODIES HAR INTE STÖD FÖR ROTATION. DÄRFÖR BLIR DET KANSKE KNAS
@@ -276,7 +277,9 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				+ p_entity->getName()
 				+ "]. If this is a chamber, it is OK!\n";
 
-			DEBUGPRINT((err.c_str()));
+			// Ignore warning if the entity has a level piece root component.
+			if ( ! static_cast<LevelPieceRoot*>(p_entity->getComponent(ComponentType::LevelPieceRoot)))
+				DEBUGPRINT((err.c_str()));
 
 			p_entity->removeComponent(ComponentType::PhysicsBody);
 			p_entity->removeComponent(ComponentType::BodyInitData);

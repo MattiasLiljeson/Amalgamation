@@ -4,6 +4,9 @@
 		<title>Datagrid</title>
 	</head>
 	<body id="infoPanel">
+		<div id="title_bar">
+			<span id="title">The scores!</span>
+		</div>
 		<datagrid source="playerstats.infopanel">
 			<col fields="playerName" width="60%">Player:</col>
 			<col fields="score" width="30%">Score:</col>

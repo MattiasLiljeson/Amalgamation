@@ -38,6 +38,7 @@ public:
 		OnHitScoreEffectPacket,
 		ModuleStateChangePacket,
 		ModuleStatusEffectPacket,
+		BombActivationPacket,
 
 		// Client -> Server:
 		/************************************************************************/
@@ -57,6 +58,7 @@ public:
 		EditSphereUpdatePacket,
 		SelectionMarkerUpdatePacket,
 		PlayerInfo,
+		HighlightEntityPacket
 	};
 
 };

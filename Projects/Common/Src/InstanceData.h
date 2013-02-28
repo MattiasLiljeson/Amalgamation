@@ -16,6 +16,15 @@ struct InstanceData
 	float worldTransform[16];
 	float gradientColors[16];
 	float flags[4];			//Contains numberOfActiveGradient layers,
+	float colorTone[4]; //0 - Red, 1 - Green, 2 - Blue, 3 - Shine
+
+	InstanceData()
+	{
+		colorTone[0] = 1;
+		colorTone[1] = 1;
+		colorTone[2] = 1;
+		colorTone[3] = 0;
+	}
 
 	void setWorldTransform(float* p_worldTransform){
 		for (int i = 0 ; i < 16; i++){
@@ -40,6 +49,13 @@ struct InstanceData
 			}
 		}
 		
+	}
+	void setColorTone(AglVector4 p_colorTone)
+	{
+		colorTone[0] = p_colorTone.x;
+		colorTone[1] = p_colorTone.y;
+		colorTone[2] = p_colorTone.z;
+		colorTone[3] = p_colorTone.w;
 	}
 	void setNumberOfActiveGradientLayers(float p_value){
 		flags[0] = p_value;

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Component.h>
+#include <string>
+
+using namespace std;
 
 // =======================================================================================
 //	PlayerScore
@@ -14,12 +17,12 @@
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class PlayerScore: public Component
+class PlayerComponent: public Component
 {
 public:
-	PlayerScore();
+	PlayerComponent();
 
-	~PlayerScore();
+	~PlayerComponent();
 
 	float getScore();
 	const float* getScorePointer();
@@ -37,7 +40,11 @@ public:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void setAbsoluteScore(float p_absoluteScore);
-
+public:
+	string m_playerName;
+	int m_ping;
+	int m_playerID;
+	int m_networkID;
 private:
 	float m_score; // The accumulated score of the player
 };
