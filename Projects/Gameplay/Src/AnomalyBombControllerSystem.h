@@ -1,27 +1,24 @@
 #pragma once
-
-#include <Component.h>
-#include <AglMatrix.h>
-#include <ComponentFactory.h>
-
+#include <EntitySystem.h>
+class TcpServer;
 // =======================================================================================
-//                                      LevelPieceRoot
+// AnomalyBombControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief...
 ///        
-/// # LevelPieceRoot
-/// Detailed description.....
-/// Created on: 14-2-2013 
+/// # AnomalyBombControllerSystem
+/// Detailed description...
+/// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class LevelPieceRoot : public Component
+class AnomalyBombControllerSystem: public EntitySystem
 {
 public:
-	LevelPieceRoot();
-	
-	int pieceId;
+	AnomalyBombControllerSystem(TcpServer* p_server);
+	virtual void processEntities( const vector<Entity*>& p_entities ) final;
+
 private:
-	static ComponentRegister<LevelPieceRoot> s_reg;
+	TcpServer* m_server;
+
 };

@@ -29,13 +29,16 @@ void HudSystem::process()
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
 	
-	if(stateSystem->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
+	if(stateSystem->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
 		m_backend->showDocument(m_hudIndex);
 
 		setHUDData(SCORE,"-1");
 		//setHUDData(MAPPING,"Empty");
 		setHUDData(TIME,"00:00");
+	}
+	if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
+
 	}
 }
 

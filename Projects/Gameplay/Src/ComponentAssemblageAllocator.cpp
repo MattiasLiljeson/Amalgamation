@@ -39,6 +39,7 @@
 #include "FlareGunModule.h"
 #include "GravityBombModule.h"
 #include "EmpModule.h"
+#include "AnomalyBomb.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -78,4 +79,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<FlareGunModule>();
 	handle<GravityBombModule>();
 	handle<EmpModule>();
+	handle<AnomalyBomb>();
 }

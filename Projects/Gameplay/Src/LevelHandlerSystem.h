@@ -26,5 +26,9 @@ public:
 
 	void inserted( Entity* p_entity );
 
-	void destroyLevel();
+	void destroyLevel(); // Destroys the level
+	bool hasLevel() const;
+
+private:
+	bool m_hasLevel;
 };

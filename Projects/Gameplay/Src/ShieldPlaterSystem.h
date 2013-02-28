@@ -1,27 +1,22 @@
 #pragma once
-
-#include <Component.h>
-#include <AglMatrix.h>
-#include <ComponentFactory.h>
-
+#include <EntitySystem.h>
 // =======================================================================================
-//                                      LevelPieceRoot
+// ShieldPlaterSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief...
 ///        
-/// # LevelPieceRoot
-/// Detailed description.....
-/// Created on: 14-2-2013 
+/// # ShieldPlaterSystem
+/// Detailed description...
+/// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class LevelPieceRoot : public Component
+class ShieldPlaterSystem: public EntitySystem
 {
 public:
-	LevelPieceRoot();
-	
-	int pieceId;
+	ShieldPlaterSystem();
+	void inserted( Entity* p_entity ) final;
+
 private:
-	static ComponentRegister<LevelPieceRoot> s_reg;
+	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false );
 };

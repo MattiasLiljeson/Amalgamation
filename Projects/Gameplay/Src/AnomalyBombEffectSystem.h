@@ -1,27 +1,20 @@
 #pragma once
-
-#include <Component.h>
-#include <AglMatrix.h>
-#include <ComponentFactory.h>
-
+#include <EntitySystem.h>
 // =======================================================================================
-//                                      LevelPieceRoot
+// GravityMineEffectSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief...
 ///        
-/// # LevelPieceRoot
-/// Detailed description.....
-/// Created on: 14-2-2013 
+/// # GravityMineEffectSystem
+/// Detailed description...
+/// Created on: 25-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class LevelPieceRoot : public Component
+class AnomalyBombEffectSystem: public EntitySystem
 {
 public:
-	LevelPieceRoot();
-	
-	int pieceId;
-private:
-	static ComponentRegister<LevelPieceRoot> s_reg;
+	AnomalyBombEffectSystem();
+	virtual void processEntities( const vector<Entity*>& p_entities ) final;
+
 };

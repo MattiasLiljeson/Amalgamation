@@ -14,9 +14,11 @@
     <ClInclude Include="AnomalyAcceleratorModule.h" />
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h" />
+    <ClInclude Include="AnomalyBombControllerSystem.h" />
     <ClInclude Include="AntTweakBarEnablerSystem.h" />
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="BombActivationPacket.h" />
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
@@ -35,6 +37,10 @@
     <ClInclude Include="HighlightEntityPacket.h" />
     <ClInclude Include="InterpolationComponent2.h" />
     <ClInclude Include="InterpolationSystem2.h" />
+    <ClInclude Include="AnomalyBombEffectPiece.h" />
+    <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -131,11 +137,13 @@
     <ClInclude Include="SelectionMarker.h" />
     <ClInclude Include="SelectionMarkerSystem.h" />
     <ClInclude Include="SelectionMarkerUpdatePacket.h" />
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h" />
     <ClInclude Include="ServerMeasurementSystem.h" />
     <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
     <ClInclude Include="ShieldPlate.h" />
+    <ClInclude Include="ShieldPlaterSystem.h" />
     <ClInclude Include="ShieldPlatingSystem.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
     <ClInclude Include="ShipParticleSystemUpdater.h" />
@@ -144,6 +152,7 @@
     <ClInclude Include="SlotParticleEffectPacket.h" />
     <ClInclude Include="SpawnExplosionPacket.h" />
     <ClInclude Include="SpawnPointSet.h" />
+    <ClInclude Include="SpawnPointSystem.h" />
     <ClInclude Include="SpeedBoostModuleActivation.h" />
     <ClInclude Include="ParticleSystemEmitter.h" />
     <ClInclude Include="ParticleSystemEmitterSystem.h" />
@@ -227,6 +236,7 @@
     <ClCompile Include="AnomalyAcceleratorModule.cpp" />
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp" />
+    <ClCompile Include="AnomalyBombControllerSystem.cpp" />
     <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
@@ -237,6 +247,7 @@
     <ClCompile Include="AudioListenerSystem.cpp" />
     <ClCompile Include="AxisRotationSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
+    <ClCompile Include="BombActivationPacket.cpp" />
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
@@ -277,6 +288,7 @@
     <ClCompile Include="GraphicsRendererSystem.cpp" />
     <ClCompile Include="GravityBombModule.cpp" />
     <ClCompile Include="HighlightEntityPacket.cpp" />
+    <ClCompile Include="AnomalyBombEffectSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
@@ -303,6 +315,7 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />
@@ -345,6 +358,7 @@
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp" />
     <ClCompile Include="ServerClientInfoSystem.cpp" />
     <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp" />
     <ClCompile Include="ServerMeasurementSystem.cpp" />
     <ClCompile Include="ServerPacketHandlerSystem.cpp" />
     <ClCompile Include="ServerPickingSystem.cpp" />
@@ -354,6 +368,7 @@
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ShadowSystem.cpp" />
+    <ClCompile Include="ShieldPlaterSystem.cpp" />
     <ClCompile Include="ShieldPlatingSystem.cpp" />
     <ClCompile Include="ShipConnectionPointHighlights.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />
@@ -381,6 +396,7 @@
     <ClCompile Include="SkeletalAnimation.cpp" />
     <ClCompile Include="SkeletalAnimationSystem.cpp" />
     <ClCompile Include="SlotParticleEffectPacket.cpp" />
+    <ClCompile Include="SpawnPointSystem.cpp" />
     <ClCompile Include="SpawnExplosionPacket.cpp" />
     <ClCompile Include="SpawnPointSet.cpp" />
     <ClCompile Include="SpawnSoundEffectPacket.cpp" />

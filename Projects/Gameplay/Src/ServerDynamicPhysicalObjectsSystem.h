@@ -1,27 +1,19 @@
 #pragma once
-
-#include <Component.h>
-#include <AglMatrix.h>
-#include <ComponentFactory.h>
-
+#include <EntitySystem.h>
 // =======================================================================================
-//                                      LevelPieceRoot
+// ServerDynamicPhysicalObjectsSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Tracks entities with components: NetworkSynced, Transform, PhysicsBody.
 ///        
-/// # LevelPieceRoot
-/// Detailed description.....
-/// Created on: 14-2-2013 
+/// # ServerDynamicPhysicalObjectsSystem
+/// Detailed description...
+/// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class LevelPieceRoot : public Component
+class ServerDynamicPhysicalObjectsSystem: public EntitySystem
 {
 public:
-	LevelPieceRoot();
-	
-	int pieceId;
-private:
-	static ComponentRegister<LevelPieceRoot> s_reg;
+	ServerDynamicPhysicalObjectsSystem();
+	// Get the active entities!
 };

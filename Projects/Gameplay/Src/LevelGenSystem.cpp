@@ -24,6 +24,7 @@
 #include "LoadMeshSystemServer.h"
 #include "EntityFactory.h"
 #include "LevelInfo.h"
+#include "LevelPieceRoot.h"
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -36,6 +37,8 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 	m_entityFactory			= NULL;
 	m_levelInfo				= NULL;
 	m_endPlugModelResource	= NULL;
+	m_readyToRun			= false;
+	m_hasGeneratedLevel		= false;
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -49,8 +52,6 @@ void LevelGenSystem::initialize()
 		m_world->getSystem(SystemType::EntityFactory));
 
 	preloadLevelGenRecipeEntity( LEVELPIECESPATH + "LevelGenServer.asd");
-
-
 }
 
 void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMesh )
@@ -88,8 +89,8 @@ void LevelGenSystem::preloadLevelGenRecipeEntity(const string& p_filePath)
 
 void LevelGenSystem::inserted( Entity* p_entity )
 {
-	m_levelInfo = static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
-	// TODO: parse levelInfo and generate!
+	m_levelInfo			= static_cast<LevelInfo*>(p_entity->getComponent(ComponentType::LevelInfo));
+	m_startTransform	= static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform))->getMatrix();
 
 	auto loadMeshSys = static_cast<LoadMeshSystemServer*>(
 		m_world->getSystem(SystemType::LoadMeshSystem));
@@ -126,12 +127,11 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		MODELPATH, false);
 	m_endPlugModelResource = resourcesFromModel->at(0);
 
+	m_readyToRun = true;
 	// Temp: This is to make sure the system works.
-	srand(static_cast<unsigned int>(time(NULL)));
-	generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
-	createLevelEntities();
+	run();
 
-	m_world->deleteEntity(p_entity);
+	//m_world->deleteEntity(p_entity);
 }
 
 void LevelGenSystem::removed( Entity* p_entity )
@@ -155,9 +155,18 @@ void LevelGenSystem::clearGeneratedData()
 
 void LevelGenSystem::run()
 {
-	//srand(static_cast<unsigned int>(time(NULL)));
-	//generateLevelPieces(1);
-	//createLevelEntities();
+	if (m_readyToRun)
+	{
+		m_hasGeneratedLevel = false;
+		srand(static_cast<unsigned int>(time(NULL)));
+		generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
+		createLevelEntities();
+		m_hasGeneratedLevel = true;
+	}
+	else
+	{
+		DEBUGPRINT(("Warning: LevelGenSystem::run was called, but the system is not ready to run yet.\n"));
+	}
 }
 
 void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRotation)
@@ -171,10 +180,9 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 		quart = AglQuaternion::identity();
 
 	// Create a initial piece.
-	Transform* transform = new Transform(AglVector3(20, -20, 10), 
-										quart, 
-										AglVector3::one());
-	
+	Transform* transform = new Transform(m_startTransform);
+	transform->setRotation(quart);
+
 	// Create the level piece to use later
 	int id = m_levelInfo->getStartFileData()->id;
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
@@ -223,6 +231,11 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		transform->setRotation( p_piece->getTransform()->getRotation() );
 
 		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
+
+		auto pieceRoot = static_cast<LevelPieceRoot*>(
+			entity->getComponent(ComponentType::LevelPieceRoot));
+
+		pieceRoot->pieceId = p_piece->getPieceId();
 	}
 
 	return entity;
@@ -281,7 +294,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 					m_generatedPieces[i]->getBoundingSphere()) && 
 					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
 				{
-					DEBUGPRINT(("Collision between chambers detected. Failed to generate!"));
+					DEBUGPRINT(("Collision between chambers detected. This means a level plug has been created instead.\n"));
 					colliding = true;
 					break;
 				}
@@ -299,6 +312,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				updateWorldMinMax(obb);
 
 				out_pieces.push_back(piece);
+				piece->setPieceId(m_generatedPieces.size());
 				m_generatedPieces.push_back(piece);
 			}
 		}
@@ -406,6 +420,12 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 		}
 	}
 }
+
+int LevelGenSystem::getGeneratedPiecesCount() const
+{
+	return m_generatedPieces.size();
+}
+
 
 
 

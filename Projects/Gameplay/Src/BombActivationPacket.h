@@ -1,27 +1,24 @@
 #pragma once
-
-#include <Component.h>
-#include <AglMatrix.h>
-#include <ComponentFactory.h>
-
+#include "Packetizer.h"
 // =======================================================================================
-//                                      LevelPieceRoot
+// BombActivationPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Brief...
 ///        
-/// # LevelPieceRoot
-/// Detailed description.....
-/// Created on: 14-2-2013 
+/// # BombActivationPacket
+/// Detailed description...
+/// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-
-class LevelPieceRoot : public Component
+class BombActivationPacket: public Packetizer
 {
 public:
-	LevelPieceRoot();
-	
-	int pieceId;
-private:
-	static ComponentRegister<LevelPieceRoot> s_reg;
+	BombActivationPacket();
+	virtual Packet pack() final;
+	virtual void unpack( Packet& p_packet ) final;
+
+public:
+	int netsyncId;
+
 };

@@ -1,11 +1,15 @@
+#define FORCE_VS_DBG_OUTPUT
+
 #include "LevelHandlerSystem.h"
 #include "LevelPieceRoot.h"
 #include "Transform.h"
+#include "SpawnPointSystem.h"
+#include "LevelGenSystem.h"
 
 LevelHandlerSystem::LevelHandlerSystem()
 	: EntitySystem(SystemType::LevelHandlerSystem, 2, ComponentType::LevelPieceRoot, ComponentType::Transform)
 {
-
+	m_hasLevel = false;
 }
 
 LevelHandlerSystem::~LevelHandlerSystem()
@@ -20,16 +24,17 @@ void LevelHandlerSystem::processEntities( const vector<Entity*>& p_entities )
 
 void LevelHandlerSystem::inserted( Entity* p_entity )
 {
-	// No longer required right now.
+	auto pieceRoot = static_cast<LevelPieceRoot*>(
+		p_entity->getComponent(ComponentType::LevelPieceRoot));
 
-	//auto transform = static_cast<Transform*>(
-	//	p_entity->getComponent(ComponentType::Transform));
-	//auto pieceRoot = static_cast<LevelPieceRoot*>(
-	//	p_entity->getComponent(ComponentType::LevelPieceRoot));
+	auto levelGen = static_cast<LevelGenSystem*>(
+		m_world->getSystem(SystemType::LevelGenSystem));
 
-	//// Init the translation and rotation here. Uncertain if scale should ever be applied.
-	//transform->setTranslation( pieceRoot->initTransformMatrix.GetTranslation() );
-	//transform->setRotation( pieceRoot->initTransformMatrix.GetRotation() );
+	if (levelGen && pieceRoot->pieceId == levelGen->getGeneratedPiecesCount() - 1)
+	{
+		m_hasLevel = true;
+		DEBUGPRINT(("Level is now properly generated.\n"));
+	}
 }
 
 void LevelHandlerSystem::destroyLevel()
@@ -39,4 +44,9 @@ void LevelHandlerSystem::destroyLevel()
 	{
 		m_world->deleteEntity(entities[i]);
 	}
+}
+
+bool LevelHandlerSystem::hasLevel() const
+{
+	return m_hasLevel;
 }

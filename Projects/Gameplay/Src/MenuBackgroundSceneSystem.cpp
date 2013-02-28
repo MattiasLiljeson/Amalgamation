@@ -8,6 +8,7 @@
 #include "LightsComponent.h"
 #include "ClientStateSystem.h"
 #include "GradientComponent.h"
+#include "EntityFactory.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
