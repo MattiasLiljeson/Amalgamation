@@ -8,9 +8,9 @@ c EnvironmentValues
 d f m_fogColorR 0.23
 d f m_fogColorG 0.1
 d f m_fogColorB 0.03
-d f m_ambientColorR 0.0
-d f m_ambientColorG 0.0
-d f m_ambientColorB 0.0
+d f m_ambientColorR 0.1
+d f m_ambientColorG 0.03
+d f m_ambientColorB 0.06
 # The values specifying the closeness(in percentage range 0-1) 
 # of the fog start and end in relation to the near- and far planes.
 d f m_fogFarPlaneClosenessPercentage 0.8
