@@ -110,7 +110,9 @@ void LoadMeshSystemServer::setUpParticles( Entity* p_entity, ModelResource* p_mo
 		vector<ParticleSystemInstruction>* psCollection = &(p_modelResource->particleSystems.m_collection);
 		for( unsigned int i=0; i<psCollection->size(); i++ )
 		{
-			ParticleSystemData data( psCollection->at(i), "Particle system name, from AGL file" );
+			stringstream ss;
+			ss<<"Particle system name, from AGL file:"<<psComp->getParticleSystemCnt();
+			ParticleSystemData data( psCollection->at(i), ss.str() );
 			psComp->addParticleSystem( data );
 		}
 	}

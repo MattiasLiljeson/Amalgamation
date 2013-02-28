@@ -49,7 +49,10 @@ void AnomalyAcceleratorModuleControllerSystem::processEntities(
 					m_world->getSystem(SystemType::PhysicsSystem));
 				AglVector3 moduleVelocity = physics->getController()->getBody(
 					physBody->m_id)->GetVelocity();
-				spawnAnomalyBomb(transform, moduleVelocity, module);
+					AglVector3 fireDirection = AglVector3::forward();
+					transform->getRotation().transformVector(fireDirection);
+					fireDirection *= anomalyAccelerator->launchSpeed;
+				spawnAnomalyBomb(transform, moduleVelocity + fireDirection, module);
 			}
 		}
 	}
@@ -61,7 +64,6 @@ void AnomalyAcceleratorModuleControllerSystem::spawnAnomalyBomb( Transform* p_tr
 	Entity* bombEntity = static_cast<EntityFactory*>(m_world->getSystem(
 		SystemType::EntityFactory))->createAnomalyBombServer(p_transform,
 		p_moduleVelocity, p_module);
-
 	EntityCreationPacket data;
 	Transform* bombTransform = static_cast<Transform*>(bombEntity->getComponent(
 		ComponentType::Transform));

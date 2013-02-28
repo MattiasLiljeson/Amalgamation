@@ -696,8 +696,6 @@
     <ClInclude Include="AnomalyBomb.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="EmpRocketLauncherModule.h" />
-    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
     <ClInclude Include="HighlightEntityPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -720,7 +718,6 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="PlayerSystem.h" />
-    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="AnomalyAcceleratorModule.h">
       <Filter>Components\Modules</Filter>
@@ -743,6 +740,17 @@
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ShieldPlaterSystem.h" />
+    <ClInclude Include="EmpRocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpRocketLancherModuleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1226,8 +1234,6 @@
     <ClCompile Include="AnomalyBomb.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="EmpRocketLauncherModule.cpp" />
-    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
     <ClCompile Include="HighlightEntityPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -1247,7 +1253,6 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="PlayerSystem.cpp" />
-    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="AnomalyAcceleratorModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -1267,6 +1272,16 @@
     <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp" />
+    <ClCompile Include="EmpRocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
