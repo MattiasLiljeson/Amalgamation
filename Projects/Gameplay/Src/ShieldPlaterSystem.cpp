@@ -7,10 +7,12 @@
 #include "ShieldModuleActivationClient.h"
 #include "AudioBackendSystem.h"
 #include "SpawnPointSet.h"
+#include "MeshOffsetTransform.h"
 
 ShieldPlaterSystem::ShieldPlaterSystem()
-	: EntitySystem(SystemType::ShieldPlaterSystem, 4, ComponentType::ShieldModule,
-	ComponentType::Transform, ComponentType::SpawnPointSet, ComponentType::ShipModule)
+	: EntitySystem(SystemType::ShieldPlaterSystem, 5, ComponentType::ShieldModule,
+	ComponentType::Transform, ComponentType::SpawnPointSet, ComponentType::ShipModule,
+	ComponentType::MeshOffsetTransform)
 {
 }
 
@@ -31,10 +33,17 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 		AglVector3 spawnPoint;
 		AglVector3 scaleBuffer;
 		AglQuaternion quaternionBuffer;
-		spawnPointSet->m_spawnPoints[0].spTransform.toComponents(scaleBuffer,
+
+		AglMatrix transform = spawnPointSet->m_spawnPoints[0].spTransform;
+		MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+			p_entity->getComponent(ComponentType::MeshOffsetTransform));
+		transform *= offset->offset.inverse();
+		transform.toComponents(scaleBuffer,
 			quaternionBuffer, spawnPoint);
+
 		float radius = 10.0f;
-		AglVector3 position = spawnPoint + AglVector3(radius * spawnX, radius * spawnY, 0 );
+		AglVector3 position = spawnPoint + transform.GetRight()*spawnX*radius +
+			transform.GetUp()*spawnY*radius;
 		position.normalize();
 		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
 		position = position * spawnPoint.length();

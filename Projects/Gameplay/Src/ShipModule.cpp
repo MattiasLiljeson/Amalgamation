@@ -8,12 +8,31 @@ ShipModule::ShipModule()
 	m_parentEntity = -1;
 	m_lastShipEntityWhenAttached = -1;
 	m_active = false;
-	m_value = 100;
-	m_health = 100.0f;
+	m_maxvalue = 100.0f;
+	m_value = m_maxvalue;
+	m_maxhealth = 100.0f;
+	m_health = m_maxhealth;
+	m_rotationDirection = 0;
+	m_rotation = 0;
+	m_unused = true;
+
+}
+
+ShipModule::ShipModule(float p_maxhealth, float p_maxvalue)
+	: Component( ComponentType::ShipModule )
+{
+	m_parentEntity = -1;
+	m_lastShipEntityWhenAttached = -1;
+	m_active = false;
+	m_maxvalue = p_maxvalue;
+	m_value = m_maxvalue;
+	m_maxhealth = p_maxhealth;
+	m_health = m_maxhealth;
 	m_rotationDirection = 0;
 	m_rotation = 0;
 	m_unused = true;
 }
+
 
 ShipModule::~ShipModule()
 {
@@ -26,11 +45,22 @@ ShipModule::~ShipModule()
 void ShipModule::init( vector<ComponentData> p_initData )
 {
 	for( unsigned int i=0; i<p_initData.size(); i++ )
-	{
-		if( p_initData[i].dataName == "m_value" )
+	{		
+		if( p_initData[i].dataName == "m_maxvalue" )
+		{
+			p_initData[i].getData<float>(&m_maxvalue);
+			m_value = m_maxvalue;
+		}
+		else if( p_initData[i].dataName == "m_maxhealth" )
+		{
+			p_initData[i].getData<float>(&m_maxhealth);
+			m_health = m_maxhealth;
+		}
+		else if( p_initData[i].dataName == "m_value" )
 			p_initData[i].getData<float>(&m_value);
 		else if( p_initData[i].dataName == "m_health" )
 			p_initData[i].getData<float>(&m_health);
+
 	}
 	m_rotation = 0;
 	m_rotationDirection = 0;
@@ -104,4 +134,14 @@ bool ShipModule::isUnused()
 bool ShipModule::isOwned()
 {
 	return m_parentEntity >= 0;
+}
+
+float ShipModule::getMaxHealth()
+{
+	return m_maxhealth;
+}
+
+float ShipModule::getMaxValue()
+{
+	return m_maxvalue;
 }

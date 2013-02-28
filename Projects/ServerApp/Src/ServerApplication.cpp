@@ -35,7 +35,7 @@
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
-#include <OnHitEffectBufferSystem.h>
+#include <ModuleVisualEffectBufferSystem.h>
 #include <SpawnPointSystem.h>
 #include <TempModuleSpawner.h>
 #include <AnomalyBombControllerSystem.h>
@@ -56,6 +56,7 @@
 #include <ServerGameState.h>
 #include <ServerStateSystem.h>
 #include <AnomalyAcceleratorModuleControllerSystem.h>
+#include <ShipModuleStatsSystem.h>
 #include <PlayerSystem.h>
 
 
@@ -142,7 +143,8 @@ namespace Srv
 		/************************************************************************/
 		/* States																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerStateSystem(ServerStates::LOBBY),true);
+		ServerStateSystem* serverStates = new ServerStateSystem(ServerStates::LOBBY);
+		m_world->setSystem(serverStates,true);
 
 		/************************************************************************/
 		/* Entity creation														*/
@@ -176,8 +178,9 @@ namespace Srv
 		/************************************************************************/
 		/* Effects																*/
 		/************************************************************************/
-		OnHitEffectBufferSystem* onhiteffect = new OnHitEffectBufferSystem(m_server);
-		m_world->setSystem(onhiteffect, true);
+		auto moduleeffect = new ModuleVisualEffectBufferSystem(m_server,serverStates);
+		m_world->setSystem(moduleeffect, true);
+		m_world->setSystem(new ShipModuleStatsSystem(moduleeffect), true);
 
 		/************************************************************************/
 		/* Physics																*/
@@ -207,7 +210,7 @@ namespace Srv
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerPickingSystem(m_server,onhiteffect), true);
+		m_world->setSystem(new ServerPickingSystem(m_server,moduleeffect), true);
 
 
 		/************************************************************************/
@@ -236,7 +239,7 @@ namespace Srv
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		// Important for any module-damaging logic to happen before this.
-		m_world->setSystem(new ShipModulesControllerSystem(m_server,onhiteffect), true);
+		m_world->setSystem(new ShipModulesControllerSystem(m_server,moduleeffect), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
 		m_world->setSystem(new PlayerSystem(), true);

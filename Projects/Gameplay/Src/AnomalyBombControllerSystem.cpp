@@ -25,6 +25,10 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 			ComponentType::AnomalyBomb));
 		Transform* bombTransform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
+		PhysicsBody* bombBody = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+			ComponentType::PhysicsBody));
+		PhysicsSystem* physSystem = static_cast<PhysicsSystem*>(
+			m_world->getSystem(SystemType::PhysicsSystem));
 		bombBomb->lifeTime -= dt;
 		if(bombBomb->lifeTime <= 0.0f)
 		{
@@ -60,8 +64,6 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 					vector<ComponentType::ComponentTypeIdx> otherComps =
 						m_world->getComponentManager()->getComponentEnumList(
 						dynamicEntities[netsyncIndex]);
-					PhysicsSystem* physSystem = static_cast<PhysicsSystem*>(
-						m_world->getSystem(SystemType::PhysicsSystem));
 					float length = dir.length();
 					dir.normalize();
 					float radiusFactor = (length - bombBomb->eventHorizonRadius) /
@@ -80,8 +82,6 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 					vector<ComponentType::ComponentTypeIdx> otherComps =
 						m_world->getComponentManager()->getComponentEnumList(
 						dynamicEntities[netsyncIndex]);
-					PhysicsSystem* physSystem = static_cast<PhysicsSystem*>(
-						m_world->getSystem(SystemType::PhysicsSystem));
 					float length = dir.length();
 					dir.normalize();
 					float radiusFactor = (length - bombBomb->arriveRadius) /
