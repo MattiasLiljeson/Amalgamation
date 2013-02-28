@@ -19,11 +19,19 @@ void TW_CALL MergeDialog::LoadAGL(void *clientData)
 				AglParticleSystemHeader h = ps[i]->getHeader();
 				if (h.textureNameIndex >= 0)
 				{
-					string s = scene->getName(h.textureNameIndex);
-					TextureManager::GetInstance()->LoadTexture(s);
-					h.textureNameIndex = Scene::GetInstance()->AddName(s);
+					string texPath = scene->getName(h.textureNameIndex);
+					int ind = TextureManager::GetInstance()->LoadTexture(texPath);
+					if (ind < 0)
+					{
+						h.textureNameIndex = -1;
+					}
+					else
+					{
+						TextureData* data = TextureManager::GetInstance()->GetTexture(ind);
+						h.textureNameIndex = Scene::GetInstance()->AddName(data->Path);
+					}
 				}
-				SceneDialog::GetInstance()->ClonePE(ps[i]->getHeader());
+				SceneDialog::GetInstance()->ClonePE(h);
 			}
 		}
 		delete scene;
