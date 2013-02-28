@@ -17,9 +17,10 @@
 
 AnomalyAcceleratorModuleControllerSystem::AnomalyAcceleratorModuleControllerSystem(
 	TcpServer* p_server)
-	: EntitySystem(SystemType::AnomalyAcceleratorModuleControllerSystem, 4,
+	: EntitySystem(SystemType::AnomalyAcceleratorModuleControllerSystem, 5,
 	ComponentType::AnomalyAcceleratorModule, ComponentType::Transform,
-	ComponentType::PhysicsBody, ComponentType::ShipModule)
+	ComponentType::PhysicsBody, ComponentType::ShipModule,
+	ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }
