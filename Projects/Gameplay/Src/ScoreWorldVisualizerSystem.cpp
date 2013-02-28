@@ -94,6 +94,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 	{
 		float numberoffset = (float)i*0.1f;
 		AglParticleSystem particleSystem;
+		particleSystem.getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
 		AglVector3 offset = AglVector3( 5.0f*(-(float)size+(float)i),-30*numberoffset,0.0f);
 		particleSystem.setParticleSize(AglVector2(5.0f,5.0f));
 		// offset.transform(cameraRot);

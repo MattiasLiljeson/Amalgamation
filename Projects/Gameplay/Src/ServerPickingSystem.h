@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "PickComponent.h"
 #include "ConnectionPointSet.h"
-#include "OnHitEffectBufferSystem.h"
+#include "ModuleVisualEffectBufferSystem.h"
 
 class ShipModule;
 class PlayerSystem;
@@ -26,7 +26,7 @@ class ServerPickingSystem: public EntitySystem
 {
 public:
 	ServerPickingSystem(TcpServer* p_server,
-		OnHitEffectBufferSystem* p_effectBuffer);
+		ModuleVisualEffectBufferSystem* p_effectBuffer);
 	~ServerPickingSystem();
 
 	virtual void initialize();
@@ -56,6 +56,7 @@ private:
 	bool attemptDetach(PickComponent& p_ray);
 	AglMatrix offsetTemp(Entity* p_entity, AglMatrix p_base, AglMatrix p_offset, float p_rotation = 0);
 	void setScoreEffect(Entity* p_player, Transform* p_moduleTransform, int p_score);
+	void setModuleUsedStatusEffect(Entity* p_module);
 	vector<pair<int, Entity*>> getFreeConnectionPoints(ConnectionPointSet* p_set, Entity* p_parent);
 
 	//Rotation of modules
@@ -70,5 +71,5 @@ private:
 	void unsetPick(PickComponent& p_ray);
 
 	// Effects
-	OnHitEffectBufferSystem* m_effectbuffer;
+	ModuleVisualEffectBufferSystem* m_effectbuffer;
 };

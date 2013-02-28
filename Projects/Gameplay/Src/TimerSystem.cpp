@@ -6,6 +6,8 @@ TimerSystem::TimerSystem()
 	/************************************************************************/
 	/* Add your own intervals here!											*/
 	/************************************************************************/
+	m_timerIntervals[TimerIntervals::EveryFourSeconds] = 4.0f;
+	m_timerIntervals[TimerIntervals::EveryTwoSeconds] = 2.0f;
 	m_timerIntervals[TimerIntervals::EverySecond] = 1.0f;
 	m_timerIntervals[TimerIntervals::HalfSecond] = 0.5f;
 	m_timerIntervals[TimerIntervals::Every32Millisecond] = 0.032f;
