@@ -314,6 +314,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
+	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
@@ -408,7 +409,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
