@@ -80,14 +80,15 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 
 void GameStatsSystem::updateResults(const PlayersWinLosePacket* p_packet){
 
-	vector<PlayerComponent*> playerSys  = static_cast<PlayerSystem*>(
-		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
+	PlayerSystem* system = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem));
+	vector<PlayerComponent*> playerSys = system->getPlayerComponents();
 
 	// Update panel with new data.
 	for (int i = 0; i < p_packet->activePlayers; i++)
 	{
 		PlayerStats stats;
-		stats.name	= playerSys.at(p_packet->playerIdentities[i])->m_playerName;
+		stats.name	= system->getPlayerNameFromID(p_packet->playerIdentities[i]);
 		stats.score = p_packet->scores[i];
 		stats.ping	= 0;
 

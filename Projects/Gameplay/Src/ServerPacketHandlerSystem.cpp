@@ -424,8 +424,11 @@ void ServerPacketHandlerSystem::handleLobby()
 			//Add the entity here to be used by other systems
 			Entity* newPlayer = m_world->createEntity();
 			PlayerComponent* newComp = new PlayerComponent();
-			if(playerInfo.playerName == "brightestmind"){
+			if( playerInfo.playerName == "brightestmind" && playerInfo.playerID == 0){
 				newComp->setAbsoluteScore(9001);
+			}
+			else if(playerInfo.playerName=="judas"){
+				newComp->setAbsoluteScore(-9001);
 			}
 			newComp->m_playerName = playerInfo.playerName;
 			newComp->m_playerID = connectedPlayers.size();

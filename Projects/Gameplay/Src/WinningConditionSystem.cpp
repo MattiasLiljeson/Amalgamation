@@ -7,6 +7,7 @@
 #include <TcpServer.h>
 #include "ServerStateSystem.h"
 #include "ChangeStatePacket.h"
+#include "PlayerSystem.h"
 
 WinningConditionSystem::WinningConditionSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::WinningConditionSystem, 2, ComponentType::PlayerComponent,
@@ -40,7 +41,7 @@ void WinningConditionSystem::process()
 			m_endTime = 0.0f;
 			m_elapsedGameSessionTime = 0.0f;
 			m_enabled = false; // Disable this system.
-			vector< pair<float, Entity*> > sorted =
+			vector< pair<float, int> > sorted =
 				createSortedScoreEntityMapping();
 			signalEndSession(sorted);
 		}
@@ -59,34 +60,31 @@ int WinningConditionSystem::getRemaningSeconds() const
 	return (int)timeLeft - getRemaningMinutes()*60;
 }
 
-vector< pair<float, Entity*> > WinningConditionSystem::createSortedScoreEntityMapping()
+vector< pair<float, int> > WinningConditionSystem::createSortedScoreEntityMapping()
 {
-	vector< pair<float, Entity*> > scoreEntityMapping;
-	vector<Entity*> scoreEntities = getActiveEntities();
+	vector< pair<float, int> > scoreEntityMapping;
+	vector<PlayerComponent*> scoreEntities = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
 	for(unsigned int i=0; i<scoreEntities.size(); i++)
 	{
-		PlayerComponent* score = static_cast<PlayerComponent*>(scoreEntities[i]->getComponent(
-			ComponentType::PlayerComponent));
-		scoreEntityMapping.push_back(pair<float, Entity*>(score->getScore(),
-			scoreEntities[i]));
+		scoreEntityMapping.push_back(pair<float, int>(scoreEntities[i]->getScore(),
+			scoreEntities[i]->m_playerID));
 	}
 	// Sort score with the highest first.
 	std::sort(scoreEntityMapping.begin(), scoreEntityMapping.end(),
-		boost::bind(&pair<float, Entity*>::first, _1) >
-		boost::bind(&pair<float, Entity*>::first, _2));
+		boost::bind(&pair<float, int>::first, _1) >
+		boost::bind(&pair<float, int>::first, _2));
 	return scoreEntityMapping;
 }
 
 void WinningConditionSystem::signalEndSession(
-	vector< pair<float, Entity*> > p_scoreComponentMapping)
+	vector< pair<float, int> > p_scoreComponentMapping)
 {
 	PlayersWinLosePacket winLosePacket;
 	winLosePacket.activePlayers = p_scoreComponentMapping.size();
 	for(unsigned int i=0; i<p_scoreComponentMapping.size(); i++)
 	{
-		NetworkSynced* netSync = static_cast<NetworkSynced*>(
-			p_scoreComponentMapping[i].second->getComponent(ComponentType::NetworkSynced));
-		winLosePacket.playerIdentities[i] = netSync->getPlayerID();
+		winLosePacket.playerIdentities[i] = p_scoreComponentMapping[i].second;
 		winLosePacket.scores[i] = p_scoreComponentMapping[i].first;
 	}
 

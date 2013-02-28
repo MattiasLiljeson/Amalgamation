@@ -24,7 +24,7 @@ public:
 	~PlayerSystem();
 	PlayerComponent* getPlayerCompFromNetworkComp(NetworkSynced* p_netComponent);
 	const vector<PlayerComponent*>& getPlayerComponents() const;
-
+	string getPlayerNameFromID(int p_playerID) const;
 	void inserted( Entity* p_entity );
 private:
 	vector<PlayerComponent*> m_playerComponents;

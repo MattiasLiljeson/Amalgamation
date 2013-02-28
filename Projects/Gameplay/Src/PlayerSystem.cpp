@@ -35,3 +35,16 @@ void PlayerSystem::inserted( Entity* p_entity )
 	if(playerComponent)
 		m_playerComponents.push_back(playerComponent);
 }
+
+std::string PlayerSystem::getPlayerNameFromID( int p_playerID ) const
+{
+	if(p_playerID <= m_playerComponents.size()){
+		for (unsigned int i = 0; i < m_playerComponents.size(); i++)
+		{
+			if(m_playerComponents.at(i)->m_playerID == p_playerID){
+				return m_playerComponents.at(i)->m_playerName;
+			}
+		}
+	}
+	return "";
+}
