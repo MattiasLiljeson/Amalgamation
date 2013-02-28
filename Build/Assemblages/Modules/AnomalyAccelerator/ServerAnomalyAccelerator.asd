@@ -33,3 +33,4 @@ d f m_value 100.0f
 
 c AnomalyAcceleratorModule
 d f cooldownTime 10.0
+d f launchSpeed 100.0
