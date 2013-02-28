@@ -13,6 +13,7 @@
 #include "ModuleHelper.h"
 #include "AnomalyBomb.h"
 #include "EntityFactory.h"
+#include "MeshOffsetTransform.h"
 
 AnomalyAcceleratorModuleControllerSystem::AnomalyAcceleratorModuleControllerSystem(
 	TcpServer* p_server)
@@ -49,9 +50,12 @@ void AnomalyAcceleratorModuleControllerSystem::processEntities(
 					m_world->getSystem(SystemType::PhysicsSystem));
 				AglVector3 moduleVelocity = physics->getController()->getBody(
 					physBody->m_id)->GetVelocity();
-					AglVector3 fireDirection = AglVector3::forward();
-					transform->getRotation().transformVector(fireDirection);
-					fireDirection *= anomalyAccelerator->launchSpeed;
+				AglVector3 fireDirection = AglVector3::forward();
+				MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+					p_entities[i]->getComponent(ComponentType::MeshOffsetTransform));
+				fireDirection.transform(offset->offset.inverse());
+				transform->getRotation().transformVector(fireDirection);
+				fireDirection *= anomalyAccelerator->launchSpeed;
 				spawnAnomalyBomb(transform, moduleVelocity + fireDirection, module);
 			}
 		}
