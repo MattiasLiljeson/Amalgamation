@@ -21,6 +21,7 @@ d i m_endFrame 0
 d s m_name Start
 d i m_startFrame 1
 d i m_endFrame 110
+d f m_speed 4.0
 
 d s m_name Active
 d i m_startFrame 120

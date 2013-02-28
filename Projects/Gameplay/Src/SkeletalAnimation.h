@@ -25,6 +25,15 @@ struct AnimationTake
 	string name;
 	int startFrame;
 	int endFrame;
+	float speed;
+
+	AnimationTake()
+	{
+		name = "";
+		startFrame = 0;
+		endFrame = 0;
+		speed = 1.0f;
+	}
 };
 
 class SkeletalAnimation : public Component

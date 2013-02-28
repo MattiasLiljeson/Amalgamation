@@ -48,6 +48,10 @@ void SkeletalAnimation::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&m_takes.back().endFrame);
 		}
+		else if (name == "m_speed")
+		{
+			p_initData[i].getData<float>(&m_takes.back().speed);
+		}
 	}
 	m_time = 0;
 	m_isPlaying = false;

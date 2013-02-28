@@ -90,7 +90,7 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 					}
 
 					PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
-					//insertToRenderQue( info );
+					insertToRenderQue( info );
 					delete newTrans;
 				}
 			}

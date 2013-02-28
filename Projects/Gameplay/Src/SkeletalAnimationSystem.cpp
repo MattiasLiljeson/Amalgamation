@@ -26,7 +26,7 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 				anim->m_time = take.startFrame * anim->m_fps;
 			else
 			{
-				anim->m_time += dt;
+				anim->m_time += dt * take.speed;
 
 				float maxTime = take.endFrame / anim->m_fps;//anim->m_scene->getAnimation(0)->getMaxTime();
 				float minTime = take.startFrame / anim->m_fps;//anim->m_scene->getAnimation(0)->getMinTime();
