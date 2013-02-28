@@ -59,7 +59,7 @@ void CullingSystem::processEntities( const vector<Entity*>& p_entities )
 				renderInfo->m_shouldBeCulled = true;
 				m_culled++;
 			}
-			else if (cullStatus == 2) //Not tesselated
+			else if (cullStatus == 2 || true) //Not tesselated
 			{
 				renderInfo->m_shouldBeCulled = false;
 				renderInfo->m_shouldBeTesselated = false;

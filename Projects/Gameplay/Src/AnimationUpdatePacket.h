@@ -30,4 +30,6 @@ public:
 	int networkIdentity;
 	bool shouldPlay;
 	float playSpeed;
+	bool shouldQueue;
+	string take;
 };

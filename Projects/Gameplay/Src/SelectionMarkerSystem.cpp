@@ -66,7 +66,7 @@ void SelectionMarkerSystem::setMarkerTarget(int p_target, AglMatrix p_transform)
 			if (!skelAnim)
 			{
 				skelAnim = new SkeletalAnimation(0, skelAnimTarget->m_scene, skelAnimTarget->m_offset);
-				skelAnim->m_playSpeed = 0;
+				skelAnim->m_fps = 0;
 				m_marker->addComponent(ComponentType::SkeletalAnimation, skelAnim);
 			}
 			else

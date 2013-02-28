@@ -142,7 +142,16 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 	matbuffer->SpecularShininess = AglVector4(pMaterial.specular, pMaterial.shininess);
 	matbuffer->EmissiveDiffuseMapped = AglVector4(pMaterial.emissive, float(pMaterial.diffuseTextureNameIndex >= 0 && DIFFUSEON));
 	matbuffer->EyePositionSpecularMapped = AglVector4(Camera::GetInstance()->Position().x, Camera::GetInstance()->Position().y, Camera::GetInstance()->Position().z, float(pMaterial.specularTextureNameIndex >= 0 && SPECULARON));
-	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0  && NORMALON), 0, 0);
+	matbuffer->Flags = AglVector4((float)(pMaterial.glowTextureNameIndex >= 0 && GLOWON), (float)(pMaterial.normalTextureNameIndex >= 0  && NORMALON), (float)(pMaterial.gradientDataIndex >= 0 && pMaterial.gradientTextureNameIndex >= 0), 0);
+	if (pMaterial.gradientDataIndex >= 0)
+	{
+		AglGradient* g = Scene::GetInstance()->GetGradient(pMaterial.gradientDataIndex);
+
+		vector<AglGradientMaterial*> layers = g->getLayers();
+		for (unsigned int i = 0; i < layers.size(); i++)
+			matbuffer->gradientColors[i] = layers[i]->color;
+		matbuffer->Flags.w = (float)layers.size();
+	}
 	mDeviceContext->Unmap(mMaterialBuffer, 0);
 
 	mDeviceContext->PSSetConstantBuffers(bufferNumber, 1, &mMaterialBuffer);
@@ -174,6 +183,13 @@ void SkeletonMeshShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix 
 		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
 		if (data)
 			mDeviceContext->PSSetShaderResources(3, 1, &data->SRV);
+	}
+	if (pMaterial.gradientTextureNameIndex >= 0)
+	{
+		string s = Scene::GetInstance()->GetName(pMaterial.gradientTextureNameIndex);
+		TextureData* data = TextureManager::GetInstance()->GetTexture(s);
+		if (data)
+			mDeviceContext->PSSetShaderResources(4, 1, &data->SRV);
 	}
 
 	mDeviceContext->PSSetSamplers(0, 1, &mSampler);
