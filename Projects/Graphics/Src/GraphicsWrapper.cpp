@@ -430,7 +430,7 @@ void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
 }
 
 void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
-	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	m_deferredRenderer->mapShaderResourcesForLightPass();
 	int startSlot = 4;
 	for(int i = 0; i < MAXSHADOWS; i++){
 		if(p_activeShadows[i] != -1){
@@ -440,7 +440,7 @@ void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows )
 
 }
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
-	m_deferredRenderer->unmapDeferredBaseFromShader();
+	m_deferredRenderer->unmapShaderResourcesForLightPass();
 }
 
 void GraphicsWrapper::unmapUsedShaderResourceFromLightPass( int* p_activeShadows ){
@@ -645,7 +645,7 @@ void GraphicsWrapper::setParticleRenderState()
 }
 
 void GraphicsWrapper::unmapDepthFromShader(){
-	m_deferredRenderer->unmapDepthFromShaderVariables();
+	m_deferredRenderer->unmapDepthAsShaderResource();
 }
 
 void GraphicsWrapper::renderSsao(){
@@ -657,14 +657,14 @@ void GraphicsWrapper::renderComposeStage(){
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapVariousPassesToComposeStage();
+	m_deferredRenderer->mapShaderResourcesForComposePass();
 	//m_deviceContext->PSSetShaderResources(3,1,
 	//	&m_textureManager->getResource(m_randomNormalTextures)->data);
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deferredRenderer->unmapVariousPassesFromComposeStage();
+	m_deferredRenderer->unmapShaderResourcesForComposePass();
 	m_deviceContext->PSSetShaderResources(3,1,
 		&m_textureManager->getResource(m_solidWhiteTexture)->data);
 }

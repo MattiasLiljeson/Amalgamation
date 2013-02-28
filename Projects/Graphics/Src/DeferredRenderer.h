@@ -41,14 +41,14 @@ public:
 	/* See wiki for more details.											*/
 	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
 	/************************************************************************/
-	const static int BASESHADERS = 4;
+	const static int BASESHADERS = 3;
 	const static int RT0 = 0;
 	const static int RT1 = 1;
 	const static int RT2 = 2;
 	const static int RT3 = 3;
 	const static int RT4 = 4;
 	const static int RT5 = 5;
-	enum RenderTargets{
+	enum RenderTargets {
 		RenderTargets_NON_EXISTING	= -1,
 		RenderTargets_DIFFUSE		= RT0,
 		RenderTargets_NORMAL		= RT1,
@@ -58,105 +58,70 @@ public:
 		RenderTargets_DEPTH			= RT5,
 		RenderTargets_CNT,
 	};
+
 public:
-	// ===================================================================================
-	// Setup
-	// ===================================================================================
 	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 		int p_width, int p_height);
 	virtual ~DeferredRenderer();
-
-	///-----------------------------------------------------------------------------------
-	/// Clear the buffers used by the deferred renderer.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void clearBuffers();
-
-	void setBasePassRenderTargets();
-
-
-	///-----------------------------------------------------------------------------------
-	/// Render a full screen quad textured with the gbuffer.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void mapDeferredBaseRTSToShader(ID3D11ShaderResourceView* p_shadowMap);
-
-	void mapDeferredBaseRTSToShader();
-
-	void unmapDeferredBaseFromShader();
-
-	void mapVariousPassesToComposeStage();
-	
-	void unmapVariousPassesFromComposeStage();
-
-	void unmapDepthFromShaderVariables();
-	// ===================================================================================
-	// GUI Render
-	// ===================================================================================
-
-	// ===================================================================================
-	// Blend states
-	// ===================================================================================
-
-	///-----------------------------------------------------------------------------------
-	/// Set blend state to draw with
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setBlendState(BlendState::Mode p_state);
-	
-	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
-
-	void setBlendFactors(float p_oneValue);
-
-	void setBlendMask(UINT p_mask);
-
-	void setLightRenderTarget();
-
-	BlendState::Mode getCurrentBlendStateType() {return m_currentBlendStateType;}
-
-	///-----------------------------------------------------------------------------------
-	/// Set settings for rasterizer states
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setRasterizerStateSettings(RasterizerState::Mode p_state);
-
-	RasterizerState::Mode getCurrentRasterizerStateType() {return m_currentRasterizerStateType;}
-
+	// Setup
+	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 	void releaseRenderTargetsAndDepthStencil();
 
-	void initRendertargetsAndDepthStencil( int p_width, int p_height );
-
-	ID3D11DepthStencilView* getDepthStencil();
-
-	DeferredBaseShader* getDeferredBaseShader();
-
-	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
-
-	DeferredTessBaseShader* getDeferredTessBaseShader();
-
-	DeferredTessAnimatedBaseShader* getDeferredTessAnimatedBaseShader();
-
-	LightShader* getDeferredLightShader();
-
+	// Buffer as RTs
+	void setBasePassRenderTargets();
+	void setLightRenderTarget();
 	void renderSsao();
-
 	void renderComposeStage();
 
+	// Buffers as resources
+	void mapShaderResourcesForLightPass(ID3D11ShaderResourceView* p_shadowMap);
+	void mapShaderResourcesForLightPass();
+	void unmapShaderResourcesForLightPass();
+	void mapShaderResourcesForComposePass();
+	void unmapShaderResourcesForComposePass();
+	void unmapDepthAsShaderResource();
+
+	// Buffer / RT manipulation
+	void clearBuffers();
+	ID3D11DepthStencilView* getDepthStencil();
 	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
-	// ===================================================================================
+	// Blend states
+	void setBlendState(BlendState::Mode p_state);
+	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
+	void setBlendFactors(float p_oneValue);
+	void setBlendMask(UINT p_mask);
+	BlendState::Mode getCurrentBlendStateType();
+
+	// Rasterizer states
+	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+	RasterizerState::Mode getCurrentRasterizerStateType();
+
+	// Shader getters
+	DeferredBaseShader* getDeferredBaseShader();
+	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
+	DeferredTessBaseShader* getDeferredTessBaseShader();
+	DeferredTessAnimatedBaseShader* getDeferredTessAnimatedBaseShader();
+	LightShader* getDeferredLightShader();
+
 	// Debug
-	// ===================================================================================
 	void hookUpAntTweakBar();
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
+	void initLightBuffers();
 	void buildBlendStates();
 	void buildRasterizerStates();
-	void unMapGBuffers();
 	void initShaders();
 	void initFullScreenQuad();
 	void initSSAO();
+
+	void unMapGBuffers();
+
+	void checkHr( HRESULT p_hr, const string& p_file,
+		const string& p_function, int p_line );
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
