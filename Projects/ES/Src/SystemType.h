@@ -116,6 +116,7 @@ public:	//Enums
 		GravityMineEffectSystem,
 		ShieldPlaterSystem,
 		TempModuleSpawner,
+		SlotHighlightParticleMakerSystem,
 		NUM_SYSTEM_TYPES
 	};
 
