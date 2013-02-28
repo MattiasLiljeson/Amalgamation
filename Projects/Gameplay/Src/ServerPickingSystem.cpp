@@ -57,7 +57,7 @@ AglVector3 ServerPickingSystem::project(AglVector3 p_o, AglVector3 p_d, AglVecto
 }
 
 ServerPickingSystem::ServerPickingSystem(TcpServer* p_server, 
-										 OnHitEffectBufferSystem* p_effectBuffer)
+										 ModuleVisualEffectBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ServerPickingSystem, 1, ComponentType::ShipModule)
 {
 	m_server = p_server;
@@ -611,6 +611,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		// Set the shipmodule to used status!
 		// Must be done after score has been set.
 		shipModule->setToUsed();
+		setModuleUsedStatusEffect( module );
 
 		//Set the module connection point
 		conPoints->m_connectionPoints[sel].cpConnectedEntity = target->getIndex();
@@ -1010,4 +1011,15 @@ void ServerPickingSystem::unsetPick(PickComponent& p_ray)
 	high.on = false;
 	m_server->unicastPacket(high.pack(), p_ray.m_clientIndex);
 	p_ray.setLatestPick(-1);
+}
+
+void ServerPickingSystem::setModuleUsedStatusEffect( Entity* p_module )
+{
+	NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+		p_module->getComponent(ComponentType::NetworkSynced));
+
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::UNUSEDMODULE_STATUS,
+		ModuleStatusEffectPacket::OFF,
+		networkSynced->getNetworkOwner());
+	m_effectbuffer->enqueueEffect(fxPacket);
 }

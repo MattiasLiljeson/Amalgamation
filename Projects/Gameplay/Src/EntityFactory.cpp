@@ -709,15 +709,20 @@ Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	// read basic assemblage
-	Entity* shieldEntity = entityFromRecipeOrFile( "shieldModuleClient",
+	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",
 		"Assemblages/Modules/Shield/ClientShield.asd");
-
-	ShipModule* shipModule = static_cast<ShipModule*>(shieldEntity->getComponent(ComponentType::ShipModule));
-
+	shieldEntity->setName("shieldModuleClient");
+	// set transform from packet directly
+	auto transform = static_cast<Transform*>(
+		shieldEntity->getComponent(ComponentType::Transform));
+	transform->setTranslation(p_packet.translation);
+	transform->setRotation(p_packet.rotation);	
+	transform->setScale(p_packet.scale);	
+	// Add network dependent components
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-
+	auto shipModule = static_cast<ShipModule*>(
+		shieldEntity->getComponent(ComponentType::ShipModule));
 	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
 
@@ -731,9 +736,17 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile( "Assemblages/Modules/Shield/ServerShield.asd" );
-	Entity* entity = entityFromRecipe( "ShieldModule" );
-
+	Entity* entity = entityFromRecipeOrFile( "Shield",
+		"Assemblages/Modules/Shield/ServerShield.asd");
+	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+	transform->setTranslation(p_packet.translation);
+	transform->setRotation(p_packet.rotation);
+	transform->setScale(p_packet.scale);
+	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
+	bodyInitData->m_position = p_packet.translation;
+	bodyInitData->m_orientation = p_packet.rotation;
+	bodyInitData->m_scale = p_packet.scale;
+	// 
 	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));
@@ -743,9 +756,8 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd" );
-	Entity* entity = entityFromRecipe( "ClientAnomalyAccelerator" );
+	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyAccelerator",
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd");
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -754,9 +766,8 @@ Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd" );
-	Entity* entity = entityFromRecipe( "ServerAnomalyAccelerator" );
+	Entity* entity = entityFromRecipeOrFile( "ServerAnomalyAccelerator",
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd");
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyModule));
 	m_world->addEntity(entity);
@@ -765,9 +776,8 @@ Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 
 Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 {
-	AssemblageHelper::E_FileStatus status = readAssemblageFile(
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd" );
-	Entity* entity = entityFromRecipe( "ClientAnomalyBomb" );
+	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyBomb",
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd");
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -889,6 +899,7 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 	particleInstruction.particleSystem = particleSystem;
 	p_emitters->addParticleSystemInstruction(particleInstruction, p_desiredIndex);
 }
+
 
 void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 {
