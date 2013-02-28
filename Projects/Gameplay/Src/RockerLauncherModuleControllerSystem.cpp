@@ -82,7 +82,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	if (gun->laserSightEntity < 0)
 	{
 		//Create Ray entity
-		Entity* entity = m_world->createEntity();
+		/*Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
 		entity->addComponent( ComponentType::Transform, t);
@@ -100,7 +100,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		entity->addComponent(ComponentType::NetworkSynced, 
 			new NetworkSynced( entity->getIndex(), -1, EntityType::LaserSight));
 
-		m_server->broadcastPacket(data.pack());
+		m_server->broadcastPacket(data.pack());*/
 	}
 	else
 	{
@@ -210,7 +210,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
 
-	AglVector3 actualdir = t->getForward() * 200.0f + vel;
+	AglVector3 actualdir = t->getForward() * 100.0f + vel;
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
 		AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), t->getForward()),

@@ -31,7 +31,7 @@ void RocketControllerSystem::initialize()
 void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-	float waitUntilActivation = 1.0f;//0.2f;
+	float waitUntilActivation = 0.2f;
 	float rocketMaxAge = 15.0f;
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
