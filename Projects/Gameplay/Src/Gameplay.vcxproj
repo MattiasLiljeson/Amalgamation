@@ -40,6 +40,7 @@
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />

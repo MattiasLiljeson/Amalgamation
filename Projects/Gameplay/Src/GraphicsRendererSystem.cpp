@@ -87,51 +87,51 @@ void GraphicsRendererSystem::process(){
 	//m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
 
 	// Meshes
-	m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
 	initMeshPass();
 	m_meshRenderer->render();
 	endMeshPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[MESH].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[MESH].profile);
 
 	// Lights
-	m_wrapper->getGPUTimer()->Start(m_profiles[LIGHT].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[LIGHT].profile);
 	initLightPass();
 	m_lightRenderSystem->render();
 	endLightPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
 
 	//SSAO
-	m_wrapper->getGPUTimer()->Start(m_profiles[SSAO].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[SSAO].profile);
 	beginSsao();
 	m_wrapper->renderSsao();
 	endSsao();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[SSAO].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[SSAO].profile);
 
 	//Compose
-	m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
 
 	//Particles
-	m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
 	initParticlePass();
 	renderParticles();
 	endParticlePass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
 	
 	//GUI
-	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
+	//m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
 	initGUIPass();
 	m_libRocketRenderSystem->render();
 	m_antTweakBarSystem->render();
 	endGUIPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[GUI].profile);
+	//m_wrapper->getGPUTimer()->Stop(m_profiles[GUI].profile);
 
 	flipBackbuffer();
 
-	updateTimers();
+	//updateTimers();
 }
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);

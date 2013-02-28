@@ -752,6 +752,9 @@
     <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
       <Filter>Systems\Network\Server only</Filter>
     </ClInclude>
+    <ClInclude Include="SlotHighlightParticleMakerSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1282,6 +1285,9 @@
     </ClCompile>
     <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

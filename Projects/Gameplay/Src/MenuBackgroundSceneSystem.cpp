@@ -7,6 +7,7 @@
 #include "InputBackendSystem.h"
 #include "LightsComponent.h"
 #include "ClientStateSystem.h"
+#include "GradientComponent.h"
 #include "EntityFactory.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
@@ -74,6 +75,11 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
 	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
+
+	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
+		AglVector4(1,0,0,1),
+		AglVector4(0,1,0,1)));
+
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();

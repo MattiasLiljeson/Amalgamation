@@ -67,9 +67,7 @@ float4 PS(VertexOut input) : SV_TARGET
 	float4 lightDiff = gLightDiff.Load( index ) * 10.0f;
 	float4 lightSpec = gLightSpec.Load( index ) * 10.0f;
 	float depth = gDepthBuffer.Load( index ).r;
-	float4 finalCol = float4(0,0,0,0);
-	finalCol += specColor * lightSpec;
-	finalCol += diffColor * lightDiff;
+
 
 	//float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float3 fog = gFogColorAndFogFar.rgb;
@@ -80,7 +78,9 @@ float4 PS(VertexOut input) : SV_TARGET
 	// calc linear depths
 	float pixelDepthW = length(position-gCameraPos.xyz);
 	float linDepth = pixelDepthW / (gFarPlane-gNearPlane);
-	float fogDepth = saturate(pixelDepthW / ((gFarPlane*fogNearFarPercentage.x)-(gNearPlane*(2.0f-fogNearFarPercentage.y))));
+	fogNearFarPercentage.y=0.4f;
+	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
+	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	
 	float finalAO = 0.0f;
 
@@ -100,10 +100,18 @@ float4 PS(VertexOut input) : SV_TARGET
 			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
+
+	// add light
+	float4 finalCol = float4(0,0,0,0);
+	finalCol += specColor * lightSpec;
+	finalCol += diffColor * lightDiff;	
 	// apply ao
 	finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
-	finalCol += float4 (ambient,0.0f );
-
-	finalCol = float4( lerp( finalCol.rgb, fog, fogDepth ), 0.0f ); // can do this when light is separate from diffuse
-	return float4( finalCol.rgb + finalEmissiveValue.rgb, 1.0f ); // then all light can be added here like glow is now
+	finalCol += float4 (ambient,0.0f );	
+	// apply fog
+	finalCol = float4( lerp( finalCol.rgb, fog+(lightSpec+lightDiff)*0.01f, fogDepth), finalCol.a ); 
+	// apply glow
+	finalCol += float4( finalEmissiveValue, 0.0f );
+	
+	return float4( finalCol.rgb, 1.0f );
 }

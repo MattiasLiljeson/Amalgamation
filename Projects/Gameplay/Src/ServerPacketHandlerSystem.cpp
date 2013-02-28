@@ -424,8 +424,11 @@ void ServerPacketHandlerSystem::handleLobby()
 			//Add the entity here to be used by other systems
 			Entity* newPlayer = m_world->createEntity();
 			PlayerComponent* newComp = new PlayerComponent();
-			if(playerInfo.playerName == "thebrightestmind"){
+			if( playerInfo.playerName == "brightestmind" && playerInfo.playerID == 0){
 				newComp->setAbsoluteScore(9001);
+			}
+			else if(playerInfo.playerName=="judas"){
+				newComp->setAbsoluteScore(-9001);
 			}
 			newComp->m_playerName = playerInfo.playerName;
 			newComp->m_playerID = connectedPlayers.size();
@@ -647,7 +650,8 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 		m_world->getSystem(SystemType::SpawnPointSystem));
 	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
 
-	shipSpawnPoint = spawnPointSys->invalidSpawnPoint();
+	// NOTE: (Johan) As a developer I don't want to spawn randomly, but as a player I do.
+	shipSpawnPoint = spawnPointSys->invalidSpawnPoint(); // Comment this away if u wanna play!
 
 	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
 	{
