@@ -28,14 +28,14 @@ public:
 	int getRemaningSeconds() const;
 
 private:
-	vector< pair<float, Entity*> > createSortedScoreEntityMapping();
+	vector< pair<float, int> > createSortedScoreEntityMapping();
 	///-----------------------------------------------------------------------------------
 	/// Sends a packet stating if a client won or lost. Currently only handles one winner.
 	/// \param pair<float
 	/// \param p_scoreComponentMapping
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void signalEndSession(vector< pair<float, Entity*> > p_scoreComponentMapping);
+	void signalEndSession(vector< pair<float, int> > p_scoreComponentMapping);
 
 	void calculateWinners(PlayersWinLosePacket* p_packet);
 

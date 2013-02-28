@@ -29,13 +29,14 @@ void CameraSystem::initialize()
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if(p_entities.size() > 0){	
+		/*
 		auto inputSystem = static_cast<InputBackendSystem*>(
 			m_world->getSystem(SystemType::InputBackendSystem));
 
 		if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_M))->getDelta() > 0.5f){
 			m_renderFromShadowCamera = !m_renderFromShadowCamera;
 		}
-
+		*/
 		bool noValidCameraFound = true;
 		for(unsigned int i=0; i<p_entities.size(); i++ ){
 			if(noValidCameraFound)

@@ -38,7 +38,7 @@ void HudSystem::process()
 		setHUDData(TIME,"00:00");
 	}
 	if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
-
+		m_backend->hideDocument(m_hudIndex);
 	}
 }
 
