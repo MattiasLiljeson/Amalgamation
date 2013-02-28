@@ -8,6 +8,7 @@
 #include "ShipModule.h"
 #include "ParticleSystemCreationInfo.h"
 #include "SpawnExplosionPacket.h"
+#include "MeshOffsetTransform.h"
 
 RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
@@ -30,11 +31,28 @@ void RocketControllerSystem::initialize()
 void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-	float waitUntilActivation = 0.2f;
+	float waitUntilActivation = 1.0f;//0.2f;
 	float rocketMaxAge = 15.0f;
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		StandardRocket* rocket = static_cast<StandardRocket*>(p_entities[i]->getComponent(ComponentType::StandardRocket));
+
+		if (rocket->m_age == 0)
+		{
+			//Align with movement direction
+			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+				( p_entities[i]->getComponent( ComponentType::MeshOffsetTransform) );
+
+			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
+			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
+			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
+			AglMatrix world = body->GetWorld();
+
+			world = meshOffset->offset.inverse()*world;
+			world = pb->getOffset()*world;
+			body->setTransform(world);
+		}
+
 		rocket->m_age += dt;
 		//Check collision
 		if (rocket->m_age > waitUntilActivation && rocket->m_age <= rocketMaxAge)
@@ -66,20 +84,30 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 			to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
 
+			//START APPLY IMPULSE
+
+			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+				( p_entities[i]->getComponent( ComponentType::MeshOffsetTransform) );
+
 			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
 
 			AglVector3 imp = to->getTranslation() - from->getTranslation();
 			imp.normalize();
 			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
-			AglVector3 rotAxis = AglVector3::crossProduct(imp, body->GetWorld().GetForward());
+
+			AglMatrix world = meshOffset->offset * pb->getOffset().inverse() * body->GetWorld();
+
+			AglVector3 rotAxis = AglVector3::crossProduct(imp, -world.GetForward());
 			rotAxis.normalize();
-			float rotFraction = (max(AglVector3::dotProduct(imp, -body->GetWorld().GetForward()), 0.0f));
+			float rotFraction = (max(AglVector3::dotProduct(imp, world.GetForward()), 0.0f));
 			rotAxis *= m_turnPower * dt;
 
-			AglVector3 impulse = -body->GetWorld().GetForward()*dt*m_enginePower;
+			AglVector3 impulse = world.GetForward()*dt*m_enginePower;
 
 			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
+
+			//END APPLY IMPULSE
 
 			//Check collision	
 			vector<unsigned int> cols = ps->getController()->CollidesWith(pb->m_id);

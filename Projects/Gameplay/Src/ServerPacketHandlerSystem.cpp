@@ -646,6 +646,9 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	auto spawnPointSys = static_cast<SpawnPointSystem*>(
 		m_world->getSystem(SystemType::SpawnPointSystem));
 	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
+
+	shipSpawnPoint = spawnPointSys->invalidSpawnPoint();
+
 	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
 	{
 		// Update the ship position
