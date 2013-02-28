@@ -6,6 +6,7 @@ MineLayerModule::MineLayerModule()
 	: Component( ComponentType::MineLayerModule )
 {
 	m_cooldown = 0;
+	m_timeSinceMineSpawnStart = 0;
 }
 
 MineLayerModule::~MineLayerModule()

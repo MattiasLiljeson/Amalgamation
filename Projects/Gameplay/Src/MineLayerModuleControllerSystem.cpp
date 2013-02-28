@@ -12,6 +12,7 @@
 #include "NetworkSynced.h"
 #include "SpawnSoundEffectPacket.h"
 #include "ModuleHelper.h"
+#include "AnimationUpdatePacket.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 2,
@@ -46,19 +47,31 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				ComponentType::getTypeFor(ComponentType::MineLayerModule)));
 
 			mineLayer->m_cooldown -= dt;
-			if (mineLayer->m_cooldown <= 0 && module->getActive())
+			if ((mineLayer->m_cooldown <= 0 && module->getActive()) || mineLayer->m_timeSinceMineSpawnStart > 0)
 			{
+				if (mineLayer->m_timeSinceMineSpawnStart > 1.0f)
+				{
+					Transform* transform = static_cast<Transform*>(
+						m_world->getComponentManager()->getComponent(p_entities[i],
+						ComponentType::getTypeFor(ComponentType::Transform)));
+					PhysicsBody* physBody = static_cast<PhysicsBody*>(
+						p_entities[i]->getComponent(ComponentType::PhysicsBody));
+					PhysicsSystem* physics = static_cast<PhysicsSystem*>(
+						m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+					AglVector3 moduleVelocity = physics->getController()->getBody(
+						physBody->m_id)->GetVelocity();
+					spawnMine(transform, moduleVelocity,module);
+					mineLayer->m_timeSinceMineSpawnStart = 0;
+				} 
+
+				else if (mineLayer->m_timeSinceMineSpawnStart == 0)
+				{
+					setSpawnAnimation(p_entities[i]);
+					mineLayer->m_timeSinceMineSpawnStart += dt;
+				}
+				else
+					mineLayer->m_timeSinceMineSpawnStart += dt;
 				mineLayer->m_cooldown = 2;
-				Transform* transform = static_cast<Transform*>(
-					m_world->getComponentManager()->getComponent(p_entities[i],
-					ComponentType::getTypeFor(ComponentType::Transform)));
-				PhysicsBody* physBody = static_cast<PhysicsBody*>(
-					p_entities[i]->getComponent(ComponentType::PhysicsBody));
-				PhysicsSystem* physics = static_cast<PhysicsSystem*>(
-					m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
-				AglVector3 moduleVelocity = physics->getController()->getBody(
-					physBody->m_id)->GetVelocity();
-				spawnMine(transform, moduleVelocity,module);
 			}
 		}
 	}
@@ -68,7 +81,6 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 												AglVector3 p_moduleVelocity,
 												ShipModule* p_module)
 {
-
 	Entity* entity = m_world->createEntity();
 	Transform* t = new Transform(p_transform->getTranslation(), p_transform->getRotation(),
 		AglVector3(1.4f, 1.4f, 1.4f));
@@ -116,4 +128,21 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 	m_server->broadcastPacket(soundEffectPacket.pack());
 
 	m_world->addEntity(entity);
+}
+void MineLayerModuleControllerSystem::setSpawnAnimation(Entity* p_layer)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_layer->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 1.0f;
+	packet.take = "Spawn";
+	m_server->broadcastPacket( packet.pack() );
+
+	AnimationUpdatePacket packetIdle;
+	packetIdle.networkIdentity = p_layer->getIndex();
+	packetIdle.shouldPlay = true;
+	packetIdle.playSpeed = 15.0f;
+	packetIdle.take = "Default";
+	packetIdle.shouldQueue = true;
+	m_server->broadcastPacket( packetIdle.pack() );
 }

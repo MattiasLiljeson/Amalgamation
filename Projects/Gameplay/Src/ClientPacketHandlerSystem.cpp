@@ -451,7 +451,7 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
-			unsigned int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
+			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
