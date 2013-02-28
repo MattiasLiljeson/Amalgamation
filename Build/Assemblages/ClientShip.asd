@@ -34,12 +34,12 @@ d f 1:specularG 0.8
 
 # Main floodlight
 d string 	2:typeAsStr 	"spot"
-d float 	2:range 		1000.0
-d float 	2:spotPower 	16.0
-d float 	2:lightEnergy 	10
+d float 	2:range 		500.0
+d float 	2:spotPower 	30.0
+d float 	2:lightEnergy 	12
 d vec3 		2:translation 	0, 		0,		10
-d vec3 		2:color 		0.5,	0.5,	0.4
-d vec3 		2:scale 		100, 	1000, 	100
+d vec3 		2:color 		0.98,	0.79,	0.3
+d vec3 		2:scale 		100, 	500, 	100
 d vec3 		2:lightDir 		0, 		1,		0
 
 # Engine

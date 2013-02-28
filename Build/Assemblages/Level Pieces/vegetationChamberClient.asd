@@ -13,7 +13,7 @@ d f m_ambientColorG 0.169
 d f m_ambientColorB 0.157
 # The values specifying the closeness(in percentage range 0-1) 
 # of the fog start and end in relation to the near- and far planes.
-d f m_fogFarPlaneClosenessPercentage 0.3
+d f m_fogFarPlaneClosenessPercentage 0.1
 d f m_fogNearPlaneClosenessPercentage 1.0
 # Radius of the "fog-volume" covering the chamber
 d f m_minRadius 600.0
