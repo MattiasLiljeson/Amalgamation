@@ -186,6 +186,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	// Create the level piece to use later
 	int id = m_levelInfo->getStartFileData()->id;
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
+	piece->setPieceId(0);
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;

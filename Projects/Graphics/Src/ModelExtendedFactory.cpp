@@ -192,7 +192,7 @@ void ModelExtendedFactory::readAndStoreTextures( SourceData& p_source,
 		m_textureFactory->createTexture(gradientName, TEXTUREPATH));
 
 	if(gradients != NULL){
-		for (unsigned int i = 0 ; i < gradients->getLayers().size(); i++){
+		for (unsigned int i = 1 ; i < gradients->getLayers().size(); i++){
 			materialInfo.setGradientLayer(i,gradients->getLayerColor(i));
 		}
 		materialInfo.setNumberOfGradientLayers(gradients->getLayers().size());
