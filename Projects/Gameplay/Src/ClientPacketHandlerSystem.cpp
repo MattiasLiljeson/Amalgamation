@@ -702,6 +702,13 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			PlayersWinLosePacket winLose;
 			winLose.unpack( packet );
+
+			GameStatsSystem* gameStats = static_cast<GameStatsSystem*>
+				(m_world->getSystem(SystemType::GameStatsSystem));
+
+			gameStats->updateResults(&winLose);
+
+			/*
 			NetsyncDirectMapperSystem* directMapper =
 				static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
 				SystemType::NetsyncDirectMapperSystem));
@@ -721,6 +728,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 					}
 				}
 			}
+			*/
 		}
 		else if (packetType == (char)PacketType::OnHitScoreEffectPacket)
 		{
@@ -1106,8 +1114,8 @@ void ClientPacketHandlerSystem::handleResults()
 		changeState.m_gameState = GameStates::RESULTS;
 		m_tcpClient->sendPacket(changeState.pack());
 	}
-	else
-	{
-		m_gameState->setQueuedState(GameStates::MENU);
-	}
+//	else
+//	{
+//		m_gameState->setQueuedState(GameStates::MENU);
+//	}
 }

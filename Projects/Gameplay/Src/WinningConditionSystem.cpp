@@ -86,7 +86,7 @@ void WinningConditionSystem::signalEndSession(
 	{
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(
 			p_scoreComponentMapping[i].second->getComponent(ComponentType::NetworkSynced));
-		winLosePacket.playerIdentities[i] = netSync->getNetworkOwner();
+		winLosePacket.playerIdentities[i] = netSync->getPlayerID();
 		winLosePacket.scores[i] = p_scoreComponentMapping[i].first;
 	}
 

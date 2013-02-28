@@ -13,13 +13,15 @@
 #include "ClientStateSystem.h"
 #include "PlayerSystem.h"
 #include "PlayerComponent.h"
+#include "PlayersWinLosePacket.h"
+#include "InputActionsBackendSystem.h"
 
 GameStatsSystem::GameStatsSystem()
 	: EntitySystem(SystemType::GameStatsSystem)
 {
 	m_infoPanelVisible = false;
 	m_infoPanel = NULL;
-	m_infoPanelDoc = -1;
+	m_rocketDocument = -1;
 }
 GameStatsSystem::~GameStatsSystem()
 {
@@ -32,11 +34,11 @@ void GameStatsSystem::initialize()
 		(m_world->getSystem(SystemType::LibRocketBackendSystem));
 
 
-	m_infoPanelDoc = rocketBackend->loadDocument(
+	m_rocketDocument = rocketBackend->loadDocument(
 		GUI_HUD_PATH.c_str(), "infoPanel");
-	if (m_infoPanelDoc >= 0)
+	if (m_rocketDocument >= 0)
 	{
-		rocketBackend->updateElement(m_infoPanelDoc, "title", "Client Table:");
+		rocketBackend->updateElement(m_rocketDocument, "title", "The Scores!");
 		m_infoPanel = new DisplayGameStats("playerstats", "infopanel");
 	}
 }
@@ -76,6 +78,23 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 	}
 }
 
+void GameStatsSystem::updateResults(const PlayersWinLosePacket* p_packet){
+
+	vector<PlayerComponent*> playerSys  = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
+
+	// Update panel with new data.
+	for (int i = 0; i < p_packet->activePlayers; i++)
+	{
+		PlayerStats stats;
+		stats.name	= playerSys.at(p_packet->playerIdentities[i])->m_playerName;
+		stats.score = p_packet->scores[i];
+		stats.ping	= 0;
+
+		m_infoPanel->updateRow(i, stats);
+	}
+}
+
 void GameStatsSystem::process()
 {
 
@@ -95,7 +114,7 @@ void GameStatsSystem::process()
 			if (!m_infoPanelVisible)
 			{
 				m_infoPanelVisible = !m_infoPanelVisible;
-				rocketBackend->showDocument(m_infoPanelDoc);
+				rocketBackend->showDocument(m_rocketDocument);
 				m_infoPanel->updateTheVisualInfoPanel();
 			}
 		}
@@ -104,19 +123,41 @@ void GameStatsSystem::process()
 			if (m_infoPanelVisible)
 			{
 				m_infoPanelVisible = !m_infoPanelVisible;
-				rocketBackend->hideDocument(m_infoPanelDoc);
+				rocketBackend->hideDocument(m_rocketDocument);
 			}
 		}
+	}
 
-		if (m_infoPanelVisible)
+	else if( gameState->getCurrentState() == GameStates::RESULTS){
+
+		auto rocketBackend = static_cast<LibRocketBackendSystem*>
+			(m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+		auto actionInputSystem = static_cast<InputActionsBackendSystem*>(
+			m_world->getSystem(SystemType::InputActionsBackendSystem));
+
+		if(gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
+			rocketBackend->updateElement(m_rocketDocument, "title", "The Final Results!");
+			rocketBackend->showDocument(m_rocketDocument);
+		}
+
+		if(actionInputSystem->getDeltaByAction
+			(InputActionsBackendSystem::Actions_THRUST_FORWARD) > 0.5f){
+			gameState->setQueuedState(GameStates::MENU);
+		}
+
+		//Always show the info panel during the results! 
+		m_infoPanelVisible = true;
+	}
+
+	if (m_infoPanelVisible)
+	{
+		auto timerSystem = static_cast<TimerSystem*>(
+			m_world->getSystem(SystemType::TimerSystem));
+
+		if (timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
 		{
-			auto timerSystem = static_cast<TimerSystem*>(
-				m_world->getSystem(SystemType::TimerSystem));
-
-			if (timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
-			{
-				m_infoPanel->updateTheVisualInfoPanel();
-			}
+			m_infoPanel->updateTheVisualInfoPanel();
 		}
 	}
 }
