@@ -13,6 +13,7 @@
 #include <Globals.h>
 #include "SpawnSoundEffectPacket.h"
 #include "ShieldModuleActivation.h"
+#include "AnimationUpdatePacket.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 2,
@@ -45,11 +46,11 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 				m_world->getComponentManager()->getComponent(p_entities[i],
 				ComponentType::getTypeFor(ComponentType::ShieldModule)));
 			
-			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->getActive());
+			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->getActive(), p_entities[i]);
 		}
 	}
 }
-void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active)
+void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e)
 {
 	Transform* parentTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_parentEntity,
@@ -66,6 +67,13 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		
 		if (p_active)
 		{
+			//Handle animation
+			if (p_module->m_shieldAge == 0)
+				activateShield(p_e);
+
+			p_module->m_shieldAge++;
+
+
 			transform->setTranslation(parentTransform->getTranslation());
 			transform->setRotation(parentTransform->getRotation());
 			transform->setScale(AglVector3(6, 6, 6));
@@ -97,6 +105,9 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		}
 		else
 		{
+			if (p_module->m_shieldAge != 0)
+				deactivateShield(p_e);
+			p_module->m_shieldAge = 0;
 			transform->setScale(AglVector3(0, 0, 0));
 		}
 	}
@@ -141,4 +152,39 @@ void ShieldModuleControllerSystem::removed( Entity* p_entity )
 	// HACK: NOTE: HACK: NOTE: REMOVE THE EVENTS!
 	// NOTE: Or does the module destroy its own events? Well, maybe it does!
 	// NOTE: Yeah, they do. Don't bother the guy writing the first line (A).
+}
+
+void ShieldModuleControllerSystem::activateShield(Entity* p_shield)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_shield->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 15.0f;
+	packet.take = "Start";
+	m_server->broadcastPacket( packet.pack() );
+
+	AnimationUpdatePacket packetIdle;
+	packetIdle.networkIdentity = p_shield->getIndex();
+	packetIdle.shouldPlay = true;
+	packetIdle.playSpeed = 15.0f;
+	packetIdle.take = "Active";
+	packetIdle.shouldQueue = true;
+	m_server->broadcastPacket( packetIdle.pack() );
+}
+void ShieldModuleControllerSystem::deactivateShield(Entity* p_shield)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_shield->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 15.0f;
+	packet.take = "Stop";
+	m_server->broadcastPacket( packet.pack() );
+
+	AnimationUpdatePacket idlepacket;
+	idlepacket.networkIdentity = p_shield->getIndex();
+	idlepacket.shouldPlay = true;
+	idlepacket.playSpeed = 15.0f;
+	idlepacket.take = "Default";
+	idlepacket.shouldQueue = true;
+	m_server->broadcastPacket( idlepacket.pack() );
 }

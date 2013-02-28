@@ -14,6 +14,7 @@
 #include <AglMatrix.h>
 #include <ComponentFactory.h>
 #include <vector>
+#include <deque>
 
 using namespace std;
 
@@ -21,9 +22,18 @@ class AglScene;
 
 struct AnimationTake
 {
-	float speed;
+	string name;
 	int startFrame;
 	int endFrame;
+	float speed;
+
+	AnimationTake()
+	{
+		name = "";
+		startFrame = 0;
+		endFrame = 0;
+		speed = 1.0f;
+	}
 };
 
 class SkeletalAnimation : public Component
@@ -38,7 +48,9 @@ public:
 	AglScene* m_scene;
 	AglMatrix m_offset;
 	bool m_isPlaying;
-	float m_playSpeed;
+	float m_fps;
+	int m_currentTake;
+	deque<int> queuedTakes;
 
 	vector<AnimationTake> m_takes;
 	static ComponentRegister<SkeletalAnimation> s_reg;

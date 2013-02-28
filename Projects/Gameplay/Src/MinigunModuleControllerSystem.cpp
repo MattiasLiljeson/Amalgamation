@@ -416,12 +416,14 @@ void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
 	packet.networkIdentity = p_gun->getIndex();
 	packet.shouldPlay = true;
 	packet.playSpeed = 15.0f;
+	packet.take = "Shooting";
 	m_server->broadcastPacket( packet.pack() );
 }
 void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
 {
 	AnimationUpdatePacket packet;
 	packet.networkIdentity = p_gun->getIndex();
-	packet.shouldPlay = false;
+	packet.shouldPlay = true;
+	packet.take = "Default";
 	m_server->broadcastPacket( packet.pack() );
 }

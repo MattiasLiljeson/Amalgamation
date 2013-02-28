@@ -27,7 +27,9 @@ public:
 	void removed( Entity* p_entity );
 	void processEntities(const vector<Entity*>& p_entities );
 private:
-	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active);
+	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e);
+	void activateShield(Entity* p_shield);
+	void deactivateShield(Entity* p_shield);
 private:
 	TcpServer* m_server;
 };

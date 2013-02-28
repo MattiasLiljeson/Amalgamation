@@ -15,6 +15,9 @@
 #include "SpawnSoundEffectPacket.h"
 #include "ShipConnectionPointHighlights.h"
 #include "ModuleHelper.h"
+#include "SpawnPointSet.h"
+#include "MeshOffsetTransform.h"
+#include "LoadMesh.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -79,7 +82,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	if (gun->laserSightEntity < 0)
 	{
 		//Create Ray entity
-		Entity* entity = m_world->createEntity();
+		/*Entity* entity = m_world->createEntity();
 
 		Transform* t = new Transform(AglVector3(0, 0, 0), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), gun->fireDirection), AglVector3(0.03f, 0.03f, 20));
 		entity->addComponent( ComponentType::Transform, t);
@@ -97,7 +100,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		entity->addComponent(ComponentType::NetworkSynced, 
 			new NetworkSynced( entity->getIndex(), -1, EntityType::LaserSight));
 
-		m_server->broadcastPacket(data.pack());
+		m_server->broadcastPacket(data.pack());*/
 	}
 	else
 	{
@@ -170,15 +173,35 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::Transform)));
 
-	Transform* t = new Transform(gunTransform->getTranslation(), AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), -gun->fireDirection), AglVector3(2, 2, 2));
+	PhysicsSystem* physics = static_cast<PhysicsSystem*>
+		( m_world->getSystem( SystemType::SystemTypeIdx::PhysicsSystem ) );
 
-	AglVector3 dir = gun->fireDirection;
-	const AglQuaternion& rot = gunTransform->getRotation();
-	rot.transformVector(dir);
+	PhysicsBody* body = static_cast<PhysicsBody*>
+		( p_entity->getComponent( ComponentType::PhysicsBody) );
 
-	PhysicsBody* body = static_cast<PhysicsBody*>(p_entity->getComponent(ComponentType::PhysicsBody));
+	Body* rigidBody = physics->getController()->getBody(body->m_id);
 
-	PhysicsSystem* physics = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
+	MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+		( p_entity->getComponent( ComponentType::MeshOffsetTransform) );
+
+
+	//Find spawn point
+	SpawnPointSet* sps = static_cast<SpawnPointSet*>(p_entity->getComponent(ComponentType::SpawnPointSet));
+	AglMatrix sightOffset = AglMatrix::identityMatrix();
+	for (unsigned int sp = 0; sps->m_spawnPoints.size(); sp++)
+	{
+		if (sps->m_spawnPoints[sp].spAction == "rocket")
+		{
+			sightOffset = sps->m_spawnPoints[sp].spTransform;
+			break;
+		}
+	}
+
+	//Fix!
+	Transform newTransform = Transform(sightOffset*meshOffset->offset*body->getOffset().inverse()*rigidBody->GetWorld());
+
+	Transform* t = new Transform(newTransform.getMatrix());
+
 	AglVector3 vel = physics->getController()->getBody(body->m_id)->GetVelocity();
 
 
@@ -187,17 +210,18 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
 
-	AglVector3 actualdir = dir * 100.0f + vel;
-	actualdir.normalize();
+	AglVector3 actualdir = t->getForward() * 100.0f + vel;
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(gunTransform->getTranslation(),
-		AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), -dir),
-		AglVector3(5.0f, 5.0f, 5.0f), dir * 100.0f + vel, 
-		AglVector3(0, 0, 0), 0, 
+		AglQuaternion::rotateToFrom(AglVector3(0, 0, 1), t->getForward()),
+		AglVector3(1.0f, 1.0f, 1.0f), actualdir, 
+		AglVector3(0, 0, 0), 3, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, true));
 
 	entity->addComponent( ComponentType::Transform, t);
+
+	entity->addComponent(ComponentType::LoadMesh, new LoadMesh("rocket.agl"));
 
 
 	// store owner data
