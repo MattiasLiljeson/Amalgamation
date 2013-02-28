@@ -333,3 +333,9 @@ const float AglParticleSystem::getAge() const
 {
 	return m_age;
 }
+
+void AglParticleSystem::setRasterizerMode(
+	AglParticleSystemHeader::AglRasterizerMode p_mode)
+{
+	m_header.rasterizerMode = (char)p_mode;
+}

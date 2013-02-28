@@ -63,6 +63,7 @@ public:
 	void setFadeInStop(float p_fadeInStop);
 	void setTextureNameIndex(int p_textureNameIndex);
 	void setAlignmentType(AglParticleSystemHeader::AglAlignmentType p_alignment);
+	void setRasterizerMode(AglParticleSystemHeader::AglRasterizerMode p_mode);
 
 	AglParticleSystemHeader::AglSpace getSpawnSpace();
 	void setSpawnSpace( AglParticleSystemHeader::AglSpace p_space );

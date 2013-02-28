@@ -330,21 +330,21 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
-		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
-			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
-
-		if( emitters == NULL ) {
-			emitters = new ParticleSystemsComponent();
-			entity->addComponent( emitters );
-		}
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
-			AglVector3(0.0f, 0.0f, -1.0f), 0);
-		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
-			AglVector3(0.0f, 1.0f, 1.0f), 1);
-		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
-			AglVector3(-1.0f, 0.0f, 0.0f), 2);
-		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
-			AglVector3(1.0f, 0.0f, 0.0f), 3);
+//		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
+//			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
+//
+//		if( emitters == NULL ) {
+//			emitters = new ParticleSystemsComponent();
+//			entity->addComponent( emitters );
+//		}
+//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
+//			AglVector3(0.0f, 0.0f, -1.0f), 0);
+//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
+//			AglVector3(0.0f, 1.0f, 1.0f), 1);
+//		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
+//			AglVector3(-1.0f, 0.0f, 0.0f), 2);
+//		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
+//			AglVector3(1.0f, 0.0f, 0.0f), 3);
 
 		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );

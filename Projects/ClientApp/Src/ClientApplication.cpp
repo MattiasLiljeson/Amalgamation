@@ -119,6 +119,7 @@
 #include <InterpolationSystem2.h>
 #include <AnomalyBombEffectSystem.h>
 #include <ShieldPlaterSystem.h>
+#include <SlotHighlightParticleMakerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -407,6 +408,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
+	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
