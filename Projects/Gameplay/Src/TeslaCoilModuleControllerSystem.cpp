@@ -8,12 +8,16 @@
 #include <PhysicsController.h>
 #include <TcpClient.h>
 #include "NetworkSynced.h"
+#include <RandomUtil.h>
+#include "TeslaHitPacket.h"
+#include <TcpServer.h>
 
-TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem()
+TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
 	ComponentType::TeslaCoilModule, ComponentType::ShipModule, ComponentType::Transform,
 	ComponentType::PhysicsBody, ComponentType::NetworkSynced)
 {
+	m_server = p_server;
 }
 
 void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_entities )
@@ -35,7 +39,10 @@ void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_
 					getComponent(ComponentType::Transform));
 				NetworkSynced* teslaNetsync = static_cast<NetworkSynced*>(p_entities[i]->
 					getComponent(ComponentType::NetworkSynced));
-				fireTeslaCoil(p_entities[i], teslaCoil, teslaTransform, teslaNetsync);
+				ShipModule* teslaShipModule = static_cast<ShipModule*>(p_entities[i]->
+					getComponent(ComponentType::ShipModule));
+				fireTeslaCoil(p_entities[i], teslaCoil, teslaTransform, teslaNetsync,
+					teslaShipModule);
 			}
 		}
 	}
@@ -43,8 +50,9 @@ void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_
 
 void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 	TeslaCoilModule* p_teslaModule, Transform* p_teslaTransform,
-	NetworkSynced* p_teslaNetsync)
+	NetworkSynced* p_teslaNetsync, ShipModule* p_teslaShipModule)
 {
+	vector<int> entitiesHit;
 	ShipModulesTrackerSystem* moduleTracker = static_cast<
 		ShipModulesTrackerSystem*>(m_world->getSystem(
 		SystemType::ShipModulesTrackerSystem));
@@ -64,21 +72,41 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 			ShipModule* otherShipModule = static_cast<ShipModule*>(
 				otherModule->getComponent(ComponentType::ShipModule));
 			float distance = distanceVector.length();
-			float damageMultiplier = 1.0f;
-			otherShipModule->addDamageThisTick(damageMultiplier * p_teslaModule->damage,
-				p_teslaNetsync->getNetworkOwner());
+			float hitChance = calculateHitChance(distance, p_teslaModule->optimalRange,
+				p_teslaModule->range);
+			if(RandomUtil::randomSingle() <= hitChance)
+			{
+				//if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
+				{
+					otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
+						p_teslaNetsync->getNetworkOwner());
+					entitiesHit.push_back(otherShipModule->m_parentEntity);
+				}
+			}
+		}//if
+	}//for: otherModuleIndex
+	if(!entitiesHit.empty())
+	{
+		unsigned int i=0;
+		TeslaHitPacket hitPacket;
+		while(i < hitPacket.NUM_TESLA_HITS_MAX && i < entitiesHit.size())
+		{
+			hitPacket.identitiesHit[i] = entitiesHit[i];
+			i++;
 		}
+		hitPacket.numberOfHits = static_cast<unsigned char>(i);
+		m_server->broadcastPacket(hitPacket.pack());
 	}
 }
 
-float TeslaCoilModuleControllerSystem::calculateMultiplier(float p_distance,
+float TeslaCoilModuleControllerSystem::calculateHitChance(float p_distance,
 	float p_optimalRange, float p_range)
 {
-	float damageMultiplier = 1.0f;
+	float hitChance = 1.0f;
 	if(p_distance > p_optimalRange)
 	{
-		damageMultiplier = 1.0f - (p_distance - p_optimalRange) /
+		hitChance = 1.0f - (p_distance - p_optimalRange) /
 			(p_range - p_optimalRange);
 	}
-	return damageMultiplier;
+	return hitChance;
 }

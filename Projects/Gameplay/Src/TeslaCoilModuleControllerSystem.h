@@ -5,6 +5,8 @@ class TeslaCoilModule;
 class Transform;
 class PhysicsBody;
 class NetworkSynced;
+class ShipModule;
+class TcpServer;
 // =======================================================================================
 // TeslaCoilModuleControllerSystem
 // =======================================================================================
@@ -19,11 +21,16 @@ class NetworkSynced;
 class TeslaCoilModuleControllerSystem: public EntitySystem
 {
 public:
-	TeslaCoilModuleControllerSystem();
+	TeslaCoilModuleControllerSystem(TcpServer* p_server);
 	void processEntities( const vector<Entity*>& p_entities ) final;
 
 private:
 	void fireTeslaCoil(Entity* p_teslaEntity, TeslaCoilModule* p_teslaModule,
-		Transform* p_teslaTransform, NetworkSynced* p_teslaNetsync);
-	float calculateMultiplier( float p_distance, float p_optimalRange, float p_range );
+		Transform* p_teslaTransform, NetworkSynced* p_teslaNetsync,
+		ShipModule* p_teslaShipModule);
+	float calculateHitChance( float p_distance, float p_optimalRange, float p_range );
+
+private:
+	TcpServer* m_server;
+
 };

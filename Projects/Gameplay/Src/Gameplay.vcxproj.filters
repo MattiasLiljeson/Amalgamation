@@ -767,6 +767,9 @@
     <ClInclude Include="SettingsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="TeslaHitPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1310,6 +1313,9 @@
     </ClCompile>
     <ClCompile Include="SettingsSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaHitPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

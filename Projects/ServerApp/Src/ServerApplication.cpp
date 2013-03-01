@@ -235,7 +235,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyBombControllerSystem(m_server), true);
-		m_world->setSystem(new TeslaCoilModuleControllerSystem());
+		m_world->setSystem(new TeslaCoilModuleControllerSystem(m_server));
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);

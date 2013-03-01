@@ -39,6 +39,7 @@ public:
 		ModuleStateChangePacket,
 		ModuleStatusEffectPacket,
 		BombActivationPacket,
+		TeslaHitPacket,
 
 		// Client -> Server:
 		/************************************************************************/
