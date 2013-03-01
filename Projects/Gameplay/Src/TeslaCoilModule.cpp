@@ -8,11 +8,12 @@ TeslaCoilModule::TeslaCoilModule()
 }
 
 TeslaCoilModule::TeslaCoilModule( float p_range, float p_optimalRange,
-	float p_cooldownTime )
+	float p_cooldownTime, float p_damage )
 	: Component(ComponentType::TeslaCoilModule)
 {
 	range = p_range;
 	optimalRange = p_optimalRange;
 	cooldownTime = p_cooldownTime;
+	damage = p_damage;
 	cooldown = 0.0f;
 }

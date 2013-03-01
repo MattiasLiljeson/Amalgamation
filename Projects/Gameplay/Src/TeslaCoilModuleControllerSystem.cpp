@@ -6,11 +6,13 @@
 #include "PhysicsBody.h"
 #include "PhysicsSystem.h"
 #include <PhysicsController.h>
+#include <TcpClient.h>
+#include "NetworkSynced.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem()
-	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 4,
+	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
 	ComponentType::TeslaCoilModule, ComponentType::ShipModule, ComponentType::Transform,
-	ComponentType::PhysicsBody)
+	ComponentType::PhysicsBody, ComponentType::NetworkSynced)
 {
 }
 
@@ -31,40 +33,46 @@ void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_
 				teslaCoil->cooldown = teslaCoil->cooldownTime;
 				Transform* teslaTransform = static_cast<Transform*>(p_entities[i]->
 					getComponent(ComponentType::Transform));
-				fireTeslaCoil(p_entities[i], teslaCoil, teslaTransform);
+				NetworkSynced* teslaNetsync = static_cast<NetworkSynced*>(p_entities[i]->
+					getComponent(ComponentType::NetworkSynced));
+				fireTeslaCoil(p_entities[i], teslaCoil, teslaTransform, teslaNetsync);
 			}
 		}
 	}
 }
 
 void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
-	TeslaCoilModule* p_teslaModule, Transform* p_teslaTransform)
+	TeslaCoilModule* p_teslaModule, Transform* p_teslaTransform,
+	NetworkSynced* p_teslaNetsync)
 {
 	ShipModulesTrackerSystem* moduleTracker = static_cast<
 		ShipModulesTrackerSystem*>(m_world->getSystem(
-		SystemType::ShipModulesControllerSystem));
+		SystemType::ShipModulesTrackerSystem));
 	AglVector3 teslaPosition = p_teslaTransform->getTranslation();
 	for(unsigned int otherModuleIndex=0;
 		otherModuleIndex<moduleTracker->getActiveEntities().size();
 		otherModuleIndex++)
 	{
-		AglVector3 otherModulePosition = static_cast<Transform*>(
-			moduleTracker->getActiveEntities()[otherModuleIndex]->
-			getComponent(ComponentType::Transform))->getTranslation();
+		Entity* otherModule = moduleTracker->getActiveEntities()[otherModuleIndex];
+		AglVector3 otherModulePosition = static_cast<Transform*>(otherModule->getComponent(
+			ComponentType::Transform))->getTranslation();
 		AglVector3 distanceVector = otherModulePosition - teslaPosition;
 		if(distanceVector.lengthSquared() < p_teslaModule->range * p_teslaModule->range)
 		{
 			PhysicsBody* body = static_cast<PhysicsBody*>(
-				moduleTracker->getActiveEntities()[otherModuleIndex]->
-				getComponent(ComponentType::PhysicsBody));
-			if(p_teslaEntity != moduleTracker->getActiveEntities()[otherModuleIndex]
-				&& body != NULL)
-			{
-				static_cast<PhysicsSystem*>(m_world->getSystem(
-					SystemType::PhysicsSystem))->getController()->
-					ApplyExternalImpulse(body->m_id, distanceVector,
-					AglVector3::zero());
-			}
+				otherModule->getComponent(ComponentType::PhysicsBody));
+			ShipModule* otherShipModule = static_cast<ShipModule*>(
+				otherModule->getComponent(ComponentType::ShipModule));
+			float damageMultiplier = calculateMultiplier(distanceVector.length(),
+				p_teslaModule->optimalRange, p_teslaModule->range);
+			otherShipModule->addDamageThisTick(damageMultiplier * p_teslaModule->damage,
+				p_teslaNetsync->getNetworkOwner());
 		}
 	}
+}
+
+float TeslaCoilModuleControllerSystem::calculateMultiplier(float p_distance,
+	float p_optimalRange, float p_range)
+{
+	return 1.0f - (p_distance - p_optimalRange) / (p_range - p_optimalRange);
 }

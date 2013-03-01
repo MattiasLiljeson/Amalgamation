@@ -4,6 +4,7 @@ class Entity;
 class TeslaCoilModule;
 class Transform;
 class PhysicsBody;
+class NetworkSynced;
 // =======================================================================================
 // TeslaCoilModuleControllerSystem
 // =======================================================================================
@@ -23,5 +24,6 @@ public:
 
 private:
 	void fireTeslaCoil(Entity* p_teslaEntity, TeslaCoilModule* p_teslaModule,
-		Transform* p_teslaTransform);
+		Transform* p_teslaTransform, NetworkSynced* p_teslaNetsync);
+	float calculateMultiplier( float p_distance, float p_optimalRange, float p_range );
 };
