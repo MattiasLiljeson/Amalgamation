@@ -459,10 +459,34 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
 				if (particleSys)
 				{
-					particleSys->setSpawnPoint(		p_data.position);
+					AglVector3 pos = p_data.position;
+					if (particleSys->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
+					{
+						EntityManager* entitymanager = m_world->getEntityManager();
+						Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+						CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
+						Transform* transform = static_cast<Transform*>(
+							cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+						AglVector3 position = transform->getTranslation();
+						AglQuaternion rotation = transform->getRotation();
+						AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+						AglVector3 up = transform->getMatrix().GetUp();
+						AglMatrix view = AglMatrix::createViewMatrix(position,
+							lookTarget,
+							up);
+
+						AglVector4 pos4d(pos.x, pos.y, pos.z, 1.0f);
+						pos4d.transform(view*info->m_projMat);
+						pos4d /= pos4d.w;
+						pos = AglVector3(pos4d.x, pos4d.y, 0);
+					}
+
+
+					particleSys->setSpawnPoint(		pos, p_data.forceParticleMove);
 					particleSys->setSpawnDirection(	p_data.direction);
 					particleSys->setSpawnSpeed(		p_data.speed);
 					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					particleSys->setColor(p_data.color);
 				}
 			}
 			else

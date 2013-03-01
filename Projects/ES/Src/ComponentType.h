@@ -114,6 +114,7 @@ public:	//Enums
 		BoundingBox,
 		SelectionMarker,
 		GravityMineEffectPiece,
+		Sprite,
 		NUM_COMPONENT_TYPES
 	};
 

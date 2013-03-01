@@ -119,6 +119,7 @@ public:	//Enums
 		ShieldPlaterSystem,
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
+		SpriteSystem,
 		NUM_SYSTEM_TYPES
 	};
 

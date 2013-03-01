@@ -120,6 +120,7 @@
 #include <AnomalyBombEffectSystem.h>
 #include <ShieldPlaterSystem.h>
 #include <SlotHighlightParticleMakerSystem.h>
+#include <SpriteSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -355,6 +356,11 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( new SpeedFovAdjustSystem() );
 
+	/************************************************************************/
+	/* Sprites																*/
+	/************************************************************************/
+	SpriteSystem* spriteSystem = new SpriteSystem();
+	m_world->setSystem(spriteSystem);
 
 	/************************************************************************/
 	/* Renderer																*/

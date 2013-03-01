@@ -67,6 +67,13 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 
 	AglMatrix v = Camera::GetInstance()->GetViewMatrix();
 	AglMatrix p = Camera::GetInstance()->GetProjectionMatrix();
+
+	if (pPS->getParticleSystem()->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
+	{
+		v = p = AglMatrix::identityMatrix();
+		w = AglMatrix::identityMatrix();
+	}
+
 	AglVector3 pos = Camera::GetInstance()->GetPosition();
 	v = v.transpose();
 	p = p.transpose();
@@ -86,6 +93,7 @@ void ParticleShader::SetBuffer(ParticleSystem* pPS)
 	buffer->ParticleMaxAge = pPS->GetHeader().particleAge;
 	buffer->Opacity = pPS->GetHeader().maxOpacity;
 	buffer->scale	= 1.0f;
+	buffer->space = pPS->getParticleSystem()->getParticleSpace();
 
 	AglVector3 y = Camera::GetInstance()->LocalYAxis();
 	AglVector3 z = Camera::GetInstance()->LocalZAxis();

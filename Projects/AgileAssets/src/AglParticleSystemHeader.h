@@ -56,7 +56,8 @@ struct AglParticleSystemHeader{
 
 		AglSpace_GLOBAL,
 		AglSpace_LOCAL,
-		//AglSpace_PARTICLES_LOCAL = 4,
+		
+		AglSpace_SCREEN,
 
 		AglSpace_CNT
 	};

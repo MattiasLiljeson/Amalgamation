@@ -578,9 +578,6 @@
     <ClInclude Include="OnHitScoreEffectPacket.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="OnHitEffectBufferSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
@@ -754,6 +751,17 @@
     </ClInclude>
     <ClInclude Include="SlotHighlightParticleMakerSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
+    <ClInclude Include="ModuleStatusEffectSystem.h" />
+    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
+    <ClInclude Include="ShipModuleStatsSystem.h" />
+    <ClInclude Include="SpriteSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1131,9 +1139,6 @@
     <ClCompile Include="OnHitScoreEffectPacket.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="OnHitEffectBufferSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
@@ -1288,6 +1293,16 @@
     </ClCompile>
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
+    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
+    <ClCompile Include="ShipModuleStatsSystem.cpp" />
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

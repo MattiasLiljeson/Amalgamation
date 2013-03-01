@@ -337,6 +337,13 @@ void TW_CALL ParticleSystemDialog::SetLocalLife(void* clientData)
 	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
 	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_LOCAL;
 }
+void TW_CALL ParticleSystemDialog::SetScreenSpace(void* clientData)
+{
+	ParticleSystemDialog* d = (ParticleSystemDialog*)clientData;
+	ParticleSystem* ps = Scene::GetInstance()->GetParticleSystem(d->mPSIndex);
+	ps->getParticleSystem()->getHeaderPtr()->spawnSpace = AglParticleSystemHeader::AglSpace_SCREEN;
+	ps->getParticleSystem()->getHeaderPtr()->particleSpace = AglParticleSystemHeader::AglSpace_SCREEN;
+}
 
 void TW_CALL ParticleSystemDialog::Clone(void* clientData)
 {
@@ -455,6 +462,7 @@ void ParticleSystemDialog::setPS(int pIndex)
 	TwAddButton(m_dialog, "Global", SetGlobalSpace, (void*)this, "group='Particle Space'");
 	TwAddButton(m_dialog, "Local Spawn", SetLocalSpawn, (void*)this, "group='Particle Space'");
 	TwAddButton(m_dialog, "Local Life", SetLocalLife, (void*)this, "group='Particle Space'");
+	TwAddButton(m_dialog, "Screen Space", SetScreenSpace, (void*)this, "group='Particle Space'");
 
 	//Clone
 	TwAddButton(m_dialog, "Clone", Clone, (void*)this, " label='Clone'");

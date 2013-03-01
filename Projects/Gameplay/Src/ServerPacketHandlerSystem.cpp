@@ -651,7 +651,7 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
 
 	// NOTE: (Johan) As a developer I don't want to spawn randomly, but as a player I do.
-	//shipSpawnPoint = spawnPointSys->invalidSpawnPoint(); // Comment this away if u wanna play!
+	shipSpawnPoint = spawnPointSys->invalidSpawnPoint(); // Comment this away if u wanna play!
 
 	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
 	{

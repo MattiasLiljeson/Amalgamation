@@ -36,7 +36,8 @@ struct ParticleBuffer
 	AglVector4 CameraY;
 	int Alignment;
 	float scale;
-	float buff[2];
+	int space;
+	float buff;
 };
 
 class ParticleShader

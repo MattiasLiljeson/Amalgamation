@@ -18,6 +18,7 @@ void ModuleStatusEffectSystem::initialize()
 
 void ModuleStatusEffectSystem::process()
 {
+	return;
 	// unused module effect
 	while(!m_unusedModuleEffects.empty())
 	{
@@ -27,17 +28,11 @@ void ModuleStatusEffectSystem::process()
 
 		ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 										data.moduleEntity->getComponent(ComponentType::ParticleSystemsComponent));
-		int count = 0;
-		if (ps)
-			count = ps->getParticleSystemCnt();
 
-		if (count != 3)
-		{
-			if (!data.mode)
-				addParticleEffectComponent(data.moduleEntity);
-			else
-				removeParticleEffectComponent(data.moduleEntity);
-		}
+		if (!data.mode)
+			addParticleEffectComponent(data.moduleEntity);
+		else
+			removeParticleEffectComponent(data.moduleEntity);
 
 		m_unusedModuleEffects.pop_back();
 	}

@@ -89,7 +89,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						m_world->getComponentManager()->getComponent(
 						p_entities[entityIdx]->getIndex(), ComponentType::NetworkSynced ) );
 
-					if( netSync->getNetworkType() == EntityType::MinigunModule )
+					if( true)//netSync->getNetworkType() == EntityType::MinigunModule )
 					{
 						ParticleSystemServerComponent* psServerComp = 
 							static_cast<ParticleSystemServerComponent*>
@@ -109,6 +109,11 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								updatePacket.direction			= updateData->spawnDirection;
 								updatePacket.speed				= updateData->spawnSpeed;
 								updatePacket.spawnFrequency		= updateData->spawnFrequency;
+								updatePacket.color				= updateData->color;
+
+								updatePacket.forceParticleMove = false;
+								if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
+									updatePacket.forceParticleMove = true;
 								m_server->broadcastPacket( updatePacket.pack() );
 							}
 						}
