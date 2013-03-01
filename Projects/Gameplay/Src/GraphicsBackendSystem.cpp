@@ -13,18 +13,16 @@
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
-GraphicsBackendSystem::GraphicsBackendSystem( HINSTANCE p_hInstance, 
-											 int p_scrWidth /* = 1280 */, 
-											 int p_scrHeight /* = 720 */, 
-											 bool p_windowed /* = true */)
-											 : EntitySystem( 
-											 SystemType::GraphicsBackendSystem )
-											 
+GraphicsBackendSystem::GraphicsBackendSystem( 
+	HINSTANCE p_hInstance, int p_scrWidth /* = 1280 */, int p_scrHeight /* = 720 */,
+	bool p_windowed /* = true */, bool p_useHdr /* = true */ ) 
+	: EntitySystem( SystemType::GraphicsBackendSystem )										 
 {
 	m_hInstance = p_hInstance;
 	m_newWidth = m_scrWidth = p_scrWidth;
 	m_newHeight = m_scrHeight = p_scrHeight;
 	m_windowed = p_windowed;
+	m_useHdr = p_useHdr;
 
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
@@ -78,10 +76,12 @@ void GraphicsBackendSystem::initialize()
 	TextureParser::init();
 
 	m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
-	m_graphicsWrapper = new GraphicsWrapper( m_window->getWindowRef(), 
+	m_graphicsWrapper = new GraphicsWrapper( 
+		m_window->getWindowRef(), 
 		m_scrWidth, 
 		m_scrHeight, 
-		m_windowed );
+		m_windowed,
+		m_useHdr );
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 

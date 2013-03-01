@@ -1,10 +1,35 @@
 #pragma once
 
+#include <fstream>
+
+static void printToFile(const char* msg)
+{
+	static bool initalised = false;
+	std::ofstream ofs;
+	if (!initalised)
+	{
+		ofs = std::ofstream("log.txt", std::ios_base::out | std::ios_base::trunc);
+		initalised = true;
+	}
+	else
+		ofs = std::ofstream("log.txt", std::ios_base::out | std::ios_base::app);
+	
+	if (ofs.is_open())
+	{
+		ofs << msg;
+		ofs.close();
+	}
+}
+
 // Will only print in debug, will replace call in release with "nothing"
 // call like this: DEBUGPRINT(("text"));
 // #ifdef _DEBUG
 	static void debugPrint(const char* msg);
+  #ifdef _DEBUG 
 	#define DEBUGPRINT(x) debugPrint x
+  #else
+	#define DEBUGPRINT(x) printToFile x
+  #endif
 	#ifdef WINAPI
 		#include <Windows.h>
 		void debugPrint(const char* msg)
@@ -33,7 +58,11 @@
 // Warning version
 // #ifdef _DEBUG
 static void debugWarn(const char* msg);
-#define DEBUGWARNING(x) debugWarn x
+#ifdef _DEBUG 
+  #define DEBUGWARNING(x) debugWarn x
+#else
+  #define DEBUGWARNING(x) printToFile x
+#endif
 // #ifdef WINAPI  // commented this out to force popup
 #include <Windows.h>
 void debugWarn(const char* msg)

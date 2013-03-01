@@ -763,6 +763,9 @@
     <ClInclude Include="Sprite.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
+    <ClInclude Include="SettingsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1303,6 +1306,9 @@
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

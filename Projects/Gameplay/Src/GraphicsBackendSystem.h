@@ -30,7 +30,7 @@ class GraphicsBackendSystem : public EntitySystem
 {
 public:
 	GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth = 1280, 
-		int p_scrHeight = 720, bool p_windowed = true );
+		int p_scrHeight = 720, bool p_windowed = true, bool p_useHdr = false );
 	~GraphicsBackendSystem(void);
 
 	void changeResolution( int p_scrWidth, int p_scrHeight );
@@ -58,6 +58,7 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
+	bool m_useHdr;
 	bool m_wireframe;
 	/************************************************************************/
 	/* DEBUG FUNCTIONS ONLY! */

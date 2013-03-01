@@ -31,7 +31,8 @@
 #include "LightShader.h"
 #include "ParticleSystemAndTexture.h"
 
-GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
+GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
+								 bool p_useHdr )
 {
 	m_device		= NULL;
 	m_deviceContext = NULL;
@@ -42,6 +43,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_width	= p_width;
 	m_height= p_height;
 	m_windowed = p_windowed;
+	m_useHdr = p_useHdr;
 	m_wireframeMode = false;
 	m_renderingShadows = false;
 
@@ -77,7 +79,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
-							   m_width, m_height);
+							   m_width, m_height, m_useHdr );
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
@@ -430,7 +432,7 @@ void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
 }
 
 void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
-	m_deferredRenderer->mapDeferredBaseRTSToShader();
+	m_deferredRenderer->mapShaderResourcesForLightPass();
 	int startSlot = 4;
 	for(int i = 0; i < MAXSHADOWS; i++){
 		if(p_activeShadows[i] != -1){
@@ -440,7 +442,7 @@ void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows )
 
 }
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
-	m_deferredRenderer->unmapDeferredBaseFromShader();
+	m_deferredRenderer->unmapShaderResourcesForLightPass();
 }
 
 void GraphicsWrapper::unmapUsedShaderResourceFromLightPass( int* p_activeShadows ){
@@ -645,7 +647,7 @@ void GraphicsWrapper::setParticleRenderState()
 }
 
 void GraphicsWrapper::unmapDepthFromShader(){
-	m_deferredRenderer->unmapDepthFromShaderVariables();
+	m_deferredRenderer->unmapDepthAsShaderResource();
 }
 
 void GraphicsWrapper::renderSsao(){
@@ -657,14 +659,14 @@ void GraphicsWrapper::renderComposeStage(){
 }
 
 void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapVariousPassesToComposeStage();
+	m_deferredRenderer->mapShaderResourcesForComposePass();
 	//m_deviceContext->PSSetShaderResources(3,1,
 	//	&m_textureManager->getResource(m_randomNormalTextures)->data);
 }
 
 void GraphicsWrapper::unmapVariousStagesForCompose(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deferredRenderer->unmapVariousPassesFromComposeStage();
+	m_deferredRenderer->unmapShaderResourcesForComposePass();
 	m_deviceContext->PSSetShaderResources(3,1,
 		&m_textureManager->getResource(m_solidWhiteTexture)->data);
 }
