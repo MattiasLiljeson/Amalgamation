@@ -10,6 +10,7 @@ RocketLauncherModule::RocketLauncherModule()
 	burstCount = 1;
 	timeSinceRocket = FLT_MAX;
 	currentBurst = 0;
+	target = -1;
 }
 
 RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection)
@@ -23,6 +24,7 @@ RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3
 	burstCount = 1;
 	timeSinceRocket = FLT_MAX;
 	currentBurst = 0;
+	target = -1;
 }
 
 RocketLauncherModule::~RocketLauncherModule()

@@ -35,6 +35,7 @@ public:
 
 	//Maybe temporary
 	int		   laserSightEntity;
+	int		   target;
 
 	static ComponentRegister<RocketLauncherModule> s_reg;
 };
