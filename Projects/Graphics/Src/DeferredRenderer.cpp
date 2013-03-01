@@ -13,16 +13,16 @@
 #include "GUIShader.h"
 
 
-DeferredRenderer::DeferredRenderer(ID3D11Device* p_device, 
-								   ID3D11DeviceContext* p_deviceContext, 
-								   int p_width, 
-								   int p_height)
+DeferredRenderer::DeferredRenderer(
+	ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, int p_width, 
+	int p_height, bool p_useHdr )
 {
 	m_device		= p_device;
 	m_deviceContext = p_deviceContext;
 
 	m_width		= p_width;
 	m_height	= p_height;
+	m_useHdr	= p_useHdr;
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -182,7 +182,7 @@ void DeferredRenderer::clearBuffers()
 	float clearColor[] = {
 		0.0f,0.0f,0.0f,0.0f
 	};
-	for (unsigned int i = 0; i < RenderTargets_CNT; i++){
+	for (unsigned int i = 0; i < RenderTargets_CNT-1; i++){
 		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
 	}
 
@@ -408,13 +408,11 @@ void DeferredRenderer::initLightBuffers()
 	lightBufferDesc.CPUAccessFlags = 0;
 	lightBufferDesc.MiscFlags = 0;
 
-//#define USE_HDR
-
-#ifdef USE_HDR
-	lightBufferDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
-#else
-	lightBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-#endif
+	if( m_useHdr ) {
+		lightBufferDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
+	} else {
+		lightBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	}
 
 	// From first light to last
 	int firstIdx = RenderTargets_LIGHT_DIFFUSE;

@@ -31,7 +31,8 @@
 #include "LightShader.h"
 #include "ParticleSystemAndTexture.h"
 
-GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed)
+GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
+								 bool p_useHdr )
 {
 	m_device		= NULL;
 	m_deviceContext = NULL;
@@ -42,6 +43,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_width	= p_width;
 	m_height= p_height;
 	m_windowed = p_windowed;
+	m_useHdr = p_useHdr;
 	m_wireframeMode = false;
 	m_renderingShadows = false;
 
@@ -77,7 +79,7 @@ GraphicsWrapper::GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_
 	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
 
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
-							   m_width, m_height);
+							   m_width, m_height, m_useHdr );
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);

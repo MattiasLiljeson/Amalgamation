@@ -763,6 +763,10 @@
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="SettingsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1303,6 +1307,9 @@
     </ClCompile>
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

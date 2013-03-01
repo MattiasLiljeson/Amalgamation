@@ -142,6 +142,8 @@ External/*
 *.bsc
 *.vspx
 
+*/log.txt
+
 [Ll]oc[Mm]etrics*.*
 
 ### ADD EXPCETIONS TO RULES ABOVE!!!
