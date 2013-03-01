@@ -74,7 +74,9 @@ void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMes
 			boundingSphere = AglBoundingSphere::mergeSpheres(boundingSphere, 
 				nextBoundingSphere);
 		}
-		boundingSphere.radius;
+		string logtext = p_pieceMesh->at(0)->name + " : r=" + toString(boundingSphere.radius) + "\n";
+		DEBUGPRINT( (logtext.c_str()) );
+
 		p_pieceMesh->at(0)->meshHeader.boundingSphere = boundingSphere;
 	}
 }
