@@ -63,8 +63,8 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 				otherModule->getComponent(ComponentType::PhysicsBody));
 			ShipModule* otherShipModule = static_cast<ShipModule*>(
 				otherModule->getComponent(ComponentType::ShipModule));
-			float damageMultiplier = calculateMultiplier(distanceVector.length(),
-				p_teslaModule->optimalRange, p_teslaModule->range);
+			float distance = distanceVector.length();
+			float damageMultiplier = 1.0f;
 			otherShipModule->addDamageThisTick(damageMultiplier * p_teslaModule->damage,
 				p_teslaNetsync->getNetworkOwner());
 		}
@@ -74,5 +74,11 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 float TeslaCoilModuleControllerSystem::calculateMultiplier(float p_distance,
 	float p_optimalRange, float p_range)
 {
-	return 1.0f - (p_distance - p_optimalRange) / (p_range - p_optimalRange);
+	float damageMultiplier = 1.0f;
+	if(p_distance > p_optimalRange)
+	{
+		damageMultiplier = 1.0f - (p_distance - p_optimalRange) /
+			(p_range - p_optimalRange);
+	}
+	return damageMultiplier;
 }
