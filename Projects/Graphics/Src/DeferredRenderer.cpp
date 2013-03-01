@@ -178,7 +178,7 @@ void DeferredRenderer::unmapDepthAsShaderResource()
 
 void DeferredRenderer::clearBuffers()
 {
-	unMapGBuffers();
+	unmapAllBuffers();
 	float clearColor[] = {
 		0.0f,0.0f,0.0f,0.0f
 	};
@@ -408,7 +408,7 @@ void DeferredRenderer::initLightBuffers()
 	lightBufferDesc.CPUAccessFlags = 0;
 	lightBufferDesc.MiscFlags = 0;
 
-#define USE_HDR
+//#define USE_HDR
 
 #ifdef USE_HDR
 	lightBufferDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
@@ -504,7 +504,7 @@ void DeferredRenderer::initSSAO()
 	m_ssaoData.epsilon  = 0.0f;
 }
 
-void DeferredRenderer::unMapGBuffers()
+void DeferredRenderer::unmapAllBuffers()
 {
 	ID3D11ShaderResourceView* nulz[RenderTargets_CNT];
 	for (int i=0; i<RenderTargets_CNT; i++)

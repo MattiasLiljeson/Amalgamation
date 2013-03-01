@@ -117,7 +117,7 @@ private:
 	void initFullScreenQuad();
 	void initSSAO();
 
-	void unMapGBuffers();
+	void unmapAllBuffers();
 
 	void checkHr( HRESULT p_hr, const string& p_file,
 		const string& p_function, int p_line );
