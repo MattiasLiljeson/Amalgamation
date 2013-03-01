@@ -13,6 +13,7 @@ cbuffer cbPerFrame : register(b0)
 	float4 CameraY;
 	int Alignment;
 	float Scale;
+	int space;
 };
 
 cbuffer cbFixed
@@ -91,7 +92,6 @@ void GShader(point VS_OUT gIn[1],
 		W[3] = float4(gIn[0].Position, 1.0f);
 	}
 	
-	
 	matrix rot = matrix(cos(gIn[0].Rotation), -sin(gIn[0].Rotation), 0, 0,
 						sin(gIn[0].Rotation), cos(gIn[0].Rotation), 0, 0,
 						0, 0, 1, 0,
@@ -101,6 +101,9 @@ void GShader(point VS_OUT gIn[1],
 	W = mul(W, gWorld);
 	matrix vp = mul(gView, gProj);
 	matrix WVP = mul(W, vp);
+	
+	if (space == 2)
+		WVP = matrix(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, gIn[0].Position.x, gIn[0].Position.y, 0, 1);
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x * Scale;
 	float halfHeight = 0.5f*gIn[0].Size.y * Scale;

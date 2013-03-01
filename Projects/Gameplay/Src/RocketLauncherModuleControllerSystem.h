@@ -29,6 +29,7 @@ public:
 private:
 	void handleLaserSight(Entity* p_entity);
 	void spawnRocket(Entity* p_entity,ShipModule* p_module);
+	Entity* getClosestShip(Entity* p_entity, Entity* p_parentShip);
 private:
 	TcpServer* m_server;
 };

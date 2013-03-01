@@ -65,4 +65,5 @@ private:
 		ModuleStatusVisualizationMode* p_visMode);
 
 	Entity* m_myship;
+	AglVector3 m_moduleColorTone;
 };

@@ -753,17 +753,22 @@
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
+    <ClInclude Include="ModuleStatusEffectSystem.h" />
     <ClInclude Include="ShipModuleStatsSystem.h" />
-    <ClInclude Include="ModuleStatusEffectPacket.h">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleStatusEffectSystem.h">
+    <ClInclude Include="SpriteSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h">
-      <Filter>Systems\GFX</Filter>
+    <ClInclude Include="Sprite.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleStatusVisualizationMode.h">
+    <ClInclude Include="SettingsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h" />
+    <ClInclude Include="ColorTone.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1297,17 +1302,21 @@
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
     <ClCompile Include="ShipModuleStatsSystem.cpp" />
-    <ClCompile Include="ModuleStatusEffectPacket.cpp">
-      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+    <ClCompile Include="SpriteSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp">
-      <Filter>Systems\GFX</Filter>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleStatusVisualizationMode.cpp">
+    <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp" />
+    <ClCompile Include="ColorTone.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>

@@ -108,6 +108,9 @@ void GS(point Particle gIn[1],
 	
 	float halfWidth  = 0.5f*gIn[0].Size.x;
 	float halfHeight = 0.5f*gIn[0].Size.y;
+	
+	if (particleSpace == 2)
+		WVP = float4x4(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, gIn[0].Position.x, gIn[0].Position.y, 0, 1);
 
 	float4 v[4];
 	v[0] = float4(-halfWidth, -halfHeight, 0.0f, 1.0f);
@@ -133,6 +136,7 @@ void GS(point Particle gIn[1],
 		opacity = 1.0f;
 	
 	opacity *= maxOpacity;
+	opacity *= color.w;
 	GS_OUT gOut;
 	[unroll]
 	for(int i = 0; i < 4; ++i)

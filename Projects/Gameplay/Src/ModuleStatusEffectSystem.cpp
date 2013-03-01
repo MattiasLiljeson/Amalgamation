@@ -2,11 +2,13 @@
 #include "ModuleStatusVisualizationMode.h"
 #include "ClientStateSystem.h"
 #include <ValueClamp.h>
+#include "ColorTone.h"
 
 ModuleStatusEffectSystem::ModuleStatusEffectSystem() : 
 	EntitySystem( SystemType::ModuleStatusEffectSystem)
 {
 	m_myship=NULL;
+	m_moduleColorTone = AglVector3(0.9f,0.8f,0.5f);
 }
 
 ModuleStatusEffectSystem::~ModuleStatusEffectSystem()
@@ -116,18 +118,58 @@ void ModuleStatusEffectSystem::activateUpdateParticleEffect(Entity* p_entity,
 			m_myship->getComponent(ComponentType::Transform));
 		auto moduletransform = static_cast<Transform*>(
 			p_entity->getComponent(ComponentType::Transform));
+		auto glowEffect = static_cast<ColorTone*>(
+			p_entity->getComponent(ComponentType::ColorTone));
 		if (particleEmitters && shiptransform && moduletransform)
 		{
 			AglVector3 shippos = shiptransform->getTranslation();
 			AglVector3 modulepos = moduletransform->getTranslation();
-			float dist = AglVector3::lengthSquared(modulepos-shippos);
+			float distSq = AglVector3::lengthSquared(modulepos-shippos);
 			// update positionhint
 			AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
 			if (posHint)
 			{
-				float tint = saturate(dist/100.0f);
+				float tint = saturate(distSq/1000000.0f);
 				posHint->setColor(AglVector4(tint,tint,tint,1.0f));
 			}
+			for (unsigned int i=0;i<p_visMode->unusedHintParticleSysId.size();i++)
+			{
+				AglParticleSystem* unusedHint = particleEmitters->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
+				if (unusedHint)
+				{				
+					float tint = saturate(distSq/50000.0f);
+					unusedHint->setColor(AglVector4(tint,tint,tint,1.0f));
+					if (distSq>1000000.0f)
+						unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
+					else if (unusedHint->getHeaderPtr()->spawnType == AglParticleSystemHeader::ONCE)
+					{
+						unusedHint->setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+						unusedHint->restart();
+					}
+				}
+			}
+			//
+			// Extract this to separate
+			float glow = 1.0f-saturate(distSq/1000000.0f-100.0f);
+			if (glow>0.001f)
+			{
+				if (!glowEffect)
+				{
+					glowEffect = new ColorTone();
+					p_entity->addComponent( ComponentType::ColorTone, glowEffect );
+					p_entity->applyComponentChanges();
+				}
+				glowEffect->color=AglVector4(m_moduleColorTone.x,
+					m_moduleColorTone.y,m_moduleColorTone.z,1.0f)*glow;
+				glowEffect->toneEnabled=true;
+			}
+			else
+			{
+				if (glowEffect)
+					glowEffect->toneEnabled=false;
+			}
+			//
+
 		}
 	}
 }

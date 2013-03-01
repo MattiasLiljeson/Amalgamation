@@ -51,7 +51,8 @@ struct MaterialInfo;
 class GraphicsWrapper
 {
 public:
-	GraphicsWrapper(HWND p_hWnd, int p_width, int p_height, bool p_windowed);
+	GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
+		bool p_useHdr );
 	virtual ~GraphicsWrapper();
 	///-----------------------------------------------------------------------------------
 	/// Clears the back buffer with a non black color
@@ -262,6 +263,7 @@ private:
 	int m_solidWhiteTexture;
 
 	bool m_windowed;
+	bool m_useHdr;
 	bool m_wireframeMode;
 	bool m_renderingShadows;
 

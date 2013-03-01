@@ -41,7 +41,7 @@ public:
 	const vector<AglStandardParticle>& getParticles();
 	const float getAge() const;
 
-	void setSpawnPoint(AglVector3 p_spawnPoint);
+	void setSpawnPoint(AglVector3 p_spawnPoint, bool p_particlesFollow = false);
 	void setParticleAge(float p_age);
 	const AglVector3& getSpawnDirection();
 	const AglVector3& getCurrSpawnDirection();

@@ -12,6 +12,7 @@ public:	//Enums
 	{
 		NON_EXISTING = -1,
 		EntitySystem,
+		SettingsSystem,
 		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,
@@ -119,6 +120,7 @@ public:	//Enums
 		ShieldPlaterSystem,
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
+		SpriteSystem,
 		NUM_SYSTEM_TYPES
 	};
 

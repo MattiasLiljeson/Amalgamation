@@ -32,4 +32,6 @@ public:
 	AglVector3 direction;
 	float	   speed;
 	float	   spawnFrequency;
+	AglVector4 color;
+	bool	   forceParticleMove;
 };

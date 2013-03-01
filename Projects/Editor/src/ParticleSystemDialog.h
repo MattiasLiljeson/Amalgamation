@@ -81,6 +81,7 @@ private:
 	static void TW_CALL SetGlobalSpace(void* clientData);
 	static void TW_CALL SetLocalSpawn(void* clientData);
 	static void TW_CALL SetLocalLife(void* clientData);
+	static void TW_CALL SetScreenSpace(void* clientData);
 
 	//Clone
 	static void TW_CALL Clone(void* clientData);

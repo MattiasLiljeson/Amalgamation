@@ -41,7 +41,7 @@ void ShipModuleStatsSystem::processEntities( const vector<Entity*>& p_entities )
 	// so send status updates every second in case player joined late(for example)
 	// (Status effects works without this but might then glitch in these special cases!)
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::EverySecond))
+		checkTimeInterval(TimerIntervals::Every32Millisecond))
 	{
 		if (m_currentStart>=p_entities.size())
 			m_currentStart=0;

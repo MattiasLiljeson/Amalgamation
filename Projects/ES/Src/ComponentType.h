@@ -24,6 +24,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		ClientInfo,
+		ColorTone,
 		CircularMovement,
 		AxisRotate,
 		Extrapolate,
@@ -115,6 +116,7 @@ public:	//Enums
 		BoundingBox,
 		SelectionMarker,
 		GravityMineEffectPiece,
+		Sprite,
 		NUM_COMPONENT_TYPES
 	};
 

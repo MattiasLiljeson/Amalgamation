@@ -9,6 +9,8 @@ ParticleUpdatePacket::ParticleUpdatePacket()
 	direction = AglVector3(1, 0, 0);
 	speed = 1;
 	spawnFrequency = 1;
+	color = AglVector4(0, 0, 0, 0);
+	forceParticleMove = false;
 }
 
 ParticleUpdatePacket::~ParticleUpdatePacket()
@@ -24,7 +26,9 @@ Packet ParticleUpdatePacket::pack()
 		<< position
 		<< direction
 		<< speed
-		<< spawnFrequency;
+		<< spawnFrequency
+		<< color
+		<< forceParticleMove;
 
 	return packet;
 }
@@ -36,5 +40,7 @@ void ParticleUpdatePacket::unpack( Packet& p_packet )
 		>> position 
 		>> direction
 		>> speed
-		>> spawnFrequency;
+		>> spawnFrequency
+		>> color
+		>> forceParticleMove;
 }

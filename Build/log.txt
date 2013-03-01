@@ -1,119 +1,180 @@
-Attempting to connect to server...
-Connection established!
-SERVER: Changed to loading state!
-CLIENT: Changed to loading state!
-
-ServerShip constructed in 0.002 seconds.
-
-RocketLauncher constructed in 0 seconds.
+Warning: No spawnpoint was found for the ship. Fallback of the default position is used.
 SERVER: Changed to sent all packet state!
 
-ClientAnomalyAccelerator constructed in 0 seconds.
-
-SpeedBooster constructed in 0 seconds.
-
-Shield constructed in 0 seconds.
-
-ClientMinigun constructed in 0.001 seconds.
-
-SpeedBooster constructed in 0 seconds.
-
-Shield constructed in 0 seconds.
-
-ClientAnomalyAccelerator constructed in 0 seconds.
-
-SpeedBooster constructed in 0 seconds.
-
-Shield constructed in 0 seconds.
-
-ClientMinigun constructed in 0 seconds.
+RocketLauncher constructed in 0.001 seconds.
 
 RocketLauncher constructed in 0 seconds.
 
-ClientMinigun constructed in 0 seconds.
-
 RocketLauncher constructed in 0 seconds.
 
-Shield constructed in 0 seconds.
-
-Shield constructed in 0 seconds.
-
-Shield constructed in 0 seconds.
+RocketLauncher constructed in 0 seconds.
 
 MineLayer constructed in 0.001 seconds.
 
-RocketLauncher constructed in 0 seconds.
-
-ClientMinigun constructed in 0 seconds.
-
-RocketLauncher constructed in 0 seconds.
-
-rocket_launcher.agl loaded in 0.269 seconds.
-
-shield_module.agl loaded in 0.285 seconds.
-
-speed_booster.agl loaded in 0.259 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-MinigunAnim.agl loaded in 0.296 seconds.
-
-speed_booster.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-speed_booster.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-MinigunAnim.agl loaded in 0 seconds.
-
-rocket_launcher.agl loaded in 0 seconds.
-
-MinigunAnim.agl loaded in 0 seconds.
-
-rocket_launcher.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-shield_module.agl loaded in 0 seconds.
-
-MineWeaponFinal.agl loaded in 0.173 seconds.
-
-rocket_launcher.agl loaded in 0 seconds.
-
-MinigunAnim.agl loaded in 0 seconds.
-
-rocket_launcher.agl loaded in 0 seconds.
+MineLayer constructed in 0 seconds.
 
 MineLayer constructed in 0 seconds.
 
-SpeedBooster constructed in 0 seconds.
-
-RocketLauncher constructed in 0 seconds.
+MineLayer constructed in 0 seconds.
 
 Shield constructed in 0.001 seconds.
 
 Shield constructed in 0 seconds.
 
-ClientAnomalyAccelerator constructed in 0.001 seconds.
+Shield constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+SpeedBooster constructed in 0.001 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+ClientMinigun constructed in 0.001 seconds.
 
 ClientMinigun constructed in 0 seconds.
 
+ClientMinigun constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+ClientAnomalyAccelerator constructed in 0.001 seconds.
+
 ClientAnomalyAccelerator constructed in 0 seconds.
 
-ClientShip constructed in 0.015 seconds.
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+RocketLauncher constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+RocketLauncher constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+Shield constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+ClientMinigun constructed in 0.001 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+RocketLauncher constructed in 0 seconds.
+
+ClientMinigun constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+RocketLauncher constructed in 0 seconds.
+
+RocketLauncher constructed in 0 seconds.
+
+MineLayer constructed in 0 seconds.
+
+SpeedBooster constructed in 0 seconds.
+
+ClientShip constructed in 0.003 seconds.
 CLIENT: Changed to finished loading state!
+
+rocket_launcher.agl loaded in 0.37 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0.211 seconds.
 
 MineWeaponFinal.agl loaded in 0 seconds.
 
+MineWeaponFinal.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0.346 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0.351 seconds.
+
 speed_booster.agl loaded in 0 seconds.
 
-rocket_launcher.agl loaded in 0 seconds.
+speed_booster.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0.27 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
 
 shield_module.agl loaded in 0 seconds.
 
@@ -123,1460 +184,674 @@ shield_module.agl loaded in 0 seconds.
 
 MinigunAnim.agl loaded in 0 seconds.
 
+MineWeaponFinal.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
 shield_module.agl loaded in 0 seconds.
 
-WorldPrison_FinalWork_9_exporting.agl loaded in 2.12 seconds.
+MineWeaponFinal.agl loaded in 0 seconds.
 
-small_chamber4.agl loaded in 0.001 seconds.
+MineWeaponFinal.agl loaded in 0 seconds.
 
-small_chamber4.agl loaded in 0 seconds.
+MineWeaponFinal.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0.001 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+speed_booster.agl loaded in 0.001 seconds.
+
+WorldPrison_FinalWork_9_exporting.agl loaded in 2.237 seconds.
+
+small_chamber3.agl loaded in 0.002 seconds.
+
+RockD.agl loaded in 0 seconds.
+
+RockD.agl loaded in 0 seconds.
+
+vegetationchamber.agl loaded in 0.002 seconds.
+
+RockD.agl loaded in 0 seconds.
 
 RockD.agl loaded in 0 seconds.
 
 Ship.agl loaded in 0 seconds.
 SERVER: Changed to ingame state!
-
-shield_plate.agl loaded in 0.163 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0.003 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0.001 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
-
-shield_plate.agl loaded in 0 seconds.
 CLIENT: Changed to ingame state!
 
+shield_plate.agl loaded in 0.139 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.002 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.011 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
 shield_plate.agl loaded in 0 seconds.
 
 shield_plate.agl loaded in 0 seconds.
@@ -2043,7 +1318,1113 @@ shield_plate.agl loaded in 0 seconds.
 
 shield_plate.agl loaded in 0 seconds.
 
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
 shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0.001 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
 
 shield_plate.agl loaded in 0 seconds.
 

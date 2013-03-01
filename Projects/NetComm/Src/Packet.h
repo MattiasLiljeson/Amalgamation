@@ -99,6 +99,7 @@ public:
 	Packet& operator << (float	p_data);
 	Packet& operator << (double p_data);
 	Packet& operator << (AglVector3& p_data);
+	Packet& operator << (AglVector4& p_data);
 	Packet& operator << (AglMatrix& p_data);
 	Packet& operator << (AglQuaternion& p_data);
 	Packet& operator << (SYSTEMTIME p_data);
@@ -114,6 +115,7 @@ public:
 	Packet& operator >> (double& p_data);
 	Packet& operator >> (AglMatrix& p_data);
 	Packet& operator >> (AglVector3& p_data);
+	Packet& operator >> (AglVector4& p_data);
 	Packet& operator >> (AglQuaternion& p_data);
 	Packet& operator >> (SYSTEMTIME& p_data);
 	Packet& operator >> (string& p_data);

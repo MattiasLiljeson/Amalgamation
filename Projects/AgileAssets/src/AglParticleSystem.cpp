@@ -74,8 +74,16 @@ const vector<AglStandardParticle>& AglParticleSystem::getParticles()
 	return m_particles;
 }
 	
-void AglParticleSystem::setSpawnPoint(AglVector3 p_spawnPoint)
+void AglParticleSystem::setSpawnPoint(AglVector3 p_spawnPoint, bool p_particlesFollow)
 {
+	if (p_particlesFollow)
+	{
+		for (unsigned int i = 0; i < m_particles.size(); i++)
+		{
+			m_particles[i].position -= m_header.spawnPoint;
+			m_particles[i].position += p_spawnPoint;
+		}
+	}
 	m_header.spawnPoint = p_spawnPoint;
 }
 void AglParticleSystem::setParticleAge(float p_age)

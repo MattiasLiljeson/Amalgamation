@@ -20,6 +20,7 @@
 #include "InputBackendSystem.h"
 #include "ModuleHelper.h"
 #include "ShipModule.h"
+#include "ColorTone.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -172,6 +173,10 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 			p_data->setNumberOfActiveGradientLayers( 1 );
 		}
 	}	
+
+	auto colorTone = static_cast<ColorTone*>(p_entity->getComponent(ComponentType::ColorTone));
+	if (colorTone && colorTone->toneEnabled)
+		p_data->setColorTone(colorTone->color);
 
 	if (p_entity->getComponent(ComponentType::SelectionMarker))
 		p_data->setColorTone(AglVector4(0, 1, 0, 1));

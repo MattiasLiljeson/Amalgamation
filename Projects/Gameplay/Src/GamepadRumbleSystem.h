@@ -26,6 +26,7 @@ public:
 	void initialize();
 
 	void processEntities( const vector<Entity*>& p_entities );
+	void setRumbleEnabled( bool p_enabled ){ m_enabled = p_enabled; }
 	void disable() {m_enabled=false;}
 	void enable() {m_enabled=true;}
 private:

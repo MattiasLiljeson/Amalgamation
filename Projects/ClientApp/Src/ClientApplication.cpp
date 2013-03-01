@@ -41,6 +41,7 @@
 #include <GameState.h>
 
 // Systems
+#include <SettingsSystem.h>
 #include <AntTweakBarEnablerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
@@ -120,6 +121,7 @@
 #include <AnomalyBombEffectSystem.h>
 #include <ShieldPlaterSystem.h>
 #include <SlotHighlightParticleMakerSystem.h>
+#include <SpriteSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -226,6 +228,11 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
+	SettingsSystem* settingsSystem = new SettingsSystem();
+	settingsSystem->readSettingsFile();
+	GameSettingsInfo settings = settingsSystem->getSettings();
+	m_world->setSystem( settingsSystem );
+
 	/************************************************************************/
 	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
@@ -244,8 +251,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Graphics																*/
 	/************************************************************************/
-	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance ,
-		1280, 720, true );
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
+		settings.screenWidth, settings.screenHeight, settings.windowed, settings.useHdr );
 
 	m_world->setSystem( graphicsBackend );
 
@@ -286,7 +293,9 @@ void ClientApplication::initSystems()
 	m_world->setSystem( inputBackend );
 	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "input.ini" ) );
 
-	m_world->setSystem( new GamepadRumbleSystem( inputBackend ) );
+	GamepadRumbleSystem* rumbleSys = new GamepadRumbleSystem( inputBackend );
+	rumbleSys->setRumbleEnabled( settings.rumble );
+	m_world->setSystem( rumbleSys );
 
 	/************************************************************************/
 	/* Culling																*/
@@ -355,6 +364,11 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( new SpeedFovAdjustSystem() );
 
+	/************************************************************************/
+	/* Sprites																*/
+	/************************************************************************/
+	SpriteSystem* spriteSystem = new SpriteSystem();
+	m_world->setSystem(spriteSystem);
 
 	/************************************************************************/
 	/* Renderer																*/
