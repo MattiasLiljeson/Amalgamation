@@ -52,14 +52,14 @@ public:
 	virtual ~SettingsSystem();
 
 	FileStatus readSettingsFile( string p_filePath = "settings.txt" );
-	//FileStatus writeSettingsFile( string p_filePath = "settings.txt" );
+	FileStatus writeSettingsFile( string p_filePath = "settings.txt" );
 
 	GameSettingsInfo getSettings();
 	void setSettings( GameSettingsInfo p_settings );
 
 private:
-	FileStatus checkFileOperation( ifstream* p_fileStream );
-
+	FileStatus checkFileReadOperation( istream* p_fileStream );
+	FileStatus checkFileWriteOperation( ostream* p_fileStream );
 private:
 	bool m_settingsAreSet;
 	GameSettingsInfo m_settings;
