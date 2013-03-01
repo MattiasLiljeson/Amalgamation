@@ -213,8 +213,11 @@ void ClientApplication::run()
 			m_world->setDelta((float)dt);
 			m_world->process();
 
-			if(m_world->shouldShutDown())
+			if(m_world->shouldShutDown()) {
+				static_cast<SettingsSystem*>(
+					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile();
 				m_running = false;
+			}
 			
 		}
 
