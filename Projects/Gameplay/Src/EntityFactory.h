@@ -78,13 +78,16 @@ public:
 	void createExplosion(const SpawnExplosionPacket& p_packet);
 
 public:
+	// Tesla coil
+	Entity* createTeslaCoilModuleClient(EntityCreationPacket p_packet);
+	Entity* createTeslaCoilModuleServer(EntityCreationPacket p_packet);
+
 	// Anomaly accelerator
 	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);
 	Entity* createAnomalyModuleServer(EntityCreationPacket p_packet);
 	Entity* createAnomalyBombClient(EntityCreationPacket p_packet);
 	Entity* createAnomalyBombServer(Transform* p_transform,
 		AglVector3 p_moduleVelocity, ShipModule* p_module);
-
 	Entity* createAnomalyPieces(int p_parentIndex);
 
 private:

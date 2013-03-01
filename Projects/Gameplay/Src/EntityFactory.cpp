@@ -52,6 +52,7 @@
 #include "AnomalyBombEffectPiece.h"
 #include "CircularMovement.h"
 #include <RandomUtil.h>
+#include "TeslaCoilModule.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -214,6 +215,13 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 			e = createAnomalyModuleClient(p_packet);
 		else
 			e = createAnomalyModuleServer(p_packet);
+	}
+	else if (type == EntityType::TeslaCoilModule)
+	{
+		if (m_client)
+			e = createTeslaCoilModuleClient(p_packet);
+		else
+			e = createTeslaCoilModuleServer(p_packet);
 	}
 	else if (type > EntityType::ShipModuleStart && type < EntityType::EndModule)
 	{
@@ -750,6 +758,27 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet)
+{
+	Entity* entity = entityFromRecipeOrFile( "ClientTeslaCoil",
+		"Assemblages/Modules/TeslaCoil/ClientTeslaCoil.asd");
+	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
+		(EntityType::EntityEnums)p_packet.entityType));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet)
+{
+	Entity* entity = entityFromRecipeOrFile( "ServerTeslaCoil",
+		"Assemblages/Modules/TeslaCoil/ServerTeslaCoil.asd");
+	entity->addComponent(new TeslaCoilModule(100.0f, 50.0f, 0.1f));
+	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
+		EntityType::TeslaCoilModule));
 	m_world->addEntity(entity);
 	return entity;
 }

@@ -1,20 +1,27 @@
 #pragma once
 #include <EntitySystem.h>
-#include "ShipModule.h"
+class Entity;
+class TeslaCoilModule;
+class Transform;
+class PhysicsBody;
 // =======================================================================================
-// ShipModulesTrackerSystem
+// TeslaCoilModuleControllerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # ShipModulesTrackerSystem
+/// # TeslaCoilModuleControllerSystem
 /// Detailed description...
-/// Created on: 31-1-2013 
+/// Created on: 1-3-2013 
 ///---------------------------------------------------------------------------------------
-class ShipModulesTrackerSystem: public EntitySystem
+class TeslaCoilModuleControllerSystem: public EntitySystem
 {
 public:
-	ShipModulesTrackerSystem();
-	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
+	TeslaCoilModuleControllerSystem();
+	void processEntities( const vector<Entity*>& p_entities ) final;
+
+private:
+	void fireTeslaCoil(Entity* p_teslaEntity, TeslaCoilModule* p_teslaModule,
+		Transform* p_teslaTransform);
 };

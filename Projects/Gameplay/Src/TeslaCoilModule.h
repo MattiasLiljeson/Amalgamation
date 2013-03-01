@@ -1,20 +1,26 @@
 #pragma once
-#include <EntitySystem.h>
-#include "ShipModule.h"
+#include <Component.h>
 // =======================================================================================
-// ShipModulesTrackerSystem
+// TeslaCoilModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # ShipModulesTrackerSystem
+/// # TeslaCoilModule
 /// Detailed description...
-/// Created on: 31-1-2013 
+/// Created on: 1-3-2013 
 ///---------------------------------------------------------------------------------------
-class ShipModulesTrackerSystem: public EntitySystem
+class TeslaCoilModule: public Component
 {
 public:
-	ShipModulesTrackerSystem();
-	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
+	TeslaCoilModule();
+	TeslaCoilModule(float p_range, float p_optimalRange, float p_cooldownTime);
+
+public:
+	float range;
+	float optimalRange;
+	float cooldown;
+	float cooldownTime;
+
 };

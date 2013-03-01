@@ -578,9 +578,6 @@
     <ClInclude Include="OnHitScoreEffectPacket.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="OnHitEffectBufferSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
@@ -728,9 +725,6 @@
     <ClInclude Include="AnomalyBombControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only</Filter>
     </ClInclude>
-    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
-      <Filter>Systems\Gameplay\Server Only</Filter>
-    </ClInclude>
     <ClInclude Include="AnomalyBombEffectSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
@@ -754,6 +748,20 @@
     </ClInclude>
     <ClInclude Include="SlotHighlightParticleMakerSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
+    <ClInclude Include="ModuleStatusEffectSystem.h" />
+    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
+    <ClInclude Include="ShipModuleStatsSystem.h" />
+    <ClInclude Include="TeslaCoilModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1131,9 +1139,6 @@
     <ClCompile Include="OnHitScoreEffectPacket.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="OnHitEffectBufferSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
@@ -1260,9 +1265,6 @@
     <ClCompile Include="AnomalyAcceleratorModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
-      <Filter>Systems\Gameplay\Server Only</Filter>
-    </ClCompile>
     <ClCompile Include="AnomalyBombControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only</Filter>
     </ClCompile>
@@ -1288,6 +1290,19 @@
     </ClCompile>
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
+    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
+    <ClCompile Include="ShipModuleStatsSystem.cpp" />
+    <ClCompile Include="TeslaCoilModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

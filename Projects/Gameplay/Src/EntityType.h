@@ -26,6 +26,7 @@ public:
 		RocketLauncherModule,
 		BoosterModule,
 		AnomalyModule,
+		TeslaCoilModule,
 		EndModule, //Should never be used. Marks the end of module subsection
 		//End Modules
 		PlayerCamera,

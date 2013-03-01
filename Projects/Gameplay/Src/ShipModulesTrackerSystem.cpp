@@ -1,11 +1,8 @@
 #include "ShipModulesTrackerSystem.h"
 
 ShipModulesTrackerSystem::ShipModulesTrackerSystem()
-	: EntitySystem(SystemType::ShipModulesTrackerSystem, 1, ComponentType::ShipModule)
-{
-}
-
-ShipModulesTrackerSystem::~ShipModulesTrackerSystem()
+	: EntitySystem(SystemType::ShipModulesTrackerSystem, 3, ComponentType::ShipModule,
+	ComponentType::Transform, ComponentType::PhysicsBody)
 {
 }
 
