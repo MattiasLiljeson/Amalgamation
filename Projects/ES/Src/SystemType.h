@@ -12,6 +12,7 @@ public:	//Enums
 	{
 		NON_EXISTING = -1,
 		EntitySystem,
+		SettingsSystem,
 		GraphicsBackendSystem,
 		PrintPositionsSystem,
 		ProcessingMessagesSystem,

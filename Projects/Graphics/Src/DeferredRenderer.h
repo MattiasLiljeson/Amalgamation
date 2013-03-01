@@ -60,8 +60,8 @@ public:
 	};
 
 public:
-	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-		int p_width, int p_height);
+	DeferredRenderer( ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+		int p_width, int p_height, bool p_useHdr );
 	virtual ~DeferredRenderer();
 	// Setup
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
@@ -129,7 +129,7 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
-	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT];
+	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT-1];
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[RenderTargets_CNT];
 	ID3D11DepthStencilView*		m_depthStencilView;
 
@@ -158,4 +158,5 @@ private:
 
 	int m_width;
 	int m_height;
+	bool m_useHdr;
 };
