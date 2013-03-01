@@ -49,20 +49,20 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile( string p_filePath 
 	outFile.open( p_filePath );
 
 	if( checkFileWriteOperation( &outFile ) != FileStatus_OK ) {
-		status =  FileStatus_FILE_NOT_FOUND;
+		status =  FileStatus_FILE_CANT_BE_CREATED;
 	} else {
-		outFile << m_settings.windowed;
-		outFile << m_settings.useHdr;
-		outFile << m_settings.screenHeight;
-		outFile << m_settings.screenWidth;
-		outFile << m_settings.sfxVolume;
-		outFile << m_settings.musicVolume;
-		outFile << m_settings.rumble;
-		outFile << m_settings.playerName;
-		outFile << m_settings.favouriteIp[0];
-		outFile << m_settings.favouriteIp[1];
-		outFile << m_settings.favouriteIp[2];
-		outFile << m_settings.favouriteIp[3];
+		outFile << m_settings.windowed << "\n";
+		outFile << m_settings.useHdr << "\n";
+		outFile << m_settings.screenHeight << "\n";
+		outFile << m_settings.screenWidth << "\n";
+		outFile << m_settings.sfxVolume << "\n";
+		outFile << m_settings.musicVolume << "\n";
+		outFile << m_settings.rumble << "\n";
+		outFile << m_settings.playerName << "\n";
+		outFile << m_settings.favouriteIp[0] << "\n";
+		outFile << m_settings.favouriteIp[1] << "\n";
+		outFile << m_settings.favouriteIp[2] << "\n";
+		outFile << m_settings.favouriteIp[3] << "\n";
 		status = checkFileWriteOperation( &outFile );
 		m_settingsAreSet = true;
 	}

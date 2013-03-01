@@ -44,6 +44,7 @@ public:
 		FileStatus_NOT_INITILIZED = -1,
 		FileStatus_OK,
 		FileStatus_FILE_NOT_FOUND,
+		FileStatus_FILE_CANT_BE_CREATED,
 		FileStatus_WRONG_FILE_STRUCTURE,
 		FileStatus_CNT
 	};
