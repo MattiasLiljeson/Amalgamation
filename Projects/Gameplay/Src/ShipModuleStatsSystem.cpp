@@ -6,7 +6,7 @@
 
 unsigned int ShipModuleStatsSystem::m_currentStart = 0;
 
-ShipModuleStatsSystem::ShipModuleStatsSystem( ModuleVisualEffectBufferSystem* p_effectBuffer )
+ShipModuleStatsSystem::ShipModuleStatsSystem( ModuleVisualEffectServerBufferSystem* p_effectBuffer )
 	: EntitySystem(SystemType::ShipModuleStatsSystem, 1,
 	ComponentType::ComponentTypeIdx::ShipModule)
 {

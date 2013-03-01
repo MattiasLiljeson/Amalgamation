@@ -23,11 +23,11 @@ class TcpServer;
 /// Created on: 13-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class ModuleVisualEffectBufferSystem : public EntitySystem
+class ModuleVisualEffectServerBufferSystem : public EntitySystem
 {
 public:
-	ModuleVisualEffectBufferSystem(TcpServer* p_server, ServerStateSystem* p_states);
-	virtual ~ModuleVisualEffectBufferSystem();
+	ModuleVisualEffectServerBufferSystem(TcpServer* p_server, ServerStateSystem* p_states);
+	virtual ~ModuleVisualEffectServerBufferSystem();
 
 	virtual void initialize();
 	virtual void process();

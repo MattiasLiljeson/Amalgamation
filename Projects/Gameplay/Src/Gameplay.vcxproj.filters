@@ -578,9 +578,6 @@
     <ClInclude Include="OnHitScoreEffectPacket.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="OnHitEffectBufferSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
@@ -754,6 +751,20 @@
     </ClInclude>
     <ClInclude Include="SlotHighlightParticleMakerSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ShipModuleStatsSystem.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusVisualizationMode.h">
+      <Filter>Components\GFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1131,9 +1142,6 @@
     <ClCompile Include="OnHitScoreEffectPacket.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="OnHitEffectBufferSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
@@ -1288,6 +1296,19 @@
     </ClCompile>
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModuleStatsSystem.cpp" />
+    <ClCompile Include="ModuleStatusEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp">
+      <Filter>Components\GFX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

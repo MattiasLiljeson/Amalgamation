@@ -40,6 +40,7 @@
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
@@ -129,7 +130,7 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="NewlyConnectedPlayerPacket.h" />
-    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h" />
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
@@ -338,7 +340,7 @@
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
-    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp" />
     <ClCompile Include="OnHitScoreEffectPacket.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
     <ClCompile Include="ParticleSystemsComponent.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include "ModuleVisualEffectBufferSystem.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 
 // =======================================================================================
 //                               ShipModuleStatsSystem
@@ -19,7 +19,7 @@
 class ShipModuleStatsSystem : public EntitySystem
 {
 public:
-	ShipModuleStatsSystem(ModuleVisualEffectBufferSystem* p_effectBuffer);
+	ShipModuleStatsSystem(ModuleVisualEffectServerBufferSystem* p_effectBuffer);
 	virtual ~ShipModuleStatsSystem();
 
 	void initialize();
@@ -35,5 +35,5 @@ private:
 
 	static unsigned int m_currentStart;
 	static const unsigned int m_batchSz=10;
-	ModuleVisualEffectBufferSystem* m_effectbuffer;
+	ModuleVisualEffectServerBufferSystem* m_effectbuffer;
 };

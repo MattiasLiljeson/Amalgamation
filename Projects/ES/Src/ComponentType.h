@@ -39,6 +39,7 @@ public:	//Enums
 		ShipEditController,
 		Impulse,
 		BodyInitData,
+		ModuleStatusVisualizationMode,
 		BoundingVolumeInitData,
 		LookAtEntity,
 		PlayerCameraController,

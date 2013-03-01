@@ -35,7 +35,7 @@
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
 #include <LevelHandlerSystem.h>
-#include <ModuleVisualEffectBufferSystem.h>
+#include <ModuleVisualEffectServerBufferSystem.h>
 #include <SpawnPointSystem.h>
 #include <TempModuleSpawner.h>
 #include <AnomalyBombControllerSystem.h>
@@ -178,7 +178,7 @@ namespace Srv
 		/************************************************************************/
 		/* Effects																*/
 		/************************************************************************/
-		auto moduleeffect = new ModuleVisualEffectBufferSystem(m_server,serverStates);
+		auto moduleeffect = new ModuleVisualEffectServerBufferSystem(m_server,serverStates);
 		m_world->setSystem(moduleeffect, true);
 		m_world->setSystem(new ShipModuleStatsSystem(moduleeffect), true);
 

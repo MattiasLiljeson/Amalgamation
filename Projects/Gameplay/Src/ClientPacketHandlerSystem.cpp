@@ -771,7 +771,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 					case ModuleStatusEffectPacket::UNUSEDMODULE_STATUS:
 						{
 							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
-							effectPacket.m_mode==1?fx.mode=true:fx.mode=false;
+							effectPacket.m_mode==0?fx.mode=true:fx.mode=false;
 							fx.moduleEntity = entity;
 							moduleFxVis->setUnusedModuleEffect(fx);
 							break;
