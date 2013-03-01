@@ -57,9 +57,12 @@ private:
 	vector<ModuleValueStatEffect> m_valueEffect;
 	vector<ModuleHealthStatEffect> m_healthEffects;
 
-	void activateUpdateParticleEffect(ModuleStatusVisualizationMode* p_visMode);
+	void activateUpdateParticleEffect(Entity* p_entity,
+		ModuleStatusVisualizationMode* p_visMode);
 	void addAndRegisterParticleEffect(Entity* p_entity, 
 									  ModuleStatusVisualizationMode* p_visMode);
 	void disableParticleEffect(Entity* p_entity, 
 		ModuleStatusVisualizationMode* p_visMode);
+
+	Entity* m_myship;
 };

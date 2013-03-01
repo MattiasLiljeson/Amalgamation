@@ -1,10 +1,12 @@
 #include "ModuleStatusEffectSystem.h"
 #include "ModuleStatusVisualizationMode.h"
+#include "ClientStateSystem.h"
+#include <ValueClamp.h>
 
 ModuleStatusEffectSystem::ModuleStatusEffectSystem() : 
 	EntitySystem( SystemType::ModuleStatusEffectSystem)
 {
-
+	m_myship=NULL;
 }
 
 ModuleStatusEffectSystem::~ModuleStatusEffectSystem()
@@ -32,6 +34,7 @@ void ModuleStatusEffectSystem::process()
 		ModuleStatusVisualizationMode* visMode = static_cast<ModuleStatusVisualizationMode*>(
 			data.moduleEntity->getComponent(ComponentType::ModuleStatusVisualizationMode));
 
+
 		if (data.mode)
 		{
 			// create visualization mode component, to keep track
@@ -43,14 +46,13 @@ void ModuleStatusEffectSystem::process()
 				// add particle effects for vismode
 				// if there are existing particle effect components, they'll be appended
 				// vismode keeps track of the new ones
-				addAndRegisterParticleEffect(data.moduleEntity, 
-											 visMode);
+				addAndRegisterParticleEffect(data.moduleEntity, visMode);
 			}
 			// update or activate effect based on new data
 			// and the registered data in vismode
 			if (ps)
 			{
-				activateUpdateParticleEffect(visMode);
+				activateUpdateParticleEffect(data.moduleEntity, visMode);
 			}
 		}
 		else
@@ -94,10 +96,40 @@ void ModuleStatusEffectSystem::setHealthEffect( ModuleHealthStatEffect& p_fx )
 	m_healthEffects.push_back(p_fx);
 }
 
-void ModuleStatusEffectSystem::activateUpdateParticleEffect(ModuleStatusVisualizationMode* p_visMode)
+void ModuleStatusEffectSystem::activateUpdateParticleEffect(Entity* p_entity,
+															ModuleStatusVisualizationMode* p_visMode)
 {
 	// Do updating here,
 	// like distance based fading etc
+	auto state = static_cast<ClientStateSystem*>(m_world->getSystem(SystemType::ClientStateSystem));
+	
+	//if (state->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME)
+	if (!m_myship)
+	{
+		 m_myship = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MyShip);
+	}
+	if (m_myship)
+	{
+		auto particleEmitters = static_cast<ParticleSystemsComponent*>(
+			p_entity->getComponent(ComponentType::ParticleSystemsComponent));
+		auto shiptransform = static_cast<Transform*>(
+			m_myship->getComponent(ComponentType::Transform));
+		auto moduletransform = static_cast<Transform*>(
+			p_entity->getComponent(ComponentType::Transform));
+		if (particleEmitters && shiptransform && moduletransform)
+		{
+			AglVector3 shippos = shiptransform->getTranslation();
+			AglVector3 modulepos = moduletransform->getTranslation();
+			float dist = AglVector3::lengthSquared(modulepos-shippos);
+			// update positionhint
+			AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
+			if (posHint)
+			{
+				float tint = saturate(dist/100.0f);
+				posHint->setColor(AglVector4(tint,tint,tint,1.0f));
+			}
+		}
+	}
 }
 
 void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity, 
@@ -114,11 +146,13 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 
 	if (createNewParticleSystem)
 		particleEmitters = new ParticleSystemsComponent();
+
+	float globalscale=3.0f;
 	// World highlight, always on top
 	// =============================================
 	AglParticleSystem particleSystem1;
 	AglVector3 offset = AglVector3( 0.0f,0.0f,0.0f);
-	particleSystem1.setParticleSize(AglVector2(30.0f,30.0f));
+	particleSystem1.setParticleSize(AglVector2(30.0f,30.0f)*globalscale);
 	//
 	particleSystem1.setSpawnPoint(offset);
 	particleSystem1.setSpawnDirection(AglVector3::up());
@@ -152,7 +186,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 1
 	// =============================================
 	AglParticleSystem particleSystem2;
-	particleSystem2.setParticleSize(AglVector2(2.0f,2.0f));
+	particleSystem2.setParticleSize(AglVector2(2.0f,2.0f)*globalscale);
 	//
 	particleSystem2.setSpawnPoint(offset);
 	particleSystem2.setSpawnDirection(AglVector3::up());
@@ -167,7 +201,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem2.setSpawnAngularVelocity(0.0f);
 	particleSystem2.setFadeInStop(1.0f);
 	particleSystem2.setFadeOutStart(3.00f);
-	particleSystem2.setSpawnOffset(3.0f);
+	particleSystem2.setSpawnOffset(3.0f*globalscale);
 	particleSystem2.setSpread(1.0f);
 	particleSystem2.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem2.setOffsetType(AglParticleSystemHeader::ONSPHERE);
@@ -183,7 +217,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 2
 	// =============================================
 	AglParticleSystem particleSystem3;
-	particleSystem3.setParticleSize(AglVector2(1.0f,1.0f));
+	particleSystem3.setParticleSize(AglVector2(1.0f,1.0f)*globalscale);
 	//			  3
 	particleSystem3.setSpawnPoint(offset);
 	particleSystem3.setSpawnDirection(AglVector3::up());
@@ -198,7 +232,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem3.setSpawnAngularVelocity(2.0f);
 	particleSystem3.setFadeInStop(2.0f);
 	particleSystem3.setFadeOutStart(3.00f);
-	particleSystem3.setSpawnOffset(2.0f);
+	particleSystem3.setSpawnOffset(2.0f*globalscale);
 	particleSystem3.setSpread(1.0f);
 	particleSystem3.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem3.setOffsetType(AglParticleSystemHeader::ONSPHERE);
@@ -214,7 +248,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 3
 	// =============================================
 	AglParticleSystem particleSystem4;
-	particleSystem4.setParticleSize(AglVector2(8.0f,8.0f));
+	particleSystem4.setParticleSize(AglVector2(8.0f,8.0f)*globalscale);
 	//			  4
 	particleSystem4.setSpawnPoint(offset);
 	particleSystem4.setSpawnDirection(AglVector3::up());
@@ -229,7 +263,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem4.setSpawnAngularVelocity(0.0f);
 	particleSystem4.setFadeInStop(5.0f);
 	particleSystem4.setFadeOutStart(5.00f);
-	particleSystem4.setSpawnOffset(5.0f);
+	particleSystem4.setSpawnOffset(5.0f*globalscale);
 	particleSystem4.setSpread(1.0f);
 	particleSystem4.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem4.setOffsetType(AglParticleSystemHeader::ONSPHERE);
@@ -245,7 +279,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 4
 	// =============================================
 	AglParticleSystem particleSystem5;
-	particleSystem5.setParticleSize(AglVector2(2.0f,2.0f));
+	particleSystem5.setParticleSize(AglVector2(2.0f,2.0f)*globalscale);
 	//			  5
 	particleSystem5.setSpawnPoint(offset);
 	particleSystem5.setSpawnDirection(AglVector3::up());
@@ -260,7 +294,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem5.setSpawnAngularVelocity(0.0f);
 	particleSystem5.setFadeInStop(1.0f);
 	particleSystem5.setFadeOutStart(2.00f);
-	particleSystem5.setSpawnOffset(10.0f);
+	particleSystem5.setSpawnOffset(10.0f*globalscale);
 	particleSystem5.setSpread(0.0f);
 	particleSystem5.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem5.setOffsetType(AglParticleSystemHeader::INSPHERE);
@@ -276,7 +310,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 5
 	// =============================================
 	AglParticleSystem particleSystem6;
-	particleSystem6.setParticleSize(AglVector2(2.0f,2.0f));
+	particleSystem6.setParticleSize(AglVector2(2.0f,2.0f)*globalscale);
 	//			  6
 	particleSystem6.setSpawnPoint(offset);
 	particleSystem6.setSpawnDirection(AglVector3::up());
@@ -291,7 +325,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem6.setSpawnAngularVelocity(1.0f);
 	particleSystem6.setFadeInStop(2.0f);
 	particleSystem6.setFadeOutStart(2.00f);
-	particleSystem6.setSpawnOffset(5.0f);
+	particleSystem6.setSpawnOffset(5.0f*globalscale);
 	particleSystem6.setSpread(0.3f);
 	particleSystem6.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem6.setOffsetType(AglParticleSystemHeader::ONSPHERE);
@@ -307,7 +341,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	// art deco 7
 	// =============================================
 	AglParticleSystem particleSystem7;
-	particleSystem7.setParticleSize(AglVector2(14.0f,14.0f));
+	particleSystem7.setParticleSize(AglVector2(14.0f,14.0f)*globalscale);
 	//			  7
 	particleSystem7.setSpawnPoint(offset);
 	particleSystem7.setSpawnDirection(AglVector3::up());
@@ -322,7 +356,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	particleSystem7.setSpawnAngularVelocity(0.0f);
 	particleSystem7.setFadeInStop(5.0f);
 	particleSystem7.setFadeOutStart(5.00f);
-	particleSystem7.setSpawnOffset(1.0f);
+	particleSystem7.setSpawnOffset(1.0f*globalscale);
 	particleSystem7.setSpread(0.3f);
 	particleSystem7.setSpreadType(AglParticleSystemHeader::INSPACE);
 	particleSystem7.setOffsetType(AglParticleSystemHeader::ONSPHERE);
