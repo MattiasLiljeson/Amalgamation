@@ -87,6 +87,8 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "PlayerInfo.h"
+#include "ModuleStatusEffectPacket.h"
+#include "ModuleStatusEffectSystem.h"
 #include "HighlightEntityPacket.h"
 #include "InterpolationComponent2.h"
 #include "BombActivationPacket.h"
@@ -451,7 +453,7 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
-			unsigned int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
+			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
@@ -745,6 +747,54 @@ void ClientPacketHandlerSystem::handleIngameState()
 				inst.transform = AglMatrix(AglVector3::one(),scoreFx.angle,scoreFx.position);
 
 				scoreVis->addEffect(inst);
+			}
+		}
+		else if (packetType == (char)PacketType::ModuleStatusEffectPacket)
+		{
+			// get effect system for modules
+			auto moduleFxVis = static_cast<ModuleStatusEffectSystem*>(
+				m_world->getSystem(SystemType::ModuleStatusEffectSystem));
+
+			if (moduleFxVis)
+			{
+				auto directMapper =
+					static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+					SystemType::NetsyncDirectMapperSystem));
+				//
+				ModuleStatusEffectPacket effectPacket;
+				effectPacket.unpack(packet);
+				Entity* entity = directMapper->getEntity(effectPacket.m_moduleNetworkId);
+				if (entity)
+				{
+					switch (effectPacket.m_statusType)
+					{
+					case ModuleStatusEffectPacket::UNUSEDMODULE_STATUS:
+						{
+							ModuleStatusEffectSystem::ModuleUnusedEffect fx;
+							effectPacket.m_mode==1?fx.mode=true:fx.mode=false;
+							fx.moduleEntity = entity;
+							moduleFxVis->setUnusedModuleEffect(fx);
+							break;
+						}
+					case ModuleStatusEffectPacket::HEALTH_STATUS:
+						{
+							ModuleStatusEffectSystem::ModuleHealthStatEffect fx;
+							fx.moduleEntity = entity;
+							fx.health = effectPacket.m_value;
+							moduleFxVis->setHealthEffect(fx);
+							break;
+						}
+					case ModuleStatusEffectPacket::VALUE_STATUS:
+					default:
+						{
+							ModuleStatusEffectSystem::ModuleValueStatEffect fx;
+							fx.moduleEntity = entity;
+							fx.value = effectPacket.m_value;
+							moduleFxVis->setValueEffect(fx);
+							break;
+						}
+					}
+				}		
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation)

@@ -24,5 +24,6 @@ public:
 
 public:
 	float m_cooldown;
+	float m_timeSinceMineSpawnStart;
 	static ComponentRegister<MineLayerModule> s_reg;
 };

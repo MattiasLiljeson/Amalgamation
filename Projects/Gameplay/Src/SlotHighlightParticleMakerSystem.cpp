@@ -1,10 +1,12 @@
 #include "SlotHighlightParticleMakerSystem.h"
 #include "ConnectionPointSet.h"
 #include "ParticleSystemsComponent.h"
+#include "MeshOffsetTransform.h"
 
 SlotHighlightParticleMakerSystem::SlotHighlightParticleMakerSystem()
-	: EntitySystem(SystemType::SlotHighlightParticleMakerSystem, 2,
-	ComponentType::TAG_MyShip, ComponentType::ConnectionPointSet)
+	: EntitySystem(SystemType::SlotHighlightParticleMakerSystem, 3,
+	ComponentType::TAG_MyShip, ComponentType::ConnectionPointSet,
+	ComponentType::MeshOffsetTransform)
 {
 }
 
@@ -24,20 +26,27 @@ void SlotHighlightParticleMakerSystem::inserted( Entity* p_entity )
 		AglVector3 positionBuffer; // The only usable.
 		AglQuaternion rotationBuffer;
 		AglVector3 scaleBuffer;
-		connectionPoints->m_connectionPoints[0].cpTransform.toComponents(
-			scaleBuffer, rotationBuffer, positionBuffer);
+		AglMatrix inverseOffset = static_cast<MeshOffsetTransform*>(p_entity->
+			getComponent(ComponentType::MeshOffsetTransform))->offset.inverse();
+		AglMatrix transform;
+		transform = connectionPoints->m_connectionPoints[0].cpTransform;
+		transform *= inverseOffset;
+		transform.toComponents(scaleBuffer, rotationBuffer, positionBuffer);
 		createHighlightParticleEmitter(emitters, positionBuffer, positionBuffer, 0); // Down
 
-		connectionPoints->m_connectionPoints[1].cpTransform.toComponents(
-			scaleBuffer, rotationBuffer, positionBuffer);
+		transform = connectionPoints->m_connectionPoints[1].cpTransform;
+		transform *= inverseOffset;
+		transform.toComponents(scaleBuffer, rotationBuffer, positionBuffer);
 		createHighlightParticleEmitter(emitters, positionBuffer, positionBuffer, 1); // Forward
 
-		connectionPoints->m_connectionPoints[3].cpTransform.toComponents(
-			scaleBuffer, rotationBuffer, positionBuffer);
+		transform = connectionPoints->m_connectionPoints[2].cpTransform;
+		transform *= inverseOffset;
+		transform.toComponents(scaleBuffer, rotationBuffer, positionBuffer);
 		createHighlightParticleEmitter(emitters, positionBuffer, positionBuffer, 2); // Left
 
-		connectionPoints->m_connectionPoints[2].cpTransform.toComponents(
-			scaleBuffer, rotationBuffer, positionBuffer);
+		transform = connectionPoints->m_connectionPoints[3].cpTransform;
+		transform *= inverseOffset;
+		transform.toComponents(scaleBuffer, rotationBuffer, positionBuffer);
 		createHighlightParticleEmitter(emitters, positionBuffer, positionBuffer, 3); // Right
 	}
 }

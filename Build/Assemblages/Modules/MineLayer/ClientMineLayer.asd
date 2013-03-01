@@ -9,3 +9,19 @@ c LoadMesh
 d s m_filename MineWeaponFinal.agl
 
 c ShipModule
+
+c SkeletalAnimation
+
+d f m_fps 30
+
+d s m_name Default
+d i m_startFrame 0
+d i m_endFrame 60
+
+d s m_name Spawn
+d i m_startFrame 70
+d i m_endFrame 150
+
+d s m_name Death
+d i m_startFrame 160
+d i m_endFrame 200

@@ -135,6 +135,7 @@ using namespace std;
 #include <MeshOffsetTransform.h>
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
+#include <ModuleStatusEffectSystem.h>
 #include <PlayerSystem.h>
 
 #define FORCE_VS_DBG_OUTPUT
@@ -314,7 +315,9 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
+	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
+	m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
 	m_world->setSystem( new EditSphereSystem() );
@@ -408,7 +411,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
@@ -468,7 +470,7 @@ void ClientApplication::initEntities()
 	/* Create the main camera used to render the scene						*/
 	/************************************************************************/
 	entity = m_world->createEntity();
-	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.047f,1.0f,3000.0f ) );
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.3f,1.0f,3000.0f ) );
 	entity->addComponent( new MainCamera_TAG() );
 	entity->addComponent( new AudioListener() );
 	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );

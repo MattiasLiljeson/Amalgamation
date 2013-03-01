@@ -28,8 +28,8 @@ d f m_mass 0.25
 c PhysicsBody
 
 c ShipModule
-d f m_health 100.0f
-d f m_value 100.0f
+d f m_maxhealth 100.0f
+d f m_maxvalue 100.0f
 
 c AnomalyAcceleratorModule
 d f cooldownTime 10.0

@@ -29,6 +29,7 @@ public:
 
 private:
 	void spawnMine(Transform* p_transform, AglVector3 p_moduleVelocity, ShipModule* p_module);
+	void setSpawnAnimation(Entity* p_layer);
 private:
 	TcpServer* m_server;
 };

@@ -57,3 +57,11 @@ d f 3:diffuseR 0.3
 d f 3:diffuseG 0.2
 d f 3:diffuseB 0.1
 d f 3:specular 0.2
+
+c SkeletalAnimation
+
+d f m_fps 24
+
+d s m_name Default
+d i m_startFrame 280
+d i m_endFrame 340

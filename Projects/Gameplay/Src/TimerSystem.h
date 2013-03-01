@@ -20,6 +20,8 @@ struct TimerIntervals
 {
 	enum Enum
 	{
+		EveryFourSeconds,
+		EveryTwoSeconds,
 		EverySecond,
 		HalfSecond,
 		Every32Millisecond,

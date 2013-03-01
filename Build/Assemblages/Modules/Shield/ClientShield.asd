@@ -1,4 +1,4 @@
-e shieldModuleClient
+e Shield
 
 c Transform
 d f m_translationX 0.0
