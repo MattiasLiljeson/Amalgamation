@@ -14,6 +14,7 @@ struct ConnectionPointCollection;
 struct InstanceData;
 struct ParticleSystemAndTexture;
 struct RendererSceneInfo;
+struct GameSettingsInfo;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================
@@ -29,8 +30,7 @@ struct RendererSceneInfo;
 class GraphicsBackendSystem : public EntitySystem
 {
 public:
-	GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth = 1280, 
-		int p_scrHeight = 720, bool p_windowed = true, bool p_useHdr = false );
+	GraphicsBackendSystem( HINSTANCE p_hInstance, GameSettingsInfo& p_settings );
 	~GraphicsBackendSystem(void);
 
 	void changeResolution( int p_scrWidth, int p_scrHeight );

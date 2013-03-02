@@ -10,19 +10,19 @@
 #include <AglMesh.h>
 #include <RendererSceneInfo.h>
 #include "Transform.h"
+#include "GameSettingsInfo.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
 GraphicsBackendSystem::GraphicsBackendSystem( 
-	HINSTANCE p_hInstance, int p_scrWidth /* = 1280 */, int p_scrHeight /* = 720 */,
-	bool p_windowed /* = true */, bool p_useHdr /* = true */ ) 
+	HINSTANCE p_hInstance, GameSettingsInfo& p_settings) 
 	: EntitySystem( SystemType::GraphicsBackendSystem )										 
 {
 	m_hInstance = p_hInstance;
-	m_newWidth = m_scrWidth = p_scrWidth;
-	m_newHeight = m_scrHeight = p_scrHeight;
-	m_windowed = p_windowed;
-	m_useHdr = p_useHdr;
+	m_newWidth = m_scrWidth = p_settings.screenWidth;
+	m_newHeight = m_scrHeight = p_settings.screenHeight;
+	m_windowed = p_settings.windowed;
+	m_useHdr = p_settings.useHdr;
 
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/

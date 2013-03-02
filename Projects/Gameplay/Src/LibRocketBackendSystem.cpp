@@ -254,6 +254,11 @@ void LibRocketBackendSystem::process()
 			m_renderGUI = true;
 		}
 	}
+	else if(stateSystem->getCurrentState() == GameStates::INGAME){
+		if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_9) > 0.5f ){
+			m_renderGUI = !m_renderGUI;
+		}
+	}
 	else
 	{
 		m_renderGUI = true;

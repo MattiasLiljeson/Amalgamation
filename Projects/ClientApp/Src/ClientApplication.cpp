@@ -206,7 +206,7 @@ void ClientApplication::run()
 
 			if(m_world->shouldShutDown()) {
 				static_cast<SettingsSystem*>(
-					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile();
+					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile(SETTINGSPATH);
 				m_running = false;
 			}
 			
@@ -228,7 +228,7 @@ void ClientApplication::initSystems()
 	//----------------------------------------------------------------------------------
 
 	SettingsSystem* settingsSystem = new SettingsSystem();
-	settingsSystem->readSettingsFile();
+	settingsSystem->readSettingsFile(SETTINGSPATH);
 	GameSettingsInfo settings = settingsSystem->getSettings();
 	m_world->setSystem( settingsSystem );
 
@@ -251,7 +251,7 @@ void ClientApplication::initSystems()
 	/* Graphics																*/
 	/************************************************************************/
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
-		settings.screenWidth, settings.screenHeight, settings.windowed, settings.useHdr );
+		settings );
 
 	m_world->setSystem( graphicsBackend );
 

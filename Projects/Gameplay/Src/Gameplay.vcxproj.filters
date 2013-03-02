@@ -766,6 +766,10 @@
     <ClInclude Include="SettingsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="GameSettingsInfo.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

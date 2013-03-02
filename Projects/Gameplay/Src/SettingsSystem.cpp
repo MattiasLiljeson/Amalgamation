@@ -9,12 +9,13 @@ SettingsSystem::~SettingsSystem()
 {
 }
 
-SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /*= "settings.txt" */ )
+SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, string p_file 
+															/* = "settings.txt" */)
 {
 	FileStatus status = FileStatus_OK;
 
 	ifstream inFile;
-	inFile.open( p_filePath );
+	inFile.open( p_path+p_file );
 	string temp;
 	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_NOT_FOUND;
@@ -47,6 +48,8 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 		inFile >> m_settings.enableSSAO;
 		inFile >> temp;
 		inFile >> m_settings.enableCheats;
+		inFile >> temp;
+		inFile >> m_settings.enableVSYNC;
 
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
@@ -58,12 +61,13 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 }
 
 
-SettingsSystem::FileStatus SettingsSystem::writeSettingsFile( string p_filePath /*= "settings.txt" */ )
+SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, string p_file 
+															 /* = "settings.txt" */)
 {
 	FileStatus status = FileStatus_OK;
 
 	ofstream outFile;
-	outFile.open( p_filePath );
+	outFile.open( p_path + p_file );
 
 	if( checkFileWriteOperation( &outFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_CANT_BE_CREATED;
@@ -96,11 +100,12 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile( string p_filePath 
 		outFile << m_settings.enableSSAO		<< "\n";
 		outFile << "EnableCheats= ";
 		outFile << m_settings.enableCheats		<< "\n";
+		outFile << "EnableVSYNC= ";
+		outFile << m_settings.enableVSYNC		<< "\n";
 
 		status = checkFileWriteOperation( &outFile );
 		m_settingsAreSet = true;
 	}
-
 	outFile.close();
 
 	return status;
