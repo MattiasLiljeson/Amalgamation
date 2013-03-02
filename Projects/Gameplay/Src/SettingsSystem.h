@@ -12,13 +12,16 @@ struct GameSettingsInfo
 	int useHdr; // Treated as bool
 	int screenHeight;
 	int screenWidth;
+	int masterVolume;
 	int sfxVolume;
 	int musicVolume;
 	int rumble; // Treated as bool
 	string playerName;
 	string ip;
 	string port;
-	int favouriteIp[4];
+	int enableTesselation;
+	int enableSSAO;
+	int enableCheats;
 
 	GameSettingsInfo()
 	{
@@ -26,16 +29,16 @@ struct GameSettingsInfo
 		useHdr			= -1;
 		screenHeight	= -1;
 		screenWidth		= -1;
+		masterVolume	= -1;
 		sfxVolume		= -1;
 		musicVolume		= -1;
 		rumble			= -1;
 		playerName		= "";
 		ip				= "";
 		port			= "";
-		favouriteIp[0]	= 0;
-		favouriteIp[1]	= 0;
-		favouriteIp[2]	= 0;
-		favouriteIp[3]	= 0;
+		enableTesselation  = -1;
+		enableSSAO		= -1;
+		enableCheats	= -1;
 	}
 };
 

@@ -1,5 +1,14 @@
-1 1
-720 1280
-100 100 1
-Bicen
-0 0 0 0
+Windowed= 1
+HDRLights= 1
+ScreenHeight= 720
+ScreenWidth= 1280
+MasterVolume= 100
+SoundEffectVolume= 100
+MusicVolume= 100
+Rumble= 1
+PlayerName= Bicen
+LastUsedIP= 194.47.150.37
+LastUsedPort= 1337
+EnableTesselation= 1
+EnableSSAO= 1
+EnableCheats= 1

@@ -28,6 +28,8 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 		inFile >> temp;
 		inFile >> m_settings.screenWidth;
 		inFile >> temp;
+		inFile >> m_settings.masterVolume;
+		inFile >> temp;
 		inFile >> m_settings.sfxVolume;
 		inFile >> temp;
 		inFile >> m_settings.musicVolume;
@@ -39,12 +41,13 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 		inFile >> m_settings.ip;
 		inFile >> temp;
 		inFile >> m_settings.port;
-		/*
-		inFile >> m_settings.favouriteIp[0];
-		inFile >> m_settings.favouriteIp[1];
-		inFile >> m_settings.favouriteIp[2];
-		inFile >> m_settings.favouriteIp[3];
-		*/
+		inFile >> temp;
+		inFile >> m_settings.enableTesselation;
+		inFile >> temp;
+		inFile >> m_settings.enableSSAO;
+		inFile >> temp;
+		inFile >> m_settings.enableCheats;
+
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
 	}
@@ -65,18 +68,35 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile( string p_filePath 
 	if( checkFileWriteOperation( &outFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_CANT_BE_CREATED;
 	} else {
-		outFile << m_settings.windowed			<< " ";
+		outFile << "Windowed= ";
+		outFile << m_settings.windowed			<< "\n";
+		outFile << "HDRLights= ";
 		outFile << m_settings.useHdr			<< "\n";
-		outFile << m_settings.screenHeight		<< " ";
+		outFile << "ScreenHeight= ";
+		outFile << m_settings.screenHeight		<< "\n";
+		outFile << "ScreenWidth= ";
 		outFile << m_settings.screenWidth		<< "\n";
-		outFile << m_settings.sfxVolume			<< " ";
-		outFile << m_settings.musicVolume		<< " ";
+		outFile << "MasterVolume= ";
+		outFile << m_settings.masterVolume		<< "\n";
+		outFile << "SoundEffectVolume= ";
+		outFile << m_settings.sfxVolume			<< "\n";
+		outFile << "MusicVolume= ";
+		outFile << m_settings.musicVolume		<< "\n";
+		outFile << "Rumble= ";
 		outFile << m_settings.rumble			<< "\n";
+		outFile << "PlayerName= ";
 		outFile << m_settings.playerName		<< "\n";
-		outFile << m_settings.favouriteIp[0]	<< " ";
-		outFile << m_settings.favouriteIp[1]	<< " ";
-		outFile << m_settings.favouriteIp[2]	<< " ";
-		outFile << m_settings.favouriteIp[3]	<< "\n";
+		outFile << "LastUsedIP= ";
+		outFile << m_settings.ip				<< "\n";
+		outFile << "LastUsedPort= ";
+		outFile << m_settings.port				<< "\n";
+		outFile << "EnableTesselation= ";
+		outFile << m_settings.enableTesselation	<< "\n";
+		outFile << "EnableSSAO= ";
+		outFile << m_settings.enableSSAO		<< "\n";
+		outFile << "EnableCheats= ";
+		outFile << m_settings.enableCheats		<< "\n";
+
 		status = checkFileWriteOperation( &outFile );
 		m_settingsAreSet = true;
 	}
