@@ -15,22 +15,36 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 
 	ifstream inFile;
 	inFile.open( p_filePath );
-
+	string temp;
 	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_NOT_FOUND;
 	} else {
+		inFile >> temp;
 		inFile >> m_settings.windowed;
+		inFile >> temp;
 		inFile >> m_settings.useHdr;
+		inFile >> temp;
 		inFile >> m_settings.screenHeight;
+		inFile >> temp;
 		inFile >> m_settings.screenWidth;
+		inFile >> temp;
 		inFile >> m_settings.sfxVolume;
+		inFile >> temp;
 		inFile >> m_settings.musicVolume;
+		inFile >> temp;
 		inFile >> m_settings.rumble;
+		inFile >> temp;
 		inFile >> m_settings.playerName;
+		inFile >> temp;
+		inFile >> m_settings.ip;
+		inFile >> temp;
+		inFile >> m_settings.port;
+		/*
 		inFile >> m_settings.favouriteIp[0];
 		inFile >> m_settings.favouriteIp[1];
 		inFile >> m_settings.favouriteIp[2];
 		inFile >> m_settings.favouriteIp[3];
+		*/
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
 	}

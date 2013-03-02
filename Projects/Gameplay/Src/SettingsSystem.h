@@ -6,8 +6,6 @@
 
 using namespace std;
 
-using namespace std;
-
 struct GameSettingsInfo
 {
 	int windowed; // Treated as bool
@@ -18,6 +16,8 @@ struct GameSettingsInfo
 	int musicVolume;
 	int rumble; // Treated as bool
 	string playerName;
+	string ip;
+	string port;
 	int favouriteIp[4];
 
 	GameSettingsInfo()
@@ -30,6 +30,8 @@ struct GameSettingsInfo
 		musicVolume		= -1;
 		rumble			= -1;
 		playerName		= "";
+		ip				= "";
+		port			= "";
 		favouriteIp[0]	= 0;
 		favouriteIp[1]	= 0;
 		favouriteIp[2]	= 0;
