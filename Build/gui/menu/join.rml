@@ -6,14 +6,17 @@
 	<body class="Pop-up" template="window" onshow="">
 		<form onsubmit="clearStack; connectToServer; goto lobby">
 			<div>
-				IP:
-				<Input id="host" name="server_host" type="text" size="9" maxlength="15" value="localhost" />
+				Server IP:
+				<Input id="host" name="server_host" type="text" size="15"
+				maxlength="15" value="localhost" />
 				<br/>
-				Port:
-				<Input id="port" name="server_port" type="text" size="4" maxlength="5" value="1337" />
+				Server Port:
+				<Input id="port" name="server_port" type="text" size="5"
+				maxlength="5" value="1337" />
 				<br/>
-				Name:
-				<Input id="name" name="player_name" type="text" size="9" maxlength="15" value="Max" />
+				Player Name:
+				<Input id="name" name="player_name" type="text" size="15"
+				maxlength="15" value="Max" />
 			</div>
 			<input type="submit" value="accept">Connect</input>
 			<button onclick="goto previous">Cancel</button>

@@ -1,9 +1,7 @@
 #include "ClientApplication.h"
 #include <windows.h>
 
-#ifdef COMBINE_CLIENT_AND_SERVER
-	#include "ServerApplication.h"
-#endif
+#include "ServerApplication.h"
 
 #include <EntityWorld.h>
 #include <Input.h>
@@ -150,9 +148,8 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 		m_client = new TcpClient();
 		m_world = new EntityWorld();
 
-#ifdef COMBINE_CLIENT_AND_SERVER
-		m_serverApp = new Srv::ServerApplication();
-#endif
+		m_serverApp = NULL;
+
 		// Systems first!
 		initSystems();
 
@@ -162,22 +159,19 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 
 ClientApplication::~ClientApplication()
 {
+	if(m_serverApp != NULL){
+		ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+		m_serverApp->putMessage( newMessage );
+		m_serverApp->stop();
+		delete m_serverApp;
+	}
 
-#ifdef COMBINE_CLIENT_AND_SERVER
-	ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
-	m_serverApp->putMessage( newMessage );
-	m_serverApp->stop();
-	delete m_serverApp;
-#endif
 	delete m_world;
 	delete m_client;
 }
 
 void ClientApplication::run()
 {
-#ifdef COMBINE_CLIENT_AND_SERVER
-	m_serverApp->start();
-#endif
 	m_running = true;
 
 	// simple timer
@@ -207,9 +201,6 @@ void ClientApplication::run()
 
 			m_prevTimeStamp = currTimeStamp;
 
-			//if(dt > 0.5f)
-				//dt = 0.5f;
-
 			m_world->setDelta((float)dt);
 			m_world->process();
 
@@ -217,6 +208,11 @@ void ClientApplication::run()
 				static_cast<SettingsSystem*>(
 					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile();
 				m_running = false;
+			}
+			
+			if(m_world->isHostingServer() && m_serverApp == NULL){
+				m_serverApp = new Srv::ServerApplication();
+				m_serverApp->start();
 			}
 			
 		}
@@ -412,13 +408,11 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Audio																*/
 	/************************************************************************/
-#ifdef ENABLE_SOUND
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );
 	m_world->setSystem( new AudioController(audioBackend) );
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
-#endif // ENABLE_SOUND
 
 	/************************************************************************/
 	/* Gameplay																*/

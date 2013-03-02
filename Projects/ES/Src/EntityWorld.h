@@ -254,11 +254,12 @@ public:
 
 	void process();
 
-	//<T extends Component> ComponentMapper<T> getMapper(Class<T> type);
-
 	void requestToShutDown();
 
 	bool shouldShutDown();
+
+	void requestToHostServer();
+	bool isHostingServer();
 
 	const double& getTotalSystemsTime() const;
 
@@ -286,5 +287,6 @@ private:
 	vector<Manager*> m_managersBag;
 
 	bool m_shutdown;
+	bool m_hostServer;
 };
 

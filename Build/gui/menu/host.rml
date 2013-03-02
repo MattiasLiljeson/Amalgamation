@@ -4,11 +4,19 @@
 		<link type="text/template" href="window.rml" />
 	</head>
 	<body class="Pop-up" template="window" onshow="">
-		<form onsubmit="host_server">
+		<form onsubmit="clearStack; host_server; goto lobby">
 			<div>
 				Server Name:
-				<Input name="server_name" type="text" size="10" maxlength="20" value="Untitled Server" />
+				<Input name="server_name" type="text" size="15"
+				maxlength="15" value="Untitled Server" />
 				<br/>
+				Server Port:
+				<Input name="server_port" type="text" size="5"
+				maxlength="5" value="1337" />
+				<br/>
+				Player Name:
+				<Input name="player_name" type="text" size="15"
+				maxlength="15" value="Max" />
 			</div>
 			<input type="submit" value="accept">Create</input>
 			<button onclick="goto previous">Cancel</button>
