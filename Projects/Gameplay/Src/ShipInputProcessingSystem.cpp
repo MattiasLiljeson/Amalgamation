@@ -163,25 +163,11 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 
 	// edit mode
 
-	double etv = m_actionBackend->getStatusByAction(
+	double editModeDeltaAction = m_actionBackend->getDeltaByAction(
 		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
-	input.stateSwitchTrig=saturate(etv)>0.5;
-
-	if (m_editSwitchTrigReleased)
-	{
-		if (input.stateSwitchTrig)
-		{
-			m_editSwitchTrigReleased = false;
-		}
-	}
-	else
-	{
-		if (!input.stateSwitchTrig)
-		{
-			m_editSwitchTrigReleased = true;
-		}
-		input.stateSwitchTrig=false;
-	}
+	
+	if(editModeDeltaAction != 0.0)
+		input.toggleEditMode = true;
 	
 	return input;
 }

@@ -93,6 +93,8 @@
 #include "InterpolationComponent2.h"
 #include "BombActivationPacket.h"
 #include "AnomalyBomb.h"
+#include "TeslaHitPacket.h"
+#include "TeslaEffectSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -941,6 +943,17 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			if(statePacket.m_serverState == ServerStates::RESULTS ){
 				m_gameState->setQueuedState(GameStates::RESULTS);
+			}
+		}
+		else if(packetType == (char)PacketType::TeslaHitPacket)
+		{
+			TeslaHitPacket hitPacket;
+			hitPacket.unpack(packet);
+			for(unsigned char i=0; i<hitPacket.numberOfHits; i++)
+			{
+				static_cast<TeslaEffectSystem*>(m_world->getSystem(
+					SystemType::TeslaEffectSystem))->animateHit(hitPacket.identitySource,
+					hitPacket.identitiesHit[i]);
 			}
 		}
 		else

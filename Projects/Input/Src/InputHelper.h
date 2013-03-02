@@ -113,6 +113,8 @@ public:
 		KeyboardKeys_Y,
 		KeyboardKeys_Z,
 		KeyboardKeys_SPACE,
+		KeyboardKeys_LEFT_ALT,
+		KeyboardKeys_RIGHT_ALT,
 		KeyboardKeys_BACKSPACE,
 		KeyboardKeys_RETURN,
 		KeyboardKeys_LCTRL,

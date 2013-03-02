@@ -115,6 +115,7 @@ public:	//Enums
 		BoundingBox,
 		SelectionMarker,
 		AnomalyBombEffectPiece,
+		TeslaEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 

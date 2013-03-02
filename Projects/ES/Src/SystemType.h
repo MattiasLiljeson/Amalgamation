@@ -121,6 +121,7 @@ public:	//Enums
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
 		TeslaCoilModuleControllerSystem,
+		TeslaEffectSystem,
 		NUM_SYSTEM_TYPES
 	};
 

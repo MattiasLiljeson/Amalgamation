@@ -94,6 +94,13 @@ Packet& Packet::operator << (char p_data)
 	return *this;
 }
 
+Packet& Packet::operator << (unsigned char p_data)
+{	
+	unsigned int dataSize = sizeof(p_data);
+	WriteData(&p_data, dataSize);
+	return *this;
+}
+
 Packet& Packet::operator << (short p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
@@ -183,6 +190,13 @@ Packet& Packet::operator>>( bool& p_data )
 }
 
 Packet& Packet::operator >> (char& p_data)
+{
+	unsigned int dataSize = sizeof(p_data);
+	ReadData(&p_data, dataSize);
+	return *this;
+}
+
+Packet& Packet::operator >> (unsigned char& p_data)
 {
 	unsigned int dataSize = sizeof(p_data);
 	ReadData(&p_data, dataSize);

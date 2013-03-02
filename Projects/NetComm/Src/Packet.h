@@ -92,6 +92,7 @@ public:
 
 	Packet& operator << (bool	p_data);
 	Packet& operator << (char	p_data);
+	Packet& operator << (unsigned char p_data);
 	Packet& operator << (short	p_data);
 	Packet& operator << (unsigned short p_data);
 	Packet& operator << (int	p_data);
@@ -106,6 +107,7 @@ public:
 	
 	Packet& operator >> (bool&	p_data);
 	Packet& operator >> (char&	 p_data);
+	Packet& operator >> (unsigned char& p_date);
 	Packet& operator >> (short&	 p_data);
 	Packet& operator >> (unsigned short& p_data);
 	Packet& operator >> (int&	 p_data);

@@ -770,6 +770,13 @@
     <ClInclude Include="TeslaHitPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="TeslaEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1316,6 +1323,12 @@
     </ClCompile>
     <ClCompile Include="TeslaHitPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectPiece.cpp">
+      <Filter>Components\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

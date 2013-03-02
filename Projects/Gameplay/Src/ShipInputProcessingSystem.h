@@ -47,7 +47,7 @@ public:
 			rRight=0.0f;
 			rLeft=0.0f;
 			thrust=0.0f;
-			stateSwitchTrig=false;
+			toggleEditMode=false;
 		}
 		double	hPositive,hNegative,
 			vPositive,vNegative,
@@ -57,7 +57,7 @@ public:
 			evPositive,evNegative,
 			rRight, rLeft,
 			thrust;
-		bool stateSwitchTrig;
+		bool toggleEditMode;
 
 		float getHorizontalInput()
 		{
@@ -93,7 +93,7 @@ public:
 		}
 		bool getStateModeSwitch()
 		{
-			return stateSwitchTrig;
+			return toggleEditMode;
 		}
 	};
 

@@ -1,29 +1,23 @@
 #pragma once
-#include "Packetizer.h"
+#include <Component.h>
 // =======================================================================================
-// TeslaHitPacket
+// TeslaEffectPiece
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief...
-///        
-/// # TeslaHitPacket
+/// \brief One piece of the Tesla coil effect.
+/// 
+/// # TeslaEffectPiece
 /// Detailed description...
-/// Created on: 1-3-2013 
+/// Created on: 2-3-2013 
 ///---------------------------------------------------------------------------------------
-class TeslaHitPacket: public Packetizer
+class TeslaEffectPiece: public Component
 {
 public:
-	TeslaHitPacket();
-
-	Packet pack() final;
-	void unpack(Packet& p_packet) final;
+	TeslaEffectPiece();
+	TeslaEffectPiece(float p_lifeTime);
 
 public:
-	static const int NUM_TESLA_HITS_MAX = 10;
-
-	unsigned char numberOfHits;
-	int identitySource;
-	int identitiesHit[NUM_TESLA_HITS_MAX];
+	float lifeTime;
 
 };
