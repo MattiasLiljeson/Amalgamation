@@ -19,10 +19,10 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 	: EntitySystem( SystemType::GraphicsBackendSystem )										 
 {
 	m_hInstance = p_hInstance;
-	m_newWidth = m_scrWidth = p_settings.screenWidth;
-	m_newHeight = m_scrHeight = p_settings.screenHeight;
-	m_windowed = p_settings.windowed;
-	m_useHdr = p_settings.useHdr;
+	applySettings(p_settings);
+
+	m_newWidth = m_scrWidth;
+	m_newHeight = m_scrHeight;
 
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
@@ -170,4 +170,14 @@ void GraphicsBackendSystem::renderParticleSystem( ParticleSystemAndTexture* p_sy
 
 AglVector2 GraphicsBackendSystem::getWindowSize(){
 	return AglVector2((float)m_scrWidth, (float)m_scrHeight);
+}
+
+void GraphicsBackendSystem::applySettings( GameSettingsInfo& p_settings )
+{
+	m_scrWidth = p_settings.screenWidth;
+	m_scrHeight = p_settings.screenHeight;
+	m_windowed = p_settings.windowed;
+	m_useHdr = p_settings.useHdr;
+	m_vsync = p_settings.enableVSYNC;
+	m_tesselation = p_settings.enableTesselation;
 }

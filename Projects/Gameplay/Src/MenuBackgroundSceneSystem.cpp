@@ -77,8 +77,8 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
-		AglVector4(1,0,0,1),
-		AglVector4(0,1,0,1)));
+		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
+		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
 
 	m_world->addEntity(m_ship);
 

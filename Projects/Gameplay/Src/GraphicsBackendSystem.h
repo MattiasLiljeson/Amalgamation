@@ -49,6 +49,7 @@ public:
 
 	void renderParticleSystem( ParticleSystemAndTexture* p_system,
 		const InstanceData& p_worldTransform );
+	void applySettings(GameSettingsInfo& p_settings);
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 
@@ -59,6 +60,8 @@ private:
 	int m_scrHeight;
 	bool m_windowed;
 	bool m_useHdr;
+	bool m_vsync;
+	bool m_tesselation;
 	bool m_wireframe;
 	/************************************************************************/
 	/* DEBUG FUNCTIONS ONLY! */
