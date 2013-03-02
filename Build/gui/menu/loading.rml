@@ -1,0 +1,10 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="menu.rcss" />
+	</head>
+	<body class="loading">
+		<div>
+			HERP DERP
+		</div>
+	</body>
+</rml>
