@@ -4,7 +4,7 @@
 		<link type="text/template" href="window.rml" />
 	</head>
 	<body class="Pop-up" template="window" onshow="">
-		<form onsubmit="clearStack; connectToServer; goto lobby">
+		<form onsubmit="connectToServer;">
 			<div>
 				Server IP:
 				<Input id="host" name="server_host" type="text" size="15"

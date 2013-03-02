@@ -140,6 +140,11 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 			handleIngameState();
 			break;
 		}
+	case GameStates::MENU:
+		{
+			handleMenu();
+			break;
+		}
 	case GameStates::LOBBY:
 		{
 			handleLobby();
@@ -974,7 +979,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 	}
 }
 
-void ClientPacketHandlerSystem::handleLobby()
+void ClientPacketHandlerSystem::handleMenu()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
@@ -992,8 +997,26 @@ void ClientPacketHandlerSystem::handleLobby()
 			playerInfoPacket.playerName = m_tcpClient->getPlayerName();
 			playerInfoPacket.playerID = m_tcpClient->getPlayerID();
 			m_tcpClient->sendPacket(playerInfoPacket.pack());
+			m_gameState->setQueuedState(GameStates::LOBBY);
+		}	
+		else
+		{
+			printPacketTypeNotHandled("Menu", (int)packetType);
 		}
-		else if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
+	}
+}
+
+void ClientPacketHandlerSystem::handleLobby()
+{
+	while (m_tcpClient->hasNewPackets())
+	{
+
+		Packet packet = m_tcpClient->popNewPacket();
+		//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+		char packetType;
+		packetType = packet.getPacketType();
+
+		if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
 		{
 			NewlyConnectedPlayerPacket newlyConnected;
 			newlyConnected.unpack(packet);

@@ -68,6 +68,7 @@ private:
 	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
 	void handleIngameState();
+	void handleMenu();
 	void handleLobby();
 	void handleLoading();
 	void handleFinishedLoading();

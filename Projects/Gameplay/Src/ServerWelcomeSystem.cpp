@@ -39,6 +39,7 @@
 
 #include <Globals.h>
 #include "EntityFactory.h"
+#include "PlayerSystem.h"
 
 
 
@@ -89,7 +90,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	/* It goes here if there are new clients that has connected to the		*/
 	/* server.																*/
 	/************************************************************************/
-	if ( m_server->isListening() && m_connectedPlayers.size() < 7)
+	if ( m_server->isListening() )
 	{
 		while( m_server->hasNewConnections() )
 		{
@@ -102,7 +103,6 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			/* Send the newly connected client a welcome packet with all inclusive. */
 			/************************************************************************/
 			sendWelcomePacket(id);
-
 		}
 	}
 }
@@ -110,6 +110,8 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 void ServerWelcomeSystem::initialize()
 {
 	m_server->startListening(m_activePort);
+	m_playerSystem = static_cast<PlayerSystem*>
+		(m_world->getSystem(SystemType::PlayerSystem));
 }
 
 void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
@@ -117,7 +119,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
-	welcomePacket.playerID = m_connectedPlayers.size();
+	welcomePacket.playerID = m_playerSystem->getActiveEntities().size();
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 }
 
@@ -128,22 +130,13 @@ void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
 	m_world->addEntity(e);
 }
 
-void ServerWelcomeSystem::addPlayer(int p_playerId, const string& p_playerName)
-{
-	m_connectedPlayers.push_back( PlayerInfo(p_playerName, p_playerId) );
-}
-
 void ServerWelcomeSystem::sendBrodcastAllPlayers()
 {
-	for(unsigned int i = 0; i < m_connectedPlayers.size(); i++){
+	vector<PlayerComponent*> playerComps = m_playerSystem->getPlayerComponents();
+	for(unsigned int i = 0; i < playerComps.size(); i++){
 		NewlyConnectedPlayerPacket connectedPacket;
-		connectedPacket.playerID = m_connectedPlayers[i].ID;
-		connectedPacket.playerName = m_connectedPlayers[i].name;
+		connectedPacket.playerID = playerComps.at(i)->m_playerID;
+		connectedPacket.playerName = playerComps.at(i)->m_playerName;
 		m_server->broadcastPacket( connectedPacket.pack() );
 	}
-}
-
-unsigned int ServerWelcomeSystem::getTotalOfConnectedPlayers()
-{
-	return m_connectedPlayers.size();
 }

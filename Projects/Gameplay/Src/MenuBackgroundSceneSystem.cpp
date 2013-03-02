@@ -29,6 +29,14 @@ void MenuBackgroundSceneSystem::process()
 	{
 		this->setEnabled(false);
 	}
+	else if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto* entityFactory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+		
+		GradientComponent* gradient = static_cast<GradientComponent*>
+			(m_ship->getComponent(ComponentType::Gradient));
+		gradient->m_color.layerOne = entityFactory->getPlayersFirstGradientLevel();
+		gradient->m_color.layerTwo = entityFactory->getPlayersSecondGradientLevel();
+	}
 	else{
 		m_deltaRotation = 0.0f;
 		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);

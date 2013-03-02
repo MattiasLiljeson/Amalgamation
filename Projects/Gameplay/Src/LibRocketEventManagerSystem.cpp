@@ -208,8 +208,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-			sys->setConnectionAddress(server_address, server_port);
-			m_stateSystem->setQueuedState(GameStates::LOBBY);
+			sys->setAddressAndConnect(server_address, server_port);
 		}
 		else if(values[0] == "start_game")
 		{
@@ -230,8 +229,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-			sys->setConnectionAddress("127.0.0.1", server_port);
-			m_stateSystem->setQueuedState(GameStates::LOBBY);
+			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
 	}
 }
