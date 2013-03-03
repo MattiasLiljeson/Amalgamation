@@ -90,6 +90,9 @@ void ClientMeasurementSystem::initMeasuredSystems()
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::TransformParentHandlerSystem),
 		"TransformHierarchy"));
+	m_measuredSystems.push_back(pair<EntitySystem*, string>(
+		m_world->getSystem(SystemType::AxisRotationSystem),
+		"AxisRotation"));
 
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::CullingSystem),

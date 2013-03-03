@@ -334,13 +334,13 @@ namespace Srv
 //			cp.entityType = EntityType::MineLayerModule;
 //			factory->entityFromPacket(cp, &pos);
 //		}
-//		//Shield modules
-//		for (unsigned int i = 0; i < 4; i++)
-//		{
-//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
-//			cp.entityType = EntityType::ShieldModule;
-//			factory->entityFromPacket(cp, &pos);
-//		}
+		//Shield modules
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::ShieldModule;
+			factory->entityFromPacket(cp, &pos);
+		}
 
 		//Speed Booster
 		for (unsigned int i = 0; i < 40; i++)

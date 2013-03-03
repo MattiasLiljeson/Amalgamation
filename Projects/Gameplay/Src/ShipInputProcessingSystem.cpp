@@ -37,9 +37,7 @@ void ShipInputProcessingSystem::process()
 {
 	m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
 	// Fetch the status of the various input methods.
-	RawInputForces rawInput = readAllInput();
-	// processed input
-	m_processedInput = rawInput;
+	m_processedInput = readAllInput();
 
 	// Apply correction vectors to the analogue sticks.
 	//m_processedInput.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
