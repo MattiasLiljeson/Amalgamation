@@ -776,7 +776,6 @@ Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet
 {
 	Entity* entity = entityFromRecipeOrFile( "ServerTeslaCoil",
 		"Assemblages/Modules/TeslaCoil/ServerTeslaCoil.asd");
-	entity->addComponent(new TeslaCoilModule(100.0f, 50.0f, 0.1f, 0.5f));
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::TeslaCoilModule));
 	m_world->addEntity(entity);

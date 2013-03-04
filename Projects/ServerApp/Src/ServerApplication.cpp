@@ -357,13 +357,13 @@ namespace Srv
 //			factory->entityFromPacket(cp, &pos);
 //		}
 //
-//		//Anomaly accelerator
-//		for (unsigned int i = 0; i < 4; i++)
-//		{
-//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(80.0f, 0.0f, (float)i*15.0f));
-//			cp.entityType = EntityType::AnomalyModule;
-//			factory->entityFromPacket(cp, &pos);
-//		}
+		//Anomaly accelerator
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(80.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::AnomalyModule;
+			factory->entityFromPacket(cp, &pos);
+		}
 		//Tesla coil
 		for (unsigned int i = 0; i < 4; i++)
 		{

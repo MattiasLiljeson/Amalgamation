@@ -40,6 +40,7 @@
 #include "GravityBombModule.h"
 #include "EmpModule.h"
 #include "AnomalyBomb.h"
+#include "TeslaCoilModule.h"
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -80,4 +81,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<GravityBombModule>();
 	handle<EmpModule>();
 	handle<AnomalyBomb>();
+	handle<TeslaCoilModule>();
 }
