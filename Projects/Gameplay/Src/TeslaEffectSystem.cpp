@@ -26,9 +26,11 @@ void TeslaEffectSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			Transform* pieceTransform = static_cast<Transform*>(p_entities[i]->
 				getComponent(ComponentType::Transform));
-			AglVector3 scale = pieceTransform->getScale();
-			//RandomUtil::randomInterval(5.0f, 10.0f);
-
+			float scaleFactor = RandomUtil::randomInterval(1.0f, 5.0f);
+			AglVector3 upScale = AglVector3::right() * scaleFactor;
+			AglVector3 rightScale = AglVector3::forward() * scaleFactor;
+			AglVector3 scale = effectPiece->forwardScale + upScale + rightScale;
+			pieceTransform->setScale(scale);
 		}
 	}
 }
@@ -64,10 +66,11 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 	// up is in-game forward.
 	AglVector3 forwardScale = AglVector3::up() *
 		(p_sourcePosition - p_targetPosition).length();
+	float scaleFactor = RandomUtil::randomInterval(1.0f, 5.0f);
 	// right is in-game up.
-	AglVector3 upScale = AglVector3::right() * 5.0f;
+	AglVector3 upScale = AglVector3::right() * scaleFactor;
 	// forward is in-game right.
-	AglVector3 rightScale = AglVector3::forward() * 5.0f;
+	AglVector3 rightScale = AglVector3::forward() * scaleFactor;
 	AglVector3 scale = AglVector3::one() + forwardScale + upScale + rightScale;
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
 		p_targetPosition - p_sourcePosition);
@@ -75,6 +78,6 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 		rotation, scale);
 	effectCenter->addComponent(transform);
 	effectCenter->addComponent(new LoadMesh("LightningPart.agl"));
-	effectCenter->addComponent(new TeslaEffectPiece(0.1f));
+	effectCenter->addComponent(new TeslaEffectPiece(0.1f, forwardScale));
 	m_world->addEntity(effectCenter);
 }
