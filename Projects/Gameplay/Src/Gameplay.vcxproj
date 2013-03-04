@@ -31,6 +31,7 @@
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="GameSettingsInfo.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="GravityBombModule.h" />

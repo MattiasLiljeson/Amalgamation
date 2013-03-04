@@ -1010,3 +1010,11 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
 	m_world->addEntity(effect);
 }
+
+AglVector4 EntityFactory::getPlayersFirstGradientLevel( ) const{
+	return m_gradientColors[m_client->getPlayerID()].layerOne;
+}
+
+AglVector4 EntityFactory::getPlayersSecondGradientLevel( ) const{
+	return m_gradientColors[m_client->getPlayerID()].layerTwo;
+}

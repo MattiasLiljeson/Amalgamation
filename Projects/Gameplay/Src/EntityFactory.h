@@ -87,6 +87,9 @@ public:
 
 	Entity* createAnomalyPieces(int p_parentIndex);
 
+	AglVector4 getPlayersFirstGradientLevel() const;
+	AglVector4 getPlayersSecondGradientLevel() const;
+
 private:
 	//Ship
 	Entity* createShipEntityClient(EntityCreationPacket p_packet);

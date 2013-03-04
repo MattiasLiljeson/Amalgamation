@@ -24,6 +24,7 @@ LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphic
 	m_graphicsBackend = p_graphicsBackend;
 	m_inputBackend = p_inputBackend;
 	m_renderGUI = true;
+	m_renderDebug = false;
 }
 
 
@@ -69,8 +70,8 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
-	//Rocket::Debugger::Initialise( m_rocketContext );
-	//Rocket::Debugger::SetVisible( true );
+	Rocket::Debugger::Initialise( m_rocketContext );
+	Rocket::Debugger::SetVisible( m_renderDebug );
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -238,6 +239,11 @@ void LibRocketBackendSystem::process()
 		m_renderInterface->updateOnWindowResize();
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
+
+	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
+		m_renderDebug = !m_renderDebug;
+		Rocket::Debugger::SetVisible( m_renderDebug );
+	}
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
 	if(stateSystem->getCurrentState() == GameStates::MENU ||
@@ -252,6 +258,11 @@ void LibRocketBackendSystem::process()
 			m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) < 0.0)
 		{
 			m_renderGUI = true;
+		}
+	}
+	else if(stateSystem->getCurrentState() == GameStates::INGAME){
+		if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_9) > 0.5f ){
+			m_renderGUI = !m_renderGUI;
 		}
 	}
 	else

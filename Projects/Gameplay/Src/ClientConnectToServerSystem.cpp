@@ -46,15 +46,15 @@ void ClientConnectToServerSystem::process()
 		levelHandler->destroyLevel();
 	}
 
-	InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
+/*	InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
 		(m_world->getSystem(SystemType::InputBackendSystem));
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
-		getSystem(SystemType::ClientStateSystem));
-	if( stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
-		connectToNetworkAddress();
+		getSystem(SystemType::ClientStateSystem));*/
+//	if( stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
+//		connectToNetworkAddress();
 		// Disable the menu background scene.
 		//m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
-	}
+//	}
 
 //	if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){
 //		connectToNetworkAddress();
@@ -68,6 +68,13 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 {
 	m_tcpClient->connectToServerAsync( m_serverAddress, m_serverPort);
 	m_isLookingForConnection = true;
+}
+
+void ClientConnectToServerSystem::setAddressAndConnect( const std::string& p_address, 
+													   const std::string& p_port )
+{
+	setConnectionAddress(p_address,p_port);
+	connectToNetworkAddress();
 }
 
 void ClientConnectToServerSystem::setConnectionAddress( const std::string& p_address, 

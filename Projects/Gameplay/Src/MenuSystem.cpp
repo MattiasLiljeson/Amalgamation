@@ -41,6 +41,7 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
+	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
 	rocketEventManager->loadWindow("main_menu");
 
@@ -51,11 +52,18 @@ void MenuSystem::process()
 	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
 
-	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
+	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
 		rocketEventManager->clearDocumentStack();
+	}
+	else if(gameState->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+		rocketEventManager->clearDocumentStack();
+		rocketEventManager->loadWindow("lobby");
 	}
 }
 

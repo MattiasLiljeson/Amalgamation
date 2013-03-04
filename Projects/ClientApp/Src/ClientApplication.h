@@ -1,20 +1,6 @@
 #pragma once
 #include <AglVector3.h>
 /************************************************************************/
-/* This defines if a local server should be created or not. Simply add	*/
-/* a _ before to use the local server. Otherwise start a separate server*/
-/* by compiling the server app and run it.								*/
-/************************************************************************/
-#define COMBINE_CLIENT_AND_SERVER
-
-/************************************************************************/
-/* Enables or disables the sound creation for easy use of instead of	*/
-/* removing code, ENABLE_SOUND = enables sound							*/
-/* _ENABLE_SOUND = disable sound										*/
-/************************************************************************/
-#define ENABLE_SOUND
-
-/************************************************************************/
 /* ????	-Robin & Alex													*/
 /************************************************************************/
 #define WIN32_LEAN_AND_MEAN // Johan: dafuq?
@@ -37,12 +23,10 @@ class EntityFactory;
 class EntityWorld;
 class TcpClient;
 
-#ifdef COMBINE_CLIENT_AND_SERVER
 namespace Srv
 {
 	class ServerApplication;
 };
-#endif // _COMBINE_CLIENT_AND_SERVER
 
 // =======================================================================================
 //	ClientApplication
@@ -77,7 +61,5 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
-#ifdef COMBINE_CLIENT_AND_SERVER
 	Srv::ServerApplication* m_serverApp;
-#endif
 };

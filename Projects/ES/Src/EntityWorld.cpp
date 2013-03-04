@@ -6,6 +6,8 @@ EntityWorld::EntityWorld()
 	m_totalGameTime = 0;
 	m_delta = 0.01f;
 	m_shutdown = false;
+	m_hostServer = false;
+	
 	m_aspectRatio = 800.0f/600.0f;
 
 	m_componentManager = new ComponentManager();
@@ -315,6 +317,16 @@ bool EntityWorld::shouldShutDown()
 	return m_shutdown;
 }
 
+void EntityWorld::requestToHostServer()
+{
+	m_hostServer = true;
+}
+
+bool EntityWorld::isHostingServer()
+{
+	return m_hostServer;
+}
+
 const double& EntityWorld::getTotalSystemsTime() const
 {
 	return m_systemManager->getTotalSystemExecutionTime();
@@ -331,3 +343,4 @@ void EntityWorld::postPerformManagers()
 	for( unsigned int i=0; i<m_managersBag.size(); i++ )
 		m_managersBag[i]->postPerform();
 }
+
