@@ -145,6 +145,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		m_world->getComponentManager()->getComponent(p_entity,
 		ComponentType::getTypeFor(ComponentType::ShipModule)));
 
+	Entity* child = p_entity;
 	if (module->m_parentEntity >= 0)
 	{
 		//Check if the module is highlighted
@@ -160,7 +161,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			else
 			{
 				module = parentmodule;
-				p_entity = parent;
+				child = parent;
 			}
 		}
 
@@ -173,7 +174,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		{
 			if (highlights->slotStatus[i])
 			{
-				if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
+				if (cps->m_connectionPoints[i].cpConnectedEntity == child->getIndex())
 				{
 					ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 						p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
