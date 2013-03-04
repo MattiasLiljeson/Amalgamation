@@ -11,6 +11,7 @@
 #include <RandomUtil.h>
 #include "TeslaHitPacket.h"
 #include <TcpServer.h>
+#include <algorithm>
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
@@ -87,6 +88,20 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 	}//for: otherModuleIndex
 	if(!entitiesHit.empty())
 	{
+		//struct lengthCompare
+		//{
+		//	EntityWorld* world;
+		//	AglVector3 sourcePosition;
+		//	lengthCompare(EntityWorld* p_world, AglVector3 p_sourcePosition)
+		//	{
+		//		world = p_world;
+		//		sourcePosition = p_sourcePosition;
+		//	}
+		//	bool operator() (int i, int j)
+		//	{
+		//	}
+		//} myLengthCompare(m_world, static_cast<Transform*>(p_teslaEntity->getComponent(
+		//	ComponentType::Transform))->getTranslation());
 		unsigned int i=0;
 		TeslaHitPacket hitPacket;
 		hitPacket.identitySource = p_teslaEntity->getIndex();

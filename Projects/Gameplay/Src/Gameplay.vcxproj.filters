@@ -699,9 +699,6 @@
     <ClInclude Include="EmpModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="GravityBombModule.h">
-      <Filter>Components\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="FlareGunModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -1287,9 +1284,6 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="EmpModule.cpp">
-      <Filter>Components\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="GravityBombModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
     <ClCompile Include="FlareGunModule.cpp">

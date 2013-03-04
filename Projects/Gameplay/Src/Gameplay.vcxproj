@@ -38,7 +38,6 @@
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
-    <ClInclude Include="GravityBombModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />
     <ClInclude Include="InterpolationComponent2.h" />
     <ClInclude Include="InterpolationSystem2.h" />
@@ -305,7 +304,6 @@
     <ClCompile Include="GradientComponent.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
     <ClCompile Include="GraphicsRendererSystem.cpp" />
-    <ClCompile Include="GravityBombModule.cpp" />
     <ClCompile Include="HighlightEntityPacket.cpp" />
     <ClCompile Include="AnomalyBombEffectSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
