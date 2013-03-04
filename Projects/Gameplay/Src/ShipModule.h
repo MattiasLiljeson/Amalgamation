@@ -1,8 +1,9 @@
 #pragma once
 
+#include "ModuleEvent.h"
 #include <Component.h>
 #include <ComponentFactory.h>
-#include "ModuleEvent.h"
+#include <DamageAccumulator.h>
 #include <vector>
 using namespace std;
 
@@ -13,7 +14,6 @@ using namespace std;
 ///---------------------------------------------------------------------------------------
 /// \brief Describes a module that can be attached to a ship
 ///        
-/// # PlayerScore
 /// Detailed description...
 /// Created on: 4-1-2013 
 ///---------------------------------------------------------------------------------------
@@ -21,32 +21,17 @@ using namespace std;
 class ShipModule: public Component
 {
 public:
-	int m_parentEntity;
-	int m_lastShipEntityWhenAttached;
-	float m_value; ///< Value of the module. Generates score.
-	float m_health; ///< Health of the module. A module that loses all health is removed
-
-	float m_rotation; ///< Current Rotation of the module
-	int	  m_rotationDirection; ///< Current Rotation direction of the module {-1 = Negative, 0 = None, 1 = Positive }
-
 	ShipModule();
 	ShipModule(float p_maxhealth, float p_maxvalue);
 	~ShipModule();
 	void init( vector<ComponentData> p_initData );
-	///-----------------------------------------------------------------------------------
-	/// Add damage for accumulation
-	/// The perpetrator id is needed.
-	/// \param p_amount
-	/// \param p_perpEntityShipId
-	/// \return void
-	///-----------------------------------------------------------------------------------
+
+	/// Add damage for accumulation. The perpetrator id is needed.
 	void addDamageThisTick(float p_amount,int p_perpClientId);
 	void applyDamage();
 	void resetDamage();
-	///-----------------------------------------------------------------------------------
-	/// Get the id of the latest client to cause damage to this module
-	/// \return int
-	///-----------------------------------------------------------------------------------
+
+	/// Get the id of the latest client to cause damage to this module. \return int The id.
 	int getLatestPerpetratorClient();
 	bool damageTaken() const;
 	const bool& getActive() const;
@@ -58,16 +43,20 @@ public:
 	void setToUsed(); ///< Tell module that it has been used
 	bool isUnused(); ///< Has the module been used?
 	bool isOwned(); ///< Is the module attached to a ship?
+	const DamageAccumulator& getDamage();
+
+public:
+	int m_parentEntity;
+	int m_lastShipEntityWhenAttached;
+	float m_value; ///< Value of the module. Generates score.
+	float m_health; ///< Health of the module. A module that loses all health is removed
+
+	float m_rotation; ///< Current Rotation of the module
+	int	  m_rotationDirection; ///< Current Rotation direction of the module {-1 = Negative, 0 = None, 1 = Positive }
+
 private:
 	float m_maxhealth; ///< Max health for this module
 	float m_maxvalue; ///< Max value
-	struct DamageAccumulator
-	{
-		DamageAccumulator(){reset();latestPerp=-1;}
-		void reset() {accumulatedDamage=0.0f;}
-		float accumulatedDamage;
-		int latestPerp;
-	};
 	bool m_unused; ///< Module is in pristine condition and has never been used.
 	bool m_active;
 	DamageAccumulator m_damageAcc;

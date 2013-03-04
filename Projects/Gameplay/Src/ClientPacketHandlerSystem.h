@@ -73,6 +73,8 @@ private:
 	void handleLoading();
 	void handleFinishedLoading();
 	void handleResults();
+	void handleHitIndicationPacket( Packet& p_packet );
+
 private:
 	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;

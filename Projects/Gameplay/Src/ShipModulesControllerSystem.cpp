@@ -1,24 +1,25 @@
-#include "ShipModulesControllerSystem.h"
-#include "ShipModule.h"
 #include "Control.h"
-#include "PhysicsBody.h"
-#include "PhysicsSystem.h"
-#include "NetworkSynced.h"
-#include "PlayerComponent.h"
-#include "PhysicsController.h"
-#include "ShipConnectionPointHighlights.h"
-#include "OnHitScoreEffectPacket.h"
-#include "ModuleVisualEffectBufferSystem.h"
-#include "Transform.h"
-#include "ModuleHelper.h"
-#include "SlotParticleEffectPacket.h"
 #include "EditSphereUpdatePacket.h"
-#include "ShipManagerSystem.h"
-#include <ToString.h>
-#include <DebugUtil.h>
-#include "ScoreRuleHelper.h"
+#include "ModuleHelper.h"
 #include "ModuleStatusEffectPacket.h"
+#include "ModuleVisualEffectBufferSystem.h"
+#include "NetworkSynced.h"
+#include "OnHitScoreEffectPacket.h"
+#include "PhysicsBody.h"
+#include "PhysicsController.h"
+#include "PhysicsSystem.h"
+#include "PlayerComponent.h"
 #include "PlayerSystem.h"
+#include "ScoreRuleHelper.h"
+#include "ShipConnectionPointHighlights.h"
+#include "ShipManagerSystem.h"
+#include "ShipModule.h"
+#include "ShipModulesControllerSystem.h"
+#include "SlotParticleEffectPacket.h"
+#include "Transform.h"
+#include <DamageAccumulator.h>
+#include <DebugUtil.h>
+#include <ToString.h>
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 ModuleVisualEffectBufferSystem* p_effectBuffer)
@@ -113,6 +114,13 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
 				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
+					int ownerId = networkSynced->getNetworkOwner();
+					DamageAccumulator damage = m->getDamage();
+					Packet packet( PacketType::HitIndicatorPacket );
+					packet.WriteData( &damage, sizeof(DamageAccumulator) );
+					//m_server->unicastPacket( packet, ownerId );
+					m_server->broadcastPacket( packet );
+
 					m->applyDamage();
 					// send status effect update for health
 					updateModuleHealthEffect(networkSynced->getNetworkOwner(),
@@ -135,7 +143,8 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 								int perpId = m->getLatestPerpetratorClient();
 								if (perpId!=me)
 								{
-									auto ships = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+									ShipManagerSystem* ships = static_cast<ShipManagerSystem*>(
+										m_world->getSystem(SystemType::ShipManagerSystem));
 									Entity* perpShip = ships->findShip(perpId);
 									if (perpShip)
 									{

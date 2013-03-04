@@ -17,7 +17,7 @@ void Component::init( vector<ComponentData> p_initData )
 {
 }
 
-void Component::setComponentType( ComponentType::ComponentTypeIdx p_type )
+void Component::setComponentTypeId( ComponentType::ComponentTypeIdx p_type )
 { 
 	m_componentTypeId = p_type;
 }

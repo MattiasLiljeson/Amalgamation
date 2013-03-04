@@ -20,6 +20,8 @@
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
     <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="DamageUpdaterSystem.h" />
+    <ClInclude Include="DamageVisualizerSystem.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
     <ClInclude Include="EditSphereSystem.h" />
@@ -32,6 +34,7 @@
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
+    <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="GravityBombModule.h" />
@@ -271,6 +274,8 @@
     <ClCompile Include="ConnectionVisualizerSystem.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="CullingSystem.cpp" />
+    <ClCompile Include="DamageUpdaterSystem.cpp" />
+    <ClCompile Include="DamageVisualizerSystem.cpp" />
     <ClCompile Include="DestroyOnParticlesDeath.cpp" />
     <ClCompile Include="DestroyOnParticlesDeathSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
@@ -298,6 +303,7 @@
     <ClCompile Include="HighlightEntityPacket.cpp" />
     <ClCompile Include="AnomalyBombEffectSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputActionsBackendSystem.cpp" />

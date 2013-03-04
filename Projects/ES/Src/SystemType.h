@@ -121,6 +121,8 @@ public:	//Enums
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
 		SpriteSystem,
+		DamageUpdaterSystem,
+		DamageVisualizerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

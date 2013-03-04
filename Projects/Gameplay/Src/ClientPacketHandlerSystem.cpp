@@ -1,17 +1,4 @@
-#include "AudioListener.h"
-#include "BodyInitData.h"
 #include "ClientPacketHandlerSystem.h"
-#include "GameStatsSystem.h"
-#include "NetSyncedPlayerScoreTrackerSystem.h"
-#include "PhysicsBody.h"
-#include <AntTweakBarWrapper.h>
-#include <Component.h>
-#include <ComponentType.h>
-#include <Entity.h>
-#include <Packet.h>
-#include <SystemType.h>
-#include <TcpClient.h>
-#include "LobbySystem.h"
 
 // Components
 #include "AudioBackendSystem.h"
@@ -19,6 +6,7 @@
 #include "CameraInfo.h"
 #include "ConnectionPointSet.h"
 #include "Control.h"
+#include "DamageComponent.h"
 #include "EntityType.h"
 #include "Extrapolate.h"
 #include "GameplayTags.h"
@@ -26,12 +14,16 @@
 #include "Input.h"
 #include "InputBackendSystem.h"
 #include "InterpolationComponent.h"
+#include "InterpolationComponent2.h"
+#include "LightsComponent.h"
 #include "LookAtEntity.h"
 #include "NetsyncDirectMapperSystem.h"
 #include "NetworkSynced.h"
+#include "OnHitScoreEffectPacket.h"
 #include "PacketType.h"
 #include "ParticleRenderSystem.h"
 #include "ParticleSystemEmitter.h"
+#include "ParticleSystemsComponent.h"
 #include "PickComponent.h"
 #include "PingPacket.h"
 #include "PlayerCameraController.h"
@@ -39,60 +31,76 @@
 #include "PongPacket.h"
 #include "PositionalSoundSource.h"
 #include "RenderInfo.h"
+#include "ScoreWorldVisualizerSystem.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
+#include "ShipModule.h"
 #include "TimerSystem.h"
 #include "Transform.h"
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
-#include "OnHitScoreEffectPacket.h"
-#include "ScoreWorldVisualizerSystem.h"
-#include "ShipModule.h"
+
 
 // Packets
+#include "AnimationUpdatePacket.h"
+#include "BombActivationPacket.h"
+#include "ChangeStatePacket.h"
+#include "EditSphereUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "EntityDeletionPacket.h"
 #include "EntityUpdatePacket.h"
+#include "HighlightEntityPacket.h"
+#include "ModuleStateChangePacket.h"
+#include "ModuleStatusEffectPacket.h"
+#include "ModuleTriggerPacket.h"
+#include "NewlyConnectedPlayerPacket.h"
 #include "ParticleSystemCreationInfo.h"
+#include "ParticleUpdatePacket.h"
+#include "PlayersWinLosePacket.h"
 #include "PlayersWinLosePacket.h"
 #include "RemoveSoundEffectPacket.h"
+#include "RemoveSoundEffectPacket.h"
+#include "SelectionMarkerUpdatePacket.h"
+#include "SlotParticleEffectPacket.h"
+#include "SpawnExplosionPacket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "UpdateClientStatsPacket.h"
-#include "ParticleUpdatePacket.h"
-#include "ModuleTriggerPacket.h"
-#include "ModuleStateChangePacket.h"
-#include "NewlyConnectedPlayerPacket.h"
 
 // Debug
-#include "EntityFactory.h"
-#include "LightsComponent.h"
-#include "ParticleSystemCreationInfo.h"
-#include "ParticleSystemsComponent.h"
-#include "PlayersWinLosePacket.h"
-#include "RemoveSoundEffectPacket.h"
-#include <DebugUtil.h>
-#include <ParticleSystemAndTexture.h>
-#include <ToString.h>
-#include "SlotParticleEffectPacket.h"
-#include "ConnectionVisualizerSystem.h"
-#include "SpawnExplosionPacket.h"
-#include "AnimationUpdatePacket.h"
-#include "SkeletalAnimation.h"
-#include "EditSphereUpdatePacket.h"
-#include "EditSphereSystem.h"
-#include "HudSystem.h"
-#include "SelectionMarkerUpdatePacket.h"
-#include "SelectionMarkerSystem.h"
-#include "ClientStateSystem.h"
-#include "ChangeStatePacket.h"
-#include "PlayerInfo.h"
-#include "ModuleStatusEffectPacket.h"
-#include "ModuleStatusEffectSystem.h"
-#include "HighlightEntityPacket.h"
-#include "InterpolationComponent2.h"
-#include "BombActivationPacket.h"
+
+// Misc
+#include <DamageAccumulator.h>
+
+// Sort the following into their respective category. These have probably been auto-added.
 #include "AnomalyBomb.h"
+#include "AudioListener.h"
+#include "BodyInitData.h"
+#include "ClientStateSystem.h"
+#include "ConnectionVisualizerSystem.h"
+#include "EditSphereSystem.h"
+#include "EntityFactory.h"
+#include "GameStatsSystem.h"
+#include "HudSystem.h"
+#include "LobbySystem.h"
+#include "ModuleStatusEffectSystem.h"
+#include "NetSyncedPlayerScoreTrackerSystem.h"
+#include "ParticleSystemCreationInfo.h"
+#include "PhysicsBody.h"
+#include "PlayerInfo.h"
+#include "SelectionMarkerSystem.h"
+#include "SkeletalAnimation.h"
+#include <AntTweakBarWrapper.h>
+#include <Component.h>
+#include <ComponentType.h>
+#include <DebugUtil.h>
+#include <Entity.h>
+#include <Packet.h>
+#include <ParticleSystemAndTexture.h>
+#include <SystemType.h>
+#include <TcpClient.h>
+#include <ToString.h>
+
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -136,35 +144,23 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	switch (m_gameState->getCurrentState())
 	{
 	case GameStates::INGAME:
-		{
-			handleIngameState();
-			break;
-		}
+		handleIngameState();
+		break;
 	case GameStates::MENU:
-		{
-			handleMenu();
-			break;
-		}
+		handleMenu();
+		break;
 	case GameStates::LOBBY:
-		{
-			handleLobby();
-			break;
-		}
+		handleLobby();
+		break;
 	case GameStates::LOADING:
-		{
-			handleLoading();
-			break;
-		}
+		handleLoading();
+		break;
 	case GameStates::FINISHEDLOADING:
-		{
-			handleFinishedLoading();
-			break;
-		}
+		handleFinishedLoading();
+		break;
 	case GameStates::RESULTS:
-		{
-			handleResults();
-			break;
-		}
+		handleResults();
+		break;
 	default:
 		break;
 	}
@@ -560,9 +556,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			if (data.entityType == (char)EntityType::EndBatch){
 				handleBatch(0);
-			}
-			else
-			{
+			} else {
 				m_batch.push_back(data);
 			}
 		}
@@ -694,9 +688,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 			pongPacket.unpack(packet);
 			float totalElapsedTime = m_world->getElapsedTime();
 
-			/************************************************************************/
-			/* Convert from seconds to milliseconds.								*/
-			/************************************************************************/
+			// Convert from seconds to milliseconds.
 			m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
 		}
 		else if(packetType == (char)PacketType::UpdateClientStats)
@@ -972,6 +964,10 @@ void ClientPacketHandlerSystem::handleIngameState()
 				m_gameState->setQueuedState(GameStates::RESULTS);
 			}
 		}
+		else if( packetType == (char)PacketType::HitIndicatorPacket )
+		{
+			handleHitIndicationPacket( packet );
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -1229,4 +1225,34 @@ void ClientPacketHandlerSystem::handleResults()
 //	{
 //		m_gameState->setQueuedState(GameStates::MENU);
 //	}
+}
+
+void ClientPacketHandlerSystem::handleHitIndicationPacket( Packet& p_packet )
+{
+	const int OK = 0;
+	const int ENTITY_NOT_FOUND = 1;
+	const int COMPONENT_NOT_FOUND = 2;
+	int status = OK;
+	Entity* ship = m_world->getEntityManager()->
+		getFirstEntityByComponentType( ComponentType::TAG_MyShip );
+
+	if( ship == NULL ) {
+		status = ENTITY_NOT_FOUND;
+	}
+
+	Component* comp = NULL;
+	if( status == OK ) {
+		comp = ship->getComponent( ComponentType::DamageComponent );
+		if( comp == NULL ) {
+			status = COMPONENT_NOT_FOUND;
+		}
+	}
+
+	if ( status == OK ) {
+		DamageAccumulator acc;
+		p_packet.ReadData( &acc, sizeof(DamageAccumulator) ); 
+
+		DamageComponent* hitComp = static_cast<DamageComponent*>( comp ); 
+		hitComp->addDamage( acc );
+	}
 }

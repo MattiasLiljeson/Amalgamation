@@ -145,3 +145,8 @@ float ShipModule::getMaxValue()
 {
 	return m_maxvalue;
 }
+
+const DamageAccumulator& ShipModule::getDamage()
+{
+	return m_damageAcc;
+}
