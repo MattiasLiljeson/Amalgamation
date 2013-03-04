@@ -1,5 +1,7 @@
 #include "SettingsSystem.h"
 
+// THIS COMMENT IS HERE TO LET GIT KNOW THAT THIS FILE HAS BEEN UPDATED!
+
 SettingsSystem::SettingsSystem() : EntitySystem( SystemType::SettingsSystem )
 {
 	m_settingsAreSet = false;
@@ -16,40 +18,47 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 
 	ifstream inFile;
 	inFile.open( p_path+p_file );
-	string temp;
+	string ignore;
 	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_NOT_FOUND;
 	} else {
-		inFile >> temp;
-		inFile >> m_settings.windowed;
-		inFile >> temp;
-		inFile >> m_settings.useHdr;
-		inFile >> temp;
-		inFile >> m_settings.screenHeight;
-		inFile >> temp;
+		// Gfx settings
+		inFile >> ignore;
 		inFile >> m_settings.screenWidth;
-		inFile >> temp;
-		inFile >> m_settings.masterVolume;
-		inFile >> temp;
-		inFile >> m_settings.sfxVolume;
-		inFile >> temp;
-		inFile >> m_settings.musicVolume;
-		inFile >> temp;
-		inFile >> m_settings.rumble;
-		inFile >> temp;
-		inFile >> m_settings.playerName;
-		inFile >> temp;
-		inFile >> m_settings.ip;
-		inFile >> temp;
-		inFile >> m_settings.port;
-		inFile >> temp;
+		inFile >> ignore;
+		inFile >> m_settings.screenHeight;
+		inFile >> ignore;
+		inFile >> m_settings.windowed;
+		inFile >> ignore;
+		inFile >> m_settings.useHdr;
+		inFile >> ignore;
 		inFile >> m_settings.enableTesselation;
-		inFile >> temp;
+		inFile >> ignore;
 		inFile >> m_settings.enableSSAO;
-		inFile >> temp;
-		inFile >> m_settings.enableCheats;
-		inFile >> temp;
+		inFile >> ignore;
 		inFile >> m_settings.enableVSYNC;
+
+		// Sound settings
+		inFile >> ignore;
+		inFile >> m_settings.masterVolume;
+		inFile >> ignore;
+		inFile >> m_settings.sfxVolume;
+		inFile >> ignore;
+		inFile >> m_settings.musicVolume;
+		inFile >> ignore;
+
+		// Network settings
+		inFile >> m_settings.playerName;
+		inFile >> ignore;
+		inFile >> m_settings.ip;
+		inFile >> ignore;
+		inFile >> m_settings.port;
+
+		// Game settings
+		inFile >> ignore;
+		inFile >> m_settings.rumble;
+		inFile >> ignore;
+		inFile >> m_settings.enableCheats;
 
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
@@ -62,7 +71,7 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 
 
 SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, string p_file 
-															 /* = "settings.txt" */)
+															 /* = "settings.cfg" */)
 {
 	FileStatus status = FileStatus_OK;
 
@@ -72,36 +81,43 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 	if( checkFileWriteOperation( &outFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_CANT_BE_CREATED;
 	} else {
+		// Gfx settings
+		outFile << "ScreenWidth= ";
+		outFile << m_settings.screenWidth		<< "\n";
+		outFile << "ScreenHeight= ";
+		outFile << m_settings.screenHeight		<< "\n";
 		outFile << "Windowed= ";
 		outFile << m_settings.windowed			<< "\n";
 		outFile << "HDRLights= ";
 		outFile << m_settings.useHdr			<< "\n";
-		outFile << "ScreenHeight= ";
-		outFile << m_settings.screenHeight		<< "\n";
-		outFile << "ScreenWidth= ";
-		outFile << m_settings.screenWidth		<< "\n";
+		outFile << "EnableTesselation= ";
+		outFile << m_settings.enableTesselation	<< "\n";
+		outFile << "EnableSSAO= ";
+		outFile << m_settings.enableSSAO		<< "\n";
+		outFile << "EnableVSYNC= ";
+		outFile << m_settings.enableVSYNC		<< "\n";
+
+		// Sound settings
 		outFile << "MasterVolume= ";
 		outFile << m_settings.masterVolume		<< "\n";
 		outFile << "SoundEffectVolume= ";
 		outFile << m_settings.sfxVolume			<< "\n";
 		outFile << "MusicVolume= ";
 		outFile << m_settings.musicVolume		<< "\n";
-		outFile << "Rumble= ";
-		outFile << m_settings.rumble			<< "\n";
+
+		// Networks settings
 		outFile << "PlayerName= ";
 		outFile << m_settings.playerName		<< "\n";
 		outFile << "LastUsedIP= ";
 		outFile << m_settings.ip				<< "\n";
 		outFile << "LastUsedPort= ";
 		outFile << m_settings.port				<< "\n";
-		outFile << "EnableTesselation= ";
-		outFile << m_settings.enableTesselation	<< "\n";
-		outFile << "EnableSSAO= ";
-		outFile << m_settings.enableSSAO		<< "\n";
+
+		// Game settings
+		outFile << "Rumble= ";
+		outFile << m_settings.rumble			<< "\n";
 		outFile << "EnableCheats= ";
 		outFile << m_settings.enableCheats		<< "\n";
-		outFile << "EnableVSYNC= ";
-		outFile << m_settings.enableVSYNC		<< "\n";
 
 		status = checkFileWriteOperation( &outFile );
 		m_settingsAreSet = true;

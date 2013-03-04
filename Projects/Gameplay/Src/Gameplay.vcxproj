@@ -20,6 +20,7 @@
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
     <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="ColorTone.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
     <ClInclude Include="EditSphereSystem.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="Sprite.h" />
@@ -133,7 +135,7 @@
     <ClInclude Include="NetsyncDirectMapperSystem.h" />
     <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
     <ClInclude Include="NewlyConnectedPlayerPacket.h" />
-    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h" />
     <ClInclude Include="OnHitScoreEffectPacket.h" />
     <ClInclude Include="ParticleSystemCreationInfo.h" />
     <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
@@ -266,6 +268,7 @@
     <ClCompile Include="ClientMeasurementSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="ColorTone.cpp" />
     <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="ConnectionPointSet.cpp" />
     <ClCompile Include="ConnectionVisualizerSystem.cpp" />
@@ -323,6 +326,7 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -345,7 +349,7 @@
     <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
     <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
     <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
-    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp" />
     <ClCompile Include="OnHitScoreEffectPacket.cpp" />
     <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
     <ClCompile Include="ParticleSystemsComponent.cpp" />

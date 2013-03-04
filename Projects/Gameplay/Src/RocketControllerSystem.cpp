@@ -60,29 +60,10 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			//Start targeting ships
 			ShipManagerSystem* shipManager = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
 
-			Entity* ship = shipManager->getShips()[0];
+			Entity* ship = m_world->getEntity(rocket->m_target);
 
 			Transform* from = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-			Transform* to = NULL;
-
-			//Find Closest Target
-			float dist = FLT_MAX;
-			vector<Entity*> ships = shipManager->getShips();
-			for (unsigned int s = 0; s < ships.size(); s++)
-			{
-				if (ships[s] != p_entities[i])
-				{
-					to = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-					if (AglVector3::lengthSquared(to->getTranslation()-from->getTranslation()) < dist)
-					{
-						dist = AglVector3::lengthSquared(to->getTranslation()-from->getTranslation());
-						ship = ships[s];
-					}
-				}
-			}
-
-
-			to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
+			Transform* to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
 
 			//START APPLY IMPULSE
 
