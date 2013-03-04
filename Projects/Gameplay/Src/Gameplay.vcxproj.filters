@@ -765,11 +765,14 @@
     <ClInclude Include="SettingsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleVisualEffectServerBufferSystem.h" />
     <ClInclude Include="ColorTone.h">
       <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusVisualizationMode.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1314,10 +1317,12 @@
     <ClCompile Include="SettingsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
     <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp" />
     <ClCompile Include="ColorTone.cpp">
       <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

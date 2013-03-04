@@ -48,13 +48,13 @@ void ModuleStatusEffectSystem::process()
 				// add particle effects for vismode
 				// if there are existing particle effect components, they'll be appended
 				// vismode keeps track of the new ones
-				addAndRegisterParticleEffect(data.moduleEntity, visMode);
+				addAndRegisterUnusedModuleParticleEffect(data.moduleEntity, visMode);
 			}
 			// update or activate effect based on new data
 			// and the registered data in vismode
 			if (ps)
 			{
-				activateUpdateParticleEffect(data.moduleEntity, visMode);
+				activateUpdateUnusedModuleParticleEffect(data.moduleEntity, visMode);
 			}
 		}
 		else
@@ -63,11 +63,18 @@ void ModuleStatusEffectSystem::process()
 			// and has existing particles
 			if (visMode && visMode->hasUnusedHintParticles() && 
 				visMode->hasPositionHintParticle())
-				disableParticleEffect(data.moduleEntity,visMode);
+				disableUnusedModuleParticleEffect(data.moduleEntity,visMode);
 		}
 
 
 		m_unusedModuleEffects.pop_back();
+	}
+	// module freefloat effect
+	while (!m_freefloatEffects.empty())
+	{
+		ModuleFreefloatEffect data = m_freefloatEffects.back();
+		updateFreefloatGlowEffect(data.moduleEntity,data.mode);
+		m_freefloatEffects.pop_back();
 	}
 	//  module value effect
 	while(!m_valueEffect.empty())
@@ -98,7 +105,7 @@ void ModuleStatusEffectSystem::setHealthEffect( ModuleHealthStatEffect& p_fx )
 	m_healthEffects.push_back(p_fx);
 }
 
-void ModuleStatusEffectSystem::activateUpdateParticleEffect(Entity* p_entity,
+void ModuleStatusEffectSystem::activateUpdateUnusedModuleParticleEffect(Entity* p_entity,
 															ModuleStatusVisualizationMode* p_visMode)
 {
 	// Do updating here,
@@ -114,17 +121,10 @@ void ModuleStatusEffectSystem::activateUpdateParticleEffect(Entity* p_entity,
 	{
 		auto particleEmitters = static_cast<ParticleSystemsComponent*>(
 			p_entity->getComponent(ComponentType::ParticleSystemsComponent));
-		auto shiptransform = static_cast<Transform*>(
-			m_myship->getComponent(ComponentType::Transform));
-		auto moduletransform = static_cast<Transform*>(
-			p_entity->getComponent(ComponentType::Transform));
-		auto glowEffect = static_cast<ColorTone*>(
-			p_entity->getComponent(ComponentType::ColorTone));
-		if (particleEmitters && shiptransform && moduletransform)
+
+		if (particleEmitters)
 		{
-			AglVector3 shippos = shiptransform->getTranslation();
-			AglVector3 modulepos = moduletransform->getTranslation();
-			float distSq = AglVector3::lengthSquared(modulepos-shippos);
+			float distSq = getDistSqBetweenShipAndModule(p_entity);
 			// update positionhint
 			AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
 			if (posHint)
@@ -148,33 +148,11 @@ void ModuleStatusEffectSystem::activateUpdateParticleEffect(Entity* p_entity,
 					}
 				}
 			}
-			//
-			// Extract this to separate
-			float glow = 1.0f-saturate(distSq/1000000.0f-100.0f);
-			if (glow>0.001f)
-			{
-				if (!glowEffect)
-				{
-					glowEffect = new ColorTone();
-					p_entity->addComponent( ComponentType::ColorTone, glowEffect );
-					p_entity->applyComponentChanges();
-				}
-				glowEffect->color=AglVector4(m_moduleColorTone.x,
-					m_moduleColorTone.y,m_moduleColorTone.z,1.0f)*glow;
-				glowEffect->toneEnabled=true;
-			}
-			else
-			{
-				if (glowEffect)
-					glowEffect->toneEnabled=false;
-			}
-			//
-
 		}
 	}
 }
 
-void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity, 
+void ModuleStatusEffectSystem::addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
 								  ModuleStatusVisualizationMode* p_visMode)
 {
 	// Pure beauty below.
@@ -422,7 +400,7 @@ void ModuleStatusEffectSystem::addAndRegisterParticleEffect(Entity* p_entity,
 	
 }
 
-void ModuleStatusEffectSystem::disableParticleEffect( Entity* p_entity, 
+void ModuleStatusEffectSystem::disableUnusedModuleParticleEffect( Entity* p_entity, 
 													 ModuleStatusVisualizationMode* p_visMode)
 {
 	auto particleEmitters = static_cast<ParticleSystemsComponent*>(
@@ -438,4 +416,56 @@ void ModuleStatusEffectSystem::disableParticleEffect( Entity* p_entity,
 			if (unusedHint) unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
 		}
 	}
+}
+
+void ModuleStatusEffectSystem::updateFreefloatGlowEffect( Entity* p_entity, bool p_mode )
+{
+	float distSq = getDistSqBetweenShipAndModule(p_entity);
+	float glow = 0.0f;
+	if (p_mode) glow = 1.0f-saturate(distSq/1000000.0f-100.0f);
+	auto glowEffect = static_cast<ColorTone*>(
+		p_entity->getComponent(ComponentType::ColorTone));
+	if (glow>0.001f)
+	{
+		if (!glowEffect)
+		{
+			glowEffect = new ColorTone();
+			p_entity->addComponent( ComponentType::ColorTone, glowEffect );
+			p_entity->applyComponentChanges();
+		}
+		glowEffect->color=AglVector4(m_moduleColorTone.x,
+			m_moduleColorTone.y,m_moduleColorTone.z,1.0f)*glow;
+		glowEffect->toneEnabled=true;
+	}
+	else
+	{
+		if (glowEffect)
+			glowEffect->toneEnabled=false;
+	}
+	//
+
+}
+
+float ModuleStatusEffectSystem::getDistSqBetweenShipAndModule(Entity* p_moduleEntity)
+{
+	float distSq = 0.0f;
+	if (m_myship)
+	{
+		auto shiptransform = static_cast<Transform*>(
+			m_myship->getComponent(ComponentType::Transform));
+		auto moduletransform = static_cast<Transform*>(
+			p_moduleEntity->getComponent(ComponentType::Transform));
+		if (shiptransform && moduletransform)
+		{
+			AglVector3 shippos = shiptransform->getTranslation();
+			AglVector3 modulepos = moduletransform->getTranslation();
+			distSq = AglVector3::lengthSquared(modulepos-shippos);
+		}
+	}
+	return distSq;
+}
+
+void ModuleStatusEffectSystem::setFreefloatEffect( ModuleFreefloatEffect& p_fx )
+{
+	m_freefloatEffects.push_back(p_fx);
 }

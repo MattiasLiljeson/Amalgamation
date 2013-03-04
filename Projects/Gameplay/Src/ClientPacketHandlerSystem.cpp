@@ -808,6 +808,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 							moduleFxVis->setHealthEffect(fx);
 							break;
 						}
+					case ModuleStatusEffectPacket::FREEFLOAT_STATUS:
+						{
+							ModuleStatusEffectSystem::ModuleFreefloatEffect fx;
+							effectPacket.m_mode==0?fx.mode=true:fx.mode=false;
+							fx.moduleEntity = entity;
+							moduleFxVis->setFreefloatEffect(fx);
+							break;
+						}
 					case ModuleStatusEffectPacket::VALUE_STATUS:
 					default:
 						{
