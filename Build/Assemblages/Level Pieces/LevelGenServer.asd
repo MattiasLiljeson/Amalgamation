@@ -21,11 +21,21 @@ c LevelInfo
 
 	# Level size - Specifies how large the level should be in size.
 	# The size in the game is calculated by adding all chambers' radiuses together.
-	d i m_levelSize_2p			1500
-	d i m_levelSize_4p			3000
-	d i m_levelSize_6p			4500
-	d i m_levelSize_8p			6000
+	d s m_levelSize 1:1500
+	d s m_levelSize 2:1500
+	d s m_levelSize 3:2000
+	d s m_levelSize 4:3000
+	d s m_levelSize 5:3500
+	d s m_levelSize 6:4500
+	d s m_levelSize 7:5000
+	d s m_levelSize 8:6000
 
+	# Level size precision specified how accurate the size should be. For instance,
+	# if the desired size is 2000, and the level genererated becomes 2400, this is
+	# ok, since it's within the precision range.
+	# Not yet implemented!
+	d i m_levelSizePrecision	300
+	
 	# The info will store all chambers and tunnel types, reusing the variables.
 	# These are stored as array data in the component when parsed.
 	# piece begin starts a new piece block section to be read.
@@ -53,7 +63,7 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	mineChamberServer.asd
 	d s m_pieceModelName 			World_Mine.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 4
 	d s piece begin
@@ -71,7 +81,7 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber1Server.asd
 	d s m_pieceModelName 			small_chamber1.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 7
 	d s piece begin
@@ -83,13 +93,13 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber3Server.asd
 	d s m_pieceModelName 			small_chamber3.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 9
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber4Server.asd
 	d s m_pieceModelName 			small_chamber4.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece X
 

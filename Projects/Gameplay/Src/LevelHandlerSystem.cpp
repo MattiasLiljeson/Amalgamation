@@ -33,7 +33,7 @@ void LevelHandlerSystem::inserted( Entity* p_entity )
 	if (levelGen && pieceRoot->pieceId == levelGen->getGeneratedPiecesCount() - 1)
 	{
 		m_hasLevel = true;
-		DEBUGPRINT(("Level is now properly generated.\n"));
+		DEBUGPRINT(("Level is now properly generated and loaded.\n"));
 	}
 }
 
@@ -44,6 +44,7 @@ void LevelHandlerSystem::destroyLevel()
 	{
 		m_world->deleteEntity(entities[i]);
 	}
+	m_hasLevel = false;
 }
 
 bool LevelHandlerSystem::hasLevel() const

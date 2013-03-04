@@ -44,6 +44,8 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 LevelGenSystem::~LevelGenSystem()
 {
 	clearGeneratedData();
+	// Clear model resources (Don't delete, since the level gen doesn't have ownership)
+	m_modelResources.clear();
 }
 
 void LevelGenSystem::initialize()
@@ -118,10 +120,19 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		// before being used.
 		calculatePieceCollision(resourcesFromModel);
 
-		m_modelResources.push_back( rootResource );
-
+		// Add model resource to collection. This also checks the bounding sphere and
+		// inserts the resource index to another vector with a sorted order of its bounding sphere.
+		addResource(rootResource);
+		
 		//delete resourcesFromModel;
 	}
+	//for (int i = 0; i < m_sortedResourceIds.size(); i++)
+	//{
+	//	float radius = m_modelResources[m_sortedResourceIds[i]]->meshHeader.boundingSphere.radius;
+	//	string logtext = " : r=" + toString(radius) + "\n";
+	//	DEBUGPRINT( (logtext.c_str()) );
+	//}
+
 	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
 	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
 		&endPlug->assemblageName);
@@ -130,8 +141,6 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	m_endPlugModelResource = resourcesFromModel->at(0);
 
 	m_readyToRun = true;
-	// Temp: This is to make sure the system works.
-	run();
 
 	//m_world->deleteEntity(p_entity);
 }
@@ -149,25 +158,33 @@ void LevelGenSystem::clearGeneratedData()
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
-	// Clear model resources (Don't delete, since the level gen doesn't have ownership)
-	m_modelResources.clear();
 
-	// There's still data that exists, such as init data. These should not be destroyed.
+	// There's still data that exists, such as init data. These should not be destroyed
+	// or cleared here.
 }
 
-void LevelGenSystem::run()
+void LevelGenSystem::generateLevel(int p_nrOfPlayers)
 {
-	if (m_readyToRun)
+	if (!m_hasGeneratedLevel)
 	{
-		m_hasGeneratedLevel = false;
-		srand(static_cast<unsigned int>(time(NULL)));
-		generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
-		createLevelEntities();
-		m_hasGeneratedLevel = true;
+		if (m_readyToRun)
+		{
+			clearGeneratedData();
+
+			m_nrOfPlayers = p_nrOfPlayers;
+			srand(static_cast<unsigned int>(time(NULL)));
+			generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
+			createLevelEntities();
+			m_hasGeneratedLevel = true;
+		}
+		else
+		{
+			DEBUGPRINT(("Warning: LevelGenSystem is not ready to generate level yet.\n"));
+		}
 	}
 	else
 	{
-		DEBUGPRINT(("Warning: LevelGenSystem::run was called, but the system is not ready to run yet.\n"));
+		DEBUGPRINT(("Warning: LevelGenSystem has already generated a level.\n"));
 	}
 }
 
@@ -195,9 +212,30 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	pieces.push_back(piece);
 	m_generatedPieces.push_back(piece);
 
+	int usedMaxDepth;
+
+	if (p_maxDepth == -1)
+	{
+		m_useLevelMaxSize	= true;
+		usedMaxDepth		= 10000;
+		m_levelMaxSize		= m_levelInfo->getLevelSize(m_nrOfPlayers);
+	}
+	else
+	{
+		m_useLevelMaxSize	= false;
+		usedMaxDepth		= p_maxDepth;
+	}
+	m_hasHitLevelMaxSize = false;
+	m_currentLevelSize = m_modelResources[id]->meshHeader.boundingSphere.radius;
+
+	testLevelMaxSizeHit();
 	// The algorithm generates pieces outwards based on a so called depth. For each depth
 	// the pieces from the previous depth are used to create and connect new pieces.
-	for (int currentDepth = 0; currentDepth < p_maxDepth; currentDepth++)
+	// If the specified depth is set to -1, then the level gen will generate a level that
+	// depends on the number of players in game.
+	for (int currentDepth = 0; 
+		currentDepth < usedMaxDepth && !m_hasHitLevelMaxSize && !pieces.empty(); 
+		currentDepth++)
 	{
 		// Stores created pieces temporarily
 		vector<LevelPiece*> temps;
@@ -271,7 +309,7 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 	{
 		// Prepare and connect newly created transform pieces to the target.
 		int maxPiecesCount = freeConnectSlots.size();
-		for (int i = 0; i < maxPiecesCount; i++)
+		for (int i = 0; i < maxPiecesCount && !m_hasHitLevelMaxSize; i++)
 		{
 			// TODO: ??? Currently, if the randomized piece type collides with other pieces
 			// on the desired position, it will set that corresponding slot on the target
@@ -287,32 +325,19 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 												new Transform(), p_generation);
 
 			int slot = popIntVector(freeConnectSlots);
-			piece->connectTo(p_targetPiece, slot);
 
-			// Verify that it isn't colliding with previous level pieces.
-			bool colliding = false;
-			for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
+			if (tryConnectPieces(p_targetPiece, piece, slot))
 			{
-				if (AglCollision::isColliding( piece->getBoundingSphere(),
-					m_generatedPieces[i]->getBoundingSphere()) && 
-					piece->getChild(0) != m_generatedPieces[i]->getTransform() )
+				// This is not done from here anymore.
+				//AglOBB obb = piece->getBoundingBox();
+				//updateWorldMinMax(obb);
+				if (m_useLevelMaxSize)
 				{
-					DEBUGPRINT(("Collision between chambers detected. This means a level plug has been created instead.\n"));
-					colliding = true;
-					break;
-				}
-			}
+					m_currentLevelSize += 
+						m_modelResources[pieceType]->meshHeader.boundingSphere.radius;
 
-			if (colliding)
-			{
-				// Remove the connected component.
-				p_targetPiece->setChild(slot, NULL);
-				delete piece;
-			}			
-			else
-			{
-				AglOBB obb = piece->getBoundingBox();
-				updateWorldMinMax(obb);
+					testLevelMaxSizeHit();
+				}
 
 				out_pieces.push_back(piece);
 				piece->setPieceId(m_generatedPieces.size());
@@ -428,6 +453,101 @@ int LevelGenSystem::getGeneratedPiecesCount() const
 {
 	return m_generatedPieces.size();
 }
+
+bool LevelGenSystem::isLevelGenerated() const
+{
+	return m_hasGeneratedLevel;
+}
+
+
+void LevelGenSystem::resetState()
+{
+	m_readyToRun		= true;
+	m_hasGeneratedLevel = false;
+}
+
+void LevelGenSystem::addResource(ModelResource* p_modelResource)
+{
+	AglBoundingSphere boundingSphere = p_modelResource->meshHeader.boundingSphere;
+
+	// Add resource to collection
+	m_modelResources.push_back(p_modelResource);
+
+	int insertAtIndex = m_sortedResourceIds.size();
+	// Check all previous bounding spheres.
+	for (unsigned int i = 0; i < m_sortedResourceIds.size(); i++)
+	{
+		int resourceId = m_sortedResourceIds[i];
+		if (m_modelResources[resourceId]->meshHeader.boundingSphere.radius < boundingSphere.radius)
+		{
+			insertAtIndex = i;
+			break; // Break!
+		}
+	}
+	m_sortedResourceIds.insert(m_sortedResourceIds.begin() + insertAtIndex, m_modelResources.size()-1);
+}
+
+bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPiece, int p_slot )
+{
+	bool tooLarge = false;
+	bool colliding = false;
+
+	int newPieceRadius = (int)m_modelResources[p_newPiece->getTypeId()]->meshHeader.boundingSphere.radius;
+	if (m_useLevelMaxSize && m_currentLevelSize + newPieceRadius > m_levelMaxSize)
+	{
+		DEBUGPRINT(("Chamber piece too large. A level plug has been created instead.\n"));
+		tooLarge = true;
+	}
+	p_newPiece->connectTo(p_target, p_slot);
+
+	// Verify that it isn't colliding with previous level pieces.
+	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
+	{
+		if (AglCollision::isColliding( p_newPiece->getBoundingSphere(),
+			m_generatedPieces[i]->getBoundingSphere()) && 
+			p_newPiece->getChild(0) != m_generatedPieces[i]->getTransform() )
+		{
+			DEBUGPRINT(("Collision between chambers detected. A level plug has been created instead.\n"));
+			colliding = true;
+			break;
+		}
+	}
+
+	if (colliding || tooLarge)
+	{
+		// Remove the connected component.
+		p_target->setChild(p_slot, NULL);
+		delete p_newPiece;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool LevelGenSystem::testLevelMaxSizeHit()
+{
+	string logtext = "Current level size: " + toString(m_currentLevelSize) + "\n";
+	DEBUGPRINT( (logtext.c_str()) );
+	if (m_currentLevelSize >= m_levelMaxSize)
+	{
+		logtext = "Max level size hit:\n\tdesired=" 
+			+ toString(m_levelMaxSize) 
+			+ "\n\tresulted="
+			+ toString(m_currentLevelSize)
+			+ "\n";
+		DEBUGPRINT( (logtext.c_str()) );
+		m_hasHitLevelMaxSize = true;
+	}
+	return m_hasHitLevelMaxSize;
+}
+
+
+
+
+
+
 
 
 
