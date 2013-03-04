@@ -115,6 +115,8 @@ public:	//Enums
 		SelectionMarker,
 		GravityMineEffectPiece,
 		Sprite,
+		SlotMarker,
+		SlotMarkerSprite,
 		NUM_COMPONENT_TYPES
 	};
 

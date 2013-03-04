@@ -120,6 +120,7 @@
 #include <ShieldPlaterSystem.h>
 #include <SlotHighlightParticleMakerSystem.h>
 #include <SpriteSystem.h>
+#include <SlotMarkerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -422,6 +423,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
+	m_world->setSystem(new SlotMarkerSystem());
 
 	/************************************************************************/
 	/* Animation															*/

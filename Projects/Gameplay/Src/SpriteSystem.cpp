@@ -15,7 +15,7 @@ SpriteSystem::~SpriteSystem()
 
 void SpriteSystem::initialize()
 {
-	Entity* effect = m_world->createEntity();
+	/*Entity* effect = m_world->createEntity();
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -38,7 +38,7 @@ void SpriteSystem::initialize()
 	particleEmitter->addParticleSystemInstruction(particleInstructionFlares);
 
 	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
-	m_world->addEntity(effect);
+	m_world->addEntity(effect);*/
 }
 
 void SpriteSystem::processEntities( const vector<Entity*>& p_entities )

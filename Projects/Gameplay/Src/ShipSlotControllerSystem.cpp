@@ -10,6 +10,7 @@
 #include "ParticleSystemsComponent.h"
 #include "ParticleSystemAndTexture.h"
 #include <AglParticleSystem.h>
+#include "SlotMarkerSystem.h"
 
 SlotInputControllerSystem::SlotInputControllerSystem(InputBackendSystem* p_inputBackend,
 										 TcpClient* p_client)
@@ -138,6 +139,10 @@ void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)
 	packet.id = p_slot;
 
 	m_client->sendPacket( packet.pack() );
+
+	SlotMarkerSystem* sms = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+
+	sms->setSlot(p_slot);
 }
 
 
