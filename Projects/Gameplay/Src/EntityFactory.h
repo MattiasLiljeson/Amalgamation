@@ -81,6 +81,8 @@ public:
 	// Tesla coil
 	Entity* createTeslaCoilModuleClient(EntityCreationPacket p_packet);
 	Entity* createTeslaCoilModuleServer(EntityCreationPacket p_packet);
+	Entity* createTeslaEffectPieceClient(AglVector3 p_forwardScale,
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition);
 
 	// Anomaly accelerator
 	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);
@@ -139,7 +141,6 @@ private:
 
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
 		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
-
 
 private:
 	map<string, Recipe*> m_entityRecipes;

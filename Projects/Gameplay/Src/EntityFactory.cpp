@@ -53,6 +53,7 @@
 #include "CircularMovement.h"
 #include <RandomUtil.h>
 #include "TeslaCoilModule.h"
+#include "TeslaEffectPiece.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -765,7 +766,7 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = entityFromRecipeOrFile( "ClientTeslaCoil",
-		"Assemblages/Modules/TeslaCoil/ClientTeslaCoil.asd");
+		"Assemblages/Modules/TeslaCoil/ClientTeslaCoil.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -775,9 +776,38 @@ Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet
 Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet)
 {
 	Entity* entity = entityFromRecipeOrFile( "ServerTeslaCoil",
-		"Assemblages/Modules/TeslaCoil/ServerTeslaCoil.asd");
+		"Assemblages/Modules/TeslaCoil/ServerTeslaCoil.asd" );
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::TeslaCoilModule));
+	m_world->addEntity(entity);
+	return entity;
+}
+
+Entity* EntityFactory::createTeslaEffectPieceClient(AglVector3 p_forwardScale,
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition)
+{
+	Entity* entity = entityFromRecipeOrFile( "ClientTeslaEffectPiece",
+		"Assemblages/Modules/TeslaCoil/ClientTeslaEffectPiece.asd" );
+	// Change some components that isn't fully initialized in its assemblage:
+	Transform* transform = static_cast<Transform*>(entity->getComponent(
+		ComponentType::Transform));
+	// right is in-game up.
+	AglVector3 upScale = AglVector3::right() * p_thicknessFactor;
+	// forward is in-game right.
+	AglVector3 rightScale = AglVector3::forward() * p_thicknessFactor;
+	AglVector3 scale = AglVector3::one() + p_forwardScale + upScale + rightScale;
+	transform->setScale(scale);
+	transform->setRotation(p_rotation);
+	transform->setTranslation(p_sourcePosition);
+
+	TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(entity->getComponent(
+		ComponentType::TeslaEffectPiece));
+	effectPiece->forwardScale = p_forwardScale;
+
+	int meshIndex = RandomUtil::randomInteger(
+		static_cast<int>( effectPiece->possibleMeshes.size() ));
+	entity->addComponent(new LoadMesh(effectPiece->possibleMeshes[meshIndex]));
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -785,7 +815,7 @@ Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet
 Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyAccelerator",
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd");
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyAccelerator.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
@@ -795,7 +825,7 @@ Entity* EntityFactory::createAnomalyModuleClient(EntityCreationPacket p_packet)
 Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 {
 	Entity* entity = entityFromRecipeOrFile( "ServerAnomalyAccelerator",
-		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd");
+		"Assemblages/Modules/AnomalyAccelerator/ServerAnomalyAccelerator.asd" );
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyModule));
 	m_world->addEntity(entity);
@@ -805,7 +835,7 @@ Entity* EntityFactory::createAnomalyModuleServer(EntityCreationPacket p_packet)
 Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 {
 	Entity* entity = entityFromRecipeOrFile( "ClientAnomalyBomb",
-		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd");
+		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(entity);
