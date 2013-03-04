@@ -23,7 +23,8 @@ public:
 	{
 		UNUSEDMODULE_STATUS,	///< Effect if module is unused
 		HEALTH_STATUS,			///< Effect based on module health
-		VALUE_STATUS			///< Effect based on module value
+		VALUE_STATUS,			///< Effect based on module value
+		FREEFLOAT_STATUS		///< Effect if not attached to ship(freefloat in space)
 	};
 	enum Mode
 	{

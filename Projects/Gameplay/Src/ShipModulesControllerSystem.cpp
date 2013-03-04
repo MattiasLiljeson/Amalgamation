@@ -8,7 +8,7 @@
 #include "PhysicsController.h"
 #include "ShipConnectionPointHighlights.h"
 #include "OnHitScoreEffectPacket.h"
-#include "ModuleVisualEffectBufferSystem.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 #include "Transform.h"
 #include "ModuleHelper.h"
 #include "SlotParticleEffectPacket.h"
@@ -21,7 +21,7 @@
 #include "PlayerSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
-														 ModuleVisualEffectBufferSystem* p_effectBuffer)
+														 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
 	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {

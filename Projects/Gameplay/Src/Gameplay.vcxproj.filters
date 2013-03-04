@@ -754,9 +754,6 @@
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStatusEffectPacket.h" />
-    <ClInclude Include="ModuleStatusEffectSystem.h" />
-    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
-    <ClInclude Include="ShipModuleStatsSystem.h" />
     <ClInclude Include="SpriteSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -769,6 +766,22 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="GameSettingsInfo.h">
       <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ColorTone.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusVisualizationMode.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModuleStatsSystem.h">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1302,9 +1315,6 @@
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
     <ClCompile Include="ModuleStatusEffectPacket.cpp" />
-    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
-    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
-    <ClCompile Include="ShipModuleStatsSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
@@ -1312,6 +1322,21 @@
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorTone.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModuleStatsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
