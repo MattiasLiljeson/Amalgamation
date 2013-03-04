@@ -88,20 +88,32 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 	}//for: otherModuleIndex
 	if(!entitiesHit.empty())
 	{
-		//struct lengthCompare
-		//{
-		//	EntityWorld* world;
-		//	AglVector3 sourcePosition;
-		//	lengthCompare(EntityWorld* p_world, AglVector3 p_sourcePosition)
-		//	{
-		//		world = p_world;
-		//		sourcePosition = p_sourcePosition;
-		//	}
-		//	bool operator() (int i, int j)
-		//	{
-		//	}
-		//} myLengthCompare(m_world, static_cast<Transform*>(p_teslaEntity->getComponent(
-		//	ComponentType::Transform))->getTranslation());
+		// Compare functor
+		struct LengthCompare
+		{
+			EntityWorld* world;
+			AglVector3 sourcePosition;
+			LengthCompare(EntityWorld* p_world, AglVector3 p_sourcePosition)
+			{
+				world = p_world;
+				sourcePosition = p_sourcePosition;
+			}
+			bool operator() (int p_firstIndex, int p_secondIndex)
+			{
+				AglVector3 firstPosition = static_cast<Transform*>(
+					world->getComponentManager()->getComponent(p_firstIndex,
+					ComponentType::Transform))->getTranslation();
+				AglVector3 secondPosition = static_cast<Transform*>(
+					world->getComponentManager()->getComponent(p_secondIndex,
+					ComponentType::Transform))->getTranslation();
+				float firstLengthSquared = (firstPosition - sourcePosition).lengthSquared();
+				float secondLengthSquared = (secondPosition - sourcePosition).lengthSquared();
+				return firstLengthSquared < secondLengthSquared;
+			}
+		} myLengthCompare(m_world, static_cast<Transform*>(p_teslaEntity->getComponent(
+			ComponentType::Transform))->getTranslation());
+
+		std::sort(entitiesHit.begin(), entitiesHit.begin() + entitiesHit.size(), myLengthCompare);
 		unsigned int i=0;
 		TeslaHitPacket hitPacket;
 		hitPacket.identitySource = p_teslaEntity->getIndex();
