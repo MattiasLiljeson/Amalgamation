@@ -1,5 +1,7 @@
 #include "SettingsSystem.h"
 
+// THIS COMMENT IS HERE TO LET GIT KNOW THAT THIS FILE HAS BEEN UPDATED!
+
 SettingsSystem::SettingsSystem() : EntitySystem( SystemType::SettingsSystem )
 {
 	m_settingsAreSet = false;
