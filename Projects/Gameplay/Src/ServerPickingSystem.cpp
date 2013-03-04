@@ -562,12 +562,31 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
 		Entity* ship = target;
+		Entity* firstChild = NULL;
+		int shipSlot = p_ray.m_targetSlot;
 		while (ship->getComponent(ComponentType::ShipModule))
 		{
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
+			firstChild = ship;
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
+
+		if (firstChild)
+		{
+			ConnectionPointSet* shipcps = static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(ship,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			for (unsigned int i = 0; i < shipcps->m_connectionPoints.size(); i++)
+			{
+				if (shipcps->m_connectionPoints[i].cpConnectedEntity == firstChild->getIndex())
+				{
+					shipSlot = i;
+					break;
+				}
+			}
+		}
+
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
 			ComponentType::PhysicsBody));
 
@@ -650,8 +669,12 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.translationOffset = AglVector3(0, 0, 0);
 		slotPacket.forwardDirection = AglVector3(0, 0, 0);
 		slotPacket.slot = p_ray.m_targetSlot;
+		slotPacket.shipSlot = shipSlot;
 		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 		slotPacket.active = false;
+
+		//Consider adding data concerning the connected entity
+
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
 

@@ -10,9 +10,11 @@ public:
 		: Component( ComponentType::SlotMarker )
 	{ 
 		shipMarker = -1;
+		dir = AglVector3(1, 0, 0);
 	};
 	~SlotMarker(){}
 
 	int shipMarker;
-	vector<pair<EntityType, int>> m_collection;
+	AglVector3 dir;
+	vector<pair<EntityType, Entity*>> m_collection;
 };

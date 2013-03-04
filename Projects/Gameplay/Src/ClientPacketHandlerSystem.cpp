@@ -93,6 +93,7 @@
 #include "InterpolationComponent2.h"
 #include "BombActivationPacket.h"
 #include "AnomalyBomb.h"
+#include "SlotMarkerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -600,6 +601,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
 				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+
+				SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+				slotmarker->addMarker(data.shipSlot);
 			}
 		}
 
