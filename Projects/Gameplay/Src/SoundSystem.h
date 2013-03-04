@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include "AudioBackendSystem.h"
 
 // =======================================================================================
 //                                      SoundSystem
@@ -16,8 +17,10 @@
 class SoundSystem : public EntitySystem
 {
 public:
-	SoundSystem();
+	SoundSystem(AudioBackendSystem* p_audioBackend);
 	virtual ~SoundSystem();
 
 	void processEntities( const vector<Entity*>& p_entities );
+private:
+	AudioBackendSystem* m_audioBackend;
 };
