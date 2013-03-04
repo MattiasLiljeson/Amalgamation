@@ -1,9 +1,9 @@
-#include "ModuleVisualEffectBufferSystem.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 #include "TimerSystem.h"
 #include <TcpServer.h>
 #include "NetworkSynced.h"
 
-ModuleVisualEffectBufferSystem::ModuleVisualEffectBufferSystem(TcpServer* p_server, 
+ModuleVisualEffectServerBufferSystem::ModuleVisualEffectServerBufferSystem(TcpServer* p_server, 
 															   ServerStateSystem* p_states) :
 	EntitySystem(SystemType::ModuleVisualEffectBufferSystem)
 {
@@ -11,17 +11,17 @@ ModuleVisualEffectBufferSystem::ModuleVisualEffectBufferSystem(TcpServer* p_serv
 	m_serverStates = p_states;
 }
 
-ModuleVisualEffectBufferSystem::~ModuleVisualEffectBufferSystem()
+ModuleVisualEffectServerBufferSystem::~ModuleVisualEffectServerBufferSystem()
 {
 
 }
 
-void ModuleVisualEffectBufferSystem::initialize()
+void ModuleVisualEffectServerBufferSystem::initialize()
 {
 
 }
 
-void ModuleVisualEffectBufferSystem::process()
+void ModuleVisualEffectServerBufferSystem::process()
 {
 	// Dequeue all packets and send to their clients
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
@@ -63,21 +63,21 @@ void ModuleVisualEffectBufferSystem::process()
 }
 
 
-void ModuleVisualEffectBufferSystem::enqueueEffect( Entity* p_entity, 
+void ModuleVisualEffectServerBufferSystem::enqueueEffect( Entity* p_entity, 
 											OnHitScoreEffectPacket& p_packet )
 {
 	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
 		m_scoreFXqueue_entity.push(pair<Entity*,OnHitScoreEffectPacket>(p_entity,p_packet));
 }
 
-void ModuleVisualEffectBufferSystem::enqueueEffect(int p_networkOwnerId, 
+void ModuleVisualEffectServerBufferSystem::enqueueEffect(int p_networkOwnerId, 
 											OnHitScoreEffectPacket& p_packet)
 {
 	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
 		m_scoreFXqueue_netowner.push(pair<int,OnHitScoreEffectPacket>(p_networkOwnerId,p_packet));
 }
 
-void ModuleVisualEffectBufferSystem::enqueueEffect( ModuleStatusEffectPacket& p_packet )
+void ModuleVisualEffectServerBufferSystem::enqueueEffect( ModuleStatusEffectPacket& p_packet )
 {
 	if (m_serverStates->getCurrentState()==ServerStates::INGAME)
 		m_statusFXqueue_netowner.push(p_packet);

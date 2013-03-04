@@ -1,7 +1,7 @@
 #include "ParticleSystemEmitterSystem.h"
 
 ParticleSystemEmitterSystem::ParticleSystemEmitterSystem()
-	: EntitySystem(SystemType::ParticleSystemEmitterSystem, 1, ComponentType::ParticleSystemEmitter)
+	: EntitySystem(SystemType::ParticleSystemEmitterSystem, 1, ComponentType::ParticleSystemEmitter_DEPRECATED)
 {
 }
 

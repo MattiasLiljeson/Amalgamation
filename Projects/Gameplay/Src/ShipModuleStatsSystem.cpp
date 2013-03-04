@@ -6,7 +6,7 @@
 
 unsigned int ShipModuleStatsSystem::m_currentStart = 0;
 
-ShipModuleStatsSystem::ShipModuleStatsSystem( ModuleVisualEffectBufferSystem* p_effectBuffer )
+ShipModuleStatsSystem::ShipModuleStatsSystem( ModuleVisualEffectServerBufferSystem* p_effectBuffer )
 	: EntitySystem(SystemType::ShipModuleStatsSystem, 1,
 	ComponentType::ComponentTypeIdx::ShipModule)
 {
@@ -41,7 +41,7 @@ void ShipModuleStatsSystem::processEntities( const vector<Entity*>& p_entities )
 	// so send status updates every second in case player joined late(for example)
 	// (Status effects works without this but might then glitch in these special cases!)
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::EverySecond))
+		checkTimeInterval(TimerIntervals::Every32Millisecond))
 	{
 		if (m_currentStart>=p_entities.size())
 			m_currentStart=0;
@@ -70,6 +70,8 @@ void ShipModuleStatsSystem::processEntities( const vector<Entity*>& p_entities )
 					enableModuleUnusuedEffect(id);
 				else
 					disableModuleUnusuedEffect(id);
+
+				updateModuleFreeFloatEffect(id,!module->isOwned());
 
 				updateModuleHealthEffect(id,module->m_health/module->getMaxHealth());
 				updateModuleValueEffect(id,module->m_value/module->getMaxValue());
@@ -112,6 +114,22 @@ void ShipModuleStatsSystem::updateModuleValueEffect( int p_moduleNetworkOwner,
 {
 	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::VALUE_STATUS,
 		p_valuePercent,
+		p_moduleNetworkOwner);
+
+	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+void ShipModuleStatsSystem::updateModuleFreeFloatEffect( int p_moduleNetworkOwner, 
+														bool p_mode )
+{
+	ModuleStatusEffectPacket::Mode mode=ModuleStatusEffectPacket::OFF;
+	if (p_mode==true) 
+		mode = ModuleStatusEffectPacket::ON;
+	else
+		mode = ModuleStatusEffectPacket::OFF;
+
+	ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::FREEFLOAT_STATUS,
+		mode,
 		p_moduleNetworkOwner);
 
 	m_effectbuffer->enqueueEffect(fxPacket);

@@ -22,8 +22,8 @@ public:
 	SettingsSystem();
 	virtual ~SettingsSystem();
 
-	FileStatus readSettingsFile( string p_path, string p_file = "settings.txt");
-	FileStatus writeSettingsFile( string p_path, string p_file = "settings.txt");
+	FileStatus readSettingsFile( string p_path, string p_file = "stdSettings.settings");
+	FileStatus writeSettingsFile( string p_path, string p_file = "stdSettings.settings");
 
 	GameSettingsInfo getSettings();
 	void setSettings( GameSettingsInfo p_settings );

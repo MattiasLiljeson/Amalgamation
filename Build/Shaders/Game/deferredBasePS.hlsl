@@ -28,7 +28,15 @@ PixelOut PS(PixelIn p_input)
 	pixelOut.diffuse = p_input.gradientColor[index];
 	
 	pixelOut.diffuse *= diffuseTexture.Sample(pointSampler, p_input.texCoord);
-	pixelOut.diffuse.rgb *= p_input.colorOverlay.xyz;
+	// add color overlay
+	// sign in members are read as various tone options
+	// a little tacky but it works
+	if (p_input.colorOverlay.x<0.0f) // if x is negative read as additive
+		pixelOut.diffuse.rgb += abs(p_input.colorOverlay.xyz);
+	else if (p_input.colorOverlay.y<0.0f) // if y is negative read as total replacement
+		pixelOut.diffuse.rgb = abs(p_input.colorOverlay.xyz);	
+	else // default is multiply
+		pixelOut.diffuse.rgb *= p_input.colorOverlay.xyz;		
 	
 	float3 normalT	= normalTexture.Sample(pointSampler, p_input.texCoord).xyz;
 	pixelOut.normal = float4(calcWorldNormals(normalT, p_input.tangent, p_input.normal)*0.5f+0.5f,0.0f);

@@ -13,11 +13,18 @@ public:
 	T getAvg(); ///< Works well over the network. Long falloff
 	T getLog(); ///< Small falloff. Works bad over the network.
 	void addVal( T p_val );
+	T getLastVal();
 
 private:
 	float m_vals[VAL_CNT];
 	int m_currIdx;
 };
+
+template<typename T, unsigned int N>
+T NumericBuffer<T, N>::getLastVal()
+{
+	return m_vals[m_currIdx];
+}
 
 template<typename T, unsigned int N>
 NumericBuffer<T,N>::NumericBuffer( T p_initVal )

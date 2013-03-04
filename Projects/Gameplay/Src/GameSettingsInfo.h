@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// THIS COMMENT IS HERE TO LET GIT KNOW THAT THIS FILE HAS BEEN UPDATED!
+
 struct GameSettingsInfo
 {
 	// Gfx settings

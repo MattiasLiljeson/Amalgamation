@@ -19,7 +19,11 @@ using namespace std;
 
 struct ParticleSystemInstruction
 {
-	ParticleSystemInstruction(){uvRect=AglVector4(0.0f,0.0f,1.0f,1.0f);}
+	ParticleSystemInstruction()
+	{
+		uvRect = AglVector4( 0.0f, 0.0f, 1.0f, 1.0f );
+	}
+
 	AglParticleSystem particleSystem;
 	string textureFileName;
 	AglVector4 uvRect; ///< cropping rect for particle

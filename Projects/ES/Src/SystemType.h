@@ -122,6 +122,8 @@ public:	//Enums
 		SlotHighlightParticleMakerSystem,
 		SpriteSystem,
 		SlotMarkerSystem,
+		DamageUpdaterSystem,
+		DamageVisualizerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

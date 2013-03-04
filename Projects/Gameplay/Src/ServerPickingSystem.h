@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "PickComponent.h"
 #include "ConnectionPointSet.h"
-#include "ModuleVisualEffectBufferSystem.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 
 class ShipModule;
 class PlayerSystem;
@@ -26,7 +26,7 @@ class ServerPickingSystem: public EntitySystem
 {
 public:
 	ServerPickingSystem(TcpServer* p_server,
-		ModuleVisualEffectBufferSystem* p_effectBuffer);
+		ModuleVisualEffectServerBufferSystem* p_effectBuffer);
 	~ServerPickingSystem();
 
 	virtual void initialize();
@@ -71,5 +71,5 @@ private:
 	void unsetPick(PickComponent& p_ray);
 
 	// Effects
-	ModuleVisualEffectBufferSystem* m_effectbuffer;
+	ModuleVisualEffectServerBufferSystem* m_effectbuffer;
 };

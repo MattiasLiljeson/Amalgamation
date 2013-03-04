@@ -7,7 +7,7 @@ class ParticleSystemEmitter : public Component
 {
 public:
 	ParticleSystemEmitter()
-	: Component( ComponentType::ParticleSystemEmitter )
+	: Component( ComponentType::ParticleSystemEmitter_DEPRECATED )
 	{
 	}
 

@@ -22,7 +22,7 @@ ModuleStatusEffectPacket::ModuleStatusEffectPacket( StatusType p_statusType,
 												    int p_networkId )
 {
 	m_statusType=(int)p_statusType;
-	m_mode=Mode::ON;
+	m_mode=(int)Mode::ON;
 	m_moduleNetworkId=p_networkId;
 	m_value=p_value;
 }

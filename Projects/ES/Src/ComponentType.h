@@ -24,6 +24,7 @@ public:	//Enums
 		Input,
 		NetworkSynced,
 		ClientInfo,
+		ColorTone,
 		CircularMovement,
 		AxisRotate,
 		Extrapolate,
@@ -39,6 +40,7 @@ public:	//Enums
 		ShipEditController,
 		Impulse,
 		BodyInitData,
+		ModuleStatusVisualizationMode,
 		BoundingVolumeInitData,
 		LookAtEntity,
 		PlayerCameraController,
@@ -71,7 +73,7 @@ public:	//Enums
 		Vibration,
 		ParticleSystemsComponent,
 		PickComponent,
-		ParticleSystemEmitter,
+		ParticleSystemEmitter_DEPRECATED,
 		ParticleSystemServerComponent,
 		DebugMove,
 		uvRectCrop,
@@ -84,6 +86,7 @@ public:	//Enums
 		AnomalyAcceleratorModule,
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
+		DamageComponent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
