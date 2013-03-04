@@ -38,13 +38,36 @@ void TeslaEffectSystem::processEntities( const vector<Entity*>& p_entities )
 
 void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int p_numberOfHits )
 {
-	for(int i=0; i<p_numberOfHits; i++)
+	AglVector3 geometricMean = AglVector3::zero();
+	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
+		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
+	Entity* entitySource = netsyncMapper->getEntity(p_fromEntity);
+	if(entitySource != NULL)
 	{
-		animateHit(p_fromEntity, p_identitiesHit[i]);
+		for(int i=0; i<p_numberOfHits; i++)
+		{
+			Entity* target = netsyncMapper->getEntity(p_identitiesHit[i]);
+			if(target != NULL)
+			{
+				Transform* transform = static_cast<Transform*>(target->getComponent(
+					ComponentType::Transform));
+				if(transform != NULL)
+				{
+					geometricMean += transform->getTranslation();
+				}
+			}
+		}
+		geometricMean /= (float)p_numberOfHits;
+
+		for(int i=0; i<p_numberOfHits; i++)
+		{
+			animateHit(p_fromEntity, p_identitiesHit[i], geometricMean);
+		}
 	}
 }
 
-void TeslaEffectSystem::animateHit( int p_fromEntity, int p_toEntity )
+void TeslaEffectSystem::animateHit( int p_fromEntity, int p_toEntity,
+	const AglVector3 p_geometricMean )
 {
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
 		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
@@ -56,12 +79,13 @@ void TeslaEffectSystem::animateHit( int p_fromEntity, int p_toEntity )
 			ComponentType::Transform));
 		Transform* targetTransform = static_cast<Transform*>(target->getComponent(
 			ComponentType::Transform));
-		animate(sourceTransform->getTranslation(), targetTransform->getTranslation());
+		animate(sourceTransform->getTranslation(), targetTransform->getTranslation(),
+			p_geometricMean);
 	}
 }
 
 void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
-	const AglVector3& p_targetPosition )
+	const AglVector3& p_targetPosition, const AglVector3 p_geometricMean )
 {
 	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
 		SystemType::EntityFactory));

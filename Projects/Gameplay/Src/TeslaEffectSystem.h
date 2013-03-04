@@ -19,7 +19,8 @@ public:
 	void animateHits(int p_fromEntity, int* p_identitiesHit, int p_numberOfHits);
 
 private:
-	void animateHit(int p_fromEntity, int p_toEntity);
-	void animate( const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition );
+	void animateHit(int p_fromEntity, int p_toEntity, const AglVector3 p_geometricMean);
+	void animate(const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition,
+		const AglVector3 p_geometricMean);
 
 };
