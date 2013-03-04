@@ -123,6 +123,8 @@ public:	//Enums
 		SpriteSystem,
 		TeslaCoilModuleControllerSystem,
 		TeslaEffectSystem,
+		DamageUpdaterSystem,
+		DamageVisualizerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

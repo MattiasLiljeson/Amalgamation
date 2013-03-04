@@ -73,7 +73,7 @@ public:	//Enums
 		Vibration,
 		ParticleSystemsComponent,
 		PickComponent,
-		ParticleSystemEmitter,
+		ParticleSystemEmitter_DEPRECATED,
 		ParticleSystemServerComponent,
 		DebugMove,
 		uvRectCrop,
@@ -87,6 +87,7 @@ public:	//Enums
 		TeslaCoilModule,
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
+		DamageComponent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)

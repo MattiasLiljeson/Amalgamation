@@ -1,27 +1,43 @@
 #include "ComponentAssemblageAllocator.h"
 
 // Components
-#include <Component.h>
+#include "AnomalyAcceleratorModule.h"
+#include "AnomalyBomb.h"
 #include "AudioInfo.h"
 #include "AudioListener.h"
 #include "BodyInitData.h"
 #include "ConnectionPointSet.h"
+#include "Connector1to2Module.h"
+#include "DamageComponent.h"
+#include "DestroyOnParticlesDeath.h"
+#include "EmpModule.h"
+#include "EntityParent.h"
+#include "EnvironmentValues.h"
+#include "FlareGunModule.h"
+#include "GameplayTags.h"
+#include "GravityBombModule.h"
 #include "HudElement.h"
+#include "LevelInfo.h"
+#include "LevelPieceRoot.h"
+#include "LightBlinker.h"
+#include "LightsComponent.h"
+#include "LoadMesh.h"
+#include "MineLayerModule.h"
+#include "MinigunModule.h"
 #include "MinigunModule.h"
 #include "PhysicsBody.h"
 #include "PlayerCameraController.h"
+#include "PlayerCameraController.h"
 #include "RenderInfo.h"
+#include "RocketLauncherModule.h"
+#include "ShieldModule.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
 #include "ShipModule.h"
+#include "SkeletalAnimation.h"
 #include "SpeedBoosterModule.h"
-#include "MinigunModule.h"
-#include "GameplayTags.h"
-#include "PlayerCameraController.h"
-#include "ShieldModule.h"
-#include "MineLayerModule.h"
-#include "RocketLauncherModule.h"
-#include "Connector1to2Module.h"
+#include "SpeedBuffer.h"
+#include "TeslaModule.h"
 #include "Transform.h"
 #include "Vibration.h"
 #include "EntityParent.h"
@@ -41,6 +57,9 @@
 #include "AnomalyBomb.h"
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
+
+// unsorted automatically added includes. Sort them when added!
+#include <Component.h>
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
@@ -82,4 +101,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<AnomalyBomb>();
 	handle<TeslaCoilModule>();
 	handle<TeslaEffectPiece>();
+	handle<DamageComponent>();
 }

@@ -768,6 +768,15 @@
       <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="DamageComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageUpdaterSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="ColorTone.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -1322,6 +1331,16 @@
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+
+    <ClCompile Include="DamageComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageUpdaterSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="ColorTone.cpp">

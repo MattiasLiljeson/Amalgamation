@@ -46,7 +46,7 @@ int ParticleSystemsComponent::addParticleSystemInstruction(
 	ps.second = NULL;
 	m_particleSystems[newIdx] = ps;
 	m_instructionCnt++;
-	return m_particleSystems.size() -1;
+	return newIdx;
 }
 
 bool ParticleSystemsComponent::removeParticleSystemInstruction( int p_idx )
@@ -79,7 +79,7 @@ int ParticleSystemsComponent::addParticleSystem( const ParticleSystemAndTexture&
 	ps.second =  new ParticleSystemAndTexture( p_system );
 	m_particleSystems[newIdx] = ps;
 	m_particleSystemCnt++;
-	return m_particleSystems.size() -1;
+	return newIdx;
 }
 
 bool ParticleSystemsComponent::removeParticleSystem( int p_idx )

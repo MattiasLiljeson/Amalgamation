@@ -65,3 +65,5 @@ d f m_fps 24
 d s m_name Default
 d i m_startFrame 280
 d i m_endFrame 340
+
+c DamageComponent
