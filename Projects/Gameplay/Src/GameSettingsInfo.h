@@ -4,38 +4,52 @@ using namespace std;
 
 struct GameSettingsInfo
 {
-	int windowed; // Treated as bool
-	int useHdr; // Treated as bool
+	// Gfx settings
 	int screenHeight;
 	int screenWidth;
+	int windowed;			// Treated as bool
+	int useHdr;				// Treated as bool
+	int enableTesselation;	// Treated as bool
+	int enableSSAO;			// Treated as bool
+	int enableVSYNC;		// Treated as bool
+
+	// Sound settings
 	int masterVolume;
 	int sfxVolume;
 	int musicVolume;
-	int rumble; // Treated as bool
+
+	// Network settings
 	string playerName;
 	string ip;
 	string port;
-	int enableTesselation;
-	int enableSSAO;
-	int enableCheats;
-	int enableVSYNC;
+
+	// Game settings
+	int rumble;				// Treated as bool
+	int enableCheats;		// Treated as bool
 
 	GameSettingsInfo()
 	{
-		windowed		= -1;
-		useHdr			= -1;
-		screenHeight	= -1;
-		screenWidth		= -1;
-		masterVolume	= -1;
-		sfxVolume		= -1;
-		musicVolume		= -1;
-		rumble			= -1;
-		playerName		= "";
-		ip				= "";
-		port			= "";
-		enableTesselation  = -1;
-		enableSSAO		= -1;
-		enableCheats	= -1;
-		enableVSYNC		= -1;
+		// Gfx settings
+		screenHeight		= 128;
+		screenWidth			= 128;
+		windowed			= true;
+		useHdr				= false;
+		enableTesselation	= false;
+		enableSSAO			= true;
+		enableVSYNC			= false;
+
+		// Sound settings
+		masterVolume		= 75;		// Percentage, %
+		sfxVolume			= 75;		// Percentage, %
+		musicVolume			= 75;		// Percentage, %
+		
+		// Network settings
+		playerName			= "Bicen";
+		ip					= "194.47.150.30";
+		port				= "1337";
+
+		// Game settings
+		enableCheats		= true;
+		rumble				= true;
 	}
 };
