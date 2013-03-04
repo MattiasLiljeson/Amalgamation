@@ -10,7 +10,7 @@
 #include "GradientComponent.h"
 #include "EntityFactory.h"
 #include "MeshOffsetTransform.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include <Globals.h>
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
@@ -38,11 +38,11 @@ void MenuBackgroundSceneSystem::process()
 	transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
 		transform->getTranslation().z) );
 
-	PositionalSoundSource* soundSource = static_cast<PositionalSoundSource*>
-		(m_ship->getComponent(ComponentType::PositionalSoundSource));
+	SoundComponent* soundSource = static_cast<SoundComponent*>
+		(m_ship->getComponent(ComponentType::SoundComponent));
 
-	soundSource->m_front = worldTransform.GetBackward();
-	soundSource->m_top = worldTransform.GetUp();
+	//soundSource->m_front = worldTransform.GetBackward();
+	//soundSource->m_top = worldTransform.GetUp();
 
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
@@ -107,9 +107,12 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f,3.14f);
 	m_ship->addComponent(axisRotate);
 
-	PositionalSoundSource* soundSoure = new PositionalSoundSource( TESTSOUNDEFFECTPATH, 
+	// RM-RT 2013-03-04
+	/*
+	SoundComponent* soundSoure = new SoundComponent( TESTSOUNDEFFECTPATH, 
 		"space_ship_engine_idle.wav");
 	m_ship->addComponent(soundSoure);
+	*/
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
@@ -118,7 +121,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
-	initPointLight(entity, position + AglVector3(0.0f, 0.0f, -50.0f), 200.0f);
+	initPointLight(entity, position + AglVector3(0.0f, 10.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 }

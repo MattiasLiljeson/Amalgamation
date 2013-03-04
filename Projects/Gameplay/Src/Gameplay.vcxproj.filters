@@ -144,9 +144,6 @@
     <ClInclude Include="AudioBackendSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioController.h">
-      <Filter>Systems\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="AudioListenerSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
@@ -386,9 +383,6 @@
     </ClInclude>
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="PositionalSoundSource.h">
-      <Filter>Components\Audio</Filter>
     </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
@@ -802,6 +796,15 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems\MISC</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundComponent.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientRangeSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraSystem.cpp">
@@ -823,9 +826,6 @@
       <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioBackendSystem.cpp">
-      <Filter>Systems\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioController.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioListenerSystem.cpp">
@@ -1034,9 +1034,6 @@
     </ClCompile>
     <ClCompile Include="SpawnSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
-    <ClCompile Include="PositionalSoundSource.cpp">
-      <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
@@ -1373,6 +1370,15 @@
     </ClCompile>
     <ClCompile Include="Vibration.cpp">
       <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundComponent.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientRangeSystem.cpp">
+      <Filter>Systems\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

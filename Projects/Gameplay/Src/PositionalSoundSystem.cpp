@@ -7,13 +7,13 @@
 
 #include "Transform.h"
 #include "AudioInfo.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include <Globals.h>
 #include <PositionalSoundCreationInfo.h>
 
 PositionalSoundSystem::PositionalSoundSystem()
 	: EntitySystem( SystemType::PositionalSoundSystem, 2,
-	ComponentType::PositionalSoundSource, ComponentType::Transform )
+	ComponentType::SoundComponent, ComponentType::Transform )
 {
 }
 
@@ -37,11 +37,11 @@ void PositionalSoundSystem::initialize()
 
 void PositionalSoundSystem::inserted( Entity* p_entity )
 {
-	PositionalSoundSource* positionalSoundSource = static_cast<PositionalSoundSource*>(
-		p_entity->getComponent(ComponentType::PositionalSoundSource));
+	SoundComponent* positionalSoundSource = static_cast<SoundComponent*>(
+		p_entity->getComponent(ComponentType::SoundComponent));
 	Transform* transform = static_cast<Transform*>(
 		p_entity->getComponent(ComponentType::Transform));
-
+	/*
 	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
 		positionalSoundSource->getFilename().c_str(),
 		positionalSoundSource->getPath().c_str(),
@@ -53,22 +53,26 @@ void PositionalSoundSystem::inserted( Entity* p_entity )
 	positionalSoundSource->setSoundIndex(soundIndex);
 	updateSoundPositions(p_entity);
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
+	*/
 }
 
 void PositionalSoundSystem::removed( Entity* p_entity )
 {
-	PositionalSoundSource* positionalSoundEffect = static_cast<PositionalSoundSource*>(
-		p_entity->getComponent(ComponentType::PositionalSoundSource));
+	/*
+	SoundComponent* positionalSoundEffect = static_cast<SoundComponent*>(
+		p_entity->getComponent(ComponentType::SoundComponent));
 	int soundIndex = positionalSoundEffect->getSoundIndex();
 	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
+	*/
 }
 
 void PositionalSoundSystem::updateSoundPositions( Entity* p_entity )
 {
-	PositionalSoundSource* positionalSoundEffect = NULL;
+	/*
+	SoundComponent* positionalSoundEffect = NULL;
 	Transform* transform = NULL;
-	positionalSoundEffect = static_cast<PositionalSoundSource*>(p_entity->getComponent(
-		ComponentType::PositionalSoundSource));
+	positionalSoundEffect = static_cast<SoundComponent*>(p_entity->getComponent(
+		ComponentType::SoundComponent));
 	transform = static_cast<Transform*>(p_entity->getComponent(
 		ComponentType::Transform));
 
@@ -81,4 +85,5 @@ void PositionalSoundSystem::updateSoundPositions( Entity* p_entity )
 	//positionalSound->setTop(positionalSoundEffect->m_top);
 
 	m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
+	*/
 }

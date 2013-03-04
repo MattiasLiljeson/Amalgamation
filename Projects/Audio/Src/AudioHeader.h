@@ -11,13 +11,13 @@ struct AudioHeader{
 	};
 
 	enum SoundType{
-		AMBIENT, AMBIENTRANGE, POSITIONALSOUND
+		AMBIENT, AMBIENTRANGE, POSITIONALSOUND, NUMSOUNDTYPES
 	};
 
 	float maxRange;
 	float minRange;
-	float range;
-	unsigned sourceChannels;
+	unsigned int sourceChannels;
+	unsigned int soundIndex;
 	AglVector3 pos;
 	AglVector3 front;
 	AglVector3 top;

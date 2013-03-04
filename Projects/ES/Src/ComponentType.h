@@ -34,7 +34,7 @@ public:	//Enums
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
-		PositionalSoundSource,
+		SoundComponent,
 		ShipFlyController,
 		ShipEditController,
 		Impulse,
@@ -99,6 +99,8 @@ public:	//Enums
 		TAG_ShadowCamera,
 		TAG_LookAtMainCamera,
 		TAG_Highlight,
+		TAG_PositionalSound,
+		TAG_AmbientRangeSound,
 		// -------------------
 	
 		/************************************************************************/

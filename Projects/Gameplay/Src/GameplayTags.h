@@ -39,3 +39,7 @@ class ShadowCamera_TAG : public Tag{ public: ShadowCamera_TAG() : Tag( Component
 class LookAtMainCamera_TAG : public Tag{ public: LookAtMainCamera_TAG() : Tag( ComponentType::TAG_LookAtMainCamera ){}};
 
 class Highlight_TAG : public Tag{ public: Highlight_TAG() : Tag( ComponentType::TAG_Highlight ){}};
+
+class PositionalSound_TAG : public Tag{ public: PositionalSound_TAG() : Tag( ComponentType::TAG_PositionalSound ){}};
+
+class AmbientRangeSound_TAG : public Tag{ public: AmbientRangeSound_TAG() : Tag( ComponentType::TAG_AmbientRangeSound ){}};

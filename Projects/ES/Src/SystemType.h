@@ -121,6 +121,8 @@ public:	//Enums
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
 		SpriteSystem,
+		SoundSystem,
+		AmbientRangeSystem,
 		NUM_SYSTEM_TYPES
 	};
 

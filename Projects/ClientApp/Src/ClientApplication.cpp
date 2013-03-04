@@ -27,7 +27,7 @@
 #include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
-#include <PositionalSoundSource.h>
+#include <SoundComponent.h>
 #include <RenderInfo.h>
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
@@ -43,7 +43,6 @@
 #include <AntTweakBarEnablerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
-#include <AudioController.h>
 #include <AudioListenerSystem.h>
 #include <AxisRotationSystem.h>
 #include <CameraInfo.h>
@@ -410,7 +409,6 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );
-	m_world->setSystem( new AudioController(audioBackend) );
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
 

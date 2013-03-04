@@ -37,7 +37,7 @@
 #include "PlayerCameraController.h"
 #include "PlayerComponent.h"
 #include "PongPacket.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include "RenderInfo.h"
 #include "ShipEditController.h"
 #include "ShipFlyController.h"
@@ -628,11 +628,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
-					entity->addComponent(ComponentType::PositionalSoundSource,
-						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+					// RM-RT 2013-03-04
+					/*
+					entity->addComponent(ComponentType::SoundComponent,
+						new SoundComponent(TESTSOUNDEFFECTPATH,
 						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
 						true, 1.0f));
 					entity->applyComponentChanges();
+					*/
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -654,7 +657,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
 			if( entity != NULL )
 			{
-				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->removeComponent(ComponentType::SoundComponent);
 				entity->applyComponentChanges();
 			}
 		}

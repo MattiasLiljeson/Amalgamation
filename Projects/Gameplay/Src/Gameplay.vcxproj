@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AmbientRangeSystem.h" />
     <ClInclude Include="AnomalyAcceleratorModule.h" />
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h" />
@@ -43,13 +44,13 @@
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
-    <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
@@ -177,7 +178,7 @@
     <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="PlayersWinLosePacket.h" />
     <ClInclude Include="PongPacket.h" />
-    <ClInclude Include="PositionalSoundSource.h" />
+    <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RemoveSoundEffectPacket.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AmbientRangeSystem.cpp" />
     <ClCompile Include="AnomalyAcceleratorModule.cpp" />
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp" />
@@ -249,7 +251,6 @@
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
-    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="TempModuleSpawner.cpp" />
@@ -359,7 +361,7 @@
     <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
-    <ClCompile Include="PositionalSoundSource.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />

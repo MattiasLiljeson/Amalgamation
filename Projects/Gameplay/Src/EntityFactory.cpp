@@ -20,7 +20,7 @@
 #include "PlayerCameraController.h"
 #include "PlayerComponent.h"
 #include "PlayerState.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include "RenderInfo.h"
 #include "RocketLauncherModule.h"
 #include "ShipEditController.h"
@@ -346,9 +346,12 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 //		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
 //			AglVector3(1.0f, 0.0f, 0.0f), 3);
 
-		entity->addComponent(new PositionalSoundSource( TESTSOUNDEFFECTPATH,
-			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 
+		// RM-RT 2013-03-04
+		/*
+		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
+			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
+		*/
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 	}
 //	entity->addComponent( new PlayerComponent() );
@@ -636,8 +639,12 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+
+	// RM-RT 2013-03-04
+	/*
+	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
 		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
+	*/
 	m_world->addEntity(entity);
 	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
 		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
@@ -662,8 +669,12 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
-	entity->addComponent( ComponentType::PositionalSoundSource, new PositionalSoundSource(
+	
+	// RM-RT 2013-03-04
+	/*
+	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
+	*/
 
 	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
 	v->enabled = false;
