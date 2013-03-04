@@ -3,6 +3,7 @@
 #include "LoadMesh.h"
 #include "TeslaEffectPiece.h"
 #include "NetsyncDirectMapperSystem.h"
+#include <RandomUtil.h>
 
 TeslaEffectSystem::TeslaEffectSystem()
 	: EntitySystem(SystemType::TeslaEffectSystem, 2, ComponentType::Transform,
@@ -20,6 +21,14 @@ void TeslaEffectSystem::processEntities( const vector<Entity*>& p_entities )
 		if(effectPiece->lifeTime <= 0.0f)
 		{
 			m_world->deleteEntity(p_entities[i]);
+		}
+		else
+		{
+			Transform* pieceTransform = static_cast<Transform*>(p_entities[i]->
+				getComponent(ComponentType::Transform));
+			AglVector3 scale = pieceTransform->getScale();
+			//RandomUtil::randomInterval(5.0f, 10.0f);
+
 		}
 	}
 }
@@ -52,14 +61,20 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 	const AglVector3& p_targetPosition )
 {
 	Entity* effectCenter = m_world->createEntity();
-	AglVector3 scale = AglVector3::one() + AglVector3::forward() *
-		(p_targetPosition - p_sourcePosition).length();
-	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::forward(),
+	// up is in-game forward.
+	AglVector3 forwardScale = AglVector3::up() *
+		(p_sourcePosition - p_targetPosition).length();
+	// right is in-game up.
+	AglVector3 upScale = AglVector3::right() * 5.0f;
+	// forward is in-game right.
+	AglVector3 rightScale = AglVector3::forward() * 5.0f;
+	AglVector3 scale = AglVector3::one() + forwardScale + upScale + rightScale;
+	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
 		p_targetPosition - p_sourcePosition);
 	Transform* transform = new Transform(p_sourcePosition,
 		rotation, scale);
 	effectCenter->addComponent(transform);
-	effectCenter->addComponent(new LoadMesh("RockA.agl"));
+	effectCenter->addComponent(new LoadMesh("LightningPart.agl"));
 	effectCenter->addComponent(new TeslaEffectPiece(0.1f));
 	m_world->addEntity(effectCenter);
 }

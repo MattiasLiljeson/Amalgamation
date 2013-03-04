@@ -76,7 +76,7 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 				p_teslaModule->range);
 			if(RandomUtil::randomSingle() <= hitChance)
 			{
-				//if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
+				if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
 				{
 					otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
 						p_teslaNetsync->getNetworkOwner());
