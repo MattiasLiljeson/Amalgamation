@@ -2,7 +2,7 @@
 #include "EditSphereUpdatePacket.h"
 #include "ModuleHelper.h"
 #include "ModuleStatusEffectPacket.h"
-#include "ModuleVisualEffectBufferSystem.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 #include "NetworkSynced.h"
 #include "OnHitScoreEffectPacket.h"
 #include "PhysicsBody.h"
@@ -22,7 +22,7 @@
 #include <ToString.h>
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
-														 ModuleVisualEffectBufferSystem* p_effectBuffer)
+														 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
 	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {

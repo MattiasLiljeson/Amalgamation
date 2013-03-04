@@ -6,7 +6,7 @@
 
 class Transform;
 class TcpServer;
-class ModuleVisualEffectBufferSystem;
+class ModuleVisualEffectServerBufferSystem;
 
 // =======================================================================================
 //                                      ShipModulesControllerSystem
@@ -24,7 +24,7 @@ class ShipModulesControllerSystem: public EntitySystem
 {
 public:
 	ShipModulesControllerSystem(TcpServer* p_server,
-		ModuleVisualEffectBufferSystem* p_effectBuffer);
+		ModuleVisualEffectServerBufferSystem* p_effectBuffer);
 	~ShipModulesControllerSystem();
 
 	virtual void initialize();
@@ -65,7 +65,7 @@ private:
 
 	// system dependencies
 	TcpServer* m_server;
-	ModuleVisualEffectBufferSystem* m_effectbuffer;
+	ModuleVisualEffectServerBufferSystem* m_effectbuffer;
 
 	bool m_editMode;
 
