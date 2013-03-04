@@ -54,7 +54,6 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 		if (gun && module && module->m_parentEntity >= 0)
 		{
 			//Check fire
-			gun->coolDown = max(0, gun->coolDown - dt);
 			gun->timeSinceRocket += dt;
 			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
@@ -115,19 +114,32 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			{
 				if (cps->m_connectionPoints[i].cpConnectedEntity == p_entity->getIndex())
 				{
-					Entity* ship = getClosestShip(p_entity, parent);
+					AglVector3 target;
+					Entity* ship = getClosestShip(p_entity, parent, target);
 
-					if (ship)
+					if (ship || true)
 					{
-						Transform* shipTransform = static_cast<Transform*>(
-							m_world->getComponentManager()->getComponent(ship,
-							ComponentType::getTypeFor(ComponentType::Transform)));
-
 						//Show the crosshair
 						ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 							p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
-						ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 0, 0, 1);
-						ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = shipTransform->getTranslation();
+
+						if (gun->coolDown == 0)
+							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(0, 1, 0, 1);
+						else
+						{
+							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 0, 0, 1);
+						}
+						ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = target;
+						if (ship)
+						{
+							gun->coolDown = max(0, gun->coolDown - m_world->getDelta());
+							gun->target = ship->getIndex();
+						}
+						else
+						{
+							gun->coolDown = 2.0f;
+							gun->target = -1;
+						}
 					}
 
 				}
@@ -215,6 +227,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 
 	// store owner data
 	StandardRocket* rocketModule = new StandardRocket();
+	rocketModule->m_target = gun->target;
 	rocketModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, p_module);
 
 	entity->addComponent(ComponentType::StandardRocket, rocketModule);
@@ -242,7 +255,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 //	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
 //	m_server->broadcastPacket(soundEffectPacket.pack());
 }
-Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, Entity* p_parentShip)
+Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, Entity* p_parentShip, AglVector3& p_target)
 {
 	//Calculate origin and direction of the ray
 	Transform* shipTransform = static_cast<Transform*>(
@@ -275,7 +288,10 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 
 			AglVector3 p = st->getTranslation();
 
-			if (AglVector3::dotProduct(d, p-o) > 0)
+			AglVector3 d2 = p-o;
+			d2.normalize();
+
+			if (AglVector3::dotProduct(d, d2) > 0.9f)
 			{
 				float dist = AglVector3::lengthSquared((o - p) - d*AglVector3::dotProduct(o-p, d));
 
@@ -290,7 +306,13 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 	}
 	if (id >= 0)
 	{
+		Transform* shipTransform = static_cast<Transform*>(
+			m_world->getComponentManager()->getComponent(ships[id],
+			ComponentType::getTypeFor(ComponentType::Transform)));
+		p_target = shipTransform->getTranslation();
 		return ships[id];
 	}
+
+	p_target = o + d * 200;
 	return NULL;
 }

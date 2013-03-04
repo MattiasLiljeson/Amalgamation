@@ -4,6 +4,7 @@
 #include "RocketLauncherModule.h"
 #include "Transform.h"
 #include "TcpServer.h"
+#include <AglVector3.h>
 
 class ShipModule;
 
@@ -29,7 +30,7 @@ public:
 private:
 	void handleLaserSight(Entity* p_entity);
 	void spawnRocket(Entity* p_entity,ShipModule* p_module);
-	Entity* getClosestShip(Entity* p_entity, Entity* p_parentShip);
+	Entity* getClosestShip(Entity* p_entity, Entity* p_parentShip, AglVector3& p_target);
 private:
 	TcpServer* m_server;
 };
