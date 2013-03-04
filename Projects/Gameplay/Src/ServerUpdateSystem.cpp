@@ -78,7 +78,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			// packet handling is too slow when running Debug build otherwise.
 			TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every8Millisecond;
 #ifdef _DEBUG
-			entityupdateInterval = TimerIntervals::Every32Millisecond;
+			entityupdateInterval = TimerIntervals::Every64Millisecond;
 #endif
 			if( timerSys->checkTimeInterval(entityupdateInterval) )
 			{

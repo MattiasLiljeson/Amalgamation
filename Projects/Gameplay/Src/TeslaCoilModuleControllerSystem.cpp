@@ -80,7 +80,7 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 				{
 					otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
 						p_teslaNetsync->getNetworkOwner());
-					entitiesHit.push_back(otherShipModule->m_parentEntity);
+					entitiesHit.push_back(otherModule->getIndex());
 				}
 			}
 		}//if
@@ -89,7 +89,8 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 	{
 		unsigned int i=0;
 		TeslaHitPacket hitPacket;
-		while(i < hitPacket.NUM_TESLA_HITS_MAX && i < entitiesHit.size())
+		hitPacket.identitySource = p_teslaEntity->getIndex();
+		while(i < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX && i < entitiesHit.size())
 		{
 			hitPacket.identitiesHit[i] = entitiesHit[i];
 			i++;

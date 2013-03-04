@@ -949,12 +949,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			TeslaHitPacket hitPacket;
 			hitPacket.unpack(packet);
-			for(unsigned char i=0; i<hitPacket.numberOfHits; i++)
-			{
-				static_cast<TeslaEffectSystem*>(m_world->getSystem(
-					SystemType::TeslaEffectSystem))->animateHit(hitPacket.identitySource,
-					hitPacket.identitiesHit[i]);
-			}
+			static_cast<TeslaEffectSystem*>(m_world->getSystem(
+				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
+				hitPacket.identitiesHit, hitPacket.numberOfHits);
 		}
 		else
 		{

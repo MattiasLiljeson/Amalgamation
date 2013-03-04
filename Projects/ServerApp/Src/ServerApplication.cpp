@@ -334,13 +334,13 @@ namespace Srv
 //			cp.entityType = EntityType::MineLayerModule;
 //			factory->entityFromPacket(cp, &pos);
 //		}
-		//Shield modules
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::ShieldModule;
-			factory->entityFromPacket(cp, &pos);
-		}
+//		//Shield modules
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(50.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::ShieldModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
 
 		//Speed Booster
 		for (unsigned int i = 0; i < 4; i++)
@@ -349,14 +349,14 @@ namespace Srv
 			cp.entityType = EntityType::BoosterModule;
 			factory->entityFromPacket(cp, &pos);
 		}
-		//Minigun
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
-			cp.entityType = EntityType::MinigunModule;
-			factory->entityFromPacket(cp, &pos);
-		}
-//*/
+//		//Minigun
+//		for (unsigned int i = 0; i < 4; i++)
+//		{
+//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
+//			cp.entityType = EntityType::MinigunModule;
+//			factory->entityFromPacket(cp, &pos);
+//		}
+//
 //		//Anomaly accelerator
 //		for (unsigned int i = 0; i < 4; i++)
 //		{
@@ -364,12 +364,12 @@ namespace Srv
 //			cp.entityType = EntityType::AnomalyModule;
 //			factory->entityFromPacket(cp, &pos);
 //		}
-//		//Tesla coil
-//		for (unsigned int i = 0; i < 4; i++)
-//		{
-//			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(90.0f, 0.0f, (float)i*15.0f));
-//			cp.entityType = EntityType::TeslaCoilModule;
-//			factory->entityFromPacket(cp, &pos);
-//		}
+		//Tesla coil
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(90.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::TeslaCoilModule;
+			factory->entityFromPacket(cp, &pos);
+		}
 	}
 };

@@ -24,6 +24,14 @@ void TeslaEffectSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
+void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int p_numberOfHits )
+{
+	for(int i=0; i<p_numberOfHits; i++)
+	{
+		animateHit(p_fromEntity, p_identitiesHit[i]);
+	}
+}
+
 void TeslaEffectSystem::animateHit( int p_fromEntity, int p_toEntity )
 {
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
@@ -44,7 +52,7 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 	const AglVector3& p_targetPosition )
 {
 	Entity* effectCenter = m_world->createEntity();
-	Transform* transform = new Transform(p_targetPosition - p_sourcePosition,
+	Transform* transform = new Transform(p_targetPosition,
 		AglQuaternion::identity(), AglVector3::one());
 	effectCenter->addComponent(transform);
 	effectCenter->addComponent(new LoadMesh("RockA.agl"));
