@@ -160,11 +160,13 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	saturate(input.thrust);
 
 	// edit mode toggle
+	double editModeToggle = m_actionBackend->getDeltaByAction(
+
 
 	// edit mode trigger
-	double editModeDeltaAction = m_actionBackend->getDeltaByAction(
+	double editModeTrigger = m_actionBackend->getDeltaByAction(
 		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
-	if(editModeDeltaAction != 0.0)
+	if(editModeTrigger != 0.0)
 		input.toggleEditMode = true;
 	
 	return input;
