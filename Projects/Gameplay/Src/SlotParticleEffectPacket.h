@@ -21,4 +21,5 @@ public:
 	bool		active;
 	AglVector3	translationOffset;
 	AglVector3	forwardDirection;
+	int			moduleType;
 };

@@ -9,6 +9,7 @@ SlotParticleEffectPacket::SlotParticleEffectPacket()
 	active = false;
 	translationOffset = AglVector3();
 	forwardDirection = AglVector3();
+	moduleType = EntityType::ShipModuleStart;
 }
 
 Packet SlotParticleEffectPacket::pack()
@@ -19,7 +20,8 @@ Packet SlotParticleEffectPacket::pack()
 		<< shipSlot
 		<< active
 		<< translationOffset
-		<< forwardDirection;
+		<< forwardDirection
+		<< moduleType;
 
 	return packet;
 }
@@ -31,5 +33,6 @@ void SlotParticleEffectPacket::unpack( Packet& p_packet )
 				>> shipSlot
 				>> active
 				>> translationOffset
-				>> forwardDirection;
+				>> forwardDirection
+				>> moduleType;
 }

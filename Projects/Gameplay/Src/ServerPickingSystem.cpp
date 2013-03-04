@@ -671,6 +671,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.slot = p_ray.m_targetSlot;
 		slotPacket.shipSlot = shipSlot;
 		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
+		slotPacket.moduleType = networkSynced->getNetworkType();
 		slotPacket.active = false;
 
 		//Consider adding data concerning the connected entity
@@ -732,6 +733,30 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 		{
 			//Get the parent
 			Entity* parent = m_world->getEntity(shipModule->m_parentEntity);
+
+			Entity* ship = parent;
+			Entity* firstChild = module;
+			int shipSlot = -1;
+			while (ship->getComponent(ComponentType::ShipModule))
+			{
+				ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
+					ComponentType::ShipModule));
+				firstChild = ship;
+				ship = m_world->getEntity(intermediate->m_parentEntity);
+			}
+
+			ConnectionPointSet* shipcps = static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(ship,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			for (unsigned int i = 0; i < shipcps->m_connectionPoints.size(); i++)
+			{
+				if (shipcps->m_connectionPoints[i].cpConnectedEntity == firstChild->getIndex())
+				{
+					shipSlot = i;
+					break;
+				}
+			}
+
 
 			//Ensure that the module is not connected to an enemy ship.
 			ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
@@ -815,6 +840,8 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			slotPacket.slot = slot;
 			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 			slotPacket.active = true;
+			slotPacket.moduleType = networkSynced->getNetworkType();
+			slotPacket.shipSlot = shipSlot;
 			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
 			//Send a packet back to the client telling him how the edit sphere should be oriented

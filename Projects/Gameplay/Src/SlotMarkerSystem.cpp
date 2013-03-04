@@ -44,6 +44,55 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		gfx->getGfxWrapper()->
 			createTexture("icon_inactive.png", TEXTUREPATH );
 
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			m_textures[i].first 
+				= gfx->getGfxWrapper()->createTexture("placeholder.png", TEXTUREPATH );
+			m_textures[i].second
+				= "placeholder.png";
+		}
+
+		//Speed booster
+		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Booster.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].second
+			= "Icon_Booster.png";
+
+		//Megagun
+		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Megagun.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].second
+			= "Icon_Megagun.png";
+
+		//Mine Layer
+		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Mine.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].second
+			= "Icon_Mine.png";
+
+		//Rocket launcher
+		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
+			= "Icon_Rocket.png";
+
+		//Shield
+		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].second
+			= "Icon_Shield.png";
+
+		//Tesla
+		/*m_textures[EntityType::tes - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
+			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+
+		gfx->getGfxWrapper()->
+			createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
+		gfx->getGfxWrapper()->
+			createTexture("Icon_Tesla.png", GUI_TEXTURE_PATH );*/
+
 
 		//Left slot
 		slots[2] = m_world->createEntity();
@@ -175,16 +224,33 @@ void SlotMarkerSystem::unset(SlotMarker* p_marker)
 
 	arrangeChildren(p_marker, false);
 }
-void SlotMarkerSystem::addMarker(int p_slot)
+void SlotMarkerSystem::addMarker(int p_slot, EntityType p_type)
 {
 	if (p_slot >= 0)
 	{
 		SlotMarker* addTo = static_cast<SlotMarker*>(slots[p_slot]->getComponent(ComponentType::SlotMarker));
 		Entity* newE = createModuleMarkerEntity(AglVector3(0, 0, 0), "rocketlaunchericon_activated.png", m_moduleMarkerSize);
-		EntityType t;
-		t.type = EntityType::ShipModuleStart;
-		addTo->m_collection.push_back(pair<EntityType, Entity*>(t, newE));
+		addTo->m_collection.push_back(pair<EntityType, Entity*>(p_type, newE));
 		arrangeChildren(addTo, p_slot == m_current);
+	}
+}
+void SlotMarkerSystem::removeMarker(int p_slot, EntityType p_type)
+{
+	if (p_slot >= 0)
+	{
+		SlotMarker* removeFrom = static_cast<SlotMarker*>(slots[p_slot]->getComponent(ComponentType::SlotMarker));
+		for (unsigned int i = 0; i < removeFrom->m_collection.size(); i++)
+		{
+			if (removeFrom->m_collection[i].first.type == p_type.type)
+			{
+				m_world->deleteEntity(removeFrom->m_collection[i].second);
+				
+				removeFrom->m_collection[i] = removeFrom->m_collection.back();
+				removeFrom->m_collection.pop_back();
+				break;
+			}
+		}
+		arrangeChildren(removeFrom, p_slot == m_current);
 	}
 }
 void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
@@ -236,7 +302,10 @@ void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
 			ps->getParticleSystemInstruction(0)->particleSystem.setParticleSize(m_moduleMarkerSize * (0.5f + p_marked*0.5f));
 			ps->getParticleSystemInstruction(0)->particleSystem.setMaxOpacity(0.5f + 0.5f*p_marked);
 			if (p_marked)
-				ps->getParticleSystemInstruction(0)->textureFileName = "rocketlaunchericon_activated.png";
+			{
+				string name = m_textures[p_marker->m_collection[i].first.type - EntityType::ShipModuleStart].second;
+				ps->getParticleSystemInstruction(0)->textureFileName = name;
+			}
 			else
 				ps->getParticleSystemInstruction(0)->textureFileName = "icon_inactive.png";
 		}
@@ -247,7 +316,8 @@ void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
 
 			if (p_marked)
 			{
-				ps->getParticleSystemAndTexturePtr(0)->textureIdx = textureManager->getResourceId("rocketlaunchericon_activated.png");
+				string name = m_textures[p_marker->m_collection[i].first.type - EntityType::ShipModuleStart].second;
+				ps->getParticleSystemAndTexturePtr(0)->textureIdx = textureManager->getResourceId(name);
 			}
 			else
 			{
