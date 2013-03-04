@@ -21,7 +21,8 @@ c LevelInfo
 
 	# Level size - Specifies how large the level should be in size.
 	# The size in the game is calculated by adding all chambers' radiuses together.
-	d s m_levelSize 1:1500
+	#d s m_levelSize 1:1500
+	d s m_levelSize 1:6000
 	d s m_levelSize 2:1500
 	d s m_levelSize 3:2000
 	d s m_levelSize 4:3000

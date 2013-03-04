@@ -95,8 +95,18 @@ float4 PS(VertexOut input) : SV_TARGET
 		{
 			finalAO += gLightDiff.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
 			
-			sampledGlow = gDiffBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
-			sampledGlow.rgb *= sampledGlow.a;
+			//float dx = 1.0f/gRenderTargetSize.x;
+			//float dy = 1.0f/gRenderTargetSize.y;
+			float lightBloom = 2.0f;
+			float glowBloom = 2.0f;
+			// some bloom from highlights
+			float3 light = 10.0f*(gSpecBuffer.Load( index+uint3(x,y,0)*lightBloom ) * gLightSpec.Load( index+uint3(x,y,0)*lightBloom ));
+			light+=10.0f*(gDiffBuffer.Load( index+uint3(x,y,0)*lightBloom ) * gLightDiff.Load( index+uint3(x,y,0)*lightBloom ));
+			float str = (light.r+light.g+light.b)*0.333f*0.5f;
+			// sample glow and add blurred highlights as well
+			sampledGlow = gDiffBuffer.Load( index+uint3(x,y,0)*glowBloom ).rgba + float4(light,str);
+			//sampledGlow = gDiffBuffer.Sample(pointSampler, input.texCoord+float2(x*dx,y*dy)*2.0f).rgba;
+			sampledGlow.rgb *= sampledGlow.a*2.0f;
 			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
