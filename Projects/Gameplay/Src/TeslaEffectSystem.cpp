@@ -52,10 +52,10 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 	const AglVector3& p_targetPosition )
 {
 	Entity* effectCenter = m_world->createEntity();
-	Transform* transform = new Transform(p_targetPosition,
+	Transform* transform = new Transform((p_sourcePosition + p_targetPosition) / 2.0f,
 		AglQuaternion::identity(), AglVector3::one());
 	effectCenter->addComponent(transform);
 	effectCenter->addComponent(new LoadMesh("RockA.agl"));
-	effectCenter->addComponent(new TeslaEffectPiece(10.0f));
+	effectCenter->addComponent(new TeslaEffectPiece(0.1f));
 	m_world->addEntity(effectCenter);
 }
