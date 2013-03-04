@@ -20,6 +20,8 @@
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
     <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="DamageUpdaterSystem.h" />
+    <ClInclude Include="DamageVisualizerSystem.h" />
     <ClInclude Include="ColorTone.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
@@ -33,6 +35,7 @@
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
+    <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="GravityBombModule.h" />
@@ -41,7 +44,6 @@
     <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
@@ -231,7 +233,11 @@
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
     <ClInclude Include="StaticProp.h" />
-    <ClInclude Include="TeslaModule.h" />
+    <ClInclude Include="TeslaCoilModule.h" />
+    <ClInclude Include="TeslaCoilModuleControllerSystem.h" />
+    <ClInclude Include="TeslaEffectPiece.h" />
+    <ClInclude Include="TeslaEffectSystem.h" />
+    <ClInclude Include="TeslaHitPacket.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
@@ -274,6 +280,8 @@
     <ClCompile Include="ConnectionVisualizerSystem.cpp" />
     <ClCompile Include="Connector1to2Module.cpp" />
     <ClCompile Include="CullingSystem.cpp" />
+    <ClCompile Include="DamageUpdaterSystem.cpp" />
+    <ClCompile Include="DamageVisualizerSystem.cpp" />
     <ClCompile Include="DestroyOnParticlesDeath.cpp" />
     <ClCompile Include="DestroyOnParticlesDeathSystem.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
@@ -301,6 +309,7 @@
     <ClCompile Include="HighlightEntityPacket.cpp" />
     <ClCompile Include="AnomalyBombEffectSystem.cpp" />
     <ClCompile Include="HighlightSlotPacket.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="HudSystem.cpp" />
     <ClCompile Include="HudElement.cpp" />
     <ClCompile Include="InputActionsBackendSystem.cpp" />
@@ -426,7 +435,11 @@
     <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
-    <ClCompile Include="TeslaModule.cpp" />
+    <ClCompile Include="TeslaCoilModule.cpp" />
+    <ClCompile Include="TeslaCoilModuleControllerSystem.cpp" />
+    <ClCompile Include="TeslaEffectPiece.cpp" />
+    <ClCompile Include="TeslaEffectSystem.cpp" />
+    <ClCompile Include="TeslaHitPacket.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />

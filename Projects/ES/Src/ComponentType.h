@@ -73,7 +73,7 @@ public:	//Enums
 		Vibration,
 		ParticleSystemsComponent,
 		PickComponent,
-		ParticleSystemEmitter,
+		ParticleSystemEmitter_DEPRECATED,
 		ParticleSystemServerComponent,
 		DebugMove,
 		uvRectCrop,
@@ -84,8 +84,10 @@ public:	//Enums
 		Gradient,
 		SpeedBuffer,
 		AnomalyAcceleratorModule,
+		TeslaCoilModule,
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
+		DamageComponent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -115,8 +117,9 @@ public:	//Enums
 		BoundingSphere,
 		BoundingBox,
 		SelectionMarker,
-		GravityMineEffectPiece,
 		Sprite,
+		AnomalyBombEffectPiece,
+		TeslaEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 

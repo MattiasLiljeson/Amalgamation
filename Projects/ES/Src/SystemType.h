@@ -116,11 +116,15 @@ public:	//Enums
 		PlayerSystem,
 		AnomalyBombControllerSystem,
 		ServerDynamicPhysicalObjectsSystem,
-		GravityMineEffectSystem,
+		AnomalyBombEffectSystem,
 		ShieldPlaterSystem,
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
 		SpriteSystem,
+		TeslaCoilModuleControllerSystem,
+		TeslaEffectSystem,
+		DamageUpdaterSystem,
+		DamageVisualizerSystem,
 		NUM_SYSTEM_TYPES
 	};
 

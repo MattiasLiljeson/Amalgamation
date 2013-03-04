@@ -52,6 +52,7 @@ public:
 		Actions_TRIGGER_EDIT_MODE,
 		Actions_MOVE_MODULE,
 		Actions_DROP_MODULE,
+		Actions_TOGGLE_EDIT_MODE,
 
 		Actions_CNT//End Actions enum
 	};

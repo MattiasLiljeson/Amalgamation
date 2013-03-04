@@ -16,6 +16,5 @@ class ShipModulesTrackerSystem: public EntitySystem
 {
 public:
 	ShipModulesTrackerSystem();
-	~ShipModulesTrackerSystem();
 	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
 };

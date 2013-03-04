@@ -39,7 +39,7 @@
 #include <GameState.h>
 
 // Systems
-#include <SettingsSystem.h>
+#include <AnomalyBombEffectSystem.h>
 #include <AntTweakBarEnablerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
@@ -51,13 +51,20 @@
 #include <CircularMovementSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <ClientEntityCountSystem.h>
+#include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
 #include <ClientPickingSystem.h>
 #include <ClientStateSystem.h>
+#include <ConnectionVisualizerSystem.h>
+#include <CullingSystem.h>
+#include <DamageUpdaterSystem.h>
+#include <DamageVisualizerSystem.h>
 #include <DebugMovementSystem.h>
 #include <DisplayPlayerScoreSystem.h>
+#include <EditSphereSystem.h>
 #include <EntityFactory.h>
+#include <EnvironmentSystem.h>
 #include <ExtrapolationSystem.h>
 #include <GameOptionsSystem.h>
 #include <GameStatsSystem.h>
@@ -68,14 +75,19 @@
 #include <InputActionsBackendSystem.h>
 #include <InputBackendSystem.h>
 #include <InterpolationSystem.h>
+#include <InterpolationSystem2.h>
 #include <LevelGenSystem.h>
+#include <LevelHandlerSystem.h>
+#include <LevelInfoLoader.h>
 #include <LibRocketBackendSystem.h>
 #include <LibRocketEventManagerSystem.h>
 #include <LightBlinkerSystem.h>
 #include <LightRenderSystem.h>
 #include <LoadMeshSystemClient.h>
+#include <LobbySystem.h>
 #include <LookAtEntity.h>
 #include <LookAtSystem.h>
+#include <MenuBackgroundSceneSystem.h>
 #include <MenuSystem.h>
 #include <MeshRenderSystem.h>
 #include <MineControllerSystem.h>
@@ -85,41 +97,32 @@
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <NetsyncDirectMapperSystem.h>
 #include <ParticleRenderSystem.h>
+#include <ParticleSystemInstructionTranslatorSystem.h>
 #include <PhysicsSystem.h>
 #include <PlayerCameraControllerSystem.h>
 #include <PositionalSoundSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RocketLauncherModuleControllerSystem.h>
+#include <ScoreWorldVisualizerSystem.h>
+#include <SelectionMarkerSystem.h>
+#include <SettingsSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
+#include <ShieldPlaterSystem.h>
 #include <ShieldPlatingSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
 #include <ShipInputProcessingSystem.h>
 #include <ShipModulesControllerSystem.h>
+#include <ShipParticleSystemUpdater.h>
+#include <SkeletalAnimationSystem.h>
+#include <SlotHighlightParticleMakerSystem.h>
+#include <SpeedBufferUpdaterSystem.h>
+#include <SpeedFovAdjustSystem.h>
+#include <SpriteSystem.h>
+#include <TeslaEffectSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
-#include <ScoreWorldVisualizerSystem.h>
-#include <ParticleSystemInstructionTranslatorSystem.h>
-#include <ClientEntityCountSystem.h>
-#include <SkeletalAnimationSystem.h>
-#include <LevelHandlerSystem.h>
-#include <CullingSystem.h>
-#include <ConnectionVisualizerSystem.h>
-#include <SpeedFovAdjustSystem.h>
-#include <MenuBackgroundSceneSystem.h>
-#include <LobbySystem.h>
-#include <LevelInfoLoader.h>
-#include <EnvironmentSystem.h>
-#include <SpeedBufferUpdaterSystem.h>
-#include <ShipParticleSystemUpdater.h>
-#include <EditSphereSystem.h>
-#include <SelectionMarkerSystem.h>
-#include <InterpolationSystem2.h>
-#include <AnomalyBombEffectSystem.h>
-#include <ShieldPlaterSystem.h>
-#include <SlotHighlightParticleMakerSystem.h>
-#include <SpriteSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -136,7 +139,10 @@ using namespace std;
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
+
+// unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
+
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -283,6 +289,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new LookAtSystem(NULL) );
 	m_world->setSystem( new SpeedBufferUpdaterSystem() );
+	m_world->setSystem( new DamageUpdaterSystem() );
 	
 	/************************************************************************/
 	/* Input																*/
@@ -313,6 +320,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new HudSystem( rocketBackend ) );
 	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
 	m_world->setSystem( new GameOptionsSystem() );
+	m_world->setSystem( new DamageVisualizerSystem( graphicsBackend ) );
 
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
 	// that they can be properly be added to the LibRocketEventManager.
@@ -452,6 +460,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
 	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
 
 	m_world->initialize();
 

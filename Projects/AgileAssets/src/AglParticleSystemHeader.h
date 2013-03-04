@@ -56,7 +56,6 @@ struct AglParticleSystemHeader{
 
 		AglSpace_GLOBAL,
 		AglSpace_LOCAL,
-		
 		AglSpace_SCREEN,
 
 		AglSpace_CNT
@@ -94,32 +93,31 @@ struct AglParticleSystemHeader{
 
 	AglParticleSystemHeader()
 	{
-		particleAge = 4.0f;
-		spawnPoint = AglVector3(0, 0, 0);
-		particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
-		spawnDirection = AglVector3::left();
-		spawnSpeed = 0;
-		spawnAngularVelocity = 0;
-		spread = 0;
-		spawnFrequency = 1.0f;
-		spawnOffset = 0.0f;
-		spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
-		spawnType = AglParticleSystemHeader::CONTINUOUSLY;
-		maxOpacity = 1.0f;
-		particlesPerSpawn = 1;
-		spreadType = AglParticleSystemHeader::INSPACE;
-		particleSize = AglVector2(1.0f, 1.0f);
+		alignmentType = AglParticleSystemHeader::OBSERVER;
+		blendMode = AglBlendMode_ALPHA;
 		color = AglVector4(1.0f, 1.0f, 1.0f, 1.0f);
 		fadeInStop = 0;
 		fadeOutStart = particleAge;
-		textureNameIndex = -1;
-		alignmentType = AglParticleSystemHeader::OBSERVER;
+		maxOpacity = 1.0f;
+		particleAge = 4.0f;
+		particleFormat = AGL_PARTICLE_FORMAT_STANDARD;
+		particleSize = AglVector2(1.0f, 1.0f);
+		particleSpace = AglSpace_GLOBAL;
+		particlesPerSpawn = 1;
+		rasterizerMode = AglRasterizerMode_Z_CULLED;
+		spawnAngularVelocity = 0;
+		spawnDirection = AglVector3::left();
+		spawnFrequency = 1.0f;
+		spawnOffset = 0.0f;
+		spawnOffsetType = AglParticleSystemHeader::ONSPHERE;
+		spawnPoint = AglVector3(0, 0, 0);
 		spawnRotation = 0;
 		spawnRotationOffset = 0;
-
-		blendMode = AglBlendMode_ALPHA;
-		rasterizerMode = AglRasterizerMode_Z_CULLED;
-		particleSpace = AglSpace_GLOBAL;
 		spawnSpace = AglSpace_LOCAL;
+		spawnSpeed = 0;
+		spawnType = AglParticleSystemHeader::CONTINUOUSLY;
+		spread = 0;
+		spreadType = AglParticleSystemHeader::INSPACE;
+		textureNameIndex = -1;
 	}
 };

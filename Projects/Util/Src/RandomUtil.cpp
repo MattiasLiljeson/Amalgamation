@@ -7,9 +7,19 @@ float RandomUtil::randomSingle()
 	return (float)rand()/(float)RAND_MAX;
 }
 
+int RandomUtil::randomInteger(int p_max)
+{
+	return rand() % p_max;
+}
+
 float RandomUtil::randomInterval( float p_min, float p_max )
 {
 	return p_min + (float)rand() / (float)RAND_MAX * (p_max-p_min);
+}
+
+int RandomUtil::randomIntegerInterval( int p_min, int p_max )
+{
+	return p_min + rand() % (p_max - p_min + 1);
 }
 
 void RandomUtil::randomEvenlyDistributedSphere( float* out_x, float* out_y, float* out_z )
