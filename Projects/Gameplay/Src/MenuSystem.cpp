@@ -58,6 +58,11 @@ void MenuSystem::process()
 
 		rocketEventManager->clearDocumentStack();
 	}
+	else if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+		rocketEventManager->loadWindow("loading");
+	}
 	else if(gameState->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
