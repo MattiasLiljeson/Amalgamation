@@ -343,14 +343,14 @@ namespace Srv
 		}
 
 		//Speed Booster
-		for (unsigned int i = 0; i < 40; i++)
+		for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(60.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::BoosterModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 		//Minigun
-		for (unsigned int i = 0; i < 40; i++)
+		for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(70.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::MinigunModule;
