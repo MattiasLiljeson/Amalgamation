@@ -71,7 +71,7 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 
 
 SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, string p_file 
-															 /* = "settings.txt" */)
+															 /* = "settings.cfg" */)
 {
 	FileStatus status = FileStatus_OK;
 
