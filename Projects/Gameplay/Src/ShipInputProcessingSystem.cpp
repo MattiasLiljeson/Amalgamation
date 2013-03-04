@@ -37,9 +37,7 @@ void ShipInputProcessingSystem::process()
 {
 	m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
 	// Fetch the status of the various input methods.
-	RawInputForces rawInput = readAllInput();
-	// processed input
-	m_processedInput = rawInput;
+	m_processedInput = readAllInput();
 
 	// Apply correction vectors to the analogue sticks.
 	//m_processedInput.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
@@ -161,26 +159,21 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 		InputActionsBackendSystem::Actions_THRUST_FORWARD);
 	saturate(input.thrust);
 
-	// edit mode
-
-	double etv = m_actionBackend->getStatusByAction(
-		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
-	input.stateSwitchTrig=saturate(etv)>0.5;
-
-	if (m_editSwitchTrigReleased)
+	// edit mode toggle
+	double editModeToggle = m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_TOGGLE_EDIT_MODE);
+	if(editModeToggle>0.0)
 	{
-		if (input.stateSwitchTrig)
-		{
-			m_editSwitchTrigReleased = false;
-		}
+		input.toggleEditMode = true;
 	}
-	else
+
+
+	// edit mode trigger
+	double editModeTrigger = m_actionBackend->getDeltaByAction(
+		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
+	if(editModeTrigger != 0.0)
 	{
-		if (!input.stateSwitchTrig)
-		{
-			m_editSwitchTrigReleased = true;
-		}
-		input.stateSwitchTrig=false;
+		input.toggleEditMode = true;
 	}
 	
 	return input;

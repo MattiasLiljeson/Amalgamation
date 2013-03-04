@@ -225,6 +225,8 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_Z]		= DIK_Z;
 
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_SPACE]		= DIK_SPACE;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_LEFT_ALT]		= DIK_LMENU;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_RIGHT_ALT]	= DIK_RMENU;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_BACKSPACE]	= DIK_BACKSPACE;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_RETURN]	= DIK_RETURN;
 

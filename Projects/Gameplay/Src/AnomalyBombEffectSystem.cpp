@@ -4,8 +4,8 @@
 #include "EntityParent.h"
 
 AnomalyBombEffectSystem::AnomalyBombEffectSystem()
-	: EntitySystem(SystemType::GravityMineEffectSystem, 4,
-	ComponentType::GravityMineEffectPiece, ComponentType::Transform,
+	: EntitySystem(SystemType::AnomalyBombEffectSystem, 4,
+	ComponentType::AnomalyBombEffectPiece, ComponentType::Transform,
 	ComponentType::EntityParent, ComponentType::RenderInfo)
 {
 }
@@ -15,7 +15,7 @@ void AnomalyBombEffectSystem::processEntities( const vector<Entity*>& p_entities
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
 		AnomalyBombEffectPiece* piece = static_cast<AnomalyBombEffectPiece*>(
-			p_entities[i]->getComponent(ComponentType::GravityMineEffectPiece));
+			p_entities[i]->getComponent(ComponentType::AnomalyBombEffectPiece));
 		piece->lifeTime -= m_world->getDelta() * 1.0f;
 		if(piece->lifeTime <= 0.0f)
 		{

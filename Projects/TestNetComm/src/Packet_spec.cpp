@@ -63,6 +63,17 @@ Describe(a_packet)
 		Assert::That(c_dst, Equals(c_src));
 	}
 
+	It(can_contain_unsigned_char_data)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		unsigned char c_src = 100;
+		packet << c_src;
+		unsigned char c_dst;
+		packet >> c_dst;
+
+		Assert::That(c_dst, Equals(c_src));
+	}
+
 	It(can_contain_short_data)
 	{
 		Packet packet(TEST_PACKET_TYPE);

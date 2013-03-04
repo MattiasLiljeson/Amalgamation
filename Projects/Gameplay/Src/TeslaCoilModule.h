@@ -2,28 +2,31 @@
 #include <Component.h>
 #include <ComponentFactory.h>
 // =======================================================================================
-// AnomalyAcceleratorModule
+// TeslaCoilModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief A module that accelerates large particles and crashes them together almost at
-/// the speed of light. This in turn give rise to a chaotic pattern in the Higgs field
-/// and creates tiny black holes that lasts for several seconds.
+/// \brief The Tesla coil module has a chance (1%-100%) of electrocuting another module
+/// within its range. It has a 100% hit chance within its "optimal" range.
 ///        
-/// # AnomalyAcceleratorModule
-/// Created on: 26-2-2013 
+/// # TeslaCoilModule
+/// Created on: 1-3-2013 
 ///---------------------------------------------------------------------------------------
-class AnomalyAcceleratorModule: public Component
+class TeslaCoilModule: public Component
 {
 public:
-	AnomalyAcceleratorModule();
+	TeslaCoilModule();
+	TeslaCoilModule(float p_range, float p_optimalRange, float p_cooldownTime,
+		float p_damage);
 	void init( vector<ComponentData> p_initData );
 
 public:
+	float range;
+	float optimalRange;
 	float cooldown;
 	float cooldownTime;
-	float launchSpeed;
+	float damage;
 
 public:
-	static ComponentRegister<AnomalyAcceleratorModule> s_reg;
+	static ComponentRegister<TeslaCoilModule> s_reg;
 };

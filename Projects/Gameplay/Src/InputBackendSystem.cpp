@@ -122,6 +122,16 @@ void InputBackendSystem::initialize()
 		InputHelper::KeyboardKeys_SPACE,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_SPACE),
 		"KeyboardKeys_SPACE" );
+	//Left alt
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
+		InputHelper::KeyboardKeys_LEFT_ALT,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_LEFT_ALT),
+		"KeyboardKeys_LEFT_ALT" );
+	//Right alt
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
+		InputHelper::KeyboardKeys_RIGHT_ALT,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_RIGHT_ALT),
+		"KeyboardKeys_RIGHT_ALT" );
 	// backspace
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
 		InputHelper::KeyboardKeys_BACKSPACE,

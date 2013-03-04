@@ -120,6 +120,7 @@
 #include <ShieldPlaterSystem.h>
 #include <SlotHighlightParticleMakerSystem.h>
 #include <SpriteSystem.h>
+#include <TeslaEffectSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -452,6 +453,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
 	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
 
 	m_world->initialize();
 

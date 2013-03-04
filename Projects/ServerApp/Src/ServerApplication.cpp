@@ -40,6 +40,7 @@
 #include <TempModuleSpawner.h>
 #include <AnomalyBombControllerSystem.h>
 #include <ServerDynamicPhysicalObjectsSystem.h>
+#include <TeslaCoilModuleControllerSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -234,6 +235,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyBombControllerSystem(m_server), true);
+		m_world->setSystem(new TeslaCoilModuleControllerSystem(m_server));
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
@@ -359,6 +361,13 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(80.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::AnomalyModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Tesla coil
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(90.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::TeslaCoilModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 	}
