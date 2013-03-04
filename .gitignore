@@ -126,6 +126,7 @@ External/*
 *.lastcodeanalysissucceeded
 /Build/*.dll.txt
 /Build/*.exe.txt
+/Build/log.txt
 
 *.agl
 *.fbx

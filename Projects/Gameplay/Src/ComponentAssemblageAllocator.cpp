@@ -37,7 +37,6 @@
 #include "SkeletalAnimation.h"
 #include "SpeedBoosterModule.h"
 #include "SpeedBuffer.h"
-#include "TeslaModule.h"
 #include "Transform.h"
 #include "Vibration.h"
 #include "EntityParent.h"
