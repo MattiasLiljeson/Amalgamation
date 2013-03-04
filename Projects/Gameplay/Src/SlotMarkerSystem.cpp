@@ -46,36 +46,36 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 
 
 		//Left slot
-		slots[0] = m_world->createEntity();
+		slots[2] = m_world->createEntity();
 		SlotMarker* sm = new SlotMarker();
 		sm->shipMarker = createShipMarkerEntity(AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
 		sm->dir = AglVector3(1, 0, 0);
-		slots[0]->addComponent(ComponentType::SlotMarker, sm);
-		m_world->addEntity(slots[0]);
-
-		//Right slot
-		slots[1] = m_world->createEntity();
-		sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
-		sm->dir = AglVector3(-1, 0, 0);
-		slots[1]->addComponent(ComponentType::SlotMarker, sm);
-		m_world->addEntity(slots[1]);
-
-		//Top
-		slots[2] = m_world->createEntity();
-		sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
-		sm->dir = AglVector3(0, 1, 0);
 		slots[2]->addComponent(ComponentType::SlotMarker, sm);
 		m_world->addEntity(slots[2]);
 
-		//Bottom
+		//Right slot
 		slots[3] = m_world->createEntity();
+		sm = new SlotMarker();
+		sm->shipMarker = createShipMarkerEntity(AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->dir = AglVector3(-1, 0, 0);
+		slots[3]->addComponent(ComponentType::SlotMarker, sm);
+		m_world->addEntity(slots[3]);
+
+		//Top
+		slots[1] = m_world->createEntity();
+		sm = new SlotMarker();
+		sm->shipMarker = createShipMarkerEntity(AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->dir = AglVector3(0, 1, 0);
+		slots[1]->addComponent(ComponentType::SlotMarker, sm);
+		m_world->addEntity(slots[1]);
+
+		//Bottom
+		slots[0] = m_world->createEntity();
 		sm = new SlotMarker();
 		sm->shipMarker = createShipMarkerEntity(AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
 		sm->dir = AglVector3(0, -1, 0);
-		slots[3]->addComponent(ComponentType::SlotMarker, sm);
-		m_world->addEntity(slots[3]);
+		slots[0]->addComponent(ComponentType::SlotMarker, sm);
+		m_world->addEntity(slots[0]);
 	}
 }
 
@@ -234,6 +234,7 @@ void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
 		{
 			ps->getParticleSystemInstruction(0)->particleSystem.setSpawnPoint(targetPos);
 			ps->getParticleSystemInstruction(0)->particleSystem.setParticleSize(m_moduleMarkerSize * (0.5f + p_marked*0.5f));
+			ps->getParticleSystemInstruction(0)->particleSystem.setMaxOpacity(0.5f + 0.5f*p_marked);
 			if (p_marked)
 				ps->getParticleSystemInstruction(0)->textureFileName = "rocketlaunchericon_activated.png";
 			else
@@ -242,6 +243,7 @@ void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
 		else
 		{
 			ps->getParticleSystemPtr(0)->setSpawnPoint(targetPos);
+			ps->getParticleSystemPtr(0)->setMaxOpacity(0.5f + 0.5f*p_marked);
 
 			if (p_marked)
 			{

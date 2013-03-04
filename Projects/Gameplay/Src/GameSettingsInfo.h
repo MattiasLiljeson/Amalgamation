@@ -30,8 +30,8 @@ struct GameSettingsInfo
 	GameSettingsInfo()
 	{
 		// Gfx settings
-		screenHeight		= 128;
-		screenWidth			= 128;
+		screenHeight		= 720;
+		screenWidth			= 1280;
 		windowed			= true;
 		useHdr				= false;
 		enableTesselation	= false;
