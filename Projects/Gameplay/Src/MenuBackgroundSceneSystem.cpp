@@ -9,11 +9,15 @@
 #include "ClientStateSystem.h"
 #include "GradientComponent.h"
 #include "EntityFactory.h"
+#include "MeshOffsetTransform.h"
+#include "PositionalSoundSource.h"
+#include <Globals.h>
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
 {
 	m_deltaRotation = 0.0f;
+	xPos = -7.5f;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
@@ -22,6 +26,23 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 
 void MenuBackgroundSceneSystem::process()
 {
+
+	MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
+	Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
+	AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
+
+	xPos = transform->getTranslation().x;
+
+	xPos += m_world->getDelta()*2;
+
+	transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
+		transform->getTranslation().z) );
+
+	PositionalSoundSource* soundSource = static_cast<PositionalSoundSource*>
+		(m_ship->getComponent(ComponentType::PositionalSoundSource));
+
+	soundSource->m_front = worldTransform.GetBackward();
+	soundSource->m_top = worldTransform.GetUp();
 
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
@@ -38,7 +59,6 @@ void MenuBackgroundSceneSystem::process()
 		gradient->m_color.layerTwo = entityFactory->getPlayersSecondGradientLevel();
 	}
 	else{
-		m_deltaRotation = 0.0f;
 		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
 		double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
 		if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
@@ -61,6 +81,7 @@ void MenuBackgroundSceneSystem::process()
 		if(rotate != NULL)
 		{
 			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
+			m_deltaRotation = 0.0f;
 		}
 	}
 }
@@ -80,9 +101,15 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
+	AglVector3 axis( 0.0f, 1.0f, -0.2f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
+	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f,3.14f);
+	m_ship->addComponent(axisRotate);
+
+	PositionalSoundSource* soundSoure = new PositionalSoundSource( TESTSOUNDEFFECTPATH, 
+		"space_ship_engine_idle.wav");
+	m_ship->addComponent(soundSoure);
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),

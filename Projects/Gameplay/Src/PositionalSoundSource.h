@@ -1,5 +1,6 @@
 #pragma once
 
+#include <AglVector3.h>
 #include <Component.h>
 #include <string>
 using namespace std;
@@ -45,7 +46,7 @@ public:
 
 	const bool& loops() const;
 
-private:
+public:
 	string m_path;
 	string m_filename;
 	float m_soundVolume;
@@ -55,4 +56,7 @@ private:
 	int m_soundIndex;
 	float m_lifeTime;
 
+	AglVector3 m_top;
+	AglVector3 m_front;
+	AglVector3 m_velocity;
 };

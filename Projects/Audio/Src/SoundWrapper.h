@@ -152,6 +152,7 @@ private:
 	IXAudio2MasteringVoice* m_masterVoice;
 
 	float m_masterVolume;
+	float* m_channelVolumes;
 	UINT32 m_destChannels;
 	DWORD m_channelMask;
 

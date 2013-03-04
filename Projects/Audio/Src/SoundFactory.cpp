@@ -389,6 +389,6 @@ void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter,
 	p_emitter->pLPFDirectCurve = NULL; // use default curve
 	p_emitter->pLPFReverbCurve = NULL; // use default curve
 	p_emitter->pReverbCurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_Reverb_Curve;
-	p_emitter->CurveDistanceScaler	= 30.0f;
+	p_emitter->CurveDistanceScaler	= 100.0f;
 	p_emitter->DopplerScaler		= 1.0f;
 }

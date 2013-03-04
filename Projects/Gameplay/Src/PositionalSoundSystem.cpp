@@ -75,7 +75,10 @@ void PositionalSoundSystem::updateSoundPositions( Entity* p_entity )
 	PositionalSound* positionalSound = static_cast<PositionalSound*>(
 		m_audioBackendSystem->getSoundWrapper()->getSound(
 		positionalSoundEffect->getSoundIndex()));
+
 	positionalSound->setPosition(transform->getTranslation());
+	positionalSound->setFront(positionalSoundEffect->m_front);
+	//positionalSound->setTop(positionalSoundEffect->m_top);
 
 	m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
 }

@@ -69,7 +69,6 @@ public:
 	PositionalSound* createPositionalSoundEffect(BasicSoundCreationInfo* p_basicSoundInfo, 
 		PositionalSoundCreationInfo* p_positionalInfo, int p_soundIndex,
 		vector<Sound*>* p_positionalSounds);
-protected:
 private:
 	void createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
 		WAVEFORMATEX* p_waveFormatEx);

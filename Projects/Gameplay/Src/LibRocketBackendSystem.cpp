@@ -240,6 +240,7 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 
+	// Debug help functionality
 	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
 		m_renderDebug = !m_renderDebug;
 		Rocket::Debugger::SetVisible( m_renderDebug );

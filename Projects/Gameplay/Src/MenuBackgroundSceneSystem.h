@@ -34,5 +34,5 @@ private:
 	vector<Entity*> m_lights;
 	InputBackendSystem* m_inputBackend;
 	float m_deltaRotation;
-
+	float xPos;
 };

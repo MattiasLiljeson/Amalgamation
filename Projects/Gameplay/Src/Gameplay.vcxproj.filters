@@ -88,9 +88,6 @@
     <Filter Include="Systems\Gameplay\Tracking">
       <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Misc">
-      <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\States">
       <UniqueIdentifier>{9e022492-9da3-4858-bcdf-adee07cbdfdd}</UniqueIdentifier>
     </Filter>
@@ -109,17 +106,17 @@
     <Filter Include="Systems\Network\Physics">
       <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\MISC">
+      <UniqueIdentifier>{6bf7e36e-bc98-487a-a161-c8ebe8ea3e96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MISC">
+      <UniqueIdentifier>{11f016a9-926c-4c48-a78a-7c1dae11969f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="undefined">
+      <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetworkSynced.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -188,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="ShipModule.h">
       <Filter>Components\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ConnectionPointSet.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="MinigunModule.h">
       <Filter>Components\Modules</Filter>
@@ -327,9 +321,6 @@
     <ClInclude Include="MeshRenderSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="AntTweakBarSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="LightRenderSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
@@ -344,9 +335,6 @@
     </ClInclude>
     <ClInclude Include="ExtrapolationSystem.h">
       <Filter>Systems\Network\Client only</Filter>
-    </ClInclude>
-    <ClInclude Include="Extrapolate.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="StandardRocket.h">
       <Filter>Components\Gameplay</Filter>
@@ -381,12 +369,6 @@
     <ClInclude Include="LoadMeshSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="EntityParent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformParentHandlerSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
@@ -396,14 +378,8 @@
     <ClInclude Include="PlayerStats.h">
       <Filter>Structs</Filter>
     </ClInclude>
-    <ClInclude Include="ClientInfo.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ServerClientInfoSystem.h">
       <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayGameStats.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpawnSoundEffectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
@@ -414,16 +390,12 @@
     <ClInclude Include="PositionalSoundSource.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="DebugMove.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="DebugMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="NetsyncDirectMapperSystem.h">
       <Filter>Systems\Network\Client only</Filter>
     </ClInclude>
-    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="MoveShipLightsSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
@@ -448,9 +420,6 @@
     <ClInclude Include="ParticleSystemCreationInfo.h">
       <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemServerComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ShipModulesTrackerSystem.h">
       <Filter>Systems\Gameplay\Tracking</Filter>
     </ClInclude>
@@ -465,16 +434,6 @@
     </ClInclude>
     <ClInclude Include="SpeedBoostModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshOffsetTransform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpolationComponent.h" />
-    <ClInclude Include="Vibration.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticProp.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Components\GUI</Filter>
@@ -528,13 +487,10 @@
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="EnumGameStates.h">
-      <Filter>Misc</Filter>
+      <Filter>undefined</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Components\States</Filter>
-    </ClInclude>
-    <ClInclude Include="ShieldPlatingSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBoostModuleActivation.h">
       <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
@@ -545,9 +501,6 @@
     <ClInclude Include="CircularMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
-    <ClInclude Include="CircularMovement.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ShieldPlate.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -556,9 +509,6 @@
     </ClInclude>
     <ClInclude Include="ShieldModuleActivationClient.h">
       <Filter>Components\Modules\Events\Module Events %28Client%29</Filter>
-    </ClInclude>
-    <ClInclude Include="SpawnPointSet.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="SkeletalAnimation.h">
       <Filter>Components\GFX</Filter>
@@ -581,26 +531,8 @@
     <ClInclude Include="LevelHandlerSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
-    <ClInclude Include="LevelPieceRoot.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="BoundingBox.h">
       <Filter>Components\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="GradientMapping.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="GamepadRumbleSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadMeshSystemServer.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadMeshSystemClient.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpolationSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="ModuleStateChangePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
@@ -617,20 +549,8 @@
     <ClInclude Include="SpeedFovAdjustSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
-    <ClInclude Include="LevelInfo.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="LevelInfoLoader.h">
       <Filter>Systems\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="AxisRotate.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AxisRotationSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuBackgroundSceneSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="SpawnExplosionPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
@@ -669,13 +589,10 @@
       <Filter>Components\GFX</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHelper.h">
-      <Filter>Misc</Filter>
+      <Filter>undefined</Filter>
     </ClInclude>
     <ClInclude Include="ScoreRuleHelper.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectionMarker.h">
-      <Filter>Components</Filter>
+      <Filter>undefined</Filter>
     </ClInclude>
     <ClInclude Include="SelectionMarkerSystem.h">
       <Filter>Systems\Gameplay</Filter>
@@ -683,10 +600,6 @@
     <ClInclude Include="SelectionMarkerUpdatePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="ClientStateSystem.h" />
-    <ClInclude Include="LobbySystem.h" />
-    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
-    <ClInclude Include="ServerStateSystem.h" />
     <ClInclude Include="PlayerInfo.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -708,14 +621,6 @@
     <ClInclude Include="FlareGunModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="InterpolationComponent2.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpolationSystem2.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerSystem.h" />
-    <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="AnomalyAcceleratorModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -734,17 +639,11 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
-    <ClInclude Include="ShieldPlaterSystem.h" />
     <ClInclude Include="EmpRocketLauncherModule.h">
       <Filter>Components\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="EmpRocketLancherModuleSystem.h">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
       <Filter>Systems\Network\Server only</Filter>
@@ -752,29 +651,159 @@
     <ClInclude Include="SlotHighlightParticleMakerSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
-    <ClInclude Include="ModuleStatusEffectPacket.h" />
-    <ClInclude Include="ModuleStatusEffectSystem.h" />
-    <ClInclude Include="ModuleVisualEffectBufferSystem.h" />
-    <ClInclude Include="ShipModuleStatsSystem.h" />
     <ClInclude Include="SpriteSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="SettingsSystem.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="GameSettingsInfo.h">
       <Filter>Structs</Filter>
     </ClInclude>
+    <ClInclude Include="ClientStateSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbySystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusEffectPacket.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleVisualEffectBufferSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="NewlyConnectedPlayerPacket.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStateSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlaterSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModuleStatsSystem.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="TempModuleSpawner.h">
+      <Filter>undefined</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotationSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayGameStats.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpRocketLancherModuleSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem2.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformParentHandlerSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotate.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularMovement.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionPointSet.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMove.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityParent.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolate.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientMapping.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent2.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfo.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceRoot.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshOffsetTransform.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkSynced.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemServerComponent.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarker.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticProp.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Vibration.h">
+      <Filter>Components\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h">
+      <Filter>Systems\MISC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
@@ -837,9 +866,6 @@
     </ClCompile>
     <ClCompile Include="SpeedBoosterModule.cpp">
       <Filter>Components\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ConnectionPointSet.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="MinigunModule.cpp">
       <Filter>Components\Modules</Filter>
@@ -952,9 +978,6 @@
     <ClCompile Include="MeshRenderSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="AntTweakBarSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="LightRenderSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
@@ -991,7 +1014,6 @@
     <ClCompile Include="GraphicsRendererSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
     <ClCompile Include="LoadMesh.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
@@ -1001,23 +1023,14 @@
     <ClCompile Include="BodyInitData.cpp">
       <Filter>Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="TransformParentHandlerSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="PositionalSoundSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
     <ClCompile Include="GameStatsSystem.cpp">
       <Filter>Systems\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="ClientInfo.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="ServerClientInfoSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayGameStats.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="SpawnSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
@@ -1031,7 +1044,6 @@
     <ClCompile Include="NetsyncDirectMapperSystem.cpp">
       <Filter>Systems\Network\Client only</Filter>
     </ClCompile>
-    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="MoveShipLightsSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
@@ -1064,9 +1076,6 @@
     </ClCompile>
     <ClCompile Include="LightBlinker.cpp">
       <Filter>Components\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="Vibration.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="MenuItem.cpp">
       <Filter>Components\GUI</Filter>
@@ -1122,17 +1131,11 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Components\States</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlatingSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="CircularMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTriggerPacket.cpp">
       <Filter>Systems\Debugging</Filter>
-    </ClCompile>
-    <ClCompile Include="SpawnPointSet.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="SkeletalAnimationSystem.cpp">
       <Filter>Systems\GFX</Filter>
@@ -1149,21 +1152,6 @@
     <ClCompile Include="LevelHandlerSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
-    <ClCompile Include="LevelPieceRoot.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="GamepadRumbleSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadMeshSystemServer.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadMeshSystemClient.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="InterpolationSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleStateChangePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -1179,17 +1167,8 @@
     <ClCompile Include="SpeedFovAdjustSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
-    <ClCompile Include="LevelInfo.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="LevelInfoLoader.cpp">
       <Filter>Systems\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="AxisRotationSystem.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuBackgroundSceneSystem.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="SpawnExplosionPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
@@ -1228,10 +1207,10 @@
       <Filter>Components\GFX</Filter>
     </ClCompile>
     <ClCompile Include="ModuleHelper.cpp">
-      <Filter>Misc</Filter>
+      <Filter>undefined</Filter>
     </ClCompile>
     <ClCompile Include="ScoreRuleHelper.cpp">
-      <Filter>Misc</Filter>
+      <Filter>undefined</Filter>
     </ClCompile>
     <ClCompile Include="SelectionMarkerSystem.cpp">
       <Filter>Systems\Gameplay</Filter>
@@ -1239,10 +1218,6 @@
     <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="ClientStateSystem.cpp" />
-    <ClCompile Include="LobbySystem.cpp" />
-    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
-    <ClCompile Include="ServerStateSystem.cpp" />
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
@@ -1264,11 +1239,6 @@
     <ClCompile Include="TeslaModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="InterpolationSystem2.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerSystem.cpp" />
-    <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="AnomalyAcceleratorModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
@@ -1284,16 +1254,11 @@
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlaterSystem.cpp" />
     <ClCompile Include="EmpRocketLauncherModule.cpp">
       <Filter>Components\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="EmpRocketLancherModuleSystem.cpp">
-      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
       <Filter>Systems\Network\Server only</Filter>
@@ -1301,18 +1266,113 @@
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
-    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
-    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp" />
-    <ClCompile Include="ShipModuleStatsSystem.cpp" />
     <ClCompile Include="SpriteSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAssemblageAllocator.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbySystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleVisualEffectBufferSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerStateSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModuleStatsSystem.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="TempModuleSpawner.cpp">
+      <Filter>undefined</Filter>
+    </ClCompile>
+    <ClCompile Include="AntTweakBarSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotationSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayGameStats.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem2.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
     <ClCompile Include="SettingsSystem.cpp">
-      <Filter>Systems</Filter>
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformParentHandlerSystem.cpp">
+      <Filter>Systems\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInfo.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionPointSet.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfo.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceRoot.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Components\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="Vibration.cpp">
+      <Filter>Components\MISC</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
 #include "SoundOrientation.h"
 
 AudioListenerSystem::AudioListenerSystem(AudioBackendSystem* p_audioBackend) : 
-	EntitySystem(SystemType::AudioListenerSystem, 2, ComponentType::Transform, 
-	ComponentType::AudioListener)
+	EntitySystem(SystemType::AudioListenerSystem, 3, ComponentType::TAG_MainCamera,
+	ComponentType::Transform, ComponentType::AudioListener)
 {
 	m_audioBackend = p_audioBackend;
 }
