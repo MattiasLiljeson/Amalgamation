@@ -9,28 +9,48 @@ SettingsSystem::~SettingsSystem()
 {
 }
 
-SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /*= "settings.txt" */ )
+SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, string p_file 
+															/* = "settings.txt" */)
 {
 	FileStatus status = FileStatus_OK;
 
 	ifstream inFile;
-	inFile.open( p_filePath );
-
+	inFile.open( p_path+p_file );
+	string temp;
 	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) {
 		status =  FileStatus_FILE_NOT_FOUND;
 	} else {
+		inFile >> temp;
 		inFile >> m_settings.windowed;
+		inFile >> temp;
 		inFile >> m_settings.useHdr;
+		inFile >> temp;
 		inFile >> m_settings.screenHeight;
+		inFile >> temp;
 		inFile >> m_settings.screenWidth;
+		inFile >> temp;
+		inFile >> m_settings.masterVolume;
+		inFile >> temp;
 		inFile >> m_settings.sfxVolume;
+		inFile >> temp;
 		inFile >> m_settings.musicVolume;
+		inFile >> temp;
 		inFile >> m_settings.rumble;
+		inFile >> temp;
 		inFile >> m_settings.playerName;
-		inFile >> m_settings.favouriteIp[0];
-		inFile >> m_settings.favouriteIp[1];
-		inFile >> m_settings.favouriteIp[2];
-		inFile >> m_settings.favouriteIp[3];
+		inFile >> temp;
+		inFile >> m_settings.ip;
+		inFile >> temp;
+		inFile >> m_settings.port;
+		inFile >> temp;
+		inFile >> m_settings.enableTesselation;
+		inFile >> temp;
+		inFile >> m_settings.enableSSAO;
+		inFile >> temp;
+		inFile >> m_settings.enableCheats;
+		inFile >> temp;
+		inFile >> m_settings.enableVSYNC;
+
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
 	}
@@ -41,32 +61,51 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile( string p_filePath /
 }
 
 
-SettingsSystem::FileStatus SettingsSystem::writeSettingsFile( string p_filePath /*= "settings.txt" */ )
+SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, string p_file 
+															 /* = "settings.txt" */)
 {
 	FileStatus status = FileStatus_OK;
 
 	ofstream outFile;
-	outFile.open( p_filePath );
+	outFile.open( p_path + p_file );
 
 	if( checkFileWriteOperation( &outFile ) != FileStatus_OK ) {
-		status =  FileStatus_FILE_NOT_FOUND;
+		status =  FileStatus_FILE_CANT_BE_CREATED;
 	} else {
-		outFile << m_settings.windowed;
-		outFile << m_settings.useHdr;
-		outFile << m_settings.screenHeight;
-		outFile << m_settings.screenWidth;
-		outFile << m_settings.sfxVolume;
-		outFile << m_settings.musicVolume;
-		outFile << m_settings.rumble;
-		outFile << m_settings.playerName;
-		outFile << m_settings.favouriteIp[0];
-		outFile << m_settings.favouriteIp[1];
-		outFile << m_settings.favouriteIp[2];
-		outFile << m_settings.favouriteIp[3];
+		outFile << "Windowed= ";
+		outFile << m_settings.windowed			<< "\n";
+		outFile << "HDRLights= ";
+		outFile << m_settings.useHdr			<< "\n";
+		outFile << "ScreenHeight= ";
+		outFile << m_settings.screenHeight		<< "\n";
+		outFile << "ScreenWidth= ";
+		outFile << m_settings.screenWidth		<< "\n";
+		outFile << "MasterVolume= ";
+		outFile << m_settings.masterVolume		<< "\n";
+		outFile << "SoundEffectVolume= ";
+		outFile << m_settings.sfxVolume			<< "\n";
+		outFile << "MusicVolume= ";
+		outFile << m_settings.musicVolume		<< "\n";
+		outFile << "Rumble= ";
+		outFile << m_settings.rumble			<< "\n";
+		outFile << "PlayerName= ";
+		outFile << m_settings.playerName		<< "\n";
+		outFile << "LastUsedIP= ";
+		outFile << m_settings.ip				<< "\n";
+		outFile << "LastUsedPort= ";
+		outFile << m_settings.port				<< "\n";
+		outFile << "EnableTesselation= ";
+		outFile << m_settings.enableTesselation	<< "\n";
+		outFile << "EnableSSAO= ";
+		outFile << m_settings.enableSSAO		<< "\n";
+		outFile << "EnableCheats= ";
+		outFile << m_settings.enableCheats		<< "\n";
+		outFile << "EnableVSYNC= ";
+		outFile << m_settings.enableVSYNC		<< "\n";
+
 		status = checkFileWriteOperation( &outFile );
 		m_settingsAreSet = true;
 	}
-
 	outFile.close();
 
 	return status;

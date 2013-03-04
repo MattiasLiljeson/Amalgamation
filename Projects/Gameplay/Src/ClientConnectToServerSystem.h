@@ -34,6 +34,7 @@ public:
 	void connectToNetworkAddress();
 	//void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
 
+	void setAddressAndConnect(const std::string& p_address, const std::string& p_port);
 	void setConnectionAddress(const std::string& p_address, const std::string& p_port);
 private:
 	TcpClient* m_tcpClient;

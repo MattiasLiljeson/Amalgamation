@@ -208,14 +208,28 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-			sys->setConnectionAddress(server_address, server_port);
-			m_stateSystem->setQueuedState(GameStates::LOBBY);
+			sys->setAddressAndConnect(server_address, server_port);
 		}
 		else if(values[0] == "start_game")
 		{
 			ChangeStatePacket letsRollPacket;
 			letsRollPacket.m_gameState = GameStates::INITGAME;
 			m_client->sendPacket(letsRollPacket.pack());
+		}
+		else if(values[0] == "host_server"){
+			m_world->requestToHostServer();
+
+			string server_port = p_event.GetParameter<Rocket::Core::String>
+				("server_port", "1337").CString();
+
+			string playerName = p_event.GetParameter<Rocket::Core::String>
+				("player_name", "NotFound").CString();
+			m_client->setPlayerName(playerName);
+
+			auto sys = static_cast<ClientConnectToServerSystem*>(
+				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
 	}
 }

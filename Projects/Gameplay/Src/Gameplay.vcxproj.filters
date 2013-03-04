@@ -34,9 +34,6 @@
     <Filter Include="Systems\Audio">
       <UniqueIdentifier>{17697685-e7f0-41c7-b82a-0934c2c51555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Physics">
-      <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
@@ -109,6 +106,9 @@
     <Filter Include="Systems\Level">
       <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Network\Physics">
+      <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -157,7 +157,7 @@
       <Filter>Systems\Input</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
-      <Filter>Systems\Physics</Filter>
+      <Filter>Systems\Network\Physics</Filter>
     </ClInclude>
     <ClInclude Include="LevelGenSystem.h">
       <Filter>Systems\Level</Filter>
@@ -766,6 +766,10 @@
     <ClInclude Include="SettingsSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="GameSettingsInfo.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -802,7 +806,7 @@
       <Filter>Systems\Input</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Systems\Physics</Filter>
+      <Filter>Systems\Network\Physics</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>

@@ -55,6 +55,7 @@ private:
 
 private:
 	bool m_renderGUI;
+	bool m_renderDebug;
 	int m_wndHeight;
 	int m_wndWidth;
 
