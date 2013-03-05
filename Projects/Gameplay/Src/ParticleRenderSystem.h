@@ -54,11 +54,21 @@ public:
 	virtual RasterizerState::Mode rasterizerStateFromAglRasterizerMode(
 		AglParticleSystemHeader::AglRasterizerMode p_rast);
 
+	int* getDrawnPSCount()
+	{
+		return &drawnPS;
+	}
+
 private:
 	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
 	//void rebuildVertexBuffer( AglParticleSystem* p_particleSystem );
 	bool insertToRenderQue( PsRenderInfo p_renderInfo );
 	void clearRenderQues();
+
+	//Should be moved to a culling system perhaps? //AA
+	bool shouldRender(ParticleSystemAndTexture* p_ps);
+	bool boxPlane(const AglVector3& p_min, const AglVector3& p_max, const AglVector4& p_plane);
+	void calcCameraPlanes();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
@@ -66,5 +76,11 @@ private:
 	vector< PsRenderInfo > m_renderQues
 		[AglParticleSystemHeader::AglBlendMode_CNT]
 		[AglParticleSystemHeader::AglRasterizerMode_CNT];
+
+
+	//Culling system? //AA
+	int drawnPS;
+
+	AglVector4 m_cameraPlanes[6];
 };
 

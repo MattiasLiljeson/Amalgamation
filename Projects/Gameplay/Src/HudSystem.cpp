@@ -47,10 +47,10 @@ void HudSystem::process()
 
 		float screenRatio = 1280 / m_screenSize.x;
 
-		float wingRatio = 311.0f / 563.0f;
+		float wingRatio = 228.0f / 527.0f;
 		AglVector2 wingsize = AglVector2(0.3f, 0.3f*gfx->getAspectRatio() * wingRatio) * screenRatio;
 
-		float timerRatio = 106.0f / 675.0f;
+		float timerRatio = 109.0f / 953.0f;
 		AglVector2 timerSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * timerRatio) * screenRatio;
 
 		m_leftWing = createSprite(AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), "leftwing_HUD.png", wingsize);
@@ -68,10 +68,10 @@ void HudSystem::process()
 			m_screenSize = newSize;
 			float screenRatio = 1280 / m_screenSize.x;
 
-			float wingRatio = 311.0f / 563.0f;
+			float wingRatio = 228.0f / 527.0f;
 			AglVector2 wingsize = AglVector2(0.3f, 0.3f*gfx->getAspectRatio() * wingRatio) * screenRatio;
 
-			float timerRatio = 106.0f / 675.0f;
+			float timerRatio = 109.0f / 953.0f;
 			AglVector2 timerSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * timerRatio) * screenRatio;
 
 			reinitSprite(m_leftWing, AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), wingsize);

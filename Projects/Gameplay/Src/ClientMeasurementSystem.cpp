@@ -2,6 +2,7 @@
 #include <AntTweakBarWrapper.h>
 #include "MeshRenderSystem.h"
 #include "CullingSystem.h"
+#include "ParticleRenderSystem.h"
 
 ClientMeasurementSystem::ClientMeasurementSystem()
 	: EntitySystem( SystemType::ClientMeasurementSystem )
@@ -44,6 +45,8 @@ void ClientMeasurementSystem::initialize()
 	//Culling
 	CullingSystem* cull = static_cast<CullingSystem*>(m_world->getSystem(SystemType::CullingSystem));
 
+	ParticleRenderSystem* psSystem = static_cast<ParticleRenderSystem*>(m_world->getSystem(SystemType::ParticleRenderSystem));
+
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Rendered",
 		TwType::TW_TYPE_UINT32, cull->getRenderedCountPtr(),
@@ -62,6 +65,11 @@ void ClientMeasurementSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Tesselated Meshes",
 		TwType::TW_TYPE_UINT32, cull->getTesselatedCountPtr(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Rendered Particle Systems",
+		TwType::TW_TYPE_INT32, psSystem->getDrawnPSCount(),
 		"group='Culling'" );
 
 	//ES time

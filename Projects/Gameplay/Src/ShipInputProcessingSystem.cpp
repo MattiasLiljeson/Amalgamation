@@ -126,22 +126,25 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	saturate(input.svNegative);
 
 	// edit mode rotate
+	if(m_actionBackend->getStatusByAction(
+		InputActionsBackendSystem::Actions_EDIT_MODE_ACTIVATE_ROTATION) > 0.0)
+	{
+		input.ehPositive = m_actionBackend->getStatusByAction(
+			InputActionsBackendSystem::Actions_EDIT_MODE_RIGHT);
+		saturate(input.ehPositive);
 
-	input.ehPositive = m_actionBackend->getStatusByAction(
-		InputActionsBackendSystem::Actions_EDIT_MODE_RIGHT);
-	saturate(input.ehPositive);
+		input.ehNegative = m_actionBackend->getStatusByAction(
+			InputActionsBackendSystem::Actions_EDIT_MODE_LEFT);
+		saturate(input.ehNegative);
 
-	input.ehNegative = m_actionBackend->getStatusByAction(
-		InputActionsBackendSystem::Actions_EDIT_MODE_LEFT);
-	saturate(input.ehNegative);
+		input.evPositive = m_actionBackend->getStatusByAction(
+			InputActionsBackendSystem::Actions_EDIT_MODE_UP);
+		saturate(input.evPositive);
 
-	input.evPositive = m_actionBackend->getStatusByAction(
-		InputActionsBackendSystem::Actions_EDIT_MODE_UP);
-	saturate(input.evPositive);
-
-	input.evNegative = m_actionBackend->getStatusByAction(
-		InputActionsBackendSystem::Actions_EDIT_MODE_DOWN);
-	saturate(input.evNegative);
+		input.evNegative = m_actionBackend->getStatusByAction(
+			InputActionsBackendSystem::Actions_EDIT_MODE_DOWN);
+		saturate(input.evNegative);
+	}
 
 	// roll
 

@@ -107,10 +107,11 @@ c LevelInfo
 
 
 	# Starting piece of this generator [0 to N-1] where N is the amount of pieces 
-	# above that will be loaded.
-	d i m_startPieceId 				0
+	# above that will be loaded. Specify -1 to randomly select one.
+	d i m_startPieceId 				-1
 
 	# End piece to plug connection points with.
+	# The end plug piece must be specified after all other pieces.
 	d s m_plugPiece 				plugPieceServer.asd
 	d s m_plugModel 				RockD.agl
 

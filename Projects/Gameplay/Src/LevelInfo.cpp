@@ -114,6 +114,8 @@ LevelPieceFileData* LevelInfo::getFileDataFromId( int p_id ) const
 
 LevelPieceFileData* LevelInfo::getStartFileData() const
 {
+	if (m_startPieceId == -1)
+		return getRandomFileData();
 	return m_fileData[m_startPieceId];
 }
 
