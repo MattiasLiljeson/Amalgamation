@@ -21,7 +21,7 @@ void SoundComponent::addAudioHeader(AudioHeader* p_audioHeader){
 	m_sounds.at(p_audioHeader->soundType).push_back(p_audioHeader);
 }
 
-vector<AudioHeader*>* SoundComponent::getAllAudiosByType( AudioHeader::SoundType& p_soundType )
+vector<AudioHeader*>* SoundComponent::getAllAudiosByType( AudioHeader::SoundType p_soundType )
 {
 	return &m_sounds.at(p_soundType);
 }

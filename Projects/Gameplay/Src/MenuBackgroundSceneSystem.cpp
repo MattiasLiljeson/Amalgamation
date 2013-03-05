@@ -129,9 +129,18 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	audioHeader->path = TESTSOUNDEFFECTPATH;
 	audioHeader->queuedPlayingState = AudioHeader::PLAY;
 	audioHeader->playInterval = AudioHeader::TIMERBASED;
-	audioHeader->timerInterval = 5.0f;
-
+	audioHeader->timerInterval = 2.0f;
 	soundComp->addAudioHeader(audioHeader);
+
+	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENTRANGE);
+	audioHeader->file = "Shield_Active_v2.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	audioHeader->maxRange = 80;
+	audioHeader->minRange = 50; 
+	soundComp->addAudioHeader(audioHeader);
+
 	m_ship->addComponent(soundComp);
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(

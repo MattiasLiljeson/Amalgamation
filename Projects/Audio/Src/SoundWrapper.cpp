@@ -246,7 +246,7 @@ bool SoundWrapper::isPlaying( const int soundIndex ){
 }
 
 Sound* SoundWrapper::getSound( int p_index ){
-	return m_activeSounds[p_index];
+	return m_sounds[p_index];
 }
 
 unsigned int SoundWrapper::createSoundFromHeader( const AudioHeader* p_audioHeader ){

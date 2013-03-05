@@ -32,8 +32,8 @@ struct AudioHeader{
 	float timerInterval; // Only used if the play interval is set to TIMERBASED Measured in s
 	float timeSinceLastPlayed; // Only used if the play interval is set to TIMERBASED in s
 	float maxFrequencyOffeset; //Used for Doppler standard 1.0f
-	float maxRange;
-	float minRange;
+	float maxRange; //Used for ambient range
+	float minRange;	//Used to specify a minimum range when the volume is 1.0f
 	float dopplerScalar;
 	float dopplerFactor;
 	unsigned int sourceChannels;

@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AmbientRangeSystem.h" />
     <ClInclude Include="AnomalyAcceleratorModule.h" />
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h" />
@@ -241,7 +240,6 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AmbientRangeSystem.cpp" />
     <ClCompile Include="AnomalyAcceleratorModule.cpp" />
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp" />

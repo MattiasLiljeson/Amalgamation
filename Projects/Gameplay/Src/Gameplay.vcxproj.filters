@@ -801,9 +801,6 @@
     <ClInclude Include="SoundComponent.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AmbientRangeSystem.h">
-      <Filter>Systems\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems\MISC</Filter>
     </ClInclude>
@@ -1378,9 +1375,6 @@
     </ClCompile>
     <ClCompile Include="SoundComponent.cpp">
       <Filter>Components\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="AmbientRangeSystem.cpp">
-      <Filter>Systems\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

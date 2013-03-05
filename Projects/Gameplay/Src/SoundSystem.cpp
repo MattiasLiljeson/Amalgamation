@@ -20,13 +20,11 @@ void SoundSystem::initialize()
 
 void SoundSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	if(p_entities.size()>0){
-		for (unsigned int i = 0; i < p_entities.size(); i++){
+	for (unsigned int i = 0; i < p_entities.size(); i++){
 
-			SoundComponent* soundComp = static_cast<SoundComponent*>
-				(p_entities[i]->getComponent(ComponentType::SoundComponent));
-			updateSoundStatus(soundComp);
-		}
+		SoundComponent* soundComp = static_cast<SoundComponent*>
+			(p_entities[i]->getComponent(ComponentType::SoundComponent));
+		updateSoundStatus(soundComp);
 	}
 }
 
