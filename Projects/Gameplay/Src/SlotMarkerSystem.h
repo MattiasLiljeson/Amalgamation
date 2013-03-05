@@ -23,14 +23,18 @@ private:
 	void set(SlotMarker* p_marker);
 	void unset(SlotMarker* p_marker);
 	void arrangeChildren(SlotMarker* p_marker, bool p_marked);
+	void reinit(int p_slot);
 
 private:
 	Entity* slots[4];
+	AglVector3 positions[4];
 	int m_current;
 
 	AglVector2 m_shipMarkerSize;
 	AglVector2 m_moduleMarkerSize;
 
 	pair<int, string> m_textures[10];
+
+	AglVector2 m_screenSize;
 };
 
