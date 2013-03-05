@@ -267,14 +267,6 @@ void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter, const AudioHeader* p
 	p_emitter->CurveDistanceScaler	= p_audioHeader->maxRange;
 	p_emitter->DopplerScaler		= p_audioHeader->dopplerScalar;
 }
-void SoundFactory::initBuffer( XAUDIO2_BUFFER* p_audioBuffer, 
-							  BasicSoundCreationInfo* p_basicSoundInfo )
-{
-	if (p_basicSoundInfo->loopPlayback)
-		p_audioBuffer->LoopCount = XAUDIO2_LOOP_INFINITE;
-	else
-		p_audioBuffer->LoopCount = p_basicSoundInfo->loopPlayback;
-}
 
 void SoundFactory::initBuffer(XAUDIO2_BUFFER* p_audioBuffer, 
 							  const AudioHeader* p_audioHeader)
@@ -282,6 +274,9 @@ void SoundFactory::initBuffer(XAUDIO2_BUFFER* p_audioBuffer,
 	switch (p_audioHeader->playInterval)
 	{
 	case AudioHeader::ONCE:
+		p_audioBuffer->LoopCount = 1;
+		break;
+	case AudioHeader::TIMERBASED:
 		p_audioBuffer->LoopCount = 1;
 		break;
 	case AudioHeader::TWICE:

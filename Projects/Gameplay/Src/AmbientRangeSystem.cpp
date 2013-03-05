@@ -1,8 +1,10 @@
 #include "AmbientRangeSystem.h"
 
 AmbientRangeSystem::AmbientRangeSystem() : EntitySystem( SystemType::AmbientRangeSystem, 
-														1, 
-														ComponentType::TAG_AmbientRangeSound )
+														3, 
+														ComponentType::TAG_AmbientRangeSound,
+														ComponentType::Transform,
+														ComponentType::SoundComponent)
 {
 
 }

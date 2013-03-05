@@ -115,19 +115,22 @@ void MenuBackgroundSceneSystem::sysEnabled()
 		"space_ship_engine_idle.wav");
 	m_ship->addComponent(soundSoure);
 	*/
+	SoundComponent* soundComp = new SoundComponent();
+
 	AudioHeader* audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
 	audioHeader->file = "space_ship_engine_idle.wav";
 	audioHeader->path = TESTSOUNDEFFECTPATH;
 	audioHeader->queuedPlayingState = AudioHeader::PLAY;
 	audioHeader->playInterval = AudioHeader::FOREVER;
-	SoundComponent* soundComp = new SoundComponent();
 	soundComp->addAudioHeader(audioHeader);
 
 	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
-	audioHeader->file = "Mine_Blip.wav";
+	audioHeader->file = "Mine_Blip_v2.wav";
 	audioHeader->path = TESTSOUNDEFFECTPATH;
 	audioHeader->queuedPlayingState = AudioHeader::PLAY;
-	audioHeader->playInterval = AudioHeader::FOREVER;
+	audioHeader->playInterval = AudioHeader::TIMERBASED;
+	audioHeader->timerInterval = 5.0f;
+
 	soundComp->addAudioHeader(audioHeader);
 	m_ship->addComponent(soundComp);
 

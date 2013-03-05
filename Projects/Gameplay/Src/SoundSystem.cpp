@@ -65,7 +65,19 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 	for(unsigned int i = 0; i < AudioHeader::SoundType::NUMSOUNDTYPES; i++){
 		for(unsigned int j = 0; j < p_soundComponent->m_sounds[i].size(); j++){
 			AudioHeader* header = p_soundComponent->m_sounds[i][j];
-			if( header->playingState != header->queuedPlayingState){
+
+
+			if(header->playInterval == AudioHeader::TIMERBASED){
+				header->timeSinceLastPlayed += m_world->getDelta();
+
+				if(header->timeSinceLastPlayed >= header->timerInterval){
+					m_audioBackend->changeAudioInstruction(header->soundIndex, 
+					AudioHeader::PlayState::RESTART);
+					header->timeSinceLastPlayed = 0;
+				}
+			}
+
+			else if( header->playingState != header->queuedPlayingState ){
 				header->playingState = header->queuedPlayingState;
 				m_audioBackend->changeAudioInstruction(header->soundIndex, 
 					header->playingState);

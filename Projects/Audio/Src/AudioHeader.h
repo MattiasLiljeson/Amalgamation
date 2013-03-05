@@ -18,7 +18,7 @@
 
 struct AudioHeader{
 	enum PlayInterval{
-		ONCE, TWICE, FOREVER
+		ONCE, TWICE, FOREVER, TIMERBASED
 	};
 
 	enum PlayState{
@@ -28,6 +28,9 @@ struct AudioHeader{
 	enum SoundType{
 		AMBIENT, AMBIENTRANGE, POSITIONALSOUND, NUMSOUNDTYPES
 	};
+
+	float timerInterval; // Only used if the play interval is set to TIMERBASED Measured in s
+	float timeSinceLastPlayed; // Only used if the play interval is set to TIMERBASED in s
 	float maxFrequencyOffeset; //Used for Doppler standard 1.0f
 	float maxRange;
 	float minRange;
@@ -47,6 +50,8 @@ struct AudioHeader{
 	std::string file;
 
 	AudioHeader(const SoundType& p_soundType){
+		timerInterval = 0;
+		timeSinceLastPlayed = 0;
 		maxRange = 1.0f;
 		minRange = -1;
 		maxFrequencyOffeset = 1.0f;

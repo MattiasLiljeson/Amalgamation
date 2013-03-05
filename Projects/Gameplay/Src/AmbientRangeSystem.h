@@ -20,6 +20,4 @@ public:
 	virtual ~AmbientRangeSystem();
 
 	void processEntities( const vector<Entity*>& p_entities );
-
-private:
 };
