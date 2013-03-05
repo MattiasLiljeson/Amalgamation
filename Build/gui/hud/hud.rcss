@@ -6,19 +6,16 @@ body{
 	font-weight: bold;
 	color: white;
 	
-	margin-top: 7%;
-	height: 35px;
-	width: 99.8%;
-	border-style: solid;
-	border-width: 1px;
-	border-color: white;
-	background: rgba(20,20,20,40);
+	height: 100%;
+	width: 100%;
+
+	background: rgba(0,20,0,40);
 }
 
 div.elements{
+	width: 30%;
+	height: 120px;	
 	float: left;
-	width: 32%;
-	height: 100%;
 }
 
 div#context{
@@ -26,8 +23,32 @@ div#context{
 }
 
 div#scoreElem{ 
+	background: rgba(255,0,0,40);
 }
 div#timerElem{
+	background: rgba(0,255,0,40);
+	width: 40%;
 }
-div#mappingElem{
+div#massElem{
+	background: rgba(0,0,255,40);
+}
+
+
+div#leftwing{ 
+	background-decorator: image;
+	background-image: ../../Assets/Textures/leftwing_HUD.png;
+	width: 264px;
+	height: 114px;
+}
+div#rightwing{
+	background-decorator: image;
+	background-image: ../../Assets/Textures/rightwing_HUD.png;
+	width: 263px;
+	height: 114px;
+}
+div#timer{
+	background-decorator: image;
+	background-image: ../../Assets/Textures/timer_HUD.png;
+	width: 477px;
+	height: 55px;
 }

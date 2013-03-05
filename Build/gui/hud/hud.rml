@@ -4,27 +4,25 @@
 	</head>
 	<body id="hudelements" class="content">
 		<div id="context">
-			<!--<div class="elements" id="mappingElem">
-				MappedKeys
-				<p id="mapping">
-				</p>
-			</div>-->			
 			<div class="elements" id="scoreElem">
 				<!--Score:-->
-				<p id="score">
-				</p>
-			</div>
+				<div id="leftwing">Score</div>
+				<p id="score"></p>				
+			</div>			
 			<div class="elements" id="timerElem">
 				<!--Time Remaining:-->
+				<div id="timer">TIMER</div>
 				<p id="playername"></p>
 				<p id="time"></p>
 				<p id="servername"></p>
 			</div>
 			<div class="elements" id="massElem">
 				<!--Mass:-->
+				<div id="rightwing">MASS</div>
 				<p id="mass"></p>
 				<p id="boost"></p>
-			</div>
+			</div>			
+
 		</div>
 	</body>
 </rml>

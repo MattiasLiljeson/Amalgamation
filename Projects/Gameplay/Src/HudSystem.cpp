@@ -26,6 +26,7 @@ void HudSystem::initialize()
 {
 	m_hudIndex = m_backend->loadDocument( GUI_HUD_PATH.c_str(), "hud" );
 
+	m_backend->showDocument(m_hudIndex);
 }
 
 void HudSystem::process()
@@ -48,7 +49,7 @@ void HudSystem::process()
 		float screenRatio = 1280 / m_screenSize.x;
 
 		float wingRatio = 228.0f / 527.0f;
-		AglVector2 wingsize = AglVector2(0.3f, 0.3f*gfx->getAspectRatio() * wingRatio) * screenRatio;
+		AglVector2 wingsize = AglVector2(1.0f, 1.0f*gfx->getAspectRatio() * wingRatio) * screenRatio;
 
 		float timerRatio = 109.0f / 953.0f;
 		AglVector2 timerSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * timerRatio) * screenRatio;
