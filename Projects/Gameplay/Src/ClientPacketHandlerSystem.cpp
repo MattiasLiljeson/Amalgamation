@@ -642,11 +642,16 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
-					entity->addComponent(ComponentType::PositionalSoundSource,
-						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-						true, 1.0f));
-					entity->applyComponentChanges();
+					Component* positionalSound = entity->getComponent(
+						ComponentType::PositionalSoundSource);
+					if(positionalSound != NULL)
+					{
+						entity->addComponent(ComponentType::PositionalSoundSource,
+							new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+							true, 1.0f));
+						entity->applyComponentChanges();
+					}
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
