@@ -9,7 +9,6 @@ DamageComponent::DamageComponent() : Component( ComponentType::DamageComponent )
 	m_hitMult = 0.01f;
 	m_dmgParticleSystemIdx = -1;
 	m_hitParticleSystemIdx = -1;
-
 }
 
 DamageComponent::~DamageComponent()

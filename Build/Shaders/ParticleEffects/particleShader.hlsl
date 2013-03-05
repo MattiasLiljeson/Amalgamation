@@ -48,7 +48,23 @@ Particle VS(Particle vIn)
 [maxvertexcount(4)]
 void GS(point Particle gIn[1], 
 			inout TriangleStream<GS_OUT> triStream)
-{		
+{	
+	float opacity;
+	if (gIn[0].Age < fadeIn) //Fade in
+		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
+	else if (gIn[0].Age > fadeOut)//Fade out
+		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);
+	else
+		opacity = 1.0f;
+	
+	opacity *= maxOpacity;
+	opacity *= color.w;
+
+	const float epsilon = 0.01;
+	if( opacity < epsilon ) {
+		return;
+	}
+
 	float4 position = float4( gIn[0].Position.xyz, 1.0 );
 	if( particleSpace == 1 ) // 1 = LOCAL
 	{ 
@@ -118,25 +134,11 @@ void GS(point Particle gIn[1],
 	v[2] = float4(-halfWidth, +halfHeight, 0.0f, 1.0f);
 	v[3] = float4(+halfWidth, +halfHeight, 0.0f, 1.0f);
 	float2 t[4];
-//	t[0] = float2(1.0f, 1.0f);
-//	t[1] = float2(0.0f, 1.0f);
-//	t[2] = float2(1.0f, 0.0f);
-//	t[3] = float2(0.0f, 0.0f);
 	t[0] = float2(uvCropRect.z, uvCropRect.w);
 	t[1] = float2(uvCropRect.x, uvCropRect.w);
 	t[2] = float2(uvCropRect.z, uvCropRect.y);
 	t[3] = float2(uvCropRect.x, uvCropRect.y);
 	
-	float opacity;
-	if (gIn[0].Age < fadeIn) //Fade in
-		opacity = smoothstep(0.0f, 1.0f, gIn[0].Age / fadeIn); 
-	else if (gIn[0].Age > fadeOut)//Fade out
-		opacity = (particleMaxAge - gIn[0].Age) / (particleMaxAge - fadeOut);
-	else
-		opacity = 1.0f;
-	
-	opacity *= maxOpacity;
-	opacity *= color.w;
 	GS_OUT gOut;
 	[unroll]
 	for(int i = 0; i < 4; ++i)
