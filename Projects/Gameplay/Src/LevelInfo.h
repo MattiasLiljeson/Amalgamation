@@ -2,6 +2,8 @@
 
 #include <Component.h>
 #include <ComponentFactory.h>
+#include <Globals.h>
+#include <string>
 
 struct LevelPieceFileData;
 // =======================================================================================
@@ -32,14 +34,17 @@ public:
 
 	int		getBranchCount() const;
 	bool	doRandomStartRotation() const;
-
+	int		getLevelSize(int p_playerCount) const;
 private:
 	void addWeightData(LevelPieceFileData* p_fromFileData);
+	void setLevelSize(string p_fromData);
 
 private:
 	vector<LevelPieceFileData*> m_fileData;
 	vector<int>					m_weightData;
 	LevelPieceFileData*			m_endPlug;
+	
+	int		m_levelSize[MAXPLAYERS];
 
 	int		m_branchCount;
 	bool	m_randomStartRotation;

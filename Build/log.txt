@@ -1,5 +1,356 @@
-Texture file not found, reverting to fallback texture. Assets/Textures/hit.pngSERVER: Changed to result state!
-SERVER: Not handled(Sent All Packet): 20
-SERVER: Not handled(Sent All Packet): 26
-CLIENT: Changed to results!
-SERVER: Changed to lobby state!
+Texture file not found, reverting to fallback texture. Assets/Textures/hit.png
+MineLayer constructed in 0 seconds.
+
+ServerTeslaCoil constructed in 0 seconds.
+Module spawned at position 41.9921 618.221 693.222
+
+MineWeaponFinal.agl loaded in 0 seconds.
+
+ClientTeslaCoil constructed in 0 seconds.
+
+placeholder_module.agl loaded in 0 seconds.
+
+Shield constructed in 0 seconds.
+Module spawned at position -109.743 143.277 942.181
+
+Shield constructed in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+shield_plate.agl loaded in 0 seconds.
+
+ServerAnomalyAccelerator constructed in 0 seconds.
+Module spawned at position -432.239 226.189 -192.439
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+ServerAnomalyAccelerator constructed in 0 seconds.
+Module spawned at position 72.4463 -593.323 318.344
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+Module spawned at position 293.441 574.909 705.593
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position -679.378 28.4949 276.427
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position 10.8404 -37.5387 -213.171
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position 716.551 84.7305 248.735
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position 10.8408 -341.226 398.182
+
+MineLayer constructed in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+Module spawned at position 4.1609 64.3783 -411.499
+
+MineLayer constructed in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+Module spawned at position 10.8408 32.0193 734.473
+
+MineLayer constructed in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+Module spawned at position 10.8408 -374.34 157.658
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position 466.138 508.995 76.6163
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position -452.726 318.359 634.919
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+
+ServerAnomalyAccelerator constructed in 0 seconds.
+Module spawned at position 10.8408 270.664 779.158
+
+ClientAnomalyAccelerator constructed in 0 seconds.
+
+shield_module.agl loaded in 0 seconds.
+
+ServerTeslaCoil constructed in 0 seconds.
+Module spawned at position 10.8404 209.306 -257.895
+
+ClientTeslaCoil constructed in 0 seconds.
+
+placeholder_module.agl loaded in 0 seconds.
+Module spawned at position 177.658 226.189 -192.439
+
+SpeedBooster constructed in 0 seconds.
+
+speed_booster.agl loaded in 0 seconds.
+Module spawned at position 4.1609 705.628 205.197
+
+RocketLauncher constructed in 0 seconds.
+
+rocket_launcher.agl loaded in 0 seconds.
+Module spawned at position 77.7858 497.941 -215
+
+MineLayer constructed in 0 seconds.
+
+MineWeaponFinal.agl loaded in 0 seconds.
+Module spawned at position -613.41 8.65965 592.098
+
+ClientMinigun constructed in 0 seconds.
+
+MinigunAnim.agl loaded in 0 seconds.

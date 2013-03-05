@@ -121,6 +121,7 @@
 #include <SpeedFovAdjustSystem.h>
 #include <SpriteSystem.h>
 #include <SlotMarkerSystem.h>
+#include <TeslaEffectSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 
@@ -461,6 +462,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
 	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
 
 	m_world->initialize();
 

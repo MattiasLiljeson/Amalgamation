@@ -78,13 +78,18 @@ public:
 	void createExplosion(const SpawnExplosionPacket& p_packet);
 
 public:
+	// Tesla coil
+	Entity* createTeslaCoilModuleClient(EntityCreationPacket p_packet);
+	Entity* createTeslaCoilModuleServer(EntityCreationPacket p_packet);
+	Entity* createTeslaEffectPieceClient(AglVector3 p_forwardScale,
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition);
+
 	// Anomaly accelerator
 	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);
 	Entity* createAnomalyModuleServer(EntityCreationPacket p_packet);
 	Entity* createAnomalyBombClient(EntityCreationPacket p_packet);
 	Entity* createAnomalyBombServer(Transform* p_transform,
 		AglVector3 p_moduleVelocity, ShipModule* p_module);
-
 	Entity* createAnomalyPieces(int p_parentIndex);
 
 	AglVector4 getPlayersFirstGradientLevel() const;
@@ -139,7 +144,6 @@ private:
 
 	void createHighlightParticleEmitter( ParticleSystemsComponent* p_emitters,
 		AglVector3 p_spawnPosition, AglVector3 p_spawnDirection, int p_desiredIndex );
-
 
 private:
 	map<string, Recipe*> m_entityRecipes;

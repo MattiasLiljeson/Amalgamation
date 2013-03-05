@@ -1,20 +1,29 @@
 #pragma once
-#include <EntitySystem.h>
-#include "ShipModule.h"
+#include "Packetizer.h"
 // =======================================================================================
-// ShipModulesTrackerSystem
+// TeslaHitPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # ShipModulesTrackerSystem
+/// # TeslaHitPacket
 /// Detailed description...
-/// Created on: 31-1-2013 
+/// Created on: 1-3-2013 
 ///---------------------------------------------------------------------------------------
-class ShipModulesTrackerSystem: public EntitySystem
+class TeslaHitPacket: public Packetizer
 {
 public:
-	ShipModulesTrackerSystem();
-	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
+	TeslaHitPacket();
+
+	Packet pack() final;
+	void unpack(Packet& p_packet) final;
+
+public:
+	static const int NUM_TESLA_HITS_MAX = 10;
+
+	unsigned char numberOfHits;
+	int identitySource;
+	int identitiesHit[NUM_TESLA_HITS_MAX];
+
 };

@@ -84,6 +84,7 @@ public:	//Enums
 		Gradient,
 		SpeedBuffer,
 		AnomalyAcceleratorModule,
+		TeslaCoilModule,
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
 		DamageComponent,
@@ -116,10 +117,11 @@ public:	//Enums
 		BoundingSphere,
 		BoundingBox,
 		SelectionMarker,
-		GravityMineEffectPiece,
 		Sprite,
 		SlotMarker,
 		SlotMarkerSprite,
+		AnomalyBombEffectPiece,
+		TeslaEffectPiece,
 		NUM_COMPONENT_TYPES
 	};
 

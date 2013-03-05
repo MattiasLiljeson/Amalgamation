@@ -696,13 +696,7 @@
     <ClInclude Include="HighlightEntityPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="TeslaModule.h">
-      <Filter>Components\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="EmpModule.h">
-      <Filter>Components\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="GravityBombModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
     <ClInclude Include="FlareGunModule.h">
@@ -797,6 +791,21 @@
     </ClInclude>
     <ClInclude Include="ShipModuleStatsSystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaHitPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1283,13 +1292,7 @@
     <ClCompile Include="EmpModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="GravityBombModule.cpp">
-      <Filter>Components\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="FlareGunModule.cpp">
-      <Filter>Components\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="TeslaModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
     <ClCompile Include="InterpolationSystem2.cpp">
@@ -1365,6 +1368,21 @@
     </ClCompile>
     <ClCompile Include="ShipModuleStatsSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectPiece.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaHitPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

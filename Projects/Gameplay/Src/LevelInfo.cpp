@@ -1,6 +1,7 @@
 #include "LevelInfo.h"
 #include "LevelPieceFileData.h"
 #include <random>
+#include <sstream>
 
 ComponentRegister<LevelInfo> LevelInfo::s_reg("LevelInfo");
 
@@ -11,6 +12,8 @@ LevelInfo::LevelInfo()
 	m_startPieceId			= -1;
 	m_randomStartRotation	= false;
 	m_endPlug				= NULL;
+
+	memset(m_levelSize, 0, sizeof(m_levelSize));
 }
 
 LevelInfo::~LevelInfo()
@@ -77,6 +80,12 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getDataAsString(&m_endPlug->modelFileName);
 		}
+		else if (p_initData[i].dataName == "m_levelSize")
+		{
+			string data;
+			p_initData[i].getDataAsString(&data);
+			setLevelSize(data);
+		}
 	}
 	if (m_endPlug)
 	{
@@ -128,6 +137,23 @@ LevelPieceFileData* LevelInfo::getEndPlugFileData() const
 {
 	return m_endPlug;
 }
+
+void LevelInfo::setLevelSize(string p_fromData )
+{
+	int nrOfPlayers, size;
+	char waste;
+	stringstream stream(p_fromData);
+	stream >> nrOfPlayers >> waste >> size;
+
+	m_levelSize[nrOfPlayers-1] = size;
+}
+
+int LevelInfo::getLevelSize( int p_playerCount ) const
+{
+	return m_levelSize[p_playerCount-1];
+}
+
+
 
 
 

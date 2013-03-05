@@ -101,6 +101,8 @@
 #include <TcpClient.h>
 #include <ToString.h>
 #include "SlotMarkerSystem.h"
+#include "TeslaHitPacket.h"
+#include "TeslaEffectSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -993,6 +995,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 		else if( packetType == (char)PacketType::HitIndicatorPacket )
 		{
 			handleHitIndicationPacket( packet );
+		}
+		else if(packetType == (char)PacketType::TeslaHitPacket)
+		{
+			TeslaHitPacket hitPacket;
+			hitPacket.unpack(packet);
+			static_cast<TeslaEffectSystem*>(m_world->getSystem(
+				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
+				hitPacket.identitiesHit, hitPacket.numberOfHits);
 		}
 		else
 		{

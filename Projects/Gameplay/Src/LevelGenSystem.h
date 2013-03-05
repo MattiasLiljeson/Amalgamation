@@ -39,12 +39,16 @@ public:
 	void clearGeneratedData();
 	int getGeneratedPiecesCount() const;
 
-	void run();
+	void resetState();
+
+	void generateLevel(int p_nrOfPlayers);
 
 	void createLevelEntities();
 	const AglVector3& getWorldMin() const;
 	const AglVector3& getWorldMax() const;
 	vector<LevelPiece*> getGeneratedPieces() const;
+
+	bool isLevelGenerated() const;
 protected:
 
 private:
@@ -62,6 +66,8 @@ private:
 	void generatePiecesOnPiece(LevelPiece* p_targetPiece, 
 								vector<LevelPiece*>& out_pieces, int p_generation);
 
+	bool tryConnectPieces(LevelPiece* p_target, LevelPiece* p_newPiece, int p_slot);
+
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
 	void addEndPlugs(LevelPiece* p_atPiece);
@@ -72,17 +78,28 @@ private:
 	virtual void inserted( Entity* p_entity );
 	virtual void removed( Entity* p_entity );
 
+	void addResource(ModelResource* p_modelResource);
+	bool testLevelMaxSizeHit();
+
 	EntityFactory*	m_entityFactory;
 	LevelInfo* m_levelInfo; // This is a component, be cautious!
 
 	vector<ModelResource*>	m_modelResources;
 	ModelResource*			m_endPlugModelResource;
-
+	vector<int>				m_sortedResourceIds;	// Contains a list of indices of
+													// model resources, sorted in
+													// size, with the highest first.
+	
 	vector<LevelPiece*> m_generatedPieces;
 
-	TcpServer* m_server;
-	bool m_readyToRun;
-	bool m_hasGeneratedLevel;
+	TcpServer*	m_server;
+	bool		m_readyToRun;
+	bool		m_hasGeneratedLevel;
+	int			m_nrOfPlayers;
+	int			m_levelMaxSize; // Max size, specified based on the number of players.
+	int			m_currentLevelSize;
+	bool		m_useLevelMaxSize;
+	bool		m_hasHitLevelMaxSize;
 
 	AglMatrix m_startTransform;
 
