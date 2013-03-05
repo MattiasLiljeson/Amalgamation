@@ -25,6 +25,6 @@ public:
 	~SoundComponent();
 	void addAudioHeader(AudioHeader* p_audioHeader);
 	vector<AudioHeader*>* getAllAudiosByType(AudioHeader::SoundType& p_soundType);
-private:
+public:
 	vector<vector<AudioHeader*>> m_sounds;
 };

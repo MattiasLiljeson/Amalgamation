@@ -48,7 +48,6 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
     <ClInclude Include="AudioInfo.h" />

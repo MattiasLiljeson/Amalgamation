@@ -1,12 +1,10 @@
 #include "Sound.h"
 
 
-Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer, 
-			 float p_volume/* =1.0f */)
+Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer)
 {
 	m_sourceVoice = p_sourceVoice;
 	m_buffer = p_buffer;
-	m_volume = p_volume;
 
 	m_left	= 0;
 	m_right = 0;
@@ -16,11 +14,7 @@ Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer,
 	if(FAILED (hr))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
-	m_sourceVoice->SetVolume(m_volume);
 	m_sourceState = new XAUDIO2_VOICE_STATE();
-
-	// NOTE: (Johan) Careful!
-//	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 }
 
 Sound::~Sound()

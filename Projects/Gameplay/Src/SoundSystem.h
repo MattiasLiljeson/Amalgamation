@@ -2,6 +2,7 @@
 #include <EntitySystem.h>
 #include "AudioBackendSystem.h"
 
+class SoundComponent;
 // =======================================================================================
 //                                      SoundSystem
 // =======================================================================================
@@ -20,7 +21,17 @@ public:
 	SoundSystem(AudioBackendSystem* p_audioBackend);
 	virtual ~SoundSystem();
 
+	void initialize();
+
 	void processEntities( const vector<Entity*>& p_entities );
+
+	void updateSoundStatus(const SoundComponent* p_soundComponent);
+
+	void inserted( Entity* p_entity );
+
+	void removed( Entity* p_entity );
+
+
 private:
 	AudioBackendSystem* m_audioBackend;
 };

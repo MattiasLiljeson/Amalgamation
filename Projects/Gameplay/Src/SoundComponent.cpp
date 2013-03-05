@@ -3,6 +3,10 @@
 
 SoundComponent::SoundComponent() : Component(ComponentType::SoundComponent)
 {
+	for (unsigned int i=0; i < AudioHeader::SoundType::NUMSOUNDTYPES; i++){
+		vector<AudioHeader*> audioVector;
+		m_sounds.push_back(audioVector);
+	}
 }
 
 SoundComponent::~SoundComponent()

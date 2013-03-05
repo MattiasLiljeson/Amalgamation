@@ -792,7 +792,6 @@
     <ClInclude Include="Vibration.h">
       <Filter>Components\MISC</Filter>
     </ClInclude>
-    <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h">
       <Filter>Systems\MISC</Filter>
     </ClInclude>
@@ -804,6 +803,9 @@
     </ClInclude>
     <ClInclude Include="AmbientRangeSystem.h">
       <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h">
+      <Filter>Systems\MISC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

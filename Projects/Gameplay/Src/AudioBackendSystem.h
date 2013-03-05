@@ -4,6 +4,7 @@
 #include <BasicSoundCreationInfo.h>
 #include <SoundEnums.h>
 #include "EntitySystem.h"
+#include <AudioHeader.h>
 
 class SoundWrapper;
 
@@ -33,8 +34,8 @@ public:
 	/// \param p_position
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void playPositionalSoundEffect(string p_path, string p_filename,
-		AglVector3 p_position);
+	//void playPositionalSoundEffect(string p_path, string p_filename,
+	//	AglVector3 p_position);
 
 	///-----------------------------------------------------------------------------------
 	/// Play a simple sound effect without position. The effect cannot be altered after
@@ -43,24 +44,19 @@ public:
 	/// \param p_filename
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void playSoundEffect(string p_path, string p_filename);
+	//void playSoundEffect(string p_path, string p_filename);
 
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
-	int createAmbientSound(BasicSoundCreationInfo* p_info);
-	int createPositionalSound(BasicSoundCreationInfo* p_info,
-		PositionalSoundCreationInfo* p_positionalInfo );
-	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
+	//int createAmbientSound(BasicSoundCreationInfo* p_info);
+	//int createPositionalSound(BasicSoundCreationInfo* p_info,
+	//	PositionalSoundCreationInfo* p_positionalInfo );
+	void changeAudioInstruction(unsigned int p_index, 
+		const AudioHeader::PlayState& p_instruction);
 	void updateListenerVolume(float p_volume);
 	void updateOutputMatrix(int p_index);
 	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
 	string m_label;
-	static AudioBackendSystem* m_selfPointer;
-private:
-	/************************************************************************/
-	/* DEBUG FUNCTIONS ONLY! */
-	/************************************************************************/
-	static void TW_CALL stopOrPlaySound(void* p_clientData);
 };

@@ -136,6 +136,7 @@ using namespace std;
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
 #include <PlayerSystem.h>
+#include "../../Gameplay/Src/SoundSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -411,6 +412,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( audioBackend );
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
+	m_world->setSystem( new SoundSystem(audioBackend) );
 
 	/************************************************************************/
 	/* Gameplay																*/

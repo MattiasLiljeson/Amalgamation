@@ -646,9 +646,9 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
 	*/
 	m_world->addEntity(entity);
-	static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
-		playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
-		p_packet.translation);
+	//static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
+	//	playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
+	//	p_packet.translation);
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)

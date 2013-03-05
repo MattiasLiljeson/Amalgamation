@@ -21,7 +21,7 @@ class PositionalSound : public Sound
 	
 public:
 	PositionalSound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer,
-		const PositionalSoundInfo& p_info, float p_volume=1.0f);
+		const PositionalSoundInfo& p_info);
 	virtual ~PositionalSound();
 	X3DAUDIO_EMITTER	getEmitter();
 	void				setPosition(const AglVector3& p_newPos );

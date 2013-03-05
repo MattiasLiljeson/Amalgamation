@@ -613,9 +613,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-					spawnSoundPacket.position);
+	//			audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+	//				SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+	//				spawnSoundPacket.position);
 			}
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
@@ -643,8 +643,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				// Short ambient sound effect.
 				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
-				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+				//audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+				//	SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
 			}
 		}
 		else if(packetType == (char)PacketType::RemoveSoundEffect)

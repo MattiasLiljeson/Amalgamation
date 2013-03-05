@@ -26,18 +26,6 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 
 void MenuBackgroundSceneSystem::process()
 {
-
-	MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
-	Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
-	AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
-
-	xPos = transform->getTranslation().x;
-
-	xPos += m_world->getDelta()*2;
-
-	transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
-		transform->getTranslation().z) );
-
 	SoundComponent* soundSource = static_cast<SoundComponent*>
 		(m_ship->getComponent(ComponentType::SoundComponent));
 
@@ -68,6 +56,7 @@ void MenuBackgroundSceneSystem::process()
 				+ rtPositive;
 			double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
 				+ rtNegative;
+
 			if(deltaPositive > 0.0)
 			{
 				m_deltaRotation -= (float)deltaPositive;
@@ -76,6 +65,19 @@ void MenuBackgroundSceneSystem::process()
 			{
 				m_deltaRotation += (float)deltaNegative;
 			}
+
+			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
+			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
+			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
+
+			xPos = transform->getTranslation().x;
+
+			xPos += m_world->getDelta() * 20 * m_deltaRotation;
+
+			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
+				transform->getTranslation().z) );
+
+
 		}
 		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
 		if(rotate != NULL)
@@ -113,6 +115,17 @@ void MenuBackgroundSceneSystem::sysEnabled()
 		"space_ship_engine_idle.wav");
 	m_ship->addComponent(soundSoure);
 	*/
+	AudioHeader* audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
+	audioHeader->file = "space_ship_engine_idle.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	SoundComponent* soundComp = new SoundComponent();
+	soundComp->addAudioHeader(audioHeader);
+
+	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
+
+	m_ship->addComponent(soundComp);
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),

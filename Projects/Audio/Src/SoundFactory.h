@@ -11,6 +11,7 @@
 #include "PositionalSoundCreationInfo.h"
 #include <ResourceManager.h>
 #include "SoundBufferAndHeader.h"
+#include "AudioHeader.h"
 
 // =======================================================================================
 //                                      SoundFactory
@@ -36,7 +37,7 @@ public:
 	/// \param p_flePath
 	/// \return Sound*
 	///-----------------------------------------------------------------------------------
-	Sound* createAmbientSound(BasicSoundCreationInfo* p_info);
+	//Sound* createAmbientSound(BasicSoundCreationInfo* p_info);
 
 	///-----------------------------------------------------------------------------------
 	/// Create an ambient sound effects that deletes itself after playback is done.
@@ -45,8 +46,8 @@ public:
 	/// \param p_positionalSounds
 	/// \return Sound*
 	///-----------------------------------------------------------------------------------
-	Sound* createAmbientSoundEffect(BasicSoundCreationInfo* p_info, int p_soundIndex,
-		vector<Sound*>* p_sounds);
+	//Sound* createAmbientSoundEffect(BasicSoundCreationInfo* p_info, int p_soundIndex,
+	//	vector<Sound*>* p_sounds);
 		
 
 	///-----------------------------------------------------------------------------------
@@ -55,8 +56,8 @@ public:
 	/// \param p_positionalInfo
 	/// \return PositionalSound*
 	///-----------------------------------------------------------------------------------
-	PositionalSound* createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
-		PositionalSoundCreationInfo* p_positionalInfo);
+	//PositionalSound* createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+	//	PositionalSoundCreationInfo* p_positionalInfo);
 
 	///-----------------------------------------------------------------------------------
 	/// Creates a 3D positional sound-effect that deletes itself after playback is done.
@@ -66,12 +67,16 @@ public:
 	/// \param p_positionalSounds
 	/// \return PositionalSound*
 	///-----------------------------------------------------------------------------------
-	PositionalSound* createPositionalSoundEffect(BasicSoundCreationInfo* p_basicSoundInfo, 
-		PositionalSoundCreationInfo* p_positionalInfo, int p_soundIndex,
-		vector<Sound*>* p_positionalSounds);
+	//PositionalSound* createPositionalSoundEffect(BasicSoundCreationInfo* p_basicSoundInfo, 
+	//	PositionalSoundCreationInfo* p_positionalInfo, int p_soundIndex,
+	//	vector<Sound*>* p_positionalSounds);
+
+	Sound* createSoundFromHeader(const AudioHeader* p_audioHeader);
 private:
 	void createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
-		WAVEFORMATEX* p_waveFormatEx);
+		WAVEFORMATEX* p_waveFormatEx);	
+	void createSoundBuffer(const AudioHeader* p_audioHeader, 
+		SoundBufferAndHeader* p_soundBuffer);
 	IXAudio2SourceVoice* createSourceVoice(XAUDIO2_BUFFER& p_buffer,
 		WAVEFORMATEX& p_waveFormatEx, IXAudio2VoiceCallback* p_callback = NULL,
 		float maxFreqOffset=1.0f);
@@ -79,14 +84,17 @@ private:
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);
 	void readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWORD bufferOffset);
-	void initBuffer(XAUDIO2_BUFFER* p_audioBuffer, BasicSoundCreationInfo* p_basicSoundInfo);
+	void initBuffer(XAUDIO2_BUFFER* p_audioBuffer, 
+		BasicSoundCreationInfo* p_basicSoundInfo);
+	void initBuffer(XAUDIO2_BUFFER* p_audioBuffer, const AudioHeader* p_audioHeader);
 	void initFile(const char* p_filePath);
 	void initEmitter(X3DAUDIO_EMITTER* p_emitter, SoundOrientation p_soundOrientation);
+	void initEmitter(X3DAUDIO_EMITTER* p_emitter, const AudioHeader* p_audioHeader);
 	void initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_destChannels);
-
+	void initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, unsigned int p_destChannels,
+		const AudioHeader* p_audioHeader);
 private:
 	IXAudio2* m_soundDevice;
 	HANDLE	m_file; ///< m_file is always used when loading sounds from file
 	ResourceManager<SoundBufferAndHeader> m_soundBufferManager;
-	vector<IXAudio2VoiceCallback*> m_addedCallbacks;
 };
