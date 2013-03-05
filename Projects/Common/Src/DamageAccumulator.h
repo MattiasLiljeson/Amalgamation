@@ -11,6 +11,7 @@ struct DamageAccumulator
 	{
 		reset();
 		latestPerp = -1;
+		victim = -1;
 	}
 
 	void reset() 
@@ -26,4 +27,5 @@ struct DamageAccumulator
 
 	float accumulatedDamage;
 	int latestPerp;
+	int victim;
 };

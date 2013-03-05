@@ -75,12 +75,23 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 	uint3 index;
 	index.xy = p_input.position.xy;
 	index.z = 0;
-	float4 normalColor	= gNormalMap.Load( index );	
 	float depth = gDepth.Load( index ).x; 
 
-	float3 normalVec = convertSampledNormal( normalColor.xyz );
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
+
+	// Early clip if light is too far away
+	float3 lightVec = p_input.light.pos - worldPos;
+	float distance = length( lightVec );
+	if( distance > p_input.light.range ) {
+		PixelOut pout;
+		pout.lightDiffuse = float4( 0.0f, 0.0f, 0.0f, 0.0f );
+		pout.lightSpecular = float4( 0.0f, 0.0f, 0.0f, 0.0f );
+		return pout;
+	}
+
+	float4 normalColor	= gNormalMap.Load( index );	
+	float3 normalVec = convertSampledNormal( normalColor.xyz );
 
 	LightOut light;
 	
