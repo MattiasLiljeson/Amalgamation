@@ -278,9 +278,11 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 				p.position += p.velocity * p_dt;
 				p.rotation += p.angularVelocity * p_dt;
 
+				float size = max(p.size.x, p.size.y);
+				AglVector3 sizeVec = AglVector3(size, size, size); 
 				//Compute min and max
-				m_max = AglVector3::maxOf(m_max, p.position);
-				m_min = AglVector3::minOf(m_min, p.position);
+				m_max = AglVector3::maxOf(m_max, p.position+sizeVec);
+				m_min = AglVector3::minOf(m_min, p.position-sizeVec);
 			}
 		}
 		for (unsigned int i = 0; i < 5; i++)
