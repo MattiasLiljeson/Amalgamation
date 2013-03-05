@@ -202,8 +202,10 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	Transform* transform = new Transform(m_startTransform);
 	transform->setRotation(quart);
 
-	// Create the level piece to use later
+	// Create the level piece to use later. Note, this could be random, if the specified
+	// start piece id in the assemblage has been set to -1.
 	int id = m_levelInfo->getStartFileData()->id;
+
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
 	piece->setPieceId(0);
 

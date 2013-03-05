@@ -1,24 +1,11 @@
 #pragma once
 
-#include <fstream>
+#include "DebugFileWriter.h"
 
 static void printToFile(const char* msg)
 {
-	static bool initalised = false;
-	std::ofstream ofs;
-	if (!initalised)
-	{
-		ofs = std::ofstream("log.txt", std::ios_base::out | std::ios_base::trunc);
-		initalised = true;
-	}
-	else
-		ofs = std::ofstream("log.txt", std::ios_base::out | std::ios_base::app);
-	
-	if (ofs.is_open())
-	{
-		ofs << msg;
-		ofs.close();
-	}
+	static DebugFileWriter debugWriter;
+	debugWriter.writeToFile(msg);
 }
 
 // Will only print in debug, will replace call in release with "nothing"

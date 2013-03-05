@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Gameplay\Src\ComponentAssemblageAllocator.h" />
+    <ClInclude Include="DebugFileWriter.h" />
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="FileCheck.h" />
     <ClInclude Include="NumericBuffer.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="UniqueIndexList.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DebugFileWriter.cpp" />
     <ClCompile Include="FileCheck.cpp" />
     <ClCompile Include="PreciseTimer.cpp" />
     <ClCompile Include="RandomUtil.cpp" />
