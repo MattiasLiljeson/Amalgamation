@@ -22,6 +22,7 @@ public:
 
 private:
 	Entity* createSprite(AglVector3 p_position, string p_texture, AglVector2 p_size);
+	Entity* createConstructionSprite(AglVector3 p_position, string p_texture, AglVector2 p_size);
 	void reinitSprite(Entity* p_sprite, AglVector3 p_position, AglVector2 p_size);
 
 private:
@@ -36,6 +37,7 @@ private:
 	Entity* m_leftWing;
 	Entity* m_rightWing;
 	Entity* m_timerMonitor;
+	Entity* m_constructionMode;
 
 
 };
