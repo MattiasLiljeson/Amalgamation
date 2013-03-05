@@ -1,0 +1,15 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="timer.rcss"/>
+	</head>
+	<body id="hudelements" class="content">
+		<div id="context">
+			<div class="elements" id="timerElem">
+				Time Remaining:
+				<p id="time">
+				</p>
+			</div>
+
+		</div>
+	</body>
+</rml>
