@@ -1010,6 +1010,7 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		{
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
+
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(

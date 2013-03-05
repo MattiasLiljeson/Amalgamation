@@ -45,40 +45,44 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 			}
 			for(unsigned int netsyncIndex=0; netsyncIndex<dynamicEntities.size(); netsyncIndex++)
 			{
-				Transform* otherTransform = static_cast<Transform*>(
-					dynamicEntities[netsyncIndex]->getComponent(ComponentType::Transform));
-				AglVector3 dir = ( bombTransform->getTranslation() -
-					otherTransform->getTranslation() );
-				float lengthSquared = dir.lengthSquared();
-				if(lengthSquared <= bombBomb->eventHorizonRadius * bombBomb->eventHorizonRadius)
+				Entity* otherEntity = dynamicEntities[netsyncIndex];
+				if(otherEntity->getComponent(ComponentType::ShipModule) == NULL)
 				{
-					// Stillness.
-				}
-				else if(lengthSquared <= bombBomb->arriveRadius * bombBomb->arriveRadius)
-				{
-					PhysicsBody* body = static_cast<PhysicsBody*>(
-						dynamicEntities[netsyncIndex]->getComponent(
-						ComponentType::PhysicsBody));
-					float length = dir.length();
-					dir.normalize();
-					float radiusFactor = (length - bombBomb->eventHorizonRadius) /
-						(bombBomb->arriveRadius - bombBomb->eventHorizonRadius);
-					physSystem->getController()->ApplyExternalImpulse(
-						body->m_id, dir * radiusFactor * dt * bombBomb->impulse,
-						AglVector3::zero());
-				}
-				else if(lengthSquared <= bombBomb->radius * bombBomb->radius)
-				{
-					PhysicsBody* body = static_cast<PhysicsBody*>(
-						dynamicEntities[netsyncIndex]->getComponent(
-						ComponentType::PhysicsBody));
-					float length = dir.length();
-					dir.normalize();
-					float radiusFactor = (length - bombBomb->arriveRadius) /
-						(bombBomb->radius - bombBomb->arriveRadius);
-					physSystem->getController()->ApplyExternalImpulse(
-						body->m_id, dir * (1.0f - radiusFactor) * dt * bombBomb->impulse,
-						AglVector3::zero());
+					Transform* otherTransform = static_cast<Transform*>(
+						dynamicEntities[netsyncIndex]->getComponent(ComponentType::Transform));
+					AglVector3 dir = ( bombTransform->getTranslation() -
+						otherTransform->getTranslation() );
+					float lengthSquared = dir.lengthSquared();
+					if(lengthSquared <= bombBomb->eventHorizonRadius * bombBomb->eventHorizonRadius)
+					{
+						// Stillness.
+					}
+					else if(lengthSquared <= bombBomb->arriveRadius * bombBomb->arriveRadius)
+					{
+						PhysicsBody* body = static_cast<PhysicsBody*>(
+							dynamicEntities[netsyncIndex]->getComponent(
+							ComponentType::PhysicsBody));
+						float length = dir.length();
+						dir.normalize();
+						float radiusFactor = (length - bombBomb->eventHorizonRadius) /
+							(bombBomb->arriveRadius - bombBomb->eventHorizonRadius);
+						physSystem->getController()->ApplyExternalImpulse(
+							body->m_id, dir * radiusFactor * dt * bombBomb->impulse,
+							AglVector3::zero());
+					}
+					else if(lengthSquared <= bombBomb->radius * bombBomb->radius)
+					{
+						PhysicsBody* body = static_cast<PhysicsBody*>(
+							dynamicEntities[netsyncIndex]->getComponent(
+							ComponentType::PhysicsBody));
+						float length = dir.length();
+						dir.normalize();
+						float radiusFactor = (length - bombBomb->arriveRadius) /
+							(bombBomb->radius - bombBomb->arriveRadius);
+						physSystem->getController()->ApplyExternalImpulse(
+							body->m_id, dir * (1.0f - radiusFactor) * dt * bombBomb->impulse,
+							AglVector3::zero());
+					}
 				}
 			}
 		}

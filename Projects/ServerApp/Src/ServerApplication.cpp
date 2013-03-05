@@ -8,13 +8,16 @@
 #include "PhysicsBody.h"
 #include "StaticProp.h"
 #include "Transform.h"
+#include <AnomalyBombControllerSystem.h>
 #include <EntityFactory.h>
 #include <LevelGenSystem.h>
+#include <LevelHandlerSystem.h>
 #include <LoadMeshSystemServer.h>
 #include <LookAtSystem.h>
 #include <MineControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MinigunModuleControllerSystem.h>
+#include <ModuleVisualEffectServerBufferSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -22,6 +25,7 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ServerClientInfoSystem.h>
 #include <ServerDynamicObjectsSystem.h>
+#include <ServerDynamicPhysicalObjectsSystem.h>
 #include <ServerPacketHandlerSystem.h>
 #include <ServerPickingSystem.h>
 #include <ServerScoreSystem.h>
@@ -32,15 +36,11 @@
 #include <ShipManagerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <ShipModulesTrackerSystem.h>
-#include <TimerSystem.h>
-#include <WinningConditionSystem.h>
-#include <LevelHandlerSystem.h>
-#include <ModuleVisualEffectServerBufferSystem.h>
 #include <SpawnPointSystem.h>
 #include <TempModuleSpawner.h>
-#include <AnomalyBombControllerSystem.h>
-#include <ServerDynamicPhysicalObjectsSystem.h>
 #include <TeslaCoilModuleControllerSystem.h>
+#include <TimerSystem.h>
+#include <WinningConditionSystem.h>
 
 //Modules
 #include <MineLayerModule.h>

@@ -18,6 +18,6 @@ void DamageUpdaterSystem::processEntities( const vector<Entity*>& p_entities )
 	for( unsigned int i=0; i<p_entities.size(); i++ ) {
 		DamageComponent* dmgComp = static_cast<DamageComponent*>(
 			p_entities[i]->getComponent( ComponentType::DamageComponent ) );
-		dmgComp->pushFrameDamageToBuffer();
+		dmgComp->pushFramePerValuesToBuffer();
 	}
 }

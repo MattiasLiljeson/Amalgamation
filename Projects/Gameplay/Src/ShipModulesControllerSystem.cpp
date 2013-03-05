@@ -111,16 +111,25 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 				NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
 					entity->getComponent(ComponentType::NetworkSynced));
 
+				if( m != NULL ) // If the entity has a ship module.
+				{
+					// Send damage to the module to all clients
+					int ownerId = ModuleHelper::FindParentShipClientId( m_world, m, NULL );
+					DamageAccumulator damage = m->getDamage();
+
+					const float epsilon = 0.01f;
+					if( damage.accumulatedDamage > 0.01f )
+					{
+						damage.victim = ownerId;
+						Packet packet( PacketType::HitIndicatorPacket );
+						packet.WriteData( &damage, sizeof(DamageAccumulator) );
+						m_server->broadcastPacket( packet );
+					}
+				}
+
 				ShipModule* parentM = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
 				if (m && (!parentM || parentM->m_parentEntity != entity->getIndex())) //Could be a ship
 				{
-					int ownerId = networkSynced->getNetworkOwner();
-					DamageAccumulator damage = m->getDamage();
-					Packet packet( PacketType::HitIndicatorPacket );
-					packet.WriteData( &damage, sizeof(DamageAccumulator) );
-					//m_server->unicastPacket( packet, ownerId );
-					m_server->broadcastPacket( packet );
-
 					m->applyDamage();
 					// send status effect update for health
 					updateModuleHealthEffect(networkSynced->getNetworkOwner(),
