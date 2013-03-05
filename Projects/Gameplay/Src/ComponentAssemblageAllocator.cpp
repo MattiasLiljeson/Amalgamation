@@ -1,6 +1,6 @@
 #include "ComponentAssemblageAllocator.h"
 
-// Components
+// Components (Keep it sorted)
 #include "AnomalyAcceleratorModule.h"
 #include "AnomalyBomb.h"
 #include "AudioInfo.h"
@@ -15,7 +15,6 @@
 #include "EnvironmentValues.h"
 #include "FlareGunModule.h"
 #include "GameplayTags.h"
-#include "GravityBombModule.h"
 #include "HudElement.h"
 #include "LevelInfo.h"
 #include "LevelPieceRoot.h"
@@ -24,9 +23,7 @@
 #include "LoadMesh.h"
 #include "MineLayerModule.h"
 #include "MinigunModule.h"
-#include "MinigunModule.h"
 #include "PhysicsBody.h"
-#include "PlayerCameraController.h"
 #include "PlayerCameraController.h"
 #include "RenderInfo.h"
 #include "RocketLauncherModule.h"
@@ -37,68 +34,51 @@
 #include "SkeletalAnimation.h"
 #include "SpeedBoosterModule.h"
 #include "SpeedBuffer.h"
-#include "Transform.h"
-#include "Vibration.h"
-#include "EntityParent.h"
-#include "LoadMesh.h"
-#include "LightsComponent.h"
-#include "LightBlinker.h"
-#include "LevelPieceRoot.h"
-#include "LevelInfo.h"
-#include "EnvironmentValues.h"
-#include "SpeedBuffer.h"
-#include "DestroyOnParticlesDeath.h"
-#include "SkeletalAnimation.h"
-#include "AnomalyAcceleratorModule.h"
-#include "FlareGunModule.h"
-#include "GravityBombModule.h"
-#include "EmpModule.h"
-#include "AnomalyBomb.h"
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
+#include "Transform.h"
+#include "Vibration.h"
 
 // unsorted automatically added includes. Sort them when added!
 #include <Component.h>
 
 ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 {
+	// Instantiations of components (Keep it sorted)
+	handle<AnomalyAcceleratorModule>();
+	handle<AnomalyBomb>();
 	handle<AudioInfo>();
 	handle<AudioListener>();
 	handle<BodyInitData>();
 	handle<ConnectionPointSet>();
+	handle<Connector1to2Module>();
+	handle<DamageComponent>();
+	handle<DestroyOnParticlesDeath>();
+	handle<EmpModule>();
+	handle<EntityParent>();
+	handle<EnvironmentValues>();
+	handle<FlareGunModule>();
 	handle<HudElement>();
+	handle<LevelInfo>();
+	handle<LevelPieceRoot>();
+	handle<LightBlinker>();
+	handle<LightsComponent>();
+	handle<LoadMesh>();
+	handle<MineLayerModule>();
 	handle<MinigunModule>();
 	handle<PhysicsBody>();
 	handle<PlayerCameraController>();
 	handle<RenderInfo>();
+	handle<RocketLauncherModule>();
+	handle<ShieldModule>();
 	handle<ShipEditController>();
 	handle<ShipFlyController>();
 	handle<ShipModule>();
-	handle<SpeedBoosterModule>();
-	handle<MinigunModule>();
-	handle<PlayerCameraController>();
-	handle<ShieldModule>();
-	handle<Vibration>();
-	handle<MineLayerModule>();
-	handle<RocketLauncherModule>();
-	handle<Connector1to2Module>();
-	handle<Transform>();
-	handle<EntityParent>();
-	handle<LoadMesh>();
-	handle<LightsComponent>();
-	handle<LightBlinker>();
-	handle<LevelPieceRoot>();
-	handle<LevelInfo>();
-	handle<EnvironmentValues>();
-	handle<SpeedBuffer>();
-	handle<DestroyOnParticlesDeath>();
 	handle<SkeletalAnimation>();
-	handle<AnomalyAcceleratorModule>();
-	handle<FlareGunModule>();
-	handle<GravityBombModule>();
-	handle<EmpModule>();
-	handle<AnomalyBomb>();
+	handle<SpeedBoosterModule>();
+	handle<SpeedBuffer>();
 	handle<TeslaCoilModule>();
 	handle<TeslaEffectPiece>();
-	handle<DamageComponent>();
+	handle<Transform>();
+	handle<Vibration>();
 }

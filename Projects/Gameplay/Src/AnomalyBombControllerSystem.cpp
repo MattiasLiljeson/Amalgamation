@@ -72,11 +72,6 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 					PhysicsBody* body = static_cast<PhysicsBody*>(
 						dynamicEntities[netsyncIndex]->getComponent(
 						ComponentType::PhysicsBody));
-					vector<ComponentType::ComponentTypeIdx> bombComps =
-						m_world->getComponentManager()->getComponentEnumList(p_entities[i]);
-					vector<ComponentType::ComponentTypeIdx> otherComps =
-						m_world->getComponentManager()->getComponentEnumList(
-						dynamicEntities[netsyncIndex]);
 					float length = dir.length();
 					dir.normalize();
 					float radiusFactor = (length - bombBomb->arriveRadius) /
