@@ -26,7 +26,7 @@ Sound::~Sound()
 
 HRESULT Sound::stop()
 {
-	HRESULT hr = S_OK;
+	HRESULT hr = S_OK; 
 
 	hr = m_sourceVoice->Stop(0);
 	hr = m_sourceVoice->FlushSourceBuffers();

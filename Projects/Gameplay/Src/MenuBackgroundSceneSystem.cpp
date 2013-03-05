@@ -124,7 +124,11 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	soundComp->addAudioHeader(audioHeader);
 
 	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
-
+	audioHeader->file = "Mine_Blip.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	soundComp->addAudioHeader(audioHeader);
 	m_ship->addComponent(soundComp);
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
