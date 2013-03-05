@@ -6,6 +6,7 @@
 #include "LevelHandlerSystem.h"
 #include "LevelPieceRoot.h"
 #include "Transform.h"
+#include "TimerSystem.h"
 
 #include <ToString.h>
 #include <DebugUtil.h>
@@ -26,6 +27,10 @@ void SpawnPointSystem::initialize()
 {
 	m_levelHandler = static_cast<LevelHandlerSystem*>(
 		m_world->getSystem(SystemType::LevelHandlerSystem));
+
+	m_timerSystem = static_cast<TimerSystem*>(
+		m_world->getSystem(SystemType::TimerSystem));
+
 }
 
 void SpawnPointSystem::clearSpawnPoints()
@@ -45,8 +50,8 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 	int pieceId = pieceRoot->pieceId;
 	if (pieceId >= 0)
 	{
-		vector<ShipSpawnPoint> newShipSpawnPoints;
-		vector<ModuleSpawnPoint> newModuleSpawnPoints;
+		vector<ShipSpawnPointData> newShipSpawnPoints;
+		vector<ModuleSpawnPointData> newModuleSpawnPoints;
 
 		DEBUGPRINT(( (toString("Starting to read spawnpoint of chamber ") + toString(pieceId) + " " + p_entity->getName() + "\n").c_str()) );
 		auto rootTransform = static_cast<Transform*>(
@@ -71,7 +76,7 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 
 				//DEBUGPRINT(( (toString("Ship spawnpoint found at position ") + posAsString).c_str()) );
-				newShipSpawnPoints.push_back(ShipSpawnPoint(spawnPoint.spTransform));
+				newShipSpawnPoints.push_back(ShipSpawnPointData(spawnPoint.spTransform, pieceRoot->pieceId, newShipSpawnPoints.size()));
 			}
 			else if (spawnPoint.spAction == "module")
 			{
@@ -80,7 +85,7 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 
 				//DEBUGPRINT(( (toString("Module spawnpoint found at position ") + posAsString).c_str()) );
 
-				newModuleSpawnPoints.push_back(ModuleSpawnPoint(spawnPoint.spTransform));
+				newModuleSpawnPoints.push_back(ModuleSpawnPointData(spawnPoint.spTransform, pieceRoot->pieceId, newModuleSpawnPoints.size()));
 			}
 		}
 		m_shipSpawnPoints[pieceId]		= newShipSpawnPoints;
@@ -106,7 +111,14 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 
 void SpawnPointSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	
+	if (m_timerSystem->checkTimeInterval(TimerIntervals::HalfSecond))
+	{
+		for (unsigned int spawnPointId = 0; spawnPointId < m_refreshingSpawnPoints.size(); spawnPointId++)
+		{
+			m_refreshingSpawnPoints[spawnPointId].currentCooldown -= 0.5f;
+			
+		}
+	}
 }
 
 const AglMatrix& SpawnPointSystem::getRandomFreeShipSpawnPoint()
@@ -127,22 +139,27 @@ const AglMatrix& SpawnPointSystem::getRandomFreeShipSpawnPoint()
 
 const AglMatrix& SpawnPointSystem::getRandomFreeModuleSpawnPoint()
 {
+	return getRandomFreeModuleSpawnPointData().transform;
+}
+
+ModuleSpawnPointData SpawnPointSystem::getRandomFreeModuleSpawnPointData()
+{
 	auto selectId = getRandomFreeSpawnPoint(m_moduleSpawnPoints);
 
 	if (selectId.first >= 0 && selectId.second >= 0)
 	{
 		setSpawnPointState(m_moduleSpawnPoints, selectId.first, selectId.second, SPAWNPOINTSTATE_OCCUPIED);
-		return m_moduleSpawnPoints[selectId.first][selectId.second].transform;
+		return m_moduleSpawnPoints[selectId.first][selectId.second];
 	}
 	else
 	{
-		//DEBUGPRINT(("Warning: Found no available module spawnpoint. An invalidSpawnPoint is returned.\n"));
-		return invalidSpawnPoint();
+		//DEBUGPRINT(("Warning: Found no available module spawnpoint data. An invalidSpawnPointData is returned.\n"));
+		return s_invalidSpawnPointData;
 	}
 }
 
 pair<int, int> SpawnPointSystem::getRandomFreeSpawnPoint( 
-	const vector<vector<ModuleOrShipSpawnPoint>>& p_fromSpawnPoints ) const
+	const vector<vector<ModuleOrShipSpawnPointData>>& p_fromSpawnPoints ) const
 {
 	vector<pair<int, int>> selection;
 
@@ -167,7 +184,7 @@ pair<int, int> SpawnPointSystem::getRandomFreeSpawnPoint(
 }
 
 void SpawnPointSystem::setSpawnPointState( 
-	vector<vector<ModuleOrShipSpawnPoint>>& p_inSpawnPoints, 
+	vector<vector<ModuleOrShipSpawnPointData>>& p_inSpawnPoints, 
 	int p_inChamber, int p_inPoint, SpawnPointState p_newState )
 {
 	p_inSpawnPoints[p_inChamber][p_inPoint].state = p_newState;
@@ -183,11 +200,21 @@ const AglMatrix& SpawnPointSystem::invalidSpawnPoint()
 	return s_invalidSpawnPoint;
 }
 
+void SpawnPointSystem::applyResetCooldown( int p_atChamber, int p_atSpawnPoint )
+{
+	ModuleSpawnPointData spawnPoint = m_moduleSpawnPoints[p_atChamber][p_atSpawnPoint];
+	spawnPoint.currentCooldown = 10.0f;
+	m_refreshingSpawnPoints.push_back(spawnPoint);
+}
+
+
+
+
 const AglMatrix SpawnPointSystem::s_invalidSpawnPoint(AglVector3::one(), 
 													AglQuaternion::identity(), 
 													AglVector3(FLT_MAX, FLT_MAX, FLT_MAX));
 
-
+const ModuleOrShipSpawnPointData SpawnPointSystem::s_invalidSpawnPointData(s_invalidSpawnPoint, -1, -1);
 
 
 

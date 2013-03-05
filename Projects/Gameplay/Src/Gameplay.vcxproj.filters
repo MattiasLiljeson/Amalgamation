@@ -807,6 +807,9 @@
     <ClInclude Include="TeslaCoilModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleOnChamberStartPoint.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

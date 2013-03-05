@@ -43,6 +43,7 @@
     <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />

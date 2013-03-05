@@ -28,6 +28,15 @@ public:
 	virtual void process();
 
 	virtual void initialize();
+
+	virtual void processEntities( const vector<Entity*>& p_entities );
+
+	virtual void inserted( Entity* p_entity );
+
+	virtual void removed( Entity* p_entity );
+
+
+
 protected:
 private:
 	TcpServer*			m_server;

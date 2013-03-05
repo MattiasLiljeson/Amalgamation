@@ -16,7 +16,7 @@
 /// Created on: 5-3-2013 
 ///---------------------------------------------------------------------------------------
 
-class ModuleOnChamberStartPoint
+class ModuleOnChamberStartPoint : public Component
 {
 public:
 	ModuleOnChamberStartPoint(int p_atChamber, int p_atSpawnPoint)

@@ -6,14 +6,15 @@
 #include "EntityFactory.h"
 #include "EntityCreationPacket.h"
 #include "ServerStateSystem.h"
-#include <TcpServer.h>
 #include "NetworkSynced.h"
+#include "ModuleOnChamberStartPoint.h"
 
+#include <TcpServer.h>
 #include <DebugUtil.h>
 #include <ToString.h>
 
 TempModuleSpawner::TempModuleSpawner(TcpServer* p_server)
-	: EntitySystem(SystemType::TempModuleSpawner)
+	: EntitySystem(SystemType::TempModuleSpawner, 1, ComponentType::ModuleOnChamberSpawnPoint)
 {
 	m_server = p_server;
 }
@@ -34,11 +35,14 @@ void TempModuleSpawner::process()
 		//DEBUGPRINT(("Request spawning a module at a random position.\n"));
 		if (m_spawnPointSystem->isSpawnPointsReady())
 		{
-			AglMatrix pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
+			
+			ModuleSpawnPointData pointData = m_spawnPointSystem->getRandomFreeModuleSpawnPointData();
 
-			if (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
+			if (! (pointData.transform == m_spawnPointSystem->invalidSpawnPoint()) )
 			//while (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
 			{
+				AglMatrix pos = pointData.transform;
+
 				EntityCreationPacket cp;
 
 				int randModule = rand() % (EntityType::EndModule - EntityType::ShipModuleStart - 1);
@@ -47,7 +51,9 @@ void TempModuleSpawner::process()
 				cp.entityType = randModule;
 				cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
 				Entity* e = m_factory->entityFromPacket(cp, &pos);
-	
+				
+				e->addComponent( new ModuleOnChamberStartPoint(pointData.inChamber, pointData.atSpawnPoint));
+
 				AglVector3 posV = pos.GetTranslation();
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
 	
@@ -86,6 +92,24 @@ void TempModuleSpawner::initialize()
 	m_factory = static_cast<EntityFactory*>(
 		m_world->getSystem(SystemType::EntityFactory));
 }
+
+void TempModuleSpawner::processEntities( const vector<Entity*>& p_entities )
+{
+	
+}
+
+void TempModuleSpawner::inserted( Entity* p_entity )
+{
+	DEBUGPRINT(("Module inserted in TempModuleSpawner system."));
+}
+
+void TempModuleSpawner::removed( Entity* p_entity )
+{
+	DEBUGPRINT(("Module removed from TempModuleSpawner system."));	
+}
+
+
+
 
 
 
