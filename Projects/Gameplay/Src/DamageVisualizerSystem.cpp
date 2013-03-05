@@ -27,31 +27,50 @@ void DamageVisualizerSystem::processEntities( const vector<Entity*>& p_entities 
 		ParticleSystemsComponent* psComp = static_cast<ParticleSystemsComponent*>(
 			p_entities[i]->getComponent( ComponentType::ParticleSystemsComponent ) );
 
-		int psIdx = dmgComp->getParticleSystemIdx();
-		if( psIdx == -1 ) 
+		bool skipDrawingThisIteration = false;
+
+		int dmgPsIdx = dmgComp->getDmgParticleSystemIdx();
+		if( dmgPsIdx == -1 ) 
 		{
-			ParticleSystemInstruction instr = createParticleSystemInstruction();
-			psIdx = psComp->addParticleSystemInstruction( instr );
-			dmgComp->setParticleSystemIdx( psIdx );
+			ParticleSystemInstruction instr = createDmgParticleSystemInstruction();
+			dmgPsIdx = psComp->addParticleSystemInstruction( instr );
+			dmgComp->setDmgParticleSystemIdx( dmgPsIdx );
+			skipDrawingThisIteration = true;
 		}
-		else // It takes one iteration to load and instruction and convert it into a ps.
+
+		int hitPsIdx = dmgComp->getHitParticleSystemIdx();
+		if( hitPsIdx == -1 ) 
+		{
+			ParticleSystemInstruction instr = createHitParticleSystemInstruction();
+			hitPsIdx = psComp->addParticleSystemInstruction( instr );
+			dmgComp->setHitParticleSystemIdx( hitPsIdx );
+			skipDrawingThisIteration = true;
+		}
+		
+		if( !skipDrawingThisIteration )// It takes one iteration to load and instruction and convert it into a ps.
 		{
 			float epsilon = 0.01f;
-			float opacity = dmgComp->getBufferPtr()->getLastVal() * 1000;
 
-			//opacity = 0.5f; //DEBUG
-
-			if( opacity > epsilon )
+			float dmgOpacity = dmgComp->getDmgBufferPtr()->getLastVal(); //* 1000;// *1000 for debug!
+			if( dmgOpacity > epsilon || false)
 			{
-				ParticleSystemAndTexture* psAndTex = psComp->getParticleSystemAndTexturePtr( psIdx );
-				psAndTex->particleSystem.getHeaderPtr()->maxOpacity = opacity ;
+				ParticleSystemAndTexture* psAndTex = psComp->getParticleSystemAndTexturePtr( dmgPsIdx );
+				psAndTex->particleSystem.getHeaderPtr()->maxOpacity = dmgOpacity ;
+				psAndTex->particleSystem.restart();
+			}
+
+			float hitOpacity = dmgComp->getHitBufferPtr()->getLastVal(); //* 1000;// *1000 for debug!
+			if( hitOpacity > epsilon )
+			{
+				ParticleSystemAndTexture* psAndTex = psComp->getParticleSystemAndTexturePtr( hitPsIdx );
+				psAndTex->particleSystem.getHeaderPtr()->maxOpacity = hitOpacity ;
 				psAndTex->particleSystem.restart();
 			}
 		}
 	}
 }
 
-ParticleSystemInstruction DamageVisualizerSystem::createParticleSystemInstruction()
+AglParticleSystemHeader DamageVisualizerSystem::createFullScreenAdditiveQuad()
 {
 	AglParticleSystemHeader header;
 	header.alignmentType = AglParticleSystemHeader::SCREEN;
@@ -65,10 +84,27 @@ ParticleSystemInstruction DamageVisualizerSystem::createParticleSystemInstructio
 	header.particleSpace = AglParticleSystemHeader::AglSpace_SCREEN;
 	header.rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
 	header.spawnType = AglParticleSystemHeader::ONCE;
+	return header;
+}
+
+ParticleSystemInstruction DamageVisualizerSystem::createDmgParticleSystemInstruction()
+{
+	ParticleSystemInstruction instr;
+	instr.textureFileName = "dmg.png";
+	instr.particleSystem = AglParticleSystem( createFullScreenAdditiveQuad() );
+	
+	return instr;
+}
+
+ParticleSystemInstruction DamageVisualizerSystem::createHitParticleSystemInstruction()
+{
 
 	ParticleSystemInstruction instr;
 	instr.textureFileName = "hit.png";
+	AglParticleSystemHeader header = createFullScreenAdditiveQuad();
+	header.particleSize = AglVector2( 2.5f, 2.5f );
+	header.spawnPoint = AglVector3( 0.0f, -0.3f, 0.0f );
 	instr.particleSystem = AglParticleSystem( header );
-	
+
 	return instr;
 }

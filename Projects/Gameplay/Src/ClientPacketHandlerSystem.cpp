@@ -1241,6 +1241,7 @@ void ClientPacketHandlerSystem::handleHitIndicationPacket( Packet& p_packet )
 	const int ENTITY_NOT_FOUND = 1;
 	const int COMPONENT_NOT_FOUND = 2;
 	int status = OK;
+
 	Entity* ship = m_world->getEntityManager()->
 		getFirstEntityByComponentType( ComponentType::TAG_MyShip );
 
@@ -1261,6 +1262,13 @@ void ClientPacketHandlerSystem::handleHitIndicationPacket( Packet& p_packet )
 		p_packet.ReadData( &acc, sizeof(DamageAccumulator) ); 
 
 		DamageComponent* hitComp = static_cast<DamageComponent*>( comp ); 
-		hitComp->addDamage( acc );
+		int myNetworkId = static_cast<NetworkSynced*>(ship->getComponent( ComponentType::NetworkSynced ))->getNetworkOwner();
+
+		if( acc.victim == myNetworkId ){
+			hitComp->addDamage( acc );
+		} else if ( acc.latestPerp == myNetworkId ) {
+			hitComp->addHit( acc );
+		}
+
 	}
 }

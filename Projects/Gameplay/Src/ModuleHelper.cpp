@@ -35,5 +35,7 @@ int ModuleHelper::FindParentShipClientId( EntityWorld* p_world, ShipModule* p_mo
 		}
 	}
 
+	int* p, *k, *j;
+
 	return ownerId;
 }
