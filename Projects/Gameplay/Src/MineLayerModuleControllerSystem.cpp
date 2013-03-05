@@ -13,6 +13,7 @@
 #include "SpawnSoundEffectPacket.h"
 #include "ModuleHelper.h"
 #include "AnimationUpdatePacket.h"
+#include "MeshOffsetTransform.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 2,
@@ -36,6 +37,8 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
+		MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(p_entities[i]->getComponent(ComponentType::MeshOffsetTransform));
+
 		ShipModule* module = static_cast<ShipModule*>(
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::ShipModule)));

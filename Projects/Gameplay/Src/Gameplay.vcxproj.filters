@@ -762,6 +762,12 @@
       <Filter>Structs</Filter>
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="SlotMarkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotMarker.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="DamageComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -1335,6 +1341,9 @@
     </ClCompile>
     <ClCompile Include="SettingsSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotMarkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="DamageComponent.cpp">
       <Filter>Components</Filter>

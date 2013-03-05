@@ -17,7 +17,9 @@ public:
 public:
 	int			networkIdentity;
 	int			slot;
+	int			shipSlot;
 	bool		active;
 	AglVector3	translationOffset;
 	AglVector3	forwardDirection;
+	int			moduleType;
 };

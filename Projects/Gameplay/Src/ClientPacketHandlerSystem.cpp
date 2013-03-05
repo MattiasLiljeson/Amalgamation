@@ -100,9 +100,9 @@
 #include <SystemType.h>
 #include <TcpClient.h>
 #include <ToString.h>
+#include "SlotMarkerSystem.h"
 #include "TeslaHitPacket.h"
 #include "TeslaEffectSystem.h"
-
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -596,6 +596,24 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
 				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+
+				if (!data.active)
+				{
+					//Add an icon
+					SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+					EntityType type;
+					type.type = (EntityType::EntityEnums)data.moduleType;
+					slotmarker->addMarker(data.shipSlot, type);
+				}
+				else if (data.networkIdentity)
+				{
+					//Remove an icon
+					SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+					EntityType type;
+					type.type = (EntityType::EntityEnums)data.moduleType;
+					slotmarker->removeMarker(data.shipSlot, type);
+				}
+
 			}
 		}
 
@@ -624,11 +642,16 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
-					entity->addComponent(ComponentType::PositionalSoundSource,
-						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-						true, 1.0f));
-					entity->applyComponentChanges();
+					Component* positionalSound = entity->getComponent(
+						ComponentType::PositionalSoundSource);
+					if(positionalSound != NULL)
+					{
+						entity->addComponent(ComponentType::PositionalSoundSource,
+							new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+							true, 1.0f));
+						entity->applyComponentChanges();
+					}
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -1251,6 +1274,7 @@ void ClientPacketHandlerSystem::handleHitIndicationPacket( Packet& p_packet )
 	const int ENTITY_NOT_FOUND = 1;
 	const int COMPONENT_NOT_FOUND = 2;
 	int status = OK;
+
 	Entity* ship = m_world->getEntityManager()->
 		getFirstEntityByComponentType( ComponentType::TAG_MyShip );
 
@@ -1271,6 +1295,13 @@ void ClientPacketHandlerSystem::handleHitIndicationPacket( Packet& p_packet )
 		p_packet.ReadData( &acc, sizeof(DamageAccumulator) ); 
 
 		DamageComponent* hitComp = static_cast<DamageComponent*>( comp ); 
-		hitComp->addDamage( acc );
+		int myNetworkId = static_cast<NetworkSynced*>(ship->getComponent( ComponentType::NetworkSynced ))->getNetworkOwner();
+
+		if( acc.victim == myNetworkId ){
+			hitComp->addDamage( acc );
+		} else if ( acc.latestPerp == myNetworkId ) {
+			hitComp->addHit( acc );
+		}
+
 	}
 }

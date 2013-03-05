@@ -9,7 +9,10 @@ public:
 	virtual ~DamageVisualizerSystem();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
-	ParticleSystemInstruction createParticleSystemInstruction();
+	AglParticleSystemHeader createFullScreenAdditiveQuad();
+	ParticleSystemInstruction createDmgParticleSystemInstruction();
+	ParticleSystemInstruction createHitParticleSystemInstruction();
+
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;

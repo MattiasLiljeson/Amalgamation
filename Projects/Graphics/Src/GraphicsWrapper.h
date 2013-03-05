@@ -198,6 +198,12 @@ public:
 	int getEmptyTexture();
 
 	MaterialInfo getMaterialInfoFromMeshID(unsigned int p_index);
+
+	ResourceManager<Texture>* getTextureManager()
+	{
+		return m_textureManager;
+	}
+
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
 	void initSwapChain(HWND p_hWnd);

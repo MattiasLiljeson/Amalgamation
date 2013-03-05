@@ -118,6 +118,8 @@ public:	//Enums
 		BoundingBox,
 		SelectionMarker,
 		Sprite,
+		SlotMarker,
+		SlotMarkerSprite,
 		AnomalyBombEffectPiece,
 		TeslaEffectPiece,
 		NUM_COMPONENT_TYPES

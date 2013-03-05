@@ -13,6 +13,7 @@ c LevelInfo
 	# 1 for true, 0 for false.
 	d i m_randomStartRotation 	0
 
+
 	# Branching count - Specifies how many times the level generator system should
 	# branch outwards. If the branching count is set to 0, only one chamber will be
 	# created. If the branching count is set to -1, the player will branch as many
