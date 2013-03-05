@@ -8,6 +8,7 @@
 #include <AglParticleSystemHeader.h>
 #include <ParticleSystemAndTexture.h>
 #include "MeshOffsetTransform.h"
+#include "CameraInfo.h"
 
 PsRenderInfo::PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, InstanceData p_transform )
 {
@@ -25,6 +26,7 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 	ComponentType::ParticleSystemsComponent, ComponentType::Transform )
 {
 	m_gfxBackend = p_gfxBackend;
+	drawnPS = 0;
 }
 
 
@@ -36,7 +38,8 @@ ParticleRenderSystem::~ParticleRenderSystem()
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	clearRenderQues();
-
+	drawnPS = 0;
+	calcCameraPlanes();
 
 	// get camera pos, for sorting
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
@@ -69,29 +72,34 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			for( unsigned int i=0; i<particlesComp->getParticleSystemsPtr()->size(); i++ )
 			{
 				ParticleSystemAndTexture* psAndTex = particlesComp->getParticleSystemAndTexturePtr(i);
-				if( psAndTex != NULL ) {
-					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
-
-					AglMatrix transMat = transform->getMatrix();
-
-					Transform* newTrans = new Transform(transform->getMatrix());
-
-
-					// Offset Agl-loaded meshes by their offset matrix
-					if( offset != NULL ) {
-						transMat = offset->offset.inverse() * transMat;
-					}
-					newTrans->setMatrix(transMat);
-
-					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL &&
-						header.particleSpace == AglParticleSystemHeader::AglSpace_GLOBAL) 
+				if( psAndTex != NULL ) 
+				{
+					if (shouldRender(psAndTex))
 					{
-						particlesComp->setSpawn( transMat, i );
-					}
+						drawnPS++;
+						AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
-					insertToRenderQue( info );
-					delete newTrans;
+						AglMatrix transMat = transform->getMatrix();
+
+						Transform* newTrans = new Transform(transform->getMatrix());
+
+
+						// Offset Agl-loaded meshes by their offset matrix
+						if( offset != NULL ) {
+							transMat = offset->offset.inverse() * transMat;
+						}
+						newTrans->setMatrix(transMat);
+
+						if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL &&
+							header.particleSpace == AglParticleSystemHeader::AglSpace_GLOBAL) 
+						{
+							particlesComp->setSpawn( transMat, i );
+						}
+
+						PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
+						insertToRenderQue( info );
+						delete newTrans;
+					}
 				}
 			}
 		}
@@ -171,5 +179,77 @@ void ParticleRenderSystem::clearRenderQues()
 		for( int j=0; j<AglParticleSystemHeader::AglRasterizerMode_CNT; j++ ) {
 			m_renderQues[i][j].clear();
 		}
+	}
+}
+bool ParticleRenderSystem::shouldRender(ParticleSystemAndTexture* p_ps)
+{
+	if (p_ps->particleSystem.getParticleSpace() == AglParticleSystemHeader::AglSpace_GLOBAL)
+	{
+		AglVector3 minP = p_ps->particleSystem.getMin();
+		AglVector3 maxP = p_ps->particleSystem.getMax();
+		for (unsigned int i = 0; i < 6; i++)
+		{
+			if (boxPlane(minP, maxP, m_cameraPlanes[i]))
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool ParticleRenderSystem::boxPlane(const AglVector3& p_min, const AglVector3& p_max, const AglVector4& p_plane)
+{
+	AglVector3 c = (p_max+p_min)*0.5f;
+
+	AglVector3 h = (p_max-p_min) * 0.5f;
+	AglVector3 n = AglVector3(p_plane.x, p_plane.y, p_plane.z);
+	float ex = h.x*abs(n.x); 
+	float ey = h.y*abs(n.y); 
+	float ez = h.z*abs(n.z); 
+
+	float e = ex + ey + ez;
+	float s = AglVector3::dotProduct(c, n)+p_plane.w;
+
+	return s + e < 0;
+}
+void ParticleRenderSystem::calcCameraPlanes()
+{
+	EntityManager* entitymanager = m_world->getEntityManager();
+	Entity* cam = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+
+	CameraInfo* info = static_cast<CameraInfo*>(cam->getComponent(ComponentType::CameraInfo));
+
+	Transform* transform = static_cast<Transform*>(
+		cam->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	AglVector3 position = transform->getTranslation();
+	AglQuaternion rotation = transform->getRotation();
+	AglVector3 lookTarget = position+transform->getMatrix().GetForward();
+	AglVector3 up = transform->getMatrix().GetUp();
+
+	AglMatrix view = AglMatrix::createViewMatrix(position,
+		lookTarget,
+		up);
+
+	AglMatrix viewProj = view * info->m_projMat;
+
+	m_cameraPlanes[0] = viewProj.getColumn(3)+viewProj.getColumn(0); //LEFT
+	m_cameraPlanes[1] = viewProj.getColumn(3)-viewProj.getColumn(0); //RIGHT
+	m_cameraPlanes[2] = viewProj.getColumn(3)-viewProj.getColumn(1); //TOP
+	m_cameraPlanes[3] = viewProj.getColumn(3)+viewProj.getColumn(1); //BOTTOM
+	m_cameraPlanes[4] = viewProj.getColumn(2);						 //NEAR
+	m_cameraPlanes[5] = viewProj.getColumn(3)-viewProj.getColumn(2); //FAR
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		float l = sqrt(m_cameraPlanes[i].x * m_cameraPlanes[i].x +
+			m_cameraPlanes[i].y * m_cameraPlanes[i].y + 
+			m_cameraPlanes[i].z * m_cameraPlanes[i].z);
+
+		m_cameraPlanes[i].x /= l;
+		m_cameraPlanes[i].y /= l;
+		m_cameraPlanes[i].z /= l;
+		m_cameraPlanes[i].w /= l;
 	}
 }
