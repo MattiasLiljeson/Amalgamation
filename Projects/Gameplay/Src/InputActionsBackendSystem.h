@@ -54,6 +54,9 @@ public:
 		Actions_TOGGLE_EDIT_MODE,
 		Actions_MOVE_MODULE,
 		Actions_DROP_MODULE,
+		Actions_MENU_RIGHT,
+		Actions_MENU_LEFT,
+		Actions_MENU_ACTIVATE_ROTATION,
 
 		Actions_CNT//End Actions enum
 	};
