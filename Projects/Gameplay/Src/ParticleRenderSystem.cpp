@@ -25,6 +25,7 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 	ComponentType::ParticleSystemsComponent, ComponentType::Transform )
 {
 	m_gfxBackend = p_gfxBackend;
+	drawnPS = 0;
 }
 
 
@@ -36,7 +37,7 @@ ParticleRenderSystem::~ParticleRenderSystem()
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	clearRenderQues();
-
+	drawnPS = 0;
 
 	// get camera pos, for sorting
 	AglVector3 cameraPos( 0.0f, 0.0f, 0.0f );
@@ -69,29 +70,34 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 			for( unsigned int i=0; i<particlesComp->getParticleSystemsPtr()->size(); i++ )
 			{
 				ParticleSystemAndTexture* psAndTex = particlesComp->getParticleSystemAndTexturePtr(i);
-				if( psAndTex != NULL ) {
-					AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
-
-					AglMatrix transMat = transform->getMatrix();
-
-					Transform* newTrans = new Transform(transform->getMatrix());
-
-
-					// Offset Agl-loaded meshes by their offset matrix
-					if( offset != NULL ) {
-						transMat = offset->offset.inverse() * transMat;
-					}
-					newTrans->setMatrix(transMat);
-
-					if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL &&
-						header.particleSpace == AglParticleSystemHeader::AglSpace_GLOBAL) 
+				if( psAndTex != NULL ) 
+				{
+					if (shouldRender(psAndTex))
 					{
-						particlesComp->setSpawn( transMat, i );
-					}
+						drawnPS++;
+						AglParticleSystemHeader header = psAndTex->particleSystem.getHeader();
 
-					PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
-					insertToRenderQue( info );
-					delete newTrans;
+						AglMatrix transMat = transform->getMatrix();
+
+						Transform* newTrans = new Transform(transform->getMatrix());
+
+
+						// Offset Agl-loaded meshes by their offset matrix
+						if( offset != NULL ) {
+							transMat = offset->offset.inverse() * transMat;
+						}
+						newTrans->setMatrix(transMat);
+
+						if( header.spawnSpace == AglParticleSystemHeader::AglSpace_LOCAL &&
+							header.particleSpace == AglParticleSystemHeader::AglSpace_GLOBAL) 
+						{
+							particlesComp->setSpawn( transMat, i );
+						}
+
+						PsRenderInfo info( psAndTex, newTrans->getInstanceVertex());
+						insertToRenderQue( info );
+						delete newTrans;
+					}
 				}
 			}
 		}
@@ -172,4 +178,10 @@ void ParticleRenderSystem::clearRenderQues()
 			m_renderQues[i][j].clear();
 		}
 	}
+}
+bool ParticleRenderSystem::shouldRender(ParticleSystemAndTexture* p_ps)
+{
+	if (p_ps->particleSystem.getParticleSpace() == AglParticleSystemHeader::AglSpace_GLOBAL)
+		return false;
+	return true;
 }

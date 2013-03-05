@@ -54,11 +54,18 @@ public:
 	virtual RasterizerState::Mode rasterizerStateFromAglRasterizerMode(
 		AglParticleSystemHeader::AglRasterizerMode p_rast);
 
+	int* getDrawnPSCount()
+	{
+		return &drawnPS;
+	}
+
 private:
 	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
 	//void rebuildVertexBuffer( AglParticleSystem* p_particleSystem );
 	bool insertToRenderQue( PsRenderInfo p_renderInfo );
 	void clearRenderQues();
+
+	bool shouldRender(ParticleSystemAndTexture* p_ps);
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
@@ -66,5 +73,7 @@ private:
 	vector< PsRenderInfo > m_renderQues
 		[AglParticleSystemHeader::AglBlendMode_CNT]
 		[AglParticleSystemHeader::AglRasterizerMode_CNT];
+
+	int drawnPS;
 };
 
