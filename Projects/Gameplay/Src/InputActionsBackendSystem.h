@@ -42,6 +42,7 @@ public:
 		Actions_EDIT_MODE_RIGHT,
 		Actions_EDIT_MODE_UP,
 		Actions_EDIT_MODE_DOWN,
+		Actions_EDIT_MODE_ACTIVATE_ROTATION,
 		Actions_CURSOR_LEFT,
 		Actions_CURSOR_RIGHT,
 		Actions_CURSOR_UP,
@@ -50,9 +51,9 @@ public:
 		Actions_ROLL_RIGHT,
 		Actions_THRUST_FORWARD,
 		Actions_TRIGGER_EDIT_MODE,
+		Actions_TOGGLE_EDIT_MODE,
 		Actions_MOVE_MODULE,
 		Actions_DROP_MODULE,
-		Actions_TOGGLE_EDIT_MODE,
 
 		Actions_CNT//End Actions enum
 	};
@@ -62,11 +63,12 @@ public:
 	void initialize();
 	double getDeltaByAction(Actions p_action);
 	double getStatusByAction(Actions p_action);
+	Control* getControlByAction(Actions p_action, int p_index);
 	void setMouseSensitivity(float p_sensitivity);
 
 private:
 	void readControlFromString(string p_key, Control** p_control);
-
+	void initCursor();
 private:
 	vector<Control*> m_inputControls[Actions_CNT];
 	string m_inputIniFile;
