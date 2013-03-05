@@ -26,6 +26,8 @@ private:
 	vector<AglStandardParticle> m_particles;
 	float		  m_age;
 	float		  m_timeSinceSpawn;
+	AglVector3	  m_min;
+	AglVector3	  m_max;
 
 private:
 	AglVector3 requestSpawnPoint();
@@ -77,6 +79,9 @@ public:
 	void restart();
 
 	void update(float p_dt, AglVector3 p_cameraPosition);
+
+	AglVector3 getMax();
+	AglVector3 getMin();
 };
 
 #endif // AGLPARTICLESYSTEM_H

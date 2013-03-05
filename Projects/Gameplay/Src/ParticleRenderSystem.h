@@ -65,7 +65,10 @@ private:
 	bool insertToRenderQue( PsRenderInfo p_renderInfo );
 	void clearRenderQues();
 
+	//Should be moved to a culling system perhaps? //AA
 	bool shouldRender(ParticleSystemAndTexture* p_ps);
+	bool boxPlane(const AglVector3& p_min, const AglVector3& p_max, const AglVector4& p_plane);
+	void calcCameraPlanes();
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;
@@ -74,6 +77,10 @@ private:
 		[AglParticleSystemHeader::AglBlendMode_CNT]
 		[AglParticleSystemHeader::AglRasterizerMode_CNT];
 
+
+	//Culling system? //AA
 	int drawnPS;
+
+	AglVector4 m_cameraPlanes[6];
 };
 
