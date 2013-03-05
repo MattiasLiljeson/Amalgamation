@@ -29,6 +29,7 @@ private:
 		Transform* p_teslaTransform, NetworkSynced* p_teslaNetsync,
 		ShipModule* p_teslaShipModule);
 	float calculateHitChance( float p_distance, float p_optimalRange, float p_range );
+	bool canTarget(ShipModule* p_teslaModule, ShipModule* p_otherModule) const;
 
 private:
 	TcpServer* m_server;

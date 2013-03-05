@@ -12,6 +12,7 @@
 #include "TeslaHitPacket.h"
 #include <TcpServer.h>
 #include <algorithm>
+#include "ModuleHelper.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
@@ -62,33 +63,38 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 		otherModuleIndex<moduleTracker->getActiveEntities().size();
 		otherModuleIndex++)
 	{
-		Entity* otherModule = moduleTracker->getActiveEntities()[otherModuleIndex];
-		AglVector3 otherModulePosition = static_cast<Transform*>(otherModule->getComponent(
-			ComponentType::Transform))->getTranslation();
-		AglVector3 distanceVector = otherModulePosition - teslaPosition;
-		if(distanceVector.lengthSquared() < p_teslaModule->range * p_teslaModule->range)
+		Entity* otherEntity = moduleTracker->getActiveEntities()[otherModuleIndex];
+		ShipModule* otherShipModule = static_cast<ShipModule*>(otherEntity->getComponent(
+			ComponentType::ShipModule));
+		if(canTarget(p_teslaShipModule, otherShipModule))
 		{
-			PhysicsBody* body = static_cast<PhysicsBody*>(
-				otherModule->getComponent(ComponentType::PhysicsBody));
-			ShipModule* otherShipModule = static_cast<ShipModule*>(
-				otherModule->getComponent(ComponentType::ShipModule));
-			float distance = distanceVector.length();
-			float hitChance = calculateHitChance(distance, p_teslaModule->optimalRange,
-				p_teslaModule->range);
-			if(RandomUtil::randomSingle() <= hitChance)
+			AglVector3 otherModulePosition = static_cast<Transform*>(otherEntity->getComponent(
+				ComponentType::Transform))->getTranslation();
+			AglVector3 distanceVector = otherModulePosition - teslaPosition;
+			if(distanceVector.lengthSquared() < p_teslaModule->range * p_teslaModule->range)
 			{
-				if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
+				PhysicsBody* body = static_cast<PhysicsBody*>(
+					otherEntity->getComponent(ComponentType::PhysicsBody));
+				ShipModule* otherShipModule = static_cast<ShipModule*>(
+					otherEntity->getComponent(ComponentType::ShipModule));
+				float distance = distanceVector.length();
+				float hitChance = calculateHitChance(distance, p_teslaModule->optimalRange,
+					p_teslaModule->range);
+				if(RandomUtil::randomSingle() <= hitChance)
 				{
-					otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
-						p_teslaNetsync->getNetworkOwner());
-					entitiesHit.push_back(otherModule->getIndex());
+					if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
+					{
+						otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
+							p_teslaNetsync->getNetworkOwner());
+						entitiesHit.push_back(otherEntity->getIndex());
+					}
 				}
 			}
-		}//if
+		}//if canTarget
 	}//for: otherModuleIndex
 	if(!entitiesHit.empty())
 	{
-		// Compare functor
+		// A custom compare Functor
 		struct LengthCompare
 		{
 			EntityWorld* world;
@@ -112,6 +118,7 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 			}
 		} myLengthCompare(m_world, static_cast<Transform*>(p_teslaEntity->getComponent(
 			ComponentType::Transform))->getTranslation());
+		//struct LightCompare
 
 		std::sort(entitiesHit.begin(), entitiesHit.begin() + entitiesHit.size(), myLengthCompare);
 		unsigned int i=0;
@@ -137,4 +144,23 @@ float TeslaCoilModuleControllerSystem::calculateHitChance(float p_distance,
 			(p_range - p_optimalRange);
 	}
 	return hitChance;
+}
+
+bool TeslaCoilModuleControllerSystem::canTarget( ShipModule* p_teslaModule,
+	ShipModule* p_otherModule ) const
+{
+	Entity* sourceParent = NULL;
+	ModuleHelper::FindParentShip(m_world, &sourceParent, p_teslaModule);
+	Entity* targetParent = NULL;
+	ModuleHelper::FindParentShip(m_world, &targetParent, p_otherModule);
+	bool target = false;
+	if(sourceParent != NULL && targetParent != NULL)
+	{
+		target = sourceParent->getIndex() != targetParent->getIndex();
+	}
+	else if(targetParent == NULL)
+	{
+		target = true;
+	}
+	return target;
 }
