@@ -58,41 +58,41 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		//Speed booster
 		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Booster.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("booster_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].second
-			= "Icon_Booster.png";
+			= "booster_icon_activated.png";
 
 		//Megagun
 		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Megagun.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("megagun_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].second
-			= "Icon_Megagun.png";
+			= "megagun_icon_activated.png";
 
 		//Mine Layer
 		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Mine.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("minelayer_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].second
-			= "Icon_Mine.png";
+			= "minelayer_icon_activated.png";
 
 		//Rocket launcher
 		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("rocketlauncher_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
-			= "Icon_Rocket.png";
+			= "rocketlauncher_icon_activated.png";
 
 		//Shield
 		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("shield_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].second
-			= "Icon_Shield.png";
+			= "shield_icon_activated.png";
 
 		//Tesla
-		/*m_textures[EntityType::tes - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
-		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::TeslaCoilModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("tesla_icon_activated.png", TEXTUREPATH );
+		m_textures[EntityType::TeslaCoilModule - EntityType::ShipModuleStart].second
+			= "tesla_icon_activated.png";
 
-		gfx->getGfxWrapper()->
+		/*gfx->getGfxWrapper()->
 			createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
 		gfx->getGfxWrapper()->
 			createTexture("Icon_Tesla.png", GUI_TEXTURE_PATH );*/
