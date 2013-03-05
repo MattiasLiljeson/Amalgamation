@@ -8,16 +8,22 @@
 				MappedKeys
 				<p id="mapping">
 				</p>
-			</div>-->
-			<div class="elements" id="timerElem">
-				Time Remaining:
-				<p id="time">
-				</p>
-			</div>
+			</div>-->			
 			<div class="elements" id="scoreElem">
-				Score:
+				<!--Score:-->
 				<p id="score">
 				</p>
+			</div>
+			<div class="elements" id="timerElem">
+				<!--Time Remaining:-->
+				<p id="playername"></p>
+				<p id="time"></p>
+				<p id="servername"></p>
+			</div>
+			<div class="elements" id="massElem">
+				<!--Mass:-->
+				<p id="mass"></p>
+				<p id="boost"></p>
 			</div>
 		</div>
 	</body>

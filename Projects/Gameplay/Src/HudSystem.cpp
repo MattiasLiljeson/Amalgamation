@@ -35,7 +35,7 @@ void HudSystem::process()
 	
 	if(stateSystem->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
-		//m_backend->showDocument(m_hudIndex);
+		m_backend->showDocument(m_hudIndex);
 
 		setHUDData(SCORE,"-1");
 		//setHUDData(MAPPING,"Empty");
