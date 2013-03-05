@@ -34,5 +34,5 @@ d f m_maxvalue 100.0f
 c TeslaCoilModule
 d f range 60.0
 d f optimalRange 20.0
-d f cooldownTime 0.1
-d f damage 0.5
+d f cooldownTime 0.5
+d f damage 2.0
