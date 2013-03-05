@@ -1011,12 +1011,6 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
 
-			// NOTE: Due to the picker trying to handle a module that already has
-			// been detached from a ship, it could yield an invalid parent and crash!
-			// Hence, do an early return here, for safety reasons. // Alex
-			if (intermediate->m_parentEntity < 0)
-				return;
-
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
