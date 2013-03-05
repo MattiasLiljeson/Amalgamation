@@ -44,8 +44,6 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		gfx->getGfxWrapper()->
 			createTexture("button_back.png", TEXTUREPATH );
 		gfx->getGfxWrapper()->
-			createTexture("rocketlaunchericon_activated.png", TEXTUREPATH );
-		gfx->getGfxWrapper()->
 			createTexture("icon_inactive.png", TEXTUREPATH );
 
 		for (unsigned int i = 0; i < 10; i++)
