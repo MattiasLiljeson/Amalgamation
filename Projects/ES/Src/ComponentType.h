@@ -88,6 +88,7 @@ public:	//Enums
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
 		DamageComponent,
+		ModuleOnChamberSpawnPoint,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
