@@ -1,20 +1,5 @@
-Texture file not found, reverting to fallback texture. Assets/Textures/hit.png
-Mine constructed in 0.002 seconds.
-
-MineFinal.agl loaded in 0.006 seconds.
-
-Mine constructed in 0 seconds.
-
-MineFinal.agl loaded in 0 seconds.
-
-Mine constructed in 0 seconds.
-
-MineFinal.agl loaded in 0 seconds.
-
-Mine constructed in 0 seconds.
-
-MineFinal.agl loaded in 0 seconds.
-
-Mine constructed in 0 seconds.
-
-MineFinal.agl loaded in 0 seconds.
+Texture file not found, reverting to fallback texture. Assets/Textures/hit.pngSERVER: Changed to result state!
+SERVER: Not handled(Sent All Packet): 20
+SERVER: Not handled(Sent All Packet): 26
+CLIENT: Changed to results!
+SERVER: Changed to lobby state!
