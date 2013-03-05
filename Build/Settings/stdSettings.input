@@ -1,33 +1,34 @@
-//-Actions-						-Inputs- (Separated by tabs and/or spaces)--
-Actions_ACTIVATE_SLOT_1			KeyboardKeys_1			BTN_A
-Actions_ACTIVATE_SLOT_2			KeyboardKeys_2			BTN_Y
-Actions_ACTIVATE_SLOT_3			KeyboardKeys_3			BTN_X
-Actions_ACTIVATE_SLOT_4			KeyboardKeys_4			BTN_B
-Actions_ACTIVATE_MODULE			MouseButtons_0			TRIGGER_L
-Actions_ROTATE_MODULE_LEFT		KeyboardKeys_NUMPAD_7	DPAD_LEFT
-Actions_ROTATE_MODULE_RIGHT		KeyboardKeys_NUMPAD_8	DPAD_RIGHT
-Actions_ROTATE90_MODULE_LEFT	KeyboardKeys_NUMPAD_4	DPAD_UP
-Actions_ROTATE90_MODULE_RIGHT   KeyboardKeys_NUMPAD_5	DPAD_DOWN
-Actions_STRAFE_LEFT				KeyboardKeys_A			THUMB_RX_NEGATIVE
-Actions_STRAFE_RIGHT			KeyboardKeys_D			THUMB_RX_POSITIVE
-Actions_STRAFE_UP				KeyboardKeys_W			THUMB_RY_POSITIVE
-Actions_STRAFE_DOWN 			KeyboardKeys_S			THUMB_RY_NEGATIVE
-Actions_TURN_LEFT				MouseAxes_X_NEGATIVE	THUMB_LX_NEGATIVE
-Actions_TURN_RIGHT				MouseAxes_X_POSITIVE	THUMB_LX_POSITIVE
-Actions_TURN_UP					MouseAxes_Y_NEGATIVE	THUMB_LY_NEGATIVE
-Actions_TURN_DOWN				MouseAxes_Y_POSITIVE	THUMB_LY_POSITIVE
-Actions_EDIT_MODE_LEFT			KeyboardKeys_A			THUMB_RX_NEGATIVE
-Actions_EDIT_MODE_RIGHT			KeyboardKeys_D			THUMB_RX_POSITIVE
-Actions_EDIT_MODE_UP			KeyboardKeys_W			THUMB_RY_POSITIVE
-Actions_EDIT_MODE_DOWN			KeyboardKeys_S			THUMB_RY_NEGATIVE
-Actions_CURSOR_LEFT				MouseAxes_X_NEGATIVE	THUMB_LX_NEGATIVE
-Actions_CURSOR_RIGHT			MouseAxes_X_POSITIVE	THUMB_LX_POSITIVE
-Actions_CURSOR_UP				MouseAxes_Y_NEGATIVE	THUMB_LY_POSITIVE
-Actions_CURSOR_DOWN				MouseAxes_Y_POSITIVE	THUMB_LY_NEGATIVE
-Actions_ROLL_LEFT				KeyboardKeys_Q			SHOULDER_PRESS_L
-Actions_ROLL_RIGHT				KeyboardKeys_E			SHOULDER_PRESS_R
-Actions_THRUST_FORWARD			KeyboardKeys_SPACE		TRIGGER_R
-Actions_TRIGGER_EDIT_MODE		KeyboardKeys_LEFT_ALT
-Actions_MOVE_MODULE				MouseButtons_1			TRIGGER_R
-Actions_DROP_MODULE				MouseButtons_0			TRIGGER_L
-Actions_TOGGLE_EDIT_MODE		KeyboardKeys_C			BTN_BACK
+//-Actions-							-Inputs- (Separated by tabs and/or spaces)--
+Actions_ACTIVATE_SLOT_1				KeyboardKeys_1			BTN_A
+Actions_ACTIVATE_SLOT_2				KeyboardKeys_2			BTN_Y
+Actions_ACTIVATE_SLOT_3				KeyboardKeys_3			BTN_X
+Actions_ACTIVATE_SLOT_4				KeyboardKeys_4			BTN_B
+Actions_ACTIVATE_MODULE				MouseButtons_0			TRIGGER_L
+Actions_ROTATE_MODULE_LEFT			KeyboardKeys_NUMPAD_7	DPAD_LEFT
+Actions_ROTATE_MODULE_RIGHT			KeyboardKeys_NUMPAD_8	DPAD_RIGHT
+Actions_ROTATE90_MODULE_LEFT		KeyboardKeys_NUMPAD_4	DPAD_UP
+Actions_ROTATE90_MODULE_RIGHT   	KeyboardKeys_NUMPAD_5	DPAD_DOWN
+Actions_STRAFE_LEFT					KeyboardKeys_A			THUMB_RX_NEGATIVE
+Actions_STRAFE_RIGHT				KeyboardKeys_D			THUMB_RX_POSITIVE
+Actions_STRAFE_UP					KeyboardKeys_W			THUMB_RY_POSITIVE
+Actions_STRAFE_DOWN 				KeyboardKeys_S			THUMB_RY_NEGATIVE
+Actions_TURN_LEFT					MouseAxes_X_NEGATIVE	THUMB_LX_NEGATIVE
+Actions_TURN_RIGHT					MouseAxes_X_POSITIVE	THUMB_LX_POSITIVE
+Actions_TURN_UP						MouseAxes_Y_NEGATIVE	THUMB_LY_NEGATIVE
+Actions_TURN_DOWN					MouseAxes_Y_POSITIVE	THUMB_LY_POSITIVE
+Actions_EDIT_MODE_LEFT				KeyboardKeys_A 			MouseAxes_X_POSITIVE	THUMB_LX_NEGATIVE
+Actions_EDIT_MODE_RIGHT				KeyboardKeys_D 			MouseAxes_X_NEGATIVE	THUMB_LX_POSITIVE
+Actions_EDIT_MODE_UP				KeyboardKeys_W 			MouseAxes_Y_POSITIVE	THUMB_LY_POSITIVE
+Actions_EDIT_MODE_DOWN				KeyboardKeys_S 			MouseAxes_Y_NEGATIVE	THUMB_LY_NEGATIVE
+Actions_EDIT_MODE_ACTIVATE_ROTATION	MouseButtons_2			THUMB_LX_NEGATIVE THUMB_LX_POSITIVE THUMB_LY_POSITIVE THUMB_LY_NEGATIVE		KeyboardKeys_A KeyboardKeys_D KeyboardKeys_W KeyboardKeys_S
+Actions_CURSOR_LEFT					MouseAxes_X_NEGATIVE	THUMB_RX_NEGATIVE
+Actions_CURSOR_RIGHT				MouseAxes_X_POSITIVE	THUMB_RX_POSITIVE
+Actions_CURSOR_UP					MouseAxes_Y_NEGATIVE	THUMB_RY_POSITIVE
+Actions_CURSOR_DOWN					MouseAxes_Y_POSITIVE	THUMB_RY_NEGATIVE
+Actions_ROLL_LEFT					KeyboardKeys_Q			SHOULDER_PRESS_L
+Actions_ROLL_RIGHT					KeyboardKeys_E			SHOULDER_PRESS_R
+Actions_THRUST_FORWARD				KeyboardKeys_SPACE		TRIGGER_R
+Actions_TRIGGER_EDIT_MODE			KeyboardKeys_LEFT_ALT	THUMB_PRESS_L
+Actions_TOGGLE_EDIT_MODE			KeyboardKeys_C			BTN_BACK
+Actions_MOVE_MODULE					MouseButtons_0			TRIGGER_R
+Actions_DROP_MODULE					MouseButtons_1			TRIGGER_L
