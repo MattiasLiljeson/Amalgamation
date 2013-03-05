@@ -116,7 +116,7 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 				skelAnim->m_scene->setTime(skelAnim->m_time);
 				AglMatrix m = skeleton->getInverseBindMatrix(i) * skeleton->getGlobalTransform(i);
 
-				m *= skelAnim->m_offset;
+				m *= skelAnim->m_offset.inverse();
 
 				m_boneMatrices[renderInfo->m_meshId].push_back(m);
 			}

@@ -5,6 +5,7 @@
 class SpawnPointSystem;
 class TimerSystem;
 class EntityFactory;
+class TcpServer;
 // =======================================================================================
 //                                      TempModuleSpawner
 // =======================================================================================
@@ -21,16 +22,17 @@ class EntityFactory;
 class TempModuleSpawner : public EntitySystem
 {
 public:
-	TempModuleSpawner();
+	TempModuleSpawner(TcpServer* p_server);
 	virtual ~TempModuleSpawner();
 
 	virtual void process();
 
 	virtual void initialize();
-
 protected:
 private:
+	TcpServer*			m_server;
 	SpawnPointSystem*	m_spawnPointSystem;
 	TimerSystem*		m_timerSystem;
 	EntityFactory*		m_factory;
+
 };

@@ -10,6 +10,7 @@ TimerSystem::TimerSystem()
 	m_timerIntervals[TimerIntervals::EveryTwoSeconds] = 2.0f;
 	m_timerIntervals[TimerIntervals::EverySecond] = 1.0f;
 	m_timerIntervals[TimerIntervals::HalfSecond] = 0.5f;
+	m_timerIntervals[TimerIntervals::Every32Millisecond] = 0.064f;
 	m_timerIntervals[TimerIntervals::Every32Millisecond] = 0.032f;
 	m_timerIntervals[TimerIntervals::Every16Millisecond] = 0.016f;
 	m_timerIntervals[TimerIntervals::Every8Millisecond] = 0.008f;

@@ -205,7 +205,7 @@ ParticleSystemInstruction* ParticleSystemsComponent::getParticleSystemInstructio
 {
 	ParticleSystemInstruction* instruction = NULL;
 	if( 0<= p_idx && p_idx < m_particleSystems.size() ) {
-		if( m_particleSystems[p_idx].second != NULL ) {
+		if( m_particleSystems[p_idx].first != NULL ) {
 			instruction = m_particleSystems[p_idx].first;
 		}
 	}

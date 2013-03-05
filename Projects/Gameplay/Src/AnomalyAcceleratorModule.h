@@ -11,7 +11,6 @@
 /// and creates tiny black holes that lasts for several seconds.
 ///        
 /// # AnomalyAcceleratorModule
-/// Detailed description...
 /// Created on: 26-2-2013 
 ///---------------------------------------------------------------------------------------
 class AnomalyAcceleratorModule: public Component

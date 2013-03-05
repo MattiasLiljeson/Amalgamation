@@ -8,13 +8,16 @@
 #include "PhysicsBody.h"
 #include "StaticProp.h"
 #include "Transform.h"
+#include <AnomalyBombControllerSystem.h>
 #include <EntityFactory.h>
 #include <LevelGenSystem.h>
+#include <LevelHandlerSystem.h>
 #include <LoadMeshSystemServer.h>
 #include <LookAtSystem.h>
 #include <MineControllerSystem.h>
 #include <MineLayerModuleControllerSystem.h>
 #include <MinigunModuleControllerSystem.h>
+#include <ModuleVisualEffectServerBufferSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
@@ -22,6 +25,7 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ServerClientInfoSystem.h>
 #include <ServerDynamicObjectsSystem.h>
+#include <ServerDynamicPhysicalObjectsSystem.h>
 #include <ServerPacketHandlerSystem.h>
 #include <ServerPickingSystem.h>
 #include <ServerScoreSystem.h>
@@ -32,14 +36,11 @@
 #include <ShipManagerSystem.h>
 #include <ShipModulesControllerSystem.h>
 #include <ShipModulesTrackerSystem.h>
-#include <TimerSystem.h>
-#include <WinningConditionSystem.h>
-#include <LevelHandlerSystem.h>
-#include <ModuleVisualEffectServerBufferSystem.h>
 #include <SpawnPointSystem.h>
 #include <TempModuleSpawner.h>
-#include <AnomalyBombControllerSystem.h>
-#include <ServerDynamicPhysicalObjectsSystem.h>
+#include <TeslaCoilModuleControllerSystem.h>
+#include <TimerSystem.h>
+#include <WinningConditionSystem.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -234,6 +235,7 @@ namespace Srv
 		m_world->setSystem(new MineControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyAcceleratorModuleControllerSystem(m_server), true);
 		m_world->setSystem(new AnomalyBombControllerSystem(m_server), true);
+		m_world->setSystem(new TeslaCoilModuleControllerSystem(m_server));
 		m_world->setSystem(new ShipManagerSystem(), true);
 		m_world->setSystem(new RocketControllerSystem(m_server), true);
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
@@ -247,7 +249,7 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new TempModuleSpawner(), true);
+		m_world->setSystem(new TempModuleSpawner(m_server), true);
 
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
@@ -359,6 +361,13 @@ namespace Srv
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(80.0f, 0.0f, (float)i*15.0f));
 			cp.entityType = EntityType::AnomalyModule;
+			factory->entityFromPacket(cp, &pos);
+		}
+		//Tesla coil
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(90.0f, 0.0f, (float)i*15.0f));
+			cp.entityType = EntityType::TeslaCoilModule;
 			factory->entityFromPacket(cp, &pos);
 		}
 	}

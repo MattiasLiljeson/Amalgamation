@@ -16,13 +16,13 @@
 #include <Connector1to2Module.h>
 #include <DebugMove.h>
 #include <EntityParent.h>
+#include <GameState.h>
 #include <GameplayTags.h>
 #include <HudElement.h>
 #include <InterpolationComponent.h>
 #include <LightsComponent.h>
 #include <LoadMesh.h>
 #include <MineLayerModule.h>
-#include <MinigunModule.h>
 #include <MinigunModule.h>
 #include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
@@ -36,7 +36,6 @@
 #include <ShipModule.h>
 #include <SpeedBoosterModule.h>
 #include <Transform.h>
-#include <GameState.h>
 
 // Systems
 #include <AnomalyBombEffectSystem.h>
@@ -50,7 +49,6 @@
 #include <CameraSystem.h>
 #include <CircularMovementSystem.h>
 #include <ClientConnectToServerSystem.h>
-#include <ClientEntityCountSystem.h>
 #include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
 #include <ClientPacketHandlerSystem.h>
@@ -120,6 +118,8 @@
 #include <SpeedBufferUpdaterSystem.h>
 #include <SpeedFovAdjustSystem.h>
 #include <SpriteSystem.h>
+#include <SlotMarkerSystem.h>
+#include <TeslaEffectSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 
@@ -429,6 +429,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
+	m_world->setSystem(new SlotMarkerSystem());
 
 	/************************************************************************/
 	/* Animation															*/
@@ -459,6 +460,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
 	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
 
 	m_world->initialize();
 

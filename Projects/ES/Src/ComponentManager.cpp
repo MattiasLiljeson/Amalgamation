@@ -72,7 +72,7 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 	if( m_componentsByType[typeIndex][entityIndex] == NULL ) {
 		m_componentsByType[typeIndex][entityIndex] = p_component;
 	} else {
-		DEBUGWARNING(("Component already existing!"));
+		DEBUGWARNING(("Component already existing!\n"));
 	}
 
 	p_entity->setComponentBit( typeIndex, true );

@@ -25,5 +25,7 @@ public:
 	/// \return float
 	///-----------------------------------------------------------------------------------
 	static float randomInterval(float p_min, float p_max);
+	static int randomInteger(int p_max);
+	static int randomIntegerInterval(int p_min, int p_max);
 	static void randomEvenlyDistributedSphere(float* out_x, float* out_y, float* out_z);
 };

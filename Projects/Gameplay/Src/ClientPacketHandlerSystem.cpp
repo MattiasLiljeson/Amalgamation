@@ -100,7 +100,9 @@
 #include <SystemType.h>
 #include <TcpClient.h>
 #include <ToString.h>
-
+#include "SlotMarkerSystem.h"
+#include "TeslaHitPacket.h"
+#include "TeslaEffectSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -594,6 +596,24 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
 				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+
+				if (!data.active)
+				{
+					//Add an icon
+					SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+					EntityType type;
+					type.type = (EntityType::EntityEnums)data.moduleType;
+					slotmarker->addMarker(data.shipSlot, type);
+				}
+				else if (data.networkIdentity)
+				{
+					//Remove an icon
+					SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));
+					EntityType type;
+					type.type = (EntityType::EntityEnums)data.moduleType;
+					slotmarker->removeMarker(data.shipSlot, type);
+				}
+
 			}
 		}
 
@@ -622,11 +642,16 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
-					entity->addComponent(ComponentType::PositionalSoundSource,
-						new PositionalSoundSource(TESTSOUNDEFFECTPATH,
-						SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-						true, 1.0f));
-					entity->applyComponentChanges();
+					Component* positionalSound = entity->getComponent(
+						ComponentType::PositionalSoundSource);
+					if(positionalSound != NULL)
+					{
+						entity->addComponent(ComponentType::PositionalSoundSource,
+							new PositionalSoundSource(TESTSOUNDEFFECTPATH,
+							SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+							true, 1.0f));
+						entity->applyComponentChanges();
+					}
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -975,6 +1000,14 @@ void ClientPacketHandlerSystem::handleIngameState()
 		else if( packetType == (char)PacketType::HitIndicatorPacket )
 		{
 			handleHitIndicationPacket( packet );
+		}
+		else if(packetType == (char)PacketType::TeslaHitPacket)
+		{
+			TeslaHitPacket hitPacket;
+			hitPacket.unpack(packet);
+			static_cast<TeslaEffectSystem*>(m_world->getSystem(
+				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
+				hitPacket.identitiesHit, hitPacket.numberOfHits);
 		}
 		else
 		{

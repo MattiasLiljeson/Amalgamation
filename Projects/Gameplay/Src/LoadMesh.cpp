@@ -20,7 +20,7 @@ LoadMesh::LoadMesh( const string& p_filename,bool p_isPrimitive )
 void LoadMesh::init( vector<ComponentData> p_initData )
 {
 	char* cStr;
-int temp;
+	int temp;
 	for( unsigned int i=0; i<p_initData.size(); i++ )
 	{
 		if( p_initData[i].dataName == "m_filename" )

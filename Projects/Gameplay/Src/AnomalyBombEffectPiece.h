@@ -7,7 +7,7 @@ class AnomalyBombEffectPiece: public Component
 public:
 	AnomalyBombEffectPiece(float p_minRadius, float p_maxRadius, float p_maxLifeTime,
 		float p_startFactor = 0.0f)
-		: Component(ComponentType::GravityMineEffectPiece)
+		: Component(ComponentType::AnomalyBombEffectPiece)
 	{
 		minRadius = p_minRadius;
 		maxRadius = p_maxRadius;
