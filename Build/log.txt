@@ -1,1 +1,20 @@
 Texture file not found, reverting to fallback texture. Assets/Textures/hit.png
+Mine constructed in 0.002 seconds.
+
+MineFinal.agl loaded in 0.006 seconds.
+
+Mine constructed in 0 seconds.
+
+MineFinal.agl loaded in 0 seconds.
+
+Mine constructed in 0 seconds.
+
+MineFinal.agl loaded in 0 seconds.
+
+Mine constructed in 0 seconds.
+
+MineFinal.agl loaded in 0 seconds.
+
+Mine constructed in 0 seconds.
+
+MineFinal.agl loaded in 0 seconds.

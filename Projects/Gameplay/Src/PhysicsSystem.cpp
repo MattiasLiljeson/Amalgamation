@@ -247,7 +247,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 
 
 			//Debug information - Not updated - May be incorrect
-			Entity* entity = m_world->createEntity();
+			/*Entity* entity = m_world->createEntity();
 			Transform* t = new Transform(AglMatrix::createScaleMatrix(obb.size*0.5f)*obb.world);
 			entity->addComponent( ComponentType::Transform, t );
 
@@ -263,7 +263,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			data.rotation		= t->getRotation();
 			data.scale			= t->getScale();
 
-			m_server->broadcastPacket(data.pack());
+			m_server->broadcastPacket(data.pack());*/
 
 		}
 		else
