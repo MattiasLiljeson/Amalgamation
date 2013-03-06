@@ -26,7 +26,7 @@ void HudSystem::initialize()
 {
 	m_hudIndex = m_backend->loadDocument( GUI_HUD_PATH.c_str(), "hud" );
 
-	m_backend->showDocument(m_hudIndex);
+	// m_backend->showDocument(m_hudIndex);
 }
 
 void HudSystem::process()
@@ -48,7 +48,7 @@ void HudSystem::process()
 
 		float screenRatio = 1280 / m_screenSize.x;
 
-		float wingRatio = 228.0f / 527.0f;
+		/*float wingRatio = 228.0f / 527.0f;
 		AglVector2 wingsize = AglVector2(1.0f, 1.0f*gfx->getAspectRatio() * wingRatio) * screenRatio;
 
 		float timerRatio = 109.0f / 953.0f;
@@ -56,7 +56,7 @@ void HudSystem::process()
 
 		m_leftWing = createSprite(AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), "leftwing_HUD.png", wingsize);
 		m_rightWing = createSprite(AglVector3(1.0f-wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), "rightwing_HUD.png", wingsize);
-		m_timerMonitor = createSprite(AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), "timer_HUD.png", timerSize);
+		m_timerMonitor = createSprite(AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), "timer_HUD.png", timerSize);*/
 	}
 	else if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
@@ -69,7 +69,7 @@ void HudSystem::process()
 			m_screenSize = newSize;
 			float screenRatio = 1280 / m_screenSize.x;
 
-			float wingRatio = 228.0f / 527.0f;
+			/*float wingRatio = 228.0f / 527.0f;
 			AglVector2 wingsize = AglVector2(0.3f, 0.3f*gfx->getAspectRatio() * wingRatio) * screenRatio;
 
 			float timerRatio = 109.0f / 953.0f;
@@ -77,7 +77,7 @@ void HudSystem::process()
 
 			reinitSprite(m_leftWing, AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), wingsize);
 			reinitSprite(m_rightWing, AglVector3(1.0f-wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), wingsize);
-			reinitSprite(m_timerMonitor, AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), timerSize);
+			reinitSprite(m_timerMonitor, AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), timerSize);*/
 		}
 	}
 	else if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
