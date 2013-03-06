@@ -132,6 +132,7 @@ void DeferredRenderer::generateSsao()
 
 void DeferredRenderer::generateDof()
 {
+	m_dofGenerationShader->setSSAOBufferData(m_ssaoData);
 	m_dofGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
@@ -178,13 +179,32 @@ void DeferredRenderer::mapGbuffersAndLightAsShaderResources(){
 	m_deviceContext->PSSetShaderResources( 10, 1, &m_gBuffersShaderResource[RenderTargets_DEPTH] );
 }
 
-void DeferredRenderer::mapDofBuffersAsShaderResources(){
+void DeferredRenderer::unmapGbuffersAndLightAsShaderResources(){
+	ID3D11ShaderResourceView* nulz = NULL;
+	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 2, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 4, 1, &nulz );
+	m_deviceContext->PSSetShaderResources(10, 1, &nulz );
+}
 
+void DeferredRenderer::mapDofBuffersAsShaderResources(){
 	m_deviceContext->PSSetShaderResources( 5, 1, &m_dofBuffersShaderResource[RenderTargets_DIFFUSE] );
 	m_deviceContext->PSSetShaderResources( 6, 1, &m_dofBuffersShaderResource[RenderTargets_NORMAL] );
 	m_deviceContext->PSSetShaderResources( 7, 1, &m_dofBuffersShaderResource[RenderTargets_SPECULAR] );
 	m_deviceContext->PSSetShaderResources( 8, 1, &m_dofBuffersShaderResource[RenderTargets_LIGHT_DIFFUSE] );
 	m_deviceContext->PSSetShaderResources( 9, 1, &m_dofBuffersShaderResource[RenderTargets_LIGHT_SPEC] );
+}
+
+void DeferredRenderer::unmapDofBuffersAsShaderResources(){
+	ID3D11ShaderResourceView* nulz = NULL;
+
+	m_deviceContext->PSSetShaderResources( 5, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 6, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 7, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 8, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 9, 1, &nulz );
 }
 
 void DeferredRenderer::unmapShaderResourcesForComposePass()
@@ -419,8 +439,8 @@ void DeferredRenderer::initDofBuffers()
 	m_dofBuffersShaderResource[RenderTargets_DEPTH] = m_dofBuffersShaderResource[RenderTargets_DEPTH];
 	m_dofBuffersShaderResource[RenderTargets_DEPTH] = NULL;
 
-	m_dofBuffers[RenderTargets_DEPTH] = m_gBuffers[RenderTargets_DEPTH];
-	m_dofBuffers[RenderTargets_DEPTH] = NULL;
+	//m_dofBuffers[RenderTargets_DEPTH] = m_gBuffers[RenderTargets_DEPTH];
+	//m_dofBuffers[RenderTargets_DEPTH] = NULL;
 }
 
 

@@ -675,8 +675,16 @@ void GraphicsWrapper::mapGbuffersAndLightAsShaderResources(){
 	m_deferredRenderer->mapGbuffersAndLightAsShaderResources();
 }
 
+void GraphicsWrapper::unmapGbuffersAndLightAsShaderResources(){
+	m_deferredRenderer->unmapGbuffersAndLightAsShaderResources();
+}
+
 void GraphicsWrapper::mapDofBuffersAsShaderResources(){
 	m_deferredRenderer->mapDofBuffersAsShaderResources();
+}
+
+void GraphicsWrapper::unmapDofBuffersAsShaderResources(){
+	m_deferredRenderer->unmapDofBuffersAsShaderResources();
 }
 
 

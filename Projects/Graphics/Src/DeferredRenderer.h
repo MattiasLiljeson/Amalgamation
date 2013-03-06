@@ -80,7 +80,9 @@ public:
 	void mapShaderResourcesForLightPass();
 	void unmapShaderResourcesForLightPass();
 	void mapGbuffersAndLightAsShaderResources();
+	void unmapGbuffersAndLightAsShaderResources();
 	void mapDofBuffersAsShaderResources();
+	void unmapDofBuffersAsShaderResources();
 	void unmapShaderResourcesForComposePass();
 	void unmapDofShaderResources();
 	void unmapDepthAsShaderResource();

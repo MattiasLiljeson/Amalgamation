@@ -158,7 +158,9 @@ public:
 	void renderComposeStage();
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 	void mapGbuffersAndLightAsShaderResources();
+	void unmapGbuffersAndLightAsShaderResources();
 	void mapDofBuffersAsShaderResources();
+	void unmapDofBuffersAsShaderResources();
 	void unmapVariousStagesAfterCompose();
 	unsigned int generateShadowMap();
 	GPUTimer* getGPUTimer();

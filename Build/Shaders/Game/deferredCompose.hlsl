@@ -70,7 +70,7 @@ float4 PS(VertexOut input) : SV_TARGET
 	index.z = 0;
 
 	//float4 dofDiffColor = gDiffBuffer.Sample( pointSampler, input.texCoord );
-	float4 dofDiffColor = gDofDiffBuffer.Sample( pointSampler, input.texCoord );
+	float4 dofDiffColor = gDofLightSpec.Sample( pointSampler, input.texCoord );
 	return dofDiffColor;
 
 	float4 diffColor = gDiffBuffer.Load( index );

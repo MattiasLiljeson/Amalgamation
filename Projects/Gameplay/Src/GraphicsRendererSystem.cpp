@@ -116,11 +116,11 @@ void GraphicsRendererSystem::process(){
 	m_wrapper->getGPUTimer()->Stop(m_profiles[DOF].profile);
 
 	//Compose
-	//m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
+	m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
-	//m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
+	m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
 
 	//Particles
 	m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
@@ -218,6 +218,7 @@ void GraphicsRendererSystem::beginDofGenerationPass()
 
 void GraphicsRendererSystem::endDofGenerationPass()
 {
+	m_wrapper->unmapGbuffersAndLightAsShaderResources();
 }
 
 void GraphicsRendererSystem::initComposePass()
@@ -226,14 +227,16 @@ void GraphicsRendererSystem::initComposePass()
 		RasterizerState::DEFAULT, false);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
-	//m_wrapper->mapGbuffersAndLightAsShaderResources();
+	m_wrapper->mapGbuffersAndLightAsShaderResources();
 	m_wrapper->mapDofBuffersAsShaderResources();
 }
 
 void GraphicsRendererSystem::endComposePass()
 {
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_wrapper->unmapVariousStagesAfterCompose();
+	//m_wrapper->unmapVariousStagesAfterCompose();
+	m_wrapper->unmapDofBuffersAsShaderResources();
+	m_wrapper->unmapGbuffersAndLightAsShaderResources();
 	m_wrapper->unmapDepthFromShader();
 }
 
