@@ -816,6 +816,9 @@
     <ClInclude Include="ShipHighlight.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleHighlightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1394,6 +1397,9 @@
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ShipHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHighlightSystem.cpp">
       <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
     </ClCompile>
   </ItemGroup>

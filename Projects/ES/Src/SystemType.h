@@ -127,6 +127,7 @@ public:	//Enums
 		DamageUpdaterSystem,
 		DamageVisualizerSystem,
 		ShipHighlightSystem,
+		ModuleHighlightSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -1,26 +1,21 @@
 #pragma once
 #include <EntitySystem.h>
 // =======================================================================================
-// ShipHighlightSystem
+// ModuleHighlightSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief Brief...
 ///        
-/// # ShipHighlightSystem
+/// # ModuleHighlightSystem
 /// Detailed description...
 /// Created on: 25-2-2013 
 ///---------------------------------------------------------------------------------------
-class ShipHighlightSystem: public EntitySystem
+class ModuleHighlightSystem: public EntitySystem
 {
 private:
-	float m_minDistance;
-	float m_maxDistance;
 public:
-	ShipHighlightSystem();
+	ModuleHighlightSystem();
 	virtual void processEntities( const vector<Entity*>& p_entities ) final;
-
-	float* getMinDistance();
-	float* getMaxDistance();
 
 };
