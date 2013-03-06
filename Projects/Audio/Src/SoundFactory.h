@@ -32,45 +32,6 @@ public:
 	SoundFactory(IXAudio2* p_soundDevice);
 	~SoundFactory();
 
-	///-----------------------------------------------------------------------------------
-	/// Create an ambient sound that can be altered in runtime.
-	/// \param p_flePath
-	/// \return Sound*
-	///-----------------------------------------------------------------------------------
-	//Sound* createAmbientSound(BasicSoundCreationInfo* p_info);
-
-	///-----------------------------------------------------------------------------------
-	/// Create an ambient sound effects that deletes itself after playback is done.
-	/// \param p_info
-	/// \param p_soundIndex
-	/// \param p_positionalSounds
-	/// \return Sound*
-	///-----------------------------------------------------------------------------------
-	//Sound* createAmbientSoundEffect(BasicSoundCreationInfo* p_info, int p_soundIndex,
-	//	vector<Sound*>* p_sounds);
-		
-
-	///-----------------------------------------------------------------------------------
-	/// Creates a 3D positional sound that can be altered in runtime.
-	/// \param p_basicSoundInfo
-	/// \param p_positionalInfo
-	/// \return PositionalSound*
-	///-----------------------------------------------------------------------------------
-	//PositionalSound* createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
-	//	PositionalSoundCreationInfo* p_positionalInfo);
-
-	///-----------------------------------------------------------------------------------
-	/// Creates a 3D positional sound-effect that deletes itself after playback is done.
-	/// \param p_basicSoundInfo
-	/// \param p_positionalInfo
-	/// \param p_soundIndex
-	/// \param p_positionalSounds
-	/// \return PositionalSound*
-	///-----------------------------------------------------------------------------------
-	//PositionalSound* createPositionalSoundEffect(BasicSoundCreationInfo* p_basicSoundInfo, 
-	//	PositionalSoundCreationInfo* p_positionalInfo, int p_soundIndex,
-	//	vector<Sound*>* p_positionalSounds);
-
 	Sound* createSoundFromHeader(const AudioHeader* p_audioHeader);
 private:
 	void createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
@@ -78,8 +39,7 @@ private:
 	void createSoundBuffer(const AudioHeader* p_audioHeader, 
 		SoundBufferAndHeader* p_soundBuffer);
 	IXAudio2SourceVoice* createSourceVoice(XAUDIO2_BUFFER& p_buffer,
-		WAVEFORMATEX& p_waveFormatEx, IXAudio2VoiceCallback* p_callback = NULL,
-		float maxFreqOffset=1.0f);
+		WAVEFORMATEX& p_waveFormatEx, float maxFreqOffset);
 
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);

@@ -26,12 +26,13 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 
 void MenuBackgroundSceneSystem::process()
 {
+	/*
 	SoundComponent* soundSource = static_cast<SoundComponent*>
 		(m_ship->getComponent(ComponentType::SoundComponent));
 
 	//soundSource->m_front = worldTransform.GetBackward();
 	//soundSource->m_top = worldTransform.GetUp();
-
+	*/
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
 	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME)
@@ -39,7 +40,8 @@ void MenuBackgroundSceneSystem::process()
 		this->setEnabled(false);
 	}
 	else if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
-		auto* entityFactory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+		auto* entityFactory = static_cast<EntityFactory*>
+			(m_world->getSystem(SystemType::EntityFactory));
 		
 		GradientComponent* gradient = static_cast<GradientComponent*>
 			(m_ship->getComponent(ComponentType::Gradient));
@@ -47,8 +49,11 @@ void MenuBackgroundSceneSystem::process()
 		gradient->m_color.layerTwo = entityFactory->getPlayersSecondGradientLevel();
 	}
 	else{
-		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-		double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
+		double rtPositive = m_inputBackend->
+			getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
+		double rtNegative = m_inputBackend->
+			getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
+
 		if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
 			rtPositive > 0.0 || rtNegative > 0.0)
 		{
@@ -66,6 +71,7 @@ void MenuBackgroundSceneSystem::process()
 				m_deltaRotation += (float)deltaNegative;
 			}
 
+			/*
 			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
 			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
 			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
@@ -76,7 +82,7 @@ void MenuBackgroundSceneSystem::process()
 
 			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
 				transform->getTranslation().z) );
-
+			*/
 
 		}
 		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
@@ -115,6 +121,8 @@ void MenuBackgroundSceneSystem::sysEnabled()
 		"space_ship_engine_idle.wav");
 	m_ship->addComponent(soundSoure);
 	*/
+
+	/*
 	SoundComponent* soundComp = new SoundComponent();
 
 	AudioHeader* audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
@@ -124,23 +132,27 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	audioHeader->playInterval = AudioHeader::FOREVER;
 	soundComp->addAudioHeader(audioHeader);
 
+	
 	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
+	audioHeader->file = "Shield_Active_v2.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	audioHeader->timerInterval = 2.0f;
+	soundComp->addAudioHeader(audioHeader);
+	
+
+	audioHeader = new AudioHeader(AudioHeader::SoundType::POSITIONALSOUND);
 	audioHeader->file = "Mine_Blip_v2.wav";
 	audioHeader->path = TESTSOUNDEFFECTPATH;
 	audioHeader->queuedPlayingState = AudioHeader::PLAY;
 	audioHeader->playInterval = AudioHeader::TIMERBASED;
 	audioHeader->timerInterval = 2.0f;
-	soundComp->addAudioHeader(audioHeader);
-
-	audioHeader = new AudioHeader(AudioHeader::SoundType::POSITIONALSOUND);
-	audioHeader->file = "Shield_Active_v2.wav";
-	audioHeader->path = TESTSOUNDEFFECTPATH;
-	audioHeader->queuedPlayingState = AudioHeader::PLAY;
-	audioHeader->playInterval = AudioHeader::FOREVER;
-	audioHeader->maxRange = 80;
+	audioHeader->maxRange = 40;
 	soundComp->addAudioHeader(audioHeader);
 
 	m_ship->addComponent(soundComp);
+	*/
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),

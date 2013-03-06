@@ -92,3 +92,9 @@ float* Sound::getRightChannelRef()
 	return &m_right;
 }
 
+void Sound::setFrequency( float p_frequency )
+{
+	m_sourceVoice->SetFrequencyRatio(p_frequency);
+}
+
+

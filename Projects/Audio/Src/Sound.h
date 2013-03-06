@@ -69,12 +69,15 @@ public:
 	float* getLeftChannelRef();
 	float* getRightChannelRef();
 
+
+	void setFrequency(float p_frequency);
 public:
-	float					m_left;
-	float					m_right;
 	//-END-
+	float m_left;
+	float m_right;
 protected:
 	XAUDIO2_BUFFER*			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
 	XAUDIO2_VOICE_STATE*	m_sourceState;
+	//float m_frequency;
 };
