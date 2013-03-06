@@ -4,7 +4,7 @@
 #include "CircularMovement.h"
 #include "AxisRotate.h"
 #include <RandomUtil.h>
-#include "InputBackendSystem.h"
+#include "InputActionsBackendSystem.h"
 #include "LightsComponent.h"
 #include "ClientStateSystem.h"
 #include "GradientComponent.h"
@@ -39,15 +39,13 @@ void MenuBackgroundSceneSystem::process()
 	}
 	else{
 		m_deltaRotation = 0.0f;
-		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-		double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
-		if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
-			rtPositive > 0.0 || rtNegative > 0.0)
+		if(m_actionBackend->getStatusByAction(InputActionsBackendSystem::
+			Actions_MENU_ACTIVATE_ROTATION) != 0.0)
 		{
-			double deltaPositive = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_POSITIVE)
-				+ rtPositive;
-			double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
-				+ rtNegative;
+			double deltaPositive = m_actionBackend->getStatusByAction(
+				InputActionsBackendSystem::Actions_MENU_RIGHT);
+			double deltaNegative = m_actionBackend->getStatusByAction(
+				InputActionsBackendSystem::Actions_MENU_LEFT);
 			if(deltaPositive > 0.0)
 			{
 				m_deltaRotation -= (float)deltaPositive;
@@ -67,8 +65,8 @@ void MenuBackgroundSceneSystem::process()
 
 void MenuBackgroundSceneSystem::initialize()
 {
-	m_inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(
-		SystemType::InputBackendSystem));
+	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
+		SystemType::InputActionsBackendSystem));
 }
 
 void MenuBackgroundSceneSystem::sysEnabled()

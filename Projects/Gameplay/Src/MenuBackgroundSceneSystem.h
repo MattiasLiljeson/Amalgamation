@@ -1,7 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
 #include <AglVector3.h>
-class InputBackendSystem;
+class InputActionsBackendSystem;
 // =======================================================================================
 // MenuBackgroundSceneSystem
 // =======================================================================================
@@ -32,7 +32,7 @@ private:
 	Entity* m_ship;
 	vector<Entity*> m_rocks;
 	vector<Entity*> m_lights;
-	InputBackendSystem* m_inputBackend;
+	InputActionsBackendSystem* m_actionBackend;
 	float m_deltaRotation;
 
 };

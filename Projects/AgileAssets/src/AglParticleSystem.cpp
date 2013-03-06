@@ -43,6 +43,8 @@ AglParticleSystem::AglParticleSystem()
 	m_header.rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_Z_CULLED;
 	m_header.particleSpace = AglParticleSystemHeader::AglSpace_GLOBAL;
 	m_header.spawnSpace = AglParticleSystemHeader::AglSpace_LOCAL;
+
+	m_min = m_max = m_header.spawnPoint;
 }
 AglParticleSystem::AglParticleSystem(AglParticleSystemHeader p_header)
 {
@@ -259,6 +261,7 @@ void AglParticleSystem::restart()
 
 void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 {
+	m_min = m_max = m_header.spawnPoint;
 	if (m_header.particleFormat == AGL_PARTICLE_FORMAT_STANDARD)
 	{
 		for (unsigned int i = 0; i < m_particles.size(); i++)
@@ -274,6 +277,12 @@ void AglParticleSystem::update(float p_dt, AglVector3 p_cameraPosition)
 			{
 				p.position += p.velocity * p_dt;
 				p.rotation += p.angularVelocity * p_dt;
+
+				float size = max(p.size.x, p.size.y);
+				AglVector3 sizeVec = AglVector3(size, size, size); 
+				//Compute min and max
+				m_max = AglVector3::maxOf(m_max, p.position+sizeVec);
+				m_min = AglVector3::minOf(m_min, p.position-sizeVec);
 			}
 		}
 		for (unsigned int i = 0; i < 5; i++)
@@ -346,4 +355,13 @@ void AglParticleSystem::setRasterizerMode(
 	AglParticleSystemHeader::AglRasterizerMode p_mode)
 {
 	m_header.rasterizerMode = p_mode;
+}
+
+AglVector3 AglParticleSystem::getMax()
+{
+	return m_max;
+}
+AglVector3 AglParticleSystem::getMin()
+{
+	return m_min;
 }

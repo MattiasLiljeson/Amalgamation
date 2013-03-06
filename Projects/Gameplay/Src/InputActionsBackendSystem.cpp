@@ -3,6 +3,7 @@
 #include <fstream>
 #include <DebugUtil.h>
 #include "InputBackendSystem.h"
+#include <Cursor.h>
 
 InputActionsBackendSystem::InputActionsBackendSystem( string p_inputIniFile )
 	: EntitySystem( SystemType::InputActionsBackendSystem )
@@ -45,6 +46,7 @@ void InputActionsBackendSystem::initialize()
 		DEBUGWARNING(( string("WARNING: File: " + m_inputIniFile +
 			" could not be opened!").c_str() ));
 	}
+	initCursor();
 }
 void InputActionsBackendSystem::readControlFromString(string p_key, Control** p_control)
 {
@@ -77,4 +79,33 @@ double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 		status += m_inputControls[p_action][i]->getStatus();
 	}
 	return status;
+}
+
+Control* InputActionsBackendSystem::getControlByAction( Actions p_action, int p_index )
+{
+	if(m_inputControls[p_action].size() >= p_index)
+		return m_inputControls[p_action][p_index];
+	return NULL;
+}
+
+void InputActionsBackendSystem::initCursor()
+{
+	Cursor* cursor = m_inputBackend->getCursor();
+	cursor->addControlSet(
+		60.0, 60.0, false,
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, 0 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 0 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 0 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 0 ),
+		m_inputBackend->getControlByEnum( InputHelper::MouseButtons_LEFT ),
+		m_inputBackend->getControlByEnum( InputHelper::MouseButtons_RIGHT ) );
+	cursor->addControlSet(
+		1000.0, 1000.0, true,
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, 1 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 1 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 1 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 1 ),
+		m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_A ),
+		m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_B ) );
+
 }

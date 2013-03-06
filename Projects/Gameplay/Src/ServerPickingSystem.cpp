@@ -380,7 +380,7 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position,
 			transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
 			AglVector3 pos = conPoints->m_connectionPoints[free[i].first].cpTransform.GetTranslation();
 			pos.transform(transform->getMatrix());
-			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
+			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position) && free[i].second->getIndex() != p_pc.getLatestPick()) //Can't target itself
 			{
 				closest = pos;
 				p_pc.m_targetEntity = free[i].second->getIndex();
@@ -975,7 +975,7 @@ void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 //Send information about the Selection marker
 void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 {
-	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0)
+	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0 && p_ray.m_targetEntity != p_ray.getLatestPick())
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));

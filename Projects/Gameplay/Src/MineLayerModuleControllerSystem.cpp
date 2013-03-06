@@ -16,8 +16,9 @@
 #include "MeshOffsetTransform.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 2,
-	ComponentType::MineLayerModule, ComponentType::PhysicsBody)
+	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 3,
+	ComponentType::MineLayerModule, ComponentType::PhysicsBody,
+	ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }
@@ -63,7 +64,7 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 						m_world->getSystem(SystemType::SystemTypeIdx::PhysicsSystem));
 					AglVector3 moduleVelocity = physics->getController()->getBody(
 						physBody->m_id)->GetVelocity();
-					spawnMine(transform, moduleVelocity,module);
+					spawnMine(transform, moduleVelocity, module);
 					mineLayer->m_timeSinceMineSpawnStart = 0;
 				} 
 
@@ -99,13 +100,13 @@ void MineLayerModuleControllerSystem::spawnMine(Transform* p_transform,
 
 	entity->addComponent( ComponentType::PhysicsBody, 
 		new PhysicsBody() );
-	AglVector3 fireDirection = AglVector3(0, -1.0f, 0);
+	AglVector3 fireDirection = AglVector3(0, 0, 1.0f);
 	const AglQuaternion& rot = p_transform->getRotation();
 	rot.transformVector(fireDirection);
 	entity->addComponent( ComponentType::BodyInitData, 
 		new BodyInitData(p_transform->getTranslation(),
 		p_transform->getRotation(),
-		AglVector3(1.4f, 1.4f, 1.4f), fireDirection * 10.0f + p_moduleVelocity,
+		AglVector3(1.4f, 1.4f, 1.4f), fireDirection * 75.0f + p_moduleVelocity,
 		AglVector3(0, 0, 0), 0, 
 		BodyInitData::DYNAMIC, 
 		BodyInitData::SINGLE, false, true));
