@@ -64,7 +64,7 @@ void ShipHighlightSystem::processEntities( const vector<Entity*>& p_entities )
 					tone.w = 1.0f;
 
 				}
-				highlight->setAdditiveTone(tone*strength);
+				highlight->setTone(tone*strength);
 			}
 			else
 			{
