@@ -7,4 +7,6 @@ d f lifeTime 0.1
 // There can be as many possibleMesh entries as wanted.
 //(The effect will randomly use any of the given meshes)
 d s possibleMesh LightningPart.agl
+d s possibleMesh LigthningPart2.agl
+d s possibleMesh LigthningPart3.agl
 //d s possibleMesh RockA.agl

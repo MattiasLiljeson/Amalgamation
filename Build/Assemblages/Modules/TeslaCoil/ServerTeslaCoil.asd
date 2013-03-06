@@ -9,7 +9,7 @@ d f m_scaleY 1.0
 d f m_scaleZ 1.0
 
 c LoadMesh
-d s m_filename placeholder_module.agl
+d s m_filename TeslaCoil.agl
 
 c BodyInitData
 d f m_positionX 30.0
