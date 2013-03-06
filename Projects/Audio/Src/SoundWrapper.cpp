@@ -184,11 +184,9 @@ void SoundWrapper::initListener()
 
 void SoundWrapper::updateOutputMatrix(int p_index)
 {
-	PositionalSound* sound = static_cast<PositionalSound*>(m_activeSounds[p_index]);
+	PositionalSound* sound = static_cast<PositionalSound*>(m_sounds[p_index]);
 	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
 		X3DAUDIO_CALCULATE_MATRIX, &sound->getDSPSettings());
-
-	//m_masterVoice->GetChannelVolumes(2,m_s)
 
 	sound->m_left = sound->getDSPSettings().pMatrixCoefficients[0];
 	sound->m_right = sound->getDSPSettings().pMatrixCoefficients[1];

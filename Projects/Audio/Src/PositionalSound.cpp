@@ -67,3 +67,9 @@ X3DAUDIO_DSP_SETTINGS* PositionalSound::getDSPSettingsPtr()
 	return &m_dataInfo.settings;
 }
 
+void PositionalSound::setRange( const float& p_range )
+{
+	m_dataInfo.emitter.CurveDistanceScaler = p_range;
+}
+
+

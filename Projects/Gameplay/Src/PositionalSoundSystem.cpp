@@ -80,6 +80,14 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 		p_soundComponent->getAllAudiosByType(AudioHeader::POSITIONALSOUND);
 
 	for (unsigned int i = 0; i < positionalSound->size(); i++){
+		AudioHeader* header = positionalSound->at(i);
+		header->pos = trans->getTranslation();
+
+		PositionalSound* sound = static_cast<PositionalSound*>
+			(m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex));
+		sound->setPosition(header->pos);
+		sound->setRange(header->maxRange);
+		m_audioBackendSystem->updateOutputMatrix(header->soundIndex);
 	}
 	
 	

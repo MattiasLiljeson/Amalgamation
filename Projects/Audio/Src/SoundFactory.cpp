@@ -169,7 +169,7 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 		{
 			DEBUGWARNING((e.what()));
 			delete bufferAndHeader;
-			bufferAndHeader = m_soundBufferManager.getResource("default_what.wav");
+			return NULL;
 		}
 	}
 
@@ -192,13 +192,16 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 
 	case AudioHeader::POSITIONALSOUND:
 		{
-			X3DAUDIO_EMITTER emitter = {0};
-			initEmitter(&emitter, p_audioHeader);
-			X3DAUDIO_DSP_SETTINGS dspSettings = {0};
-			initDSPSettings(&dspSettings, 2, p_audioHeader);
+			X3DAUDIO_EMITTER		emitter = {0};
+			X3DAUDIO_DSP_SETTINGS	dspSettings = {0};
 			PositionalSoundInfo info;
+
+			initEmitter(&emitter, p_audioHeader);
+			initDSPSettings(&dspSettings, 2, p_audioHeader);
+
 			info.emitter = emitter;
 			info.settings = dspSettings;
+
 			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
 				*bufferAndHeader->waveFormatEx, NULL);
 			newSound = new PositionalSound(soundVoice, bufferAndHeader->buffer, info);

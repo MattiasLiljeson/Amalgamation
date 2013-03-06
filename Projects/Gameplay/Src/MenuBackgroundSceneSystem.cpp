@@ -132,13 +132,12 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	audioHeader->timerInterval = 2.0f;
 	soundComp->addAudioHeader(audioHeader);
 
-	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENTRANGE);
+	audioHeader = new AudioHeader(AudioHeader::SoundType::POSITIONALSOUND);
 	audioHeader->file = "Shield_Active_v2.wav";
 	audioHeader->path = TESTSOUNDEFFECTPATH;
 	audioHeader->queuedPlayingState = AudioHeader::PLAY;
 	audioHeader->playInterval = AudioHeader::FOREVER;
 	audioHeader->maxRange = 80;
-	audioHeader->minRange = 50; 
 	soundComp->addAudioHeader(audioHeader);
 
 	m_ship->addComponent(soundComp);
