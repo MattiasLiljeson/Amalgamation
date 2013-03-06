@@ -286,7 +286,7 @@ void MinigunModuleControllerSystem::updateRay(Entity* p_entity, AglVector3& p_ra
 	AglMatrix sightOffset = AglMatrix::identityMatrix();
 	for (unsigned int sp = 0; sps->m_spawnPoints.size(); sp++)
 	{
-		if (sps->m_spawnPoints[sp].spAction == "Bullet")
+		if (sps->m_spawnPoints[sp].spAction == "Laser")
 		{
 			sightOffset = sps->m_spawnPoints[sp].spTransform;
 			break;
