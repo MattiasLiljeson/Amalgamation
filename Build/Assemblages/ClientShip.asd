@@ -36,7 +36,7 @@ d f 1:specularG 0.8
 d string 	2:typeAsStr 	"spot"
 d float 	2:range 		500.0
 d float 	2:spotPower 	30.0
-d float 	2:lightEnergy 	12
+d float 	2:lightEnergy 	7
 d vec3 		2:translation 	0, 		0,		10
 d vec3 		2:color 		0.98,	0.79,	0.3
 d vec3 		2:scale 		100, 	500, 	100
