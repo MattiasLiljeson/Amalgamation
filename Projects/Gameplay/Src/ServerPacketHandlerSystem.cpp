@@ -54,6 +54,7 @@
 #include "LevelHandlerSystem.h"
 #include "SpawnPointSystem.h"
 #include "LevelGenSystem.h"
+#include <OutputLogger.h>
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -754,6 +755,6 @@ Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClien
 
 void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p_packetType )
 {
-	DEBUGPRINT((("SERVER: Not handled("+p_state+"): " +
-		toString(p_packetType) + "\n").c_str()));
+	m_world->getOutputLogger()->write(("SERVER: Not handled("+p_state+"): " +
+		toString(p_packetType) + "\n").c_str());
 }

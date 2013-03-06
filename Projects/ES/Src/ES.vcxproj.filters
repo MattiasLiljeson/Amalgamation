@@ -68,6 +68,9 @@
     <ClCompile Include="Recipe.cpp">
       <Filter>Assemblages</Filter>
     </ClCompile>
+    <ClCompile Include="OutputLogger.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="AssemblageException.h">
       <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputLogger.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

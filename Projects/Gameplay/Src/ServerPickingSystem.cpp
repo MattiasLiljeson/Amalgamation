@@ -24,6 +24,7 @@
 #include "PlayerSystem.h"
 #include "TcpServer.h"
 #include "PlayerComponent.h"
+#include "ModuleOnChamberStartPoint.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -687,6 +688,15 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		editSphereUpdate.m_radius = bs.radius;
 		m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
 
+		// If the module was spawned on a spawnpoint, then the module wont be on the
+		// on the spawnpoint anymore. Remove that component if it exists.
+		auto chamberSpawnPoint = static_cast<ModuleOnChamberStartPoint*>(
+			module->getComponent(ComponentType::ModuleOnChamberSpawnPoint));
+		if (chamberSpawnPoint)
+		{
+			module->removeComponent(ComponentType::ModuleOnChamberSpawnPoint);
+			module->applyComponentChanges();
+		}
 
 		/************************************************************************/
 		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/

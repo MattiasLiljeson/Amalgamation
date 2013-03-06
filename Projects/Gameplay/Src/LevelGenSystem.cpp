@@ -25,6 +25,7 @@
 #include "EntityFactory.h"
 #include "LevelInfo.h"
 #include "LevelPieceRoot.h"
+#include <OutputLogger.h>
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -77,7 +78,7 @@ void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMes
 				nextBoundingSphere);
 		}
 		string logtext = p_pieceMesh->at(0)->name + " : r=" + toString(boundingSphere.radius) + "\n";
-		DEBUGPRINT( (logtext.c_str()) );
+		m_world->getOutputLogger()->write( logtext.c_str() );
 
 		p_pieceMesh->at(0)->meshHeader.boundingSphere = boundingSphere;
 	}
@@ -179,12 +180,14 @@ void LevelGenSystem::generateLevel(int p_nrOfPlayers)
 		}
 		else
 		{
-			DEBUGPRINT(("Warning: LevelGenSystem is not ready to generate level yet.\n"));
+			m_world->getOutputLogger()
+				->write("LevelGenSystem is not ready to generate level yet.\n", WRITETYPE_WARNING);
 		}
 	}
 	else
 	{
-		DEBUGPRINT(("Warning: LevelGenSystem has already generated a level.\n"));
+		m_world->getOutputLogger()
+			->write("LevelGenSystem has already generated a level.\n", WRITETYPE_WARNING);
 	}
 }
 
@@ -246,6 +249,8 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 
 		pieces = vector<LevelPiece*>(temps);
 	}
+
+	testLevelMaxSizeHit();
 }
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
@@ -255,7 +260,8 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 	
 	if (!entity)
 	{
-		DEBUGWARNING(("LevelGenSystem Warning: Unable to create the specified level piece entity!"));
+		m_world->getOutputLogger()
+			->write("LevelGenSystem was unable to create the specified level piece entity!\n", WRITETYPE_WARNING);
 	}
 	else
 	{
@@ -371,7 +377,8 @@ void LevelGenSystem::createLevelEntities()
 		//e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
-	DEBUGPRINT(((toString(m_generatedPieces.size()) + " chambers generated.\n").c_str()));
+	m_world->getOutputLogger()
+		->write((toString(m_generatedPieces.size()) + " chambers generated.\n").c_str());
 }
 
 const AglVector3&  LevelGenSystem::getWorldMin() const
@@ -446,7 +453,9 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 		{
 			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i));
 			m_world->addEntity(plug);
-			DEBUGPRINT(("Added end plug!\n"));
+			
+			m_world->getOutputLogger()
+				->write("Added end plug!\n");
 		}
 	}
 }
@@ -497,7 +506,9 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	int newPieceRadius = (int)m_modelResources[p_newPiece->getTypeId()]->meshHeader.boundingSphere.radius;
 	if (m_useLevelMaxSize && m_currentLevelSize + newPieceRadius > m_levelMaxSize)
 	{
-		DEBUGPRINT(("Chamber piece too large. A level plug has been created instead.\n"));
+		m_world->getOutputLogger()
+			->write("Chamber piece too large. A level plug has been created instead.\n");
+
 		tooLarge = true;
 	}
 	p_newPiece->connectTo(p_target, p_slot);
@@ -509,7 +520,8 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 			m_generatedPieces[i]->getBoundingSphere()) && 
 			p_newPiece->getChild(0) != m_generatedPieces[i]->getTransform() )
 		{
-			DEBUGPRINT(("Collision between chambers detected. A level plug has been created instead.\n"));
+			m_world->getOutputLogger()
+				->write("Collision between chambers detected. A level plug has been created instead.\n");
 			colliding = true;
 			break;
 		}
@@ -531,7 +543,9 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 bool LevelGenSystem::testLevelMaxSizeHit()
 {
 	string logtext = "Current level size: " + toString(m_currentLevelSize) + "\n";
-	DEBUGPRINT( (logtext.c_str()) );
+	m_world->getOutputLogger()
+		->write( logtext.c_str() );
+
 	if (m_currentLevelSize >= m_levelMaxSize)
 	{
 		logtext = "Max level size hit:\n\tdesired=" 
@@ -539,7 +553,9 @@ bool LevelGenSystem::testLevelMaxSizeHit()
 			+ "\n\tresulted="
 			+ toString(m_currentLevelSize)
 			+ "\n";
-		DEBUGPRINT( (logtext.c_str()) );
+
+		m_world->getOutputLogger()
+			->write( logtext.c_str() );
 		m_hasHitLevelMaxSize = true;
 	}
 	return m_hasHitLevelMaxSize;

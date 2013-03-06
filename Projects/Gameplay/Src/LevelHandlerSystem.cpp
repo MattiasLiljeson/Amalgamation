@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "SpawnPointSystem.h"
 #include "LevelGenSystem.h"
+#include <OutputLogger.h>
 
 LevelHandlerSystem::LevelHandlerSystem()
 	: EntitySystem(SystemType::LevelHandlerSystem, 2, ComponentType::LevelPieceRoot, ComponentType::Transform)
@@ -33,7 +34,8 @@ void LevelHandlerSystem::inserted( Entity* p_entity )
 	if (levelGen && pieceRoot->pieceId == levelGen->getGeneratedPiecesCount() - 1)
 	{
 		m_hasLevel = true;
-		DEBUGPRINT(("Level is now properly generated and loaded.\n"));
+		m_world->getOutputLogger()
+			->write("Level is now properly generated and loaded.\n");
 	}
 }
 

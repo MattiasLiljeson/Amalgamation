@@ -44,6 +44,7 @@
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
     <ClInclude Include="ModuleHighlightSystem.h" />
+    <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="ShipHighlight.h" />

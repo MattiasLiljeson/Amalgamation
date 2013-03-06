@@ -819,6 +819,9 @@
     <ClInclude Include="SoundComponent.h">
       <Filter>Components\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleOnChamberStartPoint.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
