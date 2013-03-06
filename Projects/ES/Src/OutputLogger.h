@@ -1,36 +1,39 @@
 #pragma once
 
+#include "EntitySystem.h"
 #include <fstream>
 using namespace std;
 
 enum WriteType
 {
-	WRITETYPE_UNKNOWN,
+	WRITETYPE_INFO,
 	WRITETYPE_WARNING,
 	WRITETYPE_ERROR
 };
 
 // =======================================================================================
-//                                      DebugFileWriter
+//                                      OutputLogger
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # DebugFileWriter
+/// # OutputLogger
 /// Detailed description.....
-/// Created on: 5-3-2013 
+/// Created on: 6-3-2013 
 ///---------------------------------------------------------------------------------------
 
-
-class DebugFileWriter
+class OutputLogger : public EntitySystem
 {
 public:
-	void writeToFile(const char* p_msg, WriteType p_type = WRITETYPE_UNKNOWN);
+	OutputLogger(const char* p_fileName);
+	~OutputLogger();
 
-	DebugFileWriter();
-	~DebugFileWriter();
+	void write(const char* p_msg, WriteType p_type = WRITETYPE_INFO);
+
+	virtual bool checkProcessing();
+
+protected:
 private:
 	ofstream m_outStream;
-	bool	 m_initialised;
 };

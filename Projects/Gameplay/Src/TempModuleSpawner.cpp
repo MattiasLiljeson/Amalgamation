@@ -8,6 +8,7 @@
 #include "ServerStateSystem.h"
 #include "NetworkSynced.h"
 #include "ModuleOnChamberStartPoint.h"
+#include <OutputLogger.h>
 
 #include <TcpServer.h>
 #include <DebugUtil.h>
@@ -38,7 +39,7 @@ void TempModuleSpawner::process()
 			
 			const ModuleSpawnPointData* pointData = m_spawnPointSystem->getRandomFreeModuleSpawnPointData();
 
-			if (! (pointData->transform == m_spawnPointSystem->invalidSpawnPoint()) )
+			if ( pointData )
 			//while (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
 			{
 				AglMatrix pos = pointData->transform;
@@ -66,8 +67,9 @@ void TempModuleSpawner::process()
 				cp.owner			= netSync->getNetworkOwner();
 				cp.playerID			= netSync->getPlayerID();
 
-				DEBUGPRINT(((toString("Module spawned at position ") + posAsString).c_str()));
-
+				m_world->getOutputLogger()
+					->write((toString("Module spawned at position ") + posAsString).c_str());
+				
 				//pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
 				m_server->broadcastPacket(cp.pack());
 			}
@@ -78,7 +80,8 @@ void TempModuleSpawner::process()
 		}
 		else
 		{
-			DEBUGPRINT(("Warning: Spawnpoints aren't ready yet.\n"));
+			m_world->getOutputLogger()
+				->write("Spawnpoints aren't ready yet.\n", WRITETYPE_WARNING);
 		}
 	}
 }
@@ -93,6 +96,7 @@ void TempModuleSpawner::initialize()
 
 	m_factory = static_cast<EntityFactory*>(
 		m_world->getSystem(SystemType::EntityFactory));
+
 }
 
 void TempModuleSpawner::processEntities( const vector<Entity*>& p_entities )
@@ -102,12 +106,14 @@ void TempModuleSpawner::processEntities( const vector<Entity*>& p_entities )
 
 void TempModuleSpawner::inserted( Entity* p_entity )
 {
-	DEBUGPRINT(("Module inserted in TempModuleSpawner system."));
+	m_world->getOutputLogger()
+		->write("Module inserted in TempModuleSpawner system.\n");
 }
 
 void TempModuleSpawner::removed( Entity* p_entity )
 {
-	DEBUGPRINT(("Module removed from TempModuleSpawner system."));
+	m_world->getOutputLogger()
+		->write("Module removed from TempModuleSpawner system.\n");
 	auto spawnPointInfo = static_cast<ModuleOnChamberStartPoint*>(
 		p_entity->getComponent(ComponentType::ModuleOnChamberSpawnPoint));
 

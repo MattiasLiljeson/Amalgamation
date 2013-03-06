@@ -7,6 +7,7 @@
 #include "LevelPieceRoot.h"
 #include "Transform.h"
 #include "TimerSystem.h"
+#include <OutputLogger.h>
 
 #include <ToString.h>
 #include <DebugUtil.h>
@@ -30,7 +31,6 @@ void SpawnPointSystem::initialize()
 
 	m_timerSystem = static_cast<TimerSystem*>(
 		m_world->getSystem(SystemType::TimerSystem));
-
 }
 
 void SpawnPointSystem::clearSpawnPoints()
@@ -69,7 +69,9 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 		vector<ShipSpawnPointData*> newShipSpawnPoints;
 		vector<ModuleSpawnPointData*> newModuleSpawnPoints;
 
-		DEBUGPRINT(( (toString("Starting to read spawnpoint of chamber ") + toString(pieceId) + " " + p_entity->getName() + "\n").c_str()) );
+		m_world->getOutputLogger()
+			->write((toString("Starting to read spawnpoint of chamber ") + toString(pieceId) + " " + p_entity->getName() + "\n").c_str());
+		
 		auto rootTransform = static_cast<Transform*>(
 			p_entity->getComponent(ComponentType::Transform));
 
@@ -117,22 +119,24 @@ void SpawnPointSystem::inserted( Entity* p_entity )
 		debugPrintStr += toString(newModuleSpawnPoints.size());
 		debugPrintStr += " module spawnpoints.\n";
 
-		DEBUGPRINT((debugPrintStr.c_str()));
+		m_world->getOutputLogger()
+			->write(debugPrintStr.c_str());
 	}
 	else
 	{
-		DEBUGPRINT(("Warning: SpawnPointSystem received an entity that contains an invalid levelId.\n"));
+		m_world->getOutputLogger()
+			->write("SpawnPointSystem received an entity that contains an invalid levelId.\n", WRITETYPE_WARNING);
 	}
 }
 
 void SpawnPointSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	if (m_timerSystem->checkTimeInterval(TimerIntervals::Every64Millisecond))
+	if (m_timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
 	{
 		int spawnPointId = 0;
 		while (spawnPointId < m_refreshingSpawnPoints.size())
 		{
-			m_refreshingSpawnPoints[spawnPointId]->currentCooldown -= 0.064f;
+			m_refreshingSpawnPoints[spawnPointId]->currentCooldown -= 1.0f;
 			if (m_refreshingSpawnPoints[spawnPointId]->currentCooldown <= 0.0f)
 			{
 				string debugPrintStr = "Spawnpoint cooldown is done.\n\t@chamber: ";
@@ -140,7 +144,8 @@ void SpawnPointSystem::processEntities( const vector<Entity*>& p_entities )
 				debugPrintStr += "\n\t@spawnpoint: ";
 				debugPrintStr += toString(m_refreshingSpawnPoints[spawnPointId]->atSpawnPoint);
 				debugPrintStr += "\n";
-				DEBUGPRINT((debugPrintStr.c_str()));
+				m_world->getOutputLogger()
+					->write(debugPrintStr.c_str());
 
 				m_refreshingSpawnPoints[spawnPointId]->state = SPAWNPOINTSTATE_FREE;
 				m_refreshingSpawnPoints[spawnPointId] = m_refreshingSpawnPoints.back();
@@ -185,7 +190,7 @@ const ModuleSpawnPointData* SpawnPointSystem::getRandomFreeModuleSpawnPointData(
 	else
 	{
 		//DEBUGPRINT(("Warning: Found no available module spawnpoint data. An invalidSpawnPointData is returned.\n"));
-		return &s_invalidSpawnPointData;
+		return NULL;
 	}
 }
 
