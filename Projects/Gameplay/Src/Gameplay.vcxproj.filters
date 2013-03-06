@@ -109,6 +109,9 @@
     <Filter Include="Systems\Network\Physics">
       <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Gameplay\Client Only\Highlight">
+      <UniqueIdentifier>{ddf2a0ab-1f23-45a9-99e5-a94587b57780}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -807,6 +810,12 @@
     <ClInclude Include="TeslaCoilModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ShipHiglightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipHighlight.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1383,6 +1392,9 @@
     </ClCompile>
     <ClCompile Include="TeslaCoilModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

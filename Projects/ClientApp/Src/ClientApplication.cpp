@@ -122,6 +122,7 @@
 #include <TeslaEffectSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
+#include <ShipHiglightSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -337,6 +338,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ShipParticleSystemUpdater() );
 	m_world->setSystem( new EditSphereSystem() );
 	m_world->setSystem( new SelectionMarkerSystem());
+	m_world->setSystem( new ShipHighlightSystem());
 
 	/************************************************************************/
 	/* Player    															*/

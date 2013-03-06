@@ -122,6 +122,7 @@ public:	//Enums
 		SlotMarkerSprite,
 		AnomalyBombEffectPiece,
 		TeslaEffectPiece,
+		ShipHighlight,
 		NUM_COMPONENT_TYPES
 	};
 

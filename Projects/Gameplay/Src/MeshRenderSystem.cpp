@@ -21,6 +21,7 @@
 #include "ModuleHelper.h"
 #include "ShipModule.h"
 #include "ColorTone.h"
+#include "ShipHighlight.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -178,10 +179,17 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 	if (colorTone && colorTone->toneEnabled)
 		p_data->setColorTone(colorTone->color);
 
+	//neg-x creates additive blending
+	//neg-y replaces color entirely
+
 	if (p_entity->getComponent(ComponentType::SelectionMarker))
 		p_data->setColorTone(AglVector4(-0.6f, 0.8f, 0.2f, 1)); ///< neg-sign on y for total color replacement
 	else if (p_entity->getComponent(ComponentType::TAG_Highlight))
 		p_data->setColorTone(AglVector4(0.5f, 1, 1, 1));
+
+	ShipHighlight* highlight = static_cast<ShipHighlight*>(p_entity->getComponent(ComponentType::ShipHighlight));
+	if (highlight && highlight->active)
+		p_data->setColorTone(highlight->color);
 
 	p_data->setGradientColor( matInfo.getGradientColors() );
 }
