@@ -16,8 +16,9 @@
 #include "MeshOffsetTransform.h"
 
 MineLayerModuleControllerSystem::MineLayerModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 2,
-	ComponentType::MineLayerModule, ComponentType::PhysicsBody)
+	: EntitySystem(SystemType::MineLayerModuleControllerSystem, 3,
+	ComponentType::MineLayerModule, ComponentType::PhysicsBody,
+	ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }

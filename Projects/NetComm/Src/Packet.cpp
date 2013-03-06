@@ -80,105 +80,105 @@ bool Packet::isEmpty() const
 	return empty;
 }
 
-Packet& Packet::operator << ( bool p_data )
+Packet& Packet::operator << ( const bool& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << (char p_data)
+Packet& Packet::operator << ( const char& p_data )
 {	
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << (unsigned char p_data)
+Packet& Packet::operator << ( const unsigned char& p_data )
 {	
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << (short p_data)
+Packet& Packet::operator << ( const short& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator<<( unsigned short p_data )
+Packet& Packet::operator << ( const unsigned short& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << (int p_data)
+Packet& Packet::operator << ( const int& p_data )
 {	
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << ( unsigned int p_data )
+Packet& Packet::operator << ( const unsigned int& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << ( float p_data )
+Packet& Packet::operator << ( const float& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator << (double p_data)
+Packet& Packet::operator << ( const double& p_data )
 {	
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator<<( AglMatrix& p_data )
+Packet& Packet::operator << ( const AglMatrix& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)(&p_data), dataSize);
 	return *this;
 }
 
 
-Packet& Packet::operator << ( AglVector3& p_data)
+Packet& Packet::operator << ( const AglVector3& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)(&p_data), dataSize);
 	return *this;
 }
-Packet& Packet::operator << (AglVector4& p_data)
+Packet& Packet::operator << ( const AglVector4& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator <<( AglQuaternion& p_data )
+Packet& Packet::operator <<( const AglQuaternion& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator<<( SYSTEMTIME p_data )
+Packet& Packet::operator << ( const SYSTEMTIME& p_data )
 {
 	unsigned int dataSize = sizeof(p_data);
-	WriteData(&p_data, dataSize);
+	WriteData((void*)&p_data, dataSize);
 	return *this;
 }
 
-Packet& Packet::operator<<( string p_data )
+Packet& Packet::operator << ( const string& p_data )
 {
 	vector<unsigned char> buffer;
 	buffer.resize(p_data.size() + 1);
