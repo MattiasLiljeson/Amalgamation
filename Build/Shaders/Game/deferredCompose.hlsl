@@ -11,12 +11,18 @@ static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
 										{0.02f,0.04f,0.08f,0.04f,0.02f},
 										{0.01f,0.02f,0.04f,0.02f,0.01f}};
 
-Texture2D gDiffBuffer	: register(t0);
-Texture2D gNormalBuffer	: register(t1);
-Texture2D gSpecBuffer	: register(t2);
-Texture2D gLightDiff 	: register(t3);
-Texture2D gLightSpec	: register(t4);
-Texture2D gDepthBuffer	: register(t5);
+Texture2D gDiffBuffer		: register(t0);
+Texture2D gNormalBuffer		: register(t1);
+Texture2D gSpecBuffer		: register(t2);
+Texture2D gLightDiff 		: register(t3);
+Texture2D gLightSpec		: register(t4);
+
+Texture2D gDofDiffBuffer	: register(t5);
+Texture2D gDofNormalBuffer	: register(t6);
+Texture2D gDofSpecBuffer	: register(t7);
+Texture2D gDofLightDiff 	: register(t8);
+Texture2D gDofLightSpec		: register(t9);
+Texture2D gDepthBuffer		: register(t10);
 
 SamplerState pointSampler : register(s0);
 
@@ -62,6 +68,10 @@ float4 PS(VertexOut input) : SV_TARGET
 	uint3 index;
 	index.xy = input.position.xy;
 	index.z = 0;
+
+	//float4 dofDiffColor = gDiffBuffer.Sample( pointSampler, input.texCoord );
+	float4 dofDiffColor = gDofDiffBuffer.Sample( pointSampler, input.texCoord );
+	return dofDiffColor;
 
 	float4 diffColor = gDiffBuffer.Load( index );
 	float4 specColor = gSpecBuffer.Load( index );

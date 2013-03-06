@@ -77,37 +77,22 @@ public:
 	///-----------------------------------------------------------------------------------
 	void setRasterizerStateSettings(RasterizerState::Mode p_state, 
 									bool p_allowWireframeModeOverride=true);
-
 	void setBlendStateSettings( BlendState::Mode p_state );
-
 	void setScissorRegion(int x, int y, int width, int height);
-
 	void setPrimitiveTopology( PrimitiveTopology::Mode p_state);
-
 	void setBaseRenderTargets();
-
+	void setLightRenderTargets();
+	void setDofRenderTargets();
 	void setComposedRenderTargetWithNoDepthStencil();
-
-	void setLightPassRenderTarget();
-
 	void setParticleRenderState();
-
 	void setViewportToShadowMapSize();
-
 	void resetViewportToOriginalSize();
-
 	void setShadowMapAsRenderTarget(unsigned int p_shadowMapIdx);
-
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
-
 	void setShadowViewProjections( AglMatrix* p_viewProj );
-
 	void setRenderingShadows();
-	
 	void stopedRenderingShadows();
-
 	void setActiveShadow( int p_activeShadow );
-
 	void unmapPerShadowBuffer();
 
 	///-----------------------------------------------------------------------------------
@@ -117,11 +102,8 @@ public:
 	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
 	void mapDeferredBaseToShader();
-
 	void mapNeededShaderResourceToLightPass(int* p_activeShadows);
-
 	void unmapDeferredBaseFromShader();
-
 	void unmapUsedShaderResourceFromLightPass(int* p_activeShadows);
 
 	void unmapDepthFromShader();
@@ -145,25 +127,16 @@ public:
 		int p_numVertices, PNTTBVertex* p_vertices, 
 		int p_numIndices, DIndex* p_indices,
 		int p_textureId);
-
-
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
 	unsigned int createTexture( const byte* p_source, int p_width, int p_height,
 		int p_pitch, int p_bitLevel, TextureParser::TEXTURE_TYPE p_type );
-
 	int getMeshId( const string& p_name );
-
-
-
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
-
 	void hookUpAntTweakBar();
-
 	int getWindowWidth();
 	int getWindowHeight();
-
 	pair<int,int> getScreenPixelPosFromNDC(float p_x, float p_y);
 	pair<int,int> getScreenPixelPosFromNDC(float p_x, float p_y, int p_width, int p_height);
 	pair<float,float> getNDCPosFromScreenPixel(int p_x, int p_y);
@@ -180,25 +153,17 @@ public:
 	void setWireframeMode(bool p_wireframe);
 
 	void renderParticleSystem( ParticleSystemAndTexture* p_system, InstanceData p_transform );
-
-	void renderSsao();
-
+	void generateSsao();
+	void generateDof();
 	void renderComposeStage();
-
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
-
-	void mapVariousStagesForCompose();
-
-	void unmapVariousStagesForCompose();
-
+	void mapGbuffersAndLightAsShaderResources();
+	void mapDofBuffersAsShaderResources();
+	void unmapVariousStagesAfterCompose();
 	unsigned int generateShadowMap();
-
 	GPUTimer* getGPUTimer();
-
 	int getEmptyTexture();
-
 	MaterialInfo getMaterialInfoFromMeshID(unsigned int p_index);
-
 	ResourceManager<Texture>* getTextureManager()
 	{
 		return m_textureManager;
@@ -214,9 +179,7 @@ private:
 	void initHardware();
 
 	void releaseBackBuffer();
-
 	void initBackBuffer();
-
 	void renderMeshInstanced(void* p_vertexBufferRef, UINT32 p_vertexSize,
 		void* p_vertexAnimationBufferRef, UINT32 p_vertexAnimationSize,
 		void* p_indexBufferRef, UINT32 p_indexElementCount,

@@ -67,18 +67,22 @@ public:
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 	void releaseRenderTargetsAndDepthStencil();
 
-	// Buffer as RTs
+	// Buffers as RTs
 	void setBasePassRenderTargets();
-	void setLightRenderTarget();
-	void renderSsao();
+	void setLightRenderTargets();
+	void generateSsao();
+	void setDofRenderTargets();
+	void generateDof();
 	void renderComposeStage();
 
 	// Buffers as resources
 	void mapShaderResourcesForLightPass(ID3D11ShaderResourceView* p_shadowMap);
 	void mapShaderResourcesForLightPass();
 	void unmapShaderResourcesForLightPass();
-	void mapShaderResourcesForComposePass();
+	void mapGbuffersAndLightAsShaderResources();
+	void mapDofBuffersAsShaderResources();
 	void unmapShaderResourcesForComposePass();
+	void unmapDofShaderResources();
 	void unmapDepthAsShaderResource();
 
 	// Buffer / RT manipulation
@@ -111,6 +115,7 @@ private:
 	void initDepthStencil();
 	void initGeometryBuffers();
 	void initLightBuffers();
+	void initDofBuffers();
 	void buildBlendStates();
 	void buildRasterizerStates();
 	void initShaders();
@@ -122,6 +127,9 @@ private:
 	void checkHr( HRESULT p_hr, const string& p_file,
 		const string& p_function, int p_line );
 
+	void createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
+		ID3D11RenderTargetView** out_rtv, int p_width, int p_height, DXGI_FORMAT p_format );
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -129,8 +137,14 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
+	// Regular Gbuffers
 	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT-1];
 	ID3D11ShaderResourceView*	m_gBuffersShaderResource[RenderTargets_CNT];
+
+	// Dof
+	ID3D11RenderTargetView*		m_dofBuffers[RenderTargets_CNT-1];
+	ID3D11ShaderResourceView*	m_dofBuffersShaderResource[RenderTargets_CNT];
+
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*				m_baseShader;
@@ -140,6 +154,7 @@ private:
 
 	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_ssaoShader;
+	DeferredComposeShader*	m_dofGenerationShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

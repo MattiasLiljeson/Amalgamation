@@ -412,15 +412,23 @@ void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
 void GraphicsWrapper::setPrimitiveTopology( PrimitiveTopology::Mode p_state ){
 	m_deviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(p_state));
 }
+
 void GraphicsWrapper::setBaseRenderTargets(){
 	m_deferredRenderer->setBasePassRenderTargets();
 }
+
+void GraphicsWrapper::setLightRenderTargets(){
+	m_deferredRenderer->setLightRenderTargets();
+}
+
+void GraphicsWrapper::setDofRenderTargets(){
+	m_deferredRenderer->setDofRenderTargets();
+}
+
 void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 }
-void GraphicsWrapper::setLightPassRenderTarget(){
-	m_deferredRenderer->setLightRenderTarget();
-}
+
 void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 	m_shadowShader->sendViewProjection(p_viewProj);
 	m_shadowShader->apply();
@@ -441,6 +449,7 @@ void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows )
 	}
 
 }
+
 void GraphicsWrapper::unmapDeferredBaseFromShader(){
 	m_deferredRenderer->unmapShaderResourcesForLightPass();
 }
@@ -650,23 +659,31 @@ void GraphicsWrapper::unmapDepthFromShader(){
 	m_deferredRenderer->unmapDepthAsShaderResource();
 }
 
-void GraphicsWrapper::renderSsao(){
-	m_deferredRenderer->renderSsao();
+void GraphicsWrapper::generateSsao(){
+	m_deferredRenderer->generateSsao();
+}
+
+void GraphicsWrapper::generateDof(){
+	m_deferredRenderer->generateDof();
 }
 
 void GraphicsWrapper::renderComposeStage(){
 	m_deferredRenderer->renderComposeStage();
 }
 
-void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapShaderResourcesForComposePass();
-	//m_deviceContext->PSSetShaderResources(3,1,
-	//	&m_textureManager->getResource(m_randomNormalTextures)->data);
+void GraphicsWrapper::mapGbuffersAndLightAsShaderResources(){
+	m_deferredRenderer->mapGbuffersAndLightAsShaderResources();
 }
 
-void GraphicsWrapper::unmapVariousStagesForCompose(){
+void GraphicsWrapper::mapDofBuffersAsShaderResources(){
+	m_deferredRenderer->mapDofBuffersAsShaderResources();
+}
+
+
+void GraphicsWrapper::unmapVariousStagesAfterCompose(){
 	ID3D11ShaderResourceView* nulz = NULL;
 	m_deferredRenderer->unmapShaderResourcesForComposePass();
+	m_deferredRenderer->unmapDofShaderResources();
 	m_deviceContext->PSSetShaderResources(3,1,
 		&m_textureManager->getResource(m_solidWhiteTexture)->data);
 }

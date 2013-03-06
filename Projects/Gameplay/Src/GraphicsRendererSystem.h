@@ -41,19 +41,22 @@ public:
 	void initMeshPass();
 	void endMeshPass();
 
-	void initParticlePass();
-	void renderParticles();
-	void endParticlePass();
-
 	void initLightPass();
 	void endLightPass();
 
 	void beginSsao();
 	void endSsao();
 
+	void beginDofGenerationPass();
+	void endDofGenerationPass();
+
 	void initComposePass();
 	void endComposePass();
 	
+	void initParticlePass();
+	void renderParticles();
+	void endParticlePass();
+
 	void initGUIPass();
 	void endGUIPass();
 	
@@ -64,7 +67,7 @@ public:
 	void updateTimers();
 private:
 	enum {
-		SHADOW, MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
+		SHADOW, MESH, LIGHT, SSAO, DOF, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
 	};
 private:
 	GraphicsWrapper* m_wrapper;
