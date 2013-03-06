@@ -196,6 +196,7 @@ void CullingSystem::calcCameraPlanes()
 		m_cameraPlanes[i].z /= l;
 		m_cameraPlanes[i].w /= l;
 	}
+
 }
 
 //Returns true if the box is completely outside the plane

@@ -93,6 +93,7 @@
 #include <MoveShipLightsSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
 #include <NetsyncDirectMapperSystem.h>
+#include <OutputLogger.h>
 #include <ParticleRenderSystem.h>
 #include <ParticleSystemInstructionTranslatorSystem.h>
 #include <PhysicsSystem.h>
@@ -462,9 +463,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientMeasurementSystem() );
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
+	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new AnomalyBombEffectSystem() );
 	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new TeslaEffectSystem() );
+
 
 	m_world->initialize();
 

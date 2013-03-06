@@ -19,6 +19,7 @@
 #include <MinigunModuleControllerSystem.h>
 #include <ModuleVisualEffectServerBufferSystem.h>
 #include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <OutputLogger.h>
 #include <PhysicsSystem.h>
 #include <ProcessingMessagesSystem.h>
 #include <RocketControllerSystem.h>
@@ -258,6 +259,7 @@ namespace Srv
 		/* Debugging															*/
 		/************************************************************************/
 		m_world->setSystem(new ServerMeasurementSystem(), true);
+		m_world->setSystem(new OutputLogger("log_server.txt"));
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
 		// GET INITIALIZED.

@@ -25,6 +25,7 @@
     <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
     <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="OutputLogger.cpp" />
     <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="SystemType.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="EntityWorld.h" />
     <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="IPerformer.h" />
+    <ClInclude Include="OutputLogger.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="SystemManager.h" />

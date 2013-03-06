@@ -1,5 +1,5 @@
 #include "EntityWorld.h"
-
+#include "OutputLogger.h"
 
 EntityWorld::EntityWorld()
 {
@@ -343,4 +343,10 @@ void EntityWorld::postPerformManagers()
 	for( unsigned int i=0; i<m_managersBag.size(); i++ )
 		m_managersBag[i]->postPerform();
 }
+
+OutputLogger* EntityWorld::getOutputLogger()
+{
+	return static_cast<OutputLogger*>(m_systemManager->getSystem(SystemType::LogToFileSystem));
+}
+
 

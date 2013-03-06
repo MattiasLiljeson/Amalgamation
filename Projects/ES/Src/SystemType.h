@@ -130,6 +130,7 @@ public:	//Enums
 		ModuleHighlightSystem,
 		SoundSystem,
 		AmbientRangeSystem,
+		LogToFileSystem,
 		NUM_SYSTEM_TYPES
 	};
 

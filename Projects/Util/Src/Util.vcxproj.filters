@@ -16,7 +16,6 @@
       <Filter>RandomUtil</Filter>
     </ClInclude>
     <ClInclude Include="NumericBuffer.h" />
-    <ClInclude Include="DebugFileWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />
@@ -29,7 +28,6 @@
     <ClCompile Include="RandomUtil.cpp">
       <Filter>RandomUtil</Filter>
     </ClCompile>
-    <ClCompile Include="DebugFileWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Filesystem">
