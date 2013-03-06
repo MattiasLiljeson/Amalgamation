@@ -126,6 +126,8 @@ public:	//Enums
 		TeslaEffectSystem,
 		DamageUpdaterSystem,
 		DamageVisualizerSystem,
+		ShipHighlightSystem,
+		ModuleHighlightSystem,
 		NUM_SYSTEM_TYPES
 	};
 

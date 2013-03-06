@@ -850,6 +850,15 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			editSphereUpdate.m_offset = bs.position;
 			editSphereUpdate.m_radius = bs.radius;
 			m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
+
+			/************************************************************************/
+			/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+			/************************************************************************/
+			ModuleStateChangePacket moduleChanged;
+			moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
+			moduleChanged.currentParrent = -1;
+
+			m_server->broadcastPacket(moduleChanged.pack());
 		}
 	}
 	return true;
