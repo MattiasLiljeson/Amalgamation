@@ -36,9 +36,10 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		m_screenSize = gfx->getWindowSize();
 
-		float resRatio = 1280 / m_screenSize.x;
+		float resRatioX = 1280 / m_screenSize.x;
+		float resRatioY =  720 / m_screenSize.y;
 
-		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio());
+		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()*resRatioX);
 		m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
 
 		gfx->getGfxWrapper()->
@@ -95,7 +96,7 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		gfx->getGfxWrapper()->
 			createTexture("Icon_Tesla.png", GUI_TEXTURE_PATH );*/
 
-		positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f * resRatio/*For offseting from the timer, hardcoded right now*/, 0);
+		positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f*resRatioY/*For offseting from the timer, hardcoded right now*/, 0);
 		positions[0] = AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0);
 		positions[2] = AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0);
 		positions[3] = AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0);
@@ -141,12 +142,13 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		if (newSize.x != m_screenSize.x || newSize.y != m_screenSize.y)
 		{
 			m_screenSize = newSize;
-			float resRatio = 1280.0f / m_screenSize.x;
+			float resRatioX = 1280 / m_screenSize.x;
+			float resRatioY =  720 / m_screenSize.y;
 
-			m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()) * resRatio;
+			m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()) * resRatioX;
 			m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
 
-			positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f * resRatio /*For offseting from the timer, hardcoded right now*/, 0);
+			positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f*resRatioY /*For offseting from the timer, hardcoded right now*/, 0);
 			positions[0] = AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0);
 			positions[2] = AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0);
 			positions[3] = AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0);

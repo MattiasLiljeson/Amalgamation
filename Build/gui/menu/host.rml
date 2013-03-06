@@ -8,7 +8,7 @@
 			<div>
 				Server Name:
 				<Input name="server_name" type="text" size="15"
-				maxlength="15" value="Untitled Server" />
+				maxlength="10" value="Untitled Server" />
 				<br/>
 				Server Port:
 				<Input name="server_port" type="text" size="5"
@@ -16,7 +16,7 @@
 				<br/>
 				Player Name:
 				<Input name="player_name" type="text" size="15"
-				maxlength="15" value="Max" />
+				maxlength="10" value="Max" />
 			</div>
 			<input type="submit" value="accept">Create</input>
 			<button onclick="goto previous">Cancel</button>
