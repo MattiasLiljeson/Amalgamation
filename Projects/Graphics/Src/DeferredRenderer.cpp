@@ -285,6 +285,10 @@ void DeferredRenderer::hookUpAntTweakBar()
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
 		AntTweakBarWrapper::GRAPHICS,"Epsilon",TwType::TW_TYPE_FLOAT,&m_ssaoData.epsilon,
 		"group=SSAO step=0.001");
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"cocFac",TwType::TW_TYPE_FLOAT,&m_ssaoData.cocFactor,
+		"group=SSAO step=0.01");
 }
 
 void DeferredRenderer::initDepthStencil()
@@ -500,6 +504,7 @@ void DeferredRenderer::initSSAO()
 	m_ssaoData.intensity= 1.0f;
 	m_ssaoData.sampleRadius=0.02f;
 	m_ssaoData.epsilon  = 0.0f;
+	m_ssaoData.cocFactor  = 1.0f;
 }
 
 void DeferredRenderer::unmapAllBuffers()

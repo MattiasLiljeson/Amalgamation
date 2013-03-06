@@ -22,9 +22,6 @@ SurfaceLightingData Lambert(Light p_light, float4 p_surfaceNormal)
 	return result;
 }
 
-// TODO: Implement Phong, Blinn-phong and maybe more?
-
-
 // New light structs and algorithms /Mattias L
 struct LightInfo
 {
@@ -45,16 +42,18 @@ struct SurfaceInfo
 {
 	float4	diffuse;
 	float4	specular;
-	//float3	normal;
-	//float	pad1;
-	//float3	pos;
-	//float	pad2;
 };
 
 struct LightOut
 {
 	float3 lightDiffuse;
 	float3 lightSpecular;
+};
+
+struct PixelOut
+{
+	float4 lightDiffuse 	: SV_TARGET0;
+	float4 lightSpecular 	: SV_TARGET1;
 };
 
 LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
@@ -68,7 +67,7 @@ LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pi
 	lightOut.lightSpecular = 0.0f;
 	
 	// Add diffuse and specular term, provided the surface is in
-	// the line of site of the light.
+	// the line of sight of the light.
 	float diffuseFactor = dot( lightVec, normal );
 	[branch]
 	if( diffuseFactor > 0.0f ) {

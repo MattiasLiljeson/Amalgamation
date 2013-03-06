@@ -1,5 +1,6 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
+#include "lightLib.hlsl"
 
 Texture2D gNormalMap 		: register(t1);
 Texture2D gDepth 			: register(t3);
@@ -29,10 +30,10 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 };
 
-float3 getPosition(float2 uv)
+float3 getPosition( float2 uv, float depth )
 {
-	float depthValue = gDepth.Sample(shadowSampler, uv).r;
-	return getWorldPosFromTexCoord( uv, depthValue, gViewProjInverse);
+	//float depthValue = gDepth.Sample(shadowSampler, uv).r;
+	return getWorldPosFromTexCoord( uv, depth, gViewProjInverse);
 }
 
 // Input: It uses texture coords as the random number seed.
@@ -62,13 +63,27 @@ float2 getRandomVector( float2 uv )
 
 float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
 {
-	float3 diff = getPosition( texCoordOrig + uvOffset) - position;
+	float depthValue = gDepth.Sample(shadowSampler, texCoordOrig).r;
+	float3 diff = getPosition( texCoordOrig + uvOffset, depthValue ) - position;
 	
 	float3 v = normalize(diff);
 	float d = length(diff)*scale;
 	
 	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
 	return clamp(ao,0.0f,0.5f);
+}
+
+float computeCoc(float depth)
+{
+	float limNear = 40.0f, limFar = 100.0f, coc =0.0f;
+
+	if( depth > limFar ) {
+		coc = (depth-limFar)/(gFarPlane-limFar);
+	} else if( depth < limNear ) {
+		coc = 1.0f - (depth/limNear);
+	}
+	coc *= coc; // Quad falloff
+	return coc;
 }
 
 VertexOut VS(VertexIn p_input)
@@ -80,13 +95,15 @@ VertexOut VS(VertexIn p_input)
 	return vout;
 }
 
-float4 PS(VertexOut input) : SV_TARGET
+PixelOut PS(VertexOut input)
 {
 	float depth = gDepth.Sample(pointSampler, input.texCoord).r;
-	float3 position = getPosition(input.texCoord);
+	float3 position = getPosition(input.texCoord, depth);
+	float pixelDepthW = length(position-gCameraPos.xyz);
 	float3 normal 	= convertSampledNormal(gNormalMap.Sample(pointSampler, input.texCoord).rgb);
 	float2 rand 	= getRandomVector( position.xy );
 
+	// Generate ao
 	float ao = 0.0f;
 	float radius = sampleRadius/depth;
 	
@@ -105,7 +122,14 @@ float4 PS(VertexOut input) : SV_TARGET
 		ao += doAmbientOcclusion(input.texCoord, coord1*0.75f, position, normal);
 		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
 	}
-	
-	ao = 1.0f - ao;;
-	return float4(0.0f, 0.0f, 0.0f, ao );
+	ao = 1.0f - ao;
+
+	// Calc Circle of Cunfusion for Dof
+	float coc = computeCoc(pixelDepthW);
+
+	PixelOut pout;
+	pout.lightDiffuse = float4( 0, 0, 0, ao );
+	pout.lightSpecular = float4( 0, 0, 0, coc );
+	return pout;
+	//return float4(0.0f, 0.0f, 0.0f, ao );
 }

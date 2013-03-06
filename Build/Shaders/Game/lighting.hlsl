@@ -64,12 +64,6 @@ VertexOut VS( VertexIn p_input )
 	return vout;
 }
 
-struct PixelOut
-{
-	float4 lightDiffuse 	: SV_TARGET0;
-	float4 lightSpecular 	: SV_TARGET1;
-};
-
 PixelOut PS( VertexOut p_input ) : SV_TARGET
 {
 	uint3 index;

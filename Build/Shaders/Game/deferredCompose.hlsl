@@ -27,6 +27,7 @@ cbuffer SSAO : register(b1)
 	float intensity;
 	float sampleRadius;
 	float epsilon;
+	float cocFactor;
 	const static float randSize = 64;
 }
 
@@ -66,6 +67,7 @@ float4 PS(VertexOut input) : SV_TARGET
 	float4 specColor = gSpecBuffer.Load( index );
 	float4 lightDiff = gLightDiff.Load( index ) * 10.0f;
 	float4 lightSpec = gLightSpec.Load( index ) * 10.0f;
+	diffColor = specColor = lightDiff = lightSpec = 0;
 	float depth = gDepthBuffer.Load( index ).r;
 
 
@@ -82,17 +84,40 @@ float4 PS(VertexOut input) : SV_TARGET
 	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	
-	float finalAO = 0.0f;
+	float coc = 0.0f;
+	for( int x=-2; x<3; x++ ) {
+		for(int y=-2; y<3; y++ ) {
+			float samp = gLightSpec.Load( uint3(index.x+x, index.y+y, 0) ).a ;
+			coc += samp * blurFilter5[x+2][y+2];
+		}
+	}
+	//float gaussPixelDepthW = length( getPosition(input.texCoord,gaussDepth) - gCameraPos.xyz );
 
-	float3 finalEmissiveValue = float3(0,0,0);
-		
+	//float coc = computeFocalDepth(gaussPixelDepthW);
+	//coc *= cocFactor;
+	//coc = 1.0f;
+	//return float4(coc, coc, coc, 1);
+
+	float finalAO = 0.0f;
+	float3 finalEmissiveValue = float3(0,0,0);	
 	float4 sampledGlow;
+	float2 scale = float2(1.0f/1280.0f, 1.0f/720.0f);
+	//scale *= coc;
 	[unroll]
-	for(int x=-2;x<3;x++)
+	for( int x=-2; x<3; x++ )
 	{
 		[unroll]
-		for(int y=-2;y<3;y++)
+		for( int y=-2; y<3; y++ )
 		{
+			float2 offset = float2(x*scale.x, y*scale.y);
+			offset *= coc;
+			float2 idx = index.xy*scale + offset;
+			float blurFactor = blurFilter5[x+2][y+2];
+			diffColor += gDiffBuffer.Sample( pointSampler, idx ) * blurFactor;
+			specColor += gSpecBuffer.Sample( pointSampler, idx ) * blurFactor;
+			lightDiff += gLightDiff.Sample( pointSampler, idx ) * blurFactor;
+			lightSpec += gLightSpec.Sample( pointSampler, idx ) * blurFactor;
+
 			finalAO += gLightDiff.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
 			
 			sampledGlow = gDiffBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
@@ -100,6 +125,11 @@ float4 PS(VertexOut input) : SV_TARGET
 			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
+	//return float4( coc, coc, coc, 1.0f );
+	return float4( diffColor.r, diffColor.g, diffColor.b, 1.0f );
+	return float4( lightDiff.r, lightDiff.g, lightDiff.b, 1.0f );
+	return float4( lightDiff.a, lightDiff.a, lightDiff.a, 1.0f );
+	return float4( lightSpec.a, lightSpec.a, lightSpec.a, 1.0f );
 
 	// add light
 	float4 finalCol = float4(0,0,0,0);
