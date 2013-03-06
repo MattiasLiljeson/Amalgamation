@@ -1015,13 +1015,32 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
 		Entity* ship = target;
+
+		bool invalidTarget = false;
+
 		while (ship->getComponent(ComponentType::ShipModule))
 		{
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
 
+			if (intermediate->m_parentEntity < 0)
+			{
+				invalidTarget = true;
+				break;
+			}
+
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
+
+		if (invalidTarget)
+		{
+			SelectionMarkerUpdatePacket smup;
+			smup.targetNetworkIdentity = -1;
+			smup.transform = AglMatrix::identityMatrix();
+			m_server->unicastPacket(smup.pack(), p_ray.m_clientIndex);
+			return;
+		}
+
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
 			ComponentType::PhysicsBody));
 
