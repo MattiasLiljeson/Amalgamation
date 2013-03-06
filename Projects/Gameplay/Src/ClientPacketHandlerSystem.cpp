@@ -897,11 +897,18 @@ void ClientPacketHandlerSystem::handleIngameState()
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
-				Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
-					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-					data.currentParrent);
+				if (data.currentParrent >= 0)
+				{
+					Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+						data.currentParrent);
 
-				shipModule->m_parentEntity = parrentObjec->getIndex();
+					shipModule->m_parentEntity = parrentObjec->getIndex();
+				}
+				else
+				{
+					shipModule->m_parentEntity = -1;
+				}
 			}
 			else{
 				DEBUGWARNING(( "Unhandled module has changed!" ));
