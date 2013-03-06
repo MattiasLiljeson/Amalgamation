@@ -321,105 +321,105 @@ void ClientPacketHandlerSystem::updateCounters()
 
 void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
-	if( static_cast<InputBackendSystem*>(m_world->getSystem(
-		SystemType::InputBackendSystem))->getControlByEnum(
-		InputHelper::KeyboardKeys_0)->getDelta() > 0 )
-	{
-		if( m_staticPropIdentities.empty() )
-		{
-			DEBUGPRINT(( string(
-				/* 0 - 511 */
-				toString(0) + " - " +
-				toString(511) +
-				/* byte size */
-				" = " +
-				toString(511 * 51) +
-				" bytes" +
-				/* end */
-				"\n").c_str() ));
+	//if( static_cast<InputBackendSystem*>(m_world->getSystem(
+	//	SystemType::InputBackendSystem))->getControlByEnum(
+	//	InputHelper::KeyboardKeys_0)->getDelta() > 0 )
+	//{
+	//	if( m_staticPropIdentities.empty() )
+	//	{
+	//		DEBUGPRINT(( string(
+	//			/* 0 - 511 */
+	//			toString(0) + " - " +
+	//			toString(511) +
+	//			/* byte size */
+	//			" = " +
+	//			toString(511 * 51) +
+	//			" bytes" +
+	//			/* end */
+	//			"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, 511));
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(0, 511));
+	//	}
 
-		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
-		{
-			DEBUGPRINT(( string(
-				/* 0 - x */
-				toString(0) + " - " +
-				toString(m_staticPropIdentities.front()) +
-				/* byte size */
-				" = " +
-				toString((m_staticPropIdentities.front() + 1) * 51) +
-				" bytes" +
-				/* end */
-				"\n").c_str() ));
+	//	if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
+	//	{
+	//		DEBUGPRINT(( string(
+	//			/* 0 - x */
+	//			toString(0) + " - " +
+	//			toString(m_staticPropIdentities.front()) +
+	//			/* byte size */
+	//			" = " +
+	//			toString((m_staticPropIdentities.front() + 1) * 51) +
+	//			" bytes" +
+	//			/* end */
+	//			"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, m_staticPropIdentities.front()));
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(0, m_staticPropIdentities.front()));
+	//	}
 
-		while( m_staticPropIdentities.size() >= 2 )
-		{
-			int firstValue = m_staticPropIdentities.front();
-			m_staticPropIdentities.pop();
-			int secondValue = m_staticPropIdentities.front();
+	//	while( m_staticPropIdentities.size() >= 2 )
+	//	{
+	//		int firstValue = m_staticPropIdentities.front();
+	//		m_staticPropIdentities.pop();
+	//		int secondValue = m_staticPropIdentities.front();
 
-			if( secondValue - firstValue > 1 )
-			{
-				DEBUGPRINT(( string(
-					/* x - y */
-					toString(firstValue) + " - " +
-					toString(secondValue - 1) +
-					/* byte size */
-					" = " +
-					toString((secondValue - firstValue) * 51) +
-					" bytes" +
-					/* end */
-					"\n").c_str() ));
+	//		if( secondValue - firstValue > 1 )
+	//		{
+	//			DEBUGPRINT(( string(
+	//				/* x - y */
+	//				toString(firstValue) + " - " +
+	//				toString(secondValue - 1) +
+	//				/* byte size */
+	//				" = " +
+	//				toString((secondValue - firstValue) * 51) +
+	//				" bytes" +
+	//				/* end */
+	//				"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(firstValue, secondValue));
-			}
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(firstValue, secondValue));
+	//		}
+	//	}
 
-		if( m_staticPropIdentities.size() == 1 )
-		{
-			if( m_staticPropIdentities.front() < 511 )
-			{
-				DEBUGPRINT(( string(
-					/* x - 511 */
-					toString(m_staticPropIdentities.front()) + " - " +
-					toString(511) +
-					/* byte size */
-					" = " +
-					toString((511 - m_staticPropIdentities.front()) * 51) +
-					" bytes" +
-					/* end */
-					"\n").c_str() ));
+	//	if( m_staticPropIdentities.size() == 1 )
+	//	{
+	//		if( m_staticPropIdentities.front() < 511 )
+	//		{
+	//			DEBUGPRINT(( string(
+	//				/* x - 511 */
+	//				toString(m_staticPropIdentities.front()) + " - " +
+	//				toString(511) +
+	//				/* byte size */
+	//				" = " +
+	//				toString((511 - m_staticPropIdentities.front()) * 51) +
+	//				" bytes" +
+	//				/* end */
+	//				"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(m_staticPropIdentities.front(), 511));
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(m_staticPropIdentities.front(), 511));
 
-					m_staticPropIdentities.pop();
-			}
-		}
+	//				m_staticPropIdentities.pop();
+	//		}
+	//	}
+	//	for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
+	//	{
+	//		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+	//			AntTweakBarWrapper::NETWORK,
+	//			("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
+	//			&m_staticPropIdentitiesForAntTweakBar[i].first,
+	//			"group='Missing packets range'" );
 
-		for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
-		{
-			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-				AntTweakBarWrapper::NETWORK,
-				("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
-				&m_staticPropIdentitiesForAntTweakBar[i].first,
-				"group='Missing packets range'" );
+	//		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+	//			AntTweakBarWrapper::NETWORK,
+	//			("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
+	//			&m_staticPropIdentitiesForAntTweakBar[i].second,
+	//			"group='Missing packets range'" );
+	//	}
 
-			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-				AntTweakBarWrapper::NETWORK,
-				("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
-				&m_staticPropIdentitiesForAntTweakBar[i].second,
-				"group='Missing packets range'" );
-		}
-	}
+	//}
 }
 
 void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
