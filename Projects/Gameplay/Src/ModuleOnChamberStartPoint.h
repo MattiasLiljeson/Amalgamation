@@ -22,11 +22,10 @@ public:
 	ModuleOnChamberStartPoint(int p_atChamber, int p_atSpawnPoint)
 		: Component(ComponentType::ModuleOnChamberSpawnPoint)
 	{
-		m_atChamber		= p_atChamber;
-		m_atSpawnPoint	= p_atSpawnPoint;
+		atChamber		= p_atChamber;
+		atSpawnPoint	= p_atSpawnPoint;
 	}
 
-private:
-	int m_atChamber;
-	int m_atSpawnPoint;
+	int atChamber;
+	int atSpawnPoint;
 };

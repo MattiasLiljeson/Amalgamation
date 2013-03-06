@@ -32,6 +32,7 @@ struct ModuleOrShipSpawnPointData
 	float			currentCooldown;
 	int				inChamber;
 	int				atSpawnPoint;
+
 };
 
 typedef ModuleOrShipSpawnPointData ShipSpawnPointData;
@@ -63,7 +64,7 @@ public:
 	const AglMatrix& getRandomFreeShipSpawnPoint();
 	const AglMatrix& getRandomFreeModuleSpawnPoint();
 
-	ModuleSpawnPointData getRandomFreeModuleSpawnPointData();
+	const ModuleSpawnPointData* getRandomFreeModuleSpawnPointData();
 
 	virtual void inserted( Entity* p_entity );
 
@@ -76,18 +77,18 @@ public:
 	static const AglMatrix& invalidSpawnPoint();
 private:
 	pair<int, int> getRandomFreeSpawnPoint(
-		const vector<vector<ModuleOrShipSpawnPointData>>& p_fromSpawnPoints) const;
+		const vector<vector<ModuleOrShipSpawnPointData*>>& p_fromSpawnPoints) const;
 	void setSpawnPointState(
-		vector<vector<ModuleOrShipSpawnPointData>>& p_inSpawnPoints,
+		vector<vector<ModuleOrShipSpawnPointData*>>& p_inSpawnPoints,
 		int p_inChamber, int p_inPoint, SpawnPointState p_newState);
 private:
 
 	// Stores ship spawn points and module spawn points. The bool defines whether or not
 	// the spawn point is free (free = true, occupied = false)
-	vector<vector<ShipSpawnPointData>> m_shipSpawnPoints;
-	vector<vector<ModuleSpawnPointData>> m_moduleSpawnPoints;
+	vector<vector<ShipSpawnPointData*>> m_shipSpawnPoints;
+	vector<vector<ModuleSpawnPointData*>> m_moduleSpawnPoints;
 
-	vector<ModuleSpawnPointData> m_refreshingSpawnPoints;
+	vector<ModuleSpawnPointData*> m_refreshingSpawnPoints;
 
 	vector<int> freeSlots;
 

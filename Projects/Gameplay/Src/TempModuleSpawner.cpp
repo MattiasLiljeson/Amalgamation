@@ -36,12 +36,12 @@ void TempModuleSpawner::process()
 		if (m_spawnPointSystem->isSpawnPointsReady())
 		{
 			
-			ModuleSpawnPointData pointData = m_spawnPointSystem->getRandomFreeModuleSpawnPointData();
+			const ModuleSpawnPointData* pointData = m_spawnPointSystem->getRandomFreeModuleSpawnPointData();
 
-			if (! (pointData.transform == m_spawnPointSystem->invalidSpawnPoint()) )
+			if (! (pointData->transform == m_spawnPointSystem->invalidSpawnPoint()) )
 			//while (! (pos == m_spawnPointSystem->invalidSpawnPoint()) )
 			{
-				AglMatrix pos = pointData.transform;
+				AglMatrix pos = pointData->transform;
 
 				EntityCreationPacket cp;
 
@@ -52,7 +52,7 @@ void TempModuleSpawner::process()
 				cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
 				Entity* e = m_factory->entityFromPacket(cp, &pos);
 				
-				e->addComponent( new ModuleOnChamberStartPoint(pointData.inChamber, pointData.atSpawnPoint));
+				e->addComponent( new ModuleOnChamberStartPoint(pointData->inChamber, pointData->atSpawnPoint));
 
 				AglVector3 posV = pos.GetTranslation();
 				string posAsString = toString(posV.x) + " " + toString(posV.y) + " " + toString(posV.z) + "\n";
@@ -72,7 +72,9 @@ void TempModuleSpawner::process()
 				m_server->broadcastPacket(cp.pack());
 			}
 			else
-				setEnabled(false);
+			{
+
+			}
 		}
 		else
 		{
@@ -105,7 +107,11 @@ void TempModuleSpawner::inserted( Entity* p_entity )
 
 void TempModuleSpawner::removed( Entity* p_entity )
 {
-	DEBUGPRINT(("Module removed from TempModuleSpawner system."));	
+	DEBUGPRINT(("Module removed from TempModuleSpawner system."));
+	auto spawnPointInfo = static_cast<ModuleOnChamberStartPoint*>(
+		p_entity->getComponent(ComponentType::ModuleOnChamberSpawnPoint));
+
+	m_spawnPointSystem->applyResetCooldown(spawnPointInfo->atChamber, spawnPointInfo->atSpawnPoint);
 }
 
 
