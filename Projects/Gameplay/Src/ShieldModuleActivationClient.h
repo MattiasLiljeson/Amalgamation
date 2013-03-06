@@ -3,7 +3,7 @@
 #include <Entity.h>
 #include <vector>
 #include "AudioBackendSystem.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include <Globals.h>
 using namespace std;
 // =======================================================================================
@@ -38,11 +38,14 @@ public:
 		{
 			m_plateEntities[i]->setEnabled(true);
 		}
-		if(m_shieldEntity->getComponent(ComponentType::PositionalSoundSource) == NULL)
+		if(m_shieldEntity->getComponent(ComponentType::SoundComponent) == NULL)
 		{
-			m_shieldEntity->addComponent(new PositionalSoundSource(
+			// RM-RT 2013-03-04
+			/*
+			m_shieldEntity->addComponent(new SoundComponent(
 				TESTSOUNDEFFECTPATH, "Shield_Active.wav", true, 1.0f));
 			m_shieldEntity->applyComponentChanges();
+			*/
 		}
 	}
 
@@ -52,9 +55,9 @@ public:
 		{
 			m_plateEntities[i]->setEnabled(false);
 		}
-		if(m_shieldEntity->getComponent(ComponentType::PositionalSoundSource) != NULL)
+		if(m_shieldEntity->getComponent(ComponentType::SoundComponent) != NULL)
 		{
-			m_shieldEntity->removeComponent(ComponentType::PositionalSoundSource);
+			m_shieldEntity->removeComponent(ComponentType::SoundComponent);
 			m_shieldEntity->applyComponentChanges();
 		}
 	}

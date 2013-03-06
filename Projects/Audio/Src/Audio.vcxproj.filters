@@ -48,9 +48,6 @@
     <ClInclude Include="SoundEnums.h">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClInclude>
-    <ClInclude Include="SoundOrientation.h">
-      <Filter>AudioEngine</Filter>
-    </ClInclude>
     <ClInclude Include="PositionalSoundCreationInfo.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
@@ -58,6 +55,12 @@
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
     <ClInclude Include="SoundBufferAndHeader.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundOrientation.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioHeader.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
   </ItemGroup>

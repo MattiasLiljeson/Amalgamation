@@ -20,7 +20,6 @@ struct PositionalSoundInfo
 	X3DAUDIO_EMITTER		emitter;
 	X3DAUDIO_DSP_SETTINGS	settings;
 	X3DAUDIO_CONE			cone;
-	AglVector3				previousPosition;
 
 	PositionalSoundInfo()
 	{

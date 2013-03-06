@@ -128,6 +128,8 @@ public:	//Enums
 		DamageVisualizerSystem,
 		ShipHighlightSystem,
 		ModuleHighlightSystem,
+		SoundSystem,
+		AmbientRangeSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -51,13 +51,14 @@
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="SlotMarker.h" />
     <ClInclude Include="SlotMarkerSystem.h" />
+    <ClInclude Include="SoundComponent.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
-    <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
@@ -185,7 +186,6 @@
     <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="PlayersWinLosePacket.h" />
     <ClInclude Include="PongPacket.h" />
-    <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RemoveSoundEffectPacket.h" />
@@ -261,7 +261,6 @@
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
-    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
@@ -344,6 +343,8 @@
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="TempModuleSpawner.cpp" />
@@ -378,7 +379,6 @@
     <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
-    <ClCompile Include="PositionalSoundSource.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />

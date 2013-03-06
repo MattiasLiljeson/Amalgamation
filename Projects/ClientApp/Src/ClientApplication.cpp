@@ -27,7 +27,7 @@
 #include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
 #include <PlayerCameraController.h>
-#include <PositionalSoundSource.h>
+#include <SoundComponent.h>
 #include <RenderInfo.h>
 #include <RocketLauncherModule.h>
 #include <ShieldModule.h>
@@ -42,7 +42,6 @@
 #include <AntTweakBarEnablerSystem.h>
 #include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
-#include <AudioController.h>
 #include <AudioListenerSystem.h>
 #include <AxisRotationSystem.h>
 #include <CameraInfo.h>
@@ -143,6 +142,7 @@ using namespace std;
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
+#include "../../Gameplay/Src/SoundSystem.h"
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -421,9 +421,9 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );
-	m_world->setSystem( new AudioController(audioBackend) );
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
+	m_world->setSystem( new SoundSystem(audioBackend) );
 
 	/************************************************************************/
 	/* Gameplay																*/

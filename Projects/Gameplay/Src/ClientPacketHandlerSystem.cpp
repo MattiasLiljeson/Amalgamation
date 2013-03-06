@@ -29,7 +29,7 @@
 #include "PlayerCameraController.h"
 #include "PlayerComponent.h"
 #include "PongPacket.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include "RenderInfo.h"
 #include "ScoreWorldVisualizerSystem.h"
 #include "ShipEditController.h"
@@ -627,9 +627,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-					spawnSoundPacket.position);
+	//			audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+	//				SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+	//				spawnSoundPacket.position);
 			}
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
@@ -642,6 +642,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
+					// RM-RT 2013-03-04
+					/*
 					Component* positionalSound = entity->getComponent(
 						ComponentType::PositionalSoundSource);
 					if(positionalSound != NULL)
@@ -652,6 +654,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 							true, 1.0f));
 						entity->applyComponentChanges();
 					}
+					*/
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -659,8 +662,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				// Short ambient sound effect.
 				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
-				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+				//audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+				//	SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
 			}
 		}
 		else if(packetType == (char)PacketType::RemoveSoundEffect)
@@ -673,7 +676,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
 			if( entity != NULL )
 			{
-				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->removeComponent(ComponentType::SoundComponent);
 				entity->applyComponentChanges();
 			}
 		}

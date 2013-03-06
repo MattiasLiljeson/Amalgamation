@@ -1,19 +1,22 @@
+#include "PositionalSoundSystem.h"
+
 #include <Sound.h>
 #include <PositionalSound.h>
 #include <SoundWrapper.h>
 
-#include "PositionalSoundSystem.h"
 #include "AudioBackendSystem.h"
 
 #include "Transform.h"
 #include "AudioInfo.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include <Globals.h>
 #include <PositionalSoundCreationInfo.h>
+#include <AudioHeader.h>
+#include "AudioListenerSystem.h"
 
 PositionalSoundSystem::PositionalSoundSystem()
 	: EntitySystem( SystemType::PositionalSoundSystem, 2,
-	ComponentType::PositionalSoundSource, ComponentType::Transform )
+	ComponentType::SoundComponent, ComponentType::Transform )
 {
 }
 
@@ -23,59 +26,70 @@ PositionalSoundSystem::~PositionalSoundSystem()
 
 void PositionalSoundSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	for(unsigned int i=0; i<p_entities.size(); i++)
-	{
-		updateSoundPositions(p_entities[i]);
+	for(unsigned int i=0; i<p_entities.size(); i++){
+
+		SoundComponent* soundComp = static_cast<SoundComponent*>
+			(p_entities[i]->getComponent(ComponentType::SoundComponent));
+		processSoundComponent(p_entities[i], soundComp);
 	}
 }
 
 void PositionalSoundSystem::initialize()
 {
-	m_audioBackendSystem = static_cast<AudioBackendSystem*>(m_world->getSystem(
-		SystemType::AudioBackendSystem ));
+	m_audioBackendSystem = static_cast<AudioBackendSystem*>
+		(m_world->getSystem(SystemType::AudioBackendSystem ));
+
+	m_audioListenerSystem = static_cast<AudioListenerSystem*>
+		(m_world->getSystem(SystemType::AudioListenerSystem));
 }
 
-void PositionalSoundSystem::inserted( Entity* p_entity )
+void PositionalSoundSystem::processSoundComponent(Entity* p_entity, 
+												  SoundComponent* p_soundComponent)
 {
-	PositionalSoundSource* positionalSoundSource = static_cast<PositionalSoundSource*>(
-		p_entity->getComponent(ComponentType::PositionalSoundSource));
-	Transform* transform = static_cast<Transform*>(
-		p_entity->getComponent(ComponentType::Transform));
+	Transform* trans = static_cast<Transform*>
+		(p_entity->getComponent(ComponentType::Transform));
 
-	BasicSoundCreationInfo creationalSoundInfo = BasicSoundCreationInfo(
-		positionalSoundSource->getFilename().c_str(),
-		positionalSoundSource->getPath().c_str(),
-		positionalSoundSource->loops());
-	PositionalSoundCreationInfo positionCreationalSoundInfo = PositionalSoundCreationInfo(
-		transform->getTranslation());
-	int soundIndex = m_audioBackendSystem->getSoundWrapper()->createNewPositionalSound(
-		&creationalSoundInfo, &positionCreationalSoundInfo);
-	positionalSoundSource->setSoundIndex(soundIndex);
-	updateSoundPositions(p_entity);
-	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::PLAY);
-}
+	vector<AudioHeader*>* ambientRange = 
+		p_soundComponent->getAllAudiosByType(AudioHeader::AMBIENTRANGE);
+	
+	SoundOrientation* listener = m_audioListenerSystem->getListenerOrientation();
+	for (unsigned int i = 0; i < ambientRange->size(); i++){
+		
+		AudioHeader* header = ambientRange->at(i);
+		header->pos = trans->getTranslation();
 
-void PositionalSoundSystem::removed( Entity* p_entity )
-{
-	PositionalSoundSource* positionalSoundEffect = static_cast<PositionalSoundSource*>(
-		p_entity->getComponent(ComponentType::PositionalSoundSource));
-	int soundIndex = positionalSoundEffect->getSoundIndex();
-	m_audioBackendSystem->getSoundWrapper()->updateSound(soundIndex, SoundEnums::STOP);
-}
+		AglVector3 distanceVec = listener->listenerPos - header->pos;
+		float length = AglVector3::length(distanceVec);
+		
+		float newVolume;
+		//Check if sound is within the inner circle
+		if(header->minRange > 0 && length < header->minRange)
+			newVolume = 1.0f;
+		else{
+			//Calculate the falloff volume
+			newVolume = (header->maxRange - length)/header->maxRange;
+			if(newVolume<0){
+				newVolume = 0;
+			}
+		}
 
-void PositionalSoundSystem::updateSoundPositions( Entity* p_entity )
-{
-	PositionalSoundSource* positionalSoundEffect = NULL;
-	Transform* transform = NULL;
-	positionalSoundEffect = static_cast<PositionalSoundSource*>(p_entity->getComponent(
-		ComponentType::PositionalSoundSource));
-	transform = static_cast<Transform*>(p_entity->getComponent(
-		ComponentType::Transform));
+		m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex)->
+			getSourceVoice()->SetVolume(newVolume);
+	}
 
-	PositionalSound* positionalSound = static_cast<PositionalSound*>(
-		m_audioBackendSystem->getSoundWrapper()->getSound(
-		positionalSoundEffect->getSoundIndex()));
-	positionalSound->setPosition(transform->getTranslation());
+	vector<AudioHeader*>* positionalSound = 
+		p_soundComponent->getAllAudiosByType(AudioHeader::POSITIONALSOUND);
 
-	m_audioBackendSystem->updateOutputMatrix(positionalSoundEffect->getSoundIndex());
+	for (unsigned int i = 0; i < positionalSound->size(); i++){
+		AudioHeader* header = positionalSound->at(i);
+		header->pos = trans->getTranslation();
+
+		PositionalSound* sound = static_cast<PositionalSound*>
+			(m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex));
+		sound->setPosition(header->pos);
+		sound->setRange(header->maxRange);
+		m_audioBackendSystem->updateOutputMatrix(header->soundIndex);
+	}
+	
+	
 }

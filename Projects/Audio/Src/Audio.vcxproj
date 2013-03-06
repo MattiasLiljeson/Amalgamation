@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioHeader.h" />
     <ClInclude Include="BasicSoundCreationInfo.h" />
     <ClInclude Include="AudioCurves.h" />
     <ClInclude Include="PositionalSound.h" />
