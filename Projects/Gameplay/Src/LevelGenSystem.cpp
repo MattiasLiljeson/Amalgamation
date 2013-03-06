@@ -456,7 +456,10 @@ Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector, EndPieceMode p_mod
 		bodyInitData->m_position		= transform->getTranslation();
 		bodyInitData->m_orientation		= transform->getRotation();
 		bodyInitData->m_scale			= transform->getScale();
-		bodyInitData->m_modelResource	= m_endPlugModelResource;
+		if (p_mode == ENDPIECEMODE_CLOSED)
+			bodyInitData->m_modelResource = m_endPlugModelResource;
+		else
+			bodyInitData->m_modelResource = m_endPlugOpenedModelResource;
 	}
 	return entity;
 }
