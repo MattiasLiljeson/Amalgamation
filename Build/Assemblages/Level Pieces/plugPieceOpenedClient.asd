@@ -1,7 +1,7 @@
-e PlugPieceClient
+e PlugPieceOpenedClient
 
 c LoadMesh
-d s m_filename RockD.agl
+d s m_filename Gate_open.agl
 
 # Transform data on the client is going to be overrided by the packet that is sent from the server.
 c Transform

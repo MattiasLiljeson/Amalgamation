@@ -562,8 +562,11 @@ void ServerPacketHandlerSystem::handleLoading()
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				data.isLevelProp = prop->isLevelPiece;
+				data.isLevelProp = false;//prop->isLevelPiece; // isLevelProp is no longer
+																// used here. MiscData is
+																// instead.
 				data.meshInfo = prop->meshInfo;  
+				data.miscData = prop->propType;
 
 				//				packets.push( packet );
 				m_server->broadcastPacket( data.pack() );

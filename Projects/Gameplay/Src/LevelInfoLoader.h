@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include "StaticProp.h"
 
 class LevelInfo;
 struct LevelPieceFileData;
@@ -27,7 +28,7 @@ public:
 
 	virtual void removed( Entity* p_entity );
 
-	LevelPieceFileData* getFileData(int p_id) const;
+	LevelPieceFileData* getFileData(int p_id, StaticPropType p_type) const;
 protected:
 private:
 	LevelInfo* m_levelInfo;

@@ -134,12 +134,20 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	//	DEBUGPRINT( (logtext.c_str()) );
 	//}
 
-	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
+	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_CLOSED);
 	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
 		&endPlug->assemblageName);
 	auto resourcesFromModel = loadMeshSys->createModels(endPlug->modelFileName,
 		MODELPATH, false);
 	m_endPlugModelResource = resourcesFromModel->at(0);
+	
+	endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_OPENED);
+	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
+		&endPlug->assemblageName);
+	resourcesFromModel = loadMeshSys->createModels(endPlug->modelFileName,
+		MODELPATH, false);
+	m_endPlugOpenedModelResource = resourcesFromModel->at(0);
+
 
 	m_readyToRun = true;
 
@@ -279,7 +287,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		transform->setTranslation( p_piece->getTransform()->getTranslation() );
 		transform->setRotation( p_piece->getTransform()->getRotation() );
 
-		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
+		entity->addComponent(new StaticProp(p_piece->getTypeId(), STATICPROPTYPE_LEVELPIECE));
 
 		auto pieceRoot = static_cast<LevelPieceRoot*>(
 			entity->getComponent(ComponentType::LevelPieceRoot));
@@ -336,6 +344,10 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 
 			if (tryConnectPieces(p_targetPiece, piece, slot))
 			{
+				// Add an open gate
+				Entity* ent = addEndPlug(&p_targetPiece->getConnectionPoint(slot), ENDPIECEMODE_OPENED);
+				m_world->addEntity(ent);
+
 				// This is not done from here anymore.
 				//AglOBB obb = piece->getBoundingBox();
 				//updateWorldMinMax(obb);
@@ -406,10 +418,10 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 	}
 }
 
-Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
+Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector, EndPieceMode p_mode )
 {
-	Entity* entity = m_entityFactory->entityFromRecipe( 
-		m_levelInfo->getEndPlugFileData()->assemblageName );
+	Entity* entity = m_entityFactory->entityFromRecipe(
+		m_levelInfo->getEndPlugFileData(p_mode)->assemblageName );
 
 	auto transform = static_cast<Transform*>(
 		entity->getComponent(ComponentType::Transform));
@@ -428,9 +440,13 @@ Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
 	// Set proper rotation and scale of the plug piece
 	transform->setMatrix(p_atConnector->getMatrix());
 	transform->setForwardDirection( -transform->getForward() );
+	// NOTE: Due to some circumstance, the gate needs to be rotated here. It wasn't needed
+	// before, but now it does. // Alex
+	transform->setRotation(transform->getRotation() 
+		* AglQuaternion::constructFromAxisAndAngle(AglVector3::right(), 90 * 3.1415f / 180.0f));
 	transform->setScale(tempScale);
 
-	entity->addComponent(new StaticProp(m_levelInfo->getEndPlugFileData()->id, true));
+	entity->addComponent(new StaticProp(m_levelInfo->getEndPlugFileData(p_mode)->id, STATICPROPTYPE_PLUGPIECE));
 
 	// Manipulate the BodyInitData translation info to match the transform, and add a proper
 	// model resource.
@@ -451,7 +467,7 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 	{
 		if (!p_atPiece->isChildSlotOccupied(i))
 		{
-			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i));
+			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i), ENDPIECEMODE_CLOSED);
 			m_world->addEntity(plug);
 			
 			m_world->getOutputLogger()

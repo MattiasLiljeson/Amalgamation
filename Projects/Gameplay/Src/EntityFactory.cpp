@@ -54,6 +54,7 @@
 #include <RandomUtil.h>
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
+#include "StaticProp.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -879,17 +880,16 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
-	if (p_packet.isLevelProp)
+	if (p_packet.miscData != STATICPROPTYPE_UNSPECIFIED)
 	{
-		// meshId = gfxBackend->getMeshId(m_levelPieceMapping.getModelFileName(p_packet.meshInfo));
-		// changed during refactoring by Jarl 30-1-2013
-		// use an assemblage, like this:
-		// entity = entityFromRecipeOrFile( "DebugSphere", "Assemblages/DebugSphere.asd" );
 		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
 			m_world->getSystem(SystemType::LevelInfoLoader));
-		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo );
-		string asdName = (levelInfoLoader->getFileData( p_packet.meshInfo ))->assemblageName;
-		entity = entityFromRecipe( asdName );
+		auto fileData = levelInfoLoader->getFileData( p_packet.meshInfo, (StaticPropType)p_packet.miscData );
+		if (fileData)
+		{
+			string asdName = fileData->assemblageName;
+			entity = entityFromRecipe( asdName );
+		}
 	}
 	else	
 	{

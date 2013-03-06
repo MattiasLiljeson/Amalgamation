@@ -33,7 +33,10 @@ void LevelInfoLoader::initialize()
 		entityFactory->readAssemblageFile(LEVELPIECESPATH + fileData[i]->assemblageFileName,
 			&fileData[i]->assemblageName);
 	}
-	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
+	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_OPENED);
+	entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
+		&endPlug->assemblageName);
+	endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_CLOSED);
 	entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
 		&endPlug->assemblageName);
 
@@ -45,10 +48,17 @@ void LevelInfoLoader::removed( Entity* p_entity )
 	m_levelInfo = NULL;
 }
 
-LevelPieceFileData* LevelInfoLoader::getFileData( int p_id ) const
+LevelPieceFileData* LevelInfoLoader::getFileData( int p_id, StaticPropType p_type ) const
 {
 	if (m_levelInfo)
-		return m_levelInfo->getFileDataFromId(p_id);
+	{
+		if (p_type == STATICPROPTYPE_LEVELPIECE)
+			return m_levelInfo->getFileDataFromId(p_id);
+		else if (p_type == STATICPROPTYPE_PLUGPIECE)
+			return m_levelInfo->getEndPlugFileData((EndPieceMode)p_id);
+		else
+			return NULL;
+	}
 	else
 		return NULL;
 }

@@ -11,19 +11,24 @@ LevelInfo::LevelInfo()
 	m_branchCount			= -1;
 	m_startPieceId			= -1;
 	m_randomStartRotation	= false;
-	m_endPlug				= NULL;
+	m_endPlugOpened			= NULL;
+	m_endPlugClosed			= NULL;
 
 	memset(m_levelSize, 0, sizeof(m_levelSize));
 }
 
 LevelInfo::~LevelInfo()
 {
-	delete m_endPlug;
+	delete m_endPlugOpened;
+	delete m_endPlugClosed;
+	m_endPlugOpened = NULL;
+	m_endPlugClosed = NULL;
 	for (unsigned int i = 0; i < m_fileData.size(); i++)
 	{
 		delete m_fileData[i];
 	}
 	m_fileData.clear();
+	memset(m_levelSize, 0, sizeof(m_levelSize));
 }
 
 void LevelInfo::init( vector<ComponentData> p_initData )
@@ -71,14 +76,23 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<int>(&m_startPieceId);
 		}
-		else if (p_initData[i].dataName == "m_plugPiece")
+		else if (p_initData[i].dataName == "m_plugAssemblageOpened")
 		{
-			m_endPlug = new LevelPieceFileData();
-			p_initData[i].getDataAsString(&m_endPlug->assemblageFileName);
+			m_endPlugOpened = new LevelPieceFileData();
+			p_initData[i].getDataAsString(&m_endPlugOpened->assemblageFileName);
 		}
-		else if (p_initData[i].dataName == "m_plugModel")
+		else if (p_initData[i].dataName == "m_plugModelOpened")
 		{
-			p_initData[i].getDataAsString(&m_endPlug->modelFileName);
+			p_initData[i].getDataAsString(&m_endPlugOpened->modelFileName);
+		}
+		else if (p_initData[i].dataName == "m_plugAssemblageClosed")
+		{
+			m_endPlugClosed = new LevelPieceFileData();
+			p_initData[i].getDataAsString(&m_endPlugClosed->assemblageFileName);
+		}
+		else if (p_initData[i].dataName == "m_plugModelClosed")
+		{
+			p_initData[i].getDataAsString(&m_endPlugClosed->modelFileName);
 		}
 		else if (p_initData[i].dataName == "m_levelSize")
 		{
@@ -87,10 +101,15 @@ void LevelInfo::init( vector<ComponentData> p_initData )
 			setLevelSize(data);
 		}
 	}
-	if (m_endPlug)
+	if (m_endPlugOpened)
 	{
-		m_endPlug->id		= m_fileData.size();
-		m_endPlug->weight	= 0;
+		m_endPlugOpened->id		= ENDPIECEMODE_OPENED;
+		m_endPlugOpened->weight	= 0;
+	}
+	if (m_endPlugClosed)
+	{
+		m_endPlugClosed->id		= ENDPIECEMODE_CLOSED;
+		m_endPlugClosed->weight	= 0;
 	}
 }
 
@@ -108,8 +127,8 @@ LevelPieceFileData* LevelInfo::getFileDataFromId( int p_id ) const
 {
 	if (p_id < m_fileData.size())
 		return m_fileData[p_id];
-	else // Else, assume the end plug is the one desired.
-		return m_endPlug;
+	else
+		return NULL;
 }
 
 LevelPieceFileData* LevelInfo::getStartFileData() const
@@ -135,9 +154,12 @@ bool LevelInfo::doRandomStartRotation() const
 	return m_randomStartRotation;
 }
 
-LevelPieceFileData* LevelInfo::getEndPlugFileData() const
+LevelPieceFileData* LevelInfo::getEndPlugFileData(EndPieceMode p_mode) const
 {
-	return m_endPlug;
+	if (p_mode == ENDPIECEMODE_OPENED)
+		return m_endPlugOpened;
+	else
+		return m_endPlugClosed;
 }
 
 void LevelInfo::setLevelSize(string p_fromData )
