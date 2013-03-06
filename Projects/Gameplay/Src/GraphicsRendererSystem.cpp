@@ -121,6 +121,7 @@ void GraphicsRendererSystem::process(){
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
 	
+
 	//GUI
 	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
 	initGUIPass();

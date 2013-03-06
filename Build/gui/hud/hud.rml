@@ -1,24 +1,44 @@
 <rml>
-	<head>
+  <head>
 		<link type="text/rcss" href="hud.rcss"/>
 	</head>
 	<body id="hudelements" class="content">
 		<div id="context">
-			<!--<div class="elements" id="mappingElem">
-				MappedKeys
-				<p id="mapping">
-				</p>
-			</div>-->
-			<div class="elements" id="timerElem">
-				Time Remaining:
-				<p id="time">
-				</p>
-			</div>
 			<div class="elements" id="scoreElem">
-				Score:
-				<p id="score">
-				</p>
+				<!--Score:-->
+				<div id="leftwing">
+					<div class="hud-textbox">
+						<div id="scorelabel-box"><p id="scorelabel">Score</p></div>
+						<div id="score-box"><p id="score">99999</p></div>
+					</div>
+				</div>			
+			</div>			
+			<div class="elements" id="timerElem">
+				<!--Time Remaining:-->
+				<div id="timer">
+					<div class="hud-textbox">
+						<div id="playername-box"><p id="playername">Playername</p></div>
+						<div id="time-box"><p id="time">3:52</p></div>
+						<div id="servername-box">@ <p id="servername">ServerName</p></div>
+					</div>
+				</div>
 			</div>
+			<div class="elements" id="massElem">
+				<!--Mass:-->
+				<div id="rightwing">
+					<div class="hud-textbox">
+						<div id="masslabel-box"><p id="masslabel">Mass</p></div>
+						<div id="mass-box"><p id="mass">200</p><p id="mass-suffix">Mg</p></div>
+						<div id="boost-box"><p id="boost-prefix">Boost x</p><p id="boost">2</p ></div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<div id="socket-buttons">
+			<div class="button" id="top-btn">A</div>
+			<div class="button" id="right-btn">B</div>
+			<div class="button" id="left-btn">C</div>
+			<div class="button" id="bottom-btn">D</div>
 		</div>
 	</body>
 </rml>
