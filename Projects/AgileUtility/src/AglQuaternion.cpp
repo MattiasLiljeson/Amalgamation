@@ -92,7 +92,11 @@ AglQuaternion AglQuaternion::rotateToFrom(AglVector3 p_from, AglVector3 p_to)
 	AglVector3::normalize(p_from);
 	AglVector3::normalize(p_to);
 	AglVector3::normalize(axis);
-	float angle = acos(AglVector3::dotProduct(p_from, p_to));
+
+	float dot = AglVector3::dotProduct(p_from, p_to);
+	float angle = 0;
+	if (dot < 1.0f)
+		angle = acos(dot);
 	return constructFromAxisAndAngle(axis, angle);
 }
 
