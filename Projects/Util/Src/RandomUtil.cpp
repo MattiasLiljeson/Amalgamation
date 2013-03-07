@@ -7,9 +7,9 @@ float RandomUtil::randomSingle()
 	return (float)rand()/(float)RAND_MAX;
 }
 
-int RandomUtil::randomInteger(int p_max)
+int RandomUtil::randomInteger(int p_count)
 {
-	return rand() % p_max;
+	return rand() % p_count;
 }
 
 float RandomUtil::randomInterval( float p_min, float p_max )

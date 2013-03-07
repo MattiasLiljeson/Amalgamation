@@ -120,6 +120,7 @@
 #include <SpriteSystem.h>
 #include <SlotMarkerSystem.h>
 #include <TeslaEffectSystem.h>
+#include <TeslaLightningSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <ShipHiglightSystem.h>
@@ -336,7 +337,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
-	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
+	m_world->setSystem( new SlotHighlightParticleMakerSystem(), false );
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
 	m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
@@ -441,7 +442,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem(new SlotMarkerSystem());
+	m_world->setSystem( new SlotMarkerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new TeslaLightningSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
@@ -471,9 +476,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
-	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
-	m_world->setSystem( new TeslaEffectSystem() );
 
 
 	m_world->initialize();

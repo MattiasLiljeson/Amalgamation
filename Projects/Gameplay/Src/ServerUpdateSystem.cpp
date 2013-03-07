@@ -148,8 +148,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						updatePacket.rotation		= transform->getRotation();
 						updatePacket.scale			= transform->getScale();
 						updatePacket.timestamp		= m_world->getElapsedTime();
-						updatePacket.velocity		= velocity;
-						updatePacket.angularVelocity= angularVelocity;
 						Packet packet((char)PacketType::EntityUpdate);
 						packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
 
