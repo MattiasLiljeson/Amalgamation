@@ -183,6 +183,7 @@ void ParticleRenderSystem::clearRenderQues()
 }
 bool ParticleRenderSystem::shouldRender(ParticleSystemAndTexture* p_ps)
 {
+	return false;
 	if (p_ps->particleSystem.getParticleSpace() == AglParticleSystemHeader::AglSpace_GLOBAL)
 	{
 		AglVector3 minP = p_ps->particleSystem.getMin();

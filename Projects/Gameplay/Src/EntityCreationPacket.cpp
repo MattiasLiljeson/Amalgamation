@@ -13,6 +13,8 @@ EntityCreationPacket::EntityCreationPacket()
 	rotation		= AglQuaternion();
 	meshInfo		= -1;
 	isLevelProp		= false;
+	bsPos			= AglVector3(0, 0, 0);
+	bsRadius		= -1;
 }
 
 EntityCreationPacket::~EntityCreationPacket()
@@ -32,7 +34,9 @@ Packet EntityCreationPacket::pack()
 		<< miscData
 		<< translation
 		<< rotation
-		<< scale;
+		<< scale
+		<< bsPos
+		<< bsRadius;
 
 	return packet;
 }
@@ -48,5 +52,7 @@ void EntityCreationPacket::unpack( Packet& p_packet )
 		>> miscData
 		>> translation
 		>> rotation
-		>> scale;
+		>> scale
+		>> bsPos
+		>> bsRadius;
 }

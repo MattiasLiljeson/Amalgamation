@@ -124,6 +124,7 @@
 #include <TransformParentHandlerSystem.h>
 #include <ShipHiglightSystem.h>
 #include <ModuleHighlightSystem.h>
+#include <PortalCullingSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -308,6 +309,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Culling																*/
 	/************************************************************************/
+	m_world->setSystem(new PortalCullingSystem());
 	m_world->setSystem(new CullingSystem() );
 
 	

@@ -924,6 +924,15 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 
 		m_world->addEntity(entity);
 	}
+
+	LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
+	if (root)
+	{
+		root->boundingSphere.position = p_packet.bsPos;
+		root->boundingSphere.radius = p_packet.bsRadius;
+	}
+
+
 	return entity;
 }
 Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)

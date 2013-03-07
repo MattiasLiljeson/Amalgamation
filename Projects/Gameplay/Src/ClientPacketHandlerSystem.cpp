@@ -103,6 +103,8 @@
 #include "SlotMarkerSystem.h"
 #include "TeslaHitPacket.h"
 #include "TeslaEffectSystem.h"
+#include "RootBoundingSpherePacket.h"
+#include "LevelPieceRoot.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 

@@ -55,6 +55,8 @@
 #include "SpawnPointSystem.h"
 #include "LevelGenSystem.h"
 #include <OutputLogger.h>
+#include "LevelPieceRoot.h"
+#include "RootBoundingSpherePacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -568,6 +570,20 @@ void ServerPacketHandlerSystem::handleLoading()
 				data.meshInfo = prop->meshInfo;  
 				data.miscData = prop->propType;
 
+				LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entities[i]->getComponent(ComponentType::LevelPieceRoot));
+				if (root)
+				{
+					data.bsPos = root->boundingSphere.position;
+					data.bsRadius = root->boundingSphere.radius;
+					/*RootBoundingSpherePacket bspacket;
+					bspacket.targetNetworkIdentity = entities[i]->getIndex();
+					bspacket.position = root->boundingSphere.position;
+					bspacket.radius = root->boundingSphere.radius;*/
+				}
+				else
+				{
+
+				}
 				//				packets.push( packet );
 				m_server->broadcastPacket( data.pack() );
 			}

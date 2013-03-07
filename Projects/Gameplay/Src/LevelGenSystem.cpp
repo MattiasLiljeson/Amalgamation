@@ -293,6 +293,13 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 			entity->getComponent(ComponentType::LevelPieceRoot));
 
 		pieceRoot->pieceId = p_piece->getPieceId();
+		pieceRoot->boundingSphere = p_piece->getBoundingSphere();
+		//1) Add bounding sphere to root
+		//2) Send bounding sphere to client
+		//3) Receive sphere on client and set it
+		//4) Use sphere in culling algorithm
+		//Somehow send bounding sphere to client - Not here!
+		//p_piece->getBoundingSphere();
 	}
 
 	return entity;

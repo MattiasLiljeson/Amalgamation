@@ -825,6 +825,12 @@
     <ClInclude Include="ShineSpawn.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
+    <ClInclude Include="PortalCullingSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RootBoundingSpherePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1407,6 +1413,12 @@
     </ClCompile>
     <ClCompile Include="SoundComponent.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PortalCullingSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RootBoundingSpherePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

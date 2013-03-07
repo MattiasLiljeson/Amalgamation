@@ -46,6 +46,8 @@
     <ClInclude Include="ModuleHighlightSystem.h" />
     <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="PortalCullingSystem.h" />
+    <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="ShineSpawn.h" />
     <ClInclude Include="ShipHighlight.h" />
@@ -341,6 +343,8 @@
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="ModuleHighlightSystem.cpp" />
     <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="PortalCullingSystem.cpp" />
+    <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />

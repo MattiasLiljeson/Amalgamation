@@ -131,6 +131,7 @@ public:	//Enums
 		SoundSystem,
 		AmbientRangeSystem,
 		LogToFileSystem,
+		PortalCullingSystem,
 		NUM_SYSTEM_TYPES
 	};
 
