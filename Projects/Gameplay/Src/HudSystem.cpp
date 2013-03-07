@@ -114,6 +114,12 @@ void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 	case HudSystem::MAPPING:
 		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT,p_value);
 		break;
+	case HudSystem::PLAYERNAME:
+		m_backend->updateElement(m_hudIndex,PLAYERELEMENT,p_value);
+		break;
+	case HudSystem::SERVERNAME:
+		m_backend->updateElement(m_hudIndex, SERVERELEMENT,p_value);
+		break;
 	default:
 		break;
 	}
