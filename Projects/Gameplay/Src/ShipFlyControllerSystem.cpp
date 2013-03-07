@@ -22,6 +22,7 @@
 #include "EntityUpdatePacket.h"
 #include "MeshOffsetTransform.h"
 #include "ClientStateSystem.h"
+#include "ThrustComponent.h"
 
 #define FORCE_VS_OUTPUT
 
@@ -126,6 +127,10 @@ void ShipFlyControllerSystem::handleIngame( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
+		auto thrustComp = static_cast<ThrustComponent*>
+			(p_entities[i]->getComponent(ComponentType::ThrustComponent));
+		thrustComp->addThrustVector(thrustVec, m_world->getDelta());
+		thrustComp->addAngularVector(angularVec, m_world->getDelta());
 
 		controller->m_thrustPowerAccumulator += thrustVec/*+gearShift*/;
 		controller->m_turnPowerAccumulator += angularVec;

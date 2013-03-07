@@ -18,7 +18,14 @@ class ThrustComponent : public Component
 public:
 	ThrustComponent();
 	~ThrustComponent();
+
+	void addThrustVector(const AglVector3& p_thrust, float p_delta);
+	void addAngularVector(const AglVector3& p_angular, float p_delta);
 public:
-	AglVector3 thrustVector;
-	AglVector3 angularVector;
+	AglVector3 m_resultingThrust;
+	AglVector3 m_resultingAngular;
+	float m_thrustPower;
+	float m_angularPower;
+
+	const static int POWERCAP = 100;
 };

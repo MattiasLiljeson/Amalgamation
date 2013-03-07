@@ -20,7 +20,13 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 
+	void inserted( Entity* p_entity );
+
+	void removed( Entity* p_entity );
+
 protected:
 private:
-	int x;
+	unsigned int m_shipIdleSoundIndex;
+	unsigned int m_shipActiveSoundIndex;
+	
 };

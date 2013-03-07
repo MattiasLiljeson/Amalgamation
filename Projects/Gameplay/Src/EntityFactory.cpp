@@ -312,7 +312,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
-	Component* soundComponent = NULL;
+	SoundComponent* soundComponent = NULL;
 
 	// read basic assemblage
 	entity = entityFromRecipeOrFile( "ClientShip", "Assemblages/ClientShip.asd");
@@ -348,6 +348,25 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
+		//!!!!!!!! Don't change the name of the sounds !!!!!!!!
+		AudioHeader* engineSound = new AudioHeader(AudioHeader::AMBIENT, "ShipEngineIdle");
+		engineSound->file = "space_ship_engine_idle.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 2.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->volume = 0.5f;
+		soundComponent->addAudioHeader(engineSound);
+
+		engineSound = new AudioHeader(AudioHeader::AMBIENT, "ShipEngineActive");
+		engineSound->file = "space_ship_engine_active.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 2.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->volume = 0.5f;
+		soundComponent->addAudioHeader(engineSound);
 		// RM-RT 2013-03-04
 		/*
 		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,

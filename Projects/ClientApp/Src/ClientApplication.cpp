@@ -143,7 +143,8 @@ using namespace std;
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
-#include "../../Gameplay/Src/SoundSystem.h"
+#include <SoundSystem.h>
+#include <ShipEngineSystem.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -422,6 +423,10 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );
+	m_world->setSystem( new ShipEngineSystem() );
+
+	//Must be last the last systems that handles any sound operations
+	//otherwise a one frame delay will be added. Robin T
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
 	m_world->setSystem( new SoundSystem(audioBackend) );
