@@ -7,6 +7,8 @@
 #include <GPUTimer.h>
 #include <AntTweakBarWrapper.h>
 #include "ParticleRenderSystem.h"
+#include "ClientStateSystem.h"
+#include "MenuSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -24,6 +26,8 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
+	m_shouldRender			= true;
+	m_enteredIngamePreviousFrame = false;
 
 	m_totalTime =	0.0f;	
 
@@ -62,7 +66,30 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
+	auto gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
 
+	if( m_shouldRender){
+		renderTheScene();
+	}
+	if(m_enteredIngamePreviousFrame){
+		auto menuSystem = static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem));
+		menuSystem->endLoadingState();
+		m_shouldRender = true;
+		m_enteredIngamePreviousFrame = false;
+	}
+	if(!m_shouldRender && gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::NOTCHANGED){
+		m_enteredIngamePreviousFrame = true;
+	}
+	else if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME){
+		m_shouldRender = false;
+	}
+}
+
+
+void GraphicsRendererSystem::renderTheScene()
+{
+	/*
 	//Shadows
 	//m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
 	clearShadowStuf();
@@ -72,7 +99,7 @@ void GraphicsRendererSystem::process(){
 		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
 			m_shadowSystem->getViewProjection(i);
 	}
-
+	*/
 	/*
 	initShadowPass();
 	for(unsigned int i = 0; i < MAXSHADOWS; i++){
@@ -85,7 +112,6 @@ void GraphicsRendererSystem::process(){
 	endShadowPass();
 	*/
 	//m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
-
 	// Meshes
 	m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
 	initMeshPass();
@@ -120,7 +146,7 @@ void GraphicsRendererSystem::process(){
 	renderParticles();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
-	
+
 
 	//GUI
 	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
@@ -134,6 +160,7 @@ void GraphicsRendererSystem::process(){
 
 	updateTimers();
 }
+
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);

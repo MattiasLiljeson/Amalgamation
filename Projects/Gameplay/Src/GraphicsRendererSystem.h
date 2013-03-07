@@ -35,6 +35,8 @@ public:
 	virtual void initialize();
 	virtual void process();
 
+private:
+	void renderTheScene();
 	void initShadowPass();
 	void endShadowPass();
 
@@ -83,4 +85,6 @@ private:
 	double	m_totalTime;
 
 	int		m_currentFrame;
+	bool	m_enteredIngamePreviousFrame;
+	bool	m_shouldRender;
 };
