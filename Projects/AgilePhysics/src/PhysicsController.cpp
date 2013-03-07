@@ -587,7 +587,7 @@ vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_line)
 	}
 	return cols;
 }
-int	PhysicsController::LineClosestCollision(unsigned int p_line)
+int	PhysicsController::LineClosestCollision(unsigned int p_line, int p_ignore)
 {
 	int col = -1;
 	float closestT = FLT_MAX;
@@ -595,10 +595,33 @@ int	PhysicsController::LineClosestCollision(unsigned int p_line)
 	{
 		if (mLineSegmentCollisions[i].lineID == p_line)
 		{
-			if (mLineSegmentCollisions[i].t < closestT)
+			if (mLineSegmentCollisions[i].t < closestT && mLineSegmentCollisions[i].bodyID != p_ignore)
 			{
 				col = mLineSegmentCollisions[i].bodyID;
 				closestT = mLineSegmentCollisions[i].t;
+			}
+		}
+	}
+	return col;
+}
+int PhysicsController::LineClosestCollision(unsigned int p_line, AglVector3& p_colPoint, int p_ignore)
+{
+	int col = -1;
+	float closestT = FLT_MAX;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].lineID == p_line)
+		{
+			if (mLineSegmentCollisions[i].t < closestT && mLineSegmentCollisions[i].bodyID != p_ignore)
+			{
+				col = mLineSegmentCollisions[i].bodyID;
+				closestT = mLineSegmentCollisions[i].t;
+
+				LineSegment ls = mLineSegments[mLineSegmentCollisions[i].lineID];
+
+				AglVector3 dir = ls.p2 - ls.p1;
+				dir.normalize();
+				p_colPoint = ls.p1 + dir*mLineSegmentCollisions[i].t; 
 			}
 		}
 	}

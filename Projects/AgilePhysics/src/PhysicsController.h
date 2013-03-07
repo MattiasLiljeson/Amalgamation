@@ -161,7 +161,8 @@ public:
 
 	vector<unsigned int> LineCollidesWith(unsigned int p_line);
 	vector<LineCollisionData> LineSortedCollisions(unsigned int p_line);
-	int					 LineClosestCollision(unsigned int p_line);
+	int					 LineClosestCollision(unsigned int p_line, int p_ignore = -1);
+	int					 LineClosestCollision(unsigned int p_line, AglVector3& p_colPoint, int p_ignore = -1);
 
 	void ActivateBody(unsigned int pBody);
 	void InactivateBody(unsigned int pBody);

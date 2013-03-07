@@ -503,6 +503,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 			//Rotate around connection axis
 			//AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
 			rot = rots.back()*rot;
+			rot.normalize();
 			rots.pop_back();
 			//first = false;
 		}

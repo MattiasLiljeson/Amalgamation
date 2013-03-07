@@ -14,8 +14,8 @@ RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
 	ComponentType::Transform, ComponentType::PhysicsBody)
 {
-	m_turnPower = 2.0f;
-	m_enginePower = 50.0f;
+	m_turnPower = 8.0f;
+	m_enginePower = 150.0f;
 	m_server = p_server;
 }
 
@@ -31,7 +31,7 @@ void RocketControllerSystem::initialize()
 void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-	float waitUntilActivation = 0.2f;
+	float waitUntilActivation = 0.1f;
 	float rocketMaxAge = 15.0f;
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
@@ -74,6 +74,9 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
 
 			AglVector3 imp = to->getTranslation() - from->getTranslation();
+
+			float distance = imp.length();
+
 			imp.normalize();
 			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
 
@@ -81,10 +84,39 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 			AglVector3 rotAxis = AglVector3::crossProduct(imp, -world.GetForward());
 			rotAxis.normalize();
-			float rotFraction = (max(AglVector3::dotProduct(imp, world.GetForward()), 0.0f));
-			rotAxis *= m_turnPower * dt;
 
-			AglVector3 impulse = world.GetForward()*dt*m_enginePower;
+			//Compute fraction of turn power that should be applied
+			AglVector3 angVel = body->GetAngularVelocity();
+			
+			float angVelAxis = max(AglVector3::dotProduct(angVel, rotAxis), 0);
+
+			float amountToRotate = min(1.0f - AglVector3::dotProduct(imp, world.GetForward()), 1.0f); //0 -> 1
+
+			float frac = 1.0f;
+			if (amountToRotate / angVelAxis < 0.25f)
+			{
+				frac = (amountToRotate / angVelAxis) / 0.25f;
+			}
+
+			rotAxis *= m_turnPower * dt * frac;
+
+			if (true)//distance < 100)
+			{
+				frac = 1-frac;
+				
+				/*if (distance < 100)
+				{
+					frac *= (0.5f + distance / 100.0f);
+				}*/
+			}
+			else
+			{
+				frac = 1.0f;
+			}
+
+			AglVector3 impulse = imp*0.25f + world.GetForward();
+			impulse.normalize();
+			impulse *= dt*m_enginePower*frac;
 
 			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 

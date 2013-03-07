@@ -24,12 +24,11 @@ public:
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
 private:
-	void handleLaserSight(Entity* p_entity);
-	void spawnRay(Entity* p_entity);
-	void updateRays(Entity* p_entity);
-	void handleParticleSystem(Entity* p_entity);
+	void handleLaserSight(Entity* p_entity, AglVector3 p_pos, AglVector3 p_dir);
 	void startAnimation(Entity* p_gun);
 	void stopAnimation(Entity* p_gun);
+	void updateRay(Entity* p_gun, AglVector3& p_rayPos, AglVector3& p_rayDir);
+
 private:
 	TcpServer* m_server;
 };
