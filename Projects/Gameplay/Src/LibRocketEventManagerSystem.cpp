@@ -44,6 +44,7 @@
 #include "PacketType.h"
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
+#include "SoundComponent.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -72,6 +73,17 @@ void LibRocketEventManagerSystem::initialize()
 	EventInstancer* eventInstancer = new EventInstancer(this);
 	Rocket::Core::Factory::RegisterEventListenerInstancer(eventInstancer);
 	eventInstancer->RemoveReference();
+
+	m_menuEntity = m_world->createEntity();
+	SoundComponent* soundComp = new SoundComponent();
+	AudioHeader* header = new AudioHeader(AudioHeader::AMBIENT,"MenuOk");
+	header->file = "Mine_Blip_v2.wav";
+	header->volume = 0.3f;
+	header->path = TESTSOUNDEFFECTPATH;
+	soundComp->addAudioHeader(header);
+
+	m_menuEntity->addComponent(soundComp);
+	m_world->addEntity(m_menuEntity);
 }
 
 // Releases all event handlers registered with the manager.
@@ -157,6 +169,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "goto" && values.size() > 1)
 		{
+			playConfirmSound();
 			// Clear the stack from windows that are on top of the triggering one.
 			clearStackUntilFoundDocId(ownerDocument->GetId());
 			// If goto previous is specified, then hide this window, and open the
@@ -180,6 +193,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "open" &&	values.size() > 1)
 		{
+			playConfirmSound();
 			// Opens a window and pushes it to the stack, without hiding the parent window.
 			// Clear other open windows on top.
 			clearStackUntilFoundDocId(ownerDocument->GetId());
@@ -231,6 +245,9 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
+		else if(values[0] == "play_confirm"){
+			playConfirmSound();
+		}
 	}
 }
 
@@ -239,6 +256,20 @@ void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_enti
 	if (wantsToExit){
 		m_world->requestToShutDown();
 	}
+}
+
+void LibRocketEventManagerSystem::playConfirmSound()
+{
+	auto soundComp = static_cast<SoundComponent*>
+		(m_menuEntity->getComponent(ComponentType::SoundComponent));
+
+	soundComp->getSoundHeaderByName(AudioHeader::AMBIENT,"MenuOk")->
+		queuedPlayingState = AudioHeader::PLAY;
+}
+
+void LibRocketEventManagerSystem::playBackSound()
+{
+
 }
 
 // Loads a window and binds the event handler for it.
