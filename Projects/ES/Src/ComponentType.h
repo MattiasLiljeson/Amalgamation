@@ -66,8 +66,6 @@ public:	//Enums
 		Connector1to2Module,
 		EmpModule,
 		FlareGunModule,
-		GravityBombModule,
-		TeslaModule,
 		LightSources,
 		LightBlinker,
 		Vibration,
@@ -125,6 +123,7 @@ public:	//Enums
 		SlotMarkerSprite,
 		AnomalyBombEffectPiece,
 		TeslaEffectPiece,
+		TeslaCoilEffect,
 		ShipHighlight,
 		NUM_COMPONENT_TYPES
 	};

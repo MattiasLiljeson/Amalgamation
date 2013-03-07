@@ -7,11 +7,35 @@
 #include "EntityFactory.h"
 #include "SpawnPointSet.h"
 #include "MeshOffsetTransform.h"
+#include "TeslaCoilEffect.h"
 
 TeslaEffectSystem::TeslaEffectSystem()
-	: EntitySystem(SystemType::TeslaEffectSystem, 3, ComponentType::Transform,
-	ComponentType::MeshOffsetTransform, ComponentType::SpawnPointSet)
+	: EntitySystem(SystemType::TeslaEffectSystem, 6, ComponentType::Transform,
+	ComponentType::MeshOffsetTransform, ComponentType::SpawnPointSet,
+	ComponentType::TeslaCoilModule, ComponentType::ShipModule,
+	ComponentType::TeslaCoilEffect)
 {
+}
+
+void TeslaEffectSystem::inserted( Entity* p_entity )
+{
+	TeslaCoilEffect* coilEffect = static_cast<TeslaCoilEffect*>(p_entity->getComponent(
+		ComponentType::TeslaCoilEffect));
+	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory));
+	for(unsigned int meshIndex=0; meshIndex<coilEffect->possibleMeshes.size(); meshIndex++)
+	{
+		Entity* entity = NULL;
+		vector<Entity*> entityPool;
+		for(unsigned int i=0; i<10; i++)
+		{
+			entity = factory->createTeslaEffectPieceClient(AglVector3::one(), 1.0f,
+				AglQuaternion::identity(), AglVector3::zero(),
+				coilEffect->possibleMeshes[meshIndex]);
+			entityPool.push_back(entity);
+		}
+		m_lightningPool[p_entity->getIndex()].push_back( entityPool );
+	}
 }
 
 void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int p_numberOfHits )
@@ -39,13 +63,13 @@ void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int
 
 		for(int i=0; i<p_numberOfHits; i++)
 		{
-			animateHit(entitySource, p_identitiesHit[i], geometricMean);
+			animateHit(entitySource, p_identitiesHit[i], geometricMean, i);
 		}
 	}
 }
 
 void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
-	const AglVector3 p_geometricMean )
+	const AglVector3 p_geometricMean, int p_index )
 {
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
 		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
@@ -67,26 +91,51 @@ void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
 			spawnTransform *= offset->offset.inverse();
 			spawnTransform *= sourceTransform->getMatrix();
 			AglVector3 sourcePosition = spawnTransform.GetTranslation();
-			animate(sourcePosition, targetTransform->getTranslation(),
-				p_geometricMean);
+			int randomMesh = RandomUtil::randomInteger(
+				(int)m_lightningPool[p_fromEntity->getIndex()].size() - 1);
+			Entity* effectEntity = m_lightningPool[p_fromEntity->getIndex()][randomMesh][p_index];
+			
+			Transform* ligntningTransform = static_cast<Transform*>(effectEntity->
+				getComponent(ComponentType::Transform));
+			ligntningTransform->setTranslation(sourcePosition);
+			AglVector3 forwardScale = AglVector3::up() *
+				(sourcePosition - targetTransform->getTranslation()).length();
+			// right is in-game up.
+			AglVector3 upScale = AglVector3::right();
+			// forward is in-game right.
+			AglVector3 rightScale = AglVector3::forward();
+			AglVector3 scale = AglVector3::one() + forwardScale + upScale + rightScale;
+			ligntningTransform->setScale(scale);
+			AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
+				targetTransform->getTranslation() - sourcePosition);
+			ligntningTransform->setRotation(rotation);
+
+			TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(
+				effectEntity->getComponent(ComponentType::TeslaEffectPiece));
+			effectPiece->lifeTime = effectPiece->maxLifeTime; // Restarts it.
+			effectPiece->forwardScale = forwardScale;
+			
+			//animate(sourcePosition, targetTransform->getTranslation(),
+			//	p_geometricMean, );
 		}
 	}
 }
 
-void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
-	const AglVector3& p_targetPosition, const AglVector3 p_geometricMean )
-{
-	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
-		SystemType::EntityFactory));
-	// up is in-game forward.
-	AglVector3 forwardScale = AglVector3::up() *
-		(p_sourcePosition - p_targetPosition).length();
-	float thicknessFactor = RandomUtil::randomInterval(1.0f, 5.0f);
-	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
-		p_targetPosition - p_sourcePosition);
-	Entity* effectCenter = factory->createTeslaEffectPieceClient(forwardScale,
-		thicknessFactor, rotation, p_sourcePosition);
-}
+//void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
+//	const AglVector3& p_targetPosition, const AglVector3 p_geometricMean,
+//	string p_meshName)
+//{
+//	EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
+//		SystemType::EntityFactory));
+//	// up is in-game forward.
+//	AglVector3 forwardScale = AglVector3::up() *
+//		(p_sourcePosition - p_targetPosition).length();
+//	float thicknessFactor = RandomUtil::randomInterval(1.0f, 5.0f);
+//	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
+//		p_targetPosition - p_sourcePosition);
+//	Entity* effectCenter = factory->createTeslaEffectPieceClient(forwardScale,
+//		thicknessFactor, rotation, p_sourcePosition, p_meshName);
+//}
 
 bool TeslaEffectSystem::entityInSystem( Entity* p_checkEntity ) const
 {

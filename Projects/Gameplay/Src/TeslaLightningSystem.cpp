@@ -2,12 +2,13 @@
 #include "TeslaEffectPiece.h"
 #include "Transform.h"
 #include <RandomUtil.h>
+#include "RenderInfo.h"
 
 TeslaLightningSystem::TeslaLightningSystem()
-	: EntitySystem(SystemType::TeslaLightningSystem, 2,
-	ComponentType::TeslaEffectPiece, ComponentType::Transform)
+	: EntitySystem(SystemType::TeslaLightningSystem, 3,
+	ComponentType::TeslaEffectPiece, ComponentType::Transform,
+	ComponentType::RenderInfo)
 {
-
 }
 
 void TeslaLightningSystem::processEntities( const vector<Entity*>& p_entities )
@@ -16,10 +17,13 @@ void TeslaLightningSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(p_entities[i]->
 			getComponent(ComponentType::TeslaEffectPiece));
+		RenderInfo* renderInfo = static_cast<RenderInfo*>(p_entities[i]->getComponent(
+			ComponentType::RenderInfo));
 		effectPiece->lifeTime -= m_world->getDelta();
 		if(effectPiece->lifeTime <= 0.0f)
 		{
-			m_world->deleteEntity(p_entities[i]);
+			//m_world->deleteEntity(p_entities[i]);
+			renderInfo->m_shouldBeRendered = false;
 		}
 		else
 		{
@@ -30,6 +34,7 @@ void TeslaLightningSystem::processEntities( const vector<Entity*>& p_entities )
 			AglVector3 rightScale = AglVector3::forward() * scaleFactor;
 			AglVector3 scale = effectPiece->forwardScale + upScale + rightScale;
 			pieceTransform->setScale(scale);
+			renderInfo->m_shouldBeRendered = true;
 		}
 	}
 }

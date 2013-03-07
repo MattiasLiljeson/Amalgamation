@@ -796,7 +796,8 @@ Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet
 }
 
 Entity* EntityFactory::createTeslaEffectPieceClient(AglVector3 p_forwardScale,
-		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition)
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition,
+		string p_meshName)
 {
 	Entity* entity = entityFromRecipeOrFile( "ClientTeslaEffectPiece",
 		"Assemblages/Modules/TeslaCoil/ClientTeslaEffectPiece.asd" );
@@ -816,9 +817,7 @@ Entity* EntityFactory::createTeslaEffectPieceClient(AglVector3 p_forwardScale,
 		ComponentType::TeslaEffectPiece));
 	effectPiece->forwardScale = p_forwardScale;
 
-	int meshIndex = RandomUtil::randomInteger(
-		static_cast<int>( effectPiece->possibleMeshes.size() ));
-	entity->addComponent(new LoadMesh(effectPiece->possibleMeshes[meshIndex]));
+	entity->addComponent(new LoadMesh(p_meshName));
 
 	m_world->addEntity(entity);
 	return entity;

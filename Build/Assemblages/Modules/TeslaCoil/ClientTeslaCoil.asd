@@ -10,6 +10,8 @@ d s m_filename TeslaCoil.agl
 
 c ShipModule
 
+c TeslaCoilModule
+
 c LightsComponent
 # crazy light
 d string 	2:typeAsStr 	"point"
@@ -39,3 +41,10 @@ d i m_endFrame 91
 d s m_name Death
 d i m_startFrame 180
 d i m_endFrame 220
+
+c TeslaCoilEffect
+// There can be as many possibleMesh entries as wanted.
+//(The effect will randomly use any of the given meshes)
+d s possibleMesh LightningPart.agl
+d s possibleMesh LigthningPart2.agl
+d s possibleMesh LigthningPart3.agl

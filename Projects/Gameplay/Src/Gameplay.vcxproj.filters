@@ -825,6 +825,9 @@
     <ClInclude Include="TeslaLightningSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="TeslaCoilEffect.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1410,6 +1413,9 @@
     </ClCompile>
     <ClCompile Include="TeslaLightningSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilEffect.cpp">
+      <Filter>Components\Gameplay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
