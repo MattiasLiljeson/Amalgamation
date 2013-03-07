@@ -12,7 +12,8 @@
 /// \brief	Handles the packing and unpacking of entity updates.
 ///        
 /// # EntityUpdatePacket
-/// 73 byte.
+/// Before: 73 bytes. (With AngularVelocity and Velocity)
+/// Now: 49 bytes.
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 

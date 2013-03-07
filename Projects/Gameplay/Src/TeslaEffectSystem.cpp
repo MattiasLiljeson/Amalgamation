@@ -65,8 +65,8 @@ void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
 			MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
 				p_fromEntity->getComponent(ComponentType::MeshOffsetTransform));
 			spawnTransform *= offset->offset.inverse();
-			AglVector3 decompTranslation = spawnTransform.GetTranslation();
-			AglVector3 sourcePosition = sourceTransform->getTranslation() + decompTranslation;
+			spawnTransform *= sourceTransform->getMatrix();
+			AglVector3 sourcePosition = spawnTransform.GetTranslation();
 			animate(sourcePosition, targetTransform->getTranslation(),
 				p_geometricMean);
 		}
