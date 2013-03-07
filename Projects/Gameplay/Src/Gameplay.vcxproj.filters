@@ -112,6 +112,9 @@
     <Filter Include="Systems\Gameplay\Client Only\Highlight">
       <UniqueIdentifier>{ddf2a0ab-1f23-45a9-99e5-a94587b57780}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Ship">
+      <UniqueIdentifier>{8cc9028c-7a7f-4254-ab0c-e4c11b7a376e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetworkSynced.h">
@@ -822,6 +825,12 @@
     <ClInclude Include="ModuleOnChamberStartPoint.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ThrustComponent.h">
+      <Filter>Components\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEngineSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1404,6 +1413,12 @@
     </ClCompile>
     <ClCompile Include="SoundComponent.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustComponent.cpp">
+      <Filter>Components\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEngineSystem.cpp">
+      <Filter>Systems\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

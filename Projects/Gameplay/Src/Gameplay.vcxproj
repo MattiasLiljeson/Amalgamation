@@ -47,6 +47,7 @@
     <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="SettingsSystem.h" />
+    <ClInclude Include="ShipEngineSystem.h" />
     <ClInclude Include="ShipHighlight.h" />
     <ClInclude Include="ShipHiglightSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
@@ -243,6 +244,7 @@
     <ClInclude Include="TeslaEffectPiece.h" />
     <ClInclude Include="TeslaEffectSystem.h" />
     <ClInclude Include="TeslaHitPacket.h" />
+    <ClInclude Include="ThrustComponent.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
@@ -341,6 +343,7 @@
     <ClCompile Include="ModuleHighlightSystem.cpp" />
     <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
+    <ClCompile Include="ShipEngineSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
@@ -447,6 +450,7 @@
     <ClCompile Include="TeslaEffectPiece.cpp" />
     <ClCompile Include="TeslaEffectSystem.cpp" />
     <ClCompile Include="TeslaHitPacket.cpp" />
+    <ClCompile Include="ThrustComponent.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />

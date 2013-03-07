@@ -47,6 +47,7 @@ struct AudioHeader{
 	SoundType soundType;
 	std::string path;
 	std::string file;
+	std::string soundName;
 
 	AudioHeader(const SoundType& p_soundType){
 		timerInterval = 0;
@@ -67,6 +68,6 @@ struct AudioHeader{
 		playingState = STOP;
 		queuedPlayingState = STOP;
 		soundType = p_soundType;
-
+		soundName = "Undefined";
 	}
 };

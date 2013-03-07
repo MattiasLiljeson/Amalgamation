@@ -55,6 +55,7 @@
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
 #include "StaticProp.h"
+#include "ThrustComponent.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -311,6 +312,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
+	Component* soundComponent = NULL;
 
 	// read basic assemblage
 	entity = entityFromRecipeOrFile( "ClientShip", "Assemblages/ClientShip.asd");
@@ -324,10 +326,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		m_gradientColors[p_packet.playerID].layerOne,
 		m_gradientColors[p_packet.playerID].layerTwo) );
 
-	//m_playerCounter++;
+	entity->addComponent( ComponentType::ThrustComponent, new ThrustComponent());
 
 	entity->addComponent( new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		EntityType::Ship));
+
+	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
+
+	soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+	
 	Component* component = NULL;
 
 	/************************************************************************/
@@ -340,40 +348,17 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
-//		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
-//			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
-//
-//		if( emitters == NULL ) {
-//			emitters = new ParticleSystemsComponent();
-//			entity->addComponent( emitters );
-//		}
-//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
-//			AglVector3(0.0f, 0.0f, -1.0f), 0);
-//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
-//			AglVector3(0.0f, 1.0f, 1.0f), 1);
-//		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
-//			AglVector3(-1.0f, 0.0f, 0.0f), 2);
-//		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
-//			AglVector3(1.0f, 0.0f, 0.0f), 3);
-
-
 		// RM-RT 2013-03-04
 		/*
 		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 		*/
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
-	}
-//	entity->addComponent( new PlayerComponent() );
-	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
+		m_world->addEntity(entity);
 
-	m_world->addEntity(entity);
-
-	/************************************************************************/
-	/* Attach a camera if it's the client's ship!							*/
-	/************************************************************************/
-	if(p_packet.owner == m_client->getId())
-	{
+		/************************************************************************/
+		/* Attach a camera if it's the client's ship!							*/
+		/************************************************************************/
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
 		if(entity->getComponent(ComponentType::AudioListener))
@@ -390,7 +375,10 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 		entity->applyComponentChanges();
 	}
-
+	else
+	{
+		m_world->addEntity(entity);
+	}
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)

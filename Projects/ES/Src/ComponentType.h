@@ -89,6 +89,7 @@ public:	//Enums
 		InterpolationComponent2,
 		DamageComponent,
 		ModuleOnChamberSpawnPoint,
+		ThrustComponent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
