@@ -90,6 +90,11 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 				header->playingState = header->queuedPlayingState;
 				m_audioBackend->changeAudioInstruction(header->soundIndex, 
 					header->playingState);
+
+				if (header->playInterval == AudioHeader::ONCE){
+					header->playingState = AudioHeader::STOP;
+					header->queuedPlayingState = AudioHeader::STOP;
+				}
 			}
 		}
 	}

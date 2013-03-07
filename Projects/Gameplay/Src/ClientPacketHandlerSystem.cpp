@@ -1256,6 +1256,12 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 
 			if(changeState.m_serverState == ServerStates::INGAME){
 				m_gameState->setQueuedState( GameStates::INGAME );
+
+				auto* hudSystem = static_cast<HudSystem*>
+					(m_world->getSystem(SystemType::HudSystem));
+				hudSystem->setHUDData(HudSystem::PLAYERNAME,
+					m_tcpClient->getPlayerName().c_str());
+				hudSystem->setHUDData(HudSystem::SERVERNAME,"TheOnServ");
 			}
 		}
 		else

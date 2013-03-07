@@ -4,7 +4,7 @@
 		<link type="text/template" href="window.rml" />
 	</head>
 	<body class="Pop-up" template="window" onshow="">
-		<form onsubmit="host_server;">
+		<form onsubmit="host_server; play_confirm;">
 			<div>
 				Server Name:
 				<Input name="server_name" type="text" size="15"

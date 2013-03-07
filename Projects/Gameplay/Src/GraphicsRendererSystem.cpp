@@ -30,8 +30,6 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_shouldRender			= true;
 	m_enteredIngamePreviousFrame = false;
 
-	m_totalTime =	0.0f;	
-
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
 
@@ -41,6 +39,7 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_profiles.push_back(GPUTimerProfile("COMP"));
 	m_profiles.push_back(GPUTimerProfile("PART"));
 	m_profiles.push_back(GPUTimerProfile("GUI"));
+	m_profiles.push_back(GPUTimerProfile("TOTAL"));
 
 	clearShadowStuf();
 }
@@ -72,11 +71,7 @@ void GraphicsRendererSystem::initialize(){
 			&m_profiles[i].renderingAverage,"group='GPU Extra'");
 
 		m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_profiles[i].profile);
-	}
-
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::MEASUREMENT,"Total",TwType::TW_TYPE_DOUBLE, &m_totalTime,"group=GPU");
-	
+	}	
 }
 void GraphicsRendererSystem::process(){
 
@@ -318,13 +313,13 @@ void GraphicsRendererSystem::clearShadowStuf()
 
 void GraphicsRendererSystem::updateTimers()
 {
-	m_totalTime = 0;
+	double total = 0;
 	GPUTimer* timer = m_wrapper->getGPUTimer();
 
-	for(unsigned int i = 0; i < NUMRENDERINGPASSES; i++){
-
+	for(unsigned int i = 0; i < NUMRENDERINGPASSES-1; i++){
 		m_profiles[i].pushNewTime(timer->getTheTimeAndReset(m_profiles[i].profile));
-		m_totalTime += m_profiles[i].renderingTime;
+		total += m_profiles[i].renderingTime;
 	}
+	m_profiles[TOTAL].pushNewTime(total);
 	m_wrapper->getGPUTimer()->tick();
 }

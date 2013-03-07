@@ -108,7 +108,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	AglVector3 axis( 0.0f, 1.0f, -0.2f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f,3.14f);
+	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f);
 	m_ship->addComponent(axisRotate);
 
 	// RM-RT 2013-03-04
