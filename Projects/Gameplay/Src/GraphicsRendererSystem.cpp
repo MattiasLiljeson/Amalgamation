@@ -63,16 +63,16 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
-
+	m_wrapper->clearRenderTargets();
 	//Shadows
 	//m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
-	clearShadowStuf();
-	//Fill the shadow view projections
-	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
-		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
-		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
-			m_shadowSystem->getViewProjection(i);
-	}
+	//clearShadowStuf();
+	////Fill the shadow view projections
+	//for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
+	//	m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
+	//	m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
+	//		m_shadowSystem->getViewProjection(i);
+	//}
 
 	/*
 	initShadowPass();
@@ -161,37 +161,39 @@ void GraphicsRendererSystem::initMeshPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	//m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
-	m_wrapper->clearRenderTargets();
 	m_wrapper->setBaseRenderTargets();
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+
 }
 
 void GraphicsRendererSystem::endMeshPass(){
-		m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 }
 
 void GraphicsRendererSystem::initLightPass(){
 	m_wrapper->setRasterizerStateSettings(
-	//RasterizerState::WIREFRAME_NOCULL, false); // For debug /ML
-	RasterizerState::FILLED_CW_FRONTCULL, false);
+		//RasterizerState::WIREFRAME_NOCULL, false); // For debug /ML
+		RasterizerState::FILLED_CW_FRONTCULL, false);
 	m_wrapper->setBlendStateSettings(BlendState::LIGHT);
 	m_wrapper->setLightRenderTargets();
 	//m_wrapper->mapDeferredBaseToShader();
-	m_wrapper->mapNeededShaderResourceToLightPass(m_activeShadows);
+	m_wrapper->mapDepthAndNormal();
+	//m_wrapper->mapShadows( m_activeShadows );
+	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
+
 }
 
 void GraphicsRendererSystem::endLightPass(){
-	//m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
-	//m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	//m_wrapper->unmapDeferredBaseFromShader();
-	//m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
+	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 }
 
 void GraphicsRendererSystem::beginSsao()
 {
-	// not used anymore
-	//m_wrapper->mapRandomVecTexture();
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setBlendStateSettings(BlendState::SSAO);
+	//m_wrapper->setComposedRenderTargetWithNoDepthStencil();
+	//m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setRasterizerStateSettings(
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
 }
@@ -200,25 +202,27 @@ void GraphicsRendererSystem::endSsao()
 {
 	m_wrapper->setRasterizerStateSettings(RasterizerState::DEFAULT);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	m_wrapper->unmapDeferredBaseFromShader();
-	m_wrapper->unmapUsedShaderResourceFromLightPass(m_activeShadows);
+	m_wrapper->unmapDepthAndNormal();
+	//m_wrapper->unmapShadows(m_activeShadows);
 
 }
 
 void GraphicsRendererSystem::beginDofGenerationPass()
 {
-	m_wrapper->setRasterizerStateSettings( RasterizerState::DEFAULT, false );
-	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
-	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
-	//m_wrapper->setRasterizerStateSettings( RasterizerState::FILLED_NOCULL_NOCLIP, false );
+	m_wrapper->setViewportToShadowMapSize();
+
+	m_wrapper->setPrimitiveTopology( PrimitiveTopology::TRIANGLESTRIP );
+	m_wrapper->setBlendStateSettings( BlendState::OVERWRITE );
 	m_wrapper->setDofRenderTargets();
 	//m_wrapper->setComposedRenderTargetWithNoDepthStencil();
-	m_wrapper->mapGbuffersAndLightAsShaderResources();
+	m_wrapper->mapGbuffers();
 }
 
 void GraphicsRendererSystem::endDofGenerationPass()
 {
-	m_wrapper->unmapGbuffersAndLightAsShaderResources();
+	m_wrapper->unmapGbuffers();
+	m_wrapper->resetViewportToOriginalSize();
+
 }
 
 void GraphicsRendererSystem::initComposePass()
@@ -227,17 +231,18 @@ void GraphicsRendererSystem::initComposePass()
 		RasterizerState::DEFAULT, false);
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setComposedRenderTargetWithNoDepthStencil();
-	m_wrapper->mapGbuffersAndLightAsShaderResources();
-	m_wrapper->mapDofBuffersAsShaderResources();
+	m_wrapper->mapGbuffers();
+	m_wrapper->mapDofBuffers();
+	m_wrapper->mapDepth();
 }
 
 void GraphicsRendererSystem::endComposePass()
 {
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLELIST);
 	//m_wrapper->unmapVariousStagesAfterCompose();
-	m_wrapper->unmapDofBuffersAsShaderResources();
-	m_wrapper->unmapGbuffersAndLightAsShaderResources();
-	m_wrapper->unmapDepthFromShader();
+	m_wrapper->unmapDofBuffers();
+	m_wrapper->unmapGbuffers();
+	m_wrapper->unmapDepth();
 }
 
 void GraphicsRendererSystem::initParticlePass(){

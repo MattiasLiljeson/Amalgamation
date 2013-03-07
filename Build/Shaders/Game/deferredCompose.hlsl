@@ -22,6 +22,7 @@ Texture2D gDofNormalBuffer	: register(t6);
 Texture2D gDofSpecBuffer	: register(t7);
 Texture2D gDofLightDiff 	: register(t8);
 Texture2D gDofLightSpec		: register(t9);
+
 Texture2D gDepthBuffer		: register(t10);
 
 SamplerState pointSampler : register(s0);
@@ -69,17 +70,19 @@ float4 PS(VertexOut input) : SV_TARGET
 	index.xy = input.position.xy;
 	index.z = 0;
 
-	//float4 dofDiffColor = gDiffBuffer.Sample( pointSampler, input.texCoord );
-	float4 dofDiffColor = gDofLightSpec.Sample( pointSampler, input.texCoord );
-	return dofDiffColor;
+	float4 rawDiffColor = gDiffBuffer.Load( index );
+	//float4 rawNormal 	= gNormalBuffer.Load( index );
+	float4 rawSpecColor = gSpecBuffer.Load( index );
+	float4 rawLightDiff = gLightDiff.Load( index ) * 10.0f;
+	float4 rawLightSpec = gLightSpec.Load( index ) * 10.0f;
 
-	float4 diffColor = gDiffBuffer.Load( index );
-	float4 specColor = gSpecBuffer.Load( index );
-	float4 lightDiff = gLightDiff.Load( index ) * 10.0f;
-	float4 lightSpec = gLightSpec.Load( index ) * 10.0f;
-	diffColor = specColor = lightDiff = lightSpec = 0;
+	float4 dofDiffColor = gDofDiffBuffer.Sample( pointSampler, input.texCoord );
+	//float4 dofNormal 	= gDofNormalBuffer.Sample( pointSampler, input.texCoord );
+	float4 dofSpecColor = gDofSpecBuffer.Sample( pointSampler, input.texCoord );
+	float4 dofLightDiff = gDofLightDiff.Sample( pointSampler, input.texCoord ) * 10.0f;
+	float4 dofLightSpec = gDofLightSpec.Sample( pointSampler, input.texCoord ) * 10.0f;
+
 	float depth = gDepthBuffer.Load( index ).r;
-
 
 	//float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float3 fog = gFogColorAndFogFar.rgb;
@@ -94,19 +97,6 @@ float4 PS(VertexOut input) : SV_TARGET
 	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	
-	float coc = 0.0f;
-	for( int x=-2; x<3; x++ ) {
-		for(int y=-2; y<3; y++ ) {
-			float samp = gLightSpec.Load( uint3(index.x+x, index.y+y, 0) ).a ;
-			coc += samp * blurFilter5[x+2][y+2];
-		}
-	}
-	//float gaussPixelDepthW = length( getPosition(input.texCoord,gaussDepth) - gCameraPos.xyz );
-
-	//float coc = computeFocalDepth(gaussPixelDepthW);
-	//coc *= cocFactor;
-	//coc = 1.0f;
-	//return float4(coc, coc, coc, 1);
 
 	float finalAO = 0.0f;
 	float3 finalEmissiveValue = float3(0,0,0);	
@@ -119,39 +109,56 @@ float4 PS(VertexOut input) : SV_TARGET
 		[unroll]
 		for( int y=-2; y<3; y++ )
 		{
-			float2 offset = float2(x*scale.x, y*scale.y);
-			offset *= coc;
-			float2 idx = index.xy*scale + offset;
+			//float2 offset = float2(x*scale.x, y*scale.y);
+			//offset *= coc;
+			//float2 idx = index.xy*scale + offset;
+			uint3 idx = index+uint3(x,y,0);
 			float blurFactor = blurFilter5[x+2][y+2];
-			diffColor += gDiffBuffer.Sample( pointSampler, idx ) * blurFactor;
-			specColor += gSpecBuffer.Sample( pointSampler, idx ) * blurFactor;
-			lightDiff += gLightDiff.Sample( pointSampler, idx ) * blurFactor;
-			lightSpec += gLightSpec.Sample( pointSampler, idx ) * blurFactor;
 
-			finalAO += gLightDiff.Load( index+uint3(x,y,0) ).a * blurFilter5[x+2][y+2];
+			finalAO += gLightDiff.Load( idx ).a * blurFactor;
 			
 			sampledGlow = gDiffBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
 			sampledGlow.rgb *= sampledGlow.a;
-			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
+			finalEmissiveValue += sampledGlow.rgb * blurFactor;
 		}
 	}
-	//return float4( coc, coc, coc, 1.0f );
-	return float4( diffColor.r, diffColor.g, diffColor.b, 1.0f );
-	return float4( lightDiff.r, lightDiff.g, lightDiff.b, 1.0f );
-	return float4( lightDiff.a, lightDiff.a, lightDiff.a, 1.0f );
-	return float4( lightSpec.a, lightSpec.a, lightSpec.a, 1.0f );
+	float coc = 0.0f;
+	coc = dofLightSpec.a ;
+	coc *= cocFactor;
+	//return float4(coc,coc,coc,1);
+	float4 dofDiff = dofDiffColor * dofLightDiff;
+	return dofDiff;
+	float4 dofSpec = dofSpecColor * dofLightSpec;
+	float4 rawDiff = rawDiffColor * rawLightDiff;
+	float4 rawSpec = rawSpecColor * rawLightSpec;
+	float4 diff = coc*dofDiff + (1-coc)*rawDiff;
+	//diff = rawDiff*0.5 + rawDiff*0.5;
+	//diff = dofDiff;
+	float4 spec = coc*dofSpec + (1-coc)*rawSpec;
+	//spec = rawSpec;
+	//spec = dofSpec;
+
+	//float4 diffColor = coc*dofDiffColor + (1-coc)*rawDiffColor;
+	//diffColor = dofDiffColor;
+	//float4 specColor = coc*dofSpecColor + (1-coc)*rawSpecColor;
+	//specColor = dofSpecColor;
+	//float4 lightDiff = coc*dofLightDiff + (1-coc)*rawLightDiff;
+	//lightDiff = dofLightDiff;
+	//float4 lightSpec = coc*dofLightSpec + (1-coc)*rawLightSpec;
+	//lightSpec = dofLightSpec;
 
 	// add light
 	float4 finalCol = float4(0,0,0,0);
-	finalCol += specColor * lightSpec;
-	finalCol += diffColor * lightDiff;	
+	finalCol += diff + spec;
+	//finalCol += specColor * lightSpec;
+	//finalCol += diffColor * lightDiff;	
 	// apply ao
-	finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
-	finalCol += float4 (ambient,0.0f );	
+	//finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
+	//finalCol += float4 (ambient,0.0f );	
 	// apply fog
-	finalCol = float4( lerp( finalCol.rgb, fog+(lightSpec+lightDiff)*0.01f, fogDepth), finalCol.a ); 
+	//finalCol = float4( lerp( finalCol.rgb, fog+(lightSpec+lightDiff)*0.01f, fogDepth), finalCol.a ); 
 	// apply glow
-	finalCol += float4( finalEmissiveValue, 0.0f );
+	//finalCol += float4( finalEmissiveValue, 0.0f );
 	
 	return float4( finalCol.rgb, 1.0f );
 }

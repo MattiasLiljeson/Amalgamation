@@ -42,6 +42,7 @@ struct BlendState
 		PARTICLE,
 		LIGHT,
 		SSAO,
+		OVERWRITE,
 		NUMBER_OF_MODES
 	};
 };

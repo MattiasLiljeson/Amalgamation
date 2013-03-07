@@ -3,10 +3,10 @@
 #include "shadowing.hlsl"
 #include "utility.hlsl"
 
-Texture2D gDiffuseMap 	: register(t0);
+//Texture2D gDiffuseMap 	: register(t0);
 Texture2D gNormalMap 	: register(t1);
-Texture2D gSpecular 	: register(t2);
-Texture2D gDepth 		: register(t3);
+//Texture2D gSpecular 	: register(t2);
+Texture2D gDepth 		: register(t10);
 
 Texture2D gShadow1 		: register(t4);
 Texture2D gShadow2 		: register(t5);

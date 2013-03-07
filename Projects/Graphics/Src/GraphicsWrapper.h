@@ -101,12 +101,14 @@ public:
 	///-----------------------------------------------------------------------------------
 	void renderGUIMeshList( unsigned int p_meshId, vector<InstanceData>* p_instanceList );
 
-	void mapDeferredBaseToShader();
-	void mapNeededShaderResourceToLightPass(int* p_activeShadows);
-	void unmapDeferredBaseFromShader();
-	void unmapUsedShaderResourceFromLightPass(int* p_activeShadows);
+	//void mapDeferredBaseToShader();
+	void mapDepthAndNormal();
+	void unmapDepthAndNormal();
+	void mapShadows( int* p_activeShadows );
+	void unmapShadows( int* p_activeShadows );
 
-	void unmapDepthFromShader();
+	void mapDepth();
+	void unmapDepth();
 	void renderLights( LightMesh* p_mesh, vector<LightInstanceData>* p_instanceList );
 	///-----------------------------------------------------------------------------------
 	/// Switch the back buffer so that the current render target is presented
@@ -157,10 +159,10 @@ public:
 	void generateDof();
 	void renderComposeStage();
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
-	void mapGbuffersAndLightAsShaderResources();
-	void unmapGbuffersAndLightAsShaderResources();
-	void mapDofBuffersAsShaderResources();
-	void unmapDofBuffersAsShaderResources();
+	void mapGbuffers();
+	void unmapGbuffers();
+	void mapDofBuffers();
+	void unmapDofBuffers();
 	void unmapVariousStagesAfterCompose();
 	unsigned int generateShadowMap();
 	GPUTimer* getGPUTimer();

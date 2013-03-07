@@ -3,7 +3,7 @@
 #include "lightLib.hlsl"
 
 Texture2D gNormalMap 		: register(t1);
-Texture2D gDepth 			: register(t3);
+Texture2D gDepth 			: register(t10);
 //Texture2D gRandomNormals	: register(t4);
 
 SamplerState pointSampler : register(s0);
@@ -16,6 +16,8 @@ cbuffer SSAO : register(b1)
 	float intensity;
 	float sampleRadius;
 	float epsilon;
+	float cocFactor;
+
 	const static float randSize = 64;
 }
 
@@ -79,6 +81,7 @@ float computeCoc(float depth)
 
 	if( depth > limFar ) {
 		coc = (depth-limFar)/(gFarPlane-limFar);
+		//coc = 1.0f;
 	} else if( depth < limNear ) {
 		coc = 1.0f - (depth/limNear);
 	}

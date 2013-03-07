@@ -47,7 +47,8 @@ public:
 	const static int RT2 = 2;
 	const static int RT3 = 3;
 	const static int RT4 = 4;
-	const static int RT5 = 5;
+	const static int DEPTH_IDX = 10;
+	//const static int RT5 = 5;
 	enum RenderTargets {
 		RenderTargets_NON_EXISTING	= -1,
 		RenderTargets_DIFFUSE		= RT0,
@@ -55,7 +56,7 @@ public:
 		RenderTargets_SPECULAR		= RT2,
 		RenderTargets_LIGHT_DIFFUSE = RT3,
 		RenderTargets_LIGHT_SPEC	= RT4,
-		RenderTargets_DEPTH			= RT5,
+		//RenderTargets_DEPTH			= RT5,
 		RenderTargets_CNT,
 	};
 
@@ -76,19 +77,21 @@ public:
 	void renderComposeStage();
 
 	// Buffers as resources
-	void mapShaderResourcesForLightPass(ID3D11ShaderResourceView* p_shadowMap);
-	void mapShaderResourcesForLightPass();
-	void unmapShaderResourcesForLightPass();
-	void mapGbuffersAndLightAsShaderResources();
-	void unmapGbuffersAndLightAsShaderResources();
-	void mapDofBuffersAsShaderResources();
-	void unmapDofBuffersAsShaderResources();
-	void unmapShaderResourcesForComposePass();
-	void unmapDofShaderResources();
-	void unmapDepthAsShaderResource();
+	void mapNormal(ID3D11ShaderResourceView* p_shadowMap);
+	void mapNormal();
+	void unmapNormal();
+	void mapGbuffers();
+	void unmapGbuffers();
+	void mapDofBuffers();
+	void unmapDofBuffers();
+	//void unmapDofShaderResources();
+	//void unmapShaderResourcesForComposePass();
+	void mapDepth();
+	void unmapDepth();
+	//void unmapDepthAsShaderResource();
 
 	// Buffer / RT manipulation
-	void clearBuffers();
+	void clearRenderTargets();
 	ID3D11DepthStencilView* getDepthStencil();
 	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
@@ -139,13 +142,15 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
+	ID3D11ShaderResourceView*	m_srvDepth;
+
 	// Regular Gbuffers
-	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT-1];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[RenderTargets_CNT];
+	ID3D11RenderTargetView*		m_rtvGBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvGBuffers[RenderTargets_CNT];
 
 	// Dof
-	ID3D11RenderTargetView*		m_dofBuffers[RenderTargets_CNT-1];
-	ID3D11ShaderResourceView*	m_dofBuffersShaderResource[RenderTargets_CNT];
+	ID3D11RenderTargetView*		m_rtvDofBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvDofBuffers[RenderTargets_CNT];
 
 	ID3D11DepthStencilView*		m_depthStencilView;
 
