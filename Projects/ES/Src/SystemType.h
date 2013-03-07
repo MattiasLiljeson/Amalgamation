@@ -132,6 +132,7 @@ public:	//Enums
 		AmbientRangeSystem,
 		LogToFileSystem,
 		PortalCullingSystem,
+		ShipEngineSystem,
 		NUM_SYSTEM_TYPES
 	};
 

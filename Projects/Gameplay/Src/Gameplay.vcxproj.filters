@@ -831,6 +831,12 @@
     <ClInclude Include="RootBoundingSpherePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ShipEngineSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrustComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1419,6 +1425,12 @@
     </ClCompile>
     <ClCompile Include="RootBoundingSpherePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEngineSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

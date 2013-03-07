@@ -25,3 +25,31 @@ vector<AudioHeader*>* SoundComponent::getAllAudiosByType( AudioHeader::SoundType
 {
 	return &m_sounds.at(p_soundType);
 }
+
+AudioHeader* SoundComponent::getSoundHeaderByName( AudioHeader::SoundType p_soundType, 
+												  const char* p_name )
+{
+	for (unsigned int i = 0; i < m_sounds.at(p_soundType).size(); i++){
+		if(p_name == m_sounds[p_soundType][i]->getSoundName())
+			return m_sounds[p_soundType][i];
+	}
+
+	return NULL;
+}
+
+unsigned int SoundComponent::getSoundIndexByName( AudioHeader::SoundType p_soundType, 
+											 const char* p_name )
+{
+	for (unsigned int i = 0; i < m_sounds.at(p_soundType).size(); i++){
+		if(p_name == m_sounds[p_soundType][i]->getSoundName())
+			return i;
+	}
+
+	return -1;
+}
+
+AudioHeader* SoundComponent::getSoundHeaderByIndex( AudioHeader::SoundType p_soundType, 
+												   unsigned int p_index )
+{
+	return m_sounds[p_soundType][p_index];
+}
