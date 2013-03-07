@@ -243,6 +243,7 @@
     <ClInclude Include="TeslaEffectPiece.h" />
     <ClInclude Include="TeslaEffectSystem.h" />
     <ClInclude Include="TeslaHitPacket.h" />
+    <ClInclude Include="TeslaLightningSystem.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
@@ -447,6 +448,7 @@
     <ClCompile Include="TeslaEffectPiece.cpp" />
     <ClCompile Include="TeslaEffectSystem.cpp" />
     <ClCompile Include="TeslaHitPacket.cpp" />
+    <ClCompile Include="TeslaLightningSystem.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />

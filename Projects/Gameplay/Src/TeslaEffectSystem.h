@@ -15,12 +15,12 @@ class TeslaEffectSystem: public EntitySystem
 {
 public:
 	TeslaEffectSystem();
-	void processEntities( const vector<Entity*>& p_entities ) final;
 	void animateHits(int p_fromEntity, int* p_identitiesHit, int p_numberOfHits);
 
 private:
-	void animateHit(int p_fromEntity, int p_toEntity, const AglVector3 p_geometricMean);
+	void animateHit(Entity* p_fromEntity, int p_toEntity, const AglVector3 p_geometricMean);
 	void animate(const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition,
 		const AglVector3 p_geometricMean);
+	bool entityInSystem(Entity* p_checkEntity) const;
 
 };

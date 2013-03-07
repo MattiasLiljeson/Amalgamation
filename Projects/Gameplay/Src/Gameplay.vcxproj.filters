@@ -822,6 +822,9 @@
     <ClInclude Include="ModuleOnChamberStartPoint.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="TeslaLightningSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1404,6 +1407,9 @@
     </ClCompile>
     <ClCompile Include="SoundComponent.cpp">
       <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaLightningSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,35 +5,13 @@
 #include "NetsyncDirectMapperSystem.h"
 #include <RandomUtil.h>
 #include "EntityFactory.h"
+#include "SpawnPointSet.h"
+#include "MeshOffsetTransform.h"
 
 TeslaEffectSystem::TeslaEffectSystem()
-	: EntitySystem(SystemType::TeslaEffectSystem, 2, ComponentType::Transform,
-	ComponentType::TeslaEffectPiece)
+	: EntitySystem(SystemType::TeslaEffectSystem, 3, ComponentType::Transform,
+	ComponentType::MeshOffsetTransform, ComponentType::SpawnPointSet)
 {
-}
-
-void TeslaEffectSystem::processEntities( const vector<Entity*>& p_entities )
-{
-	for(unsigned int i=0; i<p_entities.size(); i++)
-	{
-		TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(p_entities[i]->
-			getComponent(ComponentType::TeslaEffectPiece));
-		effectPiece->lifeTime -= m_world->getDelta();
-		if(effectPiece->lifeTime <= 0.0f)
-		{
-			m_world->deleteEntity(p_entities[i]);
-		}
-		else
-		{
-			Transform* pieceTransform = static_cast<Transform*>(p_entities[i]->
-				getComponent(ComponentType::Transform));
-			float scaleFactor = RandomUtil::randomInterval(1.0f, 5.0f);
-			AglVector3 upScale = AglVector3::right() * scaleFactor;
-			AglVector3 rightScale = AglVector3::forward() * scaleFactor;
-			AglVector3 scale = effectPiece->forwardScale + upScale + rightScale;
-			pieceTransform->setScale(scale);
-		}
-	}
 }
 
 void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int p_numberOfHits )
@@ -42,7 +20,7 @@ void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
 		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
 	Entity* entitySource = netsyncMapper->getEntity(p_fromEntity);
-	if(entitySource != NULL)
+	if(entityInSystem(entitySource))
 	{
 		for(int i=0; i<p_numberOfHits; i++)
 		{
@@ -61,26 +39,37 @@ void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int
 
 		for(int i=0; i<p_numberOfHits; i++)
 		{
-			animateHit(p_fromEntity, p_identitiesHit[i], geometricMean);
+			animateHit(entitySource, p_identitiesHit[i], geometricMean);
 		}
 	}
 }
 
-void TeslaEffectSystem::animateHit( int p_fromEntity, int p_toEntity,
+void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
 	const AglVector3 p_geometricMean )
 {
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
 		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
-	Entity* source = netsyncMapper->getEntity(p_fromEntity);
+	Entity* source = p_fromEntity;
 	Entity* target = netsyncMapper->getEntity(p_toEntity);
 	if(source != NULL && target != NULL)
 	{
 		Transform* sourceTransform = static_cast<Transform*>(source->getComponent(
 			ComponentType::Transform));
+		SpawnPointSet* spawnPoints = static_cast<SpawnPointSet*>(source->getComponent(
+			ComponentType::SpawnPointSet));
 		Transform* targetTransform = static_cast<Transform*>(target->getComponent(
 			ComponentType::Transform));
-		animate(sourceTransform->getTranslation(), targetTransform->getTranslation(),
-			p_geometricMean);
+		if(spawnPoints->m_spawnPoints.size() > 0)
+		{
+			AglMatrix spawnTransform = spawnPoints->m_spawnPoints[0].spTransform;
+			MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+				p_fromEntity->getComponent(ComponentType::MeshOffsetTransform));
+			spawnTransform *= offset->offset.inverse();
+			AglVector3 decompTranslation = spawnTransform.GetTranslation();
+			AglVector3 sourcePosition = sourceTransform->getTranslation() + decompTranslation;
+			animate(sourcePosition, targetTransform->getTranslation(),
+				p_geometricMean);
+		}
 	}
 }
 
@@ -97,4 +86,19 @@ void TeslaEffectSystem::animate( const AglVector3& p_sourcePosition,
 		p_targetPosition - p_sourcePosition);
 	Entity* effectCenter = factory->createTeslaEffectPieceClient(forwardScale,
 		thicknessFactor, rotation, p_sourcePosition);
+}
+
+bool TeslaEffectSystem::entityInSystem( Entity* p_checkEntity ) const
+{
+	if(p_checkEntity == NULL)
+		return false;
+
+	for(unsigned int i=0; i<getActiveEntities().size(); i++)
+	{
+		if(getActiveEntities()[i]->getIndex() == p_checkEntity->getIndex())
+		{
+			return true;
+		}
+	}
+	return false;
 }

@@ -124,6 +124,7 @@ public:	//Enums
 		SlotMarkerSystem,
 		TeslaCoilModuleControllerSystem,
 		TeslaEffectSystem,
+		TeslaLightningSystem,
 		DamageUpdaterSystem,
 		DamageVisualizerSystem,
 		ShipHighlightSystem,

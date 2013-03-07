@@ -120,6 +120,7 @@
 #include <SpriteSystem.h>
 #include <SlotMarkerSystem.h>
 #include <TeslaEffectSystem.h>
+#include <TeslaLightningSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <ShipHiglightSystem.h>
@@ -143,7 +144,7 @@ using namespace std;
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
-#include "../../Gameplay/Src/SoundSystem.h"
+#include <SoundSystem.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -434,7 +435,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem(new SlotMarkerSystem());
+	m_world->setSystem( new SlotMarkerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new TeslaLightningSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
@@ -464,9 +469,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
-	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
-	m_world->setSystem( new TeslaEffectSystem() );
 
 
 	m_world->initialize();
