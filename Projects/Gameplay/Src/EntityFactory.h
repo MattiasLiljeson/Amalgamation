@@ -82,7 +82,8 @@ public:
 	Entity* createTeslaCoilModuleClient(EntityCreationPacket p_packet);
 	Entity* createTeslaCoilModuleServer(EntityCreationPacket p_packet);
 	Entity* createTeslaEffectPieceClient(AglVector3 p_forwardScale,
-		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition);
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition,
+		string p_meshName);
 
 	// Anomaly accelerator
 	Entity* createAnomalyModuleClient(EntityCreationPacket p_packet);

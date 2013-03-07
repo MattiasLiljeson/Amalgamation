@@ -15,9 +15,10 @@
 #include "ModuleHelper.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
+	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 7,
 	ComponentType::TeslaCoilModule, ComponentType::ShipModule, ComponentType::Transform,
-	ComponentType::PhysicsBody, ComponentType::NetworkSynced)
+	ComponentType::PhysicsBody, ComponentType::NetworkSynced,
+	ComponentType::SpawnPointSet, ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }
