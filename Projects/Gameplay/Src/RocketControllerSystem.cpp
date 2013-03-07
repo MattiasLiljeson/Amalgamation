@@ -104,17 +104,19 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			{
 				frac = 1-frac;
 				
-				if (distance < 100)
+				/*if (distance < 100)
 				{
 					frac *= (0.5f + distance / 100.0f);
-				}
+				}*/
 			}
 			else
 			{
 				frac = 1.0f;
 			}
 
-			AglVector3 impulse = world.GetForward()*dt*m_enginePower*frac;
+			AglVector3 impulse = imp*0.25f + world.GetForward();
+			impulse.normalize();
+			impulse *= dt*m_enginePower*frac;
 
 			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 
