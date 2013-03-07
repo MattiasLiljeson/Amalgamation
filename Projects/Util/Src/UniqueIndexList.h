@@ -26,6 +26,8 @@ public:
 	T			 at(unsigned int p_index);
 	T			 operator[](unsigned int p_index);
 
+	bool		 hasValue(unsigned int p_index);
+
 	unsigned int getSize();
 
 	void		 clear();
@@ -34,8 +36,6 @@ private:
 	vector<T> m_list;
 	stack<unsigned int> m_freeIndices;
 };
-
-
 
 template<class T>
 unsigned int UniqueIndexList<T>::add(T p_valueRef)
@@ -77,6 +77,15 @@ template<class T>
 T UniqueIndexList<T>::operator[](unsigned int p_index)
 {
 	return m_list[p_index];
+}
+
+template<class T>
+bool UniqueIndexList<T>::hasValue( unsigned int p_index )
+{
+	if (p_index < m_list.size())
+		return m_list[p_index] != NULL;
+	else
+		return false;
 }
 
 template<class T>

@@ -25,6 +25,7 @@
     <ClInclude Include="ColorTone.h" />
     <ClInclude Include="DestroyOnParticlesDeath.h" />
     <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
+    <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="EditSphereSystem.h" />
     <ClInclude Include="EditSphereUpdatePacket.h" />
     <ClInclude Include="EmpRocketLancherModuleSystem.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="DamageVisualizerSystem.cpp" />
     <ClCompile Include="DestroyOnParticlesDeath.cpp" />
     <ClCompile Include="DestroyOnParticlesDeathSystem.cpp" />
+    <ClCompile Include="DisconnectPacket.cpp" />
     <ClCompile Include="DisplayGameStats.cpp" />
     <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
     <ClCompile Include="EditSphereSystem.cpp" />
