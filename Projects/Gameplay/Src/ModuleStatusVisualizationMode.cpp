@@ -20,3 +20,8 @@ bool ModuleStatusVisualizationMode::hasUnusedHintParticles()
 {
 	return unusedHintParticleSysId.size()>0;
 }
+
+bool ModuleStatusVisualizationMode::hasHealthParticles()
+{
+	return healthParticlesSysId.size()>0;
+}

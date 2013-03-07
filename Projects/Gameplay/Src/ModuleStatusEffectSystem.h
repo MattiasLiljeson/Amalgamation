@@ -65,12 +65,24 @@ private:
 	vector<ModuleHealthStatEffect> m_healthEffects;
 	vector<ModuleFreefloatEffect> m_freefloatEffects;
 
-	void activateUpdateUnusedModuleParticleEffect(Entity* p_entity,
+	// Particle effects
+	// For unused modules
+	void activateUpdateUnusedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
 		ModuleStatusVisualizationMode* p_visMode);
-	void addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
-									  ModuleStatusVisualizationMode* p_visMode);
-	void disableUnusedModuleParticleEffect(Entity* p_entity, 
+	ParticleSystemsComponent* addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
 		ModuleStatusVisualizationMode* p_visMode);
+	void disableUnusedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
+		ModuleStatusVisualizationMode* p_visMode);
+
+	// For hurt modules
+	void activateUpdateDamagedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps, ModuleStatusVisualizationMode* p_visMode, float p_health);
+	ParticleSystemsComponent* addAndRegisterDamagedModuleParticleEffect(Entity* p_entity, 
+		ModuleStatusVisualizationMode* p_visMode);
+	void disableDamagedParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
+		ModuleStatusVisualizationMode* p_visMode);
+
+	// For module value
+
 	void updateFreefloatGlowEffect(Entity* p_entity, bool p_mode);
 	float getDistSqBetweenShipAndModule(Entity* p_moduleEntity);
 
