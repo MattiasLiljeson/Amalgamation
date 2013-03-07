@@ -283,8 +283,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
-	PhysicsSystem* physics = new PhysicsSystem( NULL );
-	m_world->setSystem( physics );
+	//PhysicsSystem* physics = new PhysicsSystem( NULL );
+	//m_world->setSystem( physics );
 
 	/************************************************************************/
 	/* General controlling													*/
@@ -353,8 +353,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( slotInput );
 
 	// Controller systems for the ship
-	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, physics, m_client, slotInput ));
-	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, physics, slotInput) );
+	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
+	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
 
 	/************************************************************************/
 	/* Hierarchy															*/

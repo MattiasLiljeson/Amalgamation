@@ -128,7 +128,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							p_entities[entityIdx]->getComponent(ComponentType::PhysicsBody));
 						AglVector3 velocity = AglVector3();
 						AglVector3 angularVelocity = AglVector3();
-						if( physicsBody != NULL )	/* It is probably the ray entity that is
+						if( physicsBody != NULL && physicsBody->m_id >= 0)	/* It is probably the ray entity that is
 													* missing the PhysicsBody component. */
 						{
 							PhysicsSystem* physicsSystem = static_cast<PhysicsSystem*>(

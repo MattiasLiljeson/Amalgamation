@@ -55,6 +55,7 @@
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
 #include "StaticProp.h"
+#include "ShineSpawn.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -678,6 +679,9 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+
+	entity->addComponent(ComponentType::ShineSpawn, new ShineSpawn(m_world->getElapsedTime(), 3.5f));
+
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 	
 	// RM-RT 2013-03-04

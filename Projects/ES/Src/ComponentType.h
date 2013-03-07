@@ -126,6 +126,7 @@ public:	//Enums
 		AnomalyBombEffectPiece,
 		TeslaEffectPiece,
 		ShipHighlight,
+		ShineSpawn,
 		NUM_COMPONENT_TYPES
 	};
 

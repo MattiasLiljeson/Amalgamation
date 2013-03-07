@@ -28,7 +28,9 @@ public:
 	void processEntities(const vector<Entity*>& p_entities );
 
 private:
-	void spawnMine(Transform* p_transform, AglVector3 p_moduleVelocity, ShipModule* p_module);
+	void spawnMine(Entity* p_entity);
+	void launchMine(Entity* p_entity);
+	void updateMine(Entity* p_entity, float p_age);
 	void setSpawnAnimation(Entity* p_layer);
 private:
 	TcpServer* m_server;

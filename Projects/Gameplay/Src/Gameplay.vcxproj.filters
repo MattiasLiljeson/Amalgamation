@@ -822,6 +822,9 @@
     <ClInclude Include="ModuleOnChamberStartPoint.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ShineSpawn.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">

@@ -215,15 +215,7 @@ namespace Srv
 		m_world->setSystem(new ServerPickingSystem(m_server,moduleeffect), true);
 
 
-		/************************************************************************/
-		/* Network																*/
-		/************************************************************************/
-		m_world->setSystem(new ServerWelcomeSystem( m_server ), true);
-		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
-		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
-		m_world->setSystem(new ServerScoreSystem( m_server ), true);
-		m_world->setSystem(new NetSyncedPlayerScoreTrackerSystem(), true);
-		m_world->setSystem(new ServerClientInfoSystem(), true);
+		//Närverk var här innan
 
 
 		/************************************************************************/
@@ -251,6 +243,16 @@ namespace Srv
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
 		m_world->setSystem(new TempModuleSpawner(m_server), true);
+
+		/************************************************************************/
+		/* Network																*/
+		/************************************************************************/
+		m_world->setSystem(new ServerWelcomeSystem( m_server ), true);
+		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
+		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
+		m_world->setSystem(new ServerScoreSystem( m_server ), true);
+		m_world->setSystem(new NetSyncedPlayerScoreTrackerSystem(), true);
+		m_world->setSystem(new ServerClientInfoSystem(), true);
 
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
