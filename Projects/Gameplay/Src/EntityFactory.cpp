@@ -814,20 +814,6 @@ Entity* EntityFactory::createTeslaEffectPieceClient(AglVector3 p_forwardScale,
 	Entity* entity = entityFromRecipeOrFile( "ClientTeslaEffectPiece",
 		"Assemblages/Modules/TeslaCoil/ClientTeslaEffectPiece.asd" );
 	// Change some components that isn't fully initialized in its assemblage:
-	Transform* transform = static_cast<Transform*>(entity->getComponent(
-		ComponentType::Transform));
-	// right is in-game up.
-	AglVector3 upScale = AglVector3::right() * p_thicknessFactor;
-	// forward is in-game right.
-	AglVector3 rightScale = AglVector3::forward() * p_thicknessFactor;
-	AglVector3 scale = AglVector3::one() + p_forwardScale + upScale + rightScale;
-	transform->setScale(scale);
-	transform->setRotation(p_rotation);
-	transform->setTranslation(p_sourcePosition);
-
-	TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(entity->getComponent(
-		ComponentType::TeslaEffectPiece));
-	effectPiece->forwardScale = p_forwardScale;
 
 	entity->addComponent(new LoadMesh(p_meshName));
 

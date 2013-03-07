@@ -29,7 +29,11 @@ void TeslaLightningSystem::processEntities( const vector<Entity*>& p_entities )
 		{
 			Transform* pieceTransform = static_cast<Transform*>(p_entities[i]->
 				getComponent(ComponentType::Transform));
-			float scaleFactor = RandomUtil::randomInterval(1.0f, 5.0f);
+			float scaleFactor = 0.6f;
+			if(effectPiece->damages)
+			{
+				scaleFactor = RandomUtil::randomInterval(1.0f, 5.0f);
+			}
 			AglVector3 upScale = AglVector3::right() * scaleFactor;
 			AglVector3 rightScale = AglVector3::forward() * scaleFactor;
 			AglVector3 scale = effectPiece->forwardScale + upScale + rightScale;

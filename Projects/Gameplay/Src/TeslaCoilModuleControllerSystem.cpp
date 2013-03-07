@@ -85,8 +85,6 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 				{
 					if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
 					{
-						otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
-							p_teslaNetsync->getNetworkOwner());
 						entitiesHit.push_back(otherEntity->getIndex());
 					}
 				}
@@ -122,15 +120,28 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 		//struct LightCompare
 
 		std::sort(entitiesHit.begin(), entitiesHit.begin() + entitiesHit.size(), myLengthCompare);
-		unsigned int i=0;
+		unsigned int hitIndex = 0;
+		unsigned int hitIndexFloating = 0;
 		TeslaHitPacket hitPacket;
 		hitPacket.identitySource = p_teslaEntity->getIndex();
-		while(i < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX && i < entitiesHit.size())
+		while( hitIndex + hitIndexFloating < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX &&
+			hitIndex < entitiesHit.size() )
 		{
-			hitPacket.identitiesHit[i] = entitiesHit[i];
-			i++;
+			ShipModule* otherModule = static_cast<ShipModule*>(m_world->getEntity(
+				entitiesHit[hitIndex])->getComponent(ComponentType::ShipModule));
+			if(otherModule->isOwned())
+			{
+				otherModule->addDamageThisTick(p_teslaModule->damage,
+					p_teslaNetsync->getNetworkOwner());
+				hitPacket.identitiesHit[hitIndex] = entitiesHit[hitIndex];
+				hitIndex++;
+			}
+			hitPacket.identitiesHitFloating[hitIndexFloating] =
+				entitiesHit[hitIndexFloating];
+			hitIndexFloating++;
 		}
-		hitPacket.numberOfHits = static_cast<unsigned char>(i);
+		hitPacket.numberOfHits = static_cast<unsigned char>(hitIndex);
+		hitPacket.numberOfHitsFloating = static_cast<unsigned char>(hitIndexFloating);
 		m_server->broadcastPacket(hitPacket.pack());
 	}
 }

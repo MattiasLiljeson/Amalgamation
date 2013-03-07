@@ -38,7 +38,8 @@ void TeslaEffectSystem::inserted( Entity* p_entity )
 	}
 }
 
-void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int p_numberOfHits )
+void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit,
+	int p_numberOfHits, int* p_identitiesHitFloating, int p_numberOfHitsFloating )
 {
 	AglVector3 geometricMean = AglVector3::zero();
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
@@ -63,13 +64,17 @@ void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit, int
 
 		for(int i=0; i<p_numberOfHits; i++)
 		{
-			animateHit(entitySource, p_identitiesHit[i], geometricMean, i);
+			animateHit(entitySource, p_identitiesHit[i], geometricMean, i, true);
+		}
+		for(int i=p_numberOfHits; i<p_numberOfHitsFloating; i++)
+		{
+			animateHit(entitySource, p_identitiesHitFloating[i], geometricMean, i, false);
 		}
 	}
 }
 
 void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
-	const AglVector3 p_geometricMean, int p_index )
+	const AglVector3 p_geometricMean, int p_index, bool p_damage )
 {
 	NetsyncDirectMapperSystem* netsyncMapper = static_cast<NetsyncDirectMapperSystem*>(
 		m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
@@ -104,7 +109,12 @@ void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
 			AglVector3 upScale = AglVector3::right();
 			// forward is in-game right.
 			AglVector3 rightScale = AglVector3::forward();
-			AglVector3 scale = AglVector3::one() + forwardScale + upScale + rightScale;
+			if(!p_damage)
+			{
+				upScale /= 5.0f;
+				rightScale /= 5.0f;
+			}
+			AglVector3 scale = forwardScale + upScale + rightScale;
 			ligntningTransform->setScale(scale);
 			AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(),
 				targetTransform->getTranslation() - sourcePosition);

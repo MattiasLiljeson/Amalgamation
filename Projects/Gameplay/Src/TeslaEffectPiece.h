@@ -27,6 +27,7 @@ public:
 	float lifeTime;
 	float maxLifeTime;
 	AglVector3 forwardScale;
+	bool damages;
 
 public:
 	static ComponentRegister<TeslaEffectPiece> s_reg;
