@@ -9,6 +9,7 @@
 #include "ParticleRenderSystem.h"
 #include "ClientStateSystem.h"
 #include "MenuSystem.h"
+#include "TimerSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -34,12 +35,11 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
 
-	m_profiles.push_back(GPUTimerProfile("SHADOW"));
 	m_profiles.push_back(GPUTimerProfile("MESH"));
-	m_profiles.push_back(GPUTimerProfile("LIGHT"));
+	m_profiles.push_back(GPUTimerProfile("LIGH"));
 	m_profiles.push_back(GPUTimerProfile("SSAO"));
-	m_profiles.push_back(GPUTimerProfile("COMPOSE"));
-	m_profiles.push_back(GPUTimerProfile("PARTICLE"));
+	m_profiles.push_back(GPUTimerProfile("COMP"));
+	m_profiles.push_back(GPUTimerProfile("PART"));
 	m_profiles.push_back(GPUTimerProfile("GUI"));
 
 	clearShadowStuf();
@@ -51,10 +51,25 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 void GraphicsRendererSystem::initialize(){
 	for (unsigned int i=0;i < NUMRENDERINGPASSES; i++)
 	{
+
+		string variableName = m_profiles[i].profile;
 		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 			AntTweakBarWrapper::MEASUREMENT,
-			m_profiles[i].profile.c_str(),TwType::TW_TYPE_DOUBLE,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
 			&m_profiles[i].renderingTime,"group=GPU");
+ 
+		variableName +=" Spike";
+		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+			AntTweakBarWrapper::MEASUREMENT,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
+			&m_profiles[i].renderingSpike,"group='GPU Extra'");
+		
+		variableName = m_profiles[i].profile;
+		variableName += " Avg";
+		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+			AntTweakBarWrapper::MEASUREMENT,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
+			&m_profiles[i].renderingAverage,"group='GPU Extra'");
 
 		m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_profiles[i].profile);
 	}
@@ -66,6 +81,16 @@ void GraphicsRendererSystem::initialize(){
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
+
+	auto timerSystem = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
+	if(timerSystem->checkTimeInterval(TimerIntervals::EverySecond)){
+		for (unsigned int i= 0; i < NUMRENDERINGPASSES; i++)
+		{
+			m_profiles[i].calculateAvarage();
+		}
+		
+	}
+
 	auto gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
 
@@ -298,7 +323,7 @@ void GraphicsRendererSystem::updateTimers()
 
 	for(unsigned int i = 0; i < NUMRENDERINGPASSES; i++){
 
-		m_profiles[i].renderingTime = timer->getTheTimeAndReset(m_profiles[i].profile);
+		m_profiles[i].pushNewTime(timer->getTheTimeAndReset(m_profiles[i].profile));
 		m_totalTime += m_profiles[i].renderingTime;
 	}
 	m_wrapper->getGPUTimer()->tick();

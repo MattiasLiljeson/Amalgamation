@@ -66,7 +66,7 @@ private:
 	void updateTimers();
 private:
 	enum {
-		SHADOW, MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
+		MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
 	};
 private:
 	GraphicsWrapper* m_wrapper;
