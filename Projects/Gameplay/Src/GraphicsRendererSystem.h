@@ -66,7 +66,7 @@ private:
 	void updateTimers();
 private:
 	enum {
-		MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
+		MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, TOTAL, NUMRENDERINGPASSES
 	};
 private:
 	GraphicsWrapper* m_wrapper;
@@ -82,7 +82,6 @@ private:
 	AglMatrix* m_shadowViewProjections;
 
 	vector<GPUTimerProfile> m_profiles;
-	double	m_totalTime;
 
 	int		m_currentFrame;
 	bool	m_enteredIngamePreviousFrame;
