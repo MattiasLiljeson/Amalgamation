@@ -509,7 +509,8 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 
 	// Add network dependent components
 	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, 
+		(EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 

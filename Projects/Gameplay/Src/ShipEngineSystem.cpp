@@ -29,6 +29,7 @@ void ShipEngineSystem::processEntities( const vector<Entity*>& p_entities )
 			ThrustComponent* thrust = static_cast<ThrustComponent*>
 				(p_entities[i]->getComponent(ComponentType::ThrustComponent));
 
+
 			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP + 1.0f;
 
 			idle->frequency = factor;
