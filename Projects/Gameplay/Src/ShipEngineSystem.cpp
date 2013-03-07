@@ -3,7 +3,7 @@
 #include "ThrustComponent.h"
 
 ShipEngineSystem::ShipEngineSystem() : EntitySystem(SystemType::ShipEngineSystem, 5,
-													ComponentType::TAG_Ship,
+													ComponentType::TAG_MyShip,
 													ComponentType::Transform,
 													ComponentType::MeshOffsetTransform,
 													ComponentType::SoundComponent,

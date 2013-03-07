@@ -124,6 +124,7 @@ void TeslaEffectSystem::animateHit( Entity* p_fromEntity, int p_toEntity,
 				effectEntity->getComponent(ComponentType::TeslaEffectPiece));
 			effectPiece->lifeTime = effectPiece->maxLifeTime; // Restarts it.
 			effectPiece->forwardScale = forwardScale;
+			effectPiece->damages = p_damage;
 			
 			//animate(sourcePosition, targetTransform->getTranslation(),
 			//	p_geometricMean, );

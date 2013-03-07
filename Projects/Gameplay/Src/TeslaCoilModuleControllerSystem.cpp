@@ -13,6 +13,8 @@
 #include <TcpServer.h>
 #include <algorithm>
 #include "ModuleHelper.h"
+#include "MeshOffsetTransform.h"
+#include "SpawnPointSet.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 7,
@@ -69,6 +71,12 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 			ComponentType::ShipModule));
 		if(canTarget(p_teslaShipModule, otherShipModule))
 		{
+			
+			AglMatrix transform = p_teslaTransform->getMatrix();
+			MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+				p_teslaEntity->getComponent(ComponentType::MeshOffsetTransform));
+			transform *= offset->offset.inverse();
+
 			AglVector3 otherModulePosition = static_cast<Transform*>(otherEntity->getComponent(
 				ComponentType::Transform))->getTranslation();
 			AglVector3 distanceVector = otherModulePosition - teslaPosition;
