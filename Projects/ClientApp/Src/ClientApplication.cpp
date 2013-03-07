@@ -337,7 +337,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
-	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
+	m_world->setSystem( new SlotHighlightParticleMakerSystem(), false );
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
 	m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
