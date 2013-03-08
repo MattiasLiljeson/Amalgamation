@@ -192,7 +192,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
-		factory->entityFromPacket(p_packet);
+		Entity* entity = factory->entityFromPacket(p_packet);
+		Transform* transform = static_cast<Transform*>(entity->getComponent(
+			ComponentType::Transform));
+		if(transform)
+		{
+			transform->setTranslation(p_packet.translation);
+			transform->setRotation(p_packet.rotation);
+			transform->setScale(p_packet.scale);
+		}
 	}
 	else
 	{

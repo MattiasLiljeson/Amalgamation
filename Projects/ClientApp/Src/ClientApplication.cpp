@@ -126,6 +126,7 @@
 #include <ShipHiglightSystem.h>
 #include <ModuleHighlightSystem.h>
 #include <PortalCullingSystem.h>
+#include <ClientModuleCounterSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -476,6 +477,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
+	m_world->setSystem( new ClientModuleCounterSystem() );
 
 
 	m_world->initialize();

@@ -141,17 +141,43 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								physicsBody->m_id)->GetAngularVelocity();
 						}
 
-						EntityUpdatePacket updatePacket;
-						updatePacket.networkIdentity = netSync->getNetworkIdentity();
-						updatePacket.entityType		= static_cast<char>(netSync->getNetworkType());
-						updatePacket.translation	= transform->getTranslation();
-						updatePacket.rotation		= transform->getRotation();
-						updatePacket.scale			= transform->getScale();
-						updatePacket.timestamp		= m_world->getElapsedTime();
-						Packet packet((char)PacketType::EntityUpdate);
-						packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
+						bool hasChanged = true;
+						if(m_previousTransforms.count(transform) > 0)
+						{
+							Transform& prevTransform = m_previousTransforms[transform];
+							if(prevTransform.getTranslation() == transform->getTranslation() &&
+								prevTransform.getRotation() == transform->getRotation() &&
+								prevTransform.getScale() == transform->getScale())
+							{
+								hasChanged = false;
+							}
+							else
+							{
+								m_previousTransforms[transform] = *transform;
+								hasChanged = true;
+							}
+						}
+						else
+						{
+							m_previousTransforms[transform] = *transform;
+							hasChanged = true;
+						}
 
-						m_server->broadcastPacket( packet );
+						if(hasChanged)
+						{
+							m_previousTransforms[transform] = *transform;
+							EntityUpdatePacket updatePacket;
+							updatePacket.networkIdentity = netSync->getNetworkIdentity();
+							updatePacket.entityType		= static_cast<char>(netSync->getNetworkType());
+							updatePacket.translation	= transform->getTranslation();
+							updatePacket.rotation		= transform->getRotation();
+							updatePacket.scale			= transform->getScale();
+							updatePacket.timestamp		= m_world->getElapsedTime();
+							Packet packet((char)PacketType::EntityUpdate);
+							packet.WriteData(&updatePacket, sizeof(EntityUpdatePacket));
+
+							m_server->broadcastPacket( packet );
+						}
 					}
 				}
 				//Broadcast an end of the batch

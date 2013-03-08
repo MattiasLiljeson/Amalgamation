@@ -1,7 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
-
+#include "Transform.h"
 class TcpServer;
 
 // =======================================================================================
@@ -32,5 +32,5 @@ public:
 
 private:
 	TcpServer* m_server;
-
+	map<Transform*, Transform> m_previousTransforms;
 };

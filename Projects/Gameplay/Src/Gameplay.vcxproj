@@ -19,6 +19,7 @@
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
+    <ClInclude Include="ClientModuleCounterSystem.h" />
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DamageUpdaterSystem.h" />
     <ClInclude Include="DamageVisualizerSystem.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="ClientEntityCountSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientMeasurementSystem.cpp" />
+    <ClCompile Include="ClientModuleCounterSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ClientStateSystem.cpp" />
     <ClCompile Include="ColorTone.cpp" />
