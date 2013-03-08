@@ -32,7 +32,13 @@ Packet EntityCreationPacket::pack()
 		<< miscData
 		<< translation
 		<< rotation
-		<< scale;
+		<< scale
+		<< (char)additionalMisc.size();
+
+	for (unsigned int misc = 0; misc < additionalMisc.size(); misc++)
+	{
+		packet << additionalMisc[misc];
+	}
 
 	return packet;
 }
@@ -49,4 +55,15 @@ void EntityCreationPacket::unpack( Packet& p_packet )
 		>> translation
 		>> rotation
 		>> scale;
+	
+	char miscSize;
+	p_packet >> miscSize;
+	if (miscSize > 0)
+	{
+		additionalMisc.resize(miscSize, 0);
+		for (unsigned int misc = 0; misc < miscSize; misc++)
+		{
+			p_packet >> additionalMisc[misc];
+		}
+	}
 }

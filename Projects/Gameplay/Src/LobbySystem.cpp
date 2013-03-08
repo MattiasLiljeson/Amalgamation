@@ -8,13 +8,17 @@ LobbySystem::LobbySystem() : EntitySystem (SystemType::LobbySystem),
 
 	for(int i = 0; i < MAXPLAYERS; i++)
 	{
-		m_players[i].playerName = "open";
-		m_players[i].ping = -1;
-		m_players[i].ready = false;
-
+		resetPlayer(i);
 	}
 	m_connectPlayers = 0;
 	NotifyRowAdd(m_tableName,0,MAXPLAYERS);
+}
+
+void LobbySystem::resetPlayer( int p_playerId )
+{
+	m_players[p_playerId].playerName	= "open";
+	m_players[p_playerId].ping			= -1;
+	m_players[p_playerId].ready			= false;
 }
 
 LobbySystem::~LobbySystem()
@@ -81,8 +85,16 @@ void LobbySystem::updateRow( int p_row, const LobbyStats& p_stats )
 void LobbySystem::addNewPlayer( const NewlyConnectedPlayerPacket& p_packet )
 {
 	m_players[p_packet.playerID].playerName = p_packet.playerName;
-	m_players[p_packet.playerID].ping = p_packet.playerID;
-	m_players[p_packet.playerID].ready = false;
+	m_players[p_packet.playerID].ping		= p_packet.playerID;
+	m_players[p_packet.playerID].ready		= false;
 
-	NotifyRowChange(m_tableName,p_packet.playerID,1);
+	NotifyRowChange(m_tableName,p_packet.playerID, 1);
 }
+
+void LobbySystem::removePlayer( const DisconnectPacket& p_packet )
+{
+	resetPlayer(p_packet.playerID);
+	NotifyRowChange(m_tableName, p_packet.playerID, 1);
+}
+
+

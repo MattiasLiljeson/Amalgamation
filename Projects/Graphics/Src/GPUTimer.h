@@ -24,12 +24,13 @@ class GPUTimer
 public:
 	GPUTimer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext);
 	~GPUTimer();
-	void addProfile(string p_profile);
-	void Start(string p_profile);
-	void Stop(string p_profile);
+	void addProfile(const string& p_profile);
+	void Start(const string& p_profile);
+	void Stop(const string& p_profile);
 
 	void tick();
-	double getTheTimeAndReset(string p_profile);
+	double getTheTimeAndReset(const string& p_profile);
+	double getLargestSpike(const string& p_profile);
 public:
 	static const unsigned int QUREY_LATENCY = 5;
 private:
@@ -68,12 +69,12 @@ private:
 	};
 	struct Profile 
 	{
-		vector<Timer*> timers;
+		vector<Timer*>	timers;
+
 		~Profile(){
 			for (unsigned int i = 0 ; i < QUREY_LATENCY; i++){
 				delete timers[i];
 			}
-			
 		}
 	};
 	typedef std::map<std::string,Profile*> ProfileMap;

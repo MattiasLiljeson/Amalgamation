@@ -11,6 +11,7 @@
 #include <PhysicsController.h>
 #include "SpawnSoundEffectPacket.h"
 #include "ShipManagerSystem.h"
+#include "SpawnExplosionPacket.h"
 
 MineControllerSystem::MineControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineControllerSystem, 3, ComponentType::StandardMine,
@@ -71,35 +72,53 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			Body* b = ps->getController()->getBody(pb->m_id);
 			if (mine->m_age > 2 && col.size() > 0)
 			{
-				//Do some damage
-				for (unsigned int j = 0; j < col.size(); j++)
-				{
-					Entity* hitEntity = ps->getEntity(col[j]);
-					if (hitEntity)
-					{
-						ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(ComponentType::ShipModule));
-						if (hitModule)
-						{
-							hitModule->addDamageThisTick(101.0f,mine->m_ownerId); // Above max hp.
-						}
-					}
-				}
-
-				//Send a shockwave
-				ps->getController()->ApplyExternalImpulse(b->GetWorld().GetTranslation(), 20, 20);
-				ps->getController()->InactivateBody(pb->m_id);
-
-				//Send an explosion sound effect
-				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-				SpawnSoundEffectPacket soundEffectPacket;
-				soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::Explosion;
-				soundEffectPacket.positional = true;
-				soundEffectPacket.position = t->getTranslation();
-				soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-				m_server->broadcastPacket(soundEffectPacket.pack());
-
-				m_world->deleteEntity(p_entities[i]);
+				RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
+				explodeMine(ps, pb, body, p_entities[i]);
 			}
 		}	
 	}
+}
+void MineControllerSystem::explodeMine(PhysicsSystem* p_physicsSystem,
+										   PhysicsBody* p_physicsBody, RigidBody* p_rigidBody, Entity* p_entity)
+{
+	StandardMine* mine = static_cast<StandardMine*>(p_entity->getComponent(ComponentType::StandardMine));
+
+	// Remove the rocket...
+	p_physicsSystem->getController()->ApplyExternalImpulse(p_rigidBody->GetWorld().GetTranslation(), 20, 20);
+	p_physicsSystem->getController()->InactivateBody(p_physicsBody->m_id);
+
+
+	vector<pair<unsigned int, float>> collided = p_physicsSystem->getController()->GetObjectsWithinSphere(p_rigidBody->GetWorld().GetTranslation(), 20);
+	for (unsigned int i = 0; i < collided.size(); i++)
+	{
+		Entity* colEn = p_physicsSystem->getEntity(collided[i].first);
+		if(colEn)
+		{
+			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
+			if (colModule)
+			{
+				float damage = min(100, 1000 / collided[i].second);
+				if (damage > colModule->m_health)
+				{
+					Transform* t = static_cast<Transform*>(colEn->getComponent(ComponentType::Transform));
+					SpawnExplosionPacket explosion;
+					explosion.position = t->getTranslation();
+					explosion.source = ExplosionSource::MINE;
+					m_server->broadcastPacket(explosion.pack());
+				}
+				colModule->addDamageThisTick(damage, mine->m_ownerId);
+			}
+		}
+	}
+
+
+	Transform* t = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
+
+
+	SpawnExplosionPacket explosion;
+	explosion.position = t->getTranslation();
+	explosion.source = ExplosionSource::MINE;
+	m_server->broadcastPacket(explosion.pack());
+
+	m_world->deleteEntity(p_entity);
 }

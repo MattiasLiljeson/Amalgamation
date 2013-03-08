@@ -1,7 +1,8 @@
 #pragma once
 
 #include <EntitySystem.h>
-
+#include "Transform.h"
+#include "AglParticleSystemHeader.h"
 class TcpServer;
 
 // =======================================================================================
@@ -32,5 +33,15 @@ public:
 
 private:
 	TcpServer* m_server;
+	struct TransformRecord {
+		Transform transform;
+		float timestamp;
+	};
+	map<Transform*, TransformRecord> m_previousTransforms;
 
+	struct ParticleRecord {
+		AglParticleSystemHeader particleHeader;
+		float timestamp;
+	};
+	map<AglParticleSystemHeader*, ParticleRecord> m_previousParticles;
 };

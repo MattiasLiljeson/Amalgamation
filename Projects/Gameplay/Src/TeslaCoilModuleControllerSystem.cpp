@@ -13,11 +13,14 @@
 #include <TcpServer.h>
 #include <algorithm>
 #include "ModuleHelper.h"
+#include "MeshOffsetTransform.h"
+#include "SpawnPointSet.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 5,
+	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 7,
 	ComponentType::TeslaCoilModule, ComponentType::ShipModule, ComponentType::Transform,
-	ComponentType::PhysicsBody, ComponentType::NetworkSynced)
+	ComponentType::PhysicsBody, ComponentType::NetworkSynced,
+	ComponentType::SpawnPointSet, ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }
@@ -68,6 +71,12 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 			ComponentType::ShipModule));
 		if(canTarget(p_teslaShipModule, otherShipModule))
 		{
+			
+			AglMatrix transform = p_teslaTransform->getMatrix();
+			MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+				p_teslaEntity->getComponent(ComponentType::MeshOffsetTransform));
+			transform *= offset->offset.inverse();
+
 			AglVector3 otherModulePosition = static_cast<Transform*>(otherEntity->getComponent(
 				ComponentType::Transform))->getTranslation();
 			AglVector3 distanceVector = otherModulePosition - teslaPosition;
@@ -84,8 +93,6 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 				{
 					if(otherShipModule->m_parentEntity != p_teslaShipModule->m_parentEntity)
 					{
-						otherShipModule->addDamageThisTick(hitChance * p_teslaModule->damage,
-							p_teslaNetsync->getNetworkOwner());
 						entitiesHit.push_back(otherEntity->getIndex());
 					}
 				}
@@ -121,15 +128,28 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 		//struct LightCompare
 
 		std::sort(entitiesHit.begin(), entitiesHit.begin() + entitiesHit.size(), myLengthCompare);
-		unsigned int i=0;
+		unsigned int hitIndex = 0;
+		unsigned int hitIndexFloating = 0;
 		TeslaHitPacket hitPacket;
 		hitPacket.identitySource = p_teslaEntity->getIndex();
-		while(i < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX && i < entitiesHit.size())
+		while( hitIndex + hitIndexFloating < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX &&
+			hitIndex < entitiesHit.size() )
 		{
-			hitPacket.identitiesHit[i] = entitiesHit[i];
-			i++;
+			ShipModule* otherModule = static_cast<ShipModule*>(m_world->getEntity(
+				entitiesHit[hitIndex])->getComponent(ComponentType::ShipModule));
+			if(otherModule->isOwned())
+			{
+				otherModule->addDamageThisTick(p_teslaModule->damage,
+					p_teslaNetsync->getNetworkOwner());
+				hitPacket.identitiesHit[hitIndex] = entitiesHit[hitIndex];
+				hitIndex++;
+			}
+			hitPacket.identitiesHitFloating[hitIndexFloating] =
+				entitiesHit[hitIndexFloating];
+			hitIndexFloating++;
 		}
-		hitPacket.numberOfHits = static_cast<unsigned char>(i);
+		hitPacket.numberOfHits = static_cast<unsigned char>(hitIndex);
+		hitPacket.numberOfHitsFloating = static_cast<unsigned char>(hitIndexFloating);
 		m_server->broadcastPacket(hitPacket.pack());
 	}
 }

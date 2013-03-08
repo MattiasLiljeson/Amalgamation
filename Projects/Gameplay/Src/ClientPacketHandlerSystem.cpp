@@ -103,6 +103,9 @@
 #include "SlotMarkerSystem.h"
 #include "TeslaHitPacket.h"
 #include "TeslaEffectSystem.h"
+#include "RootBoundingSpherePacket.h"
+#include "LevelPieceRoot.h"
+#include "DisconnectPacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -190,7 +193,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
-		factory->entityFromPacket(p_packet);
+		Entity* entity = factory->entityFromPacket(p_packet);
+		Transform* transform = static_cast<Transform*>(entity->getComponent(
+			ComponentType::Transform));
+		if(transform)
+		{
+			transform->setTranslation(p_packet.translation);
+			transform->setRotation(p_packet.rotation);
+			transform->setScale(p_packet.scale);
+		}
 	}
 	else
 	{
@@ -896,21 +907,25 @@ void ClientPacketHandlerSystem::handleIngameState()
 				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
 				data.affectedModule);
 
-			if(affectedModule != NULL){
+			if(affectedModule != NULL)
+			{
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
-				if (data.currentParrent >= 0)
+				if(affectedModule)
 				{
-					Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
-						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-						data.currentParrent);
+					if (data.currentParrent >= 0)
+					{
+						Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+							m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+							data.currentParrent);
 
-					shipModule->m_parentEntity = parrentObjec->getIndex();
-				}
-				else
-				{
-					shipModule->m_parentEntity = -1;
+						shipModule->m_parentEntity = parrentObjec->getIndex();
+					}
+					else
+					{
+						shipModule->m_parentEntity = -1;
+					}
 				}
 			}
 			else{
@@ -1017,7 +1032,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 			hitPacket.unpack(packet);
 			static_cast<TeslaEffectSystem*>(m_world->getSystem(
 				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
-				hitPacket.identitiesHit, hitPacket.numberOfHits);
+				hitPacket.identitiesHit, hitPacket.numberOfHits,
+				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
 		}
 		else
 		{
@@ -1082,6 +1098,15 @@ void ClientPacketHandlerSystem::handleLobby()
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				addNewPlayer(newlyConnected);
 		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+				removePlayer(dcPacket);
+
+		}
+
 		else if(packetType == (char)PacketType::ChangeStatePacket){
 			ChangeStatePacket changeState;
 			changeState.unpack(packet);
@@ -1253,6 +1278,12 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 
 			if(changeState.m_serverState == ServerStates::INGAME){
 				m_gameState->setQueuedState( GameStates::INGAME );
+
+				auto* hudSystem = static_cast<HudSystem*>
+					(m_world->getSystem(SystemType::HudSystem));
+				hudSystem->setHUDData(HudSystem::PLAYERNAME,
+					m_tcpClient->getPlayerName().c_str());
+				hudSystem->setHUDData(HudSystem::SERVERNAME,"TheOnServ");
 			}
 		}
 		else

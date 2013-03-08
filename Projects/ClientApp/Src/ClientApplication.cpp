@@ -120,10 +120,14 @@
 #include <SpriteSystem.h>
 #include <SlotMarkerSystem.h>
 #include <TeslaEffectSystem.h>
+#include <TeslaLightningSystem.h>
 #include <TimerSystem.h>
 #include <TransformParentHandlerSystem.h>
 #include <ShipHiglightSystem.h>
 #include <ModuleHighlightSystem.h>
+#include <PortalCullingSystem.h>
+#include <ClientModuleCounterSystem.h>
+#include <AddToParentSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -143,7 +147,8 @@ using namespace std;
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
-#include "../../Gameplay/Src/SoundSystem.h"
+#include <SoundSystem.h>
+#include <ShipEngineSystem.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -283,8 +288,8 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Physics																*/
 	/************************************************************************/
-	PhysicsSystem* physics = new PhysicsSystem( NULL );
-	m_world->setSystem( physics );
+	//PhysicsSystem* physics = new PhysicsSystem( NULL );
+	//m_world->setSystem( physics );
 
 	/************************************************************************/
 	/* General controlling													*/
@@ -308,6 +313,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Culling																*/
 	/************************************************************************/
+	m_world->setSystem(new PortalCullingSystem());
 	m_world->setSystem(new CullingSystem() );
 
 	
@@ -333,7 +339,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	/* Effects																*/
 	/************************************************************************/
-	m_world->setSystem( new SlotHighlightParticleMakerSystem() );
+	m_world->setSystem( new SlotHighlightParticleMakerSystem(), false );
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
 	m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
@@ -353,8 +359,8 @@ void ClientApplication::initSystems()
 	m_world->setSystem( slotInput );
 
 	// Controller systems for the ship
-	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, physics, m_client, slotInput ));
-	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, physics, slotInput) );
+	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
+	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
 
 	/************************************************************************/
 	/* Hierarchy															*/
@@ -422,6 +428,10 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );
+	m_world->setSystem( new ShipEngineSystem() );
+
+	//Must be last the last systems that handles any sound operations
+	//otherwise a one frame delay will be added. Robin T
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
 	m_world->setSystem( new SoundSystem(audioBackend) );
@@ -434,7 +444,11 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem(new SlotMarkerSystem());
+	m_world->setSystem( new SlotMarkerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new TeslaLightningSystem() );
 
 	/************************************************************************/
 	/* Animation															*/
@@ -452,6 +466,9 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
 
+
+	m_world->setSystem(new AddToParentSystem());
+
 	/************************************************************************/
 	/* Debugging															*/
 	/************************************************************************/
@@ -464,9 +481,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
-	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
-	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new ClientModuleCounterSystem() );
 
 
 	m_world->initialize();

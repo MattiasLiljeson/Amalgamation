@@ -99,17 +99,20 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 					if (col >= 0)
 					{
 						Entity* collided = physics->getEntity(col);
-						ShipModule* colModule = static_cast<ShipModule*>(
-							collided->getComponent(ComponentType::ShipModule));
-
-						if (colModule)
+						if(collided)
 						{
-							colModule->addDamageThisTick(200*dt, ownerId);
+							ShipModule* colModule = static_cast<ShipModule*>(
+								collided->getComponent(ComponentType::ShipModule));
 
-							AglVector3 o;
-							AglVector3 d;
-							physics->getController()->GetRay(gun->rayIndex, o, d);
-							physics->getController()->ApplyExternalImpulse(col, d*dt*3.0f, AglVector3(0, 0, 0));
+							if (colModule)
+							{
+								colModule->addDamageThisTick(200*dt, ownerId);
+
+								AglVector3 o;
+								AglVector3 d;
+								physics->getController()->GetRay(gun->rayIndex, o, d);
+								physics->getController()->ApplyExternalImpulse(col, d*dt*3.0f, AglVector3(0, 0, 0));
+							}
 						}
 
 						return;

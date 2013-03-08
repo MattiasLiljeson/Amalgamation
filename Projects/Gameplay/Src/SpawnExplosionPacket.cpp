@@ -4,17 +4,19 @@
 SpawnExplosionPacket::SpawnExplosionPacket()
 {
 	position = AglVector3();
+	source = ExplosionSource::ROCKET;
 }
 
 Packet SpawnExplosionPacket::pack()
 {
 	Packet packet(static_cast<char>(PacketType::SpawnExplosionPacket));	
-	packet << position;
-
+	packet << position
+		   << source;
 	return packet;
 }
 
 void SpawnExplosionPacket::unpack( Packet& p_packet )
 {
-	p_packet >> position;
+	p_packet >> position
+			 >> source;
 }

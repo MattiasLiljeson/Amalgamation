@@ -167,7 +167,8 @@ void LevelGenSystem::clearGeneratedData()
 		delete m_generatedPieces[i];
 	}
 	m_generatedPieces.clear();
-
+	m_endPlugs.clear();
+	m_pieceIds.clear();
 	// There's still data that exists, such as init data. These should not be destroyed
 	// or cleared here.
 }
@@ -218,12 +219,13 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	int id = m_levelInfo->getStartFileData()->id;
 
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
-	piece->setPieceId(0);
+	piece->setPieceId(m_pieceIds.add(piece));
 
 	// The first time, this vector will only contain the initial piece.
 	vector<LevelPiece*> pieces;
 	pieces.push_back(piece);
 	m_generatedPieces.push_back(piece);
+	printAddedLevelPiece(piece);
 
 	int usedMaxDepth;
 
@@ -293,6 +295,16 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 			entity->getComponent(ComponentType::LevelPieceRoot));
 
 		pieceRoot->pieceId = p_piece->getPieceId();
+		pieceRoot->boundingSphere = p_piece->getBoundingSphere();
+
+		pieceRoot->pieceRootType = PIECEROOTTYE_CHAMBER;
+
+		pieceRoot->connectedRootPieces.resize(p_piece->getMaxChildCount(), -1);
+		for (unsigned int i = 0; i < p_piece->getMaxChildCount(); i++)
+		{
+			pieceRoot->connectedRootPieces[i] = p_piece->getGate(i);
+		}
+		int i = 0;
 	}
 
 	return entity;
@@ -346,6 +358,14 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			{
 				// Add an open gate
 				Entity* ent = addEndPlug(&p_targetPiece->getConnectionPoint(slot), ENDPIECEMODE_OPENED);
+				int gateUid = m_pieceIds.add(ent);
+				p_targetPiece->setGate(slot, gateUid);
+				piece->setGate(0, gateUid);
+
+				string info = "Added open gate with id " + toString(gateUid) + "\n";
+				m_world->getOutputLogger()
+					->write(info.c_str());
+
 				m_world->addEntity(ent);
 
 				// This is not done from here anymore.
@@ -360,7 +380,19 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				}
 
 				out_pieces.push_back(piece);
-				piece->setPieceId(m_generatedPieces.size());
+
+				int newPieceUid = m_pieceIds.add(piece);
+				piece->setPieceId(newPieceUid);
+				printAddedLevelPiece(piece);
+
+				// Connect the gate with the two chambers
+				auto plugPieceRoot = static_cast<LevelPieceRoot*>(ent->getComponent(ComponentType::LevelPieceRoot));
+				plugPieceRoot->pieceId = gateUid;
+				plugPieceRoot->pieceRootType = PIECEROOTTYE_GATE;
+				plugPieceRoot->connectedRootPieces.resize(2, -1);
+				plugPieceRoot->connectedRootPieces[CHAMBERSIDE_PARENT]	= p_targetPiece->getPieceId();
+				plugPieceRoot->connectedRootPieces[CHAMBERSIDE_CHILD]	= piece->getPieceId();
+
 				m_generatedPieces.push_back(piece);
 			}
 		}
@@ -383,9 +415,10 @@ void LevelGenSystem::createLevelEntities()
 {
 	for (unsigned int i = 0; i < m_generatedPieces.size(); i++)
 	{
+		addEndPlugs(m_generatedPieces[i]); // Endplugs needs to be generated before chamber entities.
 		Entity* e = createEntity(m_generatedPieces[i]);
 		m_world->addEntity(e);
-		addEndPlugs(m_generatedPieces[i]);
+		
 		//e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
@@ -461,6 +494,7 @@ Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector, EndPieceMode p_mod
 		else
 			bodyInitData->m_modelResource = m_endPlugOpenedModelResource;
 	}
+	m_endPlugs.push_back(entity);
 	return entity;
 }
 
@@ -471,10 +505,19 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 		if (!p_atPiece->isChildSlotOccupied(i))
 		{
 			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i), ENDPIECEMODE_CLOSED);
+			int plugId = m_pieceIds.add(plug);
+			p_atPiece->setGate(i, plugId);
 			m_world->addEntity(plug);
 			
+			auto plugPieceRoot = static_cast<LevelPieceRoot*>(plug->getComponent(ComponentType::LevelPieceRoot));
+			plugPieceRoot->pieceId = plugId;
+			plugPieceRoot->pieceRootType = PIECEROOTTYE_GATE;
+			plugPieceRoot->connectedRootPieces.resize(2, -1);
+			plugPieceRoot->connectedRootPieces[CHAMBERSIDE_PARENT] = p_atPiece->getPieceId();
+
+			string info = "Added end plug with id " + toString(plugId) + "\n";
 			m_world->getOutputLogger()
-				->write("Added end plug!\n");
+				->write(info.c_str());
 		}
 	}
 }
@@ -537,7 +580,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	{
 		if (AglCollision::isColliding( p_newPiece->getBoundingSphere(),
 			m_generatedPieces[i]->getBoundingSphere()) && 
-			p_newPiece->getChild(0) != m_generatedPieces[i]->getTransform() )
+			p_newPiece->getChild(0) != m_generatedPieces[i] )
 		{
 			m_world->getOutputLogger()
 				->write("Collision between chambers detected. A level plug has been created instead.\n");
@@ -565,7 +608,7 @@ bool LevelGenSystem::testLevelMaxSizeHit()
 	m_world->getOutputLogger()
 		->write( logtext.c_str() );
 
-	if (m_currentLevelSize >= m_levelMaxSize)
+	if (m_useLevelMaxSize && m_currentLevelSize >= m_levelMaxSize)
 	{
 		logtext = "Max level size hit:\n\tdesired=" 
 			+ toString(m_levelMaxSize) 
@@ -579,6 +622,20 @@ bool LevelGenSystem::testLevelMaxSizeHit()
 	}
 	return m_hasHitLevelMaxSize;
 }
+
+void LevelGenSystem::printAddedLevelPiece( LevelPiece* p_piece )
+{
+	string info = "Added level piece with id " + toString(p_piece->getPieceId()) + "\n";
+	m_world->getOutputLogger()
+		->write(info.c_str());
+}
+
+int LevelGenSystem::getLevelPieceRootCount()
+{
+	return m_pieceIds.getSize();
+}
+
+
 
 
 

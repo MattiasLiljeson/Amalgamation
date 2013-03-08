@@ -1,5 +1,7 @@
 #pragma once
 #include "Packetizer.h"
+#include <vector>
+using namespace std;
 
 // =======================================================================================
 //                                      EntityCreationPacket
@@ -34,4 +36,8 @@ public:
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;
+
+	// Additional misc data. This vector has no limit in itself, but should not contain
+	// to much data, as it could get larger than what's allowed in a packet.
+	vector<char> additionalMisc;
 };

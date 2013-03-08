@@ -55,6 +55,8 @@
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
 #include "StaticProp.h"
+#include "ShineSpawn.h"
+#include "ThrustComponent.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -311,6 +313,7 @@ Entity* EntityFactory::entityFromPacket(EntityCreationPacket p_packet, AglMatrix
 Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
+	SoundComponent* soundComponent = NULL;
 
 	// read basic assemblage
 	entity = entityFromRecipeOrFile( "ClientShip", "Assemblages/ClientShip.asd");
@@ -324,10 +327,16 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		m_gradientColors[p_packet.playerID].layerOne,
 		m_gradientColors[p_packet.playerID].layerTwo) );
 
-	//m_playerCounter++;
+	entity->addComponent( ComponentType::ThrustComponent, new ThrustComponent());
 
 	entity->addComponent( new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		EntityType::Ship));
+
+	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
+
+	soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+	
 	Component* component = NULL;
 
 	/************************************************************************/
@@ -340,40 +349,36 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		entity->addTag( ComponentType::TAG_ShipFlyMode, new ShipFlyMode_TAG );
 		entity->addComponent( ComponentType::TAG_MyShip, new MyShip_TAG() );
 		
-//		ParticleSystemsComponent* emitters = static_cast<ParticleSystemsComponent*>(
-//			entity->getComponent( ComponentType::ParticleSystemsComponent ) );
-//
-//		if( emitters == NULL ) {
-//			emitters = new ParticleSystemsComponent();
-//			entity->addComponent( emitters );
-//		}
-//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -2.0f, -5.0f), // Down
-//			AglVector3(0.0f, 0.0f, -1.0f), 0);
-//		createHighlightParticleEmitter(emitters, AglVector3(0.0f, -7.0f, 2.0f), // Forward
-//			AglVector3(0.0f, 1.0f, 1.0f), 1);
-//		createHighlightParticleEmitter(emitters, AglVector3(-4.5f, -2.0f, 2.5f), // Left
-//			AglVector3(-1.0f, 0.0f, 0.0f), 2);
-//		createHighlightParticleEmitter(emitters, AglVector3(4.5f, -2.0f, 2.5f), // Right
-//			AglVector3(1.0f, 0.0f, 0.0f), 3);
+		//!!!!!!!! Don't change the name of the sounds !!!!!!!!
+		AudioHeader* engineSound = new AudioHeader(AudioHeader::AMBIENT, "ShipEngineIdle");
+		engineSound->file = "space_ship_engine_idle.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 2.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->volume = 0.5f;
+		soundComponent->addAudioHeader(engineSound);
 
-
+		engineSound = new AudioHeader(AudioHeader::AMBIENT, "ShipEngineActive");
+		engineSound->file = "space_ship_engine_active.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 2.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->volume = 0.5f;
+		soundComponent->addAudioHeader(engineSound);
 		// RM-RT 2013-03-04
 		/*
 		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
 			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
 		*/
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
-	}
-//	entity->addComponent( new PlayerComponent() );
-	entity->addComponent( ComponentType::TAG_Ship, new Ship_TAG());
+		m_world->addEntity(entity);
 
-	m_world->addEntity(entity);
-
-	/************************************************************************/
-	/* Attach a camera if it's the client's ship!							*/
-	/************************************************************************/
-	if(p_packet.owner == m_client->getId())
-	{
+		/************************************************************************/
+		/* Attach a camera if it's the client's ship!							*/
+		/************************************************************************/
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
 		if(entity->getComponent(ComponentType::AudioListener))
@@ -390,7 +395,10 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 		entity->applyComponentChanges();
 	}
-
+	else
+	{
+		m_world->addEntity(entity);
+	}
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
@@ -502,7 +510,8 @@ Entity* EntityFactory::createSpeedBoosterClient(EntityCreationPacket p_packet)
 
 	// Add network dependent components
 	entity->addComponent(ComponentType::NetworkSynced,
-		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, 
+		(EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
@@ -674,10 +683,13 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity = entityFromRecipeOrFile( "Mine", "Assemblages/Mine.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
+	Transform* trans = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	entity->addComponent( ComponentType::Transform, trans );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+
+	entity->addComponent(ComponentType::ShineSpawn, new ShineSpawn(m_world->getElapsedTime(), 3.5f));
+
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 	
 	// RM-RT 2013-03-04
@@ -685,6 +697,34 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 	*/
+
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	/*string name = "Unload";
+	AudioHeader* unload = new AudioHeader(AudioHeader::AMBIENT, name);
+	unload->file = "Mine_Unload.wav";
+	unload->path = TESTSOUNDEFFECTPATH;
+	unload->maxFrequencyOffeset = 2.0f;
+	unload->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	unload->sourceChannels = 1;
+	unload->queuedPlayingState = AudioHeader::PLAY;
+	unload->volume = 0.5f;
+	soundComponent->addAudioHeader(unload);
+
+	AudioHeader* blip = new AudioHeader(AudioHeader::POSITIONALSOUND, "Blip");
+	blip->file = "Mine_Blip_v2.wav";
+	blip->path = TESTSOUNDEFFECTPATH;
+	blip->maxFrequencyOffeset = 2.0f;
+	blip->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
+	blip->timerInterval = 1.0f;
+	blip->sourceChannels = 1;
+	blip->queuedPlayingState = AudioHeader::PLAY;
+	blip->volume = 1.0f;
+	blip->minRange = 0.0f;
+	blip->maxRange = 100.0f;
+	soundComponent->addAudioHeader(blip);*/
+
 
 	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
 	v->enabled = false;
@@ -796,29 +836,14 @@ Entity* EntityFactory::createTeslaCoilModuleServer(EntityCreationPacket p_packet
 }
 
 Entity* EntityFactory::createTeslaEffectPieceClient(AglVector3 p_forwardScale,
-		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition)
+		float p_thicknessFactor, AglQuaternion p_rotation, AglVector3 p_sourcePosition,
+		string p_meshName)
 {
 	Entity* entity = entityFromRecipeOrFile( "ClientTeslaEffectPiece",
 		"Assemblages/Modules/TeslaCoil/ClientTeslaEffectPiece.asd" );
 	// Change some components that isn't fully initialized in its assemblage:
-	Transform* transform = static_cast<Transform*>(entity->getComponent(
-		ComponentType::Transform));
-	// right is in-game up.
-	AglVector3 upScale = AglVector3::right() * p_thicknessFactor;
-	// forward is in-game right.
-	AglVector3 rightScale = AglVector3::forward() * p_thicknessFactor;
-	AglVector3 scale = AglVector3::one() + p_forwardScale + upScale + rightScale;
-	transform->setScale(scale);
-	transform->setRotation(p_rotation);
-	transform->setTranslation(p_sourcePosition);
 
-	TeslaEffectPiece* effectPiece = static_cast<TeslaEffectPiece*>(entity->getComponent(
-		ComponentType::TeslaEffectPiece));
-	effectPiece->forwardScale = p_forwardScale;
-
-	int meshIndex = RandomUtil::randomInteger(
-		static_cast<int>( effectPiece->possibleMeshes.size() ));
-	entity->addComponent(new LoadMesh(effectPiece->possibleMeshes[meshIndex]));
+	entity->addComponent(new LoadMesh(p_meshName));
 
 	m_world->addEntity(entity);
 	return entity;
@@ -880,7 +905,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
-	if (p_packet.miscData != STATICPROPTYPE_UNSPECIFIED)
+	if (p_packet.miscData != STATICPROPTYPE_UNSPECIFIED) // Means this is either a level chamber or level gate for now.
 	{
 		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
 			m_world->getSystem(SystemType::LevelInfoLoader));
@@ -889,6 +914,23 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		{
 			string asdName = fileData->assemblageName;
 			entity = entityFromRecipe( asdName );
+		}
+		LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
+		if (root)
+		{
+			root->pieceId = p_packet.networkIdentity;
+			if (p_packet.miscData == STATICPROPTYPE_LEVELPIECE)
+				root->pieceRootType = PIECEROOTTYE_CHAMBER;
+			else
+				root->pieceRootType = PIECEROOTTYE_GATE;
+
+			int miscSize = p_packet.additionalMisc.size();
+			if (miscSize > 0)
+			{
+				root->connectedRootPieces.resize(miscSize);
+				for (int misc = 0; misc < miscSize; misc++)
+					root->connectedRootPieces[misc] = p_packet.additionalMisc[misc];
+			}
 		}
 	}
 	else	
@@ -899,6 +941,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
 	}
+
 	// Try fetch a transform component if it exists.
 	Transform* transform = NULL;
 	if (entity)
@@ -920,6 +963,14 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 
 		m_world->addEntity(entity);
 	}
+
+	/*LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
+	if (root)
+	{
+		root->boundingSphere.position = p_packet.bsPos;
+		root->boundingSphere.radius = p_packet.bsRadius;
+	}*/
+
 	return entity;
 }
 Entity* EntityFactory::createOtherServer(EntityCreationPacket p_packet)
@@ -994,6 +1045,8 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	flares.setParticleAge(0.5f);
 	flares.setFadeOutStart(0.0f);
 	flares.setSpawnOffset(1.0f);
+	if (p_packet.source == ExplosionSource::MINE)
+		flares.setColor(AglVector4(1, 0, 0, 1));
 	//flares.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlares;
@@ -1069,6 +1122,8 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Flash.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
 	Flash.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	Flash.setParticleSize(AglVector2(20.0f, 20.0f));
+	if (p_packet.source == ExplosionSource::MINE)
+		Flash.setColor(AglVector4(1, 0, 0, 1));
 	//Flash.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlash;
@@ -1077,6 +1132,24 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	particleEmitter->addParticleSystemInstruction(particleInstructionFlash);
 
 	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
+
+	SoundComponent* soundComponent = new SoundComponent();
+	effect->addComponent(soundComponent);
+
+	Component* component = NULL;
+
+	string name = "Explosion";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	explodeSound->file = "bomb-03.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::PLAY;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+
 	m_world->addEntity(effect);
 }
 

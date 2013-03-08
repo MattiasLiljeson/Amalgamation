@@ -23,7 +23,8 @@ public:
 	void init( vector<ComponentData> p_initData );
 
 public:
-	float m_cooldown;
-	float m_timeSinceMineSpawnStart;
+	float m_mineAge;
+	int m_currentMine;
+	float m_timeSinceSpawnStarted;
 	static ComponentRegister<MineLayerModule> s_reg;
 };

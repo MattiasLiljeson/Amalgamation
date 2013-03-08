@@ -21,8 +21,8 @@ public:
 	~MenuSystem();
 	void initialize();
 	void process( );
-
-	void inserted( Entity* p_entity );
-
+	void endLoadingState();
+private:
+	int m_loadingWindowIdx;
 };
 

@@ -35,14 +35,13 @@ public:
 	virtual void processEntities(const vector<Entity*>& p_entities );
 
 	virtual void initialize();
-	void sendBrodcastAllPlayers();
+	//void sendBrodcastAllPlayers();
 private:
 	void sendWelcomePacket(int p_newlyConnectedClientId);
-	void sendDisconnectPacket(int p_newlyDisconnectClientId);
-	void createClientInfoEntity(int p_newlyConnectedClientId);
+	//void sendDisconnectPacket(int p_newlyDisconnectClientId);
+	//void createClientInfoEntity(int p_newlyConnectedClientId);
 private:
-	TcpServer* m_server;
-	PlayerSystem* m_playerSystem;
-	int		m_activePort;
-
+	TcpServer*		m_server;
+	PlayerSystem*	m_playerSystem;
+	int				m_activePort;
 };

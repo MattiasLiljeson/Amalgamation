@@ -35,15 +35,13 @@ public:
 	virtual void initialize();
 	virtual void process();
 
+private:
+	void renderTheScene();
 	void initShadowPass();
 	void endShadowPass();
 
 	void initMeshPass();
 	void endMeshPass();
-
-	void initParticlePass();
-	void renderParticles();
-	void endParticlePass();
 
 	void initLightPass();
 	void endLightPass();
@@ -51,9 +49,16 @@ public:
 	void beginSsao();
 	void endSsao();
 
+	void beginDofGenerationPass();
+	void endDofGenerationPass();
+
 	void initComposePass();
 	void endComposePass();
 	
+	void initParticlePass();
+	void renderParticles();
+	void endParticlePass();
+
 	void initGUIPass();
 	void endGUIPass();
 	
@@ -63,8 +68,8 @@ public:
 
 	void updateTimers();
 private:
-	enum {
-		SHADOW, MESH, LIGHT, SSAO, COMPOSE, PARTICLE, GUI, NUMRENDERINGPASSES
+	enum Passes {
+		MESH, LIGHT, SSAO, DOF, COMPOSE, PARTICLE, GUI, TOTAL, NUMRENDERINGPASSES
 	};
 private:
 	GraphicsWrapper* m_wrapper;
@@ -80,7 +85,8 @@ private:
 	AglMatrix* m_shadowViewProjections;
 
 	vector<GPUTimerProfile> m_profiles;
-	double	m_totalTime;
 
 	int		m_currentFrame;
+	bool	m_enteredIngamePreviousFrame;
+	bool	m_shouldRender;
 };

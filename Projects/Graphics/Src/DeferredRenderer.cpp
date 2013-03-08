@@ -20,23 +20,25 @@ DeferredRenderer::DeferredRenderer(
 	m_device		= p_device;
 	m_deviceContext = p_deviceContext;
 
-	m_width		= p_width;
-	m_height	= p_height;
-	m_useHdr	= p_useHdr;
+	m_width			= p_width;
+	m_height		= p_height;
+	m_useHdr		= p_useHdr;
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
 		m_device->GetFeatureLevel());
 
 	
 	m_depthStencilView = NULL;
-	for(int i = 0; i < RenderTargets_CNT; i++)
+	m_srvDepth = NULL;
+	for( int i=0; i<RenderTargets_CNT; i++ )
 	{
-		m_gBuffers[i] = NULL;
-		m_gBuffersShaderResource[i] = NULL;
+		m_rtvGBuffers[i] = NULL;
+		m_srvGBuffers[i] = NULL;
+		m_rtvDofBuffers[i] = NULL;
+		m_srvDofBuffers[i] = NULL;
 	}
 
 	m_bufferFactory = new BufferFactory(m_device,m_deviceContext);
-
 
 	initRendertargetsAndDepthStencil( m_width, m_height );
 
@@ -62,7 +64,7 @@ DeferredRenderer::~DeferredRenderer()
 		SAFE_RELEASE(m_blendStates[i]);
 	}
 
-	for (unsigned int i = 0; i < m_blendStates.size(); i++){
+	for (unsigned int i = 0; i < m_rasterizerStates.size(); i++){
 		SAFE_RELEASE(m_rasterizerStates[i]);
 	}
 
@@ -71,6 +73,7 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_baseShader;
 	delete m_lightShader;
 	delete m_ssaoShader;
+	delete m_dofGenerationShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 	delete m_animatedBaseShader;
@@ -86,6 +89,7 @@ void DeferredRenderer::initRendertargetsAndDepthStencil( int p_width, int p_heig
 	initDepthStencil();
 	initGeometryBuffers();
 	initLightBuffers();
+	initDofBuffers();
 }
 
 void DeferredRenderer::releaseRenderTargetsAndDepthStencil()
@@ -95,25 +99,43 @@ void DeferredRenderer::releaseRenderTargetsAndDepthStencil()
 
 	for (int i = 0; i < RenderTargets_CNT; i++)
 	{
-		SAFE_RELEASE(m_gBuffers[i]);
-		SAFE_RELEASE(m_gBuffersShaderResource[i]);
+		SAFE_RELEASE(m_rtvGBuffers[i]);
+		SAFE_RELEASE(m_srvGBuffers[i]);
+
+		SAFE_RELEASE(m_rtvDofBuffers[i]);
+		SAFE_RELEASE(m_srvDofBuffers[i]);
 	}
 }
 
 void DeferredRenderer::setBasePassRenderTargets()
 {
-	m_deviceContext->OMSetRenderTargets(BASESHADERS,m_gBuffers,m_depthStencilView);
+	m_deviceContext->OMSetRenderTargets(BASESHADERS,m_rtvGBuffers,m_depthStencilView);
 }
 
-void DeferredRenderer::setLightRenderTarget()
+void DeferredRenderer::setLightRenderTargets()
 {
-	m_deviceContext->OMSetRenderTargets( 2, &m_gBuffers[RenderTargets_LIGHT_DIFFUSE], NULL );
+	m_deviceContext->OMSetRenderTargets( 2, &m_rtvGBuffers[RenderTargets_LIGHT_DIFFUSE], NULL );
 }
 
-void DeferredRenderer::renderSsao()
+void DeferredRenderer::setDofRenderTargets()
+{
+	m_deviceContext->OMSetRenderTargets( RenderTargets_CNT, m_rtvDofBuffers, NULL );
+
+}
+
+void DeferredRenderer::generateSsao()
 {
 	m_ssaoShader->setSSAOBufferData(m_ssaoData);
 	m_ssaoShader->apply();
+	m_fullscreenQuad->apply();
+
+	m_deviceContext->Draw(6,0);
+}
+
+void DeferredRenderer::generateDof()
+{
+	m_dofGenerationShader->setSSAOBufferData(m_ssaoData);
+	m_dofGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
@@ -128,62 +150,92 @@ void DeferredRenderer::renderComposeStage()
 	m_deviceContext->Draw(6,0);
 }
 
-void DeferredRenderer::mapShaderResourcesForLightPass(ID3D11ShaderResourceView* p_shadowMap)
+void DeferredRenderer::setViewPortSize( float p_width, float p_height )
+{
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= p_width;
+	vp.Height	= p_height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+
+void DeferredRenderer::mapNormal(ID3D11ShaderResourceView* p_shadowMap)
 {	
-	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
-	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
-		RenderTargets_DEPTH] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_srvGBuffers[RenderTargets_NORMAL] );
 
-		m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
+	//m_deviceContext->PSSetShaderResources( 4, 1, &p_shadowMap);
 }
 
-void DeferredRenderer::mapShaderResourcesForLightPass()
+void DeferredRenderer::mapNormal()
 {	
-	m_deviceContext->PSSetShaderResources( 0, 3, m_gBuffersShaderResource);
-	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[
-		RenderTargets_DEPTH] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_srvGBuffers[RenderTargets_NORMAL] );
 }
 
-void DeferredRenderer::unmapShaderResourcesForLightPass()
+void DeferredRenderer::unmapNormal()
 {
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deviceContext->PSSetShaderResources( 4, 1, &nulz);
+	m_deviceContext->PSSetShaderResources( 1, 1, &nulz);
 }
 
-void DeferredRenderer::mapShaderResourcesForComposePass(){
-	m_deviceContext->PSSetShaderResources( 0, 1, &m_gBuffersShaderResource[RenderTargets_DIFFUSE] );
-	m_deviceContext->PSSetShaderResources( 1, 1, &m_gBuffersShaderResource[RenderTargets_NORMAL] );
-	m_deviceContext->PSSetShaderResources( 2, 1, &m_gBuffersShaderResource[RenderTargets_SPECULAR] );
-	m_deviceContext->PSSetShaderResources( 3, 1, &m_gBuffersShaderResource[RenderTargets_LIGHT_DIFFUSE] );
-	m_deviceContext->PSSetShaderResources( 4, 1, &m_gBuffersShaderResource[RenderTargets_LIGHT_SPEC] );
-	m_deviceContext->PSSetShaderResources( 5, 1, &m_gBuffersShaderResource[RenderTargets_DEPTH] );
+void DeferredRenderer::mapGbuffers(){
+	m_deviceContext->PSSetShaderResources( 0, 1, &m_srvGBuffers[RenderTargets_DIFFUSE] );
+	m_deviceContext->PSSetShaderResources( 1, 1, &m_srvGBuffers[RenderTargets_NORMAL] );
+	m_deviceContext->PSSetShaderResources( 2, 1, &m_srvGBuffers[RenderTargets_SPECULAR] );
+	m_deviceContext->PSSetShaderResources( 3, 1, &m_srvGBuffers[RenderTargets_LIGHT_DIFFUSE] );
+	m_deviceContext->PSSetShaderResources( 4, 1, &m_srvGBuffers[RenderTargets_LIGHT_SPEC] );
 }
 
-void DeferredRenderer::unmapShaderResourcesForComposePass()
-{
+void DeferredRenderer::unmapGbuffers(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deviceContext->PSSetShaderResources( RenderTargets_DIFFUSE,		1, &nulz );
-	m_deviceContext->PSSetShaderResources( RenderTargets_NORMAL,		1, &nulz );
-	m_deviceContext->PSSetShaderResources( RenderTargets_SPECULAR,		1, &nulz );
-	m_deviceContext->PSSetShaderResources( RenderTargets_LIGHT_DIFFUSE, 1, &nulz );
-	m_deviceContext->PSSetShaderResources( RenderTargets_LIGHT_SPEC,	1, &nulz );
-	m_deviceContext->PSSetShaderResources( RenderTargets_DEPTH,			1, &nulz );
-}
-
-void DeferredRenderer::unmapDepthAsShaderResource()
-{
-	ID3D11ShaderResourceView* nulz = NULL;
+	m_deviceContext->PSSetShaderResources( 0, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 1, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 2, 1, &nulz );
 	m_deviceContext->PSSetShaderResources( 3, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 4, 1, &nulz );
 }
 
-void DeferredRenderer::clearBuffers()
+void DeferredRenderer::mapDofBuffers(){
+	m_deviceContext->PSSetShaderResources( 5, 1, &m_srvDofBuffers[RenderTargets_DIFFUSE] );
+	m_deviceContext->PSSetShaderResources( 6, 1, &m_srvDofBuffers[RenderTargets_NORMAL] );
+	m_deviceContext->PSSetShaderResources( 7, 1, &m_srvDofBuffers[RenderTargets_SPECULAR] );
+	m_deviceContext->PSSetShaderResources( 8, 1, &m_srvDofBuffers[RenderTargets_LIGHT_DIFFUSE] );
+	m_deviceContext->PSSetShaderResources( 9, 1, &m_srvDofBuffers[RenderTargets_LIGHT_SPEC] );
+}
+
+void DeferredRenderer::unmapDofBuffers(){
+	ID3D11ShaderResourceView* nulz = NULL;
+
+	m_deviceContext->PSSetShaderResources( 5, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 6, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 7, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 8, 1, &nulz );
+	m_deviceContext->PSSetShaderResources( 9, 1, &nulz );
+}
+
+
+void DeferredRenderer::mapDepth()
+{
+	m_deviceContext->PSSetShaderResources( DEPTH_IDX, 1, &m_srvDepth );
+}
+
+void DeferredRenderer::unmapDepth()
+{
+	ID3D11ShaderResourceView* nulz = NULL;
+	m_deviceContext->PSSetShaderResources( DEPTH_IDX, 1, &nulz );
+}
+
+void DeferredRenderer::clearRenderTargets()
 {
 	unmapAllBuffers();
-	float clearColor[] = {
-		0.0f,0.0f,0.0f,0.0f
-	};
-	for (unsigned int i = 0; i < RenderTargets_CNT-1; i++){
-		m_deviceContext->ClearRenderTargetView(m_gBuffers[i], clearColor);
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	for( unsigned int i=0; i<RenderTargets_CNT; i++ ) {
+		m_deviceContext->ClearRenderTargetView( m_rtvGBuffers[i], clearColor );
+		m_deviceContext->ClearRenderTargetView( m_rtvDofBuffers[i], clearColor );
 	}
 
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -196,7 +248,7 @@ ID3D11DepthStencilView* DeferredRenderer::getDepthStencil()
 
 ID3D11ShaderResourceView*const* DeferredRenderer::getShaderResourceView( RenderTargets p_target )
 {
-	return &m_gBuffersShaderResource[p_target];
+	return &m_srvGBuffers[p_target];
 }
 
 void DeferredRenderer::setBlendState(BlendState::Mode p_state)
@@ -285,6 +337,10 @@ void DeferredRenderer::hookUpAntTweakBar()
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
 		AntTweakBarWrapper::GRAPHICS,"Epsilon",TwType::TW_TYPE_FLOAT,&m_ssaoData.epsilon,
 		"group=SSAO step=0.001");
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"cocFac",TwType::TW_TYPE_FLOAT,&m_ssaoData.cocFactor,
+		"group=SSAO step=0.01");
 }
 
 void DeferredRenderer::initDepthStencil()
@@ -328,7 +384,7 @@ void DeferredRenderer::initDepthStencil()
 	shaderResourceDesc.Texture2D.MipLevels = 1;
 
 	HRESULT createDepthShaderResourceView = m_device->CreateShaderResourceView(
-		depthStencilTexture, &shaderResourceDesc, &m_gBuffersShaderResource[RenderTargets_DEPTH] );
+		depthStencilTexture, &shaderResourceDesc, &m_srvDepth );
 	checkHr( createDepthShaderResourceView, __FILE__, __FUNCTION__, __LINE__ );
 
 
@@ -337,119 +393,50 @@ void DeferredRenderer::initDepthStencil()
 
 void DeferredRenderer::initGeometryBuffers()
 {
-	ID3D11Texture2D* gBufferTextures[RenderTargets_CNT];
-	D3D11_TEXTURE2D_DESC gBufferDesc;
-	ZeroMemory( &gBufferDesc, sizeof(gBufferDesc) );
-
-	gBufferDesc.Width = m_width;
-	gBufferDesc.Height = m_height;
-	gBufferDesc.MipLevels = 1;
-	gBufferDesc.ArraySize = 1;
-	gBufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	gBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	gBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	gBufferDesc.SampleDesc.Count = 1;
-	gBufferDesc.SampleDesc.Quality = 0;
-	gBufferDesc.CPUAccessFlags = 0;
-	gBufferDesc.MiscFlags = 0;
-
 	// From first gbuffer to last
 	int firstIdx = RenderTargets_DIFFUSE;
 	int lastIdx = RenderTargets_SPECULAR;
 
 	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateTexture2D( &gBufferDesc, NULL, &gBufferTextures[i] );		
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
-	}
-
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	renderTargetViewDesc.Format = gBufferDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateRenderTargetView( gBufferTextures[i], &renderTargetViewDesc,
-			&m_gBuffers[i] );
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
-	}
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceDesc;
-	shaderResourceDesc.Format = gBufferDesc.Format;
-	shaderResourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceDesc.Texture2D.MipLevels = 1;
-	shaderResourceDesc.Texture2D.MostDetailedMip = 0;
-
-	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateShaderResourceView(gBufferTextures[i],&shaderResourceDesc,
-			&m_gBuffersShaderResource[i]);
-		gBufferTextures[i]->Release();
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+		createSrvAndRtv( &m_srvGBuffers[i], &m_rtvGBuffers[i], m_width, m_height,
+			DXGI_FORMAT_R8G8B8A8_UNORM );
+		createSrvAndRtv( &m_srvDofBuffers[i], &m_rtvDofBuffers[i], m_width/4, m_height/4,
+			DXGI_FORMAT_R8G8B8A8_UNORM );
 	}
 }
 
 void DeferredRenderer::initLightBuffers()
 {
-	const int LIGHT_BUFFER_CNT = 2;
-	ID3D11Texture2D* lightBufferTextures[RenderTargets_CNT];
-	D3D11_TEXTURE2D_DESC lightBufferDesc;
-	ZeroMemory( &lightBufferDesc, sizeof(lightBufferDesc) );
-
-	lightBufferDesc.Width = m_width;
-	lightBufferDesc.Height = m_height;
-	lightBufferDesc.MipLevels = 1;
-	lightBufferDesc.ArraySize = 1;
-	lightBufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	lightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	lightBufferDesc.SampleDesc.Count = 1;
-	lightBufferDesc.SampleDesc.Quality = 0;
-	lightBufferDesc.CPUAccessFlags = 0;
-	lightBufferDesc.MiscFlags = 0;
-
-	if( m_useHdr ) {
-		lightBufferDesc.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
-	} else {
-		lightBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	}
-
 	// From first light to last
 	int firstIdx = RenderTargets_LIGHT_DIFFUSE;
 	int lastIdx = RenderTargets_LIGHT_SPEC;
 
 	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateTexture2D( &lightBufferDesc, NULL, &lightBufferTextures[i] );		
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
-	}
-
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	renderTargetViewDesc.Format = lightBufferDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateRenderTargetView( lightBufferTextures[i],
-			&renderTargetViewDesc, &m_gBuffers[i] );
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
-	}
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceDesc;
-	shaderResourceDesc.Format = lightBufferDesc.Format;
-	shaderResourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceDesc.Texture2D.MipLevels = 1;
-	shaderResourceDesc.Texture2D.MostDetailedMip = 0;
-
-	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
-		HRESULT hr = S_OK;
-		hr = m_device->CreateShaderResourceView( lightBufferTextures[i],
-			&shaderResourceDesc, &m_gBuffersShaderResource[i]);
-		lightBufferTextures[i]->Release();
-		checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+		createSrvAndRtv( &m_srvGBuffers[i], &m_rtvGBuffers[i], m_width, m_height,
+			DXGI_FORMAT_R16G16B16A16_UNORM );
+		createSrvAndRtv( &m_srvDofBuffers[i], &m_rtvDofBuffers[i], m_width/4, m_height/4,
+			DXGI_FORMAT_R16G16B16A16_UNORM );
 	}
 }
+
+
+void DeferredRenderer::initDofBuffers()
+{
+	// From first gbuffer to last
+	int firstIdx = RenderTargets_DIFFUSE;
+	int lastIdx = RenderTargets_LIGHT_SPEC;
+
+	for( unsigned int i=firstIdx; i<=lastIdx; i++ ) {
+		//createSrvAndRtv( &m_dofBuffersShaderResource[i], &m_dofBuffers[i], m_width/16, m_height/16,
+		//	DXGI_FORMAT_R8G8B8A8_UNORM );
+	}
+	//m_srvDofBuffers[RenderTargets_DEPTH] = m_srvDofBuffers[RenderTargets_DEPTH];
+	//m_srvDofBuffers[RenderTargets_DEPTH] = NULL;
+
+	//m_dofBuffers[RenderTargets_DEPTH] = m_gBuffers[RenderTargets_DEPTH];
+	//m_dofBuffers[RenderTargets_DEPTH] = NULL;
+}
+
 
 void DeferredRenderer::buildBlendStates()
 {
@@ -472,6 +459,9 @@ void DeferredRenderer::initShaders()
 
 	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
 		L"Shaders/Game/ssaoGenerate.hlsl");
+
+	m_dofGenerationShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/dofGeneration.hlsl");
 
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
 		L"Shaders/Game/deferredBaseAnimatedVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
@@ -500,14 +490,20 @@ void DeferredRenderer::initSSAO()
 	m_ssaoData.intensity= 1.0f;
 	m_ssaoData.sampleRadius=0.02f;
 	m_ssaoData.epsilon  = 0.0f;
+	m_ssaoData.cocFactor  = 1.0f;
 }
 
 void DeferredRenderer::unmapAllBuffers()
 {
-	ID3D11ShaderResourceView* nulz[RenderTargets_CNT];
-	for (int i=0; i<RenderTargets_CNT; i++)
-		nulz[i]=NULL;
-	m_deviceContext->PSSetShaderResources(0,RenderTargets_CNT,nulz);
+	//ID3D11ShaderResourceView* nulz[RenderTargets_CNT];
+	//for (int i=0; i<RenderTargets_CNT; i++)
+	//	nulz[i]=NULL;
+	//m_deviceContext->PSSetShaderResources(0,RenderTargets_CNT,nulz);
+
+	unmapGbuffers();
+	unmapDofBuffers();
+	unmapDepth();
+
 	m_lightShader->apply();
 }
 
@@ -517,4 +513,48 @@ void DeferredRenderer::checkHr( HRESULT p_hr, const string& p_file,
 	if ( p_hr != S_OK ) {
 		throw D3DException( p_hr, p_file, p_function, p_line );
 	}
+}
+
+void DeferredRenderer::createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
+	ID3D11RenderTargetView** out_rtv, int p_width, int p_height, DXGI_FORMAT p_format )
+{
+	D3D11_TEXTURE2D_DESC bufferDesc;
+	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
+	int dofBufferFactor = 4;
+	bufferDesc.Width = p_width;
+	bufferDesc.Height = p_height;
+	bufferDesc.MipLevels = 1;
+	bufferDesc.ArraySize = 1;
+	bufferDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufferDesc.Format = p_format;
+	bufferDesc.SampleDesc.Count = 1;
+	bufferDesc.SampleDesc.Quality = 0;
+	bufferDesc.CPUAccessFlags = 0;
+	bufferDesc.MiscFlags = 0;
+
+	HRESULT hr = S_OK;
+
+	ID3D11Texture2D* bufferTexture;
+	hr = m_device->CreateTexture2D( &bufferDesc, NULL, &bufferTexture );		
+	checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = bufferDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	hr = m_device->CreateRenderTargetView( bufferTexture, &renderTargetViewDesc, out_rtv );
+	checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceDesc;
+	shaderResourceDesc.Format = bufferDesc.Format;
+	shaderResourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceDesc.Texture2D.MipLevels = 1;
+	shaderResourceDesc.Texture2D.MostDetailedMip = 0;
+
+	hr = m_device->CreateShaderResourceView( bufferTexture, &shaderResourceDesc, out_srv );
+	checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
+
+	bufferTexture->Release();
 }

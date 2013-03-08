@@ -37,6 +37,7 @@
 #include "WelcomePacket.h"
 #include "NewlyConnectedPlayerPacket.h"
 #include "DisconnectPacket.h"
+#include "Packet.h"
 
 #include <Globals.h>
 #include "EntityFactory.h"
@@ -66,7 +67,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		int id = m_server->popNewDisconnection();
 
-		sendDisconnectPacket(id);
+		//sendDisconnectPacket(id);
 		//for (unsigned int index = 0; index < p_entities.size(); index++)
 		//{
 		//	NetworkSynced* netSync = static_cast<NetworkSynced*>(
@@ -99,7 +100,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			int id = m_server->popNewConnection();
 
 			// Creates a new client info entity for the newly connected client
-			createClientInfoEntity(id);
+			// createClientInfoEntity(id);
 
 			/************************************************************************/
 			/* Send the newly connected client a welcome packet with all inclusive. */
@@ -126,27 +127,27 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 }
 
-void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
-{
-	Entity* e = m_world->createEntity();
-	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
-	m_world->addEntity(e);
-}
+//void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
+//{
+//	Entity* e = m_world->createEntity();
+//	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
+//	m_world->addEntity(e);
+//}
 
-void ServerWelcomeSystem::sendBrodcastAllPlayers()
-{
-	vector<PlayerComponent*> playerComps = m_playerSystem->getPlayerComponents();
-	for(unsigned int i = 0; i < playerComps.size(); i++){
-		NewlyConnectedPlayerPacket connectedPacket;
-		connectedPacket.playerID = playerComps.at(i)->m_playerID;
-		connectedPacket.playerName = playerComps.at(i)->m_playerName;
-		m_server->broadcastPacket( connectedPacket.pack() );
-	}
-}
+//void ServerWelcomeSystem::sendBrodcastAllPlayers()
+//{
+//	vector<PlayerComponent*> playerComps = m_playerSystem->getPlayerComponents();
+//	for(unsigned int i = 0; i < playerComps.size(); i++){
+//		NewlyConnectedPlayerPacket connectedPacket;
+//		connectedPacket.playerID = playerComps.at(i)->m_playerID;
+//		connectedPacket.playerName = playerComps.at(i)->m_playerName;
+//		m_server->broadcastPacket( connectedPacket.pack() );
+//	}
+//}
 
-void ServerWelcomeSystem::sendDisconnectPacket( int p_newlyDisconnectClientId )
-{
-	DisconnectPacket dcPacket;
-	dcPacket.clientNetworkIdentity = p_newlyDisconnectClientId;
-//	dcPacket.playerID = m_playerSystem->get
-}
+//void ServerWelcomeSystem::sendDisconnectPacket( int p_newlyDisconnectClientId )
+//{
+//	DisconnectPacket dcPacket;
+//	dcPacket.clientNetworkIdentity = p_newlyDisconnectClientId;
+////	dcPacket.playerID = m_playerSystem->get
+//}

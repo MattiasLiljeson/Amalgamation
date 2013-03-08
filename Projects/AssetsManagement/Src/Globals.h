@@ -54,3 +54,5 @@ static const int MAXSHADOWS = 2;
 static const char* TIMERELEMENT = "time";
 static const char* SCOREELEMENT = "score";
 static const char* MAPPINGELEMENT = "mapping";
+static const char* PLAYERELEMENT = "playername";
+static const char* SERVERELEMENT = "servername";

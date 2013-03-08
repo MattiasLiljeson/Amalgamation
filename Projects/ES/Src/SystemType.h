@@ -124,6 +124,7 @@ public:	//Enums
 		SlotMarkerSystem,
 		TeslaCoilModuleControllerSystem,
 		TeslaEffectSystem,
+		TeslaLightningSystem,
 		DamageUpdaterSystem,
 		DamageVisualizerSystem,
 		ShipHighlightSystem,
@@ -131,6 +132,10 @@ public:	//Enums
 		SoundSystem,
 		AmbientRangeSystem,
 		LogToFileSystem,
+		PortalCullingSystem,
+		ShipEngineSystem,
+		ClientModuleCounterSystem,
+		AddToParentSystem,
 		NUM_SYSTEM_TYPES
 	};
 

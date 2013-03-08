@@ -15,6 +15,8 @@
 ///---------------------------------------------------------------------------------------
 
 struct AudioHeader{
+
+public:
 	enum PlayInterval{
 		ONCE, TWICE, FOREVER, TIMERBASED
 	};
@@ -30,6 +32,7 @@ struct AudioHeader{
 	float timerInterval; // Only used if the play interval is set to TIMERBASED Measured in s
 	float timeSinceLastPlayed; // Only used if the play interval is set to TIMERBASED in s
 	float maxFrequencyOffeset;
+	float volume;  
 	float frequency; //Used for to pitch sounds standard 1.0f
 	float maxRange; //Used for ambient range
 	float minRange;	//Used to specify a minimum range when the volume is 1.0f
@@ -47,14 +50,18 @@ struct AudioHeader{
 	SoundType soundType;
 	std::string path;
 	std::string file;
+private:
+	std::string soundName;
 
-	AudioHeader(const SoundType& p_soundType){
+public:
+	AudioHeader(const SoundType& p_soundType, const std::string& p_soundName){
 		timerInterval = 0;
 		timeSinceLastPlayed = 0;
 		maxRange = 1.0f;
 		minRange = -1;
 		frequency = 1.0f;
 		maxFrequencyOffeset = 1.0f;
+		volume = 1.0f;
 		dopplerScalar = 1.0f;
 		dopplerFactor = 1.0f;
 		sourceChannels = 1.0f;
@@ -67,6 +74,9 @@ struct AudioHeader{
 		playingState = STOP;
 		queuedPlayingState = STOP;
 		soundType = p_soundType;
-
+		soundName = p_soundName;
+	}
+	const string& getSoundName(){
+		return soundName;
 	}
 };

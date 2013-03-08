@@ -55,6 +55,9 @@
 #include "SpawnPointSystem.h"
 #include "LevelGenSystem.h"
 #include <OutputLogger.h>
+#include "LevelPieceRoot.h"
+#include "RootBoundingSpherePacket.h"
+#include "DisconnectPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -170,9 +173,8 @@ void ServerPacketHandlerSystem::handleIngame()
 					{
 						Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 						ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
-						SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-						if (module->getActive() && boostmodule)
-							boostVector = thrustPacket.thrustVector*3;
+						if (module->getActive())
+							boostVector = thrustPacket.thrustVector*stackBooster(shipModule);
 					}
 				}
 			}
@@ -431,15 +433,18 @@ void ServerPacketHandlerSystem::handleLobby()
 			else if(playerInfo.playerName=="judas"){
 				newComp->setAbsoluteScore(-9001);
 			}
-			newComp->m_playerName = playerInfo.playerName;
-			newComp->m_playerID = connectedPlayers.size();
+			newComp->m_playerName	= playerInfo.playerName;
+			newComp->m_playerID		= playerInfo.playerID; //connectedPlayers.size();
+			newComp->m_networkID	= packet.getSenderId();
 			newPlayer->addComponent(newComp);
 			m_world->addEntity(newPlayer);
 
 			NewlyConnectedPlayerPacket connectedPlayer;
-			connectedPlayer.playerName = newComp->m_playerName;
-			connectedPlayer.playerID = newComp->m_playerID;
-			connectedPlayer.score = newComp->getScore();
+			connectedPlayer.playerName	= newComp->m_playerName;
+			connectedPlayer.playerID	= newComp->m_playerID;
+			connectedPlayer.score		= newComp->getScore();
+			connectedPlayer.networkID	= newComp->m_networkID;
+			// Broadcast the player to all clients.
 			m_server->broadcastPacket(connectedPlayer.pack());
 
 			for (unsigned int i = 0; i < connectedPlayers.size(); i++){
@@ -447,11 +452,19 @@ void ServerPacketHandlerSystem::handleLobby()
 				PlayerComponent* playerComp;
 				playerComp = static_cast<PlayerComponent*>
 					(connectedPlayers[i]->getComponent(ComponentType::PlayerComponent));
-				alreadyConnectedPlayers.playerID = playerComp->m_playerID;
-				alreadyConnectedPlayers.playerName = playerComp->m_playerName;
+				alreadyConnectedPlayers.playerID	= playerComp->m_playerID;
+				alreadyConnectedPlayers.playerName	= playerComp->m_playerName;
+				alreadyConnectedPlayers.networkID	= playerComp->m_networkID;
 
-				m_server->broadcastPacket(alreadyConnectedPlayers.pack());
+				// Send all the existing players to the new client.
+				m_server->unicastPacket(packet, newComp->m_networkID);
+				//m_server->broadcastPacket(alreadyConnectedPlayers.pack());
 			}			
+		}
+		else if(packetType == (char)PacketType::ClientDisconnect){
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
 		}
 		else
 		{
@@ -568,7 +581,24 @@ void ServerPacketHandlerSystem::handleLoading()
 				data.meshInfo = prop->meshInfo;  
 				data.miscData = prop->propType;
 
-				//				packets.push( packet );
+				LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entities[i]->getComponent(ComponentType::LevelPieceRoot));
+				if (root)
+				{
+					//data.bsPos = root->boundingSphere.position;
+					//data.bsRadius = root->boundingSphere.radius;
+					/*RootBoundingSpherePacket bspacket;
+					bspacket.targetNetworkIdentity = entities[i]->getIndex();
+					bspacket.position = root->boundingSphere.position;
+					bspacket.radius = root->boundingSphere.radius;*/
+					data.networkIdentity = root->pieceId;
+					int miscSize = root->connectedRootPieces.size();
+					if (miscSize > 0)
+					{
+						data.additionalMisc.resize(miscSize);
+						for (int misc = 0; misc < miscSize; misc++)
+							data.additionalMisc[misc] = root->connectedRootPieces[misc];
+					}
+				}
 				m_server->broadcastPacket( data.pack() );
 			}
 
@@ -678,9 +708,8 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	auto spawnPointSys = static_cast<SpawnPointSystem*>(
 		m_world->getSystem(SystemType::SpawnPointSystem));
 	AglMatrix shipSpawnPoint = spawnPointSys->getRandomFreeShipSpawnPoint();
-
 	// NOTE: (Johan) As a developer I don't want to spawn randomly, but as a player I do.
-	shipSpawnPoint = spawnPointSys->invalidSpawnPoint(); // Comment this away if u wanna play!
+	//shipSpawnPoint = spawnPointSys->invalidSpawnPoint(); // Comment this away if u wanna play!
 
 	if (! (shipSpawnPoint == spawnPointSys->invalidSpawnPoint()) )
 	{
@@ -760,4 +789,28 @@ void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p
 {
 	m_world->getOutputLogger()->write(("SERVER: Not handled("+p_state+"): " +
 		toString(p_packetType) + "\n").c_str());
+}
+float ServerPacketHandlerSystem::stackBooster(Entity* p_parent)
+{
+	float boostPower = 0;
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(p_parent->getComponent(ComponentType::ConnectionPointSet));
+
+	int parent = -1;
+	ShipModule* sm = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+	if (sm)
+		parent = sm->m_parentEntity;
+
+	for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+	{
+		if (cps->m_connectionPoints[i].cpConnectedEntity >= 0 &&
+			cps->m_connectionPoints[i].cpConnectedEntity != parent)
+		{
+			boostPower += stackBooster(m_world->getEntity(cps->m_connectionPoints[i].cpConnectedEntity));
+		}
+	}
+	
+	SpeedBoosterModule* speedBooster = static_cast<SpeedBoosterModule*>(p_parent->getComponent(ComponentType::SpeedBoosterModule));
+	if (speedBooster)
+		boostPower += 3;
+	return boostPower;
 }

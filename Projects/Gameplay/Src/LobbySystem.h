@@ -4,6 +4,7 @@
 #include <string>
 #include <Globals.h>
 #include "NewlyConnectedPlayerPacket.h"
+#include "DisconnectPacket.h"
 
 using namespace Rocket::Controls;
 
@@ -42,7 +43,9 @@ public:
 	void initialize();
 	void updateRow(int p_row, const LobbyStats& p_stats);
 	void addNewPlayer(const NewlyConnectedPlayerPacket& p_packet);
-
+	void removePlayer(const DisconnectPacket& p_packet);
+private:
+	void resetPlayer(int p_playerId);
 private:
 	const char* m_tableName;
 	int m_connectPlayers;

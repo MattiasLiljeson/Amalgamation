@@ -7,7 +7,7 @@ using namespace std;
 PlayerSystem::PlayerSystem() : EntitySystem( SystemType::PlayerSystem, 1, 
 											ComponentType::PlayerComponent)
 {
-	m_playerComponents.resize(MAXPLAYERS, NULL);
+	//m_playerComponents.resize(MAXPLAYERS, NULL);
 }
 
 PlayerSystem::~PlayerSystem()

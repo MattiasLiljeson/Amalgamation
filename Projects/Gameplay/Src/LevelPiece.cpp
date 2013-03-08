@@ -17,6 +17,7 @@ LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* 
 	m_childSlotsOccupied.resize(maxChildCount);
 	m_children.resize(maxChildCount, NULL);
 	m_connectionPoints.resize(maxChildCount);
+	m_gates.resize(maxChildCount, -1);
 
 	updateConnectionPoints();
 	updateBoundingVolumes();
@@ -52,12 +53,12 @@ int LevelPiece::getTypeId() const
 	return m_typeId;
 }
 
-const Transform* LevelPiece::getChild( int p_inSlot ) const
+const LevelPiece* LevelPiece::getChild( int p_inSlot ) const
 {
 	return m_children[p_inSlot];
 }
 
-void LevelPiece::setChild( int p_inSlot, Transform* p_transform )
+void LevelPiece::setChild( int p_inSlot, LevelPiece* p_transform )
 {
 	m_children[p_inSlot] = p_transform;
 	if (p_transform)
@@ -110,8 +111,8 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!
-	p_targetPiece->setChild(p_targetSlot, m_transform);
-	setChild(0, p_targetPiece->getTransform());
+	p_targetPiece->setChild(p_targetSlot, this);
+	setChild(0, p_targetPiece);
 
 	updateBoundingVolumes();
 
@@ -202,3 +203,14 @@ void LevelPiece::setPieceId( int p_id )
 {
 	m_pieceId = p_id;
 }
+
+int LevelPiece::getGate( int p_inSlot ) const
+{
+	return m_gates[p_inSlot];
+}
+
+void LevelPiece::setGate( int p_inSlot, int p_id )
+{
+	m_gates[p_inSlot] = p_id;
+}
+

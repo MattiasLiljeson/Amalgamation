@@ -34,6 +34,7 @@
 #include "SkeletalAnimation.h"
 #include "SpeedBoosterModule.h"
 #include "SpeedBuffer.h"
+#include "TeslaCoilEffect.h"
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
 #include "Transform.h"
@@ -77,6 +78,7 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<SkeletalAnimation>();
 	handle<SpeedBoosterModule>();
 	handle<SpeedBuffer>();
+	handle<TeslaCoilEffect>();
 	handle<TeslaCoilModule>();
 	handle<TeslaEffectPiece>();
 	handle<Transform>();

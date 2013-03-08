@@ -5,8 +5,9 @@ ComponentRegister<MineLayerModule> MineLayerModule::s_reg("MineLayerModule");
 MineLayerModule::MineLayerModule()
 	: Component( ComponentType::MineLayerModule )
 {
-	m_cooldown = 0;
-	m_timeSinceMineSpawnStart = 0;
+	m_currentMine = -1;
+	m_mineAge = 0;
+	m_timeSinceSpawnStarted = 0;
 }
 
 MineLayerModule::~MineLayerModule()

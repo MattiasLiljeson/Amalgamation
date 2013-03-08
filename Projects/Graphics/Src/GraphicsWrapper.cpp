@@ -42,6 +42,7 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 
 	m_width	= p_width;
 	m_height= p_height;
+	m_lowResDivider = 4;
 	m_windowed = p_windowed;
 	m_useHdr = p_useHdr;
 	m_wireframeMode = false;
@@ -49,45 +50,34 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 
 	initSwapChain(p_hWnd);
 	initHardware();
-
 	initBackBuffer();
-
-	resetViewportToOriginalSize();
 
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
 	m_renderSceneInfoBuffer = m_bufferFactory->createRenderSceneInfoCBuffer();
 	m_perShadowBuffer = m_bufferFactory->createPerShadowBuffer();
-
 	m_meshManager		= new ResourceManager<Mesh>();
 	m_textureManager	= new ResourceManager<Texture>();
-
 	m_textureFactory	= new TextureFactory(m_device,m_deviceContext,m_textureManager);
 	m_modelFactory		= new ModelExtendedFactory(m_device,m_bufferFactory,m_meshManager,
 												   m_textureFactory);
 
 	m_guiShader = m_shaderFactory->createGUIShader(
 		L"Shaders/GUI/rocket.hlsl");
-
 	m_shadowShader = m_shaderFactory->createShadowShader(
 		L"Shaders/Game/shadowMap.hlsl");
-
 	createTexture("mesherror.png",TEXTUREPATH);
-
 	m_solidWhiteTexture = createTexture("1x1_solid_white.png", TEXTUREPATH);
 	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
-
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
 							   m_width, m_height, m_useHdr );
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
-
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
-
 	m_gpuTimer = new GPUTimer(m_device,m_deviceContext);
 
+	resetViewportToStdSize();
 	clearRenderTargets();
-
 	initBoneMatrixTexture();
 }
 
@@ -221,7 +211,7 @@ void GraphicsWrapper::initBackBuffer()
 
 void GraphicsWrapper::clearRenderTargets()
 {
-	m_deferredRenderer->clearBuffers();
+	m_deferredRenderer->clearRenderTargets();
 	
 	static float clearColor[4] = { 0.0, 0.0, 0.0f, 1.0f };
 	m_deviceContext->ClearRenderTargetView( m_backBuffer,clearColor);
@@ -412,15 +402,23 @@ void GraphicsWrapper::setScissorRegion( int x, int y, int width, int height )
 void GraphicsWrapper::setPrimitiveTopology( PrimitiveTopology::Mode p_state ){
 	m_deviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(p_state));
 }
+
 void GraphicsWrapper::setBaseRenderTargets(){
 	m_deferredRenderer->setBasePassRenderTargets();
 }
+
+void GraphicsWrapper::setLightRenderTargets(){
+	m_deferredRenderer->setLightRenderTargets();
+}
+
+void GraphicsWrapper::setDofRenderTargets(){
+	m_deferredRenderer->setDofRenderTargets();
+}
+
 void GraphicsWrapper::setComposedRenderTargetWithNoDepthStencil(){
 	m_deviceContext->OMSetRenderTargets( 1, &m_backBuffer, NULL );
 }
-void GraphicsWrapper::setLightPassRenderTarget(){
-	m_deferredRenderer->setLightRenderTarget();
-}
+
 void GraphicsWrapper::setShadowViewProjection( const AglMatrix& p_viewProj ){
 	m_shadowShader->sendViewProjection(p_viewProj);
 	m_shadowShader->apply();
@@ -431,21 +429,26 @@ void GraphicsWrapper::setShadowViewProjections( AglMatrix* p_viewProj ){
 	m_shadowShader->apply();
 }
 
-void GraphicsWrapper::mapNeededShaderResourceToLightPass( int* p_activeShadows ){
-	m_deferredRenderer->mapShaderResourcesForLightPass();
+void GraphicsWrapper::mapDepthAndNormal(){
+	m_deferredRenderer->mapNormal();
+	m_deferredRenderer->mapDepth();
+}
+
+void GraphicsWrapper::unmapDepthAndNormal(){
+	m_deferredRenderer->unmapNormal();
+	m_deferredRenderer->unmapDepth();
+}
+
+void GraphicsWrapper::mapShadows( int* p_activeShadows ){
 	int startSlot = 4;
 	for(int i = 0; i < MAXSHADOWS; i++){
 		if(p_activeShadows[i] != -1){
 			m_deviceContext->PSSetShaderResources( startSlot, 1, m_shadowMapRenderer->getShadowMap(i));
 		}
 	}
-
-}
-void GraphicsWrapper::unmapDeferredBaseFromShader(){
-	m_deferredRenderer->unmapShaderResourcesForLightPass();
 }
 
-void GraphicsWrapper::unmapUsedShaderResourceFromLightPass( int* p_activeShadows ){
+void GraphicsWrapper::unmapShadows( int* p_activeShadows ){
 
 	ID3D11ShaderResourceView* nulz = NULL;
 	int startSlot = 4;
@@ -610,7 +613,7 @@ void GraphicsWrapper::changeBackbufferRes( int p_width, int p_height ){
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 
 	initBackBuffer();
-	resetViewportToOriginalSize();
+	resetViewportToStdSize();
 
 	m_deferredRenderer->initRendertargetsAndDepthStencil( m_width, m_height );
 }
@@ -646,27 +649,49 @@ void GraphicsWrapper::setParticleRenderState()
 	m_deviceContext->OMSetRenderTargets(1,&m_backBuffer,m_deferredRenderer->getDepthStencil());
 }
 
-void GraphicsWrapper::unmapDepthFromShader(){
-	m_deferredRenderer->unmapDepthAsShaderResource();
+void GraphicsWrapper::mapDepth(){
+	m_deferredRenderer->mapDepth();
 }
 
-void GraphicsWrapper::renderSsao(){
-	m_deferredRenderer->renderSsao();
+void GraphicsWrapper::unmapDepth(){
+	m_deferredRenderer->unmapDepth();
+}
+
+void GraphicsWrapper::generateSsao(){
+	m_deferredRenderer->generateSsao();
+}
+
+void GraphicsWrapper::generateDof(){
+	m_deferredRenderer->generateDof();
 }
 
 void GraphicsWrapper::renderComposeStage(){
 	m_deferredRenderer->renderComposeStage();
 }
 
-void GraphicsWrapper::mapVariousStagesForCompose(){
-	m_deferredRenderer->mapShaderResourcesForComposePass();
-	//m_deviceContext->PSSetShaderResources(3,1,
-	//	&m_textureManager->getResource(m_randomNormalTextures)->data);
+void GraphicsWrapper::mapGbuffers(){
+	m_deferredRenderer->mapGbuffers();
 }
 
-void GraphicsWrapper::unmapVariousStagesForCompose(){
+void GraphicsWrapper::unmapGbuffers(){
+	m_deferredRenderer->unmapGbuffers();
+}
+
+void GraphicsWrapper::mapDofBuffers(){
+	m_deferredRenderer->mapDofBuffers();
+}
+
+void GraphicsWrapper::unmapDofBuffers(){
+	m_deferredRenderer->unmapDofBuffers();
+}
+
+
+void GraphicsWrapper::unmapVariousStagesAfterCompose(){
 	ID3D11ShaderResourceView* nulz = NULL;
-	m_deferredRenderer->unmapShaderResourcesForComposePass();
+	//m_deferredRenderer->unmapShaderResourcesForComposePass();
+	//m_deferredRenderer->unmapDofShaderResources();
+	unmapGbuffers();
+	unmapDofBuffers();
 	m_deviceContext->PSSetShaderResources(3,1,
 		&m_textureManager->getResource(m_solidWhiteTexture)->data);
 }
@@ -763,28 +788,23 @@ void GraphicsWrapper::renderMeshInstanced( void* p_vertexBufferRef, UINT32 p_ver
 	m_deviceContext->DrawIndexedInstanced( p_indexElementCount, p_instanceElementCount, 0,0,0);
 }
 
-void GraphicsWrapper::setViewportToShadowMapSize(){
-	D3D11_VIEWPORT vp;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	vp.Width	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
-	vp.Height	= static_cast<float>(ShadowMapRenderer::SHADOWMAPSIZE);
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-
-	m_deviceContext->RSSetViewports(1,&vp);
+void GraphicsWrapper::setViewportToLowRes()
+{
+	m_deferredRenderer->setViewPortSize(
+		m_width/m_renderSceneInfo.lowResDivider,
+		m_height/m_renderSceneInfo.lowResDivider );
 }
 
-void GraphicsWrapper::resetViewportToOriginalSize(){
-	D3D11_VIEWPORT vp;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	vp.Width	= static_cast<float>(m_width);
-	vp.Height	= static_cast<float>(m_height);
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
+void GraphicsWrapper::setViewportToShadowMapSize()
+{
+	m_deferredRenderer->setViewPortSize(
+		(float)(ShadowMapRenderer::SHADOWMAPSIZE),
+		(float)(ShadowMapRenderer::SHADOWMAPSIZE));	
+}
 
-	m_deviceContext->RSSetViewports(1,&vp);
+void GraphicsWrapper::resetViewportToStdSize()
+{
+	m_deferredRenderer->setViewPortSize( m_width, m_height );
 }
 
 void GraphicsWrapper::setShadowMapAsRenderTarget( unsigned int p_shadowMapIdx ){
