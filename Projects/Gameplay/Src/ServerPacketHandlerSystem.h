@@ -45,6 +45,8 @@ private:
 	void handleLoading();
 	void handleSentAllPackets();
 	void handleResult();
+
+	float stackBooster(Entity* p_parent);
 private:
 	ServerStateSystem* m_stateSystem;
 	TcpServer*		m_server;
