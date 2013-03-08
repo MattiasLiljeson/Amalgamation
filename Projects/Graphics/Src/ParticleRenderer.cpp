@@ -27,6 +27,7 @@ ParticleRenderer::ParticleRenderer( ID3D11Device* p_device,
 
 ParticleRenderer::~ParticleRenderer(){
 	SAFE_RELEASE(m_depthStencil);
+	SAFE_RELEASE(m_vertexBuffer);
 	delete m_shaderFactory;
 	delete m_shader;
 	delete m_stdTexture;

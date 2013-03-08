@@ -160,12 +160,27 @@ float4 PS(VertexOut input) : SV_TARGET
 			float blurFactor = blurFilter5[x+2][y+2];
 
 			finalAO += g_diffLight.Load( idx ).a * blurFactor;
+			coc += g_specLight.Load( idx ).a * blurFactor;
 			
 			sampledGlow = g_diffuse.Load( index+uint3(x*2,y*2,0) ).rgba;
 			sampledGlow.rgb *= sampledGlow.a;
 			finalEmissiveValue += sampledGlow.rgb * blurFactor;
+			
+			float lightBloom = 1.8f;
+			uint3 lightBloomIdx = index+uint3(x,y,0)*lightBloom;
+			
+			// some bloom from highlights
+			float3 light = 10.0f * ( g_specular.Load( lightBloomIdx ) * g_specLight.Load( lightBloomIdx ));
+			light += 10.0f * (g_diffuse.Load( lightBloomIdx ) * g_diffLight.Load( lightBloomIdx ));
+			float str = max( 0.0f, length(light)-1.0f );
 
-			coc += g_specLight.Load( idx ).a * blurFactor;
+			float glowBloom = 1.8f;
+			uint3 glowBloomIdx = index+uint3(x,y,0)*glowBloom;
+
+			// sample glow and add blurred highlights as well
+			sampledGlow = g_diffuse.Load( glowBloomIdx ).rgba + float4( light, str );
+			sampledGlow.rgb *= sampledGlow.a * 2.0f;
+			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
 	//return float4( coc, coc, coc, 1);

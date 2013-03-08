@@ -46,4 +46,6 @@ c LevelInfo
 
 
 	# Plug piece
-	d s m_plugPiece plugPieceClient.asd
+	# The end plug piece must be specified after all other pieces.
+	d s m_plugAssemblageOpened plugPieceOpenedClient.asd
+	d s m_plugAssemblageClosed plugPieceClosedClient.asd

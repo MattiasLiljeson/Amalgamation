@@ -9,7 +9,7 @@ d f m_scaleY 1.0
 d f m_scaleZ 1.0
 
 c LoadMesh
-d s m_filename placeholder_module.agl
+d s m_filename TeslaCoil.agl
 
 c BodyInitData
 d f m_positionX 30.0
@@ -34,5 +34,5 @@ d f m_maxvalue 100.0f
 c TeslaCoilModule
 d f range 60.0
 d f optimalRange 20.0
-d f cooldownTime 0.5
-d f damage 2.0
+d f cooldownTime 0.1
+d f damage 5.0

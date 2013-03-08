@@ -41,7 +41,7 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
-	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
+	m_loadingWindowIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
 	rocketEventManager->loadWindow("main_menu");
 
@@ -52,15 +52,10 @@ void MenuSystem::process()
 	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
 
-	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME){
+	if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
-
 		rocketEventManager->clearDocumentStack();
-	}
-	else if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME){
-		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
-			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 		rocketEventManager->loadWindow("loading");
 	}
 	else if(gameState->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
@@ -72,16 +67,11 @@ void MenuSystem::process()
 	}
 }
 
-void MenuSystem::inserted( Entity* p_entity )
+void MenuSystem::endLoadingState()
 {
-	//auto menuItem = static_cast<MenuItem*>(p_entity->getComponent(ComponentType::MenuItem));
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	//auto rocketBackend = static_cast<LibRocketBackendSystem*>(
-	//	m_world->getSystem(SystemType::LibRocketBackendSystem));
+	rocketBackend->hideDocument(m_loadingWindowIdx);
 
-	//rocketBackend->loadDocumentByName(menuItem->documentName.c_str(), menuItem->initiallyVisible, menuItem->modal);
-	//for (int i = 0; i < menuItem->handlerNames.size(); i++)
-	//{
-	//	
-	//}
 }

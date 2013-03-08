@@ -11,6 +11,7 @@
 #include "SoundFactory.h"
 #include "BasicSoundCreationInfo.h"
 #include "PositionalSoundCreationInfo.h"
+#include <UniqueIndexList.h>
 
 using namespace std;
 
@@ -58,7 +59,7 @@ public:
 	/// \param p_info
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int createAmbientSound(BasicSoundCreationInfo* p_info);
+	//int createAmbientSound(BasicSoundCreationInfo* p_info);
 
 	///-----------------------------------------------------------------------------------
 	/// Utilizes the sound factory class to create the new positional sound. The created
@@ -67,8 +68,12 @@ public:
 	/// \param p_pos
 	/// \return int
 	///-----------------------------------------------------------------------------------
-	int createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
-		PositionalSoundCreationInfo* p_positionalInfo);
+	//int createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
+	//	PositionalSoundCreationInfo* p_positionalInfo);
+
+	unsigned int createSoundFromHeader(const AudioHeader* p_audioHeader);
+
+	void destroySound(unsigned int p_index);
 
 	///-----------------------------------------------------------------------------------
 	/// To update positional sound output matrix is a relative expensive function to be 
@@ -84,7 +89,7 @@ public:
 	/// \param p_soundInstruction
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void updateSound(int p_index, const SoundEnums::Instructions& p_soundInstruction);
+	void updateSound(unsigned int p_index, const AudioHeader::PlayState& p_soundInstruction);
 
 	///-----------------------------------------------------------------------------------
 	/// Returns the sound instance
@@ -152,6 +157,7 @@ private:
 	IXAudio2MasteringVoice* m_masterVoice;
 
 	float m_masterVolume;
+	float* m_channelVolumes;
 	UINT32 m_destChannels;
 	DWORD m_channelMask;
 
@@ -168,4 +174,6 @@ private:
 	vector<Sound*> m_activeSounds;
 	// Will be deleted by an end-of-sound-effect-callback.
 	vector<Sound*> m_soundEffects;
+
+	UniqueIndexList<Sound*> m_sounds;
 };

@@ -23,7 +23,9 @@ public:
 	static const int NUM_TESLA_HITS_MAX = 10;
 
 	unsigned char numberOfHits;
+	unsigned char numberOfHitsFloating;
 	int identitySource;
 	int identitiesHit[NUM_TESLA_HITS_MAX];
+	int identitiesHitFloating[NUM_TESLA_HITS_MAX];
 
 };

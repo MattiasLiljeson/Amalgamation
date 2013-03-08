@@ -34,13 +34,16 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
 
-		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio());
+		m_screenSize = gfx->getWindowSize();
+
+		float resRatioX = 1280 / m_screenSize.x;
+		float resRatioY =  720 / m_screenSize.y;
+
+		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()*resRatioX);
 		m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
 
 		gfx->getGfxWrapper()->
 			createTexture("button_back.png", TEXTUREPATH );
-		gfx->getGfxWrapper()->
-			createTexture("rocketlaunchericon_activated.png", TEXTUREPATH );
 		gfx->getGfxWrapper()->
 			createTexture("icon_inactive.png", TEXTUREPATH );
 
@@ -54,50 +57,54 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 
 		//Speed booster
 		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Booster.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("booster_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::BoosterModule - EntityType::ShipModuleStart].second
-			= "Icon_Booster.png";
+			= "booster_icon_activated.png";
 
 		//Megagun
 		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Megagun.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("megagun_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::MinigunModule - EntityType::ShipModuleStart].second
-			= "Icon_Megagun.png";
+			= "megagun_icon_activated.png";
 
 		//Mine Layer
 		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Mine.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("minelayer_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::MineLayerModule - EntityType::ShipModuleStart].second
-			= "Icon_Mine.png";
+			= "minelayer_icon_activated.png";
 
 		//Rocket launcher
 		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("rocketlauncher_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
-			= "Icon_Rocket.png";
+			= "rocketlauncher_icon_activated.png";
 
 		//Shield
 		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
+			= gfx->getGfxWrapper()->createTexture("shield_icon_activated.png", TEXTUREPATH );
 		m_textures[EntityType::ShieldModule - EntityType::ShipModuleStart].second
-			= "Icon_Shield.png";
+			= "shield_icon_activated.png";
 
 		//Tesla
-		/*m_textures[EntityType::tes - EntityType::ShipModuleStart].first 
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
-		m_textures[EntityType::RocketLauncherModule - EntityType::ShipModuleStart].second
-			= gfx->getGfxWrapper()->createTexture("Icon_Rocket.png", GUI_TEXTURE_PATH );
+		m_textures[EntityType::TeslaCoilModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("tesla_icon_activated.png", TEXTUREPATH );
+		m_textures[EntityType::TeslaCoilModule - EntityType::ShipModuleStart].second
+			= "tesla_icon_activated.png";
 
-		gfx->getGfxWrapper()->
+		/*gfx->getGfxWrapper()->
 			createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
 		gfx->getGfxWrapper()->
 			createTexture("Icon_Tesla.png", GUI_TEXTURE_PATH );*/
 
+		positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f*resRatioY/*For offseting from the timer, hardcoded right now*/, 0);
+		positions[0] = AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0);
+		positions[2] = AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0);
+		positions[3] = AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0);
 
 		//Left slot
 		slots[2] = m_world->createEntity();
 		SlotMarker* sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->shipMarker = createShipMarkerEntity(positions[2], "button_left_back.png", m_shipMarkerSize*0.5f)->getIndex();
 		sm->dir = AglVector3(1, 0, 0);
 		slots[2]->addComponent(ComponentType::SlotMarker, sm);
 		m_world->addEntity(slots[2]);
@@ -105,26 +112,52 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		//Right slot
 		slots[3] = m_world->createEntity();
 		sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->shipMarker = createShipMarkerEntity(positions[3], "button_right_back.png", m_shipMarkerSize*0.5f)->getIndex();
 		sm->dir = AglVector3(-1, 0, 0);
 		slots[3]->addComponent(ComponentType::SlotMarker, sm);
 		m_world->addEntity(slots[3]);
 
-		//Top
-		slots[1] = m_world->createEntity();
-		sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
-		sm->dir = AglVector3(0, 1, 0);
-		slots[1]->addComponent(ComponentType::SlotMarker, sm);
-		m_world->addEntity(slots[1]);
-
 		//Bottom
 		slots[0] = m_world->createEntity();
 		sm = new SlotMarker();
-		sm->shipMarker = createShipMarkerEntity(AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f, 0), "button_back.png", m_shipMarkerSize*0.5f)->getIndex();
-		sm->dir = AglVector3(0, -1, 0);
+		sm->shipMarker = createShipMarkerEntity(positions[0], "button_bottom_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->dir = AglVector3(0, 1, 0);
 		slots[0]->addComponent(ComponentType::SlotMarker, sm);
 		m_world->addEntity(slots[0]);
+
+		//Top
+		slots[1] = m_world->createEntity();
+		sm = new SlotMarker();
+		sm->shipMarker = createShipMarkerEntity(positions[1], "button_top_back.png", m_shipMarkerSize*0.5f)->getIndex();
+		sm->dir = AglVector3(0, -1, 0);
+		slots[1]->addComponent(ComponentType::SlotMarker, sm);
+		m_world->addEntity(slots[1]);
+	}
+	else if (state->getCurrentState() == GameStates::INGAME) 
+	{
+		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
+
+		AglVector2 newSize = gfx->getWindowSize();
+
+		if (newSize.x != m_screenSize.x || newSize.y != m_screenSize.y)
+		{
+			m_screenSize = newSize;
+			float resRatioX = 1280 / m_screenSize.x;
+			float resRatioY =  720 / m_screenSize.y;
+
+			m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()) * resRatioX;
+			m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
+
+			positions[1] = AglVector3(0, 1.0f - m_shipMarkerSize.y*0.5f - 0.1f*resRatioY /*For offseting from the timer, hardcoded right now*/, 0);
+			positions[0] = AglVector3(0, -1.0f + m_shipMarkerSize.y*0.5f, 0);
+			positions[2] = AglVector3(-1.0f + m_shipMarkerSize.x*0.5f, 0, 0);
+			positions[3] = AglVector3(1.0f - m_shipMarkerSize.x*0.5f, 0, 0);
+
+			reinit(0);
+			reinit(1);
+			reinit(2);
+			reinit(3);
+		}
 	}
 }
 
@@ -338,4 +371,23 @@ void SlotMarkerSystem::arrangeChildren(SlotMarker* p_marker, bool p_marked)
 		AglMatrix rot(cos(step), -sin(step), 0, 0, sin(step), cos(step), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		dir.transformNormal(rot);
 	}
+}
+
+void SlotMarkerSystem::reinit(int p_slot)
+{
+	SlotMarker* marker = static_cast<SlotMarker*>(slots[p_slot]->getComponent(ComponentType::SlotMarker));
+	Entity* shipMarker = m_world->getEntity(marker->shipMarker);
+	ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
+		shipMarker->getComponent(ComponentType::ParticleSystemsComponent));
+	ps->getParticleSystemPtr(0)->setParticleSize(m_shipMarkerSize * (0.5f + 0.5f*(p_slot == m_current)));
+	ps->getParticleSystemPtr(0)->setMaxOpacity(0.5f+0.5f*(p_slot == m_current));
+	ps->getParticleSystemPtr(0)->setSpawnPoint(positions[p_slot]);
+	vector<AglStandardParticle>* particles = ps->getParticleSystemPtr(0)->getParticlesPtr();
+	for (unsigned int i = 0; i < particles->size(); i++)
+	{
+		((*particles)[i]).size = m_shipMarkerSize * (0.5f + 0.5f*(p_slot == m_current));
+		((*particles)[i]).position = positions[p_slot];
+	}
+
+	arrangeChildren(marker, p_slot == m_current);
 }

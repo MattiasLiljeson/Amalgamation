@@ -29,7 +29,7 @@
 #include "PlayerCameraController.h"
 #include "PlayerComponent.h"
 #include "PongPacket.h"
-#include "PositionalSoundSource.h"
+#include "SoundComponent.h"
 #include "RenderInfo.h"
 #include "ScoreWorldVisualizerSystem.h"
 #include "ShipEditController.h"
@@ -103,6 +103,8 @@
 #include "SlotMarkerSystem.h"
 #include "TeslaHitPacket.h"
 #include "TeslaEffectSystem.h"
+#include "RootBoundingSpherePacket.h"
+#include "LevelPieceRoot.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -190,7 +192,15 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 		(m_world->getSystem(SystemType::EntityFactory));
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
-		factory->entityFromPacket(p_packet);
+		Entity* entity = factory->entityFromPacket(p_packet);
+		Transform* transform = static_cast<Transform*>(entity->getComponent(
+			ComponentType::Transform));
+		if(transform)
+		{
+			transform->setTranslation(p_packet.translation);
+			transform->setRotation(p_packet.rotation);
+			transform->setScale(p_packet.scale);
+		}
 	}
 	else
 	{
@@ -321,105 +331,105 @@ void ClientPacketHandlerSystem::updateCounters()
 
 void ClientPacketHandlerSystem::updateInitialPacketLossDebugData()
 {
-	if( static_cast<InputBackendSystem*>(m_world->getSystem(
-		SystemType::InputBackendSystem))->getControlByEnum(
-		InputHelper::KeyboardKeys_0)->getDelta() > 0 )
-	{
-		if( m_staticPropIdentities.empty() )
-		{
-			DEBUGPRINT(( string(
-				/* 0 - 511 */
-				toString(0) + " - " +
-				toString(511) +
-				/* byte size */
-				" = " +
-				toString(511 * 51) +
-				" bytes" +
-				/* end */
-				"\n").c_str() ));
+	//if( static_cast<InputBackendSystem*>(m_world->getSystem(
+	//	SystemType::InputBackendSystem))->getControlByEnum(
+	//	InputHelper::KeyboardKeys_0)->getDelta() > 0 )
+	//{
+	//	if( m_staticPropIdentities.empty() )
+	//	{
+	//		DEBUGPRINT(( string(
+	//			/* 0 - 511 */
+	//			toString(0) + " - " +
+	//			toString(511) +
+	//			/* byte size */
+	//			" = " +
+	//			toString(511 * 51) +
+	//			" bytes" +
+	//			/* end */
+	//			"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, 511));
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(0, 511));
+	//	}
 
-		if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
-		{
-			DEBUGPRINT(( string(
-				/* 0 - x */
-				toString(0) + " - " +
-				toString(m_staticPropIdentities.front()) +
-				/* byte size */
-				" = " +
-				toString((m_staticPropIdentities.front() + 1) * 51) +
-				" bytes" +
-				/* end */
-				"\n").c_str() ));
+	//	if( !m_staticPropIdentities.empty() && m_staticPropIdentities.front() > 1 )
+	//	{
+	//		DEBUGPRINT(( string(
+	//			/* 0 - x */
+	//			toString(0) + " - " +
+	//			toString(m_staticPropIdentities.front()) +
+	//			/* byte size */
+	//			" = " +
+	//			toString((m_staticPropIdentities.front() + 1) * 51) +
+	//			" bytes" +
+	//			/* end */
+	//			"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(0, m_staticPropIdentities.front()));
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(0, m_staticPropIdentities.front()));
+	//	}
 
-		while( m_staticPropIdentities.size() >= 2 )
-		{
-			int firstValue = m_staticPropIdentities.front();
-			m_staticPropIdentities.pop();
-			int secondValue = m_staticPropIdentities.front();
+	//	while( m_staticPropIdentities.size() >= 2 )
+	//	{
+	//		int firstValue = m_staticPropIdentities.front();
+	//		m_staticPropIdentities.pop();
+	//		int secondValue = m_staticPropIdentities.front();
 
-			if( secondValue - firstValue > 1 )
-			{
-				DEBUGPRINT(( string(
-					/* x - y */
-					toString(firstValue) + " - " +
-					toString(secondValue - 1) +
-					/* byte size */
-					" = " +
-					toString((secondValue - firstValue) * 51) +
-					" bytes" +
-					/* end */
-					"\n").c_str() ));
+	//		if( secondValue - firstValue > 1 )
+	//		{
+	//			DEBUGPRINT(( string(
+	//				/* x - y */
+	//				toString(firstValue) + " - " +
+	//				toString(secondValue - 1) +
+	//				/* byte size */
+	//				" = " +
+	//				toString((secondValue - firstValue) * 51) +
+	//				" bytes" +
+	//				/* end */
+	//				"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(firstValue, secondValue));
-			}
-		}
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(firstValue, secondValue));
+	//		}
+	//	}
 
-		if( m_staticPropIdentities.size() == 1 )
-		{
-			if( m_staticPropIdentities.front() < 511 )
-			{
-				DEBUGPRINT(( string(
-					/* x - 511 */
-					toString(m_staticPropIdentities.front()) + " - " +
-					toString(511) +
-					/* byte size */
-					" = " +
-					toString((511 - m_staticPropIdentities.front()) * 51) +
-					" bytes" +
-					/* end */
-					"\n").c_str() ));
+	//	if( m_staticPropIdentities.size() == 1 )
+	//	{
+	//		if( m_staticPropIdentities.front() < 511 )
+	//		{
+	//			DEBUGPRINT(( string(
+	//				/* x - 511 */
+	//				toString(m_staticPropIdentities.front()) + " - " +
+	//				toString(511) +
+	//				/* byte size */
+	//				" = " +
+	//				toString((511 - m_staticPropIdentities.front()) * 51) +
+	//				" bytes" +
+	//				/* end */
+	//				"\n").c_str() ));
 
-				m_staticPropIdentitiesForAntTweakBar.push_back(
-					pair<int, int>(m_staticPropIdentities.front(), 511));
+	//			m_staticPropIdentitiesForAntTweakBar.push_back(
+	//				pair<int, int>(m_staticPropIdentities.front(), 511));
 
-					m_staticPropIdentities.pop();
-			}
-		}
+	//				m_staticPropIdentities.pop();
+	//		}
+	//	}
+	//	for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
+	//	{
+	//		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+	//			AntTweakBarWrapper::NETWORK,
+	//			("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
+	//			&m_staticPropIdentitiesForAntTweakBar[i].first,
+	//			"group='Missing packets range'" );
 
-		for( unsigned int i=0; i<m_staticPropIdentitiesForAntTweakBar.size(); i++ )
-		{
-			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-				AntTweakBarWrapper::NETWORK,
-				("min" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
-				&m_staticPropIdentitiesForAntTweakBar[i].first,
-				"group='Missing packets range'" );
+	//		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+	//			AntTweakBarWrapper::NETWORK,
+	//			("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
+	//			&m_staticPropIdentitiesForAntTweakBar[i].second,
+	//			"group='Missing packets range'" );
+	//	}
 
-			AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-				AntTweakBarWrapper::NETWORK,
-				("max" + toString(i)).c_str(), TwType::TW_TYPE_INT32,
-				&m_staticPropIdentitiesForAntTweakBar[i].second,
-				"group='Missing packets range'" );
-		}
-	}
+	//}
 }
 
 void ClientPacketHandlerSystem::updateBroadcastPacketLossDebugData(
@@ -627,9 +637,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 				spawnSoundPacket.attachedToNetsyncEntity == -1 )
 			{
 				// Short positional sound effect.
-				audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
-					spawnSoundPacket.position);
+	//			audioBackend->playPositionalSoundEffect(TESTSOUNDEFFECTPATH,
+	//				SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier],
+	//				spawnSoundPacket.position);
 			}
 			else if( spawnSoundPacket.positional &&
 				spawnSoundPacket.attachedToNetsyncEntity != -1 )
@@ -642,6 +652,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 					spawnSoundPacket.attachedToNetsyncEntity );
 				if( entity != NULL )
 				{
+					// RM-RT 2013-03-04
+					/*
 					Component* positionalSound = entity->getComponent(
 						ComponentType::PositionalSoundSource);
 					if(positionalSound != NULL)
@@ -652,6 +664,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 							true, 1.0f));
 						entity->applyComponentChanges();
 					}
+					*/
 				}
 			}
 			else if( !spawnSoundPacket.positional &&
@@ -659,8 +672,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				// Short ambient sound effect.
 				// NOTE: (Johan) Seems to be a bug because only one sound effect will be played.
-				audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-					SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
+				//audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+				//	SpawnSoundEffectPacket::soundEffectMapper[spawnSoundPacket.soundIdentifier]);
 			}
 		}
 		else if(packetType == (char)PacketType::RemoveSoundEffect)
@@ -673,7 +686,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 			Entity* entity = directMapper->getEntity(data.attachedNetsyncIdentity);
 			if( entity != NULL )
 			{
-				entity->removeComponent(ComponentType::PositionalSoundSource);
+				entity->removeComponent(ComponentType::SoundComponent);
 				entity->applyComponentChanges();
 			}
 		}
@@ -897,11 +910,18 @@ void ClientPacketHandlerSystem::handleIngameState()
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
-				Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
-					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-					data.currentParrent);
+				if (data.currentParrent >= 0)
+				{
+					Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+						data.currentParrent);
 
-				shipModule->m_parentEntity = parrentObjec->getIndex();
+					shipModule->m_parentEntity = parrentObjec->getIndex();
+				}
+				else
+				{
+					shipModule->m_parentEntity = -1;
+				}
 			}
 			else{
 				DEBUGWARNING(( "Unhandled module has changed!" ));
@@ -1007,7 +1027,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 			hitPacket.unpack(packet);
 			static_cast<TeslaEffectSystem*>(m_world->getSystem(
 				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
-				hitPacket.identitiesHit, hitPacket.numberOfHits);
+				hitPacket.identitiesHit, hitPacket.numberOfHits,
+				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
 		}
 		else
 		{
@@ -1243,6 +1264,12 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 
 			if(changeState.m_serverState == ServerStates::INGAME){
 				m_gameState->setQueuedState( GameStates::INGAME );
+
+				auto* hudSystem = static_cast<HudSystem*>
+					(m_world->getSystem(SystemType::HudSystem));
+				hudSystem->setHUDData(HudSystem::PLAYERNAME,
+					m_tcpClient->getPlayerName().c_str());
+				hudSystem->setHUDData(HudSystem::SERVERNAME,"TheOnServ");
 			}
 		}
 		else

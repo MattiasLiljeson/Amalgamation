@@ -5,6 +5,10 @@
 #include "Transform.h"
 #include "TcpServer.h"
 
+class PhysicsSystem;
+class PhysicsBody;
+class RigidBody;
+
 // =======================================================================================
 //                                      PhysicsSystem
 // =======================================================================================
@@ -24,6 +28,9 @@ public:
 
 	virtual void initialize();
 	void processEntities(const vector<Entity*>& p_entities );
+private:
+	void explodeMine(PhysicsSystem* p_physicsSystem,
+		PhysicsBody* p_physicsBody, RigidBody* p_rigidBody, Entity* p_entity);
 private:
 	TcpServer* m_server;
 };

@@ -5,6 +5,7 @@ SoundWrapper::SoundWrapper()
 {
 	m_soundDevice	= NULL;
 	m_masterVoice	= NULL;
+	m_channelVolumes = NULL;
 	m_masterVolume	= 1.0f;	// NOTE: (Johan) Makes no difference if this is changed.
 	
 	ZeroMemory(&m_details, sizeof(XAUDIO2_DEVICE_DETAILS));
@@ -22,6 +23,12 @@ SoundWrapper::SoundWrapper()
 
 SoundWrapper::~SoundWrapper()
 {
+
+	for (unsigned int i = 0; i < m_sounds.getSize(); i++)
+	{
+		destroySound(i);
+	}
+	
 	for (unsigned int i = 0; i <m_activeSounds.size(); i++)
 	{
 		delete m_activeSounds[i];
@@ -40,6 +47,9 @@ SoundWrapper::~SoundWrapper()
 	m_soundDevice->Release();
 	
 	delete m_soundFactory;
+	delete m_channelVolumes;
+
+	CoUninitialize();
 }
 
 void SoundWrapper::initSoundEngine()
@@ -65,7 +75,7 @@ void SoundWrapper::initSoundEngine()
 
 	m_destChannels	= m_details.OutputFormat.Format.nChannels;
 	m_channelMask	= m_details.OutputFormat.dwChannelMask; 
-
+	m_channelVolumes = new float[m_destChannels];
 	init3DSoundSettings();
 	initListener();
 }
@@ -73,9 +83,9 @@ void SoundWrapper::initSoundEngine()
 void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 {
 	X3DAUDIO_VECTOR front = {
-		-p_sceneInfo.listenerOrientFront[0],
-		-p_sceneInfo.listenerOrientFront[1],
-		-p_sceneInfo.listenerOrientFront[2],
+		p_sceneInfo.listenerOrientFront[0],
+		p_sceneInfo.listenerOrientFront[1],
+		p_sceneInfo.listenerOrientFront[2],
 	};
 
 	X3DAUDIO_VECTOR top = {
@@ -102,9 +112,10 @@ void SoundWrapper::updateListener(const SoundOrientation& p_sceneInfo)
 	m_listener.Velocity		= velocity;
 	m_listener.pCone		= NULL;
 }
-
+/*
 int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 {
+	
 	int soundIndex = -1;
 	Sound* sound = NULL;
 	if(p_info->loopPlayback)
@@ -122,7 +133,9 @@ int SoundWrapper::createAmbientSound(BasicSoundCreationInfo* p_info)
 	}
 	return soundIndex;
 }
+*/
 
+/*
 int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
 										   PositionalSoundCreationInfo* p_positionalInfo)
 {
@@ -146,6 +159,7 @@ int SoundWrapper::createNewPositionalSound(BasicSoundCreationInfo* p_basicSoundI
 	}
 	return soundIndex;
 }
+*/
 
 void SoundWrapper::init3DSoundSettings()
 {
@@ -170,7 +184,7 @@ void SoundWrapper::initListener()
 
 void SoundWrapper::updateOutputMatrix(int p_index)
 {
-	PositionalSound* sound = static_cast<PositionalSound*>(m_activeSounds[p_index]);
+	PositionalSound* sound = static_cast<PositionalSound*>(m_sounds[p_index]);
 	X3DAudioCalculate(m_x3DAudioInstance, &m_listener, &sound->getEmitter(), 
 		X3DAUDIO_CALCULATE_MATRIX, &sound->getDSPSettings());
 
@@ -181,22 +195,25 @@ void SoundWrapper::updateOutputMatrix(int p_index)
 		m_destChannels, sound->getDSPSettings().pMatrixCoefficients);
 }
 
-void SoundWrapper::updateSound( int p_index, 
-							   const SoundEnums::Instructions& p_soundInstruction )
+void SoundWrapper::updateSound( unsigned int p_index, 
+							   const AudioHeader::PlayState& p_soundInstruction )
 {
 	switch (p_soundInstruction)
 	{
-		case SoundEnums::Instructions::PLAY:
-			m_activeSounds[p_index]->resumeOrPlay();
+		case AudioHeader::PlayState::PLAY:
+			m_sounds[p_index]->resumeOrPlay();
 			break;
-		case SoundEnums::Instructions::PAUSE:
-			m_activeSounds[p_index]->pause();
+		case AudioHeader::PlayState::STOP:
+			m_sounds[p_index]->stop();
 			break;
-		case SoundEnums::Instructions::STOP:
-			m_activeSounds[p_index]->stop();
+		case AudioHeader::PlayState::PAUSE:
+			m_sounds[p_index]->pause();
 			break;
-		case SoundEnums::Instructions::RESTART:
-			m_activeSounds[p_index]->restart();
+		case AudioHeader::PlayState::RESTART:
+			m_sounds[p_index]->restart();
+			break;
+		case AudioHeader::PlayState::RESUME:
+			m_sounds[p_index]->resumeOrPlay();
 			break;
 		default:
 			break;
@@ -218,17 +235,24 @@ void SoundWrapper::setMasterVolume( const float p_value )
 	m_masterVolume = p_value;
 }
 
-void SoundWrapper::updateMasterVolume()
-{
+void SoundWrapper::updateMasterVolume(){
 	m_masterVoice->SetVolume(m_masterVolume,0);
 }
 
-bool SoundWrapper::isPlaying( const int soundIndex )
-{
+bool SoundWrapper::isPlaying( const int soundIndex ){
 	return m_activeSounds[soundIndex]->isPlaying();
 }
 
-Sound* SoundWrapper::getSound( int p_index )
+Sound* SoundWrapper::getSound( int p_index ){
+	return m_sounds[p_index];
+}
+
+unsigned int SoundWrapper::createSoundFromHeader( const AudioHeader* p_audioHeader ){
+	return m_sounds.add(m_soundFactory->createSoundFromHeader(p_audioHeader));
+}
+
+void SoundWrapper::destroySound( unsigned int p_index )
 {
-	return m_activeSounds[p_index];
+	delete m_sounds.at(p_index);
+	m_sounds.removeAt(p_index);
 }

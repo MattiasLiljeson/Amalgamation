@@ -127,6 +127,8 @@ External/*
 /Build/*.dll.txt
 /Build/*.exe.txt
 /Build/log.txt
+/Build/log_server.txt
+/Build/log_client.txt
 
 *.agl
 *.fbx

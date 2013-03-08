@@ -3,6 +3,7 @@
 #include <Component.h>
 #include <AglMatrix.h>
 #include <ComponentFactory.h>
+#include <AglBoundingSphere.h>
 
 // =======================================================================================
 //                                      LevelPieceRoot
@@ -22,6 +23,8 @@ public:
 	LevelPieceRoot();
 	
 	int pieceId;
+	AglBoundingSphere boundingSphere;
+	bool shouldCull;
 private:
 	static ComponentRegister<LevelPieceRoot> s_reg;
 };

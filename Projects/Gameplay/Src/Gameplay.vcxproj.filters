@@ -1,44 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{3b4ffbfb-44ad-46fd-9668-cf5457cf2378}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\GFX">
-      <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GFX">
       <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Network">
-      <UniqueIdentifier>{c8d90dbd-1e98-4c08-bd45-970976832584}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Client only">
-      <UniqueIdentifier>{7e8c3639-af8d-4dc9-b14a-a2110309b0d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Server only">
-      <UniqueIdentifier>{f9080e87-a6cc-4e4e-a5b6-d8d9d12c560c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Shared">
-      <UniqueIdentifier>{598cd067-3fde-4322-93f8-60839d9de4bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Packet Translation">
-      <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Audio">
       <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Audio">
-      <UniqueIdentifier>{17697685-e7f0-41c7-b82a-0934c2c51555}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Input">
-      <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\GUI">
-      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\GUI">
       <UniqueIdentifier>{9b451e1d-4250-48a9-b153-f724e60047a4}</UniqueIdentifier>
@@ -49,44 +19,14 @@
     <Filter Include="Components\Modules">
       <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay">
-      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\Tags">
       <UniqueIdentifier>{3b95b3e8-1f89-4116-8a09-3aa212603498}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\Gameplay">
       <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Timer">
-      <UniqueIdentifier>{72cfdd05-70c4-46af-b896-f310e2ad1fa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Packet Translation\Packetizer">
-      <UniqueIdentifier>{c5530950-a1ec-448f-b7f3-e286ad528221}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Gameplay\Client Only">
-      <UniqueIdentifier>{76ad3c20-f53a-48b9-abee-cdb92bd51253}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Gameplay\Server Only">
-      <UniqueIdentifier>{2078725b-b88b-46bc-a0c5-98d2a2907c9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Gameplay\Server Only\Modules">
-      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Structs">
       <UniqueIdentifier>{a00554af-c0bc-4968-87f2-f05f087071ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Debugging">
-      <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Network\Packet Translation\Packet Structs">
-      <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\GUI\LibRocket">
-      <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems\Gameplay\Tracking">
-      <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
     </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
@@ -103,11 +43,74 @@
     <Filter Include="Components\Modules\Events\Module Events %28Client%29">
       <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Level">
-      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{3b4ffbfb-44ad-46fd-9668-cf5457cf2378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GFX">
+      <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network">
+      <UniqueIdentifier>{c8d90dbd-1e98-4c08-bd45-970976832584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Client only">
+      <UniqueIdentifier>{7e8c3639-af8d-4dc9-b14a-a2110309b0d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Server only">
+      <UniqueIdentifier>{f9080e87-a6cc-4e4e-a5b6-d8d9d12c560c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Shared">
+      <UniqueIdentifier>{598cd067-3fde-4322-93f8-60839d9de4bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Packet Translation">
+      <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Packet Translation\Packetizer">
+      <UniqueIdentifier>{c5530950-a1ec-448f-b7f3-e286ad528221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Network\Packet Translation\Packet Structs">
+      <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Network\Physics">
       <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Audio">
+      <UniqueIdentifier>{17697685-e7f0-41c7-b82a-0934c2c51555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Input">
+      <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GUI">
+      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GUI\LibRocket">
+      <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay">
+      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Client Only">
+      <UniqueIdentifier>{76ad3c20-f53a-48b9-abee-cdb92bd51253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Client Only\Highlight">
+      <UniqueIdentifier>{ddf2a0ab-1f23-45a9-99e5-a94587b57780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only">
+      <UniqueIdentifier>{2078725b-b88b-46bc-a0c5-98d2a2907c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only\Modules">
+      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Tracking">
+      <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Timer">
+      <UniqueIdentifier>{72cfdd05-70c4-46af-b896-f310e2ad1fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Debugging">
+      <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Level">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +148,6 @@
       <Filter>Components\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioBackendSystem.h">
-      <Filter>Systems\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioController.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioListenerSystem.h">
@@ -410,9 +410,6 @@
     </ClInclude>
     <ClInclude Include="PositionalSoundSystem.h">
       <Filter>Systems\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="PositionalSoundSource.h">
-      <Filter>Components\Audio</Filter>
     </ClInclude>
     <ClInclude Include="DebugMove.h">
       <Filter>Components</Filter>
@@ -733,7 +730,6 @@
       <Filter>Systems\Level</Filter>
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
-    <ClInclude Include="ShieldPlaterSystem.h" />
     <ClInclude Include="EmpRocketLauncherModule.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -807,6 +803,54 @@
     <ClInclude Include="TeslaCoilModuleControllerSystem.h">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ShipHiglightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipHighlight.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHighlightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundComponent.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleOnChamberStartPoint.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShineSpawn.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PortalCullingSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RootBoundingSpherePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEngineSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrustComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaLightningSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilEffect.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlaterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AddToParentSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientModuleCounterSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -831,9 +875,6 @@
       <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioBackendSystem.cpp">
-      <Filter>Systems\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioController.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioListenerSystem.cpp">
@@ -1058,9 +1099,6 @@
     </ClCompile>
     <ClCompile Include="SpawnSoundEffectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
-    </ClCompile>
-    <ClCompile Include="PositionalSoundSource.cpp">
-      <Filter>Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="DebugMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
@@ -1319,7 +1357,6 @@
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlaterSystem.cpp" />
     <ClCompile Include="EmpRocketLauncherModule.cpp">
       <Filter>Components\Modules</Filter>
     </ClCompile>
@@ -1383,6 +1420,45 @@
     </ClCompile>
     <ClCompile Include="TeslaCoilModuleControllerSystem.cpp">
       <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundComponent.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PortalCullingSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RootBoundingSpherePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEngineSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaLightningSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilEffect.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AddToParentSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientModuleCounterSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

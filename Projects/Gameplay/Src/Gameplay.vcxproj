@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddToParentSystem.h" />
     <ClInclude Include="AnomalyAcceleratorModule.h" />
     <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
     <ClInclude Include="AnomalyBomb.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
+    <ClInclude Include="ClientModuleCounterSystem.h" />
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DamageUpdaterSystem.h" />
     <ClInclude Include="DamageVisualizerSystem.h" />
@@ -43,18 +45,27 @@
     <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="ModuleHighlightSystem.h" />
+    <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="PortalCullingSystem.h" />
+    <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
+    <ClInclude Include="ShineSpawn.h" />
+    <ClInclude Include="ShipEngineSystem.h" />
+    <ClInclude Include="ShipHighlight.h" />
+    <ClInclude Include="ShipHiglightSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="SlotMarker.h" />
     <ClInclude Include="SlotMarkerSystem.h" />
+    <ClInclude Include="SoundComponent.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSystem.h" />
     <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
-    <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
@@ -182,7 +193,6 @@
     <ClInclude Include="PlayerStats.h" />
     <ClInclude Include="PlayersWinLosePacket.h" />
     <ClInclude Include="PongPacket.h" />
-    <ClInclude Include="PositionalSoundSource.h" />
     <ClInclude Include="PositionalSoundSystem.h" />
     <ClInclude Include="RayPacket.h" />
     <ClInclude Include="RemoveSoundEffectPacket.h" />
@@ -234,11 +244,14 @@
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
     <ClInclude Include="StaticProp.h" />
+    <ClInclude Include="TeslaCoilEffect.h" />
     <ClInclude Include="TeslaCoilModule.h" />
     <ClInclude Include="TeslaCoilModuleControllerSystem.h" />
     <ClInclude Include="TeslaEffectPiece.h" />
     <ClInclude Include="TeslaEffectSystem.h" />
     <ClInclude Include="TeslaHitPacket.h" />
+    <ClInclude Include="ThrustComponent.h" />
+    <ClInclude Include="TeslaLightningSystem.h" />
     <ClInclude Include="ThrustPacket.h" />
     <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
@@ -250,6 +263,7 @@
     <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddToParentSystem.cpp" />
     <ClCompile Include="AnomalyAcceleratorModule.cpp" />
     <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
     <ClCompile Include="AnomalyBomb.cpp" />
@@ -258,7 +272,6 @@
     <ClCompile Include="AnimationUpdatePacket.cpp" />
     <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
-    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
@@ -273,6 +286,7 @@
     <ClCompile Include="ClientEntityCountSystem.cpp" />
     <ClCompile Include="ClientInfo.cpp" />
     <ClCompile Include="ClientMeasurementSystem.cpp" />
+    <ClCompile Include="ClientModuleCounterSystem.cpp" />
     <ClCompile Include="ClientPacketHandlerSystem.cpp" />
     <ClCompile Include="ClientStateSystem.cpp" />
     <ClCompile Include="ColorTone.cpp" />
@@ -335,10 +349,17 @@
     <ClCompile Include="LoadMeshSystemServer.cpp" />
     <ClCompile Include="LobbySystem.cpp" />
     <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="ModuleHighlightSystem.cpp" />
     <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="PortalCullingSystem.cpp" />
+    <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
+    <ClCompile Include="ShipEngineSystem.cpp" />
+    <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />
     <ClCompile Include="TempModuleSpawner.cpp" />
@@ -373,7 +394,6 @@
     <ClCompile Include="PlayersWinLosePacket.cpp" />
     <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="PongPacket.cpp" />
-    <ClCompile Include="PositionalSoundSource.cpp" />
     <ClCompile Include="PositionalSoundSystem.cpp" />
     <ClCompile Include="RayPacket.cpp" />
     <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
@@ -436,11 +456,14 @@
     <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
+    <ClCompile Include="TeslaCoilEffect.cpp" />
     <ClCompile Include="TeslaCoilModule.cpp" />
     <ClCompile Include="TeslaCoilModuleControllerSystem.cpp" />
     <ClCompile Include="TeslaEffectPiece.cpp" />
     <ClCompile Include="TeslaEffectSystem.cpp" />
     <ClCompile Include="TeslaHitPacket.cpp" />
+    <ClCompile Include="ThrustComponent.cpp" />
+    <ClCompile Include="TeslaLightningSystem.cpp" />
     <ClCompile Include="ThrustPacket.cpp" />
     <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />

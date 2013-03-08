@@ -25,6 +25,7 @@
 #include "EntityFactory.h"
 #include "LevelInfo.h"
 #include "LevelPieceRoot.h"
+#include <OutputLogger.h>
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -77,7 +78,7 @@ void LevelGenSystem::calculatePieceCollision( vector<ModelResource*>* p_pieceMes
 				nextBoundingSphere);
 		}
 		string logtext = p_pieceMesh->at(0)->name + " : r=" + toString(boundingSphere.radius) + "\n";
-		DEBUGPRINT( (logtext.c_str()) );
+		m_world->getOutputLogger()->write( logtext.c_str() );
 
 		p_pieceMesh->at(0)->meshHeader.boundingSphere = boundingSphere;
 	}
@@ -133,12 +134,20 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	//	DEBUGPRINT( (logtext.c_str()) );
 	//}
 
-	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData();
+	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_CLOSED);
 	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
 		&endPlug->assemblageName);
 	auto resourcesFromModel = loadMeshSys->createModels(endPlug->modelFileName,
 		MODELPATH, false);
 	m_endPlugModelResource = resourcesFromModel->at(0);
+	
+	endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_OPENED);
+	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
+		&endPlug->assemblageName);
+	resourcesFromModel = loadMeshSys->createModels(endPlug->modelFileName,
+		MODELPATH, false);
+	m_endPlugOpenedModelResource = resourcesFromModel->at(0);
+
 
 	m_readyToRun = true;
 
@@ -179,12 +188,14 @@ void LevelGenSystem::generateLevel(int p_nrOfPlayers)
 		}
 		else
 		{
-			DEBUGPRINT(("Warning: LevelGenSystem is not ready to generate level yet.\n"));
+			m_world->getOutputLogger()
+				->write("LevelGenSystem is not ready to generate level yet.\n", WRITETYPE_WARNING);
 		}
 	}
 	else
 	{
-		DEBUGPRINT(("Warning: LevelGenSystem has already generated a level.\n"));
+		m_world->getOutputLogger()
+			->write("LevelGenSystem has already generated a level.\n", WRITETYPE_WARNING);
 	}
 }
 
@@ -202,8 +213,10 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	Transform* transform = new Transform(m_startTransform);
 	transform->setRotation(quart);
 
-	// Create the level piece to use later
+	// Create the level piece to use later. Note, this could be random, if the specified
+	// start piece id in the assemblage has been set to -1.
 	int id = m_levelInfo->getStartFileData()->id;
+
 	LevelPiece* piece = new LevelPiece(id, m_modelResources[id], transform, 0);
 	piece->setPieceId(0);
 
@@ -244,6 +257,8 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 
 		pieces = vector<LevelPiece*>(temps);
 	}
+
+	testLevelMaxSizeHit();
 }
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
@@ -253,7 +268,8 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 	
 	if (!entity)
 	{
-		DEBUGWARNING(("LevelGenSystem Warning: Unable to create the specified level piece entity!"));
+		m_world->getOutputLogger()
+			->write("LevelGenSystem was unable to create the specified level piece entity!\n", WRITETYPE_WARNING);
 	}
 	else
 	{
@@ -271,12 +287,19 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		transform->setTranslation( p_piece->getTransform()->getTranslation() );
 		transform->setRotation( p_piece->getTransform()->getRotation() );
 
-		entity->addComponent(new StaticProp(p_piece->getTypeId(), true));
+		entity->addComponent(new StaticProp(p_piece->getTypeId(), STATICPROPTYPE_LEVELPIECE));
 
 		auto pieceRoot = static_cast<LevelPieceRoot*>(
 			entity->getComponent(ComponentType::LevelPieceRoot));
 
 		pieceRoot->pieceId = p_piece->getPieceId();
+		pieceRoot->boundingSphere = p_piece->getBoundingSphere();
+		//1) Add bounding sphere to root
+		//2) Send bounding sphere to client
+		//3) Receive sphere on client and set it
+		//4) Use sphere in culling algorithm
+		//Somehow send bounding sphere to client - Not here!
+		//p_piece->getBoundingSphere();
 	}
 
 	return entity;
@@ -328,6 +351,10 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 
 			if (tryConnectPieces(p_targetPiece, piece, slot))
 			{
+				// Add an open gate
+				Entity* ent = addEndPlug(&p_targetPiece->getConnectionPoint(slot), ENDPIECEMODE_OPENED);
+				m_world->addEntity(ent);
+
 				// This is not done from here anymore.
 				//AglOBB obb = piece->getBoundingBox();
 				//updateWorldMinMax(obb);
@@ -369,7 +396,8 @@ void LevelGenSystem::createLevelEntities()
 		//e = createDebugSphereEntity(m_generatedPieces[i]);
 		//m_world->addEntity(e);
 	}
-	DEBUGPRINT(((toString(m_generatedPieces.size()) + " chambers generated.\n").c_str()));
+	m_world->getOutputLogger()
+		->write((toString(m_generatedPieces.size()) + " chambers generated.\n").c_str());
 }
 
 const AglVector3&  LevelGenSystem::getWorldMin() const
@@ -397,10 +425,10 @@ void LevelGenSystem::updateWorldMinMax( AglOBB& boundingVolume )
 	}
 }
 
-Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
+Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector, EndPieceMode p_mode )
 {
-	Entity* entity = m_entityFactory->entityFromRecipe( 
-		m_levelInfo->getEndPlugFileData()->assemblageName );
+	Entity* entity = m_entityFactory->entityFromRecipe(
+		m_levelInfo->getEndPlugFileData(p_mode)->assemblageName );
 
 	auto transform = static_cast<Transform*>(
 		entity->getComponent(ComponentType::Transform));
@@ -419,9 +447,13 @@ Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
 	// Set proper rotation and scale of the plug piece
 	transform->setMatrix(p_atConnector->getMatrix());
 	transform->setForwardDirection( -transform->getForward() );
+	// NOTE: Due to some circumstance, the gate needs to be rotated here. It wasn't needed
+	// before, but now it does. // Alex
+	transform->setRotation(transform->getRotation() 
+		* AglQuaternion::constructFromAxisAndAngle(AglVector3::right(), 90 * 3.1415f / 180.0f));
 	transform->setScale(tempScale);
 
-	entity->addComponent(new StaticProp(m_levelInfo->getEndPlugFileData()->id, true));
+	entity->addComponent(new StaticProp(m_levelInfo->getEndPlugFileData(p_mode)->id, STATICPROPTYPE_PLUGPIECE));
 
 	// Manipulate the BodyInitData translation info to match the transform, and add a proper
 	// model resource.
@@ -431,7 +463,10 @@ Entity* LevelGenSystem::addEndPlug( Transform* p_atConnector )
 		bodyInitData->m_position		= transform->getTranslation();
 		bodyInitData->m_orientation		= transform->getRotation();
 		bodyInitData->m_scale			= transform->getScale();
-		bodyInitData->m_modelResource	= m_endPlugModelResource;
+		if (p_mode == ENDPIECEMODE_CLOSED)
+			bodyInitData->m_modelResource = m_endPlugModelResource;
+		else
+			bodyInitData->m_modelResource = m_endPlugOpenedModelResource;
 	}
 	return entity;
 }
@@ -442,9 +477,11 @@ void LevelGenSystem::addEndPlugs(LevelPiece* p_atPiece)
 	{
 		if (!p_atPiece->isChildSlotOccupied(i))
 		{
-			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i));
+			Entity* plug = addEndPlug(&p_atPiece->getConnectionPoint(i), ENDPIECEMODE_CLOSED);
 			m_world->addEntity(plug);
-			DEBUGPRINT(("Added end plug!\n"));
+			
+			m_world->getOutputLogger()
+				->write("Added end plug!\n");
 		}
 	}
 }
@@ -495,7 +532,9 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	int newPieceRadius = (int)m_modelResources[p_newPiece->getTypeId()]->meshHeader.boundingSphere.radius;
 	if (m_useLevelMaxSize && m_currentLevelSize + newPieceRadius > m_levelMaxSize)
 	{
-		DEBUGPRINT(("Chamber piece too large. A level plug has been created instead.\n"));
+		m_world->getOutputLogger()
+			->write("Chamber piece too large. A level plug has been created instead.\n");
+
 		tooLarge = true;
 	}
 	p_newPiece->connectTo(p_target, p_slot);
@@ -507,7 +546,8 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 			m_generatedPieces[i]->getBoundingSphere()) && 
 			p_newPiece->getChild(0) != m_generatedPieces[i]->getTransform() )
 		{
-			DEBUGPRINT(("Collision between chambers detected. A level plug has been created instead.\n"));
+			m_world->getOutputLogger()
+				->write("Collision between chambers detected. A level plug has been created instead.\n");
 			colliding = true;
 			break;
 		}
@@ -529,7 +569,9 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 bool LevelGenSystem::testLevelMaxSizeHit()
 {
 	string logtext = "Current level size: " + toString(m_currentLevelSize) + "\n";
-	DEBUGPRINT( (logtext.c_str()) );
+	m_world->getOutputLogger()
+		->write( logtext.c_str() );
+
 	if (m_currentLevelSize >= m_levelMaxSize)
 	{
 		logtext = "Max level size hit:\n\tdesired=" 
@@ -537,7 +579,9 @@ bool LevelGenSystem::testLevelMaxSizeHit()
 			+ "\n\tresulted="
 			+ toString(m_currentLevelSize)
 			+ "\n";
-		DEBUGPRINT( (logtext.c_str()) );
+
+		m_world->getOutputLogger()
+			->write( logtext.c_str() );
 		m_hasHitLevelMaxSize = true;
 	}
 	return m_hasHitLevelMaxSize;

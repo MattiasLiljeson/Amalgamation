@@ -73,6 +73,10 @@ public:
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] p_windowName The name of the window to load.
 	bool loadWindow(const Rocket::Core::String& p_windowName);
+
+	void playConfirmSound();
+
+	void playBackSound();
 public:
 	bool wantsToExit;
 	
@@ -100,6 +104,7 @@ private:
 	std::stack<Rocket::Core::String>	m_docIdStack;
 	ClientStateSystem*					m_stateSystem;
 	TcpClient* m_client;
+	Entity* m_menuEntity;
 };
 
 

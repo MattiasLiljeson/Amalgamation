@@ -29,6 +29,7 @@ class IEntityObserver;
 class IPerformer;
 class SystemManager;
 class SystemType;
+class OutputLogger;
 
 class EntityWorld
 {
@@ -244,6 +245,13 @@ public:
 	 */
 	EntitySystem* getSystem( SystemType p_type );
 	EntitySystem* getSystem( SystemType::SystemTypeIdx p_typeIdx );
+
+	/**
+	 * Retrieve the output logger system.
+	 * 
+	 * @return instance of the system in this world.
+	 */
+	OutputLogger* getOutputLogger();
 
 	/**
 	 * Performs an action on each entity.

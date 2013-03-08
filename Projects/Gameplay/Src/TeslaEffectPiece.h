@@ -25,8 +25,9 @@ public:
 
 public:
 	float lifeTime;
+	float maxLifeTime;
 	AglVector3 forwardScale;
-	vector<string> possibleMeshes;
+	bool damages;
 
 public:
 	static ComponentRegister<TeslaEffectPiece> s_reg;

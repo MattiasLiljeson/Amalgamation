@@ -107,7 +107,10 @@ AglVector3 AglVector3::operator-() const
 
 bool AglVector3::operator==(const AglVector3& p_other) const
 {
-	if (x == p_other.x && y == p_other.y && z == p_other.z)
+	float epsilon = 0.0001f;
+	if (fabs(x - p_other.x) < epsilon &&
+		fabs(y - p_other.y) < epsilon &&
+		fabs(z - p_other.z) < epsilon)
 		return true;
 	return false;
 }

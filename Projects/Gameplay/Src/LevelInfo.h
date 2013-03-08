@@ -6,6 +6,13 @@
 #include <string>
 
 struct LevelPieceFileData;
+
+enum EndPieceMode
+{
+	ENDPIECEMODE_OPENED,
+	ENDPIECEMODE_CLOSED
+};
+
 // =======================================================================================
 //                                      LevelInfo
 // =======================================================================================
@@ -30,7 +37,7 @@ public:
 	LevelPieceFileData* getStartFileData() const;
 	LevelPieceFileData* getFileDataFromId(int p_id) const;
 	
-	LevelPieceFileData* getEndPlugFileData() const;
+	LevelPieceFileData* getEndPlugFileData(EndPieceMode p_mode) const;
 
 	int		getBranchCount() const;
 	bool	doRandomStartRotation() const;
@@ -42,8 +49,9 @@ private:
 private:
 	vector<LevelPieceFileData*> m_fileData;
 	vector<int>					m_weightData;
-	LevelPieceFileData*			m_endPlug;
-	
+	LevelPieceFileData*			m_endPlugClosed;
+	LevelPieceFileData*			m_endPlugOpened;
+
 	int		m_levelSize[MAXPLAYERS];
 
 	int		m_branchCount;

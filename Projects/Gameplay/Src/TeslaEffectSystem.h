@@ -1,6 +1,9 @@
 #pragma once
 #include <EntitySystem.h>
 #include <AglVector3.h>
+#include <map>
+#include <vector>
+using namespace std;
 // =======================================================================================
 // TeslaEffectSystem
 // =======================================================================================
@@ -15,12 +18,18 @@ class TeslaEffectSystem: public EntitySystem
 {
 public:
 	TeslaEffectSystem();
-	void processEntities( const vector<Entity*>& p_entities ) final;
-	void animateHits(int p_fromEntity, int* p_identitiesHit, int p_numberOfHits);
+	void inserted( Entity* p_entity ) final;
+	void animateHits(int p_fromEntity, int* p_identitiesHit, int p_numberOfHits,
+		int* p_identitiesHitFloating, int p_numberOfHitsFloating);
 
 private:
-	void animateHit(int p_fromEntity, int p_toEntity, const AglVector3 p_geometricMean);
-	void animate(const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition,
-		const AglVector3 p_geometricMean);
+	void animateHit(Entity* p_fromEntity, int p_toEntity, const AglVector3 p_geometricMean,
+		int p_index, bool p_damage);
+//	void animate(const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition,
+//		const AglVector3 p_geometricMean, string p_meshName);
+	bool entityInSystem(Entity* p_checkEntity) const;
+
+private:
+	map<int, vector< vector<Entity*> > > m_lightningPool;
 
 };

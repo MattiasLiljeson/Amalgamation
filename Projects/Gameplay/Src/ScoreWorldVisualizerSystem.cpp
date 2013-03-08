@@ -79,9 +79,9 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 	string scorestr = toString(p_data.score);
 	unsigned int size = scorestr.size();
 
-	float w = 616.0f;
-	float h = 16.0f;
-	float ww = 8.0f;
+	float w = 4928.0f;
+	float h = 128.0f;
+	float ww = 64.0f;
 	int no = w/ww;
 	int offset = 16;
 
@@ -96,7 +96,7 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		AglParticleSystem particleSystem;
 		particleSystem.getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
 		AglVector3 offset = AglVector3( 5.0f*(-(float)size+(float)i),-30*numberoffset,0.0f);
-		particleSystem.setParticleSize(AglVector2(5.0f,5.0f));
+		particleSystem.setParticleSize(AglVector2(5.0f,10.0f));
 		// offset.transform(cameraRot);
 		particleSystem.setSpawnPoint(offset);
 		particleSystem.setSpawnDirection(AglVector3::up());
@@ -106,12 +106,14 @@ Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreatio
 		particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 		particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_LOCAL );
 		particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
-		particleSystem.setParticleAge(0.5f+numberoffset);
+		particleSystem.setParticleAge(0.8f+numberoffset);
 		particleSystem.setSpawnSpeed(15.0f+60*numberoffset);
 		particleSystem.setFadeInStop(0.15f+numberoffset);
-		particleSystem.setFadeOutStart(0.18f+numberoffset);
+		particleSystem.setFadeOutStart(0.3f+numberoffset);
 		if (p_data.score<0)
-			particleSystem.setColor(AglVector4(1.0f,0.0f,0.0f,0.0f));
+		{
+			particleSystem.setColor(AglVector4(1.0f,0.0f,0.0f,1.0f));
+		}
 		// Create an instruction for creation
 		ParticleSystemInstruction particleInstruction;
 		particleInstruction.textureFileName = "text.png";

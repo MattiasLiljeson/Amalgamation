@@ -4,16 +4,20 @@
 #include "CircularMovement.h"
 #include "AxisRotate.h"
 #include <RandomUtil.h>
-#include "InputBackendSystem.h"
+#include "InputActionsBackendSystem.h"
 #include "LightsComponent.h"
 #include "ClientStateSystem.h"
 #include "GradientComponent.h"
 #include "EntityFactory.h"
+#include "MeshOffsetTransform.h"
+#include "SoundComponent.h"
+#include <Globals.h>
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
 {
 	m_deltaRotation = 0.0f;
+	xPos = -7.5f;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
@@ -22,7 +26,13 @@ MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
 
 void MenuBackgroundSceneSystem::process()
 {
+	/*
+	SoundComponent* soundSource = static_cast<SoundComponent*>
+		(m_ship->getComponent(ComponentType::SoundComponent));
 
+	//soundSource->m_front = worldTransform.GetBackward();
+	//soundSource->m_top = worldTransform.GetUp();
+	*/
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
 	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME)
@@ -30,7 +40,8 @@ void MenuBackgroundSceneSystem::process()
 		this->setEnabled(false);
 	}
 	else if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
-		auto* entityFactory = static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory));
+		auto* entityFactory = static_cast<EntityFactory*>
+			(m_world->getSystem(SystemType::EntityFactory));
 		
 		GradientComponent* gradient = static_cast<GradientComponent*>
 			(m_ship->getComponent(ComponentType::Gradient));
@@ -39,15 +50,14 @@ void MenuBackgroundSceneSystem::process()
 	}
 	else{
 		m_deltaRotation = 0.0f;
-		double rtPositive = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE);
-		double rtNegative = m_inputBackend->getStatusByEnum(InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE);
-		if(m_inputBackend->getStatusByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
-			rtPositive > 0.0 || rtNegative > 0.0)
+		if(m_actionBackend->getStatusByAction(InputActionsBackendSystem::
+			Actions_MENU_ACTIVATE_ROTATION) != 0.0)
 		{
-			double deltaPositive = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_POSITIVE)
-				+ rtPositive;
-			double deltaNegative = m_inputBackend->getStatusByEnum(InputHelper::MouseAxes_X_NEGATIVE)
-				+ rtNegative;
+			double deltaPositive = m_actionBackend->getStatusByAction(
+				InputActionsBackendSystem::Actions_MENU_RIGHT);
+			double deltaNegative = m_actionBackend->getStatusByAction(
+				InputActionsBackendSystem::Actions_MENU_LEFT);
+
 			if(deltaPositive > 0.0)
 			{
 				m_deltaRotation -= (float)deltaPositive;
@@ -56,19 +66,34 @@ void MenuBackgroundSceneSystem::process()
 			{
 				m_deltaRotation += (float)deltaNegative;
 			}
+
+			/*
+			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
+			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
+			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
+
+			xPos = transform->getTranslation().x;
+
+			xPos += m_world->getDelta() * 20 * m_deltaRotation;
+
+			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
+				transform->getTranslation().z) );
+			*/
+
 		}
 		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
 		if(rotate != NULL)
 		{
 			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
+			m_deltaRotation = 0.0f;
 		}
 	}
 }
 
 void MenuBackgroundSceneSystem::initialize()
 {
-	m_inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(
-		SystemType::InputBackendSystem));
+	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
+		SystemType::InputActionsBackendSystem));
 }
 
 void MenuBackgroundSceneSystem::sysEnabled()
@@ -80,9 +105,50 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
+	AglVector3 axis( 0.0f, 1.0f, -0.2f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
-	m_ship->addComponent(new AxisRotate(AglVector3(0.0f, 1.0f, -0.2f), toVector, rotation, 0.0f));
+	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f);
+	m_ship->addComponent(axisRotate);
+
+	// RM-RT 2013-03-04
+	/*
+	SoundComponent* soundSoure = new SoundComponent( TESTSOUNDEFFECTPATH, 
+		"space_ship_engine_idle.wav");
+	m_ship->addComponent(soundSoure);
+	*/
+
+	/*
+	SoundComponent* soundComp = new SoundComponent();
+
+	AudioHeader* audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
+	audioHeader->file = "space_ship_engine_idle.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	soundComp->addAudioHeader(audioHeader);
+
+	
+	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
+	audioHeader->file = "Shield_Active_v2.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::FOREVER;
+	audioHeader->timerInterval = 2.0f;
+	soundComp->addAudioHeader(audioHeader);
+	
+
+	audioHeader = new AudioHeader(AudioHeader::SoundType::POSITIONALSOUND);
+	audioHeader->file = "Mine_Blip_v2.wav";
+	audioHeader->path = TESTSOUNDEFFECTPATH;
+	audioHeader->queuedPlayingState = AudioHeader::PLAY;
+	audioHeader->playInterval = AudioHeader::TIMERBASED;
+	audioHeader->timerInterval = 2.0f;
+	audioHeader->maxRange = 40;
+	soundComp->addAudioHeader(audioHeader);
+
+	m_ship->addComponent(soundComp);
+	*/
 
 	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
@@ -91,7 +157,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
-	initPointLight(entity, position + AglVector3(0.0f, 0.0f, -50.0f), 200.0f);
+	initPointLight(entity, position + AglVector3(0.0f, 10.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 }

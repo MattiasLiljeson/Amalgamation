@@ -1,0 +1,32 @@
+body{
+	font-family: Armorhide;
+	font-charset: U+00??;
+	font-style: normal;
+	font-size: 20;
+	font-weight: bold;
+	color: white;
+	
+	height: 35px;
+	width: 600px;
+	border-style: solid;
+	border-width: 0px;
+	border-color: white;
+	background: rgba(0,0,0,0);
+}
+
+div.elements{
+	float: left;
+	width: 100%;
+	height: 100%;
+}
+
+div#context{
+	text-align: center;
+}
+
+div#scoreElem{ 
+}
+div#timerElem{
+}
+div#mappingElem{
+}

@@ -11,6 +11,7 @@
 #include <RendererSceneInfo.h>
 #include "Transform.h"
 #include "GameSettingsInfo.h"
+#include "ShipHiglightSystem.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -105,6 +106,15 @@ void GraphicsBackendSystem::initialize()
 	TwAddButton(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
 		"Toggle wireframe",
 		toggleWireframe, (void*)NULL, "");
+
+
+	//Some handling of ship highlighting
+	ShipHighlightSystem* shs = static_cast<ShipHighlightSystem*>(m_world->getSystem(SystemType::ShipHighlightSystem));
+
+	TwAddVarRW(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL), "Highlight Min", 
+		TW_TYPE_FLOAT, shs->getMinDistance(), "min=0.0 max=1000.0");
+	TwAddVarRW(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL), "Highlight Max", 
+		TW_TYPE_FLOAT, shs->getMaxDistance(), "min=0.0 max=1000.0");
 }
 
 void GraphicsBackendSystem::process()

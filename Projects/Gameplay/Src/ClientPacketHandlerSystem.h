@@ -9,6 +9,7 @@
 #include "EntityUpdatePacket.h"
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleUpdatePacket.h"
+#include "RootBoundingSpherePacket.h"
 
 using namespace std;
 
@@ -101,6 +102,9 @@ private:
 
 	//Added by Anton
 	vector<EntityUpdatePacket> m_batch;
+
+	//Added by Anton again. Moahahaha
+	vector<RootBoundingSpherePacket> queuedBsPackets;
 
 public:
 	AglMatrix cameraTransform;

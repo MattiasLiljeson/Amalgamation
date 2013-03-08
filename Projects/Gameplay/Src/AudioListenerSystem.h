@@ -1,8 +1,8 @@
 #pragma once
 #include "EntitySystem.h"
+#include <SoundOrientation.h>
 
 class AudioBackendSystem;
-
 // =======================================================================================
 //                                      AudioListenerSystem
 // =======================================================================================
@@ -21,6 +21,8 @@ public:
 	AudioListenerSystem(AudioBackendSystem* p_audioBackend);
 	virtual ~AudioListenerSystem();
 	void processEntities(const vector<Entity*>& p_entities);
+	SoundOrientation* getListenerOrientation();
 private:
 	AudioBackendSystem* m_audioBackend;
+	SoundOrientation m_listener;
 };

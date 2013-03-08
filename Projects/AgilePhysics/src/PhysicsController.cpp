@@ -521,6 +521,24 @@ void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_radi
 		}
 	}
 }
+vector<pair<unsigned int, float>> PhysicsController::GetObjectsWithinSphere(AglVector3 p_position, float p_radius)
+{
+	AglBoundingSphere bs(p_position, p_radius);
+	vector<pair<unsigned int, float>> objects;
+	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
+	{
+		AglVector3 colPoint;
+		if (CheckCollision(bs, mRigidBodies[i].first, colPoint))
+		{
+			AglVector3 n = colPoint - bs.position;
+			float dist = n.length();
+
+			pair<unsigned int, float> data = pair<unsigned int, float>(mRigidBodies[i].second, dist);
+			objects.push_back(data);
+		}
+	}
+	return objects;
+}
 
 bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 {
@@ -587,7 +605,7 @@ vector<unsigned int> PhysicsController::LineCollidesWith(unsigned int p_line)
 	}
 	return cols;
 }
-int	PhysicsController::LineClosestCollision(unsigned int p_line)
+int	PhysicsController::LineClosestCollision(unsigned int p_line, int p_ignore)
 {
 	int col = -1;
 	float closestT = FLT_MAX;
@@ -595,10 +613,33 @@ int	PhysicsController::LineClosestCollision(unsigned int p_line)
 	{
 		if (mLineSegmentCollisions[i].lineID == p_line)
 		{
-			if (mLineSegmentCollisions[i].t < closestT)
+			if (mLineSegmentCollisions[i].t < closestT && mLineSegmentCollisions[i].bodyID != p_ignore)
 			{
 				col = mLineSegmentCollisions[i].bodyID;
 				closestT = mLineSegmentCollisions[i].t;
+			}
+		}
+	}
+	return col;
+}
+int PhysicsController::LineClosestCollision(unsigned int p_line, AglVector3& p_colPoint, int p_ignore)
+{
+	int col = -1;
+	float closestT = FLT_MAX;
+	for (unsigned int i = 0; i < mLineSegmentCollisions.size(); i++)
+	{
+		if (mLineSegmentCollisions[i].lineID == p_line)
+		{
+			if (mLineSegmentCollisions[i].t < closestT && mLineSegmentCollisions[i].bodyID != p_ignore)
+			{
+				col = mLineSegmentCollisions[i].bodyID;
+				closestT = mLineSegmentCollisions[i].t;
+
+				LineSegment ls = mLineSegments[mLineSegmentCollisions[i].lineID];
+
+				AglVector3 dir = ls.p2 - ls.p1;
+				dir.normalize();
+				p_colPoint = ls.p1 + dir*mLineSegmentCollisions[i].t; 
 			}
 		}
 	}

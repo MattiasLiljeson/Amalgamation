@@ -1,26 +1,18 @@
 #include "Sound.h"
 
 
-Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer, 
-			 float p_volume/* =1.0f */)
+Sound::Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer)
 {
 	m_sourceVoice = p_sourceVoice;
 	m_buffer = p_buffer;
-	m_volume = p_volume;
 
-	m_left	= 0;
-	m_right = 0;
-
+	/*
 	HRESULT hr = S_OK;
 	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	if(FAILED (hr))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
-
-	m_sourceVoice->SetVolume(m_volume);
+	*/
 	m_sourceState = new XAUDIO2_VOICE_STATE();
-
-	// NOTE: (Johan) Careful!
-//	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 }
 
 Sound::~Sound()
@@ -32,7 +24,7 @@ Sound::~Sound()
 
 HRESULT Sound::stop()
 {
-	HRESULT hr = S_OK;
+	HRESULT hr = S_OK; 
 
 	hr = m_sourceVoice->Stop(0);
 	hr = m_sourceVoice->FlushSourceBuffers();
@@ -53,6 +45,7 @@ HRESULT Sound::restart()
 {
 	HRESULT hr = S_OK;
 
+	hr = m_sourceVoice->FlushSourceBuffers();
 	hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
 	hr = m_sourceVoice->Start(0);
 
@@ -62,8 +55,9 @@ HRESULT Sound::restart()
 HRESULT Sound::resumeOrPlay()
 {
 	HRESULT hr = S_OK;
-//	if(m_sourceState->BuffersQueued == 0)
-//		hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
+	if(!isPlaying()){
+		hr = m_sourceVoice->SubmitSourceBuffer(m_buffer);
+	}
 	hr = m_sourceVoice->Start(0);
 	return hr;
 }
@@ -97,4 +91,10 @@ float* Sound::getRightChannelRef()
 {
 	return &m_right;
 }
+
+void Sound::setFrequency( float p_frequency )
+{
+	m_sourceVoice->SetFrequencyRatio(p_frequency);
+}
+
 

@@ -1,34 +1,249 @@
 body{
-	font-family: Armorhide;
-	font-charset: U+00??;
+  font-family: Armorhide;
+  font-charset: U+00??;
 	font-style: normal;
 	font-size: 20;
-	font-weight: bold;
 	color: white;
+	/*margin-top: 100px;*/
 	
-	margin-top: 7%;
-	height: 35px;
-	width: 99.8%;
-	margin-bottom: 80.5%;
-	border-style: solid;
-	border-width: 1px;
-	border-color: white;
-	background: rgba(20,20,20,40);
+	height: 100%;
+	width: 100%;
+	darken-font-effect: shadow;
+	darken-offset: 0px 2px;
+	darken-color: rgb(0,0,0);
+	/*background: rgba(0,20,0,40);*/
 }
 
 div.elements{
+	width: 30%;
+	height: 120px;	
 	float: left;
-	width: 50%;
-	height: 100%;
+	display: block;
 }
 
 div#context{
 	text-align: center;
+	height: 120px;
 }
 
+/* main three columns */
+
 div#scoreElem{ 
+	/*background: rgba(255,0,0,40);*/
+	width: 30%;
 }
 div#timerElem{
+	/*background: rgba(0,255,0,40);*/
+	width: 40%;
+	text-align: center;
 }
-div#mappingElem{
+div#massElem{
+	/*background: rgba(0,0,255,40);*/
+	width: 30%;
+}
+
+/* Image background sprites */
+
+div#leftwing{ 
+	background-decorator: image;
+	background-image: ../../Assets/Textures/leftwing_HUD.png;
+	width: 264px;
+	height: 114px;
+	display: block;
+	float: left;
+}
+
+div#rightwing{
+	background-decorator: image;
+	background-image: ../../Assets/Textures/rightwing_HUD.png;
+	width: 263px;
+	height: 114px;
+	display: block;
+	float: right;
+}
+
+
+div#timer{
+	background-decorator: image;
+	background-image: ../../Assets/Textures/timer_HUD.png;
+	width: 477px;
+	height: 55px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Areas on sprites where text should be drawn */
+
+div#leftwing .hud-textbox{
+	display: block;
+	margin-left: 14px;
+	margin-top: 14px;
+	width: 86px;
+	height: 86px;
+	/*background: rgba(255,0,0,40);*/
+}
+
+div#rightwing .hud-textbox{
+	display: block;
+	margin-right: 14px;
+	margin-top: 14px;	
+	margin-left: auto;
+	width: 86px;
+	height: 86px;
+	/*background: rgba(255,0,0,40);*/
+}
+
+div#timer .hud-textbox{
+	display: block;
+	width: 291px;
+	height: 35px;
+	margin-top: 11px;	
+	margin-left: 93px;
+	/*background: rgba(255,0,0,40);*/
+}
+
+/* Leftwing textboxes */
+div#leftwing .hud-textbox div#scorelabel-box {
+	display: block;
+	width: 100%;
+	height: 14px;
+	/*background: rgba(0,255,0,40);*/
+	text-align: center;
+	font-size: 15px;
+	margin-top: 16px;
+	font-family: Geo;
+}
+
+div#leftwing .hud-textbox div#score-box {
+	display: block;
+	width: 100%;
+	height: 25px;
+	/*background: rgba(0,100,0,40);*/
+	text-align: center;
+	font-size: 17px;
+	margin-top: 2px;
+	font-family: Esper;
+}
+
+/* Rightwing textboxes */
+div#rightwing .hud-textbox div#masslabel-box {
+	display: block;
+	width: 100%;
+	height: 14px;
+	/*background: rgba(0,255,0,40);*/
+	text-align: center;
+	font-size: 15px;
+	margin-top: 16px;
+	font-family: Geo;
+}
+
+div#rightwing .hud-textbox div#mass-box {
+	display: block;
+	width: 100%;
+	height: 18px;
+	/*background: rgba(0,100,0,40);*/
+	text-align: center;
+	font-size: 17px;
+	margin-top: 2px;
+	font-family: Esper;
+}
+
+div#rightwing .hud-textbox div#mass-box p#mass-suffix {
+	background: rgba(0,100,0,40);
+	font-size: 13px;
+	font-family: Geo;
+}
+
+div#rightwing .hud-textbox div#boost-box {
+	display: block;
+	width: 100%;
+	height: 14px;
+	/*background: rgba(0,255,0,40);*/
+	text-align: center;
+	font-size: 18px;
+	font-family: Geo;
+}
+
+
+/* Timer textboxes */
+div#timer .hud-textbox div#playername-box {
+	float: left;
+	width: 30%;
+	height: 100%;
+	/*background: rgba(0,255,0,40);*/
+	text-align: center;
+	font-size: 12px;
+	padding-top: 8px;
+	overflow: hidden;
+	font-family: Geo;
+}
+
+div#timer .hud-textbox div#time-box {
+	float: left;
+	width: 40%;
+	height: 100%;
+	margin-top: -6px;
+	/*background: rgba(0,100,0,40);*/
+	text-align: center;
+	font-size: 33px;
+	font-family: digital display tfb;
+}
+
+div#timer .hud-textbox div#servername-box {
+	float: left;
+	width: 30%;
+	height: 100%;
+	/*background: rgba(0,10,0,40);*/
+	text-align: center;
+	font-size: 12px;
+	padding-top: 8px;
+	overflow: hidden;
+	font-family: Geo;
+}
+
+div#socket-buttons{
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 13px;
+  font-family: Young;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  color: rgba(255,255,255,100);
+  darken-font-effect: none;
+}
+
+div#socket-buttons .button{
+	display: block;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	/*background: rgba(0,10,0,40);*/
+}
+
+div#socket-buttons div#top-btn{
+	margin-left:-11px;
+	left: 50%;
+	top: 76px;
+}
+
+div#socket-buttons div#left-btn{
+	margin-top:-8px;
+	left: 38px;
+	top: 50%;
+}
+
+div#socket-buttons div#right-btn{
+  margin-top:-8px;
+  right: 38px;
+  top: 50%;
+}
+
+div#socket-buttons div#bottom-btn{
+	margin-left:-11px;
+	bottom:36px;
+	left: 50%;
 }

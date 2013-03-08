@@ -35,7 +35,7 @@ public:	//Enums
 		CameraInfo,
 		AudioInfo,
 		AudioListener,
-		PositionalSoundSource,
+		SoundComponent,
 		ShipFlyController,
 		ShipEditController,
 		Impulse,
@@ -66,8 +66,6 @@ public:	//Enums
 		Connector1to2Module,
 		EmpModule,
 		FlareGunModule,
-		GravityBombModule,
-		TeslaModule,
 		LightSources,
 		LightBlinker,
 		Vibration,
@@ -88,6 +86,8 @@ public:	//Enums
 		EmpRocketLauncherModule,
 		InterpolationComponent2,
 		DamageComponent,
+		ModuleOnChamberSpawnPoint,
+		ThrustComponent,
 
 		// -------------------
 		// Tags									(Replace with dedicated ES-tag management?)
@@ -103,6 +103,9 @@ public:	//Enums
 		TAG_ShadowCamera,
 		TAG_LookAtMainCamera,
 		TAG_Highlight,
+		TAG_PositionalSound,
+		TAG_AmbientRangeSound,
+		TAG_AddToParent,
 		// -------------------
 	
 		/************************************************************************/
@@ -122,6 +125,9 @@ public:	//Enums
 		SlotMarkerSprite,
 		AnomalyBombEffectPiece,
 		TeslaEffectPiece,
+		TeslaCoilEffect,
+		ShipHighlight,
+		ShineSpawn,
 		NUM_COMPONENT_TYPES
 	};
 

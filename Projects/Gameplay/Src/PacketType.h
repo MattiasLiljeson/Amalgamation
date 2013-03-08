@@ -60,7 +60,8 @@ public:
 		EditSphereUpdatePacket,
 		SelectionMarkerUpdatePacket,
 		PlayerInfo,
-		HighlightEntityPacket
+		HighlightEntityPacket,
+		RootBoundingSpherePacket,
 	};
 
 };

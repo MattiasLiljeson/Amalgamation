@@ -30,6 +30,8 @@ struct AglQuaternion
 	AglQuaternion& operator*=(const AglQuaternion& p_other);
 	AglQuaternion operator*(const float& p_scalar) const;
 	AglQuaternion operator+(const AglQuaternion& p_other) const;
+	
+	bool operator==(const AglQuaternion& p_other) const;
 
 	//Construction Functions
 	static AglQuaternion identity();

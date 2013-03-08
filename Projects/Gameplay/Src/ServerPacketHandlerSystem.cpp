@@ -54,6 +54,9 @@
 #include "LevelHandlerSystem.h"
 #include "SpawnPointSystem.h"
 #include "LevelGenSystem.h"
+#include <OutputLogger.h>
+#include "LevelPieceRoot.h"
+#include "RootBoundingSpherePacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -169,9 +172,8 @@ void ServerPacketHandlerSystem::handleIngame()
 					{
 						Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 						ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
-						SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-						if (module->getActive() && boostmodule)
-							boostVector = thrustPacket.thrustVector*3;
+						if (module->getActive())
+							boostVector = thrustPacket.thrustVector*stackBooster(shipModule);
 					}
 				}
 			}
@@ -561,9 +563,26 @@ void ServerPacketHandlerSystem::handleLoading()
 				data.translation = transform->getTranslation();
 				data.rotation = transform->getRotation();
 				data.scale = transform->getScale();
-				data.isLevelProp = prop->isLevelPiece;
+				data.isLevelProp = false;//prop->isLevelPiece; // isLevelProp is no longer
+																// used here. MiscData is
+																// instead.
 				data.meshInfo = prop->meshInfo;  
+				data.miscData = prop->propType;
 
+				LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entities[i]->getComponent(ComponentType::LevelPieceRoot));
+				if (root)
+				{
+					data.bsPos = root->boundingSphere.position;
+					data.bsRadius = root->boundingSphere.radius;
+					/*RootBoundingSpherePacket bspacket;
+					bspacket.targetNetworkIdentity = entities[i]->getIndex();
+					bspacket.position = root->boundingSphere.position;
+					bspacket.radius = root->boundingSphere.radius;*/
+				}
+				else
+				{
+
+				}
 				//				packets.push( packet );
 				m_server->broadcastPacket( data.pack() );
 			}
@@ -754,6 +773,30 @@ Entity* ServerPacketHandlerSystem::createTheShipEntity(int p_newlyConnectedClien
 
 void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p_packetType )
 {
-	DEBUGPRINT((("SERVER: Not handled("+p_state+"): " +
-		toString(p_packetType) + "\n").c_str()));
+	m_world->getOutputLogger()->write(("SERVER: Not handled("+p_state+"): " +
+		toString(p_packetType) + "\n").c_str());
+}
+float ServerPacketHandlerSystem::stackBooster(Entity* p_parent)
+{
+	float boostPower = 0;
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(p_parent->getComponent(ComponentType::ConnectionPointSet));
+
+	int parent = -1;
+	ShipModule* sm = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+	if (sm)
+		parent = sm->m_parentEntity;
+
+	for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+	{
+		if (cps->m_connectionPoints[i].cpConnectedEntity >= 0 &&
+			cps->m_connectionPoints[i].cpConnectedEntity != parent)
+		{
+			boostPower += stackBooster(m_world->getEntity(cps->m_connectionPoints[i].cpConnectedEntity));
+		}
+	}
+	
+	SpeedBoosterModule* speedBooster = static_cast<SpeedBoosterModule*>(p_parent->getComponent(ComponentType::SpeedBoosterModule));
+	if (speedBooster)
+		boostPower += 3;
+	return boostPower;
 }

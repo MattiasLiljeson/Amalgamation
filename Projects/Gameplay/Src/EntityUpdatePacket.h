@@ -12,7 +12,8 @@
 /// \brief	Handles the packing and unpacking of entity updates.
 ///        
 /// # EntityUpdatePacket
-/// Detailed description.....
+/// Before: 73 bytes. (With AngularVelocity and Velocity)
+/// Now: 49 bytes.
 /// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
@@ -32,6 +33,4 @@ public:
 	AglVector3		scale;
 	AglQuaternion	rotation;
 	float timestamp;
-	AglVector3 velocity;
-	AglVector3 angularVelocity;
 };

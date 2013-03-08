@@ -84,6 +84,16 @@ void LibRocketBackendSystem::initialize()
 	//fonts.push_back( "Delicious-Italic.otf" );
 	//fonts.push_back( "Delicious-Roman.otf" );
 	fonts.push_back( "Armorhide.ttf" );
+	fonts.push_back( "digital-display.ttf" );
+	fonts.push_back( "Geo-Regular.ttf" );
+	fonts.push_back( "EHSMB.ttf" );
+	fonts.push_back( "esper.ttf" );
+	fonts.push_back( "young.ttf" );
+	fonts.push_back( "Sierra Madre.ttf" );
+	fonts.push_back( "AIRSTREA.ttf" );
+	fonts.push_back( "ARCADE_I.ttf" );
+	fonts.push_back( "ARCADE_N.ttf" );
+	fonts.push_back( "ARCADE_R.ttf" );
 	for( unsigned int i=0; i<fonts.size(); i++ )
 	{
 		string tmp = GUI_FONT_PATH + fonts[i]; 
@@ -240,6 +250,7 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 
+	// Debug help functionality
 	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
 		m_renderDebug = !m_renderDebug;
 		Rocket::Debugger::SetVisible( m_renderDebug );

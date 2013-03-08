@@ -34,4 +34,7 @@ public:
 	AglVector3		translation;
 	AglVector3		scale;
 	AglQuaternion	rotation;
+
+	AglVector3		bsPos; //Bounding Sphere Position
+	float			bsRadius; //Bounding Sphere Radius
 };

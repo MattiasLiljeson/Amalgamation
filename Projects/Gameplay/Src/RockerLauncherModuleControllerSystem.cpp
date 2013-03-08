@@ -124,13 +124,19 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 							p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 
+						ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, 1);
 						if (gun->coolDown == 0)
-							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(0, 1, 0, 1);
+						{
+							//Show the lockon
+							ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(1, 1, 1, 1);
+						}
 						else
 						{
-							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 0, 0, 1);
+							//Hide the lockon
+							ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(0, 0, 0, 0);
 						}
 						ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = target;
+						ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = target;
 						if (ship)
 						{
 							gun->coolDown = max(0, gun->coolDown - m_world->getDelta());
@@ -151,6 +157,9 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 					ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(0, 0, 0, 0);
 					ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = trans->getTranslation();
+					//Hide the lockon
+					ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(0, 0, 0, 0);
+					ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = trans->getTranslation();
 				}
 			}
 		}
@@ -162,6 +171,9 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 		ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(0, 0, 0, 0);
 		ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = trans->getTranslation();
+		//Hide the lockon
+		ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(0, 0, 0, 0);
+		ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = trans->getTranslation();
 	}
 }
 void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModule* p_module)

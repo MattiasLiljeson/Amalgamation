@@ -4,6 +4,11 @@
 #include "Packetizer.h"
 #include <AglVector3.h>
 
+enum ExplosionSource
+{
+	MINE, ROCKET
+};
+
 struct SpawnExplosionPacket : public Packetizer
 {
 public:
@@ -15,4 +20,5 @@ public:
 
 public:
 	AglVector3 position;
+	int		   source;
 };

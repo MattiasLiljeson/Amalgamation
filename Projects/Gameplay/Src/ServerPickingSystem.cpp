@@ -24,6 +24,7 @@
 #include "PlayerSystem.h"
 #include "TcpServer.h"
 #include "PlayerComponent.h"
+#include "ModuleOnChamberStartPoint.h"
 
 float getT(AglVector3 p_o, AglVector3 p_d, AglVector3 p_c, float p_r)
 {
@@ -379,7 +380,7 @@ AglVector3 ServerPickingSystem::closestConnectionPoint(AglVector3 p_position,
 			transform = static_cast<Transform*>(free[i].second->getComponent(ComponentType::Transform));
 			AglVector3 pos = conPoints->m_connectionPoints[free[i].first].cpTransform.GetTranslation();
 			pos.transform(transform->getMatrix());
-			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position))
+			if (AglVector3::lengthSquared(pos-p_position) < AglVector3::lengthSquared(closest-p_position) && free[i].second->getIndex() != p_pc.getLatestPick()) //Can't target itself
 			{
 				closest = pos;
 				p_pc.m_targetEntity = free[i].second->getIndex();
@@ -502,6 +503,7 @@ AglMatrix ServerPickingSystem::offsetTemp(Entity* p_entity, AglMatrix p_base, Ag
 			//Rotate around connection axis
 			//AglQuaternion rot2 = AglQuaternion::constructFromAxisAndAngle(transform.GetForward(), p_rotation);
 			rot = rots.back()*rot;
+			rot.normalize();
 			rots.pop_back();
 			//first = false;
 		}
@@ -687,6 +689,15 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		editSphereUpdate.m_radius = bs.radius;
 		m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
 
+		// If the module was spawned on a spawnpoint, then the module wont be on the
+		// on the spawnpoint anymore. Remove that component if it exists.
+		auto chamberSpawnPoint = static_cast<ModuleOnChamberStartPoint*>(
+			module->getComponent(ComponentType::ModuleOnChamberSpawnPoint));
+		if (chamberSpawnPoint)
+		{
+			module->removeComponent(ComponentType::ModuleOnChamberSpawnPoint);
+			module->applyComponentChanges();
+		}
 
 		/************************************************************************/
 		/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
@@ -850,6 +861,15 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			editSphereUpdate.m_offset = bs.position;
 			editSphereUpdate.m_radius = bs.radius;
 			m_server->unicastPacket(editSphereUpdate.pack(), shipNetworkSynced->getNetworkOwner());
+
+			/************************************************************************/
+			/* SEND TO CLIENTS!!!!  shipModule->m_parentEntity						*/
+			/************************************************************************/
+			ModuleStateChangePacket moduleChanged;
+			moduleChanged.affectedModule = networkSynced->getNetworkIdentity();
+			moduleChanged.currentParrent = -1;
+
+			m_server->broadcastPacket(moduleChanged.pack());
 		}
 	}
 	return true;
@@ -965,7 +985,7 @@ void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 //Send information about the Selection marker
 void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 {
-	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0)
+	if (p_ray.getLatestPick() >= 0 && p_ray.m_targetEntity >= 0 && p_ray.m_targetEntity != p_ray.getLatestPick())
 	{
 		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 			SystemType::PhysicsSystem));
@@ -1006,12 +1026,32 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
 		Entity* ship = target;
+
+		bool invalidTarget = false;
+
 		while (ship->getComponent(ComponentType::ShipModule))
 		{
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
+
+			if (intermediate->m_parentEntity < 0)
+			{
+				invalidTarget = true;
+				break;
+			}
+
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
+
+		if (invalidTarget)
+		{
+			SelectionMarkerUpdatePacket smup;
+			smup.targetNetworkIdentity = -1;
+			smup.transform = AglMatrix::identityMatrix();
+			m_server->unicastPacket(smup.pack(), p_ray.m_clientIndex);
+			return;
+		}
+
 		PhysicsBody* shipBody = static_cast<PhysicsBody*>(ship->getComponent(
 			ComponentType::PhysicsBody));
 

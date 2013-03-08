@@ -13,6 +13,7 @@ class EntityFactory;
 struct ModelResource;
 struct AglVector3;
 class LevelInfo;
+enum EndPieceMode;
 
 using namespace std;
 
@@ -71,7 +72,7 @@ private:
 	void calculatePieceCollision(vector<ModelResource*>* p_pieceMesh);
 
 	void addEndPlugs(LevelPiece* p_atPiece);
-	Entity* addEndPlug(Transform* p_atConnector);
+	Entity* addEndPlug(Transform* p_atConnector, EndPieceMode p_mode);
 
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
@@ -86,6 +87,7 @@ private:
 
 	vector<ModelResource*>	m_modelResources;
 	ModelResource*			m_endPlugModelResource;
+	ModelResource*			m_endPlugOpenedModelResource;
 	vector<int>				m_sortedResourceIds;	// Contains a list of indices of
 													// model resources, sorted in
 													// size, with the highest first.

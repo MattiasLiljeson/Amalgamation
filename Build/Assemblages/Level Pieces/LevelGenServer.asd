@@ -22,7 +22,8 @@ c LevelInfo
 
 	# Level size - Specifies how large the level should be in size.
 	# The size in the game is calculated by adding all chambers' radiuses together.
-	d s m_levelSize 1:1500
+	#d s m_levelSize 1:1500
+	d s m_levelSize 1:6000
 	d s m_levelSize 2:1500
 	d s m_levelSize 3:2000
 	d s m_levelSize 4:3000
@@ -107,10 +108,12 @@ c LevelInfo
 
 
 	# Starting piece of this generator [0 to N-1] where N is the amount of pieces 
-	# above that will be loaded.
-	d i m_startPieceId 				0
+	# above that will be loaded. Specify -1 to randomly select one.
+	d i m_startPieceId 				3
 
 	# End piece to plug connection points with.
-	d s m_plugPiece 				plugPieceServer.asd
-	d s m_plugModel 				RockD.agl
-
+	# The end plug piece must be specified after all other pieces.
+	d s m_plugAssemblageOpened		plugPieceOpenedServer.asd
+	d s m_plugModelOpened			Gate_open.agl
+	d s m_plugAssemblageClosed		plugPieceClosedServer.asd
+	d s m_plugModelClosed			Gate_closed.agl

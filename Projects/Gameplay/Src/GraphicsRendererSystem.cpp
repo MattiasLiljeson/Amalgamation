@@ -7,6 +7,9 @@
 #include <GPUTimer.h>
 #include <AntTweakBarWrapper.h>
 #include "ParticleRenderSystem.h"
+#include "ClientStateSystem.h"
+#include "MenuSystem.h"
+#include "TimerSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   ShadowSystem*	p_shadowSystem,
@@ -24,20 +27,20 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_particleRenderSystem	= p_particle;
 	m_antTweakBarSystem		= p_antTweakBar;
 	m_lightRenderSystem		= p_light;
-
-	m_totalTime =	0.0f;	
+	m_shouldRender			= true;
+	m_enteredIngamePreviousFrame = false;
 
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
 
-	m_profiles.push_back(GPUTimerProfile("SHADOW"));
 	m_profiles.push_back(GPUTimerProfile("MESH"));
-	m_profiles.push_back(GPUTimerProfile("LIGHT"));
+	m_profiles.push_back(GPUTimerProfile("LIGH"));
 	m_profiles.push_back(GPUTimerProfile("SSAO"));
 	m_profiles.push_back(GPUTimerProfile("DOF"));
-	m_profiles.push_back(GPUTimerProfile("COMPOSE"));
-	m_profiles.push_back(GPUTimerProfile("PARTICLE"));
+	m_profiles.push_back(GPUTimerProfile("COMP"));
+	m_profiles.push_back(GPUTimerProfile("PART"));
 	m_profiles.push_back(GPUTimerProfile("GUI"));
+	m_profiles.push_back(GPUTimerProfile("TOTAL"));
 
 	clearShadowStuf();
 }
@@ -48,32 +51,76 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 void GraphicsRendererSystem::initialize(){
 	for (unsigned int i=0;i < NUMRENDERINGPASSES; i++)
 	{
+
+		string variableName = m_profiles[i].profile;
 		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 			AntTweakBarWrapper::MEASUREMENT,
-			m_profiles[i].profile.c_str(),TwType::TW_TYPE_DOUBLE,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
 			&m_profiles[i].renderingTime,"group=GPU");
+ 
+		variableName +=" Spike";
+		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+			AntTweakBarWrapper::MEASUREMENT,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
+			&m_profiles[i].renderingSpike,"group='GPU Extra'");
+		
+		variableName = m_profiles[i].profile;
+		variableName += " Avg";
+		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+			AntTweakBarWrapper::MEASUREMENT,
+			variableName.c_str(),TwType::TW_TYPE_DOUBLE,
+			&m_profiles[i].renderingAverage,"group='GPU Extra'");
 
 		m_backend->getGfxWrapper()->getGPUTimer()->addProfile(m_profiles[i].profile);
-	}
-
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
-		AntTweakBarWrapper::MEASUREMENT,"Total",TwType::TW_TYPE_DOUBLE, &m_totalTime,"group=GPU");
-	
+	}	
 }
 void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
-	m_wrapper->clearRenderTargets();
+
+	auto timerSystem = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
+	if(timerSystem->checkTimeInterval(TimerIntervals::EverySecond)){
+		for (unsigned int i= 0; i < NUMRENDERINGPASSES; i++)
+		{
+			m_profiles[i].calculateAvarage();
+		}
+		
+	}
+
+	auto gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	if( m_shouldRender){
+		renderTheScene();
+	}
+	if(m_enteredIngamePreviousFrame){
+		auto menuSystem = static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem));
+		menuSystem->endLoadingState();
+		m_shouldRender = true;
+		m_enteredIngamePreviousFrame = false;
+	}
+	if(!m_shouldRender && gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::NOTCHANGED){
+		m_enteredIngamePreviousFrame = true;
+	}
+	else if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME){
+		m_shouldRender = false;
+	}
+}
+
+
+void GraphicsRendererSystem::renderTheScene()
+{
+	/*
 	//Shadows
 	//m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
-	//clearShadowStuf();
-	////Fill the shadow view projections
-	//for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
-	//	m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
-	//	m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
-	//		m_shadowSystem->getViewProjection(i);
-	//}
-
+	clearShadowStuf();
+	//Fill the shadow view projections
+	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
+		m_activeShadows[m_shadowSystem->getShadowIdx(i)] = 1;
+		m_shadowViewProjections[m_shadowSystem->getShadowIdx(i)] = 
+			m_shadowSystem->getViewProjection(i);
+	}
+	*/
 	/*
 	initShadowPass();
 	for(unsigned int i = 0; i < MAXSHADOWS; i++){
@@ -86,6 +133,7 @@ void GraphicsRendererSystem::process(){
 	endShadowPass();
 	*/
 	//m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
+	m_wrapper->clearRenderTargets();
 
 	// Meshes
 	m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
@@ -128,7 +176,8 @@ void GraphicsRendererSystem::process(){
 	//renderParticles();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
-	
+
+
 	//GUI
 	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
 	initGUIPass();
@@ -141,6 +190,7 @@ void GraphicsRendererSystem::process(){
 
 	updateTimers();
 }
+
 void GraphicsRendererSystem::initShadowPass(){
 	m_wrapper->setRasterizerStateSettings(RasterizerState::FILLED_CW_FRONTCULL);
 	m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
@@ -295,13 +345,13 @@ void GraphicsRendererSystem::clearShadowStuf()
 
 void GraphicsRendererSystem::updateTimers()
 {
-	m_totalTime = 0;
+	double total = 0;
 	GPUTimer* timer = m_wrapper->getGPUTimer();
 
-	for(unsigned int i = 0; i < NUMRENDERINGPASSES; i++){
-
-		m_profiles[i].renderingTime = timer->getTheTimeAndReset(m_profiles[i].profile);
-		m_totalTime += m_profiles[i].renderingTime;
+	for(unsigned int i = 0; i < NUMRENDERINGPASSES-1; i++){
+		m_profiles[i].pushNewTime(timer->getTheTimeAndReset(m_profiles[i].profile));
+		total += m_profiles[i].renderingTime;
 	}
+	m_profiles[TOTAL].pushNewTime(total);
 	m_wrapper->getGPUTimer()->tick();
 }

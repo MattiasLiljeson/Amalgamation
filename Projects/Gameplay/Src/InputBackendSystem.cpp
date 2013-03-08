@@ -15,6 +15,7 @@
 #include <map>
 #include <string>
 #include <GraphicsWrapper.h>
+#include "InputActionsBackendSystem.h"
 
 InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 									   GraphicsBackendSystem* p_graphicsBackend )
@@ -159,24 +160,8 @@ void InputBackendSystem::initialize()
 		"KEY_PERIOD" );
 
 	// Intitiate cursor
+	// Moved Control set initialization for cursor to InputActionBackend's initialize().
 	m_cursor = new Cursor();
-	m_cursor->addControlSet(
-		60.0, 60.0, false,
-		getControlByEnum( InputHelper::MouseAxes_X_NEGATIVE ),
-		getControlByEnum( InputHelper::MouseAxes_X_POSITIVE ),
-		getControlByEnum( InputHelper::MouseAxes_Y_NEGATIVE ),
-		getControlByEnum( InputHelper::MouseAxes_Y_POSITIVE ),
-		getControlByEnum( InputHelper::MouseButtons_LEFT ),
-		getControlByEnum( InputHelper::MouseButtons_RIGHT ) );
-	m_cursor->addControlSet(
-		1000.0, 1000.0, true,
-		getControlByEnum( InputHelper::Xbox360Analogs_THUMB_LX_NEGATIVE ),
-		getControlByEnum( InputHelper::Xbox360Analogs_THUMB_LX_POSITIVE ),
-		getControlByEnum( InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE ),
-		getControlByEnum( InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE ),
-		getControlByEnum( InputHelper::Xbox360Digitals_BTN_A ),
-		getControlByEnum( InputHelper::Xbox360Digitals_BTN_B ) );
-
 	m_cursor->setScreenSize(m_graphicsBackend->getGfxWrapper()->getWindowWidth(),
 							m_graphicsBackend->getGfxWrapper()->getWindowHeight());
 }

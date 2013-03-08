@@ -106,8 +106,8 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 
 			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
 				m_world->getSystem(SystemType::AudioBackendSystem));
-			audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-				"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
+			//audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
+			//	"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
 		}
 	
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_MODULE) > 0)
