@@ -2,6 +2,7 @@
 #include "TimerSystem.h"
 #include <TcpServer.h>
 #include "NetworkSynced.h"
+#include <DebugUtil.h>
 
 ModuleVisualEffectServerBufferSystem::ModuleVisualEffectServerBufferSystem(TcpServer* p_server, 
 															   ServerStateSystem* p_states) :
@@ -56,6 +57,8 @@ void ModuleVisualEffectServerBufferSystem::process()
 		while(!m_statusFXqueue_netowner.empty())
 		{
 			auto info = m_statusFXqueue_netowner.front();
+			if (info.m_mode == ModuleStatusEffectPacket::SPAWNED)
+				DEBUGPRINT(("sent"));
 			m_server->broadcastPacket(info.pack());
 			m_statusFXqueue_netowner.pop();
 		}

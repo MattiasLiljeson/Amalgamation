@@ -813,7 +813,13 @@ void ClientPacketHandlerSystem::handleIngameState()
 				ModuleStatusEffectPacket effectPacket;
 				effectPacket.unpack(packet);
 				Entity* entity = directMapper->getEntity(effectPacket.m_moduleNetworkId);
-				if (entity)
+				if (effectPacket.m_statusType==ModuleStatusEffectPacket::SPAWNED)
+				{
+					ModuleStatusEffectSystem::ModuleSpawnEffect fx;
+					fx.networkId = effectPacket.m_moduleNetworkId;
+					moduleFxVis->setSpawnedEffect(fx);
+				}
+				else if (entity)
 				{
 					switch (effectPacket.m_statusType)
 					{

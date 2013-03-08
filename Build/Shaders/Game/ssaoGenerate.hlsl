@@ -106,6 +106,6 @@ float4 PS(VertexOut input) : SV_TARGET
 		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
 	}
 	
-	ao = 1.0f - ao;;
-	return float4(0.0f, 0.0f, 0.0f, ao );
+	ao = 1.0f - ao;
+	return float4(0.0f, 0.0f, 0.0f, depth );
 }

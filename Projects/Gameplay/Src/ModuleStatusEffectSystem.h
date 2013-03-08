@@ -37,6 +37,12 @@ public:
 		float value;
 	};
 
+	struct ModuleSpawnEffect
+	{
+		int networkId;
+	};
+
+
 	struct ModuleHealthStatEffect
 	{
 		Entity* moduleEntity;
@@ -58,12 +64,14 @@ public:
 	void setValueEffect(ModuleValueStatEffect& p_fx);
 	void setHealthEffect(ModuleHealthStatEffect& p_fx);
 	void setFreefloatEffect(ModuleFreefloatEffect& p_fx);
+	void setSpawnedEffect(ModuleSpawnEffect& p_fx);
 protected:
 private:
 	vector<ModuleUnusedEffect> m_unusedModuleEffects;
 	vector<ModuleValueStatEffect> m_valueEffect;
 	vector<ModuleHealthStatEffect> m_healthEffects;
 	vector<ModuleFreefloatEffect> m_freefloatEffects;
+	vector<ModuleSpawnEffect> m_spawnEffects;
 
 	// Particle effects
 	// For unused modules
@@ -85,6 +93,9 @@ private:
 
 	void updateFreefloatGlowEffect(Entity* p_entity, bool p_mode);
 	float getDistSqBetweenShipAndModule(Entity* p_moduleEntity);
+
+	// spawn
+	bool createSpawnEffect(Entity* p_entity);
 
 	Entity* m_myship;
 	AglVector3 m_moduleColorTone;

@@ -250,7 +250,7 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new TempModuleSpawner(m_server), true);
+		m_world->setSystem(new TempModuleSpawner(m_server,moduleeffect), true);
 
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
@@ -258,7 +258,7 @@ namespace Srv
 		/************************************************************************/
 		/* Debugging															*/
 		/************************************************************************/
-		m_world->setSystem(new ServerMeasurementSystem(), true);
+		// m_world->setSystem(new ServerMeasurementSystem(), true);
 		m_world->setSystem(new OutputLogger("log_server.txt"));
 
 		// NOTE: (Johan) THIS MUST BE AFTER ALL SYSTEMS ARE SET, OR SOME SYSTEMS WON'T
