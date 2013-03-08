@@ -90,10 +90,12 @@ int CullingSystem::shouldCull(Entity* p_entity)
 	if (parentComp)
 	{
 		Entity* parent = m_world->getEntity(parentComp->getParentEntityId());
-		
-		LevelPieceRoot* root = static_cast<LevelPieceRoot*>(parent->getComponent(ComponentType::LevelPieceRoot));
-		if (root && root->shouldCull)
-			return 0;
+		if(parent)
+		{
+			LevelPieceRoot* root = static_cast<LevelPieceRoot*>(parent->getComponent(ComponentType::LevelPieceRoot));
+			if (root && root->shouldCull)
+				return 0;
+		}
 	}
 
 #ifdef CULL_MODE_BOX
