@@ -29,6 +29,8 @@ struct RenderSceneInfoCBuffer
 	float renderTargetSize[2];
 	float farPlane;
 	float nearPlane;
+	float lowResDivider;
+	float pad[3];
 
 	void setSceneInfo(const RendererSceneInfo& p_sceneInfo){
 		ambientColorAndFogNear[3] = p_sceneInfo.fogNearPlaneClosenessPercentage; // fog near
@@ -43,6 +45,7 @@ struct RenderSceneInfoCBuffer
 		setRenderTargetSize(p_sceneInfo.renderTargetDimensions);
 		setFarPlane(p_sceneInfo.farPlane);
 		setNearPlane(p_sceneInfo.nearPlane);
+		setLowResDivider( p_sceneInfo.lowResDivider);
 	}
 	void setViewProjection(const AglMatrix& p_viewProj){
 		for (unsigned int i = 0; i < 16; i++){
@@ -89,5 +92,9 @@ struct RenderSceneInfoCBuffer
 	}
 	void setNearPlane(const float& p_near){
 		nearPlane = p_near;
+	}
+
+	void setLowResDivider(const float& p_lowResDivider){
+		lowResDivider = p_lowResDivider;
 	}
 };

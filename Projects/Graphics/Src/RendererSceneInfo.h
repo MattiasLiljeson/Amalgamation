@@ -31,4 +31,10 @@ struct RendererSceneInfo
 	AglVector2 renderTargetDimensions;
 	float farPlane;
 	float nearPlane;
+	int lowResDivider;
+
+	RendererSceneInfo()
+	{
+		lowResDivider = 4;
+	}
 };

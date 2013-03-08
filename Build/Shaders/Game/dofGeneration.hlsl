@@ -1,22 +1,11 @@
-Texture2D gDiffuseBuffer	: register(t0);
-Texture2D gNormalBuffer		: register(t1);
-Texture2D gSpecularBuffer	: register(t2);
-Texture2D gLightDiffuse 	: register(t3);
-Texture2D gLightSpecular	: register(t4);
-//Texture2D gDepthBuffer		: register(t5);
+Texture2D g_diffuse				: register(t0);
+Texture2D g_normal				: register(t1);
+Texture2D g_specular			: register(t2);
+Texture2D g_diffLight 			: register(t3);
+Texture2D g_specLight			: register(t4);
+//Texture2D g_depth				: register(t10);
 
-SamplerState pointSampler	: register(s0);
-
-cbuffer SSAO : register(b1)
-{
-	float scale;
-	float bias;
-	float intensity;
-	float sampleRadius;
-	float epsilon;
-	float cocFactor;
-	const static float randSize = 64;
-}
+SamplerState g_samplerPointWrap	: register(s0);
 
 struct VertexIn
 {
@@ -49,17 +38,12 @@ VertexOut VS(VertexIn input)
 PixelOut PS(VertexOut input)
 {
 	PixelOut pout;
-	//pout.diffuse = float4(1,0,0,1);
-	//pout.normal = float4(0,1,0,1);
-	//pout.specular = float4(0,0,1,1);
-	//pout.lightDiffus = float4(1,1,0,1);
-	//pout.lightSpecula = float4(1,0,1,1);
-
-	pout.diffuse 		= gDiffuseBuffer.Sample( pointSampler, input.texCoord );
-	pout.normal 		= gNormalBuffer.Sample( pointSampler, input.texCoord );
-	pout.specular 		= gSpecularBuffer.Sample( pointSampler, input.texCoord );
-	pout.lightDiffus 	= gLightDiffuse.Sample( pointSampler, input.texCoord );
-	pout.lightSpecula 	= gLightSpecular.Sample( pointSampler, input.texCoord );
+	
+	pout.diffuse 		= g_diffuse.Sample( g_samplerPointWrap, input.texCoord );
+	pout.normal 		= g_normal.Sample( g_samplerPointWrap, input.texCoord );
+	pout.specular 		= g_specular.Sample( g_samplerPointWrap, input.texCoord );
+	pout.lightDiffus 	= g_diffLight.Sample( g_samplerPointWrap, input.texCoord );
+	pout.lightSpecula 	= g_specLight.Sample( g_samplerPointWrap, input.texCoord );
 
 	return pout;
 }

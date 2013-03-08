@@ -151,7 +151,7 @@ void GraphicsRendererSystem::initShadowPass(){
 }
 
 void GraphicsRendererSystem::endShadowPass(){
-	m_wrapper->resetViewportToOriginalSize();
+	m_wrapper->resetViewportToStdSize();
 	m_wrapper->stopedRenderingShadows();
 	//m_wrapper->unmapPerShadowBuffer();
 }
@@ -192,8 +192,6 @@ void GraphicsRendererSystem::beginSsao()
 {
 	m_wrapper->setPrimitiveTopology(PrimitiveTopology::TRIANGLESTRIP);
 	m_wrapper->setBlendStateSettings(BlendState::SSAO);
-	//m_wrapper->setComposedRenderTargetWithNoDepthStencil();
-	//m_wrapper->setBlendStateSettings(BlendState::DEFAULT);
 	m_wrapper->setRasterizerStateSettings(
 		RasterizerState::FILLED_NOCULL_NOCLIP, false);
 }
@@ -209,8 +207,7 @@ void GraphicsRendererSystem::endSsao()
 
 void GraphicsRendererSystem::beginDofGenerationPass()
 {
-	m_wrapper->setViewportToShadowMapSize();
-
+	m_wrapper->setViewportToLowRes();
 	m_wrapper->setPrimitiveTopology( PrimitiveTopology::TRIANGLESTRIP );
 	m_wrapper->setBlendStateSettings( BlendState::OVERWRITE );
 	m_wrapper->setDofRenderTargets();
@@ -221,7 +218,7 @@ void GraphicsRendererSystem::beginDofGenerationPass()
 void GraphicsRendererSystem::endDofGenerationPass()
 {
 	m_wrapper->unmapGbuffers();
-	m_wrapper->resetViewportToOriginalSize();
+	m_wrapper->resetViewportToStdSize();
 
 }
 

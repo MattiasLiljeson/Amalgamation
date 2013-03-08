@@ -85,8 +85,11 @@ public:
 	void setDofRenderTargets();
 	void setComposedRenderTargetWithNoDepthStencil();
 	void setParticleRenderState();
+
+	void setViewportToLowRes();
 	void setViewportToShadowMapSize();
-	void resetViewportToOriginalSize();
+	void resetViewportToStdSize();
+
 	void setShadowMapAsRenderTarget(unsigned int p_shadowMapIdx);
 	void setShadowViewProjection(const AglMatrix& p_viewProj);
 	void setShadowViewProjections( AglMatrix* p_viewProj );
@@ -231,6 +234,7 @@ private:
 
 	int m_height;
 	int m_width;
+	int m_lowResDivider;
 
 	int m_randomNormalTextures;
 	int m_solidWhiteTexture;

@@ -20,9 +20,9 @@ DeferredRenderer::DeferredRenderer(
 	m_device		= p_device;
 	m_deviceContext = p_deviceContext;
 
-	m_width		= p_width;
-	m_height	= p_height;
-	m_useHdr	= p_useHdr;
+	m_width			= p_width;
+	m_height		= p_height;
+	m_useHdr		= p_useHdr;
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -150,6 +150,20 @@ void DeferredRenderer::renderComposeStage()
 	m_deviceContext->Draw(6,0);
 }
 
+void DeferredRenderer::setViewPortSize( float p_width, float p_height )
+{
+	D3D11_VIEWPORT vp;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	vp.Width	= p_width;
+	vp.Height	= p_height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+
+	m_deviceContext->RSSetViewports(1,&vp);
+}
+
+
 void DeferredRenderer::mapNormal(ID3D11ShaderResourceView* p_shadowMap)
 {	
 	m_deviceContext->PSSetShaderResources( 1, 1, &m_srvGBuffers[RenderTargets_NORMAL] );
@@ -203,27 +217,6 @@ void DeferredRenderer::unmapDofBuffers(){
 	m_deviceContext->PSSetShaderResources( 9, 1, &nulz );
 }
 
-//void DeferredRenderer::unmapShaderResourcesForComposePass()
-//{
-//	ID3D11ShaderResourceView* nulz = NULL;
-//	m_deviceContext->PSSetShaderResources( RenderTargets_DIFFUSE,		1, &nulz );
-//	m_deviceContext->PSSetShaderResources( RenderTargets_NORMAL,		1, &nulz );
-//	m_deviceContext->PSSetShaderResources( RenderTargets_SPECULAR,		1, &nulz );
-//	m_deviceContext->PSSetShaderResources( RenderTargets_LIGHT_DIFFUSE, 1, &nulz );
-//	m_deviceContext->PSSetShaderResources( RenderTargets_LIGHT_SPEC,	1, &nulz );
-//	m_deviceContext->PSSetShaderResources( DEPTH_IDX,			1, &nulz );
-//}
-
-//void DeferredRenderer::unmapDofShaderResources()
-//{
-//	int offset = RenderTargets_CNT;
-//	ID3D11ShaderResourceView* nulz = NULL;
-//	m_deviceContext->PSSetShaderResources( offset + RenderTargets_DIFFUSE,			1, &nulz );
-//	m_deviceContext->PSSetShaderResources( offset + RenderTargets_NORMAL,			1, &nulz );
-//	m_deviceContext->PSSetShaderResources( offset + RenderTargets_SPECULAR,			1, &nulz );
-//	m_deviceContext->PSSetShaderResources( offset + RenderTargets_LIGHT_DIFFUSE,	1, &nulz );
-//	m_deviceContext->PSSetShaderResources( offset + RenderTargets_LIGHT_SPEC,		1, &nulz );
-//}
 
 void DeferredRenderer::mapDepth()
 {

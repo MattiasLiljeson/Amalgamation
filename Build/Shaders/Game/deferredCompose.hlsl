@@ -1,6 +1,8 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
 
+static const float g_LIGHT_MULT = 10;
+
 static const float blurFilter3[3][3] = {{0.01f,0.08f,0.01f},
 									   {0.08f,0.64f,0.01f},
 									   {0.01f,0.08f,0.01f}};
@@ -11,32 +13,37 @@ static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
 										{0.02f,0.04f,0.08f,0.04f,0.02f},
 										{0.01f,0.02f,0.04f,0.02f,0.01f}};
 
-Texture2D gDiffBuffer		: register(t0);
-Texture2D gNormalBuffer		: register(t1);
-Texture2D gSpecBuffer		: register(t2);
-Texture2D gLightDiff 		: register(t3);
-Texture2D gLightSpec		: register(t4);
+#define NUM_TAPS 12
+static const float2 poisson[NUM_TAPS] = {
+	{-.326,-.406},
+	{-.840,-.074},
+	{-.696, .457},
+	{-.203, .621},
+	{ .962,-.195},
+	{ .473,-.480},
+	{ .519, .767},
+	{ .185,-.893},
+	{ .507, .064},
+	{ .896, .412},
+	{-.322,-.933},
+	{-.792,-.598}
+};
 
-Texture2D gDofDiffBuffer	: register(t5);
-Texture2D gDofNormalBuffer	: register(t6);
-Texture2D gDofSpecBuffer	: register(t7);
-Texture2D gDofLightDiff 	: register(t8);
-Texture2D gDofLightSpec		: register(t9);
+Texture2D g_diffuse				: register(t0);
+Texture2D g_normal				: register(t1);
+Texture2D g_specular			: register(t2);
+Texture2D g_diffLight 			: register(t3);
+Texture2D g_specLight			: register(t4);
 
-Texture2D gDepthBuffer		: register(t10);
+Texture2D g_diffuseLowRes		: register(t5);
+Texture2D g_normalLowRes		: register(t6);
+Texture2D g_specularLowRes		: register(t7);
+Texture2D g_specLightLowRes 	: register(t8);
+Texture2D g_diffLightLowRes		: register(t9);
 
-SamplerState pointSampler : register(s0);
+Texture2D g_depth				: register(t10);
 
-cbuffer SSAO : register(b1)
-{
-	float scale;
-	float bias;
-	float intensity;
-	float sampleRadius;
-	float epsilon;
-	float cocFactor;
-	const static float randSize = 64;
-}
+SamplerState g_samplerPointWrap : register(s0);
 
 struct VertexIn
 {
@@ -49,10 +56,65 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 };
 
-// Changed by Jarl: removed additional depth sampling, added depth as param instead
 float3 getPosition(float2 p_uv,float p_depth) 
 {
 	return getWorldPosFromTexCoord( p_uv, p_depth, gViewProjInverse);
+}
+
+// Depth of field blur
+float4 PoissonDOF( float2 texCoord, uint3 index )
+{
+	float maxCoCRadius=5.0f, maxCoCDiameter = maxCoCRadius*2;
+	float radiusScale=1.0f/g_lowResDivider; // radius of CoC on low res downsampled image
+	//float radiusScale=1.0f; // radius of CoC on low res downsampled image
+
+	float4 outColor = float4( 0.0f, 0.0f, 0.0f, 0.0f );
+	float discRadius, discRadiusLow, centerCoc;
+
+	// Convert depth of pixel to blur radius(radius of the poisson disc)
+	centerCoc = g_specLight.Load(index).a;
+	discRadius = abs(centerCoc * maxCoCDiameter);
+	discRadiusLow = discRadius*radiusScale;
+
+	// Step size
+	float2 gDX_Tex = float2(1/gRenderTargetSize.x, 1/gRenderTargetSize.y);
+	float2 gDX_TexDOF = gDX_Tex/g_lowResDivider;
+	for (int i=0; i < NUM_TAPS; i++)
+	{
+		// Get the tex-coords for high- and low-res tap
+		float2 coordLow = texCoord + (gDX_TexDOF * poisson[i] * discRadiusLow);
+		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
+			
+		float4 diffBuffLow  	= g_diffuseLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 diffLightLow  	= g_specLightLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 diffLow = diffBuffLow * diffLightLow * g_LIGHT_MULT;
+
+		float4 specBuffLow  	= g_specularLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 specLightLow  	= g_diffLightLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 specLow = specBuffLow * specLightLow * g_LIGHT_MULT;
+		float4 finalLow 		= diffLow + specLow;
+
+		float4 diffBuffHigh  	= g_diffuse.Sample( g_samplerPointWrap, coordHigh );
+		float4 diffLightHigh	= g_diffLight.Sample( g_samplerPointWrap, coordHigh );
+		float4 diffHigh = diffBuffHigh * diffLightHigh * g_LIGHT_MULT;
+
+		float4 specBuffHigh  	= g_specular.Sample( g_samplerPointWrap, coordHigh );
+		float4 specLightHigh  	= g_specLight.Sample( g_samplerPointWrap, coordHigh );
+		float4 specHigh = specBuffHigh * specLightHigh * g_LIGHT_MULT;
+		float4 finalHigh = diffHigh + specHigh;
+
+		float coc = g_specLight.Sample( g_samplerPointWrap, coordHigh ).a;
+		// Mix low- and high-res taps based on blurriness
+		float4 tap = lerp( finalHigh, finalLow, coc );
+
+		// Ignore taps that are closer than the center and in focus
+		tap.a = (tap.a >= centerCoc) ? 1.0f : abs(tap.a * 2.0f - 1.0f);
+
+		outColor.rgb += tap.rgb * tap.a;
+		outColor.a += tap.a;
+	}
+
+	return outColor/outColor.a;
 }
 
 VertexOut VS(VertexIn p_input)
@@ -70,21 +132,8 @@ float4 PS(VertexOut input) : SV_TARGET
 	index.xy = input.position.xy;
 	index.z = 0;
 
-	float4 rawDiffColor = gDiffBuffer.Load( index );
-	//float4 rawNormal 	= gNormalBuffer.Load( index );
-	float4 rawSpecColor = gSpecBuffer.Load( index );
-	float4 rawLightDiff = gLightDiff.Load( index ) * 10.0f;
-	float4 rawLightSpec = gLightSpec.Load( index ) * 10.0f;
+	float depth = g_depth.Load( index ).r;
 
-	float4 dofDiffColor = gDofDiffBuffer.Sample( pointSampler, input.texCoord );
-	//float4 dofNormal 	= gDofNormalBuffer.Sample( pointSampler, input.texCoord );
-	float4 dofSpecColor = gDofSpecBuffer.Sample( pointSampler, input.texCoord );
-	float4 dofLightDiff = gDofLightDiff.Sample( pointSampler, input.texCoord ) * 10.0f;
-	float4 dofLightSpec = gDofLightSpec.Sample( pointSampler, input.texCoord ) * 10.0f;
-
-	float depth = gDepthBuffer.Load( index ).r;
-
-	//float4 sampleNormal = float4(gNormalBuffer.Sample(pointSampler, input.texCoord).rgb,1.0f);
 	float3 fog = gFogColorAndFogFar.rgb;
 	float3 ambient = gAmbientColorAndFogNear.rgb;
 	float2 fogNearFarPercentage = float2(gAmbientColorAndFogNear.a,gFogColorAndFogFar.a);
@@ -97,68 +146,38 @@ float4 PS(VertexOut input) : SV_TARGET
 	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	
-
 	float finalAO = 0.0f;
 	float3 finalEmissiveValue = float3(0,0,0);	
 	float4 sampledGlow;
 	float2 scale = float2(1.0f/1280.0f, 1.0f/720.0f);
-	//scale *= coc;
+	float coc = 0.0f;
+
 	[unroll]
-	for( int x=-2; x<3; x++ )
-	{
+	for( int x=-2; x<3; x++ ) {
 		[unroll]
-		for( int y=-2; y<3; y++ )
-		{
-			//float2 offset = float2(x*scale.x, y*scale.y);
-			//offset *= coc;
-			//float2 idx = index.xy*scale + offset;
+		for( int y=-2; y<3; y++ ) {
 			uint3 idx = index+uint3(x,y,0);
 			float blurFactor = blurFilter5[x+2][y+2];
 
-			finalAO += gLightDiff.Load( idx ).a * blurFactor;
+			finalAO += g_diffLight.Load( idx ).a * blurFactor;
 			
-			sampledGlow = gDiffBuffer.Load( index+uint3(x*2,y*2,0) ).rgba;
+			sampledGlow = g_diffuse.Load( index+uint3(x*2,y*2,0) ).rgba;
 			sampledGlow.rgb *= sampledGlow.a;
 			finalEmissiveValue += sampledGlow.rgb * blurFactor;
+
+			coc += g_specLight.Load( idx ).a * blurFactor;
 		}
 	}
-	float coc = 0.0f;
-	coc = dofLightSpec.a ;
-	coc *= cocFactor;
-	//return float4(coc,coc,coc,1);
-	float4 dofDiff = dofDiffColor * dofLightDiff;
-	return dofDiff;
-	float4 dofSpec = dofSpecColor * dofLightSpec;
-	float4 rawDiff = rawDiffColor * rawLightDiff;
-	float4 rawSpec = rawSpecColor * rawLightSpec;
-	float4 diff = coc*dofDiff + (1-coc)*rawDiff;
-	//diff = rawDiff*0.5 + rawDiff*0.5;
-	//diff = dofDiff;
-	float4 spec = coc*dofSpec + (1-coc)*rawSpec;
-	//spec = rawSpec;
-	//spec = dofSpec;
+	//return float4( coc, coc, coc, 1);
+	float4 finalCol = PoissonDOF( input.texCoord, index );
 
-	//float4 diffColor = coc*dofDiffColor + (1-coc)*rawDiffColor;
-	//diffColor = dofDiffColor;
-	//float4 specColor = coc*dofSpecColor + (1-coc)*rawSpecColor;
-	//specColor = dofSpecColor;
-	//float4 lightDiff = coc*dofLightDiff + (1-coc)*rawLightDiff;
-	//lightDiff = dofLightDiff;
-	//float4 lightSpec = coc*dofLightSpec + (1-coc)*rawLightSpec;
-	//lightSpec = dofLightSpec;
-
-	// add light
-	float4 finalCol = float4(0,0,0,0);
-	finalCol += diff + spec;
-	//finalCol += specColor * lightSpec;
-	//finalCol += diffColor * lightDiff;	
 	// apply ao
-	//finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
-	//finalCol += float4 (ambient,0.0f );	
+	finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
+	finalCol += float4 (ambient,0.0f );	
 	// apply fog
-	//finalCol = float4( lerp( finalCol.rgb, fog+(lightSpec+lightDiff)*0.01f, fogDepth), finalCol.a ); 
+	finalCol = float4( lerp( finalCol.rgb, fog/*+(lightSpec+lightDiff)*0.01f*/, fogDepth), finalCol.a ); 
 	// apply glow
-	//finalCol += float4( finalEmissiveValue, 0.0f );
+	finalCol += float4( finalEmissiveValue, 0.0f );
 	
 	return float4( finalCol.rgb, 1.0f );
 }

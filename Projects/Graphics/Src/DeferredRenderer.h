@@ -76,6 +76,8 @@ public:
 	void generateDof();
 	void renderComposeStage();
 
+	void setViewPortSize( float p_width, float p_height );
+
 	// Buffers as resources
 	void mapNormal(ID3D11ShaderResourceView* p_shadowMap);
 	void mapNormal();
@@ -84,11 +86,8 @@ public:
 	void unmapGbuffers();
 	void mapDofBuffers();
 	void unmapDofBuffers();
-	//void unmapDofShaderResources();
-	//void unmapShaderResourcesForComposePass();
 	void mapDepth();
 	void unmapDepth();
-	//void unmapDepthAsShaderResource();
 
 	// Buffer / RT manipulation
 	void clearRenderTargets();
