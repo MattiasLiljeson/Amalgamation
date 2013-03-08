@@ -163,14 +163,9 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 	p_physicsSystem->getController()->InactivateBody(p_physicsBody->m_id);
 	
 	m_world->deleteEntity(p_entity);
-	// ...and play an explosion sound effect.
+
+
 	Transform* t = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
-	SpawnSoundEffectPacket soundEffectPacket;
-	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::Explosion;
-	soundEffectPacket.positional = true;
-	soundEffectPacket.position = t->getTranslation();
-	soundEffectPacket.attachedToNetsyncEntity = -1;
-	m_server->broadcastPacket(soundEffectPacket.pack());
 
 
 	SpawnExplosionPacket explosion;

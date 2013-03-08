@@ -1084,6 +1084,25 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	particleEmitter->addParticleSystemInstruction(particleInstructionFlash);
 
 	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
+
+	SoundComponent* soundComponent = new SoundComponent();
+	effect->addComponent(soundComponent);
+
+	Component* component = NULL;
+
+	//Plays twice for some reason
+	string name = "Explosion";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	explodeSound->file = "bomb-03.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::PLAY;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+
 	m_world->addEntity(effect);
 }
 

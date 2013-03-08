@@ -143,13 +143,13 @@ void SoundFactory::initBuffer(XAUDIO2_BUFFER* p_audioBuffer,
 	switch (p_audioHeader->playInterval)
 	{
 	case AudioHeader::ONCE:
-		p_audioBuffer->LoopCount = 1;
+		p_audioBuffer->LoopCount = 0;
 		break;
 	case AudioHeader::TIMERBASED:
 		p_audioBuffer->LoopCount = 1;
 		break;
 	case AudioHeader::TWICE:
-		p_audioBuffer->LoopCount = 2;
+		p_audioBuffer->LoopCount = 1;
 		break;
 	case AudioHeader::FOREVER:
 		p_audioBuffer->LoopCount = XAUDIO2_LOOP_INFINITE;
