@@ -32,5 +32,9 @@ public:
 
 private:
 	TcpServer* m_server;
-	map<Transform*, Transform> m_previousTransforms;
+	struct TransformRecord {
+		Transform transform;
+		float timestamp;
+	};
+	map<Transform*, TransformRecord> m_previousTransforms;
 };

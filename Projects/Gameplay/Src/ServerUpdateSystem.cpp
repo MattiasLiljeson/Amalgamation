@@ -144,7 +144,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						bool hasChanged = true;
 						if(m_previousTransforms.count(transform) > 0)
 						{
-							Transform& prevTransform = m_previousTransforms[transform];
+							Transform& prevTransform = m_previousTransforms[transform].transform;
 							if(prevTransform.getTranslation() == transform->getTranslation() &&
 								prevTransform.getRotation() == transform->getRotation() &&
 								prevTransform.getScale() == transform->getScale())
@@ -153,19 +153,20 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							}
 							else
 							{
-								m_previousTransforms[transform] = *transform;
 								hasChanged = true;
 							}
 						}
 						else
 						{
-							m_previousTransforms[transform] = *transform;
 							hasChanged = true;
 						}
 
-						if(hasChanged)
+						if(hasChanged || m_world->getElapsedTime() > 
+							m_previousTransforms[transform].timestamp + 1.0f)
 						{
-							m_previousTransforms[transform] = *transform;
+							m_previousTransforms[transform].transform = *transform;
+							m_previousTransforms[transform].timestamp = 
+								m_world->getElapsedTime();
 							EntityUpdatePacket updatePacket;
 							updatePacket.networkIdentity = netSync->getNetworkIdentity();
 							updatePacket.entityType		= static_cast<char>(netSync->getNetworkType());
