@@ -13,8 +13,6 @@ EntityCreationPacket::EntityCreationPacket()
 	rotation		= AglQuaternion();
 	meshInfo		= -1;
 	isLevelProp		= false;
-	bsPos			= AglVector3(0, 0, 0);
-	bsRadius		= -1;
 }
 
 EntityCreationPacket::~EntityCreationPacket()
@@ -35,8 +33,12 @@ Packet EntityCreationPacket::pack()
 		<< translation
 		<< rotation
 		<< scale
-		<< bsPos
-		<< bsRadius;
+		<< (char)additionalMisc.size();
+
+	for (unsigned int misc = 0; misc < additionalMisc.size(); misc++)
+	{
+		packet << additionalMisc[misc];
+	}
 
 	return packet;
 }
@@ -52,7 +54,16 @@ void EntityCreationPacket::unpack( Packet& p_packet )
 		>> miscData
 		>> translation
 		>> rotation
-		>> scale
-		>> bsPos
-		>> bsRadius;
+		>> scale;
+	
+	char miscSize;
+	p_packet >> miscSize;
+	if (miscSize > 0)
+	{
+		additionalMisc.resize(miscSize, 0);
+		for (unsigned int misc = 0; misc < miscSize; misc++)
+		{
+			p_packet >> additionalMisc[misc];
+		}
+	}
 }
