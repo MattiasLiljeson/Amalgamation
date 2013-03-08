@@ -894,6 +894,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			string asdName = fileData->assemblageName;
 			entity = entityFromRecipe( asdName );
 		}
+
 	}
 	else	
 	{
@@ -903,6 +904,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			entity = entityFromRecipeOrFile( "DebugCube", "Assemblages/DebugCube.asd" );
 
 	}
+
 	// Try fetch a transform component if it exists.
 	Transform* transform = NULL;
 	if (entity)
@@ -925,13 +927,12 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 		m_world->addEntity(entity);
 	}
 
-	LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
+	/*LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
 	if (root)
 	{
 		root->boundingSphere.position = p_packet.bsPos;
 		root->boundingSphere.radius = p_packet.bsRadius;
-	}
-
+	}*/
 
 	return entity;
 }

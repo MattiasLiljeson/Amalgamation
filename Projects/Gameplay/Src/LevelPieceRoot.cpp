@@ -8,4 +8,5 @@ LevelPieceRoot::LevelPieceRoot()
 	pieceId = -1;
 	boundingSphere.radius = -1; //Invalid bounding sphere
 	boundingSphere.position = AglVector3(0, 0, 0);
+	shouldCull = false;
 }

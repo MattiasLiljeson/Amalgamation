@@ -18,6 +18,8 @@
 #include "GradientComponent.h"
 #include "BoundingBox.h"
 #include "InputBackendSystem.h"
+#include "EntityParent.h"
+#include "LevelPieceRoot.h"
 
 CullingSystem::CullingSystem()
 	: EntitySystem( SystemType::CullingSystem, 1,
@@ -81,6 +83,18 @@ int CullingSystem::shouldCull(Entity* p_entity)
 {
 	Transform* transform = static_cast<Transform*>(
 		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+	EntityParent* parentComp = static_cast<EntityParent*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::EntityParent ) );
+
+	if (parentComp)
+	{
+		Entity* parent = m_world->getEntity(parentComp->getParentEntityId());
+		
+		LevelPieceRoot* root = static_cast<LevelPieceRoot*>(parent->getComponent(ComponentType::LevelPieceRoot));
+		if (root && root->shouldCull)
+			return 0;
+	}
 
 #ifdef CULL_MODE_BOX
 	//Bounding Box check - Not very beneficial
