@@ -173,7 +173,7 @@ void GraphicsRendererSystem::renderTheScene()
 	//Particles
 	m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
 	initParticlePass();
-	//renderParticles();
+	renderParticles();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
 
