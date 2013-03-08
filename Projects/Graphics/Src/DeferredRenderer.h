@@ -47,7 +47,8 @@ public:
 	const static int RT2 = 2;
 	const static int RT3 = 3;
 	const static int RT4 = 4;
-	const static int RT5 = 5;
+	const static int DEPTH_IDX = 10;
+	//const static int RT5 = 5;
 	enum RenderTargets {
 		RenderTargets_NON_EXISTING	= -1,
 		RenderTargets_DIFFUSE		= RT0,
@@ -55,7 +56,7 @@ public:
 		RenderTargets_SPECULAR		= RT2,
 		RenderTargets_LIGHT_DIFFUSE = RT3,
 		RenderTargets_LIGHT_SPEC	= RT4,
-		RenderTargets_DEPTH			= RT5,
+		//RenderTargets_DEPTH			= RT5,
 		RenderTargets_CNT,
 	};
 
@@ -67,22 +68,29 @@ public:
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
 	void releaseRenderTargetsAndDepthStencil();
 
-	// Buffer as RTs
+	// Buffers as RTs
 	void setBasePassRenderTargets();
-	void setLightRenderTarget();
-	void renderSsao();
+	void setLightRenderTargets();
+	void generateSsao();
+	void setDofRenderTargets();
+	void generateDof();
 	void renderComposeStage();
 
+	void setViewPortSize( float p_width, float p_height );
+
 	// Buffers as resources
-	void mapShaderResourcesForLightPass(ID3D11ShaderResourceView* p_shadowMap);
-	void mapShaderResourcesForLightPass();
-	void unmapShaderResourcesForLightPass();
-	void mapShaderResourcesForComposePass();
-	void unmapShaderResourcesForComposePass();
-	void unmapDepthAsShaderResource();
+	void mapNormal(ID3D11ShaderResourceView* p_shadowMap);
+	void mapNormal();
+	void unmapNormal();
+	void mapGbuffers();
+	void unmapGbuffers();
+	void mapDofBuffers();
+	void unmapDofBuffers();
+	void mapDepth();
+	void unmapDepth();
 
 	// Buffer / RT manipulation
-	void clearBuffers();
+	void clearRenderTargets();
 	ID3D11DepthStencilView* getDepthStencil();
 	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
@@ -111,6 +119,7 @@ private:
 	void initDepthStencil();
 	void initGeometryBuffers();
 	void initLightBuffers();
+	void initDofBuffers();
 	void buildBlendStates();
 	void buildRasterizerStates();
 	void initShaders();
@@ -122,6 +131,9 @@ private:
 	void checkHr( HRESULT p_hr, const string& p_file,
 		const string& p_function, int p_line );
 
+	void createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
+		ID3D11RenderTargetView** out_rtv, int p_width, int p_height, DXGI_FORMAT p_format );
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -129,8 +141,16 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
-	ID3D11RenderTargetView*		m_gBuffers[RenderTargets_CNT-1];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvDepth;
+
+	// Regular Gbuffers
+	ID3D11RenderTargetView*		m_rtvGBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvGBuffers[RenderTargets_CNT];
+
+	// Dof
+	ID3D11RenderTargetView*		m_rtvDofBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvDofBuffers[RenderTargets_CNT];
+
 	ID3D11DepthStencilView*		m_depthStencilView;
 
 	DeferredBaseShader*				m_baseShader;
@@ -140,6 +160,7 @@ private:
 
 	LightShader*			m_lightShader;
 	DeferredComposeShader*	m_ssaoShader;
+	DeferredComposeShader*	m_dofGenerationShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

@@ -460,7 +460,9 @@ void ShaderFactory::createSamplerState( ID3D11SamplerState** p_samplerState )
 
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc,sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC; // This looks better but is more expensive /ML
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -527,7 +529,9 @@ void ShaderFactory::createPTVertexInputLayout(VSData* p_vs,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 2;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 void ShaderFactory::createPNTVertexInputLayout(VSData* p_vs, 
@@ -541,7 +545,10 @@ void ShaderFactory::createPNTVertexInputLayout(VSData* p_vs,
 		{"TEXCOORD", 0,	DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, 
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	//constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 3;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 void ShaderFactory::createInstancedPNTVertexInputLayout( VSData* p_vs, 
@@ -569,7 +576,10 @@ void ShaderFactory::createInstancedPNTVertexInputLayout( VSData* p_vs,
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	//constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 7;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 
@@ -588,7 +598,10 @@ void ShaderFactory::createPNTTBVertexInputLayout( VSData* p_vs,
 		{"BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	//constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 5;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs, 
@@ -640,7 +653,10 @@ void ShaderFactory::createInstancedPNTTBVertexInputLayout( VSData* p_vs,
 		{"OVERLAY", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,1, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA,1},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	//constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 15;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 void ShaderFactory::createInstancedAnimatedPNTTBVertexInputLayout( VSData* p_vs, 
 														  ID3D11InputLayout** p_inputLayout )
@@ -702,7 +718,10 @@ void ShaderFactory::createInstancedAnimatedPNTTBVertexInputLayout( VSData* p_vs,
 		{"OVERLAY", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,2, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_INSTANCE_DATA,1},
 	};
-	constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	//constructInputLayout(input,sizeof(input)/sizeof(input[0]),p_vs,p_inputLayout);
+	int cntCalc = sizeof(input)/sizeof(input[0]);
+	int elementCnt = 19;
+	constructInputLayout(input, elementCnt, p_vs, p_inputLayout);
 }
 
 void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
@@ -751,6 +770,7 @@ void ShaderFactory::createInstancedLightInputLayout( VSData* p_vertexShader,
 	};
 
 	//int elementCnt = sizeof(input)/sizeof(input[0]) ; //Will this work for both RGB and RGBA? Mattias L
+	int cntCalc = sizeof(input)/sizeof(input[0]);
 	int elementCnt = 14;
 	constructInputLayout(input, elementCnt, p_vertexShader, p_inputLayout);
 }

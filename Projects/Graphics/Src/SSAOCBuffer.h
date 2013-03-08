@@ -19,7 +19,9 @@ struct SSAOBuffer
 	float intensity;
 	float sampleRadius;
 	float epsilon;
-	float empty[3];
+	float cocFactor; //SHOULD NOT BE HERE
+	float empty[2];
+
 
 	void setData(const SSAOBuffer& p_data){
 		scale			= p_data.scale;
@@ -27,5 +29,6 @@ struct SSAOBuffer
 		intensity		= p_data.intensity;
 		sampleRadius	= p_data.sampleRadius;
 		epsilon			= p_data.epsilon;
+		cocFactor		= p_data.cocFactor;
 	}
 };

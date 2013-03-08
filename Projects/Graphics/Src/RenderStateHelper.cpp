@@ -152,7 +152,29 @@ void RenderStateHelper::fillBlendStateList(ID3D11Device* p_device,
 				p_device->CreateBlendState( &blendStateDesc, &blendstate ); 
 				break;
 			}
-		case BlendState::NORMAL:
+		case BlendState::OVERWRITE:
+			{
+				blendstate = NULL;
+				ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+				float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+				blendStateDesc.RenderTarget[0].BlendEnable = FALSE;
+
+				blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
+				blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+				blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+				blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+				blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+				blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+				blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+				p_device->CreateBlendState( &blendStateDesc, &blendstate ); 
+				break;
+			}
+
+		//case BlendState::NORMAL:
 		default:
 			{
 				blendstate=defaultBlendstate; // fallback

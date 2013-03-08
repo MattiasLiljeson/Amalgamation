@@ -90,7 +90,8 @@ int CullingSystem::shouldCull(Entity* p_entity)
 	if (parentComp)
 	{
 		Entity* parent = m_world->getEntity(parentComp->getParentEntityId());
-		if(parent)
+		
+		if (parent)
 		{
 			LevelPieceRoot* root = static_cast<LevelPieceRoot*>(parent->getComponent(ComponentType::LevelPieceRoot));
 			if (root && root->shouldCull)

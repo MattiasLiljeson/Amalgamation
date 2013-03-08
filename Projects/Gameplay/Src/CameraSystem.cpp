@@ -14,6 +14,7 @@ CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend ) :
 {
 	m_gfxBackend = p_gfxBackend;
 	m_renderFromShadowCamera = false;
+	m_lowResDivider = 4;
 }
 
 
@@ -23,7 +24,9 @@ CameraSystem::~CameraSystem()
 
 void CameraSystem::initialize()
 {
-
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Low Res Divider",TwType::TW_TYPE_INT32,&m_lowResDivider,
+		"group=Depth of Field min=1 max=32");
 }
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
@@ -105,6 +108,7 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	sceneInfo.fogColor = camInfo->m_fogColor;
 	sceneInfo.fogFarPlaneClosenessPercentage = camInfo->m_fogFarPlaneClosenessPercentage;
 	sceneInfo.fogNearPlaneClosenessPercentage = camInfo->m_fogNearPlaneClosenessPercentage;
+	sceneInfo.lowResDivider = m_lowResDivider;
 
 	// sets up certain "global" scene data
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();

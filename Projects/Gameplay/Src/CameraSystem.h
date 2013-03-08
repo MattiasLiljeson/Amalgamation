@@ -32,5 +32,6 @@ private:
 	GraphicsBackendSystem* m_gfxBackend;
 	bool	m_renderFromShadowCamera;
 	Entity* m_playerCamera;
+	int m_lowResDivider;
 };
 
