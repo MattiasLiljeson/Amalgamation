@@ -45,6 +45,14 @@ AglQuaternion AglQuaternion::operator+(const AglQuaternion& p_other) const
 {
 	return AglQuaternion(u + p_other.u, v + p_other.v);
 }
+bool AglQuaternion::operator==(const AglQuaternion& p_other) const
+{
+	float epsilon = 0.0001f;
+	if(u == p_other.u &&
+		fabs(v - p_other.v) < epsilon)
+		return true;
+	return false;
+}
 
 AglQuaternion AglQuaternion::identity()
 {

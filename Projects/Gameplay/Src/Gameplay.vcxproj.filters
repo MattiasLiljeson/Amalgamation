@@ -848,6 +848,9 @@
     <ClInclude Include="AddToParentSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ClientModuleCounterSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1453,6 +1456,9 @@
     </ClCompile>
     <ClCompile Include="AddToParentSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientModuleCounterSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
