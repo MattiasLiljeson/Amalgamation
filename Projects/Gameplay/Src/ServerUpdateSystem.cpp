@@ -102,19 +102,42 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							{
 								AglParticleSystemHeader* updateData =
 									&psServerComp->particleSystems[psIdx].updateData;
-								ParticleUpdatePacket updatePacket;
-								updatePacket.networkIdentity	= netSync->getNetworkIdentity();
-								updatePacket.particleSystemIdx	= psIdx;
-								updatePacket.position			= updateData->spawnPoint;
-								updatePacket.direction			= updateData->spawnDirection;
-								updatePacket.speed				= updateData->spawnSpeed;
-								updatePacket.spawnFrequency		= updateData->spawnFrequency;
-								updatePacket.color				= updateData->color;
+								bool hasChanged = true;
+								if(m_previousParticles.count(updateData) > 0)
+								{
+									AglParticleSystemHeader& previousHeader =
+										m_previousParticles[updateData].particleHeader;
+									if(previousHeader.spawnPoint == updateData->spawnPoint &&
+										previousHeader.spawnDirection == updateData->spawnDirection &&
+										previousHeader.spawnSpeed == updateData->spawnSpeed &&
+										previousHeader.spawnFrequency == updateData->spawnFrequency &&
+										previousHeader.color == updateData->color)
+									{
+										hasChanged = false;
+									}
+								}
 
-								updatePacket.forceParticleMove = false;
-								if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
-									updatePacket.forceParticleMove = true;
-								m_server->broadcastPacket( updatePacket.pack() );
+								if(hasChanged || m_world->getElapsedTime() >
+									m_previousParticles[updateData].timestamp + 1.0f)
+								{
+									m_previousParticles[updateData].particleHeader =
+										*updateData;
+									m_previousParticles[updateData].timestamp =
+										m_world->getElapsedTime();
+									ParticleUpdatePacket updatePacket;
+									updatePacket.networkIdentity	= netSync->getNetworkIdentity();
+									updatePacket.particleSystemIdx	= psIdx;
+									updatePacket.position			= updateData->spawnPoint;
+									updatePacket.direction			= updateData->spawnDirection;
+									updatePacket.speed				= updateData->spawnSpeed;
+									updatePacket.spawnFrequency		= updateData->spawnFrequency;
+									updatePacket.color				= updateData->color;
+
+									updatePacket.forceParticleMove = false;
+									if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
+										updatePacket.forceParticleMove = true;
+									m_server->broadcastPacket( updatePacket.pack() );
+								}
 							}
 						}
 					}
@@ -123,23 +146,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						transform = static_cast<Transform*>(
 							m_world->getComponentManager()->getComponent(
 							p_entities[entityIdx]->getIndex(), ComponentType::Transform ) );
-
-						physicsBody = static_cast<PhysicsBody*>(
-							p_entities[entityIdx]->getComponent(ComponentType::PhysicsBody));
-						AglVector3 velocity = AglVector3();
-						AglVector3 angularVelocity = AglVector3();
-						if( physicsBody != NULL && physicsBody->m_id >= 0)	/* It is probably the ray entity that is
-													* missing the PhysicsBody component. */
-						{
-							PhysicsSystem* physicsSystem = static_cast<PhysicsSystem*>(
-								m_world->getSystem(SystemType::PhysicsSystem));
-
-							velocity = physicsSystem->getController()->getBody(
-								physicsBody->m_id)->GetVelocity();
-
-							angularVelocity = physicsSystem->getController()->getBody(
-								physicsBody->m_id)->GetAngularVelocity();
-						}
 
 						bool hasChanged = true;
 						if(m_previousTransforms.count(transform) > 0)
@@ -151,14 +157,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							{
 								hasChanged = false;
 							}
-							else
-							{
-								hasChanged = true;
-							}
-						}
-						else
-						{
-							hasChanged = true;
 						}
 
 						if(hasChanged || m_world->getElapsedTime() > 
