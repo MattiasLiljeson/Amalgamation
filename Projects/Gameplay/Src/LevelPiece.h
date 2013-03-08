@@ -4,6 +4,7 @@
 #include <AglMatrix.h>
 #include <AglOBB.h>
 #include <AglBoundingSphere.h>
+#include "LevelPieceRoot.h"
 
 using namespace std;
 
@@ -52,10 +53,16 @@ public:
 	Transform*  getTransform() const;
 	int			getTypeId() const;
 	int			getPieceId() const;
-	const Transform* getChild(int p_inSlot) const;
+	const LevelPiece* getChild(int p_inSlot) const;
+	
+	int			getGate(int p_inSlot) const;		// returns an id, either to a gate in the
+													// m_endPlugs list, or to a chamber piece,
+													// in the m_generatedPieces list.
+	void		setGate(int p_inSlot, int p_id);	// Sets id.
+
 	bool		isChildSlotOccupied(int p_inSlot) const;
 	int			getMaxChildCount() const;
-	void		setChild(int p_inSlot, Transform* p_transform);
+	void		setChild(int p_inSlot, LevelPiece* p_transform);
 	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
 	const AglOBB& getBoundingBox() const;
 	const AglBoundingSphere& getBoundingSphere() const;
@@ -72,8 +79,10 @@ private:
 	//AglMeshHeader*				m_meshHeader;
 	vector<bool>				m_childSlotsOccupied;
 	Transform*					m_transform;
-	vector<Transform*>			m_children;
+	vector<LevelPiece*>			m_children;
 	vector<Transform>			m_connectionPoints;
+	vector<int>					m_gates;
+
 	AglOBB						m_boundingBox;
 	AglBoundingSphere			m_boundingSphere;
 };

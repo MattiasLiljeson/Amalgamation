@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EntitySystem.h>
+#include "LevelPieceRoot.h"
 
 // =======================================================================================
 //                                      LevelHandlerSystem
@@ -31,4 +32,6 @@ public:
 
 private:
 	bool m_hasLevel;
+
+	vector<LevelPieceRoot*> m_pieceRoots;
 };

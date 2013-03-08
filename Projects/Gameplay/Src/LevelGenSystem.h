@@ -5,6 +5,7 @@
 #include "LevelPieceFileData.h"
 #include <ModelBaseFactory.h>
 #include <string>
+#include <UniqueIndexList.h>
 
 class Transform;
 class LevelPiece;
@@ -40,6 +41,8 @@ public:
 	void clearGeneratedData();
 	int getGeneratedPiecesCount() const;
 
+	int getLevelPieceRootCount();
+
 	void resetState();
 
 	void generateLevel(int p_nrOfPlayers);
@@ -74,6 +77,8 @@ private:
 	void addEndPlugs(LevelPiece* p_atPiece);
 	Entity* addEndPlug(Transform* p_atConnector, EndPieceMode p_mode);
 
+	void printAddedLevelPiece(LevelPiece* p_piece);
+
 	void updateWorldMinMax(AglOBB& boundingVolume);
 
 	virtual void inserted( Entity* p_entity );
@@ -91,8 +96,11 @@ private:
 	vector<int>				m_sortedResourceIds;	// Contains a list of indices of
 													// model resources, sorted in
 													// size, with the highest first.
-	
+
+	UniqueIndexList<void*> m_pieceIds; // Used both for generated pieces and end plugs.
+
 	vector<LevelPiece*> m_generatedPieces;
+	vector<Entity*>		m_endPlugs;
 
 	TcpServer*	m_server;
 	bool		m_readyToRun;
