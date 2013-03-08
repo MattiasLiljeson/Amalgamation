@@ -92,19 +92,22 @@ void MineControllerSystem::explodeMine(PhysicsSystem* p_physicsSystem,
 	for (unsigned int i = 0; i < collided.size(); i++)
 	{
 		Entity* colEn = p_physicsSystem->getEntity(collided[i].first);
-		ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
-		if (colModule)
+		if(colEn)
 		{
-			float damage = min(100, 1000 / collided[i].second);
-			if (damage > colModule->m_health)
+			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
+			if (colModule)
 			{
-				Transform* t = static_cast<Transform*>(colEn->getComponent(ComponentType::Transform));
-				SpawnExplosionPacket explosion;
-				explosion.position = t->getTranslation();
-				explosion.source = ExplosionSource::MINE;
-				m_server->broadcastPacket(explosion.pack());
+				float damage = min(100, 1000 / collided[i].second);
+				if (damage > colModule->m_health)
+				{
+					Transform* t = static_cast<Transform*>(colEn->getComponent(ComponentType::Transform));
+					SpawnExplosionPacket explosion;
+					explosion.position = t->getTranslation();
+					explosion.source = ExplosionSource::MINE;
+					m_server->broadcastPacket(explosion.pack());
+				}
+				colModule->addDamageThisTick(damage, mine->m_ownerId);
 			}
-			colModule->addDamageThisTick(damage, mine->m_ownerId);
 		}
 	}
 

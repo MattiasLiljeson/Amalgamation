@@ -942,6 +942,8 @@ void ServerPickingSystem::rotateModule(Entity* p_module, int p_dir)
 	PhysicsBody* moduleBody = static_cast<PhysicsBody*>(p_module->getComponent(ComponentType::PhysicsBody));
 
 	Entity* parent = m_world->getEntity(module->m_parentEntity);
+	if(!parent)
+		return;
 	PhysicsBody* parentBody = static_cast<PhysicsBody*>(parent->getComponent(ComponentType::PhysicsBody));
 
 	ConnectionPointSet* parentCon =

@@ -906,21 +906,25 @@ void ClientPacketHandlerSystem::handleIngameState()
 				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
 				data.affectedModule);
 
-			if(affectedModule != NULL){
+			if(affectedModule != NULL)
+			{
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
-				if (data.currentParrent >= 0)
+				if(affectedModule)
 				{
-					Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
-						m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
-						data.currentParrent);
+					if (data.currentParrent >= 0)
+					{
+						Entity* parrentObjec = static_cast<NetsyncDirectMapperSystem*>(
+							m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+							data.currentParrent);
 
-					shipModule->m_parentEntity = parrentObjec->getIndex();
-				}
-				else
-				{
-					shipModule->m_parentEntity = -1;
+						shipModule->m_parentEntity = parrentObjec->getIndex();
+					}
+					else
+					{
+						shipModule->m_parentEntity = -1;
+					}
 				}
 			}
 			else{
