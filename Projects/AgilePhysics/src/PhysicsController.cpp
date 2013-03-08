@@ -521,6 +521,24 @@ void PhysicsController::ApplyExternalImpulse(AglVector3 p_position, float p_radi
 		}
 	}
 }
+vector<pair<unsigned int, float>> PhysicsController::GetObjectsWithinSphere(AglVector3 p_position, float p_radius)
+{
+	AglBoundingSphere bs(p_position, p_radius);
+	vector<pair<unsigned int, float>> objects;
+	for (unsigned int i = 0; i < mRigidBodies.size(); i++)
+	{
+		AglVector3 colPoint;
+		if (CheckCollision(bs, mRigidBodies[i].first, colPoint))
+		{
+			AglVector3 n = colPoint - bs.position;
+			float dist = n.length();
+
+			pair<unsigned int, float> data = pair<unsigned int, float>(mRigidBodies[i].second, dist);
+			objects.push_back(data);
+		}
+	}
+	return objects;
+}
 
 bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 {

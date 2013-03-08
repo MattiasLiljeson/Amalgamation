@@ -683,8 +683,8 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity = entityFromRecipeOrFile( "Mine", "Assemblages/Mine.asd" );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
+	Transform* trans = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
+	entity->addComponent( ComponentType::Transform, trans );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 
@@ -697,6 +697,34 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
 		TESTSOUNDEFFECTPATH, "Mine_Blip.wav") );
 	*/
+
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	/*string name = "Unload";
+	AudioHeader* unload = new AudioHeader(AudioHeader::AMBIENT, name);
+	unload->file = "Mine_Unload.wav";
+	unload->path = TESTSOUNDEFFECTPATH;
+	unload->maxFrequencyOffeset = 2.0f;
+	unload->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	unload->sourceChannels = 1;
+	unload->queuedPlayingState = AudioHeader::PLAY;
+	unload->volume = 0.5f;
+	soundComponent->addAudioHeader(unload);
+
+	AudioHeader* blip = new AudioHeader(AudioHeader::POSITIONALSOUND, "Blip");
+	blip->file = "Mine_Blip_v2.wav";
+	blip->path = TESTSOUNDEFFECTPATH;
+	blip->maxFrequencyOffeset = 2.0f;
+	blip->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
+	blip->timerInterval = 1.0f;
+	blip->sourceChannels = 1;
+	blip->queuedPlayingState = AudioHeader::PLAY;
+	blip->volume = 1.0f;
+	blip->minRange = 0.0f;
+	blip->maxRange = 100.0f;
+	soundComponent->addAudioHeader(blip);*/
+
 
 	Vibration* v = new Vibration(100.0f,10.0f,40.0f);
 	v->enabled = false;
@@ -1001,6 +1029,8 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	flares.setParticleAge(0.5f);
 	flares.setFadeOutStart(0.0f);
 	flares.setSpawnOffset(1.0f);
+	if (p_packet.source == ExplosionSource::MINE)
+		flares.setColor(AglVector4(1, 0, 0, 1));
 	//flares.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlares;
@@ -1076,6 +1106,8 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Flash.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
 	Flash.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	Flash.setParticleSize(AglVector2(20.0f, 20.0f));
+	if (p_packet.source == ExplosionSource::MINE)
+		Flash.setColor(AglVector4(1, 0, 0, 1));
 	//Flash.setColor(AglVector4(1, 0, 0, 1));
 
 	ParticleSystemInstruction particleInstructionFlash;
@@ -1090,7 +1122,6 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 
 	Component* component = NULL;
 
-	//Plays twice for some reason
 	string name = "Explosion";
 	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	explodeSound->file = "bomb-03.wav";

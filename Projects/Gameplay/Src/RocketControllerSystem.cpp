@@ -126,23 +126,7 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 			vector<unsigned int> cols = ps->getController()->CollidesWith(pb->m_id);
 			if (cols.size() > 0)
 			{
-				// Apply damage to first found collision
-				Entity* hitEntity = ps->getEntity(cols[0]);
-				if(hitEntity)
-				{
-					ShipModule* hitModule = static_cast<ShipModule*>(hitEntity->getComponent(
-						ComponentType::ShipModule));
-					StandardRocket* hitRocket = static_cast<StandardRocket*>(hitEntity->getComponent(
-						ComponentType::StandardRocket));
-					if(hitRocket==NULL)
-					{
-						if (hitModule)
-						{
-							hitModule->addDamageThisTick(101.0f,rocket->m_ownerId); // Above max hp.
-						}
-						explodeRocket(ps, pb, body, p_entities[i]);
-					}
-				}
+				explodeRocket(ps, pb, body, p_entities[i]);
 			}
 		}// if (rocket->m_age > waitUntilActivation && rocket->m_age <= rocketMaxAge)
 		else if(rocket->m_age > rocketMaxAge)
@@ -158,11 +142,31 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 	PhysicsBody* p_physicsBody, RigidBody* p_rigidBody, Entity* p_entity)
 {
+	StandardRocket* rocket = static_cast<StandardRocket*>(p_entity->getComponent(ComponentType::StandardRocket));
+
 	// Remove the rocket...
 	p_physicsSystem->getController()->ApplyExternalImpulse(p_rigidBody->GetWorld().GetTranslation(), 20, 20);
 	p_physicsSystem->getController()->InactivateBody(p_physicsBody->m_id);
 	
-	m_world->deleteEntity(p_entity);
+
+	vector<pair<unsigned int, float>> collided = p_physicsSystem->getController()->GetObjectsWithinSphere(p_rigidBody->GetWorld().GetTranslation(), 20);
+	for (unsigned int i = 0; i < collided.size(); i++)
+	{
+		Entity* colEn = p_physicsSystem->getEntity(collided[i].first);
+		ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
+		if (colModule)
+		{
+			float damage = min(100, 1000 / collided[i].second);
+			if (damage > colModule->m_health)
+			{
+				Transform* t = static_cast<Transform*>(colEn->getComponent(ComponentType::Transform));
+				SpawnExplosionPacket explosion;
+				explosion.position = t->getTranslation();
+				m_server->broadcastPacket(explosion.pack());
+			}
+			colModule->addDamageThisTick(damage, rocket->m_ownerId);
+		}
+	}
 
 
 	Transform* t = static_cast<Transform*>(p_entity->getComponent(ComponentType::Transform));
@@ -171,6 +175,8 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 	SpawnExplosionPacket explosion;
 	explosion.position = t->getTranslation();
 	m_server->broadcastPacket(explosion.pack());
+
+	m_world->deleteEntity(p_entity);
 }
 
 
