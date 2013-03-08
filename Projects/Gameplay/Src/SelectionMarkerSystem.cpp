@@ -7,7 +7,7 @@
 
 SelectionMarkerSystem::SelectionMarkerSystem() : 
 	EntitySystem( SystemType::SelectionMarkerSystem, 1,
-	ComponentType::SelectionMarker)
+	ComponentType::SelectionMarker) // HACK: Fix this!
 
 {
 }

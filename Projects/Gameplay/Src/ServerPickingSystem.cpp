@@ -571,6 +571,8 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			ShipModule* intermediate = static_cast<ShipModule*>(ship->getComponent(
 				ComponentType::ShipModule));
 			firstChild = ship;
+			if(!intermediate || intermediate->m_parentEntity < 0)
+				return;
 			ship = m_world->getEntity(intermediate->m_parentEntity);
 		}
 
