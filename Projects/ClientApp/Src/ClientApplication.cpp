@@ -127,6 +127,7 @@
 #include <ModuleHighlightSystem.h>
 #include <PortalCullingSystem.h>
 #include <ClientModuleCounterSystem.h>
+#include <AddToParentSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -464,6 +465,9 @@ void ClientApplication::initSystems()
 	/* Destroyers															*/
 	/************************************************************************/
 	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+
+	m_world->setSystem(new AddToParentSystem());
 
 	/************************************************************************/
 	/* Debugging															*/

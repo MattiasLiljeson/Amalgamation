@@ -105,6 +105,7 @@ public:	//Enums
 		TAG_Highlight,
 		TAG_PositionalSound,
 		TAG_AmbientRangeSound,
+		TAG_AddToParent,
 		// -------------------
 	
 		/************************************************************************/

@@ -109,8 +109,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 										m_previousParticles[updateData].particleHeader;
 									if(previousHeader.spawnPoint == updateData->spawnPoint &&
 										previousHeader.spawnDirection == updateData->spawnDirection &&
-										previousHeader.spawnSpeed == updateData->spawnSpeed &&
-										previousHeader.spawnFrequency == updateData->spawnFrequency &&
+										fabs(previousHeader.spawnSpeed - updateData->spawnSpeed) < 0.0001f &&
+										fabs(previousHeader.spawnFrequency - updateData->spawnFrequency) < 0.0001f &&
 										previousHeader.color == updateData->color)
 									{
 										hasChanged = false;

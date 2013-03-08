@@ -24,6 +24,7 @@ public:
 	
 	int pieceId;
 	AglBoundingSphere boundingSphere;
+	bool shouldCull;
 private:
 	static ComponentRegister<LevelPieceRoot> s_reg;
 };

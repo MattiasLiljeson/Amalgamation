@@ -135,6 +135,7 @@ public:	//Enums
 		PortalCullingSystem,
 		ShipEngineSystem,
 		ClientModuleCounterSystem,
+		AddToParentSystem,
 		NUM_SYSTEM_TYPES
 	};
 

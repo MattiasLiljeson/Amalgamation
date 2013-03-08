@@ -172,9 +172,8 @@ void ServerPacketHandlerSystem::handleIngame()
 					{
 						Entity* shipModule = m_world->getEntity(connected->m_connectionPoints[i].cpConnectedEntity);
 						ShipModule* module = static_cast<ShipModule*>(shipModule->getComponent(ComponentType::ShipModule));
-						SpeedBoosterModule* boostmodule = static_cast<SpeedBoosterModule*>(shipModule->getComponent(ComponentType::SpeedBoosterModule));
-						if (module->getActive() && boostmodule)
-							boostVector = thrustPacket.thrustVector*3;
+						if (module->getActive())
+							boostVector = thrustPacket.thrustVector*stackBooster(shipModule);
 					}
 				}
 			}
@@ -776,4 +775,28 @@ void ServerPacketHandlerSystem::printPacketTypeNotHandled( string p_state, int p
 {
 	m_world->getOutputLogger()->write(("SERVER: Not handled("+p_state+"): " +
 		toString(p_packetType) + "\n").c_str());
+}
+float ServerPacketHandlerSystem::stackBooster(Entity* p_parent)
+{
+	float boostPower = 0;
+	ConnectionPointSet* cps = static_cast<ConnectionPointSet*>(p_parent->getComponent(ComponentType::ConnectionPointSet));
+
+	int parent = -1;
+	ShipModule* sm = static_cast<ShipModule*>(p_parent->getComponent(ComponentType::ShipModule));
+	if (sm)
+		parent = sm->m_parentEntity;
+
+	for (unsigned int i = 0; i < cps->m_connectionPoints.size(); i++)
+	{
+		if (cps->m_connectionPoints[i].cpConnectedEntity >= 0 &&
+			cps->m_connectionPoints[i].cpConnectedEntity != parent)
+		{
+			boostPower += stackBooster(m_world->getEntity(cps->m_connectionPoints[i].cpConnectedEntity));
+		}
+	}
+	
+	SpeedBoosterModule* speedBooster = static_cast<SpeedBoosterModule*>(p_parent->getComponent(ComponentType::SpeedBoosterModule));
+	if (speedBooster)
+		boostPower += 3;
+	return boostPower;
 }

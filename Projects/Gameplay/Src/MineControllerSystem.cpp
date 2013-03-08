@@ -11,6 +11,7 @@
 #include <PhysicsController.h>
 #include "SpawnSoundEffectPacket.h"
 #include "ShipManagerSystem.h"
+#include "SpawnExplosionPacket.h"
 
 MineControllerSystem::MineControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineControllerSystem, 3, ComponentType::StandardMine,
@@ -91,12 +92,9 @@ void MineControllerSystem::processEntities(const vector<Entity*>& p_entities)
 
 				//Send an explosion sound effect
 				Transform* t = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-				SpawnSoundEffectPacket soundEffectPacket;
-				soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::Explosion;
-				soundEffectPacket.positional = true;
-				soundEffectPacket.position = t->getTranslation();
-				soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-				m_server->broadcastPacket(soundEffectPacket.pack());
+				SpawnExplosionPacket explosion;
+				explosion.position = t->getTranslation();
+				m_server->broadcastPacket(explosion.pack());
 
 				m_world->deleteEntity(p_entities[i]);
 			}

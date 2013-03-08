@@ -140,7 +140,11 @@ AglVector4 AglVector4::operator-() const
 
 bool AglVector4::operator==(const AglVector4& p_other) const
 {
-	if (x == p_other.x && y == p_other.y && z == p_other.z && w == p_other.w)
+	float epsilon = 0.0001f;
+	if (fabs(x - p_other.x) < epsilon &&
+		fabs(y - p_other.y) < epsilon &&
+		fabs(z - p_other.z) < epsilon &&
+		fabs(w - p_other.w) < epsilon)
 		return true;
 	return false;
 }
