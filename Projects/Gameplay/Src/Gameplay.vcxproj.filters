@@ -845,6 +845,9 @@
     <ClInclude Include="ShieldPlaterSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="AddToParentSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1447,6 +1450,9 @@
     </ClCompile>
     <ClCompile Include="ShieldPlaterSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AddToParentSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

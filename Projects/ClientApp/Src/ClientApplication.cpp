@@ -126,6 +126,7 @@
 #include <ShipHiglightSystem.h>
 #include <ModuleHighlightSystem.h>
 #include <PortalCullingSystem.h>
+#include <AddToParentSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -463,6 +464,9 @@ void ClientApplication::initSystems()
 	/* Destroyers															*/
 	/************************************************************************/
 	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+
+	m_world->setSystem(new AddToParentSystem());
 
 	/************************************************************************/
 	/* Debugging															*/

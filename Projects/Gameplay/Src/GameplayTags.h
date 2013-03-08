@@ -43,3 +43,5 @@ class Highlight_TAG : public Tag{ public: Highlight_TAG() : Tag( ComponentType::
 class PositionalSound_TAG : public Tag{ public: PositionalSound_TAG() : Tag( ComponentType::TAG_PositionalSound ){}};
 
 class AmbientRangeSound_TAG : public Tag{ public: AmbientRangeSound_TAG() : Tag( ComponentType::TAG_AmbientRangeSound ){}};
+
+class AddToParent_TAG : public Tag{ public: AddToParent_TAG() : Tag( ComponentType::TAG_AddToParent ){}};

@@ -17,6 +17,7 @@
 #include <Globals.h>
 #include <ModelResource.h>
 #include <ModelResource.h>
+#include "GameplayTags.h"
 
 LoadMeshSystem::LoadMeshSystem( ) : 
 	EntitySystem( SystemType::LoadMeshSystem, 1,
@@ -228,6 +229,9 @@ void LoadMeshSystem::createChildrenEntities( vector<ModelResource*>* p_modelReso
 		// Hierarchy
 		component = new EntityParent( rootId, modelResource->transform );
 		entity->addComponent( ComponentType::EntityParent, component );
+
+		//Only used on the client right now - move from here?
+		entity->addComponent(ComponentType::TAG_AddToParent, new AddToParent_TAG());
 
 		// finished
 		m_world->addEntity(entity);		

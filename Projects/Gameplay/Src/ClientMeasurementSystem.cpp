@@ -3,6 +3,7 @@
 #include "MeshRenderSystem.h"
 #include "CullingSystem.h"
 #include "ParticleRenderSystem.h"
+#include "PortalCullingSystem.h"
 
 ClientMeasurementSystem::ClientMeasurementSystem()
 	: EntitySystem( SystemType::ClientMeasurementSystem )
@@ -44,6 +45,7 @@ void ClientMeasurementSystem::initialize()
 
 	//Culling
 	CullingSystem* cull = static_cast<CullingSystem*>(m_world->getSystem(SystemType::CullingSystem));
+	PortalCullingSystem* cull2 = static_cast<PortalCullingSystem*>(m_world->getSystem(SystemType::PortalCullingSystem));
 
 	ParticleRenderSystem* psSystem = static_cast<ParticleRenderSystem*>(m_world->getSystem(SystemType::ParticleRenderSystem));
 
@@ -70,6 +72,16 @@ void ClientMeasurementSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Rendered Particle Systems",
 		TwType::TW_TYPE_INT32, psSystem->getDrawnPSCount(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Rendered Chambers",
+		TwType::TW_TYPE_INT32, cull2->getRenderedChambers(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Culled Chambers",
+		TwType::TW_TYPE_INT32, cull2->getCulledChambers(),
 		"group='Culling'" );
 
 	//ES time
