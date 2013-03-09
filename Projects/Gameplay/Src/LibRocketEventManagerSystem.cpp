@@ -45,6 +45,7 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "SoundComponent.h"
+#include "DisconnectPacket.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -245,12 +246,11 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
-		else if(values[0] == "quit_server"){
-			m_world->requestToQuitServer();
-
-			auto stateSys = static_cast<ClientStateSystem*>(
-				m_world->getSystem(SystemType::ClientStateSystem));
-			stateSys->setQueuedState(GameStates::MENU);
+		else if(values[0] == "leave_server"){
+			DisconnectPacket dcPacket;
+			dcPacket.playerID = m_client->getPlayerID();
+			dcPacket.clientNetworkIdentity = m_client->getId();
+			m_client->sendPacket(dcPacket.pack());
 		}
 		else if(values[0] == "play_confirm"){
 			playConfirmSound();

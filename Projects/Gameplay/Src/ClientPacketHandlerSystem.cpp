@@ -1105,6 +1105,17 @@ void ClientPacketHandlerSystem::handleLobby()
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				removePlayer(dcPacket);
 
+			// If this is the same player as the current client player, then disconnect from
+			// server and change state of lobby safely.
+			if (dcPacket.clientNetworkIdentity == m_tcpClient->getId())
+			{
+				m_gameState->setQueuedState(GameStates::MENU);
+			}
+			// If this player is the host (id = 0) then request to shut down the server.
+			if (dcPacket.playerID == 0)
+			{
+				m_world->requestToQuitServer();
+			}
 		}
 
 		else if(packetType == (char)PacketType::ChangeStatePacket){

@@ -465,6 +465,13 @@ void ServerPacketHandlerSystem::handleLobby()
 			DisconnectPacket dcPacket;
 			dcPacket.unpack(packet);
 
+			// Remove client, needs to do more here.
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+			playerSystem->recyclePlayerId(dcPacket.playerID);
+
+			// Broadcast the dc packet back to all clients, including the one who sent it.
+			m_server->broadcastPacket(packet);
 		}
 		else
 		{

@@ -190,6 +190,14 @@ void TcpClient::disconnect()
 		delete m_communicationProcess;
 		m_communicationProcess = NULL;
 	}
+
+	if( m_connecterProcess )
+	{
+		m_connecterProcess->putMessage( new ProcessMessageTerminate() );
+		m_connecterProcess->stop();
+		delete m_connecterProcess;
+		m_connecterProcess = NULL;
+	}
 }
 
 bool TcpClient::hasActiveConnection()
