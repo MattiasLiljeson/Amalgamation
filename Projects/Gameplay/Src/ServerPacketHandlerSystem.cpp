@@ -457,7 +457,7 @@ void ServerPacketHandlerSystem::handleLobby()
 				alreadyConnectedPlayers.networkID	= playerComp->m_networkID;
 
 				// Send all the existing players to the new client.
-				m_server->unicastPacket(packet, newComp->m_networkID);
+				m_server->unicastPacket(alreadyConnectedPlayers.pack(), newComp->m_networkID);
 				//m_server->broadcastPacket(alreadyConnectedPlayers.pack());
 			}			
 		}
@@ -465,10 +465,10 @@ void ServerPacketHandlerSystem::handleLobby()
 			DisconnectPacket dcPacket;
 			dcPacket.unpack(packet);
 
-			// Remove client, needs to do more here.
+			// Remove client!
 			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
 				(m_world->getSystem(SystemType::PlayerSystem));
-			playerSystem->recyclePlayerId(dcPacket.playerID);
+			playerSystem->deletePlayerEntity(dcPacket.playerID);
 
 			// Broadcast the dc packet back to all clients, including the one who sent it.
 			m_server->broadcastPacket(packet);

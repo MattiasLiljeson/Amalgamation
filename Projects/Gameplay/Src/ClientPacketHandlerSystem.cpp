@@ -46,6 +46,7 @@
 #include "AnimationUpdatePacket.h"
 #include "BombActivationPacket.h"
 #include "ChangeStatePacket.h"
+#include "DisconnectPacket.h"
 #include "EditSphereUpdatePacket.h"
 #include "EntityCreationPacket.h"
 #include "EntityDeletionPacket.h"
@@ -105,7 +106,7 @@
 #include "TeslaEffectSystem.h"
 #include "RootBoundingSpherePacket.h"
 #include "LevelPieceRoot.h"
-#include "DisconnectPacket.h"
+#include "PlayerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1105,15 +1106,20 @@ void ClientPacketHandlerSystem::handleLobby()
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				removePlayer(dcPacket);
 
+
 			// If this is the same player as the current client player, then disconnect from
-			// server and change state of lobby safely.
+			// server and change state of lobby safely. Remove all players as well!
 			if (dcPacket.clientNetworkIdentity == m_tcpClient->getId())
 			{
+				static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+					deletePlayerEntity(dcPacket.playerID);
 				m_gameState->setQueuedState(GameStates::MENU);
 			}
 			// If this player is the host (id = 0) then request to shut down the server.
 			if (dcPacket.playerID == 0)
 			{
+				static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+					deleteAllPlayerEntities();
 				m_world->requestToQuitServer();
 			}
 		}

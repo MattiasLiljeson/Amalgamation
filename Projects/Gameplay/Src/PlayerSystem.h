@@ -3,6 +3,7 @@
 #include "NetworkSynced.h"
 #include <UniqueIndexList.h>
 
+
 class NetworkSynced;
 class PlayerComponent;
 
@@ -30,12 +31,14 @@ public:
 	void removed( Entity* p_entity );
 
 	//PlayerComponent* serverCreatePlayerComponent(int p_fromNetworkOwnerId);
+	void deletePlayerEntity(int p_playerId);
+	void deleteAllPlayerEntities();
 
 	int createPlayerId(int p_fromNetworkOwnerId);
 	void recyclePlayerId(int p_playerId);
 private:
+	vector<PlayerComponent*> m_playerComponentsObsolete;
 	vector<PlayerComponent*> m_playerComponents;
 
-	UniqueIndexList<PlayerComponent*> m_playerComps;
 	UniqueIndexList<int> m_playerIds;
 };
