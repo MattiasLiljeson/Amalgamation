@@ -245,6 +245,13 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
+		else if(values[0] == "quit_server"){
+			m_world->requestToQuitServer();
+
+			auto stateSys = static_cast<ClientStateSystem*>(
+				m_world->getSystem(SystemType::ClientStateSystem));
+			stateSys->setQueuedState(GameStates::MENU);
+		}
 		else if(values[0] == "play_confirm"){
 			playConfirmSound();
 		}

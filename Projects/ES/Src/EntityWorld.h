@@ -267,6 +267,7 @@ public:
 	bool shouldShutDown();
 
 	void requestToHostServer();
+	void requestToQuitServer();
 	bool isHostingServer();
 
 	const double& getTotalSystemsTime() const;
