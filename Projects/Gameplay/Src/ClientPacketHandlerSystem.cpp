@@ -108,6 +108,7 @@
 #include "LevelPieceRoot.h"
 #include "PlayerSystem.h"
 #include "ClientConnectToServerSystem.h"
+#include "MenuSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1160,7 +1161,9 @@ void ClientPacketHandlerSystem::handleLobby()
 	// Else, the server abruptly disconnected. Reset!
 	else
 	{
-		resetFromDisconnect();
+		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
+			->displayDisconnectPopup();
+		//resetFromDisconnect();
 	}
 }
 

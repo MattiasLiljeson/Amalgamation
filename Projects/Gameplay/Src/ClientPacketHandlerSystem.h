@@ -48,6 +48,7 @@ public:
 
 	virtual void initialize();
 
+	void resetFromDisconnect();
 private:
 	//NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
@@ -76,7 +77,6 @@ private:
 	void handleResults();
 	void handleHitIndicationPacket( Packet& p_packet );
 
-	void resetFromDisconnect();
 private:
 	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;

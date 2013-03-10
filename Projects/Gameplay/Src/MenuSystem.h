@@ -22,7 +22,9 @@ public:
 	void initialize();
 	void process( );
 	void endLoadingState();
+	void displayDisconnectPopup();
 private:
 	int m_loadingWindowIdx;
+	int m_disconnectPopupIdx;
 };
 

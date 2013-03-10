@@ -46,6 +46,7 @@
 #include "ChangeStatePacket.h"
 #include "SoundComponent.h"
 #include "DisconnectPacket.h"
+#include "ClientPacketHandlerSystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -252,6 +253,13 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			dcPacket.clientNetworkIdentity = m_client->getId();
 			m_client->sendPacket(dcPacket.pack());
 		}
+		else if (values[0] == "reset_connection")
+		{
+			auto sys = static_cast<ClientPacketHandlerSystem*>(
+				m_world->getSystem(SystemType::ClientPacketHandlerSystem));
+			sys->resetFromDisconnect();
+		}
+
 		else if(values[0] == "play_confirm"){
 			playConfirmSound();
 		}
