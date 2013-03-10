@@ -255,7 +255,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "reset_connection")
 		{
-			ownerDocument->Show(Rocket::Core::ElementDocument::MODAL);
+			ownerDocument->Show(Rocket::Core::ElementDocument::NONE);
 			ownerDocument->Hide();
 			auto sys = static_cast<ClientPacketHandlerSystem*>(
 				m_world->getSystem(SystemType::ClientPacketHandlerSystem));

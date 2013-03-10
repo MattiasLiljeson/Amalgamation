@@ -71,6 +71,7 @@ void MenuSystem::process()
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
+
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("main_menu");
 	}
