@@ -107,6 +107,7 @@
 #include "RootBoundingSpherePacket.h"
 #include "LevelPieceRoot.h"
 #include "PlayerSystem.h"
+#include "ClientConnectToServerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1120,6 +1121,10 @@ void ClientPacketHandlerSystem::handleLobby()
 			{
 				static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
 					deleteAllPlayerEntities();
+				static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+					setEnabled(true);
+
+				//m_tcpClient->disconnect();
 				m_world->requestToQuitServer();
 			}
 		}

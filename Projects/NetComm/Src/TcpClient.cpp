@@ -14,6 +14,9 @@
 #include "ProcessMessageCommProcessInfo.h"
 #include "ProcessMessageAskForCommProcessInfo.h"
 
+#define FORCE_VS_DBG_OUTPUT
+#include <DebugUtil.h>
+
 TcpClient::TcpClient()
 {
 	m_ioService = new boost::asio::io_service();
@@ -177,6 +180,11 @@ void TcpClient::processMessages()
 			m_totalPacketsSentInCommProcess = commInfoMessage->totalPacketsSent;
 		}
 
+		else if (message->type == MessageType::SOCKET_DISCONNECTED)
+		{
+			disconnect();
+		}
+
 		delete message;
 	}
 }
@@ -189,6 +197,7 @@ void TcpClient::disconnect()
 		m_communicationProcess->stop();
 		delete m_communicationProcess;
 		m_communicationProcess = NULL;
+		m_numConnections -= 1;
 	}
 
 	if( m_connecterProcess )
@@ -198,6 +207,10 @@ void TcpClient::disconnect()
 		delete m_connecterProcess;
 		m_connecterProcess = NULL;
 	}
+	m_ioService->stop();
+	delete m_ioService;
+	m_ioService = new boost::asio::io_service();
+	DEBUGPRINT(("Client disconnected from server!\n"));
 }
 
 bool TcpClient::hasActiveConnection()

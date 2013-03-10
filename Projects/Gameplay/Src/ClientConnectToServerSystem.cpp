@@ -35,15 +35,15 @@ void ClientConnectToServerSystem::process()
 	if( m_tcpClient->hasActiveConnection() )
 	{
 		m_isLookingForConnection = false;
-		m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
+		//m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
 		setEnabled(false);
 
 		// Clears and hides all currently visible documents.
 		//eventManagerSys->clearDocumentStack();
 		
-		auto levelHandler = static_cast<LevelHandlerSystem*>(
-			m_world->getSystem(SystemType::LevelHandlerSystem));
-		levelHandler->destroyLevel();
+		//auto levelHandler = static_cast<LevelHandlerSystem*>(
+		//	m_world->getSystem(SystemType::LevelHandlerSystem));
+		//levelHandler->destroyLevel();
 	}
 
 /*	InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
