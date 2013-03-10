@@ -91,5 +91,5 @@ void MenuSystem::displayDisconnectPopup()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	rocketBackend->showDocument(m_disconnectPopupIdx, Rocket::Core::ElementDocument::MODAL);
+	rocketBackend->showDocument(m_disconnectPopupIdx, Rocket::Core::ElementDocument::FOCUS);
 }

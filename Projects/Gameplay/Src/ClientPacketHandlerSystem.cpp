@@ -1112,13 +1112,15 @@ void ClientPacketHandlerSystem::handleLobby()
 				// then the following should be done:
 				// * Remove all players from the client!
 				// * Clear lobby data!
-				// * Disconnect from server immediately!
 				// * Enable the 'connect to server' system!
 				// * Queue state to menu!
 				// This is done in 'reset from disconnect'!
+				// Additionally 
+				// * Disconnect from server immediately!
 				if (dcPacket.clientNetworkIdentity == m_tcpClient->getId())
 				{
 					resetFromDisconnect();
+					m_tcpClient->disconnect();
 				}
 				// Else, the client player should:
 				// * Remove player from lobby.
@@ -1394,14 +1396,12 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 	// then the following should be done:
 	// * Remove all players from the client!
 	// * Clear lobby data!
-	// * Disconnect from server immediately!
 	// * Enable the 'connect to server' system!
 	// * Queue state to menu!
 	static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
 		deleteAllPlayerEntities();
 	static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 		resetAllPlayers();
-	m_tcpClient->disconnect();
 	static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
 		setEnabled(true);
 	m_gameState->setQueuedState(GameStates::MENU);
