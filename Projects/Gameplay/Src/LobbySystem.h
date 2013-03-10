@@ -44,6 +44,7 @@ public:
 	void updateRow(int p_row, const LobbyStats& p_stats);
 	void addNewPlayer(const NewlyConnectedPlayerPacket& p_packet);
 	void removePlayer(const DisconnectPacket& p_packet);
+	void resetAllPlayers();
 private:
 	void resetPlayer(int p_playerId);
 private:

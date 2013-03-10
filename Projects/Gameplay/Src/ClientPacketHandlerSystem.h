@@ -76,6 +76,7 @@ private:
 	void handleResults();
 	void handleHitIndicationPacket( Packet& p_packet );
 
+	void resetFromDisconnect();
 private:
 	ClientStateSystem* m_gameState;
 	TcpClient* m_tcpClient;

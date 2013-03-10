@@ -97,4 +97,13 @@ void LobbySystem::removePlayer( const DisconnectPacket& p_packet )
 	NotifyRowChange(m_tableName, p_packet.playerID, 1);
 }
 
+void LobbySystem::resetAllPlayers()
+{
+	for(int i = 0; i < MAXPLAYERS; i++)
+	{
+		resetPlayer(i);
+	}
+	NotifyRowChange(m_tableName,0,MAXPLAYERS);
+}
+
 

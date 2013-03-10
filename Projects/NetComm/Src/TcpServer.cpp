@@ -193,7 +193,8 @@ void TcpServer::processMessages()
 			if (processToBeDeleted != -1)
 			{
 				DEBUGPRINT(( (toString("Server terminated comprocess ") 
-					+ toString(m_communicationProcesses[processToBeDeleted]->getId())).c_str() ));
+					+ toString(m_communicationProcesses[processToBeDeleted]->getId())
+					+ toString("\n")).c_str() ));
 				m_communicationProcesses[processToBeDeleted]->putMessage( new ProcessMessageTerminate() );
 				m_communicationProcesses[processToBeDeleted]->stop();
 				delete m_communicationProcesses[processToBeDeleted];
