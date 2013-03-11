@@ -48,46 +48,46 @@ void MenuBackgroundSceneSystem::process()
 		gradient->m_color.layerOne = entityFactory->getPlayersFirstGradientLevel();
 		gradient->m_color.layerTwo = entityFactory->getPlayersSecondGradientLevel();
 	}
-	else{
-		m_deltaRotation = 0.0f;
-		if(m_actionBackend->getStatusByAction(InputActionsBackendSystem::
-			Actions_MENU_ACTIVATE_ROTATION) != 0.0)
-		{
-			double deltaPositive = m_actionBackend->getStatusByAction(
-				InputActionsBackendSystem::Actions_MENU_RIGHT);
-			double deltaNegative = m_actionBackend->getStatusByAction(
-				InputActionsBackendSystem::Actions_MENU_LEFT);
-
-			if(deltaPositive > 0.0)
-			{
-				m_deltaRotation -= (float)deltaPositive;
-			}
-			if(deltaNegative > 0.0)
-			{
-				m_deltaRotation += (float)deltaNegative;
-			}
-
-			/*
-			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
-			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
-			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
-
-			xPos = transform->getTranslation().x;
-
-			xPos += m_world->getDelta() * 20 * m_deltaRotation;
-
-			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
-				transform->getTranslation().z) );
-			*/
-
-		}
-		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
-		if(rotate != NULL)
-		{
-			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
-			m_deltaRotation = 0.0f;
-		}
-	}
+//	else{
+//		m_deltaRotation = 0.0f;
+//		if(m_actionBackend->getStatusByAction(InputActionsBackendSystem::
+//			Actions_MENU_ACTIVATE_ROTATION) != 0.0)
+//		{
+//			double deltaPositive = m_actionBackend->getStatusByAction(
+//				InputActionsBackendSystem::Actions_MENU_RIGHT);
+//			double deltaNegative = m_actionBackend->getStatusByAction(
+//				InputActionsBackendSystem::Actions_MENU_LEFT);
+//
+//			if(deltaPositive > 0.0)
+//			{
+//				m_deltaRotation -= (float)deltaPositive;
+//			}
+//			if(deltaNegative > 0.0)
+//			{
+//				m_deltaRotation += (float)deltaNegative;
+//			}
+//
+//			/*
+//			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
+//			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
+//			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
+//
+//			xPos = transform->getTranslation().x;
+//
+//			xPos += m_world->getDelta() * 20 * m_deltaRotation;
+//
+//			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
+//				transform->getTranslation().z) );
+//			*/
+//
+//		}
+//		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
+//		if(rotate != NULL)
+//		{
+//			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
+//			m_deltaRotation = 0.0f;
+//		}
+//	}
 }
 
 void MenuBackgroundSceneSystem::initialize()
@@ -98,9 +98,6 @@ void MenuBackgroundSceneSystem::initialize()
 
 void MenuBackgroundSceneSystem::sysEnabled()
 {
-	static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory))->
-		createBackgroundScene();
-
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 50);
 
