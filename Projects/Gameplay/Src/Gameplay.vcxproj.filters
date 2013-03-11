@@ -542,9 +542,6 @@
     <ClInclude Include="CircularMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
-    <ClInclude Include="CircularMovement.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ShieldPlate.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -850,6 +847,9 @@
     </ClInclude>
     <ClInclude Include="ClientModuleCounterSystem.h">
       <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalMovement.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1459,6 +1459,9 @@
     </ClCompile>
     <ClCompile Include="ClientModuleCounterSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotate.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -75,7 +75,7 @@
     <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
-    <ClInclude Include="CircularMovement.h" />
+    <ClInclude Include="OrbitalMovement.h" />
     <ClInclude Include="CircularMovementSystem.h" />
     <ClInclude Include="ClientEntityCountSystem.h" />
     <ClInclude Include="ClientMeasurementSystem.h" />
@@ -275,6 +275,7 @@
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="AxisRotate.cpp" />
     <ClCompile Include="AxisRotationSystem.cpp" />
     <ClCompile Include="BodyInitData.cpp" />
     <ClCompile Include="BombActivationPacket.cpp" />

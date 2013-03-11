@@ -93,6 +93,9 @@ public:
 		AglVector3 p_moduleVelocity, ShipModule* p_module);
 	Entity* createAnomalyPieces(int p_parentIndex);
 
+	//Background
+	void createBackgroundScene();
+
 	AglVector4 getPlayersFirstGradientLevel() const;
 	AglVector4 getPlayersSecondGradientLevel() const;
 

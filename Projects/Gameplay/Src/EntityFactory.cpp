@@ -776,6 +776,13 @@ Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
 	return NULL;
 }
 
+void EntityFactory::createBackgroundScene()
+{
+	Entity* testEntity = entityFromRecipeOrFile( "test",
+		"Assemblages/BackgroundScene/test.asd" );
+	m_world->addEntity(testEntity);
+}
+
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
 	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",

@@ -1,6 +1,6 @@
 #include "CircularMovementSystem.h"
 #include "Transform.h"
-#include "CircularMovement.h"
+#include "OrbitalMovement.h"
 #include "InputBackendSystem.h"
 #include <Control.h>
 
@@ -20,7 +20,7 @@ void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities 
 	{
 		Transform* transform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
-		CircularMovement* circular = static_cast<CircularMovement*>(p_entities[i]->
+		OrbitalMovement* circular = static_cast<OrbitalMovement*>(p_entities[i]->
 			getComponent(ComponentType::CircularMovement));
 		AglVector3 v = circular->vectorFromCenter;
 		AglVector3 k = circular->axis;

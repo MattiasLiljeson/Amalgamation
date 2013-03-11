@@ -12,10 +12,10 @@
 /// Detailed description...
 /// Created on: 11-2-2013 
 ///---------------------------------------------------------------------------------------
-class CircularMovement: public Component
+class OrbitalMovement: public Component
 {
 public:
-	CircularMovement(AglVector3 p_center, AglVector3 p_axis, AglVector3 p_vecFromCenter,
+	OrbitalMovement(AglVector3 p_center, AglVector3 p_axis, AglVector3 p_vecFromCenter,
 		float p_angularVelocity)
 		: Component(ComponentType::CircularMovement)
 	{

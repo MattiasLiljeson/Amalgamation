@@ -1,7 +1,7 @@
 #include "MenuBackgroundSceneSystem.h"
 #include "LoadMesh.h"
 #include "Transform.h"
-#include "CircularMovement.h"
+#include "OrbitalMovement.h"
 #include "AxisRotate.h"
 #include <RandomUtil.h>
 #include "InputActionsBackendSystem.h"
@@ -98,6 +98,9 @@ void MenuBackgroundSceneSystem::initialize()
 
 void MenuBackgroundSceneSystem::sysEnabled()
 {
+	static_cast<EntityFactory*>(m_world->getSystem(SystemType::EntityFactory))->
+		createBackgroundScene();
+
 	initInstanceSphereByJohan("RockA.agl", AglVector3(40.0f, 0.0f, 100.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 50);
 
@@ -196,7 +199,7 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 		AglVector3 scale(1.0f, 1.0f, 1.0f);
 		entity->addComponent(new Transform(position, rotation, scale));
 		entity->addComponent(new LoadMesh(p_meshName));
-		entity->addComponent(new CircularMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
+		entity->addComponent(new OrbitalMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
 		AglVector3 randomAxis;
 		RandomUtil::randomEvenlyDistributedSphere(&randomAxis.x, &randomAxis.y,
 			&randomAxis.z);
