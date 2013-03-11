@@ -913,7 +913,7 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 {
 	Entity* entity = NULL;
 
-	if (p_packet.miscData != STATICPROPTYPE_UNSPECIFIED)
+	if (p_packet.miscData != STATICPROPTYPE_UNSPECIFIED) // Means this is either a level chamber or level gate for now.
 	{
 		auto levelInfoLoader = static_cast<LevelInfoLoader*>(
 			m_world->getSystem(SystemType::LevelInfoLoader));
@@ -923,7 +923,23 @@ Entity* EntityFactory::createOtherClient(EntityCreationPacket p_packet)
 			string asdName = fileData->assemblageName;
 			entity = entityFromRecipe( asdName );
 		}
+		LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entity->getComponent(ComponentType::LevelPieceRoot));
+		if (root)
+		{
+			root->pieceId = p_packet.networkIdentity;
+			if (p_packet.miscData == STATICPROPTYPE_LEVELPIECE)
+				root->pieceRootType = PIECEROOTTYE_CHAMBER;
+			else
+				root->pieceRootType = PIECEROOTTYE_GATE;
 
+			int miscSize = p_packet.additionalMisc.size();
+			if (miscSize > 0)
+			{
+				root->connectedRootPieces.resize(miscSize);
+				for (int misc = 0; misc < miscSize; misc++)
+					root->connectedRootPieces[misc] = p_packet.additionalMisc[misc];
+			}
+		}
 	}
 	else	
 	{

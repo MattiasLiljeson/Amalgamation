@@ -572,18 +572,21 @@ void ServerPacketHandlerSystem::handleLoading()
 				LevelPieceRoot* root = static_cast<LevelPieceRoot*>(entities[i]->getComponent(ComponentType::LevelPieceRoot));
 				if (root)
 				{
-					data.bsPos = root->boundingSphere.position;
-					data.bsRadius = root->boundingSphere.radius;
+					//data.bsPos = root->boundingSphere.position;
+					//data.bsRadius = root->boundingSphere.radius;
 					/*RootBoundingSpherePacket bspacket;
 					bspacket.targetNetworkIdentity = entities[i]->getIndex();
 					bspacket.position = root->boundingSphere.position;
 					bspacket.radius = root->boundingSphere.radius;*/
+					data.networkIdentity = root->pieceId;
+					int miscSize = root->connectedRootPieces.size();
+					if (miscSize > 0)
+					{
+						data.additionalMisc.resize(miscSize);
+						for (int misc = 0; misc < miscSize; misc++)
+							data.additionalMisc[misc] = root->connectedRootPieces[misc];
+					}
 				}
-				else
-				{
-
-				}
-				//				packets.push( packet );
 				m_server->broadcastPacket( data.pack() );
 			}
 

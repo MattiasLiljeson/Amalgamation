@@ -31,7 +31,9 @@ void LevelHandlerSystem::inserted( Entity* p_entity )
 	auto levelGen = static_cast<LevelGenSystem*>(
 		m_world->getSystem(SystemType::LevelGenSystem));
 
-	if (levelGen && pieceRoot->pieceId == levelGen->getGeneratedPiecesCount() - 1)
+	m_pieceRoots.push_back(pieceRoot);
+
+	if (levelGen && getActiveEntities().size() == levelGen->getLevelPieceRootCount())
 	{
 		m_hasLevel = true;
 		m_world->getOutputLogger()
@@ -46,6 +48,7 @@ void LevelHandlerSystem::destroyLevel()
 	{
 		m_world->deleteEntity(entities[i]);
 	}
+	m_pieceRoots.clear();
 	m_hasLevel = false;
 }
 
