@@ -17,6 +17,7 @@
 #include <AglSkeletonMapping.h>
 #include <GraphicsWrapper.h>
 #include <ModelResource.h>
+#include "SoundComponent.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -181,5 +182,19 @@ void LoadMeshSystemClient::setUpLights( Entity* p_entity, ModelResource* p_model
 
 void LoadMeshSystemClient::setUpAmbientRangeSound( Entity* p_entity, ModelResource* p_modelResource )
 {
-
+	if (!p_modelResource->ambientRangeSoundCollection.m_collection.empty())
+	{
+		SoundComponent* component = new SoundComponent();
+		for (unsigned int i = 0; i < p_modelResource->ambientRangeSoundCollection.m_collection.size(); i++)
+		{
+			AmbientRangeSoundCreationData* ardat = &p_modelResource->ambientRangeSoundCollection.m_collection[i];
+			AudioHeader* ar = new AudioHeader(AudioHeader::AMBIENTRANGE,ardat->filename);
+			ar->pos = ardat->transform.GetTranslation();
+			ar->volume = ardat->volume;
+			ar->minRange = ardat->minRange;
+			ar->maxRange = ardat->maxRange;
+			component->addAudioHeader(ar);
+		}
+		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
+	}
 }
