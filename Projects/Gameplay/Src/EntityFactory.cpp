@@ -368,6 +368,14 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		engineSound->sourceChannels = 1;
 		engineSound->volume = 0.5f;
 		soundComponent->addAudioHeader(engineSound);
+
+		engineSound = new AudioHeader(AudioHeader::POSITIONALSOUND, "ShipEngineIdle");
+		engineSound->file = "space_ship_engine_idle.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->maxRange = 200.0f;
+		soundComponent->addAudioHeader(engineSound);
 		// RM-RT 2013-03-04
 		/*
 		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
