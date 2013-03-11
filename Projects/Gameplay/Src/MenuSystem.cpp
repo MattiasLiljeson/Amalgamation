@@ -41,6 +41,7 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
+	m_disconnectPopupIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"connection_lost");
 	m_loadingWindowIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
 	rocketEventManager->loadWindow("main_menu");
@@ -65,6 +66,15 @@ void MenuSystem::process()
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("lobby");
 	}
+	//
+	else if(gameState->getStateDelta(GameStates::MENU) == EnumGameDelta::ENTEREDTHISFRAME){
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+
+		rocketEventManager->clearDocumentStack();
+		rocketEventManager->loadWindow("main_menu");
+	}
 }
 
 void MenuSystem::endLoadingState()
@@ -74,4 +84,16 @@ void MenuSystem::endLoadingState()
 
 	rocketBackend->hideDocument(m_loadingWindowIdx);
 
+}
+
+void MenuSystem::displayDisconnectPopup()
+{
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+	auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+		m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+
+	rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
+	//rocketBackend->showDocument(m_disconnectPopupIdx, Rocket::Core::ElementDocument::FOCUS);
 }

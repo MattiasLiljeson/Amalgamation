@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		<div class="lowerPanel" id="buttons">
-			<button onclick="goto main_menu">Leave</button>
+			<button onclick="goto main_menu; leave_server">Leave</button>
 			<button onclick="start_game; play_confirm;">Ready</button>
 		</div>
 

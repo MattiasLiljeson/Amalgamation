@@ -57,6 +57,7 @@
 #include <OutputLogger.h>
 #include "LevelPieceRoot.h"
 #include "RootBoundingSpherePacket.h"
+#include "DisconnectPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -432,15 +433,18 @@ void ServerPacketHandlerSystem::handleLobby()
 			else if(playerInfo.playerName=="judas"){
 				newComp->setAbsoluteScore(-9001);
 			}
-			newComp->m_playerName = playerInfo.playerName;
-			newComp->m_playerID = connectedPlayers.size();
+			newComp->m_playerName	= playerInfo.playerName;
+			newComp->m_playerID		= playerInfo.playerID; //connectedPlayers.size();
+			newComp->m_networkID	= packet.getSenderId();
 			newPlayer->addComponent(newComp);
 			m_world->addEntity(newPlayer);
 
 			NewlyConnectedPlayerPacket connectedPlayer;
-			connectedPlayer.playerName = newComp->m_playerName;
-			connectedPlayer.playerID = newComp->m_playerID;
-			connectedPlayer.score = newComp->getScore();
+			connectedPlayer.playerName	= newComp->m_playerName;
+			connectedPlayer.playerID	= newComp->m_playerID;
+			connectedPlayer.score		= newComp->getScore();
+			connectedPlayer.networkID	= newComp->m_networkID;
+			// Broadcast the player to all clients.
 			m_server->broadcastPacket(connectedPlayer.pack());
 
 			for (unsigned int i = 0; i < connectedPlayers.size(); i++){
@@ -448,11 +452,26 @@ void ServerPacketHandlerSystem::handleLobby()
 				PlayerComponent* playerComp;
 				playerComp = static_cast<PlayerComponent*>
 					(connectedPlayers[i]->getComponent(ComponentType::PlayerComponent));
-				alreadyConnectedPlayers.playerID = playerComp->m_playerID;
-				alreadyConnectedPlayers.playerName = playerComp->m_playerName;
+				alreadyConnectedPlayers.playerID	= playerComp->m_playerID;
+				alreadyConnectedPlayers.playerName	= playerComp->m_playerName;
+				alreadyConnectedPlayers.networkID	= playerComp->m_networkID;
 
-				m_server->broadcastPacket(alreadyConnectedPlayers.pack());
+				// Send all the existing players to the new client.
+				m_server->unicastPacket(alreadyConnectedPlayers.pack(), newComp->m_networkID);
+				//m_server->broadcastPacket(alreadyConnectedPlayers.pack());
 			}			
+		}
+		else if(packetType == (char)PacketType::ClientDisconnect){
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			// Remove client!
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+			playerSystem->deletePlayerEntity(dcPacket.playerID);
+
+			// Broadcast the dc packet back to all clients, including the one who sent it.
+			m_server->broadcastPacket(packet);
 		}
 		else
 		{

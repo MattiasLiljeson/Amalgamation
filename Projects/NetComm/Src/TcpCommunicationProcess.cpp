@@ -153,12 +153,13 @@ void TcpCommunicationProcess::onReceivePacket( const boost::system::error_code& 
 	}
 	else if( p_error )
 	{
+		DEBUGPRINT(( p_error.message().c_str() ));
 		m_parent->putMessage( new ProcessMessageSocketDisconnected(
 			this, getId() ) );
 
 		m_running = false;
 	}
-	else
+	else 
 	{
 		if( p_bytesTransferred > 0 )
 		{

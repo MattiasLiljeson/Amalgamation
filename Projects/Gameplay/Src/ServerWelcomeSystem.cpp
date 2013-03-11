@@ -36,6 +36,8 @@
 #include "EntityCreationPacket.h"
 #include "WelcomePacket.h"
 #include "NewlyConnectedPlayerPacket.h"
+#include "DisconnectPacket.h"
+#include "Packet.h"
 
 #include <Globals.h>
 #include "EntityFactory.h"
@@ -65,25 +67,26 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		int id = m_server->popNewDisconnection();
 
-		for (unsigned int index = 0; index < p_entities.size(); index++)
-		{
-			NetworkSynced* netSync = static_cast<NetworkSynced*>(
-				m_world->getComponentManager()->getComponent( p_entities[index],
-					ComponentType::NetworkSynced ) );
-		}
+		//sendDisconnectPacket(id);
+		//for (unsigned int index = 0; index < p_entities.size(); index++)
+		//{
+		//	NetworkSynced* netSync = static_cast<NetworkSynced*>(
+		//		m_world->getComponentManager()->getComponent( p_entities[index],
+		//			ComponentType::NetworkSynced ) );
+		//}
 
-		// If a client has disconnected, then the clientinfo should be removed?
-		auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
-			m_world->getSystem(SystemType::ServerClientInfoSystem));
-		vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-		for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
-		{
-			auto clientInfo = static_cast<ClientInfo*>(
-				clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+		//// If a client has disconnected, then the clientinfo should be removed?
+		//auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+		//	m_world->getSystem(SystemType::ServerClientInfoSystem));
+		//vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+		//for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
+		//{
+		//	auto clientInfo = static_cast<ClientInfo*>(
+		//		clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
 
-			if (clientInfo->id == id)
-				m_world->deleteEntity(clientInfoEntities[i]);
-		}
+		//	if (clientInfo->id == id)
+		//		m_world->deleteEntity(clientInfoEntities[i]);
+		//}
 	}
 
 	/************************************************************************/
@@ -97,7 +100,7 @@ void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 			int id = m_server->popNewConnection();
 
 			// Creates a new client info entity for the newly connected client
-			createClientInfoEntity(id);
+			// createClientInfoEntity(id);
 
 			/************************************************************************/
 			/* Send the newly connected client a welcome packet with all inclusive. */
@@ -119,24 +122,32 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
-	welcomePacket.playerID = m_playerSystem->getActiveEntities().size();
+	//welcomePacket.playerID = m_playerSystem->getActiveEntities().size();
+	welcomePacket.playerID = m_playerSystem->createPlayerId(p_newlyConnectedClientId);
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 }
 
-void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
-{
-	Entity* e = m_world->createEntity();
-	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
-	m_world->addEntity(e);
-}
+//void ServerWelcomeSystem::createClientInfoEntity( int p_newlyConnectedClientId )
+//{
+//	Entity* e = m_world->createEntity();
+//	e->addComponent(ComponentType::ClientInfo, new ClientInfo(p_newlyConnectedClientId));
+//	m_world->addEntity(e);
+//}
 
-void ServerWelcomeSystem::sendBrodcastAllPlayers()
-{
-	vector<PlayerComponent*> playerComps = m_playerSystem->getPlayerComponents();
-	for(unsigned int i = 0; i < playerComps.size(); i++){
-		NewlyConnectedPlayerPacket connectedPacket;
-		connectedPacket.playerID = playerComps.at(i)->m_playerID;
-		connectedPacket.playerName = playerComps.at(i)->m_playerName;
-		m_server->broadcastPacket( connectedPacket.pack() );
-	}
-}
+//void ServerWelcomeSystem::sendBrodcastAllPlayers()
+//{
+//	vector<PlayerComponent*> playerComps = m_playerSystem->getPlayerComponents();
+//	for(unsigned int i = 0; i < playerComps.size(); i++){
+//		NewlyConnectedPlayerPacket connectedPacket;
+//		connectedPacket.playerID = playerComps.at(i)->m_playerID;
+//		connectedPacket.playerName = playerComps.at(i)->m_playerName;
+//		m_server->broadcastPacket( connectedPacket.pack() );
+//	}
+//}
+
+//void ServerWelcomeSystem::sendDisconnectPacket( int p_newlyDisconnectClientId )
+//{
+//	DisconnectPacket dcPacket;
+//	dcPacket.clientNetworkIdentity = p_newlyDisconnectClientId;
+////	dcPacket.playerID = m_playerSystem->get
+//}

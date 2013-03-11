@@ -1,30 +1,28 @@
 #pragma once
-
-#include <EntitySystem.h>
+#include "Packetizer.h"
 
 // =======================================================================================
-//                                      MenuSystem
+//									DisconnectPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Handles the packing and unpacking of DisconnectPacket
 ///        
-/// # MenuSystem
+/// # WelcomePacket
 /// Detailed description.....
-/// Created on: 4-2-2013 
+/// Created on: 14-1-2013 
 ///---------------------------------------------------------------------------------------
 
-class MenuSystem : public EntitySystem
+class DisconnectPacket : public Packetizer
 {
 public:
-	MenuSystem();
-	~MenuSystem();
-	void initialize();
-	void process( );
-	void endLoadingState();
-	void displayDisconnectPopup();
-private:
-	int m_loadingWindowIdx;
-	int m_disconnectPopupIdx;
-};
+	DisconnectPacket();
+	~DisconnectPacket();
 
+	Packet pack();
+
+	void unpack( Packet& p_packet );
+public:
+	int clientNetworkIdentity;
+	int playerID;
+};

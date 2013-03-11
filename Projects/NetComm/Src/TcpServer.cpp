@@ -14,6 +14,9 @@
 #include "ProcessMessageAskForCommProcessInfo.h"
 #include "ProcessMessageCommProcessInfo.h"
 
+#define FORCE_VS_DBG_OUTPUT
+#include <DebugUtil.h>
+#include <ToString.h>
 
 TcpServer::TcpServer()
 {
@@ -25,6 +28,11 @@ TcpServer::TcpServer()
 
 TcpServer::~TcpServer()
 {
+	shutdown();
+}
+
+void TcpServer::shutdown()
+{
 	stopListening();
 
 	for( unsigned int i=0; i<m_communicationProcesses.size(); i++ )
@@ -33,8 +41,10 @@ TcpServer::~TcpServer()
 		m_communicationProcesses[i]->stop();
 		delete m_communicationProcesses[i];
 	}
+	m_communicationProcesses.clear();
 
 	delete m_ioService;
+	m_ioService = NULL;
 }
 
 void TcpServer::startListening( int p_port )
@@ -182,6 +192,9 @@ void TcpServer::processMessages()
 			
 			if (processToBeDeleted != -1)
 			{
+				DEBUGPRINT(( (toString("Server terminated comprocess ") 
+					+ toString(m_communicationProcesses[processToBeDeleted]->getId())
+					+ toString("\n")).c_str() ));
 				m_communicationProcesses[processToBeDeleted]->putMessage( new ProcessMessageTerminate() );
 				m_communicationProcesses[processToBeDeleted]->stop();
 				delete m_communicationProcesses[processToBeDeleted];
@@ -314,3 +327,4 @@ const unsigned int& TcpServer::totalSentInCommProcess(
 {
 	return m_totalSentInCommProcesses[p_processIdentity];
 }
+

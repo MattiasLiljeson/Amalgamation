@@ -322,6 +322,12 @@ void EntityWorld::requestToHostServer()
 	m_hostServer = true;
 }
 
+void EntityWorld::requestToQuitServer()
+{
+	m_hostServer = false;
+}
+
+
 bool EntityWorld::isHostingServer()
 {
 	return m_hostServer;

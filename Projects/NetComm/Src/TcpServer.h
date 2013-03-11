@@ -36,6 +36,7 @@ public:
 	TcpServer();
 	~TcpServer();
 
+	void shutdown();
 	void startListening( int p_port );
 
 	void stopListening();

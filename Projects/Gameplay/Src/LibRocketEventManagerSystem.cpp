@@ -45,6 +45,8 @@
 #include "ClientStateSystem.h"
 #include "ChangeStatePacket.h"
 #include "SoundComponent.h"
+#include "DisconnectPacket.h"
+#include "ClientPacketHandlerSystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -245,6 +247,19 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			sys->setAddressAndConnect("127.0.0.1", server_port);
 		}
+		else if(values[0] == "leave_server"){
+			DisconnectPacket dcPacket;
+			dcPacket.playerID = m_client->getPlayerID();
+			dcPacket.clientNetworkIdentity = m_client->getId();
+			m_client->sendPacket(dcPacket.pack());
+		}
+		else if (values[0] == "reset_connection")
+		{
+			auto sys = static_cast<ClientPacketHandlerSystem*>(
+				m_world->getSystem(SystemType::ClientPacketHandlerSystem));
+			sys->resetFromDisconnect();
+		}
+
 		else if(values[0] == "play_confirm"){
 			playConfirmSound();
 		}
@@ -273,7 +288,8 @@ void LibRocketEventManagerSystem::playBackSound()
 }
 
 // Loads a window and binds the event handler for it.
-bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windowName)
+bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windowName, 
+											 int p_focusFlags/*= Rocket::Core::ElementDocument::FOCUS*/)
 {
 	// Set the event handler for the new screen, if one has been registered.
 	EventHandler* old_event_handler = m_eventHandler;
@@ -298,7 +314,7 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 	m_currentDocId = p_windowName;
 	m_docIdStack.push(p_windowName);
 
-	document->Show();
+	document->Show(p_focusFlags);
 	document->PullToFront();
 
 	// Remove the caller's reference.

@@ -1,6 +1,8 @@
 #pragma once
 #include <EntitySystem.h>
 #include "NetworkSynced.h"
+#include <UniqueIndexList.h>
+
 
 class NetworkSynced;
 class PlayerComponent;
@@ -24,8 +26,19 @@ public:
 	~PlayerSystem();
 	PlayerComponent* getPlayerCompFromNetworkComp(NetworkSynced* p_netComponent);
 	const vector<PlayerComponent*>& getPlayerComponents() const;
-	string getPlayerNameFromID(int p_playerID) const;
+	string getPlayerNameFromID(int p_playerID);
 	void inserted( Entity* p_entity );
+	void removed( Entity* p_entity );
+
+	//PlayerComponent* serverCreatePlayerComponent(int p_fromNetworkOwnerId);
+	void deletePlayerEntity(int p_playerId);
+	void deleteAllPlayerEntities();
+
+	int createPlayerId(int p_fromNetworkOwnerId);
+	void recyclePlayerId(int p_playerId);
 private:
+	vector<PlayerComponent*> m_playerComponentsObsolete;
 	vector<PlayerComponent*> m_playerComponents;
+
+	UniqueIndexList<int> m_playerIds;
 };

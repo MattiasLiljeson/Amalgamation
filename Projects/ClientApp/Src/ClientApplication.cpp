@@ -227,7 +227,13 @@ void ClientApplication::run()
 				m_serverApp = new Srv::ServerApplication();
 				m_serverApp->start();
 			}
-			
+			else if (!m_world->isHostingServer() && m_serverApp != NULL){
+				ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+				m_serverApp->putMessage( newMessage );
+				m_serverApp->stop();
+				delete m_serverApp;
+				m_serverApp = NULL;
+			}
 		}
 
 	}

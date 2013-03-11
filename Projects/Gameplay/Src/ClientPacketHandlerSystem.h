@@ -48,6 +48,7 @@ public:
 
 	virtual void initialize();
 
+	void resetFromDisconnect();
 private:
 	//NetworkEntityCreationPacket readCreationPacket(Packet& p_packet);
 	NetworkScoreUpdatePacket	readScorePacket(Packet& p_packet);
