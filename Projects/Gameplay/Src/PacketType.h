@@ -49,7 +49,7 @@ public:
 		/************************************************************************/
 		ThrustPacket,
 		RayPacket,
-		ModuleHighlightPacket,
+		HighlightSlotPacket,
 		SimpleEvent,
 		ParticleUpdate,
 		ParticleSystemCreationInfo,
