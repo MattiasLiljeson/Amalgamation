@@ -6,6 +6,7 @@
 #include <EntitySystem.h>
 #include "ClientInfo.h"
 #include <string>
+#include <Globals.h>
 
 class TcpServer;
 class PhysicsSystem;
@@ -56,6 +57,7 @@ private:
 	int m_readyLoadingPlayers;
 	int m_resultsPlayers; //Stupid name for a stupid variable
 	int m_readyLobbyPlayers;
+	bool m_lobbyPlayerReadyStates[MAXPLAYERS];
 
 	const static int roundTime = 1500;
 };

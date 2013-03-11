@@ -1118,6 +1118,12 @@ void ClientPacketHandlerSystem::handleLobby()
 			DisconnectPacket dcPacket;
 			dcPacket.unpack(packet);
 
+			// Reset all ready states.
+			if (dcPacket.playerID != m_tcpClient->getPlayerID())
+			{
+				static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+					->setAllPlayersReady(false);
+			}
 			handlePlayerDisconnect(dcPacket);
 		}
 		else if (packetType == (char)PacketType::PlayerReadyPacket)

@@ -120,4 +120,13 @@ bool LobbySystem::isPlayerReady( int p_playerId ) const
 	return m_players[p_playerId].ready;
 }
 
+void LobbySystem::setAllPlayersReady( bool p_ready )
+{
+	for(int i = 0; i < MAXPLAYERS; i++)
+	{
+		m_players[i].ready = p_ready;
+	}
+	NotifyRowChange(m_tableName,0,MAXPLAYERS);
+}
+
 

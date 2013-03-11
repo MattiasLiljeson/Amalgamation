@@ -70,7 +70,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	m_finishedLoadingPlayers = 0;
 	m_readyLoadingPlayers = 0;
 	m_resultsPlayers = 0;
-	m_readyLobbyPlayers = 0;
+	memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -474,6 +474,8 @@ void ServerPacketHandlerSystem::handleLobby()
 
 			// Broadcast the dc packet back to all clients, including the one who sent it.
 			m_server->broadcastPacket(packet);
+			// Broadcast a ready packet to all clients that forces them to set unready.
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 		}
 		else if(packetType == (char)PacketType::PlayerReadyPacket){
 			// Broadcast the ready packet back to all clients, including the one who sent it.
@@ -482,14 +484,13 @@ void ServerPacketHandlerSystem::handleLobby()
 			PlayerReadyPacket readyPacket;
 			readyPacket.unpack(packet);
 
+			m_lobbyPlayerReadyStates[readyPacket.playerId] = readyPacket.ready;
 			// Check so that all players are ready!
-			if (readyPacket.ready)
+			m_readyLobbyPlayers = 0;
+			for (int i = 0; i < MAXPLAYERS; i++)
 			{
-				m_readyLobbyPlayers++;
-			}
-			else
-			{
-				m_readyLobbyPlayers--;
+				if (m_lobbyPlayerReadyStates[i])
+					m_readyLoadingPlayers++;
 			}
 
 			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers) + "\n").c_str() );
