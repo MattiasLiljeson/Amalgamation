@@ -61,35 +61,6 @@ ServerWelcomeSystem::~ServerWelcomeSystem()
 void ServerWelcomeSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	/************************************************************************/
-	/* NOT USED RIGHT NOW! CLIENTS CANT DISCONNECT.							*/
-	/************************************************************************/
-	while (m_server->hasNewDisconnections())
-	{
-		int id = m_server->popNewDisconnection();
-
-		//sendDisconnectPacket(id);
-		//for (unsigned int index = 0; index < p_entities.size(); index++)
-		//{
-		//	NetworkSynced* netSync = static_cast<NetworkSynced*>(
-		//		m_world->getComponentManager()->getComponent( p_entities[index],
-		//			ComponentType::NetworkSynced ) );
-		//}
-
-		//// If a client has disconnected, then the clientinfo should be removed?
-		//auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
-		//	m_world->getSystem(SystemType::ServerClientInfoSystem));
-		//vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-		//for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
-		//{
-		//	auto clientInfo = static_cast<ClientInfo*>(
-		//		clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
-
-		//	if (clientInfo->id == id)
-		//		m_world->deleteEntity(clientInfoEntities[i]);
-		//}
-	}
-
-	/************************************************************************/
 	/* It goes here if there are new clients that has connected to the		*/
 	/* server.																*/
 	/************************************************************************/

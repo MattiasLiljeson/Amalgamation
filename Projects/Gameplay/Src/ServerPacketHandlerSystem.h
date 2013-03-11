@@ -47,6 +47,9 @@ private:
 	void handleSentAllPackets();
 	void handleResult();
 
+	void handleClientDisconnect();
+	void handlePlayerDisconnect(int p_player);
+
 	float stackBooster(Entity* p_parent);
 private:
 	ServerStateSystem* m_stateSystem;

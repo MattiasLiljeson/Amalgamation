@@ -476,6 +476,8 @@ void ServerPacketHandlerSystem::handleLobby()
 			m_server->broadcastPacket(packet);
 			// Force all players to be set unready.
 			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
+
+			m_world->getOutputLogger()->write(("Server detected a disconnect packet for player: " + toString(dcPacket.playerID) + "\n").c_str());
 		}
 		else if(packetType == (char)PacketType::PlayerReadyPacket){
 			// Broadcast the ready packet back to all clients, including the one who sent it.
@@ -852,4 +854,29 @@ float ServerPacketHandlerSystem::stackBooster(Entity* p_parent)
 	if (speedBooster)
 		boostPower += 3;
 	return boostPower;
+}
+
+void ServerPacketHandlerSystem::handleClientDisconnect()
+{
+	while (m_server->hasNewDisconnections())
+	{
+		int clientId = m_server->popNewDisconnection();
+
+		auto playerSys = static_cast<PlayerSystem*>(
+			m_world->getSystem(SystemType::PlayerSystem));
+
+		int playerId = playerSys->findPlayerId(clientId);
+
+		playerSys->deletePlayerEntity(playerId);
+
+		DisconnectPacket dcPacket;
+		dcPacket.playerID = playerId;
+
+		m_server->broadcastPacket(dcPacket.pack());
+		
+		memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
+
+		m_world->getOutputLogger()->write(("Server detected a disconnecting player: " + toString(dcPacket.playerID) + "\n").c_str());
+		// Here needs to do more, for instance, removing entities!
+	}
 }
