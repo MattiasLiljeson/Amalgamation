@@ -26,5 +26,6 @@ public:
 private:
 	int m_loadingWindowIdx;
 	int m_disconnectPopupIdx;
+	int m_lobbyDocIdx;
 };
 
