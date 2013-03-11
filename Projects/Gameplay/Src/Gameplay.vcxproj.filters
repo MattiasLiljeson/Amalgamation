@@ -854,6 +854,12 @@
     <ClInclude Include="DisconnectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="GlowAnimation.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="GlowAnimationSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1468,6 +1474,12 @@
     </ClCompile>
     <ClCompile Include="DisconnectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowAnimation.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowAnimationSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

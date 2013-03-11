@@ -20,10 +20,10 @@ class ColorTone : public Component
 {
 public:
 	ColorTone();
-	virtual ~ColorTone();
+	ColorTone(AglVector4 p_color, bool p_enabled);
+	~ColorTone();
 
+public:
 	AglVector4 color;
 	bool toneEnabled;
-protected:
-private:
 };

@@ -39,6 +39,8 @@
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
     <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="GlowAnimation.h" />
+    <ClInclude Include="GlowAnimationSystem.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />
@@ -283,6 +285,8 @@
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="GlowAnimation.cpp" />
+    <ClCompile Include="GlowAnimationSystem.cpp" />
     <ClCompile Include="OrbitalMovementSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientEntityCountSystem.cpp" />
