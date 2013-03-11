@@ -192,6 +192,7 @@ void PhysicsController::Update(float pElapsedTime)
 
 
 	mCollisions.clear();
+	mStaticCollisions.clear();
 	mLineSegmentCollisions.clear();
 	//New update method stepping
 	//1) Update Velocity and Position
@@ -283,6 +284,8 @@ void PhysicsController::Update(float pElapsedTime)
 				{
 					collisions.push_back(staticCol[j]);
 				}
+				if (staticCol.size() > 0)
+					mStaticCollisions.push_back(mRigidBodies[i].second);
 			} 
 		}
 	}
@@ -553,6 +556,16 @@ bool PhysicsController::IsColliding(unsigned int p_b1, unsigned int p_b2)
 		if (mCollisions[i].first == p_b1)
 			if (mCollisions[i].second == p_b2)
 				return true;
+	}
+	return false;
+}
+
+bool PhysicsController::CollidesWithStaticEnvironment(unsigned int p_b)
+{
+	for (unsigned int i = 0; i < mStaticCollisions.size(); i++)
+	{
+		if (mStaticCollisions[i] == p_b)
+			return true;
 	}
 	return false;
 }

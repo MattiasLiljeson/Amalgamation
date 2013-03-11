@@ -54,15 +54,17 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 		if (gun && module && module->m_parentEntity >= 0)
 		{
 			//Check fire
+			gun->cooldown = max(0, gun->cooldown - m_world->getDelta());
 			gun->timeSinceRocket += dt;
-			if (gun->coolDown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
+			if (gun->cooldown == 0 && (module->getActive() || gun->currentBurst > 0) && gun->timeSinceRocket > 0.75f)
 			{
 				spawnRocket(p_entities[i],module);
 				gun->timeSinceRocket = 0;
 				gun->currentBurst++;
 				if (gun->currentBurst >= gun->burstCount)
 				{
-					gun->coolDown = 1.0f;
+					gun->lockCoolDown = 2.0f;
+					gun->cooldown = 2.0f;
 					gun->currentBurst = 0;
 				}
 			}
@@ -124,8 +126,13 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 							p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 
-						ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, 1);
-						if (gun->coolDown == 0)
+						if (gun->cooldown > 0)
+							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, max(0, gun->cooldown-1.5f)*2.0f);
+						else
+						{
+							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, 1);
+						}
+						if (gun->lockCoolDown == 0)
 						{
 							//Show the lockon
 							ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(1, 1, 1, 1);
@@ -139,12 +146,12 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = target;
 						if (ship)
 						{
-							gun->coolDown = max(0, gun->coolDown - m_world->getDelta());
+							gun->lockCoolDown = max(0, gun->lockCoolDown - m_world->getDelta());
 							gun->target = ship->getIndex();
 						}
 						else
 						{
-							gun->coolDown = 2.0f;
+							gun->lockCoolDown = 2.0f;
 							gun->target = -1;
 						}
 					}
@@ -240,7 +247,7 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 
 	// store owner data
 	StandardRocket* rocketModule = new StandardRocket();
-	rocketModule->m_target = gun->target;
+	rocketModule->m_target = gun->lockCoolDown == 0 ? gun->target : -1;
 	rocketModule->m_ownerId = ModuleHelper::FindParentShipClientId(m_world, p_module);
 
 	entity->addComponent(ComponentType::StandardRocket, rocketModule);
@@ -295,7 +302,7 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 	int id = -1;
 	for (unsigned int i = 0; i < ships.size(); i++)
 	{
-		if (true)//ships[i] != p_parentShip)
+		if (ships[i] != p_parentShip)
 		{
 			Transform* st = static_cast<Transform*>(ships[i]->getComponent(ComponentType::Transform));
 
@@ -304,7 +311,7 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 			AglVector3 d2 = p-o;
 			d2.normalize();
 
-			if (true)//AglVector3::dotProduct(d, d2) > 0.9f)
+			if (AglVector3::dotProduct(d, d2) > 0.9f)
 			{
 				float dist = AglVector3::lengthSquared((o - p) - d*AglVector3::dotProduct(o-p, d));
 
