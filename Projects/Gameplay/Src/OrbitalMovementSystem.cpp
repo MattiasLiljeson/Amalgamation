@@ -6,7 +6,7 @@
 
 OrbitalMovementSystem::OrbitalMovementSystem()
 	: EntitySystem( SystemType::CircularMovementSystem, 2, ComponentType::Transform,
-	ComponentType::CircularMovement )
+	ComponentType::OrbitalMovement )
 {
 }
 
@@ -21,7 +21,7 @@ void OrbitalMovementSystem::processEntities( const vector<Entity*>& p_entities )
 		Transform* transform = static_cast<Transform*>(p_entities[i]->getComponent(
 			ComponentType::Transform));
 		OrbitalMovement* circular = static_cast<OrbitalMovement*>(p_entities[i]->
-			getComponent(ComponentType::CircularMovement));
+			getComponent(ComponentType::OrbitalMovement));
 		AglVector3 v = circular->vectorFromCenter;
 		AglVector3 k = circular->axis;
 		AglVector3::normalize(k);
@@ -29,7 +29,7 @@ void OrbitalMovementSystem::processEntities( const vector<Entity*>& p_entities )
 		AglVector3 vRot = AglVector3::rotateAroundAxis(v, k, circular->angle);
 		AglVector3 position = circular->centerPosition + vRot;
 		transform->setTranslation(position);
-		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
-		transform->setRotation(rotation);
+		//AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), vRot);
+		//transform->setRotation(rotation);
 	}
 }

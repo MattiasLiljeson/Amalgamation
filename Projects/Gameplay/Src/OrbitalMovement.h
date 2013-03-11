@@ -17,7 +17,7 @@ class OrbitalMovement: public Component
 public:
 	OrbitalMovement(AglVector3 p_center, AglVector3 p_axis, AglVector3 p_vecFromCenter,
 		float p_angularVelocity)
-		: Component(ComponentType::CircularMovement)
+		: Component(ComponentType::OrbitalMovement)
 	{
 		centerPosition = p_center;
 		axis = p_axis;
