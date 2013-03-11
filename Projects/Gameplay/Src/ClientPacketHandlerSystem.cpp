@@ -72,6 +72,7 @@
 
 // Misc
 #include <DamageAccumulator.h>
+#include <Cursor.h>
 
 // Sort the following into their respective category. These have probably been auto-added.
 #include "AnomalyBomb.h"
@@ -1432,6 +1433,10 @@ void ClientPacketHandlerSystem::handleServerDisconnect()
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();
+		
+		auto inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+		if (!inputBackend->getCursor()->isVisible())
+			inputBackend->getCursor()->show();
 	}
 }
 
