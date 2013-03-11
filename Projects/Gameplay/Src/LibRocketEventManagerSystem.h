@@ -27,6 +27,7 @@
 
 #pragma once
 #include <Rocket/Core/Event.h>
+#include <Rocket/Core/ElementDocument.h>
 #include <EventManager.h>
 #include <EntitySystem.h>
 #include <stack>
@@ -72,7 +73,8 @@ public:
 	void processEvent(Rocket::Core::Event& p_event, const Rocket::Core::String& p_value);
 	/// Loads a window and binds the event handler for it.
 	/// @param[in] p_windowName The name of the window to load.
-	bool loadWindow(const Rocket::Core::String& p_windowName);
+	bool loadWindow(const Rocket::Core::String& p_windowName,
+					int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 
 	void playConfirmSound();
 

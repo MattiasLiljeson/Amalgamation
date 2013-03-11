@@ -255,9 +255,6 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "reset_connection")
 		{
-			ownerDocument->Show(Rocket::Core::ElementDocument::NONE);
-			ownerDocument->PushToBack();
-			ownerDocument->Hide();
 			auto sys = static_cast<ClientPacketHandlerSystem*>(
 				m_world->getSystem(SystemType::ClientPacketHandlerSystem));
 			sys->resetFromDisconnect();
@@ -291,7 +288,8 @@ void LibRocketEventManagerSystem::playBackSound()
 }
 
 // Loads a window and binds the event handler for it.
-bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windowName)
+bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windowName, 
+											 int p_focusFlags/*= Rocket::Core::ElementDocument::FOCUS*/)
 {
 	// Set the event handler for the new screen, if one has been registered.
 	EventHandler* old_event_handler = m_eventHandler;
@@ -316,7 +314,7 @@ bool LibRocketEventManagerSystem::loadWindow(const Rocket::Core::String& p_windo
 	m_currentDocId = p_windowName;
 	m_docIdStack.push(p_windowName);
 
-	document->Show();
+	document->Show(p_focusFlags);
 	document->PullToFront();
 
 	// Remove the caller's reference.
