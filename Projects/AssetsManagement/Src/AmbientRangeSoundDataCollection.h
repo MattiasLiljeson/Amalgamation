@@ -14,6 +14,7 @@ struct AmbientRangeSoundCreationData
 	string filename;
 	float minRange,maxRange;
 	float volume;
+	int channels;
 };
 
 

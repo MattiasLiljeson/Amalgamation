@@ -92,6 +92,7 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		data.minrange = getFloatFromDecimalString(extractPart(p_string,1));
 		data.maxrange = getFloatFromDecimalString(extractPart(p_string,2));
 		data.volume = getFloatFromDecimalString(extractPart(p_string,3));
+		data.channels = (int)getFloatFromDecimalString(extractPart(p_string,4));
 	}
 	return pair<Data,Token>(data,tokenVal);
 }

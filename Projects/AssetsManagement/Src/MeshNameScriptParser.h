@@ -44,7 +44,8 @@ public:
 		string instanceSpecFilename;				///< For instance points (file name)
 		string spawnSpecName;						///< For spawn points (action name)
 		LightCreationData lightSpec;				///< Light specific
-		float volume,minrange,maxrange;					///< sound specific
+		float volume,minrange,maxrange;				///< sound specific
+		int channels;								///< sound specific
 	};
 
 	static pair<Data,Token> parse(const string& p_string);

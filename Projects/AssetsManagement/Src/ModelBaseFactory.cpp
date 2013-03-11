@@ -413,12 +413,15 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				if (isOk)
 				{
 					AmbientRangeSoundCreationData sd;
-					FixTransform(cp->transform);
-					sd.transform = cp->transform*p_offset;
+					AglMatrix mat = AglMatrix::identityMatrix();
+					mat.SetTranslation(cp->transform.GetTranslation());
+					FixTransform(mat);
+					sd.transform = mat*p_offset;
 					sd.filename = parsedAction.first.name;
 					sd.minRange = parsedAction.first.minrange;
 					sd.maxRange = parsedAction.first.maxrange;
 					sd.volume = parsedAction.first.volume;
+					sd.channels = parsedAction.first.channels;
 					p_model->ambientRangeSoundCollection.m_collection.push_back(sd);
 				}
 

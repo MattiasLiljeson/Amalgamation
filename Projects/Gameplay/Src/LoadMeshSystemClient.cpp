@@ -189,12 +189,18 @@ void LoadMeshSystemClient::setUpAmbientRangeSound( Entity* p_entity, ModelResour
 		{
 			AmbientRangeSoundCreationData* ardat = &p_modelResource->ambientRangeSoundCollection.m_collection[i];
 			AudioHeader* ar = new AudioHeader(AudioHeader::AMBIENTRANGE,ardat->filename);
+			ar->file = ardat->filename+".wav";
+			ar->path = SOUNDEFFECTPATH;
+			ar->playInterval = AudioHeader::FOREVER;
+			ar->playingState = AudioHeader::PLAY;
+			ar->queuedPlayingState = AudioHeader::PLAY;
+			ar->sourceChannels = ardat->channels;
 			ar->pos = ardat->transform.GetTranslation();
 			ar->volume = ardat->volume;
 			ar->minRange = ardat->minRange;
 			ar->maxRange = ardat->maxRange;
 			component->addAudioHeader(ar);
 		}
-		p_entity->addComponent( ComponentType::ConnectionPointSet, component );
+		p_entity->addComponent( ComponentType::SoundComponent, component );
 	}
 }
