@@ -1127,17 +1127,22 @@ void ClientPacketHandlerSystem::handleLobby()
 			
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
 				->setPlayerReady(readyPacket.playerId, readyPacket.ready);
-			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
-				m_world->getSystem(SystemType::LibRocketBackendSystem));
 			
-			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
-			if (readyPacket.ready)
+			// If local player, then set unready/ready button
+			if (readyPacket.playerId == m_tcpClient->getPlayerID())
 			{
-				rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Unready");
-			}
-			else
-			{
-				rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+				auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+					m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+				int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+				if (readyPacket.ready)
+				{
+					rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Unready");
+				}
+				else
+				{
+					rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+				} 
 			}
 		}
 		else if(packetType == (char)PacketType::ChangeStatePacket){
@@ -1149,7 +1154,7 @@ void ClientPacketHandlerSystem::handleLobby()
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation){
-			DEBUGWARNING(( "Server sent packets too fast and too furious!" ));
+			DEBUGWARNING(( "Server sent packets too fast and too furious!\n" ));
 		}
 		else
 		{

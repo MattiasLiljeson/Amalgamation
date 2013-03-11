@@ -492,7 +492,7 @@ void ServerPacketHandlerSystem::handleLobby()
 				m_readyLobbyPlayers--;
 			}
 
-			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers)).c_str() );
+			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers) + "\n").c_str() );
 			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
 				(m_world->getSystem(SystemType::PlayerSystem));
 			if (m_readyLobbyPlayers >= playerSystem->getActiveEntities().size())
