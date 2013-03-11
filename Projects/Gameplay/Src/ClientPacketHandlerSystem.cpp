@@ -609,7 +609,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 				Entity* parent = directMapper->getEntity(data.networkIdentity);
 
 				ConnectionVisualizerSystem* conVis = static_cast<ConnectionVisualizerSystem*>(m_world->getSystem(SystemType::ConnectionVisualizerSystem));
-				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active));
+				conVis->addEffect(ConnectionVisualizerSystem::ConnectionEffectData(parent, data.slot, data.translationOffset, data.forwardDirection, !data.active || !data.inEditMode));
 
 				if (!data.active)
 				{
@@ -619,7 +619,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 					type.type = (EntityType::EntityEnums)data.moduleType;
 					slotmarker->addMarker(data.shipSlot, type);
 				}
-				else if (data.networkIdentity)
+				else if (data.networkIdentity >= 0)
 				{
 					//Remove an icon
 					SlotMarkerSystem* slotmarker = static_cast<SlotMarkerSystem*>(m_world->getSystem(SystemType::SlotMarkerSystem));

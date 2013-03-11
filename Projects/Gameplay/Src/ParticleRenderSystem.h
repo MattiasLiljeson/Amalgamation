@@ -58,6 +58,10 @@ public:
 	{
 		return &drawnPS;
 	}
+	int* getMaxDrawnPSCount()
+	{
+		return &maxDrawnPS;
+	}
 
 private:
 	//void renderParticleSystem(AglParticleSystem* p_particleSystem);
@@ -80,6 +84,7 @@ private:
 
 	//Culling system? //AA
 	int drawnPS;
+	int maxDrawnPS;
 
 	AglVector4 m_cameraPlanes[6];
 };

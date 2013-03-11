@@ -409,11 +409,19 @@ void ModuleStatusEffectSystem::disableUnusedModuleParticleEffect( Entity* p_enti
 	{
 		// let the particles have one last run and "die" silently by setting spawn type to once
 		AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
-		if (posHint) posHint->setSpawnType(AglParticleSystemHeader::ONCE);
+		if (posHint) 
+		{
+			posHint->setSpawnType(AglParticleSystemHeader::ONCE);
+			//posHint->setColor(AglVector4(0, 0, 0, 0));
+		}
 		for (unsigned int i=0;i<p_visMode->unusedHintParticleSysId.size();i++)
 		{
 			AglParticleSystem* unusedHint = particleEmitters->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
-			if (unusedHint) unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
+			if (unusedHint) 
+			{
+				unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
+				//unusedHint->setColor(AglVector4(0, 0, 0, 0));
+			}
 		}
 	}
 }
