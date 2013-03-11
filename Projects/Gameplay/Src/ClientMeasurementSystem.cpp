@@ -75,6 +75,11 @@ void ClientMeasurementSystem::initialize()
 		"group='Culling'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Max Rendered Particle Systems",
+		TwType::TW_TYPE_INT32, psSystem->getMaxDrawnPSCount(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Rendered Chambers",
 		TwType::TW_TYPE_INT32, cull2->getRenderedChambers(),
 		"group='Culling'" );
