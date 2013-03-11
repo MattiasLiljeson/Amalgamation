@@ -25,7 +25,7 @@ public:	//Enums
 		NetworkSynced,
 		ClientInfo,
 		ColorTone,
-		CircularMovement,
+		OrbitalMovement,
 		AxisRotate,
 		Extrapolate,
 		InterpolationComponent,
