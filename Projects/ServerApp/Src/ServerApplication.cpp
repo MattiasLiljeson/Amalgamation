@@ -326,7 +326,7 @@ namespace Srv
 		cp.scale = AglVector3(1.0f, 1.0f, 1.0f);
 		float y = 10.0f;
 		//Rocket Launcher
-		for (unsigned int i = 0; i < 4; i++)
+		/*for (unsigned int i = 0; i < 4; i++)
 		{
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(40.0f, y, (float)i*15.0f));
 			cp.entityType = EntityType::RocketLauncherModule;
@@ -374,6 +374,6 @@ namespace Srv
 			AglMatrix pos = AglMatrix::createTranslationMatrix(AglVector3(90.0f, y, (float)i*15.0f));
 			cp.entityType = EntityType::TeslaCoilModule;
 			factory->entityFromPacket(cp, &pos);
-		}
+		}*/
 	}
 };
