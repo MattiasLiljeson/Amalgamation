@@ -1,20 +1,20 @@
-#include "CircularMovementSystem.h"
+#include "OrbitalMovementSystem.h"
 #include "Transform.h"
 #include "OrbitalMovement.h"
 #include "InputBackendSystem.h"
 #include <Control.h>
 
-CircularMovementSystem::CircularMovementSystem()
+OrbitalMovementSystem::OrbitalMovementSystem()
 	: EntitySystem( SystemType::CircularMovementSystem, 2, ComponentType::Transform,
 	ComponentType::CircularMovement )
 {
 }
 
-CircularMovementSystem::~CircularMovementSystem()
+OrbitalMovementSystem::~OrbitalMovementSystem()
 {
 }
 
-void CircularMovementSystem::processEntities( const vector<Entity*>& p_entities )
+void OrbitalMovementSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
